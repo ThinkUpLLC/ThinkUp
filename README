@@ -1,0 +1,38 @@
+WARNING: Pre-alpha code, PROCEED AT YOUR OWN RISK!
+
+SYSTEM REQUIREMENTS
+-------------------
+PHP 5 with cURL extension enabled
+Smarty
+MySQL 5
+Cron (would be nice to run crawler hourly)
+
+
+INSTALLATION
+------------
+SET UP DATABASE:
+- Create a database and select it, i.e., 
+CREATE DATABASE twitalytic
+- Build tables with build_db.sql
+- Insert your Twitter user ID into crawler_states table, i.e.,
+INSERT INTO crawler_states (twitter_user_id) VALUES (7144422)
+
+CONFIGURE CODE:
+- Edit twitalytic/include/config.inc.php, add your Twitter user id, name, password (blech!), db credentials and paths
+- Edit twitalytic/automated/crawl.config.inc.php, set crawler include path to twitalytic/include
+
+CONFIGURE WEBSERVER:
+- Set httpd.conf DocumentRoot to twitalytic/www/
+
+
+RUN CRAWLER TO LOAD DATA
+------------------------
+Watch what's going on:
+$ tail -f automated/logs/crawl.log
+
+Run crawler:
+$ php automated/crawl.php
+
+Cron this job to run hourly
+
+Once there's data in the DB, view webapp in http://localhost/
