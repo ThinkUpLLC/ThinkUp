@@ -12,41 +12,49 @@ $db = new Database();
 $conn = $db->getConnection();
 
 $id = new InstanceDAO();
-$i = $id->getStalest();
-$crawler = new Crawler($i);
+$instances = $id->getAllInstances();
 
-$cfg = new Config($i->owner_username, $i->owner_user_id);
-$logger = new Logger($i->owner_username);
-$api = new TwitterAPIAccessor($TWITALYTIC_CFG['app_title'], $i);
-$api -> init($logger);
+foreach ($instances as $i) {
+	$crawler = new Crawler($i);
+	$cfg = new Config($i->owner_username, $i->owner_user_id);
+	$logger = new Logger($i->owner_username);
+	$api = new TwitterAPIAccessor($TWITALYTIC_CFG['app_title'], $i);
+	$api -> init($logger);
 
-if ( $api->available_api_calls_for_crawler > 0 ) {
+	if ( $api->available_api_calls_for_crawler > 0 ) {
 	
-	$crawler->fetchOwnerInfo($cfg, $api, $logger);
+		$crawler->fetchOwnerInfo($cfg, $api, $logger);
 
-	$crawler->fetchOwnerTweets($cfg, $api, $logger);
+		$crawler->fetchOwnerTweets($cfg, $api, $logger);
 	
-	$crawler->fetchOwnerReplies($cfg, $api, $logger);
+		$crawler->fetchOwnerReplies($cfg, $api, $logger);
 	
-	$crawler->fetchOwnerFollowers($cfg, $api, $logger);
+		$crawler->fetchOwnerFollowers($cfg, $api, $logger);
 	
-	$crawler->fetchOwnerFriends($cfg, $api, $logger);
+		$crawler->fetchOwnerFriends($cfg, $api, $logger);
 
-	// TODO: Get direct messages
-	// TODO: Gather favorites data
+		// TODO: Get direct messages
+		// TODO: Gather favorites data
 
-	$crawler->updateQueuedUsers($logger);
+		$crawler->updateQueuedUsers($logger);
 	
-	$owner_tweet_count = $crawler->owner_object->tweet_count;
-} else {
-	$owner_tweet_count = '';
+		$owner_tweet_count = $crawler->owner_object->tweet_count;
+	} else {
+		$owner_tweet_count = '';
+	}
+
+	// Save instance
+	$id->save($crawler->instance, $owner_tweet_count, $logger, $api);
+	$logger->close();			# Close logging
+
+	#Clean up
+	$crawler = null;
+	$cfg = null;
+	$logger = null;
+	$api->close();				# Clean up connection
+	$api = null;
 }
-
-// Save crawler state
-$id->save($crawler->instance, $owner_tweet_count, $logger, $api);
 
 // Clean up
 if ( isset($conn) ) $db->closeConnection($conn);
-$api->close();				# Clean up connection
-$logger->close();			# Close logging
 ?>

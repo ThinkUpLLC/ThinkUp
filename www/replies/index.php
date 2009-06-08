@@ -14,7 +14,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	$tweet = $td->getTweet($status_id);
 
 	$id = new InstanceDAO();
-	$i = $id->getByUserID($tweet['author_user_id']);
+	$i = $id->getByUsername($tweet['author_username']);
 
 	$cfg = new Config($i->owner_username, $i->owner_user_id);
 	$s = new SmartyTwitalytic();

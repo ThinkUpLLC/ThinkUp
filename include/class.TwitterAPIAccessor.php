@@ -68,9 +68,6 @@ class TwitterAPIAccessor {
 
 	function prepAPI ($master_username) {
 
-		# This is the Twitter account to use to run these applications
-		$master_username 	= 'ginatrapani';
-
 		# Define how to access Twitter API
 		$api_domain			= 'https://twitter.com';
 		$api_format 		= 'xml';

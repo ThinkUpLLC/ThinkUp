@@ -87,6 +87,6 @@
 <div id="doc4" class="yui-t2">
 	<div id="hd" role="banner">
 		
-		<h1><a href="{$cfg->site_root_path}?u={$instance->owner_user_id}">{$instance->owner_username}'s Twitter Dashboard</a></h1>   
+		<h1><a href="{$cfg->site_root_path}?u={$instance->owner_username}">{$instance->owner_username}'s Twitter Dashboard</a></h1>   
 		<h3>Data updated <strong>{$instance->crawler_last_run|relative_datetime}</strong>.</h3>
 	</div>

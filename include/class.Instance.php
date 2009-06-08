@@ -13,6 +13,7 @@ class Instance {
 	var $total_replies_in_system;
 	var $total_follows_in_system;
 	var $total_friends_in_system;
+	var $total_users_in_system;
 	var $is_archive_loaded_replies;
 	var $is_archive_loaded_follows;
 	var $is_archive_loaded_friends;
@@ -31,6 +32,7 @@ class Instance {
 		$this->total_tweets_in_system=$r['total_tweets_in_system'];
 		$this->total_replies_in_system=$r['total_replies_in_system'];
 		$this->total_follows_in_system=$r['total_follows_in_system'];
+		$this->total_users_in_system=$r['total_users_in_system'];
 		if ( $r['is_archive_loaded_replies'] == 1)
 			$this->is_archive_loaded_replies = true;
 		else
@@ -75,14 +77,14 @@ class InstanceDAO {
 		return $i;
 	}
 	
-	function getByUserID($user_id) {
+	function getByUsername($username) {
 		$sql_query = "
 			SELECT 
 				* 
 			FROM 
 				instances 
 			WHERE 
-				twitter_user_id = ".$user_id.";";
+				twitter_username = '".$username."';";
 		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
 		$row = mysql_fetch_assoc($sql_result);
 		$i = new Instance($row);
@@ -150,14 +152,14 @@ class InstanceDAO {
 		
 	}
 
-	function isUserConfigured($uid) {
+	function isUserConfigured($un) {
 		$q = "
 			SELECT 
-				twitter_user_id 
+				twitter_username 
 			FROM 
 				instances
 			WHERE 
-				twitter_user_id = ".$uid;
+				twitter_username = '".$un."'";
 		$sql_result = mysql_query($q) or die('Error: selection query failed:' .$q );
 		if ( mysql_num_rows($sql_result) > 0 )
 			return true;

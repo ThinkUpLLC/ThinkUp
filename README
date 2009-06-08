@@ -2,9 +2,9 @@ WARNING: Pre-alpha code, PROCEED AT YOUR OWN RISK!
 
 SYSTEM REQUIREMENTS
 -------------------
-PHP 5 with cURL extension enabled
-Smarty
-MySQL 5
+- PHP 5 with cURL extension enabled
+- Smarty (http://smarty.net)
+- MySQL 5
 
 
 INSTALLATION
@@ -13,7 +13,7 @@ SET UP DATABASE:
 - Create a database and select it, i.e., 
 CREATE DATABASE twitalytic
 - Build tables with build_db.sql
-- Insert your Twitter login credentials into instances table, i.e.,
+- Insert your Twitter login credentials into instances table and repeat for each account, i.e.,
 INSERT INTO instances (twitter_user_id, twitter_username, twitter_password) VALUES (7144422, 'ginatrapani', 'itsasecret')
 
 CONFIGURE CODE:
@@ -32,6 +32,6 @@ $ tail -f automated/logs/crawl.log
 Run crawler:
 $ php automated/crawl.php
 
-Cron this job to run as many times per hour as there are system instances, i.e., for 3 system users, 3 times an hour
+Cron this job to run once per hour
 
 Once there's data in the DB, view webapp in http://localhost/

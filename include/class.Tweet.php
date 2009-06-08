@@ -316,6 +316,8 @@ class TweetDAO {
 			ON
 				t.author_user_id = u.user_id
 			WHERE 
+				in_reply_to_user_id = ". $owner_user_id ."
+			AND
 				pub_date > '". $parent_pub_date ."' 
 			AND
 				in_reply_to_status_id IS NULL

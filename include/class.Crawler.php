@@ -92,6 +92,9 @@ class Crawler {
 					if ( count($tweets) == 0 && $got_latest_page_of_tweets ) {# you're paged back and no new tweets
 						$this->instance->last_page_fetched_tweets = 1;
 						$continue_fetching=false;
+						$status_message = 'Paged back but not finding new tweets; moving on.'; 
+						$logger->logStatus($status_message, get_class($this) );		
+						$status_message = "";
 					}
 
 
@@ -156,8 +159,12 @@ class Crawler {
 						if ( count($tweets) == 0 && $got_newest_replies ) {# you're paged back and no new tweets
 							$this->last_page_fetched_replies = 1;
 							$continue_fetching=false;
-							$this->is_archive_loaded_replies = true;
+							$this->instance->is_archive_loaded_replies = true;
+							$status_message = 'Paged back but not finding new replies; moving on.'; 
+							$logger->logStatus($status_message, get_class($this) );		
+							$status_message = "";
 						}
+						
 
 						$td = new TweetDAO;
 						$count = 0;
@@ -220,10 +227,10 @@ class Crawler {
 				//figure out percentage 
 				$percent_follows_missing = 100 - (($this->instance->total_follows_in_system*100)/$this->owner_object->follower_count);
 				$percent_follows_missing = round($percent_follows_missing, 1);
-				$status_message .= " $percent_follows_missing% of follows are missing";
-				if ( $percent_follows_missing > 5 ) {
-					$status_message .= " Fetching follows archive again, more than 5% are missing from system";
-					$this->is_archive_loaded_follows = false;
+				$status_message .= " $percent_follows_missing% of follows are missing.";
+				if ( $percent_follows_missing > 2 ) {
+					$status_message .= " Fetching follows, more than 2% are missing from system";
+					$this->instance->is_archive_loaded_follows = false;
 					$logger->logStatus($status_message, get_class($this) );
 					$status_message = "";
 					
@@ -256,8 +263,8 @@ class Crawler {
 					$status_message .= "Page ".$this->instance->last_page_fetched_followers.": ".count($users) ." follows queued to update. ";		
 					$count = 0;
 					if ( count($users) == 0 ) {
-						$this->last_page_fetched_followers = 0;
-						$this->is_archive_loaded_follows = true;
+						$this->instance->last_page_fetched_followers = 0;
+						$this->instance->is_archive_loaded_follows = true;
 					}
 
 					foreach($users as $u) {
@@ -299,20 +306,20 @@ class Crawler {
 
 	function fetchOwnerFriends($cfg, $api, $logger) {
 		$status_message = "";
-		$this->is_archive_loaded_friends = false;
+		$this->instance->is_archive_loaded_friends = false;
 		# $this->is_archive_loaded_friends == compare friend count to what's in DB
-		$this->last_page_fetched_friends = 0;
+		$this->instance->last_page_fetched_friends = 0;
 		# Fetch friend pages
 		$continue_fetching = true;
 		while ( $api->available && 
 			$api->available_api_calls_for_crawler > 0 && 
 			$continue_fetching && 
-			!$this->is_archive_loaded_friends) {
+			!$this->instance->is_archive_loaded_friends) {
 
-			$this->last_page_fetched_friends = $this->last_page_fetched_friends + 1;
+			$this->instance->last_page_fetched_friends = $this->instance->last_page_fetched_friends + 1;
 
 			$friend_ids 	= str_replace("[id]",$cfg->owner_username,$api->cURL_source['following']);
-			$friend_ids  .= "?page=".$this->last_page_fetched_friends;
+			$friend_ids  .= "?page=".$this->instance->last_page_fetched_friends;
 
 			list($cURL_status,$twitter_data) = $api->apiRequest($friend_ids, $logger);
 
@@ -323,11 +330,11 @@ class Crawler {
 				try { 
 					$status_message = "Parsing XML. "; 
 					$users = $api->parseXML($twitter_data);
-					$status_message .= "Page ".$this->last_page_fetched_friends.": ".count($users) ." friends queued to update. ";		
+					$status_message .= "Page ".$this->instance->last_page_fetched_friends.": ".count($users) ." friends queued to update. ";		
 					$count = 0;
 					if ( count($users) == 0 ) {
-						$this->last_page_fetched_friends = 0;
-						$this->is_archive_loaded_friends = true;
+						$this->instance->last_page_fetched_friends = 0;
+						$this->instance->is_archive_loaded_friends = true;
 					}
 
 					foreach($users as $u) {

@@ -8,9 +8,9 @@ $conn = $db->getConnection();
 
 $id = new InstanceDAO();
 
-if ( isset($_REQUEST['u']) && is_numeric($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
-	$user_id = $_REQUEST['u'];
-	$i = $id->getByUserID($user_id);	
+if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
+	$username = $_REQUEST['u'];
+	$i = $id->getByUsername($username);	
 } else {
 	$i = $id->getFreshest();
 }

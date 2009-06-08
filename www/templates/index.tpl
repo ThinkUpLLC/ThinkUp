@@ -178,21 +178,25 @@
 	<li>{$instance->total_replies_in_system|number_format} Replies</li>
 </ul>
 <br /><br />
-<h2>System Stats</h2>
+<h2>Progress</h2>
 <ul>
 	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded ({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</li>
-	<li>{$percent_followers_loaded|number_format}% of Followers Loaded ({$instance->total_follows_in_system|number_format} of {$owner_stats.follower_count|number_format})</li>
+	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded ({$instance->total_follows_in_system|number_format} of {$owner_stats.follower_count|number_format})</li>
 	
-<li>{$instance->total_users_in_system|number_format} Users Total</li>
+
 </ul>
 <br /><br />
-<h2>System Instances</h2>
+<h2>Other Users</h2>
 <ul>
 	{foreach from=$instances key=tid item=i}
-	<li><a href="?u={$i->owner_user_id}">{$i->owner_username}</a><br />updated {$i->crawler_last_run|relative_datetime}</li>
+	<li><a href="?u={$i->owner_username}">{$i->owner_username}</a><br />updated {$i->crawler_last_run|relative_datetime}</li>
 	{/foreach}	
 </ul>
-
+<br /><br />
+<h2>System Stats</h2>
+<ul>
+	<li>{$instance->total_users_in_system|number_format} Users Total</li>
+	</ul>
 </div>
 	
 
