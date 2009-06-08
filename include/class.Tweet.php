@@ -18,7 +18,7 @@ class TweetDAO {
 		# get tweet
 		$sql_query		= "
 			SELECT 
-				tweet_text, pub_date, status_id, author_username 
+				tweet_text, pub_date, status_id, author_username, author_user_id 
 			FROM 
 				tweets 
 			WHERE

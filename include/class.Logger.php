@@ -4,9 +4,10 @@ class Logger {
 	var $log;
 	var $twitter_username;
 	
-	function Logger() {
-		global $TWITALYTIC_CFG;
-		$this -> twitter_username = $TWITALYTIC_CFG['owner_username'];
+	function Logger($twitter_username) {
+		//global $TWITALYTIC_CFG;
+		//$this -> twitter_username = $TWITALYTIC_CFG['owner_username'];
+		$this -> twitter_username=$twitter_username;
 		/*
 		 *   Initialize log
 		 */

@@ -2,13 +2,9 @@
 
 /** APPLICATION CONFIG **/
 $TWITALYTIC_CFG['debug'] = true;
-$TWITALYTIC_CFG['owner_username'] = "yourusername";
-$TWITALYTIC_CFG['owner_password'] = "yourpassword";
-$TWITALYTIC_CFG['owner_user_id'] = 123456;
 
-//TODO: Adjust API calls to leave unmade based on how much time is left till next reset
-$TWITALYTIC_CFG['api_calls_to_leave_unmade'] = 50;
 $TWITALYTIC_CFG['timeZone'] = 'TZ=US/Pacific';
+
 $TWITALYTIC_CFG['app_title'] = 'Twitalytic';
 $TWITALYTIC_CFG['log_location'] = '/Users/gina/Sites/twitalytic/automated/logs/';
 $TWITALYTIC_CFG['site_root_path'] = '/';

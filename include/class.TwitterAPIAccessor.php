@@ -12,13 +12,11 @@ class TwitterAPIAccessor {
 	var $owner_username;
 	
 
-	function TwitterAPIAccessor() {
-		global $TWITALYTIC_CFG;
-		list($this->owner_username,$this->cURL_source) = $this -> prepAPI($TWITALYTIC_CFG['owner_username']);
-		$this -> cURL = $this -> prepRequest($TWITALYTIC_CFG['app_title'], $TWITALYTIC_CFG['owner_username'],$TWITALYTIC_CFG['owner_password'] );
-		$this -> api_calls_to_leave_unmade = $TWITALYTIC_CFG['api_calls_to_leave_unmade'];
-		$this -> app_title = $TWITALYTIC_CFG['app_title'] . ' Crawler';
-		
+	function TwitterAPIAccessor($app_title, $instance) {
+		list($this->owner_username,$this->cURL_source) = $this -> prepAPI($instance->owner_username);
+		$this -> cURL = $this -> prepRequest($app_title, $instance->owner_username, $instance->owner_password);
+		$this -> api_calls_to_leave_unmade = $instance->api_calls_to_leave_unmade;
+		$this -> app_title = $app_title;
 	}
 	
 	function init($logger) {

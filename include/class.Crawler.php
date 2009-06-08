@@ -1,131 +1,15 @@
 <?php
 
 class Crawler {
-	var $owner_username;
-	var $owner_user_id;
-	var $last_status_id;
-	var $last_page_fetched_followers;
-	var $last_page_fetched_friends;
-	var $last_page_fetched_replies;
-	var $last_page_fetched_tweets;
-	var $total_tweets_in_system;
-	var $total_replies_in_system;
-	var $total_follows_in_system;
-	var $total_friends_in_system;
-	var $is_archive_loaded_replies;
-	var $is_archive_loaded_follows;
-	var $is_archive_loaded_friends;
-	var $last_run;
-
-
+	var $instance;
 	var $owner_object;
 	//data queues
 	var $users_to_update = array();
 	
-	function Crawler() {
-		global $TWITALYTIC_CFG;
-		$this -> owner_username = $TWITALYTIC_CFG['owner_username'];		
-		$this -> owner_user_id = $TWITALYTIC_CFG['owner_user_id'];		
+	function Crawler($instance) {
+		$this->instance = $instance;
 
 	}
-	
-	function init() {
-		$sql_query = array();
-		$sql_query['Retrieve_Crawler_Status_for_User'] = "
-			SELECT 
-				* 
-			FROM 
-				crawler_states 
-			WHERE 
-				twitter_user_id=".$this->owner_user_id;
-			
-		$sql_result = mysql_query($sql_query['Retrieve_Crawler_Status_for_User'])  or die('Error, selection query failed:' .$sql_query['Retrieve_Crawler_Status_for_User'] );
-		$row = mysql_fetch_assoc($sql_result);
-
-		# get backlog status
-		$this->last_status_id		= $row['last_status_id'];	# Last status ID retrieved
-		$this->last_page_fetched_followers = $row['last_page_fetched_followers'];
-		$this->last_page_fetched_replies = $row['last_page_fetched_replies'];
-		$this->last_page_fetched_tweets =   $row['last_page_fetched_tweets'];	
-		$this->total_tweets_in_system = $row['total_tweets_in_system']; 
-		$this->total_replies_in_system = $row['total_replies_in_system']; 
-		$this->total_follows_in_system = $row['total_follows_in_system']; 
-		$this->total_users_in_system = $row['total_users_in_system']; 		
-		
-		$this->last_run = $row['crawler_last_run'];
-
-		if ( $row['is_archive_loaded_replies'] == 1)
-			$this->is_archive_loaded_replies = true;
-		else
-			$this->is_archive_loaded_replies = false;
-
-		if ( $row['is_archive_loaded_follows'] == 1)
-			$this->is_archive_loaded_follows = true;
-		else
-			$this->is_archive_loaded_follows = false;
-
-		mysql_free_result($sql_result);				
-	}
-	
-	
-	function saveState($user_xml_total_tweets_by_owner, $logger, $api ) {
-		$sql_query = array();
-		if ($user_xml_total_tweets_by_owner != '')
-			$owner_tweets =  "total_tweets_by_owner = ".$user_xml_total_tweets_by_owner.",";
-		else
-			$owner_tweets = '';
-	
-		if ( $this->is_archive_loaded_follows )
-			$is_archive_loaded_follows = 1;
-		else
-			$is_archive_loaded_follows = 0;
-
-		if ( $this->is_archive_loaded_replies )
-			$is_archive_loaded_replies = 1;
-		else
-			$is_archive_loaded_replies = 0;
-			
-	
-		$sql_query['Save_Crawler_State'] = "
-			UPDATE 
-				crawler_states
-			SET
-				last_status_id = ". $this->last_status_id .",
-				last_page_fetched_followers = ".$this->last_page_fetched_followers.",
-				last_page_fetched_replies = ".$this->last_page_fetched_replies.",
-				last_page_fetched_tweets = ".$this->last_page_fetched_tweets.",
-				crawler_last_run = NOW(),
-				total_tweets_in_system = (select count(*) from tweets where author_user_id=".$this->owner_user_id."),
-				".$owner_tweets."
-				total_replies_in_system = (select count(*) from tweets where tweet_text like '%@".$this->owner_username."%'),
-				total_follows_in_system = (select count(*) from follows where user_id=".$this->owner_user_id."),
-				total_users_in_system = (select count(*) from users),
-				is_archive_loaded_follows = ". $is_archive_loaded_follows .",
-				is_archive_loaded_replies = ". $is_archive_loaded_replies .",
-				earliest_reply_in_system = (select
-					pub_date
-				from 
-					tweets
-				where tweet_text like '%@".$this->owner_username."%'
-				order by
-					pub_date asc
-				limit 1),
-				earliest_tweet_in_system = (select
-					pub_date
-				from 
-					tweets
-				where author_user_id = ".$this->owner_user_id."
-				order by
-					pub_date asc
-				limit 1);";
-		$foo = mysql_query($sql_query['Save_Crawler_State']) or die('Error, update query failed: '. $sql_query['Save_Crawler_State'] );
-
-		$status_message="Crawl complete, crawler state saved.\n\n";
-		$logger->logStatus($status_message, get_class($this) );
-		$status_message = "";
-		
-	}
-
 
 	function fetchOwnerInfo($cfg, $api, $logger) {
 		// Get owner user details and put them in queue
@@ -159,20 +43,20 @@ class Crawler {
 		// Get owner's tweets
 		$status_message = "";
 		$got_latest_page_of_tweets = false;
-		while ( $api->available && $api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->total_tweets_in_system) {	
+		while ( $api->available && $api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system) {	
 
 			$recent_tweets 		= str_replace("[id]",$cfg->owner_username,$api->cURL_source['user_timeline']);
 			$recent_tweets 		.= "?&count=200";
 
-			if ( $got_latest_page_of_tweets && $this->owner_object->tweet_count != $this->total_tweets_in_system ) {
-				if ( $this->last_page_fetched_tweets < 2)
-					$this->last_page_fetched_tweets = 2;
+			if ( $got_latest_page_of_tweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system ) {
+				if ( $this->instance->last_page_fetched_tweets < 2)
+					$this->instance->last_page_fetched_tweets = 2;
 				else
-					$this->last_page_fetched_tweets++;
-				$recent_tweets 		.= "&page=".$this->last_page_fetched_tweets;	
+					$this->instance->last_page_fetched_tweets++;
+				$recent_tweets 		.= "&page=".$this->instance->last_page_fetched_tweets;	
 			} else {
-				if ($this->last_status_id > 0)  
-					$recent_tweets .= "&since_id=$this->last_status_id"; 
+				if ($this->instance->last_status_id > 0)  
+					$recent_tweets .= "&since_id=".$this->instance->last_status_id; 
 			}
 
 			list($cURL_status,$twitter_data) = $api->apiRequest($recent_tweets, $logger);
@@ -192,7 +76,7 @@ class Crawler {
 							$count++;
 							$this->total_tweets_in_system++;
 						}
-						if ( $tweet['status_id'] > $this->last_status_id ) 
+						if ( $tweet['status_id'] > $this->instance->last_status_id ) 
 							$this->last_status_id = $tweet['status_id'];
 					}
 					$status_message .= count($tweets) ." tweet(s) found and $count saved"; 
@@ -205,10 +89,10 @@ class Crawler {
 					}
 
 
-					if ( $this->owner_object->tweet_count == $this->total_tweets_in_system)  
+					if ( $this->owner_object->tweet_count == $this->instance->total_tweets_in_system)  
 						$this->is_archive_loaded_tweets = true;
 
-					$status_message .= $this->total_tweets_in_system." in system; ".$this->owner_object->tweet_count." by owner\n";
+					$status_message .= $this->instance->total_tweets_in_system." in system; ".$this->owner_object->tweet_count." by owner\n";
 					$logger->logStatus($status_message, get_class($this) );		
 					$status_message = "";
 
@@ -223,7 +107,7 @@ class Crawler {
 
 		}
 
-		if ( $this->owner_object->tweet_count == $this->total_tweets_in_system ) {
+		if ( $this->owner_object->tweet_count == $this->instance->total_tweets_in_system ) {
 			$status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
 			$this->is_archive_loaded_tweets = true;
 		}
@@ -292,7 +176,7 @@ class Crawler {
 						$logger->logStatus($status_message, get_class($this) );
 						$status_message = "";
 
-						if ( $got_newest_replies && $this->is_archive_loaded_replies ) {
+						if ( $got_newest_replies && $this->instance->is_archive_loaded_replies ) {
 							$continue_fetching = false;
 							$status_message .= 'Retrieved newest replies; Reply archive loaded; Stopping reply fetch.'; 	
 							$logger->logStatus($status_message, get_class($this) );
@@ -319,16 +203,16 @@ class Crawler {
 	function fetchOwnerFollowers($cfg, $api, $logger) {
 		// Get owner's followers: Page back only if more than 5% of follows are missing from database
 		// See how many are missing from last run
-		if ( $this->is_archive_loaded_follows  ) { //all pages have been loaded
+		if ( $this->instance->is_archive_loaded_follows  ) { //all pages have been loaded
 			//find out how many new follows owner has compared to what's in db
-			$new_follower_count = $this->owner_object->follower_count - $this->total_follows_in_system;
-			$status_message = "New follower count is ". $this->owner_object->follower_count." and system has ".$this->total_follows_in_system."; ". $new_follower_count ." new follows to load";
+			$new_follower_count = $this->owner_object->follower_count - $this->instance->total_follows_in_system;
+			$status_message = "New follower count is ". $this->owner_object->follower_count." and system has ".$this->instance->total_follows_in_system."; ". $new_follower_count ." new follows to load";
 			$logger->logStatus($status_message, get_class($this) );
 			$status_message = "";
 			
 			if ( $new_follower_count > 0 ) {
 				//figure out percentage 
-				$percent_follows_missing = 100 - (($this->total_follows_in_system*100)/$this->owner_object->follower_count);
+				$percent_follows_missing = 100 - (($this->instance->total_follows_in_system*100)/$this->owner_object->follower_count);
 				$percent_follows_missing = round($percent_follows_missing, 1);
 				$status_message .= " $percent_follows_missing% of follows are missing";
 				if ( $percent_follows_missing > 5 ) {
@@ -347,12 +231,12 @@ class Crawler {
 		while ( $api->available && 
 			$api->available_api_calls_for_crawler > 0 && 
 			$continue_fetching && 
-			!$this->is_archive_loaded_follows) {
+			!$this->instance->is_archive_loaded_follows) {
 
-			$this->last_page_fetched_followers = $this->last_page_fetched_followers + 1;
+			$this->instance->last_page_fetched_followers = $this->instance->last_page_fetched_followers + 1;
 
 			$follower_ids 	= str_replace("[id]",$cfg->owner_username,$api->cURL_source['followers']);
-			$follower_ids  .= "?page=".$this->last_page_fetched_followers;
+			$follower_ids  .= "?page=".$this->instance->last_page_fetched_followers;
 
 			list($cURL_status,$twitter_data) = $api->apiRequest($follower_ids, $logger);
 
@@ -363,7 +247,7 @@ class Crawler {
 				try { 
 					$status_message = "Parsing XML. "; 
 					$users = $api->parseXML($twitter_data);
-					$status_message .= "Page ".$this->last_page_fetched_followers.": ".count($users) ." follows queued to update. ";		
+					$status_message .= "Page ".$this->instance->last_page_fetched_followers.": ".count($users) ." follows queued to update. ";		
 					$count = 0;
 					if ( count($users) == 0 ) {
 						$this->last_page_fetched_followers = 0;
@@ -380,7 +264,7 @@ class Crawler {
 							INSERT INTO
 								follows (user_id,follower_id,last_seen)
 								VALUES (
-									".$this->owner_user_id.",".$u['user_id'].",NOW()
+									".$this->instance->owner_user_id.",".$u['user_id'].",NOW()
 								)
 								ON DUPLICATE KEY UPDATE 
 									last_seen=NOW();
@@ -450,7 +334,7 @@ class Crawler {
 							INSERT INTO
 								follows (user_id,follower_id,last_seen)
 								VALUES (
-									".$u['user_id'].", ".$this->owner_user_id.", NOW()
+									".$u['user_id'].", ".$this->instance->owner_user_id.", NOW()
 								)
 								ON DUPLICATE KEY UPDATE 
 									last_seen=NOW();

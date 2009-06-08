@@ -5,7 +5,6 @@ SYSTEM REQUIREMENTS
 PHP 5 with cURL extension enabled
 Smarty
 MySQL 5
-Cron (would be nice to run crawler hourly)
 
 
 INSTALLATION
@@ -14,8 +13,8 @@ SET UP DATABASE:
 - Create a database and select it, i.e., 
 CREATE DATABASE twitalytic
 - Build tables with build_db.sql
-- Insert your Twitter user ID into crawler_states table, i.e.,
-INSERT INTO crawler_states (twitter_user_id) VALUES (7144422)
+- Insert your Twitter login credentials into instances table, i.e.,
+INSERT INTO instances (twitter_user_id, twitter_username, twitter_password) VALUES (7144422, 'ginatrapani', 'itsasecret')
 
 CONFIGURE CODE:
 - Edit twitalytic/include/config.inc.php, add your Twitter user id, name, password (blech!), db credentials and paths
@@ -33,6 +32,6 @@ $ tail -f automated/logs/crawl.log
 Run crawler:
 $ php automated/crawl.php
 
-Cron this job to run hourly
+Cron this job to run as many times per hour as there are system instances, i.e., for 3 system users, 3 times an hour
 
 Once there's data in the DB, view webapp in http://localhost/

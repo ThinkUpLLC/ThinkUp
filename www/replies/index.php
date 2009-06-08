@@ -3,22 +3,27 @@
 chdir("..");
 $root_path 			= realpath('./../include')."/";
 require_once($root_path . "init.php");
-$cfg = new Config();
 $db = new Database();
-$s = new SmartyTwitalytic();
-$c = new Crawler();
-
 $conn = $db->getConnection();
 
-// instantiate data access objects
-$ud = new UserDAO();
-$fd = new FollowDAO();
 $td = new TweetDAO();
-$c->init();
 
 
 if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_REQUEST['t']) ){
 	$status_id = $_REQUEST['t'];
+	$tweet = $td->getTweet($status_id);
+
+	$id = new InstanceDAO();
+	$i = $id->getByUserID($tweet['author_user_id']);
+
+	$cfg = new Config($i->owner_username, $i->owner_user_id);
+	$s = new SmartyTwitalytic();
+	$u = new Utils();
+
+	// instantiate data access objects
+	$ud = new UserDAO();
+	
+	
 	$all_replies = $td->getRepliesToTweet($status_id);
 	$all_replies_count = count($all_replies);
 	$public_replies = $td->getPublicRepliesToTweet($status_id);
@@ -36,7 +41,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 
 
 	$s->assign('cfg', $cfg);
-	$s->assign('crawler', $c);
+	$s->assign('instance', $i);
 	# clean up
 	$db->closeConnection($conn);	
 

@@ -4,7 +4,7 @@
 #
 # Host: localhost (MySQL 5.1.34)
 # Database: twitalytic
-# Generation Time: 2009-06-06 12:12:24 -0700
+# Generation Time: 2009-06-07 21:56:28 -0700
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -17,14 +17,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Dump of table crawler_states
+# Dump of table follows
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `crawler_states`;
+DROP TABLE IF EXISTS `follows`;
 
-CREATE TABLE `crawler_states` (
+CREATE TABLE `follows` (
+  `user_id` int(11) NOT NULL,
+  `follower_id` int(11) NOT NULL,
+  `last_seen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`,`follower_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Dump of table instances
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `instances`;
+
+CREATE TABLE `instances` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `twitter_user_id` int(11) NOT NULL,
+  `twitter_username` varchar(255) COLLATE utf8_bin NOT NULL,
+  `twitter_password` varchar(255) COLLATE utf8_bin NOT NULL,
   `last_status_id` int(11) DEFAULT NULL,
   `crawler_last_run` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_page_fetched_followers` int(11) NOT NULL,
@@ -39,23 +55,10 @@ CREATE TABLE `crawler_states` (
   `earliest_reply_in_system` datetime DEFAULT NULL,
   `is_archive_loaded_replies` int(11) NOT NULL DEFAULT '0',
   `is_archive_loaded_follows` int(11) NOT NULL DEFAULT '0',
+  `api_calls_to_leave_unmade` int(11) NOT NULL DEFAULT '50',
   PRIMARY KEY (`id`),
   KEY `twitter_user_id` (`twitter_user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-
-
-# Dump of table follows
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `follows`;
-
-CREATE TABLE `follows` (
-  `user_id` int(11) NOT NULL,
-  `follower_id` int(11) NOT NULL,
-  `last_seen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`,`follower_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 
@@ -84,7 +87,7 @@ CREATE TABLE `tweets` (
   KEY `author_username` (`author_username`),
   KEY `pub_date` (`pub_date`),
   KEY `author_user_id` (`author_user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=29249 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=29538 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 
@@ -112,7 +115,7 @@ CREATE TABLE `users` (
   `joined` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=80086 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=80318 DEFAULT CHARSET=latin1;
 
 
 

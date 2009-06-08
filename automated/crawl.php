@@ -7,17 +7,18 @@ ini_set("include_path", ini_get("include_path").":".$CRAWLER_INCLUDE_PATH);
 $root_path="";
 require_once("init.php");
 
-// Instantiate needed objects
-$cfg = new Config();
-$logger = new Logger();
-$api = new TwitterAPIAccessor();
+// Instantiate and initialize needed objects
 $db = new Database();
-$crawler = new Crawler();
-
-// Initialize objects
-$api -> init($logger);
 $conn = $db->getConnection();
-$crawler->init();
+
+$id = new InstanceDAO();
+$i = $id->getStalest();
+$crawler = new Crawler($i);
+
+$cfg = new Config($i->owner_username, $i->owner_user_id);
+$logger = new Logger($i->owner_username);
+$api = new TwitterAPIAccessor($TWITALYTIC_CFG['app_title'], $i);
+$api -> init($logger);
 
 if ( $api->available_api_calls_for_crawler > 0 ) {
 	
@@ -29,8 +30,8 @@ if ( $api->available_api_calls_for_crawler > 0 ) {
 	
 	$crawler->fetchOwnerFollowers($cfg, $api, $logger);
 	
-	// TODO: Get Followees
 	$crawler->fetchOwnerFriends($cfg, $api, $logger);
+
 	// TODO: Get direct messages
 	// TODO: Gather favorites data
 
@@ -42,7 +43,7 @@ if ( $api->available_api_calls_for_crawler > 0 ) {
 }
 
 // Save crawler state
-$crawler->saveState($owner_tweet_count, $logger, $api);
+$id->save($crawler->instance, $owner_tweet_count, $logger, $api);
 
 // Clean up
 if ( isset($conn) ) $db->closeConnection($conn);
