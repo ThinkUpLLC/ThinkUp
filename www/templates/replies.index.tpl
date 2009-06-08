@@ -68,7 +68,7 @@
 	<li>{$reply_count} total replies</li>
 	<li>{$private_reply_count} private</li>
 
-	<li><a href="{$cfg->webapp_home}?u={$instance->owner_user_id}">&larr; back</a></li>
+	<li><a href="{$cfg->webapp_home}?u={$instance->owner_username}">&larr; back</a></li>
 </ul>
 </div>
 
