@@ -43,16 +43,22 @@ class Crawler {
 		// Get owner's tweets
 		$status_message = "";
 		$got_latest_page_of_tweets = false;
-		while ( $api->available && $api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system) {	
+		$continue_fetching = true;
+		while ( $api->available && $api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching) {	
 
 			$recent_tweets 		= str_replace("[id]",$cfg->owner_username,$api->cURL_source['user_timeline']);
 			$recent_tweets 		.= "?&count=200";
+			$last_page_of_tweets = round($this->owner_object->tweet_count / 200)+1;
 
 			if ( $got_latest_page_of_tweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system ) {
 				if ( $this->instance->last_page_fetched_tweets < 2)
 					$this->instance->last_page_fetched_tweets = 2;
-				else
-					$this->instance->last_page_fetched_tweets++;
+				else {
+					if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets )
+						$this->instance->last_page_fetched_tweets++;
+					else
+						$this->instance->last_page_fetched_tweets = 1;
+				}
 				$recent_tweets 		.= "&page=".$this->instance->last_page_fetched_tweets;	
 			} else {
 				if ($this->instance->last_status_id > 0)  
@@ -74,23 +80,23 @@ class Crawler {
 					foreach($tweets as $tweet) {
 						if ( $td->addTweet($tweet, $this->owner_object, $logger) > 0 ) {
 							$count++;
-							$this->total_tweets_in_system++;
+							$this->instance->total_tweets_in_system++;
 						}
 						if ( $tweet['status_id'] > $this->instance->last_status_id ) 
-							$this->last_status_id = $tweet['status_id'];
+							$this->instance->last_status_id = $tweet['status_id'];
 					}
 					$status_message .= count($tweets) ." tweet(s) found and $count saved"; 
 					$logger->logStatus($status_message, get_class($this) );		
 					$status_message = "";
 
 					if ( count($tweets) == 0 && $got_latest_page_of_tweets ) {# you're paged back and no new tweets
-						$this->last_page_fetched_tweets = 1;
+						$this->instance->last_page_fetched_tweets = 1;
 						$continue_fetching=false;
 					}
 
 
 					if ( $this->owner_object->tweet_count == $this->instance->total_tweets_in_system)  
-						$this->is_archive_loaded_tweets = true;
+						$this->instance->is_archive_loaded_tweets = true;
 
 					$status_message .= $this->instance->total_tweets_in_system." in system; ".$this->owner_object->tweet_count." by owner\n";
 					$logger->logStatus($status_message, get_class($this) );		
@@ -109,7 +115,7 @@ class Crawler {
 
 		if ( $this->owner_object->tweet_count == $this->instance->total_tweets_in_system ) {
 			$status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
-			$this->is_archive_loaded_tweets = true;
+			$this->instance->is_archive_loaded_tweets = true;
 		}
 
 
