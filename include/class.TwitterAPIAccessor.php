@@ -43,7 +43,7 @@ class TwitterAPIAccessor {
 				}
 				*/
 		/* Use JSON instead */
-				$status_message .= "Parsing JSON data from $account_status ";
+				//$status_message .= "Parsing JSON data from $account_status ";
 				$json_dump = json_decode($twitter_data);
 				
 				if ( !isset($json_dump) ) {
