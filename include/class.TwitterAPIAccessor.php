@@ -232,90 +232,92 @@ class TwitterAPIAccessor {
 		$thisFeed 	= array();
 		try { 
 			$xml 		= $this->createParserFromString(utf8_encode($data));	
-			$root		= $xml->getName();	
-			switch ($root) {
-				case 'user':
-	  				$thisFeed[] = array(
-	 					'user_id' 			=> $xml->id,
-	 					'user_name' 		=> $xml->screen_name,
-	 					'full_name' 		=> $xml->name,
-	 					'avatar' 			=> $xml->profile_image_url,
-	 					'location' 			=> $xml->location,
-	 					'description' 		=> $xml->description,
-	 					'url' 				=> $xml->url,
-	 					'is_protected' 		=> $xml->protected,
-	 					'followers' 		=> $xml->followers_count,
-	 					'following' 		=> $xml->friends_count,
-	 					'tweets' 			=> $xml->statuses_count,
-						'favorites_count' 	=> $xml->favourites_count,
-						'joined'			=> $xml->created_at
-					);
-					break;
-				case 'status':
-	  				$thisFeed[] = array(
-	 					'status_id' 		=> $xml->id
-					);
-					break;
-				case 'users':
-					foreach($xml->children() as $item) {
-	  					$thisFeed[] = array(
-							'status_id' 		=> $item->status->id,
-	 						'user_id' 			=> $item->id,
-	 						'user_name' 		=> $item->screen_name,
-	 						'full_name' 		=> $item->name,
-	 						'avatar' 			=> $item->profile_image_url,
-	 						'location' 			=> $item->location,
-	 						'description' 		=> $item->description,
-	 						'url' 				=> $item->url,
-	 						'is_protected' 		=> $item->protected,
-							'following'			=> $item->friends_count,
-	 						'followers' 		=> $item->followers_count,
-							'joined'			=> $item->created_at,
-	 						'tweet_text' 		=> $item->status->text,
-	 						'tweet_html' 		=> $item->status->text,
-							'last_post'			=> $item->status->created_at,
-	 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($item->status->created_at)),
-	 						'favorites_count' 	=> $item->favourites_count,
-	 						'tweets' 			=> $item->statuses_count
+			if ( isset($xml)) {
+				$root		= $xml->getName();	
+				switch ($root) {
+					case 'user':
+		  				$thisFeed[] = array(
+		 					'user_id' 			=> $xml->id,
+		 					'user_name' 		=> $xml->screen_name,
+		 					'full_name' 		=> $xml->name,
+		 					'avatar' 			=> $xml->profile_image_url,
+		 					'location' 			=> $xml->location,
+		 					'description' 		=> $xml->description,
+		 					'url' 				=> $xml->url,
+		 					'is_protected' 		=> $xml->protected,
+		 					'followers' 		=> $xml->followers_count,
+		 					'following' 		=> $xml->friends_count,
+		 					'tweets' 			=> $xml->statuses_count,
+							'favorites_count' 	=> $xml->favourites_count,
+							'joined'			=> $xml->created_at
 						);
-					}
-					break;
-	 			case 'statuses':
-					foreach($xml->children() as $item) {
-	  					$thisFeed[] = array(
-							'status_id' 		=> $item->id,
-	 						'user_id' 			=> $item->user->id,
-	 						'user_name' 		=> $item->user->screen_name,
-	 						'full_name' 		=> $item->user->name,
-	 						'avatar' 			=> $item->user->profile_image_url,
-	 						'location' 			=> $item->user->location,
-	 						'description' 		=> $item->user->description,
-	 						'url' 				=> $item->user->url,
-	 						'is_protected' 		=> $item->user->protected,
-	 						'followers' 		=> $item->user->followers_count,
-							'following'			=> $item->user->friends_count,
-							'tweets' 			=> $item->user->statuses_count,
-							'joined'			=> $item->user->created_at,
-	 						'tweet_text' 		=> $item->text,
-	 						'tweet_html' 		=> $item->text,
-	 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($item->created_at)),
-	 						'favorites_count' 	=> $item->user->favourites_count,
-	 						'in_reply_to_status_id' => $item->in_reply_to_status_id,
-	 						'in_reply_to_user_id' => $item->in_reply_to_user_id
+						break;
+					case 'status':
+		  				$thisFeed[] = array(
+		 					'status_id' 		=> $xml->id
 						);
-					}
-					break;
-				case 'hash':
-				//DOESN'T WORK!
-					$thisFeed[] = array(
-						'remaining-hits' 		=> $xml->remaining_hits,
-						'hourly-limit'			=> $xml->hourly_limit,
-						'reset-time'			=> $xml->reset_time
-					);
-					echo "remaining hits: ". $xml->remaining_hits ." reset time " .  $thisFeed['reset-time'];
-					break;
-	  			default:
-	    			break;
+						break;
+					case 'users':
+						foreach($xml->children() as $item) {
+		  					$thisFeed[] = array(
+								'status_id' 		=> $item->status->id,
+		 						'user_id' 			=> $item->id,
+		 						'user_name' 		=> $item->screen_name,
+		 						'full_name' 		=> $item->name,
+		 						'avatar' 			=> $item->profile_image_url,
+		 						'location' 			=> $item->location,
+		 						'description' 		=> $item->description,
+		 						'url' 				=> $item->url,
+		 						'is_protected' 		=> $item->protected,
+								'following'			=> $item->friends_count,
+		 						'followers' 		=> $item->followers_count,
+								'joined'			=> $item->created_at,
+		 						'tweet_text' 		=> $item->status->text,
+		 						'tweet_html' 		=> $item->status->text,
+								'last_post'			=> $item->status->created_at,
+		 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($item->status->created_at)),
+		 						'favorites_count' 	=> $item->favourites_count,
+		 						'tweets' 			=> $item->statuses_count
+							);
+						}
+						break;
+		 			case 'statuses':
+						foreach($xml->children() as $item) {
+		  					$thisFeed[] = array(
+								'status_id' 		=> $item->id,
+		 						'user_id' 			=> $item->user->id,
+		 						'user_name' 		=> $item->user->screen_name,
+		 						'full_name' 		=> $item->user->name,
+		 						'avatar' 			=> $item->user->profile_image_url,
+		 						'location' 			=> $item->user->location,
+		 						'description' 		=> $item->user->description,
+		 						'url' 				=> $item->user->url,
+		 						'is_protected' 		=> $item->user->protected,
+		 						'followers' 		=> $item->user->followers_count,
+								'following'			=> $item->user->friends_count,
+								'tweets' 			=> $item->user->statuses_count,
+								'joined'			=> $item->user->created_at,
+		 						'tweet_text' 		=> $item->text,
+		 						'tweet_html' 		=> $item->text,
+		 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($item->created_at)),
+		 						'favorites_count' 	=> $item->user->favourites_count,
+		 						'in_reply_to_status_id' => $item->in_reply_to_status_id,
+		 						'in_reply_to_user_id' => $item->in_reply_to_user_id
+							);
+						}
+						break;
+					case 'hash':
+					//DOESN'T WORK!
+						$thisFeed[] = array(
+							'remaining-hits' 		=> $xml->remaining_hits,
+							'hourly-limit'			=> $xml->hourly_limit,
+							'reset-time'			=> $xml->reset_time
+						);
+						echo "remaining hits: ". $xml->remaining_hits ." reset time " .  $thisFeed['reset-time'];
+						break;
+		  			default:
+		    			break;
+				}
 			}
 		} catch (Exception $e) 					{ $form_error = 15; } 
 
