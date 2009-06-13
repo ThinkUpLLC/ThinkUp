@@ -36,8 +36,11 @@ $s->assign('all_tweets', $td->getAllTweets($cfg->owner_user_id, 25) );
 $s->assign('all_replies', $td->getAllReplies($cfg->owner_username, 15) );
 
 $s->assign('most_replied_to_tweets', $td->getMostRepliedToTweets($cfg->owner_user_id, 15));
+
 $s->assign('orphan_replies', $td->getOrphanReplies($cfg->owner_username, 5));
 $s->assign('standalone_replies', $td->getStandaloneReplies());
+$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->owner_user_id, 15));
+
 
 $s->assign('most_active_friends', $fd->getMostActiveFollowees($cfg->owner_user_id, 25));
 $s->assign('least_active_friends', $fd->getLeastActiveFollowees($cfg->owner_user_id, 25));

@@ -37,7 +37,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	$s->assign('public_reply_count', $public_replies_count );
 	$s->assign('private_reply_count', $private_replies_count );
 	$s->assign('reply_count', $all_replies_count );
-	$s->assign('likely_orphans', $td->getLikelyOrphansForParent($tweet['pub_date'], $cfg->owner_user_id, 15) );
+//	$s->assign('likely_orphans', $td->getLikelyOrphansForParent($tweet['pub_date'], $cfg->owner_user_id, 15) );
 
 
 	$s->assign('cfg', $cfg);
