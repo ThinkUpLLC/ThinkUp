@@ -18,6 +18,7 @@ class Instance {
 	var $is_archive_loaded_follows;
 	var $is_archive_loaded_friends;
 	var $crawler_last_run;
+	var $earliest_reply_in_system;	
 	var $api_calls_to_leave_unmade;
 		
 	function Instance($r) {
@@ -45,6 +46,7 @@ class Instance {
 
 
 		$this->crawler_last_run=$r['crawler_last_run'];
+		$this->earliest_reply_in_system=$r['earliest_reply_in_system'];	
 		$this->api_calls_to_leave_unmade=$r['api_calls_to_leave_unmade'];
 	}
 
