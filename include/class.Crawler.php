@@ -51,13 +51,11 @@ class Crawler {
 			$last_page_of_tweets = round($this->owner_object->tweet_count / 200)+1;
 
 			if ( $got_latest_page_of_tweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system ) {
-				if ( $this->instance->last_page_fetched_tweets < 2)
-					$this->instance->last_page_fetched_tweets = 2;
+				if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets )
+					$this->instance->last_page_fetched_tweets++;
 				else {
-					if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets )
-						$this->instance->last_page_fetched_tweets++;
-					else
-						$this->instance->last_page_fetched_tweets = 1;
+					$continue_fetching = false;
+					$this->instance->last_page_fetched_tweets = 1;
 				}
 				$recent_tweets 		.= "&page=".$this->instance->last_page_fetched_tweets;	
 			} else {
@@ -88,11 +86,11 @@ class Crawler {
 					$status_message .= count($tweets) ." tweet(s) found and $count saved"; 
 					$logger->logStatus($status_message, get_class($this) );		
 					$status_message = "";
-
-					if ( count($tweets) == 0 && $got_latest_page_of_tweets ) {# you're paged back and no new tweets
+					
+					if ( count($tweets) == 0 && $this->instance->last_page_fetched_tweets >= $last_page_of_tweets ) {
 						$this->instance->last_page_fetched_tweets = 1;
 						$continue_fetching=false;
-						$status_message = 'Paged back but not finding new tweets; moving on.'; 
+						$status_message = 'Paged back and not finding new tweets; moving on.'; 
 						$logger->logStatus($status_message, get_class($this) );		
 						$status_message = "";
 					}
@@ -111,8 +109,10 @@ class Crawler {
 					$status_message = "";
 
 				} 
+				$got_latest_page_of_tweets = true;
+				
 			}
-			$got_latest_page_of_tweets = true;
+			
 
 		}
 
