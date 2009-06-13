@@ -4,7 +4,7 @@
 #
 # Host: localhost (MySQL 5.1.34)
 # Database: twitalytic
-# Generation Time: 2009-06-07 21:56:28 -0700
+# Generation Time: 2009-06-12 20:32:25 -0700
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -27,7 +27,7 @@ CREATE TABLE `follows` (
   `follower_id` int(11) NOT NULL,
   `last_seen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`,`follower_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 
@@ -41,7 +41,7 @@ CREATE TABLE `instances` (
   `twitter_user_id` int(11) NOT NULL,
   `twitter_username` varchar(255) COLLATE utf8_bin NOT NULL,
   `twitter_password` varchar(255) COLLATE utf8_bin NOT NULL,
-  `last_status_id` int(11) DEFAULT NULL,
+  `last_status_id` bigint(11) DEFAULT NULL,
   `crawler_last_run` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_page_fetched_followers` int(11) NOT NULL,
   `last_page_fetched_replies` int(11) NOT NULL DEFAULT '1',
@@ -58,7 +58,7 @@ CREATE TABLE `instances` (
   `api_calls_to_leave_unmade` int(11) NOT NULL DEFAULT '50',
   PRIMARY KEY (`id`),
   KEY `twitter_user_id` (`twitter_user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 
@@ -69,7 +69,7 @@ DROP TABLE IF EXISTS `tweets`;
 
 CREATE TABLE `tweets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `status_id` int(11) NOT NULL,
+  `status_id` bigint(11) NOT NULL,
   `author_user_id` int(11) NOT NULL,
   `author_username` varchar(50) COLLATE utf8_bin NOT NULL,
   `author_fullname` varchar(50) COLLATE utf8_bin NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE `tweets` (
   `tweet_html` varchar(255) COLLATE utf8_bin NOT NULL,
   `pub_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `in_reply_to_user_id` int(11) DEFAULT NULL,
-  `in_reply_to_status_id` int(11) DEFAULT NULL,
+  `in_reply_to_status_id` bigint(11) DEFAULT NULL,
   `reply_count_cache` int(11) NOT NULL DEFAULT '0',
   `is_follow_friday` int(11) NOT NULL DEFAULT '0',
   `is_retweet` int(11) NOT NULL DEFAULT '0',
@@ -87,7 +87,7 @@ CREATE TABLE `tweets` (
   KEY `author_username` (`author_username`),
   KEY `pub_date` (`pub_date`),
   KEY `author_user_id` (`author_user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=29538 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=34375 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 
@@ -115,7 +115,7 @@ CREATE TABLE `users` (
   `joined` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=80318 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=93852 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 
