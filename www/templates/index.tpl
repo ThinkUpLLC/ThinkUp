@@ -20,13 +20,14 @@
 		<ul>
 		<li><a href="#alltweetssub">All Tweets</a></li>
 		<li><a href="#mostrepliedtweetssub">Most-Replied-To Tweets</a></li>
+		<li><a href="#tweetsauthorhasrepliedto">Your Replies</a></li>
 		</ul>		
 	</div>
 	<div class="section" id="alltweetssub">
 		<h2>All Tweets</h2>
 		<ul>
 		{foreach from=$all_tweets key=tid item=t}
-		<li><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> [<a href="replies/?t={$t.status_id}">{$t.reply_count_cache} replies</a>] {$t.tweet_html}<br /> {$t.adj_pub_date|relative_datetime} <br clear="all"></li>
+		<li><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> [<a href="replies/?t={$t.status_id}">{$t.reply_count_cache} replies</a>] {$t.tweet_html} {if $t.in_reply_to_status_id}(<a href="replies/?t={$t.in_reply_to_status_id}">in reply to</a>){/if}<br /> {$t.adj_pub_date|relative_datetime} <br clear="all"></li>
 		{/foreach}
 		<li><a href="tweets?u={$twitter_username}">All Tweets&rarr;</a></li>
 		</ul>
@@ -40,6 +41,15 @@
 		<li><a href="tweets?u={$twitter_username}">More Tweets with replies&rarr;</a></li>
 		</ul>
 	</div>
+	<div class="section" id="tweetsauthorhasrepliedto">
+		<h2>Your Replies</h2>
+		<ul>
+		{foreach from=$author_replies key=tahrt item=r}
+		<li><a href="http://twitter.com/{$r.questioner}/{$r.status_id}/">{$r.questioner}</a> said: {$r.question|regex_replace:"/@[a-zA-Z0-9]+/":""} </a><br /> {$r.answer|regex_replace:"/@[a-zA-Z0-9]+/":""} </li>
+		{/foreach}
+		</ul>
+	</div>
+
 </div>
 
 <div class="section" id="replies">
@@ -175,7 +185,7 @@
 <ul>
 	<li>{$owner_stats.follower_count|number_format} Followers</li>
 	<li>{$owner_stats.tweet_count|number_format} Tweets</li>
-	<li>{$instance->total_replies_in_system|number_format} Replies</li>
+	<li>{$instance->total_replies_in_system|number_format} Replies Since<br /> {$instance->earliest_reply_in_system}</li>
 </ul>
 <br /><br />
 <h2>Progress</h2>

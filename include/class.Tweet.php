@@ -62,6 +62,26 @@ class TweetDAO {
 		return $tweets_stored;
 	}
 	
+	function getTweetsAuthorHasRepliedTo($author_id) {
+		$sql_query = "
+			SELECT
+				t1.author_username as questioner, t1.status_id, t1.tweet_html as question, t.tweet_html as answer 
+			FROM 
+				tweets t 
+			INNER JOIN 
+				tweets t1 on t1.status_id = t.in_reply_to_status_id 
+			WHERE 
+				t.author_user_id = ". $author_id   ." AND t.in_reply_to_status_id is not null 
+			ORDER BY
+				t.pub_date desc;";
+			$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:'. $sql_query);
+			$tweets_replied_to 		= array();
+			while ($row = mysql_fetch_assoc($sql_result)) { $tweets_replied_to[] = $row; } 
+			mysql_free_result($sql_result);					# Free up memory
+			return $tweets_replied_to;
+		
+	}
+	
 	function getPublicRepliesToTweet($status_id) {
 		return $this->getRepliesToTweet($status_id, true);
 	}
@@ -140,6 +160,7 @@ class TweetDAO {
 				tweets 
 			WHERE status_id = ".$status_id;
 		$sql_result = mysql_query($q) or die('Error: selection query failed:' .$q );
+//		echo $q;
 		if ( mysql_num_rows($sql_result) > 0 )
 			return true;
 		else
