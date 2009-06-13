@@ -22,7 +22,7 @@
 
 <ul>
 {foreach from=$replies key=tid item=t}
-<li {if $t.is_protected} style="background-color:grey;color:white"{/if}><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> ({$t.follower_count} followers) <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>: {$t.tweet_html|replace:"@ginatrapani":""}<br /> {$t.adj_pub_date|relative_datetime} <br clear="all"></li>
+<li {if $t.is_protected} style="background-color:grey;color:white"{/if}><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> ({$t.follower_count} followers) <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>: {$t.tweet_html|regex_replace:"/@[a-zA-Z0-9]+/":""}<br /> {$t.adj_pub_date|relative_datetime} <br clear="all"></li>
 {/foreach}
 </ul>
 
@@ -34,7 +34,7 @@
 <p>These replies have no parent tweet ID, but they were posted right around the time of the tweet.</p><br /><br />
 <form action="mark-parent.php"><ul>
 {foreach from=$likely_orphans key=tid item=t}
-<li {if $t.is_protected} style="background-color:grey;color:white"{/if}><input type="checkbox" value="{$t.status_id}" name="oid[]"}"><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> ({$t.follower_count} followers) <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>: {$t.tweet_html|replace:"@ginatrapani":""}<br /> {$t.adj_pub_date|relative_datetime}<br clear="all"></li>
+<li {if $t.is_protected} style="background-color:grey;color:white"{/if}><input type="checkbox" value="{$t.status_id}" name="oid[]"}"><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> ({$t.follower_count} followers) <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>: {$t.tweet_html|regex_replace:"/@[a-zA-Z0-9]+/":""}<br /> {$t.adj_pub_date|relative_datetime}<br clear="all"></li>
 {/foreach}
 </ul>
 <input type="hidden" value="{$tweet.status_id}" name="pid" />
@@ -49,7 +49,7 @@
 <br /><br />
 <ul>
 {foreach from=$replies key=tid item=t}
-<li>{if $t.is_protected}Anonymous says {else}<a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>{/if}, "{$t.tweet_html|replace:"@ginatrapani ":""}"</li>
+<li>{if $t.is_protected}Anonymous says {else}<a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>{/if}, "{$t.tweet_html|regex_replace:"/@[a-zA-Z0-9]+/":""}"</li>
 {/foreach}
 </ul>
 
