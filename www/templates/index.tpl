@@ -25,29 +25,28 @@
 	</div>
 	<div class="section" id="alltweetssub">
 		<h2>All Tweets</h2>
-		<ul>
+		
 		{foreach from=$all_tweets key=tid item=t}
-		<li><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> [<a href="replies/?t={$t.status_id}">{$t.reply_count_cache} replies</a>] {$t.tweet_html} {if $t.in_reply_to_status_id}(<a href="replies/?t={$t.in_reply_to_status_id}">in reply to</a>){/if}<br /> {$t.adj_pub_date|relative_datetime} <br clear="all"></li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+			{include file="_tweet.mine.tpl" t=$t}
+		</div>
 		{/foreach}
-		<li><a href="tweets?u={$twitter_username}">All Tweets&rarr;</a></li>
-		</ul>
 	</div>
 	<div class="section" id="mostrepliedtweetssub">
 		<h2>Most-Replied</h2>
-		<ul>
 		{foreach from=$most_replied_to_tweets key=tid item=t}
-		<li>[<a href="replies/?t={$t.status_id}">{$t.reply_count_cache} replies</a>] {$t.tweet_html} <br /> {$t.adj_pub_date|relative_datetime} </li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+			{include file="_tweet.mine.tpl" t=$t}
+		</div>
 		{/foreach}
-		<li><a href="tweets?u={$twitter_username}">More Tweets with replies&rarr;</a></li>
-		</ul>
 	</div>
 	<div class="section" id="tweetsauthorhasrepliedto">
 		<h2>Your Replies</h2>
-		<ul>
 		{foreach from=$author_replies key=tahrt item=r}
-		<li><a href="http://twitter.com/{$r.questioner}/{$r.status_id}/">{$r.questioner}</a> said: {$r.question|regex_replace:"/@[a-zA-Z0-9]+/":""} </a><br /> {$r.answer|regex_replace:"/@[a-zA-Z0-9]+/":""} </li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+			{include file="_tweet.qa.tpl" t=$t}
+		</div>
 		{/foreach}
-		</ul>
 	</div>
 
 </div>
@@ -64,9 +63,11 @@
 	<div class="section" id="orphanrepliessub">
 		<h2>Orphan Replies</h2>
 		{foreach from=$orphan_replies key=tid item=t}
-		<form action="replies/mark-parent.php"></ul>
-		<li><input type="checkbox" value="{$t.status_id}" name="oid[]"}"><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> {$t.author_username} says: <a href="replies/?t={$t.status_id}">{$t.tweet_html}</a> {if $t.in_reply_to_status_id}(<a href="replies/?t={$t.in_reply_to_status_id}">in reply to</a>){/if}<br /> {$t.adj_pub_date|relative_datetime} {if $t.description}<br />{$t.description}{/if}<br />{$t.location} <br clear="all"></li>
-		{/foreach}</ul>
+		<form action="replies/mark-parent.php">
+			<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+			{include file="_tweet.cbox.tpl" t=$t}
+			</div>
+		{/foreach}
 		
 		<input type="hidden" value="0" name="pid" />
 		<input type="submit" value="mark as standalone" name="mark as standalone" />
@@ -78,22 +79,24 @@
 		<h2>Standalone Replies</h2>
 		
 		<p>Tweets marked as "standalone", that is, not associated with any tweet.</p>
-		<ul>
+		
+		
 		{foreach from=$standalone_replies key=tid item=t}
-		<li><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> {$t.author_username} says: <a href="replies/?t={$t.status_id}">{$t.tweet_html}</a> {if $t.in_reply_to_status_id}(<a href="replies/?t={$t.in_reply_to_status_id}">in reply to</a>){/if}<br /> {$t.adj_pub_date|relative_datetime} {if $t.description}<br />{$t.description}{/if}<br />{$t.location} <br clear="all"></li>
-		{/foreach}</ul>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+			{include file="_tweet.other.tpl" t=$t}
+		</div>
+		{/foreach}
 		
 	</div>
 
 		
 	<div class="section" id="allrepliessub">
 		<h2>All Replies</h2>
-		<ul>
 		{foreach from=$all_replies key=tid item=t}
-		<li><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> {$t.author_username} says: <a href="replies/?t={$t.status_id}">{$t.tweet_html}</a> {if $t.in_reply_to_status_id}(<a href="replies/?t={$t.in_reply_to_status_id}">in reply to</a>){/if}<br /> {$t.adj_pub_date|relative_datetime}  {if $t.description}<br />{$t.description}{/if}<br />{$t.location} <br clear="all"></li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+			{include file="_tweet.other.tpl" t=$t}
+		</div>
 		{/foreach}
-		<li><a href="tweets?u={$twitter_username}">All Tweets&rarr;</a></li>
-		</ul>
 	</div>
 
 </div>
@@ -108,31 +111,28 @@
 	</div>
 	<div class="section" id="mostfollowedsub">
 		<h2>Most-Followed Followers</h2>
-		<ul>
 		{foreach from=$most_followed_followers key=fid item=f}
-		<li><img src="{$f.avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$f.user_name}">{$f.user_name}</a> [{$f.follower_count|number_format} followers, following {$f.friend_count|number_format}]    {if $f.description}<br />{$f.description}{/if}<br />{$f.location}<br />Last Tweet posted: {$f.last_post|relative_datetime}<br clear="all"/></li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+		</div>
 		{/foreach}
-		<li><a href="#">More&raquo;</a></li>
-		</ul>
 	</div>
 	<div class="section" id="leastlikelyfollowerssub">
 		<h2>Least-Likely Followers</h2>
-		<ul>
 		{foreach from=$least_likely_followers key=fid item=f}
-		<li><img src="{$f.avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$f.user_name}">{$f.user_name}</a> [{$f.follower_count|number_format} followers, following {$f.friend_count|number_format}]    {if $f.description}<br />{$f.description}{/if}<br />{$f.location}<br />Last Tweet posted: {$f.last_post|relative_datetime}<br clear="all"/></li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+		</div>
 		{/foreach}
-		<li><a href="#">More&raquo;</a></li>
-		</ul>
 	</div>
 	
 	<div class="section" id="earliestjoinerssub">
 		<h2>Earliest Joiners</h2>
-		<ul>
 		{foreach from=$earliest_joiner_followers key=fid item=f}
-		<li><img src="{$f.avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$f.user_name}">{$f.user_name}</a> [{$f.follower_count|number_format} followers, following {$f.friend_count|number_format}]    {if $f.description}<br />{$f.description}{/if}<br />{$f.location}<br />Last Tweet posted: {$f.last_post|relative_datetime}<br clear="all"/></li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+		</div>
 		{/foreach}
-		<li><a href="#">More&raquo;</a></li>
-		</ul>
 	</div>	
 	
 </div>
@@ -149,14 +149,18 @@
 	<div class="section" id="mostactivefriendsssub">
 		<h2>Most Active Friends</h2>
 		{foreach from=$most_active_friends key=fid item=f}
-		<li><img src="{$f.avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$f.user_name}">{$f.user_name}</a> [{$f.follower_count|number_format} followers, following {$f.friend_count|number_format}]    {if $f.description}<br />{$f.description}<br />{/if}{$f.location}<br />Last Tweet posted: {$f.last_post|relative_datetime}<br />Average Tweets per day: {$f.avg_tweets_per_day} [{$f.tweet_count|number_format} since joining {$f.joined|relative_datetime}]<br clear="all"/></li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+		</div>
 		{/foreach}
 	</div>
 
 	<div class="section" id="leastactivefriendsssub">
 		<h2>Least Active Friends</h2>
 		{foreach from=$least_active_friends key=fid item=f}
-		<li><img src="{$f.avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$f.user_name}">{$f.user_name}</a> [{$f.follower_count|number_format} followers, following {$f.friend_count|number_format}]    {if $f.description}<br />{$f.description}<br />{/if}{$f.location}<br />Last Tweet posted: {$f.last_post|relative_datetime}<br />Average Tweets per day: {$f.avg_tweets_per_day} [{$f.tweet_count|number_format} since joining {$f.joined|relative_datetime}]<br clear="all"/></li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+		</div>
 		{/foreach}
 	</div>
 
@@ -165,7 +169,9 @@
 	<div class="section" id="mostfollowedfriendssub">
 		<h2>Most-Followed Friends</h2>
 		{foreach from=$most_followed_friends key=fid item=f}
-		<li><img src="{$f.avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$f.user_name}">{$f.user_name}</a> [{$f.follower_count|number_format} followers, following {$f.friend_count|number_format}]    {if $f.description}<br />{$f.description}<br />{/if}{$f.location}<br />Last Tweet posted: {$f.last_post|relative_datetime}<br />Average Tweets per day: {$f.avg_tweets_per_day} [{$f.tweet_count|number_format} since joining {$f.joined|relative_datetime}]<br clear="all"/></li>
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+		</div>
 		{/foreach}
 	</div>
 
@@ -185,23 +191,27 @@
 <ul>
 	<li>{$owner_stats.follower_count|number_format} Followers</li>
 	<li>{$owner_stats.tweet_count|number_format} Tweets</li>
-	<li>{$instance->total_replies_in_system|number_format} Replies Since<br /> {$instance->earliest_reply_in_system}</li>
+	<li>{$instance->total_replies_in_system|number_format} Replies in System<br /><small>[since {$instance->earliest_reply_in_system|date_format:"%D"}]</small></li>
+	<li>{$owner_stats.avg_tweets_per_day} Tweets Per Day</li> 
+	<li>Joined {$owner_stats.joined|relative_datetime} on {$owner_stats.joined|date_format:"%D"}</li>
 </ul>
 <br /><br />
 <h2>Progress</h2>
 <ul>
 	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded ({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</li>
 	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded ({$instance->total_follows_in_system|number_format} of {$owner_stats.follower_count|number_format})</li>
-	
-
 </ul>
+{if sizeof($instances) > 1 }
 <br /><br />
 <h2>Other Users</h2>
 <ul>
 	{foreach from=$instances key=tid item=i}
+	{if $i->owner_user_id != $instance->owner_user_id}
 	<li><a href="?u={$i->owner_username}">{$i->owner_username}</a><br />updated {$i->crawler_last_run|relative_datetime}</li>
+	{/if}
 	{/foreach}	
 </ul>
+{/if}
 <br /><br />
 <h2>System Stats</h2>
 <ul>

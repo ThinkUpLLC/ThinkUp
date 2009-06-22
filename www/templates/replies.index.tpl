@@ -49,7 +49,7 @@
 <br /><br />
 <ul>
 {foreach from=$replies key=tid item=t}
-<li>{if $t.is_protected}Anonymous says {else}<a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>{/if}, "{$t.tweet_html|regex_replace:"/@[a-zA-Z0-9]+/":""}"</li>
+{if $t.is_protected}Anonymous says {else}<a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>{/if}, "{$t.tweet_html|regex_replace:"/@[a-zA-Z0-9]+ /":""}"<br /><br />
 {/foreach}
 </ul>
 

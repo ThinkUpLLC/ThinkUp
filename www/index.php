@@ -22,15 +22,14 @@ $u = new Utils();
 
 // instantiate data access objects
 $ud = new UserDAO();
-$fd = new FollowDAO();
 $td = new TweetDAO();
 
 // pass data to smarty
 $owner_stats = $ud->getDetails($cfg->owner_user_id);
 $s->assign('owner_stats', $owner_stats);
-$s->assign('most_followed_followers', $fd->getMostFollowedFollowers($cfg->owner_user_id, 15));
-$s->assign('least_likely_followers', $fd->getLeastLikelyFollowers($cfg->owner_user_id, 15));
-$s->assign('earliest_joiner_followers', $fd->getEarliestJoinerFollowers($cfg->owner_user_id, 15));
+$s->assign('most_followed_followers', $ud->getMostFollowedFollowers($cfg->owner_user_id, 15));
+$s->assign('least_likely_followers', $ud->getLeastLikelyFollowers($cfg->owner_user_id, 15));
+$s->assign('earliest_joiner_followers', $ud->getEarliestJoinerFollowers($cfg->owner_user_id, 15));
 
 $s->assign('all_tweets', $td->getAllTweets($cfg->owner_user_id, 25) );
 $s->assign('all_replies', $td->getAllReplies($cfg->owner_username, 15) );
@@ -42,9 +41,9 @@ $s->assign('standalone_replies', $td->getStandaloneReplies());
 $s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->owner_user_id, 15));
 
 
-$s->assign('most_active_friends', $fd->getMostActiveFollowees($cfg->owner_user_id, 25));
-$s->assign('least_active_friends', $fd->getLeastActiveFollowees($cfg->owner_user_id, 25));
-$s->assign('most_followed_friends', $fd->getMostFollowedFollowees($cfg->owner_user_id, 25));
+$s->assign('most_active_friends', $ud->getMostActiveFollowees($cfg->owner_user_id, 25));
+$s->assign('least_active_friends', $ud->getLeastActiveFollowees($cfg->owner_user_id, 25));
+$s->assign('most_followed_friends', $ud->getMostFollowedFollowees($cfg->owner_user_id, 25));
 
 $s->assign('instance', $i);
 $s->assign('instances', $id->getAllInstances());

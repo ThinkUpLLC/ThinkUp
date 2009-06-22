@@ -10,7 +10,7 @@
 </p>
 <ul>
 {foreach from=$replies key=tid item=t}
-<li><a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>: {$t.tweet_html|replace:"@ginatrapani":""}</li>
+<li><a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>: {$t.tweet_html|replace:"@ginatrapani  ":""}</li>
 {/foreach}
 </ul>
 
