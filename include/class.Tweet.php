@@ -65,7 +65,7 @@ class TweetDAO {
 	function getTweetsAuthorHasRepliedTo($author_id) {
 		$sql_query = "
 			SELECT
-				t1.author_username as questioner, t1.status_id, t1.tweet_html as question, t.tweet_html as answer 
+				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval 8 hour as question_adj_pub_date, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
 			FROM 
 				tweets t 
 			INNER JOIN 
