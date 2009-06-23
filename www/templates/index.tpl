@@ -190,10 +190,10 @@
 
 <ul>
 	<li>{$owner_stats.follower_count|number_format} Followers</li>
-	<li>{$owner_stats.tweet_count|number_format} Tweets</li>
-	<li>{$instance->total_replies_in_system|number_format} Replies in System<br /><small>[since {$instance->earliest_reply_in_system|date_format:"%D"}]</small></li>
-	<li>{$owner_stats.avg_tweets_per_day} Tweets Per Day</li> 
-	<li>Joined {$owner_stats.joined|relative_datetime} on {$owner_stats.joined|date_format:"%D"}</li>
+	<li>{$owner_stats.friend_count|number_format} Friends</li>
+	<li>{$owner_stats.tweet_count|number_format} Tweets<br /><small>{$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
+	<li>{$instance->total_replies_in_system|number_format} Replies in System<br /><small>since {$instance->earliest_reply_in_system|date_format:"%D"}</small></li>
+	<li>
 </ul>
 <br /><br />
 <h2>Progress</h2>
