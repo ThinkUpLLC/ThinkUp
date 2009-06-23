@@ -177,9 +177,11 @@ class UserDAO {
 
 
 	function getLeastLikelyFollowers($user_id, $count) {
+		
+		//TODO: Remove hardcoded 10k follower threshold in query below
 		$sql_query		= "
 			SELECT 
-				*, ROUND(100*friend_count/follower_count,10) AS LikelihoodOfFollow, ". $this->getAverageTweetCount()."
+				*, ROUND(100*friend_count/follower_count,4) AS LikelihoodOfFollow, ". $this->getAverageTweetCount()."
 			FROM 
 				users u 
 			INNER JOIN

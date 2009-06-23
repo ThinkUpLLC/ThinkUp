@@ -38,7 +38,8 @@ class TweetDAO {
 		$condition = "";
 		if ($public)
 			$condition = "AND u.is_protected = 0";
-		
+			
+		//TODO Fix hardcoded adjusted pub_date
 		$sql_query		= "
 			select 
 				tweet_html, author_username, author_avatar, follower_count, status_id, is_protected, pub_date - interval 8 hour as adj_pub_date 
@@ -63,7 +64,10 @@ class TweetDAO {
 	}
 	
 	function getTweetsAuthorHasRepliedTo($author_id) {
+		//TODO Fix hardcoded adjusted pub_date
+
 		$sql_query = "
+		
 			SELECT
 				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval 8 hour as question_adj_pub_date, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
 			FROM 
@@ -197,6 +201,8 @@ class TweetDAO {
 	}
 	
 	function getAllTweets($author_id, $count) {
+		//TODO Fix hardcoded adjusted pub_date
+		
 		$sql_query		= "
 			SELECT 
 				*, pub_date - interval 8 hour as adj_pub_date 
@@ -217,6 +223,8 @@ class TweetDAO {
 
 	
 	function getAllReplies($author_username, $count) {
+		//TODO Fix hardcoded adjusted pub_date
+		
 		$sql_query		= "
 			SELECT 
 				*, pub_date - interval 8 hour as adj_pub_date 
@@ -241,6 +249,7 @@ class TweetDAO {
 	}
 		
 	function getMostRepliedToTweets($user_id, $count) {
+		//TODO Fix hardcoded adjusted pub_date
 		
 		$sql_query		= "
 			SELECT 
@@ -261,6 +270,7 @@ class TweetDAO {
 	}
 	
 	function getOrphanReplies($user_name, $count) {
+		//TODO Fix hardcoded adjusted pub_date
 		
 		$sql_query		= "
 			SELECT 
@@ -288,6 +298,8 @@ class TweetDAO {
 	}
 	
 	function getRetweets($user_id, $count){
+		//TODO Fix hardcoded adjusted pub_date
+		
 		$sql_query		= "
 			SELECT 
 				* , pub_date - interval 8 hour as adj_pub_date 
@@ -307,6 +319,8 @@ class TweetDAO {
 	
 	
 	function getFollowFridays($user_id, $count) {
+		//TODO Fix hardcoded adjusted pub_date
+		
 		$sql_query		= "
 			SELECT 
 				* , pub_date - interval 8 hour as adj_pub_date 
@@ -327,6 +341,8 @@ class TweetDAO {
 	}
 	
 	function getLikelyOrphansForParent($parent_pub_date, $owner_user_id, $count) {
+		//TODO Fix hardcoded adjusted pub_date
+		
 		$sql_query		= "
 			SELECT 
 				* , pub_date - interval 8 hour as adj_pub_date 
