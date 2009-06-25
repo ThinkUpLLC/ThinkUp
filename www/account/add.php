@@ -69,7 +69,7 @@ if ( $twitter_id > 0 ) {
 	echo 'Twitter authentication failed.';
 }
 
-echo '<br /> <a href="/account/">Back to your account</a>.';
+echo '<br /> <a href="'.$TWITALYTIC_CFG['site_root_path'].'account/">Back to your account</a>.';
 
 
 ?>
