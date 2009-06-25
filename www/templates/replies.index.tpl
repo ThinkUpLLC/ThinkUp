@@ -68,7 +68,7 @@
 	<li>{$reply_count} total replies</li>
 	<li>{$private_reply_count} private</li>
 
-	<li><a href="{$cfg->webapp_home}?u={$instance->owner_username}">&larr; back</a></li>
+	<li><a href="{$cfg->site_root_path}?u={$instance->twitter_username}">&larr; back</a></li>
 </ul>
 </div>
 

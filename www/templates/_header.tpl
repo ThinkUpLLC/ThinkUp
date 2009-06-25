@@ -96,7 +96,7 @@
 	<div id="hd" role="banner">
 		{if $instance}
 		<h1><a href="{$cfg->site_root_path}?u={$instance->twitter_username}">{$instance->twitter_username}'s Twitter Dashboard</a></h1>   
-		<h3>Data updated <strong>{$instance->crawler_last_run|relative_datetime}</strong>.</h3>
+		<h3>Updated <strong>{$instance->crawler_last_run|relative_datetime}</strong>.</h3>
 		{elseif $owner}
 		<h1>Your Account</a></h1>  
 		<h3><a href="{$cfg->site_root_path}">Back to the dashboard</a></h3> 

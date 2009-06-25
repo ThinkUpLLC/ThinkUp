@@ -21,6 +21,7 @@ class Instance {
 	var $crawler_last_run;
 	var $earliest_reply_in_system;	
 	var $api_calls_to_leave_unmade;
+	var $avg_replies_per_day;
 		
 	function Instance($r) {
 		$this->id = $r["id"];
@@ -50,6 +51,7 @@ class Instance {
 		$this->crawler_last_run=$r['crawler_last_run'];
 		$this->earliest_reply_in_system=$r['earliest_reply_in_system'];	
 		$this->api_calls_to_leave_unmade=$r['api_calls_to_leave_unmade'];
+		$this->avg_replies_per_day = $r['avg_replies_per_day'];
 	}
 
 }
@@ -75,10 +77,15 @@ class InstanceDAO {
 		
 	}
 	
+	private function getAverageReplyCount() {
+		return "round(total_replies_in_system/(datediff(curdate(), earliest_reply_in_system)), 2) as avg_replies_per_day";
+	}
+	
+	
 	function getFreshestByOwnerId($owner_id) {
 		$sql_query = "
 			SELECT 
-				* 
+				* , ". $this->getAverageReplyCount() ."
 			FROM 
 				instances i
 			INNER JOIN
@@ -103,7 +110,7 @@ class InstanceDAO {
 	
 	function getOneByLastRun($order) {
 		$sql_query = "
-			SELECT 
+			SELECT , ". $this->getAverageReplyCount() ."
 				* 
 			FROM 
 				instances 
@@ -120,7 +127,7 @@ class InstanceDAO {
 	function getByUsername($username) {
 		$sql_query = "
 			SELECT 
-				* 
+				* , ". $this->getAverageReplyCount() ."
 			FROM 
 				instances 
 			WHERE 
@@ -216,7 +223,7 @@ class InstanceDAO {
 	function getAllInstances() {
 		$q = "
 			SELECT 
-				*
+				*, ". $this->getAverageReplyCount() ."
 			FROM
 				instances
 			ORDER BY
@@ -232,7 +239,7 @@ class InstanceDAO {
 	function getByOwnerId($id) {
 		$q = "
 			SELECT 
-				*
+				*, ". $this->getAverageReplyCount() ."
 			FROM
 				owner_instances oi
 			INNER JOIN

@@ -195,31 +195,27 @@
 	<li>{$owner_stats.follower_count|number_format} Followers</li>
 	<li>{$owner_stats.friend_count|number_format} Friends</li>
 	<li>{$owner_stats.tweet_count|number_format} Tweets<br /><small>{$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
-	<li>{$instance->total_replies_in_system|number_format} Replies in System<br /><small>since {$instance->earliest_reply_in_system|date_format:"%D"}</small></li>
+	<li>{$instance->total_replies_in_system|number_format} Replies in System<br /><small>{$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}</small></li>
 	<li>
 </ul>
 <br /><br />
-<h2>Progress</h2>
+<h2>System Progress</h2>
 <ul>
-	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded ({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</li>
-	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded ({$instance->total_follows_in_system|number_format} of {$owner_stats.follower_count|number_format})</li>
+	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded<br /><small>({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</small></li>
+	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$instance->total_follows_in_system|number_format} of {$owner_stats.follower_count|number_format})</small></li>
 </ul>
 {if sizeof($instances) > 1 }
 <br /><br />
-<h2>Other Users</h2>
+<h2>Twitter Accounts</h2>
 <ul>
 	{foreach from=$instances key=tid item=i}
 	{if $i->twitter_user_id != $instance->twitter_user_id}
-	<li><a href="?u={$i->twitter_username}">{$i->twitter_username}</a><br />updated {$i->crawler_last_run|relative_datetime}</li>
+	<li><a href="?u={$i->twitter_username}">{$i->twitter_username}</a><br /><small>updated {$i->crawler_last_run|relative_datetime}</small></li>
 	{/if}
 	{/foreach}	
+	<li><a href="{$cfg->site_root_path}account/">Add an account&rarr;</a></li>
 </ul>
 {/if}
-<br /><br />
-<h2>System Stats</h2>
-<ul>
-	<li>{$instance->total_users_in_system|number_format} Users Total</li>
-	</ul>
 </div>
 	
 
