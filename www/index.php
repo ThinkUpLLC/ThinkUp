@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user'])) { header("Location: reg/login.php"); }
+if (!isset($_SESSION['user'])) { header("Location: u/login.php"); }
 
 
 
@@ -28,7 +28,7 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	}
 } else {
 	$i = $id->getFreshestByOwnerId($owner->id);
-	if ( $i == null ) {
+	if ( isset($i) ) {
 		echo 'You have no Twitter accounts configured. <a href="/account/">Set up a Twitter account here</a>';
 		$db->closeConnection($conn);
 		die;

@@ -219,6 +219,7 @@ class UserDAO {
 			LIMIT ".$count.";";
 		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
 		$earliest_joiner_followers 		= array();
+		$least_likely_followers = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $least_likely_followers[] = $row; } 
 		mysql_free_result($sql_result);	
 

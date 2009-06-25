@@ -1,6 +1,9 @@
 
 {include file="_header.tpl"}
 
+{if $instance->total_tweets_in_system eq 0}
+<div align="center" style="border:solid red 1px;background:white;margin:10px;"><b>There's nothing to see here. Yet! First the crawler has to run to load all that tasty Twitter data.</b></div>{/if}
+
 <div id="bd" role="main">
 	<div id="yui-main">
 	<div class="yui-b">

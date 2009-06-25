@@ -20,16 +20,15 @@ class TwitterAPIAccessor {
 	
 	function doesAuthenticate() {
 		//returns user id if successful; -1 if not.
-		$this -> cURL = $this -> prepRequest('', $this->twitter_username, $this->twitter_password);
-		$auth 	= str_replace("[id]",$this->twitter_username,$this->cURL_source['credentials']);	
+		$this ->cURL = $this -> prepRequest('', $this->twitter_username, $this->twitter_password);
+		$auth = str_replace("[id]",$this->twitter_username,$this->cURL_source['credentials']);
 		list($cURL_status,$twitter_data) = $this->apiRequestFromWebapp($auth);
-		
 		if ($cURL_status == 200)  {
-			$user = $this->parseXML($twitter_data);	
-			return $user["user_id"];
-		} else 
+			$user = $this->parseXML($twitter_data);
+			return $user[0]['user_id'];
+		} else {
 			return -1;
-			
+		}
 	}
 
 

@@ -31,7 +31,6 @@ $owner = $od->getByEmail($_SESSION['user']);
 $api = new TwitterAPIAccessor($tu, $tp);
 
 $twitter_id = $api->doesAuthenticate();
-
 if ( $twitter_id > 0 ) {
 	echo "Twitter authentication successful.<br />";
 	
@@ -39,16 +38,16 @@ if ( $twitter_id > 0 ) {
 	$i = $id->getByUsername($tu);
 	$oid = new OwnerInstanceDAO();
 
-	if ( $i != null) {
+	if ( isset($i) ) {
 		echo "Instance already exists.<br />";
 		
 		$id->updatePassword($tu, $tp);
 		echo "Updated existing instance's password.<br />";
 		
 		$oi = $oid -> get($owner->id, $i->id);
-		if ( $oi != null )
+		if ( $oi != null ) {
 			echo "Owner already has this instance, no insert or update.<br />";
-		else {
+		} else {
 			$oid->insert($owner->id, $i->id);
 			echo "Added owner instance.<br />";
 		}
@@ -57,11 +56,11 @@ if ( $twitter_id > 0 ) {
 		echo "Instance does not exist.<br />";
 		
 		$id->insert($twitter_id, $tu, $tp);
-		echo "Created instance with password.";
+		echo "Created instance with password.<br />";
 		
 		$i = $id->getByUsername($tu);
 		$oid->insert($owner->id, $i->id);
-		echo "Created an owner_instance";
+		echo "Created an owner_instance.<br />";
 	}
 	# clean up
 	$db->closeConnection($conn);	

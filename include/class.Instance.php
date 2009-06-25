@@ -69,7 +69,7 @@ class InstanceDAO {
 			INSERT INTO 
 				instances (`twitter_user_id`, `twitter_username`, `twitter_password`)
 			 VALUES
-				(".$id." , '".$user."', '".$pass."')";
+				(".$id." , '".$user."', '". $this->scramblePassword($pass)."')";
 		$sql_result = mysql_query($sql_query)  or die('Error, insert query failed:' .$sql_query );
 		
 		
@@ -122,11 +122,13 @@ class InstanceDAO {
 			WHERE 
 				twitter_username = '".$username."'";
 		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
-		$row = mysql_fetch_assoc($sql_result);
-		if ( isset($row))
-			$i = new Instance($row);
-		else
+
+		if (mysql_num_rows  ( $sql_result  ) == 0 ) {
 			$i = null;
+		} else {
+			$row = mysql_fetch_assoc($sql_result);
+			$i = new Instance($row);
+		}
 		mysql_free_result($sql_result);				
 		return $i;
 	}

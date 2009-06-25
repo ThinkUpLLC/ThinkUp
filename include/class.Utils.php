@@ -17,8 +17,10 @@ class Utils {
 	}	
 
 	function getPercentage($num, $denom) {
-		return ($denom*100)/($num);
-		
+		if ($num > 0) 
+			return ($denom*100)/($num);
+		else
+			return 0;
 	}
 	
 
