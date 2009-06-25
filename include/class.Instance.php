@@ -1,9 +1,10 @@
 <?php
 
 class Instance {
-	var $owner_username;
-	var $owner_user_id;
-	var $owner_password;
+	var $id;
+	var $twitter_username;
+	var $twitter_user_id;
+	var $twitter_password;
 	var $last_status_id;
 	var $last_page_fetched_followers;
 	var $last_page_fetched_friends;
@@ -22,10 +23,11 @@ class Instance {
 	var $api_calls_to_leave_unmade;
 		
 	function Instance($r) {
-		$this->owner_username = $r['twitter_username'];
-		$this->owner_user_id = $r['twitter_user_id'];
+		$this->id = $r["id"];
+		$this->twitter_username = $r['twitter_username'];
+		$this->twitter_user_id = $r['twitter_user_id'];
 		//TODO encrypt/decrypt here
-		$this->owner_password=$r['twitter_password'];
+		$this->twitter_password=InstanceDAO::unscramblePassword($r['twitter_password']);
 		$this->last_status_id=$r['last_status_id'];
 		$this->last_page_fetched_followers=$r['last_page_fetched_followers'];
 		$this->last_page_fetched_replies=$r['last_page_fetched_replies'];
@@ -61,6 +63,38 @@ class InstanceDAO {
 	function getFreshest() {
 		return $this->getOneByLastRun("DESC");
 	}
+	
+	function insert($id, $user, $pass) {
+		$sql_query = "
+			INSERT INTO 
+				instances (`twitter_user_id`, `twitter_username`, `twitter_password`)
+			 VALUES
+				(".$id." , '".$user."', '".$pass."')";
+		$sql_result = mysql_query($sql_query)  or die('Error, insert query failed:' .$sql_query );
+		
+		
+	}
+	
+	function getFreshestByOwnerId($owner_id) {
+		$sql_query = "
+			SELECT 
+				* 
+			FROM 
+				instances i
+			INNER JOIN
+				owner_instances oi
+			ON 
+				i.id = oi.instance_id
+			WHERE 
+				oi.owner_id = ".$owner_id."
+			ORDER BY 
+				crawler_last_run DESC";
+		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
+		$row = mysql_fetch_assoc($sql_result);
+		$i = new Instance($row);
+		mysql_free_result($sql_result);				
+		return $i;
+	}
 
 	
 	function getOneByLastRun($order) {
@@ -86,10 +120,13 @@ class InstanceDAO {
 			FROM 
 				instances 
 			WHERE 
-				twitter_username = '".$username."';";
+				twitter_username = '".$username."'";
 		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
 		$row = mysql_fetch_assoc($sql_result);
-		$i = new Instance($row);
+		if ( isset($row))
+			$i = new Instance($row);
+		else
+			$i = null;
 		mysql_free_result($sql_result);				
 		return $i;
 	}
@@ -121,10 +158,10 @@ class InstanceDAO {
 				last_page_fetched_replies = ".$i->last_page_fetched_replies.",
 				last_page_fetched_tweets = ".$i->last_page_fetched_tweets.",
 				crawler_last_run = NOW(),
-				total_tweets_in_system = (select count(*) from tweets where author_user_id=".$i->owner_user_id."),
+				total_tweets_in_system = (select count(*) from tweets where author_user_id=".$i->twitter_user_id."),
 				".$owner_tweets."
-				total_replies_in_system = (select count(*) from tweets where tweet_text like '%@".$i->owner_username."%'),
-				total_follows_in_system = (select count(*) from follows where user_id=".$i->owner_user_id."),
+				total_replies_in_system = (select count(*) from tweets where tweet_text like '%@".$i->twitter_username."%'),
+				total_follows_in_system = (select count(*) from follows where user_id=".$i->twitter_user_id."),
 				total_users_in_system = (select count(*) from users),
 				is_archive_loaded_follows = ". $is_archive_loaded_follows .",
 				is_archive_loaded_replies = ". $is_archive_loaded_replies .",
@@ -132,7 +169,7 @@ class InstanceDAO {
 					pub_date
 				from 
 					tweets
-				where tweet_text like '%@".$i->owner_username."%'
+				where tweet_text like '%@".$i->twitter_username."%'
 				order by
 					pub_date asc
 				limit 1),
@@ -140,15 +177,15 @@ class InstanceDAO {
 					pub_date
 				from 
 					tweets
-				where author_user_id = ".$i->owner_user_id."
+				where author_user_id = ".$i->twitter_user_id."
 				order by
 					pub_date asc
 				limit 1)
 			WHERE
-				twitter_user_id = ".$i->owner_user_id.";";
+				twitter_user_id = ".$i->twitter_user_id.";";
 		$foo = mysql_query($sql_query['Save_Crawler_State']) or die('Error, update query failed: '. $sql_query['Save_Crawler_State'] );
 
-		$status_message="Updated ".$i->owner_username."'s system status.\n\n";
+		$status_message="Updated ".$i->twitter_username."'s system status.\n\n";
 		$logger->logStatus($status_message, get_class($this) );
 		$status_message = "";
 		
@@ -184,6 +221,64 @@ class InstanceDAO {
 		while ($row = mysql_fetch_assoc($sql_result)) { $instances[] = new Instance($row); } 
 		mysql_free_result($sql_result);					# Free up memory
 		return $instances;
+	}
+
+	function getByOwnerId($id) {
+		$q = "
+			SELECT 
+				*
+			FROM
+				owner_instances oi
+			INNER JOIN
+				instances i
+			ON
+				i.id = oi.instance_id
+			WHERE
+				oi.owner_id = ".$id.";";
+		$sql_result = mysql_query($q)  or die('Error, selection query failed:'. $q);
+		$instances 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $instances[] = new Instance($row); } 
+		mysql_free_result($sql_result);					# Free up memory
+		return $instances;
+	}
+
+	function updatePassword($username, $password) {
+		$q = "
+			UPDATE 
+				instances
+			SET 
+				twitter_password = '". $this->scramblePassword($password)."'
+			WHERE 
+				twitter_username = '".$username."';";
+		$sql_result = mysql_query($q)  or die('Error, update query failed:'. $q);
+		//echo $q;
+		if (mysql_affected_rows() > 0) {
+			//$status_message = "User ". $user->user_name." updated in system.";
+			//$logger->logStatus($status_message, get_class($this) );
+			//$status_message = "";
+			return 1;
+		} else {
+			//$status_message = $user->user_name." was NOT updated in system.";
+			//$logger->logStatus($status_message, get_class($this) );
+			//$status_message = "";
+			return 0;
+		}
+	}
+	
+	
+	public static function scramblePassword ($password) {
+		$salt = substr(str_pad(dechex(mt_rand()),8,'0',STR_PAD_LEFT),-8);
+		$modified = $password.$salt;
+		$secured = $salt . base64_encode(bin2hex(strrev(str_rot13($modified))));
+	    return $secured;
+	}
+
+	public static function unscramblePassword ($stored_password) {
+	    $salt = substr($stored_password,0,8);
+	    $modified = substr($stored_password,8,strlen($stored_password)-8);
+		$modified = str_rot13(strrev(pack("H*",base64_decode($modified))));
+	    $password = substr($modified,0,strlen($modified)-8);
+	    return $password;
 	}
 }
 

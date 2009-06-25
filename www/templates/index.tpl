@@ -206,8 +206,8 @@
 <h2>Other Users</h2>
 <ul>
 	{foreach from=$instances key=tid item=i}
-	{if $i->owner_user_id != $instance->owner_user_id}
-	<li><a href="?u={$i->owner_username}">{$i->owner_username}</a><br />updated {$i->crawler_last_run|relative_datetime}</li>
+	{if $i->twitter_user_id != $instance->twitter_user_id}
+	<li><a href="?u={$i->twitter_username}">{$i->twitter_username}</a><br />updated {$i->crawler_last_run|relative_datetime}</li>
 	{/if}
 	{/foreach}	
 </ul>

@@ -4,8 +4,10 @@ require_once $root_path.'class.Config.php';
 require_once $root_path.'class.Database.php';	
 require_once $root_path.'class.TwitterAPIAccessor.php';		
 require_once $root_path.'class.User.php';
+require_once $root_path.'class.Owner.php';
 require_once $root_path.'class.Tweet.php';
 require_once $root_path.'class.Instance.php';
+require_once $root_path.'class.OwnerInstance.php';
 require_once $root_path.'class.Crawler.php';		
 require_once $root_path.'class.Utils.php';		
 

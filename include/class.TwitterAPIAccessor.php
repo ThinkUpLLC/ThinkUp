@@ -4,65 +4,32 @@ class TwitterAPIAccessor {
 	var $app_title; 
 	var $cURL;
 	var $available = true;
-	var $api_calls_to_leave_unmade;
-	var $available_api_calls_for_crawler = null;
-	var $available_api_calls_for_twitter = null;
 	var $next_api_reset = null;
 	var $cURL_source;
-	var $owner_username;
+	var $twitter_username;
+	var $twitter_password;
 	
-
-	function TwitterAPIAccessor($app_title, $instance) {
-		list($this->owner_username,$this->cURL_source) = $this -> prepAPI($instance->owner_username);
-		$this -> cURL = $this -> prepRequest($app_title, $instance->owner_username, $instance->owner_password);
-		$this -> api_calls_to_leave_unmade = $instance->api_calls_to_leave_unmade;
+	function TwitterAPIAccessor($twitter_username, $twitter_password, $app_title="Twitalytic") {
+		$this->twitter_username=$twitter_username;
+		$this->twitter_password=$twitter_password;
+		list($this->twitter_username,$this->cURL_source) = $this -> prepAPI($twitter_username);
+		$this -> cURL = $this -> prepRequest($app_title, $twitter_username, $twitter_password);
 		$this -> app_title = $app_title;
 	}
+
 	
-	function init($logger) {
-		$status_message = "";
-		//TODO: Standardize this call using config like the others
-		//$account_status		= $cURL_source['rate_limit'];
-		$account_status		= "https://twitter.com/account/rate_limit_status.json"; 	
-		list($cURL_status,$twitter_data) = $this->apiRequest($account_status, $logger);
-		$this->available_api_calls_for_crawler++; //status check doesnt' count against balance
-
-		if ($cURL_status > 200) { 
-			$this->available = false;
-		} else {
-			try { 
-				# Parse file
-				/* XML DOESN'T WORK
-
-				$status_message = "Parsing XML data from $account_status "; 
-				$statuses = parseXML($twitter_data);
-				foreach($statuses as $status) {
-				 	$available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
-					$available_api_calls_for_crawler = $available_api_calls_for_twitter - $crawler_calls_to_leave_unmade;
-					$twitter_next_api_reset = $status['reset-time'];//get this from API
-				}
-				*/
-		/* Use JSON instead */
-				//$status_message .= "Parsing JSON data from $account_status ";
-				$json_dump = json_decode($twitter_data);
-				
-				if ( !isset($json_dump) ) {
-					$this->available = false;
-					$status_message = 'Could not parse account status JSON'; 
-				} else {
-					$this -> available_api_calls_for_twitter = $json_dump->remaining_hits;
-					$this -> next_api_reset = $json_dump->reset_time;
-					$this -> available_api_calls_for_crawler = $this -> available_api_calls_for_twitter - $this -> api_calls_to_leave_unmade;
-				}
-			} catch (Exception $e) { 
-				$status_message = 'Could not parse account status JSON'; 
-			} 
-		}
-		$logger -> logStatus($status_message, get_class($this) );
-		$status_message = "";
-		$logger -> logStatus($this->getStatus(), get_class($this) );		
+	function doesAuthenticate() {
+		//returns user id if successful; -1 if not.
+		$this -> cURL = $this -> prepRequest('', $this->twitter_username, $this->twitter_password);
+		$auth 	= str_replace("[id]",$this->twitter_username,$this->cURL_source['credentials']);	
+		list($cURL_status,$twitter_data) = $this->apiRequestFromWebapp($auth);
 		
-		
+		if ($cURL_status == 200)  {
+			$user = $this->parseXML($twitter_data);	
+			return $user["user_id"];
+		} else 
+			return -1;
+			
 	}
 
 
@@ -141,33 +108,13 @@ class TwitterAPIAccessor {
 	    return $cURL;
 	}
 
-	function apiRequest ($url, $logger) {
+
+	
+	function apiRequestFromWebapp ($url) {
 		$cURL = $this -> cURL;
 		curl_setopt($cURL, CURLOPT_URL, $url);	
 		$foo			= curl_exec($cURL);				
 		$status 		= curl_getinfo($cURL, CURLINFO_HTTP_CODE);
-		$this->available_api_calls_for_crawler--;
-		
-		if ( $status > 200 ) {
-			$status_message	= "Could not retrieve $url"; 
-			$status_message .= " | API ERROR: $status"; 
-			$status_message .= " | $this->owner_username"; 
-			$status_message .= "\n\n$foo\n\n"; 
-			$this->available = false;
-			$logger->logStatus($status_message, get_class($this) );		
-			$status_message = "";
-		} else {
-			$status_message = "API request: ".$url."  ";
-		}
-		$logger->logStatus($status_message, get_class($this) );		
-		$status_message = "";
-
-		if ( $url != "https://twitter.com/account/rate_limit_status.json") {
-			$status_message = $this->getStatus();
-			$logger->logStatus($status_message, get_class($this) );		
-			$status_message = "";
-		}
-				
 	    return array($status,$foo);
 	}
 
@@ -337,4 +284,91 @@ class TwitterAPIAccessor {
 
 }
 
+class CrawlerTwitterAPIAccessor extends TwitterAPIAccessor {
+	var $api_calls_to_leave_unmade;
+	var $available_api_calls_for_crawler = null;
+	var $available_api_calls_for_twitter = null;
+	
+	function CrawlerTwitterAPIAccessor($app_title, $instance) {
+		parent::TwitterAPIAccessor($instance->twitter_username, $instance->twitter_password);
+		$this -> api_calls_to_leave_unmade = $instance->api_calls_to_leave_unmade;
+	}
+	
+	
+	function init($logger) {
+		$status_message = "";
+		//TODO: Standardize this call using config like the others
+		//$account_status		= $cURL_source['rate_limit'];
+		$account_status		= "https://twitter.com/account/rate_limit_status.json"; 	
+		list($cURL_status,$twitter_data) = $this->apiRequest($account_status, $logger);
+		$this->available_api_calls_for_crawler++; //status check doesnt' count against balance
+
+		if ($cURL_status > 200) { 
+			$this->available = false;
+		} else {
+			try { 
+				# Parse file
+				/* XML DOESN'T WORK
+
+				$status_message = "Parsing XML data from $account_status "; 
+				$statuses = parseXML($twitter_data);
+				foreach($statuses as $status) {
+				 	$available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
+					$available_api_calls_for_crawler = $available_api_calls_for_twitter - $crawler_calls_to_leave_unmade;
+					$twitter_next_api_reset = $status['reset-time'];//get this from API
+				}
+				*/
+		/* Use JSON instead */
+				//$status_message .= "Parsing JSON data from $account_status ";
+				$json_dump = json_decode($twitter_data);
+				
+				if ( !isset($json_dump) ) {
+					$this->available = false;
+					$status_message = 'Could not parse account status JSON'; 
+				} else {
+					$this -> available_api_calls_for_twitter = $json_dump->remaining_hits;
+					$this -> next_api_reset = $json_dump->reset_time;
+					$this -> available_api_calls_for_crawler = $this -> available_api_calls_for_twitter - $this -> api_calls_to_leave_unmade;
+				}
+			} catch (Exception $e) { 
+				$status_message = 'Could not parse account status JSON'; 
+			} 
+		}
+		$logger -> logStatus($status_message, get_class($this) );
+		$status_message = "";
+		$logger -> logStatus($this->getStatus(), get_class($this) );		
+		
+		
+	}
+
+	function apiRequest ($url, $logger) {
+		$cURL = $this -> cURL;
+		curl_setopt($cURL, CURLOPT_URL, $url);	
+		$foo			= curl_exec($cURL);				
+		$status 		= curl_getinfo($cURL, CURLINFO_HTTP_CODE);
+		$this->available_api_calls_for_crawler--;
+		
+		if ( $status > 200 ) {
+			$status_message	= "Could not retrieve $url"; 
+			$status_message .= " | API ERROR: $status"; 
+			$status_message .= " | $this->twitter_username"; 
+			$status_message .= "\n\n$foo\n\n"; 
+			$this->available = false;
+			$logger->logStatus($status_message, get_class($this) );		
+			$status_message = "";
+		} else {
+			$status_message = "API request: ".$url."  ";
+		}
+		$logger->logStatus($status_message, get_class($this) );		
+		$status_message = "";
+
+		if ( $url != "https://twitter.com/account/rate_limit_status.json") {
+			$status_message = $this->getStatus();
+			$logger->logStatus($status_message, get_class($this) );		
+			$status_message = "";
+		}
+				
+	    return array($status,$foo);
+	}
+}
 ?>

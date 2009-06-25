@@ -14,7 +14,7 @@ class Crawler {
 	function fetchOwnerInfo($cfg, $api, $logger) {
 		// Get owner user details and put them in queue
 		$status_message = "";
-		$owner_profile 	= str_replace("[id]",$cfg->owner_username,$api->cURL_source['show_user']);	
+		$owner_profile 	= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['show_user']);	
 		list($cURL_status,$twitter_data) = $api->apiRequest($owner_profile, $logger);
 
 		if ($cURL_status == 200) { 
@@ -46,7 +46,7 @@ class Crawler {
 		$continue_fetching = true;
 		while ( $api->available && $api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching) {	
 
-			$recent_tweets 		= str_replace("[id]",$cfg->owner_username,$api->cURL_source['user_timeline']);
+			$recent_tweets 		= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['user_timeline']);
 			$recent_tweets 		.= "?&count=200";
 			$last_page_of_tweets = round($this->owner_object->tweet_count / 200)+1;
 
@@ -104,7 +104,7 @@ class Crawler {
 					$status_message = "";
 
 				} catch (Exception $e) { 
-					$status_message = 'Could not parse tweet XML for $this->owner_username'; 
+					$status_message = 'Could not parse tweet XML for $this->twitter_username'; 
 					$logger->logStatus($status_message, get_class($this) );		
 					$status_message = "";
 
@@ -137,7 +137,7 @@ class Crawler {
 
 			while ( $api->available && $api->available_api_calls_for_crawler > 0 && $continue_fetching ) {	
 				# Get the most recent replies
-				$replies 		= str_replace("[id]",$cfg->owner_username,$api->cURL_source['replies']);
+				$replies 		= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['replies']);
 				$replies 		.= "?&count=200";
 
 				if ( $got_newest_replies ) {
@@ -172,7 +172,7 @@ class Crawler {
 							if ( $td->addTweet($tweet, $this->owner_object, $logger) > 0 ) {
 								$count ++;
 
-								if ( $tweet['user_id'] != $cfg->owner_user_id) { //don't update owner info from reply
+								if ( $tweet['user_id'] != $cfg->twitter_user_id) { //don't update owner info from reply
 									$u = new User($tweet, 'Replies');
 									array_push($this->users_to_update, $u);
 								}
@@ -197,7 +197,7 @@ class Crawler {
 						}					
 
 					} catch (Exception $e) { 
-						$status_message = 'Could not parse replies XML for $cfg->owner_username'; 
+						$status_message = 'Could not parse replies XML for $cfg->twitter_username'; 
 						$logger->logStatus($status_message, get_class($this) );
 						$status_message = "";
 					} 
@@ -248,7 +248,7 @@ class Crawler {
 
 			$this->instance->last_page_fetched_followers = $this->instance->last_page_fetched_followers + 1;
 
-			$follower_ids 	= str_replace("[id]",$cfg->owner_username,$api->cURL_source['followers']);
+			$follower_ids 	= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['followers']);
 			$follower_ids  .= "?page=".$this->instance->last_page_fetched_followers;
 
 			list($cURL_status,$twitter_data) = $api->apiRequest($follower_ids, $logger);
@@ -277,7 +277,7 @@ class Crawler {
 							INSERT INTO
 								follows (user_id,follower_id,last_seen)
 								VALUES (
-									".$this->instance->owner_user_id.",".$u['user_id'].",NOW()
+									".$this->instance->twitter_user_id.",".$u['user_id'].",NOW()
 								)
 								ON DUPLICATE KEY UPDATE 
 									last_seen=NOW();
@@ -318,7 +318,7 @@ class Crawler {
 
 			$this->instance->last_page_fetched_friends = $this->instance->last_page_fetched_friends + 1;
 
-			$friend_ids 	= str_replace("[id]",$cfg->owner_username,$api->cURL_source['following']);
+			$friend_ids 	= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['following']);
 			$friend_ids  .= "?page=".$this->instance->last_page_fetched_friends;
 
 			list($cURL_status,$twitter_data) = $api->apiRequest($friend_ids, $logger);
@@ -347,7 +347,7 @@ class Crawler {
 							INSERT INTO
 								follows (user_id,follower_id,last_seen)
 								VALUES (
-									".$u['user_id'].", ".$this->instance->owner_user_id.", NOW()
+									".$u['user_id'].", ".$this->instance->twitter_user_id.", NOW()
 								)
 								ON DUPLICATE KEY UPDATE 
 									last_seen=NOW();

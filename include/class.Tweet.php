@@ -110,32 +110,31 @@ class TweetDAO {
 			} else {
 				$tweet_in_reply_to_status_id = $tweet['in_reply_to_status_id'];
 			}
+
 	
 			# Check for Follow Friday
-			if (stripos($tweet['tweet_text'], "#followfriday") !== false) 
+/*			if (stripos($tweet['tweet_text'], "#followfriday") !== false) 
 				$tweet_is_follow_friday = 1;
 			else
 				$tweet_is_follow_friday = 0;
-				
+*/				
 			# Check for Retweet
-			if (stripos($tweet['tweet_text'], "RT @$owner->username") !== false || stripos($tweet['tweet_text'], "via @$owner->username") !== false ) 
+/*			if (stripos($tweet['tweet_text'], "RT @$owner->username") !== false || stripos($tweet['tweet_text'], "via @$owner->username") !== false ) 
 				$tweet_is_retweet = 1;
 			else
 				$tweet_is_retweet = 0;
-
+*/
 	
 			$sql_query['Add_Tweet'] = "
 				INSERT INTO tweets
 					(status_id,
 					author_username,author_fullname,author_avatar,author_user_id,
-					tweet_text,tweet_html,pub_date,in_reply_to_user_id,in_reply_to_status_id,
-					is_follow_friday, is_retweet)
+					tweet_text,tweet_html,pub_date,in_reply_to_user_id,in_reply_to_status_id)
 				VALUES (
 					{$tweet['status_id']}, '{$tweet['user_name']}', 
 					'{$tweet['full_name']}', '{$tweet['avatar']}', '{$tweet['user_id']}',
 					'$tweet_sql','$tweet_html_sql',
-					'{$tweet['pub_date']}', $tweet_in_reply_to_user_id, $tweet_in_reply_to_status_id,
-					$tweet_is_follow_friday, $tweet_is_retweet)
+					'{$tweet['pub_date']}', $tweet_in_reply_to_user_id, $tweet_in_reply_to_status_id)
 			";
 			$foo = mysql_query($sql_query['Add_Tweet'])  or die('Error, insert query failed: ' . $sql_query['Add_Tweet']);
 
@@ -283,9 +282,7 @@ class TweetDAO {
 				u.user_id = t.author_user_id 
 			WHERE 
 				tweet_text LIKE '%".$user_name."%' AND
-				in_reply_to_status_id is null AND
-				is_retweet=0 AND 
-				is_follow_friday=0 
+				in_reply_to_status_id is null
 			ORDER BY 
 				pub_date DESC 
 			LIMIT ".$count.";";
@@ -297,48 +294,6 @@ class TweetDAO {
 		
 	}
 	
-	function getRetweets($user_id, $count){
-		//TODO Fix hardcoded adjusted pub_date
-		
-		$sql_query		= "
-			SELECT 
-				* , pub_date - interval 8 hour as adj_pub_date 
-			FROM
-				tweets t 
-			INNER JOIN
-				users u on u.user_id = t.author_user_id 
-			WHERE
-			 	is_retweet=1 and t.author_user_id = ".$user_id."
-			LIMIT ".$count.";";
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
-		$retweets 	= array();
-		while ($row = mysql_fetch_assoc($sql_result)) { $retweets[] = $row; } 
-		mysql_free_result($sql_result);	
-		return $retweets;
-	}
-	
-	
-	function getFollowFridays($user_id, $count) {
-		//TODO Fix hardcoded adjusted pub_date
-		
-		$sql_query		= "
-			SELECT 
-				* , pub_date - interval 8 hour as adj_pub_date 
-			FROM 
-				tweets t
-			INNER JOIN
-				users u 
-			ON 
-				u.user_id = t.author_user_id 
-			WHERE 
-				is_follow_friday=1 and author_user_id = ".$user_id."
-			LIMIT ".$count.";";
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
-		$followfridays 		= array();
-		while ($row = mysql_fetch_assoc($sql_result)) { $followfridays[] = $row; }
-		mysql_free_result($sql_result);	
-		return $followfridays;	
-	}
 	
 	function getLikelyOrphansForParent($parent_pub_date, $owner_user_id, $count) {
 		//TODO Fix hardcoded adjusted pub_date

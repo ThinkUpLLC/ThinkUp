@@ -20,6 +20,8 @@ class Utils {
 		return ($denom*100)/($num);
 		
 	}
+	
+
 }
 
 

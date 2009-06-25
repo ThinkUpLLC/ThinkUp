@@ -16,9 +16,9 @@ $instances = $id->getAllInstances();
 
 foreach ($instances as $i) {
 	$crawler = new Crawler($i);
-	$cfg = new Config($i->owner_username, $i->owner_user_id);
-	$logger = new Logger($i->owner_username);
-	$api = new TwitterAPIAccessor($TWITALYTIC_CFG['app_title'], $i);
+	$cfg = new Config($i->twitter_username, $i->twitter_user_id);
+	$logger = new Logger($i->twitter_username);
+	$api = new CrawlerTwitterAPIAccessor($TWITALYTIC_CFG['app_title'], $i);
 	$api -> init($logger);
 
 	if ( $api->available_api_calls_for_crawler > 0 ) {

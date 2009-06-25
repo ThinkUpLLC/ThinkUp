@@ -1,4 +1,7 @@
 <?php
+session_start();
+if (!isset($_SESSION['user'])) { header("Location: u/login.php"); }
+
 // set up
 chdir("..");
 $root_path 			= realpath('./../include')."/";

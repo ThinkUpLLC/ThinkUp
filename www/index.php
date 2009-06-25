@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['user'])) { header("Location: reg/login.php"); }
+
+
+
 // set up
 $root_path 			= realpath('./../include')."/";
 require_once($root_path . "init.php");
@@ -6,16 +11,31 @@ require_once($root_path . "init.php");
 $db = new Database();
 $conn = $db->getConnection();
 
+$od = new OwnerDAO();
+$owner = $od->getByEmail($_SESSION['user']);
+
 $id = new InstanceDAO();
 
 if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	$username = $_REQUEST['u'];
-	$i = $id->getByUsername($username);	
+	$oid = new OwnerInstanceDAO();
+	if ( !$oid->doesOwnerHaveAccess($owner->id, $username) ) {
+		echo 'Insufficient privileges. <a href="/">Back</a>.';
+		$db->closeConnection($conn);
+		die;
+	} else {
+		$i = $id->getByUsername($username);	
+	}
 } else {
-	$i = $id->getFreshest();
+	$i = $id->getFreshestByOwnerId($owner->id);
+	if ( $i == null ) {
+		echo 'You have no Twitter accounts configured. <a href="/account/">Set up a Twitter account here</a>';
+		$db->closeConnection($conn);
+		die;
+	}
 }
 
-$cfg = new Config($i->owner_username, $i->owner_user_id);
+$cfg = new Config($i->twitter_username, $i->twitter_user_id);
 
 $s = new SmartyTwitalytic();
 $u = new Utils();
@@ -25,28 +45,28 @@ $ud = new UserDAO();
 $td = new TweetDAO();
 
 // pass data to smarty
-$owner_stats = $ud->getDetails($cfg->owner_user_id);
+$owner_stats = $ud->getDetails($cfg->twitter_user_id);
 $s->assign('owner_stats', $owner_stats);
-$s->assign('most_followed_followers', $ud->getMostFollowedFollowers($cfg->owner_user_id, 15));
-$s->assign('least_likely_followers', $ud->getLeastLikelyFollowers($cfg->owner_user_id, 15));
-$s->assign('earliest_joiner_followers', $ud->getEarliestJoinerFollowers($cfg->owner_user_id, 15));
+$s->assign('most_followed_followers', $ud->getMostFollowedFollowers($cfg->twitter_user_id, 15));
+$s->assign('least_likely_followers', $ud->getLeastLikelyFollowers($cfg->twitter_user_id, 15));
+$s->assign('earliest_joiner_followers', $ud->getEarliestJoinerFollowers($cfg->twitter_user_id, 15));
 
-$s->assign('all_tweets', $td->getAllTweets($cfg->owner_user_id, 15) );
-$s->assign('all_replies', $td->getAllReplies($cfg->owner_username, 15) );
+$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
+$s->assign('all_replies', $td->getAllReplies($cfg->twitter_username, 15) );
 
-$s->assign('most_replied_to_tweets', $td->getMostRepliedToTweets($cfg->owner_user_id, 15));
+$s->assign('most_replied_to_tweets', $td->getMostRepliedToTweets($cfg->twitter_user_id, 15));
 
-$s->assign('orphan_replies', $td->getOrphanReplies($cfg->owner_username, 5));
+$s->assign('orphan_replies', $td->getOrphanReplies($cfg->twitter_username, 5));
 $s->assign('standalone_replies', $td->getStandaloneReplies());
-$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->owner_user_id, 15));
+$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
 
 
-$s->assign('most_active_friends', $ud->getMostActiveFollowees($cfg->owner_user_id, 15));
-$s->assign('least_active_friends', $ud->getLeastActiveFollowees($cfg->owner_user_id, 15));
-$s->assign('most_followed_friends', $ud->getMostFollowedFollowees($cfg->owner_user_id, 15));
+$s->assign('most_active_friends', $ud->getMostActiveFollowees($cfg->twitter_user_id, 15));
+$s->assign('least_active_friends', $ud->getLeastActiveFollowees($cfg->twitter_user_id, 15));
+$s->assign('most_followed_friends', $ud->getMostFollowedFollowees($cfg->twitter_user_id, 15));
 
 $s->assign('instance', $i);
-$s->assign('instances', $id->getAllInstances());
+$s->assign('instances', $id->getByOwnerId($owner->id));
 $s->assign('cfg', $cfg);
 
 //Percentages
