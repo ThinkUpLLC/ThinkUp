@@ -41,7 +41,7 @@ CREATE TABLE `instances` (
   `twitter_user_id` int(11) NOT NULL,
   `twitter_username` varchar(255) COLLATE utf8_bin NOT NULL,
   `twitter_password` varchar(255) COLLATE utf8_bin NOT NULL,
-  `last_status_id` bigint(11) DEFAULT NULL,
+  `last_status_id` bigint(11) DEFAULT 0,
   `crawler_last_run` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_page_fetched_followers` int(11) NOT NULL,
   `last_page_fetched_replies` int(11) NOT NULL DEFAULT '1',
