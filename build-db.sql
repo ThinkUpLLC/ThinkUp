@@ -3,8 +3,8 @@
 # http://code.google.com/p/sequel-pro
 #
 # Host: localhost (MySQL 5.1.34)
-# Database: twitalytic
-# Generation Time: 2009-06-12 20:32:25 -0700
+# Database: twitalytic_dev
+# Generation Time: 2009-06-24 19:19:49 -0700
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -27,7 +27,7 @@ CREATE TABLE `follows` (
   `follower_id` int(11) NOT NULL,
   `last_seen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`,`follower_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 
@@ -58,7 +58,42 @@ CREATE TABLE `instances` (
   `api_calls_to_leave_unmade` int(11) NOT NULL DEFAULT '50',
   PRIMARY KEY (`id`),
   KEY `twitter_user_id` (`twitter_user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+
+# Dump of table owner_instances
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `owner_instances`;
+
+CREATE TABLE `owner_instances` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `owner_id` int(10) NOT NULL,
+  `instance_id` int(10) NOT NULL,
+  `twitter_password` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table owners
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `owners`;
+
+CREATE TABLE `owners` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `full_name` varchar(200) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+  `user_name` varchar(200) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+  `user_pwd` varchar(200) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+  `user_email` varchar(200) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+  `activation_code` int(10) NOT NULL DEFAULT '0',
+  `joined` date NOT NULL DEFAULT '0000-00-00',
+  `country` varchar(100) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+  `user_activated` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 
@@ -80,14 +115,12 @@ CREATE TABLE `tweets` (
   `in_reply_to_user_id` int(11) DEFAULT NULL,
   `in_reply_to_status_id` bigint(11) DEFAULT NULL,
   `reply_count_cache` int(11) NOT NULL DEFAULT '0',
-  `is_follow_friday` int(11) NOT NULL DEFAULT '0',
-  `is_retweet` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `status_id` (`status_id`),
   KEY `author_username` (`author_username`),
   KEY `pub_date` (`pub_date`),
   KEY `author_user_id` (`author_user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=34375 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 
@@ -99,23 +132,23 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `user_name` varchar(255) NOT NULL,
-  `full_name` varchar(255) NOT NULL,
-  `avatar` varchar(255) NOT NULL,
-  `location` varchar(255) DEFAULT NULL,
-  `description` text,
-  `url` varchar(255) DEFAULT NULL,
+  `user_name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `full_name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `avatar` varchar(255) COLLATE utf8_bin NOT NULL,
+  `location` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `description` text COLLATE utf8_bin,
+  `url` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `is_protected` tinyint(1) NOT NULL,
   `follower_count` int(11) NOT NULL,
   `friend_count` int(11) NOT NULL DEFAULT '0',
   `tweet_count` int(11) NOT NULL,
   `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `found_in` varchar(100) DEFAULT NULL,
+  `found_in` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `last_post` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `joined` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=93852 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 
