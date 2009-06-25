@@ -13,9 +13,6 @@ SET UP DATABASE:
 - Create a database and select it, i.e., 
 CREATE DATABASE twitalytic
 - Build tables with build_db.sql
-- Insert your Twitter login credentials into instances table and repeat for each account, i.e.,
-INSERT INTO instances (twitter_user_id, twitter_username, twitter_password) VALUES (7144422, 'ginatrapani', 'itsasecret')
-
 CONFIGURE CODE:
 - Edit twitalytic/include/config.inc.php, add your Twitter user id, name, password (blech!), db credentials and paths
 - Edit twitalytic/automated/crawl.config.inc.php, set crawler include path to twitalytic/include

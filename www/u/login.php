@@ -1,5 +1,9 @@
 <?php 
 include 'dbc.php';
+//chdir("..");
+$root_path 			= realpath('./../include')."/";
+require_once($root_path . "init.php");
+
 
 $user_email = mysql_real_escape_string($_POST['email']);
 
@@ -28,7 +32,7 @@ $num = mysql_num_rows($result);
 		} else
 		{
 		//header("Location: myaccount.php");
-		header("Location: /");
+		header("Location: ".$TWITALYTIC_CFG['site_root_path']);
 		}
 		//echo "Logged in...";
 		exit();

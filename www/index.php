@@ -28,8 +28,8 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	}
 } else {
 	$i = $id->getFreshestByOwnerId($owner->id);
-	if ( isset($i) ) {
-		echo 'You have no Twitter accounts configured. <a href="/account/">Set up a Twitter account here</a>';
+	if ( !isset($i) ) {
+		echo 'You have no Twitter accounts configured. <a href="'.$TWITALYTIC_CFG['site_root_path'].'account/">Set up a Twitter account here</a>';
 		$db->closeConnection($conn);
 		die;
 	}

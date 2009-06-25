@@ -20,7 +20,7 @@
 			
 			<ul>
 			{foreach from=$owner_instances key=iid item=i}
-			<li><a href="/?u={$i->twitter_username}">{$i->twitter_username}</a>  <small>delete|update</small></li>
+			<li><a href="{$cfg->site_root_path}?u={$i->twitter_username}">{$i->twitter_username}</a>  <small>delete|update</small></li>
 			{/foreach}
 			</ul>
 			<br /><br />
