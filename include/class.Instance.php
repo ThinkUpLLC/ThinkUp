@@ -90,8 +90,12 @@ class InstanceDAO {
 			ORDER BY 
 				crawler_last_run DESC";
 		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
-		$row = mysql_fetch_assoc($sql_result);
-		$i = new Instance($row);
+		if (mysql_num_rows  ( $sql_result  ) == 0 ) {
+			$i = null;
+		} else {
+			$row = mysql_fetch_assoc($sql_result);
+			$i = new Instance($row);
+		}
 		mysql_free_result($sql_result);				
 		return $i;
 	}

@@ -1,8 +1,10 @@
 <?php 
 session_start();
-
-
 include ('dbc.php'); 
+
+//chdir("..");
+$root_path 			= realpath('./../include')."/";
+require_once($root_path . "init.php");
 
 
 if ($_POST['Submit'] == 'Register')
@@ -44,13 +46,13 @@ if ($_POST['Submit'] == 'Register')
 				  ('$_POST[email]','$md5pass','$_POST[country]',now(),'$activ_code','$_POST[full_name]')") or die(mysql_error());
 	
 	$message = 
-"Thank you for registering an account with $server. Here are the login details...\n\n
+"Thank you for registering an account with ".$TWITALYTIC_CFG['app_title'].". Here are the login details...\n\n
 User Email: $_POST[email] \n
 Password: $_POST[pass2] \n
 Activation Code: $activ_code \n
 ____________________________________________
 *** ACTIVATION LINK ***** \n
-Activation Link: http://$server/activate.php?usr=$_POST[email]&code=$activ_code \n\n
+Activation Link: http://$server/".$TWITALYTIC_CFG['site_root_path']."u/activate.php?usr=$_POST[email]&code=$activ_code \n\n
 _____________________________________________
 Thank you. This is an automated response. PLEASE DO NOT REPLY.
 ";
