@@ -1,0 +1,30 @@
+.header {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: none;
+	border-bottom-style: solid;
+	border-left-style: none;
+	border-top-color: #000000;
+	border-right-color: #000000;
+	border-bottom-color: #000000;
+	border-left-color: #000000;
+}
+.phpcode {
+	font-family: "Courier New", Courier, mono;
+	font-size: 13px;
+	color: #000000;
+	background-color: f3f3f3;
+}
+.msg {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #FF0000;
+	background-color: #FFFFCC;
+	padding: 4px;
+	border: 1px dotted #FF9900;
+	font-weight: bold;
+
+}
