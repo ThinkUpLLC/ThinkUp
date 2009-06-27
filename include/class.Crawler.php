@@ -101,7 +101,7 @@ class Crawler {
 					if ( $this->owner_object->tweet_count == $this->instance->total_tweets_in_system)  
 						$this->instance->is_archive_loaded_tweets = true;
 
-					$status_message .= $this->instance->total_tweets_in_system." in system; ".$this->owner_object->tweet_count." by owner\n";
+					$status_message .= $this->instance->total_tweets_in_system." in system; ".$this->owner_object->tweet_count." by owner";
 					$logger->logStatus($status_message, get_class($this) );		
 					$status_message = "";
 
@@ -149,12 +149,18 @@ class Crawler {
 			} catch (Exception $e) { 
 				$status_message = 'Could not parse tweet XML for $id'; 
 			} 
-		} else {
-			$status_message = 'cURL status is not 200'; 
-		}
+		} elseif ( $cURL_status == 404 || $cURL_status == 403 ) {
+			try { 
+				$e = $api->parseError($twitter_data);
+				$td = new TweetErrorDAO();
+				$td->insertError($tid, $cURL_status, $e['error'],$this->owner_object->id);
+				$status_message = 'Error saved to tweets.'; 
+			} catch (Exception $e) { 
+				$status_message = 'Could not parse tweet XML for $tid'; 
+			} 
+		} 
 		$logger->logStatus($status_message, get_class($this) );		
 		$status_message = "";
-		
 	}
 
 
@@ -512,17 +518,18 @@ class Crawler {
 			} catch (Exception $e) { 
 				$status_message = 'Could not parse tweet XML for $uid'; 
 			} 
-		} else {
-			$status_message = 'cURL status is not 200'; 
+		} elseif ( $cURL_status == 404) {
 			try { 
 				$e = $api->parseError($twitter_data);
-				$fd = new FollowDAO();
-				$fd->saveError($cfg->twitter_user_id, $fid, $e['error']);
+				$ued = new UserErrorDAO();
+				$ued->insertError($fid, $cURL_status, $e['error'], $cfg->twitter_user_id);
+				$status_message = 'User error saved.'; 
+
 			} catch (Exception $e) { 
 				$status_message = 'Could not parse tweet XML for $uid'; 
 			} 
 			
-		}
+		} 
 		$logger->logStatus($status_message, get_class($this) );		
 		$status_message = "";
 		

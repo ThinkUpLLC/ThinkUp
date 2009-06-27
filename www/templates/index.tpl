@@ -2,7 +2,7 @@
 {include file="_header.tpl"}
 
 {if not $instance->total_users_in_system }
-<!-- //TODO this is hacky way to determine if the crawler has run and should be fixed -->
+<!-- //TODO this is hacky way to determine if the crawler has run and should be improved -->
 <div align="center" style="border:solid red 1px;background:white;margin:10px;"><b>There's nothing to see here. Yet! First the crawler has to run to load all that tasty Twitter data.</b></div>{/if}
 
 <div id="bd" role="main">
@@ -203,7 +203,7 @@
 <h2>System Progress</h2>
 <ul>
 	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded<br /><small>({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</small></li>
-	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$instance->total_follows_in_system|number_format} of {$owner_stats.follower_count|number_format})</small>{if $total_follows_with_errors>0}<br /><small>{$total_follows_with_errors} suspended accounts</small>{/if}</li>
+	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$instance->total_follows_in_system|number_format} of {$owner_stats.follower_count|number_format}{if $total_follows_with_errors>0}, {$total_follows_with_errors} suspended{/if})</small></li>
 </ul>
 {if sizeof($instances) > 1 }
 <br /><br />

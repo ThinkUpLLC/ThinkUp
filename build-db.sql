@@ -4,7 +4,7 @@
 #
 # Host: localhost (MySQL 5.1.34)
 # Database: twitalytic_dev1
-# Generation Time: 2009-06-27 03:21:49 -0700
+# Generation Time: 2009-06-27 13:06:06 -0700
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -26,7 +26,6 @@ CREATE TABLE `follows` (
   `user_id` int(11) NOT NULL,
   `follower_id` int(11) NOT NULL,
   `last_seen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `error` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`user_id`,`follower_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -98,6 +97,23 @@ CREATE TABLE `owners` (
 
 
 
+# Dump of table tweet_errors
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `tweet_errors`;
+
+CREATE TABLE `tweet_errors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status_id` bigint(20) NOT NULL,
+  `error_code` int(11) NOT NULL,
+  `error_text` varchar(255) NOT NULL,
+  `error_issued_to_user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `status_id` (`status_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
 # Dump of table tweets
 # ------------------------------------------------------------
 
@@ -112,6 +128,7 @@ CREATE TABLE `tweets` (
   `author_avatar` varchar(255) COLLATE utf8_bin NOT NULL,
   `tweet_text` varchar(160) COLLATE utf8_bin NOT NULL,
   `tweet_html` varchar(255) COLLATE utf8_bin NOT NULL,
+  `source` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `pub_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `in_reply_to_user_id` int(11) DEFAULT NULL,
   `in_reply_to_status_id` bigint(11) DEFAULT NULL,
@@ -122,6 +139,23 @@ CREATE TABLE `tweets` (
   KEY `pub_date` (`pub_date`),
   KEY `author_user_id` (`author_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+
+# Dump of table user_errors
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `user_errors`;
+
+CREATE TABLE `user_errors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(20) NOT NULL,
+  `error_code` int(11) NOT NULL,
+  `error_text` varchar(255) NOT NULL,
+  `error_issued_to_user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 

@@ -19,15 +19,19 @@ class Logger {
 	
 	
 	function logStatus($status_message, $classname)  {
-		$status_signature = gmdate("Y-m-d H:i:s",time())." | $this->twitter_username | $classname: ";
+		$status_signature = date("Y-m-d H:i:s",time())." | $this->twitter_username | $classname: ";
 		if ( strlen($status_message) > 0)  {
 			$this->writeFile($this -> log, $status_signature.$status_message);  # Write status to log
 		}
 	}
 	
+	private function addBreaks() {
+		$this->writeFile($this -> log, "");  # Add a little whitespace
+	}
 	
 	
 	function close() {
+		$this->addBreaks();
 		$this->closeFile($this -> log); 
 	}
 	

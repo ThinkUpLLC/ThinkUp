@@ -201,7 +201,7 @@ class InstanceDAO {
 				twitter_user_id = ".$i->twitter_user_id.";";
 		$foo = mysql_query($sql_query['Save_Crawler_State']) or die('Error, update query failed: '. $sql_query['Save_Crawler_State'] );
 
-		$status_message="Updated ".$i->twitter_username."'s system status.\n\n";
+		$status_message="Updated ".$i->twitter_username."'s system status.";
 		$logger->logStatus($status_message, get_class($this) );
 		$status_message = "";
 		

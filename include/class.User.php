@@ -307,5 +307,19 @@ class UserDAO {
 	
 }
 
+class UserErrorDAO {
+	function insertError($id, $error_code, $error_text, $issued_to) {
+		$q = "
+			INSERT INTO
+			 	user_errors (user_id, error_code, error_text, error_issued_to_user_id)
+			VALUES 
+				(".$id.", ".$error_code.", '".$error_text."', ".$issued_to.") ";
+		$sql_result = mysql_query($q) or die('Error, insert failed:' .$q );
+		if (mysql_affected_rows() > 0)
+			return true;
+		else
+			return false;
+	}
+}
 
 ?>

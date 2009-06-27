@@ -116,12 +116,12 @@ class TweetDAO {
 				INSERT INTO tweets
 					(status_id,
 					author_username,author_fullname,author_avatar,author_user_id,
-					tweet_text,tweet_html,pub_date,in_reply_to_user_id,in_reply_to_status_id)
+					tweet_text,tweet_html,pub_date,in_reply_to_user_id,in_reply_to_status_id,source)
 				VALUES (
 					{$tweet['status_id']}, '{$tweet['user_name']}', 
 					'{$tweet['full_name']}', '{$tweet['avatar']}', '{$tweet['user_id']}',
 					'$tweet_sql','$tweet_html_sql',
-					'{$tweet['pub_date']}', $tweet_in_reply_to_user_id, $tweet_in_reply_to_status_id)
+					'{$tweet['pub_date']}', $tweet_in_reply_to_user_id, $tweet_in_reply_to_status_id,'{$tweet['source']}')
 			";
 			$foo = mysql_query($sql_query['Add_Tweet'])  or die('Error, insert query failed: ' . $sql_query['Add_Tweet']);
 
@@ -334,8 +334,9 @@ class TweetDAO {
 			FROM 
 				tweets t 
 			WHERE 
-				t.in_reply_to_status_id NOT IN (select status_id from tweets) 
-			 	AND t.author_user_id=".$author_id.";";
+				t.author_user_id=".$author_id."
+				AND t.in_reply_to_status_id NOT IN (select status_id from tweets) 
+			 	AND t.in_reply_to_status_id NOT IN (select status_id from tweet_errors);";
 		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
 		$strays = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $strays[] = $row; }
@@ -346,4 +347,18 @@ class TweetDAO {
 	
 }
 
+class TweetErrorDAO {
+	function insertError($id, $error_code, $error_text, $issued_to) {
+		$q = "
+			INSERT INTO
+			 	tweet_errors (status_id, error_code, error_text, error_issued_to_user_id)
+			VALUES 
+				(".$id.", ".$error_code.", '".$error_text."', ".$issued_to.") ";
+		$sql_result = mysql_query($q) or die('Error, insert failed:' .$q );
+		if (mysql_affected_rows() > 0)
+			return true;
+		else
+			return false;
+	}
+}
 ?>

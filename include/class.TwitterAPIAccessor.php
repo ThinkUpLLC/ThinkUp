@@ -122,7 +122,7 @@ class TwitterAPIAccessor {
 	}
 	
 	function getStatus() {
-		return $this -> available_api_calls_for_crawler . " API calls left for crawler until ". $this -> next_api_reset;
+		return $this -> available_api_calls_for_crawler . " API calls left for crawler until ". date('H:i:s', (int) $this -> next_api_reset);
 
 	}
 	
@@ -246,7 +246,8 @@ class TwitterAPIAccessor {
 	 						'tweet_html' 		=> $xml->text,
 	 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($xml->created_at)),
 	 						'in_reply_to_status_id' => $xml->in_reply_to_status_id,
-	 						'in_reply_to_user_id' => $xml->in_reply_to_user_id
+	 						'in_reply_to_user_id' => $xml->in_reply_to_user_id,
+							'source'			=> $xml->source
 					);
 						break;
 					case 'users':
@@ -294,18 +295,17 @@ class TwitterAPIAccessor {
 		 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($item->created_at)),
 		 						'favorites_count' 	=> $item->user->favourites_count,
 		 						'in_reply_to_status_id' => $item->in_reply_to_status_id,
-		 						'in_reply_to_user_id' => $item->in_reply_to_user_id
+		 						'in_reply_to_user_id' => $item->in_reply_to_user_id,
+								'source'			=> $item->source
 							);
 						}
 						break;
 					case 'hash':
-					//DOESN'T WORK!
-						$thisFeed[] = array(
-							'remaining-hits' 		=> $xml->remaining_hits,
-							'hourly-limit'			=> $xml->hourly_limit,
-							'reset-time'			=> $xml->reset_time
+						$thisFeed = array(
+							'remaining-hits' 		=> $xml->{'remaining-hits'},
+							'hourly-limit'			=> $xml->{'hourly-limit'},
+							'reset-time'			=> $xml->{'reset-time-in-seconds'}
 						);
-						echo "remaining hits: ". $xml->remaining_hits ." reset time " .  $thisFeed['reset-time'];
 						break;
 		  			default:
 		    			break;
@@ -342,9 +342,7 @@ class CrawlerTwitterAPIAccessor extends TwitterAPIAccessor {
 	
 	function init($logger) {
 		$status_message = "";
-		//TODO: Standardize this call using config like the others
-		//$account_status		= $cURL_source['rate_limit'];
-		$account_status		= "https://twitter.com/account/rate_limit_status.json"; 	
+		$account_status		=  $this->cURL_source['rate_limit'];
 		list($cURL_status,$twitter_data) = $this->apiRequest($account_status, $logger);
 		$this->available_api_calls_for_crawler++; //status check doesnt' count against balance
 
@@ -353,30 +351,13 @@ class CrawlerTwitterAPIAccessor extends TwitterAPIAccessor {
 		} else {
 			try { 
 				# Parse file
-				/* XML DOESN'T WORK
-
 				$status_message = "Parsing XML data from $account_status "; 
-				$statuses = parseXML($twitter_data);
-				foreach($statuses as $status) {
-				 	$available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
-					$available_api_calls_for_crawler = $available_api_calls_for_twitter - $crawler_calls_to_leave_unmade;
-					$twitter_next_api_reset = $status['reset-time'];//get this from API
-				}
-				*/
-		/* Use JSON instead */
-				//$status_message .= "Parsing JSON data from $account_status ";
-				$json_dump = json_decode($twitter_data);
-				
-				if ( !isset($json_dump) ) {
-					$this->available = false;
-					$status_message = 'Could not parse account status JSON'; 
-				} else {
-					$this -> available_api_calls_for_twitter = $json_dump->remaining_hits;
-					$this -> next_api_reset = $json_dump->reset_time;
-					$this -> available_api_calls_for_crawler = $this -> available_api_calls_for_twitter - $this -> api_calls_to_leave_unmade;
-				}
+				$status = $this->parseXML($twitter_data);
+			 	$this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
+				$this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - $this->api_calls_to_leave_unmade;
+				$this->next_api_reset = $status['reset-time'] ;//get this from API
 			} catch (Exception $e) { 
-				$status_message = 'Could not parse account status JSON'; 
+				$status_message = 'Could not parse account status'; 
 			} 
 		}
 		$logger -> logStatus($status_message, get_class($this) );
@@ -408,7 +389,7 @@ class CrawlerTwitterAPIAccessor extends TwitterAPIAccessor {
 		$logger->logStatus($status_message, get_class($this) );		
 		$status_message = "";
 
-		if ( $url != "https://twitter.com/account/rate_limit_status.json") {
+		if ( $url != "https://twitter.com/account/rate_limit_status.xml") {
 			$status_message = $this->getStatus();
 			$logger->logStatus($status_message, get_class($this) );		
 			$status_message = "";
