@@ -1,6 +1,6 @@
 WARNING: Pre-alpha code, PROCEED AT YOUR OWN RISK!
 --------------------------------------------------
-This is not production code. This pre-alpha Twitter client stores your Twitter account usernames and passwords in your own database (hashed, not encrypted), which could be considered a security risk. The webapp's own login is also not as secure as it should be. This code is for experimentation and tinkering only. Do not run on a public, production server. You have been warned.
+This is not production code. This pre-alpha Twitter client stores your Twitter account usernames and passwords in your own database (hashed, not encrypted), which is not recommended (http://apiwiki.twitter.com/Security-Best-Practices#PasswordRetention). The webapp's own login is also not as secure as it should be. This code is for experimentation and tinkering only. Do not run on a public, production server. You have been warned.
 
 
 SYSTEM REQUIREMENTS
