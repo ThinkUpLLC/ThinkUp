@@ -111,20 +111,7 @@ class TweetDAO {
 				$tweet_in_reply_to_status_id = $tweet['in_reply_to_status_id'];
 			}
 
-	
-			# Check for Follow Friday
-/*			if (stripos($tweet['tweet_text'], "#followfriday") !== false) 
-				$tweet_is_follow_friday = 1;
-			else
-				$tweet_is_follow_friday = 0;
-*/				
-			# Check for Retweet
-/*			if (stripos($tweet['tweet_text'], "RT @$owner->username") !== false || stripos($tweet['tweet_text'], "via @$owner->username") !== false ) 
-				$tweet_is_retweet = 1;
-			else
-				$tweet_is_retweet = 0;
-*/
-	
+
 			$sql_query['Add_Tweet'] = "
 				INSERT INTO tweets
 					(status_id,
@@ -338,6 +325,22 @@ class TweetDAO {
 		mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
 		$this->incrementReplyCountCache($parent_id);
 		return mysql_affected_rows();
+	}
+	
+	function getStrayRepliedToTweets($author_id) {
+		$q = "
+			SELECT
+				in_reply_to_status_id
+			FROM 
+				tweets t 
+			WHERE 
+				t.in_reply_to_status_id NOT IN (select status_id from tweets) 
+			 	AND t.author_user_id=".$author_id.";";
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$strays = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $strays[] = $row; }
+		mysql_free_result($sql_result);	
+		return $strays;
 	}
 	
 	

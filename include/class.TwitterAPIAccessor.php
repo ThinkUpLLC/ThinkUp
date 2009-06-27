@@ -173,13 +173,35 @@ class TwitterAPIAccessor {
 		$feed_title = htmlspecialchars($feed_title, ENT_QUOTES, 'UTF-8');
 	    return array($thisFeed,$feed_title);
 	}
+	
+	function parseError($data) {
+		$thisFeed 	= array();
+		try { 
+			$xml 		= $this->createParserFromString(utf8_encode($data));	
+			if ( $xml != false ) {
+				$root = $xml->getName();	
+				switch ($root) {
+					case 'hash':
+						$thisFeed= array(
+		 					'request' 	=> $xml->request,
+		 					'error' 	=> $xml->error
+						);
+						break;
+		  			default:
+		    			break;
+				}
+			}
+		} catch (Exception $e) 					{ $form_error = 15; } 
+
+    	return $thisFeed;
+	}
 
 	function parseXML ($data) {
 		$thisFeed 	= array();
 		try { 
 			$xml 		= $this->createParserFromString(utf8_encode($data));	
-			if ( isset($xml)) {
-				$root		= $xml->getName();	
+			if ( $xml != false ) {
+				$root = $xml->getName();	
 				switch ($root) {
 					case 'user':
 		  				$thisFeed[] = array(
@@ -198,10 +220,34 @@ class TwitterAPIAccessor {
 							'joined'			=> $xml->created_at
 						);
 						break;
+					case 'ids':
+						foreach($xml->children() as $item) {
+	  						$thisFeed[] = array(
+		 						'id' 			=> $item
+							);
+						}
+						break;
 					case 'status':
 		  				$thisFeed[] = array(
-		 					'status_id' 		=> $xml->id
-						);
+		 					'status_id' 		=> $xml->id,
+	 						'user_id' 			=> $xml->user->id,
+	 						'user_name' 		=> $xml->user->screen_name,
+	 						'full_name' 		=> $xml->user->name,
+	 						'avatar' 			=> $xml->user->profile_image_url,
+	 						'location' 			=> $xml->user->location,
+	 						'description' 		=> $xml->user->description,
+	 						'url' 				=> $xml->user->url,
+	 						'is_protected' 		=> $xml->user->protected,
+	 						'followers' 		=> $xml->user->followers_count,
+							'following'			=> $xml->user->friends_count,
+							'tweets' 			=> $xml->user->statuses_count,
+							'joined'			=> $xml->user->created_at,
+	 						'tweet_text' 		=> $xml->text,
+	 						'tweet_html' 		=> $xml->text,
+	 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($xml->created_at)),
+	 						'in_reply_to_status_id' => $xml->in_reply_to_status_id,
+	 						'in_reply_to_user_id' => $xml->in_reply_to_user_id
+					);
 						break;
 					case 'users':
 						foreach($xml->children() as $item) {
@@ -264,7 +310,7 @@ class TwitterAPIAccessor {
 		  			default:
 		    			break;
 				}
-			}
+			} 
 		} catch (Exception $e) 					{ $form_error = 15; } 
 
 	    return $thisFeed;
@@ -352,7 +398,8 @@ class CrawlerTwitterAPIAccessor extends TwitterAPIAccessor {
 			$status_message .= " | API ERROR: $status"; 
 			$status_message .= " | $this->twitter_username"; 
 			$status_message .= "\n\n$foo\n\n"; 
-			$this->available = false;
+			if ( $status != 404 && $status != 403)
+				$this->available = false;
 			$logger->logStatus($status_message, get_class($this) );		
 			$status_message = "";
 		} else {

@@ -28,7 +28,7 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	}
 } else {
 	$i = $id->getFreshestByOwnerId($owner->id);
-	if ( !isset($i) && $i != null ) {
+	if ( !isset($i) && $i == null ) {
 		echo 'You have no Twitter accounts configured. <a href="'.$TWITALYTIC_CFG['site_root_path'].'account/">Set up a Twitter account here</a>';
 		$db->closeConnection($conn);
 		die;
@@ -43,6 +43,7 @@ $u = new Utils();
 // instantiate data access objects
 $ud = new UserDAO();
 $td = new TweetDAO();
+$fd = new FollowDAO();
 
 // pass data to smarty
 $owner_stats = $ud->getDetails($cfg->twitter_user_id);
@@ -72,6 +73,9 @@ $s->assign('cfg', $cfg);
 //Percentages
 $percent_followers_loaded = $u->getPercentage($owner_stats['follower_count'], $i->total_follows_in_system);
 $percent_tweets_loaded = $u->getPercentage($owner_stats['tweet_count'],$i->total_tweets_in_system );
+$follows_with_errors = $fd->getFollowsWithErrors($cfg->twitter_user_id);
+
+$s->assign('total_follows_with_errors', count($follows_with_errors));
 
 $s->assign('percent_followers_loaded', $percent_followers_loaded);
 $s->assign('percent_tweets_loaded', $percent_tweets_loaded);

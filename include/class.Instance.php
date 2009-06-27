@@ -58,12 +58,12 @@ class Instance {
 
 class InstanceDAO {
 	
-	function getStalest() {
-		return $this->getOneByLastRun("ASC");
+	function getInstanceStalestOne() {
+		return $this->getInstanceOneByLastRun("ASC");
 	}
 	
-	function getFreshest() {
-		return $this->getOneByLastRun("DESC");
+	function getInstanceFreshestOne() {
+		return $this->getInstanceOneByLastRun("DESC");
 	}
 	
 	function insert($id, $user, $pass) {
@@ -108,7 +108,7 @@ class InstanceDAO {
 	}
 
 	
-	function getOneByLastRun($order) {
+	function getInstanceOneByLastRun($order) {
 		$sql_query = "
 			SELECT , ". $this->getAverageReplyCount() ."
 				* 
@@ -116,7 +116,7 @@ class InstanceDAO {
 				instances 
 			ORDER BY 
 				crawler_last_run
-			".$order;
+			".$order." LIMIT 1";
 		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
 		$row = mysql_fetch_assoc($sql_result);
 		$i = new Instance($row);
@@ -161,12 +161,15 @@ class InstanceDAO {
 		else
 			$is_archive_loaded_replies = 0;
 			
-	
+		$lsi = "";
+		if ( $i->last_status_id != "" )
+			$lsi = "last_status_id = ". $i->last_status_id .",";
+			
 		$sql_query['Save_Crawler_State'] = "
 			UPDATE 
 				instances
 			SET
-				last_status_id = ". $i->last_status_id .",
+				".$lsi."
 				last_page_fetched_followers = ".$i->last_page_fetched_followers.",
 				last_page_fetched_replies = ".$i->last_page_fetched_replies.",
 				last_page_fetched_tweets = ".$i->last_page_fetched_tweets.",
@@ -218,9 +221,13 @@ class InstanceDAO {
 		else
 			return false;
 	}
+
+	function getAllInstancesStalestFirst() {
+		return $this->getAllInstances("ASC");
+	}
 	
 	
-	function getAllInstances() {
+	function getAllInstances($last_run="DESC") {
 		$q = "
 			SELECT 
 				*, ". $this->getAverageReplyCount() ."
@@ -228,7 +235,7 @@ class InstanceDAO {
 				instances
 			ORDER BY
 				crawler_last_run
-			DESC;";
+			".$last_run."";
 		$sql_result = mysql_query($q)  or die('Error, selection query failed:'. $q);
 		$instances 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $instances[] = new Instance($row); } 
@@ -247,7 +254,10 @@ class InstanceDAO {
 			ON
 				i.id = oi.instance_id
 			WHERE
-				oi.owner_id = ".$id.";";
+				oi.owner_id = ".$id."
+			ORDER BY
+				crawler_last_run 
+			DESC;";
 		$sql_result = mysql_query($q)  or die('Error, selection query failed:'. $q);
 		$instances 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $instances[] = new Instance($row); } 
