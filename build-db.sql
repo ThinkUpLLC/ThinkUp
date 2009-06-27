@@ -3,8 +3,8 @@
 # http://code.google.com/p/sequel-pro
 #
 # Host: localhost (MySQL 5.1.34)
-# Database: twitalytic_dev
-# Generation Time: 2009-06-24 19:19:49 -0700
+# Database: twitalytic_dev1
+# Generation Time: 2009-06-27 03:21:49 -0700
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -26,6 +26,7 @@ CREATE TABLE `follows` (
   `user_id` int(11) NOT NULL,
   `follower_id` int(11) NOT NULL,
   `last_seen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `error` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`user_id`,`follower_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -41,7 +42,7 @@ CREATE TABLE `instances` (
   `twitter_user_id` int(11) NOT NULL,
   `twitter_username` varchar(255) COLLATE utf8_bin NOT NULL,
   `twitter_password` varchar(255) COLLATE utf8_bin NOT NULL,
-  `last_status_id` bigint(11) DEFAULT 0,
+  `last_status_id` bigint(11) DEFAULT NULL,
   `crawler_last_run` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_page_fetched_followers` int(11) NOT NULL,
   `last_page_fetched_replies` int(11) NOT NULL DEFAULT '1',
