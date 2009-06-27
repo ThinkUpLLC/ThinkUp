@@ -72,10 +72,10 @@ class FollowDAO {
 		
 	}
 	
-	function getFollowsWithErrors($user_id) {
+	function getTotalFollowsWithErrors($user_id) {
 		$q = "
 			SELECT
-				follower_id
+				count(follower_id) as follows_with_errors
 			FROM 
 				follows f 
 			WHERE 
@@ -85,7 +85,22 @@ class FollowDAO {
 		$ferrors = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $ferrors[] = $row; }
 		mysql_free_result($sql_result);	
-		return $ferrors;		
+		return $ferrors[0]['follows_with_errors'];		
+		
+	}
+	
+	function getTotalFollowsWithFullDetails($user_id) {
+		$q = "
+			 SELECT count( * ) as follows_with_details
+			FROM `follows` f
+			INNER JOIN users u ON u.user_id = f.follower_id
+			WHERE f.user_id = ".$user_id;
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$details = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $details[] = $row; }
+		mysql_free_result($sql_result);	
+		return $details[0]['follows_with_details'];		
+		
 		
 	}
 }

@@ -70,12 +70,17 @@ $s->assign('instance', $i);
 $s->assign('instances', $id->getByOwnerId($owner->id));
 $s->assign('cfg', $cfg);
 
-//Percentages
-$percent_followers_loaded = $u->getPercentage($owner_stats['follower_count'], $i->total_follows_in_system);
-$percent_tweets_loaded = $u->getPercentage($owner_stats['tweet_count'],$i->total_tweets_in_system );
-$follows_with_errors = $fd->getFollowsWithErrors($cfg->twitter_user_id);
+$total_follows_with_errors = $fd->getTotalFollowsWithErrors($cfg->twitter_user_id);
+$s->assign('total_follows_with_errors', $total_follows_with_errors);
 
-$s->assign('total_follows_with_errors', count($follows_with_errors));
+$total_follows_with_full_details = $fd->getTotalFollowsWithFullDetails($cfg->twitter_user_id);
+$s->assign('total_follows_with_full_details', $total_follows_with_full_details);
+
+
+//Percentages
+//$percent_followers_loaded = $u->getPercentage($owner_stats['follower_count'], $i->total_follows_in_system);
+$percent_followers_loaded = $u->getPercentage($i->total_follows_in_system, ($total_follows_with_full_details + $total_follows_with_errors));
+$percent_tweets_loaded = $u->getPercentage($owner_stats['tweet_count'],$i->total_tweets_in_system );
 
 $s->assign('percent_followers_loaded', $percent_followers_loaded);
 $s->assign('percent_tweets_loaded', $percent_tweets_loaded);
