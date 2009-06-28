@@ -1,7 +1,6 @@
 <?php   # invoke this hourly in cron
-require_once('crawl.config.inc.php');
-ini_set("include_path", ini_get("include_path").":".$CRAWLER_INCLUDE_PATH);
-$root_path="";
+require_once('config.crawler.inc.php');
+ini_set("include_path", ini_get("include_path").":".$INCLUDE_PATH);
 require_once("init.php");
 
 // Instantiate and initialize needed objects

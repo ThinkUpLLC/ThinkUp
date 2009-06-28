@@ -1,2 +1,2 @@
-www/templates_c/*.php
+webapp/templates_c/*.php
 smarty/*
