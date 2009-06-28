@@ -22,9 +22,9 @@ In future versions, this will get easier.
 h3. Set up database
 
 * Create a database and select it, i.e., CREATE DATABASE twitalytic
-* Build tables with build_db.sql
+* Build tables with <code>build-db.sql</code>
 
-h3. CONFIGURE
+h3. Configure
 
 * *Shared libraries*: Edit <code>twitalytic/common/config.inc.php</code>, add your database credentials, file and webapp paths
 * *Crawler*: Edit <code>twitalytic/crawler/config.crawler.inc.php</code>, set include path to the absolute location of <code>twitalytic/common</code>
