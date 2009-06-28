@@ -16,22 +16,23 @@ SET UP DATABASE:
 - Create a database and select it, i.e., CREATE DATABASE twitalytic
 - Build tables with build_db.sql
 
-CONFIGURE APP:
-- Edit twitalytic/include/config.inc.php, add your database credentials, file and webapp paths
-- Edit twitalytic/automated/crawl.config.inc.php, set crawler include path to twitalytic/include
+CONFIGURE:
+- Shared libraries--Edit twitalytic/common/config.inc.php, add your database credentials, file and webapp paths
+- Crawler--Edit twitalytic/crawler/config.crawler.inc.php, set include path to the absolute location of twitalytic/common
+- Webapp--Edit twitalytic/webapp/config.webapp.inc.php, set include path to the absolute location of twitalytic/common
 
-CONFIGURE WEBSERVER:
-- Set httpd.conf DocumentRoot to twitalytic/www/
+[OPTIONAL] CONFIGURE WEBSERVER:
+- Set httpd.conf DocumentRoot to twitalytic/webapp/
 
 
 RUN CRAWLER TO LOAD DATA
 ------------------------
 Watch what's going on:
-$ tail -f automated/logs/crawl.log
+$ tail -f crawler/logs/crawl.log
 
 Run crawler:
-$ php automated/crawl.php
+$ php crawler/crawl.php
 
-Cron this job to run once per hour
+Cron this job to run at least once per hour
 
 Once there's data in the DB, view webapp in http://localhost/
