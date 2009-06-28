@@ -203,7 +203,7 @@
 <h2>System Progress</h2>
 <ul>
 	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded<br /><small>({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</small></li>
-	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$total_follows_with_full_details|number_format} with full details{if $total_follows_with_errors>0}, {$total_follows_with_errors} suspended{/if})</small></li>
+	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$total_follows_with_full_details|number_format} active{if $total_follows_with_errors>0}, {$total_follows_with_errors} suspended{/if})</small></li>
 </ul>
 {if sizeof($instances) > 1 }
 <br /><br />

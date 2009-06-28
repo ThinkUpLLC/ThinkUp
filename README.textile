@@ -1,0 +1,48 @@
+h1. Twitalytic
+
+Twitter data crawler, replies archiver, and statistics generator.
+
+
+h2. WARNING: Pre-alpha code, PROCEED AT YOUR OWN RISK!
+
+This is not production code. This pre-alpha Twitter client stores your Twitter account usernames and passwords in your own database (hashed, not encrypted), which Twitter "strongly recommends against":http://apiwiki.twitter.com/Security-Best-Practices#PasswordRetention. The webapp's own login is also not as secure as it should be. This code is for experimentation and tinkering only. Do not run on a public, production server. You have been warned.
+
+
+h2. SYSTEM REQUIREMENTS
+
+* "PHP 5":http://php.net with cURL extension enabled
+* "Smarty":http://smarty.net
+* "MySQL 5":http://mysql.com/
+
+
+h2. INSTALLATION
+
+In future versions, this will get easier.
+
+h3. SET UP DATABASE
+
+* Create a database and select it, i.e., CREATE DATABASE twitalytic
+* Build tables with build_db.sql
+
+h3. CONFIGURE
+
+* *Shared libraries* Edit twitalytic/common/config.inc.php, add your database credentials, file and webapp paths
+* *Crawler* Edit twitalytic/crawler/config.crawler.inc.php, set include path to the absolute location of twitalytic/common
+* *Webapp* Edit twitalytic/webapp/config.webapp.inc.php, set include path to the absolute location of twitalytic/common
+
+h3. [OPTIONAL] CONFIGURE WEBSERVER:
+
+* Set httpd.conf DocumentRoot to twitalytic/webapp/
+
+
+h2. RUN CRAWLER TO LOAD DATA
+
+Watch what's going on:
+<code>$ tail -f crawler/logs/crawl.log</code>
+
+Run crawler:
+<code>$ php crawler/crawl.php</code>
+
+Cron this job to run at least once per hour
+
+Once there's data in the DB, view webapp at http://localhost/

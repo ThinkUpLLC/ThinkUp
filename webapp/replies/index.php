@@ -4,10 +4,9 @@ if (!isset($_SESSION['user'])) { header("Location: u/login.php"); }
 
 // set up
 chdir("..");
-// set up
 require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").":".$INCLUDE_PATH);
-require_once($root_path . "init.php");
+require_once("init.php");
 
 $db = new Database();
 $conn = $db->getConnection();

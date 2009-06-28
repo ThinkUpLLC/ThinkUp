@@ -1,9 +1,11 @@
 <?php 
-include 'dbc.php';
-//chdir("..");
-$root_path 			= realpath('./../include')."/";
-require_once($root_path . "init.php");
+// set up
+chdir("..");
+require_once('config.webapp.inc.php');
+ini_set("include_path", ini_get("include_path").":".$INCLUDE_PATH);
+require_once("init.php");
 
+include 'dbc.php';
 
 $user_email = mysql_real_escape_string($_POST['email']);
 
