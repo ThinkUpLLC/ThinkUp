@@ -15,34 +15,34 @@ h2. SYSTEM REQUIREMENTS
 * "MySQL 5":http://mysql.com/
 
 
-h2. INSTALLATION
+h2. INSTALL
 
 In future versions, this will get easier.
 
-h3. SET UP DATABASE
+h3. Set up database
 
 * Create a database and select it, i.e., CREATE DATABASE twitalytic
 * Build tables with build_db.sql
 
 h3. CONFIGURE
 
-* *Shared libraries* Edit twitalytic/common/config.inc.php, add your database credentials, file and webapp paths
-* *Crawler* Edit twitalytic/crawler/config.crawler.inc.php, set include path to the absolute location of twitalytic/common
-* *Webapp* Edit twitalytic/webapp/config.webapp.inc.php, set include path to the absolute location of twitalytic/common
-
-h3. [OPTIONAL] CONFIGURE WEBSERVER:
-
-* Set httpd.conf DocumentRoot to twitalytic/webapp/
+* *Shared libraries*: Edit <code>twitalytic/common/config.inc.php</code>, add your database credentials, file and webapp paths
+* *Crawler*: Edit <code>twitalytic/crawler/config.crawler.inc.php</code>, set include path to the absolute location of <code>twitalytic/common</code>
+* *Webapp*: Edit <code>twitalytic/webapp/config.webapp.inc.php</code>, set include path to the absolute location of <code>twitalytic/common</code>
+* *Webserver (optional)*: Set <code>httpd.conf</code> DocumentRoot to <code>twitalytic/webapp/</code>
 
 
-h2. RUN CRAWLER TO LOAD DATA
+h2. RUN
 
-Watch what's going on:
-<code>$ tail -f crawler/logs/crawl.log</code>
+Visit the web application on your server, register for an account, and enter your Twitter login credentials.
 
-Run crawler:
+Then, run the crawler to load your Twitter data:
+
 <code>$ php crawler/crawl.php</code>
 
-Cron this job to run at least once per hour
+To view what's going on with the crawler, use this command:
 
-Once there's data in the DB, view webapp at http://localhost/
+<code>$ tail -f crawler/logs/crawler.log</code>
+
+
+Cron this job to run at least once per hour.
