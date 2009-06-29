@@ -7,13 +7,15 @@ require_once("init.php");
 $db = new Database();
 $conn = $db->getConnection();
 $id = new InstanceDAO();
+$oid = new OwnerInstanceDAO();
 
 $instances = $id->getAllInstancesStalestFirst();
 foreach ($instances as $i) {
 	$crawler = new Crawler($i);
 	$cfg = new Config($i->twitter_username, $i->twitter_user_id);
 	$logger = new Logger($i->twitter_username);
-	$api = new CrawlerTwitterAPIAccessor($TWITALYTIC_CFG['app_title'], $i);
+	$tokens = $oid->getOAuthTokens($i->id);
+	$api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'], $tokens['oauth_access_token_secret'], $cfg, $i);
 	$api -> init($logger);
 
 	if ( $api->available_api_calls_for_crawler > 0 ) {
@@ -38,9 +40,7 @@ foreach ($instances as $i) {
 		// Save instance
 		$id->save($crawler->instance,  $crawler->owner_object->tweet_count, $logger, $api);
 	} 
-
 	$logger->close();			# Close logging
-	$api->close();				# Clean up connection
 }
 
 if ( isset($conn) ) $db->closeConnection($conn); // Clean up

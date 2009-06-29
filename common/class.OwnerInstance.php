@@ -3,7 +3,8 @@
 class OwnerInstance {
 	var $owner_id;
 	var $instance_id;
-		
+	
+	
 	function OwnerInstance($oid, $iid) {
 		$this->owner_id = $oid;
 		$this->instance_id = $iid;
@@ -53,15 +54,28 @@ class OwnerInstanceDAO {
 		return $i;
 	}
 
-	function insert($owner_id, $instance_id) {
+	function insert($owner_id, $instance_id, $oauth_token, $oauth_token_secret) {
 		$sql_query = "
 			INSERT INTO 
-				owner_instances (`owner_id`, `instance_id`)
+				owner_instances (`owner_id`, `instance_id`, `oauth_access_token`, `oauth_access_token_secret`)
 			 VALUES
-				(".$owner_id.", ".$instance_id.")";
+				(".$owner_id.", ".$instance_id.", '".$oauth_token."', '". $oauth_token_secret."')";
 		$sql_result = mysql_query($sql_query)  or die('Error, insert query failed:' .$sql_query );
 	}
 
+
+	function getOAuthTokens( $id ) {
+		$q = "
+			SELECT 
+				oauth_access_token, oauth_access_token_secret 
+			FROM 
+				owner_instances 
+			WHERE 
+				instance_id = ".$id." LIMIT 1;";
+		$sql_result = mysql_query($q)  or die('Error, selection query failed:' .$sql_query );
+		$tokens = mysql_fetch_assoc($sql_result);
+		return $tokens;
+	}
 	
 }
 

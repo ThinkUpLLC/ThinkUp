@@ -4,7 +4,7 @@
 #
 # Host: localhost (MySQL 5.1.34)
 # Database: twitalytic_dev1
-# Generation Time: 2009-06-27 13:06:06 -0700
+# Generation Time: 2009-06-28 17:20:51 -0700
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -40,7 +40,6 @@ CREATE TABLE `instances` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `twitter_user_id` int(11) NOT NULL,
   `twitter_username` varchar(255) COLLATE utf8_bin NOT NULL,
-  `twitter_password` varchar(255) COLLATE utf8_bin NOT NULL,
   `last_status_id` bigint(11) DEFAULT NULL,
   `crawler_last_run` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_page_fetched_followers` int(11) NOT NULL,
@@ -71,7 +70,8 @@ CREATE TABLE `owner_instances` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `owner_id` int(10) NOT NULL,
   `instance_id` int(10) NOT NULL,
-  `twitter_password` varchar(255) NOT NULL DEFAULT '',
+  `oauth_access_token` varchar(255) NOT NULL DEFAULT '',
+  `oauth_access_token_secret` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -128,7 +128,7 @@ CREATE TABLE `tweets` (
   `author_avatar` varchar(255) COLLATE utf8_bin NOT NULL,
   `tweet_text` varchar(160) COLLATE utf8_bin NOT NULL,
   `tweet_html` varchar(255) COLLATE utf8_bin NOT NULL,
-  `source` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `source` varchar(255) COLLATE utf8_bin NOT NULL,
   `pub_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `in_reply_to_user_id` int(11) DEFAULT NULL,
   `in_reply_to_status_id` bigint(11) DEFAULT NULL,

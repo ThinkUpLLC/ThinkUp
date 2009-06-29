@@ -8,6 +8,8 @@ class Config {
 	var $site_root_path;
 	var $bitly_api_key;
 	var $bitly_login;
+	var $oauth_consumer_key;
+	var $oauth_consumer_secret;
 		
 	function Config($twitter_username=null, $twitter_user_id=null) {
 		global $TWITALYTIC_CFG;
@@ -19,6 +21,8 @@ class Config {
 		$this->site_root_path=$TWITALYTIC_CFG['site_root_path'];
 		$this->bitly_api_key=$TWITALYTIC_CFG['bitly_api_key'];
 		$this->bitly_login=$TWITALYTIC_CFG['bitly_login'];
+		$this->oauth_consumer_key=$TWITALYTIC_CFG['oauth_consumer_key'];
+		$this->oauth_consumer_secret=$TWITALYTIC_CFG['oauth_consumer_secret'];
 		
 
 		if (isset($_SERVER["SERVER_NAME"])) {

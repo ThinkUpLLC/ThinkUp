@@ -4,7 +4,6 @@ class Instance {
 	var $id;
 	var $twitter_username;
 	var $twitter_user_id;
-	var $twitter_password;
 	var $last_status_id;
 	var $last_page_fetched_followers;
 	var $last_page_fetched_friends;
@@ -27,8 +26,6 @@ class Instance {
 		$this->id = $r["id"];
 		$this->twitter_username = $r['twitter_username'];
 		$this->twitter_user_id = $r['twitter_user_id'];
-		//TODO encrypt/decrypt here
-		$this->twitter_password=InstanceDAO::unscramblePassword($r['twitter_password']);
 		$this->last_status_id=$r['last_status_id'];
 		$this->last_page_fetched_followers=$r['last_page_fetched_followers'];
 		$this->last_page_fetched_replies=$r['last_page_fetched_replies'];
@@ -66,12 +63,12 @@ class InstanceDAO {
 		return $this->getInstanceOneByLastRun("DESC");
 	}
 	
-	function insert($id, $user, $pass) {
+	function insert($id, $user) {
 		$sql_query = "
 			INSERT INTO 
-				instances (`twitter_user_id`, `twitter_username`, `twitter_password`)
+				instances (`twitter_user_id`, `twitter_username`)
 			 VALUES
-				(".$id." , '".$user."', '". $this->scramblePassword($pass)."')";
+				(".$id." , '".$user."')";
 		$sql_result = mysql_query($sql_query)  or die('Error, insert query failed:' .$sql_query );
 		
 		
@@ -265,44 +262,7 @@ class InstanceDAO {
 		return $instances;
 	}
 
-	function updatePassword($username, $password) {
-		$q = "
-			UPDATE 
-				instances
-			SET 
-				twitter_password = '". $this->scramblePassword($password)."'
-			WHERE 
-				twitter_username = '".$username."';";
-		$sql_result = mysql_query($q)  or die('Error, update query failed:'. $q);
-		//echo $q;
-		if (mysql_affected_rows() > 0) {
-			//$status_message = "User ". $user->user_name." updated in system.";
-			//$logger->logStatus($status_message, get_class($this) );
-			//$status_message = "";
-			return 1;
-		} else {
-			//$status_message = $user->user_name." was NOT updated in system.";
-			//$logger->logStatus($status_message, get_class($this) );
-			//$status_message = "";
-			return 0;
-		}
-	}
-	
-	
-	public static function scramblePassword ($password) {
-		$salt = substr(str_pad(dechex(mt_rand()),8,'0',STR_PAD_LEFT),-8);
-		$modified = $password.$salt;
-		$secured = $salt . base64_encode(bin2hex(strrev(str_rot13($modified))));
-	    return $secured;
-	}
 
-	public static function unscramblePassword ($stored_password) {
-	    $salt = substr($stored_password,0,8);
-	    $modified = substr($stored_password,8,strlen($stored_password)-8);
-		$modified = str_rot13(strrev(pack("H*",base64_decode($modified))));
-	    $password = substr($modified,0,strlen($modified)-8);
-	    return $password;
-	}
 }
 
 ?>

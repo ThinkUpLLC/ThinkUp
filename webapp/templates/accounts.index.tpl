@@ -15,27 +15,20 @@
 
 
 		<div class="section" id="instances">
-			You've configured the following Twitter accounts:
+			<b>Your Twitter accounts</b>
 			<br /><br />
-			
+			{if count($owner_instances) > 0 }
 			<ul>
 			{foreach from=$owner_instances key=iid item=i}
-			<li><a href="{$cfg->site_root_path}?u={$i->twitter_username}">{$i->twitter_username}</a>  <small>delete|update</small></li>
+			<li><a href="{$cfg->site_root_path}?u={$i->twitter_username}">{$i->twitter_username}</a>  <small>[delete]</small></li>
 			{/foreach}
 			</ul>
+			{else}
+			You have no Twitter accounts configured.
+			{/if}
 			<br /><br />
+			<b>Set up a Twitter account</b><br /><br /> <a href="{$oauthorize_link}">Authorize Twitalytic to read your Twitter data&rarr;</a>
 			
-			Add an account:<br />
-			<form name="form1" method="post" action="add.php" style="padding:5px;">
-			<p> 
-	          Twitter Username: <input name="twitter_username" type="text" size="10"><br />
-			  Twitter Password: <input name="twitter_password" type="password" size="10">
-	        </p>
-			<p> 
-	          <input type="submit" name="Submit" value="Add">
-	        </p>
-	      </form>
-			TODO: make sure fields aren't empty, that username field isn't already in list<br />
 		</div>
 
 		<div class="section" id="templates">

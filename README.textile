@@ -5,7 +5,7 @@ Twitter data crawler, replies archiver, and statistics generator.
 
 h2. WARNING: Pre-alpha code, PROCEED AT YOUR OWN RISK!
 
-This is not production code. This pre-alpha Twitter client stores your Twitter account usernames and passwords in your own database (hashed, not encrypted), which Twitter "strongly recommends against":http://apiwiki.twitter.com/Security-Best-Practices#PasswordRetention. The webapp's own login is also not as secure as it should be. This code is for experimentation and tinkering only. Do not run on a public, production server. You have been warned.
+This is not production code. This is a pre-alpha web application. The intended audience is server administrators with experience installing and troubleshooting PHP/MySQL hosted web applications. While Twitaltyic uses OAuth to access Twitter, the webapp's login is not as secure as it should be. Right now this code is for experimentation and tinkering only. Do not run on a public, production server. You have been warned.
 
 
 h2. SYSTEM REQUIREMENTS
@@ -24,9 +24,13 @@ h3. Set up database
 * Create a database and select it, i.e., CREATE DATABASE twitalytic
 * Build tables with <code>build-db.sql</code>
 
-h3. Configure
+h3. Register your app with Twitter (for OAuth support)
 
-* *Shared libraries*: Edit <code>twitalytic/common/config.inc.php</code>, add your database credentials, file and webapp paths
+* Log into Twitter and "register your Twitalytic instance":http://twitter.com/oauth_clients/. Set the callback URL to <code>http://yourserver.com/path-to-twitalytic/account/oauth.php</code>. Write down the items labeled "Consumer key" and "Consumer secret."
+
+h3. Configure the app
+
+* *Shared libraries*: Edit <code>twitalytic/common/config.inc.php</code>. Add your database credentials, file and webapp paths, and the key/secret you got from Twitter in the previous step.
 * *Crawler*: Edit <code>twitalytic/crawler/config.crawler.inc.php</code>, set include path to the absolute location of <code>twitalytic/common</code>
 * *Webapp*: Edit <code>twitalytic/webapp/config.webapp.inc.php</code>, set include path to the absolute location of <code>twitalytic/common</code>
 * *Webserver (optional)*: Set <code>httpd.conf</code> DocumentRoot to <code>twitalytic/webapp/</code>
@@ -34,7 +38,7 @@ h3. Configure
 
 h2. RUN
 
-Visit the web application on your server, register for an account, and enter your Twitter login credentials.
+Visit the web application on your server, register/login, and set up your Twitter accounts.
 
 Then, run the crawler to load your Twitter data:
 
@@ -43,6 +47,5 @@ Then, run the crawler to load your Twitter data:
 To view what's going on with the crawler, use this command:
 
 <code>$ tail -f crawler/logs/crawler.log</code>
-
 
 Cron this job to run at least once per hour.
