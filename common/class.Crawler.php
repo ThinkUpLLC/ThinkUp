@@ -44,12 +44,13 @@ class Crawler {
 		$status_message = "";
 		$got_latest_page_of_tweets = false;
 		$continue_fetching = true;
-		$queued_tweets = array();
+
 		while ( $api->available && $api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching) {	
 
 			$recent_tweets 		= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['user_timeline']);
-			$recent_tweets 		.= "?&count=100";
-			$last_page_of_tweets = round($this->owner_object->tweet_count / 100)+1;
+			$args = array();
+			$args["count"] = 200;			
+			$last_page_of_tweets = round($this->owner_object->tweet_count / 200)+1;
 
 			if ( $got_latest_page_of_tweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system ) {
 				if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets )
@@ -58,13 +59,14 @@ class Crawler {
 					$continue_fetching = false;
 					$this->instance->last_page_fetched_tweets = 1;
 				}
-				$recent_tweets 		.= "&page=".$this->instance->last_page_fetched_tweets;	
+				$args["page"] = $this->instance->last_page_fetched_tweets;			
+					
 			} else {
 				if ($this->instance->last_status_id > 0)  
-					$recent_tweets .= "&since_id=".$this->instance->last_status_id; 
+					$args["since_id"] = $this->instance->last_status_id;
 			}
 
-			list($cURL_status,$twitter_data) = $api->apiRequest($recent_tweets, $logger);
+			list($cURL_status,$twitter_data) = $api->apiRequest($recent_tweets, $logger, $args);
 			if ( $cURL_status == 200) {
 				# Parse the XML file
 				try { 
@@ -174,14 +176,15 @@ class Crawler {
 			while ( $api->available && $api->available_api_calls_for_crawler > 0 && $continue_fetching ) {	
 				# Get the most recent replies
 				$replies 		= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['replies']);
-				$replies 		.= "?&count=100";
+				$args = array();
+				$args['count'] = 200;
 
 				if ( $got_newest_replies ) {
 					$this->last_page_fetched_replies++;
-					$replies 		.= "&page=".$this->last_page_fetched_replies;	
+					$args['page'] = $this->last_page_fetched_replies;	
 				}
 
-				list($cURL_status,$twitter_data) = $api->apiRequest($replies, $logger);
+				list($cURL_status,$twitter_data) = $api->apiRequest($replies, $logger, $args);
 				if ($cURL_status > 200) { 
 					$continue_fetching = false;
 				} else {
@@ -257,10 +260,11 @@ class Crawler {
 
 			$last_page_fetched_follower_ids = $last_page_fetched_follower_ids+1;
 
+			$args = array();
 			$follower_ids 	= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['followers_ids']);
-			$follower_ids  .= "?page=".$last_page_fetched_follower_ids;
+			$args['page'] = $last_page_fetched_follower_ids;
 
-			list($cURL_status,$twitter_data) = $api->apiRequest($follower_ids, $logger);
+			list($cURL_status,$twitter_data) = $api->apiRequest($follower_ids, $logger, $args);
 
 			if ($cURL_status > 200) { 
 				$continue_fetching = false;
@@ -350,9 +354,10 @@ class Crawler {
 			$this->instance->last_page_fetched_followers = $this->instance->last_page_fetched_followers + 1;
 
 			$follower_ids 	= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['followers']);
-			$follower_ids  .= "?page=".$this->instance->last_page_fetched_followers;
+			$args = array();
+			$args['page'] = $this->instance->last_page_fetched_followers;
 
-			list($cURL_status,$twitter_data) = $api->apiRequest($follower_ids, $logger);
+			list($cURL_status,$twitter_data) = $api->apiRequest($follower_ids, $logger, $args);
 
 			if ($cURL_status > 200) { 
 				$continue_fetching = false;
@@ -419,9 +424,10 @@ class Crawler {
 			$this->instance->last_page_fetched_friends = $this->instance->last_page_fetched_friends + 1;
 
 			$friend_ids 	= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['following']);
-			$friend_ids  .= "?page=".$this->instance->last_page_fetched_friends;
+			$args = array();
+			$args['page'] = $this->instance->last_page_fetched_friends;
 
-			list($cURL_status,$twitter_data) = $api->apiRequest($friend_ids, $logger);
+			list($cURL_status,$twitter_data) = $api->apiRequest($friend_ids, $logger, $args);
 
 			if ($cURL_status > 200) { 
 				$continue_fetching = false;
@@ -532,14 +538,6 @@ class Crawler {
 		} 
 		$logger->logStatus($status_message, get_class($this) );		
 		$status_message = "";
-		
-	}
-
-	
-	function updateMostFollowedUsers($logger) {
-		
-		
-		
 		
 	}
 	

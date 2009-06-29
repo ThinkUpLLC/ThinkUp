@@ -10,14 +10,14 @@ class TwitterAPIAccessorOAuth {
 	
 	function TwitterAPIAccessorOAuth($oauth_access_token, $oauth_access_token_secret, $cfg) {
 		$this->$oauth_access_token=$oauth_access_token;
-		$this->$oauth_access_token=$oauth_access_token_secret;
+		$this->$oauth_access_token_secret=$oauth_access_token_secret;
 
-	    $this->to = new TwitterOAuth($cfg->oauth_consumer_key, $cfg->oauth_consumer_secret, $oauth_access_token, $oauth_access_token_secret);
+	    $this->to = new TwitterOAuth($cfg->oauth_consumer_key, $cfg->oauth_consumer_secret, $this->$oauth_access_token, $this->$oauth_access_token_secret);
 		$this->cURL_source = $this -> prepAPI();
 	}
 	
 	function verifyCredentials() {
-		//returns user id if successful; -1 if not.
+		//returns user array; -1 if not.
 		$auth = $this->cURL_source['credentials'];
 		list($cURL_status,$twitter_data) = $this->apiRequestFromWebapp($auth);
 		if ($cURL_status == 200)  {
@@ -326,30 +326,33 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 			} 
 		}
 		$logger -> logStatus($status_message, get_class($this) );
-		$status_message = "";
 		$logger -> logStatus($this->getStatus(), get_class($this) );		
 		
 		
 	}
 
-	function apiRequest ($url, $logger) {
-		$content = $this->to->OAuthRequest($url, array(), 'GET');
+	function apiRequest ($url, $logger, $args=array()) {
+		$content = $this->to->OAuthRequest($url, $args, 'GET');
 		$status = $this->to->lastStatusCode();
 
 		$this->available_api_calls_for_crawler--;
-		
+		$status_message = "";
 		if ( $status > 200 ) {
 			$status_message	= "Could not retrieve $url"; 
 			$status_message .= " | API ERROR: $status"; 
-			$status_message .= " | $this->twitter_username"; 
 			$status_message .= "\n\n$content\n\n"; 
 			if ( $status != 404 && $status != 403)
 				$this->available = false;
 			$logger->logStatus($status_message, get_class($this) );		
 			$status_message = "";
 		} else {
-			$status_message = "API request: ".$url."  ";
+			$status_message = "API request: ".$url;
+			if (sizeof($args)>0)
+				$status_message .= "?";
+			foreach ($args as $key => $value) 
+				$status_message .= $key."=".$value."&";
 		}
+
 		$logger->logStatus($status_message, get_class($this) );		
 		$status_message = "";
 
