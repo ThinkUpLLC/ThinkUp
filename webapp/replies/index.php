@@ -55,6 +55,6 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	echo $s->fetch('replies.public.tpl');
 */
 } else {
-	echo 'No such tweet ID<br /><a href="'. $cfg->site_root_path .'">back home</a>';
+	echo 'This update is not in the system.<br /><a href="'. $cfg->site_root_path .'">back home</a>';
 }
 ?>

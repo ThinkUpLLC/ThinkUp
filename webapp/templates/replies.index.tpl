@@ -22,7 +22,9 @@
 
 <ul>
 {foreach from=$replies key=tid item=t}
-<li {if $t.is_protected} style="background-color:grey;color:white"{/if}><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> ({$t.follower_count} followers) <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>: {$t.tweet_html|regex_replace:"/@[a-zA-Z0-9]+/":""}<br /> {$t.adj_pub_date|relative_datetime} <br clear="all"></li>
+<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+	{include file="_tweet.other.tpl" t=$t}
+</div>
 {/foreach}
 </ul>
 
