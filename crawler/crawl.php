@@ -26,13 +26,14 @@ foreach ($instances as $i) {
 	
 		$crawler->fetchOwnerReplies($cfg, $api, $logger);
 
-		$crawler->fetchStrayRepliedToTweets($cfg, $api, $logger);
-	
+		$crawler->fetchOwnerFriends($cfg, $api, $logger);
+
 		$crawler->fetchOwnerFollowers($cfg, $api, $logger);
+
+		$crawler->fetchStrayRepliedToTweets($cfg, $api, $logger);
 
 		$crawler->fetchUnloadedFollowerDetails($cfg, $api, $logger);
 
-		$crawler->fetchOwnerFriends($cfg, $api, $logger);
 
 		// TODO: Get direct messages
 		// TODO: Gather favorites data

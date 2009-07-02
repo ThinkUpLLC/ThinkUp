@@ -297,12 +297,14 @@ class TwitterAPIAccessorOAuth {
 
 class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 	var $api_calls_to_leave_unmade;
+	var $api_calls_to_leave_unmade_per_minute;
 	var $available_api_calls_for_crawler = null;
 	var $available_api_calls_for_twitter = null;
+	var $api_hourly_limit = null;
 	
 	function CrawlerTwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $cfg, $instance) {
 		parent::TwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $cfg);
-		$this->api_calls_to_leave_unmade = $instance->api_calls_to_leave_unmade;
+		$this->api_calls_to_leave_unmade_per_minute = $instance->api_calls_to_leave_unmade;
 	}
 	
 	function init($logger) {
@@ -319,8 +321,24 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 				$status_message = "Parsing XML data from $account_status "; 
 				$status = $this->parseXML($twitter_data);
 			 	$this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
-				$this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - $this->api_calls_to_leave_unmade;
+			 	$this->api_hourly_limit = $status['hourly-limit'];//get this from API
+			
 				$this->next_api_reset = $status['reset-time'] ;//get this from API
+
+
+				//Figure out how many minutes are left in the hour, then multiply that x 1 for api calls to leave unmade
+				$next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
+				$current_time_in_minutes = (int) date("i",time());
+				$minutes_left_in_hour = 60;
+				if ( $next_reset_in_minutes > $current_time_in_minutes )
+					$minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
+				elseif ( $next_reset_in_minutes < $current_time_in_minutes )
+					$minutes_left_in_hour = $current_time_in_minutes - $next_reset_in_minutes;
+
+				$this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
+				$this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - $this->api_calls_to_leave_unmade;
+
+
 			} catch (Exception $e) { 
 				$status_message = 'Could not parse account status'; 
 			} 
@@ -335,7 +353,8 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 		$content = $this->to->OAuthRequest($url, $args, 'GET');
 		$status = $this->to->lastStatusCode();
 
-		$this->available_api_calls_for_crawler--;
+		$this->available_api_calls_for_twitter = $this->available_api_calls_for_twitter - 1;
+		$this->available_api_calls_for_crawler = $this->available_api_calls_for_crawler - 1;
 		$status_message = "";
 		if ( $status > 200 ) {
 			$status_message	= "Could not retrieve $url"; 
@@ -367,7 +386,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 	}
 	
 	function getStatus() {
-		return $this->available_api_calls_for_crawler . " API calls left for crawler until ". date('H:i:s', (int) $this->next_api_reset);
+		return $this->available_api_calls_for_twitter." of ". $this->api_hourly_limit." API calls left this hour; ". $this->available_api_calls_for_crawler . " for crawler until ". date('H:i:s', (int) $this->next_api_reset);
 
 	}	
 }

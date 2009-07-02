@@ -71,7 +71,7 @@ class OwnerInstanceDAO {
 			FROM 
 				owner_instances 
 			WHERE 
-				instance_id = ".$id." LIMIT 1;";
+				instance_id = ".$id." ORDER BY id ASC LIMIT 1;";
 		$sql_result = mysql_query($q)  or die('Error, selection query failed:' .$sql_query );
 		$tokens = mysql_fetch_assoc($sql_result);
 		return $tokens;

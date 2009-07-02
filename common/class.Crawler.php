@@ -18,7 +18,6 @@ class Crawler {
 
 		if ($cURL_status == 200) { 
 			try { 
-				$status_message = "Parsing XML data from $owner_profile "; 
 				$users = $api->parseXML($twitter_data);
 				foreach($users as $user) 
 					$this->owner_object = new User($user, 'Owner Status');
@@ -70,10 +69,6 @@ class Crawler {
 			if ( $cURL_status == 200) {
 				# Parse the XML file
 				try { 
-					$status_message = "Parsing XML data from $recent_tweets "; 
-					$logger->logStatus($status_message, get_class($this) );		
-					$status_message = "";
-
 					$count = 0;
 					$tweets = $api->parseXML($twitter_data);
 
@@ -91,10 +86,11 @@ class Crawler {
 					$logger->logStatus($status_message, get_class($this) );		
 					$status_message = "";
 					
-					if ( count($tweets) == 0 && $this->instance->last_page_fetched_tweets >= $last_page_of_tweets ) {
+					//Can't rely on Twitter to return all the tweets it says it has
+					if ( count($tweets) == 0 && $got_latest_page_of_tweets /*&& $this->instance->last_page_fetched_tweets >= $last_page_of_tweets */) {
 						$this->instance->last_page_fetched_tweets = 1;
 						$continue_fetching=false;
-						$status_message = 'Paged back and not finding new tweets; moving on.'; 
+						$status_message = "Paged back ". $this->instance->last_page_fetched_tweets ." pages and not finding new tweets; moving on."; 
 						$logger->logStatus($status_message, get_class($this) );		
 						$status_message = "";
 					}
@@ -141,7 +137,6 @@ class Crawler {
 
 		if ($cURL_status == 200) { 
 			try { 
-				$status_message = "Parsing XML data from $tweet_deets "; 
 				$tweets = $api->parseXML($twitter_data);
 				foreach($tweets as $tweet) {
 					if ( $td->addTweet($tweet, $this->owner_object, $logger) > 0 ) {
@@ -189,10 +184,6 @@ class Crawler {
 					$continue_fetching = false;
 				} else {
 					try { 
-						$status_message = "Parsing XML data from $replies"; 
-						$logger->logStatus($status_message, get_class($this) );
-						$status_message = "";
-						
 						$count = 0;
 						$tweets = $api->parseXML($twitter_data);
 						if ( count($tweets) == 0 && $got_newest_replies ) {# you're paged back and no new tweets
@@ -325,18 +316,10 @@ class Crawler {
 			$logger->logStatus($status_message, get_class($this) );
 			$status_message = "";
 			
-			if ( $new_follower_count > 0 ) {
-				//figure out percentage 
-				$percent_follows_missing = 100 - (($this->instance->total_follows_in_system*100)/$this->owner_object->follower_count);
-				$percent_follows_missing = round($percent_follows_missing, 1);
-				$status_message .= " $percent_follows_missing% of follows are missing.";
-				if ( $percent_follows_missing > 2 ) {
-					$status_message .= " Fetching follows via IDs, more than 2% are missing from system";
-					$logger->logStatus($status_message, get_class($this) );
-					$status_message = "";
-					$this->fetchOwnerFollowersByIDs($cfg, $api, $logger);
-				}
-			}
+			$status_message .= " Fetching follows via IDs";
+			$logger->logStatus($status_message, get_class($this) );
+			$status_message = "";
+			$this->fetchOwnerFollowersByIDs($cfg, $api, $logger);
 		} else {
 			$status_message = "Follower archive is not loaded; fetch should begin.";
 			$logger->logStatus($status_message, get_class($this) );
@@ -514,9 +497,6 @@ class Crawler {
 
 		if ($cURL_status == 200) { 
 			try { 
-				$status_message = "Parsing XML data from $u_deets "; 
-				$logger->logStatus($status_message, get_class($this) );		
-				$status_message = "";
 				$user_arr = $api->parseXML($twitter_data);
 				$user = new User($user_arr[0], "Follower IDs");
 				$this->ud->updateUser($user, $logger);
