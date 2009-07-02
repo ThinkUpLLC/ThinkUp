@@ -75,14 +75,25 @@ $s->assign('total_follows_with_errors', $total_follows_with_errors);
 $total_follows_with_full_details = $fd->getTotalFollowsWithFullDetails($cfg->twitter_user_id);
 $s->assign('total_follows_with_full_details', $total_follows_with_full_details);
 
+$total_follows_protected = $fd-> getTotalFollowsProtected($cfg->twitter_user_id);
+$s->assign('total_follows_protected', $total_follows_protected);
+
+//TODO: Get friends with full details and also friends with errors, same as with followers
+$total_friends_loaded = $fd->getTotalFriends($cfg->twitter_user_id);
+$s->assign('total_friends', $total_friends_loaded);
+
+$total_friends_protected = $fd->getTotalFriendsProtected($cfg->twitter_user_id);
+$s->assign('total_friends_protected', $total_friends_protected);
 
 //Percentages
-//$percent_followers_loaded = $u->getPercentage($owner_stats['follower_count'], $i->total_follows_in_system);
-$percent_followers_loaded = $u->getPercentage($i->total_follows_in_system, ($total_follows_with_full_details + $total_follows_with_errors));
+$percent_followers_loaded = $u->getPercentage($owner_stats['follower_count'], ($total_follows_with_full_details + $total_follows_with_errors));
 $percent_tweets_loaded = $u->getPercentage($owner_stats['tweet_count'],$i->total_tweets_in_system );
+$percent_friends_loaded = $u->getPercentage($owner_stats['friend_count'], ($total_friends_loaded));
+
 
 $s->assign('percent_followers_loaded', $percent_followers_loaded);
 $s->assign('percent_tweets_loaded', $percent_tweets_loaded);
+$s->assign('percent_friends_loaded', $percent_friends_loaded);
 
 # clean up
 $db->closeConnection($conn);	

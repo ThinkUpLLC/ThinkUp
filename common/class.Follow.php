@@ -100,9 +100,48 @@ class FollowDAO {
 		while ($row = mysql_fetch_assoc($sql_result)) { $details[] = $row; }
 		mysql_free_result($sql_result);	
 		return $details[0]['follows_with_details'];		
-		
-		
 	}
+
+	function getTotalFollowsProtected($user_id) {
+		$q = "
+			 SELECT count( * ) as follows_protected
+			FROM `follows` f
+			INNER JOIN users u ON u.user_id = f.follower_id
+			WHERE f.user_id = ".$user_id." AND u.is_protected=1";
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$details = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $details[] = $row; }
+		mysql_free_result($sql_result);	
+		return $details[0]['follows_protected'];		
+	}
+
+	function getTotalFriends($user_id) {
+		$q = "
+			 SELECT count( * ) as total_friends
+			FROM `follows` f
+			INNER JOIN users u ON u.user_id = f.user_id
+			WHERE f.follower_id = ".$user_id."";
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$details = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $details[] = $row; }
+		mysql_free_result($sql_result);	
+		return $details[0]['total_friends'];		
+	}
+
+	function getTotalFriendsProtected($user_id) {
+		$q = "
+			 SELECT count( * ) as friends_protected
+			FROM `follows` f
+			INNER JOIN users u ON u.user_id = f.user_id
+			WHERE f.follower_id = ".$user_id." AND u.is_protected=1";
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$details = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $details[] = $row; }
+		mysql_free_result($sql_result);	
+		return $details[0]['friends_protected'];		
+	}
+
+
 }
 
 ?>
