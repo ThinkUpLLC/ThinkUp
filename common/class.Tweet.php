@@ -63,7 +63,7 @@ class TweetDAO {
 		return $tweets_stored;
 	}
 	
-	function getTweetsAuthorHasRepliedTo($author_id) {
+	function getTweetsAuthorHasRepliedTo($author_id, $count) {
 		//TODO Fix hardcoded adjusted pub_date
 
 		$sql_query = "
@@ -77,12 +77,14 @@ class TweetDAO {
 			WHERE 
 				t.author_user_id = ". $author_id   ." AND t.in_reply_to_status_id is not null 
 			ORDER BY
-				t.pub_date desc;";
-			$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:'. $sql_query);
-			$tweets_replied_to 		= array();
-			while ($row = mysql_fetch_assoc($sql_result)) { $tweets_replied_to[] = $row; } 
-			mysql_free_result($sql_result);					# Free up memory
-			return $tweets_replied_to;
+				t.pub_date desc 
+			LIMIT ".$count.";";				
+
+		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:'. $sql_query);
+		$tweets_replied_to 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $tweets_replied_to[] = $row; } 
+		mysql_free_result($sql_result);					# Free up memory
+		return $tweets_replied_to;
 		
 	}
 	
