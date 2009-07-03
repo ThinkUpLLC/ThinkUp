@@ -82,8 +82,7 @@
 		
 		<h2>Standalone Replies</h2>
 		
-		<p>Replies you've marked "standalone", that is, not associated with any particular update.</p><br /><br /><br />
-		
+		<p>Replies you've marked "standalone", that is, not associated with any particular update.</p><br />
 		
 		{foreach from=$standalone_replies key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
@@ -203,8 +202,8 @@
 <h2>System Progress</h2>
 <ul>
 	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded<br /><small>({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</small></li>
-	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$total_follows_with_full_details|number_format} loaded, {$total_follows_protected|number_format} protected{if $total_follows_with_errors>0}, {$total_follows_with_errors|number_format} suspended{/if})</small></li>
-	<li>{$percent_friends_loaded|number_format}% of Your Friends Loaded<br ><small>({$total_friends|number_format} loaded, {$total_friends_protected|number_format} protected)</small></li>
+	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$total_follows_with_full_details|number_format} loaded{if $total_follows_protected>0}, {$total_follows_protected|number_format} protected{/if}{if $total_follows_with_errors>0}, {$total_follows_with_errors|number_format} suspended{/if})</small></li>
+	<li>{$percent_friends_loaded|number_format}% of Your Friends Loaded<br ><small>({$total_friends|number_format} loaded{if $total_friends_protected}, {$total_friends_protected|number_format} protected{/if})</small></li>
 </ul>
 {if sizeof($instances) > 1 }
 <br /><br />
