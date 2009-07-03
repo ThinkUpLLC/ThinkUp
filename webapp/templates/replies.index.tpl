@@ -7,9 +7,9 @@
 	<div role="application" class="yui-g" id="tabs">
 
 				<ul>
-					<li><a href="#tweets">Replies</a></li>
+					<li><a href="#tweets">Update</a></li>
 					{if $likely_orphans}<li><a href="#replies">Likely Replies</a></li>{/if}
-					<li><a href="#followers">Public/Republishable Replies</a></li>
+					{if $replies}<li><a href="#followers">Public/Republishable Replies</a></li>{/if}
 					
 				</ul>		
 
@@ -48,6 +48,7 @@
 </form>		
 </div>
 {/if}
+{if $replies}
 <div class="section" id="followers">
 
 <h1>{$tweet.tweet_text}</h1>
@@ -57,10 +58,8 @@
 {if $t.is_protected}Anonymous says {else}<a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>{/if}, "{$t.tweet_html|regex_replace:"/^@[a-zA-Z0-9_]+ /":""}"<br /><br />
 {/foreach}
 </ul>
-
-
 </div>
-
+{/if}
 
 </div>
 </div>
@@ -72,8 +71,7 @@
 	<li>Posted at {$tweet.pub_date}</li>
 	<li>{$reply_count} total replies</li>
 	<li>{$private_reply_count} private</li>
-
-	<li><a href="{$cfg->site_root_path}?u={$instance->twitter_username}">&larr; back</a></li>
+	<li><a {if $instance}href="{$cfg->site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)"{/if}>&larr; back</a></li>
 </ul>
 </div>
 

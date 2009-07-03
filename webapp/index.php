@@ -57,7 +57,7 @@ $s->assign('all_replies', $td->getAllReplies($cfg->twitter_username, 15) );
 $s->assign('most_replied_to_tweets', $td->getMostRepliedToTweets($cfg->twitter_user_id, 15));
 
 $s->assign('orphan_replies', $td->getOrphanReplies($cfg->twitter_username, 5));
-$s->assign('standalone_replies', $td->getStandaloneReplies());
+$s->assign('standalone_replies', $td->getStandaloneReplies($cfg->twitter_username, 15));
 $s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
 
 

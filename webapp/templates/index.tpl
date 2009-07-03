@@ -23,8 +23,8 @@
 	<div role="application" class="yui-h" id="tweetssubtabs">
 		<ul>
 		<li><a href="#alltweetssub">Your Updates</a></li>
-		<li><a href="#mostrepliedtweetssub">Most-Replied-To Updates</a></li>
-		<li><a href="#tweetsauthorhasrepliedto">Your Replies</a></li>
+		<li><a href="#mostrepliedtweetssub">Most-Replied-To</a></li>
+		<li><a href="#tweetsauthorhasrepliedto">Exchanges</a></li>
 		</ul>		
 	</div>
 	<div class="section" id="alltweetssub">
@@ -82,7 +82,7 @@
 		
 		<h2>Standalone Replies</h2>
 		
-		<p>Tweets marked as "standalone", that is, not associated with any tweet.</p>
+		<p>Replies you've marked "standalone", that is, not associated with any particular update.</p><br /><br /><br />
 		
 		
 		{foreach from=$standalone_replies key=tid item=t}

@@ -29,8 +29,30 @@ class TweetDAO {
 		return $tweet;
 	}
 
-	function getStandaloneReplies() {
-		$this->getRepliesToTweet(0);
+	function getStandaloneReplies($username, $limit) {
+		$q = "
+			SELECT
+				tweet_html, author_username, author_avatar, follower_count, status_id, is_protected, pub_date - interval 8 hour as adj_pub_date 
+			FROM 
+				tweets t 
+			inner join 
+				users u 
+			on 
+				t.author_user_id = u.user_id 
+			where 
+				tweet_text 
+			LIKE
+				'%".$username."%'
+				and
+				in_reply_to_status_id=0
+			order by 
+				adj_pub_date desc
+			LIMIT ".$limit;		
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$strays = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $strays[] = $row; }
+		mysql_free_result($sql_result);	
+		return $strays;	
 	}
 	
 	function getRepliesToTweet($status_id, $public=false) {
