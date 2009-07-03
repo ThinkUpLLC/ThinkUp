@@ -34,6 +34,7 @@ foreach ($instances as $i) {
 
 		$crawler->fetchUnloadedFollowerDetails($cfg, $api, $logger);
 
+		$crawler->fetchOwnerFriendsTweets($cfg, $api, $logger);
 
 		// TODO: Get direct messages
 		// TODO: Gather favorites data

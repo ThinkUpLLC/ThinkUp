@@ -140,6 +140,34 @@ class FollowDAO {
 		mysql_free_result($sql_result);	
 		return $details[0]['friends_protected'];		
 	}
+	
+	function getStalestFriend($user_id) {
+		$q = "
+			SELECT
+				u.*
+			FROM 
+				users u
+			INNER JOIN
+				follows f
+			ON
+			 	f.user_id = u.user_id
+			WHERE 
+				f.follower_id=".$user_id." AND
+				u.user_id NOT IN (SELECT user_id FROM user_errors) AND
+				u.last_updated < DATE_SUB(NOW(), INTERVAL 1 DAY)
+			ORDER BY
+				u.last_updated ASC
+			LIMIT 1;";
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$oldfriend = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $oldfriend[] = $row; }
+		mysql_free_result($sql_result);
+		if ( count($oldfriend) > 0)
+			$friend_object = new User($oldfriend[0], "Friends");
+		else
+			$friend_object = null;
+		return $friend_object;
+	}
 
 
 }

@@ -179,9 +179,9 @@ class TwitterAPIAccessorOAuth {
 		 					'description' 		=> $xml->description,
 		 					'url' 				=> $xml->url,
 		 					'is_protected' 		=> $xml->protected,
-		 					'followers' 		=> $xml->followers_count,
-		 					'following' 		=> $xml->friends_count,
-		 					'tweets' 			=> $xml->statuses_count,
+		 					'follower_count' 	=> $xml->followers_count,
+		 					'friend_count' 		=> $xml->friends_count,
+		 					'tweet_count' 			=> $xml->statuses_count,
 							'favorites_count' 	=> $xml->favourites_count,
 							'joined'			=> $xml->created_at
 						);
@@ -228,15 +228,15 @@ class TwitterAPIAccessorOAuth {
 		 						'description' 		=> $item->description,
 		 						'url' 				=> $item->url,
 		 						'is_protected' 		=> $item->protected,
-								'following'			=> $item->friends_count,
-		 						'followers' 		=> $item->followers_count,
+								'friend_count'			=> $item->friends_count,
+		 						'follower_count' 		=> $item->followers_count,
 								'joined'			=> $item->created_at,
 		 						'tweet_text' 		=> $item->status->text,
 		 						'tweet_html' 		=> $item->status->text,
 								'last_post'			=> $item->status->created_at,
 		 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($item->status->created_at)),
 		 						'favorites_count' 	=> $item->favourites_count,
-		 						'tweets' 			=> $item->statuses_count
+		 						'tweet_count' 			=> $item->statuses_count
 							);
 						}
 						break;
@@ -252,9 +252,9 @@ class TwitterAPIAccessorOAuth {
 		 						'description' 		=> $item->user->description,
 		 						'url' 				=> $item->user->url,
 		 						'is_protected' 		=> $item->user->protected,
-		 						'followers' 		=> $item->user->followers_count,
-								'following'			=> $item->user->friends_count,
-								'tweets' 			=> $item->user->statuses_count,
+		 						'follower_count'	=> $item->user->followers_count,
+								'friend_count'		=> $item->user->friends_count,
+								'tweet_count' 		=> $item->user->statuses_count,
 								'joined'			=> $item->user->created_at,
 		 						'tweet_text' 		=> $item->text,
 		 						'tweet_html' 		=> $item->text,

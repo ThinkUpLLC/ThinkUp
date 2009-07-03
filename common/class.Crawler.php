@@ -56,7 +56,7 @@ class Crawler {
 					$this->instance->last_page_fetched_tweets++;
 				else {
 					$continue_fetching = false;
-					$this->instance->last_page_fetched_tweets = 1;
+					$this->instance->last_page_fetched_tweets = 0;
 				}
 				$args["page"] = $this->instance->last_page_fetched_tweets;			
 					
@@ -160,7 +160,6 @@ class Crawler {
 		$status_message = "";
 	}
 
-
 	function fetchOwnerReplies($cfg, $api, $logger) {
 		$status_message="";
 		// Get owner's replies
@@ -263,9 +262,8 @@ class Crawler {
 				$fd = new FollowDAO();
 
 				try { 
-					$status_message = "Parsing XML. "; 
 					$ids = $api->parseXML($twitter_data);
-					$status_message .= "Page ".$last_page_fetched_follower_ids." has ".count($ids) ." follower IDs. ";		
+					$status_message = "Page ".$last_page_fetched_follower_ids." has ".count($ids) ." follower IDs. ";		
 
 					if ( count($ids) == 0 ) {
 						$this->instance->is_archive_loaded_follows = true;
@@ -308,22 +306,17 @@ class Crawler {
 		// Get owner's followers: Page back only if more than 2% of follows are missing from database
 		// See how many are missing from last run
 		if ( $this->instance->is_archive_loaded_follows  ) { //all pages have been loaded
-			$status_message = "Follower archive marked as loaded";
+			$logger->logStatus("Follower archive marked as loaded", get_class($this) );
 			
 			//find out how many new follows owner has compared to what's in db
 			$new_follower_count = $this->owner_object->follower_count - $this->instance->total_follows_in_system;
 			$status_message = "New follower count is ". $this->owner_object->follower_count." and system has ".$this->instance->total_follows_in_system."; ". $new_follower_count ." new follows to load";
 			$logger->logStatus($status_message, get_class($this) );
-			$status_message = "";
 			
-			$status_message .= " Fetching follows via IDs";
-			$logger->logStatus($status_message, get_class($this) );
-			$status_message = "";
+			$logger->logStatus("Fetching follows via IDs", get_class($this) );
 			$this->fetchOwnerFollowersByIDs($cfg, $api, $logger);
 		} else {
-			$status_message = "Follower archive is not loaded; fetch should begin.";
-			$logger->logStatus($status_message, get_class($this) );
-			$status_message = "";
+			$logger->logStatus("Follower archive is not loaded; fetch should begin.", get_class($this) );
 		}
 
 
@@ -348,9 +341,8 @@ class Crawler {
 				$fd = new FollowDAO();
 
 				try { 
-					$status_message = "Parsing XML. "; 
 					$users = $api->parseXML($twitter_data);
-					$status_message .= "Page ".$this->instance->last_page_fetched_followers.": ".count($users) ." follows queued to update. ";		
+					$status_message .= "Page ".$this->instance->last_page_fetched_followers.": ".count($users) ." follows ready to update. ";		
 
 					if ( count($users) == 0 ) {
 						$this->instance->last_page_fetched_followers = 0;
@@ -393,9 +385,18 @@ class Crawler {
 
 
 	function fetchOwnerFriends($cfg, $api, $logger) {
+		$fd = new FollowDAO();
+		$this->instance->total_friends_in_system = $fd->getTotalFriends($cfg->twitter_user_id);
+		
+		if ($this->instance->total_friends_in_system < $this->owner_object->friend_count) {
+			$this->instance->is_archive_loaded_friends = false;
+			$logger->logStatus($this->instance->total_friends_in_system." friends in system, ".$this->owner_object->friend_count ." friends according to Twitter; Friend archive is not loaded", get_class($this) );
+		} else {
+			$this->instance->is_archive_loaded_friends = true;
+			$logger->logStatus("Friend archive loaded", get_class($this) );
+		}
+		
 		$status_message = "";
-		$this->instance->is_archive_loaded_friends = false;
-		# $this->is_archive_loaded_friends == compare friend count to what's in DB
 		$this->instance->last_page_fetched_friends = 0;
 		# Fetch friend pages
 		$continue_fetching = true;
@@ -429,7 +430,6 @@ class Crawler {
 						$this->instance->is_archive_loaded_friends = true;
 					}
 
-					$fd = new FollowDAO();
 					foreach($users as $u) {
 						$utu = new User($u, 'Friends');
 						$this->ud->updateUser($utu, $logger);
@@ -464,6 +464,82 @@ class Crawler {
 	}
 
 
+	function fetchOwnerFriendsTweets($cfg, $api, $logger) {
+		$fd = new FollowDAO();
+		$td = new TweetDAO();
+		$ud = new UserDAO();
+
+		$continue_fetching = true;
+		while ( $api->available && 
+			$api->available_api_calls_for_crawler > 0 && 
+			$continue_fetching) {
+				$stale_friend = $fd->getStalestFriend($cfg->twitter_user_id);
+				if ( $stale_friend != null) {
+					$logger->logStatus($stale_friend->user_name." is friend most need of update", get_class($this) );		
+					$stale_friend_tweets = str_replace("[id]",$stale_friend->user_name,$api->cURL_source['user_timeline']);
+					$args = array();
+					$args["count"] = 200;			
+				
+					if ($stale_friend->last_status_id > 0) {
+						$args['since_id'] = $stale_friend->last_status_id;
+					}
+
+					list($cURL_status,$twitter_data) = $api->apiRequest($stale_friend_tweets, $logger, $args);
+
+					if ($cURL_status == 200) { 
+						try { 
+							$count = 0;
+							$tweets = $api->parseXML($twitter_data);
+
+							if ( count($tweets) > 0 ) {
+								foreach($tweets as $tweet) {
+
+									if ( $td->addTweet($tweet, $stale_friend, $logger) > 0 ) 
+										$count++;
+								
+									//Update stale_friend values here
+									$stale_friend->full_name=$tweet['full_name'];
+									$stale_friend->avatar=$tweet['avatar'];
+									$stale_friend->location=$tweet['location'];
+									$stale_friend->description=$tweet['description'];
+									$stale_friend->url=$tweet['url'];
+									$stale_friend->is_protected=$tweet['is_protected'];
+									$stale_friend->follower_count=$tweet['follower_count'];
+									$stale_friend->friend_count=$tweet['friend_count'];
+									$stale_friend->tweet_count=$tweet['tweet_count'];
+									$stale_friend->joined=$tweet['joined'];
+							
+									if ( $tweet['status_id'] > $stale_friend->last_status_id ) { 
+										$stale_friend->last_status_id = $tweet['status_id'];
+									}
+									$ud->updateUser($stale_friend, $logger);
+								} 
+							} else {
+								$this->fetchAndAddUser($stale_friend->id, $api, $logger, $cfg, "Friends");	
+							}
+						
+							$logger->logStatus(count($tweets) ." tweet(s) found for ".$stale_friend->username." and $count saved", get_class($this) );		
+						} catch (Exception $e) { 
+							$logger->logStatus('Could not parse friends XML for $stale_friend->username', get_class($this) );		
+						}
+					} elseif ( $cURL_status == 401 || $cURL_status == 404 ) {
+							try { 
+								$e = $api->parseError($twitter_data);
+								$ued = new UserErrorDAO();
+								$ued->insertError($stale_friend->id, $cURL_status, $e['error'], $cfg->twitter_user_id);
+								$logger->logStatus('User error saved', get_class($this) );
+							} catch (Exception $e) { 
+								$logger->logStatus('Could not parse timeline error for $stale_friend->username', get_class($this) );
+							}
+					} 
+				} else {
+					$logger->logStatus('No friend staler than 1 day', get_class($this) );
+					$continue_fetching=false;
+				}
+				
+		}
+	}
+
 	function fetchStrayRepliedToTweets($cfg, $api, $logger) {
 		$td = new TweetDAO();
 		$strays = $td->getStrayRepliedToTweets($cfg->twitter_user_id);
@@ -485,11 +561,11 @@ class Crawler {
 		
 		foreach ($strays as $s) {
 			if ( $api->available && $api->available_api_calls_for_crawler > 0 )
-				$this->fetchAndAddUser($s['follower_id'], $api, $logger, $cfg);
+				$this->fetchAndAddUser($s['follower_id'], $api, $logger, $cfg, "Follower IDs");
 		}
 	}
 
-	private function fetchAndAddUser($fid, $api, $logger, $cfg) {
+	private function fetchAndAddUser($fid, $api, $logger, $cfg, $source) {
 		//fetch user from Twitter and add to DB
 		$status_message = "";
 		$u_deets 	= str_replace("[id]",$fid,$api->cURL_source['show_user']);	
@@ -498,9 +574,9 @@ class Crawler {
 		if ($cURL_status == 200) { 
 			try { 
 				$user_arr = $api->parseXML($twitter_data);
-				$user = new User($user_arr[0], "Follower IDs");
+				$user = new User($user_arr[0],  $source);
 				$this->ud->updateUser($user, $logger);
-				$status_message = 'Added new user '.$user->username." to database."; 
+				$status_message = 'Added/updated user '.$user->username." in database"; 
 			} catch (Exception $e) { 
 				$status_message = 'Could not parse tweet XML for $uid'; 
 			} 
