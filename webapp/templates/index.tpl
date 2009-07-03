@@ -66,8 +66,8 @@
 
 	<div class="section" id="orphanrepliessub">
 		<h2>Orphan Replies</h2>
-		{foreach from=$orphan_replies key=tid item=t}
 		<form action="replies/mark-parent.php">
+		{foreach from=$orphan_replies key=tid item=t}
 			<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
 			{include file="_tweet.cbox.tpl" t=$t}
 			</div>

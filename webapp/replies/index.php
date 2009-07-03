@@ -18,12 +18,16 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	$status_id = $_REQUEST['t'];
 	$tweet = $td->getTweet($status_id);
 
-	$id = new InstanceDAO();
-	$i = $id->getByUsername($tweet['author_username']);
-
-	$cfg = new Config($i->owner_username, $i->owner_user_id);
 	$s = new SmartyTwitalytic();
 	$u = new Utils();
+
+	$id = new InstanceDAO();
+	$i = $id->getByUsername($tweet['author_username']);
+	if ( isset($i) ) {
+		$s->assign('likely_orphans', $td->getLikelyOrphansForParent($tweet['pub_date'],  $i->twitter_user_id, 15) );
+	}
+	$cfg = new Config($i->twitter_username, $i->twitter_user_id);
+	
 
 	// instantiate data access objects
 	$ud = new UserDAO();
@@ -42,7 +46,6 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	$s->assign('public_reply_count', $public_replies_count );
 	$s->assign('private_reply_count', $private_replies_count );
 	$s->assign('reply_count', $all_replies_count );
-//	$s->assign('likely_orphans', $td->getLikelyOrphansForParent($tweet['pub_date'], $cfg->owner_user_id, 15) );
 
 
 	$s->assign('cfg', $cfg);

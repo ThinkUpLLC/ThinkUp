@@ -1,4 +1,7 @@
 <?php
+session_start();
+if (!isset($_SESSION['user'])) { header("Location: u/login.php"); }
+
 //TODO: check that parent id and all orphan id's are valid and in the db, pass a success or error message back
 echo $_GET["pid"];
 echo "<br />";
@@ -12,13 +15,16 @@ foreach ($oid as $o) {
 	echo "<br />";	
 }
 
+
+
+// set up
 chdir("..");
-$root_path 			= realpath('./../include')."/";
-require_once($root_path . "init.php");
+require_once('config.webapp.inc.php');
+ini_set("include_path", ini_get("include_path").":".$INCLUDE_PATH);
+require_once("init.php");
+
 $cfg = new Config();
 $db = new Database();
-$c = new Crawler();
-
 $conn = $db->getConnection();
 
 $td = new TweetDAO();
@@ -31,6 +37,8 @@ foreach ($oid as $o) {
 	
 }
 
+$db->closeConnection($conn);	
 
-header("Location: ".$cfg->webapp_home."replies/?t=$pid#replies");
+echo 'Assignment complete.<br /><a href="'.$TWITALYTIC_CFG['site_root_path'].'replies/?t='.$pid.'#tweets">Back to update replies.</a>.';
+
 ?>

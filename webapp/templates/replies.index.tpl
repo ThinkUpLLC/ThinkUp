@@ -8,7 +8,7 @@
 
 				<ul>
 					<li><a href="#tweets">Replies</a></li>
-					<li><a href="#replies">Likely Replies</a></li>
+					{if $likely_orphans}<li><a href="#replies">Likely Replies</a></li>{/if}
 					<li><a href="#followers">Public/Republishable Replies</a></li>
 					
 				</ul>		
@@ -29,29 +29,32 @@
 </ul>
 
 	</div>
+	{if $likely_orphans}
 		<div class="section" id="replies">
 
 <h1>{$tweet.tweet_text}</h1>
 <br /><br />
-<p>These replies have no parent tweet ID, but they were posted right around the time of the tweet.</p><br /><br />
-<form action="mark-parent.php"><ul>
+<p>Posted right around the time of this update:</p><br /><br />
+
+<form action="/replies/mark-parent.php">
 {foreach from=$likely_orphans key=tid item=t}
-<li {if $t.is_protected} style="background-color:grey;color:white"{/if}><input type="checkbox" value="{$t.status_id}" name="oid[]"}"><img src="{$t.author_avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> ({$t.follower_count} followers) <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>: {$t.tweet_html|regex_replace:"/@[a-zA-Z0-9]+/":""}<br /> {$t.adj_pub_date|relative_datetime}<br clear="all"></li>
+	<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+	{include file="_tweet.cbox.tpl" t=$t}
+	</div>
 {/foreach}
-</ul>
+
 <input type="hidden" value="{$tweet.status_id}" name="pid" />
-<input type="submit" value="assign" name="assign to parent" />
-</form>
-
+<input type="submit" value="mark as reply to update" name="mark as reply to this update" />
+</form>		
 </div>
-
+{/if}
 <div class="section" id="followers">
 
 <h1>{$tweet.tweet_text}</h1>
 <br /><br />
 <ul>
 {foreach from=$replies key=tid item=t}
-{if $t.is_protected}Anonymous says {else}<a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>{/if}, "{$t.tweet_html|regex_replace:"/@[a-zA-Z0-9]+ /":""}"<br /><br />
+{if $t.is_protected}Anonymous says {else}<a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>{/if}, "{$t.tweet_html|regex_replace:"/^@[a-zA-Z0-9_]+ /":""}"<br /><br />
 {/foreach}
 </ul>
 
