@@ -4,7 +4,7 @@
 #
 # Host: localhost (MySQL 5.1.34)
 # Database: twitalytic_dev1
-# Generation Time: 2009-06-28 17:20:51 -0700
+# Generation Time: 2009-07-02 23:16:54 -0700
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -54,7 +54,7 @@ CREATE TABLE `instances` (
   `earliest_reply_in_system` datetime DEFAULT NULL,
   `is_archive_loaded_replies` int(11) NOT NULL DEFAULT '0',
   `is_archive_loaded_follows` int(11) NOT NULL DEFAULT '0',
-  `api_calls_to_leave_unmade` int(11) NOT NULL DEFAULT '50',
+  `api_calls_to_leave_unmade` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `twitter_user_id` (`twitter_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -181,6 +181,7 @@ CREATE TABLE `users` (
   `found_in` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `last_post` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `joined` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_status_id` bigint(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
