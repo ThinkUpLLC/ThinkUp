@@ -194,7 +194,7 @@
 <ul>
 	<li>{$owner_stats.follower_count|number_format} Followers</li>
 	<li>{$owner_stats.friend_count|number_format} Friends</li>
-	<li>{$owner_stats.tweet_count|number_format} Tweets<br /><small>{$owner_stats.avg_tweet_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
+	<li>{$owner_stats.tweet_count|number_format} Tweets<br /><small>{$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
 	<li>{$instance->total_replies_in_system|number_format} Replies in System<br />{if $instance->total_replies_in_system > 0}<small>{$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}</small>{/if}</li>
 	<li>
 </ul>
