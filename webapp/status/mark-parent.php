@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user'])) { header("Location: u/login.php"); }
+if (!isset($_SESSION['user'])) { header("Location: /session/login.php"); }
 
 //TODO: check that parent id and all orphan id's are valid and in the db, pass a success or error message back
 echo $_GET["pid"];
@@ -39,6 +39,6 @@ foreach ($oid as $o) {
 
 $db->closeConnection($conn);	
 
-echo 'Assignment complete.<br /><a href="'.$TWITALYTIC_CFG['site_root_path'].'replies/?t='.$pid.'#tweets">Back to update replies.</a>.';
+echo 'Assignment complete.<br /><a href="'.$TWITALYTIC_CFG['site_root_path'].'">Back home</a>.';
 
 ?>

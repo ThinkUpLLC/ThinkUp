@@ -66,7 +66,7 @@
 
 	<div class="section" id="orphanrepliessub">
 		<h2>Orphan Replies</h2>
-		<form action="replies/mark-parent.php">
+		<form action="{$cfg->site_root_path}status/mark-parent.php">
 		{foreach from=$orphan_replies key=tid item=t}
 			<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
 			{include file="_status.cbox.tpl" t=$t}
