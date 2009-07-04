@@ -507,7 +507,7 @@ class Crawler {
 									$stale_friend->follower_count=$tweet['follower_count'];
 									$stale_friend->friend_count=$tweet['friend_count'];
 									$stale_friend->tweet_count=$tweet['tweet_count'];
-									$stale_friend->joined=$tweet['joined'];
+									$stale_friend->joined=date_format(date_create($tweet['joined']), "Y-m-d H:i:s");
 							
 									if ( $tweet['status_id'] > $stale_friend->last_status_id ) { 
 										$stale_friend->last_status_id = $tweet['status_id'];
