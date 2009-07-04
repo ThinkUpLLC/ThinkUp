@@ -201,7 +201,7 @@
 <br /><br />
 <h2>System Progress</h2>
 <ul>
-	<li>{$percent_tweet_loaded|number_format}% of Your Tweets Loaded<br /><small>({$instance->total_tweet_in_system|number_format} of {$owner_stats.tweet_count|number_format})</small></li>
+	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded<br /><small>({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</small></li>
 	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$total_follows_with_full_details|number_format} loaded{if $total_follows_protected>0}, {$total_follows_protected|number_format} protected{/if}{if $total_follows_with_errors>0}, {$total_follows_with_errors|number_format} suspended{/if})</small></li>
 	<li>{$percent_friends_loaded|number_format}% of Your Friends Loaded<br ><small>({$total_friends|number_format} loaded{if $total_friends_protected}, {$total_friends_protected|number_format} protected{/if})</small></li>
 </ul>
