@@ -91,7 +91,7 @@ class TweetDAO {
 		$sql_query = "
 		
 			SELECT
-				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval 8 hour as question_adj_pub_date, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
+				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval 8 hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
 			FROM 
 				tweets t 
 			INNER JOIN 
@@ -109,6 +109,34 @@ class TweetDAO {
 		return $tweets_replied_to;
 		
 	}
+
+	function getExchangesBetweenUsers($author_id, $other_user_id) {
+		//TODO Fix hardcoded adjusted pub_date
+
+		$sql_query = "
+		
+			SELECT
+				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval 8 hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
+			FROM 
+				tweets t 
+			INNER JOIN 
+				tweets t1 on t1.status_id = t.in_reply_to_status_id 
+			WHERE 
+				t.in_reply_to_status_id is not null AND
+				(t.author_user_id = ". $author_id   ." AND t1.author_user_id = ". $other_user_id. ")
+				OR
+				(t1.author_user_id = ". $author_id   ." AND t.author_user_id = ". $other_user_id. ")
+			ORDER BY
+				t.pub_date desc";				
+
+		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:'. $sql_query);
+		$tweets_replied_to 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $tweets_replied_to[] = $row; } 
+		mysql_free_result($sql_result);					# Free up memory
+		return $tweets_replied_to;
+		
+	}
+
 	
 	function getPublicRepliesToTweet($status_id) {
 		return $this->getRepliesToTweet($status_id, true);

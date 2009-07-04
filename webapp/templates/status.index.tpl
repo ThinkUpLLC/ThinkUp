@@ -23,7 +23,7 @@
 <ul>
 {foreach from=$replies key=tid item=t}
 <div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-	{include file="_tweet.other.tpl" t=$t}
+	{include file="_status.other.tpl" t=$t}
 </div>
 {/foreach}
 </ul>
@@ -39,7 +39,7 @@
 <form action="{$cfg->site_root_path}/replies/mark-parent.php">
 {foreach from=$likely_orphans key=tid item=t}
 	<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-	{include file="_tweet.cbox.tpl" t=$t}
+	{include file="_status.cbox.tpl" t=$t}
 	</div>
 {/foreach}
 

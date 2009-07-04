@@ -58,10 +58,25 @@ class UserDAO {
 			SELECT 
 				user_id 
 			FROM 
-				user 
+				users 
 			WHERE 
 				user_id = ".$user_id;
-		$sql_result = mysql_query($q) or die('Error [user_is_in_db]: selection query failed:' .$q );
+		$sql_result = mysql_query($q) or die('Error: selection query failed:' .$q );
+		if ( mysql_num_rows($sql_result) > 0 )
+			return true;
+		else
+			return false;
+	}
+
+	function isUserInDBByName($username) {
+		$q = "
+			SELECT 
+				user_id 
+			FROM 
+				users 
+			WHERE 
+				user_name = '".$username."'";
+		$sql_result = mysql_query($q) or die('Error selection query failed:' .$q );
 		if ( mysql_num_rows($sql_result) > 0 )
 			return true;
 		else
@@ -155,6 +170,21 @@ class UserDAO {
 		mysql_free_result($sql_result);	
 		return $row;		
 	}
+
+	function getUserByName($user_name) {
+		$sql_query		= "
+			SELECT 
+				* , ". $this->getAverageTweetCount()."
+			FROM
+				users u 
+			WHERE 
+				u.user_name = '". $user_name. "';";
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$row = mysql_fetch_assoc($sql_result);
+		mysql_free_result($sql_result);	
+		return $row;		
+	}
+
 
 	function getMostFollowedFollowers($user_id, $count) {
 		$sql_query		= "

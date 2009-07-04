@@ -32,7 +32,7 @@
 		
 		{foreach from=$all_tweets key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-			{include file="_tweet.mine.tpl" t=$t}
+			{include file="_status.mine.tpl" t=$t}
 		</div>
 		{/foreach}
 	</div>
@@ -40,7 +40,7 @@
 		<h2>Most-Replied</h2>
 		{foreach from=$most_replied_to_tweets key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-			{include file="_tweet.mine.tpl" t=$t}
+			{include file="_status.mine.tpl" t=$t}
 		</div>
 		{/foreach}
 	</div>
@@ -48,7 +48,7 @@
 		<h2>Your Replies</h2>
 		{foreach from=$author_replies key=tahrt item=r}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-			{include file="_tweet.qa.tpl" t=$t}
+			{include file="_status.qa.tpl" t=$t}
 		</div>
 		{/foreach}
 	</div>
@@ -69,7 +69,7 @@
 		<form action="replies/mark-parent.php">
 		{foreach from=$orphan_replies key=tid item=t}
 			<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-			{include file="_tweet.cbox.tpl" t=$t}
+			{include file="_status.cbox.tpl" t=$t}
 			</div>
 		{/foreach}
 		
@@ -86,7 +86,7 @@
 		
 		{foreach from=$standalone_replies key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-			{include file="_tweet.other.tpl" t=$t}
+			{include file="_status.other.tpl" t=$t}
 		</div>
 		{/foreach}
 		
@@ -97,7 +97,7 @@
 		<h2>All Replies</h2>
 		{foreach from=$all_replies key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-			{include file="_tweet.other.tpl" t=$t}
+			{include file="_status.other.tpl" t=$t}
 		</div>
 		{/foreach}
 	</div>
@@ -194,14 +194,14 @@
 <ul>
 	<li>{$owner_stats.follower_count|number_format} Followers</li>
 	<li>{$owner_stats.friend_count|number_format} Friends</li>
-	<li>{$owner_stats.tweet_count|number_format} Tweets<br /><small>{$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
+	<li>{$owner_stats.tweet_count|number_format} Tweets<br /><small>{$owner_stats.avg_tweet_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
 	<li>{$instance->total_replies_in_system|number_format} Replies in System<br />{if $instance->total_replies_in_system > 0}<small>{$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}</small>{/if}</li>
 	<li>
 </ul>
 <br /><br />
 <h2>System Progress</h2>
 <ul>
-	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded<br /><small>({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</small></li>
+	<li>{$percent_tweet_loaded|number_format}% of Your Tweets Loaded<br /><small>({$instance->total_tweet_in_system|number_format} of {$owner_stats.tweet_count|number_format})</small></li>
 	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$total_follows_with_full_details|number_format} loaded{if $total_follows_protected>0}, {$total_follows_protected|number_format} protected{/if}{if $total_follows_with_errors>0}, {$total_follows_with_errors|number_format} suspended{/if})</small></li>
 	<li>{$percent_friends_loaded|number_format}% of Your Friends Loaded<br ><small>({$total_friends|number_format} loaded{if $total_friends_protected}, {$total_friends_protected|number_format} protected{/if})</small></li>
 </ul>

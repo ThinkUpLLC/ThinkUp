@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user'])) { header("Location: u/login.php"); }
+if (!isset($_SESSION['user'])) { header("Location: /session/login.php"); }
 
 // set up
 chdir("..");
@@ -53,7 +53,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	# clean up
 	$db->closeConnection($conn);	
 
-	echo $s->fetch('replies.index.tpl');
+	echo $s->fetch('status.index.tpl');
 /*
 	echo $s->fetch('replies.public.tpl');
 */
