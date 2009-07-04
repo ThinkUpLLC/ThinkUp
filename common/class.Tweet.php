@@ -259,6 +259,24 @@ class TweetDAO {
 	}
 
 
+	function getStatusSources($author_id) {
+		$sql_query		= "
+			SELECT 
+				source, count(source) as total 
+			FROM 
+				tweets
+			WHERE 
+				author_user_id = ".$author_id."			
+			GROUP BY source
+			ORDER BY total DESC;";
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$all_sources = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $all_sources[] = $row; }		
+		mysql_free_result($sql_result);			
+		return $all_sources;
+	}
+
+
 	
 	function getAllReplies($author_username, $count) {
 		//TODO Fix hardcoded adjusted pub_date

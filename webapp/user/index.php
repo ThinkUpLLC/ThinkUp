@@ -21,12 +21,12 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 
 	if ( isset($i)) {
 		$cfg = new Config($i->twitter_username, $i->twitter_user_id);
-		$user_statuses = $td->getAllTweets($user['user_id'], 20);
 		
 		$s = new SmartyTwitalytic();
 
 		$s->assign('profile', $user);
-		$s->assign('user_statuses', $user_statuses);
+		$s->assign('user_statuses',  $td->getAllTweets($user['user_id'], 20));
+		$s->assign('sources', $td->getStatusSources($user['user_id']));
 		$s->assign('cfg', $cfg);
 		$s->assign('instance', $i);
 		$s->assign('exchanges', $td->getExchangesBetweenUsers($cfg->twitter_user_id, $user['user_id']));

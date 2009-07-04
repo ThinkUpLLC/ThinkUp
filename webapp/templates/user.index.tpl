@@ -17,13 +17,19 @@
 
 <img src="{$profile.avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <h1><a href="http://twitter.com/{$profile.user_name}">{$profile.user_name}</a></h1> <small>[{$profile.follower_count|number_format} followers, following {$profile.friend_count|number_format}] </small>   {if $profile.description}<br />{$profile.description}{/if}{if $profile.tweet_count > 0}<br /> <small>Last post {$profile.last_post|relative_datetime}{if $profile.location} from {$profile.location}{/if}</small>{/if}<br /><small>Averages {$profile.avg_tweets_per_day} updates per day; {$profile.tweet_count|number_format} since joining {$profile.joined|relative_datetime} on {$profile.joined|date_format:"%D"}</small><br clear="all" />
 <br /><br />
-<ul>
+
+{foreach from=$sources key=tid item=s}
+<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+	{$s.source} [{$s.total}]
+</div>
+{/foreach}
+
+<br /><br />
 {foreach from=$user_statuses key=tid item=t}
 <div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
 	{include file="_status.mine.tpl" t=$t}
 </div>
 {/foreach}
-</ul>
 
 
 	</div>
