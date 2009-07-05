@@ -22,9 +22,9 @@
 <div class="section" id="tweets">
 	<div role="application" class="yui-h" id="tweetssubtabs">
 		<ul>
-		<li><a href="#alltweetssub">Your Updates</a></li>
+		<li><a href="#alltweetssub">All</a></li>
 		<li><a href="#mostrepliedtweetssub">Most-Replied-To</a></li>
-		<li><a href="#tweetsauthorhasrepliedto">Exchanges</a></li>
+		<li><a href="#tweetsauthorhasrepliedto">Conversations</a></li>
 		</ul>		
 	</div>
 	<div class="section" id="alltweetssub">
@@ -59,24 +59,46 @@
 	<div role="application" class="yui-h" id="repliessubtabs">
 		<ul>
 		<li><a href="#orphanrepliessub">Inbox</a></li>
-		<li><a href="#standalonerepliessub">Standalone</a>
 		<li><a href="#allrepliessub">All</a></li>
+		<li><a href="#standalonerepliessub">Standalone</a>
 		</ul>		
 	</div>
 
 	<div class="section" id="orphanrepliessub">
 		<h2>Orphan Replies</h2>
-		<form action="{$cfg->site_root_path}status/mark-parent.php">
+		
+		<p>Incoming replies that are not associated with any particular update. Mark them as standalone or associate them with updates to move them out of the inbox.</p><br />
+		
+		
 		{foreach from=$orphan_replies key=tid item=t}
 			<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-			{include file="_status.cbox.tpl" t=$t}
+			{include file="_status.other.tpl" t=$t}
+			<form action="{$cfg->site_root_path}status/mark-parent.php">
+				<input type="hidden" value="{$t.status_id}" name="oid[]" />
+			
+			<select name="pid">
+				<option value="0">Mark as standalone</option>
+				<option disabled>Set as a reply to:</option>
+			{foreach from=$all_tweets key=aid item=a}
+				<option value="{$a.status_id}">&nbsp;&nbsp;{$a.tweet_html|truncate_for_select}</option>
+			{/foreach}
+			</select> <input value="Save" type="submit">
+			</form>
 			</div>
 		{/foreach}
-		
-		<input type="hidden" value="0" name="pid" />
-		<input type="submit" value="mark as standalone" name="mark as standalone" />
 		</form>		
 	</div>
+
+
+	<div class="section" id="allrepliessub">
+		<h2>All Replies</h2>
+		{foreach from=$all_replies key=tid item=t}
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+			{include file="_status.other.tpl" t=$t}
+		</div>
+		{/foreach}
+	</div>
+
 
 	<div class="section" id="standalonerepliessub">
 		
@@ -93,14 +115,6 @@
 	</div>
 
 		
-	<div class="section" id="allrepliessub">
-		<h2>All Replies</h2>
-		{foreach from=$all_replies key=tid item=t}
-		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-			{include file="_status.other.tpl" t=$t}
-		</div>
-		{/foreach}
-	</div>
 
 </div>
 
@@ -192,8 +206,8 @@
 	<h2>Key Stats</h2>
 
 <ul>
-	<li>{$owner_stats.follower_count|number_format} Followers</li>
-	<li>{$owner_stats.friend_count|number_format} Friends</li>
+	<li>{$owner_stats.follower_count|number_format} Followers<br /><small>{if $total_follows_protected>0}{$total_follows_protected|number_format} protected{/if}{if $total_follows_with_errors>0}, {$total_follows_with_errors|number_format} suspended{/if}</small></li>
+	<li>{$owner_stats.friend_count|number_format} Friends<br /><small>{if $total_friends_protected}{$total_friends_protected|number_format} protected{/if}</small></li>
 	<li>{$owner_stats.tweet_count|number_format} Tweets<br /><small>{$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
 	<li>{$instance->total_replies_in_system|number_format} Replies in System<br />{if $instance->total_replies_in_system > 0}<small>{$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}</small>{/if}</li>
 	<li>
@@ -202,8 +216,8 @@
 <h2>System Progress</h2>
 <ul>
 	<li>{$percent_tweets_loaded|number_format}% of Your Tweets Loaded<br /><small>({$instance->total_tweets_in_system|number_format} of {$owner_stats.tweet_count|number_format})</small></li>
-	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$total_follows_with_full_details|number_format} loaded{if $total_follows_protected>0}, {$total_follows_protected|number_format} protected{/if}{if $total_follows_with_errors>0}, {$total_follows_with_errors|number_format} suspended{/if})</small></li>
-	<li>{$percent_friends_loaded|number_format}% of Your Friends Loaded<br ><small>({$total_friends|number_format} loaded{if $total_friends_protected}, {$total_friends_protected|number_format} protected{/if})</small></li>
+	<li>{$percent_followers_loaded|number_format}% of Your Followers Loaded<br /><small>({$total_follows_with_full_details|number_format} loaded)</small></li>
+	<li>{$percent_friends_loaded|number_format}% of Your Friends Loaded<br ><small>({$total_friends|number_format} loaded)</small></li>
 </ul>
 {if sizeof($instances) > 1 }
 <br /><br />

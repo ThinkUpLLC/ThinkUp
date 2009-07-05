@@ -39,6 +39,6 @@ foreach ($oid as $o) {
 
 $db->closeConnection($conn);	
 
-echo 'Assignment complete.<br /><a href="'.$TWITALYTIC_CFG['site_root_path'].'">Back home</a>.';
+echo 'Assignment complete.<br /><a href="'.$TWITALYTIC_CFG['site_root_path'].'#replies">Back home</a>.';
 
 ?>
