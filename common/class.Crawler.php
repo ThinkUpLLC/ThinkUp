@@ -244,6 +244,8 @@ class Crawler {
 	private function fetchOwnerFollowersByIDs($cfg, $api, $logger) {
 		$continue_fetching = true;
 		$last_page_fetched_follower_ids = 0;
+		$status_message = "";
+		
 		while ( $api->available && 
 			$api->available_api_calls_for_crawler > 0 && 
 			$continue_fetching ) {
@@ -313,8 +315,10 @@ class Crawler {
 			$status_message = "New follower count is ". $this->owner_object->follower_count." and system has ".$this->instance->total_follows_in_system."; ". $new_follower_count ." new follows to load";
 			$logger->logStatus($status_message, get_class($this) );
 			
-			$logger->logStatus("Fetching follows via IDs", get_class($this) );
-			$this->fetchOwnerFollowersByIDs($cfg, $api, $logger);
+			if ( $new_follower_count > 0 ) {
+				$logger->logStatus("Fetching follows via IDs", get_class($this) );
+				$this->fetchOwnerFollowersByIDs($cfg, $api, $logger);
+			}
 		} else {
 			$logger->logStatus("Follower archive is not loaded; fetch should begin.", get_class($this) );
 		}

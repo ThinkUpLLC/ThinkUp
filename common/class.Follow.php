@@ -160,12 +160,13 @@ class FollowDAO {
 			LIMIT 1;";
 		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
 		$oldfriend = array();
-		while ($row = mysql_fetch_assoc($sql_result)) { $oldfriend[] = $row; }
-		mysql_free_result($sql_result);
-		if ( count($oldfriend) > 0)
+		if ( mysql_num_rows($sql_result) > 0 ) {
+			while ($row = mysql_fetch_assoc($sql_result)) { $oldfriend[] = $row; }
+			mysql_free_result($sql_result);
 			$friend_object = new User($oldfriend[0], "Friends");
-		else
+		} else {
 			$friend_object = null;
+		}
 		return $friend_object;
 	}
 
