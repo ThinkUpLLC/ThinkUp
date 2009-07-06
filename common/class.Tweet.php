@@ -238,6 +238,20 @@ class TweetDAO {
 		return mysql_affected_rows();
 	}
 	
+	function decrementReplyCountCache($status_id) {
+		$sql_query = "
+			UPDATE 
+				tweets
+			SET 
+				reply_count_cache = reply_count_cache - 1
+			WHERE 
+				status_id = ". $status_id."
+		"; 
+		//echo $sql_query;
+		$foo = mysql_query($sql_query) or die('Error, update query failed: '.$sql_query);
+		return mysql_affected_rows();
+	}	
+	
 	function getAllTweets($author_id, $count) {
 		//TODO Fix hardcoded adjusted pub_date
 		
@@ -384,7 +398,7 @@ class TweetDAO {
 		
 	}
 
-	function assignParent($parent_id, $orphan_id) {
+	function assignParent($parent_id, $orphan_id, $former_parent_id=-1) {
 		$sql_query		= "
 			UPDATE 
 				tweets
@@ -393,7 +407,10 @@ class TweetDAO {
 			WHERE
 				status_id = ".$orphan_id;
 		mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
-		$this->incrementReplyCountCache($parent_id);
+		if ( $parent_id > 0 )
+			$this->incrementReplyCountCache($parent_id);
+		elseif ($former_parent_id > 0)
+			$this->decrementReplyCountCache($former_parent_id);		
 		return mysql_affected_rows();
 	}
 	

@@ -75,7 +75,7 @@
 			{include file="_status.other.tpl" t=$t}
 			<form action="{$cfg->site_root_path}status/mark-parent.php">
 				<input type="hidden" value="{$t.status_id}" name="oid[]" />
-			
+				<input type="hidden" name="u" value="{$instance->twitter_username}">
 			<select name="pid">
 				<option value="0">Mark as standalone</option>
 				<option disabled>Set as a reply to:</option>
@@ -109,6 +109,17 @@
 		{foreach from=$standalone_replies key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
 			{include file="_status.other.tpl" t=$t}
+			
+			<form action="{$cfg->site_root_path}status/mark-parent.php">
+				<input type="hidden" value="{$t.status_id}" name="oid[]" />
+				<input type="hidden" name="u" value="{$instance->twitter_username}">
+			<input value="Move to:" type="submit"><select name="pid">
+			{foreach from=$all_tweets key=aid item=a}
+				<option value="{$a.status_id}">&nbsp;&nbsp;{$a.tweet_html|truncate_for_select}</option>
+			{/foreach}
+			</select> </form>
+			
+			
 		</div>
 		{/foreach}
 		

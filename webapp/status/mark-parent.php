@@ -33,12 +33,15 @@ $td = new TweetDAO();
 foreach ($oid as $o) {
 	echo "<br />";
 	
-	$td->assignParent($pid, $o);
+	if ( isset($_GET["fp"]))
+		$td->assignParent($pid, $o, $_GET["fp"]);
+	else
+		$td->assignParent($pid, $o);
 	
 }
 
 $db->closeConnection($conn);	
 
-echo 'Assignment complete.<br /><a href="'.$TWITALYTIC_CFG['site_root_path'].'#replies">Back home</a>.';
+echo 'Assignment complete.<br /><a href="'.$TWITALYTIC_CFG['site_root_path'].'?u='.$_GET['u'].'#replies">Back home</a>.';
 
 ?>

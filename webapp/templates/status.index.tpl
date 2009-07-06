@@ -24,6 +24,19 @@
 {foreach from=$replies key=tid item=t}
 <div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
 	{include file="_status.other.tpl" t=$t}
+	<form action="{$cfg->site_root_path}status/mark-parent.php">
+		<input type="hidden" value="{$t.status_id}" name="oid[]" />
+		<input type="hidden" value="{$tweet.status_id}" name="fp"		
+		<input type="hidden" name="u" value="{$instance->twitter_username}">
+	<select name="pid">
+		<option value="0">Mark as standalone</option>
+		<option disabled>Disassociate from this status and set as a reply to:</option>
+	{foreach from=$all_tweets key=aid item=a}
+	   {if $a.status_id != $tweet.status_id}
+		<option value="{$a.status_id}">&nbsp;&nbsp;{$a.tweet_html|truncate_for_select}</option>
+		{/if}
+	{/foreach}
+	</select> <input value="Save" type="submit"></form>	
 </div>
 {/foreach}
 </ul>
