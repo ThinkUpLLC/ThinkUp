@@ -338,6 +338,30 @@ class UserDAO {
 		
 	}
 
+	function getMutualFriends($uid, $instance_uid) {
+		$q = "
+			SELECT
+			 u.*, ". $this->getAverageTweetCount()."
+			FROM
+			 follows f
+			INNER JOIN
+			 users u
+			ON
+			 u.user_id = f.user_id
+			WHERE 
+			 follower_id = ".$instance_uid."
+			 AND f.user_id IN 
+			 ( SELECT user_id FROM follows WHERE follower_id = ".$uid.")
+			ORDER BY 
+			 follower_count ASC;";
+			
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		$mutual_friends 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $mutual_friends[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $mutual_friends;
+	}
 
 	
 }

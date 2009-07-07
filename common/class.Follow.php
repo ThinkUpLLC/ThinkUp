@@ -152,9 +152,9 @@ class FollowDAO {
 			ON
 			 	f.user_id = u.user_id
 			WHERE 
-				f.follower_id=".$user_id." AND
-				u.user_id NOT IN (SELECT user_id FROM user_errors) AND
-				u.last_updated < DATE_SUB(NOW(), INTERVAL 1 DAY)
+				f.follower_id=".$user_id." 
+				AND u.user_id NOT IN (SELECT user_id FROM user_errors) 
+				AND u.last_updated < DATE_SUB(NOW(), INTERVAL 1 DAY)
 			ORDER BY
 				u.last_updated ASC
 			LIMIT 1;";
@@ -169,6 +169,7 @@ class FollowDAO {
 		}
 		return $friend_object;
 	}
+	
 
 
 }

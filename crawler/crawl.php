@@ -20,21 +20,21 @@ foreach ($instances as $i) {
 
 	if ( $api->available_api_calls_for_crawler > 0 ) {
 	
-		$crawler->fetchOwnerInfo($cfg, $api, $logger);
+		$crawler->fetchInstanceUserInfo($cfg, $api, $logger);
 
-		$crawler->fetchOwnerTweets($cfg, $api, $logger);
+		$crawler->fetchInstanceUserTweets($cfg, $api, $logger);
 	
-		$crawler->fetchOwnerReplies($cfg, $api, $logger);
+		$crawler->fetchInstanceUserReplies($cfg, $api, $logger);
 
-		$crawler->fetchOwnerFriends($cfg, $api, $logger);
+		$crawler->fetchInstanceUserFriends($cfg, $api, $logger);
 
-		$crawler->fetchOwnerFollowers($cfg, $api, $logger);
+		$crawler->fetchInstanceUserFollowers($cfg, $api, $logger);
 
 		$crawler->fetchStrayRepliedToTweets($cfg, $api, $logger);
 
 		$crawler->fetchUnloadedFollowerDetails($cfg, $api, $logger);
 
-		$crawler->fetchOwnerFriendsTweets($cfg, $api, $logger);
+		$crawler->fetchFriendTweetsAndFriends($cfg, $api, $logger);
 
 		// TODO: Get direct messages
 		// TODO: Gather favorites data

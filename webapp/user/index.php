@@ -29,7 +29,12 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 		$s->assign('sources', $td->getStatusSources($user['user_id']));
 		$s->assign('cfg', $cfg);
 		$s->assign('instance', $i);
-		$s->assign('exchanges', $td->getExchangesBetweenUsers($cfg->twitter_user_id, $user['user_id']));
+		$exchanges =  $td->getExchangesBetweenUsers($cfg->twitter_user_id, $user['user_id']);
+		$s->assign('exchanges', $exchanges);
+		$s->assign('total_exchanges', count($exchanges));
+		$mutual_friends = $ud->getMutualFriends($user['user_id'], $i->twitter_user_id);
+		$s->assign('mutual_friends', $mutual_friends);
+		$s->assign('total_mutual_friends', count($mutual_friends) );
 		
 		$db->closeConnection($conn);	
 

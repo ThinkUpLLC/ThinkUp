@@ -8,7 +8,8 @@
 
 				<ul>
 					<li><a href="#tweets">User</a></li>
-					{if $exchanges}<li><a href="#replies">Conversations</a></li>{/if}
+					{if $exchanges}<li><a href="#replies">Conversations ({$total_exchanges})</a></li>{/if}
+					{if count($mutual_friends) > 0}<li><a href="#mutualfriends">Mutual Friends ({$total_mutual_friends})</a></li>{/if}
 					{if count($sources) > 0 }<li><a href="#sources">Clients</a></li>{/if}
 					
 				</ul>		
@@ -42,6 +43,21 @@
 	</div>
 {/if}
 
+
+	{if count($mutual_friends > 0)}
+	<div class="section" id="mutualfriends">
+
+	{foreach from=$mutual_friends key=tid item=f}
+	<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+	</div>
+	{/foreach}
+
+	</div>
+	{/if}
+
+
+
 	{if count($sources > 0)}
 	<div class="section" id="sources">
 
@@ -61,7 +77,7 @@
 
 <h2>User Stats</h2>
 <ul>
-	<li>Joined before/after you</li>
+	<li>Last updated {$profile.last_updated|relative_datetime}</li>
 	<li><a {if $instance}href="{$cfg->site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a></li>
 </ul>
 </div>

@@ -50,6 +50,7 @@
 <p>Posted right around the time of this update:</p><br /><br />
 
 <form action="{$cfg->site_root_path}status/mark-parent.php">
+	<input type="hidden" name="u" value="{$instance->twitter_username}">
 {foreach from=$likely_orphans key=tid item=t}
 	<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
 	{include file="_status.cbox.tpl" t=$t}
