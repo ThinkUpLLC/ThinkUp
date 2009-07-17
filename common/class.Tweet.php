@@ -366,7 +366,7 @@ class TweetDAO {
 	}
 	
 	
-	function getLikelyOrphansForParent($parent_pub_date, $owner_user_id, $count) {
+	function getLikelyOrphansForParent($parent_pub_date, $author_user_id, $author_username, $count) {
 		//TODO Fix hardcoded adjusted pub_date
 		
 		$sql_query		= "
@@ -379,13 +379,13 @@ class TweetDAO {
 			ON
 				t.author_user_id = u.user_id
 			WHERE 
-				in_reply_to_user_id = ". $owner_user_id ."
+				tweet_text 	LIKE '%".$author_username."%'				
 			AND
 				pub_date > '". $parent_pub_date ."' 
 			AND
 				in_reply_to_status_id IS NULL
 			AND
-				t.author_user_id != ". $owner_user_id ."
+				t.author_user_id != ". $author_user_id ."
 			ORDER BY 
 				pub_date 
 			ASC 

@@ -218,7 +218,7 @@
 
 <ul>
 	<li>{$owner_stats.follower_count|number_format} Followers<br /><small>{if $total_follows_protected>0}{$total_follows_protected|number_format} protected{if $total_follows_with_errors>0},{/if}{/if}{if $total_follows_with_errors>0} {$total_follows_with_errors|number_format} suspended{/if}</small></li>
-	<li>{$owner_stats.friend_count|number_format} Friends{if $total_friends_protected}<br /><small>{$total_friends_protected|number_format} protected</small>{/if}</li>
+	<li>{$owner_stats.friend_count|number_format} Friends<br /><small>{if $total_friends_protected}{$total_friends_protected|number_format} protected{/if}{if $total_friends_protected and $total_friends_with_errors},{/if}{if $total_friends_with_errors>0} {$total_friends_with_errors|number_format} suspended{/if}</small></li>
 	<li>{$owner_stats.tweet_count|number_format} Tweets<br /><small>{$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
 	<li>{$instance->total_replies_in_system|number_format} Replies in System<br />{if $instance->total_replies_in_system > 0}<small>{$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}</small>{/if}</li>
 	<li>

@@ -24,7 +24,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	$id = new InstanceDAO();
 	$i = $id->getByUsername($tweet['author_username']);
 	if ( isset($i) ) {
-		$s->assign('likely_orphans', $td->getLikelyOrphansForParent($tweet['pub_date'],  $i->twitter_user_id, 15) );
+		$s->assign('likely_orphans', $td->getLikelyOrphansForParent($tweet['pub_date'], $i->twitter_user_id,$tweet['author_username'], 15) );
 		$s->assign('all_tweets', $td->getAllTweets($i->twitter_user_id, 15) );
 		
 	}

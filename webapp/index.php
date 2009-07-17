@@ -82,6 +82,9 @@ $s->assign('total_follows_protected', $total_follows_protected);
 $total_friends_loaded = $fd->getTotalFriends($cfg->twitter_user_id);
 $s->assign('total_friends', $total_friends_loaded);
 
+$total_friends_with_errors = $fd->getTotalFriendsWithErrors($cfg->twitter_user_id);
+$s->assign('total_friends_with_errors', $total_friends_with_errors);
+
 $total_friends_protected = $fd->getTotalFriendsProtected($cfg->twitter_user_id);
 $s->assign('total_friends_protected', $total_friends_protected);
 

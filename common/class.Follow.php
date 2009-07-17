@@ -63,7 +63,8 @@ class FollowDAO {
 			WHERE 
 				f.user_id=".$user_id."
 				AND f.follower_id NOT IN (SELECT user_id FROM users) 
-				AND f.follower_id NOT IN (SELECT user_id FROM user_errors);";
+				AND f.follower_id NOT IN (SELECT user_id FROM user_errors)
+			LIMIT 20;";
 		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
 		$strays = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $strays[] = $row; }
@@ -88,6 +89,24 @@ class FollowDAO {
 		return $ferrors[0]['follows_with_errors'];		
 		
 	}
+
+	function getTotalFriendsWithErrors($user_id) {
+		$q = "
+			SELECT
+				count(follower_id) as friends_with_errors
+			FROM 
+				follows f 
+			WHERE 
+				f.follower_id=".$user_id."
+				AND f.user_id IN (SELECT user_id FROM user_errors WHERE error_issued_to_user_id=".$user_id.");";
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$ferrors = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $ferrors[] = $row; }
+		mysql_free_result($sql_result);	
+		return $ferrors[0]['friends_with_errors'];		
+		
+	}
+
 	
 	function getTotalFollowsWithFullDetails($user_id) {
 		$q = "
