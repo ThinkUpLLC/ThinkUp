@@ -44,16 +44,19 @@ class Crawler {
 		$got_latest_page_of_tweets = false;
 		$continue_fetching = true;
 
-		while ( $api->available && $api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching) {	
+		while ( $api->available && $api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching ) {	
 
 			$recent_tweets 		= str_replace("[id]",$cfg->twitter_username,$api->cURL_source['user_timeline']);
 			$args = array();
 			$args["count"] = 200;			
-			$last_page_of_tweets = round($this->owner_object->tweet_count / 200)+1;
+			$last_page_of_tweets = round($cfg->archive_limit/200)+1;
 
-			if ( $got_latest_page_of_tweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system ) {
+			//set page and since_id params for API call
+			if ( $got_latest_page_of_tweets && 
+				 $this->owner_object->tweet_count != $this->instance->total_tweets_in_system && 
+				 $this->owner_object->tweet_count < $cfg->archive_limit) {
 				if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets )
-					$this->instance->last_page_fetched_tweets++;
+					$this->instance->last_page_fetched_tweets = $this->instance->last_page_fetched_tweets + 1;
 				else {
 					$continue_fetching = false;
 					$this->instance->last_page_fetched_tweets = 0;
@@ -61,7 +64,7 @@ class Crawler {
 				$args["page"] = $this->instance->last_page_fetched_tweets;			
 					
 			} else {
-				if ($this->instance->last_status_id > 0)  
+				if (!$got_latest_page_of_tweets && $this->instance->last_status_id > 0)  
 					$args["since_id"] = $this->instance->last_status_id;
 			}
 
@@ -76,8 +79,8 @@ class Crawler {
 					foreach($tweets as $tweet) {
 
 						if ( $td->addTweet($tweet, $this->owner_object, $logger) > 0 ) {
-							$count++;
-							$this->instance->total_tweets_in_system++;
+							$count = $count + 1;
+							$this->instance->total_tweets_in_system = $this->instance->total_tweets_in_system + 1;
 						}
 						if ( $tweet['status_id'] > $this->instance->last_status_id ) 
 							$this->instance->last_status_id = $tweet['status_id'];
@@ -86,11 +89,11 @@ class Crawler {
 					$logger->logStatus($status_message, get_class($this) );		
 					$status_message = "";
 					
-					//Can't rely on Twitter to return all the tweets it says it has
-					if ( count($tweets) == 0 && $got_latest_page_of_tweets /*&& $this->instance->last_page_fetched_tweets >= $last_page_of_tweets */) {
+					//if you've got more than the Twitter API archive limit, stop looking for more tweets
+					if ( $this->owner_object->tweet_count >= $cfg->archive_limit  ) {
 						$this->instance->last_page_fetched_tweets = 1;
-						$continue_fetching=false;
-						$status_message = "Paged back ". $this->instance->last_page_fetched_tweets ." pages and not finding new tweets; moving on."; 
+						$continue_fetching = false;
+						$status_message = "More than Twitter cap of ".$cfg->archive_limit." already in system, moving on."; 
 						$logger->logStatus($status_message, get_class($this) );		
 						$status_message = "";
 					}
@@ -109,19 +112,13 @@ class Crawler {
 					$status_message = "";
 
 				}
-				
 				 
 				$got_latest_page_of_tweets = true;
-				
 			}
-			
-
 		}
 
-		if ( $this->owner_object->tweet_count == $this->instance->total_tweets_in_system ) {
+		if ( $this->owner_object->tweet_count == $this->instance->total_tweets_in_system ) 
 			$status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
-			$this->instance->is_archive_loaded_tweets = true;
-		}
 
 
 		$logger->logStatus($status_message, get_class($this) );		
@@ -435,7 +432,7 @@ class Crawler {
 
 					foreach($users as $u) {
 						$utu = new User($u, 'Friends');
-						$this->ud->updateUser($utu, $logger);
+						//$this->ud->updateUser($utu, $logger);
 
 						# add/update follow relationship
 						if ( $fd->followExists($utu->user_id, $this->instance->twitter_user_id ) ) {

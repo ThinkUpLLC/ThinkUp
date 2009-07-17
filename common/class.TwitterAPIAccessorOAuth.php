@@ -358,6 +358,10 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 		$status_message = "";
 		if ( $status > 200 ) {
 			$status_message	= "Could not retrieve $url"; 
+			if (sizeof($args)>0)
+				$status_message .= "?";
+			foreach ($args as $key => $value) 
+				$status_message .= $key."=".$value."&";
 			$status_message .= " | API ERROR: $status"; 
 			$status_message .= "\n\n$content\n\n"; 
 			if ( $status != 404 && $status != 403)
