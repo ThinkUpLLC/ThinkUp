@@ -3,6 +3,7 @@
 /** APPLICATION CONFIG **/
 $TWITALYTIC_CFG['debug'] = true;
 $TWITALYTIC_CFG['timeZone'] = 'TZ=US/Pacific';
+$TWITALYTIC_CFG['archive_limit'] = 3200; //http://apiwiki.twitter.com/Things-Every-Developer-Should-Know#6Therearepaginationlimits
 
 // Get the following by registering your instance with Twitter at http://twitter.com/oauth_clients/
 $TWITALYTIC_CFG['oauth_consumer_key'] = 'yourconsumerkey';
