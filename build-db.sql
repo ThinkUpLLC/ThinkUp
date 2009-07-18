@@ -1,13 +1,31 @@
+-- phpMyAdmin SQL Dump
+-- version 2.11.9.4
+-- http://www.phpmyadmin.net
+--
+-- Generation Time: Jul 18, 2009 at 03:53 PM
+-- Server version: 5.0.67
+-- PHP Version: 5.2.9
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- Database: `smarterware_twitalytic`
+--
+
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `follows`
 --
 
-DROP TABLE IF EXISTS `follows`;
 CREATE TABLE IF NOT EXISTS `follows` (
   `user_id` int(11) NOT NULL,
   `follower_id` int(11) NOT NULL,
   `last_seen` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`user_id`,`follower_id`)
+  `active` int(11) NOT NULL default '1',
+  PRIMARY KEY  (`user_id`,`follower_id`),
+  KEY `follower_id_user_id` (`follower_id`,`user_id`),
+  KEY `active` (`active`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -16,7 +34,6 @@ CREATE TABLE IF NOT EXISTS `follows` (
 -- Table structure for table `instances`
 --
 
-DROP TABLE IF EXISTS `instances`;
 CREATE TABLE IF NOT EXISTS `instances` (
   `id` int(11) NOT NULL auto_increment,
   `twitter_user_id` int(11) NOT NULL,
@@ -46,7 +63,6 @@ CREATE TABLE IF NOT EXISTS `instances` (
 -- Table structure for table `owners`
 --
 
-DROP TABLE IF EXISTS `owners`;
 CREATE TABLE IF NOT EXISTS `owners` (
   `id` int(20) NOT NULL auto_increment,
   `full_name` varchar(200) character set latin1 collate latin1_general_ci NOT NULL default '',
@@ -66,7 +82,6 @@ CREATE TABLE IF NOT EXISTS `owners` (
 -- Table structure for table `owner_instances`
 --
 
-DROP TABLE IF EXISTS `owner_instances`;
 CREATE TABLE IF NOT EXISTS `owner_instances` (
   `id` int(20) NOT NULL auto_increment,
   `owner_id` int(10) NOT NULL,
@@ -82,7 +97,6 @@ CREATE TABLE IF NOT EXISTS `owner_instances` (
 -- Table structure for table `tweets`
 --
 
-DROP TABLE IF EXISTS `tweets`;
 CREATE TABLE IF NOT EXISTS `tweets` (
   `id` int(11) NOT NULL auto_increment,
   `status_id` bigint(11) NOT NULL,
@@ -110,7 +124,6 @@ CREATE TABLE IF NOT EXISTS `tweets` (
 -- Table structure for table `tweet_errors`
 --
 
-DROP TABLE IF EXISTS `tweet_errors`;
 CREATE TABLE IF NOT EXISTS `tweet_errors` (
   `id` int(11) NOT NULL auto_increment,
   `status_id` bigint(20) NOT NULL,
@@ -127,7 +140,6 @@ CREATE TABLE IF NOT EXISTS `tweet_errors` (
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL auto_increment,
   `user_id` int(11) NOT NULL,
@@ -147,7 +159,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `joined` timestamp NOT NULL default '0000-00-00 00:00:00',
   `last_status_id` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `user_id` (`user_id`)
+  UNIQUE KEY `user_id` (`user_id`),
+  KEY `last_updated_user_id` (`last_updated`,`user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -156,7 +169,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Table structure for table `user_errors`
 --
 
-DROP TABLE IF EXISTS `user_errors`;
 CREATE TABLE IF NOT EXISTS `user_errors` (
   `id` int(11) NOT NULL auto_increment,
   `user_id` int(20) NOT NULL,
