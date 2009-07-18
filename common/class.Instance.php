@@ -47,7 +47,7 @@ class Instance {
 
 		$this->crawler_last_run=$r['crawler_last_run'];
 		$this->earliest_reply_in_system=$r['earliest_reply_in_system'];	
-		$this->api_calls_to_leave_unmade=$r['api_calls_to_leave_unmade'];
+		$this->api_calls_to_leave_unmade=$r['api_calls_to_leave_unmade_per_minute'];
 		$this->avg_replies_per_day = $r['avg_replies_per_day'];
 	}
 
@@ -174,7 +174,7 @@ class InstanceDAO {
 				total_tweets_in_system = (select count(*) from tweets where author_user_id=".$i->twitter_user_id."),
 				".$owner_tweets."
 				total_replies_in_system = (select count(*) from tweets where tweet_text like '%@".$i->twitter_username."%'),
-				total_follows_in_system = (select count(*) from follows where user_id=".$i->twitter_user_id."),
+				total_follows_in_system = (select count(*) from follows where user_id=".$i->twitter_user_id." and active=1),
 				total_users_in_system = (select count(*) from users),
 				is_archive_loaded_follows = ". $is_archive_loaded_follows .",
 				is_archive_loaded_replies = ". $is_archive_loaded_replies .",

@@ -12,6 +12,7 @@ $db = new Database();
 $conn = $db->getConnection();
 
 $ud = new UserDAO();
+$fd = new FollowDAO();
 $id = new InstanceDAO();
 $td = new TweetDAO();
 
@@ -33,7 +34,7 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 			$exchanges =  $td->getExchangesBetweenUsers($cfg->twitter_user_id, $user['user_id']);
 			$s->assign('exchanges', $exchanges);
 			$s->assign('total_exchanges', count($exchanges));
-			$mutual_friends = $ud->getMutualFriends($user['user_id'], $i->twitter_user_id);
+			$mutual_friends = $fd->getMutualFriends($user['user_id'], $i->twitter_user_id);
 			$s->assign('mutual_friends', $mutual_friends);
 			$s->assign('total_mutual_friends', count($mutual_friends) );
 		}

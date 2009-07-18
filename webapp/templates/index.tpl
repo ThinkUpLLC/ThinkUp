@@ -11,15 +11,15 @@
 	<div role="application" class="yui-g" id="tabs">
 
 		<ul>
-			<li><a href="#tweets">Updates</a></li>
-			<li><a href="#replies">Replies</a></li>
+			<li><a href="#updates">Updates</a></li>
+			<li><a href="#mentions">Mentions</a></li>
 			<li><a href="#followers">Followers</a></li>
 			<li><a href="#friends">Friends</a></li>
 
 		</ul>		
 
 
-<div class="section" id="tweets">
+<div class="section" id="updates">
 	<div role="application" class="yui-h" id="tweetssubtabs">
 		<ul>
 		<li><a href="#alltweetssub">All</a></li>
@@ -55,7 +55,7 @@
 
 </div>
 
-<div class="section" id="replies">
+<div class="section" id="mentions">
 	<div role="application" class="yui-h" id="repliessubtabs">
 		<ul>
 		<li><a href="#orphanrepliessub">Inbox</a></li>
@@ -135,6 +135,8 @@
 		<li><a href="#mostfollowedsub">Most-Followed</a></li>
 		<li><a href="#leastlikelyfollowerssub">Least Likely</a></li>
 		<li><a href="#earliestjoinerssub">Earliest</a></li>
+		<li><a href="#formerfollowerssub">Former</a></li>
+
 		</ul>		
 	</div>
 	<div class="section" id="mostfollowedsub">
@@ -162,6 +164,15 @@
 		</div>
 		{/foreach}
 	</div>	
+
+	<div class="section" id="formerfollowerssub">
+		<h2>Former Followers</h2>
+		{foreach from=$former_followers key=fid item=f}
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+		</div>
+		{/foreach}
+	</div>	
 	
 </div>
 
@@ -172,6 +183,7 @@
 		<li><a href="#mostactivefriendsssub">Most Active</a></li>
 		<li><a href="#leastactivefriendsssub">Least Active</a></li>
 		<li><a href="#mostfollowedfriendssub">Most-Followed</a></li>
+		<li><a href="#formerfriendssub">Former</a></li>
 		</ul>		
 	</div>
 	<div class="section" id="mostactivefriendsssub">
@@ -197,6 +209,15 @@
 	<div class="section" id="mostfollowedfriendssub">
 		<h2>Most-Followed Friends</h2>
 		{foreach from=$most_followed_friends key=fid item=f}
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+		</div>
+		{/foreach}
+	</div>
+
+	<div class="section" id="formerfriendssub">
+		<h2>Former Friends</h2>
+		{foreach from=$former_friends key=fid item=f}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
 		{include file="_user.tpl" t=$f}
 		</div>

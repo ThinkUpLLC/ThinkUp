@@ -659,5 +659,44 @@ class Crawler {
 		
 	}
 	
+	// For each API call left, grab oldest follow relationship, check if it exists, and update table
+	function cleanUpFollows($cfg, $api, $logger) {
+		$fd = new FollowDAO();
+		$continue_fetching=true;
+		while ( $api->available && 
+			$api->available_api_calls_for_crawler > 0 && 
+			$continue_fetching ) {
+			
+			$oldfollow = $fd->getOldestFollow();
+			
+			$friendship_call 	= $api->cURL_source['show_friendship'];	
+			$args = array();
+			$args["source_id"] = $oldfollow["followee_id"];
+			$args["target_id"] = $oldfollow["follower_id"];			
+
+			list($cURL_status,$twitter_data) = $api->apiRequest($friendship_call, $logger, $args);
+
+			if ($cURL_status == 200) { 
+				try { 
+					$friendship = $api->parseXML($twitter_data);
+					if ( $friendship['source_follows_target'] == 'true') 
+						$fd->update($oldfollow["followee_id"], $oldfollow["follower_id"]);
+					else
+						$fd->deactivate($oldfollow["followee_id"], $oldfollow["follower_id"]);
+
+					if ( $friendship['target_follows_source'] == 'true') 
+						$fd->update( $oldfollow["follower_id"], $oldfollow["followee_id"]);
+					else
+						$fd->deactivate( $oldfollow["follower_id"], $oldfollow["followee_id"]);
+
+					
+				} catch (Exception $e) { 
+					$status_message = 'Could not parse friendship XML'; 
+				} 
+			} else {
+				$continue_fetching = false;
+			} 
+		}
+	}
 }
 ?>

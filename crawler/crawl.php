@@ -39,6 +39,8 @@ foreach ($instances as $i) {
 		// TODO: Get direct messages
 		// TODO: Gather favorites data
 
+		$crawler->cleanUpFollows($cfg, $api, $logger);
+		
 		// Save instance
 		$id->save($crawler->instance,  $crawler->owner_object->tweet_count, $logger, $api);
 	} 

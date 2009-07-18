@@ -67,6 +67,7 @@ class TwitterAPIAccessorOAuth {
 			"follow" 				=> "/friendships/create/[id]",
 			"unfollow" 				=> "/friendships/destroy/[id]",
 			"confirm_follow" 		=> "/friendships/exists",
+			"show_friendship"		=> "/friendships/show",
 			"test" 					=> "/help/test",
 			"turn_on_notification"	=> "/notifications/follow/[id]",
 			"turn_off_notification"	=> "/notifications/leave/[id]",
@@ -271,6 +272,12 @@ class TwitterAPIAccessorOAuth {
 							'remaining-hits' 		=> $xml->{'remaining-hits'},
 							'hourly-limit'			=> $xml->{'hourly-limit'},
 							'reset-time'			=> $xml->{'reset-time-in-seconds'}
+						);
+						break;
+					case 'relationship':
+						$thisFeed = array(
+							'source_follows_target'	=> $xml->source->following,
+							'target_follows_source'	=> $xml->target->following
 						);
 						break;
 		  			default:

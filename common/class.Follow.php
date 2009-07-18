@@ -39,6 +39,22 @@ class FollowDAO {
 		else
 			return false;
 	}
+
+	function deactivate($user_id, $follower_id) {
+		$q = "
+			UPDATE 
+			 	follows
+			SET
+				active = 0
+			WHERE
+				user_id = ".$user_id." AND follower_id=".$follower_id.";";
+		$sql_result = mysql_query($q) or die('Error, update failed:' .$q );
+		if (mysql_affected_rows() > 0)
+			return true;
+		else
+			return false;
+	}
+
 	
 	function insert($user_id, $follower_id) {
 		$q = "
@@ -177,7 +193,7 @@ class FollowDAO {
 			ORDER BY
 				u.last_updated ASC
 			LIMIT 1;";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
 		$oldfriend = array();
 		if ( mysql_num_rows($sql_result) > 0 ) {
 			while ($row = mysql_fetch_assoc($sql_result)) { $oldfriend[] = $row; }
@@ -189,8 +205,258 @@ class FollowDAO {
 		return $friend_object;
 	}
 	
+	function getOldestFollow() {
+		$q = "
+			SELECT
+				user_id as followee_id, follower_id
+			FROM 
+				follows f
+			WHERE
+				active = 1
+			ORDER BY
+				f.last_seen ASC
+			LIMIT 1;";
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		$oldfollow = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $oldfollow[] = $row; }
+		mysql_free_result($sql_result);
+		return $oldfollow[0];
+	}
+
+	
+	private function getAverageTweetCount() {
+		return "round(tweet_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
+	}
+	
+
+	function getMostFollowedFollowers($user_id, $count) {
+		$sql_query		= "
+			SELECT 
+				* , ". $this->getAverageTweetCount()."
+			FROM 
+				users u 
+			INNER JOIN
+			 	follows f 
+			ON 
+				u.user_id = f.follower_id 
+			WHERE
+				f.user_id = ".$user_id." and active=1
+			ORDER BY 
+				u.follower_count DESC 
+			LIMIT ".$count.";";
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$most_followed_followers 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $most_followed_followers[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $most_followed_followers;
+		
+	}
 
 
+	function getLeastLikelyFollowers($user_id, $count) {
+		
+		//TODO: Remove hardcoded 10k follower threshold in query below
+		$sql_query		= "
+			SELECT 
+				*, ROUND(100*friend_count/follower_count,4) AS LikelihoodOfFollow, ". $this->getAverageTweetCount()."
+			FROM 
+				users u 
+			INNER JOIN
+			 	follows f 
+			ON 
+				u.user_id = f.follower_id
+			WHERE
+				f.user_id =  ".$user_id." and active=1 and follower_count > 10000 and friend_count > 0
+			ORDER BY 
+				LikelihoodOfFollow ASC #u.follower_count DESC
+			LIMIT ".$count.";";
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$least_likely_followers 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $least_likely_followers[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $least_likely_followers;
+		
+	}
+
+	function getEarliestJoinerFollowers($user_id, $count) {
+		$sql_query		= "
+			SELECT 
+				*, ". $this->getAverageTweetCount()."
+			FROM 
+				users u 
+			INNER JOIN
+			 	follows f 
+			ON 
+				u.user_id = f.follower_id 
+			WHERE
+				f.user_id =  ".$user_id." and active=1
+			ORDER BY 
+				u.user_id ASC
+			LIMIT ".$count.";";
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$earliest_joiner_followers 		= array();
+		$least_likely_followers = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $least_likely_followers[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $least_likely_followers;
+		
+	}	
+	
+	function getMostActiveFollowees($user_id, $count) {
+		$sql_query = "
+			select 
+				*, ". $this->getAverageTweetCount()." 
+			from 
+				users u 
+			inner join 
+				follows f 
+			on 
+				f.user_id = u.user_id 
+			where 
+				f.follower_id = ".$user_id." and active=1
+			order by 
+				avg_tweets_per_day DESC 
+			LIMIT ".$count;		
+			
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$most_active_friends 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $most_active_friends[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $most_active_friends;
+		
+	}
+
+	function getFormerFollowees($user_id, $count) {
+		$sql_query = "
+			select 
+				*
+			from 
+				users u 
+			inner join 
+				follows f 
+			on 
+				f.user_id = u.user_id 
+			where 
+				f.follower_id = ".$user_id." and active=0
+			order by 
+				u.follower_count DESC 
+			LIMIT ".$count;		
+			
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$most_active_friends 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $most_active_friends[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $most_active_friends;
+		
+	}
+
+	function getFormerFollowers($user_id, $count) {
+		$sql_query = "
+			select 
+				u.* 
+			from 
+				users u 
+			inner join 
+				follows f 
+			on 
+				f.follower_id = u.user_id 
+			where 
+				f.user_id = ".$user_id." and active=0
+			order by 
+				u.follower_count DESC 
+			LIMIT ".$count;		
+			
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$most_active_friends 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $most_active_friends[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $most_active_friends;
+		
+	}
+
+
+
+	function getLeastActiveFollowees($user_id, $count) {
+		$sql_query = "
+			select 
+				*, ". $this->getAverageTweetCount()."
+			from 
+				users u 
+			inner join 
+				follows f 
+			on 
+				f.user_id = u.user_id 
+			where 
+				f.follower_id = ".$user_id." and active=1
+			order by 
+				avg_tweets_per_day ASC 
+			LIMIT ".$count;		
+			
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$most_active_friends 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $most_active_friends[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $most_active_friends;
+		
+	}
+
+
+	function getMostFollowedFollowees($user_id, $count) {
+		$sql_query = "
+			select 
+				*, ". $this->getAverageTweetCount()."
+			from 
+				users u 
+			inner join 
+				follows f 
+			on 
+				f.user_id = u.user_id 
+			where 
+				f.follower_id = ".$user_id." and active=1
+			order by 
+				follower_count DESC 
+			LIMIT ".$count;		
+			
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$most_followed_friends 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $most_followed_friends[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $most_followed_friends;
+		
+	}
+
+	function getMutualFriends($uid, $instance_uid) {
+		$q = "
+			SELECT
+			 u.*, ". $this->getAverageTweetCount()."
+			FROM
+			 follows f
+			INNER JOIN
+			 users u
+			ON
+			 u.user_id = f.user_id
+			WHERE 
+			 follower_id = ".$instance_uid."
+			 AND f.user_id IN 
+			 ( SELECT user_id FROM follows WHERE follower_id = ".$uid." and active=1)
+			ORDER BY 
+			 follower_count ASC;";
+			
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		$mutual_friends 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $mutual_friends[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $mutual_friends;
+	}
 }
 
 ?>

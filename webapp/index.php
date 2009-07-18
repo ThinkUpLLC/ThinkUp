@@ -51,9 +51,10 @@ if(!$s->is_cached('index.tpl', $i->twitter_username)) {
 	// pass data to smarty
 	$owner_stats = $ud->getDetails($cfg->twitter_user_id);
 	$s->assign('owner_stats', $owner_stats);
-	$s->assign('most_followed_followers', $ud->getMostFollowedFollowers($cfg->twitter_user_id, 15));
-	$s->assign('least_likely_followers', $ud->getLeastLikelyFollowers($cfg->twitter_user_id, 15));
-	$s->assign('earliest_joiner_followers', $ud->getEarliestJoinerFollowers($cfg->twitter_user_id, 15));
+	$s->assign('most_followed_followers', $fd->getMostFollowedFollowers($cfg->twitter_user_id, 15));
+	$s->assign('least_likely_followers', $fd->getLeastLikelyFollowers($cfg->twitter_user_id, 15));
+	$s->assign('earliest_joiner_followers', $fd->getEarliestJoinerFollowers($cfg->twitter_user_id, 15));
+	$s->assign('former_followers', $fd->getFormerFollowers($cfg->twitter_user_id, 15));
 
 	$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
 	$s->assign('all_replies', $td->getAllReplies($cfg->twitter_username, 15) );
@@ -65,9 +66,12 @@ if(!$s->is_cached('index.tpl', $i->twitter_username)) {
 	$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
 
 
-	$s->assign('most_active_friends', $ud->getMostActiveFollowees($cfg->twitter_user_id, 15));
-	$s->assign('least_active_friends', $ud->getLeastActiveFollowees($cfg->twitter_user_id, 15));
-	$s->assign('most_followed_friends', $ud->getMostFollowedFollowees($cfg->twitter_user_id, 15));
+	$s->assign('most_active_friends', $fd->getMostActiveFollowees($cfg->twitter_user_id, 15));
+	$s->assign('least_active_friends', $fd->getLeastActiveFollowees($cfg->twitter_user_id, 15));
+	$s->assign('most_followed_friends', $fd->getMostFollowedFollowees($cfg->twitter_user_id, 15));
+	$s->assign('former_friends', $fd->getFormerFollowees($cfg->twitter_user_id, 15));
+	
+	
 
 	$s->assign('instance', $i);
 	$s->assign('instances', $id->getByOwnerId($owner->id));
