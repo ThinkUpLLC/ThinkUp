@@ -7,6 +7,7 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").":".$INCLUDE_PATH);
 require_once($root_path . "init.php");
 
+
 $db = new Database();
 $conn = $db->getConnection();
 
@@ -34,78 +35,83 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	}
 }
 
-$cfg = new Config($i->twitter_username, $i->twitter_user_id);
-
 $s = new SmartyTwitalytic();
-$u = new Utils();
 
-// instantiate data access objects
-$ud = new UserDAO();
-$td = new TweetDAO();
-$fd = new FollowDAO();
+if(!$s->is_cached('index.tpl', $i->twitter_username)) {
 
-// pass data to smarty
-$owner_stats = $ud->getDetails($cfg->twitter_user_id);
-$s->assign('owner_stats', $owner_stats);
-$s->assign('most_followed_followers', $ud->getMostFollowedFollowers($cfg->twitter_user_id, 15));
-$s->assign('least_likely_followers', $ud->getLeastLikelyFollowers($cfg->twitter_user_id, 15));
-$s->assign('earliest_joiner_followers', $ud->getEarliestJoinerFollowers($cfg->twitter_user_id, 15));
+	$cfg = new Config($i->twitter_username, $i->twitter_user_id);
 
-$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
-$s->assign('all_replies', $td->getAllReplies($cfg->twitter_username, 15) );
+	$u = new Utils();
 
-$s->assign('most_replied_to_tweets', $td->getMostRepliedToTweets($cfg->twitter_user_id, 15));
+	// instantiate data access objects
+	$ud = new UserDAO();
+	$td = new TweetDAO();
+	$fd = new FollowDAO();
 
-$s->assign('orphan_replies', $td->getOrphanReplies($cfg->twitter_username, 5));
-$s->assign('standalone_replies', $td->getStandaloneReplies($cfg->twitter_username, 15));
-$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
+	// pass data to smarty
+	$owner_stats = $ud->getDetails($cfg->twitter_user_id);
+	$s->assign('owner_stats', $owner_stats);
+	$s->assign('most_followed_followers', $ud->getMostFollowedFollowers($cfg->twitter_user_id, 15));
+	$s->assign('least_likely_followers', $ud->getLeastLikelyFollowers($cfg->twitter_user_id, 15));
+	$s->assign('earliest_joiner_followers', $ud->getEarliestJoinerFollowers($cfg->twitter_user_id, 15));
 
+	$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
+	$s->assign('all_replies', $td->getAllReplies($cfg->twitter_username, 15) );
 
-$s->assign('most_active_friends', $ud->getMostActiveFollowees($cfg->twitter_user_id, 15));
-$s->assign('least_active_friends', $ud->getLeastActiveFollowees($cfg->twitter_user_id, 15));
-$s->assign('most_followed_friends', $ud->getMostFollowedFollowees($cfg->twitter_user_id, 15));
+	$s->assign('most_replied_to_tweets', $td->getMostRepliedToTweets($cfg->twitter_user_id, 15));
 
-$s->assign('instance', $i);
-$s->assign('instances', $id->getByOwnerId($owner->id));
-$s->assign('cfg', $cfg);
-
-$total_follows_with_errors = $fd->getTotalFollowsWithErrors($cfg->twitter_user_id);
-$s->assign('total_follows_with_errors', $total_follows_with_errors);
-
-$total_follows_with_full_details = $fd->getTotalFollowsWithFullDetails($cfg->twitter_user_id);
-$s->assign('total_follows_with_full_details', $total_follows_with_full_details);
-
-$total_follows_protected = $fd-> getTotalFollowsProtected($cfg->twitter_user_id);
-$s->assign('total_follows_protected', $total_follows_protected);
-
-//TODO: Get friends with full details and also friends with errors, same as with followers
-$total_friends_loaded = $fd->getTotalFriends($cfg->twitter_user_id);
-$s->assign('total_friends', $total_friends_loaded);
-
-$total_friends_with_errors = $fd->getTotalFriendsWithErrors($cfg->twitter_user_id);
-$s->assign('total_friends_with_errors', $total_friends_with_errors);
-
-$total_friends_protected = $fd->getTotalFriendsProtected($cfg->twitter_user_id);
-$s->assign('total_friends_protected', $total_friends_protected);
-
-//Percentages
-$percent_followers_loaded = $u->getPercentage($owner_stats['follower_count'], ($total_follows_with_full_details + $total_follows_with_errors));
-$percent_followers_loaded = ($percent_followers_loaded  > 100) ? 100 : $percent_followers_loaded; 
-$percent_tweets_loaded = $u->getPercentage($owner_stats['tweet_count'],$i->total_tweets_in_system );
-$percent_tweets_loaded = ($percent_tweets_loaded  > 100) ? 100 : $percent_tweets_loaded; 
-
-$percent_friends_loaded = $u->getPercentage($owner_stats['friend_count'], ($total_friends_loaded));
-$percent_friends_loaded = ($percent_friends_loaded  > 100) ? 100 : $percent_friends_loaded; 
+	$s->assign('orphan_replies', $td->getOrphanReplies($cfg->twitter_username, 5));
+	$s->assign('standalone_replies', $td->getStandaloneReplies($cfg->twitter_username, 15));
+	$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
 
 
-$s->assign('percent_followers_loaded', $percent_followers_loaded);
-$s->assign('percent_tweets_loaded', $percent_tweets_loaded);
-$s->assign('percent_friends_loaded', $percent_friends_loaded);
+	$s->assign('most_active_friends', $ud->getMostActiveFollowees($cfg->twitter_user_id, 15));
+	$s->assign('least_active_friends', $ud->getLeastActiveFollowees($cfg->twitter_user_id, 15));
+	$s->assign('most_followed_friends', $ud->getMostFollowedFollowees($cfg->twitter_user_id, 15));
+
+	$s->assign('instance', $i);
+	$s->assign('instances', $id->getByOwnerId($owner->id));
+	$s->assign('cfg', $cfg);
+
+	$total_follows_with_errors = $fd->getTotalFollowsWithErrors($cfg->twitter_user_id);
+	$s->assign('total_follows_with_errors', $total_follows_with_errors);
+
+	$total_follows_with_full_details = $fd->getTotalFollowsWithFullDetails($cfg->twitter_user_id);
+	$s->assign('total_follows_with_full_details', $total_follows_with_full_details);
+
+	$total_follows_protected = $fd-> getTotalFollowsProtected($cfg->twitter_user_id);
+	$s->assign('total_follows_protected', $total_follows_protected);
+
+	//TODO: Get friends with full details and also friends with errors, same as with followers
+	$total_friends_loaded = $fd->getTotalFriends($cfg->twitter_user_id);
+	$s->assign('total_friends', $total_friends_loaded);
+
+	$total_friends_with_errors = $fd->getTotalFriendsWithErrors($cfg->twitter_user_id);
+	$s->assign('total_friends_with_errors', $total_friends_with_errors);
+
+	$total_friends_protected = $fd->getTotalFriendsProtected($cfg->twitter_user_id);
+	$s->assign('total_friends_protected', $total_friends_protected);
+
+	//Percentages
+	$percent_followers_loaded = $u->getPercentage($owner_stats['follower_count'], ($total_follows_with_full_details + $total_follows_with_errors));
+	$percent_followers_loaded = ($percent_followers_loaded  > 100) ? 100 : $percent_followers_loaded; 
+	$percent_tweets_loaded = $u->getPercentage($owner_stats['tweet_count'],$i->total_tweets_in_system );
+	$percent_tweets_loaded = ($percent_tweets_loaded  > 100) ? 100 : $percent_tweets_loaded; 
+
+	$percent_friends_loaded = $u->getPercentage($owner_stats['friend_count'], ($total_friends_loaded));
+	$percent_friends_loaded = ($percent_friends_loaded  > 100) ? 100 : $percent_friends_loaded; 
+
+
+	$s->assign('percent_followers_loaded', $percent_followers_loaded);
+	$s->assign('percent_tweets_loaded', $percent_tweets_loaded);
+	$s->assign('percent_friends_loaded', $percent_friends_loaded);
+
+}
 
 # clean up
 $db->closeConnection($conn);	
 
-echo $s->fetch('index.tpl');
+$s->display('index.tpl', $i->twitter_username);
 
 
 

@@ -1,2 +1,3 @@
 webapp/templates_c/*.php
+webapp/templates_c/cache/*.tpl
 smarty/*
