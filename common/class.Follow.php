@@ -64,7 +64,7 @@ class FollowDAO {
 				f.user_id=".$user_id."
 				AND f.follower_id NOT IN (SELECT user_id FROM users) 
 				AND f.follower_id NOT IN (SELECT user_id FROM user_errors)
-			LIMIT 20;";
+			LIMIT 100;";
 		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
 		$strays = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $strays[] = $row; }

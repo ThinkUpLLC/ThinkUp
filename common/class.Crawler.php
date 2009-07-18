@@ -240,7 +240,7 @@ class Crawler {
 	
 	private function fetchInstanceUserFollowersByIDs($cfg, $api, $logger) {
 		$continue_fetching = true;
-		$last_page_fetched_follower_ids = 0;
+		$last_page_fetched_follower_ids = $this->instance->last_page_fetched_followers;
 		$status_message = "";
 		
 		while ( $api->available && 
@@ -267,6 +267,7 @@ class Crawler {
 					if ( count($ids) == 0 ) {
 						$this->instance->is_archive_loaded_follows = true;
 						$continue_fetching = false;
+						$last_page_fetched_follower_ids = 0;
 					}
 
 					$updated_follow_count = 0;
@@ -277,11 +278,11 @@ class Crawler {
 						if ( $fd->followExists($this->instance->twitter_user_id,$id['id'] ) ) {
 							//update it
 							if ( $fd->update( $this->instance->twitter_user_id,$id['id'] ) )
-								$updated_follow_count++;
+								$updated_follow_count = $updated_follow_count + 1;
 						} else {
 							//insert it
 							if ( $fd->insert(  $this->instance->twitter_user_id,$id['id'] ))
-								$inserted_follow_count++;
+								$inserted_follow_count = $inserted_follow_count + 1;
 						}
 					}
 
@@ -298,6 +299,8 @@ class Crawler {
 			$status_message = "";
 
 		}
+		
+		$this->instance->last_page_fetched_followers = $last_page_fetched_follower_ids;
 	}
 	
 	function fetchInstanceUserFollowers($cfg, $api, $logger) {

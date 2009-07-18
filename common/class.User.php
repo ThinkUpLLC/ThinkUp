@@ -30,6 +30,10 @@ class User {
 		$this-> description = $val['description'];
 		$this-> url = $val['url'];
 		$this-> is_protected = $val['is_protected'];
+		if ( $this-> is_protected == '')
+			$this-> is_protected = 0;
+		elseif ( $this-> is_protected == 'true')
+			$this-> is_protected = 1;
 		$this-> follower_count = $val['follower_count'];
 		$this-> tweet_count = $val['tweet_count'];
 		if (isset($val['last_status_id']))
