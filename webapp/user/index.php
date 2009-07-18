@@ -23,22 +23,23 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 		$cfg = new Config($i->twitter_username, $i->twitter_user_id);
 		
 		$s = new SmartyTwitalytic();
+		if(!$s->is_cached('user.index.tpl', $i->twitter_username."-".$user['user_name'])) {
 
-		$s->assign('profile', $user);
-		$s->assign('user_statuses',  $td->getAllTweets($user['user_id'], 20));
-		$s->assign('sources', $td->getStatusSources($user['user_id']));
-		$s->assign('cfg', $cfg);
-		$s->assign('instance', $i);
-		$exchanges =  $td->getExchangesBetweenUsers($cfg->twitter_user_id, $user['user_id']);
-		$s->assign('exchanges', $exchanges);
-		$s->assign('total_exchanges', count($exchanges));
-		$mutual_friends = $ud->getMutualFriends($user['user_id'], $i->twitter_user_id);
-		$s->assign('mutual_friends', $mutual_friends);
-		$s->assign('total_mutual_friends', count($mutual_friends) );
-		
+			$s->assign('profile', $user);
+			$s->assign('user_statuses',  $td->getAllTweets($user['user_id'], 20));
+			$s->assign('sources', $td->getStatusSources($user['user_id']));
+			$s->assign('cfg', $cfg);
+			$s->assign('instance', $i);
+			$exchanges =  $td->getExchangesBetweenUsers($cfg->twitter_user_id, $user['user_id']);
+			$s->assign('exchanges', $exchanges);
+			$s->assign('total_exchanges', count($exchanges));
+			$mutual_friends = $ud->getMutualFriends($user['user_id'], $i->twitter_user_id);
+			$s->assign('mutual_friends', $mutual_friends);
+			$s->assign('total_mutual_friends', count($mutual_friends) );
+		}
 		$db->closeConnection($conn);	
 
-		echo $s->fetch('user.index.tpl');
+		$s->display('user.index.tpl', $i->twitter_username."-".$user['user_name']);
 	}
 } else {
 	echo 'This user is not in the system.<br /><a href="'. $cfg->site_root_path .'">back home</a>';
