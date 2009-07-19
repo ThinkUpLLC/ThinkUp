@@ -457,6 +457,29 @@ class FollowDAO {
 
 		return $mutual_friends;
 	}
+	
+	function getFriendsNotFollowingBack($uid) {
+		$q = "
+			SELECT 
+				u.* 
+			FROM 
+				follows f
+			INNER JOIN
+			 	users u
+			ON 
+				f.user_id = u.user_id
+			WHERE 
+				f.follower_id = ".$uid."
+			 	AND f.user_id NOT IN (SELECT follower_id FROM follows WHERE user_id = ".$uid.")
+			ORDER BY follower_count	";
+			
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		$nonmutual_friends 		= array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $nonmutual_friends[] = $row; } 
+		mysql_free_result($sql_result);	
+
+		return $nonmutual_friends;
+	}
 }
 
 ?>

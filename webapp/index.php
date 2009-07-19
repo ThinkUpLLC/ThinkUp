@@ -37,7 +37,7 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 
 $s = new SmartyTwitalytic();
 
-if(!$s->is_cached('index.tpl', $i->twitter_username)) {
+if(!$s->is_cached('index.tpl', $i->twitter_username."-".$_SESSION['user'])) {
 
 	$cfg = new Config($i->twitter_username, $i->twitter_user_id);
 
@@ -70,7 +70,7 @@ if(!$s->is_cached('index.tpl', $i->twitter_username)) {
 	$s->assign('least_active_friends', $fd->getLeastActiveFollowees($cfg->twitter_user_id, 15));
 	$s->assign('most_followed_friends', $fd->getMostFollowedFollowees($cfg->twitter_user_id, 15));
 	$s->assign('former_friends', $fd->getFormerFollowees($cfg->twitter_user_id, 15));
-	
+	$s->assign('not_mutual_friends', $fd->getFriendsNotFollowingBack($cfg->twitter_user_id));
 	
 
 	$s->assign('instance', $i);
@@ -115,7 +115,7 @@ if(!$s->is_cached('index.tpl', $i->twitter_username)) {
 # clean up
 $db->closeConnection($conn);	
 
-$s->display('index.tpl', $i->twitter_username);
+$s->display('index.tpl', $i->twitter_username."-".$_SESSION['user']);
 
 
 

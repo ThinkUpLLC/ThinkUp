@@ -180,10 +180,11 @@
 <div class="section" id="friends">
 	<div role="application" class="yui-h" id="friendssubtabs">
 		<ul>
-		<li><a href="#mostactivefriendsssub">Most Active</a></li>
-		<li><a href="#leastactivefriendsssub">Least Active</a></li>
-		<li><a href="#mostfollowedfriendssub">Most-Followed</a></li>
+		<li><a href="#mostactivefriendsssub">Active</a></li>
+		<li><a href="#leastactivefriendsssub">Dormant</a></li>
+		<li><a href="#mostfollowedfriendssub">Popular</a></li>
 		<li><a href="#formerfriendssub">Former</a></li>
+		<li><a href="#notmutualfriendssub">Not Mutual</a></li>
 		</ul>		
 	</div>
 	<div class="section" id="mostactivefriendsssub">
@@ -223,6 +224,16 @@
 		</div>
 		{/foreach}
 	</div>
+
+	<div class="section" id="notmutualfriendssub">
+		<h2>Not Mutual Friends</h2>
+		{foreach from=$not_mutual_friends key=fid item=f}
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_user.tpl" t=$f}
+		</div>
+		{/foreach}
+	</div>
+
 
 </div>
 
