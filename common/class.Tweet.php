@@ -272,6 +272,25 @@ class TweetDAO {
 		return $all_tweets;
 	}
 
+	function getAllTweetsByUsername($username) {
+		//TODO Fix hardcoded adjusted pub_date
+		
+		$sql_query		= "
+			SELECT 
+				*, pub_date - interval 8 hour as adj_pub_date 
+			FROM 
+				tweets t
+			WHERE 
+				author_username = '".$username."'
+			ORDER BY 
+				pub_date ASC";
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$all_tweets = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $all_tweets[] = $row; }		
+		mysql_free_result($sql_result);			
+		return $all_tweets;
+	}
+
 
 	function getStatusSources($author_id) {
 		$sql_query		= "

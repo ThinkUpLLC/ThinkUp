@@ -30,6 +30,8 @@
 	<div class="section" id="alltweetssub">
 		<h2>All Tweets</h2>
 		
+		<a href="{$cfg->site_root_path}status/export.php?u={$instance->twitter_username}">Export all your updates (tab-delimited)</a><br /><br />
+		
 		{foreach from=$all_tweets key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
 			{include file="_status.mine.tpl" t=$t}
