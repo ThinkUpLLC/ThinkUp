@@ -340,10 +340,13 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 				if ( $next_reset_in_minutes > $current_time_in_minutes )
 					$minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
 				elseif ( $next_reset_in_minutes < $current_time_in_minutes )
-					$minutes_left_in_hour = $current_time_in_minutes - $next_reset_in_minutes;
+					$minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
+					
 
-				$this->api_calls_to_leave_unmade = round($minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute);
-				$this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - $this->api_calls_to_leave_unmade;
+				//echo $minutes_left_in_hour . " minutes left in the hour till ".  date('H:i:s', (int) $this->next_api_reset);
+				$this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
+				//echo "  ".$this->api_calls_to_leave_unmade . " API calls to leave unmade\n";
+				$this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - round($this->api_calls_to_leave_unmade);
 
 
 			} catch (Exception $e) { 
