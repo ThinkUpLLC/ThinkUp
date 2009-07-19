@@ -35,7 +35,7 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 
 $s = new SmartyTwitalytic();
 $s->assign('tweets', $tweets);
-$s->display('status.export.tpl');
+$s->display('status.export.tpl', $username);
 
 
 
