@@ -311,7 +311,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 	
 	function CrawlerTwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $cfg, $instance) {
 		parent::TwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $cfg);
-		$this->api_calls_to_leave_unmade_per_minute = $instance->api_calls_to_leave_unmade;
+		$this->api_calls_to_leave_unmade_per_minute = $instance->api_calls_to_leave_unmade_per_minute;
 	}
 	
 	function init($logger) {
@@ -342,7 +342,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 				elseif ( $next_reset_in_minutes < $current_time_in_minutes )
 					$minutes_left_in_hour = $current_time_in_minutes - $next_reset_in_minutes;
 
-				$this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
+				$this->api_calls_to_leave_unmade = round($minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute);
 				$this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - $this->api_calls_to_leave_unmade;
 
 
@@ -397,7 +397,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 	}
 	
 	function getStatus() {
-		return $this->available_api_calls_for_twitter." of ". $this->api_hourly_limit." API calls left this hour; ". $this->available_api_calls_for_crawler . " for crawler until ". date('H:i:s', (int) $this->next_api_reset);
+		return $this->available_api_calls_for_twitter." of ". $this->api_hourly_limit." API calls left this hour; ". round($this->available_api_calls_for_crawler) . " for crawler until ". date('H:i:s', (int) $this->next_api_reset);
 
 	}	
 }

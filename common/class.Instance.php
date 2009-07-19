@@ -19,7 +19,7 @@ class Instance {
 	var $is_archive_loaded_friends;
 	var $crawler_last_run;
 	var $earliest_reply_in_system;	
-	var $api_calls_to_leave_unmade;
+	var $api_calls_to_leave_unmade_per_minute;
 	var $avg_replies_per_day;
 		
 	function Instance($r) {
@@ -47,7 +47,7 @@ class Instance {
 
 		$this->crawler_last_run=$r['crawler_last_run'];
 		$this->earliest_reply_in_system=$r['earliest_reply_in_system'];	
-		$this->api_calls_to_leave_unmade=$r['api_calls_to_leave_unmade_per_minute'];
+		$this->api_calls_to_leave_unmade_per_minute=$r['api_calls_to_leave_unmade_per_minute'];
 		$this->avg_replies_per_day = $r['avg_replies_per_day'];
 	}
 
