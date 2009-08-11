@@ -62,12 +62,28 @@
 			width : 600px;
 		}
 		
+		 /******* MENU *******/  
+ 		 #top #menu {
+			margin:10px;
+			text-transform: uppercase;
+		}
+		 #top #menu li:hover{  
+		     color: #6fa5fd;  
+		     cursor: pointer;  
+		 }  
+		 /******* /MENU *******/  
+		 /******* LOADING *******/  
+		 #loading{  
+		     visibility: hidden;  
+		 }  
+		 /******* /LOADING *******/
+		
 	</style>
 	{/literal}	
 	
 	<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login={$cfg->bitly_login}&apiKey={$cfg->bitly_api_key}"></script>
 
-	<script type="text/javascript" src="{$cfg->site_root_path}cssjs/bitly.js"></script>	
+
 	
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>	
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
@@ -79,7 +95,124 @@
 		$("#repliessubtabs").tabs();
 		$("#followerssubtabs").tabs();
 		$("#friendssubtabs").tabs();
-	});{/literal}
+	});
+	
+	
+	$(document).ready(function(){
+		//References
+		var sections = $("#menu li");
+		
+		var loading = $("#loading");
+		var loading_mentions = $("#loading_mentions");
+		var loading_followers = $("#loading_followers");
+		var loading_friends = $("#loading_friends");
+		
+		var tweets_content = $("#tweets_content");
+		var mentions_content = $("#mentions_content");
+		var followers_content = $("#followers_content");
+		var friends_content = $("#friends_content");
+		
+		{/literal}
+		showLoading();
+		tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-all", hideLoading);
+		mentions_content.load("inline.view.php?u={$instance->twitter_username}&d=mentions-all", hideLoading); 
+		followers_content.load("inline.view.php?u={$instance->twitter_username}&d=followers-mostfollowed", hideLoading); 
+		friends_content.load("inline.view.php?u={$instance->twitter_username}&d=friends-mostactive", hideLoading); 
+		
+		{literal}
+		//Manage click events
+		sections.click(function(){  	
+			//$(this).css('background-color', '#ccc');
+		
+			//show the loading bar
+			showLoading();
+			//load selected section
+			switch(this.id){
+				case "tweets-all": {/literal}
+					tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-all", hideLoading);
+					break;
+				case "tweets-mostreplies":
+					tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-mostreplies", hideLoading);
+					break;
+				case "tweets-convo":
+					tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-convo", hideLoading); 
+					break;
+				case "mentions-all":
+					mentions_content.load("inline.view.php?u={$instance->twitter_username}&d=mentions-all", hideLoading); 
+					break;				
+				case "mentions-orphan":
+					mentions_content.load("inline.view.php?u={$instance->twitter_username}&d=mentions-orphan", hideLoading); 
+					break;				
+				case "mentions-standalone":
+					mentions_content.load("inline.view.php?u={$instance->twitter_username}&d=mentions-standalone", hideLoading); 
+					break;	
+				case "followers-mostfollowed":
+					followers_content.load("inline.view.php?u={$instance->twitter_username}&d=followers-mostfollowed", hideLoading); 
+					break;	
+				case "followers-leastlikely":
+					followers_content.load("inline.view.php?u={$instance->twitter_username}&d=followers-leastlikely", hideLoading); 
+					break;	
+				case "followers-earliest":
+					followers_content.load("inline.view.php?u={$instance->twitter_username}&d=followers-earliest", hideLoading); 
+					break;	
+				case "followers-former":
+					followers_content.load("inline.view.php?u={$instance->twitter_username}&d=followers-former", hideLoading); 
+					break;	
+				case "friends-mostactive":
+					friends_content.load("inline.view.php?u={$instance->twitter_username}&d=friends-mostactive", hideLoading); 
+					break;	
+				case "friends-leastactive":
+					friends_content.load("inline.view.php?u={$instance->twitter_username}&d=friends-leastactive", hideLoading); 
+					break;	
+				case "friends-mostfollowed":
+					friends_content.load("inline.view.php?u={$instance->twitter_username}&d=friends-mostfollowed", hideLoading); 
+					break;	
+				case "friends-former":
+					friends_content.load("inline.view.php?u={$instance->twitter_username}&d=friends-former", hideLoading); 
+					break;	
+				case "friends-notmutual":
+					friends_content.load("inline.view.php?u={$instance->twitter_username}&d=friends-notmutual", hideLoading); 
+					break;	
+				default:
+					//hide loading bar if there is no selected section
+					hideLoading();
+					break;
+			}
+		});
+{literal}
+		//show loading bar
+		function showLoading(){
+			loading
+				.css({visibility:"visible"})
+				.css({opacity:"1"})
+				.css({display:"block"})
+			;
+			loading_mentions
+				.css({visibility:"visible"})
+				.css({opacity:"1"})
+				.css({display:"block"})
+			loading_followers
+				.css({visibility:"visible"})
+				.css({opacity:"1"})
+				.css({display:"block"})
+			loading_friends
+				.css({visibility:"visible"})
+				.css({opacity:"1"})
+				.css({display:"block"})
+
+
+		}
+		//hide loading bar
+		function hideLoading(){
+			loading.fadeTo(1000, 0);
+			loading_mentions.fadeTo(1000, 0);
+			loading_followers.fadeTo(1000, 0);
+			loading_friends.fadeTo(1000, 0);
+			
+		};
+	});	
+	
+	{/literal}
 
 	</script>		
 
