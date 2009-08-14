@@ -73,7 +73,9 @@ class InstanceDAO {
 		
 		
 	}
+
 	
+
 	private function getAverageReplyCount() {
 		return "round(total_replies_in_system/(datediff(curdate(), earliest_reply_in_system)), 2) as avg_replies_per_day";
 	}
@@ -139,6 +141,18 @@ class InstanceDAO {
 		}
 		mysql_free_result($sql_result);				
 		return $i;
+	}
+
+
+	function updateLastRun($id) {
+		$sql_query = "
+			UPDATE 
+				instances
+			 SET 
+				crawler_last_run = NOW()
+			WHERE
+				id = ".$id.";";
+		$sql_result = mysql_query($sql_query)  or die('Error, update query failed:' .$sql_query );
 	}
 	
 	function save($i, $user_xml_total_tweets_by_owner, $logger, $api ) {

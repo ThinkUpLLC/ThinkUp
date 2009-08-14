@@ -47,3 +47,5 @@ Then, run the crawler to load your Twitter data:
 To view what's going on with the crawler, use this command:
 
 <code>$ tail -f crawler/logs/crawler.log</code>
+
+Cron the crawler's run command to go at least once an hour.
