@@ -65,10 +65,19 @@
 		 /******* MENU *******/  
  		 #top #menu {
 			margin:10px;
+			padding:5px;
 			text-transform: uppercase;
 		}
+		 #top #menu li {
+			background-color: #ADDFFF;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			padding: 10px;
+			margin:10px;
+		}
 		 #top #menu li:hover{  
-		     color: #6fa5fd;  
+		     color: #0060e0;  
+			 background-color:#eee;
 		     cursor: pointer;  
 		 }  
 		 /******* /MENU *******/  
@@ -213,11 +222,9 @@
 	});	
 	
 	{/literal}
+	
 
-	</script>		
-
-
-
+	</script>
    <title>Twitalytic</title>
 </head>
 <body>

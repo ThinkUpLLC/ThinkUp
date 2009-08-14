@@ -1,6 +1,7 @@
 
 {include file="_header.tpl"}
 
+
 {if not $instance->total_users_in_system }
 <!-- //TODO this is hacky way to determine if the crawler has run and should be improved -->
 <div align="center" style="border:solid red 1px;background:white;margin:10px;"><b>There's nothing to see here. Yet! First the crawler has to run to load all that tasty Twitter data.</b></div>{/if}
@@ -23,13 +24,13 @@
 	
 	<div id="top">
 	<table border="0"><tr>
-	<td>
+	<td valign="top">
 		<div id="tweets_content"></div>
 	</td>
 	<td valign="top" align="left">
 		<ul id="menu">
 			<li id="tweets-all">All</li>
-			<li id="tweets-mostreplies">Most Replied-To</li>
+			<li id="tweets-mostreplies">Most&nbsp;Replied-To</li>
 			<li id="tweets-convo">Conversations</li>
 		</ul>
 		<div id="loading_mentions"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..." /></div>
@@ -45,7 +46,7 @@
 
 	<div id="top">
 	<table border="0"><tr>
-	<td>
+	<td valign="top">
 		<div id="mentions_content"></div>
 	</td>
 	<td valign="top" align="left">
@@ -64,13 +65,13 @@
 <div class="section" id="followers">
 	<div id="top">
 	<table border="0"><tr>
-	<td>
+	<td valign="top">
 		<div id="followers_content"></div>
 	</td>
 	<td valign="top" align="left">
 		<ul id="menu">
 			<li id="followers-mostfollowed">Most-Followed</li>
-			<li id="followers-leastlikely">Least Likely</li>
+			<li id="followers-leastlikely">Least&nbsp;Likely</li>
 			<li id="followers-earliest">Earliest</li>
 			<li id="followers-former">Former</li>
 			
@@ -87,16 +88,16 @@
 <div class="section" id="friends">
 	<div id="top">
 	<table border="0"><tr>
-	<td>
+	<td valign="top">
 		<div id="friends_content"></div>
 	</td>
 	<td valign="top" align="left">
 		<ul id="menu">
-			<li id="friends-mostactive">Most Active</li>
-			<li id="friends-leastactive">Least Active</li>
-			<li id="friends-mostfollowed">Most Followed</li>
+			<li id="friends-mostactive">Most&nbsp;Active</li>
+			<li id="friends-leastactive">Least&nbsp;Active</li>
+			<li id="friends-mostfollowed">Most&nbsp;Followed</li>
 			<li id="friends-former">Former</li>
-			<li id="friends-notmutual">Not Mutual</li>			
+			<li id="friends-notmutual">Not&nbsp;Mutual</li>			
 		</ul>
 		<div id="loading_friends"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..." /></div>
 	</td>		
@@ -121,7 +122,7 @@
 <ul>
 	<li>{$owner_stats.follower_count|number_format} Followers<br /><small>{if $total_follows_protected>0}{$total_follows_protected|number_format} protected{if $total_follows_with_errors>0},{/if}{/if}{if $total_follows_with_errors>0} {$total_follows_with_errors|number_format} suspended{/if}</small></li>
 	<li>{$owner_stats.friend_count|number_format} Friends<br /><small>{if $total_friends_protected}{$total_friends_protected|number_format} protected{/if}{if $total_friends_protected and $total_friends_with_errors},{/if}{if $total_friends_with_errors>0} {$total_friends_with_errors|number_format} suspended{/if}</small></li>
-	<li>{$owner_stats.tweet_count|number_format} Tweets<br /><small>{$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}, <a href="{$cfg->site_root_path}status/export.php?u={$instance->twitter_username}">export</a></small></li>
+	<li>{$owner_stats.tweet_count|number_format} Tweets <small><a href="{$cfg->site_root_path}status/export.php?u={$instance->twitter_username}">(export)</a></small><br /><small>{$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
 	<li>{$instance->total_replies_in_system|number_format} Replies in System<br />{if $instance->total_replies_in_system > 0}<small>{$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}</small>{/if}</li>
 	<li>
 </ul>
