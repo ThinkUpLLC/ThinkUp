@@ -14,12 +14,9 @@
 				</ul>		
 
 
-		<div class="section" id="tweets">
-
+<div class="section" id="tweets">
 <h1>{$tweet.tweet_text}</h1>
 <br /><br />
-
-
 	{foreach from=$replies key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
 		{include file="_status.other.tpl" t=$t}
@@ -39,10 +36,11 @@
 		
 		</div>
 	{/foreach}
+</div>
 
-	</div>
-	{if $likely_orphans}
-		<div class="section" id="replies">
+
+{if $likely_orphans}
+<div class="section" id="replies">
 
 <h1>{$tweet.tweet_text}</h1>
 <br /><br />
@@ -67,24 +65,28 @@
 		
 		</div>
 	{/foreach}
-{/if}
 </div>
+{/if}
+
+
 {if $replies}
 <div class="section" id="followers">
 
 <h1>{$tweet.tweet_text}</h1>
 <br /><br />
-<ul>
 {foreach from=$replies key=tid item=t}
 {if $t.is_protected}Anonymous says {else}<a href="http://twitter.com/{$t.author_username}">{$t.author_username}</a> <a href="http://twitter.com/{$t.author_username}/status/{$t.status_id}">says</a>{/if}, "{$t.tweet_html|regex_replace:"/^@[a-zA-Z0-9_]+ /":""}"<br /><br />
 {/foreach}
-</ul>
 </div>
 {/if}
 
 </div>
 </div>
 </div>
+
+
+
+
 <div role="contentinfo" id="keystats" class="yui-b">
 
 <h2>Tweet Stats</h2>
