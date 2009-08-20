@@ -17,6 +17,8 @@
 		<div class="section" id="instances">
 			<b>Your Twitter accounts</b>
 			<br /><br />
+			{if $owner->is_admin}<p class="info">You are an administrator so you can see all accounts in the system.</p><br /><br />{/if}
+			
 			{if count($owner_instances) > 0 }
 			<ul>
 			{foreach from=$owner_instances key=iid item=i}

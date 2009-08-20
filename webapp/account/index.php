@@ -38,5 +38,5 @@ $s->assign('oauthorize_link',$oauthorize_link );
 # clean up
 $db->closeConnection($conn);	
 
-echo $s->fetch('accounts.index.tpl');
+echo $s->fetch('account.index.tpl');
 ?>
