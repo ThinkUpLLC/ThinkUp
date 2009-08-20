@@ -14,23 +14,27 @@ class OwnerInstance {
 
 class OwnerInstanceDAO {
 	
-	function doesOwnerHaveAccess($owner_id, $username) {
-		$sql_query = "
-			SELECT 
-				* 
-			FROM 
-				owner_instances oi
-			INNER JOIN
-				instances i
-			ON 
-				i.id = oi.instance_id
-			WHERE 
-				i.twitter_username = '".$username."' AND oi.owner_id = ".$owner_id. ";";
-		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
-		if (mysql_num_rows  ( $sql_result  ) == 0 ) {
-			return false;
-		} else {
+	function doesOwnerHaveAccess($owner, $username) {
+		if ($owner->is_admin) {
 			return true;
+		} else {
+			$sql_query = "
+				SELECT 
+					* 
+				FROM 
+					owner_instances oi
+				INNER JOIN
+					instances i
+				ON 
+					i.id = oi.instance_id
+				WHERE 
+					i.twitter_username = '".$username."' AND oi.owner_id = ".$owner->id. ";";
+			$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
+			if (mysql_num_rows  ( $sql_result  ) == 0 ) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 	}
 	

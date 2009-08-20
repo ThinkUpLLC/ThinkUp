@@ -254,21 +254,32 @@ class InstanceDAO {
 		return $instances;
 	}
 
-	function getByOwnerId($id) {
-		$q = "
-			SELECT 
-				*, ". $this->getAverageReplyCount() ."
-			FROM
-				owner_instances oi
-			INNER JOIN
-				instances i
-			ON
-				i.id = oi.instance_id
-			WHERE
-				oi.owner_id = ".$id."
-			ORDER BY
-				crawler_last_run 
-			DESC;";
+	function getByOwner($o) {
+		if ($o->is_admin) {
+			$q = "
+				SELECT 
+					*, ". $this->getAverageReplyCount() ."
+				FROM
+					instances i
+				ORDER BY
+					crawler_last_run 
+				DESC;";
+		} else {
+			$q = "
+				SELECT 
+					*, ". $this->getAverageReplyCount() ."
+				FROM
+					owner_instances oi
+				INNER JOIN
+					instances i
+				ON
+					i.id = oi.instance_id
+				WHERE
+					oi.owner_id = ".$o->id."
+				ORDER BY
+					crawler_last_run 
+				DESC;";
+		}
 		$sql_result = mysql_query($q)  or die('Error, selection query failed:'. $q);
 		$instances 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $instances[] = new Instance($row); } 

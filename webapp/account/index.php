@@ -17,7 +17,7 @@ $cfg = new Config();
 $s = new SmartyTwitalytic();
 
 $owner = $od->getByEmail($_SESSION['user']);
-$owner_instances = $id->getByOwnerId($owner->id);
+$owner_instances = $id->getByOwner($owner);
 
 
 $to = new TwitterOAuth($cfg->oauth_consumer_key, $cfg->oauth_consumer_secret);

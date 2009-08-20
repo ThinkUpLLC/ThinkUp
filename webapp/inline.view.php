@@ -19,7 +19,7 @@ $id = new InstanceDAO();
 if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	$username = $_REQUEST['u'];
 	$oid = new OwnerInstanceDAO();
-	if ( !$oid->doesOwnerHaveAccess($owner->id, $username) ) {
+	if ( !$oid->doesOwnerHaveAccess($owner, $username) ) {
 		echo 'Insufficient privileges. <a href="/">Back</a>.';
 		$db->closeConnection($conn);
 		die;

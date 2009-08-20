@@ -19,7 +19,7 @@ $id = new InstanceDAO();
 if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	$username = $_REQUEST['u'];
 	$oid = new OwnerInstanceDAO();
-	if ( !$oid->doesOwnerHaveAccess($owner->id, $username) ) {
+	if ( !$oid->doesOwnerHaveAccess($owner, $username) ) {
 		echo 'Insufficient privileges. <a href="/">Back</a>.';
 		$db->closeConnection($conn);
 		die;
@@ -53,7 +53,7 @@ if(!$s->is_cached('index.tpl', $i->twitter_username."-".$_SESSION['user'])) {
 	$s->assign('owner_stats', $owner_stats);
 
 	$s->assign('instance', $i);
-	$s->assign('instances', $id->getByOwnerId($owner->id));
+	$s->assign('instances', $id->getByOwner($owner));
 	$s->assign('cfg', $cfg);
 
 	$total_follows_with_errors = $fd->getTotalFollowsWithErrors($cfg->twitter_user_id);

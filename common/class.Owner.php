@@ -5,6 +5,7 @@ class Owner {
 	var $user_name;
 	var $full_name;
 	var $user_email;
+	var $is_admin = false;
 
 
 	function Owner($val) {
@@ -12,6 +13,8 @@ class Owner {
 		$this-> user_name = $val["user_name"];
 		$this-> full_name = $val["full_name"];
 		$this-> user_email = $val['user_email'];
+		if ($val['is_admin'] == 1)
+			$this-> is_admin = true;
 	}
 	
 }

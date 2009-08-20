@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `owners` (
   `joined` date NOT NULL default '0000-00-00',
   `country` varchar(100) character set latin1 collate latin1_general_ci NOT NULL default '',
   `user_activated` int(1) NOT NULL default '0',
+  `is_admin` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
