@@ -1,6 +1,11 @@
 <?php
 session_start();
-if (!isset($_SESSION['user'])) { header("Location: session/login.php"); }
+
+if (!isset($_SESSION['user'])) {
+	require_once('public.php');
+	die();
+
+} else {
 
 // set up
 require_once('config.webapp.inc.php');
@@ -129,6 +134,6 @@ $s->display('index.tpl', $i->twitter_username."-".$_SESSION['user']);
 */
 
 
-
+}
 
 ?>

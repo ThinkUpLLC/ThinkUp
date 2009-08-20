@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `instances` (
   `is_archive_loaded_replies` int(11) NOT NULL default '0',
   `is_archive_loaded_follows` int(11) NOT NULL default '0',
   `api_calls_to_leave_unmade_per_minute` decimal(11,1) NOT NULL default '2.0',
+  `is_public` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `twitter_user_id` (`twitter_user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

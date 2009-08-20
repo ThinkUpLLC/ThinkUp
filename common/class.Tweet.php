@@ -18,7 +18,7 @@ class TweetDAO {
 		# get tweet
 		$sql_query		= "
 			SELECT 
-				tweet_text, pub_date, status_id, author_username, author_user_id 
+				tweet_text, pub_date, status_id, author_username, author_user_id, tweet_html 
 			FROM 
 				tweets 
 			WHERE
@@ -64,7 +64,7 @@ class TweetDAO {
 		//TODO Fix hardcoded adjusted pub_date
 		$sql_query		= "
 			select 
-				tweet_html, author_username, author_avatar, follower_count, status_id, is_protected, pub_date - interval 8 hour as adj_pub_date 
+				tweet_html, author_username, author_avatar, location, follower_count, status_id, is_protected, pub_date - interval 8 hour as adj_pub_date 
 			from 
 				tweets t
 			inner join 
@@ -450,7 +450,50 @@ class TweetDAO {
 		return $strays;
 	}
 	
-	
+	function getTweetsByPublicInstances($count=15) {
+		$q = "
+			SELECT 
+				*, pub_date - interval 8 hour as adj_pub_date 
+			FROM 
+				tweets t
+			INNER JOIN
+				instances i
+			ON
+				t.author_user_id = i.twitter_user_id
+			WHERE
+				i.is_public = 1 and t.reply_count_cache > 0 and in_reply_to_status_id is NULL
+			ORDER BY
+				t.pub_date DESC
+			LIMIT " . $count;
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$tweets = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $tweets[] = $row; }
+		mysql_free_result($sql_result);	
+		return $tweets;
+	}
+
+	function isTweetByPublicInstance($id) {
+		$q = "
+			SELECT 
+				*, pub_date - interval 8 hour as adj_pub_date 
+			FROM 
+				tweets t
+			INNER JOIN
+				instances i
+			ON
+				t.author_user_id = i.twitter_user_id
+			WHERE
+				i.is_public = 1 and t.status_id = ".$id.";";
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		if (mysql_num_rows($sql_result) > 0)
+			$r = true;
+		else
+			$r = false;
+
+		mysql_free_result($sql_result);
+		return $r;
+	}	
+
 }
 
 class TweetErrorDAO {

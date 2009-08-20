@@ -70,8 +70,10 @@ exit();
         <p align="center"> 
           <input type="submit" name="Submit" value="Login">
         </p>
-        <p align="center"><a href="register.php">Register</a> | <a href="forgot.php">Forgot</a></p>
+        
       </form></td>
   </tr>
 </table>
-	
+	<br /><br />
+<center><p>Not currently open for new registrations. But nerds can <a href="http://github.com/ginatrapani/twitalytic/tree/master">set up their own Twitalytic instance</a>.<br /><br />
+Back to <a href="../public.php">the public timeline</a>.</center>
