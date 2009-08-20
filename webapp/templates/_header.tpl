@@ -62,6 +62,13 @@
 			width : 600px;
 		}
 		
+		.success {
+			background-color:#BFDFBF;
+			padding:10px;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+		}
+		
 		 /******* MENU *******/  
  		 #top #menu {
 			margin:10px;

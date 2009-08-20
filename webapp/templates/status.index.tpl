@@ -26,14 +26,14 @@
 
 		<div id="div{$t.status_id}">
 		<form action="">
-			<input type="hidden" id="u{$t.status_id}" name="u" value="{$i->twitter_username}">
+			<input type="submit" name="submit" class="button" id="{$t.status_id}" value="Save as Reply To:" />
 		<select name="pid{$t.status_id}" id="pid{$t.status_id}">
-			<option value="0">Mark as standalone</option>
+			<option value="0">No Tweet in Particular (Mark as standalone)</option>
 			<option disabled>Set as a reply to:</option>
 		{foreach from=$all_tweets key=aid item=a}
 			<option value="{$a.status_id}">&nbsp;&nbsp;{$a.tweet_html|truncate_for_select}</option>
 		{/foreach}
-		</select><input type="submit" name="submit" class="button" id="{$t.status_id}" value="Assign" />  
+		</select>  
 		</form>
 		</div>
 		
@@ -55,14 +55,13 @@
 
 		<div id="div{$t.status_id}">
 		<form action="">
-			<input type="hidden" id="u{$t.status_id}" name="u" value="{$i->twitter_username}">
+			<input type="submit" name="submit" class="button" id="{$t.status_id}" value="Save as Reply To:" />  
 		<select name="pid{$t.status_id}" id="pid{$t.status_id}">
-			<option value="0">Mark as standalone</option>
-			<option disabled>Set as a reply to:</option>
+			<option value="0">No Tweet in Particular (Mark as standalone)</option>
 		{foreach from=$all_tweets key=aid item=a}
-			<option value="{$a.status_id}" {if $a.status_id eq $tweet.status_id} selected="true" {/if}>&nbsp;&nbsp;{$a.tweet_html|truncate_for_select}</option>
+			<option value="{$a.status_id}" {if $a.status_id eq $tweet.status_id} selected="true" {/if}>{$a.tweet_html|truncate_for_select}</option>
 		{/foreach}
-		</select><input type="submit" name="submit" class="button" id="{$t.status_id}" value="Assign" />  
+		</select>
 		</form>
 		</div>
 		
@@ -120,7 +119,7 @@
 			      url: "{/literal}{$cfg->site_root_path}{literal}status/mark-parent.php",  
 			      data: dataString,  
 			      success: function() {  
-				$('#div'+Id).html("<div id='message"+Id+"'></div>");  
+				$('#div'+Id).html("<div class='success' id='message"+Id+"'></div>");  
 				$('#message'+Id).html("<p>Saved!</p>") 
 			       .hide()  
 			       .fadeIn(1500, function() {  
