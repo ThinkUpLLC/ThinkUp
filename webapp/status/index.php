@@ -18,7 +18,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	$status_id = $_REQUEST['t'];
 	$s = new SmartyTwitalytic();
 	
-	if(!$s->is_cached('index.tpl', $status_id)) {
+	if(!$s->is_cached('status.index.tpl', $status_id)) {
 		$tweet = $td->getTweet($status_id);
 
 		$u = new Utils();

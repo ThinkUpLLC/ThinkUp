@@ -23,8 +23,8 @@
 <div class="section" id="updates">
 	
 	<div id="top">
-	<table border="0"><tr>
-	<td valign="top">
+	<table border="0" width="100%"><tr>
+	<td valign="top"  width="100%">
 		<div id="tweets_content"></div>
 	</td>
 	<td valign="top" align="left">
@@ -45,8 +45,8 @@
 <div class="section" id="mentions">
 
 	<div id="top">
-	<table border="0"><tr>
-	<td valign="top">
+	<table border="0" width="100%"><tr>
+	<td valign="top" width="100%">
 		<div id="mentions_content"></div>
 	</td>
 	<td valign="top" align="left">
@@ -64,8 +64,8 @@
 
 <div class="section" id="followers">
 	<div id="top">
-	<table border="0"><tr>
-	<td valign="top">
+	<table border="0" width="100%"><tr>
+	<td valign="top" width="100%">
 		<div id="followers_content"></div>
 	</td>
 	<td valign="top" align="left">
@@ -87,8 +87,8 @@
 
 <div class="section" id="friends">
 	<div id="top">
-	<table border="0"><tr>
-	<td valign="top">
+	<table border="0" width="100%"><tr>
+	<td valign="top" width="100%">
 		<div id="friends_content"></div>
 	</td>
 	<td valign="top" align="left">

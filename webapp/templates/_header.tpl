@@ -69,7 +69,7 @@
 			text-transform: uppercase;
 		}
 		 #top #menu li {
-			background-color: #ADDFFF;
+			background-color: #BFD7F7;
 			-moz-border-radius: 5px;
 			-webkit-border-radius: 5px;
 			padding: 10px;
@@ -219,8 +219,8 @@
 			loading_friends.fadeTo(1000, 0);
 			
 		};
-	});	
-	
+
+	});
 	{/literal}
 	
 

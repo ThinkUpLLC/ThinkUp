@@ -10,6 +10,9 @@ $pid = $_GET["pid"];
 
 $oid =  $_GET["oid"];
 
+$template = $_GET["t"];
+$cache_key = $_GET["ck"];
+
 foreach ($oid as $o) {
 	echo $o;
 	echo "<br />";	
@@ -41,6 +44,9 @@ foreach ($oid as $o) {
 }
 
 $db->closeConnection($conn);	
+
+$s = new SmartyTwitalytic();
+$s->clear_cache($template, $cache_key);
 
 echo 'Assignment complete.<br /><a href="'.$TWITALYTIC_CFG['site_root_path'].'?u='.$_GET['u'].'#replies">Back home</a>.';
 

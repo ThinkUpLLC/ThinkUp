@@ -20,26 +20,25 @@
 <br /><br />
 
 
-<ul>
-{foreach from=$replies key=tid item=t}
-<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-	{include file="_status.other.tpl" t=$t}
-	<form action="{$cfg->site_root_path}status/mark-parent.php">
-		<input type="hidden" value="{$t.status_id}" name="oid[]" />
-		<input type="hidden" value="{$tweet.status_id}" name="fp"		
-		<input type="hidden" name="u" value="{$instance->twitter_username}">
-	<select name="pid">
-		<option value="0">Mark as standalone</option>
-		<option disabled>Disassociate from this status and set as a reply to:</option>
-	{foreach from=$all_tweets key=aid item=a}
-	   {if $a.status_id != $tweet.status_id}
-		<option value="{$a.status_id}">&nbsp;&nbsp;{$a.tweet_html|truncate_for_select}</option>
-		{/if}
+	{foreach from=$replies key=tid item=t}
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_status.other.tpl" t=$t}
+
+		<div id="div{$t.status_id}">
+		<form action="">
+			<input type="hidden" id="u{$t.status_id}" name="u" value="{$i->twitter_username}">
+		<select name="pid{$t.status_id}" id="pid{$t.status_id}">
+			<option value="0">Mark as standalone</option>
+			<option disabled>Set as a reply to:</option>
+		{foreach from=$all_tweets key=aid item=a}
+			<option value="{$a.status_id}">&nbsp;&nbsp;{$a.tweet_html|truncate_for_select}</option>
+		{/foreach}
+		</select><input type="submit" name="submit" class="button" id="{$t.status_id}" value="Assign" />  
+		</form>
+		</div>
+		
+		</div>
 	{/foreach}
-	</select> <input value="Save" type="submit"></form>	
-</div>
-{/foreach}
-</ul>
 
 	</div>
 	{if $likely_orphans}
@@ -49,19 +48,28 @@
 <br /><br />
 <p>Posted right around the time of this update:</p><br /><br />
 
-<form action="{$cfg->site_root_path}status/mark-parent.php">
-	<input type="hidden" name="u" value="{$instance->twitter_username}">
-{foreach from=$likely_orphans key=tid item=t}
-	<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-	{include file="_status.cbox.tpl" t=$t}
-	</div>
-{/foreach}
 
-<input type="hidden" value="{$tweet.status_id}" name="pid" />
-<input type="submit" value="mark as reply to update" name="mark as reply to this update" />
-</form>		
-</div>
+	{foreach from=$likely_orphans key=tid item=t}
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_status.other.tpl" t=$t}
+
+		<div id="div{$t.status_id}">
+		<form action="">
+			<input type="hidden" id="u{$t.status_id}" name="u" value="{$i->twitter_username}">
+		<select name="pid{$t.status_id}" id="pid{$t.status_id}">
+			<option value="0">Mark as standalone</option>
+			<option disabled>Set as a reply to:</option>
+		{foreach from=$all_tweets key=aid item=a}
+			<option value="{$a.status_id}" {if $a.status_id eq $tweet.status_id} selected="true" {/if}>&nbsp;&nbsp;{$a.tweet_html|truncate_for_select}</option>
+		{/foreach}
+		</select><input type="submit" name="submit" class="button" id="{$t.status_id}" value="Assign" />  
+		</form>
+		</div>
+		
+		</div>
+	{/foreach}
 {/if}
+</div>
 {if $replies}
 <div class="section" id="followers">
 
@@ -90,7 +98,43 @@
 </div>
 
 
-</div>
+<script type="text/javascript">
+	{literal}
+	$(function() {
+		//begin reply assignment actions
+		$(".button").click(function() {  
+		// validate and process form here  
+			var element = $(this);
+			var Id = element.attr("id");
+			
+			var oid = Id;
+			var pid = $("select#pid"+Id+" option:selected").val();
+			var u = '{/literal}{$instance->twitter_username}{literal}';
+			
+			var t = 'status.index.tpl';
+			var ck = '{/literal}{$tweet.status_id}{literal}';
+			var dataString = 'u='+ u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;  
+			//alert (dataString);return false;  
+			    $.ajax({  
+			      type: "GET",  
+			      url: "{/literal}{$cfg->site_root_path}{literal}status/mark-parent.php",  
+			      data: dataString,  
+			      success: function() {  
+				$('#div'+Id).html("<div id='message"+Id+"'></div>");  
+				$('#message'+Id).html("<p>Saved!</p>") 
+			       .hide()  
+			       .fadeIn(1500, function() {  
+				 $('#message'+Id);  
+			       });  
+			    }  
+			   });  
+			   return false;  
+		      });  
+	});	
+
+	{/literal}
+</script>
 
 
 {include file="_footer.tpl"}
+
