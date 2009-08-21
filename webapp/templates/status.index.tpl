@@ -1,5 +1,5 @@
 
-{include file="_header.tpl"}
+{include file="_header.tpl" load="no"}
 
 <div id="bd" role="main">
 	<div id="yui-main">

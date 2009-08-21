@@ -1,4 +1,7 @@
 <?php 
+session_start();
+if (isset($_SESSION['user'])) { header("Location: ../index.php"); }
+
 // set up
 chdir("..");
 require_once('config.webapp.inc.php');

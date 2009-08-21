@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 // set up
 require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").":".$INCLUDE_PATH);

@@ -76,7 +76,7 @@
 
 </div>
 <h2>Replies to a Single Tweet</h2>
-<p>Archived and Curated with <a href="http://github.com/ginatrapani/twitalytic/tree/master">Twitalytic</a></p>
+<p>Archived and Curated with <a href="http://smarterware.org/2877/twitalytic-alpha-preview-archiving-curating-and-threading-tweets">Twitalytic</a></p>
 
 <h1><a href="{$site_root}public.php">&larr; Back to the Public Timeline</a></h1>
 {/if}
@@ -91,15 +91,13 @@
 
 </div>
 
-<p>Tweets and Replies Archived and Curated with <a href="http://github.com/ginatrapani/twitalytic/tree/master">Twitalytic</a></p>
+<p>Tweets and Replies Archived and Curated with <a href="http://smarterware.org/2877/twitalytic-alpha-preview-archiving-curating-and-threading-tweets">Twitalytic</a></p>
 
 {/if}
 
 
-<a href="http://smarterware.org/1448/what-im-working-on-getting-and-sharing-answers-on-twitter">More about Twitalytic</a></p>
-<p>Twitter data crawler, replies archiver, and statistics generator</p>
-<p>A work in progress by <a href="http://ginatrapani.org">Gina Trapani</a></p>
-	<script type="text/javascript" src="{$cfg->site_root_path}cssjs/linkify.js"></script>
+<p>[<a href="{$cfg->site_root_path}session/login.php">Sign in</a>]</p>
+<script type="text/javascript" src="{$cfg->site_root_path}cssjs/linkify.js"></script>
 
 	</center>
 </body>

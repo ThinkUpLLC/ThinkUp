@@ -1,5 +1,5 @@
 
-{include file="_header.tpl"}
+{include file="_header.tpl" load="no"}
 
 <div id="bd" role="main">
 	<div id="yui-main">
@@ -22,7 +22,7 @@
 			{if count($owner_instances) > 0 }
 			<ul>
 			{foreach from=$owner_instances key=iid item=i}
-			<li><a href="{$cfg->site_root_path}?u={$i->twitter_username}">{$i->twitter_username}</a>  <small>[delete]</small></li>
+			<li><a href="{$cfg->site_root_path}?u={$i->twitter_username}">{$i->twitter_username}</a> <span id="div{$i->twitter_username}"><input type="submit" name="submit" class="{if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->twitter_username}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /> </span></li>
 			{/foreach}
 			</ul>
 			{else}
@@ -62,6 +62,63 @@
 
 
 	</div>
+	
 
 
+	<script type="text/javascript">
+		{literal}
+		$(function() {
+			$(".btnPub").click(function() {  
+			// validate and process form here  
+				var element = $(this);
+				var u = element.attr("id");
+				
+				var dataString = 'u='+ u+ "&p=1";  
+				//alert (dataString);return false;  
+				    $.ajax({  
+				      type: "GET",  
+				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-public.php",  
+				      data: dataString,  
+				      success: function() {  
+					$('#div'+u).html("<span class='success' id='message"+u+"'></span>");  
+					$('#message'+u).html("Added to public timeline!") 
+				       .hide()  
+				       .fadeIn(1500, function() {  
+					 $('#message'+u);  
+				       });  
+				    }  
+				   });  
+				   return false;  
+			  });
+			
+			$(".btnPriv").click(function() {  
+			// validate and process form here  
+				var element = $(this);
+				var u = element.attr("id");
+
+				var dataString = 'u='+ u+ "&p=0";  
+				//alert (dataString);return false;  
+				    $.ajax({  
+				      type: "GET",  
+				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-public.php",  
+				      data: dataString,  
+				      success: function() {  
+					$('#div'+u).html("<span class='success' id='message"+u+"'></span>");  
+					$('#message'+u).html("Removed from public timeline!") 
+				       .hide()  
+				       .fadeIn(1500, function() {  
+					 $('#message'+u);  
+				       });  
+				    }  
+				   });  
+				   return false;  
+			      });  
+			
+			  
+
+		});	
+
+		{/literal}
+	</script>
+	
 	{include file="_footer.tpl"}			

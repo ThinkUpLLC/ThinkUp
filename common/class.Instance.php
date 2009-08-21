@@ -21,6 +21,7 @@ class Instance {
 	var $earliest_reply_in_system;	
 	var $api_calls_to_leave_unmade_per_minute;
 	var $avg_replies_per_day;
+	var $is_public = false;
 		
 	function Instance($r) {
 		$this->id = $r["id"];
@@ -49,6 +50,9 @@ class Instance {
 		$this->earliest_reply_in_system=$r['earliest_reply_in_system'];	
 		$this->api_calls_to_leave_unmade_per_minute=$r['api_calls_to_leave_unmade_per_minute'];
 		$this->avg_replies_per_day = $r['avg_replies_per_day'];
+		if ($r['is_public'] == 1)
+			$this-> is_public = true;
+
 	}
 
 }
@@ -153,7 +157,21 @@ class InstanceDAO {
 			WHERE
 				id = ".$id.";";
 		$sql_result = mysql_query($sql_query)  or die('Error, update query failed:' .$sql_query );
+
 	}
+
+	function setPublic($u, $p) {
+		$sql_query = "
+			UPDATE 
+				instances
+			 SET 
+				is_public = ".$p."
+			WHERE
+				twitter_username = '".$u."';";
+		$sql_result = mysql_query($sql_query)  or die('Error, update query failed:' .$sql_query );
+
+	}	
+	
 	
 	function save($i, $user_xml_total_tweets_by_owner, $logger, $api ) {
 		$sql_query = array();

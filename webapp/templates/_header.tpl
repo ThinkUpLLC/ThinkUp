@@ -111,6 +111,7 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>	
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
 
+
 	<script type="text/javascript">
 	{literal}$(function() {
 		$("#tabs").tabs();
@@ -118,9 +119,10 @@
 		$("#repliessubtabs").tabs();
 		$("#followerssubtabs").tabs();
 		$("#friendssubtabs").tabs();
-	});
+	});{/literal}
 	
-	
+{if $load neq 'no'}
+{literal}	
 	$(document).ready(function(){
 		//References
 		var sections = $("#menu li");
@@ -236,7 +238,7 @@
 
 	});
 	{/literal}
-	
+	{/if}
 
 	</script>
    <title>Twitalytic</title>
@@ -244,8 +246,8 @@
 <body>
 	
 {include file="_header.login.tpl"}	
-	
-	
+
+
 <div id="doc4" class="yui-t2">
 	<div id="hd" role="banner">
 		{if $instance}
