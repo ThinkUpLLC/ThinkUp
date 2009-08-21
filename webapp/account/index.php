@@ -15,6 +15,7 @@ $id = new InstanceDAO();
 $od = new OwnerDAO();
 $cfg = new Config();
 $s = new SmartyTwitalytic();
+$s->caching = 0;
 
 $owner = $od->getByEmail($_SESSION['user']);
 $owner_instances = $id->getByOwner($owner);
@@ -38,5 +39,5 @@ $s->assign('oauthorize_link',$oauthorize_link );
 # clean up
 $db->closeConnection($conn);	
 
-echo $s->fetch('account.index.tpl');
+$s->display('account.index.tpl');
 ?>
