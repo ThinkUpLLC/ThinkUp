@@ -11,7 +11,7 @@ $TWITALYTIC_CFG['oauth_consumer_key'] = 'yourconsumerkey';
 $TWITALYTIC_CFG['oauth_consumer_secret'] = 'yourconsumersecret';
  
 $TWITALYTIC_CFG['app_title'] = 'Twitalytic';
-$TWITALYTIC_CFG['log_location'] = '/Users/gina/Sites/twitalytic/automated/logs/';
+$TWITALYTIC_CFG['log_location'] = '/your-path-to/twitalytic/crawler/logs/';
 $TWITALYTIC_CFG['site_root_path'] = '/';
 $TWITALYTIC_CFG['smarty_path'] = '/usr/local/php5/lib/php/smarty/libs/';
  

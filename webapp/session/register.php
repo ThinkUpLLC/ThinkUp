@@ -48,13 +48,8 @@ if ($_POST['Submit'] == 'Register')
 				  ('$_POST[email]','$md5pass','$_POST[country]',now(),'$activ_code','$_POST[full_name]')") or die(mysql_error());
 	
 	$message = 
-"Thank you for registering an account with ".$TWITALYTIC_CFG['app_title'].". Here are the login details...\n\n
-User Email: $_POST[email] \n
-Password: $_POST[pass2] \n
-Activation Code: $activ_code \n
-____________________________________________
-*** ACTIVATION LINK ***** \n
-Activation Link: http://$server/".$TWITALYTIC_CFG['site_root_path']."u/activate.php?usr=$_POST[email]&code=$activ_code \n\n
+"Thank you for registering an account with ".$TWITALYTIC_CFG['app_title'].". Click on the link below to activate your account...\n\n
+http://$server/".$TWITALYTIC_CFG['site_root_path']."session/activate.php?usr=$_POST[email]&code=$activ_code \n\n
 _____________________________________________
 Thank you. This is an automated response. PLEASE DO NOT REPLY.
 ";
