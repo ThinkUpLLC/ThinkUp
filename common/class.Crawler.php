@@ -54,7 +54,7 @@ class Crawler {
 			//set page and since_id params for API call
 			if ( $got_latest_page_of_tweets && 
 				 $this->owner_object->tweet_count != $this->instance->total_tweets_in_system && 
-				 $this->owner_object->tweet_count < $cfg->archive_limit) {
+				 $this->instance->total_tweets_in_system < $cfg->archive_limit) {
 				if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets )
 					$this->instance->last_page_fetched_tweets = $this->instance->last_page_fetched_tweets + 1;
 				else {
@@ -90,7 +90,7 @@ class Crawler {
 					$status_message = "";
 					
 					//if you've got more than the Twitter API archive limit, stop looking for more tweets
-					if ( $this->owner_object->tweet_count >= $cfg->archive_limit  ) {
+					if ( $this->instance->total_tweets_in_system >= $cfg->archive_limit  ) {
 						$this->instance->last_page_fetched_tweets = 1;
 						$continue_fetching = false;
 						$status_message = "More than Twitter cap of ".$cfg->archive_limit." already in system, moving on."; 
