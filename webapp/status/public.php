@@ -1,8 +1,10 @@
 <?php
 // set up
 chdir("..");
-$root_path 			= realpath('./../include')."/";
-require_once($root_path . "init.php");
+require_once('config.webapp.inc.php');
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
+require_once("init.php");
+
 $cfg = new Config();
 $db = new Database();
 $s = new SmartyTwitalytic();

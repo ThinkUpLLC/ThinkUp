@@ -5,13 +5,13 @@ $TWITALYTIC_CFG['debug'] = true;
 $TWITALYTIC_CFG['timeZone'] = 'TZ=US/Pacific';
 $TWITALYTIC_CFG['archive_limit'] = 3200; //http://apiwiki.twitter.com/Things-Every-Developer-Should-Know#6Therearepaginationlimits
 $TWITALYTIC_CFG['cache_pages'] = 1;
-
+ 
 // Get the following by registering your instance with Twitter at http://twitter.com/oauth_clients/
 $TWITALYTIC_CFG['oauth_consumer_key'] = 'yourconsumerkey';
 $TWITALYTIC_CFG['oauth_consumer_secret'] = 'yourconsumersecret';
  
 $TWITALYTIC_CFG['app_title'] = 'Twitalytic';
-$TWITALYTIC_CFG['log_location'] = '/your-path-to/twitalytic/crawler/logs/';
+$TWITALYTIC_CFG['log_location'] = '/your-path-to/twitalytic/crawler/logs/crawler.log';
 $TWITALYTIC_CFG['site_root_path'] = '/';
 $TWITALYTIC_CFG['smarty_path'] = '/usr/local/php5/lib/php/smarty/libs/';
  

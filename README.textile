@@ -10,7 +10,7 @@ This is not production code. This is a pre-alpha web application. The intended a
 
 h2. SYSTEM REQUIREMENTS
 
-* "PHP 5":http://php.net with cURL extension enabled
+* "PHP 5":http://php.net with cURL and GD enabled
 * "Smarty":http://smarty.net
 * "MySQL 5":http://mysql.com/
 
@@ -26,7 +26,7 @@ h3. Set up database
 
 h3. Register your app with Twitter (for OAuth support)
 
-* Log into Twitter and "register your Twitalytic instance":http://twitter.com/oauth_clients/. Set the callback URL to <code>http://yourserver.com/path-to-twitalytic/account/oauth.php</code>. Write down the items labeled "Consumer key" and "Consumer secret."
+* Log into Twitter and "register your Twitalytic instance":http://twitter.com/oauth_clients/. Set the callback URL to <code>http://yourserver.com/path-to-twitalytic-webapp/account/oauth.php</code>. Write down the items labeled "Consumer key" and "Consumer secret."
 
 h3. Configure the app
 
@@ -49,3 +49,5 @@ To view what's going on with the crawler, use this command:
 <code>$ tail -f crawler/logs/crawler.log</code>
 
 Cron the crawler's run command to go at least once an hour.
+
+See also "this helpful HOWTO on installing Twitalytic on Dreamhost":http://wiki.github.com/ginatrapani/twitalytic/installing-twitalytic-on-dreamhost.

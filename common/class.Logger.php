@@ -4,16 +4,13 @@ class Logger {
 	var $log;
 	var $twitter_username;
 	
-	function Logger($twitter_username) {
-		//global $TWITALYTIC_CFG;
-		//$this -> twitter_username = $TWITALYTIC_CFG['owner_username'];
-		$this -> twitter_username=$twitter_username;
+	function Logger($cfg) {
+		$this -> twitter_username=$cfg->twitter_username;
 		/*
 		 *   Initialize log
 		 */
-		$path_to_logs		= realpath('logs/')."/";		# Where will you keep the log
-		$log_file			= 'crawler.log'; 				# Name the log file
-		$this -> log = $this -> openFile($path_to_logs.$log_file,'a');		# Append to any prior file
+		$log_file	= $cfg->log_location;		# Where will you keep the log
+		$this -> log = $this -> openFile($log_file,'a');		# Append to any prior file
 
 	}
 	

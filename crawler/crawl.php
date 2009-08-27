@@ -1,6 +1,6 @@
 <?php   
 require_once('config.crawler.inc.php');
-ini_set("include_path", ini_get("include_path").":".$INCLUDE_PATH);
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
 // Instantiate and initialize needed objects
@@ -13,7 +13,7 @@ $instances = $id->getAllInstancesStalestFirst();
 foreach ($instances as $i) {
 	$crawler = new Crawler($i);
 	$cfg = new Config($i->twitter_username, $i->twitter_user_id);
-	$logger = new Logger($i->twitter_username);
+	$logger = new Logger($cfg);
 	$tokens = $oid->getOAuthTokens($i->id);
 	$api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'], $tokens['oauth_access_token_secret'], $cfg, $i);
 	$api -> init($logger);

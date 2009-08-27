@@ -465,7 +465,7 @@ class TweetDAO {
 			ORDER BY
 				t.pub_date DESC
 			LIMIT " . $count;
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q" );
 		$tweets = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $tweets[] = $row; }
 		mysql_free_result($sql_result);	

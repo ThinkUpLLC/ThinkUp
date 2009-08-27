@@ -11,6 +11,7 @@ class Config {
 	var $oauth_consumer_key;
 	var $oauth_consumer_secret;
 	var $archive_limit;
+	var $log_location;
 		
 	function Config($twitter_username=null, $twitter_user_id=null) {
 		global $TWITALYTIC_CFG;
@@ -25,6 +26,7 @@ class Config {
 		$this->oauth_consumer_key=$TWITALYTIC_CFG['oauth_consumer_key'];
 		$this->oauth_consumer_secret=$TWITALYTIC_CFG['oauth_consumer_secret'];
 		$this->archive_limit = $TWITALYTIC_CFG['archive_limit'];
+		$this->log_location = $TWITALYTIC_CFG['log_location'];
 
 		if (isset($_SERVER["SERVER_NAME"])) {
 			$this->webapp_home = "http://".$_SERVER["SERVER_NAME"].$this->site_root_path;
