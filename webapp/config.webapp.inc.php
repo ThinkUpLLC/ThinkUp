@@ -1,5 +1,5 @@
 <?php
 
-$INCLUDE_PATH = "J:\\data\\code\\twitalytic\\common\\";
+$INCLUDE_PATH = "/your-path-to/twitalytic/common/";
 
 ?>
