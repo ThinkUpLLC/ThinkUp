@@ -311,7 +311,7 @@ class TweetDAO {
 
 
 	
-	function getAllReplies($author_username, $count) {
+	function getAllMentions($author_username, $count) {
 		//TODO Fix hardcoded adjusted pub_date
 		
 		$sql_query		= "
@@ -336,7 +336,32 @@ class TweetDAO {
 		mysql_free_result($sql_result);			
 		return $all_tweets;
 	}
+	
+	function getAllReplies($user_id, $count) {
+		//TODO Fix hardcoded adjusted pub_date
 		
+		$sql_query		= "
+			SELECT 
+				*, pub_date - interval 8 hour as adj_pub_date 
+			FROM 
+				tweets t
+			INNER JOIN
+				users u
+			ON
+				t.author_user_id = u.user_id
+			WHERE 
+				 in_reply_to_user_id = ".$user_id."
+			ORDER BY 
+				pub_date DESC 
+			LIMIT ".$count.";";
+		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$all_tweets = array();
+		while ($row = mysql_fetch_assoc($sql_result)) { $all_tweets[] = $row; }		
+		mysql_free_result($sql_result);			
+		return $all_tweets;
+	}	
+
+
 	function getMostRepliedToTweets($user_id, $count) {
 		//TODO Fix hardcoded adjusted pub_date
 		

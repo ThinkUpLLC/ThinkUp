@@ -8,6 +8,7 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
 
+
 $db = new Database();
 $conn = $db->getConnection();
 
@@ -67,16 +68,24 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 			$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
 			break;
 		case "mentions-all":
-			$s->assign('header', 'All Mentions' );		
-			$s->assign('all_replies', $td->getAllReplies($cfg->twitter_username, 15) );
+			$s->assign('header', 'Mentions' );
+			$s->assign('description', 'Any tweet that mentions you.');		
+			$s->assign('all_mentions', $td->getAllMentions($cfg->twitter_username, 15) );
+			break;
+		case "mentions-allreplies":
+			$s->assign('header', 'Replies' );		
+			$s->assign('description', 'Tweets that directly reply to you (i.e., start with your name).');
+			$s->assign('all_replies', $td->getAllReplies($cfg->twitter_user_id, 15) );
 			break;
 		case "mentions-orphan":
 			$s->assign('header', 'Orphan Mentions' );		
+			$s->assign('description', 'Mentions that are not associated with a specific tweet.');
 			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
 			$s->assign('orphan_replies', $td->getOrphanReplies($cfg->twitter_username, 5));
 			break;
 		case "mentions-standalone":
 			$s->assign('header', 'Standalone Mentions' );		
+			$s->assign('description', 'Mentions you have marked as standalone.');
 			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
 			$s->assign('standalone_replies', $td->getStandaloneReplies($cfg->twitter_username, 15));
 			break;
@@ -86,6 +95,7 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 			break;
 		case "followers-leastlikely":
 			$s->assign('header', 'Least-Likely Followers' );		
+			$s->assign('description', 'Followers with the greatest follower-to-friend ratio.');
 			$s->assign('people', $fd->getLeastLikelyFollowers($cfg->twitter_user_id, 15));
 			break;
 		case "followers-former":
