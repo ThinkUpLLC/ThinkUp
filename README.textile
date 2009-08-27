@@ -30,9 +30,9 @@ h3. Register your app with Twitter (for OAuth support)
 
 h3. Configure the app
 
-* *Shared libraries*: Edit <code>twitalytic/common/config.inc.php</code>. Add your database credentials, file and webapp paths, and the key/secret you got from Twitter in the previous step.
-* *Crawler*: Edit <code>twitalytic/crawler/config.crawler.inc.php</code>, set include path to the absolute location of <code>twitalytic/common</code>
-* *Webapp*: Edit <code>twitalytic/webapp/config.webapp.inc.php</code>, set include path to the absolute location of <code>twitalytic/common</code>
+* *Shared libraries*: Rename <code>twitalytic/common/config.sample.inc.php</code> to <code>config.inc.php</code>. Add your database credentials, file and webapp paths, and the key/secret you got from Twitter in the previous step.
+* *Crawler*: Rename <code>twitalytic/crawler/config.crawler.sample.inc.php</code> to <code>config.crawler.inc.php</code> and set include path to the absolute location of <code>twitalytic/common</code>
+* *Webapp*: Rename <code>twitalytic/webapp/config.webapp.sample.inc.php</code> to <code>config.webapp.inc.php</code> and set include path to the absolute location of <code>twitalytic/common</code>
 * *Webserver (optional)*: Set <code>httpd.conf</code> DocumentRoot to <code>twitalytic/webapp/</code>
 
 

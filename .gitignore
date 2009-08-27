@@ -1,3 +1,6 @@
+common/config.inc.php
+webapp/config.webapp.inc.php
+crawler/config.crawler.inc.php
 webapp/templates_c/*.php
 webapp/templates_c/cache/*.tpl
 smarty/*
