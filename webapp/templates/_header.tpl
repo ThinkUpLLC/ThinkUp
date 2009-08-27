@@ -33,6 +33,12 @@
 		
 		h1 {
 			font-size : x-large;
+			display : none;
+		}
+		
+		h2 {
+			padding-bottom : 20px;
+			font-size : smaller;
 		}
 		
 		.section h2 {
@@ -78,28 +84,103 @@
 		
 		 /******* MENU *******/  
  		 #top #menu {
-			margin:10px;
+			margin:5px;
 			padding:5px;
-			text-transform: uppercase;
+			width : 100%;
+			font-size : smaller;
 		}
 		 #top #menu li {
-			background-color: #BFD7F7;
-			-moz-border-radius: 5px;
-			-webkit-border-radius: 5px;
-			padding: 10px;
+			padding: 8px;
 			margin:10px;
+			display : inline;
 		}
 		 #top #menu li:hover{  
-		     color: #0060e0;  
-			 background-color:#eee;
+		     color: #0060e0;
 		     cursor: pointer;  
 		 }  
+		 
+		 .submenu {
+		 	padding-left : 20px;
+		 	padding-top : 10px;
+		 	font-size : small;
+		 }
+		 
+		 #sidemenu {
+		 	display : none;
+		 }
+		 
 		 /******* /MENU *******/  
 		 /******* LOADING *******/  
-		 #loading{  
+		 #loading, #loading_mentions, #loading_followers, #loading_friends {  
 		     visibility: hidden;  
+		     float : left;
 		 }  
 		 /******* /LOADING *******/
+
+		 
+		 /******* Tweet Formatting ********/
+		 
+		 .individual-tweet {
+		 	padding : 10px;
+		 	margin-top : 10px;
+		 	clear : left;
+		 }
+		 
+		 .individual-tweet p {
+		 	font-size : smaller;
+		 }
+		 
+		 .reply {
+		 	padding-left : 85px;
+		 }
+		 
+		 .private {
+		 	border : 1px dotted #666;
+		 	background-color : #eee;
+		 }
+		 
+		 .person-info {
+		 	float: left;
+		 	margin-right: 10px;
+		 	width : 80px;
+		 	text-align : center;
+		 }
+		 
+		 li.individual-tweet h3 a {
+		     font-size : x-small;
+		     color : #666;
+		 }
+		 
+		 li.individual-tweet h4, li.individual-tweet form {
+		     font-size : xx-small;
+		     visibility:hidden;
+		 }
+		 
+		 li.individual-tweet h4.reply-count {
+		 	font-size : medium;
+		 }
+
+		 li.individual-tweet:hover h4, li.individual-tweet:hover form {
+		     visibility:visible;
+		     color : #666;
+		 }
+		 
+		 
+		 li.individual-tweet:hover h3 a {
+			color: #0060e0;
+		 }		 
+		 
+		li.individual-tweet h3 a.most-popular {
+		 	font-size : medium;
+		 	font-weight : strong;
+		 }
+
+		 .avatar { 	
+		 	border: solid 1px #ccc;
+		 }
+
+		 /******* /Tweet Formatting ********/
+
 		
 	</style>
 	{/literal}	
