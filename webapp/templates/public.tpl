@@ -35,7 +35,6 @@
 		h2 {
 		}
 		.tweet {
-			padding:10px;
 
 		}
 		.content {
@@ -54,6 +53,63 @@
 			color:grey;
 			text-decoration:underline;
 		}
+
+		 
+		 /******* Tweet Formatting ********/
+		 
+		 .individual-tweet {
+		 	padding : 10px;
+		 	margin-top : 10px;
+		 }
+		 
+		 .reply {
+		 	padding-left : 85px;
+		 }
+		 
+		 .private {
+		 	border : 1px dotted #666;
+		 	background-color : #eee;
+		 }
+		 
+		 .person-info {
+		 	float: left;
+		 	margin-right: 10px;
+		 	width : 80px;
+		 	text-align : center;
+		 }
+		 
+		 li.individual-tweet h3 a {
+		     font-size : x-small;
+		     color : #666;
+		 }
+		 
+		 li.individual-tweet h4, li.individual-tweet form {
+		     font-size : xx-small;
+		     visibility:hidden;
+		 }
+
+		 li.individual-tweet:hover h4, li.individual-tweet:hover form {
+		     visibility:visible;
+		     color : #666;
+		 }
+		 
+		 
+		 li.individual-tweet:hover h3 a {
+			color: #0060e0;
+		 }		 
+		 
+		li.individual-tweet h3 a.most-popular {
+		 	font-size : medium;
+		 	font-weight : strong;
+		 }
+
+		 .avatar { 	
+		 	border: solid 1px #ccc;
+		 }
+
+		 /******* /Tweet Formatting ********/		
+		
+		
 		</style>{/literal}
 
 
@@ -69,9 +125,9 @@
 	
 	</div>
 	{foreach from=$replies key=tid item=t}
-	<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+	<ul>
 		{include file="_status.public.tpl" t=$t}
-	</div>
+	</ul>
 	{/foreach}	
 
 </div>
@@ -84,9 +140,9 @@
 
 {if $tweets}
 	{foreach from=$tweets key=tid item=t}
-	<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+	<ul>
 		{include file="_status.public.tpl" t=$t}
-	</div>
+	</ul>
 	{/foreach}
 
 </div>
