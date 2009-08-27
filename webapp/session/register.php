@@ -64,7 +64,11 @@ Thank you. This is an automated response. PLEASE DO NOT REPLY.
 	}	
 
 ?> 
+<html>
+<head> 
 <link href="styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
 <?php if (isset($_GET['msg'])) { echo "<div class=\"msg\"> $_GET[msg] </div>"; } ?>
 <p>&nbsp;</p>
 <table width="65%" border="0" cellpadding="0" cellspacing="0">
