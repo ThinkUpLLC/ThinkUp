@@ -19,6 +19,7 @@ class User {
 
 
 	function User($val, $found_in) {
+		// Why is id = $val["user_id"] and so is user_id?
 		$this-> id = $val["user_id"];
 		$this-> username = $val["user_name"];
 		$this-> full_name = $val["full_name"];

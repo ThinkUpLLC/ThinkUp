@@ -123,7 +123,7 @@
 <div class="content">
 {if $tweet and $replies}
 	<div class="tweet">
-	<h2>{$tweet.tweet_html|link_usernames_to_twitter}</h2> <div class="tweetmeta">-<a href="http://twitter.com/{$tweet.author_username}/">{$tweet.author_username}</a>, <small><a href="http://twitter.com/{$tweet.author_username}/status/{$tweet.status_id}/">{$tweet.pub_date|relative_datetime}</a></small></div>
+	<h2>{$tweet->tweet_html|link_usernames_to_twitter}</h2> <div class="tweetmeta">-<a href="http://twitter.com/{$tweet->author_username}/">{$tweet->author_username}</a>, <small><a href="http://twitter.com/{$tweet->author_username}/status/{$tweet->status_id}/">{$tweet->pub_date|relative_datetime}</a></small></div>
 	
 	</div>
 	{foreach from=$replies key=tid item=t}

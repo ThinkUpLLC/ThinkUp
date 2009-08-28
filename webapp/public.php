@@ -15,7 +15,7 @@ $s = new SmartyTwitalytic();
 if ( isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t']) ){
 	if(!$s->is_cached('public.tpl', $_REQUEST['t'])) {
 		$tweet = $td->getTweet($_REQUEST['t']);
-		$public_tweet_replies = $td->getPublicRepliesToTweet($tweet['status_id']);
+		$public_tweet_replies = $td->getPublicRepliesToTweet($tweet->status_id);
 		$s->assign('tweet', $tweet);
 		$s->assign('replies', $public_tweet_replies);
 		$s->assign('site_root', $TWITALYTIC_CFG['site_root_path']);
