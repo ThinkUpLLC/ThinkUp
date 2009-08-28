@@ -52,7 +52,7 @@
 	{if $all_mentions}
 		{foreach from=$all_mentions key=tid item=t}
 		<ul>
-			{include file="_status.other.tpl" t=$t}
+			{include file="_status.otherorphan.tpl" t=$t}
 		</ul>
 		{/foreach}
 	{/if}
@@ -87,8 +87,9 @@
 		
 	{/if}	
 
-	{if ($display eq 'followers-former' and not $people)}
-		<h2 class="info">&#9888; No followers to display.</h2> 
+	{if ($display eq 'followers-former' and not $people)or 
+		($display eq 'friends-former' and not $people) }
+		<h2 class="info">&#9888; Not found.</h2> 
 	{/if}
 
 
