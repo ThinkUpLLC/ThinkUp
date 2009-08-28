@@ -1,5 +1,5 @@
 <h1>{$header}</h1>
-
+<div>{$description}</div>
 	{if ($display eq 'tweets-all' and not $all_tweets) or 
 		($display eq 'tweets-mostreplies' and not $most_replied_to_tweets) or
 		($display eq 'tweets-convo' and not $author_replies)}
@@ -31,10 +31,11 @@
 	{/if}
 
 	
-	{if ($display eq 'mentions-all' and not $all_replies) or 
+	{if ($display eq 'mentions-all' and not $all_mentions) or 
+		($display eq 'mentions-allreplies' and not $all_replies) or
 		($display eq 'mentions-orphan' and not $orphan_replies) or 
 		($display eq 'mentions-standalone' and not $standalone_replies)}
-		<h2 class="alert">&#9888; No mentions to display.</h2>
+		<h2 class="info">&#9888; No mentions to display.</h2> 
 	{/if}
 
 	{if $orphan_replies}
@@ -45,8 +46,16 @@
 			</ul>
 		{/foreach}
 		</form>		
-	{/if}
+	{/if} 
 
+
+	{if $all_mentions}
+		{foreach from=$all_mentions key=tid item=t}
+		<ul>
+			{include file="_status.other.tpl" t=$t}
+		</ul>
+		{/foreach}
+	{/if}
 
 	{if $all_replies}
 		{foreach from=$all_replies key=tid item=t}
@@ -77,6 +86,10 @@
 		{/foreach}
 		
 	{/if}	
+
+	{if ($display eq 'followers-former' and not $people)}
+		<h2 class="info">&#9888; No followers to display.</h2> 
+	{/if}
 
 
 	{if $people}

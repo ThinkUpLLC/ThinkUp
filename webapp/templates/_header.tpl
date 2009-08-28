@@ -33,7 +33,7 @@
 		
 		h1 {
 			font-size : x-large;
-			display : none;
+			//display : none;
 		}
 		
 		h2 {
@@ -42,7 +42,7 @@
 		}
 		
 		.section h2 {
-			display : none;
+			//display : none;
 		}
 		
 		h3 {
@@ -245,6 +245,9 @@
 					break;
 				case "mentions-all":
 					mentions_content.load("inline.view.php?u={$instance->twitter_username}&d=mentions-all", hideLoading); 
+					break;				
+				case "mentions-allreplies":
+					mentions_content.load("inline.view.php?u={$instance->twitter_username}&d=mentions-allreplies", hideLoading); 
 					break;				
 				case "mentions-orphan":
 					mentions_content.load("inline.view.php?u={$instance->twitter_username}&d=mentions-orphan", hideLoading); 

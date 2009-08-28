@@ -48,6 +48,7 @@
 	
 		<ul id="menu">
 			<li id="mentions-all">All</li>
+			<li id="mentions-allreplies">Replies</li>
 			<li id="mentions-orphan">Not&nbsp;Replies</li>
 			<li id="mentions-standalone">Standalone</li>
 		</ul>
