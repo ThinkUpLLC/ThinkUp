@@ -65,7 +65,7 @@ class UserDAO {
 				users 
 			WHERE 
 				user_id = ".$user_id;
-		$sql_result = mysql_query($q) or die('Error: selection query failed:' .$q );
+		$sql_result = Database::exec($q);
 		if ( mysql_num_rows($sql_result) > 0 )
 			return true;
 		else
@@ -80,7 +80,7 @@ class UserDAO {
 				users 
 			WHERE 
 				user_name = '".$username."'";
-		$sql_result = mysql_query($q) or die('Error selection query failed:' .$q );
+		$sql_result = Database::exec($q);
 		if ( mysql_num_rows($sql_result) > 0 )
 			return true;
 		else
@@ -112,7 +112,7 @@ class UserDAO {
 		$has_last_post = $user->last_post != '' ?  true : false;
 		$has_last_status_id = $user->last_status_id != '' ? true : false;
 				
-		$sql_query = "
+		$q = "
 			INSERT INTO
 				users (user_id,
 					user_name,full_name,avatar,location,
@@ -145,8 +145,7 @@ class UserDAO {
 					found_in = '".mysql_real_escape_string($user->found_in) . "', 
 					joined = '".mysql_real_escape_string($user->joined)."'
 					".($has_last_status_id ? ", last_status_id = ".$user->last_status_id : "").";";  
-		$foo = mysql_query($sql_query) or die('Error, insert query failed: '. $sql_query );
-		//echo $sql_query;
+		$foo = Database::exec($q);
 		if (mysql_affected_rows() > 0) {
 			//$status_message = "User ". $user->user_name." updated in system.";
 			//$logger->logStatus($status_message, get_class($this) );
@@ -162,28 +161,28 @@ class UserDAO {
  	
 	//TODO: make this return the User object, not an assoc array
 	function getDetails($user_id) {
-		$sql_query		= "
+		$q	= "
 			SELECT 
 				* , ". $this->getAverageTweetCount()."
 			FROM
 				users u 
 			WHERE 
 				u.user_id = ". $user_id. ";";
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$row = mysql_fetch_assoc($sql_result);
 		mysql_free_result($sql_result);	
 		return $row;		
 	}
 
 	function getUserByName($user_name) {
-		$sql_query		= "
+		$q	= "
 			SELECT 
 				* , ". $this->getAverageTweetCount()."
 			FROM
 				users u 
 			WHERE 
 				u.user_name = '". $user_name. "';";
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$row = mysql_fetch_assoc($sql_result);
 		mysql_free_result($sql_result);	
 		return $row;		
@@ -201,7 +200,7 @@ class UserErrorDAO {
 			 	user_errors (user_id, error_code, error_text, error_issued_to_user_id)
 			VALUES 
 				(".$id.", ".$error_code.", '".$error_text."', ".$issued_to.") ";
-		$sql_result = mysql_query($q) or die('Error, insert failed:' .$q );
+		$sql_result = Database::exec($q);
 		if (mysql_affected_rows() > 0)
 			return true;
 		else

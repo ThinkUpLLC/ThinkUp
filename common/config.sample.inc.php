@@ -15,6 +15,10 @@ $TWITALYTIC_CFG['log_location'] = '/your-path-to/twitalytic/crawler/logs/crawler
 $TWITALYTIC_CFG['site_root_path'] = '/';
 $TWITALYTIC_CFG['smarty_path'] = '/usr/local/php5/lib/php/smarty/libs/';
  
+// Set whether or not your site's registration page is available
+// TODO: Improve reg/sign-in mechanisms in general; possibly build invitation system
+$TWITALYTIC_CFG['is_registration_open'] = true;
+
 // Get the following here: http://bit.ly
 $TWITALYTIC_CFG['bitly_api_key'] = 'yourkey';
 $TWITALYTIC_CFG['bitly_login'] = 'yourbitlylogin';

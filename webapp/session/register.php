@@ -7,6 +7,12 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
  
+if ( !$TWITALYTIC_CFG['is_registration_open']) {
+	echo 'So sorry, but registration on this instance of Twitalytic is closed. <br /><br /><a href="http://github.com/ginatrapani/twitalytic/tree/master">Install Twitalytic on your own server</a> or go back to <a href="'.$TWITALYTIC_CFG['site_root_path'].'public.php">the public timeline</a>.';
+	die();
+} else {
+
+
 include ('dbc.php'); 
 
 if ($_POST['Submit'] == 'Register')
@@ -278,3 +284,5 @@ Thank you. This is an automated response. PLEASE DO NOT REPLY.
 <div align="left"></div>
 </body>
 </html>
+
+<?php } ?>

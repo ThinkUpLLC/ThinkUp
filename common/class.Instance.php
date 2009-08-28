@@ -68,14 +68,12 @@ class InstanceDAO {
 	}
 	
 	function insert($id, $user) {
-		$sql_query = "
+		$q = "
 			INSERT INTO 
 				instances (`twitter_user_id`, `twitter_username`)
 			 VALUES
 				(".$id." , '".$user."')";
-		$sql_result = mysql_query($sql_query)  or die('Error, insert query failed:' .$sql_query );
-		
-		
+		$sql_result = Database::exec($q);
 	}
 
 	
@@ -86,7 +84,7 @@ class InstanceDAO {
 	
 	
 	function getFreshestByOwnerId($owner_id) {
-		$sql_query = "
+		$q = "
 			SELECT 
 				* , ". $this->getAverageReplyCount() ."
 			FROM 
@@ -99,7 +97,7 @@ class InstanceDAO {
 				oi.owner_id = ".$owner_id."
 			ORDER BY 
 				crawler_last_run DESC";
-		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
+		$sql_result = Database::exec($q);
 		if (mysql_num_rows  ( $sql_result  ) == 0 ) {
 			$i = null;
 		} else {
@@ -112,7 +110,7 @@ class InstanceDAO {
 
 	
 	function getInstanceOneByLastRun($order) {
-		$sql_query = "
+		$q = "
 			SELECT , ". $this->getAverageReplyCount() ."
 				* 
 			FROM 
@@ -120,7 +118,7 @@ class InstanceDAO {
 			ORDER BY 
 				crawler_last_run
 			".$order." LIMIT 1";
-		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
+		$sql_result = Database::exec($q);
 		$row = mysql_fetch_assoc($sql_result);
 		$i = new Instance($row);
 		mysql_free_result($sql_result);				
@@ -128,14 +126,14 @@ class InstanceDAO {
 	}
 	
 	function getByUsername($username) {
-		$sql_query = "
+		$q = "
 			SELECT 
 				* , ". $this->getAverageReplyCount() ."
 			FROM 
 				instances 
 			WHERE 
 				twitter_username = '".$username."'";
-		$sql_result = mysql_query($sql_query)  or die('Error, selection query failed:' .$sql_query );
+		$sql_result = Database::exec($q);
 
 		if (mysql_num_rows  ( $sql_result  ) == 0 ) {
 			$i = null;
@@ -149,32 +147,31 @@ class InstanceDAO {
 
 
 	function updateLastRun($id) {
-		$sql_query = "
+		$q = "
 			UPDATE 
 				instances
 			 SET 
 				crawler_last_run = NOW()
 			WHERE
 				id = ".$id.";";
-		$sql_result = mysql_query($sql_query)  or die('Error, update query failed:' .$sql_query );
+		$sql_result = Database::exec($q);
 
 	}
 
 	function setPublic($u, $p) {
-		$sql_query = "
+		$q = "
 			UPDATE 
 				instances
 			 SET 
 				is_public = ".$p."
 			WHERE
 				twitter_username = '".$u."';";
-		$sql_result = mysql_query($sql_query)  or die('Error, update query failed:' .$sql_query );
+		$sql_result = Database::exec($q);
 
 	}	
 	
 	
 	function save($i, $user_xml_total_tweets_by_owner, $logger, $api ) {
-		$sql_query = array();
 		if ($user_xml_total_tweets_by_owner != '')
 			$owner_tweets =  "total_tweets_by_owner = ".$user_xml_total_tweets_by_owner.",";
 		else
@@ -194,7 +191,7 @@ class InstanceDAO {
 		if ( $i->last_status_id != "" )
 			$lsi = "last_status_id = ". $i->last_status_id .",";
 			
-		$sql_query['Save_Crawler_State'] = "
+		$q = "
 			UPDATE 
 				instances
 			SET
@@ -228,7 +225,7 @@ class InstanceDAO {
 				limit 1)
 			WHERE
 				twitter_user_id = ".$i->twitter_user_id.";";
-		$foo = mysql_query($sql_query['Save_Crawler_State']) or die('Error, update query failed: '. $sql_query['Save_Crawler_State'] );
+		$foo = Database::exec($q);
 
 		$status_message="Updated ".$i->twitter_username."'s system status.";
 		$logger->logStatus($status_message, get_class($this) );
@@ -244,7 +241,7 @@ class InstanceDAO {
 				instances
 			WHERE 
 				twitter_username = '".$un."'";
-		$sql_result = mysql_query($q) or die('Error: selection query failed:' .$q );
+		$sql_result = Database::exec($q);
 		if ( mysql_num_rows($sql_result) > 0 )
 			return true;
 		else
@@ -265,7 +262,7 @@ class InstanceDAO {
 			ORDER BY
 				crawler_last_run
 			".$last_run."";
-		$sql_result = mysql_query($q)  or die('Error, selection query failed:'. $q);
+		$sql_result = Database::exec($q);
 		$instances 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $instances[] = new Instance($row); } 
 		mysql_free_result($sql_result);					# Free up memory
@@ -298,7 +295,7 @@ class InstanceDAO {
 					crawler_last_run 
 				DESC;";
 		}
-		$sql_result = mysql_query($q)  or die('Error, selection query failed:'. $q);
+		$sql_result = Database::exec($q);
 		$instances 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $instances[] = new Instance($row); } 
 		mysql_free_result($sql_result);					# Free up memory

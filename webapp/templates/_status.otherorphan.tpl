@@ -12,9 +12,10 @@
 				{if $t.location}<h4 class="tweetstamp">{$t.location}</h4>{/if}
 				{if $t.description}<h4 class="person-description">{$t.description}</h4>{/if}
 
-				<form action="" id="div{$t.status_id}" class="tweet-setparent">
+				<div id="div{$t.status_id}">
+				<form action="" class="tweet-setparent">
 					
-					<select name="pid3557242348" id="pid3557242348" onselect>
+					<select name="pid{$t.status_id}" id="pid{$t.status_id}" onselect>
 						<option disabled="disabled">Is in reply to...</option>					
 						<option value="0">No particular tweet (standalone)</option>
 						{foreach from=$all_tweets key=aid item=a}
@@ -23,6 +24,7 @@
 					</select>
 					<input type="submit" name="submit" class="button" id="{$t.status_id}" value="Save" />
 				</form>
+				</div>
 				
 			<div id="">
 			<form action="">

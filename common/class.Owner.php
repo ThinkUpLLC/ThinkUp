@@ -28,7 +28,7 @@ class OwnerDAO {
 				owners o 
 			WHERE 
 				o.user_email = '". $email. "';";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		$sql_result = Database::exec($q);
 		$row = mysql_fetch_assoc($sql_result);
 		mysql_free_result($sql_result);	
 		return new Owner($row);		

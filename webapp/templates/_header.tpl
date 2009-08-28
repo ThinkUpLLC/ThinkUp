@@ -7,7 +7,7 @@
 
 	<link rel="stylesheet" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
 	<link type="text/css" href="{$cfg->site_root_path}cssjs/jquery-ui-1.7.1.custom.css" rel="stylesheet" />
-
+	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
 {literal}
 	<style type="text/css">
 	

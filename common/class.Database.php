@@ -29,13 +29,9 @@ class Database {
 		mysql_close($conn);
 	}
 	
-	function executeWriteSQL($sql) {
-		
-		$conn = $this -> getConnection();
-		$result = mysql_query($sql) or die (mysql_error());
-		$this -> closeConnection($conn);
-		return $result;
+	public static function exec($q) {
+		$r = mysql_query($q)  or die("Query failed:<br /> $q <br /><br />Error details:<br />".mysql_error());
+		return $r;
 	}
-	
 }
 ?>
