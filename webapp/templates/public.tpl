@@ -2,6 +2,8 @@
 <HTML>
  <HEAD>
   <TITLE>Twitalytic Public Timeline</TITLE>
+  	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
+
 	<style type="text/css">{literal}
 	
 		html {

@@ -71,6 +71,7 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 			$s->assign('header', 'Mentions' );
 			$s->assign('description', 'Any tweet that mentions you.');		
 			$s->assign('all_mentions', $td->getAllMentions($cfg->twitter_username, 15) );
+			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
 			break;
 		case "mentions-allreplies":
 			$s->assign('header', 'Replies' );		
