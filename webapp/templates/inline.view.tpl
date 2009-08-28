@@ -71,11 +71,11 @@
 			{include file="_status.otherorphan.tpl" t=$t}
 
 <!--			
-			<div id="div{$t.status_id}">
+			<div id="div{$t->status_id}">
 			<form action="">
-			<input type="submit" name="submit" class="button" id="{$t.status_id}" value="Save as reply to:" /> <select name="pid{$t.status_id}" id="pid{$t.status_id}">
+			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as reply to:" /> <select name="pid{$t->status_id}" id="pid{$t->status_id}">
 			{foreach from=$all_tweets key=aid item=a}
-				<option value="{$a.status_id}">{$a.tweet_html|truncate_for_select}</option>
+				<option value="{$a->status_id}">{$a->tweet_html|truncate_for_select}</option>
 			{/foreach}
 			</select>
 			</form>
