@@ -17,7 +17,7 @@ class FollowDAO {
 				follows
 			WHERE 
 				user_id = ".$user_id." AND follower_id=".$follower_id.";";
-		$sql_result = mysql_query($q) or die('Error, selection query failed:' .$q );
+		$sql_result = Database::exec($q);
 		if ( mysql_num_rows($sql_result) > 0 )
 			return true;
 		else
@@ -33,7 +33,7 @@ class FollowDAO {
 				last_seen=NOW()
 			WHERE
 				user_id = ".$user_id." AND follower_id=".$follower_id.";";
-		$sql_result = mysql_query($q) or die('Error, update failed:' .$q );
+		$sql_result = Database::exec($q);
 		if (mysql_affected_rows() > 0)
 			return true;
 		else
@@ -48,7 +48,7 @@ class FollowDAO {
 				active = 0
 			WHERE
 				user_id = ".$user_id." AND follower_id=".$follower_id.";";
-		$sql_result = mysql_query($q) or die('Error, update failed:' .$q );
+		$sql_result = Database::exec($q);
 		if (mysql_affected_rows() > 0)
 			return true;
 		else
@@ -63,7 +63,7 @@ class FollowDAO {
 				VALUES (
 					".$user_id.",".$follower_id.",NOW()
 				);";
-		$foo = mysql_query($q) or die('Error, insert query failed: '. $q );
+		$foo = Database::exec($q);
 		if (mysql_affected_rows() > 0)
 			return true;
 		else
@@ -81,7 +81,7 @@ class FollowDAO {
 				AND f.follower_id NOT IN (SELECT user_id FROM users) 
 				AND f.follower_id NOT IN (SELECT user_id FROM user_errors)
 			LIMIT 100;";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$strays = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $strays[] = $row; }
 		mysql_free_result($sql_result);	
@@ -98,7 +98,7 @@ class FollowDAO {
 			WHERE 
 				f.user_id=".$user_id."
 				AND f.follower_id IN (SELECT user_id FROM user_errors WHERE error_issued_to_user_id=".$user_id.");";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$ferrors = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $ferrors[] = $row; }
 		mysql_free_result($sql_result);	
@@ -115,7 +115,7 @@ class FollowDAO {
 			WHERE 
 				f.follower_id=".$user_id."
 				AND f.user_id IN (SELECT user_id FROM user_errors WHERE error_issued_to_user_id=".$user_id.");";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$ferrors = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $ferrors[] = $row; }
 		mysql_free_result($sql_result);	
@@ -130,7 +130,7 @@ class FollowDAO {
 			FROM `follows` f
 			INNER JOIN users u ON u.user_id = f.follower_id
 			WHERE f.user_id = ".$user_id;
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$details = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $details[] = $row; }
 		mysql_free_result($sql_result);	
@@ -143,7 +143,7 @@ class FollowDAO {
 			FROM `follows` f
 			INNER JOIN users u ON u.user_id = f.follower_id
 			WHERE f.user_id = ".$user_id." AND u.is_protected=1";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$details = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $details[] = $row; }
 		mysql_free_result($sql_result);	
@@ -156,7 +156,7 @@ class FollowDAO {
 			FROM `follows` f
 			INNER JOIN users u ON u.user_id = f.user_id
 			WHERE f.follower_id = ".$user_id."";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$details = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $details[] = $row; }
 		mysql_free_result($sql_result);	
@@ -169,7 +169,7 @@ class FollowDAO {
 			FROM `follows` f
 			INNER JOIN users u ON u.user_id = f.user_id
 			WHERE f.follower_id = ".$user_id." AND u.is_protected=1";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$details = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $details[] = $row; }
 		mysql_free_result($sql_result);	
@@ -193,7 +193,7 @@ class FollowDAO {
 			ORDER BY
 				u.last_updated ASC
 			LIMIT 1;";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		$sql_result = Database::exec($q);
 		$oldfriend = array();
 		if ( mysql_num_rows($sql_result) > 0 ) {
 			while ($row = mysql_fetch_assoc($sql_result)) { $oldfriend[] = $row; }
@@ -216,7 +216,7 @@ class FollowDAO {
 			ORDER BY
 				f.last_seen ASC
 			LIMIT 1;";
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		$sql_result = Database::exec($q);
 		$oldfollow = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $oldfollow[] = $row; }
 		mysql_free_result($sql_result);
@@ -230,7 +230,7 @@ class FollowDAO {
 	
 
 	function getMostFollowedFollowers($user_id, $count) {
-		$sql_query		= "
+		$q		= "
 			SELECT 
 				* , ". $this->getAverageTweetCount()."
 			FROM 
@@ -244,7 +244,7 @@ class FollowDAO {
 			ORDER BY 
 				u.follower_count DESC 
 			LIMIT ".$count.";";
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$most_followed_followers 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $most_followed_followers[] = $row; } 
 		mysql_free_result($sql_result);	
@@ -257,7 +257,7 @@ class FollowDAO {
 	function getLeastLikelyFollowers($user_id, $count) {
 		
 		//TODO: Remove hardcoded 10k follower threshold in query below
-		$sql_query		= "
+		$q	= "
 			SELECT 
 				*, ROUND(100*friend_count/follower_count,4) AS LikelihoodOfFollow, ". $this->getAverageTweetCount()."
 			FROM 
@@ -271,7 +271,7 @@ class FollowDAO {
 			ORDER BY 
 				LikelihoodOfFollow ASC #u.follower_count DESC
 			LIMIT ".$count.";";
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$least_likely_followers 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $least_likely_followers[] = $row; } 
 		mysql_free_result($sql_result);	
@@ -281,7 +281,7 @@ class FollowDAO {
 	}
 
 	function getEarliestJoinerFollowers($user_id, $count) {
-		$sql_query		= "
+		$q = "
 			SELECT 
 				*, ". $this->getAverageTweetCount()."
 			FROM 
@@ -295,7 +295,7 @@ class FollowDAO {
 			ORDER BY 
 				u.user_id ASC
 			LIMIT ".$count.";";
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$earliest_joiner_followers 		= array();
 		$least_likely_followers = array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $least_likely_followers[] = $row; } 
@@ -306,7 +306,7 @@ class FollowDAO {
 	}	
 	
 	function getMostActiveFollowees($user_id, $count) {
-		$sql_query = "
+		$q = "
 			select 
 				*, ". $this->getAverageTweetCount()." 
 			from 
@@ -321,7 +321,7 @@ class FollowDAO {
 				avg_tweets_per_day DESC 
 			LIMIT ".$count;		
 			
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$most_active_friends 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $most_active_friends[] = $row; } 
 		mysql_free_result($sql_result);	
@@ -331,7 +331,7 @@ class FollowDAO {
 	}
 
 	function getFormerFollowees($user_id, $count) {
-		$sql_query = "
+		$q = "
 			select 
 				*
 			from 
@@ -346,7 +346,7 @@ class FollowDAO {
 				u.follower_count DESC 
 			LIMIT ".$count;		
 			
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$most_active_friends 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $most_active_friends[] = $row; } 
 		mysql_free_result($sql_result);	
@@ -356,7 +356,7 @@ class FollowDAO {
 	}
 
 	function getFormerFollowers($user_id, $count) {
-		$sql_query = "
+		$q = "
 			select 
 				u.* 
 			from 
@@ -371,7 +371,7 @@ class FollowDAO {
 				u.follower_count DESC 
 			LIMIT ".$count;		
 			
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$most_active_friends 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $most_active_friends[] = $row; } 
 		mysql_free_result($sql_result);	
@@ -383,7 +383,7 @@ class FollowDAO {
 
 
 	function getLeastActiveFollowees($user_id, $count) {
-		$sql_query = "
+		$q = "
 			select 
 				*, ". $this->getAverageTweetCount()."
 			from 
@@ -398,7 +398,7 @@ class FollowDAO {
 				avg_tweets_per_day ASC 
 			LIMIT ".$count;		
 			
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$most_active_friends 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $most_active_friends[] = $row; } 
 		mysql_free_result($sql_result);	
@@ -409,7 +409,7 @@ class FollowDAO {
 
 
 	function getMostFollowedFollowees($user_id, $count) {
-		$sql_query = "
+		$q = "
 			select 
 				*, ". $this->getAverageTweetCount()."
 			from 
@@ -424,7 +424,7 @@ class FollowDAO {
 				follower_count DESC 
 			LIMIT ".$count;		
 			
-		$sql_result = mysql_query($sql_query)  or die("Error, selection query failed: $sql_query");
+		$sql_result = Database::exec($q);
 		$most_followed_friends 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $most_followed_friends[] = $row; } 
 		mysql_free_result($sql_result);	
@@ -450,7 +450,7 @@ class FollowDAO {
 			ORDER BY 
 			 follower_count ASC;";
 			
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		$sql_result = Database::exec($q);
 		$mutual_friends 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $mutual_friends[] = $row; } 
 		mysql_free_result($sql_result);	
@@ -473,7 +473,7 @@ class FollowDAO {
 			 	AND f.user_id NOT IN (SELECT follower_id FROM follows WHERE user_id = ".$uid.")
 			ORDER BY follower_count	";
 			
-		$sql_result = mysql_query($q)  or die("Error, selection query failed: $q");
+		$sql_result = Database::exec($q);
 		$nonmutual_friends 		= array();
 		while ($row = mysql_fetch_assoc($sql_result)) { $nonmutual_friends[] = $row; } 
 		mysql_free_result($sql_result);	
