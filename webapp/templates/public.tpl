@@ -36,6 +36,7 @@
 		}
 		h2 {
 		}
+
 		.tweet {
 
 		}
@@ -80,6 +81,8 @@
 		 	text-align : center;
 		 }
 		 
+		 li { list-style:none;  }
+
 		 li.individual-tweet h3 a {
 		     font-size : x-small;
 		     color : #666;
@@ -87,14 +90,17 @@
 		 
 		 li.individual-tweet h4, li.individual-tweet form {
 		     font-size : xx-small;
-		     visibility:hidden;
+		     //visibility:hidden;
 		 }
 
 		 li.individual-tweet:hover h4, li.individual-tweet:hover form {
 		     visibility:visible;
 		     color : #666;
 		 }
-		 
+		 li.individual-tweet h4.reply-count {
+		 	font-size : medium;
+			padding:0; margin:0;
+		 }		 
 		 
 		 li.individual-tweet:hover h3 a {
 			color: #0060e0;
@@ -141,11 +147,12 @@
 
 
 {if $tweets}
-	{foreach from=$tweets key=tid item=t}
 	<ul>
+
+	{foreach from=$tweets key=tid item=t}
 		{include file="_status.public.tpl" t=$t}
-	</ul>
 	{/foreach}
+	</ul>
 
 </div>
 
