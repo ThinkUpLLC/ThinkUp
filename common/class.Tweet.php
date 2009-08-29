@@ -35,6 +35,11 @@ class Tweet {
 
 	}
 	
+	public static function extractURLs($tweet_text) {
+		preg_match_all('!https?://[\S]+!', $tweet_text, $matches);
+		return $matches[0];
+	}
+	
 }
 
 
