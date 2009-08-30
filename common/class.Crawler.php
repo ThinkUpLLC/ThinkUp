@@ -168,6 +168,8 @@ class Crawler {
 				foreach($tweets as $tweet) {
 					if ( $td->addTweet($tweet, $this->owner_object, $logger) > 0 ) {
 						$status_message = 'Added replied to tweet ID '.$tid." to database."; 
+						//expand and insert links contained in tweet
+						$this->processTweetURLs($tweet, $cfg, $logger);
 					}
 				}
 			} catch (Exception $e) { 
@@ -227,7 +229,8 @@ class Crawler {
 						foreach($tweets as $tweet) {
 							if ( $td->addTweet($tweet, $this->owner_object, $logger) > 0 ) {
 								$count ++;
-
+								//expand and insert links contained in tweet
+								$this->processTweetURLs($tweet, $cfg, $logger);
 								if ( $tweet['user_id'] != $cfg->twitter_user_id) { //don't update owner info from reply
 									$u = new User($tweet, 'Replies');
 									$this->ud->updateUser($u, $logger);
@@ -526,9 +529,11 @@ class Crawler {
 							if ( count($tweets) > 0 ) {
 								foreach($tweets as $tweet) {
 
-									if ( $td->addTweet($tweet, $stale_friend, $logger) > 0 ) 
+									if ( $td->addTweet($tweet, $stale_friend, $logger) > 0 ) {
 										$count++;
-								
+										//expand and insert links contained in tweet
+										$this->processTweetURLs($tweet, $cfg, $logger);		
+									}
 									//Update stale_friend values here
 									$stale_friend->full_name=$tweet['full_name'];
 									$stale_friend->avatar=$tweet['avatar'];

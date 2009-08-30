@@ -8,6 +8,7 @@ class Link {
 	var $clicks;
 	var $status_id;
 
+	var $container_tweet; //optional
 
 	function Link($val) {
 		$this->url = $val["url"];
@@ -15,10 +16,10 @@ class Link {
 			$this->expanded_url = $val["expanded_url"];
 
 		if (isset($val["title"]))
-			$this->expanded_url = $val["title"];
+			$this->title = $val["title"];
 
 		if (isset($val["clicks"]))
-			$this->expanded_url = $val["clicks"];
+			$this->clicks = $val["clicks"];
 
 		if (isset($val["status_id"]))
 			$this->status_id = $val["status_id"];
@@ -62,16 +63,17 @@ class LinkDAO {
 
 	function getLinksByFriends($user_id) {
 		$q = "
-			SELECT l.* 
+			SELECT l.*, t.*, pub_date - interval 8 hour as adj_pub_date  
 			FROM links l
 			INNER JOIN tweets t
 			ON t.status_id = l.status_id
 			WHERE t.author_user_id in (SELECT user_id FROM follows f WHERE f.follower_id = ".$user_id.")
+			ORDER BY l.id DESC
 			LIMIT 15";
 			
 		$sql_result = Database::exec($q);
 		$links = array();
-		while ($row = mysql_fetch_assoc($sql_result)) { $links[] = $row; }
+		while ($row = mysql_fetch_assoc($sql_result)) { $l = new Link($row); $l->container_tweet = new Tweet($row); $links[] = $l; }
 		mysql_free_result($sql_result);	
 		return $links;	
 	}
