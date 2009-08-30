@@ -8,6 +8,8 @@ class Link {
 	var $clicks;
 	var $status_id;
 
+	var $img_src; //optional
+
 	var $container_tweet; //optional
 
 	function Link($val) {
@@ -23,6 +25,16 @@ class Link {
 
 		if (isset($val["status_id"]))
 			$this->status_id = $val["status_id"];
+		
+		if ( substr($this->url, 0, strlen('http://twitpic.com/')) == 'http://twitpic.com/' ) {
+			$this->img_src = 'http://twitpic.com/show/thumb/'.substr($this->url, strlen('http://twitpic.com/'));
+		}
+
+		//TODO: Get more image services to work, plus TwitGoo, Twidroid, img.ly, etc.
+		//if ( substr($this->url, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/' ) 
+			//$this->img_src = 'http://twitpic.com/show/mini/'.substr($this->url, strlen('http://yfrog.com/'));
+			//http://img243.yfrog.com/i/xae.jpg/
+			//http://img243.yfrog.com/img243/3258/xae.jpg
 
 	}
 	
