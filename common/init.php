@@ -7,8 +7,10 @@ require_once 'class.Tweet.php';
 require_once 'class.Link.php';
 require_once 'class.Instance.php';
 require_once 'class.OwnerInstance.php';
+require_once 'class.LongUrlAPIAccessor.php';
 require_once 'class.Crawler.php';		
-require_once 'class.Utils.php';		
+require_once 'class.Utils.php';	
+
 
 require_once 'class.TwitterAPIAccessorOAuth.php';
 require_once 'OAuth.php';		

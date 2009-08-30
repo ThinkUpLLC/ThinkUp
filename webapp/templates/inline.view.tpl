@@ -94,10 +94,20 @@
 
 
 	{if $people}
-		{foreach from=$people key=fid item=f}
 		<ul>
+		{foreach from=$people key=fid item=f}
 		{include file="_user.tpl" t=$f}
+		{/foreach}	
 		</ul>
+	{/if}
+
+	{if ($display eq 'links-friends' and not $links) or 
+		($display eq 'links-favorites' and not $links)}
+		<h2 class="alert">&#9888; No tweets to display.</h2>
+	{/if}		
+	{if $links}
+		{foreach from=$links key=lid item=l}
+		{include file="_link.tpl" t=$f}
 		{/foreach}	
 	{/if}
 		

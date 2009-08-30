@@ -49,6 +49,7 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 	$ud = new UserDAO();
 	$td = new TweetDAO();
 	$fd = new FollowDAO();
+	$ld = new LinkDAO();
 
 
 	$s->assign('display', $_REQUEST['d'] );
@@ -126,6 +127,16 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 		case "friends-notmutual":
 			$s->assign('header', 'Not Mutual Friends' );		
 			$s->assign('people', $fd->getFriendsNotFollowingBack($cfg->twitter_user_id));
+			break;
+		case "links-friends":
+			$s->assign('header', 'Links From Friends' );	
+			$s->assign('description', 'Links your friends tweeted.');
+			$s->assign('links', $ld->getLinksByFriends($cfg->twitter_user_id));
+			break;
+		case "links-favorites":
+			$s->assign('header', 'Links From Favorites' );	
+			$s->assign('description', 'Links in tweets you favorited.');
+			//$s->assign('links', $ld->getLinksByFriends($cfg->twitter_user_id));
 			break;
 	}
 }
