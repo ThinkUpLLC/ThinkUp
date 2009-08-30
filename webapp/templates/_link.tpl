@@ -7,8 +7,10 @@
 			</div>
 				
 			<div class="tweet-body">
-				{if $l->img_src}<a href="{$l->url}"><img src="{$l->img_src}" style="float:right;background:#eee;padding:5px" /></a>{/if}
+				{if $l->img_src}<a href="{$l->url}"><img src="{$l->img_src}" style="float:right;background:#eee;padding:5px" /></a>
+				{else}
 				{if $l->expanded_url}<a href="{$l->expanded_url}" title="{$l->expanded_url}">{$l->title}</a>{/if}
+				{/if}
 				<p>{$l->container_tweet->tweet_html|link_usernames} {if $l->container_tweet->in_reply_to_status_id}[<a href="{$cfg->site_root_path}status/?t={$t->in_reply_to_status_id}">in reply to</a>]{/if}</p>
 				<h3><a href="http://twitter.com/{$l->container_tweet->author_username}/status/{$l->container_tweet->status_id}">{$l->container_tweet->adj_pub_date|relative_datetime}</a><h3>
 				{if $l->container_tweet->location}<h4 class="tweetstamp">{$l->container_tweet->location}</h4>{/if}
