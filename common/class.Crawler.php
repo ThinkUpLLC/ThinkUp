@@ -76,21 +76,14 @@ class Crawler {
 					$tweets = $api->parseXML($twitter_data);
 
 					$td = new TweetDAO;
-					$ld = new LinkDAO;
 					foreach($tweets as $tweet) {
 
 						if ( $td->addTweet($tweet, $this->owner_object, $logger) > 0 ) {
 							$count = $count + 1;
 							$this->instance->total_tweets_in_system = $this->instance->total_tweets_in_system + 1;
 
-							//tweet inserted; process its URLs
-							$urls = Tweet::extractURLs($tweet['tweet_text']);
-							foreach ($urls as $u) {
-								if ( $ld->insert($u, $tweet['status_id']) )
-									$logger->logStatus("Inserted ".$u." into links table", get_class($this) );		
-								else
-									$logger->logStatus("Did NOT insert ".$u." into links table", get_class($this) );
-							}
+							//expand and insert links contained in tweet
+							$this->processTweetURLs($tweet, $cfg, $logger);
 
 						}
 						if ( $tweet['status_id'] > $this->instance->last_status_id ) 
@@ -136,6 +129,31 @@ class Crawler {
 		$logger->logStatus($status_message, get_class($this) );		
 		$status_message = "";
 		
+	}
+
+	private function processTweetURLs($tweet, $cfg, $logger) {
+		$ld = new LinkDAO;
+		$lurl = new LongUrlAPIAccessor($cfg);
+
+		$urls = Tweet::extractURLs($tweet['tweet_text']);
+		foreach ($urls as $u) {
+			$eurl = $lurl->expandUrl($u);
+
+			if ( $eurl['response-code']==200 ) {
+				$logger->logStatus("LongURL API call succeeded", get_class($this));
+				if ($ld->insertExpanded($u, $eurl['long-url'], $eurl['title'], $tweet['status_id'])) 
+					$logger->logStatus("Inserted expanded ".$u." into links table", get_class($this) );	
+				else
+					$logger->logStatus("Did NOT insert expanded ".$u." into links table", get_class($this) );	
+			} else {
+				$logger->logStatus("LongURL API call failed, HTTP response: ".$eurl['response-code'], get_class($this));
+				if ( $ld->insert($u, $tweet['status_id']) )
+					$logger->logStatus("Inserted short ".$u." into links table", get_class($this) );		
+				else
+					$logger->logStatus("Did NOT insert short ".$u." into links table", get_class($this) );
+			}
+		}
+
 	}
 	
 	private function fetchAndAddTweetRepliedTo($tid, $td, $api, $logger) {
