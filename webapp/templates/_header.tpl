@@ -111,7 +111,7 @@
 		 
 		 /******* /MENU *******/  
 		 /******* LOADING *******/  
-		 #loading, #loading_mentions, #loading_followers, #loading_friends {  
+		 #loading, #loading_mentions, #loading_followers, #loading_friends, #loading_links {  
 		     visibility: hidden;  
 		     float : left;
 		 }  
@@ -158,10 +158,11 @@
 		 
 		 li.individual-tweet h4.reply-count {
 		 	font-size : medium;
+			visibility:visible;
 		 }
 
 		 li.individual-tweet:hover h4, li.individual-tweet:hover form {
-		     visibility:visible;
+		     visibility: visible; 
 		     color : #666;
 		 }
 		 
@@ -196,10 +197,6 @@
 	<script type="text/javascript">
 	{literal}$(function() {
 		$("#tabs").tabs();
-		$("#tweetssubtabs").tabs();
-		$("#repliessubtabs").tabs();
-		$("#followerssubtabs").tabs();
-		$("#friendssubtabs").tabs();
 	});{/literal}
 	
 {if $load neq 'no'}
@@ -212,11 +209,13 @@
 		var loading_mentions = $("#loading_mentions");
 		var loading_followers = $("#loading_followers");
 		var loading_friends = $("#loading_friends");
+		var loading_links =  $("#loading_links");
 		
 		var tweets_content = $("#tweets_content");
 		var mentions_content = $("#mentions_content");
 		var followers_content = $("#followers_content");
 		var friends_content = $("#friends_content");
+		var links_content =  $("#links_content");
 		
 		{/literal}
 		showLoading();
@@ -224,6 +223,7 @@
 		mentions_content.load("inline.view.php?u={$instance->twitter_username}&d=mentions-all", hideLoading); 
 		followers_content.load("inline.view.php?u={$instance->twitter_username}&d=followers-mostfollowed", hideLoading); 
 		friends_content.load("inline.view.php?u={$instance->twitter_username}&d=friends-mostactive", hideLoading); 
+		links_content.load("inline.view.php?u={$instance->twitter_username}&d=links-friends", hideLoading); 
 		
 		{literal}
 		//Manage click events
@@ -281,7 +281,13 @@
 					break;	
 				case "friends-notmutual":
 					friends_content.load("inline.view.php?u={$instance->twitter_username}&d=friends-notmutual", hideLoading); 
-					break;	
+					break;
+				case "links-friends":
+					links_content.load("inline.view.php?u={$instance->twitter_username}&d=links-friends", hideLoading); 
+					break;
+				case "links-favorites":
+					links_content.load("inline.view.php?u={$instance->twitter_username}&d=links-favorites", hideLoading); 
+					break;
 				default:
 					//hide loading bar if there is no selected section
 					hideLoading();
@@ -308,6 +314,10 @@
 				.css({visibility:"visible"})
 				.css({opacity:"1"})
 				.css({display:"block"})
+			loading_links
+				.css({visibility:"visible"})
+				.css({opacity:"1"})
+				.css({display:"block"})
 
 
 		}
@@ -317,6 +327,7 @@
 			loading_mentions.fadeTo(1000, 0);
 			loading_followers.fadeTo(1000, 0);
 			loading_friends.fadeTo(1000, 0);
+			loading_links.fadeTo(1000, 0);
 			
 		};
 

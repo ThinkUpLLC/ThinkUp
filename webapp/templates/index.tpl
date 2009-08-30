@@ -16,7 +16,7 @@
 			<li><a href="#mentions">Mentions</a></li>
 			<li><a href="#followers">Followers</a></li>
 			<li><a href="#friends">Friends</a></li>
-
+			<li><a href="#links">Links</a></li>
 		</ul>		
 
 
@@ -95,6 +95,25 @@
 		</ul>
 
 		<div id="friends_content"></div>
+
+	<span class="clear"></span>
+	</div>
+
+
+</div>
+
+
+<div class="section" id="links">
+	<div id="top">
+
+		<div id="loading_links"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..." /></div>
+	
+		<ul id="menu">
+			<li id="links-friends">From Friends</li>
+			<li id="links-favorites">From Your Favorites</li>
+		</ul>
+
+		<div id="links_content"></div>
 
 	<span class="clear"></span>
 	</div>
