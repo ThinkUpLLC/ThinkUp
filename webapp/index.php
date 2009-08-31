@@ -89,10 +89,14 @@ if(!$s->is_cached('index.tpl', $i->twitter_username."-".$_SESSION['user'])) {
 	$percent_friends_loaded = $u->getPercentage($owner_stats['friend_count'], ($total_friends_loaded));
 	$percent_friends_loaded = ($percent_friends_loaded  > 100) ? 100 : $percent_friends_loaded; 
 
-
+	$percent_followers_suspended = round($u->getPercentage($total_follows_with_full_details, $total_follows_with_errors), 2);
+	$percent_followers_protected = round($u->getPercentage($total_follows_with_full_details, $total_follows_protected), 2);
+	
 	$s->assign('percent_followers_loaded', $percent_followers_loaded);
 	$s->assign('percent_tweets_loaded', $percent_tweets_loaded);
 	$s->assign('percent_friends_loaded', $percent_friends_loaded);
+	$s->assign('percent_followers_suspended', $percent_followers_suspended);
+	$s->assign('percent_followers_protected', $percent_followers_protected);
 
 }
 
