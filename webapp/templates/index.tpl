@@ -133,8 +133,8 @@
 	<h2>Key Stats</h2>
 
 <ul>
-	<li>Followers: {$owner_stats.follower_count|number_format} <small>{if $total_follows_protected>0} ({$total_follows_protected|number_format} protected){/if}{if $total_follows_with_errors>0} ({$total_follows_with_errors|number_format} suspended){/if}</small></li>
-	<li>Friends: {$owner_stats.friend_count|number_format} <small>{if $total_friends_protected}({$total_friends_protected|number_format} protected{/if}){if $total_friends_with_errors>0} ({$total_friends_with_errors|number_format} suspended){/if}</small></li>
+	<li>Followers: <cite title="Total followers according to Twitter.com (not necessarily loaded into Twitalytic)">{$owner_stats.follower_count|number_format}</cite><br /> <small>{if $total_follows_protected>0} (<cite title="{$total_follows_protected|number_format} of {$total_follows_with_full_details|number_format} total follower profiles loaded into Twitalytic">{$percent_followers_protected}% protected</cite>)<br />{/if}{if $total_follows_with_errors>0} (<cite title="{$total_follows_with_errors|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into Twitalytic">{$percent_followers_suspended}% suspended</cite>){/if}</small></li>
+	<li>Friends: {$owner_stats.friend_count|number_format} <br /> <small>{if $total_friends_protected}({$total_friends_protected|number_format} protected)<br />{/if}{if $total_friends_with_errors>0} ({$total_friends_with_errors|number_format} suspended){/if}</small></li>
 	<li>{$owner_stats.tweet_count|number_format} Tweets <small></small><br /><small>{$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}</small></li>
 	<li>{$instance->total_replies_in_system|number_format} Replies in System<br />{if $instance->total_replies_in_system > 0}<small>{$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}</small>{/if}</li>
 	<li>
