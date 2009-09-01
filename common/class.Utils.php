@@ -23,7 +23,20 @@ class Utils {
 			return 0;
 	}
 	
+	public static function curl_get_file_contents($URL) {
+        $c = curl_init();
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($c, CURLOPT_URL, $URL);
+        $contents = curl_exec($c);
+        curl_close($c);
 
+		//echo $URL;
+		//echo $contents;
+        if ($contents) 
+			return $contents;
+        else 
+			return null;
+    }
 }
 
 

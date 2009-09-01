@@ -111,6 +111,7 @@
 		<ul id="menu">
 			<li id="links-friends">From Friends</li>
 			<li id="links-favorites">From Your Favorites</li>
+			<li id="links-photos">Photos</li>
 		</ul>
 
 		<div id="links_content"></div>

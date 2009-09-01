@@ -138,6 +138,12 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 			$s->assign('description', 'Links in tweets you favorited.');
 			//$s->assign('links', $ld->getLinksByFriends($cfg->twitter_user_id));
 			break;
+		case "links-photos":
+			$s->assign('header', 'Photos' );	
+			$s->assign('description', 'Photos your friends have tweeted.');
+			$s->assign('links', $ld->getPhotosByFriends($cfg->twitter_user_id));
+			break;
+
 	}
 }
 

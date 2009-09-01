@@ -187,13 +187,15 @@ CREATE TABLE IF NOT EXISTS `user_errors` (
 -- Table structure for table `links`
 --
 
-CREATE TABLE IF NOT EXISTS links (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  url varchar(255) COLLATE utf8_bin NOT NULL,
-  expanded_url varchar(255) COLLATE utf8_bin NOT NULL,
-  title varchar(255) COLLATE utf8_bin NOT NULL,
-  clicks int(11) NOT NULL DEFAULT '0',
-  status_id bigint(11) NOT NULL,
-  PRIMARY KEY (id),
-  KEY status_id (status_id)
+CREATE TABLE IF NOT EXISTS `links` (
+  `id` int(11) NOT NULL auto_increment,
+  `url` varchar(255) collate utf8_bin NOT NULL,
+  `expanded_url` varchar(255) collate utf8_bin NOT NULL,
+  `title` varchar(255) collate utf8_bin NOT NULL,
+  `clicks` int(11) NOT NULL default '0',
+  `status_id` bigint(11) NOT NULL,
+  `is_image` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `status_id` (`status_id`),
+  KEY `is_image` (`is_image`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

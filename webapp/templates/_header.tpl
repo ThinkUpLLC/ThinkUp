@@ -288,6 +288,9 @@
 				case "links-favorites":
 					links_content.load("inline.view.php?u={$instance->twitter_username}&d=links-favorites", hideLoading); 
 					break;
+				case "links-photos":
+					links_content.load("inline.view.php?u={$instance->twitter_username}&d=links-photos", hideLoading); 
+					break;
 				default:
 					//hide loading bar if there is no selected section
 					hideLoading();
