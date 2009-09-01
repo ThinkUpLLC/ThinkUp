@@ -132,26 +132,42 @@ class Crawler {
 	}
 
 	private function processTweetURLs($tweet, $cfg, $logger) {
+
 		$ld = new LinkDAO;
 		$lurl = new LongUrlAPIAccessor($cfg);
+		$fa = new FlickrAPIAccessor($cfg);
 
 		$urls = Tweet::extractURLs($tweet['tweet_text']);
 		foreach ($urls as $u) {
-			$eurl = $lurl->expandUrl($u);
-
-			if ( $eurl['response-code']==200 ) {
-				$logger->logStatus("LongURL API call succeeded", get_class($this));
-				if ($ld->insertExpanded($u, $eurl['long-url'], $eurl['title'], $tweet['status_id'])) 
-					$logger->logStatus("Inserted expanded ".$u." into links table", get_class($this) );	
-				else
-					$logger->logStatus("Did NOT insert expanded ".$u." into links table", get_class($this) );	
+			//if it's an image (Twitpic/Twitgoo/Flickr for now), insert direct path to thumb as expanded url, otherwise, just expand
+			//set defaults
+			$is_image = 0;
+			$title = '';
+			$eurl = '';
+			if ( substr($u, 0, strlen('http://twitpic.com/')) == 'http://twitpic.com/' ) {
+				$eurl = 'http://twitpic.com/show/thumb/'.substr($u, strlen('http://twitpic.com/'));
+				$is_image = 1;
+			} elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/' ) {
+				$eurl = 'http://twitgoo.com/show/thumb/'.substr($u, strlen('http://twitgoo.com/'));
+				$is_image = 1;
+			} elseif ( $cfg->flickr_api_key != null && substr($u, 0, strlen('http://flic.kr/p/')) == 'http://flic.kr/p/' ) { 
+				$eurl = $fa->getFlickrPhotoSource($u);
+				if ( $eurl != '')
+					$is_image = 1;
 			} else {
-				$logger->logStatus("LongURL API call failed, HTTP response: ".$eurl['response-code'], get_class($this));
-				if ( $ld->insert($u, $tweet['status_id']) )
-					$logger->logStatus("Inserted short ".$u." into links table", get_class($this) );		
-				else
-					$logger->logStatus("Did NOT insert short ".$u." into links table", get_class($this) );
+				$eurl_arr = $lurl->expandUrl($u);
+				if ( isset($eurl_arr['response-code']) && $eurl_arr['response-code'] == 200 ) {
+					$eurl = $eurl_arr['long-url'];
+					if ( isset($eurl_arr['title']) ) 
+						$title = $eurl_arr['title'];
+				} 
 			}
+
+			if ($ld->insert($u, $eurl, $title, $tweet['status_id'], $is_image)) 
+				$logger->logStatus("Inserted ".$u." (".$eurl.") into links table", get_class($this) );	
+			else
+				$logger->logStatus("Did NOT insert ".$u." (".$eurl.") into links table", get_class($this) );	
+
 		}
 
 	}
