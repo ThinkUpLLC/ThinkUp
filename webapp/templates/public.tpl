@@ -38,6 +38,7 @@
 		}
 
 		.tweet {
+		padding:10px;
 
 		}
 		.content {
