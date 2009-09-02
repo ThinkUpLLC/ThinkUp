@@ -327,11 +327,13 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 				# Parse file
 				$status_message = "Parsing XML data from $account_status "; 
 				$status = $this->parseXML($twitter_data);
-			 	$this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
-			 	$this->api_hourly_limit = $status['hourly-limit'];//get this from API
-			
-				$this->next_api_reset = $status['reset-time'] ;//get this from API
 
+				if (isset($status['remaining-hits']) && isset( $status['hourly-limit'] ) && isset($status['reset-time'])) {
+					$this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
+					$this->api_hourly_limit = $status['hourly-limit'];//get this from API
+					$this->next_api_reset = $status['reset-time'] ;//get this from API
+				} else 
+					throw new Exception('API status came back malformed');
 
 				//Figure out how many minutes are left in the hour, then multiply that x 1 for api calls to leave unmade
 				$next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
@@ -350,7 +352,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 
 
 			} catch (Exception $e) { 
-				$status_message = 'Could not parse account status'; 
+				$status_message = 'Could not parse account status: ' . $e->getMessage(); 
 			} 
 		}
 		$logger -> logStatus($status_message, get_class($this) );
