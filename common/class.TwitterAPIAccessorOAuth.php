@@ -184,7 +184,7 @@ class TwitterAPIAccessorOAuth {
 		 					'friend_count' 		=> $xml->friends_count,
 		 					'tweet_count' 			=> $xml->statuses_count,
 							'favorites_count' 	=> $xml->favourites_count,
-							'joined'			=> $xml->created_at
+							'joined'			=> gmdate("Y-m-d H:i:s",strToTime($xml->created_at)),
 						);
 						break;
 					case 'ids':
@@ -208,7 +208,7 @@ class TwitterAPIAccessorOAuth {
 	 						'followers' 		=> $xml->user->followers_count,
 							'following'			=> $xml->user->friends_count,
 							'tweets' 			=> $xml->user->statuses_count,
-							'joined'			=> $xml->user->created_at,
+							'joined'			=> gmdate("Y-m-d H:i:s",strToTime($xml->user->created_at)),
 	 						'tweet_text' 		=> $xml->text,
 	 						'tweet_html' 		=> $xml->text,
 	 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($xml->created_at)),
@@ -231,10 +231,10 @@ class TwitterAPIAccessorOAuth {
 		 						'is_protected' 		=> $item->protected,
 								'friend_count'			=> $item->friends_count,
 		 						'follower_count' 		=> $item->followers_count,
-								'joined'			=> $item->created_at,
+								'joined'			=> gmdate("Y-m-d H:i:s",strToTime($item->created_at)),
 		 						'tweet_text' 		=> $item->status->text,
 		 						'tweet_html' 		=> $item->status->text,
-								'last_post'			=> $item->status->created_at,
+								'last_post'			=> gmdate("Y-m-d H:i:s",strToTime($item->status->created_at)),
 		 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($item->status->created_at)),
 		 						'favorites_count' 	=> $item->favourites_count,
 		 						'tweet_count' 			=> $item->statuses_count
@@ -256,7 +256,7 @@ class TwitterAPIAccessorOAuth {
 		 						'follower_count'	=> $item->user->followers_count,
 								'friend_count'		=> $item->user->friends_count,
 								'tweet_count' 		=> $item->user->statuses_count,
-								'joined'			=> $item->user->created_at,
+								'joined'			=> gmdate("Y-m-d H:i:s",strToTime($item->user->created_at)),
 		 						'tweet_text' 		=> $item->text,
 		 						'tweet_html' 		=> $item->text,
 		 						'pub_date' 			=> gmdate("Y-m-d H:i:s",strToTime($item->created_at)),
@@ -327,11 +327,13 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 				# Parse file
 				$status_message = "Parsing XML data from $account_status "; 
 				$status = $this->parseXML($twitter_data);
-			 	$this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
-			 	$this->api_hourly_limit = $status['hourly-limit'];//get this from API
-			
-				$this->next_api_reset = $status['reset-time'] ;//get this from API
 
+				if (isset($status['remaining-hits']) && isset( $status['hourly-limit'] ) && isset($status['reset-time'])) {
+					$this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
+					$this->api_hourly_limit = $status['hourly-limit'];//get this from API
+					$this->next_api_reset = $status['reset-time'] ;//get this from API
+				} else 
+					throw new Exception('API status came back malformed');
 
 				//Figure out how many minutes are left in the hour, then multiply that x 1 for api calls to leave unmade
 				$next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
@@ -350,7 +352,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 
 
 			} catch (Exception $e) { 
-				$status_message = 'Could not parse account status'; 
+				$status_message = 'Could not parse account status: ' . $e->getMessage(); 
 			} 
 		}
 		$logger -> logStatus($status_message, get_class($this) );

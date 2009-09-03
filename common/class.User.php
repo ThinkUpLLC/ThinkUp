@@ -42,8 +42,8 @@ class User {
 		if (isset($val['friend_count']))
 			$this-> friend_count = $val['friend_count'];
 		if (isset($val['last_post'])) 
-			$this-> last_post = date_format(date_create($val['last_post']), "Y-m-d H:i:s");
-		$this -> joined = date_format(date_create($val['joined']), "Y-m-d H:i:s");
+			$this-> last_post = $val['last_post'];
+		$this -> joined = $val['joined'];
 		
 		$this->found_in = $found_in;
 	}
