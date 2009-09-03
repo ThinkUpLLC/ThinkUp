@@ -148,14 +148,14 @@ class UserDAO {
 					".($has_last_status_id ? ", last_status_id = ".$user->last_status_id : "").";";  
 		$foo = Database::exec($q);
 		if (mysql_affected_rows() > 0) {
-			//$status_message = "User ". $user->user_name." updated in system.";
-			//$logger->logStatus($status_message, get_class($this) );
-			//$status_message = "";
+			$status_message = "User ". $user->user_name." updated in system.";
+			$logger->logStatus($status_message, get_class($this) );
+			$status_message = "";
 			return 1;
 		} else {
-			//$status_message = $user->user_name." was NOT updated in system.";
-			//$logger->logStatus($status_message, get_class($this) );
-			//$status_message = "";
+			$status_message = "User ". $user->user_name." was NOT updated in system.";
+			$logger->logStatus($status_message, get_class($this) );
+			$status_message = "";
 			return 0;
 		}
 	}

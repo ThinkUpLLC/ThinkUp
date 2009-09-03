@@ -484,7 +484,7 @@ class Crawler {
 
 					foreach($users as $u) {
 						$utu = new User($u, 'Friends');
-						//$this->ud->updateUser($utu, $logger);
+						$this->ud->updateUser($utu, $logger);
 
 						# add/update follow relationship
 						if ( $fd->followExists($utu->user_id, $this->instance->twitter_user_id ) ) {
