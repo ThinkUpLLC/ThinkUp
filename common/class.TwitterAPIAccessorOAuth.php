@@ -122,35 +122,114 @@ class TwitterAPIAccessorOAuth {
                 $root = $xml->getName();
                 switch ($root) {
                     case 'user':
-                        $thisFeed[] = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name, 'full_name'=>$xml->name, 'avatar'=>$xml->profile_image_url, 'location'=>$xml->location, 'description'=>$xml->description, 'url'=>$xml->url, 'is_protected'=>$xml->
-                            protected , 'follower_count'=>$xml->followers_count, 'friend_count'=>$xml->friends_count, 'tweet_count'=>$xml->statuses_count, 'favorites_count'=>$xml->favourites_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), );
+                        $thisFeed[] = array(
+							'user_id'=>$xml->id, 
+							'user_name'=>$xml->screen_name, 
+							'full_name'=>$xml->name, 
+							'avatar'=>$xml->profile_image_url, 
+							'location'=>$xml->location, 
+							'description'=>$xml->description, 
+							'url'=>$xml->url, 
+							'is_protected'=>$xml->protected , 
+							'follower_count'=>$xml->followers_count, 
+							'friend_count'=>$xml->friends_count, 
+							'tweet_count'=>$xml->statuses_count, 
+							'favorites_count'=>$xml->favourites_count, 
+							'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 
+							);
                         break;
                     case 'ids':
                         foreach ($xml->children() as $item) {
-                            $thisFeed[] = array('id'=>$item);
+                            $thisFeed[] = array(
+								'id'=>$item
+							);
                         }
                         break;
                     case 'status':
-                        $thisFeed[] = array('status_id'=>$xml->id, 'user_id'=>$xml->user->id, 'user_name'=>$xml->user->screen_name, 'full_name'=>$xml->user->name, 'avatar'=>$xml->user->profile_image_url, 'location'=>$xml->user->location, 'description'=>$xml->user->description, 'url'=>$xml->user->url, 'is_protected'=>$xml->user->
-                            protected , 'followers'=>$xml->user->followers_count, 'following'=>$xml->user->friends_count, 'tweets'=>$xml->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)), 'tweet_text'=>$xml->text, 'tweet_html'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 'in_reply_to_status_id'=>$xml->in_reply_to_status_id, 'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 'source'=>$xml->source);
+                        $thisFeed[] = array(
+							'status_id'=>$xml->id, 
+							'user_id'=>$xml->user->id, 
+							'user_name'=>$xml->user->screen_name, 
+							'full_name'=>$xml->user->name, 
+							'avatar'=>$xml->user->profile_image_url, 
+							'location'=>$xml->user->location, 
+							'description'=>$xml->user->description, 
+							'url'=>$xml->user->url, 
+							'is_protected'=>$xml->user->protected , 
+							'followers'=>$xml->user->followers_count, 
+							'following'=>$xml->user->friends_count, 
+							'tweets'=>$xml->user->statuses_count, 
+							'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)), 
+							'tweet_text'=>$xml->text, 
+							'tweet_html'=>$xml->text, 
+							'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 
+							'in_reply_to_status_id'=>$xml->in_reply_to_status_id, 
+							'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 
+							'source'=>$xml->source
+						);
                         break;
                     case 'users':
                         foreach ($xml->children() as $item) {
-                            $thisFeed[] = array('status_id'=>$item->status->id, 'user_id'=>$item->id, 'user_name'=>$item->screen_name, 'full_name'=>$item->name, 'avatar'=>$item->profile_image_url, 'location'=>$item->location, 'description'=>$item->description, 'url'=>$item->url, 'is_protected'=>$item->
-                                protected , 'friend_count'=>$item->friends_count, 'follower_count'=>$item->followers_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 'tweet_text'=>$item->status->text, 'tweet_html'=>$item->status->text, 'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'favorites_count'=>$item->favourites_count, 'tweet_count'=>$item->statuses_count);
+                            $thisFeed[] = array(
+								'status_id'=>$item->status->id, 
+								'user_id'=>$item->id, 
+								'user_name'=>$item->screen_name, 
+								'full_name'=>$item->name, 
+								'avatar'=>$item->profile_image_url, 
+								'location'=>$item->location, 
+								'description'=>$item->description, 
+								'url'=>$item->url, 
+								'is_protected'=>$item->protected , 
+								'friend_count'=>$item->friends_count, 
+								'follower_count'=>$item->followers_count, 
+								'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 
+								'tweet_text'=>$item->status->text, 
+								'tweet_html'=>$item->status->text, 
+								'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
+								'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
+								'favorites_count'=>$item->favourites_count, 
+								'tweet_count'=>$item->statuses_count
+							);
                         }
                         break;
                     case 'statuses':
                         foreach ($xml->children() as $item) {
-                            $thisFeed[] = array('status_id'=>$item->id, 'user_id'=>$item->user->id, 'user_name'=>$item->user->screen_name, 'full_name'=>$item->user->name, 'avatar'=>$item->user->profile_image_url, 'location'=>$item->user->location, 'description'=>$item->user->description, 'url'=>$item->user->url, 'is_protected'=>$item->user->
-                                protected , 'follower_count'=>$item->user->followers_count, 'friend_count'=>$item->user->friends_count, 'tweet_count'=>$item->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->user->created_at)), 'tweet_text'=>$item->text, 'tweet_html'=>$item->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 'favorites_count'=>$item->user->favourites_count, 'in_reply_to_status_id'=>$item->in_reply_to_status_id, 'in_reply_to_user_id'=>$item->in_reply_to_user_id, 'source'=>$item->source);
+                            $thisFeed[] = array(
+								'status_id'=>$item->id, 
+								'user_id'=>$item->user->id, 
+								'user_name'=>$item->user->screen_name, 
+								'full_name'=>$item->user->name, 
+								'avatar'=>$item->user->profile_image_url, 
+								'location'=>$item->user->location, 
+								'description'=>$item->user->description, 
+								'url'=>$item->user->url, 
+								'is_protected'=>$item->user->protected , 
+								'follower_count'=>$item->user->followers_count, 
+								'friend_count'=>$item->user->friends_count, 
+								'tweet_count'=>$item->user->statuses_count, 
+								'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->user->created_at)), 
+								'tweet_text'=>$item->text, 
+								'tweet_html'=>$item->text, 
+								'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 
+								'favorites_count'=>$item->user->favourites_count, 
+								'in_reply_to_status_id'=>$item->in_reply_to_status_id, 
+								'in_reply_to_user_id'=>$item->in_reply_to_user_id, 
+								'source'=>$item->source
+							);
                         }
                         break;
                     case 'hash':
-                        $thisFeed = array('remaining-hits'=>$xml-> {'remaining-hits'} , 'hourly-limit'=>$xml-> {'hourly-limit'} , 'reset-time'=>$xml-> {'reset-time-in-seconds'} );
+                        $thisFeed = array(
+							'remaining-hits'=>$xml-> {'remaining-hits'} , 
+							'hourly-limit'=>$xml-> {'hourly-limit'} , 
+							'reset-time'=>$xml-> {'reset-time-in-seconds'}
+						);
                         break;
                     case 'relationship':
-                        $thisFeed = array('source_follows_target'=>$xml->source->following, 'target_follows_source'=>$xml->target->following);
+                        $thisFeed = array(
+							'source_follows_target'=>$xml->source->following, 
+							'target_follows_source'=>$xml->target->following
+						);
                         break;
                     default:
                         break;
