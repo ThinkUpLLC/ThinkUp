@@ -5,3 +5,4 @@ webapp/templates_c/*.php
 webapp/templates_c/cache/*.tpl
 crawler/logs/crawl.log
 smarty/*
+.*
