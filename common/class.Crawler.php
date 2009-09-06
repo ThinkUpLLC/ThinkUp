@@ -1,4 +1,4 @@
-<?php 
+<?php
 class Crawler {
     var $instance;
     var $owner_object;
@@ -100,7 +100,7 @@ class Crawler {
                         $logger->logStatus($status_message, get_class($this));
                         $status_message = "";
                     }
-
+ 
                     
                     if ($this->owner_object->tweet_count == $this->instance->total_tweets_in_system)
                         $this->instance->is_archive_loaded_tweets = true;
@@ -123,7 +123,7 @@ class Crawler {
         
         if ($this->owner_object->tweet_count == $this->instance->total_tweets_in_system)
             $status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
-
+ 
             
         $logger->logStatus($status_message, get_class($this));
         $status_message = "";
@@ -147,9 +147,9 @@ class Crawler {
                 $eurl = 'http://twitpic.com/show/thumb/'.substr($u, strlen('http://twitpic.com/'));
                 $is_image = 1;
             } elseif ( substr($u, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/' ) {
-            	$eurl = $u.'.th.jpg';
-				$is_image = 1;	 
-			} elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
+             $eurl = $u.'.th.jpg';
+$is_image = 1;
+} elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
                 $eurl = 'http://twitgoo.com/show/thumb/'.substr($u, strlen('http://twitgoo.com/'));
                 $is_image = 1;
             } elseif ($cfg->flickr_api_key != null && substr($u, 0, strlen('http://flic.kr/p/')) == 'http://flic.kr/p/') {
@@ -238,4 +238,4 @@ class Crawler {
                             $this->last_page_fetched_replies = 1;
                             $continue_fetching = false;
                             $this->instance->is_archive_loaded_replies = true;
-                            $status_message = 'Paged back bu
+                            $status_message = 'Paged back but not finding new replies
