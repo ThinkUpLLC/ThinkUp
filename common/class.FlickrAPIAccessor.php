@@ -5,8 +5,8 @@ class FlickrAPIAccessor {
     var $method = "flickr.photos.getSizes";
     var $api_key;
     
-    function FlickrAPIAccessor($cfg) {
-        $this->api_key = $cfg->flickr_api_key;
+    function FlickrAPIAccessor($flickr_api_key) {
+        $this->api_key = $flickr_api_key;
     }
     
     function getFlickrPhotoSource($u) {

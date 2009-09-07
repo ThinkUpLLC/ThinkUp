@@ -24,7 +24,7 @@ else
 $tu = $_POST['twitter_username'];
 $tp = $_POST['twitter_password'];
 
-$db = new Database();
+$db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
 $od = new OwnerDAO();
 

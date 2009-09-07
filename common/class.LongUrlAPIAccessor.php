@@ -6,8 +6,8 @@ class LongUrlAPIAccessor {
     var $response_code = 1;
     var $title = 1;
     
-    function LongUrlAPIAccessor($cfg) {
-        $this->user_agent = $cfg->app_title;
+    function LongUrlAPIAccessor($app_title) {
+        $this->user_agent = $app_title;
     }
     
     function expandUrl($u) {

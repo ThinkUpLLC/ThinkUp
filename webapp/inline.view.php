@@ -9,7 +9,7 @@ require_once("init.php");
 
 
 
-$db = new Database();
+$db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
 
 $od = new OwnerDAO();

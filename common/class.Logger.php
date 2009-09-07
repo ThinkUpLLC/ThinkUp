@@ -3,13 +3,14 @@ class Logger {
     var $log;
     var $twitter_username;
     
-    function Logger($username, $location) {
-        $this->twitter_username = $username;
-        $log_file = $location; # Where will you keep the log
-        $this->log = $this->openFile($log_file, 'a'); # Append to any prior file
+    function Logger($location) {
+        $this->log = $this->openFile($location, 'a'); # Append to any prior file
     }
-
     
+    function setUsername($uname) {
+        $this->twitter_username = $uname;
+    }
+	
     function logStatus($status_message, $classname) {
         $status_signature = date("Y-m-d H:i:s", time())." | ".(string) number_format(round(memory_get_usage() / 1024000, 2), 2)." MB | $this->twitter_username | $classname:";
         if (strlen($status_message) > 0) {

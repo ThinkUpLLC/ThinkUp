@@ -29,7 +29,7 @@ if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
 	$twitter_id = $u['user_id'];
 	$tu = $u['user_name']; 
 	
-	$db = new Database();
+	$db = new Database($TWITALYTIC_CFG);
 	$conn = $db->getConnection();
 	$od = new OwnerDAO();
 

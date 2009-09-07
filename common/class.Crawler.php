@@ -1,58 +1,61 @@
 <?php 
 class Crawler {
     var $instance;
+	var $logger;
+	var $api;
     var $owner_object;
     var $ud;
     
-    function Crawler($instance) {
+    function Crawler($instance, $logger, $api) {
         $this->instance = $instance;
-        $this->ud = new UserDao();
+        $this->ud = new UserDAO($this->logger);
+		$this->api = $api;
+		$this->logger = $logger;
     }
     
-    function fetchInstanceUserInfo($cfg, $api, $logger) {
+    function fetchInstanceUserInfo() {
         // Get owner user details and save them to DB
         $status_message = "";
-        $owner_profile = str_replace("[id]", $cfg->twitter_username, $api->cURL_source['show_user']);
-        list($cURL_status, $twitter_data) = $api->apiRequest($owner_profile, $logger);
+        $owner_profile = str_replace("[id]", $this->instance->twitter_username, $this->api->cURL_source['show_user']);
+        list($cURL_status, $twitter_data) = $this->api->apiRequest($owner_profile, $this->logger);
         
         if ($cURL_status == 200) {
             try {
-                $users = $api->parseXML($twitter_data);
+                $users = $this->api->parseXML($twitter_data);
                 foreach ($users as $user)
                     $this->owner_object = new User($user, 'Owner Status');
                     
                 if (isset($this->owner_object)) {
                     $status_message = 'Owner info set.';
-                    $this->ud->updateUser($this->owner_object, $logger);
+                    $this->ud->updateUser($this->owner_object, $this->logger);
                 } else {
                     $status_message = 'Owner was not set.';
                 }
             }
             catch(Exception $e) {
-                $status_message = 'Could not parse profile XML for $cfg->twitter_username';
+                $status_message = 'Could not parse profile XML for $this->owner_object->username';
             }
         } else {
             $status_message = 'cURL status is not 200';
         }
-        $logger->logStatus($status_message, get_class($this));
-        $status_message = "";
+        $this->logger->logStatus($status_message, get_class($this));
     }
     
-    function fetchInstanceUserTweets($cfg, $api, $logger) {
+    function fetchInstanceUserTweets($lurl, $fa) {
         // Get owner's tweets
         $status_message = "";
         $got_latest_page_of_tweets = false;
         $continue_fetching = true;
         
-        while ($api->available && $api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching) {
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching) {
         
-            $recent_tweets = str_replace("[id]", $cfg->twitter_username, $api->cURL_source['user_timeline']);
+            $recent_tweets = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['user_timeline']);
             $args = array();
             $args["count"] = 200;
-            $last_page_of_tweets = round($cfg->archive_limit / 200) + 1;
+            $last_page_of_tweets = round($this->api->archive_limit / 200) + 1;
             
             //set page and since_id params for API call
-            if ($got_latest_page_of_tweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system && $this->instance->total_tweets_in_system < $cfg->archive_limit) {
+            if ($got_latest_page_of_tweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system && $this->instance->total_tweets_in_system < $this->api->archive_limit) {
                 if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets)
                     $this->instance->last_page_fetched_tweets = $this->instance->last_page_fetched_tweets + 1;
                 else {
@@ -66,22 +69,22 @@ class Crawler {
                     $args["since_id"] = $this->instance->last_status_id;
             }
             
-            list($cURL_status, $twitter_data) = $api->apiRequest($recent_tweets, $logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $this->logger, $args);
             if ($cURL_status == 200) {
                 # Parse the XML file
                 try {
                     $count = 0;
-                    $tweets = $api->parseXML($twitter_data);
+                    $tweets = $this->api->parseXML($twitter_data);
                     
                     $td = new TweetDAO;
                     foreach ($tweets as $tweet) {
                     
-                        if ($td->addTweet($tweet, $this->owner_object, $logger) > 0) {
+                        if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
                             $count = $count + 1;
                             $this->instance->total_tweets_in_system = $this->instance->total_tweets_in_system + 1;
                             
                             //expand and insert links contained in tweet
-                            $this->processTweetURLs($tweet, $cfg, $logger);
+                            $this->processTweetURLs($tweet, $lurl, $fa);
                             
                         }
                         if ($tweet['status_id'] > $this->instance->last_status_id)
@@ -89,15 +92,15 @@ class Crawler {
                             
                     }
                     $status_message .= count($tweets)." tweet(s) found and $count saved";
-                    $logger->logStatus($status_message, get_class($this));
+                    $this->logger->logStatus($status_message, get_class($this));
                     $status_message = "";
                     
                     //if you've got more than the Twitter API archive limit, stop looking for more tweets
-                    if ($this->instance->total_tweets_in_system >= $cfg->archive_limit) {
+                    if ($this->instance->total_tweets_in_system >= $this->api->archive_limit) {
                         $this->instance->last_page_fetched_tweets = 1;
                         $continue_fetching = false;
-                        $status_message = "More than Twitter cap of ".$cfg->archive_limit." already in system, moving on.";
-                        $logger->logStatus($status_message, get_class($this));
+                        $status_message = "More than Twitter cap of ".$this->api->archive_limit." already in system, moving on.";
+                        $this->logger->logStatus($status_message, get_class($this));
                         $status_message = "";
                     }
 
@@ -106,13 +109,13 @@ class Crawler {
                         $this->instance->is_archive_loaded_tweets = true;
                         
                     $status_message .= $this->instance->total_tweets_in_system." in system; ".$this->owner_object->tweet_count." by owner";
-                    $logger->logStatus($status_message, get_class($this));
+                    $this->logger->logStatus($status_message, get_class($this));
                     $status_message = "";
                     
                 }
                 catch(Exception $e) {
                     $status_message = 'Could not parse tweet XML for $this->twitter_username';
-                    $logger->logStatus($status_message, get_class($this));
+                    $this->logger->logStatus($status_message, get_class($this));
                     $status_message = "";
                     
                 }
@@ -125,16 +128,14 @@ class Crawler {
             $status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
 
             
-        $logger->logStatus($status_message, get_class($this));
+        $this->logger->logStatus($status_message, get_class($this));
         $status_message = "";
         
     }
     
-    private function processTweetURLs($tweet, $cfg, $logger) {
+    private function processTweetURLs($tweet, $lurl, $fa) {
     
         $ld = new LinkDAO;
-        $lurl = new LongUrlAPIAccessor($cfg);
-        $fa = new FlickrAPIAccessor($cfg);
         
         $urls = Tweet::extractURLs($tweet['tweet_text']);
         foreach ($urls as $u) {
@@ -147,12 +148,12 @@ class Crawler {
                 $eurl = 'http://twitpic.com/show/thumb/'.substr($u, strlen('http://twitpic.com/'));
                 $is_image = 1;
             } elseif ( substr($u, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/' ) {
-            	$eurl = $u.'th.jpg';
+            	$eurl = $u.'.th.jpg';
 				$is_image = 1;	 
 			} elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
                 $eurl = 'http://twitgoo.com/show/thumb/'.substr($u, strlen('http://twitgoo.com/'));
                 $is_image = 1;
-            } elseif ($cfg->flickr_api_key != null && substr($u, 0, strlen('http://flic.kr/p/')) == 'http://flic.kr/p/') {
+            } elseif ($fa->api_key != null && substr($u, 0, strlen('http://flic.kr/p/')) == 'http://flic.kr/p/') {
                 $eurl = $fa->getFlickrPhotoSource($u);
                 if ($eurl != '')
                     $is_image = 1;
@@ -166,28 +167,28 @@ class Crawler {
             }
             
             if ($ld->insert($u, $eurl, $title, $tweet['status_id'], $is_image))
-                $logger->logStatus("Inserted ".$u." (".$eurl.") into links table", get_class($this));
+                $this->logger->logStatus("Inserted ".$u." (".$eurl.") into links table", get_class($this));
             else
-                $logger->logStatus("Did NOT insert ".$u." (".$eurl.") into links table", get_class($this));
+                $this->logger->logStatus("Did NOT insert ".$u." (".$eurl.") into links table", get_class($this));
                 
         }
         
     }
     
-    private function fetchAndAddTweetRepliedTo($tid, $td, $api, $logger, $cfg) {
+    private function fetchAndAddTweetRepliedTo($tid, $td, $lurl, $fa) {
         //fetch tweet from Twitter and add to DB
         $status_message = "";
-        $tweet_deets = str_replace("[id]", $tid, $api->cURL_source['show_tweet']);
-        list($cURL_status, $twitter_data) = $api->apiRequest($tweet_deets, $logger);
+        $tweet_deets = str_replace("[id]", $tid, $this->api->cURL_source['show_tweet']);
+        list($cURL_status, $twitter_data) = $this->api->apiRequest($tweet_deets, $this->logger);
         
         if ($cURL_status == 200) {
             try {
-                $tweets = $api->parseXML($twitter_data);
+                $tweets = $this->api->parseXML($twitter_data);
                 foreach ($tweets as $tweet) {
-                    if ($td->addTweet($tweet, $this->owner_object, $logger) > 0) {
+                    if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
                         $status_message = 'Added replied to tweet ID '.$tid." to database.";
                         //expand and insert links contained in tweet
-                        $this->processTweetURLs($tweet, $cfg, $logger);
+                        $this->processTweetURLs($tweet, $lurl, $fa);
                     }
                 }
             }
@@ -196,7 +197,7 @@ class Crawler {
             }
         } elseif ($cURL_status == 404 || $cURL_status == 403) {
             try {
-                $e = $api->parseError($twitter_data);
+                $e = $this->api->parseError($twitter_data);
                 $td = new TweetErrorDAO();
                 $td->insertError($tid, $cURL_status, $e['error'], $this->owner_object->id);
                 $status_message = 'Error saved to tweets.';
@@ -205,20 +206,20 @@ class Crawler {
                 $status_message = 'Could not parse tweet XML for $tid';
             }
         }
-        $logger->logStatus($status_message, get_class($this));
+        $this->logger->logStatus($status_message, get_class($this));
         $status_message = "";
     }
     
-    function fetchInstanceUserReplies($cfg, $api, $logger) {
+    function fetchInstanceUserReplies($lurl, $fa) {
         $status_message = "";
         // Get owner's replies
-        if ($api->available_api_calls_for_crawler > 0) {
+        if ($this->api->available_api_calls_for_crawler > 0) {
             $got_newest_replies = false;
             $continue_fetching = true;
             
-            while ($api->available && $api->available_api_calls_for_crawler > 0 && $continue_fetching) {
+            while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
                 # Get the most recent replies
-                $replies = str_replace("[id]", $cfg->twitter_username, $api->cURL_source['replies']);
+                $replies = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['replies']);
                 $args = array();
                 $args['count'] = 200;
                 
@@ -227,19 +228,19 @@ class Crawler {
                     $args['page'] = $this->last_page_fetched_replies;
                 }
                 
-                list($cURL_status, $twitter_data) = $api->apiRequest($replies, $logger, $args);
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($replies, $this->logger, $args);
                 if ($cURL_status > 200) {
                     $continue_fetching = false;
                 } else {
                     try {
                         $count = 0;
-                        $tweets = $api->parseXML($twitter_data);
+                        $tweets = $this->api->parseXML($twitter_data);
                         if (count($tweets) == 0 && $got_newest_replies) {# you're paged back and no new tweets
                             $this->last_page_fetched_replies = 1;
                             $continue_fetching = false;
                             $this->instance->is_archive_loaded_replies = true;
                             $status_message = 'Paged back but not finding new replies; moving on.';
-                            $logger->logStatus($status_message, get_class($this));
+                            $this->logger->logStatus($status_message, get_class($this));
                             $status_message = "";
                         }
 
@@ -247,38 +248,38 @@ class Crawler {
                         $td = new TweetDAO;
                         $count = 0;
                         foreach ($tweets as $tweet) {
-                            if ($td->addTweet($tweet, $this->owner_object, $logger) > 0) {
+                            if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
                                 $count++;
                                 //expand and insert links contained in tweet
-                                $this->processTweetURLs($tweet, $cfg, $logger);
-                                if ($tweet['user_id'] != $cfg->twitter_user_id) { //don't update owner info from reply
+                                $this->processTweetURLs($tweet, $lurl, $fa);
+                                if ($tweet['user_id'] != $this->owner_object->id) { //don't update owner info from reply
                                     $u = new User($tweet, 'Replies');
-                                    $this->ud->updateUser($u, $logger);
+                                    $this->ud->updateUser($u, $this->logger);
                                 }
                                 
                             }
                             
                         }
                         $status_message .= count($tweets)." replies found and $count saved";
-                        $logger->logStatus($status_message, get_class($this));
+                        $this->logger->logStatus($status_message, get_class($this));
                         $status_message = "";
                         
                         $got_newest_replies = true;
                         
-                        $logger->logStatus($status_message, get_class($this));
+                        $this->logger->logStatus($status_message, get_class($this));
                         $status_message = "";
                         
                         if ($got_newest_replies && $this->instance->is_archive_loaded_replies) {
                             $continue_fetching = false;
                             $status_message .= 'Retrieved newest replies; Reply archive loaded; Stopping reply fetch.';
-                            $logger->logStatus($status_message, get_class($this));
+                            $this->logger->logStatus($status_message, get_class($this));
                             $status_message = "";
                         }
                         
                     }
                     catch(Exception $e) {
-                        $status_message = 'Could not parse replies XML for $cfg->twitter_username';
-                        $logger->logStatus($status_message, get_class($this));
+                        $status_message = 'Could not parse replies XML for $this->owner_object->username';
+                        $this->logger->logStatus($status_message, get_class($this));
                         $status_message = "";
                     }
                 }
@@ -288,24 +289,24 @@ class Crawler {
             $status_message = 'Crawler API call limit exceeded.';
         }
         
-        $logger->logStatus($status_message, get_class($this));
+        $this->logger->logStatus($status_message, get_class($this));
         $status_message = "";
     }
     
-    private function fetchInstanceUserFollowersByIDs($cfg, $api, $logger) {
+    private function fetchInstanceUserFollowersByIDs() {
         $continue_fetching = true;
         $last_page_fetched_follower_ids = $this->instance->last_page_fetched_followers;
         $status_message = "";
         
-        while ($api->available && $api->available_api_calls_for_crawler > 0 && $continue_fetching) {
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
         
             $last_page_fetched_follower_ids = $last_page_fetched_follower_ids + 1;
             
             $args = array();
-            $follower_ids = str_replace("[id]", $cfg->twitter_username, $api->cURL_source['followers_ids']);
+            $follower_ids = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['followers_ids']);
             $args['page'] = $last_page_fetched_follower_ids;
             
-            list($cURL_status, $twitter_data) = $api->apiRequest($follower_ids, $logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $this->logger, $args);
             
             if ($cURL_status > 200) {
                 $continue_fetching = false;
@@ -313,7 +314,7 @@ class Crawler {
                 $fd = new FollowDAO();
                 
                 try {
-                    $ids = $api->parseXML($twitter_data);
+                    $ids = $this->api->parseXML($twitter_data);
                     $status_message = "Page ".$last_page_fetched_follower_ids." has ".count($ids)." follower IDs. ";
                     
                     if (count($ids) == 0) {
@@ -343,12 +344,12 @@ class Crawler {
                 catch(Exception $e) {
                     $status_message = 'Could not parse follower ID XML for $crawler_twitter_username';
                 }
-                $logger->logStatus($status_message, get_class($this));
+                $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
                 
             }
             
-            $logger->logStatus($status_message, get_class($this));
+            $this->logger->logStatus($status_message, get_class($this));
             $status_message = "";
             
         }
@@ -356,38 +357,38 @@ class Crawler {
         $this->instance->last_page_fetched_followers = $last_page_fetched_follower_ids;
     }
     
-    function fetchInstanceUserFollowers($cfg, $api, $logger) {
+    function fetchInstanceUserFollowers() {
         $status_message = "";
         // Get owner's followers: Page back only if more than 2% of follows are missing from database
         // See how many are missing from last run
         if ($this->instance->is_archive_loaded_follows) { //all pages have been loaded
-            $logger->logStatus("Follower archive marked as loaded", get_class($this));
+            $this->logger->logStatus("Follower archive marked as loaded", get_class($this));
             
             //find out how many new follows owner has compared to what's in db
             $new_follower_count = $this->owner_object->follower_count - $this->instance->total_follows_in_system;
             $status_message = "New follower count is ".$this->owner_object->follower_count." and system has ".$this->instance->total_follows_in_system."; ".$new_follower_count." new follows to load";
-            $logger->logStatus($status_message, get_class($this));
+            $this->logger->logStatus($status_message, get_class($this));
             
             if ($new_follower_count > 0) {
-                $logger->logStatus("Fetching follows via IDs", get_class($this));
-                $this->fetchInstanceUserFollowersByIDs($cfg, $api, $logger);
+                $this->logger->logStatus("Fetching follows via IDs", get_class($this));
+                $this->fetchInstanceUserFollowersByIDs();
             }
         } else {
-            $logger->logStatus("Follower archive is not loaded; fetch should begin.", get_class($this));
+            $this->logger->logStatus("Follower archive is not loaded; fetch should begin.", get_class($this));
         }
 
         
         # Fetch follower pages
         $continue_fetching = true;
-        while ($api->available && $api->available_api_calls_for_crawler > 0 && $continue_fetching && !$this->instance->is_archive_loaded_follows) {
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching && !$this->instance->is_archive_loaded_follows) {
         
             $this->instance->last_page_fetched_followers = $this->instance->last_page_fetched_followers + 1;
             
-            $follower_ids = str_replace("[id]", $cfg->twitter_username, $api->cURL_source['followers']);
+            $follower_ids = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['followers']);
             $args = array();
             $args['page'] = $this->instance->last_page_fetched_followers;
             
-            list($cURL_status, $twitter_data) = $api->apiRequest($follower_ids, $logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $this->logger, $args);
             
             if ($cURL_status > 200) {
                 $continue_fetching = false;
@@ -395,7 +396,7 @@ class Crawler {
                 $fd = new FollowDAO();
                 
                 try {
-                    $users = $api->parseXML($twitter_data);
+                    $users = $this->api->parseXML($twitter_data);
                     $status_message .= "Page ".$this->instance->last_page_fetched_followers.": ".count($users)." follows ready to update. ";
                     
                     if (count($users) == 0) {
@@ -407,7 +408,7 @@ class Crawler {
                     $inserted_follow_count = 0;
                     foreach ($users as $u) {
                         $utu = new User($u, 'Follows');
-                        $this->ud->updateUser($utu, $logger);
+                        $this->ud->updateUser($utu, $this->logger);
                         
                         # add/update follow relationship
                         if ($fd->followExists($this->instance->twitter_user_id, $utu->user_id)) {
@@ -426,43 +427,43 @@ class Crawler {
                 catch(Exception $e) {
                     $status_message = 'Could not parse followers XML for $crawler_twitter_username';
                 }
-                $logger->logStatus($status_message, get_class($this));
+                $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
                 
             }
             
-            $logger->logStatus($status_message, get_class($this));
+            $this->logger->logStatus($status_message, get_class($this));
             $status_message = "";
             
         }
         
     }
     
-    function fetchInstanceUserFriends($cfg, $api, $logger) {
+    function fetchInstanceUserFriends() {
         $fd = new FollowDAO();
-        $this->instance->total_friends_in_system = $fd->getTotalFriends($cfg->twitter_user_id);
+        $this->instance->total_friends_in_system = $fd->getTotalFriends($this->owner_object->id);
         
         if ($this->instance->total_friends_in_system < $this->owner_object->friend_count) {
             $this->instance->is_archive_loaded_friends = false;
-            $logger->logStatus($this->instance->total_friends_in_system." friends in system, ".$this->owner_object->friend_count." friends according to Twitter; Friend archive is not loaded", get_class($this));
+            $this->logger->logStatus($this->instance->total_friends_in_system." friends in system, ".$this->owner_object->friend_count." friends according to Twitter; Friend archive is not loaded", get_class($this));
         } else {
             $this->instance->is_archive_loaded_friends = true;
-            $logger->logStatus("Friend archive loaded", get_class($this));
+            $this->logger->logStatus("Friend archive loaded", get_class($this));
         }
         
         $status_message = "";
         $this->instance->last_page_fetched_friends = 0;
         # Fetch friend pages
         $continue_fetching = true;
-        while ($api->available && $api->available_api_calls_for_crawler > 0 && $continue_fetching && !$this->instance->is_archive_loaded_friends) {
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching && !$this->instance->is_archive_loaded_friends) {
         
             $this->instance->last_page_fetched_friends = $this->instance->last_page_fetched_friends + 1;
             
-            $friend_ids = str_replace("[id]", $cfg->twitter_username, $api->cURL_source['following']);
+            $friend_ids = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['following']);
             $args = array();
             $args['page'] = $this->instance->last_page_fetched_friends;
             
-            list($cURL_status, $twitter_data) = $api->apiRequest($friend_ids, $logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $this->logger, $args);
             
             if ($cURL_status > 200) {
                 $continue_fetching = false;
@@ -470,7 +471,7 @@ class Crawler {
             
                 try {
                     $status_message = "Parsing XML. ";
-                    $users = $api->parseXML($twitter_data);
+                    $users = $this->api->parseXML($twitter_data);
                     $status_message .= "Page ".$this->instance->last_page_fetched_friends.": ".count($users)." friends queued to update. ";
                     
                     $updated_follow_count = 0;
@@ -483,7 +484,7 @@ class Crawler {
                     
                     foreach ($users as $u) {
                         $utu = new User($u, 'Friends');
-                        $this->ud->updateUser($utu, $logger);
+                        $this->ud->updateUser($utu, $this->logger);
                         
                         # add/update follow relationship
                         if ($fd->followExists($utu->user_id, $this->instance->twitter_user_id)) {
@@ -503,29 +504,29 @@ class Crawler {
                 catch(Exception $e) {
                     $status_message = 'Could not parse friends XML for $crawler_twitter_username';
                 }
-                $logger->logStatus($status_message, get_class($this));
+                $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
                 
             }
             
-            $logger->logStatus($status_message, get_class($this));
+            $this->logger->logStatus($status_message, get_class($this));
             $status_message = "";
             
         }
         
     }
     
-    function fetchFriendTweetsAndFriends($cfg, $api, $logger) {
+    function fetchFriendTweetsAndFriends($lurl, $fa) {
         $fd = new FollowDAO();
         $td = new TweetDAO();
         $ud = new UserDAO();
         
         $continue_fetching = true;
-        while ($api->available && $api->available_api_calls_for_crawler > 0 && $continue_fetching) {
-            $stale_friend = $fd->getStalestFriend($cfg->twitter_user_id);
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
+            $stale_friend = $fd->getStalestFriend($this->owner_object->id);
             if ($stale_friend != null) {
-                $logger->logStatus($stale_friend->user_name." is friend most need of update", get_class($this));
-                $stale_friend_tweets = str_replace("[id]", $stale_friend->user_name, $api->cURL_source['user_timeline']);
+                $this->logger->logStatus($stale_friend->user_name." is friend most need of update", get_class($this));
+                $stale_friend_tweets = str_replace("[id]", $stale_friend->user_name, $this->api->cURL_source['user_timeline']);
                 $args = array();
                 $args["count"] = 200;
                 
@@ -533,20 +534,20 @@ class Crawler {
                     $args['since_id'] = $stale_friend->last_status_id;
                 }
                 
-                list($cURL_status, $twitter_data) = $api->apiRequest($stale_friend_tweets, $logger, $args);
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($stale_friend_tweets, $this->logger, $args);
                 
                 if ($cURL_status == 200) {
                     try {
                         $count = 0;
-                        $tweets = $api->parseXML($twitter_data);
+                        $tweets = $this->api->parseXML($twitter_data);
                         
                         if (count($tweets) > 0) {
                             foreach ($tweets as $tweet) {
                             
-                                if ($td->addTweet($tweet, $stale_friend, $logger) > 0) {
+                                if ($td->addTweet($tweet, $stale_friend, $this->logger) > 0) {
                                     $count++;
                                     //expand and insert links contained in tweet
-                                    $this->processTweetURLs($tweet, $cfg, $logger);
+                                    $this->processTweetURLs($tweet, $lurl, $fa);
                                 }
                                 //Update stale_friend values here
                                 $stale_friend->full_name = $tweet['full_name'];
@@ -563,82 +564,82 @@ class Crawler {
                                 if ($tweet['status_id'] > $stale_friend->last_status_id) {
                                     $stale_friend->last_status_id = $tweet['status_id'];
                                 }
-                                $ud->updateUser($stale_friend, $logger);
+                                $ud->updateUser($stale_friend, $this->logger);
                             }
                         } else {
-                            $this->fetchAndAddUser($stale_friend->id, $api, $logger, $cfg, "Friends");
+                            $this->fetchAndAddUser($stale_friend->id, "Friends");
                         }
                         
-                        $logger->logStatus(count($tweets)." tweet(s) found for ".$stale_friend->username." and $count saved", get_class($this));
+                        $this->logger->logStatus(count($tweets)." tweet(s) found for ".$stale_friend->username." and $count saved", get_class($this));
                     }
                     catch(Exception $e) {
-                        $logger->logStatus('Could not parse friends XML for $stale_friend->username', get_class($this));
+                        $this->logger->logStatus('Could not parse friends XML for $stale_friend->username', get_class($this));
                     }
-                    $this->fetchUserFriends($stale_friend->id, $api, $logger, $fd);
+                    $this->fetchUserFriends($stale_friend->id, $fd);
                 } elseif ($cURL_status == 401 || $cURL_status == 404) {
                     try {
-                        $e = $api->parseError($twitter_data);
+                        $e = $this->api->parseError($twitter_data);
                         $ued = new UserErrorDAO();
-                        $ued->insertError($stale_friend->id, $cURL_status, $e['error'], $cfg->twitter_user_id);
-                        $logger->logStatus('User error saved', get_class($this));
+                        $ued->insertError($stale_friend->id, $cURL_status, $e['error'], $this->owner_object->id);
+                        $this->logger->logStatus('User error saved', get_class($this));
                     }
                     catch(Exception $e) {
-                        $logger->logStatus('Could not parse timeline error for $stale_friend->username', get_class($this));
+                        $this->logger->logStatus('Could not parse timeline error for $stale_friend->username', get_class($this));
                     }
                 }
             } else {
-                $logger->logStatus('No friend staler than 1 day', get_class($this));
+                $this->logger->logStatus('No friend staler than 1 day', get_class($this));
                 $continue_fetching = false;
             }
             
         }
     }
     
-    function fetchStrayRepliedToTweets($cfg, $api, $logger) {
+    function fetchStrayRepliedToTweets($lurl, $fa) {
         $td = new TweetDAO();
-        $strays = $td->getStrayRepliedToTweets($cfg->twitter_user_id);
+        $strays = $td->getStrayRepliedToTweets($this->owner_object->id);
         $status_message = count($strays).' stray replied-to tweets to load.';
-        $logger->logStatus($status_message, get_class($this));
+        $this->logger->logStatus($status_message, get_class($this));
         
         foreach ($strays as $s) {
-            if ($api->available && $api->available_api_calls_for_crawler > 0)
-                $this->fetchAndAddTweetRepliedTo($s['in_reply_to_status_id'], $td, $api, $logger, $cfg);
+            if ($this->api->available && $this->api->available_api_calls_for_crawler > 0)
+                $this->fetchAndAddTweetRepliedTo($s['in_reply_to_status_id'], $td, $lurl, $fa);
         }
     }
     
-    function fetchUnloadedFollowerDetails($cfg, $api, $logger) {
+    function fetchUnloadedFollowerDetails() {
         $fd = new FollowDAO();
-        $strays = $fd->getUnloadedFollowerDetails($cfg->twitter_user_id);
+        $strays = $fd->getUnloadedFollowerDetails($this->owner_object->id);
         $status_message = count($strays).' unloaded follower details to load.';
-        $logger->logStatus($status_message, get_class($this));
+        $this->logger->logStatus($status_message, get_class($this));
         
         foreach ($strays as $s) {
-            if ($api->available && $api->available_api_calls_for_crawler > 0)
-                $this->fetchAndAddUser($s['follower_id'], $api, $logger, $cfg, "Follower IDs");
+            if ($this->api->available && $this->api->available_api_calls_for_crawler > 0)
+                $this->fetchAndAddUser($s['follower_id'], "Follower IDs");
         }
     }
     
-    private function fetchUserFriends($uid, $api, $logger, $fd) {
+    private function fetchUserFriends($uid, $fd) {
         $continue_fetching = true;
         $last_page_fetched_friend_ids = 0;
         $status_message = "";
         
-        while ($api->available && $api->available_api_calls_for_crawler > 0 && $continue_fetching) {
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
         
             $last_page_fetched_friend_ids = $last_page_fetched_friend_ids + 1;
             
             $args = array();
-            $friend_ids = str_replace("[id]", $uid, $api->cURL_source['following_ids']);
+            $friend_ids = str_replace("[id]", $uid, $this->api->cURL_source['following_ids']);
             $args['page'] = $last_page_fetched_friend_ids;
             
-            list($cURL_status, $twitter_data) = $api->apiRequest($friend_ids, $logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $this->logger, $args);
             
             if ($cURL_status > 200) {
                 $continue_fetching = false;
             } else {
             
                 try {
-                    $ids = $api->parseXML($twitter_data);
+                    $ids = $this->api->parseXML($twitter_data);
                     $status_message = "Page ".$last_page_fetched_friend_ids." has ".count($ids)." friend IDs. ";
                     
                     if (count($ids) == 0)
@@ -665,29 +666,29 @@ class Crawler {
                 catch(Exception $e) {
                     $status_message = 'Could not parse follower ID XML for $uid';
                 }
-                $logger->logStatus($status_message, get_class($this));
+                $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
                 
             }
             
-            $logger->logStatus($status_message, get_class($this));
+            $this->logger->logStatus($status_message, get_class($this));
             $status_message = "";
             
         }
         
     }
     
-    private function fetchAndAddUser($fid, $api, $logger, $cfg, $source) {
+    private function fetchAndAddUser($fid, $source) {
         //fetch user from Twitter and add to DB
         $status_message = "";
-        $u_deets = str_replace("[id]", $fid, $api->cURL_source['show_user']);
-        list($cURL_status, $twitter_data) = $api->apiRequest($u_deets, $logger);
+        $u_deets = str_replace("[id]", $fid, $this->api->cURL_source['show_user']);
+        list($cURL_status, $twitter_data) = $this->api->apiRequest($u_deets, $this->logger);
         
         if ($cURL_status == 200) {
             try {
-                $user_arr = $api->parseXML($twitter_data);
+                $user_arr = $this->api->parseXML($twitter_data);
                 $user = new User($user_arr[0], $source);
-                $this->ud->updateUser($user, $logger);
+                $this->ud->updateUser($user, $this->logger);
                 $status_message = 'Added/updated user '.$user->username." in database";
             }
             catch(Exception $e) {
@@ -695,9 +696,9 @@ class Crawler {
             }
         } elseif ($cURL_status == 404) {
             try {
-                $e = $api->parseError($twitter_data);
+                $e = $this->api->parseError($twitter_data);
                 $ued = new UserErrorDAO();
-                $ued->insertError($fid, $cURL_status, $e['error'], $cfg->twitter_user_id);
+                $ued->insertError($fid, $cURL_status, $e['error'], $this->owner_object->id);
                 $status_message = 'User error saved.';
                 
             }
@@ -706,29 +707,29 @@ class Crawler {
             }
             
         }
-        $logger->logStatus($status_message, get_class($this));
+        $this->logger->logStatus($status_message, get_class($this));
         $status_message = "";
         
     }
     
     // For each API call left, grab oldest follow relationship, check if it exists, and update table
-    function cleanUpFollows($cfg, $api, $logger) {
+    function cleanUpFollows() {
         $fd = new FollowDAO();
         $continue_fetching = true;
-        while ($api->available && $api->available_api_calls_for_crawler > 0 && $continue_fetching) {
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
         
             $oldfollow = $fd->getOldestFollow();
             
-            $friendship_call = $api->cURL_source['show_friendship'];
+            $friendship_call = $this->api->cURL_source['show_friendship'];
             $args = array();
             $args["source_id"] = $oldfollow["followee_id"];
             $args["target_id"] = $oldfollow["follower_id"];
             
-            list($cURL_status, $twitter_data) = $api->apiRequest($friendship_call, $logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($friendship_call, $this->logger, $args);
             
             if ($cURL_status == 200) {
                 try {
-                    $friendship = $api->parseXML($twitter_data);
+                    $friendship = $this->api->parseXML($twitter_data);
                     if ($friendship['source_follows_target'] == 'true')
                         $fd->update($oldfollow["followee_id"], $oldfollow["follower_id"]);
                     else

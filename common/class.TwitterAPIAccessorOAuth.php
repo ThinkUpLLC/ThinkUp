@@ -7,11 +7,11 @@ class TwitterAPIAccessorOAuth {
     var $oauth_access_token;
     var $oauth_access_token_secret;
     
-    function TwitterAPIAccessorOAuth($oauth_access_token, $oauth_access_token_secret, $cfg) {
+    function TwitterAPIAccessorOAuth($oauth_access_token, $oauth_access_token_secret, $oauth_consumer_key, $oauth_consumer_secret) {
         $this->$oauth_access_token = $oauth_access_token;
         $this->$oauth_access_token_secret = $oauth_access_token_secret;
         
-        $this->to = new TwitterOAuth($cfg->oauth_consumer_key, $cfg->oauth_consumer_secret, $this->$oauth_access_token, $this->$oauth_access_token_secret);
+        $this->to = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token, $this->$oauth_access_token_secret);
         $this->cURL_source = $this->prepAPI();
     }
     
@@ -262,10 +262,12 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     var $available_api_calls_for_crawler = null;
     var $available_api_calls_for_twitter = null;
     var $api_hourly_limit = null;
-    
-    function CrawlerTwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $cfg, $instance) {
-        parent::TwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $cfg);
+    var $archive_limit;
+	
+    function CrawlerTwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret, $instance, $archive_limit) {
+        parent::TwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret);
         $this->api_calls_to_leave_unmade_per_minute = $instance->api_calls_to_leave_unmade_per_minute;
+		$this->archive_limit = $archive_limit;
     }
     
     function init($logger) {
