@@ -201,17 +201,17 @@ class InstanceDAO extends MySQLDAO {
 				last_page_fetched_replies = ".$i->last_page_fetched_replies.",
 				last_page_fetched_tweets = ".$i->last_page_fetched_tweets.",
 				crawler_last_run = NOW(),
-				total_tweets_in_system = (select count(*) from tweets where author_user_id=".$i->twitter_user_id."),
+				total_tweets_in_system = (select count(*) from %prefix%tweets where author_user_id=".$i->twitter_user_id."),
 				".$owner_tweets."
-				total_replies_in_system = (select count(*) from tweets where tweet_text like '%@".$i->twitter_username."%'),
-				total_follows_in_system = (select count(*) from follows where user_id=".$i->twitter_user_id." and active=1),
-				total_users_in_system = (select count(*) from users),
+				total_replies_in_system = (select count(*) from %prefix%tweets where tweet_text like '%@".$i->twitter_username."%'),
+				total_follows_in_system = (select count(*) from %prefix%follows where user_id=".$i->twitter_user_id." and active=1),
+				total_users_in_system = (select count(*) from %prefix%users),
 				is_archive_loaded_follows = ".$is_archive_loaded_follows.",
 				is_archive_loaded_replies = ".$is_archive_loaded_replies.",
 				earliest_reply_in_system = (select
 					pub_date
 				from 
-					tweets
+					%prefix%tweets
 				where tweet_text like '%@".$i->twitter_username."%'
 				order by
 					pub_date asc
@@ -219,7 +219,7 @@ class InstanceDAO extends MySQLDAO {
 				earliest_tweet_in_system = (select
 					pub_date
 				from 
-					tweets
+					%prefix%tweets
 				where author_user_id = ".$i->twitter_user_id."
 				order by
 					pub_date asc

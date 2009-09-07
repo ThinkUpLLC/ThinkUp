@@ -80,8 +80,8 @@ class FollowDAO extends MySQLDAO {
 				%prefix%follows f 
 			WHERE 
 				f.user_id=".$user_id."
-				AND f.follower_id NOT IN (SELECT user_id FROM users) 
-				AND f.follower_id NOT IN (SELECT user_id FROM user_errors)
+				AND f.follower_id NOT IN (SELECT user_id FROM %prefix%users) 
+				AND f.follower_id NOT IN (SELECT user_id FROM %prefix%user_errors)
 			LIMIT 100;";
         $sql_result = $this->executeSQL($q);
         $strays = array();
@@ -101,7 +101,7 @@ class FollowDAO extends MySQLDAO {
 				%prefix%follows f 
 			WHERE 
 				f.user_id=".$user_id."
-				AND f.follower_id IN (SELECT user_id FROM user_errors WHERE error_issued_to_user_id=".$user_id.");";
+				AND f.follower_id IN (SELECT user_id FROM %prefix%user_errors WHERE error_issued_to_user_id=".$user_id.");";
         $sql_result = $this->executeSQL($q);
         $ferrors = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -120,7 +120,7 @@ class FollowDAO extends MySQLDAO {
 				%prefix%follows f 
 			WHERE 
 				f.follower_id=".$user_id."
-				AND f.user_id IN (SELECT user_id FROM user_errors WHERE error_issued_to_user_id=".$user_id.");";
+				AND f.user_id IN (SELECT user_id FROM %prefix%user_errors WHERE error_issued_to_user_id=".$user_id.");";
         $sql_result = $this->executeSQL($q);
         $ferrors = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -204,7 +204,7 @@ class FollowDAO extends MySQLDAO {
 			 	f.user_id = u.user_id
 			WHERE 
 				f.follower_id=".$user_id." 
-				AND u.user_id NOT IN (SELECT user_id FROM user_errors) 
+				AND u.user_id NOT IN (SELECT user_id FROM %prefix%user_errors) 
 				AND u.last_updated < DATE_SUB(NOW(), INTERVAL 1 DAY)
 			ORDER BY
 				u.last_updated ASC
@@ -481,7 +481,7 @@ class FollowDAO extends MySQLDAO {
 			WHERE 
 			 follower_id = ".$instance_uid."
 			 AND f.user_id IN 
-			 ( SELECT user_id FROM follows WHERE follower_id = ".$uid." and active=1)
+			 ( SELECT user_id FROM %prefix%follows WHERE follower_id = ".$uid." and active=1)
 			ORDER BY 
 			 follower_count ASC;";
 			 
@@ -507,7 +507,7 @@ class FollowDAO extends MySQLDAO {
 				f.user_id = u.user_id
 			WHERE 
 				f.follower_id = ".$uid."
-			 	AND f.user_id NOT IN (SELECT follower_id FROM follows WHERE user_id = ".$uid.")
+			 	AND f.user_id NOT IN (SELECT follower_id FROM %prefix%follows WHERE user_id = ".$uid.")
 			ORDER BY follower_count	";
 			
         $sql_result = $this->executeSQL($q);

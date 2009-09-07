@@ -521,8 +521,8 @@ class TweetDAO extends MySQLDAO {
 				%prefix%tweets t 
 			WHERE 
 				t.author_user_id=".$author_id."
-				AND t.in_reply_to_status_id NOT IN (select status_id from tweets) 
-			 	AND t.in_reply_to_status_id NOT IN (select status_id from tweet_errors);";
+				AND t.in_reply_to_status_id NOT IN (select status_id from %prefix%tweets) 
+			 	AND t.in_reply_to_status_id NOT IN (select status_id from %prefix%tweet_errors);";
         $sql_result = $this->executeSQL($q);
         $strays = array();
         while ($row = mysql_fetch_assoc($sql_result)) {

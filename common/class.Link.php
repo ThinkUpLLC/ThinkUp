@@ -104,7 +104,7 @@ class LinkDAO extends MySQLDAO {
 			FROM %prefix%links l
 			INNER JOIN %prefix%tweets t
 			ON t.status_id = l.status_id
-			WHERE is_image = 1 and t.author_user_id in (SELECT user_id FROM follows f WHERE f.follower_id = ".$user_id.")
+			WHERE is_image = 1 and t.author_user_id in (SELECT user_id FROM %prefix%follows f WHERE f.follower_id = ".$user_id.")
 			ORDER BY l.status_id DESC
 			LIMIT 15";
 			
