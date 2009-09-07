@@ -26,7 +26,7 @@ $tp = $_POST['twitter_password'];
 
 $db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
-$od = new OwnerDAO();
+$od = new OwnerDAO($db);
 
 $owner = $od->getByEmail($_SESSION['user']);
 
@@ -37,9 +37,9 @@ $twitter_id = $api->doesAuthenticate();
 if ( $twitter_id > 0 ) {
 	echo "Twitter authentication successful.<br />";
 	
-	$id = new InstanceDAO();
+	$id = new InstanceDAO($db);
 	$i = $id->getByUsername($tu);
-	$oid = new OwnerInstanceDAO();
+	$oid = new OwnerInstanceDAO($db);
 
 	if ( isset($i) ) {
 		echo "Instance already exists.<br />";

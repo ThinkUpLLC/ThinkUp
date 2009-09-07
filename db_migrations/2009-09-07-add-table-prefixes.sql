@@ -1,0 +1,9 @@
+RENAME TABLE follows TO ta_follows;
+RENAME TABLE tweets TO ta_tweets;
+RENAME TABLE users TO ta_users;
+RENAME TABLE instances TO ta_instances;
+RENAME TABLE owners TO ta_owners;
+RENAME TABLE owner_instances TO ta_owner_instances;
+RENAME TABLE tweet_errors TO ta_tweet_errors;
+RENAME TABLE user_errors TO ta_user_errors;
+RENAME TABLE links TO ta_links;

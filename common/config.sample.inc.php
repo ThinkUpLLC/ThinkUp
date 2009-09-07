@@ -35,5 +35,6 @@ $TWITALYTIC_CFG['db_host'] = "localhost";
 $TWITALYTIC_CFG['db_user'] = "user";
 $TWITALYTIC_CFG['db_password'] = "s3cret";
 $TWITALYTIC_CFG['db_name'] ="twitalytic";
+$TWITALYTIC_CFG['table_prefix'] = 'ta_';
  
 ?>

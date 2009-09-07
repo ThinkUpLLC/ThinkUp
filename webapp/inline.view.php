@@ -12,14 +12,14 @@ require_once("init.php");
 $db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
 
-$od = new OwnerDAO();
+$od = new OwnerDAO($db);
 $owner = $od->getByEmail($_SESSION['user']);
 
-$id = new InstanceDAO();
+$id = new InstanceDAO($db);
 
 if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	$username = $_REQUEST['u'];
-	$oid = new OwnerInstanceDAO();
+	$oid = new OwnerInstanceDAO($db);
 	if ( !$oid->doesOwnerHaveAccess($owner, $username) ) {
 		echo 'Insufficient privileges. <a href="/">Back</a>.';
 		$db->closeConnection($conn);
@@ -46,10 +46,10 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 	$u = new Utils();
 
 	// instantiate data access objects
-	$ud = new UserDAO();
-	$td = new TweetDAO();
-	$fd = new FollowDAO();
-	$ld = new LinkDAO();
+	$ud = new UserDAO($db);
+	$td = new TweetDAO($db);
+	$fd = new FollowDAO($db);
+	$ld = new LinkDAO($db);
 
 
 	$s->assign('display', $_REQUEST['d'] );

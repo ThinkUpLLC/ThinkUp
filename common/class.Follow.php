@@ -6,17 +6,20 @@ class Follow {
 }
 
 
-class FollowDAO {
+class FollowDAO extends MySQLDAO {
+	function FollowDAO($database, $logger=null) {
+		parent::MySQLDAO($database, $logger);
+	}
 
     function followExists($user_id, $follower_id) {
         $q = "
 			SELECT 
 				user_id, follower_id
 			FROM 
-				follows
+				%prefix%follows
 			WHERE 
 				user_id = ".$user_id." AND follower_id=".$follower_id.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;
         else
@@ -27,12 +30,12 @@ class FollowDAO {
     function update($user_id, $follower_id) {
         $q = "
 			UPDATE 
-			 	follows
+			 	%prefix%follows
 			SET
 				last_seen=NOW()
 			WHERE
 				user_id = ".$user_id." AND follower_id=".$follower_id.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_affected_rows() > 0)
             return true;
         else
@@ -42,12 +45,12 @@ class FollowDAO {
     function deactivate($user_id, $follower_id) {
         $q = "
 			UPDATE 
-			 	follows
+			 	%prefix%follows
 			SET
 				active = 0
 			WHERE
 				user_id = ".$user_id." AND follower_id=".$follower_id.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_affected_rows() > 0)
             return true;
         else
@@ -58,11 +61,11 @@ class FollowDAO {
     function insert($user_id, $follower_id) {
         $q = "
 			INSERT INTO
-				follows (user_id,follower_id,last_seen)
+				%prefix%follows (user_id,follower_id,last_seen)
 				VALUES (
 					".$user_id.",".$follower_id.",NOW()
 				);";
-        $foo = Database::exec($q);
+        $foo = $this->executeSQL($q);
         if (mysql_affected_rows() > 0)
             return true;
         else
@@ -74,13 +77,13 @@ class FollowDAO {
 			SELECT
 				follower_id
 			FROM 
-				follows f 
+				%prefix%follows f 
 			WHERE 
 				f.user_id=".$user_id."
 				AND f.follower_id NOT IN (SELECT user_id FROM users) 
 				AND f.follower_id NOT IN (SELECT user_id FROM user_errors)
 			LIMIT 100;";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $strays = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $strays[] = $row;
@@ -95,11 +98,11 @@ class FollowDAO {
 			SELECT
 				count(follower_id) as follows_with_errors
 			FROM 
-				follows f 
+				%prefix%follows f 
 			WHERE 
 				f.user_id=".$user_id."
 				AND f.follower_id IN (SELECT user_id FROM user_errors WHERE error_issued_to_user_id=".$user_id.");";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $ferrors = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $ferrors[] = $row;
@@ -114,11 +117,11 @@ class FollowDAO {
 			SELECT
 				count(follower_id) as friends_with_errors
 			FROM 
-				follows f 
+				%prefix%follows f 
 			WHERE 
 				f.follower_id=".$user_id."
 				AND f.user_id IN (SELECT user_id FROM user_errors WHERE error_issued_to_user_id=".$user_id.");";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $ferrors = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $ferrors[] = $row;
@@ -132,10 +135,10 @@ class FollowDAO {
     function getTotalFollowsWithFullDetails($user_id) {
         $q = "
 			 SELECT count( * ) as follows_with_details
-			FROM `follows` f
-			INNER JOIN users u ON u.user_id = f.follower_id
+			FROM %prefix%follows f
+			INNER JOIN %prefix%users u ON u.user_id = f.follower_id
 			WHERE f.user_id = ".$user_id;
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $details = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $details[] = $row;
@@ -147,10 +150,10 @@ class FollowDAO {
     function getTotalFollowsProtected($user_id) {
         $q = "
 			 SELECT count( * ) as follows_protected
-			FROM `follows` f
-			INNER JOIN users u ON u.user_id = f.follower_id
+			FROM %prefix%follows f
+			INNER JOIN %prefix%users u ON u.user_id = f.follower_id
 			WHERE f.user_id = ".$user_id." AND u.is_protected=1";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $details = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $details[] = $row;
@@ -162,10 +165,10 @@ class FollowDAO {
     function getTotalFriends($user_id) {
         $q = "
 			 SELECT count( * ) as total_friends
-			FROM `follows` f
-			INNER JOIN users u ON u.user_id = f.user_id
+			FROM %prefix%follows f
+			INNER JOIN %prefix%users u ON u.user_id = f.user_id
 			WHERE f.follower_id = ".$user_id."";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $details = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $details[] = $row;
@@ -177,10 +180,10 @@ class FollowDAO {
     function getTotalFriendsProtected($user_id) {
         $q = "
 			 SELECT count( * ) as friends_protected
-			FROM `follows` f
-			INNER JOIN users u ON u.user_id = f.user_id
+			FROM %prefix%follows f
+			INNER JOIN %prefix%users u ON u.user_id = f.user_id
 			WHERE f.follower_id = ".$user_id." AND u.is_protected=1";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $details = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $details[] = $row;
@@ -194,9 +197,9 @@ class FollowDAO {
 			SELECT
 				u.*
 			FROM 
-				users u
+				%prefix%users u
 			INNER JOIN
-				follows f
+				%prefix%follows f
 			ON
 			 	f.user_id = u.user_id
 			WHERE 
@@ -206,7 +209,7 @@ class FollowDAO {
 			ORDER BY
 				u.last_updated ASC
 			LIMIT 1;";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $oldfriend = array();
         if (mysql_num_rows($sql_result) > 0) {
             while ($row = mysql_fetch_assoc($sql_result)) {
@@ -225,13 +228,13 @@ class FollowDAO {
 			SELECT
 				user_id as followee_id, follower_id
 			FROM 
-				follows f
+				%prefix%follows f
 			WHERE
 				active = 1
 			ORDER BY
 				f.last_seen ASC
 			LIMIT 1;";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $oldfollow = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $oldfollow[] = $row;
@@ -251,9 +254,9 @@ class FollowDAO {
 			SELECT 
 				* , ".$this->getAverageTweetCount()."
 			FROM 
-				users u 
+				%prefix%users u 
 			INNER JOIN
-			 	follows f 
+			 	%prefix%follows f 
 			ON 
 				u.user_id = f.follower_id 
 			WHERE
@@ -261,7 +264,7 @@ class FollowDAO {
 			ORDER BY 
 				u.follower_count DESC 
 			LIMIT ".$count.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $most_followed_followers = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $most_followed_followers[] = $row;
@@ -280,9 +283,9 @@ class FollowDAO {
 			SELECT 
 				*, ROUND(100*friend_count/follower_count,4) AS LikelihoodOfFollow, ".$this->getAverageTweetCount()."
 			FROM 
-				users u 
+				%prefix%users u 
 			INNER JOIN
-			 	follows f 
+			 	%prefix%follows f 
 			ON 
 				u.user_id = f.follower_id
 			WHERE
@@ -290,7 +293,7 @@ class FollowDAO {
 			ORDER BY 
 				LikelihoodOfFollow ASC #u.follower_count DESC
 			LIMIT ".$count.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $least_likely_followers = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $least_likely_followers[] = $row;
@@ -306,9 +309,9 @@ class FollowDAO {
 			SELECT 
 				*, ".$this->getAverageTweetCount()."
 			FROM 
-				users u 
+				%prefix%users u 
 			INNER JOIN
-			 	follows f 
+			 	%prefix%follows f 
 			ON 
 				u.user_id = f.follower_id 
 			WHERE
@@ -316,7 +319,7 @@ class FollowDAO {
 			ORDER BY 
 				u.user_id ASC
 			LIMIT ".$count.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $earliest_joiner_followers = array();
         $least_likely_followers = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -333,9 +336,9 @@ class FollowDAO {
 			select 
 				*, ".$this->getAverageTweetCount()." 
 			from 
-				users u 
+				%prefix%users u 
 			inner join 
-				follows f 
+				%prefix%follows f 
 			on 
 				f.user_id = u.user_id 
 			where 
@@ -344,7 +347,7 @@ class FollowDAO {
 				avg_tweets_per_day DESC 
 			LIMIT ".$count;
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $most_active_friends = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $most_active_friends[] = $row;
@@ -360,9 +363,9 @@ class FollowDAO {
 			select 
 				*
 			from 
-				users u 
+				%prefix%users u 
 			inner join 
-				follows f 
+				%prefix%follows f 
 			on 
 				f.user_id = u.user_id 
 			where 
@@ -371,7 +374,7 @@ class FollowDAO {
 				u.follower_count DESC 
 			LIMIT ".$count;
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $most_active_friends = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $most_active_friends[] = $row;
@@ -387,9 +390,9 @@ class FollowDAO {
 			select 
 				u.* 
 			from 
-				users u 
+				%prefix%users u 
 			inner join 
-				follows f 
+				%prefix%follows f 
 			on 
 				f.follower_id = u.user_id 
 			where 
@@ -398,7 +401,7 @@ class FollowDAO {
 				u.follower_count DESC 
 			LIMIT ".$count;
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $most_active_friends = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $most_active_friends[] = $row;
@@ -415,9 +418,9 @@ class FollowDAO {
 			select 
 				*, ".$this->getAverageTweetCount()."
 			from 
-				users u 
+				%prefix%users u 
 			inner join 
-				follows f 
+				%prefix%follows f 
 			on 
 				f.user_id = u.user_id 
 			where 
@@ -426,7 +429,7 @@ class FollowDAO {
 				avg_tweets_per_day ASC 
 			LIMIT ".$count;
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $most_active_friends = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $most_active_friends[] = $row;
@@ -443,9 +446,9 @@ class FollowDAO {
 			select 
 				*, ".$this->getAverageTweetCount()."
 			from 
-				users u 
+				%prefix%users u 
 			inner join 
-				follows f 
+				%prefix%follows f 
 			on 
 				f.user_id = u.user_id 
 			where 
@@ -454,7 +457,7 @@ class FollowDAO {
 				follower_count DESC 
 			LIMIT ".$count;
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $most_followed_friends = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $most_followed_friends[] = $row;
@@ -470,9 +473,9 @@ class FollowDAO {
 			SELECT
 			 u.*, ".$this->getAverageTweetCount()."
 			FROM
-			 follows f
+			 %prefix%follows f
 			INNER JOIN
-			 users u
+			 %prefix%users u
 			ON
 			 u.user_id = f.user_id
 			WHERE 
@@ -482,7 +485,7 @@ class FollowDAO {
 			ORDER BY 
 			 follower_count ASC;";
 			 
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $mutual_friends = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $mutual_friends[] = $row;
@@ -497,9 +500,9 @@ class FollowDAO {
 			SELECT 
 				u.* 
 			FROM 
-				follows f
+				%prefix%follows f
 			INNER JOIN
-			 	users u
+			 	%prefix%users u
 			ON 
 				f.user_id = u.user_id
 			WHERE 
@@ -507,7 +510,7 @@ class FollowDAO {
 			 	AND f.user_id NOT IN (SELECT follower_id FROM follows WHERE user_id = ".$uid.")
 			ORDER BY follower_count	";
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $nonmutual_friends = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $nonmutual_friends[] = $row;

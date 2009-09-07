@@ -11,12 +11,15 @@ require_once('log_test.php');
 require_once('config_test.php');
 require_once('database_test.php');
 require_once('twitteroauth_test.php');
+require_once('mysqldao_test.php');
+
 
 $test = &new GroupTest('All tests');
 $test->addTestCase(new TestOfConfig());
 $test->addTestCase(new TestOfLogging());
 $test->addTestCase(new TestOfTwitterOAuth());
 $test->addTestCase(new TestOfDatabase());
+$test->addTestCase(new TestOfMySQLDAO());
 
 //$test->run(new HtmlReporter());
 $test->run(new TextReporter());

@@ -37,7 +37,10 @@ class Link {
     
 }
 
-class LinkDAO {
+class LinkDAO extends MySQLDAO {
+	function LinkDAO($database, $logger=null) {
+		parent::MySQLDAO($database, $logger);
+	}
 
     function insert($url, $expanded, $title, $status_id, $is_image = 0) {
         $expanded = mysql_real_escape_string($expanded);
@@ -45,11 +48,11 @@ class LinkDAO {
         
         $q = "
 			INSERT INTO
-				links (url, expanded_url, title, status_id, is_image)
+				%prefix%links (url, expanded_url, title, status_id, is_image)
 				VALUES (
 					'{$url}', '{$expanded}', '{$title}', ".$status_id.", ".$is_image.");";
 					
-        $foo = Database::exec($q);
+        $foo = $this->executeSQL($q);
         if (mysql_affected_rows() > 0)
             return true;
         else
@@ -62,11 +65,11 @@ class LinkDAO {
         $title = mysql_real_escape_string($title);
         
         $q = "
-			UPDATE links 
+			UPDATE %prefix%links 
 			SET expanded_url = '{$expanded}', title = '{$title}', status_id=".$status_id.", is_image=".$is_image."
 			WHERE url = '{$url}';";
 			
-        $foo = Database::exec($q);
+        $foo = $this->executeSQL($q);
         if (mysql_affected_rows() > 0)
             return true;
         else
@@ -77,14 +80,14 @@ class LinkDAO {
     function getLinksByFriends($user_id) {
         $q = "
 			SELECT l.*, t.*, pub_date - interval 8 hour as adj_pub_date  
-			FROM links l
-			INNER JOIN tweets t
+			FROM %prefix%links l
+			INNER JOIN %prefix%tweets t
 			ON t.status_id = l.status_id
 			WHERE t.author_user_id in (SELECT user_id FROM follows f WHERE f.follower_id = ".$user_id.")
 			ORDER BY l.status_id DESC
 			LIMIT 15";
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $links = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $l = new Link($row);
@@ -98,14 +101,14 @@ class LinkDAO {
     function getPhotosByFriends($user_id) {
         $q = "
 			SELECT l.*, t.*, pub_date - interval 8 hour as adj_pub_date  
-			FROM links l
-			INNER JOIN tweets t
+			FROM %prefix%links l
+			INNER JOIN %prefix%tweets t
 			ON t.status_id = l.status_id
 			WHERE is_image = 1 and t.author_user_id in (SELECT user_id FROM follows f WHERE f.follower_id = ".$user_id.")
 			ORDER BY l.status_id DESC
 			LIMIT 15";
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $links = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $l = new Link($row);
@@ -119,12 +122,12 @@ class LinkDAO {
     function getLinksToUpdate() {
         $q = "
 			SELECT l.*
-			FROM links l
+			FROM %prefix%links l
 			WHERE /*l.expanded_url = '' and */(l.url like '%flic.kr%' OR l.url like '%twitpic%') and is_image = 0
 			ORDER BY l.status_id DESC
 			LIMIT 15";
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $links = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $links[] = $row;

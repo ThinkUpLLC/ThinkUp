@@ -42,7 +42,10 @@ class Tweet {
 }
 
 
-class TweetDAO {
+class TweetDAO extends MySQLDAO {
+	function TweetDAO($database, $logger=null) {
+		parent::MySQLDAO($database, $logger);
+	}
 
     function getTweet($status_id) {
         //TODO Fix hardcoded adjusted pub_date
@@ -50,10 +53,10 @@ class TweetDAO {
 			SELECT 
 				t.*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t
+				%prefix%tweets t
 			WHERE
 			 	status_id=".$status_id.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $tweet = new Tweet(mysql_fetch_assoc($sql_result));
         mysql_free_result($sql_result); # Free up memory
         return $tweet;
@@ -71,9 +74,9 @@ class TweetDAO {
 			SELECT
 				t.*, u.*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t 
+				%prefix%tweets t 
 			inner join 
-				users u 
+				%prefix%users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
@@ -85,7 +88,7 @@ class TweetDAO {
 			order by 
 				adj_pub_date desc
 			LIMIT ".$limit;
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $strays = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $strays[] = $this->setTweetWithAuthor($row);
@@ -104,9 +107,9 @@ class TweetDAO {
 			select 
 				t.*, u.*, pub_date - interval 8 hour as adj_pub_date 
 			from 
-				tweets t
+				%prefix%tweets t
 			inner join 
-				users u 
+				%prefix%users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
@@ -114,7 +117,7 @@ class TweetDAO {
 				".$condition."	
 			order by 
 				follower_count desc;";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $tweets_stored = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $tweets_stored[] = $this->setTweetWithAuthor($row);
@@ -131,16 +134,16 @@ class TweetDAO {
 			SELECT
 				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval 8 hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
 			FROM 
-				tweets t 
+				%prefix%tweets t 
 			INNER JOIN 
-				tweets t1 on t1.status_id = t.in_reply_to_status_id 
+				%prefix%tweets t1 on t1.status_id = t.in_reply_to_status_id 
 			WHERE 
 				t.author_user_id = ".$author_id." AND t.in_reply_to_status_id is not null 
 			ORDER BY
 				t.pub_date desc 
 			LIMIT ".$count.";";
 			
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $tweets_replied_to = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $tweets_replied_to[] = $row;
@@ -158,9 +161,9 @@ class TweetDAO {
 			SELECT
 				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval 8 hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
 			FROM 
-				tweets t 
+				%prefix%tweets t 
 			INNER JOIN 
-				tweets t1 on t1.status_id = t.in_reply_to_status_id 
+				%prefix%tweets t1 on t1.status_id = t.in_reply_to_status_id 
 			WHERE 
 				t.in_reply_to_status_id is not null AND
 				(t.author_user_id = ".$author_id." AND t1.author_user_id = ".$other_user_id.")
@@ -169,7 +172,7 @@ class TweetDAO {
 			ORDER BY
 				t.pub_date desc";
 				
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $tweets_replied_to = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $tweets_replied_to[] = $row;
@@ -206,7 +209,7 @@ class TweetDAO {
 
             
             $q = "
-				INSERT INTO tweets
+				INSERT INTO %prefix%tweets
 					(status_id,
 					author_username,author_fullname,author_avatar,author_user_id,
 					tweet_text,tweet_html,pub_date,in_reply_to_user_id,in_reply_to_status_id,source)
@@ -216,7 +219,7 @@ class TweetDAO {
 					'$tweet_sql','$tweet_html_sql',
 					'{$vals['pub_date']}', $tweet_in_reply_to_user_id, $tweet_in_reply_to_status_id,'{$vals['source']}')
 			";
-            $foo = Database::exec($q);
+            $foo = $this->executeSQL($q);
 
             
             if ($vals['in_reply_to_status_id'] != '' && $this->isTweetInDB($vals['in_reply_to_status_id'])) {
@@ -239,9 +242,9 @@ class TweetDAO {
 			SELECT 
 				status_id 
 			FROM 
-				tweets 
+				%prefix%tweets 
 			WHERE status_id = ".$status_id;
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;
         else
@@ -253,10 +256,10 @@ class TweetDAO {
 			SELECT 
 				status_id 
 			FROM 
-				tweets 
+				%prefix%tweets 
 			WHERE 
 				status_id = ".$status_id;
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;
         else
@@ -266,26 +269,26 @@ class TweetDAO {
     function incrementReplyCountCache($status_id) {
         $q = "
 			UPDATE 
-				tweets
+				%prefix%tweets
 			SET 
 				reply_count_cache = reply_count_cache + 1
 			WHERE 
 				status_id = ".$status_id."
 		";
-        $foo = Database::exec($q);
+        $foo = $this->executeSQL($q);
         return mysql_affected_rows();
     }
     
     function decrementReplyCountCache($status_id) {
         $q = "
 			UPDATE 
-				tweets
+				%prefix%tweets
 			SET 
 				reply_count_cache = reply_count_cache - 1
 			WHERE 
 				status_id = ".$status_id."
 		";
-        $foo = Database::exec($q);
+        $foo = $this->executeSQL($q);
         return mysql_affected_rows();
     }
     
@@ -296,13 +299,13 @@ class TweetDAO {
 			SELECT 
 				t.*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t
+				%prefix%tweets t
 			WHERE 
 				author_user_id = ".$author_id."
 			ORDER BY 
 				pub_date DESC 
 			LIMIT ".$count.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $all_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $all_tweets[] = new Tweet($row);
@@ -318,12 +321,12 @@ class TweetDAO {
 			SELECT 
 				t.*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t
+				%prefix%tweets t
 			WHERE 
 				author_username = '".$username."'
 			ORDER BY 
 				pub_date ASC";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $all_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $all_tweets[] = new Tweet($row);
@@ -338,12 +341,12 @@ class TweetDAO {
 			SELECT 
 				source, count(source) as total 
 			FROM 
-				tweets
+				%prefix%tweets
 			WHERE 
 				author_user_id = ".$author_id."			
 			GROUP BY source
 			ORDER BY total DESC;";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $all_sources = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $all_sources[] = $row;
@@ -360,9 +363,9 @@ class TweetDAO {
 			SELECT 
 				t.*, u.*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t
+				%prefix%tweets t
 			INNER JOIN
-				users u
+				%prefix%users u
 			ON
 				t.author_user_id = u.user_id
 			WHERE 
@@ -372,7 +375,7 @@ class TweetDAO {
 			ORDER BY 
 				pub_date DESC 
 			LIMIT ".$count.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $all_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $all_tweets[] = $this->setTweetWithAuthor($row);
@@ -388,9 +391,9 @@ class TweetDAO {
 			SELECT 
 				t.*, u.*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t
+				%prefix%tweets t
 			INNER JOIN
-				users u
+				%prefix%users u
 			ON
 				t.author_user_id = u.user_id
 			WHERE 
@@ -398,7 +401,7 @@ class TweetDAO {
 			ORDER BY 
 				pub_date DESC 
 			LIMIT ".$count.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $all_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $all_tweets[] = $this->setTweetWithAuthor($row);
@@ -415,13 +418,13 @@ class TweetDAO {
 			SELECT 
 				t.* , pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t
+				%prefix%tweets t
 			WHERE
 				author_user_id = ".$user_id."
 			ORDER BY
 				reply_count_cache DESC 
 			LIMIT ".$count.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $most_replied_to_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $most_replied_to_tweets[] = new Tweet($row);
@@ -438,9 +441,9 @@ class TweetDAO {
 			SELECT 
 				t.* , u.*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t 
+				%prefix%tweets t 
 			INNER JOIN 
-				users u 
+				%prefix%users u 
 			ON 
 				u.user_id = t.author_user_id 
 			WHERE 
@@ -449,7 +452,7 @@ class TweetDAO {
 			ORDER BY 
 				pub_date DESC 
 			LIMIT ".$count.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $orphan_replies = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $orphan_replies[] = $this->setTweetWithAuthor($row);
@@ -467,9 +470,9 @@ class TweetDAO {
 			SELECT 
 				t.* , u.*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t
+				%prefix%tweets t
 			INNER JOIN
-				users u
+				%prefix%users u
 			ON
 				t.author_user_id = u.user_id
 			WHERE 
@@ -484,7 +487,7 @@ class TweetDAO {
 				pub_date 
 			ASC 
 			LIMIT ".$count;
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $likely_orphans = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $likely_orphans[] = $this->setTweetWithAuthor($row);
@@ -497,12 +500,12 @@ class TweetDAO {
     function assignParent($parent_id, $orphan_id, $former_parent_id = -1) {
         $q = "
 			UPDATE 
-				tweets
+				%prefix%tweets
 			SET 
 				in_reply_to_status_id = ".$parent_id."
 			WHERE
 				status_id = ".$orphan_id;
-        Database::exec($q);
+        $this->executeSQL($q);
         if ($parent_id > 0)
             $this->incrementReplyCountCache($parent_id);
         elseif ($former_parent_id > 0)
@@ -515,12 +518,12 @@ class TweetDAO {
 			SELECT
 				in_reply_to_status_id
 			FROM 
-				tweets t 
+				%prefix%tweets t 
 			WHERE 
 				t.author_user_id=".$author_id."
 				AND t.in_reply_to_status_id NOT IN (select status_id from tweets) 
 			 	AND t.in_reply_to_status_id NOT IN (select status_id from tweet_errors);";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $strays = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $strays[] = $row;
@@ -534,9 +537,9 @@ class TweetDAO {
 			SELECT 
 				t.*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t
+				%prefix%tweets t
 			INNER JOIN
-				instances i
+				%prefix%instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			WHERE
@@ -544,7 +547,7 @@ class TweetDAO {
 			ORDER BY
 				t.pub_date DESC
 			LIMIT ".$count;
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $tweets[] = new Tweet($row);
@@ -558,14 +561,14 @@ class TweetDAO {
 			SELECT 
 				*, pub_date - interval 8 hour as adj_pub_date 
 			FROM 
-				tweets t
+				%prefix%tweets t
 			INNER JOIN
-				instances i
+				%prefix%instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			WHERE
 				i.is_public = 1 and t.status_id = ".$id.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             $r = true;
         else
@@ -577,14 +580,18 @@ class TweetDAO {
     
 }
 
-class TweetErrorDAO {
+class TweetErrorDAO extends MySQLDAO {
+	function TweetErrorDAO($database, $logger=null) {
+		parent::MySQLDAO($database, $logger);
+	}
+	
     function insertError($id, $error_code, $error_text, $issued_to) {
         $q = "
 			INSERT INTO
-			 	tweet_errors (status_id, error_code, error_text, error_issued_to_user_id)
+			 	%prefix%tweet_errors (status_id, error_code, error_text, error_issued_to_user_id)
 			VALUES 
 				(".$id.", ".$error_code.", '".$error_text."', ".$issued_to.") ";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_affected_rows() > 0)
             return true;
         else

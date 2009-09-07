@@ -34,15 +34,37 @@ class TestOfDatabase extends UnitTestCase {
         $this->assertTrue(isset($conn), 'Connection created');
 		$db->closeConnection($conn);
 	}
-	
+
 	function testCreatingBadDatabaseConnection() {
         global $TWITALYTIC_CFG;
 		$TWITALYTIC_CFG['db_password'] = 'wrong password';
+		$TWITALYTIC_CFG['table_prefix'] = '';
         $db = new Database($TWITALYTIC_CFG);
 		$this->expectException( new Exception("ERROR: Access denied for user 'twitalytic'@'localhost' (using password: YES)localhosttwitalyticwrong password") ); 
 		$conn = $db->getConnection();
         $this->assertTrue($conn==null, 'Connection not set');
+		$db->closeConnection($conn);
 	}
+
+	function testExecutingSQLWithUnSetTablePrefixShouldFail() {
+        global $TWITALYTIC_CFG;
+		$TWITALYTIC_CFG['table_prefix'] = 'tw_';
+		$this->expectException(); 
+        $db = new Database($TWITALYTIC_CFG);
+		$conn = $db->getConnection();
+		$sql_result = $db->exec("SELECT 
+				user_id 
+			FROM 
+				%prefix%users 
+			WHERE 
+				user_id = 930061");
+
+ 		$db->closeConnection($conn);
+	}
+	
+
+	
+
 }
 
 ?>

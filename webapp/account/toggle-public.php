@@ -16,7 +16,7 @@ $cfg = new Config();
 $db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
 
-$id = new InstanceDAO();
+$id = new InstanceDAO($db);
 
 $id->setPublic($u, $p);
 

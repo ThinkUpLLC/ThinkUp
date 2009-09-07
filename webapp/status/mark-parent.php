@@ -30,7 +30,7 @@ $cfg = new Config();
 $db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
 
-$td = new TweetDAO();
+$td = new TweetDAO($db);
 
 
 foreach ($oid as $o) {

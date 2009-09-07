@@ -31,16 +31,16 @@ if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
 	
 	$db = new Database($TWITALYTIC_CFG);
 	$conn = $db->getConnection();
-	$od = new OwnerDAO();
+	$od = new OwnerDAO($db);
 
 	$owner = $od->getByEmail($_SESSION['user']);
 
 	if ( $twitter_id > 0 ) {
 		echo "Twitter authentication successful.<br />";
 
-		$id = new InstanceDAO();
+		$id = new InstanceDAO($db);
 		$i = $id->getByUsername($tu);
-		$oid = new OwnerInstanceDAO();
+		$oid = new OwnerInstanceDAO($db);
 
 		if ( isset($i) ) {
 			echo "Instance already exists.<br />";

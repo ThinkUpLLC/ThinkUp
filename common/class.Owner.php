@@ -18,16 +18,20 @@ class Owner {
     
 }
 
-class OwnerDAO {
+class OwnerDAO extends MySQLDAO {
+	function OwnerDAO($database, $logger=null) {
+		parent::MySQLDAO($database, $logger);
+	}
+	
     function getByEmail($email) {
         $q = "
 			SELECT 
 				* 
 			FROM
-				owners o 
+				%prefix%owners o 
 			WHERE 
 				o.user_email = '".$email."';";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $row = mysql_fetch_assoc($sql_result);
         mysql_free_result($sql_result);
         return new Owner($row);

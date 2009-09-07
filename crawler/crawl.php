@@ -7,8 +7,8 @@ $db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
 
 $logger = new Logger($TWITALYTIC_CFG['log_location']);
-$id = new InstanceDAO();
-$oid = new OwnerInstanceDAO();
+$id = new InstanceDAO($db, $logger);
+$oid = new OwnerInstanceDAO($db, $logger);
 $lurlapi = new LongUrlAPIAccessor($TWITALYTIC_CFG['app_title']);
 $flickrapi = new FlickrAPIAccessor($TWITALYTIC_CFG['flickr_api_key']);
 
@@ -18,7 +18,7 @@ foreach ($instances as $i) {
 	$logger->setUsername($i->twitter_username);
 	$tokens = $oid->getOAuthTokens($i->id);
 	$api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'], $tokens['oauth_access_token_secret'], $TWITALYTIC_CFG['oauth_consumer_key'], $TWITALYTIC_CFG['oauth_consumer_secret'], $i, $TWITALYTIC_CFG['archive_limit']);
-	$crawler = new Crawler($i, $logger, $api);
+	$crawler = new Crawler($i, $logger, $api, $db);
 	$cfg = new Config($i->twitter_username, $i->twitter_user_id);
 	
 	$api->init($logger);

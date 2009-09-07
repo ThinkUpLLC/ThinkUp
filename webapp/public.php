@@ -8,7 +8,7 @@ require_once("init.php");
 $db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
 
-$td = new TweetDAO();
+$td = new TweetDAO($db);
 $s = new SmartyTwitalytic();
 
 // show tweet with public replies
