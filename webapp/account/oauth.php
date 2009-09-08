@@ -21,7 +21,8 @@ $to = new TwitterOAuth($cfg->oauth_consumer_key, $cfg->oauth_consumer_secret, $r
 $tok = $to->getAccessToken();
 
 if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
-	$api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $cfg);
+	$api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $TWITALYTIC_CFG['oauth_consumer_key'], $TWITALYTIC_CFG['oauth_consumer_secret']);
+	
 	$u = $api->verifyCredentials();
 
 //	echo "User ID: ". $u['user_id'];

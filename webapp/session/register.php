@@ -31,7 +31,7 @@ if ($_POST['Submit'] == 'Register')
 	{ 
 			 die("Invalid code entered. Please enter the correct code as shown in the Image");
   		} 
-	$rs_duplicates = mysql_query("select id from owners where user_email='$_POST[email]'");
+	$rs_duplicates = mysql_query("select id from ".$TWITALYTIC_CFG['table_prefix']."owners where user_email='$_POST[email]'");
 	$duplicates = mysql_num_rows($rs_duplicates);
 	
 	if ($duplicates > 0)
