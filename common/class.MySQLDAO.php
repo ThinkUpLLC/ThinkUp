@@ -16,7 +16,7 @@ class MySQLDAO {
         	if ( isset($this->logger) && $this->logger != null )
             	$this->logger->logStatus($e->getMessage(), get_class($this));
 			else
-				die($e->getMessage());
+				die(get_class($this) ." | " . $e->getMessage());
         }
 		return $r;
     }

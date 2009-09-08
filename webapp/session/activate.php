@@ -12,7 +12,7 @@ if (!isset($_GET['usr']) && !isset($_GET['code']) ) {
 $msg = "ERROR: Invalid code...";
 exit(); }
 
-$rsCode = mysql_query("SELECT activation_code from owners where user_email='$_GET[usr]'") or die(mysql_error());
+$rsCode = mysql_query("SELECT activation_code from ".$TWITALYTIC_CFG['table_prefix']."owners where user_email='$_GET[usr]'") or die(mysql_error());
 
 list($acode) = mysql_fetch_array($rsCode);
 

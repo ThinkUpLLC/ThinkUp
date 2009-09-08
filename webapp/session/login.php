@@ -15,7 +15,7 @@ $user_email = mysql_real_escape_string($_POST['email']);
 if ($_POST['Submit']=='Login')
 {
 $md5pass = md5($_POST['pwd']);
-$sql = "SELECT id,user_email, user_name FROM owners WHERE 
+$sql = "SELECT id,user_email, user_name FROM ".$TWITALYTIC_CFG['table_prefix']."owners WHERE 
             user_email = '$user_email' AND 
             user_pwd = '$md5pass' AND user_activated='1'"; 
 			
