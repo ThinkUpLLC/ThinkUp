@@ -2,7 +2,7 @@
  
 /** APPLICATION CONFIG **/
 $TWITALYTIC_CFG['debug'] = true;
-$TWITALYTIC_CFG['timeZone'] = 'TZ=US/Pacific';
+$TWITALYTIC_CFG['GMT_offset'] = 7; //Pacific: 7, Eastern: 4
 $TWITALYTIC_CFG['archive_limit'] = 3200; //http://apiwiki.twitter.com/Things-Every-Developer-Should-Know#6Therearepaginationlimits
 $TWITALYTIC_CFG['cache_pages'] = 1;
  

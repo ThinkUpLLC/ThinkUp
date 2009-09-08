@@ -48,10 +48,9 @@ class TweetDAO extends MySQLDAO {
 	}
 
     function getTweet($status_id) {
-        //TODO Fix hardcoded adjusted pub_date
         $q = "
 			SELECT 
-				t.*, pub_date - interval 8 hour as adj_pub_date 
+				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			WHERE
@@ -72,7 +71,7 @@ class TweetDAO extends MySQLDAO {
     function getStandaloneReplies($username, $limit) {
         $q = "
 			SELECT
-				t.*, u.*, pub_date - interval 8 hour as adj_pub_date 
+				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t 
 			inner join 
@@ -102,10 +101,9 @@ class TweetDAO extends MySQLDAO {
         if ($public)
             $condition = "AND u.is_protected = 0";
             
-        //TODO Fix hardcoded adjusted pub_date
         $q = "
 			select 
-				t.*, u.*, pub_date - interval 8 hour as adj_pub_date 
+				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			from 
 				%prefix%tweets t
 			inner join 
@@ -128,11 +126,10 @@ class TweetDAO extends MySQLDAO {
     
     function getTweetsAuthorHasRepliedTo($author_id, $count) {
         //There's a better way to do this, only returns 1-1 exchanges, not back-and-forth threads
-        //TODO Fix hardcoded adjusted pub_date
         
         $q = "
 			SELECT
-				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval 8 hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
+				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval %gmt_offset% hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
 			FROM 
 				%prefix%tweets t 
 			INNER JOIN 
@@ -154,12 +151,11 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getExchangesBetweenUsers($author_id, $other_user_id) {
-        //TODO Fix hardcoded adjusted pub_date
         
         $q = "
 		
 			SELECT
-				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval 8 hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
+				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval %gmt_offset% hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
 			FROM 
 				%prefix%tweets t 
 			INNER JOIN 
@@ -293,11 +289,10 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getAllTweets($author_id, $count) {
-        //TODO Fix hardcoded adjusted pub_date
-        
+       
         $q = "
 			SELECT 
-				t.*, pub_date - interval 8 hour as adj_pub_date 
+				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			WHERE 
@@ -315,11 +310,10 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getAllTweetsByUsername($username) {
-        //TODO Fix hardcoded adjusted pub_date
         
         $q = "
 			SELECT 
-				t.*, pub_date - interval 8 hour as adj_pub_date 
+				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			WHERE 
@@ -357,11 +351,10 @@ class TweetDAO extends MySQLDAO {
 
     
     function getAllMentions($author_username, $count) {
-        //TODO Fix hardcoded adjusted pub_date
         
         $q = "
 			SELECT 
-				t.*, u.*, pub_date - interval 8 hour as adj_pub_date 
+				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			INNER JOIN
@@ -385,11 +378,10 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getAllReplies($user_id, $count) {
-        //TODO Fix hardcoded adjusted pub_date
         
         $q = "
 			SELECT 
-				t.*, u.*, pub_date - interval 8 hour as adj_pub_date 
+				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			INNER JOIN
@@ -412,11 +404,10 @@ class TweetDAO extends MySQLDAO {
 
     
     function getMostRepliedToTweets($user_id, $count) {
-        //TODO Fix hardcoded adjusted pub_date
         
         $q = "
 			SELECT 
-				t.* , pub_date - interval 8 hour as adj_pub_date 
+				t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			WHERE
@@ -435,11 +426,10 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getOrphanReplies($user_name, $count) {
-        //TODO Fix hardcoded adjusted pub_date
         
         $q = "
 			SELECT 
-				t.* , u.*, pub_date - interval 8 hour as adj_pub_date 
+				t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t 
 			INNER JOIN 
@@ -464,11 +454,10 @@ class TweetDAO extends MySQLDAO {
 
     
     function getLikelyOrphansForParent($parent_pub_date, $author_user_id, $author_username, $count) {
-        //TODO Fix hardcoded adjusted pub_date
         
         $q = "
 			SELECT 
-				t.* , u.*, pub_date - interval 8 hour as adj_pub_date 
+				t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			INNER JOIN
@@ -535,7 +524,7 @@ class TweetDAO extends MySQLDAO {
     function getTweetsByPublicInstances($count = 15) {
         $q = "
 			SELECT 
-				t.*, pub_date - interval 8 hour as adj_pub_date 
+				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			INNER JOIN
@@ -559,7 +548,7 @@ class TweetDAO extends MySQLDAO {
     function isTweetByPublicInstance($id) {
         $q = "
 			SELECT 
-				*, pub_date - interval 8 hour as adj_pub_date 
+				*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			INNER JOIN

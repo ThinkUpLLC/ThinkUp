@@ -6,6 +6,7 @@ class Database {
     var $db_password;
     var $logger = null;
     var $table_prefix;
+	var $GMT_offset=8;
     
     function Database($TWITALYTIC_CFG) {
         $this->db_host = $TWITALYTIC_CFG['db_host'];
@@ -14,8 +15,8 @@ class Database {
         $this->db_password = $TWITALYTIC_CFG['db_password'];
         if (isset($TWITALYTIC_CFG['table_prefix']))
             $this->table_prefix = $TWITALYTIC_CFG['table_prefix'];
-            
-        //TODO: Get GMT server offset here
+        if (isset($TWITALYTIC_CFG['GMT_offset']))
+            $this->GMT_offset = $TWITALYTIC_CFG['GMT_offset'];
     }
     
     function getConnection() {
@@ -36,10 +37,9 @@ class Database {
     function exec($q) {
     	$fail = false;
         $q = str_replace('%prefix%', $this->table_prefix, $q);
+        $q = str_replace('%gmt_offset%', $this->GMT_offset, $q);
+
         //echo $q;
-        //TOOD: Process GMT offset in query
-        
-        //TODO: On failure throw an exception here, catch and log inside DAO's with mysql error
         $r = mysql_query($q) or $fail = true;
 		if ($fail)
             throw new Exception("ERROR: 

@@ -35,6 +35,27 @@ class TestOfDatabase extends UnitTestCase {
 		$db->closeConnection($conn);
 	}
 
+	function testExecutingSQLWithTablePrefixAndGMTOffset() {
+        global $TWITALYTIC_CFG;
+        $db = new Database($TWITALYTIC_CFG);
+		$conn = $db->getConnection();
+		$sql_result = $db->exec("SELECT 
+				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+			FROM 
+				%prefix%tweets t
+			INNER JOIN
+				%prefix%users u
+			ON
+				t.author_user_id = u.user_id
+			WHERE 
+				 in_reply_to_user_id =  930061
+			ORDER BY 
+				pub_date DESC 
+			LIMIT 15;");
+
+ 		$db->closeConnection($conn);
+	}
+
 	function testCreatingBadDatabaseConnection() {
         global $TWITALYTIC_CFG;
 		$TWITALYTIC_CFG['db_password'] = 'wrong password';
