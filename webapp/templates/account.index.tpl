@@ -121,4 +121,4 @@
 		{/literal}
 	</script>
 	
-	{include file="_footer.tpl"}			
+	{include file="_footer.tpl" stats="no"}			
