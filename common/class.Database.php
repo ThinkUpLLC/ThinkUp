@@ -5,14 +5,18 @@ class Database {
     var $db_user;
     var $db_password;
     var $logger = null;
+    var $table_prefix;
+	var $GMT_offset=8;
     
     function Database($TWITALYTIC_CFG) {
         $this->db_host = $TWITALYTIC_CFG['db_host'];
         $this->db_name = $TWITALYTIC_CFG['db_name'];
         $this->db_user = $TWITALYTIC_CFG['db_user'];
         $this->db_password = $TWITALYTIC_CFG['db_password'];
-		//TODO: Get optional table name prefix from CFG array and set it here
-		//TODO: Get GMT server offset here
+        if (isset($TWITALYTIC_CFG['table_prefix']))
+            $this->table_prefix = $TWITALYTIC_CFG['table_prefix'];
+        if (isset($TWITALYTIC_CFG['GMT_offset']))
+            $this->GMT_offset = $TWITALYTIC_CFG['GMT_offset'];
     }
     
     function getConnection() {
@@ -30,21 +34,19 @@ class Database {
         mysql_close($conn);
     }
     
-    public static function exec($q) {
-    	//TODO: Process the table prefix--replace table name with prefix_tablename
-		//TOOD: Process GMT offset in query
-    	//TODO: On failure throw an exception here, catch and log inside DAO's with mysql error
-        $r = mysql_query($q) or die("Query failed:<br /> $q <br /><br />Error details:<br />".mysql_error());
+    function exec($q) {
+    	$fail = false;
+        $q = str_replace('%prefix%', $this->table_prefix, $q);
+        $q = str_replace('%gmt_offset%', $this->GMT_offset, $q);
+
+        //echo $q;
+        $r = mysql_query($q) or $fail = true;
+		if ($fail)
+            throw new Exception("ERROR: 
+			Query failed: ".$q. " 
+			 ".mysql_error());		
         return $r;
     }
     
-	/*
-    function logOrDie($s) {
-        if ($this->logger != null)
-            $this->logger->logStatus($s, get_class($this));
-        else
-            die($s);
-    }
-    */
 }
 ?>

@@ -56,8 +56,11 @@ class Instance {
     
 }
 
-class InstanceDAO {
-
+class InstanceDAO extends MySQLDAO {
+	function InstanceDAO($database, $logger=null) {
+		parent::MySQLDAO($database, $logger);
+	}
+	
     function getInstanceStalestOne() {
         return $this->getInstanceOneByLastRun("ASC");
     }
@@ -69,10 +72,10 @@ class InstanceDAO {
     function insert($id, $user) {
         $q = "
 			INSERT INTO 
-				instances (`twitter_user_id`, `twitter_username`)
+				%prefix%instances (`twitter_user_id`, `twitter_username`)
 			 VALUES
 				(".$id." , '".$user."')";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
     }
 
     
@@ -86,16 +89,16 @@ class InstanceDAO {
 			SELECT 
 				* , ".$this->getAverageReplyCount()."
 			FROM 
-				instances i
+				%prefix%instances i
 			INNER JOIN
-				owner_instances oi
+				%prefix%owner_instances oi
 			ON 
 				i.id = oi.instance_id
 			WHERE 
 				oi.owner_id = ".$owner_id."
 			ORDER BY 
 				crawler_last_run DESC";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) == 0) {
             $i = null;
         } else {
@@ -112,11 +115,11 @@ class InstanceDAO {
 			SELECT , ".$this->getAverageReplyCount()."
 				* 
 			FROM 
-				instances 
+				%prefix%instances 
 			ORDER BY 
 				crawler_last_run
 			".$order." LIMIT 1";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $row = mysql_fetch_assoc($sql_result);
         $i = new Instance($row);
         mysql_free_result($sql_result);
@@ -128,10 +131,10 @@ class InstanceDAO {
 			SELECT 
 				* , ".$this->getAverageReplyCount()."
 			FROM 
-				instances 
+				%prefix%instances 
 			WHERE 
 				twitter_username = '".$username."'";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         
         if (mysql_num_rows($sql_result) == 0) {
             $i = null;
@@ -147,24 +150,24 @@ class InstanceDAO {
     function updateLastRun($id) {
         $q = "
 			UPDATE 
-				instances
+				%prefix%instances
 			 SET 
 				crawler_last_run = NOW()
 			WHERE
 				id = ".$id.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         
     }
     
     function setPublic($u, $p) {
         $q = "
 			UPDATE 
-				instances
+				%prefix%instances
 			 SET 
 				is_public = ".$p."
 			WHERE
 				twitter_username = '".$u."';";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         
     }
 
@@ -191,24 +194,24 @@ class InstanceDAO {
             
         $q = "
 			UPDATE 
-				instances
+				%prefix%instances
 			SET
 				".$lsi."
 				last_page_fetched_followers = ".$i->last_page_fetched_followers.",
 				last_page_fetched_replies = ".$i->last_page_fetched_replies.",
 				last_page_fetched_tweets = ".$i->last_page_fetched_tweets.",
 				crawler_last_run = NOW(),
-				total_tweets_in_system = (select count(*) from tweets where author_user_id=".$i->twitter_user_id."),
+				total_tweets_in_system = (select count(*) from %prefix%tweets where author_user_id=".$i->twitter_user_id."),
 				".$owner_tweets."
-				total_replies_in_system = (select count(*) from tweets where tweet_text like '%@".$i->twitter_username."%'),
-				total_follows_in_system = (select count(*) from follows where user_id=".$i->twitter_user_id." and active=1),
-				total_users_in_system = (select count(*) from users),
+				total_replies_in_system = (select count(*) from %prefix%tweets where tweet_text like '%@".$i->twitter_username."%'),
+				total_follows_in_system = (select count(*) from %prefix%follows where user_id=".$i->twitter_user_id." and active=1),
+				total_users_in_system = (select count(*) from %prefix%users),
 				is_archive_loaded_follows = ".$is_archive_loaded_follows.",
 				is_archive_loaded_replies = ".$is_archive_loaded_replies.",
 				earliest_reply_in_system = (select
 					pub_date
 				from 
-					tweets
+					%prefix%tweets
 				where tweet_text like '%@".$i->twitter_username."%'
 				order by
 					pub_date asc
@@ -216,14 +219,14 @@ class InstanceDAO {
 				earliest_tweet_in_system = (select
 					pub_date
 				from 
-					tweets
+					%prefix%tweets
 				where author_user_id = ".$i->twitter_user_id."
 				order by
 					pub_date asc
 				limit 1)
 			WHERE
 				twitter_user_id = ".$i->twitter_user_id.";";
-        $foo = Database::exec($q);
+        $foo = $this->executeSQL($q);
         
         $status_message = "Updated ".$i->twitter_username."'s system status.";
         $logger->logStatus($status_message, get_class($this));
@@ -236,10 +239,10 @@ class InstanceDAO {
 			SELECT 
 				twitter_username 
 			FROM 
-				instances
+				%prefix%instances
 			WHERE 
 				twitter_username = '".$un."'";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;
         else
@@ -256,11 +259,11 @@ class InstanceDAO {
 			SELECT 
 				*, ".$this->getAverageReplyCount()."
 			FROM
-				instances
+				%prefix%instances
 			ORDER BY
 				crawler_last_run
 			".$last_run."";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $instances = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $instances[] = new Instance($row);
@@ -275,7 +278,7 @@ class InstanceDAO {
 				SELECT 
 					*, ".$this->getAverageReplyCount()."
 				FROM
-					instances i
+					%prefix%instances i
 				ORDER BY
 					crawler_last_run 
 				DESC;";
@@ -284,9 +287,9 @@ class InstanceDAO {
 				SELECT 
 					*, ".$this->getAverageReplyCount()."
 				FROM
-					owner_instances oi
+					%prefix%owner_instances oi
 				INNER JOIN
-					instances i
+					%prefix%instances i
 				ON
 					i.id = oi.instance_id
 				WHERE
@@ -295,7 +298,7 @@ class InstanceDAO {
 					crawler_last_run 
 				DESC;";
         }
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $instances = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $instances[] = new Instance($row);

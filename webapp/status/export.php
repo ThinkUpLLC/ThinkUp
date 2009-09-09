@@ -11,15 +11,15 @@ require_once("init.php");
 $db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
 
-$od = new OwnerDAO();
+$od = new OwnerDAO($db);
 $owner = $od->getByEmail($_SESSION['user']);
 
-$td = new TweetDAO();
-$id = new InstanceDAO();
+$td = new TweetDAO($db);
+$id = new InstanceDAO($db);
 
 if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	$username = $_REQUEST['u'];
-	$oid = new OwnerInstanceDAO();
+	$oid = new OwnerInstanceDAO($db);
 	if ( !$oid->doesOwnerHaveAccess($owner, $username) ) {
 		echo 'Insufficient privileges. <a href="/">Back</a>.';
 		$db->closeConnection($conn);

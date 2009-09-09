@@ -1,4 +1,4 @@
-
+{if $stats neq 'no'}
 <br clear="all">
 
 	<div id="ft" role="contentinfo">
@@ -6,6 +6,7 @@
 
 	</div>
 </div>
+{/if}
 
 
 </body>

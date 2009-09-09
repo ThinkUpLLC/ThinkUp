@@ -11,7 +11,10 @@ class OwnerInstance {
     
 }
 
-class OwnerInstanceDAO {
+class OwnerInstanceDAO extends MySQLDAO {
+	function OwnerInstanceDAO($database, $logger=null) {
+		parent::MySQLDAO($database, $logger);
+	}
 
     function doesOwnerHaveAccess($owner, $username) {
         if ($owner->is_admin) {
@@ -21,14 +24,14 @@ class OwnerInstanceDAO {
 				SELECT 
 					* 
 				FROM 
-					owner_instances oi
+					%prefix%owner_instances oi
 				INNER JOIN
-					instances i
+					%prefix%instances i
 				ON 
 					i.id = oi.instance_id
 				WHERE 
 					i.twitter_username = '".$username."' AND oi.owner_id = ".$owner->id.";";
-            $sql_result = Database::exec($q);
+            $sql_result = $this->executeSQL($q);
             if (mysql_num_rows($sql_result) == 0) {
                 return false;
             } else {
@@ -42,10 +45,10 @@ class OwnerInstanceDAO {
 			SELECT 
 				* 
 			FROM 
-				owner_instances 
+				%prefix%owner_instances 
 			WHERE 
 				owner_id = ".$owner_id." AND instance_id = ".$instance_id.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) == 0) {
             $i = null;
         } else {
@@ -60,10 +63,10 @@ class OwnerInstanceDAO {
     function insert($owner_id, $instance_id, $oauth_token, $oauth_token_secret) {
         $q = "
 			INSERT INTO 
-				owner_instances (`owner_id`, `instance_id`, `oauth_access_token`, `oauth_access_token_secret`)
+				%prefix%owner_instances (`owner_id`, `instance_id`, `oauth_access_token`, `oauth_access_token_secret`)
 			 VALUES
 				(".$owner_id.", ".$instance_id.", '".$oauth_token."', '".$oauth_token_secret."')";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
     }
 
     
@@ -72,10 +75,10 @@ class OwnerInstanceDAO {
 			SELECT 
 				oauth_access_token, oauth_access_token_secret 
 			FROM 
-				owner_instances 
+				%prefix%owner_instances 
 			WHERE 
 				instance_id = ".$id." ORDER BY id ASC LIMIT 1;";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $tokens = mysql_fetch_assoc($sql_result);
         return $tokens;
     }

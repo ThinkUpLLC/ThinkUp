@@ -31,7 +31,7 @@ if ($_POST['Submit'] == 'Register')
 	{ 
 			 die("Invalid code entered. Please enter the correct code as shown in the Image");
   		} 
-	$rs_duplicates = mysql_query("select id from owners where user_email='$_POST[email]'");
+	$rs_duplicates = mysql_query("select id from ".$TWITALYTIC_CFG['table_prefix']."owners where user_email='$_POST[email]'");
 	$duplicates = mysql_num_rows($rs_duplicates);
 	
 	if ($duplicates > 0)
@@ -48,7 +48,7 @@ if ($_POST['Submit'] == 'Register')
 	$activ_code = rand(1000,9999);
 	$server = $_SERVER['HTTP_HOST'];
 	$host = ereg_replace('www.','',$server);
-	mysql_query("INSERT INTO owners
+	mysql_query("INSERT INTO ".$TWITALYTIC_CFG['table_prefix']."owners
 	              (`user_email`,`user_pwd`,`country`,`joined`,`activation_code`,`full_name`)
 				  VALUES
 				  ('$_POST[email]','$md5pass','$_POST[country]',now(),'$activ_code','$_POST[full_name]')") or die(mysql_error());

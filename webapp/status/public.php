@@ -13,9 +13,9 @@ $c = new Crawler();
 $conn = $db->getConnection();
 
 // instantiate data access objects
-$ud = new UserDAO();
-$fd = new FollowDAO();
-$td = new TweetDAO();
+$ud = new UserDAO($db);
+$fd = new FollowDAO($db);
+$td = new TweetDAO($db);
 $c->init();
 
 //TODO error checking here, is tweet in db, etc

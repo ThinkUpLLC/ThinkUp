@@ -11,7 +11,7 @@ require_once("init.php");
 $db = new Database($TWITALYTIC_CFG);
 $conn = $db->getConnection();
 
-$td = new TweetDAO();
+$td = new TweetDAO($db);
 
 
 if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_REQUEST['t']) ){
@@ -23,7 +23,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 
 		$u = new Utils();
 
-		$id = new InstanceDAO();
+		$id = new InstanceDAO($db);
 		$i = $id->getByUsername($tweet->author_username);
 		if ( isset($i) ) {
 			$s->assign('likely_orphans', $td->getLikelyOrphansForParent($tweet->pub_date, $i->twitter_user_id,$tweet->author_username, 15) );
@@ -34,7 +34,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	
 
 		// instantiate data access objects
-		$ud = new UserDAO();
+		$ud = new UserDAO($db);
 	
 	
 		$all_replies = $td->getRepliesToTweet($status_id);

@@ -49,7 +49,10 @@ class User {
     
 }
 
-class UserDAO {
+class UserDAO extends MySQLDAO {
+	function UserDAO($database, $logger=null) {
+		parent::MySQLDAO($database, $logger);
+	}
 
     private function getAverageTweetCount() {
         return "round(tweet_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
@@ -61,10 +64,10 @@ class UserDAO {
 			SELECT 
 				user_id 
 			FROM 
-				users 
+				%prefix%users 
 			WHERE 
 				user_id = ".$user_id;
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;
         else
@@ -76,10 +79,10 @@ class UserDAO {
 			SELECT 
 				user_id 
 			FROM 
-				users 
+				%prefix%users 
 			WHERE 
 				user_name = '".$username."'";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;
         else
@@ -113,7 +116,7 @@ class UserDAO {
         
         $q = "
 			INSERT INTO
-				users (user_id,
+				%prefix%users (user_id,
 					user_name,full_name,avatar,location,
 					description, url, is_protected,
 					follower_count, tweet_count, ".($has_friend_count ? "friend_count, " : "")."
@@ -144,7 +147,7 @@ class UserDAO {
 					found_in = '".mysql_real_escape_string($user->found_in)."', 
 					joined = '".mysql_real_escape_string($user->joined)."'
 					".($has_last_status_id ? ", last_status_id = ".$user->last_status_id : "").";";
-        $foo = Database::exec($q);
+        $foo = $this->executeSQL($q);
         if (mysql_affected_rows() > 0) {
             $status_message = "User ".$user->user_name." updated in system.";
             $logger->logStatus($status_message, get_class($this));
@@ -164,10 +167,10 @@ class UserDAO {
 			SELECT 
 				* , ".$this->getAverageTweetCount()."
 			FROM
-				users u 
+				%prefix%users u 
 			WHERE 
 				u.user_id = ".$user_id.";";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $row = mysql_fetch_assoc($sql_result);
         mysql_free_result($sql_result);
         return $row;
@@ -178,10 +181,10 @@ class UserDAO {
 			SELECT 
 				* , ".$this->getAverageTweetCount()."
 			FROM
-				users u 
+				%prefix%users u 
 			WHERE 
 				u.user_name = '".$user_name."';";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         $row = mysql_fetch_assoc($sql_result);
         mysql_free_result($sql_result);
         return $row;
@@ -190,14 +193,18 @@ class UserDAO {
     
 }
 
-class UserErrorDAO {
+class UserErrorDAO extends MySQLDAO {
+	function UserErrorDAO($database, $logger=null) {
+		parent::MySQLDAO($database, $logger);
+	}
+	
     function insertError($id, $error_code, $error_text, $issued_to) {
         $q = "
 			INSERT INTO
-			 	user_errors (user_id, error_code, error_text, error_issued_to_user_id)
+			 	%prefix%user_errors (user_id, error_code, error_text, error_issued_to_user_id)
 			VALUES 
 				(".$id.", ".$error_code.", '".$error_text."', ".$issued_to.") ";
-        $sql_result = Database::exec($q);
+        $sql_result = $this->executeSQL($q);
         if (mysql_affected_rows() > 0)
             return true;
         else

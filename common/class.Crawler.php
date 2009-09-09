@@ -5,12 +5,14 @@ class Crawler {
 	var $api;
     var $owner_object;
     var $ud;
+	var $db;
     
-    function Crawler($instance, $logger, $api) {
+    function Crawler($instance, $logger, $api, $db) {
         $this->instance = $instance;
-        $this->ud = new UserDAO($this->logger);
 		$this->api = $api;
+		$this->db = $db;
 		$this->logger = $logger;
+        $this->ud = new UserDAO($this->db, $this->logger);
     }
     
     function fetchInstanceUserInfo() {
@@ -76,7 +78,7 @@ class Crawler {
                     $count = 0;
                     $tweets = $this->api->parseXML($twitter_data);
                     
-                    $td = new TweetDAO;
+                    $td = new TweetDAO($this->db, $this->logger);
                     foreach ($tweets as $tweet) {
                     
                         if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
@@ -135,7 +137,7 @@ class Crawler {
     
     private function processTweetURLs($tweet, $lurl, $fa) {
     
-        $ld = new LinkDAO;
+        $ld = new LinkDAO($this->db, $this->logger);
         
         $urls = Tweet::extractURLs($tweet['tweet_text']);
         foreach ($urls as $u) {
@@ -198,7 +200,7 @@ class Crawler {
         } elseif ($cURL_status == 404 || $cURL_status == 403) {
             try {
                 $e = $this->api->parseError($twitter_data);
-                $td = new TweetErrorDAO();
+                $td = new TweetErrorDAO($this->db, $this->logger);
                 $td->insertError($tid, $cURL_status, $e['error'], $this->owner_object->id);
                 $status_message = 'Error saved to tweets.';
             }
@@ -245,7 +247,7 @@ class Crawler {
                         }
 
                         
-                        $td = new TweetDAO;
+                        $td = new TweetDAO($this->db, $this->logger);
                         $count = 0;
                         foreach ($tweets as $tweet) {
                             if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
@@ -311,7 +313,7 @@ class Crawler {
             if ($cURL_status > 200) {
                 $continue_fetching = false;
             } else {
-                $fd = new FollowDAO();
+                $fd = new FollowDAO($this->db, $this->logger);
                 
                 try {
                     $ids = $this->api->parseXML($twitter_data);
@@ -393,7 +395,7 @@ class Crawler {
             if ($cURL_status > 200) {
                 $continue_fetching = false;
             } else {
-                $fd = new FollowDAO();
+                $fd = new FollowDAO($this->db, $this->logger);
                 
                 try {
                     $users = $this->api->parseXML($twitter_data);
@@ -440,7 +442,7 @@ class Crawler {
     }
     
     function fetchInstanceUserFriends() {
-        $fd = new FollowDAO();
+        $fd = new FollowDAO($this->db, $this->logger);
         $this->instance->total_friends_in_system = $fd->getTotalFriends($this->owner_object->id);
         
         if ($this->instance->total_friends_in_system < $this->owner_object->friend_count) {
@@ -517,9 +519,9 @@ class Crawler {
     }
     
     function fetchFriendTweetsAndFriends($lurl, $fa) {
-        $fd = new FollowDAO();
-        $td = new TweetDAO();
-        $ud = new UserDAO();
+        $fd = new FollowDAO($this->db, $this->logger);
+        $td = new TweetDAO($this->db, $this->logger);
+        $ud = new UserDAO($this->db, $this->logger);
         
         $continue_fetching = true;
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
@@ -579,7 +581,7 @@ class Crawler {
                 } elseif ($cURL_status == 401 || $cURL_status == 404) {
                     try {
                         $e = $this->api->parseError($twitter_data);
-                        $ued = new UserErrorDAO();
+                        $ued = new UserErrorDAO($this->db, $this->logger);
                         $ued->insertError($stale_friend->id, $cURL_status, $e['error'], $this->owner_object->id);
                         $this->logger->logStatus('User error saved', get_class($this));
                     }
@@ -596,7 +598,7 @@ class Crawler {
     }
     
     function fetchStrayRepliedToTweets($lurl, $fa) {
-        $td = new TweetDAO();
+        $td = new TweetDAO($this->db, $this->logger);
         $strays = $td->getStrayRepliedToTweets($this->owner_object->id);
         $status_message = count($strays).' stray replied-to tweets to load.';
         $this->logger->logStatus($status_message, get_class($this));
@@ -608,7 +610,7 @@ class Crawler {
     }
     
     function fetchUnloadedFollowerDetails() {
-        $fd = new FollowDAO();
+        $fd = new FollowDAO($this->db, $this->logger);
         $strays = $fd->getUnloadedFollowerDetails($this->owner_object->id);
         $status_message = count($strays).' unloaded follower details to load.';
         $this->logger->logStatus($status_message, get_class($this));
@@ -697,7 +699,7 @@ class Crawler {
         } elseif ($cURL_status == 404) {
             try {
                 $e = $this->api->parseError($twitter_data);
-                $ued = new UserErrorDAO();
+                $ued = new UserErrorDAO($this->db, $this->logger);
                 $ued->insertError($fid, $cURL_status, $e['error'], $this->owner_object->id);
                 $status_message = 'User error saved.';
                 
@@ -714,7 +716,7 @@ class Crawler {
     
     // For each API call left, grab oldest follow relationship, check if it exists, and update table
     function cleanUpFollows() {
-        $fd = new FollowDAO();
+        $fd = new FollowDAO($this->db, $this->logger);
         $continue_fetching = true;
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
         
