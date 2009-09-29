@@ -3,7 +3,7 @@ Contributors: ginatrapani
 Tags: twitalytic, twitter
 Requires at least: 2.8.4
 Tested up to: 2.8.4
-Stable tag: 0.1
+Stable tag: 0.2
 
 Displays Twitter data via Twitalytic in a post or page via a shortcode.
 
