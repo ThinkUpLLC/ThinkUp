@@ -22,11 +22,14 @@
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+//TODO: Allow user to save default values for shortcode parameters in a plug-in settings area
+
 
 // [twitalytic_chronological_archive twitter_username="twitalytic"]
+// Lists all the user's tweets in chronological order from beginning to end without replies
 function twitalytic_chron_archive_handler($atts) {
 
-    extract( shortcode_atts(array(
+    extract(shortcode_atts(array(
 		'twitter_username'=>'twitalytic', 
 		'title'=>'<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order (sans replies)</h3>', 
 		'before'=>'<br /><ul>', 
@@ -38,38 +41,42 @@ function twitalytic_chron_archive_handler($atts) {
 		'before_tweet_html'=>'', 
 		'after_tweet_html'=>'', 
 		'date_format'=>'Y.m.d, g:ia', 
-		'gmt_offset'=>8, 
-	), $atts));
-        
+		'gmt_offset'=>8, ), 
+	$atts));
+    
     global $wpdb;
     
-    $sql = $wpdb->prepare("select pub_date, tweet_html, status_id from ta_tweets where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc",
-		$twitter_username);
-    //echo $sql;
+    $sql = $wpdb->prepare("select 
+		pub_date, tweet_html, status_id 
+		from ta_tweets 
+		where author_username='%s' and in_reply_to_user_id is null 
+		order by pub_date asc", $twitter_username);
     
     $tweets = $wpdb->get_results($sql);
     
+	$output = '';
     if ($tweets) {
-        echo str_replace('#twitter_username#', $twitter_username, $title);
-        echo "{$before}";
+        $output .= str_replace('#twitter_username#', $twitter_username, $title);
+        $output .= "{$before}";
         foreach ($tweets as $t) {
             $tweet_content = linkUrls($t->tweet_html);
             $tweet_content = linkTwitterUsers($tweet_content);
-            echo "{$before_tweet}{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}<a href=\"http://twitter.com/{$twitter_username}/statuses/{$t->status_id}/\">".actual_time($date_format, $gmt_offset, strtotime($t->pub_date))."</a>{$after_date}{$after_tweet}";
+            $output .= "{$before_tweet}{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}<a href=\"http://twitter.com/{$twitter_username}/statuses/{$t->status_id}/\">".actual_time($date_format, $gmt_offset, strtotime($t->pub_date))."</a>{$after_date}{$after_tweet}";
         }
-        echo "{$after}";
+        $output .= "{$after}";
     } else {
-        echo "No tweets found in Twitalytic for {$twitter_username}.";
+        $output .= "No tweets found in Twitalytic for {$twitter_username}.";
     }
+	return $output;
 }
 
 // [twitalytic_status_replies status_id="12345"]
+// Lists all public replies to a given tweet
 function twitalytic_replies_handler($atts) {
 
-    extract( shortcode_atts(array(
-		'status_id'=>0, 
-		//TOOD: get twitter username from result set, don't require it as a shortcode parameter
-		'twitter_username'=>'', 
+    extract(shortcode_atts(array('status_id'=>0,
+        //TOOD: get twitter username from result set, don't require it as a shortcode parameter
+        'twitter_username'=>'', 
 		'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#status_id#/">@#twitter_username#\'s tweet</a>:</h3>', 
 		'before'=>'<br /><ul>', 
 		'after'=>'</ul>', 
@@ -80,12 +87,12 @@ function twitalytic_replies_handler($atts) {
 		'before_tweet_html'=>'', 
 		'after_tweet_html'=>'', 
 		'date_format'=>'Y.m.d, g:ia', 
-		'gmt_offset'=>8, 
-	), $atts));
-    
+		'gmt_offset'=>8, ), 
+	$atts));
+        
     global $wpdb;
     
-    $sql = $wpdb->prepare( "select 
+    $sql = $wpdb->prepare("select 
 				t.*, u.*
 			from 
 				ta_tweets t
@@ -97,33 +104,34 @@ function twitalytic_replies_handler($atts) {
 				in_reply_to_status_id = %0.0f 
 				AND u.is_protected = 0	
 			order by 
-				follower_count desc;",
-			$status_id );
-    //echo $sql;
-    
+				follower_count desc;", $status_id);
+				
     $replies = $wpdb->get_results($sql);
     
+    $output = '';
     if ($replies) {
         $modified_title = str_replace('#twitter_username#', $twitter_username, $title);
-		$modified_title = str_replace('#status_id#', $status_id, $modified_title );
-        echo "{$before}";
-		echo "{$modified_title}";
+        $modified_title = str_replace('#status_id#', $status_id, $modified_title);
+        $output .= "{$before}";
+        $output .= "{$modified_title}";
         foreach ($replies as $t) {
-			$tweet_content = strip_starter_username($t->tweet_html);
-			$tweet_content = linkUrls($tweet_content);
+            $tweet_content = strip_starter_username($t->tweet_html);
+            $tweet_content = linkUrls($tweet_content);
             $tweet_content = linkTwitterUsers($tweet_content);
-            echo "{$before_tweet}{$before_user}<a href=\"http://twitter.com/{$t->author_username}/statuses/{$t->status_id}/\">{$t->author_username}</a>{$after_user}: {$before_tweet_html}{$tweet_content}{$after_tweet_html}{$after_tweet}";
+            $output .= "{$before_tweet}{$before_user}<a href=\"http://twitter.com/{$t->author_username}/statuses/{$t->status_id}/\">{$t->author_username}</a>{$after_user}: {$before_tweet_html}{$tweet_content}{$after_tweet_html}{$after_tweet}";
         }
-        echo "{$after}";
+        $output .= "{$after}";
     } else {
-        echo "No replies found for status {$status_id}.";
+        $output .= "No replies found for status {$status_id}.";
     }
+    return $output;
 }
 
 // [twitalytic_status_reply_count status_id="12345"]
+// Display the count of replies for a given tweet ID
 function twitalytic_reply_count_handler($atts) {
 
-    extract( shortcode_atts(array(
+    extract(shortcode_atts(array(
 		'status_id'=>0, 
 		'before'=>'<a href="#permalink#">', 
 		'after'=>' Twitter replies</a>', 
@@ -131,7 +139,7 @@ function twitalytic_reply_count_handler($atts) {
     
     global $wpdb;
     
-    $sql = $wpdb->prepare( "select 
+    $sql = $wpdb->prepare("select 
 				count(*)
 			from 
 				ta_tweets t
@@ -143,13 +151,11 @@ function twitalytic_reply_count_handler($atts) {
 				in_reply_to_status_id=%0.0f
 				AND u.is_protected = 0	
 			order by 
-				follower_count desc;",
-			$status_id);
+				follower_count desc;", $status_id);
     //echo $sql;
     $count = $wpdb->get_var($sql);
-//	$plink = 
-	$before_mod = str_replace('#permalink#', get_permalink(), $before);
-    echo "{$before_mod}{$count}{$after}";
+    $before_mod = str_replace('#permalink#', get_permalink(), $before);
+    return "{$before_mod}{$count}{$after}";
 }
 
 function linkTwitterUsers($text) {
@@ -191,7 +197,7 @@ function actual_time($format, $offset, $timestamp) {
 }
 
 function strip_starter_username($text) {
-	return preg_replace("/^@[a-zA-Z0-9_]+/", '', $text);
+    return preg_replace("/^@[a-zA-Z0-9_]+/", '', $text);
 }
 
 
