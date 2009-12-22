@@ -39,10 +39,19 @@
 		
 		<div class="section" id="settings">
 			Other settings go here
-			<ul>
-				<li>Password</li>
-				<li>Timezone</li>
-			</ul>
+	<form name="changepass" method="post" action="index.php" style="padding:5px;">
+	<p>Old Password:
+	  <input name="oldpass" type="password" id="oldpass">
+	</p>
+        <p>New Password: 
+          <input name="pass1" type="password" id="pass1">
+          Atleast 5 chars</p>
+        <p>Retype Password: 
+          <input name="pass2" type="password" id="pass2">
+        </p>
+	<input type="submit" name="changepass" value="Change Password" />
+	</form>
+			Timezone
 		</div>
 
 
