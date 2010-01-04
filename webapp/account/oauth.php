@@ -21,7 +21,7 @@ $to = new TwitterOAuth($cfg->oauth_consumer_key, $cfg->oauth_consumer_secret, $r
 $tok = $to->getAccessToken();
 
 if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
-	$api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $TWITALYTIC_CFG['oauth_consumer_key'], $TWITALYTIC_CFG['oauth_consumer_secret']);
+	$api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret']);
 	
 	$u = $api->verifyCredentials();
 
@@ -30,7 +30,7 @@ if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
 	$twitter_id = $u['user_id'];
 	$tu = $u['user_name']; 
 	
-	$db = new Database($TWITALYTIC_CFG);
+	$db = new Database($THINKTANK_CFG);
 	$conn = $db->getConnection();
 	$od = new OwnerDAO($db);
 
@@ -71,7 +71,7 @@ if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
 
 
 
-echo '<br /> <a href="'.$TWITALYTIC_CFG['site_root_path'].'account/">Back to your account</a>.';
+echo '<br /> <a href="'.$THINKTANK_CFG['site_root_path'].'account/">Back to your account</a>.';
 
 
 ?>

@@ -20,9 +20,9 @@ class TestOfMySQLDAO extends UnitTestCase {
     }
     
     function setUp() {
-		global $TWITALYTIC_CFG;
-        $this->logger = new Logger($TWITALYTIC_CFG['log_location']);
-		$this->db = new Database($TWITALYTIC_CFG);
+		global $THINKTANK_CFG;
+        $this->logger = new Logger($THINKTANK_CFG['log_location']);
+		$this->db = new Database($THINKTANK_CFG);
     }
     
     function tearDown() {

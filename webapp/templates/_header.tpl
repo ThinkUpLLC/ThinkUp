@@ -339,7 +339,7 @@
 	{/if}
 
 	</script>
-   <title>Twitalytic</title>
+   <title>ThinkTank</title>
 </head>
 <body>
 	
@@ -349,7 +349,7 @@
 <div id="doc4" class="yui-t2">
 	<div id="hd" role="banner">
 		{if $instance}
-		<h1><a href="{$cfg->site_root_path}?u={$instance->twitter_username}">{$instance->twitter_username}'s Twitter Dashboard</a></h1>   
+		<h1><a href="{$cfg->site_root_path}?u={$instance->twitter_username}">{$instance->twitter_username}'s ThinkTank</a></h1>   
 		<h3>Updated <strong>{$instance->crawler_last_run|relative_datetime}</strong>.</h3>
 		{elseif $owner}
 		<h1>Your Account</a></h1>  

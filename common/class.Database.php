@@ -8,15 +8,15 @@ class Database {
     var $table_prefix;
 	var $GMT_offset=8;
     
-    function Database($TWITALYTIC_CFG) {
-        $this->db_host = $TWITALYTIC_CFG['db_host'];
-        $this->db_name = $TWITALYTIC_CFG['db_name'];
-        $this->db_user = $TWITALYTIC_CFG['db_user'];
-        $this->db_password = $TWITALYTIC_CFG['db_password'];
-        if (isset($TWITALYTIC_CFG['table_prefix']))
-            $this->table_prefix = $TWITALYTIC_CFG['table_prefix'];
-        if (isset($TWITALYTIC_CFG['GMT_offset']))
-            $this->GMT_offset = $TWITALYTIC_CFG['GMT_offset'];
+    function Database($THINKTANK_CFG) {
+        $this->db_host = $THINKTANK_CFG['db_host'];
+        $this->db_name = $THINKTANK_CFG['db_name'];
+        $this->db_user = $THINKTANK_CFG['db_user'];
+        $this->db_password = $THINKTANK_CFG['db_password'];
+        if (isset($THINKTANK_CFG['table_prefix']))
+            $this->table_prefix = $THINKTANK_CFG['table_prefix'];
+        if (isset($THINKTANK_CFG['GMT_offset']))
+            $this->GMT_offset = $THINKTANK_CFG['GMT_offset'];
     }
     
     function getConnection() {

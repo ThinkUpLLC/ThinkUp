@@ -1,9 +1,9 @@
 <?php 
 /*
- Plugin Name: Twitalytic Integration
- Plugin URI: http://github.com/ginatrapani/twitalytic
- Description: Displays Twitalytic data on your WordPress blog.
- Version: 0.2
+ Plugin Name: ThinkTank Integration
+ Plugin URI: http://github.com/ginatrapani/thinktank
+ Description: Displays ThinkTank data on your WordPress blog.
+ Version: 0.3
  Author: Gina Trapani
  Author URI: http://ginatrapani.org
  */
@@ -23,11 +23,11 @@
  */
 
 
-// [twitalytic_chronological_archive twitter_username="twitalytic"]
-function twitalytic_chron_archive_handler($atts) {
+// [thinktank_chronological_archive twitter_username="thinktankapp"]
+function thinktank_chron_archive_handler($atts) {
 
     extract( shortcode_atts(array(
-		'twitter_username'=>'twitalytic', 
+		'twitter_username'=>'thinktankapp', 
 		'title'=>'<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order (sans replies)</h3>', 
 		'before'=>'<br /><ul>', 
 		'after'=>'</ul>', 
@@ -41,7 +41,7 @@ function twitalytic_chron_archive_handler($atts) {
 		'gmt_offset'=>8, 
 	), $atts));
         
-	$wpdb2 = new wpdb("twuser", "indigo10", "twitalytic", "localhost");
+	$wpdb2 = new wpdb("thinktankuser", "thinktankpassword", "thinktank", "localhost");
 
     $sql = $wpdb2->prepare("select pub_date, tweet_html, status_id from ta_tweets where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc",
 		$twitter_username);
@@ -58,12 +58,12 @@ function twitalytic_chron_archive_handler($atts) {
         }
         echo "{$after}";
     } else {
-        echo "No tweets found in Twitalytic for {$twitter_username}.";
+        echo "No tweets found in ThinkTank for {$twitter_username}.";
     }
 }
 
-// [twitalytic_status_replies status_id="12345"]
-function twitalytic_replies_handler($atts) {
+// [thinktank_status_replies status_id="12345"]
+function thinktank_replies_handler($atts) {
 
     extract( shortcode_atts(array(
 		'status_id'=>0, 
@@ -82,7 +82,7 @@ function twitalytic_replies_handler($atts) {
 		'gmt_offset'=>8, 
 	), $atts));
     
-	$wpdb2 = new wpdb("twuser", "indigo10", "twitalytic", "localhost");
+	$wpdb2 = new wpdb("thinktankuser", "thinktankpassword", "thinktank", "localhost");
 
     
     $sql = $wpdb2->prepare( "select 
@@ -121,8 +121,8 @@ function twitalytic_replies_handler($atts) {
     return $output;
 }
 
-// [twitalytic_status_reply_count status_id="12345"]
-function twitalytic_reply_count_handler($atts) {
+// [thinktank_status_reply_count status_id="12345"]
+function thinktank_reply_count_handler($atts) {
 
     extract( shortcode_atts(array(
 		'status_id'=>0, 
@@ -130,7 +130,7 @@ function twitalytic_reply_count_handler($atts) {
 		'after'=>' Twitter replies</a>', 
 	), $atts));
     
-	$wpdb2 = new wpdb("twuser", "indigo10", "twitalytic", "localhost");
+	$wpdb2 = new wpdb("thinktankuser", "thinktankpassword", "thinktank", "localhost");
 
     
     $sql = $wpdb2->prepare( "select 
@@ -196,9 +196,9 @@ function strip_starter_username($text) {
 }
  
 
-add_shortcode('twitalytic_chronological_archive', 'twitalytic_chron_archive_handler');
-add_shortcode('twitalytic_status_replies', 'twitalytic_replies_handler');
-add_shortcode('twitalytic_reply_count', 'twitalytic_reply_count_handler');
+add_shortcode('thinktank_chronological_archive', 'thinktank_chron_archive_handler');
+add_shortcode('thinktank_status_replies', 'thinktank_replies_handler');
+add_shortcode('thinktank_reply_count', 'thinktank_reply_count_handler');
 
 
 ?>

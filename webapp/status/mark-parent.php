@@ -27,7 +27,7 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
 $cfg = new Config();
-$db = new Database($TWITALYTIC_CFG);
+$db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 
 $td = new TweetDAO($db);
@@ -45,9 +45,9 @@ foreach ($oid as $o) {
 
 $db->closeConnection($conn);	
 
-$s = new SmartyTwitalytic();
+$s = new SmartyThinkTank();
 $s->clear_cache($template, $cache_key);
 
-echo 'Assignment complete.<br /><a href="'.$TWITALYTIC_CFG['site_root_path'].'?u='.$_GET['u'].'#replies">Back home</a>.';
+echo 'Assignment complete.<br /><a href="'.$THINKTANK_CFG['site_root_path'].'?u='.$_GET['u'].'#replies">Back home</a>.';
 
 ?>

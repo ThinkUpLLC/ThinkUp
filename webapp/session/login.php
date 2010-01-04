@@ -15,7 +15,7 @@ $user_email = mysql_real_escape_string($_POST['email']);
 if ($_POST['Submit']=='Login')
 {
 $md5pass = md5($_POST['pwd']);
-$sql = "SELECT id,user_email, user_name FROM ".$TWITALYTIC_CFG['table_prefix']."owners WHERE 
+$sql = "SELECT id,user_email, user_name FROM ".$THINKTANK_CFG['table_prefix']."owners WHERE 
             user_email = '$user_email' AND 
             user_pwd = '$md5pass' AND user_activated='1'"; 
 			
@@ -37,7 +37,7 @@ $num = mysql_num_rows($result);
 		} else
 		{
 		//header("Location: myaccount.php");
-		header("Location: ".$TWITALYTIC_CFG['site_root_path']);
+		header("Location: ".$THINKTANK_CFG['site_root_path']);
 		}
 		//echo "Logged in...";
 		exit();
@@ -78,5 +78,5 @@ exit();
   </tr>
 </table>
 	<br /><br />
-<center><p><a href="http://github.com/ginatrapani/twitalytic/tree/master">Set up your own Twitalytic instance</a>.<br /><br />
+<center><p><a href="http://thinktankapp.com">Set up your own ThinkTank instance</a>.<br /><br />
 Back to <a href="../public.php">the public timeline</a>.</center>

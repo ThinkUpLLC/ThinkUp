@@ -24,7 +24,7 @@ else
 $tu = $_POST['twitter_username'];
 $tp = $_POST['twitter_password'];
 
-$db = new Database($TWITALYTIC_CFG);
+$db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 $od = new OwnerDAO($db);
 
@@ -72,7 +72,7 @@ if ( $twitter_id > 0 ) {
 	echo 'Twitter authentication failed.';
 }
 
-echo '<br /> <a href="'.$TWITALYTIC_CFG['site_root_path'].'account/">Back to your account</a>.';
+echo '<br /> <a href="'.$THINKTANK_CFG['site_root_path'].'account/">Back to your account</a>.';
 
 
 ?>

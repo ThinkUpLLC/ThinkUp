@@ -1,5 +1,5 @@
 <?php
 
-$INCLUDE_PATH = "/your-path-to/twitalytic/common/";
+$INCLUDE_PATH = "/your-path-to/thinktank/common/";
 
 ?>

@@ -21,12 +21,12 @@ class TestOfLogging extends UnitTestCase {
     }
     
     function testCreatingNewLogger() {
-        global $TWITALYTIC_CFG;
-        $logger = new Logger($TWITALYTIC_CFG['log_location']);
+        global $THINKTANK_CFG;
+        $logger = new Logger($THINKTANK_CFG['log_location']);
         $logger->logStatus('Should write this to the log', get_class($this));
-        $this->assertTrue(file_exists($TWITALYTIC_CFG['log_location']), 'File created');
+        $this->assertTrue(file_exists($THINKTANK_CFG['log_location']), 'File created');
         
-        $messages = file($TWITALYTIC_CFG['log_location']);
+        $messages = file($THINKTANK_CFG['log_location']);
         $this->assertWantedPattern('/Should write this to the log/', $messages[sizeof($messages) - 1]);
 		
 		$logger->setUsername('ginatrapani');

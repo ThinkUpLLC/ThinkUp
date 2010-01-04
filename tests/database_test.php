@@ -22,22 +22,22 @@ class TestOfDatabase extends UnitTestCase {
     }
     
     function testCreatingNewDatabase() {
-        global $TWITALYTIC_CFG;
-        $db = new Database($TWITALYTIC_CFG);
-		$this->assertTrue($db->db_host==$TWITALYTIC_CFG['db_host'], "Database vars set");
+        global $THINKTANK_CFG;
+        $db = new Database($THINKTANK_CFG);
+		$this->assertTrue($db->db_host==$THINKTANK_CFG['db_host'], "Database vars set");
     }
 	
 	function testCreatingNewDatabaseConnection() {
-        global $TWITALYTIC_CFG;
-        $db = new Database($TWITALYTIC_CFG);
+        global $THINKTANK_CFG;
+        $db = new Database($THINKTANK_CFG);
 		$conn = $db->getConnection();
         $this->assertTrue(isset($conn), 'Connection created');
 		$db->closeConnection($conn);
 	}
 
 	function testExecutingSQLWithTablePrefixAndGMTOffset() {
-        global $TWITALYTIC_CFG;
-        $db = new Database($TWITALYTIC_CFG);
+        global $THINKTANK_CFG;
+        $db = new Database($THINKTANK_CFG);
 		$conn = $db->getConnection();
 		$sql_result = $db->exec("SELECT 
 				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -57,10 +57,10 @@ class TestOfDatabase extends UnitTestCase {
 	}
 
 	function testCreatingBadDatabaseConnection() {
-        global $TWITALYTIC_CFG;
-		$TWITALYTIC_CFG['db_password'] = 'wrong password';
-		$TWITALYTIC_CFG['table_prefix'] = '';
-        $db = new Database($TWITALYTIC_CFG);
+        global $THINKTANK_CFG;
+		$THINKTANK_CFG['db_password'] = 'wrong password';
+		$THINKTANK_CFG['table_prefix'] = '';
+        $db = new Database($THINKTANK_CFG);
 		$this->expectException( new Exception("ERROR: Access denied for user 'twitalytic'@'localhost' (using password: YES)localhosttwitalyticwrong password") ); 
 		$conn = $db->getConnection();
         $this->assertTrue($conn==null, 'Connection not set');
@@ -68,10 +68,10 @@ class TestOfDatabase extends UnitTestCase {
 	}
 
 	function testExecutingSQLWithUnSetTablePrefixShouldFail() {
-        global $TWITALYTIC_CFG;
-		$TWITALYTIC_CFG['table_prefix'] = 'tw_';
+        global $THINKTANK_CFG;
+		$THINKTANK_CFG['table_prefix'] = 'tw_';
 		$this->expectException(); 
-        $db = new Database($TWITALYTIC_CFG);
+        $db = new Database($THINKTANK_CFG);
 		$conn = $db->getConnection();
 		$sql_result = $db->exec("SELECT 
 				user_id 

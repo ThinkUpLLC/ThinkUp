@@ -6,8 +6,8 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
 $cfg = new Config();
-$db = new Database($TWITALYTIC_CFG);
-$s = new SmartyTwitalytic();
+$db = new Database($THINKTANK_CFG);
+$s = new SmartyThinkTank();
 $c = new Crawler();
 
 $conn = $db->getConnection();

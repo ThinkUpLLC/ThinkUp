@@ -8,7 +8,7 @@ class TwitterAPIAccessor {
     var $twitter_username;
     var $twitter_password;
     
-    function TwitterAPIAccessor($twitter_username, $twitter_password, $app_title = "Twitalytic") {
+    function TwitterAPIAccessor($twitter_username, $twitter_password, $app_title = "ThinkTank") {
         $this->twitter_username = $twitter_username;
         $this->twitter_password = $twitter_password;
         list($this->twitter_username, $this->cURL_source) = $this->prepAPI($twitter_username);

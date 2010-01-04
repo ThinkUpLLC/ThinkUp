@@ -26,7 +26,7 @@ require_once 'class.Logger.php';
 require_once 'class.Follow.php';
 
 require_once 'config.inc.php';
-require_once($TWITALYTIC_CFG['smarty_path'].'Smarty.class.php');
+require_once($THINKTANK_CFG['smarty_path'].'Smarty.class.php');
 require_once 'class.SmartyTwitalytic.php';
 
 ?>

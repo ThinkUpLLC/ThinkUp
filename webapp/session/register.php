@@ -7,8 +7,8 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
  
-if ( !$TWITALYTIC_CFG['is_registration_open']) {
-	echo 'So sorry, but registration on this instance of Twitalytic is closed. <br /><br /><a href="http://github.com/ginatrapani/twitalytic/tree/master">Install Twitalytic on your own server</a> or go back to <a href="'.$TWITALYTIC_CFG['site_root_path'].'public.php">the public timeline</a>.';
+if ( !$THINKTANK_CFG['is_registration_open']) {
+	echo 'So sorry, but registration on this instance of Twitalytic is closed. <br /><br /><a href="http://github.com/ginatrapani/twitalytic/tree/master">Install Twitalytic on your own server</a> or go back to <a href="'.$THINKTANK_CFG['site_root_path'].'public.php">the public timeline</a>.';
 	die();
 } else {
 
@@ -31,7 +31,7 @@ if ($_POST['Submit'] == 'Register')
 	{ 
 			 die("Invalid code entered. Please enter the correct code as shown in the Image");
   		} 
-	$rs_duplicates = mysql_query("select id from ".$TWITALYTIC_CFG['table_prefix']."owners where user_email='$_POST[email]'");
+	$rs_duplicates = mysql_query("select id from ".$THINKTANK_CFG['table_prefix']."owners where user_email='$_POST[email]'");
 	$duplicates = mysql_num_rows($rs_duplicates);
 	
 	if ($duplicates > 0)
@@ -48,14 +48,14 @@ if ($_POST['Submit'] == 'Register')
 	$activ_code = rand(1000,9999);
 	$server = $_SERVER['HTTP_HOST'];
 	$host = ereg_replace('www.','',$server);
-	mysql_query("INSERT INTO ".$TWITALYTIC_CFG['table_prefix']."owners
+	mysql_query("INSERT INTO ".$THINKTANK_CFG['table_prefix']."owners
 	              (`user_email`,`user_pwd`,`country`,`joined`,`activation_code`,`full_name`)
 				  VALUES
 				  ('$_POST[email]','$md5pass','$_POST[country]',now(),'$activ_code','$_POST[full_name]')") or die(mysql_error());
 	
 	$message = 
-"Thank you for registering an account with ".$TWITALYTIC_CFG['app_title'].". Click on the link below to activate your account...\n\n
-http://$server/".$TWITALYTIC_CFG['site_root_path']."session/activate.php?usr=$_POST[email]&code=$activ_code \n\n
+"Thank you for registering an account with ".$THINKTANK_CFG['app_title'].". Click on the link below to activate your account...\n\n
+http://$server/".$THINKTANK_CFG['site_root_path']."session/activate.php?usr=$_POST[email]&code=$activ_code \n\n
 _____________________________________________
 Thank you. This is an automated response. PLEASE DO NOT REPLY.
 ";

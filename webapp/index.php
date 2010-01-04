@@ -13,7 +13,7 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
 
-$db = new Database($TWITALYTIC_CFG);
+$db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 
 $od = new OwnerDAO($db);
@@ -34,13 +34,13 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 } else {
 	$i = $id->getFreshestByOwnerId($owner->id);
 	if ( !isset($i) && $i == null ) {
-		echo 'You have no Twitter accounts configured. <a href="'.$TWITALYTIC_CFG['site_root_path'].'account/">Set up a Twitter account here</a>';
+		echo 'You have no Twitter accounts configured. <a href="'.$THINKTANK_CFG['site_root_path'].'account/">Set up a Twitter account here</a>';
 		$db->closeConnection($conn);
 		die;
 	}
 }
 
-$s = new SmartyTwitalytic();
+$s = new SmartyThinkTank();
 
 if(!$s->is_cached('index.tpl', $i->twitter_username."-".$_SESSION['user'])) {
 

@@ -9,7 +9,7 @@ require_once("init.php");
 
 
 
-$db = new Database($TWITALYTIC_CFG);
+$db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 
 $od = new OwnerDAO($db);
@@ -35,7 +35,7 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 if (!isset($_REQUEST['d']) ) 
 	$_REQUEST['d'] = "all-tweets";
 
-$s = new SmartyTwitalytic();
+$s = new SmartyThinkTank();
 
 if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user']."-".$_REQUEST['d'])) {
 

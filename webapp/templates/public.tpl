@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
  <HEAD>
-  <TITLE>Twitalytic Public Timeline</TITLE>
+  <TITLE>ThinkTank Public Timeline</TITLE>
   	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
 
 	<style type="text/css">{literal}
@@ -141,7 +141,7 @@
 
 </div>
 <h2>Replies to a Single Tweet</h2>
-<p>Archived and Curated with <a href="http://smarterware.org/2877/twitalytic-alpha-preview-archiving-curating-and-threading-tweets">Twitalytic</a></p>
+<p>Archived and Curated with <a href="http://thinktankapp.com">ThinkTank</a></p>
 
 <h1><a href="{$site_root}public.php">&larr; Back to the Public Timeline</a></h1>
 {/if}
@@ -157,7 +157,7 @@
 
 </div>
 
-<p>Tweets and Replies Archived and Curated with <a href="http://smarterware.org/2877/twitalytic-alpha-preview-archiving-curating-and-threading-tweets">Twitalytic</a></p>
+<p>Tweets and Replies Archived and Curated with <a href="http://thintankapp.com">ThinkTank</a></p>
 
 {/if}
 

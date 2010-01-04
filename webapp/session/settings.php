@@ -16,7 +16,7 @@ if ($oldpwd == md5($_POST['oldpwd']))
  {
   $newpasswd = md5($_POST['newpwd']);
   
-  mysql_query("Update ".$TWITALYTIC_CFG['table_prefix'])."owners
+  mysql_query("Update ".$THINKTANK_CFG['table_prefix'])."owners
   				SET user_pwd = '$newpasswd'
 				WHERE user_email = '$_SESSION[user]'
 				") or die(mysql_error());

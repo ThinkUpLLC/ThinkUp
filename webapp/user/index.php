@@ -8,7 +8,7 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
-$db = new Database($TWITALYTIC_CFG);
+$db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 
 $ud = new UserDAO($db);
@@ -43,6 +43,6 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 		$s->display('user.index.tpl', $i->twitter_username."-".$user['user_name']);
 	}
 } else {
-	echo 'This user is not in the system.<br /><a href="'. $TWITALYTIC_CFG['site_root_path'] .'">back home</a>';
+	echo 'This user is not in the system.<br /><a href="'. $THINKTANK_CFG['site_root_path'] .'">back home</a>';
 }
 ?>

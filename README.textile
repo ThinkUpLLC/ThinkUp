@@ -1,6 +1,6 @@
-h1. Twitalytic
+h1. ThinkTank
 
-Twitter data crawler, replies archiver, and statistics generator.
+Capture and organize replies to status updates on Twitter (and beyond).
 
 
 h2. WARNING: Pre-alpha code, PROCEED AT YOUR OWN RISK!
@@ -21,19 +21,19 @@ In future versions, this will get easier.
 
 h3. Set up database
 
-* Create a database and select it, i.e., CREATE DATABASE twitalytic
+* Create a database and select it, i.e., CREATE DATABASE thinktank
 * Build tables with <code>build-db.sql</code>
 
 h3. Register your app with Twitter (for OAuth support)
 
-* Log into Twitter and "register your Twitalytic instance":http://twitter.com/oauth_clients/. Set the callback URL to <code>http://yourserver.com/path-to-twitalytic-webapp/account/oauth.php</code>. Write down the items labeled "Consumer key" and "Consumer secret."
+* Log into Twitter and "register your ThinkTank instance":http://twitter.com/oauth_clients/. Set the callback URL to <code>http://yourserver.com/path-to-thinktank-webapp/account/oauth.php</code>. Write down the items labeled "Consumer key" and "Consumer secret."
 
 h3. Configure the app
 
-* *Shared libraries*: Rename <code>twitalytic/common/config.sample.inc.php</code> to <code>config.inc.php</code>. Add your database credentials, file and webapp paths, and the key/secret you got from Twitter in the previous step.
-* *Crawler*: Rename <code>twitalytic/crawler/config.crawler.sample.inc.php</code> to <code>config.crawler.inc.php</code> and set include path to the absolute location of <code>twitalytic/common</code>
-* *Webapp*: Rename <code>twitalytic/webapp/config.webapp.sample.inc.php</code> to <code>config.webapp.inc.php</code> and set include path to the absolute location of <code>twitalytic/common</code>
-* *Webserver (optional)*: Set <code>httpd.conf</code> DocumentRoot to <code>twitalytic/webapp/</code>
+* *Shared libraries*: Rename <code>thinktank/common/config.sample.inc.php</code> to <code>config.inc.php</code>. Add your database credentials, file and webapp paths, and the key/secret you got from Twitter in the previous step.
+* *Crawler*: Rename <code>thinktank/crawler/config.crawler.sample.inc.php</code> to <code>config.crawler.inc.php</code> and set include path to the absolute location of <code>thintank/common</code>
+* *Webapp*: Rename <code>thinktank/webapp/config.webapp.sample.inc.php</code> to <code>config.webapp.inc.php</code> and set include path to the absolute location of <code>thinktank/common</code>
+* *Webserver (optional)*: Set <code>httpd.conf</code> DocumentRoot to <code>thinktank/webapp/</code>
 
 
 h2. RUN
@@ -50,4 +50,4 @@ To view what's going on with the crawler, use this command:
 
 Cron the crawler's run command to go at least once an hour.
 
-See also "this helpful HOWTO on installing Twitalytic on Dreamhost":http://wiki.github.com/ginatrapani/twitalytic/installing-twitalytic-on-dreamhost.
+See also "this helpful HOWTO on installing ThinkTank on Dreamhost":http://wiki.github.com/ginatrapani/twitalytic/installing-twitalytic-on-dreamhost.

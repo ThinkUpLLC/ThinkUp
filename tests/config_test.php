@@ -19,9 +19,9 @@ class TestOfConfig extends UnitTestCase {
     }
 
 	function testCreatingNewConfig() {
-		global $TWITALYTIC_CFG;
+		global $THINKTANK_CFG;
 		$cfg = new Config();
-		$this->assertTrue($cfg->log_location == $TWITALYTIC_CFG['log_location'], 'Log location set');
+		$this->assertTrue($cfg->log_location == $THINKTANK_CFG['log_location'], 'Log location set');
 	}
 }
 
