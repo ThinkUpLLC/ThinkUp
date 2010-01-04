@@ -33,7 +33,7 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	die;
 }
 
-$s = new SmartyTwitalytic();
+$s = new SmartyThinkTank();
 $s->assign('tweets', $tweets);
 $s->display('status.export.tpl', $username);
 

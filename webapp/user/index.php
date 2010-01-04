@@ -23,7 +23,7 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 	if ( isset($i)) {
 		$cfg = new Config($i->twitter_username, $i->twitter_user_id);
 		
-		$s = new SmartyTwitalytic();
+		$s = new SmartyThinkTank();
 		if(!$s->is_cached('user.index.tpl', $i->twitter_username."-".$user['user_name'])) {
 
 			$s->assign('profile', $user);
