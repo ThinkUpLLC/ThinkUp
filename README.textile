@@ -5,7 +5,7 @@ Capture and organize replies to status updates on Twitter (and beyond).
 
 h2. WARNING: Pre-alpha code, PROCEED AT YOUR OWN RISK!
 
-This is not production code. This is a pre-alpha web application. The intended audience is server administrators with experience installing and troubleshooting PHP/MySQL hosted web applications. While Twitaltyic uses OAuth to access Twitter, the webapp's login is not as secure as it should be. Right now this code is for experimentation and tinkering only. Do not run on a public, production server. You have been warned.
+This is not production code. This is a pre-alpha web application. The intended audience is server administrators with experience installing and troubleshooting PHP/MySQL hosted web applications. While ThinkTank uses OAuth to access Twitter, the webapp's login is not as secure as it should be. Right now this code is for experimentation and tinkering only. Do not run on a public, production server. You have been warned.
 
 
 h2. SYSTEM REQUIREMENTS

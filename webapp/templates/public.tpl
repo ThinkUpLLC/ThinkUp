@@ -157,7 +157,7 @@
 
 </div>
 
-<p>Tweets and Replies Archived and Curated with <a href="http://thintankapp.com">ThinkTank</a></p>
+<p>Tweets and Replies Archived and Curated with <a href="http://thinktankapp.com">ThinkTank</a></p>
 
 {/if}
 

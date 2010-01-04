@@ -16,7 +16,7 @@ $td = new TweetDAO($db);
 
 if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_REQUEST['t']) ){
 	$status_id = $_REQUEST['t'];
-	$s = new SmartyTwitalytic();
+	$s = new SmartyThinkTank();
 	
 	if(!$s->is_cached('status.index.tpl', $status_id)) {
 		$tweet = $td->getTweet($status_id);
