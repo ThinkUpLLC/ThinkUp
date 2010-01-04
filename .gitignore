@@ -4,6 +4,6 @@ crawler/config.crawler.inc.php
 tests/config.tests.inc.php
 webapp/templates_c/*.php
 webapp/templates_c/cache/*.tpl
-crawler/logs/crawl.log
+crawler/logs/crawler.log
 smarty/*
 .*

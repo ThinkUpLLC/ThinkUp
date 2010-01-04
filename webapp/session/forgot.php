@@ -1,9 +1,13 @@
 <?php
+chdir("..");
+require_once('config.webapp.inc.php');
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
+require_once("init.php");
 include 'dbc.php';
 if ($_POST['Submit']=='Send')
 {
 $host = $_SERVER['HTTP_HOST'];
-$rs_search = mysql_query("select user_email from owners where user_email='$_POST[email]'");
+$rs_search = mysql_query("select user_email from ".$TWITALYTIC_CFG['table_prefix']."owners where user_email='$_POST[email]'");
 $user_count = mysql_num_rows($rs_search);
 
 if ($user_count != 0)
@@ -11,7 +15,7 @@ if ($user_count != 0)
 $newpwd = rand(1000,9999);
 $host = $_SERVER['HTTP_HOST'];
 $newmd5pwd = md5($newpwd);
-mysql_query("UPDATE users set user_pwd='$newmd5pwd' where user_email='$_POST[email]'");
+mysql_query("UPDATE ".$TWITALYTIC_CFG['table_prefix']."owners set user_pwd='$newmd5pwd' where user_email='$_POST[email]'");
 $message = 
 "You have requested new login details from $host. Here are the login details...\n\n
 User Name: $_POST[email] \n
