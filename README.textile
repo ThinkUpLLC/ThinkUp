@@ -26,7 +26,9 @@ h3. Set up database
 
 h3. Register your app with Twitter (for OAuth support)
 
-* Log into Twitter and "register your ThinkTank instance":http://twitter.com/oauth_clients/. Set the callback URL to <code>http://yourserver.com/path-to-thinktank-webapp/account/oauth.php</code>. Write down the items labeled "Consumer key" and "Consumer secret."
+* Log into Twitter and "register your ThinkTank instance":http://twitter.com/oauth_clients/. Set the callback URL to 
+<code>http://yourserver.com/path-to-thinktank-webapp/account/oauth.php</code> 
+Write down the items labeled "Consumer key" and "Consumer secret."
 
 h3. Configure the app
 
