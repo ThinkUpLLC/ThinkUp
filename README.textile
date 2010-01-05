@@ -19,6 +19,13 @@ h2. INSTALL
 
 In future versions, this will get easier.
 
+h3. Install application files
+
+* Download source code. Save it one level below your web site's DocumentRoot. (That is, if your site's DocumentRoot is <code>/var/www/vhosts/example.com/httpdocs/</code>, save ThinkTank files in <code>/var/www/vhosts/example.com/thinktank/<code> folder.
+* Create a symbolic link to the <code>thinktank/webapp</code> directory in your site's DocumentRoot folder. To do so, <code>cd</code> to the DocumentRoot, and use <code>ln -s ../thinktank/webapp/ thinktank</code> command.
+* Make the <code>thinktank/webapp/templates_c/</code> and <code>thinktank/webapp/templates_c/cache/</code> directories writable by the web server.
+* *Note for upgraders:* If you're upgrading a previous installation, delete your cookies (in Firefox under Preferences / Privacy / delete individual cookies).
+
 h3. Set up database
 
 * Create a database and select it, i.e., CREATE DATABASE thinktank
@@ -35,7 +42,6 @@ h3. Configure the app
 * *Shared libraries*: Rename <code>thinktank/common/config.sample.inc.php</code> to <code>config.inc.php</code>. Add your database credentials, file and webapp paths, and the key/secret you got from Twitter in the previous step.
 * *Crawler*: Rename <code>thinktank/crawler/config.crawler.sample.inc.php</code> to <code>config.crawler.inc.php</code> and set include path to the absolute location of <code>thintank/common</code>
 * *Webapp*: Rename <code>thinktank/webapp/config.webapp.sample.inc.php</code> to <code>config.webapp.inc.php</code> and set include path to the absolute location of <code>thinktank/common</code>
-* *Webserver (optional)*: Set <code>httpd.conf</code> DocumentRoot to <code>thinktank/webapp/</code>
 
 
 h2. RUN
@@ -52,4 +58,7 @@ To view what's going on with the crawler, use this command:
 
 Cron the crawler's run command to go at least once an hour.
 
-See also "this helpful HOWTO on installing ThinkTank on Dreamhost":http://wiki.github.com/ginatrapani/twitalytic/installing-twitalytic-on-dreamhost.
+
+h2. SUPPORT AND MORE INFORMATION
+
+To discuss ThinkTank, "post to the project mailing list":http://groups.google.com/group/thinktankapp. For deeper documentation in progress, see "the ThinkTank wiki":http://wiki.github.com/ginatrapani/thinktank, which offers such gems as a detailed, helpful "HOWTO on installing ThinkTank on Dreamhost":http://wiki.github.com/ginatrapani/thinktank/how-to-install-thinktank-on-dreamhost.
