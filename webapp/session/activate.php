@@ -23,6 +23,4 @@ echo "<h3>Thank you </h3>Email confirmed and account activated. You can <a href=
 } else
 { echo "ERROR: Incorrect activation code...not valid"; }
 
-
 ?>
-
