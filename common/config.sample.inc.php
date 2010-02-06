@@ -30,6 +30,14 @@ $THINKTANK_CFG['bitly_login'] = 'yourbitlylogin';
 // Get the following at http://flickr.com
 $THINKTANK_CFG['flickr_api_key'] = '';
 
+// To enable recaptcha set enable to TRUE 
+// and fill in your keys and libpath
+$THINKTANK_CFG['recaptcha_enable'] = FALSE;
+$THINKTANK_CFG['recaptcha_path'] = ""
+$THINKTANK_CFG['recaptcha_public_key'] = "";
+$THINKTANK_CFG['recaptcha_private_key'] = "";
+
+
 /** DATABASE CONFIG **/
 $THINKTANK_CFG['db_host'] = "localhost";
 $THINKTANK_CFG['db_user'] = "user";

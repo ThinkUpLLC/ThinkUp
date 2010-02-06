@@ -12,7 +12,6 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
-
 $db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 
@@ -105,8 +104,6 @@ $db->closeConnection($conn);
 
 $s->display('index.tpl', $i->twitter_username."-".$_SESSION['user']);
 
-
-
 /*  People you've gotten the most replies from in the last XXX months (use date of oldest reply)
 
 	select 
@@ -136,8 +133,5 @@ $s->display('index.tpl', $i->twitter_username."-".$_SESSION['user']);
 			total_replies desc
 		limit 10;	
 */
-
-
 }
-
 ?>

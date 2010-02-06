@@ -12,7 +12,7 @@ require_once 'class.LongUrlAPIAccessor.php';
 require_once 'class.FlickrAPIAccessor.php';	
 require_once 'class.Crawler.php';		
 require_once 'class.Utils.php';	
-
+require_once 'class.captcha.php';
 
 require_once 'class.TwitterAPIAccessorOAuth.php';
 require_once 'OAuth.php';		
