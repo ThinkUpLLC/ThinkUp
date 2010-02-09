@@ -1,4 +1,5 @@
 common/config.inc.php
+common/recaptchalib.php
 webapp/config.webapp.inc.php
 crawler/config.crawler.inc.php
 tests/config.tests.inc.php

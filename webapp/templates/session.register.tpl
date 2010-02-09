@@ -177,7 +177,7 @@
             <option value="Ukraine">Ukraine</option>
             <option value="UAE">UAE</option>
             <option value="UK">UK</option>
-            <option value="USA">USA</option>
+            <option value="USA" selected="true">USA</option>
             <option value="Uruguay">Uruguay</option>
             <option value="Uzbekistan">Uzbekistan</option>
             <option value="Vanuatu">Vanuatu</option>

@@ -12,8 +12,6 @@ require_once 'class.LongUrlAPIAccessor.php';
 require_once 'class.FlickrAPIAccessor.php';	
 require_once 'class.Crawler.php';		
 require_once 'class.Utils.php';	
-require_once 'class.captcha.php';
-
 require_once 'class.TwitterAPIAccessorOAuth.php';
 require_once 'OAuth.php';		
 require_once 'twitterOAuth.php';		
@@ -26,6 +24,10 @@ require_once 'class.Logger.php';
 require_once 'class.Follow.php';
 
 require_once 'config.inc.php';
+
+if ($THINKTANK_CFG['recaptcha_enable'])
+	require_once 'class.Captcha.php';
+
 require_once($THINKTANK_CFG['smarty_path'].'Smarty.class.php');
 require_once 'class.SmartyThinkTank.php';
 

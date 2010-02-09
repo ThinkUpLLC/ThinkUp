@@ -29,7 +29,7 @@
 			You have no Twitter accounts configured.
 			{/if}
 			<br /><br />
-			<b>Set up a Twitter account</b><br /><br /> <a href="{$oauthorize_link}">Authorize Twitalytic to read your Twitter data&rarr;</a>
+			<b>Set up a Twitter account</b><br /><br /> <a href="{$oauthorize_link}">Authorize ThinkTank to read your Twitter data&rarr;</a>
 			
 		</div>
 
