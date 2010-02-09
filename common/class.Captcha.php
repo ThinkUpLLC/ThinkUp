@@ -4,11 +4,11 @@ class Captcha {
     var $msg = FALSE;
     private $pubkey;
     private $prikey;
-	private $site_root;
-	
+    private $site_root;
+    
     public function __construct($config) {
-		$this->site_root = $config['site_root_path'];
-
+        $this->site_root = $config['site_root_path'];
+        
         if ($config['recaptcha_enable']) {
             $this->type = 1;
             require_once ($config['recaptcha_path']."/recaptchalib.php");
