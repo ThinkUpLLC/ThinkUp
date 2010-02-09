@@ -13,8 +13,7 @@ if (!$THINKTANK_CFG['is_registration_open']) {
 } else {
     $s = new SmartyThinkTank();
     include ('dbc.php');
-    if ($THINKTANK_CFG['recaptcha_enable'])
-        $captcha = new Captcha($THINKTANK_CFG);
+    $captcha = new Captcha($THINKTANK_CFG);
     if ($_POST['Submit'] == 'Register') {
         if (strlen($_POST['email']) < 5) {
             die("Incorrect email. Please enter valid email address..");
@@ -22,7 +21,7 @@ if (!$THINKTANK_CFG['is_registration_open']) {
         if (strcmp($_POST['pass1'], $_POST['pass2']) || empty($_POST['pass1'])) {
             //die ("Password does not match");
             die("ERROR: Password does not match or empty.");
-        } elseif ($THINKTANK_CFG['recaptcha_enable'] && !$captcha->check()) {
+        } elseif ( !$captcha->check()) {
         } else {
             $rs_duplicates = mysql_query("select id from ".$THINKTANK_CFG['table_prefix']."owners where user_email='$_POST[email]'");
             $duplicates = mysql_num_rows($rs_duplicates);
@@ -56,10 +55,9 @@ if (!$THINKTANK_CFG['is_registration_open']) {
         $s->assign('name', $_POST["full_name"]);
         $s->assign('mail', $_POST["email"]);
     }
-    if ($THINKTANK_CFG['recaptcha_enable']) {
-        $challenge = $captcha->generate($msg);
-        $s->assign('captcha', $challenge);
-    }
+    $challenge = $captcha->generate($msg);
+    $s->assign('captcha', $challenge);
+
     if (isset($_GET['msg'])) {
         $s->assign('msg', $_GET[msg]);
         $s->display('session.register.tpl', sha1($_GET['msg']));

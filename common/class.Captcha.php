@@ -5,7 +5,7 @@ class Captcha {
     private $pubkey;
     private $prikey;
     public function __construct($config) {
-        if ($config['recaptcha_enable']."/recaptchalib.php") {
+        if ($config['recaptcha_enable']) {
             $this->type = 1;
             require_once ($config['recaptcha_path']."/recaptchalib.php");
             $this->pubkey = $config['recaptcha_public_key'];
