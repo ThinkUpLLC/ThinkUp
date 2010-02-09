@@ -4,7 +4,11 @@ class Captcha {
     var $msg = FALSE;
     private $pubkey;
     private $prikey;
+	private $site_root;
+	
     public function __construct($config) {
+		$this->site_root = $config['site_root_path'];
+
         if ($config['recaptcha_enable']) {
             $this->type = 1;
             require_once ($config['recaptcha_path']."/recaptchalib.php");
@@ -22,9 +26,9 @@ class Captcha {
                 break;
             default:
                 if (isset($this->msg)) {
-                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"/captcha/pngimg.php\" align=\"middle\"><span style=\"color: #FF0000\">".$this->msg."</span>";
+                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"".$this->site_root."/captcha/pngimg.php\" align=\"middle\"><span style=\"color: #FF0000\">".$this->msg."</span>";
                 } else {
-                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"/captcha/pngimg.php\" align=\"middle\">&nbsp;";
+                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"".$this->site_root."/captcha/pngimg.php\" align=\"middle\">&nbsp;";
                 }
                 break;
         }
