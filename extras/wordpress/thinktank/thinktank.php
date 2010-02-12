@@ -58,9 +58,8 @@ function thinktank_chron_archive_handler($atts) {
 // [thinktank_status_replies status_id="12345"]
 function thinktank_replies_handler($atts) {
 
-    extract(shortcode_atts(array('status_id'=>0,
-        'twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#status_id#/">@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
-        
+    extract(shortcode_atts(array('status_id'=>0, 'twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#status_id#/">@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
+    
     $options_array = thinktank_get_options_array();
     
     if ($options_array['thinktank_server']['value'] != '')
@@ -187,13 +186,7 @@ function thinktank_menu() {
 
 function thinktank_get_options_array() {
 
-    $arr = array('thinktank_twitter_username'=>array('key'=>'thinktank_twitter_username', 'label'=>'Twitter username:', 'description'=>'Override this by using the twitter_username parameter in the shortcode', 'type'=>'text', 'value'=>get_option('thinktank_twitter_username')),
-    'thinktank_table_prefix'=>array('key'=>'thinktank_table_prefix', 'label'=>'ThinkTank table prefix:', 'description'=>'', 'type'=>'text', 'value'=>get_option('thinktank_table_prefix')),
-    'thinktank_server'=>array('key'=>'thinktank_server', 'label'=>'ThinkTank database server:', 'description'=>'', 'type'=>'text', 'value'=>get_option('thinktank_server')),
-    'thinktank_db'=>array('key'=>'thinktank_db', 'label'=>'ThinkTank database name:', 'description'=>'', 'type'=>'text', 'value'=>get_option('thinktank_db')),
-    'thinktank_dbusername'=>array('key'=>'thinktank_dbusername', 'label'=>'ThinkTank database username:', 'description'=>'', 'type'=>'text', 'value'=>get_option('thinktank_dbusername')),
-    'thinktank_dbpw'=>array('key'=>'thinktank_dbpw', 'label'=>'ThinkTank database password:', 'description'=>'', 'type'=>'password', 'value'=>get_option('thinktank_dbpw'))
-    );
+    $arr = array('thinktank_twitter_username'=>array('key'=>'thinktank_twitter_username', 'label'=>'Default Twitter username:', 'description'=>'(Required) Override this by using the twitter_username parameter in the shortcode', 'type'=>'text', 'value'=>get_option('thinktank_twitter_username')), 'thinktank_table_prefix'=>array('key'=>'thinktank_table_prefix', 'label'=>'ThinkTank table prefix:', 'description'=>'(Optional) For example <i>ta_</i>', 'type'=>'text', 'value'=>get_option('thinktank_table_prefix')), 'thinktank_server'=>array('key'=>'thinktank_server', 'label'=>'ThinkTank database server:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'text', 'value'=>get_option('thinktank_server')), 'thinktank_db'=>array('key'=>'thinktank_db', 'label'=>'ThinkTank database name:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'text', 'value'=>get_option('thinktank_db')), 'thinktank_dbusername'=>array('key'=>'thinktank_dbusername', 'label'=>'ThinkTank database username:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'text', 'value'=>get_option('thinktank_dbusername')), 'thinktank_dbpw'=>array('key'=>'thinktank_dbpw', 'label'=>'ThinkTank database password:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'password', 'value'=>get_option('thinktank_dbpw')));
     return $arr;
     
 }
@@ -232,12 +225,22 @@ echo "<h2>".__('ThinkTank Plugin Options', 'mt_trans_domain')."</h2>";
 ?>
 <form name="form1" method="post" action="">
     <input type="hidden" name="<?php echo $options_hidden_field_name; ?>" value="Y">
-    <?php foreach ($options_array as $opt) { ?>
-    <p>
+    <table>
+        <?php foreach ($options_array as $opt) { ?>
+        <tr>
+            <td align="right" valign="top">
 <?php _e($opt['label'], 'mt_trans_domain'); ?>
-         <input type="<?php echo $opt['type']; ?>" name="<?php echo $opt['key'] ?>" value="<?php echo get_option( $opt['key']); ?>" size="20">
-    </p>
-    <?php } ?>
+            </td>
+            <td>
+                <input type="<?php echo $opt['type']; ?>" name="<?php echo $opt['key'] ?>" value="<?php echo get_option( $opt['key']); ?>" size="20">
+                <br/>
+                <small>
+<?php echo $opt['description']; ?>
+                </small>
+            </td>
+        </tr>
+        <?php } ?>
+    </table>
     <p class="submit">
         <input type="submit" name="Submit" value="<?php _e('Update Options', 'mt_trans_domain' ) ?>" />
     </p>
