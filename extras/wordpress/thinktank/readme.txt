@@ -3,7 +3,7 @@ Contributors: ginatrapani
 Tags: thinktank, twitter
 Requires at least: 2.9.1
 Tested up to: 2.9.1
-Stable tag: 0.4
+Stable tag: 0.5
 
 Displays Twitter data via ThinkTank in a post or page via a shortcode.
 
@@ -19,11 +19,18 @@ Displays Twitter data pulled from the [ThinkTank](http://thinktankapp.com) on yo
 
 1. Upload `thinktank` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Place the right shortcode in a post or page. For example, `[thinktank_chronological_archive twitter_username='ginatrapani']` lists
-all tweets for ginatrapani without replies. `[thinktank_status_reply_count status_id="12345"]` outputs the number of replies for tweet ID 12345.
-`[thinktank_status_replies status_id="12345"]` lists all replies for status id 12345.
+3. In the WordPress administration area, under Settings, click on ThinkTank. There, save your default Twitter username and database details (if the ThinkTank database is separate from WordPress).
+4. Place the right shortcode in a post or page. 
+For example, 
+`[thinktank_chronological_archive]` lists all tweets for the default username without replies. 
+`[thinktank_status_reply_count status_id="12345"]` outputs the number of replies for tweet ID 12345 to the default username.
+`[thinktank_status_replies status_id="12345"]` lists all replies for status id 12345 to the default username. 
+Add the `twitter_username="yourtwittername"` parameter to the shortcode to use a Twitter name other than the default.
 
 == Changelog ==
+
+= 0.5 =
+* Added field descriptions in the Options panel; Added rudimentary encryption of the database password so it's not stored in plain text in the database.
 
 = 0.4 =
 * Added Options panel to set database values without editing the PHP file.

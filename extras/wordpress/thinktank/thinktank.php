@@ -1,9 +1,9 @@
 <?php 
 /*
  Plugin Name: ThinkTank Integration
- Plugin URI: http://github.com/ginatrapani/thinktank
+ Plugin URI: http://thinktankapp.com
  Description: Displays ThinkTank data on your WordPress blog.
- Version: 0.4
+ Version: 0.5
  Author: Gina Trapani
  Author URI: http://ginatrapani.org
  */
@@ -186,9 +186,26 @@ function thinktank_menu() {
 
 function thinktank_get_options_array() {
 
-    $arr = array('thinktank_twitter_username'=>array('key'=>'thinktank_twitter_username', 'label'=>'Default Twitter username:', 'description'=>'(Required) Override this by using the twitter_username parameter in the shortcode', 'type'=>'text', 'value'=>get_option('thinktank_twitter_username')), 'thinktank_table_prefix'=>array('key'=>'thinktank_table_prefix', 'label'=>'ThinkTank table prefix:', 'description'=>'(Optional) For example <i>ta_</i>', 'type'=>'text', 'value'=>get_option('thinktank_table_prefix')), 'thinktank_server'=>array('key'=>'thinktank_server', 'label'=>'ThinkTank database server:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'text', 'value'=>get_option('thinktank_server')), 'thinktank_db'=>array('key'=>'thinktank_db', 'label'=>'ThinkTank database name:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'text', 'value'=>get_option('thinktank_db')), 'thinktank_dbusername'=>array('key'=>'thinktank_dbusername', 'label'=>'ThinkTank database username:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'text', 'value'=>get_option('thinktank_dbusername')), 'thinktank_dbpw'=>array('key'=>'thinktank_dbpw', 'label'=>'ThinkTank database password:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'password', 'value'=>get_option('thinktank_dbpw')));
+    $arr = array('thinktank_twitter_username'=>array('key'=>'thinktank_twitter_username', 'label'=>'Default Twitter username:', 'description'=>'(Required) Override this by using the twitter_username parameter in the shortcode', 'type'=>'text', 'value'=>get_option('thinktank_twitter_username')), 'thinktank_table_prefix'=>array('key'=>'thinktank_table_prefix', 'label'=>'ThinkTank table prefix:', 'description'=>'(Optional) For example <i>ta_</i>', 'type'=>'text', 'value'=>get_option('thinktank_table_prefix')), 'thinktank_server'=>array('key'=>'thinktank_server', 'label'=>'ThinkTank database server:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'text', 'value'=>get_option('thinktank_server')), 'thinktank_db'=>array('key'=>'thinktank_db', 'label'=>'ThinkTank database name:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'text', 'value'=>get_option('thinktank_db')), 'thinktank_dbusername'=>array('key'=>'thinktank_dbusername', 'label'=>'ThinkTank database username:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'text', 'value'=>get_option('thinktank_dbusername')), 'thinktank_dbpw'=>array('key'=>'thinktank_dbpw', 'label'=>'ThinkTank database password:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress is', 'type'=>'password', 'value'=>thinktank_unscramble_password(get_option('thinktank_dbpw'))));
     return $arr;
     
+}
+
+//Don't want to store passwords in plaintext in the database
+//This isn't perfect but it's better than clear text
+function thinktank_scramble_password($password) {
+    $salt = substr(str_pad(dechex(mt_rand()), 8, '0', STR_PAD_LEFT), -8);
+    $modified = $password.$salt;
+    $secured = $salt.base64_encode(bin2hex(strrev(str_rot13($modified))));
+    return $secured;
+}
+
+function thinktank_unscramble_password($stored_password) {
+    $salt = substr($stored_password, 0, 8);
+    $modified = substr($stored_password, 8, strlen($stored_password) - 8);
+    $modified = str_rot13(strrev(pack("H*", base64_decode($modified))));
+    $password = substr($modified, 0, strlen($modified) - 8);
+    return $password;
 }
 
 function thinktank_options() {
@@ -205,7 +222,11 @@ function thinktank_options() {
             // Read their posted value
             $opt['value'] = $_POST[$opt['key']];
             // Save the posted value in the database
-            update_option($opt['key'], $opt['value']);
+            
+            if ($opt['key'] == 'thinktank_dbpw')
+                update_option($opt['key'], thinktank_scramble_password($opt['value']));
+            else
+                update_option($opt['key'], $opt['value']);
         }
         // Put an options updated message on the screen
         
@@ -226,16 +247,23 @@ echo "<h2>".__('ThinkTank Plugin Options', 'mt_trans_domain')."</h2>";
 <form name="form1" method="post" action="">
     <input type="hidden" name="<?php echo $options_hidden_field_name; ?>" value="Y">
     <table>
-        <?php foreach ($options_array as $opt) { ?>
+        <?php 
+        foreach ($options_array as $opt) {
+            if ($opt['key'] == 'thinktank_dbpw')
+                $field_value = thinktank_unscramble_password(get_option($opt['key']));
+            else
+                $field_value = get_option($opt['key']);
+            
+        ?>
         <tr>
             <td align="right" valign="top">
-<?php _e($opt['label'], 'mt_trans_domain'); ?>
+                <?php _e($opt['label'], 'mt_trans_domain'); ?>
             </td>
             <td>
-                <input type="<?php echo $opt['type']; ?>" name="<?php echo $opt['key'] ?>" value="<?php echo get_option( $opt['key']); ?>" size="20">
+                <input type="<?php echo $opt['type']; ?>" name="<?php echo $opt['key'] ?>" value="<?php echo $field_value ?>" size="20">
                 <br/>
                 <small>
-<?php echo $opt['description']; ?>
+                    <?php echo $opt['description']; ?>
                 </small>
             </td>
         </tr>
