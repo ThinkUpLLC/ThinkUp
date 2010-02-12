@@ -23,7 +23,7 @@
  */
 
 
-// [thinktank_chronological_archive twitter_username="thinktankapp"]
+// [thinktank_chronological_archive]
 function thinktank_chron_archive_handler($atts) {
 
     extract(shortcode_atts(array('twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order (sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
@@ -59,8 +59,7 @@ function thinktank_chron_archive_handler($atts) {
 function thinktank_replies_handler($atts) {
 
     extract(shortcode_atts(array('status_id'=>0,
-        //TOOD: get twitter username from result set, don't require it as a shortcode parameter
-        'twitter_username'=>'', 'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#status_id#/">@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
+        'twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#status_id#/">@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
         
     $options_array = thinktank_get_options_array();
     
