@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors: ginatrapani
 Tags: thinktank, twitter
-Requires at least: 2.8.4
-Tested up to: 2.8.4
-Stable tag: 0.2
+Requires at least: 2.9.1
+Tested up to: 2.9.1
+Stable tag: 0.4
 
 Displays Twitter data via ThinkTank in a post or page via a shortcode.
 
@@ -24,6 +24,9 @@ all tweets for ginatrapani without replies. `[thinktank_status_reply_count statu
 `[thinktank_status_replies status_id="12345"]` lists all replies for status id 12345.
 
 == Changelog ==
+
+= 0.4 =
+* Added Options panel to set database values without editing the PHP file.
 
 = 0.3 =
 * Added the preliminary capability to talk to a database other than the WordPress database; requires that you change DB credentials inside thinktank.php.

@@ -3,7 +3,7 @@
  Plugin Name: ThinkTank Integration
  Plugin URI: http://github.com/ginatrapani/thinktank
  Description: Displays ThinkTank data on your WordPress blog.
- Version: 0.3
+ Version: 0.4
  Author: Gina Trapani
  Author URI: http://ginatrapani.org
  */
@@ -26,25 +26,18 @@
 // [thinktank_chronological_archive twitter_username="thinktankapp"]
 function thinktank_chron_archive_handler($atts) {
 
-    extract( shortcode_atts(array(
-		'twitter_username'=>'thinktankapp', 
-		'title'=>'<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order (sans replies)</h3>', 
-		'before'=>'<br /><ul>', 
-		'after'=>'</ul>', 
-		'before_tweet'=>'<li>', 
-		'after_tweet'=>'</li>', 
-		'before_date'=>'', 
-		'after_date'=>'', 
-		'before_tweet_html'=>'', 
-		'after_tweet_html'=>'', 
-		'date_format'=>'Y.m.d, g:ia', 
-		'gmt_offset'=>8, 
-	), $atts));
-        
-	$wpdb2 = new wpdb("thinktankuser", "thinktankpassword", "thinktank", "localhost");
-
-    $sql = $wpdb2->prepare("select pub_date, tweet_html, status_id from ta_tweets where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc",
-		$twitter_username);
+    extract(shortcode_atts(array('twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order (sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
+    
+    $options_array = thinktank_get_options_array();
+    
+    if ($options_array['thinktank_server']['value'] != '')
+        $wpdb2 = new wpdb($options_array['thinktank_dbusername']['value'], $options_array['thinktank_dbpw']['value'], $options_array['thinktank_db']['value'], $options_array['thinktank_server']['value']);
+    else {
+        global $wpdb;
+        $wpdb2 = $wpdb;
+    }
+    
+    $sql = $wpdb2->prepare("select pub_date, tweet_html, status_id from ".$options_array['thinktank_table_prefix']['value']."tweets where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc", $twitter_username);
     
     $tweets = $wpdb2->get_results($sql);
     
@@ -65,54 +58,46 @@ function thinktank_chron_archive_handler($atts) {
 // [thinktank_status_replies status_id="12345"]
 function thinktank_replies_handler($atts) {
 
-    extract( shortcode_atts(array(
-		'status_id'=>0, 
-		//TOOD: get twitter username from result set, don't require it as a shortcode parameter
-		'twitter_username'=>'', 
-		'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#status_id#/">@#twitter_username#\'s tweet</a>:</h3>', 
-		'before'=>'<br /><ul>', 
-		'after'=>'</ul>', 
-		'before_tweet'=>'<li>', 
-		'after_tweet'=>'</li>', 
-		'before_user'=>'<b>', 
-		'after_user'=>'</b>', 
-		'before_tweet_html'=>'', 
-		'after_tweet_html'=>'', 
-		'date_format'=>'Y.m.d, g:ia', 
-		'gmt_offset'=>8, 
-	), $atts));
+    extract(shortcode_atts(array('status_id'=>0,
+        //TOOD: get twitter username from result set, don't require it as a shortcode parameter
+        'twitter_username'=>'', 'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#status_id#/">@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
+        
+    $options_array = thinktank_get_options_array();
     
-	$wpdb2 = new wpdb("thinktankuser", "thinktankpassword", "thinktank", "localhost");
-
+    if ($options_array['thinktank_server']['value'] != '')
+        $wpdb2 = new wpdb($options_array['thinktank_dbusername']['value'], $options_array['thinktank_dbpw']['value'], $options_array['thinktank_db']['value'], $options_array['thinktank_server']['value']);
+    else {
+        global $wpdb;
+        $wpdb2 = $wpdb;
+    }
     
-    $sql = $wpdb2->prepare( "select 
+    $sql = $wpdb2->prepare("select 
 				t.*, u.*
 			from 
-				ta_tweets t
+				".$options_array['thinktank_table_prefix']['value']."tweets t
 			inner join 
-				ta_users u 
+				".$options_array['thinktank_table_prefix']['value']."users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
 				in_reply_to_status_id = %0.0f 
 				AND u.is_protected = 0	
 			order by 
-				follower_count desc;",
-			$status_id );
-    
+				follower_count desc;", $status_id);
+				
     $replies = $wpdb2->get_results($sql);
-  
+    
     $output = '';
     if ($replies) {
         $modified_title = str_replace('#twitter_username#', $twitter_username, $title);
-		$modified_title = str_replace('#status_id#', $status_id, $modified_title );
+        $modified_title = str_replace('#status_id#', $status_id, $modified_title);
         $output .= "{$before}";
-	$output .= "{$modified_title}";
+        $output .= "{$modified_title}";
         foreach ($replies as $t) {
-		$tweet_content = strip_starter_username($t->tweet_html);
-		$tweet_content = linkUrls($tweet_content);
-		$tweet_content = linkTwitterUsers($tweet_content);
-		$output .= "{$before_tweet}{$before_user}<a href=\"http://twitter.com/{$t->author_username}/statuses/{$t->status_id}/\">{$t->author_username}</a>{$after_user}: {$before_tweet_html}{$tweet_content}{$after_tweet_html}{$after_tweet}";
+            $tweet_content = strip_starter_username($t->tweet_html);
+            $tweet_content = linkUrls($tweet_content);
+            $tweet_content = linkTwitterUsers($tweet_content);
+            $output .= "{$before_tweet}{$before_user}<a href=\"http://twitter.com/{$t->author_username}/statuses/{$t->status_id}/\">{$t->author_username}</a>{$after_user}: {$before_tweet_html}{$tweet_content}{$after_tweet_html}{$after_tweet}";
         }
         $output .= "{$after}";
     } else {
@@ -123,30 +108,31 @@ function thinktank_replies_handler($atts) {
 
 // [thinktank_status_reply_count status_id="12345"]
 function thinktank_reply_count_handler($atts) {
-
-    extract( shortcode_atts(array(
-		'status_id'=>0, 
-		'before'=>'<a href="#permalink#">', 
-		'after'=>' Twitter replies</a>', 
-	), $atts));
+    extract(shortcode_atts(array('status_id'=>0, 'before'=>'<a href="#permalink#">', 'after'=>' Twitter replies</a>', ), $atts));
     
-	$wpdb2 = new wpdb("thinktankuser", "thinktankpassword", "thinktank", "localhost");
+    $options_array = thinktank_get_options_array();
+    
+    if ($options_array['thinktank_server']['value'] != '')
+        $wpdb2 = new wpdb($options_array['thinktank_dbusername']['value'], $options_array['thinktank_dbpw']['value'], $options_array['thinktank_db']['value'], $options_array['thinktank_server']['value']);
+    else {
+        global $wpdb;
+        $wpdb2 = $wpdb;
+    }
 
     
-    $sql = $wpdb2->prepare( "select 
+    $sql = $wpdb2->prepare("select 
 				count(*)
 			from 
-				ta_tweets t
+				".$options_array['thinktank_table_prefix']['value']."tweets t
 			inner join 
-				ta_users u 
+				".$options_array['thinktank_table_prefix']['value']."users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
 				in_reply_to_status_id=%0.0f
 				AND u.is_protected = 0	
 			order by 
-				follower_count desc;",
-			$status_id);
+				follower_count desc;", $status_id);
     //echo $sql;
     $count = $wpdb2->get_var($sql);
     $before_mod = str_replace('#permalink#', get_permalink(), $before);
@@ -192,9 +178,76 @@ function actual_time($format, $offset, $timestamp) {
 }
 
 function strip_starter_username($text) {
-	return preg_replace("/^@[a-zA-Z0-9_]+/", '', $text);
+    return preg_replace("/^@[a-zA-Z0-9_]+/", '', $text);
 }
- 
+
+
+function thinktank_menu() {
+    add_options_page('ThinkTank Plug-in Options', 'ThinkTank', 6, __FILE__, 'thinktank_options');
+}
+
+function thinktank_get_options_array() {
+
+    $arr = array('thinktank_twitter_username'=>array('key'=>'thinktank_twitter_username', 'label'=>'Twitter username:', 'description'=>'Override this by using the twitter_username parameter in the shortcode', 'type'=>'text', 'value'=>get_option('thinktank_twitter_username')),
+    'thinktank_table_prefix'=>array('key'=>'thinktank_table_prefix', 'label'=>'ThinkTank table prefix:', 'description'=>'', 'type'=>'text', 'value'=>get_option('thinktank_table_prefix')),
+    'thinktank_server'=>array('key'=>'thinktank_server', 'label'=>'ThinkTank database server:', 'description'=>'', 'type'=>'text', 'value'=>get_option('thinktank_server')),
+    'thinktank_db'=>array('key'=>'thinktank_db', 'label'=>'ThinkTank database name:', 'description'=>'', 'type'=>'text', 'value'=>get_option('thinktank_db')),
+    'thinktank_dbusername'=>array('key'=>'thinktank_dbusername', 'label'=>'ThinkTank database username:', 'description'=>'', 'type'=>'text', 'value'=>get_option('thinktank_dbusername')),
+    'thinktank_dbpw'=>array('key'=>'thinktank_dbpw', 'label'=>'ThinkTank database password:', 'description'=>'', 'type'=>'password', 'value'=>get_option('thinktank_dbpw'))
+    );
+    return $arr;
+    
+}
+
+function thinktank_options() {
+    // variables for the field and option names
+    $options_hidden_field_name = 'thinktank_submit_hidden';
+    
+    $options_array = thinktank_get_options_array();
+    
+    // See if the user has posted us some information
+    // If they did, this hidden field will be set to 'Y'
+    if ($_POST[$options_hidden_field_name] == 'Y') {
+    
+        foreach ($options_array as $opt) {
+            // Read their posted value
+            $opt['value'] = $_POST[$opt['key']];
+            // Save the posted value in the database
+            update_option($opt['key'], $opt['value']);
+        }
+        // Put an options updated message on the screen
+        
+?>
+<div class="updated">
+    <p>
+        <strong><?php _e('Options saved.', 'mt_trans_domain'); ?></strong>
+    </p>
+</div>
+<?php 
+}
+// Now display the options editing screen
+echo '<div class="wrap">';
+// header
+echo "<h2>".__('ThinkTank Plugin Options', 'mt_trans_domain')."</h2>";
+// options form
+?>
+<form name="form1" method="post" action="">
+    <input type="hidden" name="<?php echo $options_hidden_field_name; ?>" value="Y">
+    <?php foreach ($options_array as $opt) { ?>
+    <p>
+<?php _e($opt['label'], 'mt_trans_domain'); ?>
+         <input type="<?php echo $opt['type']; ?>" name="<?php echo $opt['key'] ?>" value="<?php echo get_option( $opt['key']); ?>" size="20">
+    </p>
+    <?php } ?>
+    <p class="submit">
+        <input type="submit" name="Submit" value="<?php _e('Update Options', 'mt_trans_domain' ) ?>" />
+    </p>
+</form>
+</div>
+<?php 
+}
+
+add_action('admin_menu', 'thinktank_menu');
 
 add_shortcode('thinktank_chronological_archive', 'thinktank_chron_archive_handler');
 add_shortcode('thinktank_status_replies', 'thinktank_replies_handler');
