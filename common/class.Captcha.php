@@ -26,9 +26,9 @@ class Captcha {
                 break;
             default:
                 if (isset($this->msg)) {
-                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"".$this->site_root."/captcha/pngimg.php\" align=\"middle\"><span style=\"color: #FF0000\">".$this->msg."</span>";
+                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"".$this->site_root."captcha/pngimg.php\" align=\"middle\"><span style=\"color: #FF0000\">".$this->msg."</span>";
                 } else {
-                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"".$this->site_root."/captcha/pngimg.php\" align=\"middle\">&nbsp;";
+                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"".$this->site_root."captcha/pngimg.php\" align=\"middle\">&nbsp;";
                 }
                 break;
         }
