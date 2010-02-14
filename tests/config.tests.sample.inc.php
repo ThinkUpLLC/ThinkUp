@@ -1,8 +1,8 @@
 <?php
 
-$INCLUDE_PATH = "/your-path-to/twitalytic/common/";
+$INCLUDE_PATH = "/your-path-to/thinktank/common/";
 
-$TEST_CLASS_PATH = "/your-path-to/twitalytic/tests/classes/";
+$TEST_CLASS_PATH = "/your-path-to/thinktank/tests/classes/";
 
-$FAUX_DATA_PATH = "/your-path-to/twitalytic/tests/testdata/";
+$FAUX_DATA_PATH = "/your-path-to/thinktank/tests/testdata/";
 ?>
