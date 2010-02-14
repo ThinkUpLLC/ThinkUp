@@ -43,6 +43,6 @@ $THINKTANK_CFG['db_host'] = "localhost";
 $THINKTANK_CFG['db_user'] = "user";
 $THINKTANK_CFG['db_password'] = "s3cret";
 $THINKTANK_CFG['db_name'] ="thinktank";
-$THINKTANK_CFG['table_prefix'] = 'ta_';
+$THINKTANK_CFG['table_prefix'] = 'tt_';
  
 ?>

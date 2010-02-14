@@ -15,7 +15,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Table structure for table `follows`
 --
 
-CREATE TABLE IF NOT EXISTS `ta_follows` (
+CREATE TABLE IF NOT EXISTS `tt_follows` (
   `user_id` int(11) NOT NULL,
   `follower_id` int(11) NOT NULL,
   `last_seen` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `ta_follows` (
 -- Table structure for table `instances`
 --
 
-CREATE TABLE IF NOT EXISTS `ta_instances` (
+CREATE TABLE IF NOT EXISTS `tt_instances` (
   `id` int(11) NOT NULL auto_increment,
   `twitter_user_id` int(11) NOT NULL,
   `twitter_username` varchar(255) collate utf8_bin NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `ta_instances` (
 -- Table structure for table `owners`
 --
 
-CREATE TABLE IF NOT EXISTS `ta_owners` (
+CREATE TABLE IF NOT EXISTS `tt_owners` (
   `id` int(20) NOT NULL auto_increment,
   `full_name` varchar(200) character set latin1 collate latin1_general_ci NOT NULL default '',
   `user_name` varchar(200) character set latin1 collate latin1_general_ci NOT NULL default '',
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `ta_owners` (
 -- Table structure for table `owner_instances`
 --
 
-CREATE TABLE IF NOT EXISTS `ta_owner_instances` (
+CREATE TABLE IF NOT EXISTS `tt_owner_instances` (
   `id` int(20) NOT NULL auto_increment,
   `owner_id` int(10) NOT NULL,
   `instance_id` int(10) NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `ta_owner_instances` (
 -- Table structure for table `tweets`
 --
 
-CREATE TABLE IF NOT EXISTS `ta_tweets` (
+CREATE TABLE IF NOT EXISTS `tt_tweets` (
   `id` int(11) NOT NULL auto_increment,
   `status_id` bigint(11) NOT NULL,
   `author_user_id` int(11) NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `ta_tweets` (
 -- Table structure for table `tweet_errors`
 --
 
-CREATE TABLE IF NOT EXISTS `ta_tweet_errors` (
+CREATE TABLE IF NOT EXISTS `tt_tweet_errors` (
   `id` int(11) NOT NULL auto_increment,
   `status_id` bigint(20) NOT NULL,
   `error_code` int(11) NOT NULL,
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `ta_tweet_errors` (
 -- Table structure for table `users`
 --
 
-CREATE TABLE IF NOT EXISTS `ta_users` (
+CREATE TABLE IF NOT EXISTS `tt_users` (
   `id` int(11) NOT NULL auto_increment,
   `user_id` int(11) NOT NULL,
   `user_name` varchar(255) collate utf8_bin NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `ta_users` (
 -- Table structure for table `user_errors`
 --
 
-CREATE TABLE IF NOT EXISTS `ta_user_errors` (
+CREATE TABLE IF NOT EXISTS `tt_user_errors` (
   `id` int(11) NOT NULL auto_increment,
   `user_id` int(20) NOT NULL,
   `error_code` int(11) NOT NULL,
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `ta_user_errors` (
 -- Table structure for table `links`
 --
 
-CREATE TABLE IF NOT EXISTS `ta_links` (
+CREATE TABLE IF NOT EXISTS `tt_links` (
   `id` int(11) NOT NULL auto_increment,
   `url` varchar(255) collate utf8_bin NOT NULL,
   `expanded_url` varchar(255) collate utf8_bin NOT NULL,
