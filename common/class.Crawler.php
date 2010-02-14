@@ -134,6 +134,99 @@ class Crawler {
         $status_message = "";
         
     }
+
+    function fetchInstanceUserRetweetsByMe($lurl, $fa) {
+        // Get owner's retweets
+        $status_message = "";
+        $got_latest_page_of_retweets = false;
+        $continue_fetching = true;
+        
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching) {
+        
+            $recent_retweets = $this->api->cURL_source['retweeted_by_me'];
+            $args = array();
+            $args["count"] = 200;
+            $last_page_of_retweets = round($this->api->archive_limit / 200) + 1;
+            
+            //set page and since_id params for API call
+            if ($got_latest_page_of_retweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system && $this->instance->total_tweets_in_system < $this->api->archive_limit) {
+                if ($this->instance->last_page_fetched_tweets < $last_page_of_retweets)
+                    $this->instance->last_page_fetched_tweets = $this->instance->last_page_fetched_tweets + 1;
+                else {
+                    $continue_fetching = false;
+                    $this->instance->last_page_fetched_tweets = 0;
+                }
+                $args["page"] = $this->instance->last_page_fetched_tweets;
+                
+            } else {
+                if (!$got_latest_page_of_retweets && $this->instance->last_status_id > 0)
+                    $args["since_id"] = $this->instance->last_status_id;
+            }
+            
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_retweets, $this->logger, $args);
+            if ($cURL_status == 200) {
+                # Parse the XML file
+                try {
+                    $count = 0;
+                    $tweets = $this->api->parseXML($twitter_data);
+                    
+                    $td = new TweetDAO($this->db, $this->logger);
+                    foreach ($tweets as $tweet) {
+                    
+                        if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
+                            $count = $count + 1;
+                            $this->instance->total_tweets_in_system = $this->instance->total_tweets_in_system + 1;
+                            
+                            //expand and insert links contained in tweet
+                            $this->processTweetURLs($tweet, $lurl, $fa);
+                            
+                        }
+                        if ($tweet['status_id'] > $this->instance->last_status_id)
+                            $this->instance->last_status_id = $tweet['status_id'];
+                            
+                    }
+                    $status_message .= count($tweets)." retweet(s) found and $count saved";
+                    $this->logger->logStatus($status_message, get_class($this));
+                    $status_message = "";
+                    
+                    //if you've got more than the Twitter API archive limit, stop looking for more tweets
+                    if ($this->instance->total_tweets_in_system >= $this->api->archive_limit) {
+                        $this->instance->last_page_fetched_tweets = 1;
+                        $continue_fetching = false;
+                        $status_message = "More than Twitter cap of ".$this->api->archive_limit." already in system, moving on.";
+                        $this->logger->logStatus($status_message, get_class($this));
+                        $status_message = "";
+                    }
+
+                    
+                    if ($this->owner_object->tweet_count == $this->instance->total_tweets_in_system)
+                        $this->instance->is_archive_loaded_tweets = true;
+                        
+                    $status_message .= $this->instance->total_tweets_in_system." in system; ".$this->owner_object->tweet_count." by owner";
+                    $this->logger->logStatus($status_message, get_class($this));
+                    $status_message = "";
+                    
+                }
+                catch(Exception $e) {
+                    $status_message = 'Could not parse tweet XML for $this->twitter_username';
+                    $this->logger->logStatus($status_message, get_class($this));
+                    $status_message = "";
+                    
+                }
+                
+                $got_latest_page_of_retweets = true;
+            }
+        }
+        
+        if ($this->owner_object->tweet_count == $this->instance->total_tweets_in_system)
+            $status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
+
+            
+        $this->logger->logStatus($status_message, get_class($this));
+        $status_message = "";
+        
+    }
+
     
     private function processTweetURLs($tweet, $lurl, $fa) {
     
