@@ -212,36 +212,36 @@ class Crawler {
         $status_message = "";
     }
     
-    function fetchInstanceUserReplies($lurl, $fa) {
+    function fetchInstanceUserMentions($lurl, $fa) {
         $status_message = "";
-        // Get owner's replies
+        // Get owner's mentions
         if ($this->api->available_api_calls_for_crawler > 0) {
-            $got_newest_replies = false;
+            $got_newest_mentions = false;
             $continue_fetching = true;
             
             while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
-                # Get the most recent replies
-                $replies = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['replies']);
+                # Get the most recent mentions
+                $mentions = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['mentions']);
                 $args = array();
                 $args['count'] = 200;
                 
-                if ($got_newest_replies) {
-                    $this->last_page_fetched_replies++;
-                    $args['page'] = $this->last_page_fetched_replies;
+                if ($got_newest_mentions) {
+                    $this->last_page_fetched_mentions++;
+                    $args['page'] = $this->last_page_fetched_mentions;
                 }
                 
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($replies, $this->logger, $args);
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($mentions, $this->logger, $args);
                 if ($cURL_status > 200) {
                     $continue_fetching = false;
                 } else {
                     try {
                         $count = 0;
                         $tweets = $this->api->parseXML($twitter_data);
-                        if (count($tweets) == 0 && $got_newest_replies) {# you're paged back and no new tweets
-                            $this->last_page_fetched_replies = 1;
+                        if (count($tweets) == 0 && $got_newest_mentions) {# you're paged back and no new tweets
+                            $this->last_page_fetched_mentions = 1;
                             $continue_fetching = false;
-                            $this->instance->is_archive_loaded_replies = true;
-                            $status_message = 'Paged back but not finding new replies; moving on.';
+                            $this->instance->is_archive_loaded_mentions = true;
+                            $status_message = 'Paged back but not finding new mentions; moving on.';
                             $this->logger->logStatus($status_message, get_class($this));
                             $status_message = "";
                         }
@@ -255,32 +255,32 @@ class Crawler {
                                 //expand and insert links contained in tweet
                                 $this->processTweetURLs($tweet, $lurl, $fa);
                                 if ($tweet['user_id'] != $this->owner_object->id) { //don't update owner info from reply
-                                    $u = new User($tweet, 'Replies');
+                                    $u = new User($tweet, 'mentions');
                                     $this->ud->updateUser($u, $this->logger);
                                 }
                                 
                             }
                             
                         }
-                        $status_message .= count($tweets)." replies found and $count saved";
+                        $status_message .= count($tweets)." mentions found and $count saved";
                         $this->logger->logStatus($status_message, get_class($this));
                         $status_message = "";
                         
-                        $got_newest_replies = true;
+                        $got_newest_mentions = true;
                         
                         $this->logger->logStatus($status_message, get_class($this));
                         $status_message = "";
                         
-                        if ($got_newest_replies && $this->instance->is_archive_loaded_replies) {
+                        if ($got_newest_mentions && $this->instance->is_archive_loaded_replies) {
                             $continue_fetching = false;
-                            $status_message .= 'Retrieved newest replies; Reply archive loaded; Stopping reply fetch.';
+                            $status_message .= 'Retrieved newest mentions; Reply archive loaded; Stopping reply fetch.';
                             $this->logger->logStatus($status_message, get_class($this));
                             $status_message = "";
                         }
                         
                     }
                     catch(Exception $e) {
-                        $status_message = 'Could not parse replies XML for $this->owner_object->username';
+                        $status_message = 'Could not parse mentions XML for $this->owner_object->username';
                         $this->logger->logStatus($status_message, get_class($this));
                         $status_message = "";
                     }

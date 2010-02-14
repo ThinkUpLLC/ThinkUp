@@ -31,7 +31,9 @@ foreach ($instances as $i) {
 
 		$crawler->fetchInstanceUserTweets($lurlapi, $flickrapi);
 
-		$crawler->fetchInstanceUserReplies($lurlapi, $flickrapi);
+		//TODO: Get retweeted_by_me and merge into user timeline to match up total tweets
+		
+		$crawler->fetchInstanceUserMentions($lurlapi, $flickrapi);
 
 		$crawler->fetchInstanceUserFriends();
 
