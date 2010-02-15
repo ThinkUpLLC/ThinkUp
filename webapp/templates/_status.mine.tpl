@@ -3,7 +3,7 @@
 			<div class="person-info">
 				<img src="{$t->author_avatar}" width="48" height="48" class="avatar">
 				<h3 class="username"><a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a></h3>
-				{if $t->reply_count_cache > 0}<h4 class="reply-count"><a href="{$cfg->site_root_path}status/?t={$t->status_id}">{$t->reply_count_cache} repl{if $t->reply_count_cache eq 1}y{else}ies{/if}</a></h4>{/if} 
+				{if $t->mention_count_cache > 0}<h4 class="reply-count"><a href="{$cfg->site_root_path}status/?t={$t->status_id}">{$t->mention_count_cache} repl{if $t->mention_count_cache eq 1}y{else}ies{/if}</a></h4>{/if} 
 			</div>
 				
 			<div class="tweet-body">

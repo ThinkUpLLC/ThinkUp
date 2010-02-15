@@ -13,7 +13,7 @@ class Tweet {
     var $adj_pub_date;
     var $in_reply_to_user_id;
     var $in_reply_to_status_id;
-    var $reply_count_cache;
+    var $mention_count_cache;
     
     var $author; //optional user object
     
@@ -30,7 +30,7 @@ class Tweet {
         $this->adj_pub_date = $val["adj_pub_date"];
         $this->in_reply_to_user_id = $val["in_reply_to_user_id"];
         $this->in_reply_to_status_id = $val["in_reply_to_status_id"];
-        $this->reply_count_cache = $val["reply_count_cache"];
+        $this->mention_count_cache = $val["mention_count_cache"];
         
     }
     
@@ -38,15 +38,16 @@ class Tweet {
         preg_match_all('!https?://[\S]+!', $tweet_text, $matches);
         return $matches[0];
     }
+
     
 }
 
 
 class TweetDAO extends MySQLDAO {
-	function TweetDAO($database, $logger=null) {
-		parent::MySQLDAO($database, $logger);
-	}
-
+    function TweetDAO($database, $logger = null) {
+        parent::MySQLDAO($database, $logger);
+    }
+    
     function getTweet($status_id) {
         $q = "
 			SELECT 
@@ -125,7 +126,7 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getTweetsAuthorHasRepliedTo($author_id, $count) {
-        //There's a better way to do this, only returns 1-1 exchanges, not back-and-forth threads
+        //TODO: Figure out a better way to do this, only returns 1-1 exchanges, not back-and-forth threads
         
         $q = "
 			SELECT
@@ -151,7 +152,7 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getExchangesBetweenUsers($author_id, $other_user_id) {
-        
+    
         $q = "
 		
 			SELECT
@@ -267,7 +268,7 @@ class TweetDAO extends MySQLDAO {
 			UPDATE 
 				%prefix%tweets
 			SET 
-				reply_count_cache = reply_count_cache + 1
+				mention_count_cache = mention_count_cache + 1
 			WHERE 
 				status_id = ".$status_id."
 		";
@@ -280,7 +281,7 @@ class TweetDAO extends MySQLDAO {
 			UPDATE 
 				%prefix%tweets
 			SET 
-				reply_count_cache = reply_count_cache - 1
+				mention_count_cache = mention_count_cache - 1
 			WHERE 
 				status_id = ".$status_id."
 		";
@@ -289,7 +290,7 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getAllTweets($author_id, $count) {
-       
+    
         $q = "
 			SELECT 
 				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -310,7 +311,7 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getAllTweetsByUsername($username) {
-        
+    
         $q = "
 			SELECT 
 				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -351,7 +352,7 @@ class TweetDAO extends MySQLDAO {
 
     
     function getAllMentions($author_username, $count) {
-        
+    
         $q = "
 			SELECT 
 				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -378,7 +379,7 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getAllReplies($user_id, $count) {
-        
+    
         $q = "
 			SELECT 
 				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -404,7 +405,7 @@ class TweetDAO extends MySQLDAO {
 
     
     function getMostRepliedToTweets($user_id, $count) {
-        
+    
         $q = "
 			SELECT 
 				t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -413,7 +414,7 @@ class TweetDAO extends MySQLDAO {
 			WHERE
 				author_user_id = ".$user_id."
 			ORDER BY
-				reply_count_cache DESC 
+				mention_count_cache DESC 
 			LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
         $most_replied_to_tweets = array();
@@ -426,7 +427,7 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getOrphanReplies($user_name, $count) {
-        
+    
         $q = "
 			SELECT 
 				t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -454,7 +455,7 @@ class TweetDAO extends MySQLDAO {
 
     
     function getLikelyOrphansForParent($parent_pub_date, $author_user_id, $author_username, $count) {
-        
+    
         $q = "
 			SELECT 
 				t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -532,7 +533,7 @@ class TweetDAO extends MySQLDAO {
 			ON
 				t.author_user_id = i.twitter_user_id
 			WHERE
-				i.is_public = 1 and t.reply_count_cache > 0 and in_reply_to_status_id is NULL
+				i.is_public = 1 and t.mention_count_cache > 0 and in_reply_to_status_id is NULL
 			ORDER BY
 				t.pub_date DESC
 			LIMIT ".$count;
@@ -570,10 +571,10 @@ class TweetDAO extends MySQLDAO {
 }
 
 class TweetErrorDAO extends MySQLDAO {
-	function TweetErrorDAO($database, $logger=null) {
-		parent::MySQLDAO($database, $logger);
-	}
-	
+    function TweetErrorDAO($database, $logger = null) {
+        parent::MySQLDAO($database, $logger);
+    }
+    
     function insertError($id, $error_code, $error_text, $issued_to) {
         $q = "
 			INSERT INTO

@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `tt_tweets` (
   `pub_date` timestamp NOT NULL default '0000-00-00 00:00:00',
   `in_reply_to_user_id` int(11) default NULL,
   `in_reply_to_status_id` bigint(11) default NULL,
-  `reply_count_cache` int(11) NOT NULL default '0',
+  `mention_count_cache` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `status_id` (`status_id`),
   KEY `author_username` (`author_username`),
