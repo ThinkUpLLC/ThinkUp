@@ -23,8 +23,14 @@ class LongUrlAPIAccessor {
         $resp = Utils::curl_get_file_contents($api_call);
         if ($resp == false)
             return null;
-        else
-            return unserialize($resp);
+        else {
+        	//suppress unserialize notice with @ sign
+        	$result = @unserialize($resp); 
+            if ( $result == false )
+				return null;
+			else
+				return $result;
+		}
             
     }
 }
