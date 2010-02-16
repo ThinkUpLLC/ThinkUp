@@ -110,6 +110,8 @@ CREATE TABLE IF NOT EXISTS `tt_tweets` (
   `in_reply_to_user_id` int(11) default NULL,
   `in_reply_to_status_id` bigint(11) default NULL,
   `mention_count_cache` int(11) NOT NULL default '0',
+  `in_retweet_of_status_id` bigint(11) default NULL,
+  `retweet_count_cache` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `status_id` (`status_id`),
   KEY `author_username` (`author_username`),

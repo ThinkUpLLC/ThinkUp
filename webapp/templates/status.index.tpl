@@ -7,7 +7,8 @@
 	<div role="application" class="yui-g" id="tabs">
 
 				<ul>
-					<li><a href="#tweets">Update</a></li>
+					<li><a href="#tweets">Status</a></li>
+					{if $retweets}<li><a href="#retweets">Retweets</a></li>{/if}
 					{if $likely_orphans}<li><a href="#replies">Likely Replies</a></li>{/if}
 					{if $replies}<li><a href="#followers">Public/Republishable Replies</a></li>{/if}
 					
@@ -38,6 +39,33 @@
 	{/foreach}
 </div>
 
+{if $retweets}
+<div class="section" id="retweets">
+<h1>{$tweet->tweet_text}</h1>
+<br /><br />
+<p>In addition to the original author's followers, this tweet reached {$retweet_reach|number_format} users via retweets.</p>
+
+	{foreach from=$retweets key=tid item=t}
+		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
+		{include file="_status.other.tpl" t=$t}
+
+		<div id="div{$t->status_id}">
+		<form action="">
+			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as Reply To:" />
+		<select name="pid{$t->status_id}" id="pid{$t->status_id}">
+			<option value="0">No Tweet in Particular (Mark as standalone)</option>
+			<option disabled>Set as a reply to:</option>
+		{foreach from=$all_tweets key=aid item=a}
+			<option value="{$a->status_id}">&nbsp;&nbsp;{$a->tweet_html|truncate_for_select}</option>
+		{/foreach}
+		</select>  
+		</form>
+		</div>
+		
+		</div>
+	{/foreach}
+</div>
+{/if}
 
 {if $likely_orphans}
 <div class="section" id="replies">

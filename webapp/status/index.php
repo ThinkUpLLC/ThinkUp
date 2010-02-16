@@ -39,6 +39,8 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 	
 		$all_replies = $td->getRepliesToTweet($status_id);
 		$all_replies_count = count($all_replies);
+		$all_retweets = $td->getRetweetsOfTweet($status_id);
+		$retweet_reach = $td->getTweetReachViaRetweets($status_id);
 		$public_replies = $td->getPublicRepliesToTweet($status_id);
 		$public_replies_count = count($public_replies);
 		$private_replies_count = $all_replies_count - $public_replies_count;
@@ -47,6 +49,8 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 
 		$s->assign('tweet', $tweet);
 		$s->assign('replies', $all_replies );
+		$s->assign('retweets', $all_retweets );
+		$s->assign('retweet_reach', $retweet_reach);
 		$s->assign('public_reply_count', $public_replies_count );
 		$s->assign('private_reply_count', $private_replies_count );
 		$s->assign('reply_count', $all_replies_count );

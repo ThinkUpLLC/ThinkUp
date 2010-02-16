@@ -1,17 +1,17 @@
 <?php 
 class Crawler {
     var $instance;
-	var $logger;
-	var $api;
+    var $logger;
+    var $api;
     var $owner_object;
     var $ud;
-	var $db;
+    var $db;
     
     function Crawler($instance, $logger, $api, $db) {
         $this->instance = $instance;
-		$this->api = $api;
-		$this->db = $db;
-		$this->logger = $logger;
+        $this->api = $api;
+        $this->db = $db;
+        $this->logger = $logger;
         $this->ud = new UserDAO($this->db, $this->logger);
     }
     
@@ -134,7 +134,7 @@ class Crawler {
         $status_message = "";
         
     }
-
+    
     function fetchInstanceUserRetweetsByMe($lurl, $fa) {
         // Get owner's retweets
         $status_message = "";
@@ -242,10 +242,10 @@ class Crawler {
             if (substr($u, 0, strlen('http://twitpic.com/')) == 'http://twitpic.com/') {
                 $eurl = 'http://twitpic.com/show/thumb/'.substr($u, strlen('http://twitpic.com/'));
                 $is_image = 1;
-            } elseif ( substr($u, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/' ) {
-            	$eurl = $u.'.th.jpg';
-				$is_image = 1;	 
-			} elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
+            } elseif (substr($u, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/') {
+                $eurl = $u.'.th.jpg';
+                $is_image = 1;
+            } elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
                 $eurl = 'http://twitgoo.com/show/thumb/'.substr($u, strlen('http://twitgoo.com/'));
                 $is_image = 1;
             } elseif ($fa->api_key != null && substr($u, 0, strlen('http://flic.kr/p/')) == 'http://flic.kr/p/') {
@@ -341,8 +341,21 @@ class Crawler {
 
                         
                         $td = new TweetDAO($this->db, $this->logger);
+                        if (!isset($recentTweets)) {
+                            $recentTweets = $td->getAllTweets($this->owner_object->id, 15);
+                        }
                         $count = 0;
                         foreach ($tweets as $tweet) {
+                            // Figure out if the mention is a retweet
+                            if (RetweetDetector::isRetweet($tweet['tweet_text'], $this->owner_object->username)) {
+                                $this->logger->logStatus("Retweet found, ".substr($tweet['tweet_text'], 0, 50)."... ", get_class($this));
+                                $originalTweetId = RetweetDetector::detectOriginalTweet($tweet['tweet_text'], $recentTweets);
+                                if ($originalTweetId != false) {
+                                    $tweet['in_retweet_of_status_id'] = $originalTweetId;
+                                    $this->logger->logStatus("Retweet original status ID found: ".$originalTweetId, get_class($this));
+                                }
+                            }
+                            
                             if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
                                 $count++;
                                 //expand and insert links contained in tweet
