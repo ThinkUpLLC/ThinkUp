@@ -656,6 +656,7 @@ class Crawler {
                         $tweets = $this->api->parseXML($twitter_data);
                         
                         if (count($tweets) > 0) {
+                            $stale_friend_updated_from_tweets = false;
                             foreach ($tweets as $tweet) {
                             
                                 if ($td->addTweet($tweet, $stale_friend, $this->logger) > 0) {
@@ -663,22 +664,25 @@ class Crawler {
                                     //expand and insert links contained in tweet
                                     $this->processTweetURLs($tweet, $lurl, $fa);
                                 }
-                                //Update stale_friend values here
-                                $stale_friend->full_name = $tweet['full_name'];
-                                $stale_friend->avatar = $tweet['avatar'];
-                                $stale_friend->location = $tweet['location'];
-                                $stale_friend->description = $tweet['description'];
-                                $stale_friend->url = $tweet['url'];
-                                $stale_friend->is_protected = $tweet['is_protected'];
-                                $stale_friend->follower_count = $tweet['follower_count'];
-                                $stale_friend->friend_count = $tweet['friend_count'];
-                                $stale_friend->tweet_count = $tweet['tweet_count'];
-                                $stale_friend->joined = date_format(date_create($tweet['joined']), "Y-m-d H:i:s");
-                                
-                                if ($tweet['status_id'] > $stale_friend->last_status_id) {
-                                    $stale_friend->last_status_id = $tweet['status_id'];
+                                if (!$stale_friend_updated_from_tweets) {
+                                    //Update stale_friend values here
+                                    $stale_friend->full_name = $tweet['full_name'];
+                                    $stale_friend->avatar = $tweet['avatar'];
+                                    $stale_friend->location = $tweet['location'];
+                                    $stale_friend->description = $tweet['description'];
+                                    $stale_friend->url = $tweet['url'];
+                                    $stale_friend->is_protected = $tweet['is_protected'];
+                                    $stale_friend->follower_count = $tweet['follower_count'];
+                                    $stale_friend->friend_count = $tweet['friend_count'];
+                                    $stale_friend->tweet_count = $tweet['tweet_count'];
+                                    $stale_friend->joined = date_format(date_create($tweet['joined']), "Y-m-d H:i:s");
+                                    
+                                    if ($tweet['status_id'] > $stale_friend->last_status_id) {
+                                        $stale_friend->last_status_id = $tweet['status_id'];
+                                    }
+                                    $ud->updateUser($stale_friend, $this->logger);
+                                    $stale_friend_updated_from_tweets = true;
                                 }
-                                $ud->updateUser($stale_friend, $this->logger);
                             }
                         } else {
                             $this->fetchAndAddUser($stale_friend->id, "Friends");
