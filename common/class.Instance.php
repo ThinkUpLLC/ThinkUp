@@ -4,8 +4,6 @@ class Instance {
     var $twitter_username;
     var $twitter_user_id;
     var $last_status_id;
-    var $last_page_fetched_followers;
-    var $last_page_fetched_friends;
     var $last_page_fetched_replies;
     var $last_page_fetched_tweets;
     var $total_tweets_in_system;
@@ -27,7 +25,6 @@ class Instance {
         $this->twitter_username = $r['twitter_username'];
         $this->twitter_user_id = $r['twitter_user_id'];
         $this->last_status_id = $r['last_status_id'];
-        $this->last_page_fetched_followers = $r['last_page_fetched_followers'];
         $this->last_page_fetched_replies = $r['last_page_fetched_replies'];
         $this->last_page_fetched_tweets = $r['last_page_fetched_tweets'];
         $this->total_tweets_in_system = $r['total_tweets_in_system'];
@@ -197,7 +194,6 @@ class InstanceDAO extends MySQLDAO {
 				%prefix%instances
 			SET
 				".$lsi."
-				last_page_fetched_followers = ".$i->last_page_fetched_followers.",
 				last_page_fetched_replies = ".$i->last_page_fetched_replies.",
 				last_page_fetched_tweets = ".$i->last_page_fetched_tweets.",
 				crawler_last_run = NOW(),

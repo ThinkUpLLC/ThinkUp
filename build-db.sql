@@ -37,7 +37,6 @@ CREATE TABLE IF NOT EXISTS `tt_instances` (
   `twitter_username` varchar(255) collate utf8_bin NOT NULL,
   `last_status_id` bigint(11) default '0',
   `crawler_last_run` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `last_page_fetched_followers` int(11) NOT NULL default '1',
   `last_page_fetched_replies` int(11) NOT NULL default '1',
   `last_page_fetched_tweets` int(11) NOT NULL default '1',
   `total_tweets_by_owner` int(11) default '0',
