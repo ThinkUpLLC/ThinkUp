@@ -492,10 +492,10 @@ class Crawler {
         
             $follower_ids = $this->api->cURL_source['followers'];
             $args = array();
-			if ( !isset($next_cursor) )
-				$next_cursor = -1;
-           	$args['cursor'] = strval($next_cursor); 
- 			
+            if (!isset($next_cursor))
+                $next_cursor = -1;
+            $args['cursor'] = strval($next_cursor);
+            
             list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $this->logger, $args);
             
             if ($cURL_status > 200) {
@@ -505,16 +505,16 @@ class Crawler {
                 
                 try {
                     $status_message = "Parsing XML. ";
-					$status_message .= "Cursor ".$next_cursor.":";
+                    $status_message .= "Cursor ".$next_cursor.":";
                     $users = $this->api->parseXML($twitter_data);
-					$next_cursor = $this->api->getNextCursor();
+                    $next_cursor = $this->api->getNextCursor();
                     $status_message .= count($users)." followers queued to update. ";
                     $this->logger->logStatus($status_message, get_class($this));
-                	$status_message = "";
+                    $status_message = "";
                     
-                    if (count($users) == 0) 
+                    if (count($users) == 0)
                         $this->instance->is_archive_loaded_follows = true;
-                    
+                        
                     $updated_follow_count = 0;
                     $inserted_follow_count = 0;
                     foreach ($users as $u) {
@@ -570,9 +570,9 @@ class Crawler {
         
             $friend_ids = $this->api->cURL_source['following'];
             $args = array();
-			if ( !isset($next_cursor) )
-				$next_cursor = -1;
-           	$args['cursor'] = strval($next_cursor); 
+            if (!isset($next_cursor))
+                $next_cursor = -1;
+            $args['cursor'] = strval($next_cursor);
             
             list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $this->logger, $args);
             
@@ -582,13 +582,13 @@ class Crawler {
             
                 try {
                     $status_message = "Parsing XML. ";
-					$status_message .= "Cursor ".$next_cursor.":";
+                    $status_message .= "Cursor ".$next_cursor.":";
                     $users = $this->api->parseXML($twitter_data);
-					$next_cursor = $this->api->getNextCursor();
+                    $next_cursor = $this->api->getNextCursor();
                     $status_message .= count($users)." friends queued to update. ";
                     $this->logger->logStatus($status_message, get_class($this));
-                	$status_message = "";
-					
+                    $status_message = "";
+                    
                     $updated_follow_count = 0;
                     $inserted_follow_count = 0;
                     
