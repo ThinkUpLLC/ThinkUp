@@ -23,7 +23,7 @@ class TestOfFriendsPaging extends UnitTestCase {
     
     }
     
-    function testMakingAPICall() {
+    function testFriendsList() {
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', array(), 'GET');
         $this->assertWantedPattern('/A or B/', $result);
@@ -33,8 +33,19 @@ class TestOfFriendsPaging extends UnitTestCase {
         $next_cursor = $api->getNextCursor();
         //echo 'Next cursor is ' . $next_cursor;
         $this->assertTrue($next_cursor == '1305768756249357127');
-
-        
     }
+
+    function testIDsList() {
+        $to = new TwitterOAuth('', '', '', '');
+        $result = $to->oAuthRequest('https://twitter.com/followers/ids.xml', array(), 'GET');
+        
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $i, $THINKTANK_CFG['archive_limit']);
+        $users = $api->parseXML($result);
+        $next_cursor = $api->getNextCursor();
+        //echo 'Next cursor is ' . $next_cursor;
+        $this->assertTrue($next_cursor == '1326272872342936860');
+    }
+	
+	
 }
 ?>

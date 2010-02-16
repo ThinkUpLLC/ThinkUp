@@ -403,16 +403,15 @@ class Crawler {
     
     private function fetchInstanceUserFollowersByIDs() {
         $continue_fetching = true;
-        $last_page_fetched_follower_ids = $this->instance->last_page_fetched_followers;
         $status_message = "";
         
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
         
-            $last_page_fetched_follower_ids = $last_page_fetched_follower_ids + 1;
-            
             $args = array();
-            $follower_ids = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['followers_ids']);
-            $args['page'] = $last_page_fetched_follower_ids;
+            $follower_ids = $this->api->cURL_source['followers_ids'];
+            if (!isset($next_cursor))
+                $next_cursor = -1;
+            $args['cursor'] = strval($next_cursor);
             
             list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $this->logger, $args);
             
@@ -422,13 +421,18 @@ class Crawler {
                 $fd = new FollowDAO($this->db, $this->logger);
                 
                 try {
+                    $status_message = "Parsing XML. ";
+                    $status_message .= "Cursor ".$next_cursor.":";
                     $ids = $this->api->parseXML($twitter_data);
-                    $status_message = "Page ".$last_page_fetched_follower_ids." has ".count($ids)." follower IDs. ";
+                    $next_cursor = $this->api->getNextCursor();
+                    $status_message .= count($ids)." follower IDs queued to update. ";
+                    $this->logger->logStatus($status_message, get_class($this));
+                    $status_message = "";
+
                     
                     if (count($ids) == 0) {
                         $this->instance->is_archive_loaded_follows = true;
                         $continue_fetching = false;
-                        $last_page_fetched_follower_ids = 0;
                     }
                     
                     $updated_follow_count = 0;
@@ -462,7 +466,6 @@ class Crawler {
             
         }
         
-        $this->instance->last_page_fetched_followers = $last_page_fetched_follower_ids;
     }
     
     function fetchInstanceUserFollowers() {
@@ -484,7 +487,6 @@ class Crawler {
         } else {
             $this->logger->logStatus("Follower archive is not loaded; fetch should begin.", get_class($this));
         }
-
         
         # Fetch follower pages
         $continue_fetching = true;
@@ -563,7 +565,6 @@ class Crawler {
         }
         
         $status_message = "";
-        $this->instance->last_page_fetched_friends = 0;
         # Fetch friend pages
         $continue_fetching = true;
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching && !$this->instance->is_archive_loaded_friends) {
@@ -592,11 +593,9 @@ class Crawler {
                     $updated_follow_count = 0;
                     $inserted_follow_count = 0;
                     
-                    if (count($users) == 0) {
-                        $this->instance->last_page_fetched_friends = 0;
+                    if (count($users) == 0)
                         $this->instance->is_archive_loaded_friends = true;
-                    }
-                    
+                        
                     foreach ($users as $u) {
                         $utu = new User($u, 'Friends');
                         $this->ud->updateUser($utu, $this->logger);
@@ -690,7 +689,7 @@ class Crawler {
                     catch(Exception $e) {
                         $this->logger->logStatus('Could not parse friends XML for $stale_friend->username', get_class($this));
                     }
-                    $this->fetchUserFriends($stale_friend->id, $fd);
+                    $this->fetchUserFriendsByIDs($stale_friend->id, $fd);
                 } elseif ($cURL_status == 401 || $cURL_status == 404) {
                     try {
                         $e = $this->api->parseError($twitter_data);
@@ -734,18 +733,17 @@ class Crawler {
         }
     }
     
-    private function fetchUserFriends($uid, $fd) {
+    private function fetchUserFriendsByIDs($uid, $fd) {
         $continue_fetching = true;
-        $last_page_fetched_friend_ids = 0;
         $status_message = "";
         
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
         
-            $last_page_fetched_friend_ids = $last_page_fetched_friend_ids + 1;
-            
             $args = array();
-            $friend_ids = str_replace("[id]", $uid, $this->api->cURL_source['following_ids']);
-            $args['page'] = $last_page_fetched_friend_ids;
+            $friend_ids = $this->api->cURL_source['following_ids'];
+            if (!isset($next_cursor))
+                $next_cursor = -1;
+            $args['cursor'] = strval($next_cursor);
             
             list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $this->logger, $args);
             
@@ -754,8 +752,15 @@ class Crawler {
             } else {
             
                 try {
+                
+                    $status_message = "Parsing XML. ";
+                    $status_message .= "Cursor ".$next_cursor.":";
                     $ids = $this->api->parseXML($twitter_data);
-                    $status_message = "Page ".$last_page_fetched_friend_ids." has ".count($ids)." friend IDs. ";
+                    $next_cursor = $this->api->getNextCursor();
+                    $status_message .= count($ids)." friend IDs queued to update. ";
+                    $this->logger->logStatus($status_message, get_class($this));
+                    $status_message = "";
+
                     
                     if (count($ids) == 0)
                         $continue_fetching = false;
