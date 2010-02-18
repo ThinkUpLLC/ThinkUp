@@ -7,56 +7,44 @@ class Follow {
 
 
 class FollowDAO extends MySQLDAO {
-	function FollowDAO($database, $logger=null) {
-		parent::MySQLDAO($database, $logger);
-	}
-
+    //Construct is located in parent
     function followExists($user_id, $follower_id) {
-        $q = "
-			SELECT 
-				user_id, follower_id
-			FROM 
-				%prefix%follows
-			WHERE 
-				user_id = ".$user_id." AND follower_id=".$follower_id.";";
-        $sql_result = $this->executeSQL($q);
-        if (mysql_num_rows($sql_result) > 0)
-            return true;
-        else
-            return false;
-    }
+        $q = " SELECT user_id, follower_id ";
+        $q .= " FROM %prefix%follows ";
+        $q .= " WHERE user_id = ".$user_id." AND follower_id=".$follower_id.";";
 
+        $sql_result = $this->executeSQL($q);
+        if (mysql_num_rows($sql_result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
     function update($user_id, $follower_id) {
-        $q = "
-			UPDATE 
-			 	%prefix%follows
-			SET
-				last_seen=NOW()
-			WHERE
-				user_id = ".$user_id." AND follower_id=".$follower_id.";";
+        $q = " UPDATE %prefix%follows ";
+        $q .= " SET last_seen=NOW() ";
+        $q .= " WHERE user_id = ".$user_id." AND follower_id=".$follower_id.";";
+
         $sql_result = $this->executeSQL($q);
-        if (mysql_affected_rows() > 0)
+        if (mysql_affected_rows() > 0){
             return true;
-        else
+        } else {
             return false;
+        }
     }
     
     function deactivate($user_id, $follower_id) {
-        $q = "
-			UPDATE 
-			 	%prefix%follows
-			SET
-				active = 0
-			WHERE
-				user_id = ".$user_id." AND follower_id=".$follower_id.";";
+        $q = " UPDATE %prefix%follows ";
+        $q .= " SET active = 0 ";
+        $q .= " WHERE user_id = ".$user_id." AND follower_id=".$follower_id.";";
         $sql_result = $this->executeSQL($q);
-        if (mysql_affected_rows() > 0)
+        if (mysql_affected_rows() > 0){
             return true;
-        else
+        } else {
             return false;
+        }
     }
-
     
     function insert($user_id, $follower_id) {
         $q = "

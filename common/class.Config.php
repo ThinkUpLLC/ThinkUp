@@ -34,20 +34,14 @@ class Config {
             $this->flickr_api_key = $THINKTANK_CFG['flickr_api_key'];
         else
             $this->flickr_api_key = '';
-            
         if (isset($_SERVER["SERVER_NAME"]))
             $this->webapp_home = "http://".$_SERVER["SERVER_NAME"].$this->site_root_path;
-
-            
-        //putenv($THINKTANK_CFG['time_zone']);
-        
+            //putenv($THINKTANK_CFG['time_zone']);
         if ($this->debug) {
             ini_set("display_errors", 1);
             ini_set("error_reporting", E_ALL);
         }
-        
     }
-    
 }
 
 ?>

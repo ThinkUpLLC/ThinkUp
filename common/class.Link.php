@@ -38,9 +38,7 @@ class Link {
 }
 
 class LinkDAO extends MySQLDAO {
-	function LinkDAO($database, $logger=null) {
-		parent::MySQLDAO($database, $logger);
-	}
+    //Construct is located in parent
 
     function insert($url, $expanded, $title, $status_id, $is_image = 0) {
         $expanded = mysql_real_escape_string($expanded);

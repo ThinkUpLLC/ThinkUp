@@ -47,10 +47,8 @@ class Tweet {
 
 
 class TweetDAO extends MySQLDAO {
-    function TweetDAO($database, $logger = null) {
-        parent::MySQLDAO($database, $logger);
-    }
-    
+    //Construct is located in parent
+ 
     function getTweet($status_id) {
         $q = "
 			SELECT 
@@ -649,10 +647,8 @@ class TweetDAO extends MySQLDAO {
 }
 
 class TweetErrorDAO extends MySQLDAO {
-    function TweetErrorDAO($database, $logger = null) {
-        parent::MySQLDAO($database, $logger);
-    }
-    
+    //Construct is located in parent
+ 
     function insertError($id, $error_code, $error_text, $issued_to) {
         $q = "
 			INSERT INTO

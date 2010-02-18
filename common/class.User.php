@@ -50,9 +50,7 @@ class User {
 }
 
 class UserDAO extends MySQLDAO {
-	function UserDAO($database, $logger=null) {
-		parent::MySQLDAO($database, $logger);
-	}
+    //Construct is located in parent
 
     private function getAverageTweetCount() {
         return "round(tweet_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
@@ -194,9 +192,7 @@ class UserDAO extends MySQLDAO {
 }
 
 class UserErrorDAO extends MySQLDAO {
-	function UserErrorDAO($database, $logger=null) {
-		parent::MySQLDAO($database, $logger);
-	}
+    //Construct is located in parent
 	
     function insertError($id, $error_code, $error_text, $issued_to) {
         $q = "

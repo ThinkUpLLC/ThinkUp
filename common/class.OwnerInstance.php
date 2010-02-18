@@ -12,9 +12,7 @@ class OwnerInstance {
 }
 
 class OwnerInstanceDAO extends MySQLDAO {
-	function OwnerInstanceDAO($database, $logger=null) {
-		parent::MySQLDAO($database, $logger);
-	}
+    //Construct is located in parent
 
     function doesOwnerHaveAccess($owner, $username) {
         if ($owner->is_admin) {

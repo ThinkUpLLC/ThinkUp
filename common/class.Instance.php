@@ -54,9 +54,7 @@ class Instance {
 }
 
 class InstanceDAO extends MySQLDAO {
-	function InstanceDAO($database, $logger=null) {
-		parent::MySQLDAO($database, $logger);
-	}
+    //Construct is located in parent
 	
     function getInstanceStalestOne() {
         return $this->getInstanceOneByLastRun("ASC");
