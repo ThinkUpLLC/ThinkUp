@@ -1,35 +1,44 @@
 <?php 
+session_start();
+
+// set up
 chdir("..");
-require_once ('config.webapp.inc.php');
+require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-require_once ("init.php");
-include 'dbc.php';
+require_once("init.php");
+
+$session = new Session();
+if ($session->isLogedin()) { 
+    header("Location: ../index.php");
+}
+
+$db = new Database($THINKTANK_CFG);
+$conn = $db->getConnection();
+$od = new OwnerDAO($db);
+
 if ($_POST['Submit'] == 'Send') {
     $host = $_SERVER['HTTP_HOST'];
-    $rs_search = mysql_query("select user_email from ".$TWITALYTIC_CFG['table_prefix']."owners where user_email='$_POST[email]'");
-    $user_count = mysql_num_rows($rs_search);
-    
-    if ($user_count != 0) {
-        $newpwd = rand(1000, 9999);
+    if (getUserExist($_POST['email'])) {
+        $newpwd = rand(10000, 99999);
         $host = $_SERVER['HTTP_HOST'];
-        $newmd5pwd = md5($newpwd);
-        mysql_query("UPDATE ".$TWITALYTIC_CFG['table_prefix']."owners set user_pwd='$newmd5pwd' where user_email='$_POST[email]'");
-        $message = "You have requested new login details from $host. Here are the login details...\n\n
-User Name: $_POST[email] \n
-Password: $newpwd \n
-____________________________________________
-*** LOGIN ***** \n
-To Login: http://$host/login.php \n\n
-_____________________________________________
-Thank you. This is an automated response. PLEASE DO NOT REPLY.
-";
+        $cryptpass = $session->pwdcrypt($newpass);
+        $od->updatePaassword($_POST['email'], $cryptpass);
 
-        mail($_POST['email'], "New Login Details", $message, "From: \"Auto-Response\" <robot@$host>\r\n"."X-Mailer: PHP/".phpversion());
+        $message = "You have requested new login details from $host. Here are the login details...\n\n";
+        $message .= "User Name: ".$_POST['email']." \n";
+        $message .= "Password: $newpwd \n";
+        $message .= "____________________________________________";
+        $message .= "*** LOGIN ***** \n";
+        $message .= "To Login: http://".$host.$THINKTANK_CFG['site_root_path']."session/login.php \n\n";
+        $message .= "_____________________________________________";
+        $message .= "Thank you. This is an automated response. PLEASE DO NOT REPLY.";
+        $header = "From: \"Auto-Response\" <robot@$host>\r\n";
+        $header .= "X-Mailer: PHP/".phpversion();
+        mail($_POST['email'], "New Login Details", $message, $header);
         
         die("Thank you. New Login details has been sent to your email address");
     } else
         die("Account with given email does not exist");
-        
 }
 $s = new SmartyThinkTank();
 $s->display('session.forgot.tpl');

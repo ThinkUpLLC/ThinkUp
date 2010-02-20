@@ -1,5 +1,6 @@
 <?php
 session_start(); 
-unset($_SESSION['user']);
+$session = new Session();
+$session->logout();
 header("Location: login.php");
 ?> 

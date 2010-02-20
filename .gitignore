@@ -10,3 +10,4 @@ build-db-starter-data.sql
 libs/*
 smarty/*
 .*
+autodeploy

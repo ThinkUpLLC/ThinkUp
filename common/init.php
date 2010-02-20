@@ -13,6 +13,7 @@ require_once 'class.FlickrAPIAccessor.php';
 require_once 'class.Crawler.php';		
 require_once 'class.Utils.php';	
 require_once 'class.Captcha.php';
+require_once 'class.Session.php';
 
 require_once 'class.TwitterAPIAccessorOAuth.php';
 require_once 'OAuth.php';		
