@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS `tt_follows` (
   `last_seen` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `active` int(11) NOT NULL default '1',
   PRIMARY KEY  (`user_id`,`follower_id`),
-  KEY `follower_id_user_id` (`follower_id`,`user_id`),
   KEY `active` (`active`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -115,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `tt_tweets` (
   UNIQUE KEY `status_id` (`status_id`),
   KEY `author_username` (`author_username`),
   KEY `pub_date` (`pub_date`),
+  KEY `in_reply_to_user_id` (`in_reply_to_user_id`),
   KEY `author_user_id` (`author_user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
