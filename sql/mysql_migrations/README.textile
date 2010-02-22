@@ -8,7 +8,7 @@ If a commit message starts with <code>[DB MIGRATION REQ'D]</code>, after you pul
 
 To run a migration script at the command line, substitute in your DB username and path to the ThinkTank files, and use this command:
 
-<code>mysql -u yourusername -p thinktank < /path/to/thinktank/db_migrations/YYY_MM_DD_script-name.sql</code>
+<code>mysql -u yourusername -p thinktank < /path/to/thinktank/sql/mysql_migrations/YYY_MM_DD_script-name.sql</code>
 
 Alternately, if you have web-based access to your database, like via PHPMyAdmin, copy and paste the migration script into the SQL window and run it.
 
