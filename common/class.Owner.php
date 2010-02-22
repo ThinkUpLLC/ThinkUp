@@ -1,11 +1,11 @@
-<?php
+<?php 
 class Owner {
     var $id;
     var $user_name;
     var $full_name;
     var $user_email;
     var $is_admin = false;
- 
+    
     function Owner($val) {
         $this->id = $val["id"];
         $this->user_name = $val["user_name"];
@@ -17,10 +17,10 @@ class Owner {
     }
     
 }
- 
+
 class OwnerDAO extends MySQLDAO {
     //Construct is located in parent
-
+    
     public function getByEmail($email) {
         $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, is_admin ";
         $q .= " FROM %prefix%owners AS o ";
@@ -30,14 +30,14 @@ class OwnerDAO extends MySQLDAO {
         mysql_free_result($sql_result);
         return new Owner($row);
     }
-    public function getUserExist($email){
+    public function doesOwnerExist($email) {
         $q = " SELECT user_email ";
         $q .= " FROM %prefix%owners ";
         $q .= " WHERE user_email='".$email."'";
+        $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) != 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -51,8 +51,7 @@ class OwnerDAO extends MySQLDAO {
             $row = mysql_fetch_assoc($sql_result);
             mysql_free_result($sql_result);
             return $row;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -66,8 +65,7 @@ class OwnerDAO extends MySQLDAO {
             $row = mysql_fetch_assoc($sql_result);
             mysql_free_result($sql_result);
             return $row;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -84,7 +82,7 @@ class OwnerDAO extends MySQLDAO {
     }
     public function updateActivate($email) {
         $q = " UPDATE %prefix%owners ";
-        $q .= " SET user_activated=1 "; 
+        $q .= " SET user_activated=1 ";
         $q .= " WHERE user_email='".$email."'";
         $this->executeSQL($q);
     }
@@ -101,5 +99,5 @@ class OwnerDAO extends MySQLDAO {
         $this->executeSQL($q);
     }
 }
- 
+
 ?>

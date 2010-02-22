@@ -8,7 +8,7 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once ("init.php");
 
 $session = new Session();
-if ($session->isLogedin()) { 
+if ($session->isLogedin()) {
     header("Location: ../index.php");
 }
 
@@ -29,13 +29,14 @@ if (!$THINKTANK_CFG['is_registration_open']) {
         if (strcmp($_POST['pass1'], $_POST['pass2']) || empty($_POST['pass1'])) {
             //die ("Password does not match");
             $msg = "ERROR: Password does not match or empty.";
-        } elseif ( !$captcha->check()) {
+        } elseif (!$captcha->check()) {
             //Captcha not valid, captcha handles message...
         } else {
-            if ($od->getUserExist($_POST['email'])) {
-                $msg = "ERROR: User account already exists..";
+            if ($od->doesOwnerExist($_POST['email'])) {
+                $msg = "ERROR: User account already exists.";
                 exit();
             } else {
+                $activ_code = rand(1000, 9999);
                 $cryptpass = $session->pwdcrypt($_POST['pass2']);
                 $server = $_SERVER['HTTP_HOST'];
                 $host = ereg_replace('www.', '', $server);
@@ -51,7 +52,7 @@ if (!$THINKTANK_CFG['is_registration_open']) {
                 mail($_POST['email'], "Login Activation", $message, $mailheader);
                 unset($_SESSION['ckey']);
                 echo("Registration Successful! An activation code has been sent to your email address with an activation link.");
-                exit;
+                exit();
             }
         }
         $s->assign('name', $_POST["full_name"]);
@@ -59,7 +60,7 @@ if (!$THINKTANK_CFG['is_registration_open']) {
     }
     $challenge = $captcha->generate($msg);
     $s->assign('captcha', $challenge);
-
+    
     if (isset($msg)) {
         $s->assign('msg', $_GET[msg]);
         $s->display('session.register.tpl', sha1($_GET['msg']));
