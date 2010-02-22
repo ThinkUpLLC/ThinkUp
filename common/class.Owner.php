@@ -22,7 +22,7 @@ class OwnerDAO extends MySQLDAO {
     //Construct is located in parent
 
     public function getByEmail($email) {
-        $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email ";
+        $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, is_admin ";
         $q .= " FROM %prefix%owners AS o ";
         $q .= " WHERE o.user_email = '".$email."';";
         $sql_result = $this->executeSQL($q);

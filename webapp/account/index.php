@@ -1,15 +1,16 @@
 <?php 
+// set up
+chdir("..");
+require_once ('config.webapp.inc.php');
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
+require_once ("init.php");
+
 session_start();
 $session = new Session();
 if (!$session->isLogedin()) {
     header("Location: ../index.php");
 }
 
-// set up
-chdir("..");
-require_once ('config.webapp.inc.php');
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-require_once ("init.php");
 
 $db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
@@ -27,7 +28,7 @@ if ($_POST['changepass'] == 'Change Password') {
     } elseif (strlen($_POST['pass1']) < 5) {
         die("ERROR: New password must be at least 5 characters.");
     } else {
-        $cryptpass = $session->pwdcrypt($_POST['pass1']); 
+        $cryptpass = $session->pwdcrypt($_POST['pass1']);
         $od->updatePaassword($_SESSION['user'], $cryptpass);
     }
 }
