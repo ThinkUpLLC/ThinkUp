@@ -115,7 +115,8 @@ CREATE TABLE IF NOT EXISTS `tt_tweets` (
   KEY `author_username` (`author_username`),
   KEY `pub_date` (`pub_date`),
   KEY `in_reply_to_user_id` (`in_reply_to_user_id`),
-  KEY `author_user_id` (`author_user_id`)
+  KEY `author_user_id` (`author_user_id`),
+  KEY `in_retweet_of_status_id` ( `in_retweet_of_status_id` )
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
