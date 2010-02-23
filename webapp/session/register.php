@@ -14,15 +14,18 @@ if ($session->isLogedin()) {
     header("Location: ../index.php");
 }
 
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
-$od = new OwnerDAO($db);
+$s = new SmartyThinkTank();
 
 if (!$THINKTANK_CFG['is_registration_open']) {
-    echo 'So sorry, but registration on this instance of ThinkTank is closed. <br /><br /><a href="http://github.com/ginatrapani/thinktank/tree/master">Install thinktank on your own server</a> or go back to <a href="'.$THINKTANK_CFG['site_root_path'].'public.php">the public timeline</a>.';
-    die();
+    $s->assign('closed', true);
+    $errormsg = 'Sorry, registration on this instance of ThinkTank is closed. <br /><br /><a href="http://github.com/ginatrapani/thinktank/tree/master">Install ThinkTank on your own server</a> or go back to <a href="'.$THINKTANK_CFG['site_root_path'].'public.php">the public timeline</a>.';
 } else {
-    $s = new SmartyThinkTank();
+    $db = new Database($THINKTANK_CFG);
+    $conn = $db->getConnection();
+    $od = new OwnerDAO($db);
+
+    
+    $s->assign('closed', false);
     $captcha = new Captcha($THINKTANK_CFG);
     if ($_POST['Submit'] == 'Register') {
         if (strlen($_POST['email']) < 5) {
@@ -61,12 +64,13 @@ if (!$THINKTANK_CFG['is_registration_open']) {
     $challenge = $captcha->generate($msg);
     $s->assign('captcha', $challenge);
     
-    if (isset($errormsg)) {
-        $s->assign('errormsg', $errormsg);
-    } elseif (isset($successmsg)) {
-        $s->assign('successmsg', $successmsg);
-    }
-    
-    $s->display('session.register.tpl');
 }
+if (isset($errormsg)) {
+    $s->assign('errormsg', $errormsg);
+} elseif (isset($successmsg)) {
+    $s->assign('successmsg', $successmsg);
+}
+
+$s->display('session.register.tpl');
+
 ?>
