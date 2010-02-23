@@ -144,7 +144,7 @@
 	{/foreach}	
 
 	{if $retweets}
-		<h3 align="center">Retweets</h3>
+		<h3 align="center">Retweets to {$rtreach|number_format} followers</h3>
 		{foreach from=$retweets key=tid item=t}
 		<ul>
 			{include file="_status.public.tpl" t=$t}

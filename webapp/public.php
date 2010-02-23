@@ -26,6 +26,10 @@ if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
         $s->assign('tweet', $tweet);
         $s->assign('replies', $public_tweet_replies);
         $s->assign('retweets', $public_retweets);
+		$rtreach = 0;
+		foreach ($public_retweets as $t )
+			$rtreach += $t->author->follower_count;
+		$s->assign('rtreach', $rtreach);
         $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
     }
     $s->display('public.tpl', $_REQUEST['t']);
