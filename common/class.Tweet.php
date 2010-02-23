@@ -48,7 +48,7 @@ class Tweet {
 
 class TweetDAO extends MySQLDAO {
     //Construct is located in parent
- 
+    
     function getTweet($status_id) {
         $q = "
 			SELECT 
@@ -69,16 +69,16 @@ class TweetDAO extends MySQLDAO {
         $t->author = $u;
         return $t;
     }
-
+    
     private function setTweetWithAuthorAndLink($row) {
         $u = new User($row, '');
         $l = new Link($row);
         $t = new Tweet($row);
         $t->author = $u;
-		$t->link = $l;
+        $t->link = $l;
         return $t;
     }
-
+    
     private function setTweetWithLink($row) {
         $l = new Link($row);
         $t = new Tweet($row);
@@ -142,8 +142,8 @@ class TweetDAO extends MySQLDAO {
         mysql_free_result($sql_result); # Free up memory
         return $tweets_stored;
     }
- 
-     function getRetweetsOfTweet($status_id, $public = false) {
+    
+    function getRetweetsOfTweet($status_id, $public = false) {
         $condition = "";
         if ($public)
             $condition = "AND u.is_protected = 0";
@@ -171,8 +171,8 @@ class TweetDAO extends MySQLDAO {
         return $tweets_stored;
     }
     
-	function getTweetReachViaRetweets($status_id) {
-       $q = "
+    function getTweetReachViaRetweets($status_id) {
+        $q = "
 			select 
 				SUM(u.follower_count) as total
 			from 
@@ -188,9 +188,9 @@ class TweetDAO extends MySQLDAO {
         $sql_result = $this->executeSQL($q);
         $row = mysql_fetch_assoc($sql_result);
         mysql_free_result($sql_result); # Free up memory
-		return $row['total'];
-	}
-	
+        return $row['total'];
+    }
+    
     function getTweetsAuthorHasRepliedTo($author_id, $count) {
         //TODO: Figure out a better way to do this, only returns 1-1 exchanges, not back-and-forth threads
         
@@ -393,12 +393,12 @@ class TweetDAO extends MySQLDAO {
 				author_user_id = ".$author_id."
 			ORDER BY 
 				pub_date DESC 
-			LIMIT ".$count.";";			
+			LIMIT ".$count.";";
 			
         $sql_result = $this->executeSQL($q);
         $all_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-			$all_tweets[] = $this->setTweetWithLink($row);
+            $all_tweets[] = $this->setTweetWithLink($row);
         }
         mysql_free_result($sql_result);
         return $all_tweets;
@@ -503,9 +503,8 @@ class TweetDAO extends MySQLDAO {
         return $all_tweets;
     }
 
-  
-    function getMostRepliedToTweets($user_id, $count) {
     
+    function getMostRepliedToTweets($user_id, $count) {
         $q = "
 			SELECT 
 				l.*, t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -528,8 +527,8 @@ class TweetDAO extends MySQLDAO {
         return $most_replied_to_tweets;
         
     }
-
-    function getMostRetweetedTweets($user_id, $count) {
+    
+    function getMostRetweetedTweets($user_id, $count, $public = false) {
     
         $q = "
 			SELECT 
@@ -653,7 +652,7 @@ class TweetDAO extends MySQLDAO {
         return $strays;
     }
     
-    function getTweetsByPublicInstances($count = 15) {
+	private function getTweetsByPublicInstancesOrderedBy($count=15, $orderby="pub_date") {
         $q = "
 			SELECT 
 				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -666,7 +665,7 @@ class TweetDAO extends MySQLDAO {
 			WHERE
 				i.is_public = 1 and (t.mention_count_cache > 0 or t.retweet_count_cache > 0) and in_reply_to_status_id is NULL
 			ORDER BY
-				t.pub_date DESC
+				t.".$orderby." DESC
 			LIMIT ".$count;
         $sql_result = $this->executeSQL($q);
         $tweets = array();
@@ -675,7 +674,20 @@ class TweetDAO extends MySQLDAO {
         }
         mysql_free_result($sql_result);
         return $tweets;
+	}
+
+    function getTweetsByPublicInstances($count = 15) {
+    	return $this->getTweetsByPublicInstancesOrderedBy($count, "pub_date");
     }
+    
+    function getMostRepliedToTweetsByPublicInstances($count = 15) {
+    	return $this->getTweetsByPublicInstancesOrderedBy($count, "mention_count_cache");
+    }
+
+    function getMostRetweetedTweetsByPublicInstances($count = 15) {
+    	return $this->getTweetsByPublicInstancesOrderedBy($count, "retweet_count_cache");
+    }
+
     
     function isTweetByPublicInstance($id) {
         $q = "
@@ -703,7 +715,7 @@ class TweetDAO extends MySQLDAO {
 
 class TweetErrorDAO extends MySQLDAO {
     //Construct is located in parent
- 
+    
     function insertError($id, $error_code, $error_text, $issued_to) {
         $q = "
 			INSERT INTO

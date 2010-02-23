@@ -30,12 +30,38 @@ if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
     }
     $s->display('public.tpl', $_REQUEST['t']);
     
+} elseif (isset($_REQUEST['v'])) {
+    $view = $_REQUEST['v'];
+    switch ($view) {
+        case 'timeline':
+            if (!$s->is_cached('public.tpl')) {
+                $s->assign('tweets', $td->getTweetsByPublicInstances());
+                $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
+            }
+            $s->display('public.tpl', 'timeline');
+            break;
+        case 'mostretweets':
+            if (!$s->is_cached('public.tpl', 'mostretweets')) {
+                $s->assign('tweets', $td->getMostRetweetedTweetsByPublicInstances());
+                $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
+            }
+            $s->display('public.tpl', 'mostretweets');
+            break;
+        case 'mostreplies':
+            if (!$s->is_cached('public.tpl', 'mostreplies')) {
+                $s->assign('tweets', $td->getMostRepliedToTweetsByPublicInstances());
+                $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
+            }
+            $s->display('public.tpl', 'mostreplies');
+            break;
+    }
+    
 } else {
-    if (!$s->is_cached('public.tpl')) {
+    if (!$s->is_cached('public.tpl', 'timeline')) {
         $s->assign('tweets', $td->getTweetsByPublicInstances());
         $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
     }
-    $s->display('public.tpl');
+    $s->display('public.tpl', 'timeline');
     
 }
 
