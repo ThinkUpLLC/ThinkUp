@@ -26,17 +26,16 @@ if (!$THINKTANK_CFG['is_registration_open']) {
     $captcha = new Captcha($THINKTANK_CFG);
     if ($_POST['Submit'] == 'Register') {
         if (strlen($_POST['email']) < 5) {
-            $msg = "Incorrect email. Please enter valid email address..";
+            $errormsg = "Incorrect email. Please enter valid email address.";
         }
         if (strcmp($_POST['pass1'], $_POST['pass2']) || empty($_POST['pass1'])) {
-            //die ("Password does not match");
-            $msg = "ERROR: Password does not match or empty.";
+            if (!isset($errormsg))
+                $errormsg = "Password does not match or empty.";
         } elseif (!$captcha->check()) {
             //Captcha not valid, captcha handles message...
         } else {
             if ($od->doesOwnerExist($_POST['email'])) {
-                $msg = "ERROR: User account already exists.";
-                exit();
+                $errormsg = "User account already exists.";
             } else {
                 $activ_code = rand(1000, 9999);
                 $cryptpass = $session->pwdcrypt($_POST['pass2']);
@@ -49,12 +48,11 @@ if (!$THINKTANK_CFG['is_registration_open']) {
                 $message .= "session/activate.php?usr=".urlencode($_POST[email])."&code=$activ_code \n\n";
                 $message .= "_____________________________________________";
                 $message .= "Thank you. This is an automated response. PLEASE DO NOT REPLY.";
-				
-				Mailer::mail($_POST['email'], "ThinkTank Login Activation", $message);
-
+                
+                Mailer::mail($_POST['email'], "ThinkTank Login Activation", $message);
+                
                 unset($_SESSION['ckey']);
-                echo("Registration Successful! An activation code has been sent to your email address with an activation link.");
-                exit();
+                $successmsg = "Success! Check your email for an activation link.";
             }
         }
         $s->assign('name', $_POST["full_name"]);
@@ -63,11 +61,12 @@ if (!$THINKTANK_CFG['is_registration_open']) {
     $challenge = $captcha->generate($msg);
     $s->assign('captcha', $challenge);
     
-    if (isset($msg)) {
-        $s->assign('msg', $_GET[msg]);
-        $s->display('session.register.tpl', sha1($_GET['msg']));
-    } else {
-        $s->display('session.register.tpl');
+    if (isset($errormsg)) {
+        $s->assign('errormsg', $errormsg);
+    } elseif (isset($successmsg)) {
+        $s->assign('successmsg', $successmsg);
     }
+    
+    $s->display('session.register.tpl');
 }
 ?>

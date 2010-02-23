@@ -1,22 +1,33 @@
-{strip}
-<html>
-  <head>
-    <link href="styles.css" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-  {if isset($msg)} <div class="msg"> {$msg} </div> {/if}
-  <p>&nbsp;</p>
-  <table width="65%" border="0" cellpadding="0" cellspacing="0">
-  <tr><td bgcolor="d5e8f9" class="mnuheader"><strong><font size="5">Register Account</font></strong></td></tr>
+
+
+{include file="session._header.tpl" title="Registration"}
+
+<h1>Register For ThinkTank</h1>
+
+<div class="content">
+  {if isset($errormsg)} <div class="error"> {$errormsg} </div> {/if}
+  {if isset($successmsg)} <div class="success"> {$successmsg} </div> {/if}
+
+<form name="form1" method="post" action="register.php" style="padding:5px;">
+  <table border="0" cellpadding="0" cellspacing="5" align="center">
   <tr>
-    <td bgcolor="e5ecf9" class="forumposts">
-      <form name="form1" method="post" action="register.php" style="padding:5px;">
-        <p><br>Name:<input name="full_name" type="text" id="full_name"{if isset($name)} value="{$name}"{/if}>Ex. John Wilson</p>
-        <p>Email:<input name="email" type="text" id="email" {if isset($mail)} value="{$mail}"{/if}>Ex. john@domain.com</p>
-        <p>Password:<input name="pass1" type="password" id="pass1">At least 5 chars</p>
-        <p>Retype Password:<input name="pass2" type="password" id="pass2"></p>
-        <p>Country:
-          <select name="country" id="select8">
+    <td align="right">Name: </td>
+	<td><input name="full_name" type="text" id="full_name"{if isset($name)} value="{$name}"{/if}><br /><small>Ex. John Wilson</small></td>
+</tr>
+<tr>
+	<td align="right">Email:</td>
+	<td><input name="email" type="text" id="email" {if isset($mail)} value="{$mail}"{/if}><br /><small>Ex. john@domain.com</small></td>
+</tr>
+<tr>
+	<td align="right">Password:</td>
+	<td><input name="pass1" type="password" id="pass1"><br /><small>At least 5 chars</small></td>
+</tr>
+<tr>
+	<td align="right">Retype Password:</td>
+	<td><input name="pass2" type="password" id="pass2"></td>
+</tr>
+	<td align="right">Country:</td>
+	<td><select name="country" id="select8">
             <option value="Afghanistan">Afghanistan</option>
             <option value="Albania">Albania</option>
             <option value="Algeria">Algeria</option>
@@ -188,15 +199,20 @@
             <option value="Wallis and Futuna Islands">Wallis and Futuna Islands</option>
             <option value="Yemen">Yemen</option>
             <option value="Yugoslavia">Yugoslavia</option>
-          </select>
-        </p>
-        <p>{$captcha} </p>
-        <p align="center"><input type="submit" name="Submit" value="Register"></p>
+          </select></td>
+		 </tr>
+		 <tr>
+		 	<td>Prove you're human:</td>
+			<td>{$captcha} </td>
+		</tr>
+		<tr><td></td>
+		<td><input type="submit" name="Submit" value="Register"></td>
+		</tr>
       </form>
-    </td>
-  </tr>
   </table>
-  <div align="left"></div>
+  <br /><br />
+  <center>Already have an account? <a href="login.php">Sign in</a></center>
+
   </body>
 </html>
-{/strip}
+

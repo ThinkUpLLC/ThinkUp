@@ -180,6 +180,15 @@
 		 	border: solid 1px #ccc;
 		 }
 
+		.error {
+			background-color:#FF8080;
+			padding:10px;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			color:white;
+			text-align:center;
+			font-weight:bold;
+		}
 		 /******* /Tweet Formatting ********/
 
 		
