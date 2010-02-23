@@ -129,7 +129,7 @@
 <h1>ThinkTank</h1>
 {include file="_header.login.tpl" mode="public"}	
 <p></p><small>Last crawl {$crawler_last_run|relative_datetime}</small></p>
-<p><a href="{$cfg->site_root_path}public.php">Latest</a> | <a href="{$cfg->site_root_path}public.php?v=mostreplies">Most Replied-To</a> | <a href="{$cfg->site_root_path}public.php?v=mostretweets">Most Retweeted</a>
+<p><a href="{$cfg->site_root_path}public.php">Latest</a> | <a href="{$cfg->site_root_path}public.php?v=mostreplies">Most Replied-To</a> | <a href="{$cfg->site_root_path}public.php?v=mostretweets">Most Retweeted</a> | <a href="{$cfg->site_root_path}public.php?v=photos">Photos</a> | <a href="{$cfg->site_root_path}public.php?v=links">Links</a>
 
 <div class="content">
 {if $tweet and ($replies OR $retweets) }

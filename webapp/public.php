@@ -58,6 +58,21 @@ if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
             }
             $s->display('public.tpl', 'mostreplies');
             break;
+        case 'photos':
+            if (!$s->is_cached('public.tpl', 'photos')) {
+                $s->assign('tweets', $td->getPhotoTweetsByPublicInstances());
+                $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
+            }
+            $s->display('public.tpl', 'photos');
+            break;
+        case 'links':
+            if (!$s->is_cached('public.tpl', 'links')) {
+                $s->assign('tweets', $td->getLinkTweetsByPublicInstances());
+                $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
+            }
+            $s->display('public.tpl', 'links');
+            break;
+
     }
     
 } else {

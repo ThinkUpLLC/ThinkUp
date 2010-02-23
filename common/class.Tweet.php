@@ -652,7 +652,7 @@ class TweetDAO extends MySQLDAO {
         return $strays;
     }
     
-	private function getTweetsByPublicInstancesOrderedBy($count=15, $orderby="pub_date") {
+    private function getTweetsByPublicInstancesOrderedBy($count = 15, $orderby = "pub_date") {
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
@@ -678,18 +678,75 @@ class TweetDAO extends MySQLDAO {
         }
         mysql_free_result($sql_result);
         return $tweets;
-	}
-
-    function getTweetsByPublicInstances($count = 15) {
-    	return $this->getTweetsByPublicInstancesOrderedBy($count, "pub_date");
     }
     
-    function getMostRepliedToTweetsByPublicInstances($count = 15) {
-    	return $this->getTweetsByPublicInstancesOrderedBy($count, "mention_count_cache");
+    function getTweetsByPublicInstances($count = 15) {
+        return $this->getTweetsByPublicInstancesOrderedBy($count, "pub_date");
+    }
+    
+    function getPhotoTweetsByPublicInstances($count = 15) {
+        $q = "
+			SELECT 
+				l.*, t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+			FROM 
+				%prefix%tweets t
+			INNER JOIN
+				%prefix%instances i
+			ON
+				t.author_user_id = i.twitter_user_id
+			LEFT JOIN
+				%prefix%links l
+			ON t.status_id = l.status_id
+
+			WHERE
+				i.is_public = 1 and l.is_image = 1 
+			ORDER BY
+				t.pub_date DESC
+			LIMIT ".$count;
+        $sql_result = $this->executeSQL($q);
+        $tweets = array();
+        while ($row = mysql_fetch_assoc($sql_result)) {
+            $tweets[] = $this->setTweetWithLink($row);
+        }
+        mysql_free_result($sql_result);
+        return $tweets;
+    }
+    
+    function getLinkTweetsByPublicInstances($count = 15) {
+        $q = "
+			SELECT 
+				l.*, t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+			FROM 
+				%prefix%tweets t
+			INNER JOIN
+				%prefix%instances i
+			ON
+				t.author_user_id = i.twitter_user_id
+			LEFT JOIN
+				%prefix%links l
+			ON t.status_id = l.status_id
+
+			WHERE
+				i.is_public = 1 and l.expanded_url != '' and l.is_image = 0 
+			ORDER BY
+				t.pub_date DESC
+			LIMIT ".$count;
+        $sql_result = $this->executeSQL($q);
+        $tweets = array();
+        while ($row = mysql_fetch_assoc($sql_result)) {
+            $tweets[] = $this->setTweetWithLink($row);
+        }
+        mysql_free_result($sql_result);
+        return $tweets;
     }
 
+    
+    function getMostRepliedToTweetsByPublicInstances($count = 15) {
+        return $this->getTweetsByPublicInstancesOrderedBy($count, "mention_count_cache");
+    }
+    
     function getMostRetweetedTweetsByPublicInstances($count = 15) {
-    	return $this->getTweetsByPublicInstancesOrderedBy($count, "retweet_count_cache");
+        return $this->getTweetsByPublicInstancesOrderedBy($count, "retweet_count_cache");
     }
 
     
