@@ -655,13 +655,17 @@ class TweetDAO extends MySQLDAO {
 	private function getTweetsByPublicInstancesOrderedBy($count=15, $orderby="pub_date") {
         $q = "
 			SELECT 
-				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			INNER JOIN
 				%prefix%instances i
 			ON
 				t.author_user_id = i.twitter_user_id
+			LEFT JOIN
+				%prefix%links l
+			ON t.status_id = l.status_id
+
 			WHERE
 				i.is_public = 1 and (t.mention_count_cache > 0 or t.retweet_count_cache > 0) and in_reply_to_status_id is NULL
 			ORDER BY
@@ -670,7 +674,7 @@ class TweetDAO extends MySQLDAO {
         $sql_result = $this->executeSQL($q);
         $tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $tweets[] = new Tweet($row);
+            $tweets[] = $this->setTweetWithLink($row);
         }
         mysql_free_result($sql_result);
         return $tweets;

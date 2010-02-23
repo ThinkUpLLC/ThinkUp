@@ -8,9 +8,16 @@
 			</div>
 				
 			<div class="tweet-body">
+				{if $t->link->is_image}<a href="{$t->link->url}"><img src="{$t->link->expanded_url}" style="float:right;background:#eee;padding:5px" /></a>{/if}
+				
+				
 				<p>{$t->tweet_html|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}<!-- {if $t->in_reply_to_status_id}[<a href="{$site_root}status/?t={$t->in_reply_to_status_id}">in reply to</a>]{/if}--></p>
+
+				{if $t->link->expanded_url}<a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->title}</a>{/if}
+
 				<h3><a href="http://twitter.com/{$t->author_username}/status/{$t->status_id}">{$t->adj_pub_date|relative_datetime}</a><h3>
 				{if $t->author->location}<h4 class="tweetstamp">{$t->author->location}</h4>{/if}
+
 
 			</div>
 		
