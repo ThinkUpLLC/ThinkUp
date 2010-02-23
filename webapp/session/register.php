@@ -7,6 +7,8 @@ require_once ('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once ("init.php");
 
+require_once ("class.Mailer.php");
+
 $session = new Session();
 if ($session->isLogedin()) {
     header("Location: ../index.php");
@@ -47,9 +49,9 @@ if (!$THINKTANK_CFG['is_registration_open']) {
                 $message .= "session/activate.php?usr=".urlencode($_POST[email])."&code=$activ_code \n\n";
                 $message .= "_____________________________________________";
                 $message .= "Thank you. This is an automated response. PLEASE DO NOT REPLY.";
-                $mailheader = "From: \"Auto-Response\" <notifications@$host>\r\n";
-                $mailheader .= "X-Mailer: PHP/".phpversion();
-                mail($_POST['email'], "Login Activation", $message, $mailheader);
+				
+				Mailer::mail($_POST['email'], "ThinkTank Login Activation", $message);
+
                 unset($_SESSION['ckey']);
                 echo("Registration Successful! An activation code has been sent to your email address with an activation link.");
                 exit();
