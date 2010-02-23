@@ -55,7 +55,7 @@ class Instance {
 
 class InstanceDAO extends MySQLDAO {
     //Construct is located in parent
-	
+    
     function getInstanceStalestOne() {
         return $this->getInstanceOneByLastRun("ASC");
     }
@@ -107,8 +107,7 @@ class InstanceDAO extends MySQLDAO {
     
     function getInstanceOneByLastRun($order) {
         $q = "
-			SELECT , ".$this->getAverageReplyCount()."
-				* 
+			SELECT *, ".$this->getAverageReplyCount()."
 			FROM 
 				%prefix%instances 
 			ORDER BY 

@@ -609,7 +609,7 @@ class TweetDAO extends MySQLDAO {
 			ON
 				t.author_user_id = i.twitter_user_id
 			WHERE
-				i.is_public = 1 and t.mention_count_cache > 0 and in_reply_to_status_id is NULL
+				i.is_public = 1 and (t.mention_count_cache > 0 or t.retweet_count_cache > 0) and in_reply_to_status_id is NULL
 			ORDER BY
 				t.pub_date DESC
 			LIMIT ".$count;

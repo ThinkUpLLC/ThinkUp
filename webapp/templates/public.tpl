@@ -126,9 +126,12 @@
 
 <body>
 <center>
+<h1>ThinkTank</h1>
+{include file="_header.login.tpl" mode="public"}	
+<p></p><small><a href="{$cfg->site_root_path}public.php">Public timeline</a>, last updated {$crawler_last_run|relative_datetime}</small></p>
 
 <div class="content">
-{if $tweet and $replies}
+{if $tweet and ($replies OR $retweets) }
 	<div class="tweet">
 	<h2>{$tweet->tweet_html|link_usernames_to_twitter}</h2> <div class="tweetmeta">-<a href="http://twitter.com/{$tweet->author_username}/">{$tweet->author_username}</a>, <small><a href="http://twitter.com/{$tweet->author_username}/status/{$tweet->status_id}/">{$tweet->pub_date|relative_datetime}</a></small></div>
 	
@@ -138,6 +141,15 @@
 		{include file="_status.public.tpl" t=$t}
 	</ul>
 	{/foreach}	
+
+	{if $retweets}
+		<h3 align="center">Retweets</h3>
+		{foreach from=$retweets key=tid item=t}
+		<ul>
+			{include file="_status.public.tpl" t=$t}
+		</ul>
+		{/foreach}	
+	{/if}
 
 </div>
 <h2>Replies to a Single Tweet</h2>
@@ -157,14 +169,12 @@
 
 </div>
 
-<p>Tweets and Replies Archived and Curated with <a href="http://thinktankapp.com">ThinkTank</a></p>
-
 {/if}
 
 
-<p>[<a href="{$cfg->site_root_path}session/login.php">Sign in</a>]</p>
 <script type="text/javascript" src="{$cfg->site_root_path}cssjs/linkify.js"></script>
-
+<p>Set up your own <a href="http://thinktankapp.com">ThinkTank</a></p>
+<p>It is nice to be nice</p>
 	</center>
 </body>
 </html>
