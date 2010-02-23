@@ -1,0 +1,1 @@
+ALTER TABLE `tt_tweets` ADD KEY `in_retweet_of_status_id` ( `in_retweet_of_status_id` );
