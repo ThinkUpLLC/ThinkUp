@@ -20,6 +20,7 @@ $conn = $db->getConnection();
 $od = new OwnerDAO($db);
 
 $s = new SmartyThinkTank();
+$s->caching=false;
 
 if ($_POST['Submit'] == 'Send') {
     $host = $_SERVER['HTTP_HOST'];
@@ -32,9 +33,9 @@ if ($_POST['Submit'] == 'Send') {
         $message = "Password recovery information you requested from $host:\n\n";
         $message .= "User Name: ".$_POST['email']." \n";
         $message .= "Password: $newpwd \n";
-        $message .= "____________________________________________";
+        $message .= "____________________________________________\n";
         $message .= "*** LOGIN ***** \n";
-        $message .= "To Login: http://".$host.$THINKTANK_CFG['site_root_path']."session/login.php \n\n";
+        $message .= "http://".$host.$THINKTANK_CFG['site_root_path']."session/login.php \n\n";
         $message .= "_____________________________________________";
         $message .= "Thank you. This is an automated response. PLEASE DO NOT REPLY.";
 

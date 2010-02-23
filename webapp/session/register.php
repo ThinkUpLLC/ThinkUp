@@ -15,6 +15,7 @@ if ($session->isLoggedIn()) {
 }
 
 $s = new SmartyThinkTank();
+$s->caching=false;
 
 if (!$THINKTANK_CFG['is_registration_open']) {
     $s->assign('closed', true);

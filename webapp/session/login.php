@@ -18,6 +18,7 @@ $conn = $db->getConnection();
 $od = new OwnerDAO($db);
 $user_email = mysql_real_escape_string($_POST['email']);
 $s = new SmartyThinkTank();
+$s->caching=false;
 
 if ($_POST['Submit'] == 'Login') {
     $result = $od->getForLogin($user_email);
