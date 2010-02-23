@@ -5,7 +5,7 @@ class Session {
     public function __construct() {
         $data = $_SESSION;
     }
-    public function isLogedin() {
+    public function isLoggedIn() {
         if (!isset($_SESSION['user'])) {
             return false;
         } else {
@@ -33,7 +33,7 @@ class Session {
             return false;
         }
     }
-    public function CompleteLogin($data) {
+    public function completeLogin($data) {
         $_SESSION['user'] = $data['mail'];
     }
     public function logout() {

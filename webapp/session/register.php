@@ -10,7 +10,7 @@ require_once ("init.php");
 require_once ("class.Mailer.php");
 
 $session = new Session();
-if ($session->isLogedin()) {
+if ($session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 

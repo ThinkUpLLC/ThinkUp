@@ -8,7 +8,7 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once ("init.php");
 
 $session = new Session();
-if ($session->isLogedin()) {
+if ($session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
@@ -27,7 +27,7 @@ if ($_POST['Submit'] == 'Login') {
         header("Location: login.php?emsg=Incorrect+email+or+password");
     } else {
         // this sets variables in the session
-        $session->CompleteLogin($result);
+        $session->completeLogin($result);
         if (isset($_GET['ret']) && ! empty($_GET['ret'])) {
             header("Location: $_GET[ret]");
         } else {

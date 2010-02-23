@@ -7,7 +7,7 @@ require_once ("init.php");
 
 session_start();
 $session = new Session();
-if (!$session->isLogedin()) {
+if (!$session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
