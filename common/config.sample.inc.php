@@ -12,6 +12,7 @@ $THINKTANK_CFG['oauth_consumer_secret'] = 'yourconsumersecret';
  
 $THINKTANK_CFG['app_title'] = 'ThinkTank';
 $THINKTANK_CFG['log_location'] = '/your-path-to/thinktank/crawler/logs/crawler.log';
+$THINKTANK_CFG['sql_log_location'] = '/your-path-to/thinktank/crawler/logs/sql.log';
 $THINKTANK_CFG['smarty_path'] = '/usr/local/php5/lib/php/smarty/libs/';
 
 // Set the following to the public path of the webapp on your web server
