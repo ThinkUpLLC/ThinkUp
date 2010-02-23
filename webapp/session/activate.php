@@ -11,7 +11,8 @@ if (!isset($_GET['usr']) || !isset($_GET['code']) ) {
     echo "ERROR: Invalid code given...";
     exit(); 
 }
-$db = new Database($THINKTANK_CFG);
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+$db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 $od = new OwnerDAO($db);
 
@@ -23,5 +24,5 @@ if ($_GET['code'] == $acode['activation_code']) {
 } else {
     echo "ERROR: Incorrect activation code...not valid"; 
 }
-
+$SQLLogger->close();
 ?>

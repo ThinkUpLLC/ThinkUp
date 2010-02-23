@@ -3,7 +3,9 @@ require_once('config.crawler.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
-$db = new Database($THINKTANK_CFG);
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+
+$db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 
 $logger = new Logger($THINKTANK_CFG['log_location']);
@@ -56,6 +58,7 @@ foreach ($instances as $i) {
 }
 
 $logger->close();			# Close logging
+$SQLLogger->close();
 
 if ( isset($conn) ) $db->closeConnection($conn); // Clean up
 ?>

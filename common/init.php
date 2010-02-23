@@ -19,6 +19,7 @@ require_once 'class.TwitterAPIAccessorOAuth.php';
 require_once 'OAuth.php';		
 require_once 'twitterOAuth.php';		
 
+require_once 'class.LoggerSlowSQL.php';		
 
 # crawler only
 require_once 'class.Logger.php';		

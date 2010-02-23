@@ -1,7 +1,6 @@
 <?php 
-class Logger {
+class LoggerSlowSQL {
     var $log;
-    var $twitter_username;
     
     function __construct($location) {
         $this->log = $this->openFile($location, 'a'); # Append to any prior file
@@ -11,10 +10,10 @@ class Logger {
         $this->twitter_username = $uname;
     }
 	
-    function logStatus($status_message, $classname) {
-        $status_signature = date("Y-m-d H:i:s", time())." | ".(string) number_format(round(memory_get_usage() / 1024000, 2), 2)." MB | $this->twitter_username | $classname:";
-        if (strlen($status_message) > 0) {
-            $this->writeFile($this->log, $status_signature.$status_message); # Write status to log
+    function logQuery($query, $time) {
+        $log_signature = date("Y-m-d H:i:s", time())." | ".(string) number_format(round(memory_get_usage() / 1024000, 2), 2)." MB | ";
+        if (strlen($query) > 0) {
+            $this->writeFile($this->log, $log_signature.$query." | ".$time." Seconds"); # Write status to log
         }
     }
     

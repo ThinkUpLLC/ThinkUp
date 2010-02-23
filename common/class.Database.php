@@ -6,13 +6,15 @@ class Database {
     var $db_password;
     var $logger = null;
     var $table_prefix;
-	var $GMT_offset=8;
+    var $lq_treshold = 2.0;
+    var $GMT_offset=8;
     
-    function Database($THINKTANK_CFG) {
+    function __construct($THINKTANK_CFG, $logger=null) {
         $this->db_host = $THINKTANK_CFG['db_host'];
         $this->db_name = $THINKTANK_CFG['db_name'];
         $this->db_user = $THINKTANK_CFG['db_user'];
         $this->db_password = $THINKTANK_CFG['db_password'];
+        $this->logger = $logger; 
         if (isset($THINKTANK_CFG['table_prefix']))
             $this->table_prefix = $THINKTANK_CFG['table_prefix'];
         if (isset($THINKTANK_CFG['GMT_offset']))
@@ -40,11 +42,16 @@ class Database {
         $q = str_replace('%gmt_offset%', $this->GMT_offset, $q);
 
         //echo $q;
+        $starttime = microtime(true);
         $r = mysql_query($q) or $fail = true;
-		if ($fail)
-            throw new Exception("ERROR: 
-			Query failed: ".$q. " 
-			 ".mysql_error());		
+        $endtime = microtime(true);
+        $totaltime = $endtime - $starttime;
+        if ( $totaltime >= $this->lq_treshold && $this->logger != null ){
+            $this->logger->logQuery($q, $totaltime);
+        }
+	if ($fail){
+            throw new Exception("ERROR: Query failed: ".$q." ".mysql_error());		
+        }
         return $r;
     }
     

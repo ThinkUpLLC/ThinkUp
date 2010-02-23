@@ -24,7 +24,8 @@ else
 $tu = $_POST['twitter_username'];
 $tp = $_POST['twitter_password'];
 
-$db = new Database($THINKTANK_CFG);
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+$db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 $od = new OwnerDAO($db);
 
@@ -73,6 +74,6 @@ if ( $twitter_id > 0 ) {
 }
 
 echo '<br /> <a href="'.$THINKTANK_CFG['site_root_path'].'account/">Back to your account</a>.';
-
+$SQLLogger->close();
 
 ?>

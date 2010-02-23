@@ -6,8 +6,8 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
 $cfg = new Config();
-$db = new Database($THINKTANK_CFG);
-$s = new SmartyThinkTank();
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+$db = new Database($THINKTANK_CFG, $SQLLogger);
 $c = new Crawler();
 
 $conn = $db->getConnection();
@@ -27,6 +27,7 @@ $s->assign('cfg', $cfg);
 
 # clean up
 $db->closeConnection($conn);	
+$SQLLogger->close();
 
 echo $s->fetch('replies.public.tpl');
 

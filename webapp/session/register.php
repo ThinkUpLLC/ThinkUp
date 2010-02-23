@@ -12,7 +12,8 @@ if ($session->isLogedin()) {
     header("Location: ../index.php");
 }
 
-$db = new Database($THINKTANK_CFG);
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+$db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 $od = new OwnerDAO($db);
 
@@ -67,4 +68,5 @@ if (!$THINKTANK_CFG['is_registration_open']) {
         $s->display('session.register.tpl');
     }
 }
+$SQLLogger->close();
 ?>
