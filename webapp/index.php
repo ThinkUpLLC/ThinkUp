@@ -103,7 +103,7 @@ if(!$s->is_cached('index.tpl', $i->twitter_username."-".$_SESSION['user'])) {
 
 # clean up
 $db->closeConnection($conn);	
-i$SQLLogger->close();
+$SQLLogger->close();
 
 $s->display('index.tpl', $i->twitter_username."-".$_SESSION['user']);
 
