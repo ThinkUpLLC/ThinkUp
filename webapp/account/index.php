@@ -7,7 +7,7 @@ require_once ("init.php");
 
 session_start();
 $session = new Session();
-if (!$session->isLoggedIn()) {
+if (!$session->isLoggedn()) {
     header("Location: ../index.php");
 }
 
@@ -36,7 +36,7 @@ if ($_POST['changepass'] == 'Change Password') {
 }
 $id = new InstanceDAO($db);
 $od = new OwnerDAO($db);
-$cfg = new Config($db);
+$cfg = new Config();
 $s = new SmartyThinkTank();
 $s->caching = 0;
 

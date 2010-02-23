@@ -49,6 +49,8 @@ if (isset($emsg)) {
     $s->assign('successmsg', $smsg);
 }
 
+$cfg = new Config();
+$s->assign('cfg', $cfg);
 $s->display('session.login.tpl');
 
 ?>

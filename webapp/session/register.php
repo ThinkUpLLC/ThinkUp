@@ -71,7 +71,8 @@ if (isset($errormsg)) {
 } elseif (isset($successmsg)) {
     $s->assign('successmsg', $successmsg);
 }
-
+$cfg = new Config();
+$s->assign('cfg', $cfg);
 $s->display('session.register.tpl');
 
 ?>
