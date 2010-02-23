@@ -499,6 +499,28 @@ class TweetDAO extends MySQLDAO {
         return $most_replied_to_tweets;
         
     }
+
+    function getMostRetweetedTweets($user_id, $count) {
+    
+        $q = "
+			SELECT 
+				t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
+			FROM 
+				%prefix%tweets t
+			WHERE
+				author_user_id = ".$user_id."
+			ORDER BY
+				retweet_count_cache DESC 
+			LIMIT ".$count.";";
+        $sql_result = $this->executeSQL($q);
+        $most_retweeted_tweets = array();
+        while ($row = mysql_fetch_assoc($sql_result)) {
+            $most_retweeted_tweets[] = new Tweet($row);
+        }
+        mysql_free_result($sql_result);
+        return $most_retweeted_tweets;
+        
+    }
     
     function getOrphanReplies($user_name, $count) {
     
@@ -513,7 +535,8 @@ class TweetDAO extends MySQLDAO {
 				u.user_id = t.author_user_id 
 			WHERE 
 				tweet_text LIKE '%".$user_name."%' AND
-				in_reply_to_status_id is null
+				in_reply_to_status_id is null AND
+				in_retweet_of_status_id is null
 			ORDER BY 
 				pub_date DESC 
 			LIMIT ".$count.";";

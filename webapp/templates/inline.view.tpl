@@ -2,6 +2,7 @@
 <div>{$description}</div>
 	{if ($display eq 'tweets-all' and not $all_tweets) or 
 		($display eq 'tweets-mostreplies' and not $most_replied_to_tweets) or
+		($display eq 'tweets-mostretweeted' and not $most_retweeted) or
 		($display eq 'tweets-convo' and not $author_replies)}
 		<h2 class="alert">&#9888; No tweets to display.</h2>
 	{/if}
@@ -21,6 +22,13 @@
 		{/foreach}
 	{/if}
 
+	{if $most_retweeted}
+		{foreach from=$most_retweeted key=tid item=t}
+		<ul>
+			{include file="_status.mine.tpl" t=$t}
+		</ul>
+		{/foreach}
+	{/if}
 
 	{if $author_replies}
 		{foreach from=$author_replies key=tahrt item=r}

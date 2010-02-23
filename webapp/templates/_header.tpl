@@ -249,6 +249,9 @@
 				case "tweets-mostreplies":
 					tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-mostreplies", hideLoading);
 					break;
+				case "tweets-mostretweeted":
+					tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-mostretweeted", hideLoading);
+					break;
 				case "tweets-convo":
 					tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-convo", hideLoading); 
 					break;
