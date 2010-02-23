@@ -20,9 +20,9 @@ $acode = $od->getActivationCode($_GET['usr']);
 
 if ($_GET['code'] == $acode['activation_code']) {
     $od->updateActivate($_GET['usr']);
-    echo "<h3>Thank you </h3>Email confirmed and account activated. You can <a href=\"login.php\">login</a> now..";
+	header("Location: login.php?smsg=Success!+Your+account+has+been+activated.+You+may+sign+into+ThinkTank.");
 } else {
-    echo "ERROR: Incorrect activation code...not valid"; 
+	header("Location: login.php?emsg=Houston,+we+have+a+problem:+account+activation+failed.");
 }
 $SQLLogger->close();
 ?>

@@ -1,15 +1,16 @@
 <?php 
-session_start();
-$session = new Session();
-if (!$session->isLogedin()) {
-    header("Location: ../index.php");
-}
-
 // set up
 chdir("..");
 require_once ('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once ("init.php");
+
+session_start();
+$session = new Session();
+if (!$session->isLoggedIn()) {
+    header("Location: ../index.php");
+}
+
 
 $SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
 $db = new Database($THINKTANK_CFG, $SQLLogger);
@@ -22,19 +23,21 @@ if ($_POST['changepass'] == 'Change Password') {
     $originalpass = $od->getPass($_SESSION['user']);
     $origpass = $originalpass['pwd'];
     if ($session->pwdCheck($_POST['oldpass'], $origpass)) {
-        die("ERROR: Old password does not match or empty.");
+        $errormsg = "Old password does not match or empty.";
     } elseif ($_POST['pass1'] != $_POST['pass2']) {
-        die("ERROR: New passwords must match.");
+        $errormsg = "New passwords did not match. Your password has not been changed.";
     } elseif (strlen($_POST['pass1']) < 5) {
-        die("ERROR: New password must be at least 5 characters.");
+        $errormsg = "New password must be at least 5 characters. Your password has not been changed.";
     } else {
-        $cryptpass = $session->pwdcrypt($_POST['pass1']); 
-        $od->updatePaassword($_SESSION['user'], $cryptpass);
+        $cryptpass = $session->pwdcrypt($_POST['pass1']);
+        $od->updatePassword($_SESSION['user'], $cryptpass);
+        $successmsg = "Your password has been updated.";
+
     }
 }
 $id = new InstanceDAO($db);
 $od = new OwnerDAO($db);
-$cfg = new Config($db);
+$cfg = new Config();
 $s = new SmartyThinkTank();
 $s->caching = 0;
 
@@ -56,6 +59,11 @@ $s->assign('cfg', $cfg);
 $s->assign('oauthorize_link', $oauthorize_link);
 # clean up
 $db->closeConnection($conn);
+
+if (isset($errormsg)) 
+    $s->assign('errormsg', $errormsg);
+if (isset($successmsg)) 
+    $s->assign('successmsg', $successmsg);
 
 $s->display('account.index.tpl');
 $SQLLogger->close();

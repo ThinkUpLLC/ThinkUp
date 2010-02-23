@@ -180,6 +180,15 @@
 		 	border: solid 1px #ccc;
 		 }
 
+		.error {
+			background-color:#FF8080;
+			padding:10px;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			color:white;
+			text-align:center;
+			font-weight:bold;
+		}
 		 /******* /Tweet Formatting ********/
 
 		
@@ -239,6 +248,9 @@
 					break;
 				case "tweets-mostreplies":
 					tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-mostreplies", hideLoading);
+					break;
+				case "tweets-mostretweeted":
+					tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-mostretweeted", hideLoading);
 					break;
 				case "tweets-convo":
 					tweets_content.load("inline.view.php?u={$instance->twitter_username}&d=tweets-convo", hideLoading); 

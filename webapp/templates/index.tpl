@@ -12,7 +12,7 @@
 
 		<ul>
 			<li><a href="#updates">Tweets</a></li>
-			<li><a href="#mentions">Mentions</a></li>
+			<li><a href="#mentions">Replies</a></li>
 			<li><a href="#followers">Followers</a></li>
 			<li><a href="#friends">Friends</a></li>
 			<li><a href="#links">Links</a></li>
@@ -28,6 +28,7 @@
 		<ul id="menu">
 			<li id="tweets-all">All</li>
 			<li id="tweets-mostreplies">Most&nbsp;Replied-To</li>
+			<li id="tweets-mostretweeted">Most&nbsp;Retweeted</li>
 			<li id="tweets-convo">Conversations</li>
 		</ul>
 
@@ -46,9 +47,9 @@
 		<div id="loading"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..." /></div>
 	
 		<ul id="menu">
-			<li id="mentions-all">All</li>
+			<li id="mentions-all">All&nbsp;Mentions</li>
 			<li id="mentions-allreplies">Replies</li>
-			<li id="mentions-orphan">Not&nbsp;Replies</li>
+			<li id="mentions-orphan">Not&nbsp;Replies&nbsp;or&nbsp;Retweets</li>
 			<li id="mentions-standalone">Standalone</li>
 		</ul>
 

@@ -3,12 +3,15 @@ session_start();
 
 // set up
 chdir("..");
-require_once('config.webapp.inc.php');
+require_once ('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-require_once("init.php");
+require_once ("init.php");
+
+require_once ("class.Mailer.php");
+
 
 $session = new Session();
-if ($session->isLogedin()) { 
+if ($session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
@@ -17,31 +20,40 @@ $db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 $od = new OwnerDAO($db);
 
+$s = new SmartyThinkTank();
+$s->caching=false;
+
 if ($_POST['Submit'] == 'Send') {
     $host = $_SERVER['HTTP_HOST'];
-    if (getUserExist($_POST['email'])) {
+    if ($od->doesOwnerExist($_POST['email'])) {
         $newpwd = rand(10000, 99999);
         $host = $_SERVER['HTTP_HOST'];
-        $cryptpass = $session->pwdcrypt($newpass);
-        $od->updatePaassword($_POST['email'], $cryptpass);
-
-        $message = "You have requested new login details from $host. Here are the login details...\n\n";
+        $cryptpass = $session->pwdcrypt($newpwd);
+        $od->updatePassword($_POST['email'], $cryptpass);
+        
+        $message = "Password recovery information you requested from $host:\n\n";
         $message .= "User Name: ".$_POST['email']." \n";
         $message .= "Password: $newpwd \n";
-        $message .= "____________________________________________";
+        $message .= "____________________________________________\n";
         $message .= "*** LOGIN ***** \n";
-        $message .= "To Login: http://".$host.$THINKTANK_CFG['site_root_path']."session/login.php \n\n";
+        $message .= "http://".$host.$THINKTANK_CFG['site_root_path']."session/login.php \n\n";
         $message .= "_____________________________________________";
         $message .= "Thank you. This is an automated response. PLEASE DO NOT REPLY.";
-        $header = "From: \"Auto-Response\" <robot@$host>\r\n";
-        $header .= "X-Mailer: PHP/".phpversion();
-        mail($_POST['email'], "New Login Details", $message, $header);
-        
-        die("Thank you. New Login details has been sent to your email address");
+
+        Mailer::mail($_POST['email'], "New ThinkTank Login Details", $message);
+
+        $successmsg = "Password recovery information has been sent to your email address. <a href=\"login.php\">Sign in.</a>";
     } else
-        die("Account with given email does not exist");
+        $errormsg = "Account does not exist";
 }
-$s = new SmartyThinkTank();
+
+if (isset($errormsg)) {
+    $s->assign('errormsg', $errormsg);
+} elseif (isset($successmsg)) {
+    $s->assign('successmsg', $successmsg);
+}
+$cfg = new Config();
+$s->assign('cfg', $cfg);
 $s->display('session.forgot.tpl');
 $SQLLogger->close();
 ?>

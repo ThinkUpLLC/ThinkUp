@@ -29,7 +29,7 @@ h3. Install application files
 h3. Set up database
 
 * Create a database and select it, i.e., CREATE DATABASE thinktank
-* Build tables with <code>build-db.sql</code>
+* Build tables with <code>sql/build-db_mysql.sql</code>
 
 h3. Register your app with Twitter (for OAuth support)
 

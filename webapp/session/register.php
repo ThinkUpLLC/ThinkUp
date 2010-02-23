@@ -7,8 +7,10 @@ require_once ('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once ("init.php");
 
+require_once ("class.Mailer.php");
+
 $session = new Session();
-if ($session->isLogedin()) { 
+if ($session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
@@ -16,27 +18,34 @@ $SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
 $db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 $od = new OwnerDAO($db);
+$s = new SmartyThinkTank();
+$s->caching=false;
 
 if (!$THINKTANK_CFG['is_registration_open']) {
-    echo 'So sorry, but registration on this instance of ThinkTank is closed. <br /><br /><a href="http://github.com/ginatrapani/thinktank/tree/master">Install thinktank on your own server</a> or go back to <a href="'.$THINKTANK_CFG['site_root_path'].'public.php">the public timeline</a>.';
-    die();
+    $s->assign('closed', true);
+    $errormsg = 'Sorry, registration on this instance of ThinkTank is closed. <br /><br /><a href="http://github.com/ginatrapani/thinktank/tree/master">Install ThinkTank on your own server</a> or go back to <a href="'.$THINKTANK_CFG['site_root_path'].'public.php">the public timeline</a>.';
 } else {
-    $s = new SmartyThinkTank();
+    $db = new Database($THINKTANK_CFG);
+    $conn = $db->getConnection();
+    $od = new OwnerDAO($db);
+
+    
+    $s->assign('closed', false);
     $captcha = new Captcha($THINKTANK_CFG);
     if ($_POST['Submit'] == 'Register') {
         if (strlen($_POST['email']) < 5) {
-            $msg = "Incorrect email. Please enter valid email address..";
+            $errormsg = "Incorrect email. Please enter valid email address.";
         }
         if (strcmp($_POST['pass1'], $_POST['pass2']) || empty($_POST['pass1'])) {
-            //die ("Password does not match");
-            $msg = "ERROR: Password does not match or empty.";
-        } elseif ( !$captcha->check()) {
+            if (!isset($errormsg))
+                $errormsg = "Password does not match or empty.";
+        } elseif (!$captcha->check()) {
             //Captcha not valid, captcha handles message...
         } else {
-            if ($od->getUserExist($_POST['email'])) {
-                $msg = "ERROR: User account already exists..";
-                exit();
+            if ($od->doesOwnerExist($_POST['email'])) {
+                $errormsg = "User account already exists.";
             } else {
+                $activ_code = rand(1000, 9999);
                 $cryptpass = $session->pwdcrypt($_POST['pass2']);
                 $server = $_SERVER['HTTP_HOST'];
                 $host = ereg_replace('www.', '', $server);
@@ -47,12 +56,11 @@ if (!$THINKTANK_CFG['is_registration_open']) {
                 $message .= "session/activate.php?usr=".urlencode($_POST[email])."&code=$activ_code \n\n";
                 $message .= "_____________________________________________";
                 $message .= "Thank you. This is an automated response. PLEASE DO NOT REPLY.";
-                $mailheader = "From: \"Auto-Response\" <notifications@$host>\r\n";
-                $mailheader .= "X-Mailer: PHP/".phpversion();
-                mail($_POST['email'], "Login Activation", $message, $mailheader);
+                
+                Mailer::mail($_POST['email'], "ThinkTank Login Activation", $message);
+                
                 unset($_SESSION['ckey']);
-                echo("Registration Successful! An activation code has been sent to your email address with an activation link.");
-                exit;
+                $successmsg = "Success! Check your email for an activation link.";
             }
         }
         $s->assign('name', $_POST["full_name"]);
@@ -60,13 +68,16 @@ if (!$THINKTANK_CFG['is_registration_open']) {
     }
     $challenge = $captcha->generate($msg);
     $s->assign('captcha', $challenge);
-
-    if (isset($msg)) {
-        $s->assign('msg', $_GET[msg]);
-        $s->display('session.register.tpl', sha1($_GET['msg']));
-    } else {
-        $s->display('session.register.tpl');
-    }
+    
 }
+if (isset($errormsg)) {
+    $s->assign('errormsg', $errormsg);
+} elseif (isset($successmsg)) {
+    $s->assign('successmsg', $successmsg);
+}
+$cfg = new Config();
+$s->assign('cfg', $cfg);
+$s->display('session.register.tpl');
 $SQLLogger->close();
+
 ?>

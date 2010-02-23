@@ -64,12 +64,16 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 			$s->assign('header', 'Most Replied-To Tweets' );		
 			$s->assign('most_replied_to_tweets', $td->getMostRepliedToTweets($cfg->twitter_user_id, 15));
 			break;
+		case "tweets-mostretweeted":
+			$s->assign('header', 'Most Retweeted' );		
+			$s->assign('most_retweeted', $td->getMostRetweetedTweets($cfg->twitter_user_id, 15));
+			break;
 		case "tweets-convo":
 			$s->assign('header', 'Conversations' );		
 			$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
 			break;
 		case "mentions-all":
-			$s->assign('header', 'Mentions' );
+			$s->assign('header', 'All Mentions' );
 			$s->assign('description', 'Any tweet that mentions you.');		
 			$s->assign('all_mentions', $td->getAllMentions($cfg->twitter_username, 15) );
 			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
@@ -80,7 +84,7 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 			$s->assign('all_replies', $td->getAllReplies($cfg->twitter_user_id, 15) );
 			break;
 		case "mentions-orphan":
-			$s->assign('header', 'Orphan Mentions' );		
+			$s->assign('header', 'Not Replies or Retweets' );		
 			$s->assign('description', 'Mentions that are not associated with a specific tweet.');
 			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
 			$s->assign('orphan_replies', $td->getOrphanReplies($cfg->twitter_username, 5));
@@ -93,6 +97,7 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 			break;
 		case "followers-mostfollowed":
 			$s->assign('header', 'Most-Followed Followers' );		
+			$s->assign('description', 'Followers with most followers.');
 			$s->assign('people', $fd->getMostFollowedFollowers($cfg->twitter_user_id, 15));
 			break;
 		case "followers-leastlikely":
