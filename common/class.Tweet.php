@@ -69,6 +69,23 @@ class TweetDAO extends MySQLDAO {
         $t->author = $u;
         return $t;
     }
+
+    private function setTweetWithAuthorAndLink($row) {
+        $u = new User($row, '');
+        $l = new Link($row);
+        $t = new Tweet($row);
+        $t->author = $u;
+		$t->link = $l;
+        return $t;
+    }
+
+    private function setTweetWithLink($row) {
+        $l = new Link($row);
+        $t = new Tweet($row);
+        $t->link = $l;
+        return $t;
+    }
+
     
     function getStandaloneReplies($username, $limit) {
         $q = "
@@ -364,21 +381,24 @@ class TweetDAO extends MySQLDAO {
     }
     
     function getAllTweets($author_id, $count) {
-    
         $q = "
 			SELECT 
-				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
+			LEFT JOIN
+				%prefix%links l
+			ON t.status_id = l.status_id
 			WHERE 
 				author_user_id = ".$author_id."
 			ORDER BY 
 				pub_date DESC 
-			LIMIT ".$count.";";
+			LIMIT ".$count.";";			
+			
         $sql_result = $this->executeSQL($q);
         $all_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $all_tweets[] = new Tweet($row);
+			$all_tweets[] = $this->setTweetWithLink($row);
         }
         mysql_free_result($sql_result);
         return $all_tweets;
@@ -429,13 +449,16 @@ class TweetDAO extends MySQLDAO {
     
         $q = "
 			SELECT 
-				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
 			INNER JOIN
 				%prefix%users u
 			ON
 				t.author_user_id = u.user_id
+			LEFT JOIN
+				%prefix%links l
+			ON t.status_id = l.status_id				
 			WHERE 
 				tweet_text 
 			LIKE
@@ -446,7 +469,7 @@ class TweetDAO extends MySQLDAO {
         $sql_result = $this->executeSQL($q);
         $all_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $all_tweets[] = $this->setTweetWithAuthor($row);
+            $all_tweets[] = $this->setTweetWithAuthorAndLink($row);
         }
         mysql_free_result($sql_result);
         return $all_tweets;
@@ -456,9 +479,12 @@ class TweetDAO extends MySQLDAO {
     
         $q = "
 			SELECT 
-				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
+			LEFT JOIN
+				%prefix%links l
+			ON t.status_id = l.status_id				
 			INNER JOIN
 				%prefix%users u
 			ON
@@ -471,7 +497,7 @@ class TweetDAO extends MySQLDAO {
         $sql_result = $this->executeSQL($q);
         $all_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $all_tweets[] = $this->setTweetWithAuthor($row);
+            $all_tweets[] = $this->setTweetWithAuthorAndLink($row);
         }
         mysql_free_result($sql_result);
         return $all_tweets;
@@ -482,9 +508,12 @@ class TweetDAO extends MySQLDAO {
     
         $q = "
 			SELECT 
-				t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
+			LEFT JOIN
+				%prefix%links l
+			ON t.status_id = l.status_id				
 			WHERE
 				author_user_id = ".$user_id."
 			ORDER BY
@@ -493,7 +522,7 @@ class TweetDAO extends MySQLDAO {
         $sql_result = $this->executeSQL($q);
         $most_replied_to_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $most_replied_to_tweets[] = new Tweet($row);
+            $most_replied_to_tweets[] = $this->setTweetWithLink($row);
         }
         mysql_free_result($sql_result);
         return $most_replied_to_tweets;
@@ -504,9 +533,12 @@ class TweetDAO extends MySQLDAO {
     
         $q = "
 			SELECT 
-				t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
+			LEFT JOIN
+				%prefix%links l
+			ON t.status_id = l.status_id				
 			WHERE
 				author_user_id = ".$user_id."
 			ORDER BY
@@ -515,7 +547,7 @@ class TweetDAO extends MySQLDAO {
         $sql_result = $this->executeSQL($q);
         $most_retweeted_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $most_retweeted_tweets[] = new Tweet($row);
+            $most_retweeted_tweets[] = $this->setTweetWithLink($row);
         }
         mysql_free_result($sql_result);
         return $most_retweeted_tweets;
