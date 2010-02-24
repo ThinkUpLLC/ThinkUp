@@ -11,3 +11,4 @@ libs/*
 smarty/*
 .*
 autodeploy
+cron/config
