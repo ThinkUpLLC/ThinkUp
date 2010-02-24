@@ -12,3 +12,4 @@ smarty/*
 .*
 autodeploy
 cron/config
+scripts/autodeploy-conf
