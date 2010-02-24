@@ -9,7 +9,7 @@ class LoggerSlowSQL {
     function setUsername($uname) {
         $this->twitter_username = $uname;
     }
-	
+    
     function logQuery($query, $time) {
         $log_signature = date("Y-m-d H:i:s", time())." | ".(string) number_format(round(memory_get_usage() / 1024000, 2), 2)." MB | ";
         if (strlen($query) > 0) {
