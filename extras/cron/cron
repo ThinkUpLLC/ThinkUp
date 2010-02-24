@@ -1,0 +1,23 @@
+#!/bin/bash
+cd `dirname $0`/..
+source ./cron/config
+
+if [ -f $crawllogarch ]; then
+  echo "Log archive present... Skiping archival process"
+else 
+  echo "Starting Archival process"
+  tar -cvjf $crawllogarch $crawllog 
+  if [ -f $crawllogarch ]; then
+    echo "Deleting logfile"
+    rm $crawllog
+    touch $crawllog
+  else
+    echo "WARNING: Archive not created - Logfile not deleted"
+  fi
+fi
+
+
+calog_lines=`wc -l $crawllog`
+$php $crawler
+calog_lines2=`wc -l $crawllog` 
+tail -n $((clog_lines2-clog_lines)) $crawllog

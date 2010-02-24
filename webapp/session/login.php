@@ -12,7 +12,8 @@ if ($session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
-$db = new Database($THINKTANK_CFG);
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+$db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 
 $od = new OwnerDAO($db);
@@ -48,9 +49,10 @@ if (isset($emsg)) {
 } elseif (isset($smsg)) {
     $s->assign('successmsg', $smsg);
 }
-
 $cfg = new Config();
 $s->assign('cfg', $cfg);
 $s->display('session.login.tpl');
+
+$SQLLogger->close();
 
 ?>

@@ -30,8 +30,9 @@ if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
 	$twitter_id = $u['user_id'];
 	$tu = $u['user_name']; 
 	
-	$db = new Database($THINKTANK_CFG);
-	$conn = $db->getConnection();
+	$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+        $db = new Database($THINKTANK_CFG, $SQLLogger);
+        $conn = $db->getConnection();
 	$od = new OwnerDAO($db);
 
 	$owner = $od->getByEmail($_SESSION['user']);
@@ -72,6 +73,6 @@ if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
 
 
 echo '<br /> <a href="'.$THINKTANK_CFG['site_root_path'].'account/">Back to your account</a>.';
-
+$SQLLogger->close();
 
 ?>

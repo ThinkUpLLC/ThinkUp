@@ -5,9 +5,10 @@ crawler/config.crawler.inc.php
 tests/config.tests.inc.php
 webapp/templates_c/*.php
 webapp/templates_c/cache/*.tpl
-crawler/logs/crawler.log
-build-db-starter-data.sql
+crawler/logs/*.log
 libs/*
 smarty/*
 .*
 autodeploy
+extras/cron/config
+extras/scripts/autodeploy-conf

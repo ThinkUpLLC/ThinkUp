@@ -12,7 +12,9 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
-$db = new Database($THINKTANK_CFG);
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+
+$db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 
 $od = new OwnerDAO($db);
@@ -101,6 +103,7 @@ if(!$s->is_cached('index.tpl', $i->twitter_username."-".$_SESSION['user'])) {
 
 # clean up
 $db->closeConnection($conn);	
+$SQLLogger->close();
 
 $s->display('index.tpl', $i->twitter_username."-".$_SESSION['user']);
 

@@ -27,7 +27,8 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
 $cfg = new Config();
-$db = new Database($THINKTANK_CFG);
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+$db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 
 $td = new TweetDAO($db);
@@ -44,6 +45,7 @@ foreach ($oid as $o) {
 }
 
 $db->closeConnection($conn);	
+$SQLLogger->close();
 
 $s = new SmartyThinkTank();
 $s->clear_cache($template, $cache_key);

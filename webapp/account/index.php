@@ -12,7 +12,8 @@ if (!$session->isLoggedIn()) {
 }
 
 
-$db = new Database($THINKTANK_CFG);
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+$db = new Database($THINKTANK_CFG, $SQLLogger);
 $conn = $db->getConnection();
 
 $od = new OwnerDAO($db);
@@ -65,4 +66,5 @@ if (isset($successmsg))
     $s->assign('successmsg', $successmsg);
 
 $s->display('account.index.tpl');
+$SQLLogger->close();
 ?>

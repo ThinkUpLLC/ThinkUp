@@ -14,6 +14,10 @@ if ($session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
+$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
+$db = new Database($THINKTANK_CFG, $SQLLogger);
+$conn = $db->getConnection();
+$od = new OwnerDAO($db);
 $s = new SmartyThinkTank();
 $s->caching=false;
 
@@ -74,5 +78,6 @@ if (isset($errormsg)) {
 $cfg = new Config();
 $s->assign('cfg', $cfg);
 $s->display('session.register.tpl');
+$SQLLogger->close();
 
 ?>
