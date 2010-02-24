@@ -1,0 +1,24 @@
+#!/bin/bash
+
+thinktank="/your-path-to/thinktank"
+
+#Some Simple Paths
+logdir="$thinktank/crawler/logs"
+logarchive="$thinktank/crawler/logs/archive"
+crawler="$thinktank/crawler/crawl.php"
+
+#PHP exe path
+php="/usr/local/php5/bin/php"
+
+#Desired archive modifier 
+#default YYYYWW (year Week)
+namevar=`date +%Y%W`
+
+#############################
+#Don't Alter anything below 
+#this mark unless you know 
+#what you are doing
+#############################
+
+crawllog="$logdir/crawler.log"
+crawllogarch="$logarchive/crawler-$namevar.tar.bz2"
