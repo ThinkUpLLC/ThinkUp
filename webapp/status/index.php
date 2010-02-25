@@ -8,9 +8,7 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
-$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
-
-$db = new Database($THINKTANK_CFG, $SQLLogger);
+$db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 
 $td = new TweetDAO($db);
@@ -19,7 +17,7 @@ $td = new TweetDAO($db);
 if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_REQUEST['t']) ){
 	$status_id = $_REQUEST['t'];
 	$s = new SmartyThinkTank();
-	
+
 	if(!$s->is_cached('status.index.tpl', $status_id)) {
 		$tweet = $td->getTweet($status_id);
 
@@ -30,15 +28,15 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 		if ( isset($i) ) {
 			$s->assign('likely_orphans', $td->getLikelyOrphansForParent($tweet->pub_date, $i->twitter_user_id,$tweet->author_username, 15) );
 			$s->assign('all_tweets', $td->getAllTweets($i->twitter_user_id, 15) );
-		
+
 		}
 		$cfg = new Config($i->twitter_username, $i->twitter_user_id);
-	
+
 
 		// instantiate data access objects
 		$ud = new UserDAO($db);
-	
-	
+
+
 		$all_replies = $td->getRepliesToTweet($status_id);
 		$all_replies_count = count($all_replies);
 		$all_retweets = $td->getRetweetsOfTweet($status_id);
@@ -62,8 +60,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $td->isTweetInDB($_R
 		$s->assign('instance', $i);
 	}
 	# clean up
-	$db->closeConnection($conn);	
-        $SQLLogger->close();
+	$db->closeConnection($conn);
 
 	$s->display('status.index.tpl', $status_id);
 } else {

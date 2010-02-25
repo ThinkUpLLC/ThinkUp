@@ -13,26 +13,25 @@ $cfg = new Config();
 $request_token = $_GET['oauth_token'];
 $request_token_secret = $_SESSION['oauth_request_token_secret'];
 /*
-echo "DEBUG:"
-echo "URL Request Token: ".$request_token."<br />";
-echo "Session Request Token: ".$request_token_secret."<br />";
-*/
+ echo "DEBUG:"
+ echo "URL Request Token: ".$request_token."<br />";
+ echo "Session Request Token: ".$request_token_secret."<br />";
+ */
 $to = new TwitterOAuth($cfg->oauth_consumer_key, $cfg->oauth_consumer_secret, $request_token, $request_token_secret);
 $tok = $to->getAccessToken();
 
 if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
 	$api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret']);
-	
+
 	$u = $api->verifyCredentials();
 
-//	echo "User ID: ". $u['user_id'];
-//	echo "User name: ". $u['user_name'];
+	//	echo "User ID: ". $u['user_id'];
+	//	echo "User name: ". $u['user_name'];
 	$twitter_id = $u['user_id'];
-	$tu = $u['user_name']; 
-	
-	$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
-        $db = new Database($THINKTANK_CFG, $SQLLogger);
-        $conn = $db->getConnection();
+	$tu = $u['user_name'];
+
+	$db = new Database($THINKTANK_CFG);
+	$conn = $db->getConnection();
 	$od = new OwnerDAO($db);
 
 	$owner = $od->getByEmail($_SESSION['user']);
@@ -65,14 +64,12 @@ if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
 			$oid->insert($owner->id, $i->id, $tok['oauth_token'], $tok['oauth_token_secret']);
 			echo "Created an owner_instance.<br />";
 		}
-		# clean up
-		$db->closeConnection($conn);	
 	}
+	# clean up
+	$db->closeConnection($conn);
+
 }
 
-
-
 echo '<br /> <a href="'.$THINKTANK_CFG['site_root_path'].'account/">Back to your account</a>.';
-$SQLLogger->close();
 
 ?>

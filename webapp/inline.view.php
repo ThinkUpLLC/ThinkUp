@@ -7,9 +7,7 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
-$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
-
-$db = new Database($THINKTANK_CFG, $SQLLogger);
+$db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 
 $od = new OwnerDAO($db);
@@ -25,15 +23,16 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 		$db->closeConnection($conn);
 		die;
 	} else {
-		$i = $id->getByUsername($username);	
+		$i = $id->getByUsername($username);
 	}
 } else {
 	$db->closeConnection($conn);
 	die;
 }
 
-if (!isset($_REQUEST['d']) ) 
+if (!isset($_REQUEST['d']) ) {
 	$_REQUEST['d'] = "all-tweets";
+}
 
 $s = new SmartyThinkTank();
 
@@ -61,90 +60,90 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
 			break;
 		case "tweets-mostreplies":
-			$s->assign('header', 'Most Replied-To Tweets' );		
+			$s->assign('header', 'Most Replied-To Tweets' );
 			$s->assign('most_replied_to_tweets', $td->getMostRepliedToTweets($cfg->twitter_user_id, 15));
 			break;
 		case "tweets-mostretweeted":
-			$s->assign('header', 'Most Retweeted' );		
+			$s->assign('header', 'Most Retweeted' );
 			$s->assign('most_retweeted', $td->getMostRetweetedTweets($cfg->twitter_user_id, 15));
 			break;
 		case "tweets-convo":
-			$s->assign('header', 'Conversations' );		
+			$s->assign('header', 'Conversations' );
 			$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
 			break;
 		case "mentions-all":
 			$s->assign('header', 'All Mentions' );
-			$s->assign('description', 'Any tweet that mentions you.');		
+			$s->assign('description', 'Any tweet that mentions you.');
 			$s->assign('all_mentions', $td->getAllMentions($cfg->twitter_username, 15) );
 			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
 			break;
 		case "mentions-allreplies":
-			$s->assign('header', 'Replies' );		
+			$s->assign('header', 'Replies' );
 			$s->assign('description', 'Tweets that directly reply to you (i.e., start with your name).');
 			$s->assign('all_replies', $td->getAllReplies($cfg->twitter_user_id, 15) );
 			break;
 		case "mentions-orphan":
-			$s->assign('header', 'Not Replies or Retweets' );		
+			$s->assign('header', 'Not Replies or Retweets' );
 			$s->assign('description', 'Mentions that are not associated with a specific tweet.');
 			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
 			$s->assign('orphan_replies', $td->getOrphanReplies($cfg->twitter_username, 5));
 			break;
 		case "mentions-standalone":
-			$s->assign('header', 'Standalone Mentions' );		
+			$s->assign('header', 'Standalone Mentions' );
 			$s->assign('description', 'Mentions you have marked as standalone.');
 			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
 			$s->assign('standalone_replies', $td->getStandaloneReplies($cfg->twitter_username, 15));
 			break;
 		case "followers-mostfollowed":
-			$s->assign('header', 'Most-Followed Followers' );		
+			$s->assign('header', 'Most-Followed Followers' );
 			$s->assign('description', 'Followers with most followers.');
 			$s->assign('people', $fd->getMostFollowedFollowers($cfg->twitter_user_id, 15));
 			break;
 		case "followers-leastlikely":
-			$s->assign('header', 'Least-Likely Followers' );		
+			$s->assign('header', 'Least-Likely Followers' );
 			$s->assign('description', 'Followers with the greatest follower-to-friend ratio.');
 			$s->assign('people', $fd->getLeastLikelyFollowers($cfg->twitter_user_id, 15));
 			break;
 		case "followers-former":
-			$s->assign('header', 'Former Followers' );		
+			$s->assign('header', 'Former Followers' );
 			$s->assign('people', $fd->getFormerFollowers($cfg->twitter_user_id, 15));
 			break;
 		case "followers-earliest":
-			$s->assign('header', 'Earliest Joiners' );		
+			$s->assign('header', 'Earliest Joiners' );
 			$s->assign('people', $fd->getEarliestJoinerFollowers($cfg->twitter_user_id, 15));
 			break;
 		case "friends-mostactive":
-			$s->assign('header', 'Most Active Friends' );		
+			$s->assign('header', 'Most Active Friends' );
 			$s->assign('people', $fd->getMostActiveFollowees($cfg->twitter_user_id, 15));
 			break;
 		case "friends-leastactive":
-			$s->assign('header', 'Least Active Friends' );		
+			$s->assign('header', 'Least Active Friends' );
 			$s->assign('people', $fd->getLeastActiveFollowees($cfg->twitter_user_id, 15));
 			break;
 		case "friends-mostfollowed":
-			$s->assign('header', 'Most-Followed Friends' );		
+			$s->assign('header', 'Most-Followed Friends' );
 			$s->assign('people', $fd->getMostFollowedFollowees($cfg->twitter_user_id, 15));
 			break;
 		case "friends-former":
-			$s->assign('header', 'Former Friends' );		
+			$s->assign('header', 'Former Friends' );
 			$s->assign('people', $fd->getFormerFollowees($cfg->twitter_user_id, 15));
 			break;
 		case "friends-notmutual":
-			$s->assign('header', 'Not Mutual Friends' );		
+			$s->assign('header', 'Not Mutual Friends' );
 			$s->assign('people', $fd->getFriendsNotFollowingBack($cfg->twitter_user_id));
 			break;
 		case "links-friends":
-			$s->assign('header', 'Links From Friends' );	
+			$s->assign('header', 'Links From Friends' );
 			$s->assign('description', 'Links your friends tweeted.');
 			$s->assign('links', $ld->getLinksByFriends($cfg->twitter_user_id));
 			break;
 		case "links-favorites":
-			$s->assign('header', 'Links From Favorites' );	
+			$s->assign('header', 'Links From Favorites' );
 			$s->assign('description', 'Links in tweets you favorited.');
 			//$s->assign('links', $ld->getLinksByFriends($cfg->twitter_user_id));
 			break;
 		case "links-photos":
-			$s->assign('header', 'Photos' );	
+			$s->assign('header', 'Photos' );
 			$s->assign('description', 'Photos your friends have tweeted.');
 			$s->assign('links', $ld->getPhotosByFriends($cfg->twitter_user_id));
 			break;
@@ -153,8 +152,7 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 }
 
 # clean up
-$db->closeConnection($conn);	
-$SQLLogger->close();
+$db->closeConnection($conn);
 
 $s->display('inline.view.tpl', $i->twitter_username."-".$_SESSION['user']."-".$_REQUEST['d']);
 

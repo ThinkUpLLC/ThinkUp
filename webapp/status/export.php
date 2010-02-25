@@ -8,9 +8,7 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
-$SQLLogger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
-
-$db = new Database($THINKTANK_CFG, $SQLLogger);
+$db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 
 $od = new OwnerDAO($db);
@@ -24,7 +22,6 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	$oid = new OwnerInstanceDAO($db);
 	if ( !$oid->doesOwnerHaveAccess($owner, $username) ) {
 		echo 'Insufficient privileges. <a href="/">Back</a>.';
-		$db->closeConnection($conn);
 		die;
 	} else {
 		$tweets = $td->getAllTweetsByUsername($username);	
@@ -35,10 +32,11 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 	die;
 }
 
+$db->closeConnection($conn);
+
 $s = new SmartyThinkTank();
 $s->assign('tweets', $tweets);
 $s->display('status.export.tpl', $username);
-$SQLLogger->close();
 
 
 ?>
