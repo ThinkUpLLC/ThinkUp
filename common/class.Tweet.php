@@ -520,13 +520,13 @@ class TweetDAO extends MySQLDAO {
         
     }
     
-    function getOrphanReplies($user_name, $count) {
+    function getOrphanReplies($username, $count) {
     
         $q = " SELECT t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
         $q .= " FROM %prefix%tweets AS t ";
         $q .= " INNER JOIN %prefix%users AS u ON u.user_id = t.author_user_id ";
         $q .= " WHERE ";
-        $q .= " MATCH (`tweet_text`) AGAINST('%".$author_username."%') ";
+        $q .= " MATCH (`tweet_text`) AGAINST('%".$username."%') ";
         $q .= " AND in_reply_to_status_id is null ";
         $q .= " AND in_retweet_of_status_id is null ";
         $q .= " ORDER BY pub_date DESC ";

@@ -7,4 +7,5 @@ autodeploy - Automates the process of uploading to webserver
 Set up autodeploy:
  copy autodeploy-conf.sample to autodeploy-conf
  edit autodeploy-conf to match your settings
- run desired autodeploy script
+ run desired autodeploy script from thinktank root directory
+  example: ./extras/scripts/autdeploy-scp
