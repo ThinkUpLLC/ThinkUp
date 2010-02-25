@@ -1,7 +1,8 @@
 #!/bin/bash
-cd `dirname $0`/..
-source ./scripts/autodeploy-conf
+cd `dirname $0`/../..
+source ./extras/scripts/autodeploy-conf
 
 scp -r common/* $username@$server:$remote_common
 scp -r crawler/* $username@$server:$remote_crawler
-scp -r cron/* $username@$server:$remote_cron
+scp -r webapp/* $username@$server:$remote_webapp
+scp -r extras/* $username@$server:$remote_extras

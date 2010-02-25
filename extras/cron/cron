@@ -1,6 +1,6 @@
 #!/bin/bash
-cd `dirname $0`/..
-source ./cron/config
+cd `dirname $0`/../../
+source ./extras/cron/config
 
 if [ -f $crawllogarch ]; then
   echo "Log archive present... Skiping archival process"
@@ -16,8 +16,8 @@ else
   fi
 fi
 
-
-calog_lines=`wc -l $crawllog`
+calog_lines1=`set $(wc -l $crawllog) && echo $1`
 $php $crawler
-calog_lines2=`wc -l $crawllog` 
-tail -n $((clog_lines2-clog_lines)) $crawllog
+calog_lines2=`set $(wc -l $crawllog) && echo $1`
+calog_lines_diff=$((calog_lines2-calog_lines1))
+tail -n $calog_lines_diff $crawllog

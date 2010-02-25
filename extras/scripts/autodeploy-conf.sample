@@ -12,6 +12,7 @@ server="server.example.com"
 remote_common="$remote_base/common"
 remote_crawler="$remote_base/crawler"
 remote_webapp="$remote_base/webapp"
+remote_extras="$remote_base/extras"
 
 
 
