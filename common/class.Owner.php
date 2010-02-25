@@ -98,6 +98,13 @@ class OwnerDAO extends MySQLDAO {
         $q .= " VALUES ('".$email."','".$pass."','".$country."',now(),'".$acode."','".$fullname."')";
         $this->executeSQL($q);
     }
+    
+    public function updateLastLogin($email) {
+        $q = " UPDATE %prefix%owners ";
+        $q .= " SET last_login=now() ";
+        $q .= " WHERE user_email='".$email."'";
+        $this->executeSQL($q);
+    }
 }
 
 ?>

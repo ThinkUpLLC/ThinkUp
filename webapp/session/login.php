@@ -30,6 +30,7 @@ if ($_POST['Submit'] == 'Login') {
     } else {
         // this sets variables in the session
         $session->completeLogin($result);
+		$od->updateLastLogin($user_email);
         if (isset($_GET['ret']) && ! empty($_GET['ret'])) {
             header("Location: $_GET[ret]");
         } else {
