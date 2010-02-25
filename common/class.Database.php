@@ -14,7 +14,6 @@ class Database {
 		$this->db_name = $THINKTANK_CFG['db_name'];
 		$this->db_user = $THINKTANK_CFG['db_user'];
 		$this->db_password = $THINKTANK_CFG['db_password'];
-		$this->logger = $logger;
 		if (isset($THINKTANK_CFG['table_prefix'])) {
 			$this->table_prefix = $THINKTANK_CFG['table_prefix'];
 		}
@@ -27,7 +26,7 @@ class Database {
 			if (isset($THINKTANK_CFG['slow_query_log_threshold'])) {
 				$this->slow_query_log_threshold = $THINKTANK_CFG['slow_query_log_threshold'];
 			}
-				
+
 		}
 	}
 
