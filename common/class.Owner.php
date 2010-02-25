@@ -5,15 +5,22 @@ class Owner {
     var $full_name;
     var $user_email;
     var $is_admin = false;
+    var $last_login;
+    var $instances = null;
     
     function Owner($val) {
         $this->id = $val["id"];
         $this->user_name = $val["user_name"];
         $this->full_name = $val["full_name"];
         $this->user_email = $val['user_email'];
+        $this->last_login = $val['last_login'];
         if ($val['is_admin'] == 1) {
             $this->is_admin = true;
         }
+    }
+    
+    function setInstances($instances) {
+    	$this->instances = $instances;
     }
     
 }
@@ -22,7 +29,7 @@ class OwnerDAO extends MySQLDAO {
     //Construct is located in parent
     
     public function getByEmail($email) {
-        $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, is_admin ";
+        $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, is_admin, last_login ";
         $q .= " FROM %prefix%owners AS o ";
         $q .= " WHERE o.user_email = '".$email."';";
         $sql_result = $this->executeSQL($q);
@@ -30,6 +37,19 @@ class OwnerDAO extends MySQLDAO {
         mysql_free_result($sql_result);
         return new Owner($row);
     }
+    public function getAllOwners() {
+        $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, is_admin, last_login";
+        $q .= " FROM %prefix%owners AS o ";
+        $q .= " ORDER BY last_login DESC;";
+        $sql_result = $this->executeSQL($q);
+        $owners = array();
+        while ($row = mysql_fetch_assoc($sql_result)) {
+            $owners[] = new Owner($row);
+        }
+        mysql_free_result($sql_result); # Free up memory
+        return $owners;
+    }
+    
     public function doesOwnerExist($email) {
         $q = " SELECT user_email ";
         $q .= " FROM %prefix%owners ";

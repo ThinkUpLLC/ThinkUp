@@ -51,6 +51,16 @@ $_SESSION['oauth_request_token_secret'] = $tok['oauth_token_secret'];
 /* Build the authorization URL */
 $oauthorize_link = $to->getAuthorizeURL($token);
 
+if ( $owner->is_admin ) {
+	$owners = $od->getAllOwners();
+	foreach ($owners as $o) {
+		$instances = $id->getByOwner($o, true);
+		$o->setInstances($instances);
+	}
+	$s->assign('owners', $owners);
+}
+
+
 $s->assign('owner_instances', $owner_instances);
 $s->assign('owner', $owner);
 $s->assign('cfg', $cfg);

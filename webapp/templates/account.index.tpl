@@ -7,6 +7,11 @@
                     <li>
                         <a href="#instances">Account</a>
                     </li>
+                    {if $owner->is_admin}
+                    <li>
+                        <a href="#ttusers">ThinkTank Users</a>
+                    </li>
+                    {/if} 
                     <li>
                         <a href="#templates">Templates</a>
                     </li>
@@ -89,6 +94,24 @@
                         </table>
                     </form>
                 </div>
+                {if $owner->is_admin}
+                <div class="section" id="ttusers">
+                    <ul>
+                        {foreach from=$owners key=oid item=o}
+                        <li>
+                        	{$o->full_name} ({$o->user_email}){if $o->last_login neq '0000-00-00'}, last logged in {$o->last_login}{/if}
+                        	{if $o->instances neq null}
+                        	<ul>
+                        		{foreach from=$o->instances key=iid item=i}
+                        		<li>{$i->twitter_username}{if !$i->is_active} (paused){/if}</li>
+                        		{/foreach}
+                        	</ul>
+                        	{/if}
+                        </li>
+                        {/foreach}
+                     </ul>
+                </div>
+                {/if}
                 <div class="section" id="templates">
                     Template list goes here
                 </div>

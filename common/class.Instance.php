@@ -286,8 +286,8 @@ class InstanceDAO extends MySQLDAO {
         return $instances;
     }
     
-    function getByOwner($o) {
-        if ($o->is_admin) {
+    function getByOwner($o, $disregard_admin_status=false) {
+        if (!$disregard_admin_status && $o->is_admin) {
             $q = "
 				SELECT 
 					*, ".$this->getAverageReplyCount()."

@@ -57,6 +57,8 @@ class OwnerInstanceDAO extends MySQLDAO {
         }
         return $i;
     }
+
+    
     
     function insert($owner_id, $instance_id, $oauth_token, $oauth_token_secret) {
         $q = "
