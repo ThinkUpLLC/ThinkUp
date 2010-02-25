@@ -36,6 +36,7 @@
                         <li>
                             <a href="{$cfg->site_root_path}?u={$i->twitter_username}">{$i->twitter_username}</a>
                             <span id="div{$i->twitter_username}"><input type="submit" name="submit" class="{if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->twitter_username}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
+							<span id="divactivate{$i->twitter_username}"><input type="submit" name="submit" class="{if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->twitter_username}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
                         </li>{/foreach}
                     </ul>{else}
                     You have no Twitter accounts configured.
@@ -152,6 +153,58 @@
         			  
         
         		});	
+
+        		$(function() {
+        			$(".btnPlay").click(function() {  
+        			// validate and process form here  
+        				var element = $(this);
+        				var u = element.attr("id");
+        				
+        				var dataString = 'u='+ u+ "&p=1";  
+        				//alert (dataString);return false;  
+        				    $.ajax({  
+        				      type: "GET",  
+        				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-active.php",  
+        				      data: dataString,  
+        				      success: function() {  
+        					$('#divactivate'+u).html("<span class='success' id='message"+u+"'></span>");  
+        					$('#message'+u).html("Crawling has been started!") 
+        				       .hide()  
+        				       .fadeIn(1500, function() {  
+        					 $('#message'+u);  
+        				       });  
+        				    }  
+        				   });  
+        				   return false;  
+        			  });
+        			
+        			$(".btnPause").click(function() {  
+        			// validate and process form here  
+        				var element = $(this);
+        				var u = element.attr("id");
+        
+        				var dataString = 'u='+ u+ "&p=0";  
+        				//alert (dataString);return false;  
+        				    $.ajax({  
+        				      type: "GET",  
+        				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-active.php",  
+        				      data: dataString,  
+        				      success: function() {  
+        					$('#divactivate'+u).html("<span class='success' id='message"+u+"'></span>");  
+        					$('#message'+u).html("Crawling has been paused!") 
+        				       .hide()  
+        				       .fadeIn(1500, function() {  
+        					 $('#message'+u);  
+        				       });  
+        				    }  
+        				   });  
+        				   return false;  
+        			      });  
+        			
+        			  
+        
+        		});	
+
         
         		{/literal}
         	

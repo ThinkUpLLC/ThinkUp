@@ -190,7 +190,7 @@
 <ul>
 	{foreach from=$instances key=tid item=i}
 	{if $i->twitter_user_id != $instance->twitter_user_id}
-	<li><a href="?u={$i->twitter_username}">{$i->twitter_username}</a><br /><small>updated {$i->crawler_last_run|relative_datetime}</small></li>
+	<li><a href="?u={$i->twitter_username}">{$i->twitter_username}</a><br /><small>updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if}</small></li>
 	{/if}
 	{/foreach}	
 	<li><a href="{$cfg->site_root_path}account/">Add an account&rarr;</a></li>

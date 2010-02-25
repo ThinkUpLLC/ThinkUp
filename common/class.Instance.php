@@ -19,6 +19,7 @@ class Instance {
     var $api_calls_to_leave_unmade_per_minute;
     var $avg_replies_per_day;
     var $is_public = false;
+	var $is_active = true;
     
     function Instance($r) {
         $this->id = $r["id"];
@@ -48,6 +49,8 @@ class Instance {
         $this->avg_replies_per_day = $r['avg_replies_per_day'];
         if ($r['is_public'] == 1)
             $this->is_public = true;
+        if ($r['is_active'] == 0)
+            $this->is_active = false;
             
     }
     
@@ -165,6 +168,17 @@ class InstanceDAO extends MySQLDAO {
         
     }
 
+    function setActive($u, $p) {
+        $q = "
+			UPDATE 
+				%prefix%instances
+			 SET 
+				is_active = ".$p."
+			WHERE
+				twitter_username = '".$u."';";
+        $sql_result = $this->executeSQL($q);
+        
+    }
     
     function save($i, $user_xml_total_tweets_by_owner, $logger, $api) {
         if ($user_xml_total_tweets_by_owner != '')
@@ -246,13 +260,20 @@ class InstanceDAO extends MySQLDAO {
         return $this->getAllInstances("ASC");
     }
 
+    function getAllActiveInstancesStalestFirst() {
+        return $this->getAllInstances("ASC", true);
+    }
+
     
-    function getAllInstances($last_run = "DESC") {
+    function getAllInstances($last_run = "DESC", $only_active = false) {
+    	$condition = "";
+		if ($only_active)
+			$condition .= " WHERE is_active = 1 ";
         $q = "
 			SELECT 
 				*, ".$this->getAverageReplyCount()."
 			FROM
-				%prefix%instances
+				%prefix%instances ". $condition ."
 			ORDER BY
 				crawler_last_run
 			".$last_run."";
