@@ -96,14 +96,20 @@
                 </div>
                 {if $owner->is_admin}
                 <div class="section" id="ttusers">
+                <b>User accounts in this ThinkTank instance</b>
+                <br /><br />
+                    <p class="info">
+                        You are an administrator so you can see all accounts in the system.
+                    </p>
+                <br /><br />
                     <ul>
                         {foreach from=$owners key=oid item=o}
                         <li>
-                        	{$o->full_name} ({$o->user_email}){if $o->last_login neq '0000-00-00'}, last logged in {$o->last_login}{/if}
+                        	<b>{$o->full_name} ({$o->user_email})</b>{if $o->last_login neq '0000-00-00'}, last logged in {$o->last_login}{/if}
                         	{if $o->instances neq null}
                         	<ul>
                         		{foreach from=$o->instances key=iid item=i}
-                        		<li>{$i->twitter_username}{if !$i->is_active} (paused){/if}</li>
+                        		<li>&rarr; {$i->twitter_username}{if !$i->is_active} (paused){/if}</li>
                         		{/foreach}
                         	</ul>
                         	{/if}
