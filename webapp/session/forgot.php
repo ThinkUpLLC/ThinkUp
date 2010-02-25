@@ -36,7 +36,7 @@ if ($_POST['Submit'] == 'Send') {
         $message .= "____________________________________________\n";
         $message .= "*** LOGIN ***** \n";
         $message .= "http://".$host.$THINKTANK_CFG['site_root_path']."session/login.php \n\n";
-        $message .= "_____________________________________________";
+        $message .= "_____________________________________________\n";
         $message .= "Thank you. This is an automated response. PLEASE DO NOT REPLY.";
 
         Mailer::mail($_POST['email'], "New ThinkTank Login Details", $message);
@@ -52,7 +52,7 @@ if (isset($errormsg)) {
     $s->assign('successmsg', $successmsg);
 }
 
-$db->closeConn($conn);
+$db->closeConnection($conn);
 
 $cfg = new Config();
 $s->assign('cfg', $cfg);
