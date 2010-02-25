@@ -10,6 +10,5 @@ crawler/logs/archive/*.bz2
 libs/*
 smarty/*
 .*
-autodeploy
 extras/cron/config
 extras/scripts/autodeploy-conf

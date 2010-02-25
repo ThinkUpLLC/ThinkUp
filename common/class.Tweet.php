@@ -88,24 +88,13 @@ class TweetDAO extends MySQLDAO {
 
     
     function getStandaloneReplies($username, $limit) {
-        $q = "
-			SELECT
-				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
-			FROM 
-				%prefix%tweets t 
-			inner join 
-				%prefix%users u 
-			on 
-				t.author_user_id = u.user_id 
-			where 
-				tweet_text 
-			LIKE
-				'%".$username."%'
-				and
-				in_reply_to_status_id=0
-			order by 
-				adj_pub_date desc
-			LIMIT ".$limit;
+        $q = " SELECT t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
+        $q .= " FROM %prefix%tweets AS t ";
+        $q .= " INNER JOIN %prefix%users AS u ON t.author_user_id = u.user_id ";
+        $q .= " WHERE  MATCH(`tweet_text`) AGAINST('%".$username."%') ";
+        $q .= " AND in_reply_to_status_id=0 ";
+        $q .= " ORDER BY adj_pub_date DESC ";
+        $q .= " LIMIT ".$limit;
         $sql_result = $this->executeSQL($q);
         $strays = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -119,21 +108,11 @@ class TweetDAO extends MySQLDAO {
         $condition = "";
         if ($public)
             $condition = "AND u.is_protected = 0";
-            
-        $q = "
-			select 
-				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
-			from 
-				%prefix%tweets t
-			inner join 
-				%prefix%users u 
-			on 
-				t.author_user_id = u.user_id 
-			where 
-				in_reply_to_status_id=".$status_id." 
-				".$condition."	
-			order by 
-				follower_count desc;";
+        $q = " SELECT t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
+        $q .= " FROM %prefix%tweets t ";
+        $q .= " INNER JOIN %prefix%users AS u ON t.author_user_id = u.user_id ";
+        $q .= " WHERE in_reply_to_status_id=".$status_id." ".$condition;
+        $q .= " ORDER BY follower_count desc;";
         $sql_result = $this->executeSQL($q);
         $tweets_stored = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -447,25 +426,13 @@ class TweetDAO extends MySQLDAO {
     
     function getAllMentions($author_username, $count) {
     
-        $q = "
-			SELECT 
-				l.*, t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
-			FROM 
-				%prefix%tweets t
-			INNER JOIN
-				%prefix%users u
-			ON
-				t.author_user_id = u.user_id
-			LEFT JOIN
-				%prefix%links l
-			ON t.status_id = l.status_id				
-			WHERE 
-				tweet_text 
-			LIKE
-				'%".$author_username."%'
-			ORDER BY 
-				pub_date DESC 
-			LIMIT ".$count.";";
+        $q = " SELECT l.*, t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
+        $q .= " FROM %prefix%tweets AS t ";
+        $q .= " INNER JOIN %prefix%users AS u ON t.author_user_id = u.user_id ";
+        $q .= " LEFT JOIN %prefix%links AS l ON t.status_id = l.status_id ";
+        $q .= " WHERE MATCH (`tweet_text`) AGAINST('%".$author_username."%') ";
+        $q .= " ORDER BY pub_date DESC ";
+        $q .= " LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
         $all_tweets = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -555,22 +522,15 @@ class TweetDAO extends MySQLDAO {
     
     function getOrphanReplies($user_name, $count) {
     
-        $q = "
-			SELECT 
-				t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
-			FROM 
-				%prefix%tweets t 
-			INNER JOIN 
-				%prefix%users u 
-			ON 
-				u.user_id = t.author_user_id 
-			WHERE 
-				tweet_text LIKE '%".$user_name."%' AND
-				in_reply_to_status_id is null AND
-				in_retweet_of_status_id is null
-			ORDER BY 
-				pub_date DESC 
-			LIMIT ".$count.";";
+        $q = " SELECT t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
+        $q .= " FROM %prefix%tweets AS t ";
+        $q .= " INNER JOIN %prefix%users AS u ON u.user_id = t.author_user_id ";
+        $q .= " WHERE ";
+        $q .= " MATCH (`tweet_text`) AGAINST('%".$author_username."%') ";
+        $q .= " AND in_reply_to_status_id is null ";
+        $q .= " AND in_retweet_of_status_id is null ";
+        $q .= " ORDER BY pub_date DESC ";
+        $q .= " LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
         $orphan_replies = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -578,35 +538,21 @@ class TweetDAO extends MySQLDAO {
         }
         mysql_free_result($sql_result);
         return $orphan_replies;
-        
     }
-
     
     function getLikelyOrphansForParent($parent_pub_date, $author_user_id, $author_username, $count) {
     
-        $q = "
-			SELECT 
-				t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
-			FROM 
-				%prefix%tweets t
-			INNER JOIN
-				%prefix%users u
-			ON
-				t.author_user_id = u.user_id
-			WHERE 
-				tweet_text 	LIKE '%".$author_username."%'				
-			AND
-				pub_date > '".$parent_pub_date."' 
-			AND
-				in_reply_to_status_id IS NULL
-			AND
-				in_retweet_of_status_id IS NULL
-			AND
-				t.author_user_id != ".$author_user_id."
-			ORDER BY 
-				pub_date 
-			ASC 
-			LIMIT ".$count;
+        $q = " SELECT t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
+        $q .= " FROM %prefix%tweets AS t ";
+        $q .= " INNER JOIN %prefix%users AS u ON t.author_user_id = u.user_id ";
+        $q .= " WHERE ";
+        $q .= " MATCH (`tweet_text`) AGAINST('%".$author_username."%') ";
+        $q .= " AND pub_date > '".$parent_pub_date."' ";
+        $q .= " AND in_reply_to_status_id IS NULL ";
+        $q .= " AND in_retweet_of_status_id IS NULL ";
+        $q .= " AND t.author_user_id != ".$author_user_id;
+        $q .= " ORDER BY pub_date ASC ";
+        $q .= " LIMIT ".$count;
         $sql_result = $this->executeSQL($q);
         $likely_orphans = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
