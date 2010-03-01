@@ -7,7 +7,7 @@
 			</div>
 				
 			<div class="tweet-body">
-				{if $l->is_image}<a href="{$l->url}"><img src="{$l->expanded_url}" style="float:right;background:#eee;padding:5px" /></a>
+				{if $l->is_image}<a href="{$l->url}"><div class="pic"><img src="{$l->expanded_url}" /></div></a>
 				{else}
 				{if $l->expanded_url}<a href="{$l->expanded_url}" title="{$l->expanded_url}">{$l->title}</a>{/if}
 				{/if}

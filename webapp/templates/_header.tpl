@@ -169,7 +169,7 @@
 	
 {include file="_header.login.tpl"}	
 
-
+<!--
 <div id="doc4" class="yui-t2">
 	<div id="hd" role="banner">
 		{if $instance}
@@ -181,3 +181,4 @@
 		{/if}
 			
 	</div>
+-->

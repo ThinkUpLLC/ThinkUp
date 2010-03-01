@@ -1,40 +1,35 @@
-<h1>{$header}</h1>
-<div>{$description}</div>
+<div class="append">
+    <h1>{$header}</h1>
+    {if $description}<h4>{$description}</h4>{/if}
+</div>
 	{if ($display eq 'tweets-all' and not $all_tweets) or 
 		($display eq 'tweets-mostreplies' and not $most_replied_to_tweets) or
 		($display eq 'tweets-mostretweeted' and not $most_retweeted) or
 		($display eq 'tweets-convo' and not $author_replies)}
 		<h2 class="alert">&#9888; No tweets to display.</h2>
 	{/if}
+	
 	{if $all_tweets and $display eq 'tweets-all'}
-		{foreach from=$all_tweets key=tid item=t}
-		<ul>
+		{foreach from=$all_tweets key=tid item=t name=foo}
 			{include file="_status.mine.tpl" t=$t}
-		</ul>
 		{/foreach}
 	{/if}
 	
 	{if $most_replied_to_tweets}
-		{foreach from=$most_replied_to_tweets key=tid item=t}
-		<ul>
+		{foreach from=$most_replied_to_tweets key=tid item=t name=foo}
 			{include file="_status.mine.tpl" t=$t}
-		</ul>
 		{/foreach}
 	{/if}
 
 	{if $most_retweeted}
-		{foreach from=$most_retweeted key=tid item=t}
-		<ul>
+		{foreach from=$most_retweeted key=tid item=t name=foo}
 			{include file="_status.mine.tpl" t=$t}
-		</ul>
 		{/foreach}
 	{/if}
 
 	{if $author_replies}
-		{foreach from=$author_replies key=tahrt item=r}
-		<ul>
+		{foreach from=$author_replies key=tahrt item=r name=foo}
 			{include file="_status.qa.tpl" t=$t}
-		</ul>
 		{/foreach}
 	{/if}
 
@@ -47,35 +42,27 @@
 	{/if}
 
 	{if $orphan_replies}
-		{foreach from=$orphan_replies key=tid item=t}
-			<ul>
+		{foreach from=$orphan_replies key=tid item=t name=foo}
 			{include file="_status.otherorphan.tpl" t=$t}
-			
-			</ul>
 		{/foreach}
 		</form>		
 	{/if} 
 
 
 	{if $all_mentions}
-		{foreach from=$all_mentions key=tid item=t}
-		<ul>
+		{foreach from=$all_mentions key=tid item=t name=foo}
 			{include file="_status.otherorphan.tpl" t=$t}
-		</ul>
 		{/foreach}
 	{/if}
 
 	{if $all_replies}
-		{foreach from=$all_replies key=tid item=t}
-		<ul>
+		{foreach from=$all_replies key=tid item=t name=foo}
 			{include file="_status.other.tpl" t=$t}
-		</ul>
 		{/foreach}
 	{/if}
 
 	{if $standalone_replies}
-		{foreach from=$standalone_replies key=tid item=t}
-		<ul>
+		{foreach from=$standalone_replies key=tid item=t name=foo}
 			{include file="_status.otherorphan.tpl" t=$t}
 
 <!--			
@@ -90,7 +77,6 @@
 			</div>
 -->			
 			
-		</ul>
 		{/foreach}
 		
 	{/if}	
@@ -102,11 +88,9 @@
 
 
 	{if $people}
-		<ul>
-		{foreach from=$people key=fid item=f}
-		{include file="_user.tpl" t=$f}
+		{foreach from=$people key=fid item=f name=foo}
+		  {include file="_user.tpl" t=$f}
 		{/foreach}	
-		</ul>
 	{/if}
 
 	{if ($display eq 'links-friends' and not $links) or 

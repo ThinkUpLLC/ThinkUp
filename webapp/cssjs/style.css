@@ -1,179 +1,337 @@
+@import url("grid.css");
+
 html {
-	background: #eeeeea;
-	font: small Candara, "Helvetica Neue", Helvetica, Arial, sans-serif;
+background: #eeeeea;
+font: small Candara, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 a, a:link, a:visited {
-	text-decoration: none;
-	color: #0060e0;
+text-decoration: none;
+color: #0060e0;
 }
 
 a:hover {
-	text-decoration : underline;
-	color : red;
+text-decoration : underline;
+color : red;
 }
 
 a:visited {
-	color : black;
-	text-decoration: underline;
+color : black;
+text-decoration: underline;
 }
 
 h1 {
-	font-size : x-large;
-	//display : none;
+font-size : x-large;
+//display : none;
 }
 
 h2 {
-	padding-bottom : 20px;
-	font-size : smaller;
+padding-bottom : 20px;
+font-size : smaller;
 }
 
 .section h2 {
-	//display : none;
+//display : none;
 }
 
 h3 {
-	font-weight : 800;
+font-weight : 800;
 }
 
 li {
-	padding-bottom : 10px;
-	line-height : 125%;
+padding-bottom : 10px;
+line-height : 125%;
 }
 
 #hd, #ft {
-	padding : 20px 20px 20px 0px;
+padding : 20px 20px 20px 0px;
 }
 
 #keystats {
-	padding : 5px;
-	font-size : medium;
+padding : 5px;
+font-size : medium;
+display:none;
 }
 
 #yui-main .yui-g {
-	margin-left : 50px;
-	width : 600px;
+/*
+margin-left : 50px;
+width : 600px;
+*/
+width:960px;
+margin:0 auto;
+}
+#bd {
+text-align:left;
+width:960px;
+margin:0 auto;
 }
 
 .success {
-	background-color:#BFDFBF;
-	padding:10px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
+background-color:#BFDFBF;
+padding:10px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
 }
 
 .info {
-	background-color:#FFFFAD;
-	padding:10px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
+background-color:#FFFFAD;
+padding:10px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
 }
 
- /******* MENU *******/  
-	 #top #menu {
-	margin:5px;
-	padding:5px;
-	width : 100%;
-	font-size : smaller;
+/******* MENU *******/  
+#top #menu {
+font-size: 1.2em;
+line-height:1.8em;
+position: relative;
+top:-10px;
+padding-left: 20px;
 }
- #top #menu li {
-	padding: 8px;
-	margin:10px;
-	display : inline;
+
+#top #menu li {
+padding: 8px;
+margin:10px;
+display : inline;
 }
- #top #menu li:hover{  
-     color: #0060e0;
-     cursor: pointer;  
- }  
- 
- .submenu {
- 	padding-left : 20px;
- 	padding-top : 10px;
- 	font-size : small;
- }
- 
- #sidemenu {
- 	display : none;
- }
- 
- /******* /MENU *******/  
- /******* LOADING *******/  
- #loading, #loading_mentions, #loading_followers, #loading_friends, #loading_links {  
-     visibility: hidden;  
-     float : left;
- }  
- /******* /LOADING *******/
+#top #menu li:hover{  
+color: #0060e0;
+cursor: pointer;  
+}  
 
- 
- /******* Tweet Formatting ********/
- 
- .individual-tweet {
- 	padding : 10px;
- 	margin-top : 10px;
- 	clear : left;
- }
- 
- .individual-tweet p {
- 	font-size : smaller;
- }
- 
- .reply {
- 	padding-left : 85px;
- }
- 
- .private {
- 	border : 1px dotted #666;
- 	background-color : #eee;
- }
- 
- .person-info {
- 	float: left;
- 	margin-right: 10px;
- 	width : 80px;
- 	text-align : center;
- }
- 
- li.individual-tweet h3 a {
-     font-size : x-small;
-     color : #666;
- }
- 
- li.individual-tweet h4, li.individual-tweet form {
-     font-size : xx-small;
-     visibility:hidden;
- }
- 
- li.individual-tweet h4.reply-count {
- 	font-size : medium;
-	visibility:visible;
- }
+.submenu {
+padding-left : 20px;
+padding-top : 10px;
+font-size : small;
+}
 
- li.individual-tweet:hover h4, li.individual-tweet:hover form {
-     visibility: visible; 
-     color : #666;
- }
- 
- 
- li.individual-tweet:hover h3 a {
-	color: #0060e0;
- }		 
- 
-li.individual-tweet h3 a.most-popular {
- 	font-size : medium;
- 	font-weight : strong;
- }
+#sidemenu {
+display : none;
+}
+/******* /MENU *******/  
 
- .avatar { 	
- 	border: solid 1px #ccc;
- }
+/******* LOADING *******/  
+#loading, #loading_mentions, #loading_followers, #loading_friends, #loading_links {  
+visibility: hidden;  
+float : left;
+margin-right: 10px;
+}  
+/******* /LOADING *******/
 
+
+/******* TWEET FORMATTING ********/
+.post {
+/*
+padding : 5px;
+clear : left;
+*/
+padding: 5px 0;
+border-top: 1px solid #CCC;
+margin-top : 5px;
+}
+.individual-tweet {
+padding: 5px 0;
+border-top: 1px solid #CCC;
+
+}
+
+.individual-tweet a:link, .individual-tweet a:visited {
+color:#0060E0;
+text-decoration: none;
+}
+.individual-tweet a:hover {
+color: red;
+text-decoration: underline;
+}
+.individual-tweet p {
+/*font-size : smaller;*/
+font-size: 1.2em;
+}
+
+.reply {
+/*
+padding-left : 85px;*/
+border-top: 0px;
+}
+
+.private {
+background-color : #eee;
+}
+
+.person-info {
+float: left;
+margin-right: 10px;
+width : 80px;
+text-align : center;
+}
+
+.individual-tweet h3 a {
+font-size : x-small;
+color : #666;
+}
+
+.individual-tweet h4, individual-tweet form {
+font-size : xx-small;
+visibility:hidden;
+}
+
+.individual-tweet h4.reply-count {
+font-size : medium;
+visibility:visible;
+}
+
+
+
+.reply-count {
+font-size: 3em;
+background-color: #222;
+}
+.reply-count a:link, .reply-count a:visited {
+color: #FFF;
+padding: 0 10px;
+text-decoration: underline;
+}
+.individual-tweet:hover h4, individual-tweet:hover form {
+visibility: visible; 
+color : #666;
+}
+
+
+.individual-tweet:hover h3 a {
+color: #0060e0;
+}		 
+
+.individual-tweet h3 a.most-popular {
+font-size : medium;
+font-weight : strong;
+}
+
+.avatar { 	
+}
+
+img.avatar {
+margin:0px 2px 2px 5px;width:48px;height:48px;
+}
+.person-info {
+font-size:1.2em;
+/*border-top: 1px solid #999;*/
+}
+.pic {
+float: right;
+margin-left: 10px;
+border: 1px solid #CCC;
+padding: 5px;
+}
 .error {
-	background-color:#FF8080;
-	padding:10px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	color:white;
-	text-align:center;
-	font-weight:bold;
+background-color:#FF8080;
+padding:10px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+color:white;
+text-align:center;
+font-weight:bold;
 }
- /******* /Tweet Formatting ********/
+.header {
+padding: 10px 0 0 0;
+font-weight: 500;color: #999;font-size: 1em;
+}
+
+/******* /TWEET FORMATTING ********/
+
+/******* NEW STYLES ***************/
+.clearfix:after {visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */
+
+#content {padding-top: 0px;width: 960px;margin: 0 auto;}
+
+.bt {border-top: 1px solid #CCC;}
+.br {border-right: 1px solid #CCC;}
+.bb {border-bottom: 1px solid #CCC;}
+.bl {border-left: 1px solid #CCC;}
+
+.round-tl {-moz-border-radius-topleft: 10px;-webkit-border-top-left-radius: 10px;}
+.round-tr {-moz-border-radius-topright: 10px;-webkit-border-top-right-radius: 10px;}
+.round-br {-moz-border-radius-bottomright: 10px;-webkit-border-bottom-right-radius: 10px;}
+.round-bl {-moz-border-radius-bottomleft: 10px;-webkit-border-bottom-left-radius: 10px;}
+
+.right {text-align:right}
+.append {padding-bottom:10px}
+.prepend {padding-top:10px}
+
+/* JQuery UI overrides */
+/* added to tab id */
+#thinktank-tabs .ui-tabs {-moz-border-radius: 10px;-webkit-border-radius: 10px;margin: 0px;} 
+#thinktank-tabs .ui-widget {margin-top: 20px;}
+#thinktank-tabs .ui-widget-content {padding:0;background-image: none}
+#thinktank-tabs .ui-corner-all {}
+
+/* added to ul */
+#thinktank-tabs .ui-tabs-nav {margin:0px;background-color: #F1F1F2;border:1px solid;}
+#thinktank-tabs .ui-helper-reset {}
+#thinktank-tabs .ui-helper-clearfix {}
+#thinktank-tabs .ui-widget-header {background-image:none;}
+#thinktank-tabs .ui-corner-all {-moz-border-radius: 10px;-webkit-border-radius: 10px;}
+
+/* added to li */
+#thinktank-tabs .ui-state-default {width:190px;line-height:1.6em;font-size: 2em;border: 0px;background-color: #FFF;margin-right: 0px;background:none;}
+#thinktank-tabs .ui-corner-top {}
+#thinktank-tabs .ui-tabs-selected {width:190px;line-height:1.6em;font-size: 2em;margin-right: 0px;border:0px;background:none;}
+#thinktank-tabs .ui-state-active {width:190px;line-height:1.6em;font-size: 2em;margin-right: 0px;border:0px;background:none;}
+#thinktank-tabs .ui-tabs .ui-tabs-nav li {text-align:center;}
+#thinktank-tabs .ui-tabs .ui-tabs-nav li a {margin:10px 0;border-right: 1px solid #CCC;width:190px;padding: 0;}
+#thinktank-tabs .ui-tabs .ui-tabs-nav li.no-border a {border: 0px}
+
+/* added to tab content */
+#thinktank-tabs .ui-tabs-panel {padding-left:0px;}
+#thinktank-tabs .ui-widget-content {background-color:#F1F1F2;border:0px;}
+#thinktank-tabs .ui-corner-bottom {}
+#thinktank-tabs .ui-tabs .ui-tabs-panel {border: 0px;background-color: #FFF;-moz-border-radius: 10px;-webkit-border-radius: 10px;margin-top: 42px;}
+
+/* main tab navigation */
+.key-stat {margin:0;padding:0;}
+.key-stat h1 {font-size: 2em;font-weight:700;}
+.key-stat h3 {font-size: .9em;font-weight:500;}
+
+#thinktank-tabs h2 {font-size: 2em;color: #000;margin: 20px 0 0 0;}
+#thinktank-tabs h4 {font-size: 1.2em;color: #666;margin: 0 0 0px 0px;} 
+
+#dart1 {position:relative;top:-45px;left: 45px;height: 45px;}
+#dart2 {position:relative;top:-45px;left: 235px;height: 45px;}
+#dart3 {position:relative;top:-45px;left: 430px;height: 45px;}
+#dart4 {position:relative;top:-45px;left: 620px;height: 45px;}
+#dart5 {position:relative;top:-45px;left: 810px;height: 45px;}
+
+
+ 
+#menu-bar {float: right;margin-bottom:20px;}
+#menu-bar ul {}
+#menu-bar li {display: inline;background-color: #000;padding: 15px 10px;margin: 0 1px 0 0;font-size: 1.6em;float: left;}
+#menu-bar li a:link, #menu-bar li a:visited {color: #FFF;text-decoration: none;}
+
+#status-bar {
+border: 1px solid;
+padding: 20px 30px;
+margin: 20px 0 20px 0;
+font-size: 2em;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+text-align:center;
+text-align: center;
+}
+
+#service-bar {text-align:left;padding: 0 20px;font-size: 1.2em;margin:0 0 20px 0;color: #FFF;background-color: #666;line-height: 2em;}
+#service-bar ul {float:right;}
+#service-bar li {display: inline;}
+#service-bar a:link, #service-bar a:visited {color: #FFF;text-decoration:underline}
+#service-bar a:hover {text-decoration: none}
+
+.stat-box {
+float:right;
+position: relative;
+top: -30px;
+padding-right: 20px;
+color: #666;
+font-size: .8em;
+}
