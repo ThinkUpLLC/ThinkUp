@@ -1,6 +1,6 @@
 h1. ThinkTank
 
-Capture and organize replies to status updates on Twitter and beyond. 
+ThinkTank is an installable web application that captures and organize replies to status updates on Twitter and beyond. See screenshots and more at "http://thinktankapp.com":http://thinktankapp.com. 
 
 ThinkTank is sponsored by "Expert Labs":http://expertlabs.org, led by "Gina Trapani":http://ginatrapani.org, and used to be named Twitalytic.
 
@@ -72,7 +72,7 @@ See the script's "README":http://github.com/ginatrapani/thinktank/blob/master/ex
 
 h2. SUPPORT AND MORE INFORMATION
 
-To discuss ThinkTank, "post to the project mailing list":http://groups.google.com/group/thinktankapp. For deeper documentation, see "the ThinkTank wiki":http://wiki.github.com/ginatrapani/thinktank .
+To discuss ThinkTank, "post to the project mailing list":http://groups.google.com/group/thinktankapp. For deeper documentation, see "the ThinkTank wiki":http://wiki.github.com/ginatrapani/thinktank.
 
 
 h2. LICENSE
