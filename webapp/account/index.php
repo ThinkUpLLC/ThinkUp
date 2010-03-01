@@ -20,7 +20,7 @@ $od = new OwnerDAO($db);
 if ($_POST['changepass'] == 'Change Password') {
     $originalpass = $od->getPass($_SESSION['user']);
     $origpass = $originalpass['pwd'];
-    if ($session->pwdCheck($_POST['oldpass'], $origpass)) {
+    if (!$session->pwdCheck($_POST['oldpass'], $origpass)) {
         $errormsg = "Old password does not match or empty.";
     } elseif ($_POST['pass1'] != $_POST['pass2']) {
         $errormsg = "New passwords did not match. Your password has not been changed.";
