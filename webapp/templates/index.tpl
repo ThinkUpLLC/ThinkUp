@@ -35,129 +35,131 @@
                 <div class="section" id="updates">
                     <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart1"> 
                     <div id="top" class="clearfix">
-                        <div class="stat-box">
-                            {$owner_stats.tweet_count|number_format} total Tweets | {$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}                        
-                        </div>
-
-                        <div class="clearfix">
-                            <ul id="menu">
-                                <li id="tweets-all">All</li>
-                                <li id="tweets-mostreplies">Most&nbsp;Replied-To</li>
-                                <li id="tweets-mostretweeted">Most&nbsp;Retweeted</li>
-                                <li id="tweets-convo">Conversations</li>
-                            </ul>
-                        </div>
-
+                    
                         <div class="thinktank-canvas container_24">
+                            <div class="grid_23 clearfix right small gray stat-box">
+                                {$owner_stats.tweet_count|number_format} total Tweets | {$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}                        
+                            </div>
+                            <div class="grid_24 clearfix">
+                                <ul id="menu">
+                                    <li id="tweets-all">All</li>
+                                    <li id="tweets-mostreplies">Most&nbsp;Replied-To</li>
+                                    <li id="tweets-mostretweeted">Most&nbsp;Retweeted</li>
+                                    <li id="tweets-convo">Conversations</li>
+                                </ul>
+                            </div>
                             <div class="grid_22 push_1">
                                 <div id="loading_mentions"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..." /></div>
                                 <div id="tweets_content"></div>
                             </div>
                         </div>
 
-                    </div>
-                </div>
+                    </div> <!-- #top -->
+                </div> <!-- #updates -->
         
                 <div class="section" id="mentions">
                     <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart2"> 
                     <div id="top" class="clearfix">
-                        <div class="stat-box">
-                            {$instance->total_replies_in_system|number_format} mentions loaded into ThinkTank
-                            {if $instance->total_replies_in_system > 0} | {$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}{/if}                        
-                        </div>
-
-                        <div class="clearfix">
-                             <ul id="menu">
-                                <li id="mentions-all">All&nbsp;Mentions</li>
-                                <li id="mentions-allreplies">Replies</li>
-                                <li id="mentions-orphan">Not&nbsp;Replies&nbsp;or&nbsp;Retweets</li>
-                                <li id="mentions-standalone">Standalone</li>
-                            </ul>
-                        </div>
+                    
                         <div class="thinktank-canvas container_24">
+                            <div class="grid_23 clearfix right small gray stat-box">
+                                {$instance->total_replies_in_system|number_format} mentions loaded into ThinkTank
+                                {if $instance->total_replies_in_system > 0} | {$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}{/if}                        
+                            </div>
+                            <div class="grid_24 clearfix">
+                                 <ul id="menu">
+                                    <li id="mentions-all">All&nbsp;Mentions</li>
+                                    <li id="mentions-allreplies">Replies</li>
+                                    <li id="mentions-orphan">Not&nbsp;Replies&nbsp;or&nbsp;Retweets</li>
+                                    <li id="mentions-standalone">Standalone</li>
+                                </ul>
+                            </div>
                             <div class="grid_22 push_1">
                                 <div id="loading"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..." /></div>
                                 <div id="mentions_content"></div>
                             </div>
                         </div>
 
-                    </div>
-                </div>
+                    </div> <!-- #top -->
+                </div> <!-- #mentions -->
         
                 <div class="section" id="followers">
                     <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart3"> 
                     <div id="top" class="clearfix">
-                        <div class="stat-box">
-                            {$owner_stats.follower_count|number_format} Twitter followers
-                            {if $total_follows_protected>0} | {$total_follows_protected|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkTank protected ({$percent_followers_protected}%){/if}
-                            {if $total_follows_with_errors>0} | {$total_follows_with_errors|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkTank suspended ({$percent_followers_suspended}%){/if}
-                        </div>
-                        <div class="clearfix">
-                            <ul id="menu">
-                                <li id="followers-mostfollowed">Most-Followed</li>
-                                <li id="followers-leastlikely">Least&nbsp;Likely</li>
-                                <li id="followers-earliest">Earliest</li>
-                                <li id="followers-former">Former</li>
-                            </ul>
-                        </div>
-                        
+                    
                         <div class="thinktank-canvas container_24">
+                            <div class="grid_23 clearfix right small gray stat-box">
+                                {$owner_stats.follower_count|number_format} Twitter followers
+                                {if $total_follows_protected>0} | {$total_follows_protected|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkTank protected ({$percent_followers_protected}%){/if}
+                                {if $total_follows_with_errors>0} | {$total_follows_with_errors|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkTank suspended ({$percent_followers_suspended}%){/if}
+                            </div>
+                            <div class="grid_24 clearfix">
+                                <ul id="menu">
+                                    <li id="followers-mostfollowed">Most-Followed</li>
+                                    <li id="followers-leastlikely">Least&nbsp;Likely</li>
+                                    <li id="followers-earliest">Earliest</li>
+                                    <li id="followers-former">Former</li>
+                                </ul>
+                            </div>
                             <div class="grid_22 push_1">
                                 <div id="loading_followers"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..." /></div>
                                 <div id="followers_content"></div>
                             </div>
                         </div>
                         
-                    </div>
-                </div>
+                    </div> <!-- #top -->
+                </div> <!-- #followers -->
         
                 <div class="section" id="friends">
                     <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart4"> 
                     <div id="top" class="clearfix">
-                        <div class="stat-box">
-                            {$owner_stats.friend_count|number_format} Twitter friends
-                            {if $total_friends_protected} | {$total_friends_protected|number_format} friend profiles loaded into ThinkTank protected{/if}
-                            {if $total_friends_with_errors>0} | {$total_friends_with_errors|number_format} friends suspended{/if}                        
-                        </div>
-
-                        <ul id="menu">
-                            <li id="friends-mostactive">Chatterboxes</li>
-                            <li id="friends-leastactive">Deadbeats</li>
-                            <li id="friends-mostfollowed">Popular</li>
-                            <li id="friends-former">Former</li>
-                            <li id="friends-notmutual">Not&nbsp;Mutual</li>			
-                        </ul>
+                    
                         <div class="thinktank-canvas container_24">
+                            <div class="grid_23 clearfix right small gray stat-box">
+                                {$owner_stats.friend_count|number_format} Twitter friends
+                                {if $total_friends_protected} | {$total_friends_protected|number_format} friend profiles loaded into ThinkTank protected{/if}
+                                {if $total_friends_with_errors>0} | {$total_friends_with_errors|number_format} friends suspended{/if}                        
+                            </div>
+                            <div class="grid_24 clearfix">
+                                <ul id="menu">
+                                    <li id="friends-mostactive">Chatterboxes</li>
+                                    <li id="friends-leastactive">Deadbeats</li>
+                                    <li id="friends-mostfollowed">Popular</li>
+                                    <li id="friends-former">Former</li>
+                                    <li id="friends-notmutual">Not&nbsp;Mutual</li>			
+                                </ul>
+                            </div>
                             <div class="grid_22 push_1">
                                 <div id="loading_friends"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..." /></div>
                                 <div id="friends_content"></div>
                             </div>
                         </div>
                         
-                    </div>
-                </div>
+                    </div> <!-- #top -->
+                </div> <!-- #friends -->
         
                 <div class="section" id="links">
                     <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart5"> 
                     <div id="top" class="clearfix">
-                        <div class="stat-box">
-                        
-                        </div>
-
-                        <ul id="menu">
-                            <li id="links-friends">From Friends</li>
-                            <li id="links-favorites">From Your Favorites</li>
-                            <li id="links-photos">Photos</li>
-                        </ul>
+                    
                         <div class="thinktank-canvas container_24">
+                            <div class="grid_23 clearfix right small gray stat-box">
+                            </div>
+                            <div class="grid_24 clearfix">
+                                <ul id="menu">
+                                    <li id="links-friends">From Friends</li>
+                                    <li id="links-favorites">From Your Favorites</li>
+                                    <li id="links-photos">Photos</li>
+                                </ul>
+                            </div>
                             <div class="grid_22 push_1">
                                 <div id="loading_links"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..." /></div>
                                 <div id="links_content"></div>
                             </div>
                         </div>
                         
-                    </div>
-                </div>
+                    </div> <!-- #top -->
+                </div> <!-- #links -->
         
         	</div> <!-- #tabs -->
         </div> <!-- #thinktank-tabs -->
