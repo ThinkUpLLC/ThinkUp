@@ -80,12 +80,12 @@ if (!isset($_SESSION['user'])) {
 		$s->assign('total_friends_protected', $total_friends_protected);
 
 		//Percentages
-		$percent_followers_loaded = $u->getPercentage($owner_stats['follower_count'], ($total_follows_with_full_details + $total_follows_with_errors));
+		$percent_followers_loaded = $u->getPercentage($owner_stats->follower_count, ($total_follows_with_full_details + $total_follows_with_errors));
 		$percent_followers_loaded = ($percent_followers_loaded  > 100) ? 100 : $percent_followers_loaded;
-		$percent_tweets_loaded = $u->getPercentage($owner_stats['tweet_count'],$i->total_tweets_in_system );
+		$percent_tweets_loaded = $u->getPercentage($owner_stats->tweet_count,$i->total_tweets_in_system );
 		$percent_tweets_loaded = ($percent_tweets_loaded  > 100) ? 100 : $percent_tweets_loaded;
 
-		$percent_friends_loaded = $u->getPercentage($owner_stats['friend_count'], ($total_friends_loaded));
+		$percent_friends_loaded = $u->getPercentage($owner_stats->friend_count, ($total_friends_loaded));
 		$percent_friends_loaded = ($percent_friends_loaded  > 100) ? 100 : $percent_friends_loaded;
 
 		$percent_followers_suspended = round($u->getPercentage($total_follows_with_full_details, $total_follows_with_errors), 2);

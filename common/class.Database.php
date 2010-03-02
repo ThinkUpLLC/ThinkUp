@@ -55,6 +55,9 @@ class Database {
 		$q = str_replace('%prefix%', $this->table_prefix, $q);
 		$q = str_replace('%gmt_offset%', $this->GMT_offset, $q);
 
+		$q = str_replace('^prefix^', $this->table_prefix, $q);
+		$q = str_replace('^gmt_offset^', $this->GMT_offset, $q);
+		
 		//echo $q;
 		$starttime = microtime(true);
 		$r = mysql_query($q) or $fail = true;
