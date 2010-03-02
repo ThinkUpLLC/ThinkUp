@@ -18,7 +18,9 @@ class User {
 
 
 	function User($val, $found_in) {
-		$this->id = $val['id'];
+		if ( isset(  $val['id'] ) ) {
+			$this->id = $val['id'];
+		}
 		$this->username = $val['user_name'];
 		$this->full_name = $val['full_name'];
 		$this->user_id = $val['user_id'];
@@ -197,7 +199,7 @@ class UserDAO extends MySQLDAO {
 
 class UserErrorDAO extends MySQLDAO {
 
-		function insertError($id, $error_code, $error_text, $issued_to) {
+	function insertError($id, $error_code, $error_text, $issued_to) {
 		$q = "INSERT INTO ^prefix^user_errors (user_id, error_code, error_text, error_issued_to_user_id) ";
 		$q .= "VALUES (%s, %s, '%s', %s) ";
 		$q = sprintf($q, mysql_real_escape_string($id), mysql_real_escape_string($error_code), mysql_real_escape_string($error_text), mysql_real_escape_string($issued_to) );

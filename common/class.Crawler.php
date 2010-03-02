@@ -294,7 +294,7 @@ class Crawler {
             try {
                 $e = $this->api->parseError($twitter_data);
                 $td = new TweetErrorDAO($this->db, $this->logger);
-                $td->insertError($tid, $cURL_status, $e['error'], $this->owner_object->id);
+                $td->insertError($tid, $cURL_status, $e['error'], $this->owner_object->user_id);
                 $status_message = 'Error saved to tweets.';
             }
             catch(Exception $e) {
@@ -342,7 +342,7 @@ class Crawler {
                         
                         $td = new TweetDAO($this->db, $this->logger);
                         if (!isset($recentTweets)) {
-                            $recentTweets = $td->getAllTweets($this->owner_object->id, 15);
+                            $recentTweets = $td->getAllTweets($this->owner_object->user_id, 15);
                         }
                         $count = 0;
                         foreach ($tweets as $tweet) {
@@ -360,7 +360,7 @@ class Crawler {
                                 $count++;
                                 //expand and insert links contained in tweet
                                 $this->processTweetURLs($tweet, $lurl, $fa);
-                                if ($tweet['user_id'] != $this->owner_object->id) { //don't update owner info from reply
+                                if ($tweet['user_id'] != $this->owner_object->user_id) { //don't update owner info from reply
                                     $u = new User($tweet, 'mentions');
                                     $this->ud->updateUser($u, $this->logger);
                                 }
@@ -554,7 +554,7 @@ class Crawler {
     
     function fetchInstanceUserFriends() {
         $fd = new FollowDAO($this->db, $this->logger);
-        $this->instance->total_friends_in_system = $fd->getTotalFriends($this->owner_object->id);
+        $this->instance->total_friends_in_system = $fd->getTotalFriends($this->owner_object->user_id);
         
         if ($this->instance->total_friends_in_system < $this->owner_object->friend_count) {
             $this->instance->is_archive_loaded_friends = false;
@@ -637,7 +637,7 @@ class Crawler {
         
         $continue_fetching = true;
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
-            $stale_friend = $fd->getStalestFriend($this->owner_object->id);
+            $stale_friend = $fd->getStalestFriend($this->owner_object->user_id);
             if ($stale_friend != null) {
                 $this->logger->logStatus($stale_friend->user_name." is friend most need of update", get_class($this));
                 $stale_friend_tweets = str_replace("[id]", $stale_friend->user_name, $this->api->cURL_source['user_timeline']);
@@ -698,7 +698,7 @@ class Crawler {
                     try {
                         $e = $this->api->parseError($twitter_data);
                         $ued = new UserErrorDAO($this->db, $this->logger);
-                        $ued->insertError($stale_friend->id, $cURL_status, $e['error'], $this->owner_object->id);
+                        $ued->insertError($stale_friend->id, $cURL_status, $e['error'], $this->owner_object->user_id);
                         $this->logger->logStatus('User error saved', get_class($this));
                     }
                     catch(Exception $e) {
@@ -715,7 +715,7 @@ class Crawler {
     
     function fetchStrayRepliedToTweets($lurl, $fa) {
         $td = new TweetDAO($this->db, $this->logger);
-        $strays = $td->getStrayRepliedToTweets($this->owner_object->id);
+        $strays = $td->getStrayRepliedToTweets($this->owner_object->user_id);
         $status_message = count($strays).' stray replied-to tweets to load.';
         $this->logger->logStatus($status_message, get_class($this));
         
@@ -727,7 +727,7 @@ class Crawler {
     
     function fetchUnloadedFollowerDetails() {
         $fd = new FollowDAO($this->db, $this->logger);
-        $strays = $fd->getUnloadedFollowerDetails($this->owner_object->id);
+        $strays = $fd->getUnloadedFollowerDetails($this->owner_object->user_id);
         $status_message = count($strays).' unloaded follower details to load.';
         $this->logger->logStatus($status_message, get_class($this));
         
@@ -822,7 +822,7 @@ class Crawler {
             try {
                 $e = $this->api->parseError($twitter_data);
                 $ued = new UserErrorDAO($this->db, $this->logger);
-                $ued->insertError($fid, $cURL_status, $e['error'], $this->owner_object->id);
+                $ued->insertError($fid, $cURL_status, $e['error'], $this->owner_object->user_id);
                 $status_message = 'User error saved.';
                 
             }
