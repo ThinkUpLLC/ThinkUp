@@ -65,7 +65,7 @@ class TestOfDatabase extends UnitTestCase {
 
 
 		$db = new Database($THINKTANK_TEST_CFG);
-		$this->expectException( new Exception("ERROR: Access denied for user 'root'@'localhost' (using password: YES)localhostrootwrong password") );
+		$this->expectException( new Exception("ERROR: Access denied for user '".$THINKTANK_TEST_CFG['db_user']."'@'localhost' (using password: YES)localhost".$THINKTANK_TEST_CFG['db_user']."wrong password") );
 		$conn = $db->getConnection();
 		$this->assertTrue($conn==null, 'Connection not set');
 		$db->closeConnection($conn);
