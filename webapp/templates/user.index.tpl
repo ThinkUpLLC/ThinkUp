@@ -17,7 +17,7 @@
 
 		<div class="section" id="tweets">
 
-<img src="{$profile.avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <h1><a href="http://twitter.com/{$profile.user_name}">{$profile.user_name}</a></h1> <small>[{$profile.follower_count|number_format} followers, following {$profile.friend_count|number_format}] </small>   {if $profile.description}<br />{$profile.description}{/if}{if $profile.tweet_count > 0}<br /> <small>Last post {$profile.last_post|relative_datetime}{if $profile.location} from {$profile.location}{/if}</small>{/if}<br /><small>Averages {$profile.avg_tweets_per_day} updates per day; {$profile.tweet_count|number_format} since joining {$profile.joined|relative_datetime} on {$profile.joined|date_format:"%D"}</small><br clear="all" />
+<img src="{$profile->avatar}" width="48" height="48" style="float:left;margin-right:3px;border:solid black 1px"> <h1><a href="http://twitter.com/{$profile->user_name}">{$profile->user_name}</a></h1> <small>[{$profile->follower_count|number_format} followers, following {$profile->friend_count|number_format}] </small>   {if $profile->description}<br />{$profile->description}{/if}{if $profile->tweet_count > 0}<br /> <small>Last post {$profile->last_post|relative_datetime}{if $profile->location} from {$profile->location}{/if}</small>{/if}<br /><small>Averages {$profile->avg_tweets_per_day} updates per day; {$profile->tweet_count|number_format} since joining {$profile->joined|relative_datetime} on {$profile->joined|date_format:"%D"}</small><br clear="all" />
 {if $sources}Most-used Twitter client: {$sources[0].source}{/if}
 <br /><br />
 
@@ -77,7 +77,7 @@
 
 <h2>User Stats</h2>
 <ul>
-	<li>Last updated {$profile.last_updated|relative_datetime}</li>
+	<li>Last updated {$profile->last_updated|relative_datetime}</li>
 	<li><a {if $instance}href="{$cfg->site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a></li>
 </ul>
 </div>
