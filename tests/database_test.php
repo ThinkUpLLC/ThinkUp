@@ -1,45 +1,44 @@
-<?php 
+<?php
 require_once (dirname(__FILE__).'/simpletest/autorun.php');
 
 
 require_once (dirname(__FILE__).'/config.tests.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once ("class.Database.php");
+require_once ("class.LoggerSlowSQL.php");
 require_once ("config.inc.php");
 
 
 class TestOfDatabase extends UnitTestCase {
-    function TestOfLogging() {
-        $this->UnitTestCase('Database class test');
-    }
-    
-    function setUp() {
-    
-    }
-    
-    function tearDown() {
-    
-    }
-    
-    function testCreatingNewDatabase() {
-        global $THINKTANK_CFG;
-        $db = new Database($THINKTANK_CFG);
+	function TestOfLogging() {
+		$this->UnitTestCase('Database class test');
+	}
+
+	function setUp() {
+	}
+
+	function tearDown() {
+	}
+
+	function testCreatingNewDatabase() {
+		global $THINKTANK_CFG;
+		$db = new Database($THINKTANK_CFG);
 		$this->assertTrue($db->db_host==$THINKTANK_CFG['db_host'], "Database vars set");
-    }
-	
+	}
+
 	function testCreatingNewDatabaseConnection() {
-        global $THINKTANK_CFG;
-        $db = new Database($THINKTANK_CFG);
+		global $THINKTANK_CFG;
+		$db = new Database($THINKTANK_CFG);
 		$conn = $db->getConnection();
-        $this->assertTrue(isset($conn), 'Connection created');
+		$this->assertTrue(isset($conn), 'Connection created');
 		$db->closeConnection($conn);
 	}
 
 	function testExecutingSQLWithTablePrefixAndGMTOffset() {
-        global $THINKTANK_CFG;
-        $db = new Database($THINKTANK_CFG);
+		global $THINKTANK_CFG;
+		$db = new Database($THINKTANK_CFG);
 		$conn = $db->getConnection();
-		$sql_result = $db->exec("SELECT 
+		$sql_result = $db->exec("SELECT
 				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
 			FROM 
 				%prefix%tweets t
@@ -53,38 +52,48 @@ class TestOfDatabase extends UnitTestCase {
 				pub_date DESC 
 			LIMIT 15;");
 
- 		$db->closeConnection($conn);
-	}
-
-	function testCreatingBadDatabaseConnection() {
-        global $THINKTANK_CFG;
-		$THINKTANK_CFG['db_password'] = 'wrong password';
-		$THINKTANK_CFG['table_prefix'] = '';
-        $db = new Database($THINKTANK_CFG);
-		$this->expectException( new Exception("ERROR: Access denied for user 'twitalytic'@'localhost' (using password: YES)localhosttwitalyticwrong password") ); 
-		$conn = $db->getConnection();
-        $this->assertTrue($conn==null, 'Connection not set');
 		$db->closeConnection($conn);
 	}
 
-	function testExecutingSQLWithUnSetTablePrefixShouldFail() {
-        global $THINKTANK_CFG;
-		$THINKTANK_CFG['table_prefix'] = 'tw_';
-		$this->expectException(); 
-        $db = new Database($THINKTANK_CFG);
+	function testCreatingBadDatabaseConnection() {
+		global $THINKTANK_CFG;
+		$THINKTANK_TEST_CFG['db_password'] = 'wrong password';
+		$THINKTANK_TEST_CFG['table_prefix'] = '';
+		$THINKTANK_TEST_CFG['db_host'] = $THINKTANK_CFG['db_host'];
+		$THINKTANK_TEST_CFG['db_name'] = $THINKTANK_CFG['db_name'];
+		$THINKTANK_TEST_CFG['db_user'] = $THINKTANK_CFG['db_user'];
+
+
+		$db = new Database($THINKTANK_TEST_CFG);
+		$this->expectException( new Exception("ERROR: Access denied for user 'root'@'localhost' (using password: YES)localhostrootwrong password") );
 		$conn = $db->getConnection();
-		$sql_result = $db->exec("SELECT 
+		$this->assertTrue($conn==null, 'Connection not set');
+		$db->closeConnection($conn);
+
+	}
+
+	function testExecutingSQLWithUnSetTablePrefixShouldFail() {
+		global $THINKTANK_CFG;
+
+		$THINKTANK_TEST_CFG['table_prefix'] = 'tw_';
+		$THINKTANK_TEST_CFG['db_password'] = $THINKTANK_CFG['db_password'];
+		$THINKTANK_TEST_CFG['db_host'] = $THINKTANK_CFG['db_host'];
+		$THINKTANK_TEST_CFG['db_name'] = $THINKTANK_CFG['db_name'];
+		$THINKTANK_TEST_CFG['db_user'] = $THINKTANK_CFG['db_user'];
+
+		$this->expectException();
+		$db = new Database($THINKTANK_TEST_CFG);
+		$conn = $db->getConnection();
+		$sql_result = $db->exec("SELECT
 				user_id 
 			FROM 
 				%prefix%users 
 			WHERE 
 				user_id = 930061");
 
- 		$db->closeConnection($conn);
-	}
-	
+		$db->closeConnection($conn);
 
-	
+	}
 
 }
 
