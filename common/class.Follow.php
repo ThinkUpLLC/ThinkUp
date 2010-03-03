@@ -4,8 +4,10 @@ class FollowDAO extends MySQLDAO {
 
 	function followExists($user_id, $follower_id) {
 		$q = " SELECT user_id, follower_id ";
-		$q .= " FROM %prefix%follows ";
-		$q .= " WHERE user_id = ".$user_id." AND follower_id=".$follower_id.";";
+		$q .= " FROM ^prefix^follows ";
+		$q .= " WHERE user_id = %s AND follower_id=%s;";
+
+		$q = sprintf($q, mysql_real_escape_string($user_id),mysql_real_escape_string($follower_id) );
 
 		$sql_result = $this->executeSQL($q);
 		if (mysql_num_rows($sql_result) > 0) {
@@ -16,11 +18,14 @@ class FollowDAO extends MySQLDAO {
 	}
 
 	function update($user_id, $follower_id) {
-		$q = " UPDATE %prefix%follows ";
+		$q = " UPDATE ^prefix^follows ";
 		$q .= " SET last_seen=NOW() ";
-		$q .= " WHERE user_id = ".$user_id." AND follower_id=".$follower_id.";";
+		$q .= " WHERE user_id = %s AND follower_id= %s;";
+
+		$q = sprintf($q, mysql_real_escape_string($user_id), mysql_real_escape_string($follower_id) );
 
 		$sql_result = $this->executeSQL($q);
+
 		if (mysql_affected_rows() > 0){
 			return true;
 		} else {
@@ -29,9 +34,12 @@ class FollowDAO extends MySQLDAO {
 	}
 
 	function deactivate($user_id, $follower_id) {
-		$q = " UPDATE %prefix%follows ";
+		$q = " UPDATE ^prefix^follows ";
 		$q .= " SET active = 0 ";
-		$q .= " WHERE user_id = ".$user_id." AND follower_id=".$follower_id.";";
+		$q .= " WHERE user_id = %s AND follower_id= %s;";
+
+		$q = sprintf($q, mysql_real_escape_string($user_id), mysql_real_escape_string($follower_id) );
+
 		$sql_result = $this->executeSQL($q);
 		if (mysql_affected_rows() > 0){
 			return true;
@@ -41,30 +49,28 @@ class FollowDAO extends MySQLDAO {
 	}
 
 	function insert($user_id, $follower_id) {
-		$q = "
-			INSERT INTO
-				%prefix%follows (user_id,follower_id,last_seen)
-				VALUES (
-					".$user_id.",".$follower_id.",NOW()
-				);";
-		$foo = $this->executeSQL($q);
-		if (mysql_affected_rows() > 0)
-		return true;
-		else
-		return false;
+		$q = "INSERT INTO ^prefix^follows (user_id, follower_id, last_seen) ";
+		$q .= "	VALUES ( %s, %s, NOW() );";
+
+		$q = sprintf($q, mysql_real_escape_string($user_id), mysql_real_escape_string($follower_id) );
+
+		$sql_result = $this->executeSQL($q);
+
+		if (mysql_affected_rows() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	function getUnloadedFollowerDetails($user_id) {
-		$q = "
-			SELECT
-				follower_id
-			FROM 
-				%prefix%follows f 
-			WHERE 
-				f.user_id=".$user_id."
-				AND f.follower_id NOT IN (SELECT user_id FROM %prefix%users) 
-				AND f.follower_id NOT IN (SELECT user_id FROM %prefix%user_errors)
-			LIMIT 100;";
+		$q = "SELECT follower_id FROM ^prefix^follows f ";
+		$q .= "WHERE f.user_id=%s ";
+		$q .= "AND f.follower_id NOT IN (SELECT user_id FROM ^prefix^users) ";
+		$q .= "AND f.follower_id NOT IN (SELECT user_id FROM ^prefix^user_errors) LIMIT 100;";
+
+		$q = sprintf($q, mysql_real_escape_string($user_id));
+
 		$sql_result = $this->executeSQL($q);
 		$strays = array();
 		while ($row = mysql_fetch_assoc($sql_result)) {
@@ -72,18 +78,18 @@ class FollowDAO extends MySQLDAO {
 		}
 		mysql_free_result($sql_result);
 		return $strays;
-
 	}
 
+	
 	function getTotalFollowsWithErrors($user_id) {
 		$q = "
 			SELECT
 				count(follower_id) as follows_with_errors
 			FROM 
-				%prefix%follows f 
+				^prefix^follows f 
 			WHERE 
 				f.user_id=".$user_id."
-				AND f.follower_id IN (SELECT user_id FROM %prefix%user_errors WHERE error_issued_to_user_id=".$user_id.");";
+				AND f.follower_id IN (SELECT user_id FROM ^prefix^user_errors WHERE error_issued_to_user_id=".$user_id.");";
 		$sql_result = $this->executeSQL($q);
 		$ferrors = array();
 		while ($row = mysql_fetch_assoc($sql_result)) {
@@ -99,10 +105,10 @@ class FollowDAO extends MySQLDAO {
 			SELECT
 				count(follower_id) as friends_with_errors
 			FROM 
-				%prefix%follows f 
+				^prefix^follows f 
 			WHERE 
 				f.follower_id=".$user_id."
-				AND f.user_id IN (SELECT user_id FROM %prefix%user_errors WHERE error_issued_to_user_id=".$user_id.");";
+				AND f.user_id IN (SELECT user_id FROM ^prefix^user_errors WHERE error_issued_to_user_id=".$user_id.");";
 		$sql_result = $this->executeSQL($q);
 		$ferrors = array();
 		while ($row = mysql_fetch_assoc($sql_result)) {
@@ -117,8 +123,8 @@ class FollowDAO extends MySQLDAO {
 	function getTotalFollowsWithFullDetails($user_id) {
 		$q = "
 			 SELECT count( * ) as follows_with_details
-			FROM %prefix%follows f
-			INNER JOIN %prefix%users u ON u.user_id = f.follower_id
+			FROM ^prefix^follows f
+			INNER JOIN ^prefix^users u ON u.user_id = f.follower_id
 			WHERE f.user_id = ".$user_id;
 		$sql_result = $this->executeSQL($q);
 		$details = array();
@@ -132,8 +138,8 @@ class FollowDAO extends MySQLDAO {
 	function getTotalFollowsProtected($user_id) {
 		$q = "
 			 SELECT count( * ) as follows_protected
-			FROM %prefix%follows f
-			INNER JOIN %prefix%users u ON u.user_id = f.follower_id
+			FROM ^prefix^follows f
+			INNER JOIN ^prefix^users u ON u.user_id = f.follower_id
 			WHERE f.user_id = ".$user_id." AND u.is_protected=1";
 		$sql_result = $this->executeSQL($q);
 		$details = array();
@@ -147,8 +153,8 @@ class FollowDAO extends MySQLDAO {
 	function getTotalFriends($user_id) {
 		$q = "
 			 SELECT count( * ) as total_friends
-			FROM %prefix%follows f
-			INNER JOIN %prefix%users u ON u.user_id = f.user_id
+			FROM ^prefix^follows f
+			INNER JOIN ^prefix^users u ON u.user_id = f.user_id
 			WHERE f.follower_id = ".$user_id."";
 		$sql_result = $this->executeSQL($q);
 		$details = array();
@@ -162,8 +168,8 @@ class FollowDAO extends MySQLDAO {
 	function getTotalFriendsProtected($user_id) {
 		$q = "
 			 SELECT count( * ) as friends_protected
-			FROM %prefix%follows f
-			INNER JOIN %prefix%users u ON u.user_id = f.user_id
+			FROM ^prefix^follows f
+			INNER JOIN ^prefix^users u ON u.user_id = f.user_id
 			WHERE f.follower_id = ".$user_id." AND u.is_protected=1";
 		$sql_result = $this->executeSQL($q);
 		$details = array();
@@ -179,14 +185,14 @@ class FollowDAO extends MySQLDAO {
 			SELECT
 				u.*
 			FROM 
-				%prefix%users u
+				^prefix^users u
 			INNER JOIN
-				%prefix%follows f
+				^prefix^follows f
 			ON
 			 	f.user_id = u.user_id
 			WHERE 
 				f.follower_id=".$user_id." 
-				AND u.user_id NOT IN (SELECT user_id FROM %prefix%user_errors) 
+				AND u.user_id NOT IN (SELECT user_id FROM ^prefix^user_errors) 
 				AND u.last_updated < DATE_SUB(NOW(), INTERVAL 1 DAY)
 			ORDER BY
 				u.last_updated ASC
@@ -210,7 +216,7 @@ class FollowDAO extends MySQLDAO {
 			SELECT
 				user_id as followee_id, follower_id
 			FROM 
-				%prefix%follows f
+				^prefix^follows f
 			WHERE
 				active = 1
 			ORDER BY
@@ -222,7 +228,11 @@ class FollowDAO extends MySQLDAO {
 			$oldfollow[] = $row;
 		}
 		mysql_free_result($sql_result);
-		return $oldfollow[0];
+		if ( count($oldfollow) > 1 ) {
+			return $oldfollow[0];
+		} else {
+			return null;
+		}
 	}
 
 
@@ -236,9 +246,9 @@ class FollowDAO extends MySQLDAO {
 			SELECT 
 				* , ".$this->getAverageTweetCount()."
 			FROM 
-				%prefix%users u 
+				^prefix^users u 
 			INNER JOIN
-			 	%prefix%follows f 
+			 	^prefix^follows f 
 			ON 
 				u.user_id = f.follower_id 
 			WHERE
@@ -265,9 +275,9 @@ class FollowDAO extends MySQLDAO {
 			SELECT 
 				*, ROUND(100*friend_count/follower_count,4) AS LikelihoodOfFollow, ".$this->getAverageTweetCount()."
 			FROM 
-				%prefix%users u 
+				^prefix^users u 
 			INNER JOIN
-			 	%prefix%follows f 
+			 	^prefix^follows f 
 			ON 
 				u.user_id = f.follower_id
 			WHERE
@@ -291,9 +301,9 @@ class FollowDAO extends MySQLDAO {
 			SELECT 
 				*, ".$this->getAverageTweetCount()."
 			FROM 
-				%prefix%users u 
+				^prefix^users u 
 			INNER JOIN
-			 	%prefix%follows f 
+			 	^prefix^follows f 
 			ON 
 				u.user_id = f.follower_id 
 			WHERE
@@ -318,9 +328,9 @@ class FollowDAO extends MySQLDAO {
 			select 
 				*, ".$this->getAverageTweetCount()." 
 			from 
-				%prefix%users u 
+				^prefix^users u 
 			inner join 
-				%prefix%follows f 
+				^prefix^follows f 
 			on 
 				f.user_id = u.user_id 
 			where 
@@ -345,9 +355,9 @@ class FollowDAO extends MySQLDAO {
 			select 
 				*
 			from 
-				%prefix%users u 
+				^prefix^users u 
 			inner join 
-				%prefix%follows f 
+				^prefix^follows f 
 			on 
 				f.user_id = u.user_id 
 			where 
@@ -372,9 +382,9 @@ class FollowDAO extends MySQLDAO {
 			select 
 				u.* 
 			from 
-				%prefix%users u 
+				^prefix^users u 
 			inner join 
-				%prefix%follows f 
+				^prefix^follows f 
 			on 
 				f.follower_id = u.user_id 
 			where 
@@ -400,9 +410,9 @@ class FollowDAO extends MySQLDAO {
 			select 
 				*, ".$this->getAverageTweetCount()."
 			from 
-				%prefix%users u 
+				^prefix^users u 
 			inner join 
-				%prefix%follows f 
+				^prefix^follows f 
 			on 
 				f.user_id = u.user_id 
 			where 
@@ -428,9 +438,9 @@ class FollowDAO extends MySQLDAO {
 			select 
 				*, ".$this->getAverageTweetCount()."
 			from 
-				%prefix%users u 
+				^prefix^users u 
 			inner join 
-				%prefix%follows f 
+				^prefix^follows f 
 			on 
 				f.user_id = u.user_id 
 			where 
@@ -455,15 +465,15 @@ class FollowDAO extends MySQLDAO {
 			SELECT
 			 u.*, ".$this->getAverageTweetCount()."
 			FROM
-			 %prefix%follows f
+			 ^prefix^follows f
 			INNER JOIN
-			 %prefix%users u
+			 ^prefix^users u
 			ON
 			 u.user_id = f.user_id
 			WHERE 
 			 follower_id = ".$instance_uid."
 			 AND f.user_id IN 
-			 ( SELECT user_id FROM %prefix%follows WHERE follower_id = ".$uid." and active=1)
+			 ( SELECT user_id FROM ^prefix^follows WHERE follower_id = ".$uid." and active=1)
 			ORDER BY 
 			 follower_count ASC;";
 
@@ -482,14 +492,14 @@ class FollowDAO extends MySQLDAO {
 			SELECT 
 				u.* 
 			FROM 
-				%prefix%follows f
+				^prefix^follows f
 			INNER JOIN
-			 	%prefix%users u
+			 	^prefix^users u
 			ON 
 				f.user_id = u.user_id
 			WHERE 
 				f.follower_id = ".$uid."
-			 	AND f.user_id NOT IN (SELECT follower_id FROM %prefix%follows WHERE user_id = ".$uid.")
+			 	AND f.user_id NOT IN (SELECT follower_id FROM ^prefix^follows WHERE user_id = ".$uid.")
 			ORDER BY follower_count	";
 			
 		$sql_result = $this->executeSQL($q);
