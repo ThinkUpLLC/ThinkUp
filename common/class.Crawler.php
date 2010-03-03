@@ -29,7 +29,7 @@ class Crawler {
                     
                 if (isset($this->owner_object)) {
                     $status_message = 'Owner info set.';
-                    $this->ud->updateUser($this->owner_object, $this->logger);
+                    $this->ud->updateUser($this->owner_object);
                 } else {
                     $status_message = 'Owner was not set.';
                 }
@@ -362,7 +362,7 @@ class Crawler {
                                 $this->processTweetURLs($tweet, $lurl, $fa);
                                 if ($tweet['user_id'] != $this->owner_object->user_id) { //don't update owner info from reply
                                     $u = new User($tweet, 'mentions');
-                                    $this->ud->updateUser($u, $this->logger);
+                                    $this->ud->updateUser($u);
                                 }
                                 
                             }
@@ -521,7 +521,7 @@ class Crawler {
                     $inserted_follow_count = 0;
                     foreach ($users as $u) {
                         $utu = new User($u, 'Follows');
-                        $this->ud->updateUser($utu, $this->logger);
+                        $this->ud->updateUser($utu);
                         
                         # add/update follow relationship
                         if ($fd->followExists($this->instance->twitter_user_id, $utu->user_id)) {
@@ -598,7 +598,7 @@ class Crawler {
                         
                     foreach ($users as $u) {
                         $utu = new User($u, 'Friends');
-                        $this->ud->updateUser($utu, $this->logger);
+                        $this->ud->updateUser($utu);
                         
                         # add/update follow relationship
                         if ($fd->followExists($utu->user_id, $this->instance->twitter_user_id)) {
@@ -680,12 +680,12 @@ class Crawler {
                                     if ($tweet['status_id'] > $stale_friend->last_status_id) {
                                         $stale_friend->last_status_id = $tweet['status_id'];
                                     }
-                                    $ud->updateUser($stale_friend, $this->logger);
+                                    $ud->updateUser($stale_friend);
                                     $stale_friend_updated_from_tweets = true;
                                 }
                             }
                         } else {
-                            $this->fetchAndAddUser($stale_friend->id, "Friends");
+                            $this->fetchAndAddUser($stale_friend->user_id, "Friends");
                         }
                         
                         $this->logger->logStatus(count($tweets)." tweet(s) found for ".$stale_friend->username." and $count saved", get_class($this));
@@ -693,12 +693,12 @@ class Crawler {
                     catch(Exception $e) {
                         $this->logger->logStatus('Could not parse friends XML for $stale_friend->username', get_class($this));
                     }
-                    $this->fetchUserFriendsByIDs($stale_friend->id, $fd);
+                    $this->fetchUserFriendsByIDs($stale_friend->user_id, $fd);
                 } elseif ($cURL_status == 401 || $cURL_status == 404) {
                     try {
                         $e = $this->api->parseError($twitter_data);
                         $ued = new UserErrorDAO($this->db, $this->logger);
-                        $ued->insertError($stale_friend->id, $cURL_status, $e['error'], $this->owner_object->user_id);
+                        $ued->insertError($stale_friend->user_id, $cURL_status, $e['error'], $this->owner_object->user_id);
                         $this->logger->logStatus('User error saved', get_class($this));
                     }
                     catch(Exception $e) {
@@ -812,7 +812,7 @@ class Crawler {
             try {
                 $user_arr = $this->api->parseXML($twitter_data);
                 $user = new User($user_arr[0], $source);
-                $this->ud->updateUser($user, $this->logger);
+                $this->ud->updateUser($user);
                 $status_message = 'Added/updated user '.$user->username." in database";
             }
             catch(Exception $e) {
