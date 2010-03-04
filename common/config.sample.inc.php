@@ -23,7 +23,7 @@ $THINKTANK_CFG['smarty_path'] = '/usr/local/php5/lib/php/smarty/libs/';
 $THINKTANK_CFG['site_root_path'] = '/';
 
 // Set whether or not your site's registration page is available
-// TODO: Improve reg/sign-in mechanisms in general; possibly build invitation system
+// TODO: Build email invitation system so this isn't a binary thing
 $THINKTANK_CFG['is_registration_open'] = true;
 
 // Get the following here: http://bit.ly
