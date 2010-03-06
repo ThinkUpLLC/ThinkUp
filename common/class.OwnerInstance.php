@@ -22,9 +22,9 @@ class OwnerInstanceDAO extends MySQLDAO {
 				SELECT 
 					* 
 				FROM 
-					%prefix%owner_instances oi
+					#prefix#owner_instances oi
 				INNER JOIN
-					%prefix%instances i
+					#prefix#instances i
 				ON 
 					i.id = oi.instance_id
 				WHERE 
@@ -43,7 +43,7 @@ class OwnerInstanceDAO extends MySQLDAO {
 			SELECT 
 				* 
 			FROM 
-				%prefix%owner_instances 
+				#prefix#owner_instances 
 			WHERE 
 				owner_id = ".$owner_id." AND instance_id = ".$instance_id.";";
         $sql_result = $this->executeSQL($q);
@@ -63,7 +63,7 @@ class OwnerInstanceDAO extends MySQLDAO {
     function insert($owner_id, $instance_id, $oauth_token, $oauth_token_secret) {
         $q = "
 			INSERT INTO 
-				%prefix%owner_instances (`owner_id`, `instance_id`, `oauth_access_token`, `oauth_access_token_secret`)
+				#prefix#owner_instances (`owner_id`, `instance_id`, `oauth_access_token`, `oauth_access_token_secret`)
 			 VALUES
 				(".$owner_id.", ".$instance_id.", '".$oauth_token."', '".$oauth_token_secret."')";
         $sql_result = $this->executeSQL($q);
@@ -75,7 +75,7 @@ class OwnerInstanceDAO extends MySQLDAO {
 			SELECT 
 				oauth_access_token, oauth_access_token_secret 
 			FROM 
-				%prefix%owner_instances 
+				#prefix#owner_instances 
 			WHERE 
 				instance_id = ".$id." ORDER BY id ASC LIMIT 1;";
         $sql_result = $this->executeSQL($q);

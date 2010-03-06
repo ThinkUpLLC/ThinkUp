@@ -93,12 +93,17 @@ class TestOfFollowDAO extends UnitTestCase {
 		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg');";
 		$this->db->exec($q);
 
+		$q = "INSERT INTO tt_user_errors (user_id, error_code, error_text, error_issued_to_user_id) VALUES (15, 404, 'User not found', 13);";
+		$this->db->exec($q);
+
 		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 12, '1/1/2006');";
 		$this->db->exec($q);
 
 		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 14, '1/1/2006');";
 		$this->db->exec($q);
 
+		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 15, '1/1/2006');";
+		$this->db->exec($q);
 
 	}
 
@@ -152,6 +157,28 @@ class TestOfFollowDAO extends UnitTestCase {
 		$this->assertTrue($unloaded_followers[0]['follower_id']==14);
 
 	}
+
+	function testGetTotalFollowsWithErrors() {
+		$dao = new FollowDAO($this->db, $this->logger);
+		$total_follower_errors = $dao->getTotalFollowsWithErrors(13);
+
+		$this->assertTrue($total_follower_errors == 1);
+	}
+
+	function testGetTotalFriendsWithErrors() {
+		$dao = new FollowDAO($this->db, $this->logger);
+		$total_friend_errors = $dao->getTotalFriendsWithErrors(13);
+
+		$this->assertTrue($total_friend_errors == 0);
+	}
+
+	function testGetTotalFollowsWithFullDetails() {
+		$dao = new FollowDAO($this->db, $this->logger);
+		$total_follows_with_details = $dao->getTotalFollowsWithFullDetails(13);
+
+		$this->assertTrue($total_follows_with_details == 1);
+	}
+
 
 
 }

@@ -5,10 +5,13 @@ require_once ("init.php");
 
 $crawler = new Crawler();
 
-//Include crawler plugin files
-$plugin_files = Utils::getPlugins('plugins');
+
+//Include all the php files in the common/plugins/ directories.
+$plugin_files = Utils::getPlugins($THINKTANK_CFG['source_root_path'].'crawler/plugins');
 foreach ($plugin_files as $pf) {
-	require_once 'plugins/'.$pf.'/'.$pf.'.php';
+	foreach(glob($THINKTANK_CFG['source_root_path'].'crawler/plugins/'.$pf."/*.php") as $includefile) {
+		require_once($includefile);
+	}
 }
 
 $crawler->crawl();

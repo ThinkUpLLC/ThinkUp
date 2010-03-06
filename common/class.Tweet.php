@@ -52,9 +52,9 @@ class TweetDAO extends MySQLDAO {
     function getTweet($status_id) {
         $q = "
 			SELECT 
-				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			WHERE
 			 	status_id=".$status_id.";";
         $sql_result = $this->executeSQL($q);
@@ -88,9 +88,9 @@ class TweetDAO extends MySQLDAO {
 
     
     function getStandaloneReplies($username, $limit) {
-        $q = " SELECT t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
-        $q .= " FROM %prefix%tweets AS t ";
-        $q .= " INNER JOIN %prefix%users AS u ON t.author_user_id = u.user_id ";
+        $q = " SELECT t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= " FROM #prefix#tweets AS t ";
+        $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
         $q .= " WHERE  MATCH(`tweet_text`) AGAINST('%".$username."%') ";
         $q .= " AND in_reply_to_status_id=0 ";
         $q .= " ORDER BY adj_pub_date DESC ";
@@ -108,9 +108,9 @@ class TweetDAO extends MySQLDAO {
         $condition = "";
         if ($public)
             $condition = "AND u.is_protected = 0";
-        $q = " SELECT t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
-        $q .= " FROM %prefix%tweets t ";
-        $q .= " INNER JOIN %prefix%users AS u ON t.author_user_id = u.user_id ";
+        $q = " SELECT t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= " FROM #prefix#tweets t ";
+        $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
         $q .= " WHERE in_reply_to_status_id=".$status_id." ".$condition;
         $q .= " ORDER BY follower_count desc;";
         $sql_result = $this->executeSQL($q);
@@ -129,11 +129,11 @@ class TweetDAO extends MySQLDAO {
             
         $q = "
 			select 
-				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			from 
-				%prefix%tweets t
+				#prefix#tweets t
 			inner join 
-				%prefix%users u 
+				#prefix#users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
@@ -155,9 +155,9 @@ class TweetDAO extends MySQLDAO {
 			select 
 				SUM(u.follower_count) as total
 			from 
-				%prefix%tweets t
+				#prefix#tweets t
 			inner join 
-				%prefix%users u 
+				#prefix#users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
@@ -175,11 +175,11 @@ class TweetDAO extends MySQLDAO {
         
         $q = "
 			SELECT
-				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval %gmt_offset% hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
+				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
 			FROM 
-				%prefix%tweets t 
+				#prefix#tweets t 
 			INNER JOIN 
-				%prefix%tweets t1 on t1.status_id = t.in_reply_to_status_id 
+				#prefix#tweets t1 on t1.status_id = t.in_reply_to_status_id 
 			WHERE 
 				t.author_user_id = ".$author_id." AND t.in_reply_to_status_id is not null 
 			ORDER BY
@@ -201,11 +201,11 @@ class TweetDAO extends MySQLDAO {
         $q = "
 		
 			SELECT
-				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval %gmt_offset% hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
+				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
 			FROM 
-				%prefix%tweets t 
+				#prefix#tweets t 
 			INNER JOIN 
-				%prefix%tweets t1 on t1.status_id = t.in_reply_to_status_id 
+				#prefix#tweets t1 on t1.status_id = t.in_reply_to_status_id 
 			WHERE 
 				t.in_reply_to_status_id is not null AND
 				(t.author_user_id = ".$author_id." AND t1.author_user_id = ".$other_user_id.")
@@ -259,7 +259,7 @@ class TweetDAO extends MySQLDAO {
 
                 
             $q = "
-				INSERT INTO %prefix%tweets
+				INSERT INTO #prefix#tweets
 					(status_id,
 					author_username,author_fullname,author_avatar,author_user_id,
 					tweet_text,tweet_html,pub_date,in_reply_to_user_id,in_reply_to_status_id,in_retweet_of_status_id,source)
@@ -300,7 +300,7 @@ class TweetDAO extends MySQLDAO {
 			SELECT 
 				status_id 
 			FROM 
-				%prefix%tweets 
+				#prefix#tweets 
 			WHERE status_id = ".$status_id;
         $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
@@ -314,7 +314,7 @@ class TweetDAO extends MySQLDAO {
 			SELECT 
 				status_id 
 			FROM 
-				%prefix%tweets 
+				#prefix#tweets 
 			WHERE 
 				status_id = ".$status_id;
         $sql_result = $this->executeSQL($q);
@@ -335,7 +335,7 @@ class TweetDAO extends MySQLDAO {
     private function incrementCacheCount($status_id, $fieldname) {
         $q = "
 			UPDATE 
-				%prefix%tweets
+				#prefix#tweets
 			SET 
 				".$fieldname."_count_cache = ".$fieldname."_count_cache + 1
 			WHERE 
@@ -349,7 +349,7 @@ class TweetDAO extends MySQLDAO {
     function decrementReplyCountCache($status_id) {
         $q = "
 			UPDATE 
-				%prefix%tweets
+				#prefix#tweets
 			SET 
 				mention_count_cache = mention_count_cache - 1
 			WHERE 
@@ -362,11 +362,11 @@ class TweetDAO extends MySQLDAO {
     function getAllTweets($author_id, $count) {
         $q = "
 			SELECT 
-				l.*, t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			LEFT JOIN
-				%prefix%links l
+				#prefix#links l
 			ON t.status_id = l.status_id
 			WHERE 
 				author_user_id = ".$author_id."
@@ -387,9 +387,9 @@ class TweetDAO extends MySQLDAO {
     
         $q = "
 			SELECT 
-				t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			WHERE 
 				author_username = '".$username."'
 			ORDER BY 
@@ -409,7 +409,7 @@ class TweetDAO extends MySQLDAO {
 			SELECT 
 				source, count(source) as total 
 			FROM 
-				%prefix%tweets
+				#prefix#tweets
 			WHERE 
 				author_user_id = ".$author_id."			
 			GROUP BY source
@@ -426,10 +426,10 @@ class TweetDAO extends MySQLDAO {
     
     function getAllMentions($author_username, $count) {
     
-        $q = " SELECT l.*, t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
-        $q .= " FROM %prefix%tweets AS t ";
-        $q .= " INNER JOIN %prefix%users AS u ON t.author_user_id = u.user_id ";
-        $q .= " LEFT JOIN %prefix%links AS l ON t.status_id = l.status_id ";
+        $q = " SELECT l.*, t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= " FROM #prefix#tweets AS t ";
+        $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
+        $q .= " LEFT JOIN #prefix#links AS l ON t.status_id = l.status_id ";
         $q .= " WHERE MATCH (`tweet_text`) AGAINST('%".$author_username."%') ";
         $q .= " ORDER BY pub_date DESC ";
         $q .= " LIMIT ".$count.";";
@@ -446,14 +446,14 @@ class TweetDAO extends MySQLDAO {
     
         $q = "
 			SELECT 
-				l.*, t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			LEFT JOIN
-				%prefix%links l
+				#prefix#links l
 			ON t.status_id = l.status_id				
 			INNER JOIN
-				%prefix%users u
+				#prefix#users u
 			ON
 				t.author_user_id = u.user_id
 			WHERE 
@@ -474,11 +474,11 @@ class TweetDAO extends MySQLDAO {
     function getMostRepliedToTweets($user_id, $count) {
         $q = "
 			SELECT 
-				l.*, t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.* , pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			LEFT JOIN
-				%prefix%links l
+				#prefix#links l
 			ON t.status_id = l.status_id				
 			WHERE
 				author_user_id = ".$user_id."
@@ -499,11 +499,11 @@ class TweetDAO extends MySQLDAO {
     
         $q = "
 			SELECT 
-				l.*, t.* , pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.* , pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			LEFT JOIN
-				%prefix%links l
+				#prefix#links l
 			ON t.status_id = l.status_id				
 			WHERE
 				author_user_id = ".$user_id."
@@ -522,9 +522,9 @@ class TweetDAO extends MySQLDAO {
     
     function getOrphanReplies($username, $count) {
     
-        $q = " SELECT t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
-        $q .= " FROM %prefix%tweets AS t ";
-        $q .= " INNER JOIN %prefix%users AS u ON u.user_id = t.author_user_id ";
+        $q = " SELECT t.* , u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= " FROM #prefix#tweets AS t ";
+        $q .= " INNER JOIN #prefix#users AS u ON u.user_id = t.author_user_id ";
         $q .= " WHERE ";
         $q .= " MATCH (`tweet_text`) AGAINST('%".$username."%') ";
         $q .= " AND in_reply_to_status_id is null ";
@@ -542,9 +542,9 @@ class TweetDAO extends MySQLDAO {
     
     function getLikelyOrphansForParent($parent_pub_date, $author_user_id, $author_username, $count) {
     
-        $q = " SELECT t.* , u.*, pub_date - interval %gmt_offset% hour as adj_pub_date ";
-        $q .= " FROM %prefix%tweets AS t ";
-        $q .= " INNER JOIN %prefix%users AS u ON t.author_user_id = u.user_id ";
+        $q = " SELECT t.* , u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= " FROM #prefix#tweets AS t ";
+        $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
         $q .= " WHERE ";
         $q .= " MATCH (`tweet_text`) AGAINST('%".$author_username."%') ";
         $q .= " AND pub_date > '".$parent_pub_date."' ";
@@ -566,7 +566,7 @@ class TweetDAO extends MySQLDAO {
     function assignParent($parent_id, $orphan_id, $former_parent_id = -1) {
         $q = "
 			UPDATE 
-				%prefix%tweets
+				#prefix#tweets
 			SET 
 				in_reply_to_status_id = ".$parent_id."
 			WHERE
@@ -584,11 +584,11 @@ class TweetDAO extends MySQLDAO {
 			SELECT
 				in_reply_to_status_id
 			FROM 
-				%prefix%tweets t 
+				#prefix#tweets t 
 			WHERE 
 				t.author_user_id=".$author_id."
-				AND t.in_reply_to_status_id NOT IN (select status_id from %prefix%tweets) 
-			 	AND t.in_reply_to_status_id NOT IN (select status_id from %prefix%tweet_errors);";
+				AND t.in_reply_to_status_id NOT IN (select status_id from #prefix#tweets) 
+			 	AND t.in_reply_to_status_id NOT IN (select status_id from #prefix#tweet_errors);";
         $sql_result = $this->executeSQL($q);
         $strays = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -601,15 +601,15 @@ class TweetDAO extends MySQLDAO {
     private function getTweetsByPublicInstancesOrderedBy($count = 15, $orderby = "pub_date") {
         $q = "
 			SELECT 
-				l.*, t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			INNER JOIN
-				%prefix%instances i
+				#prefix#instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			LEFT JOIN
-				%prefix%links l
+				#prefix#links l
 			ON t.status_id = l.status_id
 
 			WHERE
@@ -633,15 +633,15 @@ class TweetDAO extends MySQLDAO {
     function getPhotoTweetsByPublicInstances($count = 15) {
         $q = "
 			SELECT 
-				l.*, t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			INNER JOIN
-				%prefix%instances i
+				#prefix#instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			LEFT JOIN
-				%prefix%links l
+				#prefix#links l
 			ON t.status_id = l.status_id
 
 			WHERE
@@ -661,15 +661,15 @@ class TweetDAO extends MySQLDAO {
     function getLinkTweetsByPublicInstances($count = 15) {
         $q = "
 			SELECT 
-				l.*, t.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			INNER JOIN
-				%prefix%instances i
+				#prefix#instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			LEFT JOIN
-				%prefix%links l
+				#prefix#links l
 			ON t.status_id = l.status_id
 
 			WHERE
@@ -699,11 +699,11 @@ class TweetDAO extends MySQLDAO {
     function isTweetByPublicInstance($id) {
         $q = "
 			SELECT 
-				*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			INNER JOIN
-				%prefix%instances i
+				#prefix#instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			WHERE
@@ -726,7 +726,7 @@ class TweetErrorDAO extends MySQLDAO {
     function insertError($id, $error_code, $error_text, $issued_to) {
         $q = "
 			INSERT INTO
-			 	%prefix%tweet_errors (status_id, error_code, error_text, error_issued_to_user_id)
+			 	#prefix#tweet_errors (status_id, error_code, error_text, error_issued_to_user_id)
 			VALUES 
 				(".$id.", ".$error_code.", '".$error_text."', ".$issued_to.") ";
         $sql_result = $this->executeSQL($q);

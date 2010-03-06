@@ -39,11 +39,11 @@ class TestOfDatabase extends UnitTestCase {
 		$db = new Database($THINKTANK_CFG);
 		$conn = $db->getConnection();
 		$sql_result = $db->exec("SELECT
-				t.*, u.*, pub_date - interval %gmt_offset% hour as adj_pub_date 
+				t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				%prefix%tweets t
+				#prefix#tweets t
 			INNER JOIN
-				%prefix%users u
+				#prefix#users u
 			ON
 				t.author_user_id = u.user_id
 			WHERE 
@@ -87,7 +87,7 @@ class TestOfDatabase extends UnitTestCase {
 		$sql_result = $db->exec("SELECT
 				user_id 
 			FROM 
-				%prefix%users 
+				#prefix#users 
 			WHERE 
 				user_id = 930061");
 

@@ -61,7 +61,7 @@ class UserDAO extends MySQLDAO {
 
 	function isUserInDB($user_id) {
 		$q = "SELECT user_id ";
-		$q .= "FROM ^prefix^users ";
+		$q .= "FROM #prefix#users ";
 		$q .= "WHERE user_id = %s;";
 		$q = sprintf($q, mysql_real_escape_string($user_id));
 		$sql_result = $this->executeSQL($q);
@@ -74,7 +74,7 @@ class UserDAO extends MySQLDAO {
 
 	function isUserInDBByName($username) {
 		$q = "SELECT user_id ";
-		$q .= "FROM ^prefix^users ";
+		$q .= "FROM #prefix#users ";
 		$q .= "WHERE user_name = '%s'";
 		$q = sprintf($q, mysql_real_escape_string($username));
 		$sql_result = $this->executeSQL($q);
@@ -114,7 +114,7 @@ class UserDAO extends MySQLDAO {
 
 		$q = "
 			INSERT INTO
-				^prefix^users (user_id,
+				#prefix#users (user_id,
 					user_name,full_name,avatar,location,
 					description, url, is_protected,
 					follower_count, tweet_count, ".($has_friend_count ? "friend_count, " : "")."
@@ -165,7 +165,7 @@ class UserDAO extends MySQLDAO {
 
 	function getDetails($user_id) {
 		$q = "SELECT * , ".$this->getAverageTweetCount()." ";
-		$q .= "FROM ^prefix^users u ";
+		$q .= "FROM #prefix#users u ";
 		$q .= "WHERE u.user_id = %s;";
 		$q = sprintf($q, mysql_real_escape_string($user_id));
 		$sql_result = $this->executeSQL($q);
@@ -180,7 +180,7 @@ class UserDAO extends MySQLDAO {
 
 	function getUserByName($user_name) {
 		$q = "SELECT * , ".$this->getAverageTweetCount()." ";
-		$q .= "FROM ^prefix^users u ";
+		$q .= "FROM #prefix#users u ";
 		$q .= "WHERE u.user_name = '%s';";
 		$q = sprintf($q, mysql_real_escape_string($user_name));
 		$sql_result = $this->executeSQL($q);
@@ -200,7 +200,7 @@ class UserDAO extends MySQLDAO {
 class UserErrorDAO extends MySQLDAO {
 
 	function insertError($id, $error_code, $error_text, $issued_to) {
-		$q = "INSERT INTO ^prefix^user_errors (user_id, error_code, error_text, error_issued_to_user_id) ";
+		$q = "INSERT INTO #prefix#user_errors (user_id, error_code, error_text, error_issued_to_user_id) ";
 		$q .= "VALUES (%s, %s, '%s', %s) ";
 		$q = sprintf($q, mysql_real_escape_string($id), mysql_real_escape_string($error_code), mysql_real_escape_string($error_text), mysql_real_escape_string($issued_to) );
 		$sql_result = $this->executeSQL($q);
