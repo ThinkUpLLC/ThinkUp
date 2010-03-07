@@ -90,7 +90,10 @@ class TestOfFollowDAO extends UnitTestCase {
 		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg');";
 		$this->db->exec($q);
 
-		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg');";
+		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
+		$this->db->exec($q);
+
+		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected) VALUES (16, 'private', 'Private Poster', 'avatar.jpg', 1);";
 		$this->db->exec($q);
 
 		$q = "INSERT INTO tt_user_errors (user_id, error_code, error_text, error_issued_to_user_id) VALUES (15, 404, 'User not found', 13);";
@@ -103,6 +106,12 @@ class TestOfFollowDAO extends UnitTestCase {
 		$this->db->exec($q);
 
 		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 15, '1/1/2006');";
+		$this->db->exec($q);
+
+		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 16, '1/1/2006');";
+		$this->db->exec($q);
+
+		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 12, '1/1/2006');";
 		$this->db->exec($q);
 
 	}
@@ -176,10 +185,39 @@ class TestOfFollowDAO extends UnitTestCase {
 		$dao = new FollowDAO($this->db, $this->logger);
 		$total_follows_with_details = $dao->getTotalFollowsWithFullDetails(13);
 
-		$this->assertTrue($total_follows_with_details == 1);
+		$this->assertTrue($total_follows_with_details == 2);
 	}
 
+	function testGetTotalFollowsProtected() {
+		$dao = new FollowDAO($this->db, $this->logger);
+		$total_follows_protected = $dao->getTotalFollowsProtected(13);
 
+		$this->assertTrue($total_follows_protected == 1);
+	}
+
+	function testGetTotalFriends() {
+		$dao = new FollowDAO($this->db, $this->logger);
+		$total_friends = $dao->getTotalFriends(12);
+
+		$this->assertTrue($total_friends == 2);
+	}
+
+	function testGetTotalFriendsProtected() {
+		$dao = new FollowDAO($this->db, $this->logger);
+		$total_friends_protected = $dao->getTotalFriendsProtected(12);
+
+		$this->assertTrue($total_friends_protected == 1);
+	}
+
+	function testGetStalestFriend() {
+		$dao = new FollowDAO($this->db, $this->logger);
+		$stalest_friend = $dao->getStalestFriend(12);
+
+		$this->assertTrue($stalest_friend != null);
+		$this->assertTrue($stalest_friend->user_id == 13);
+	}
+	
+	//TODO Complete FollowDAO tests for the rest of the methods
 
 }
 ?>
