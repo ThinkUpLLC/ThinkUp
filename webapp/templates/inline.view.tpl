@@ -1,5 +1,5 @@
 <div class="append">
-    <h1>{$header}</h1>
+    {if $header}<h1>{$header}</h1>{/if}
     {if $description}<h4>{$description}</h4>{/if}
 </div>
 	{if ($display eq 'tweets-all' and not $all_tweets) or 

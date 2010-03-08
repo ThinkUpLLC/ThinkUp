@@ -1,181 +1,106 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
- <HEAD>
-  <TITLE>ThinkTank Public Timeline</TITLE>
-  	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+ "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>ThinkTank - Public Timeline</title>
 
-	<style type="text/css">{literal}
-	
-		html {
-			background: #eeeeea;
-			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-			font-size:14.5px;
-		}
-		
-		a, a:link, a:visited {
-			text-decoration: none;
-			color: #0060e0;
-		}
-		
-		a:hover {
-			text-decoration : underline;
-			color : red;
-		}
-		
-		a:visited {
-			color : black;
-			text-decoration: underline;
-		}
-		
-		h1 {
-			font-size : x-large;
-		}
-		
-		h3 {
-			font-weight : 800;
-		}
-		h2 {
-		}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
 
-		.tweet {
-		padding:10px;
-
-		}
-		.content {
-			width:600px;
-			background-color:white;
-			border:solid 1px grey;
-			text-align:left;		
-		}
-		.tweetmeta {
-			text-align:right;
-		}
-		small {
-			color:grey;
-		}
-		small a:visited {
-			color:grey;
-			text-decoration:underline;
-		}
-
-		 
-		 /******* Tweet Formatting ********/
-		 
-		 .individual-tweet {
-		 	padding : 10px;
-		 	margin-top : 10px;
-		 }
-		 
-		 .reply {
-		 	padding-left : 85px;
-		 }
-		 
-		 .private {
-		 	border : 1px dotted #666;
-		 	background-color : #eee;
-		 }
-		 
-		 .person-info {
-		 	float: left;
-		 	margin-right: 10px;
-		 	width : 80px;
-		 	text-align : center;
-		 }
-		 
-		 li { list-style:none;  }
-
-		 li.individual-tweet h3 a {
-		     font-size : x-small;
-		     color : #666;
-		 }
-		 
-		 li.individual-tweet h4, li.individual-tweet form {
-		     font-size : xx-small;
-		     //visibility:hidden;
-		 }
-
-		 li.individual-tweet:hover h4, li.individual-tweet:hover form {
-		     visibility:visible;
-		     color : #666;
-		 }
-		 li.individual-tweet h4.reply-count {
-		 	font-size : medium;
-			padding:0; margin:0;
-		 }		 
-		 
-		 li.individual-tweet:hover h3 a {
-			color: #0060e0;
-		 }		 
-		 
-		li.individual-tweet h3 a.most-popular {
-		 	font-size : medium;
-		 	font-weight : strong;
-		 }
-
-		 .avatar { 	
-		 	border: solid 1px #ccc;
-		 }
-
-		 /******* /Tweet Formatting ********/		
-		
-		
-		</style>{/literal}
-
+	<link type="text/css" href="{$cfg->site_root_path}cssjs/jquery-ui-1.7.1.custom.css" rel="stylesheet" />
+	<link type="text/css" href="{$cfg->site_root_path}cssjs/style.css" rel="stylesheet" />
 
 </head>
 
 <body>
-<center>
-<h1>ThinkTank</h1>
+
 {include file="_header.login.tpl" mode="public"}	
-<p></p><small>Last crawl {$crawler_last_run|relative_datetime}</small></p>
-<p><a href="{$cfg->site_root_path}public.php">Latest</a> | <a href="{$cfg->site_root_path}public.php?v=mostreplies">Most Replied-To</a> | <a href="{$cfg->site_root_path}public.php?v=mostretweets">Most Retweeted</a> | <a href="{$cfg->site_root_path}public.php?v=photos">Photos</a> | <a href="{$cfg->site_root_path}public.php?v=links">Links</a>
 
-<div class="content">
-{if $tweet and ($replies OR $retweets) }
-	<div class="tweet">
-	<h2>{$tweet->tweet_html|link_usernames_to_twitter}</h2> <div class="tweetmeta">-<a href="http://twitter.com/{$tweet->author_username}/">{$tweet->author_username}</a>, <small><a href="http://twitter.com/{$tweet->author_username}/status/{$tweet->status_id}/">{$tweet->pub_date|relative_datetime}</a></small></div>
-	
-	</div>
-	{foreach from=$replies key=tid item=t}
-	<ul>
-		{include file="_status.public.tpl" t=$t}
-	</ul>
-	{/foreach}	
+    <div class="thinktank-canvas round-all container_24">
+        <div class="clearfix prepend_20">
 
-	{if $retweets}
-		<h3 align="center">Retweets to {$rtreach|number_format} followers</h3>
-		{foreach from=$retweets key=tid item=t}
-		<ul>
-			{include file="_status.public.tpl" t=$t}
-		</ul>
-		{/foreach}	
-	{/if}
+            <div class="grid_22 push_1 clearfix">
+    
+                {if $tweet and ($replies OR $retweets) }
+                
+                    <div class="prepend_20">
+                    <ul id="menu">
+                        <!-- <li>Archived and Curated with <a href="http://thinktankapp.com">ThinkTank</a></li> -->
+                        <li><a href="{$site_root}public.php">&larr; Back to the public timeline</a></li>
+                    </ul>
+                    </div>
+                    
+                    <div class="clearfix">
+                        {if $retweets}<div class="grid_15 alpha">{else}<div class="grid_22">{/if}
+                            <a href="http://twitter.com/{$tweet->author_username}/"><img src="{$tweet->author_avatar}" class="avatar2"></a>
+                            <span class="tweet">{$tweet->tweet_html|link_usernames_to_twitter}</span>
+                            <div class="small">(<a href="http://twitter.com/{$tweet->author_username}/">{$tweet->author_username}</a>, 
+                            <a href="http://twitter.com/{$tweet->author_username}/status/{$tweet->status_id}/">{$tweet->pub_date|relative_datetime}</a>)</div>
+                        </div>
+                        {if $retweets}
+                        <div class="grid_7 center big-number omega">
+                            <div class="bl">
+                            <div class="key-stat">
+                                <h1>{$rtreach|number_format}</h1>
+                                <h3>retweets to followers</h3>
+                            </div>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                    
+                    {if $replies}
+                        <div class="append_20 clearfix">               	
+                    	{foreach from=$replies key=tid item=t name=foo}
+                    		{include file="_status.public.tpl" t=$t}
+                    	{/foreach}	
+                    	</div>
+                    {/if}                
+                	{if $retweets}
+                        <div class="append_20 clearfix">
+                            <!--<h3 align="center">Retweets to {$rtreach|number_format} followers</h3>-->
+                            {foreach from=$retweets key=tid item=t name=foo}
+                                {include file="_status.public.tpl" t=$t}
+                            {/foreach}	
+                        </div>
+                	{/if}
+                
+                    
+                {else}                
+                
+                <div class="prepend_20">
+                    <ul id="menu">
+                        <li><a href="{$cfg->site_root_path}public.php">Latest</a></li> 
+                        <li><a href="{$cfg->site_root_path}public.php?v=mostreplies">Most Replied-To</a></li> 
+                        <li><a href="{$cfg->site_root_path}public.php?v=mostretweets">Most Retweeted</a></li> 
+                        <li><a href="{$cfg->site_root_path}public.php?v=photos">Photos</a></li> 
+                        <li><a href="{$cfg->site_root_path}public.php?v=links">Links</a></li>
+                    </ul>
+                </div>
+                
+                {/if}
+                
+                {if $header}<h1>{$header}</h1>{/if}
+                {if $description}<h4>{$description}</h4>{/if}
+                    
+                {if $tweets}
+                	{foreach from=$tweets key=tid item=t name=foo}
+                		{include file="_status.public.tpl" t=$t}
+                	{/foreach}
+                {/if}
 
-</div>
-<h2>Replies to a Single Tweet</h2>
-<p>Archived and Curated with <a href="http://thinktankapp.com">ThinkTank</a></p>
+            </div>
+            
+        </div> <!-- #top -->
+    </div> <!-- .thinktank-canvas -->
 
-<h1><a href="{$site_root}public.php">&larr; Back to the Public Timeline</a></h1>
-{/if}
+    <script type="text/javascript" src="{$cfg->site_root_path}cssjs/linkify.js"></script>
+    
+    <div id="footer" class="center prepend append clearfix">
+        <p>Set up your own <a href="http://thinktankapp.com">ThinkTank</a>.<br />It is nice to be nice</p>
+    </div>
 
+</div> <!-- #content -->
 
-{if $tweets}
-	<ul>
-
-	{foreach from=$tweets key=tid item=t}
-		{include file="_status.public.tpl" t=$t}
-	{/foreach}
-	</ul>
-
-</div>
-
-{/if}
-
-
-<script type="text/javascript" src="{$cfg->site_root_path}cssjs/linkify.js"></script>
-<p>Set up your own <a href="http://thinktankapp.com">ThinkTank</a></p>
-<p>It is nice to be nice</p>
-	</center>
 </body>
 </html>
