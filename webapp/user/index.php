@@ -15,6 +15,7 @@ $ud = new UserDAO($db);
 $fd = new FollowDAO($db);
 $id = new InstanceDAO($db);
 $td = new TweetDAO($db);
+$s = new SmartyThinkTank();
 
 if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_REQUEST['i']) ){
 	$user = $ud->getUserByName($_REQUEST['u']);
@@ -23,7 +24,6 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 	if ( isset($i)) {
 		$cfg = new Config($i->twitter_username, $i->twitter_user_id);
 		
-		$s = new SmartyThinkTank();
 		if(!$s->is_cached('user.index.tpl', $i->twitter_username."-".$user['user_name'])) {
 
 			$s->assign('profile', $user);

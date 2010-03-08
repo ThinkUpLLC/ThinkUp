@@ -2,18 +2,22 @@
  "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
+    <title>ThinkTank</title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-	<link rel="stylesheet" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
-	<link type="text/css" href="{$cfg->site_root_path}cssjs/jquery-ui-1.7.1.custom.css" rel="stylesheet" />
 	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
-	<link type="text/css" href="{$cfg->site_root_path}cssjs/style.css" rel="stylesheet" />
+
+	{if $cfg->bitly_api_key}
+	   <script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login={$cfg->bitly_login}&apiKey={$cfg->bitly_api_key}"></script>
+	{/if}
 	
-	<script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login={$cfg->bitly_login}&apiKey={$cfg->bitly_api_key}"></script>
+	<!-- jquery -->
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>	
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
+	<link type="text/css" href="{$cfg->site_root_path}cssjs/jquery-ui-1.7.1.custom.css" rel="stylesheet" />
 
+    <!-- custom css -->
+	<link type="text/css" href="{$cfg->site_root_path}cssjs/style.css" rel="stylesheet" />
 
 	<script type="text/javascript">
 	{literal}$(function() {
@@ -163,7 +167,6 @@
 	{/if}
 
 	</script>
-   <title>ThinkTank</title>
 </head>
 <body>
 	
