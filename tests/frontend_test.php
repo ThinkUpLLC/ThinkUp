@@ -209,7 +209,7 @@ class TestOfThinkTankFrontEnd extends WebTestCase {
 		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected) VALUES (16, 'private', 'Private Poster', 'avatar.jpg', 1);";
 		$this->db->exec($q);
 
-		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected) VALUES (17, 'thinktankapp', 'ThinkTankers', 'avatar.jpg', 0);";
+		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (17, 'thinktankapp', 'ThinkTankers', 'avatar.jpg', 0, 10);";
 		$this->db->exec($q);
 		
 		$q = "INSERT INTO tt_user_errors (user_id, error_code, error_text, error_issued_to_user_id) VALUES (15, 404, 'User not found', 13);";

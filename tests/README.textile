@@ -1,0 +1,7 @@
+h1. ThinkTank
+
+All code submitted to the repository should have working tests.
+
+The test suite assumes there is a <code>thinktank_tests</code> database which the default ThinkTank db user can access. Each test should set up the appropriate test data in the setUp() method and drop those tables in the tearDown() method.
+
+Once your tests work, add them to the <code>all_tests.php</code> file to run along with the existing tests.
