@@ -97,7 +97,7 @@
     <script type="text/javascript" src="{$cfg->site_root_path}cssjs/linkify.js"></script>
     
     <div id="footer" class="center prepend append clearfix">
-        <p>Set up your own <a href="http://thinktankapp.com">ThinkTank</a>. It is nice to be nice</p>
+        <p>Set up your own <a href="http://thinktankapp.com">ThinkTank</a>.<br />It is nice to be nice</p>
     </div>
 
 </div> <!-- #content -->
