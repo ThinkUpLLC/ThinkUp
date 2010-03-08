@@ -1,7 +1,20 @@
-h1. ThinkTank
+h1. ThinkTank Tests
 
 All code submitted to the repository should have working tests.
 
-The test suite assumes there is a <code>thinktank_tests</code> database which the default ThinkTank db user can access. Each test should set up the appropriate test data in the setUp() method and drop those tables in the tearDown() method.
+The test suite assumes there is a <code>thinktank_tests</code> database which the default ThinkTank db user can access. Each test should set up the appropriate test data in the <code>setUp()</code> method and drop those tables in the <code>tearDown()</code> method.
+
+h2. DAO Tests
+
+See <code>userdao_test.php</code> as an example of a set of DAO tests.
+
+h2. Web Page Tests
+
+Add tests for particular pages inside the webapp to <code>frontend_test.php</code>.
+
+h2. Crawler Consumption Tests
+
+To test consumption of data from web services, mock up the appropriate classes and store test data to local files.
+For example, the <code>classes/mock.TwitterOAuth.php</code> class reads data from the files in the <code>testdata</code> directory.
 
 Once your tests work, add them to the <code>all_tests.php</code> file to run along with the existing tests.
