@@ -55,19 +55,10 @@ if ( $owner->is_admin ) {
 	$s->assign('owners', $owners);
 }
 
-/* Start plugin-specific configuration handling */
-$webapp = new Webapp();
-
-//Include webapp plugin files
-$plugin_files = Utils::getPlugins('plugins');
-foreach ($plugin_files as $pf) {
-	require_once 'plugins/'.$pf.'/'.$pf.'.php';
-}
-
 if (isset($_GET['p'])) {
 	$webapp->configuration($_GET['p']);
 	array_push( $s->template_dir, 'plugins/'.$_GET['p']);
-	$s->assign('body', $_GET['p'].'.account.index.tpl');
+	$s->assign('body', $THINKTANK_CFG['source_root_path'].'common//plugins//'.$_GET['p'].'//templates/'.$_GET['p'].'.account.index.tpl');
 }
 
 $s-> assign('config_menu', $webapp->getConfigMenu());
