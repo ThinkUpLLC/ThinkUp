@@ -3,22 +3,22 @@
 <div id="bd" role="main">
 	<div id="yui-main">
 	<div class="yui-b">
-	
+
         <div id="thinktank-tabs">
             <div role="application" class="yui-g" id="tabs">
         
             	<ul>
             		<li><a href="#updates"><div class="key-stat">
-                        <h1>{$profile.tweet_count|number_format}</h1> 
+                        <h1>{$profile->tweet_count|number_format}</h1> 
                         <h3>Updates</h3></div></a></li>
             		<li><a href="#conversations"><div class="key-stat">        
                         <h1>{$total_exchanges}</h1> 
                         <h3>Conversations</h3></div></a></li>
             		<li><a href="#followers"><div class="key-stat">        
-                        <h1>{$profile.follower_count|number_format}</h1> 
+                        <h1>{$profile->follower_count|number_format}</h1> 
                         <h3>Followers</h3></div></a></li>
             		<li><a href="#friends"><div class="key-stat">
-                        <h1>{$profile.friend_count|number_format}</h1> 
+                        <h1>{$profile->friend_count|number_format}</h1> 
                         <h3>Friends</h3></div></a></li>
             		<li class="no-border"><a href="#mutual"><div class="key-stat">
                         <h1>{$total_mutual_friends}</h1> 
@@ -34,7 +34,7 @@
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_24 right small gray footnote">
-                                {$profile.user_name} averages {$profile.avg_tweets_per_day} updates per day since joining {$profile.joined|relative_datetime} on {$profile.joined|date_format:"%D"} 
+                                {$profile->user_name} averages {$profile->avg_tweets_per_day} updates per day since joining {$profile->joined|relative_datetime} on {$profile->joined|date_format:"%D"} 
                                     <!--{if $sources} | Most-used Twitter client: {$sources[0].source}{/if}-->
                                     <br />
                                    	{if count($sources > 0)}
@@ -43,20 +43,20 @@
                                             {if $smarty.foreach.foo.last}<br />{else} | {/if} 
                                     	{/foreach}
                                 	{/if}
-                                	ThankTank last updated {$profile.user_name} {$profile.last_updated|relative_datetime}<br />
+                                	ThankTank last updated {$profile->user_name} {$profile->last_updated|relative_datetime}<br />
                             </div>
 
                             <div class="grid_22 push_1 clearfix">
-                                <img src="{$profile.avatar}" class="avatar"> 
-                                <h1><a href="http://twitter.com/{$profile.user_name}">@{$profile.user_name}</a></h1> 
+                                <img src="{$profile->avatar}" class="avatar"> 
+                                <h1><a href="http://twitter.com/{$profile->user_name}">@{$profile->user_name}</a></h1> 
                                 <!--
-                                [{$profile.follower_count|number_format} followers, following {$profile.friend_count|number_format}]
+                                [{$profile->follower_count|number_format} followers, following {$profile->friend_count|number_format}]
                                 -->
-                                {if $profile.description}<br />{$profile.description}{/if}
-                                {if $profile.tweet_count > 0}
+                                {if $profile->description}<br />{$profile->description}{/if}
+                                {if $profile->tweet_count > 0}
                                     <br />
-                                    Last post {$profile.last_post|relative_datetime}
-                                    {if $profile.location} from {$profile.location}{/if}
+                                    Last post {$profile->last_post|relative_datetime}
+                                    {if $profile->location} from {$profile->location}{/if}
                                 {/if}
                             </div>
                         
@@ -84,7 +84,7 @@
                                         {include file="_status.qa.tpl" t=$t}
                             		{/foreach}
                                 {else}
-                                    ThinkTank has not captured any conversations between {$instance->twitter_username} and {$profile.user_name}.
+                                    ThinkTank has not captured any conversations between {$instance->twitter_username} and {$profile->user_name}.
                                 {/if}
                         	</div>
                         </div>
@@ -161,7 +161,7 @@
         <!--
         <h2>User Stats</h2>
         <ul>
-        	<li>Last updated {$profile.last_updated|relative_datetime}</li>
+        	<li>Last updated {$profile->last_updated|relative_datetime}</li>
         	<li><a {if $instance}href="{$cfg->site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a></li>
         </ul>
         -->

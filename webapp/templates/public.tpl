@@ -2,7 +2,7 @@
  "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <title>ThinkTank - Public Timeline</title>
+    <title>ThinkTank Public Timeline</title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
@@ -97,7 +97,7 @@
     <script type="text/javascript" src="{$cfg->site_root_path}cssjs/linkify.js"></script>
     
     <div id="footer" class="center prepend append clearfix">
-        <p>Set up your own <a href="http://thinktankapp.com">ThinkTank</a>. It is nice to be nice</p>
+        <p>Set up your own <a href="http://thinktankapp.com">ThinkTank</a>.<br />It is nice to be nice</p>
     </div>
 
 </div> <!-- #content -->

@@ -38,7 +38,7 @@
                         <div class="container_24">
                         
                             <div class="grid_24 right gray small footnote">
-                                {$owner_stats.tweet_count|number_format} total Tweets | {$owner_stats.avg_tweets_per_day} per day since {$owner_stats.joined|date_format:"%D"}                        
+                                {$owner_stats->tweet_count|number_format} total Tweets | {$owner_stats->avg_tweets_per_day} per day since {$owner_stats->joined|date_format:"%D"}                        
                             </div>
                            
                             <div class="grid_1 prefix_1">
@@ -98,7 +98,7 @@
                     
                         <div class="container_24">
                             <div class="grid_24 right gray small footnote">
-                                {$owner_stats.follower_count|number_format} Twitter followers
+                                {$owner_stats->follower_count|number_format} Twitter followers
                                 {if $total_follows_protected>0} | {$total_follows_protected|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkTank protected ({$percent_followers_protected}%){/if}
                                 {if $total_follows_with_errors>0} | {$total_follows_with_errors|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkTank suspended ({$percent_followers_suspended}%){/if}
                             </div>
@@ -129,7 +129,7 @@
                         <div class="container_24">
                         
                             <div class="grid_24 right gray small footnote">
-                                {$owner_stats.friend_count|number_format} Twitter friends
+                                {$owner_stats->friend_count|number_format} Twitter friends
                                 {if $total_friends_protected} | {$total_friends_protected|number_format} friend profiles loaded into ThinkTank protected{/if}
                                 {if $total_friends_with_errors>0} | {$total_friends_with_errors|number_format} friends suspended{/if}                        
                             </div>

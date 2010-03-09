@@ -57,7 +57,7 @@
     
         <div id="app-title"><a href="{$cfg->site_root_path}?u={$instance->twitter_username}">
             <h1><span class="bold">Think</span><span class="gray">Tank</span></h1>
-            <h2>Collating your thoughts</h2></a>
+            <h2>Ask your friends</h2></a>
         </div>
             
         <div id="menu-bar"> 
