@@ -21,9 +21,10 @@ $THINKTANK_CFG['smarty_path'] = '/usr/local/php5/lib/php/smarty/libs/';
 // Set the following to the public path of the webapp on your web server
 // For example, if it will belocated at http://example.com/tweets/, set this to '/tweets/'
 $THINKTANK_CFG['site_root_path'] = '/';
+$THINKTANK_CFG['source_root_path'] = '/your-path-to/thinktank/';
 
 // Set whether or not your site's registration page is available
-// TODO: Improve reg/sign-in mechanisms in general; possibly build invitation system
+// TODO: Build email invitation system so this isn't a binary thing
 $THINKTANK_CFG['is_registration_open'] = true;
 
 // Get the following here: http://bit.ly

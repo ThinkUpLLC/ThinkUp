@@ -46,7 +46,7 @@ class LinkDAO extends MySQLDAO {
         
         $q = "
 			INSERT INTO
-				%prefix%links (url, expanded_url, title, status_id, is_image)
+				#prefix#links (url, expanded_url, title, status_id, is_image)
 				VALUES (
 					'{$url}', '{$expanded}', '{$title}', ".$status_id.", ".$is_image.");";
 					
@@ -63,7 +63,7 @@ class LinkDAO extends MySQLDAO {
         $title = mysql_real_escape_string($title);
         
         $q = "
-			UPDATE %prefix%links 
+			UPDATE #prefix#links 
 			SET expanded_url = '{$expanded}', title = '{$title}', status_id=".$status_id.", is_image=".$is_image."
 			WHERE url = '{$url}';";
 			
@@ -78,10 +78,10 @@ class LinkDAO extends MySQLDAO {
     function getLinksByFriends($user_id) {
         $q = "
 			SELECT l.*, t.*, pub_date - interval 8 hour as adj_pub_date  
-			FROM %prefix%links l
-			INNER JOIN %prefix%tweets t
+			FROM #prefix#links l
+			INNER JOIN #prefix#tweets t
 			ON t.status_id = l.status_id
-			WHERE t.author_user_id in (SELECT user_id FROM %prefix%follows f WHERE f.follower_id = ".$user_id.")
+			WHERE t.author_user_id in (SELECT user_id FROM #prefix#follows f WHERE f.follower_id = ".$user_id.")
 			ORDER BY l.status_id DESC
 			LIMIT 15";
 			
@@ -99,10 +99,10 @@ class LinkDAO extends MySQLDAO {
     function getPhotosByFriends($user_id) {
         $q = "
 			SELECT l.*, t.*, pub_date - interval 8 hour as adj_pub_date  
-			FROM %prefix%links l
-			INNER JOIN %prefix%tweets t
+			FROM #prefix#links l
+			INNER JOIN #prefix#tweets t
 			ON t.status_id = l.status_id
-			WHERE is_image = 1 and t.author_user_id in (SELECT user_id FROM %prefix%follows f WHERE f.follower_id = ".$user_id.")
+			WHERE is_image = 1 and t.author_user_id in (SELECT user_id FROM #prefix#follows f WHERE f.follower_id = ".$user_id.")
 			ORDER BY l.status_id DESC
 			LIMIT 15";
 			
@@ -120,7 +120,7 @@ class LinkDAO extends MySQLDAO {
     function getLinksToUpdate() {
         $q = "
 			SELECT l.*
-			FROM %prefix%links l
+			FROM #prefix#links l
 			WHERE /*l.expanded_url = '' and */(l.url like '%flic.kr%' OR l.url like '%twitpic%') and is_image = 0
 			ORDER BY l.status_id DESC
 			LIMIT 15";

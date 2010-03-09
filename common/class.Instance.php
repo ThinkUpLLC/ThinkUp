@@ -70,7 +70,7 @@ class InstanceDAO extends MySQLDAO {
     function insert($id, $user) {
         $q = "
 			INSERT INTO 
-				%prefix%instances (`twitter_user_id`, `twitter_username`)
+				#prefix#instances (`twitter_user_id`, `twitter_username`)
 			 VALUES
 				(".$id." , '".$user."')";
         $sql_result = $this->executeSQL($q);
@@ -87,9 +87,9 @@ class InstanceDAO extends MySQLDAO {
 			SELECT 
 				* , ".$this->getAverageReplyCount()."
 			FROM 
-				%prefix%instances i
+				#prefix#instances i
 			INNER JOIN
-				%prefix%owner_instances oi
+				#prefix#owner_instances oi
 			ON 
 				i.id = oi.instance_id
 			WHERE 
@@ -112,7 +112,7 @@ class InstanceDAO extends MySQLDAO {
         $q = "
 			SELECT *, ".$this->getAverageReplyCount()."
 			FROM 
-				%prefix%instances 
+				#prefix#instances 
 			ORDER BY 
 				crawler_last_run
 			".$order." LIMIT 1";
@@ -128,7 +128,7 @@ class InstanceDAO extends MySQLDAO {
 			SELECT 
 				* , ".$this->getAverageReplyCount()."
 			FROM 
-				%prefix%instances 
+				#prefix#instances 
 			WHERE 
 				twitter_username = '".$username."'";
         $sql_result = $this->executeSQL($q);
@@ -147,7 +147,7 @@ class InstanceDAO extends MySQLDAO {
     function updateLastRun($id) {
         $q = "
 			UPDATE 
-				%prefix%instances
+				#prefix#instances
 			 SET 
 				crawler_last_run = NOW()
 			WHERE
@@ -159,7 +159,7 @@ class InstanceDAO extends MySQLDAO {
     function setPublic($u, $p) {
         $q = "
 			UPDATE 
-				%prefix%instances
+				#prefix#instances
 			 SET 
 				is_public = ".$p."
 			WHERE
@@ -171,7 +171,7 @@ class InstanceDAO extends MySQLDAO {
     function setActive($u, $p) {
         $q = "
 			UPDATE 
-				%prefix%instances
+				#prefix#instances
 			 SET 
 				is_active = ".$p."
 			WHERE
@@ -202,23 +202,23 @@ class InstanceDAO extends MySQLDAO {
             
         $q = "
 			UPDATE 
-				%prefix%instances
+				#prefix#instances
 			SET
 				".$lsi."
 				last_page_fetched_replies = ".$i->last_page_fetched_replies.",
 				last_page_fetched_tweets = ".$i->last_page_fetched_tweets.",
 				crawler_last_run = NOW(),
-				total_tweets_in_system = (select count(*) from %prefix%tweets where author_user_id=".$i->twitter_user_id."),
+				total_tweets_in_system = (select count(*) from #prefix#tweets where author_user_id=".$i->twitter_user_id."),
 				".$owner_tweets."
-				total_replies_in_system = (select count(*) from %prefix%tweets where tweet_text like '%@".$i->twitter_username."%'),
-				total_follows_in_system = (select count(*) from %prefix%follows where user_id=".$i->twitter_user_id." and active=1),
-				total_users_in_system = (select count(*) from %prefix%users),
+				total_replies_in_system = (select count(*) from #prefix#tweets where tweet_text like '%@".$i->twitter_username."%'),
+				total_follows_in_system = (select count(*) from #prefix#follows where user_id=".$i->twitter_user_id." and active=1),
+				total_users_in_system = (select count(*) from #prefix#users),
 				is_archive_loaded_follows = ".$is_archive_loaded_follows.",
 				is_archive_loaded_replies = ".$is_archive_loaded_replies.",
 				earliest_reply_in_system = (select
 					pub_date
 				from 
-					%prefix%tweets
+					#prefix#tweets
 				where tweet_text like '%@".$i->twitter_username."%'
 				order by
 					pub_date asc
@@ -226,7 +226,7 @@ class InstanceDAO extends MySQLDAO {
 				earliest_tweet_in_system = (select
 					pub_date
 				from 
-					%prefix%tweets
+					#prefix#tweets
 				where author_user_id = ".$i->twitter_user_id."
 				order by
 					pub_date asc
@@ -246,7 +246,7 @@ class InstanceDAO extends MySQLDAO {
 			SELECT 
 				twitter_username 
 			FROM 
-				%prefix%instances
+				#prefix#instances
 			WHERE 
 				twitter_username = '".$un."'";
         $sql_result = $this->executeSQL($q);
@@ -273,7 +273,7 @@ class InstanceDAO extends MySQLDAO {
 			SELECT 
 				*, ".$this->getAverageReplyCount()."
 			FROM
-				%prefix%instances ". $condition ."
+				#prefix#instances ". $condition ."
 			ORDER BY
 				crawler_last_run
 			".$last_run."";
@@ -292,7 +292,7 @@ class InstanceDAO extends MySQLDAO {
 				SELECT 
 					*, ".$this->getAverageReplyCount()."
 				FROM
-					%prefix%instances i
+					#prefix#instances i
 				ORDER BY
 					crawler_last_run 
 				DESC;";
@@ -301,9 +301,9 @@ class InstanceDAO extends MySQLDAO {
 				SELECT 
 					*, ".$this->getAverageReplyCount()."
 				FROM
-					%prefix%owner_instances oi
+					#prefix#owner_instances oi
 				INNER JOIN
-					%prefix%instances i
+					#prefix#instances i
 				ON
 					i.id = oi.instance_id
 				WHERE

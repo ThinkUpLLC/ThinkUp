@@ -5,21 +5,33 @@
             <div role="application" class="yui-g" id="tabs">
                 <ul>
                     <li>
-                        <a href="#instances">Account</a>
+                        <a href="#plugins">Plug-ins</a>
+                    </li>
+                    <li>
+                        <a href="#instances">Your ThinkTank Account</a>
                     </li>
                     {if $owner->is_admin}
                     <li>
-                        <a href="#ttusers">ThinkTank Users</a>
+                        <a href="#ttusers">All ThinkTank Accounts</a>
                     </li>
                     {/if} 
-                    <li>
-                        <a href="#templates">Templates</a>
-                    </li>
                 </ul>
+                
+                <div class="section" id="plugins">
+                    <b>Configure ThinkTank Plug-ins</b>
+                    <ul>
+                    {foreach from=$config_menu key=cmindex item=cmitem}
+                    	<li><a href="?p={$cmitem[0]}">{$cmitem[1]}</a></li>
+                    {/foreach}
+                    </ul>
+                    <br/>
+                    <br/>
+                    {if $body}
+                    	{include file=$body}
+                    {/if}
+                </div>
+                
                 <div class="section" id="instances">
-                    <b>Your Twitter accounts</b>
-                    <br/>
-                    <br/>
                     {if isset($errormsg)}
                     <div class="error">
                         {$errormsg} 
@@ -28,31 +40,6 @@
                     <div class="success">
                         {$successmsg} 
                     </div>{/if}
-                    {if $owner->is_admin}
-                    <p class="info">
-                        You are an administrator so you can see all accounts in the system.
-                    </p>
-                    <br/>
-                    <br/>
-                    {/if}
-                    {if count($owner_instances) > 0 }
-                    <ul>
-                        {foreach from=$owner_instances key=iid item=i}
-                        <li>
-                            <a href="{$cfg->site_root_path}?u={$i->twitter_username}">{$i->twitter_username}</a>
-                            <span id="div{$i->twitter_username}"><input type="submit" name="submit" class="{if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->twitter_username}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
-							<span id="divactivate{$i->twitter_username}"><input type="submit" name="submit" class="{if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->twitter_username}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
-                        </li>{/foreach}
-                    </ul>{else}
-                    You have no Twitter accounts configured.
-                    {/if}
-                    <br/>
-                    <br/>
-                    <b>Add a Twitter account</b>: <a href="{$oauthorize_link}">Authorize ThinkTank on Twitter&rarr;</a>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
                     <b>Your ThinkTank Password</b>
                     <form name="changepass" method="post" action="index.php" style="padding:5px;">
                         <table cellpadding="5" cellspacing="5" width="100%">
@@ -93,6 +80,7 @@
                             </tr>
                         </table>
                     </form>
+                    
                 </div>
                 {if $owner->is_admin}
                 <div class="section" id="ttusers">
@@ -118,9 +106,6 @@
                      </ul>
                 </div>
                 {/if}
-                <div class="section" id="templates">
-                    Template list goes here
-                </div>
             </div>
         </div>
     </div>
