@@ -13,11 +13,11 @@ function twitter_crawl() {
     
     $instances = $id->getAllActiveInstancesStalestFirst();
     foreach ($instances as $i) {
-        $logger->setUsername($i->twitter_username);
+        $logger->setUsername($i->network_username);
         $tokens = $oid->getOAuthTokens($i->id);
         $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'], $tokens['oauth_access_token_secret'], $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $i, $THINKTANK_CFG['archive_limit']);
         $crawler = new TwitterCrawler($i, $logger, $api, $db);
-        $cfg = new Config($i->twitter_username, $i->twitter_user_id);
+        $cfg = new Config($i->network_username, $i->network_user_id);
         
         $api->init($logger);
         
@@ -49,7 +49,7 @@ function twitter_crawl() {
             $crawler->cleanUpFollows();
             
             // Save instance
-            $id->save($crawler->instance, $crawler->owner_object->tweet_count, $logger, $api);
+            $id->save($crawler->instance, $crawler->owner_object->post_count, $logger, $api);
         }
     }
     

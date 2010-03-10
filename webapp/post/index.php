@@ -23,11 +23,11 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
 		$id = new InstanceDAO($db);
 		$i = $id->getByUsername($tweet->author_username);
 		if ( isset($i) ) {
-			$s->assign('likely_orphans', $pd->getLikelyOrphansForParent($tweet->pub_date, $i->twitter_user_id,$tweet->author_username, 15) );
-			$s->assign('all_tweets', $pd->getAllPosts($i->twitter_user_id, 15) );
+			$s->assign('likely_orphans', $pd->getLikelyOrphansForParent($tweet->pub_date, $i->network_user_id,$tweet->author_username, 15) );
+			$s->assign('all_tweets', $pd->getAllPosts($i->network_user_id, 15) );
 
 		}
-		$cfg = new Config($i->twitter_username, $i->twitter_user_id);
+		$cfg = new Config($i->network_username, $i->network_user_id);
 
 
 		// instantiate data access objects

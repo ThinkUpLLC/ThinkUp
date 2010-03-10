@@ -32,27 +32,29 @@ class TestOfThinkTankFrontEnd extends WebTestCase {
 
 		//Build test table
 		$q = "CREATE TABLE IF NOT EXISTS `tt_users` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `user_name` varchar(255) collate utf8_bin NOT NULL,
-  `full_name` varchar(255) collate utf8_bin NOT NULL,
-  `avatar` varchar(255) collate utf8_bin NOT NULL,
-  `location` varchar(255) collate utf8_bin default NULL,
-  `description` text collate utf8_bin,
-  `url` varchar(255) collate utf8_bin default NULL,
+  `user_name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `full_name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `avatar` varchar(255) COLLATE utf8_bin NOT NULL,
+  `location` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `description` text COLLATE utf8_bin,
+  `url` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `is_protected` tinyint(1) NOT NULL,
   `follower_count` int(11) NOT NULL,
-  `friend_count` int(11) NOT NULL default '0',
-  `tweet_count` int(11) NOT NULL,
-  `last_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `found_in` varchar(100) collate utf8_bin default NULL,
-  `last_post` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `joined` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `last_status_id` bigint(20) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
+  `friend_count` int(11) NOT NULL DEFAULT '0',
+  `post_count` int(11) NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `found_in` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `last_post` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `joined` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_post_id` bigint(20) NOT NULL DEFAULT '0',
+  `network` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
+  PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`),
   KEY `last_updated_user_id` (`last_updated`,`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+";
 		$this->db->exec($q);
 
 
@@ -81,29 +83,30 @@ class TestOfThinkTankFrontEnd extends WebTestCase {
 ";
 		$this->db->exec($q);
 
-		$q = "CREATE TABLE IF NOT EXISTS `tt_instances` (
-  `id` int(11) NOT NULL auto_increment,
-  `twitter_user_id` int(11) NOT NULL,
-  `twitter_username` varchar(255) collate utf8_bin NOT NULL,
-  `last_status_id` bigint(11) default '0',
-  `crawler_last_run` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `last_page_fetched_replies` int(11) NOT NULL default '1',
-  `last_page_fetched_tweets` int(11) NOT NULL default '1',
-  `total_tweets_by_owner` int(11) default '0',
-  `total_tweets_in_system` int(11) default '0',
-  `total_replies_in_system` int(11) default NULL,
-  `total_users_in_system` int(11) default NULL,
-  `total_follows_in_system` int(11) default NULL,
-  `earliest_tweet_in_system` datetime default NULL,
-  `earliest_reply_in_system` datetime default NULL,
-  `is_archive_loaded_replies` int(11) NOT NULL default '0',
-  `is_archive_loaded_follows` int(11) NOT NULL default '0',
-  `api_calls_to_leave_unmade_per_minute` decimal(11,1) NOT NULL default '2.0',
-  `is_public` int(1) NOT NULL default '0',
-  `is_active` int(1) NOT NULL default '1',
-  PRIMARY KEY  (`id`),
-  KEY `twitter_user_id` (`twitter_user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+		$q = "CREATE TABLE `tt_instances` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `network_user_id` int(11) NOT NULL,
+  `network_username` varchar(255) COLLATE utf8_bin NOT NULL,
+  `last_status_id` bigint(11) DEFAULT '0',
+  `crawler_last_run` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_page_fetched_replies` int(11) NOT NULL DEFAULT '1',
+  `last_page_fetched_tweets` int(11) NOT NULL DEFAULT '1',
+  `total_posts_by_owner` int(11) DEFAULT '0',
+  `total_posts_in_system` int(11) DEFAULT '0',
+  `total_replies_in_system` int(11) DEFAULT NULL,
+  `total_users_in_system` int(11) DEFAULT NULL,
+  `total_follows_in_system` int(11) DEFAULT NULL,
+  `earliest_post_in_system` datetime DEFAULT NULL,
+  `earliest_reply_in_system` datetime DEFAULT NULL,
+  `is_archive_loaded_replies` int(11) NOT NULL DEFAULT '0',
+  `is_archive_loaded_follows` int(11) NOT NULL DEFAULT '0',
+  `api_calls_to_leave_unmade_per_minute` decimal(11,1) NOT NULL DEFAULT '2.0',
+  `is_public` int(1) NOT NULL DEFAULT '0',
+  `is_active` int(1) NOT NULL DEFAULT '1',
+  `network` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
+  PRIMARY KEY (`id`),
+  KEY `twitter_user_id` (`network_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 ";
 		$this->db->exec($q);
@@ -192,7 +195,7 @@ class TestOfThinkTankFrontEnd extends WebTestCase {
 
 
 		//Add instance
-		$q = "INSERT INTO tt_instances (id, twitter_user_id, twitter_username, is_public) VALUES (1, 1234, 'thinktankapp', 1)";
+		$q = "INSERT INTO tt_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234, 'thinktankapp', 1)";
 		$this->db->exec($q);
 
 		//Add instance_owner

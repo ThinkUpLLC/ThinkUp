@@ -602,7 +602,7 @@ class PostDAO extends MySQLDAO {
 			INNER JOIN
 				#prefix#instances i
 			ON
-				t.author_user_id = i.twitter_user_id
+				t.author_user_id = i.network_user_id
 			LEFT JOIN
 				#prefix#links l
 			ON t.post_id = l.post_id
@@ -634,7 +634,7 @@ class PostDAO extends MySQLDAO {
 			INNER JOIN
 				#prefix#instances i
 			ON
-				t.author_user_id = i.twitter_user_id
+				t.author_user_id = i.network_user_id
 			LEFT JOIN
 				#prefix#links l
 			ON t.post_id = l.post_id
@@ -662,7 +662,7 @@ class PostDAO extends MySQLDAO {
 			INNER JOIN
 				#prefix#instances i
 			ON
-				t.author_user_id = i.twitter_user_id
+				t.author_user_id = i.network_user_id
 			LEFT JOIN
 				#prefix#links l
 			ON t.post_id = l.post_id
@@ -700,7 +700,7 @@ class PostDAO extends MySQLDAO {
 			INNER JOIN
 				#prefix#instances i
 			ON
-				t.author_user_id = i.twitter_user_id
+				t.author_user_id = i.network_user_id
 			WHERE
 				i.is_public = 1 and t.post_id = ".$id.";";
         $sql_result = $this->executeSQL($q);

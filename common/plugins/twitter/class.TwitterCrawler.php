@@ -18,7 +18,7 @@ class TwitterCrawler {
 	function fetchInstanceUserInfo() {
 		// Get owner user details and save them to DB
 		$status_message = "";
-		$owner_profile = str_replace("[id]", $this->instance->twitter_username, $this->api->cURL_source['show_user']);
+		$owner_profile = str_replace("[id]", $this->instance->network_username, $this->api->cURL_source['show_user']);
 		list($cURL_status, $twitter_data) = $this->api->apiRequest($owner_profile, $this->logger);
 
 		if ($cURL_status == 200) {
@@ -49,7 +49,7 @@ class TwitterCrawler {
 		$got_latest_page_of_tweets = false;
 		$continue_fetching = true;
 
-		while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching) {
+		while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $this->owner_object->post_count > $this->instance->total_posts_in_system && $continue_fetching) {
 
 			$recent_tweets = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['user_timeline']);
 			$args = array();
@@ -57,7 +57,7 @@ class TwitterCrawler {
 			$last_page_of_tweets = round($this->api->archive_limit / 200) + 1;
 
 			//set page and since_id params for API call
-			if ($got_latest_page_of_tweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system && $this->instance->total_tweets_in_system < $this->api->archive_limit) {
+			if ($got_latest_page_of_tweets && $this->owner_object->post_count != $this->instance->total_posts_in_system && $this->instance->total_posts_in_system < $this->api->archive_limit) {
 				if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets)
 				$this->instance->last_page_fetched_tweets = $this->instance->last_page_fetched_tweets + 1;
 				else {
@@ -67,8 +67,8 @@ class TwitterCrawler {
 				$args["page"] = $this->instance->last_page_fetched_tweets;
 
 			} else {
-				if (!$got_latest_page_of_tweets && $this->instance->last_status_id > 0)
-				$args["since_id"] = $this->instance->last_status_id;
+				if (!$got_latest_page_of_tweets && $this->instance->last_post_id > 0)
+				$args["since_id"] = $this->instance->last_post_id;
 			}
 
 			list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $this->logger, $args);
@@ -83,14 +83,14 @@ class TwitterCrawler {
 
 						if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
 							$count = $count + 1;
-							$this->instance->total_tweets_in_system = $this->instance->total_tweets_in_system + 1;
+							$this->instance->total_posts_in_system = $this->instance->total_posts_in_system + 1;
 
 							//expand and insert links contained in tweet
 							$this->processTweetURLs($tweet, $lurl, $fa);
 
 						}
-						if ($tweet['post_id'] > $this->instance->last_status_id)
-						$this->instance->last_status_id = $tweet['post_id'];
+						if ($tweet['post_id'] > $this->instance->last_post_id)
+						$this->instance->last_post_id = $tweet['post_id'];
 
 					}
 					$status_message .= count($tweets)." tweet(s) found and $count saved";
@@ -98,7 +98,7 @@ class TwitterCrawler {
 					$status_message = "";
 
 					//if you've got more than the Twitter API archive limit, stop looking for more tweets
-					if ($this->instance->total_tweets_in_system >= $this->api->archive_limit) {
+					if ($this->instance->total_posts_in_system >= $this->api->archive_limit) {
 						$this->instance->last_page_fetched_tweets = 1;
 						$continue_fetching = false;
 						$status_message = "More than Twitter cap of ".$this->api->archive_limit." already in system, moving on.";
@@ -107,16 +107,16 @@ class TwitterCrawler {
 					}
 
 
-					if ($this->owner_object->tweet_count == $this->instance->total_tweets_in_system)
+					if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
 					$this->instance->is_archive_loaded_tweets = true;
 
-					$status_message .= $this->instance->total_tweets_in_system." in system; ".$this->owner_object->tweet_count." by owner";
+					$status_message .= $this->instance->total_posts_in_system." in system; ".$this->owner_object->post_count." by owner";
 					$this->logger->logStatus($status_message, get_class($this));
 					$status_message = "";
 
 				}
 				catch(Exception $e) {
-					$status_message = 'Could not parse tweet XML for $this->twitter_username';
+					$status_message = 'Could not parse tweet XML for $this->network_username';
 					$this->logger->logStatus($status_message, get_class($this));
 					$status_message = "";
 
@@ -126,7 +126,7 @@ class TwitterCrawler {
 			}
 		}
 
-		if ($this->owner_object->tweet_count == $this->instance->total_tweets_in_system)
+		if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
 		$status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
 
 
@@ -141,7 +141,7 @@ class TwitterCrawler {
 		$got_latest_page_of_retweets = false;
 		$continue_fetching = true;
 
-		while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $this->owner_object->tweet_count > $this->instance->total_tweets_in_system && $continue_fetching) {
+		while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $this->owner_object->post_count > $this->instance->total_posts_in_system && $continue_fetching) {
 
 			$recent_retweets = $this->api->cURL_source['retweeted_by_me'];
 			$args = array();
@@ -149,7 +149,7 @@ class TwitterCrawler {
 			$last_page_of_retweets = round($this->api->archive_limit / 200) + 1;
 
 			//set page and since_id params for API call
-			if ($got_latest_page_of_retweets && $this->owner_object->tweet_count != $this->instance->total_tweets_in_system && $this->instance->total_tweets_in_system < $this->api->archive_limit) {
+			if ($got_latest_page_of_retweets && $this->owner_object->post_count != $this->instance->total_posts_in_system && $this->instance->total_posts_in_system < $this->api->archive_limit) {
 				if ($this->instance->last_page_fetched_tweets < $last_page_of_retweets)
 				$this->instance->last_page_fetched_tweets = $this->instance->last_page_fetched_tweets + 1;
 				else {
@@ -159,8 +159,8 @@ class TwitterCrawler {
 				$args["page"] = $this->instance->last_page_fetched_tweets;
 
 			} else {
-				if (!$got_latest_page_of_retweets && $this->instance->last_status_id > 0)
-				$args["since_id"] = $this->instance->last_status_id;
+				if (!$got_latest_page_of_retweets && $this->instance->last_post_id > 0)
+				$args["since_id"] = $this->instance->last_post_id;
 			}
 
 			list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_retweets, $this->logger, $args);
@@ -175,14 +175,14 @@ class TwitterCrawler {
 
 						if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
 							$count = $count + 1;
-							$this->instance->total_tweets_in_system = $this->instance->total_tweets_in_system + 1;
+							$this->instance->total_posts_in_system = $this->instance->total_posts_in_system + 1;
 
 							//expand and insert links contained in tweet
 							$this->processTweetURLs($tweet, $lurl, $fa);
 
 						}
-						if ($tweet['post_id'] > $this->instance->last_status_id)
-						$this->instance->last_status_id = $tweet['post_id'];
+						if ($tweet['post_id'] > $this->instance->last_post_id)
+						$this->instance->last_post_id = $tweet['post_id'];
 
 					}
 					$status_message .= count($tweets)." retweet(s) found and $count saved";
@@ -190,7 +190,7 @@ class TwitterCrawler {
 					$status_message = "";
 
 					//if you've got more than the Twitter API archive limit, stop looking for more tweets
-					if ($this->instance->total_tweets_in_system >= $this->api->archive_limit) {
+					if ($this->instance->total_posts_in_system >= $this->api->archive_limit) {
 						$this->instance->last_page_fetched_tweets = 1;
 						$continue_fetching = false;
 						$status_message = "More than Twitter cap of ".$this->api->archive_limit." already in system, moving on.";
@@ -199,16 +199,16 @@ class TwitterCrawler {
 					}
 
 
-					if ($this->owner_object->tweet_count == $this->instance->total_tweets_in_system)
+					if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
 					$this->instance->is_archive_loaded_tweets = true;
 
-					$status_message .= $this->instance->total_tweets_in_system." in system; ".$this->owner_object->tweet_count." by owner";
+					$status_message .= $this->instance->total_posts_in_system." in system; ".$this->owner_object->post_count." by owner";
 					$this->logger->logStatus($status_message, get_class($this));
 					$status_message = "";
 
 				}
 				catch(Exception $e) {
-					$status_message = 'Could not parse tweet XML for $this->twitter_username';
+					$status_message = 'Could not parse tweet XML for $this->network_username';
 					$this->logger->logStatus($status_message, get_class($this));
 					$status_message = "";
 
@@ -218,7 +218,7 @@ class TwitterCrawler {
 			}
 		}
 
-		if ($this->owner_object->tweet_count == $this->instance->total_tweets_in_system)
+		if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
 		$status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
 
 
@@ -440,13 +440,13 @@ class TwitterCrawler {
 					foreach ($ids as $id) {
 
 						# add/update follow relationship
-						if ($fd->followExists($this->instance->twitter_user_id, $id['id'])) {
+						if ($fd->followExists($this->instance->network_user_id, $id['id'])) {
 							//update it
-							if ($fd->update($this->instance->twitter_user_id, $id['id']))
+							if ($fd->update($this->instance->network_user_id, $id['id']))
 							$updated_follow_count = $updated_follow_count + 1;
 						} else {
 							//insert it
-							if ($fd->insert($this->instance->twitter_user_id, $id['id']))
+							if ($fd->insert($this->instance->network_user_id, $id['id']))
 							$inserted_follow_count = $inserted_follow_count + 1;
 						}
 					}
@@ -524,13 +524,13 @@ class TwitterCrawler {
 						$this->ud->updateUser($utu);
 
 						# add/update follow relationship
-						if ($fd->followExists($this->instance->twitter_user_id, $utu->user_id)) {
+						if ($fd->followExists($this->instance->network_user_id, $utu->user_id)) {
 							//update it
-							if ($fd->update($this->instance->twitter_user_id, $utu->user_id))
+							if ($fd->update($this->instance->network_user_id, $utu->user_id))
 							$updated_follow_count++;
 						} else {
 							//insert it
-							if ($fd->insert($this->instance->twitter_user_id, $utu->user_id))
+							if ($fd->insert($this->instance->network_user_id, $utu->user_id))
 							$inserted_follow_count++;
 						}
 					}
@@ -601,13 +601,13 @@ class TwitterCrawler {
 						$this->ud->updateUser($utu);
 
 						# add/update follow relationship
-						if ($fd->followExists($utu->user_id, $this->instance->twitter_user_id)) {
+						if ($fd->followExists($utu->user_id, $this->instance->network_user_id)) {
 							//update it
-							if ($fd->update($utu->user_id, $this->instance->twitter_user_id))
+							if ($fd->update($utu->user_id, $this->instance->network_user_id))
 							$updated_follow_count++;
 						} else {
 							//insert it
-							if ($fd->insert($utu->user_id, $this->instance->twitter_user_id))
+							if ($fd->insert($utu->user_id, $this->instance->network_user_id))
 							$inserted_follow_count++;
 						}
 
@@ -644,8 +644,8 @@ class TwitterCrawler {
 				$args = array();
 				$args["count"] = 200;
 
-				if ($stale_friend->last_status_id > 0) {
-					$args['since_id'] = $stale_friend->last_status_id;
+				if ($stale_friend->last_post_id > 0) {
+					$args['since_id'] = $stale_friend->last_post_id;
 				}
 
 				list($cURL_status, $twitter_data) = $this->api->apiRequest($stale_friend_tweets, $this->logger, $args);
@@ -674,11 +674,11 @@ class TwitterCrawler {
 									$stale_friend->is_protected = $tweet['is_protected'];
 									$stale_friend->follower_count = $tweet['follower_count'];
 									$stale_friend->friend_count = $tweet['friend_count'];
-									$stale_friend->tweet_count = $tweet['tweet_count'];
+									$stale_friend->post_count = $tweet['post_count'];
 									$stale_friend->joined = date_format(date_create($tweet['joined']), "Y-m-d H:i:s");
 
-									if ($tweet['post_id'] > $stale_friend->last_status_id) {
-										$stale_friend->last_status_id = $tweet['post_id'];
+									if ($tweet['post_id'] > $stale_friend->last_post_id) {
+										$stale_friend->last_post_id = $tweet['post_id'];
 									}
 									$ud->updateUser($stale_friend);
 									$stale_friend_updated_from_tweets = true;

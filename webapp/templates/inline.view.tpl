@@ -113,7 +113,7 @@
 			//alert (dataString);return false;  
 			    $.ajax({  
 			      type: "GET",  
-			      url: "{/literal}{$cfg->site_root_path}{literal}status/mark-parent.php",  
+			      url: "{/literal}{$cfg->site_root_path}{literal}post/mark-parent.php",  
 			      data: dataString,  
 			      success: function() {  
 				$('#div'+Id).html("<div class='success' id='message"+Id+"'></div>");  

@@ -1,12 +1,12 @@
 <?php 
 class Instance {
     var $id;
-    var $twitter_username;
-    var $twitter_user_id;
+    var $network_username;
+    var $network_user_id;
     var $last_status_id;
     var $last_page_fetched_replies;
     var $last_page_fetched_tweets;
-    var $total_tweets_in_system;
+    var $total_posts_in_system;
     var $total_replies_in_system;
     var $total_follows_in_system;
     var $total_friends_in_system;
@@ -23,12 +23,12 @@ class Instance {
     
     function Instance($r) {
         $this->id = $r["id"];
-        $this->twitter_username = $r['twitter_username'];
-        $this->twitter_user_id = $r['twitter_user_id'];
+        $this->network_username = $r['network_username'];
+        $this->network_user_id = $r['network_user_id'];
         $this->last_status_id = $r['last_status_id'];
         $this->last_page_fetched_replies = $r['last_page_fetched_replies'];
         $this->last_page_fetched_tweets = $r['last_page_fetched_tweets'];
-        $this->total_tweets_in_system = $r['total_tweets_in_system'];
+        $this->total_posts_in_system = $r['total_posts_in_system'];
         $this->total_replies_in_system = $r['total_replies_in_system'];
         $this->total_follows_in_system = $r['total_follows_in_system'];
         $this->total_users_in_system = $r['total_users_in_system'];
@@ -70,7 +70,7 @@ class InstanceDAO extends MySQLDAO {
     function insert($id, $user) {
         $q = "
 			INSERT INTO 
-				#prefix#instances (`twitter_user_id`, `twitter_username`)
+				#prefix#instances (`network_user_id`, `network_username`)
 			 VALUES
 				(".$id." , '".$user."')";
         $sql_result = $this->executeSQL($q);
@@ -130,7 +130,7 @@ class InstanceDAO extends MySQLDAO {
 			FROM 
 				#prefix#instances 
 			WHERE 
-				twitter_username = '".$username."'";
+				network_username = '".$username."'";
         $sql_result = $this->executeSQL($q);
         
         if (mysql_num_rows($sql_result) == 0) {
@@ -163,7 +163,7 @@ class InstanceDAO extends MySQLDAO {
 			 SET 
 				is_public = ".$p."
 			WHERE
-				twitter_username = '".$u."';";
+				network_username = '".$u."';";
         $sql_result = $this->executeSQL($q);
         
     }
@@ -175,14 +175,14 @@ class InstanceDAO extends MySQLDAO {
 			 SET 
 				is_active = ".$p."
 			WHERE
-				twitter_username = '".$u."';";
+				network_username = '".$u."';";
         $sql_result = $this->executeSQL($q);
         
     }
     
-    function save($i, $user_xml_total_tweets_by_owner, $logger, $api) {
-        if ($user_xml_total_tweets_by_owner != '')
-            $owner_tweets = "total_tweets_by_owner = ".$user_xml_total_tweets_by_owner.",";
+    function save($i, $user_xml_total_posts_by_owner, $logger, $api) {
+        if ($user_xml_total_posts_by_owner != '')
+            $owner_tweets = "total_posts_by_owner = ".$user_xml_total_posts_by_owner.",";
         else
             $owner_tweets = '';
             
@@ -208,10 +208,10 @@ class InstanceDAO extends MySQLDAO {
 				last_page_fetched_replies = ".$i->last_page_fetched_replies.",
 				last_page_fetched_tweets = ".$i->last_page_fetched_tweets.",
 				crawler_last_run = NOW(),
-				total_tweets_in_system = (select count(*) from #prefix#posts where author_user_id=".$i->twitter_user_id."),
+				total_posts_in_system = (select count(*) from #prefix#posts where author_user_id=".$i->network_user_id."),
 				".$owner_tweets."
-				total_replies_in_system = (select count(*) from #prefix#posts where post_text like '%@".$i->twitter_username."%'),
-				total_follows_in_system = (select count(*) from #prefix#follows where user_id=".$i->twitter_user_id." and active=1),
+				total_replies_in_system = (select count(*) from #prefix#posts where post_text like '%@".$i->network_username."%'),
+				total_follows_in_system = (select count(*) from #prefix#follows where user_id=".$i->network_user_id." and active=1),
 				total_users_in_system = (select count(*) from #prefix#users),
 				is_archive_loaded_follows = ".$is_archive_loaded_follows.",
 				is_archive_loaded_replies = ".$is_archive_loaded_replies.",
@@ -219,23 +219,23 @@ class InstanceDAO extends MySQLDAO {
 					pub_date
 				from 
 					#prefix#posts
-				where post_text like '%@".$i->twitter_username."%'
+				where post_text like '%@".$i->network_username."%'
 				order by
 					pub_date asc
 				limit 1),
-				earliest_tweet_in_system = (select
+				earliest_post_in_system = (select
 					pub_date
 				from 
 					#prefix#posts
-				where author_user_id = ".$i->twitter_user_id."
+				where author_user_id = ".$i->network_user_id."
 				order by
 					pub_date asc
 				limit 1)
 			WHERE
-				twitter_user_id = ".$i->twitter_user_id.";";
+				network_user_id = ".$i->network_user_id.";";
         $foo = $this->executeSQL($q);
         
-        $status_message = "Updated ".$i->twitter_username."'s system status.";
+        $status_message = "Updated ".$i->network_username."'s system status.";
         $logger->logStatus($status_message, get_class($this));
         $status_message = "";
         
@@ -244,11 +244,11 @@ class InstanceDAO extends MySQLDAO {
     function isUserConfigured($un) {
         $q = "
 			SELECT 
-				twitter_username 
+				network_username 
 			FROM 
 				#prefix#instances
 			WHERE 
-				twitter_username = '".$un."'";
+				network_username = '".$un."'";
         $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;

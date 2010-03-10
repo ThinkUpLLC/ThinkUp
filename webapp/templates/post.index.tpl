@@ -103,7 +103,7 @@
 <h1>{$tweet->post_text}</h1>
 <br /><br />
 {foreach from=$replies key=tid item=t}
-{if $t->is_protected}Anonymous says {else}<a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a> <a href="http://twitter.com/{$t->author_username}/post/{$t->post_id}">says</a>{/if}, "{$t->post_html|regex_replace:"/^@[a-zA-Z0-9_]+ /":""}"<br /><br />
+{if $t->is_protected}Anonymous says {else}<a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a> <a href="http://twitter.com/{$t->author_username}/post/{$t->post_id}">says</a>{/if}, "{$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+ /":""}"<br /><br />
 {/foreach}
 </div>
 {/if}

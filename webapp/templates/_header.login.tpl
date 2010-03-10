@@ -28,8 +28,8 @@
     		<select id="instance-select" onchange="changeMe();">
     				<option value="">-- Select an instance --</option>
                     {foreach from=$instances key=tid item=i}
-                        {if $i->twitter_user_id != $instance->twitter_user_id}
-                        <option value="{$cfg->site_root_path}?u={$i->twitter_username}">{$i->twitter_username} (updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if})</option>
+                        {if $i->network_user_id != $instance->network_user_id}
+                        <option value="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username} (updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if})</option>
                         {/if}
                     {/foreach}  				
     		</select>
@@ -55,7 +55,7 @@
 
     <div class="clearfix">
     
-        <div id="app-title"><a href="{$cfg->site_root_path}?u={$instance->twitter_username}">
+        <div id="app-title"><a href="{$cfg->site_root_path}?u={$instance->network_username}">
             <h1><span class="bold">Think</span><span class="gray">Tank</span></h1>
             <h2>Ask your friends</h2></a>
         </div>
@@ -64,7 +64,7 @@
             <ul> 
             {if $smarty.session.user}
                 {if $instance}
-                    <li class="round-tl round-bl"><a href="{$cfg->site_root_path}?u={$instance->twitter_username}">{$instance->twitter_username}</a></li>
+                    <li class="round-tl round-bl"><a href="{$cfg->site_root_path}?u={$instance->network_username}">{$instance->network_username}</a></li>
                 {else}
                     <li class="round-tl round-bl"><a href="{$cfg->site_root_path}">Home</a></li>
                 {/if}

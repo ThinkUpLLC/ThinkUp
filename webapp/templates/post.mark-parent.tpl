@@ -10,7 +10,7 @@
 
 <ul>
 {foreach from=$possible_parents key=tid item=t}
-<li><a href="mark-parent.php?t={$reply.post_id}&amp;p={$t.post_id}">use this one</a> {$t->post_text}</li>
+<li><a href="mark-parent.php?t={$reply->post_id}&amp;p={$t->post_id}">use this one</a> {$t->post_text}</li>
 {/foreach}
 </ul>
 

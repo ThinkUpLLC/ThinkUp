@@ -10,11 +10,11 @@ class User {
     var $is_protected;
     var $follower_count;
     var $friend_count;
-    var $tweet_count;
+    var $post_count;
     var $found_in;
     var $last_post;
     var $joined;
-    var $last_status_id;
+    var $last_post_id;
 
     
     function User($val, $found_in) {
@@ -36,9 +36,9 @@ class User {
             $this->is_protected = 1;
         }
         $this->follower_count = $val['follower_count'];
-        $this->tweet_count = $val['tweet_count'];
-        if (isset($val['last_status_id'])) {
-            $this->last_status_id = $val['last_status_id'];
+        $this->post_count = $val['post_count'];
+        if (isset($val['last_post_id'])) {
+            $this->last_post_id = $val['last_post_id'];
         }
         if (isset($val['friend_count'])) {
             $this->friend_count = $val['friend_count'];
@@ -48,7 +48,7 @@ class User {
         }
         $this->joined = $val['joined'];
         $this->found_in = $found_in;
-		
+        
         if (isset($val['avg_tweets_per_day'])) {
             $this->avg_tweets_per_day = $val['avg_tweets_per_day'];
         }
@@ -59,7 +59,7 @@ class User {
 class UserDAO extends MySQLDAO {
 
     private function getAverageTweetCount() {
-        return "round(tweet_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
+        return "round(post_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
     }
 
     
@@ -114,25 +114,25 @@ class UserDAO extends MySQLDAO {
         $status_message = "";
         $has_friend_count = $user->friend_count != '' ? true : false;
         $has_last_post = $user->last_post != '' ? true : false;
-        $has_last_status_id = $user->last_status_id != '' ? true : false;
+        $has_last_post_id = $user->last_post_id != '' ? true : false;
         
         $q = "
 			INSERT INTO
 				#prefix#users (user_id,
 					user_name,full_name,avatar,location,
 					description, url, is_protected,
-					follower_count, tweet_count, ".($has_friend_count ? "friend_count, " : "")."
+					follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")."
 					".($has_last_post ? "last_post, " : "")."
-					found_in, joined  ".($has_last_status_id ? ", last_status_id" : "").")
+					found_in, joined  ".($has_last_post_id ? ", last_post_id" : "").")
 				VALUES (
 					".mysql_real_escape_string($user->user_id).", 
 					'".mysql_real_escape_string($user->user_name)."','".mysql_real_escape_string($user->full_name)."','".mysql_real_escape_string($user->avatar)."','".mysql_real_escape_string($user->location)."',  
 					'".mysql_real_escape_string($user->description)."', '".mysql_real_escape_string($user->url)."',".$user->is_protected.",  							
-					".$user->follower_count.",".$user->tweet_count.",
+					".$user->follower_count.",".$user->post_count.",
 					".($has_friend_count ? $user->friend_count.", " : "")."
 					".($has_last_post ? "'".mysql_real_escape_string($user->last_post)."', " : "")."					
 					'".mysql_real_escape_string($user->found_in)."', '".mysql_real_escape_string($user->joined)."'
-					 ".($has_last_status_id ? ",".$user->last_status_id : "")."
+					 ".($has_last_post_id ? ",".$user->last_post_id : "")."
 					)
 				ON DUPLICATE KEY UPDATE 
 					full_name = '".mysql_real_escape_string($user->full_name)."',
@@ -142,13 +142,13 @@ class UserDAO extends MySQLDAO {
 					url = '".mysql_real_escape_string($user->url)."',
 					is_protected = ".$user->is_protected.",
 					follower_count = ".$user->follower_count.",
-					tweet_count = ".$user->tweet_count.",
+					post_count = ".$user->post_count.",
 					".($has_friend_count ? "friend_count= ".$user->friend_count.", " : "")."
 					".($has_last_post ? "last_post= '".mysql_real_escape_string($user->last_post)."', " : "")."
 					last_updated = NOW(),
 					found_in = '".mysql_real_escape_string($user->found_in)."', 
 					joined = '".mysql_real_escape_string($user->joined)."'
-					".($has_last_status_id ? ", last_status_id = ".$user->last_status_id : "").";";
+					".($has_last_post_id ? ", last_post_id = ".$user->last_post_id : "").";";
         $foo = $this->executeSQL($q);
         if (mysql_affected_rows() > 0) {
             if (isset($this->logger) && $this->logger != null) {
