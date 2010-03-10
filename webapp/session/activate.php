@@ -12,8 +12,6 @@ if (!isset($_GET['usr']) || !isset($_GET['code']) ) {
 	exit();
 }
 
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
 $od = new OwnerDAO($db);
 
 $acode = $od->getActivationCode($_GET['usr']);

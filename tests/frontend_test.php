@@ -230,6 +230,32 @@ class TestOfThinkTankFrontEnd extends WebTestCase {
 		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 12, '1/1/2006');";
 		$this->db->exec($q);
 
+		// Plugin data
+        $q = "CREATE TABLE  IF NOT EXISTS `tt_plugins` (
+`id` INT NOT NULL AUTO_INCREMENT,
+`name` VARCHAR( 255 ) NOT NULL ,
+`folder_name` VARCHAR( 255 ) NOT NULL ,
+`description` VARCHAR( 255 ),
+`author` VARCHAR( 255 ),
+`homepage` VARCHAR( 255 ),
+`version` VARCHAR( 255 ),
+`is_active` TINYINT NOT NULL ,
+PRIMARY KEY (  `id` )
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+		";
+		
+        $this->logger = new Logger($THINKTANK_CFG['log_location']);
+        $this->db = new Database($THINKTANK_CFG);
+        $this->conn = $this->db->getConnection();
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO  `tt_plugins` ( `name` , `folder_name` , `description` , `author` , `homepage` , `version` , `is_active` ) 
+VALUES ( 'Twitter',  'twitter',  'Twitter support',  'Gina Trapani',  'http://thinktankapp.com',  '0.01',  '1' );";
+        $this->db->exec($q);
+		
+        $q = "INSERT INTO  `tt_plugins` (`name` , `folder_name` , `description` , `author` , `homepage` , `version` , `is_active` )
+VALUES (  'My Test Plugin',  'testplugin',  'Proof of concept plugin',  'Gina Trapani',  'http://thinktankapp.com',  '0.01',  '0' );";
+        $this->db->exec($q);
 	}
 
 	function tearDown() {

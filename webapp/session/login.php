@@ -12,9 +12,6 @@ if ($session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
-
 $od = new OwnerDAO($db);
 $user_email = mysql_real_escape_string($_POST['email']);
 $s = new SmartyThinkTank();

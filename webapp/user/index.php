@@ -10,9 +10,6 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
-
 $ud = new UserDAO($db);
 $fd = new FollowDAO($db);
 $id = new InstanceDAO($db);

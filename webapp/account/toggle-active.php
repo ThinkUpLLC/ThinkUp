@@ -16,9 +16,6 @@ if ($p != 1) {
 	$p = 0;
 }
 
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
-
 $id = new InstanceDAO($db);
 
 $id->setActive($u, $p);

@@ -28,9 +28,6 @@ require_once("init.php");
 
 $cfg = new Config();
 
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
-
 $td = new TweetDAO($db);
 
 

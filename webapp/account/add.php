@@ -11,8 +11,6 @@ require_once("init.php");
 $tu = $_POST['twitter_username'];
 $tp = $_POST['twitter_password'];
 
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
 $od = new OwnerDAO($db);
 
 $owner = $od->getByEmail($_SESSION['user']);
