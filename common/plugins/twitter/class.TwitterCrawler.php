@@ -67,8 +67,8 @@ class TwitterCrawler {
 				$args["page"] = $this->instance->last_page_fetched_tweets;
 
 			} else {
-				if (!$got_latest_page_of_tweets && $this->instance->last_post_id > 0)
-				$args["since_id"] = $this->instance->last_post_id;
+				if (!$got_latest_page_of_tweets && $this->instance->last_status_id > 0)
+				$args["since_id"] = $this->instance->last_status_id;
 			}
 
 			list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $this->logger, $args);
@@ -89,8 +89,8 @@ class TwitterCrawler {
 							$this->processTweetURLs($tweet, $lurl, $fa);
 
 						}
-						if ($tweet['post_id'] > $this->instance->last_post_id)
-						$this->instance->last_post_id = $tweet['post_id'];
+						if ($tweet['post_id'] > $this->instance->last_status_id)
+						$this->instance->last_status_id = $tweet['post_id'];
 
 					}
 					$status_message .= count($tweets)." tweet(s) found and $count saved";
@@ -159,8 +159,8 @@ class TwitterCrawler {
 				$args["page"] = $this->instance->last_page_fetched_tweets;
 
 			} else {
-				if (!$got_latest_page_of_retweets && $this->instance->last_post_id > 0)
-				$args["since_id"] = $this->instance->last_post_id;
+				if (!$got_latest_page_of_retweets && $this->instance->last_status_id > 0)
+				$args["since_id"] = $this->instance->last_status_id;
 			}
 
 			list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_retweets, $this->logger, $args);
@@ -181,8 +181,8 @@ class TwitterCrawler {
 							$this->processTweetURLs($tweet, $lurl, $fa);
 
 						}
-						if ($tweet['post_id'] > $this->instance->last_post_id)
-						$this->instance->last_post_id = $tweet['post_id'];
+						if ($tweet['post_id'] > $this->instance->last_status_id)
+						$this->instance->last_status_id = $tweet['post_id'];
 
 					}
 					$status_message .= count($tweets)." retweet(s) found and $count saved";
