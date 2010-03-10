@@ -276,7 +276,7 @@ class PostDAO extends MySQLDAO {
             
             if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '' && $this->isPostInDB($vals['in_retweet_of_post_id'])) {
                 $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
-                $status_message = "Repost of ".$vals['in_retweet_of_post_id'].", ID: ".$vals["post_id"]."; updating repost cache count";
+                $status_message = "Repost of ".$vals['in_retweet_of_post_id'].", ID: ".$vals["post_id"]."; updating retweet cache count";
                 $logger->logStatus($status_message, get_class($this));
                 $status_message = "";
             }
@@ -324,7 +324,7 @@ class PostDAO extends MySQLDAO {
     }
     
     function incrementRepostCountCache($post_id) {
-        return $this->incrementCacheCount($post_id, "repost");
+        return $this->incrementCacheCount($post_id, "retweet");
     }
     
     private function incrementCacheCount($post_id, $fieldname) {
@@ -506,12 +506,12 @@ class PostDAO extends MySQLDAO {
 				retweet_count_cache DESC 
 			LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
-        $most_reposted_posts = array();
+        $most_retweeted_posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $most_reposted_posts[] = $this->setPostWithLink($row);
+            $most_retweeted_posts[] = $this->setPostWithLink($row);
         }
         mysql_free_result($sql_result);
-        return $most_reposted_posts;
+        return $most_retweeted_posts;
         
     }
     
@@ -745,11 +745,11 @@ class RetweetDetector {
     }
 
     
-    public static function detectOriginalTweet($repost_text, $recentPosts) {
+    public static function detectOriginalTweet($retweet_text, $recentPosts) {
         $originalPostId = false;
         foreach ($recentPosts as $t) {
             $snip = substr($t->post_text, 0, 12);
-            if (strpos($repost_text, $snip) != false)
+            if (strpos($retweet_text, $snip) != false)
                 $originalPostId = $t->post_id;
         }
         
