@@ -21,7 +21,7 @@
 
             <div class="grid_22 push_1 clearfix">
     
-                {if $tweet and ($replies OR $retweets) }
+                {if $post and ($replies OR $retweets) }
                 
                     <div class="prepend_20">
                     <ul id="menu">
@@ -32,10 +32,10 @@
                     
                     <div class="clearfix">
                         {if $retweets}<div class="grid_15 alpha">{else}<div class="grid_22">{/if}
-                            <a href="http://twitter.com/{$tweet->author_username}/"><img src="{$tweet->author_avatar}" class="avatar2"></a>
-                            <span class="tweet">{$tweet->tweet_html|link_usernames_to_twitter}</span>
-                            <div class="small">(<a href="http://twitter.com/{$tweet->author_username}/">{$tweet->author_username}</a>, 
-                            <a href="http://twitter.com/{$tweet->author_username}/status/{$tweet->status_id}/">{$tweet->pub_date|relative_datetime}</a>)</div>
+                            <a href="http://twitter.com/{$post->author_username}/"><img src="{$post->author_avatar}" class="avatar2"></a>
+                            <span class="tweet">{$post->post_text|link_usernames_to_twitter}</span>
+                            <div class="small">(<a href="http://twitter.com/{$post->author_username}/">{$post->author_username}</a>, 
+                            <a href="http://twitter.com/{$post->author_username}/status/{$post->post_id}/">{$post->pub_date|relative_datetime}</a>)</div>
                         </div>
                         {if $retweets}
                         <div class="grid_7 center big-number omega">
@@ -52,7 +52,7 @@
                     {if $replies}
                         <div class="append_20 clearfix">               	
                     	{foreach from=$replies key=tid item=t name=foo}
-                    		{include file="_status.public.tpl" t=$t}
+                    		{include file="_post.public.tpl" t=$t}
                     	{/foreach}	
                     	</div>
                     {/if}                
@@ -60,7 +60,7 @@
                         <div class="append_20 clearfix">
                             <!--<h3 align="center">Retweets to {$rtreach|number_format} followers</h3>-->
                             {foreach from=$retweets key=tid item=t name=foo}
-                                {include file="_status.public.tpl" t=$t}
+                                {include file="_post.public.tpl" t=$t}
                             {/foreach}	
                         </div>
                 	{/if}
@@ -83,9 +83,9 @@
                 {if $header}<h1>{$header}</h1>{/if}
                 {if $description}<h4>{$description}</h4>{/if}
                     
-                {if $tweets}
-                	{foreach from=$tweets key=tid item=t name=foo}
-                		{include file="_status.public.tpl" t=$t}
+                {if $posts}
+                	{foreach from=$posts key=tid item=t name=foo}
+                		{include file="_post.public.tpl" t=$t}
                 	{/foreach}
                 {/if}
 

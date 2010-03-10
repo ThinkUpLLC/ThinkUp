@@ -46,7 +46,7 @@ if (!isset($_SESSION['user'])) {
 
 		// instantiate data access objects
 		$ud = new UserDAO($db);
-		$td = new TweetDAO($db);
+		$pd = new PostDAO($db);
 		$fd = new FollowDAO($db);
 
 		// pass data to smarty

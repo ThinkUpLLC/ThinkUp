@@ -1,87 +1,83 @@
 <?php 
-class Tweet {
+class Post {
     var $id;
-    var $status_id;
+    var $post_id;
     var $author_user_id;
     var $author_fullname;
     var $author_username;
     var $author_avatar;
-    var $tweet_text;
-    var $tweet_html;
+    var $post_text;
     var $source;
     var $pub_date;
     var $adj_pub_date;
     var $in_reply_to_user_id;
-    var $in_reply_to_status_id;
+    var $in_reply_to_post_id;
     var $mention_count_cache;
-    var $in_retweet_of_status_id;
+    var $in_retweet_of_post_id;
     var $retweet_count_cache;
     
     var $author; //optional user object
     
-    function Tweet($val) {
+    function Post($val) {
         $this->id = $val["id"];
-        $this->status_id = $val["status_id"];
+        $this->post_id = $val["post_id"];
         $this->author_user_id = $val["author_user_id"];
         $this->author_username = $val["author_username"];
         $this->author_avatar = $val["author_avatar"];
-        $this->tweet_text = $val["tweet_text"];
-        $this->tweet_html = $val["tweet_html"];
+        $this->post_text = $val["post_text"];
         $this->source = $val["source"];
         $this->pub_date = $val["pub_date"];
         $this->adj_pub_date = $val["adj_pub_date"];
         $this->in_reply_to_user_id = $val["in_reply_to_user_id"];
-        $this->in_reply_to_status_id = $val["in_reply_to_status_id"];
+        $this->in_reply_to_post_id = $val["in_reply_to_post_id"];
         $this->mention_count_cache = $val["mention_count_cache"];
-        $this->in_retweet_of_status_id = $val["in_retweet_of_status_id"];
+        $this->in_retweet_of_post_id = $val["in_retweet_of_post_id"];
         $this->retweet_count_cache = $val["retweet_count_cache"];
     }
     
-    public static function extractURLs($tweet_text) {
-        preg_match_all('!https?://[\S]+!', $tweet_text, $matches);
+    public static function extractURLs($post_text) {
+        preg_match_all('!https?://[\S]+!', $post_text, $matches);
         return $matches[0];
     }
 
-    
 }
 
 
-class TweetDAO extends MySQLDAO {
-    //Construct is located in parent
+class PostDAO extends MySQLDAO {
     
-    function getTweet($status_id) {
+    function getPost($post_id) {
         $q = "
 			SELECT 
 				t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			WHERE
-			 	status_id=".$status_id.";";
+			 	post_id=".$post_id.";";
         $sql_result = $this->executeSQL($q);
-        $tweet = new Tweet(mysql_fetch_assoc($sql_result));
+        $post = new Post(mysql_fetch_assoc($sql_result));
         mysql_free_result($sql_result); # Free up memory
-        return $tweet;
+        return $post;
     }
     
-    private function setTweetWithAuthor($row) {
+    private function setPostWithAuthor($row) {
         $u = new User($row, '');
-        $t = new Tweet($row);
+        $t = new Post($row);
         $t->author = $u;
         return $t;
     }
     
-    private function setTweetWithAuthorAndLink($row) {
+    private function setPostWithAuthorAndLink($row) {
         $u = new User($row, '');
         $l = new Link($row);
-        $t = new Tweet($row);
+        $t = new Post($row);
         $t->author = $u;
         $t->link = $l;
         return $t;
     }
     
-    private function setTweetWithLink($row) {
+    private function setPostWithLink($row) {
         $l = new Link($row);
-        $t = new Tweet($row);
+        $t = new Post($row);
         $t->link = $l;
         return $t;
     }
@@ -89,40 +85,40 @@ class TweetDAO extends MySQLDAO {
     
     function getStandaloneReplies($username, $limit) {
         $q = " SELECT t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
-        $q .= " FROM #prefix#tweets AS t ";
+        $q .= " FROM #prefix#posts AS t ";
         $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
-        $q .= " WHERE  MATCH(`tweet_text`) AGAINST('%".$username."%') ";
-        $q .= " AND in_reply_to_status_id=0 ";
+        $q .= " WHERE  MATCH(`post_text`) AGAINST('%".$username."%') ";
+        $q .= " AND in_reply_to_post_id=0 ";
         $q .= " ORDER BY adj_pub_date DESC ";
         $q .= " LIMIT ".$limit;
         $sql_result = $this->executeSQL($q);
         $strays = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $strays[] = $this->setTweetWithAuthor($row);
+            $strays[] = $this->setPostWithAuthor($row);
         }
         mysql_free_result($sql_result);
         return $strays;
     }
     
-    function getRepliesToTweet($status_id, $public = false) {
+    function getRepliesToPost($post_id, $public = false) {
         $condition = "";
         if ($public)
             $condition = "AND u.is_protected = 0";
         $q = " SELECT t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
-        $q .= " FROM #prefix#tweets t ";
+        $q .= " FROM #prefix#posts t ";
         $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
-        $q .= " WHERE in_reply_to_status_id=".$status_id." ".$condition;
+        $q .= " WHERE in_reply_to_post_id=".$post_id." ".$condition;
         $q .= " ORDER BY follower_count desc;";
         $sql_result = $this->executeSQL($q);
-        $tweets_stored = array();
+        $posts_stored = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $tweets_stored[] = $this->setTweetWithAuthor($row);
+            $posts_stored[] = $this->setPostWithAuthor($row);
         }
         mysql_free_result($sql_result); # Free up memory
-        return $tweets_stored;
+        return $posts_stored;
     }
     
-    function getRetweetsOfTweet($status_id, $public = false) {
+    function getRetweetsOfPost($post_id, $public = false) {
         $condition = "";
         if ($public)
             $condition = "AND u.is_protected = 0";
@@ -131,37 +127,37 @@ class TweetDAO extends MySQLDAO {
 			select 
 				t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			from 
-				#prefix#tweets t
+				#prefix#posts t
 			inner join 
 				#prefix#users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
-				in_retweet_of_status_id=".$status_id." 
+				in_retweet_of_post_id=".$post_id." 
 				".$condition."	
 			order by 
 				follower_count desc;";
         $sql_result = $this->executeSQL($q);
-        $tweets_stored = array();
+        $posts_stored = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $tweets_stored[] = $this->setTweetWithAuthor($row);
+            $posts_stored[] = $this->setPostWithAuthor($row);
         }
         mysql_free_result($sql_result); # Free up memory
-        return $tweets_stored;
+        return $posts_stored;
     }
     
-    function getTweetReachViaRetweets($status_id) {
+    function getPostReachViaRetweets($post_id) {
         $q = "
 			select 
 				SUM(u.follower_count) as total
 			from 
-				#prefix#tweets t
+				#prefix#posts t
 			inner join 
 				#prefix#users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
-				in_retweet_of_status_id=".$status_id." 
+				in_retweet_of_post_id=".$post_id." 
 			order by 
 				follower_count desc;";
         $sql_result = $this->executeSQL($q);
@@ -170,29 +166,29 @@ class TweetDAO extends MySQLDAO {
         return $row['total'];
     }
     
-    function getTweetsAuthorHasRepliedTo($author_id, $count) {
+    function getPostsAuthorHasRepliedTo($author_id, $count) {
         //TODO: Figure out a better way to do this, only returns 1-1 exchanges, not back-and-forth threads
         
         $q = "
 			SELECT
-				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
+				t1.author_username as questioner_username, t1.author_avatar as questioner_avatar, t1.post_id as question_post_id, t1.post_text as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.post_id as answer_post_id, t.author_username as answerer_username, t.author_avatar as answerer_avatar, t.post_text as answer, t.pub_date - interval #gmt_offset# hour as answer_adj_pub_date
 			FROM 
-				#prefix#tweets t 
+				#prefix#posts t 
 			INNER JOIN 
-				#prefix#tweets t1 on t1.status_id = t.in_reply_to_status_id 
+				#prefix#posts t1 on t1.post_id = t.in_reply_to_post_id 
 			WHERE 
-				t.author_user_id = ".$author_id." AND t.in_reply_to_status_id is not null 
+				t.author_user_id = ".$author_id." AND t.in_reply_to_post_id is not null 
 			ORDER BY
 				t.pub_date desc 
 			LIMIT ".$count.";";
 			
         $sql_result = $this->executeSQL($q);
-        $tweets_replied_to = array();
+        $posts_replied_to = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $tweets_replied_to[] = $row;
+            $posts_replied_to[] = $row;
         }
         mysql_free_result($sql_result); # Free up memory
-        return $tweets_replied_to;
+        return $posts_replied_to;
         
     }
     
@@ -201,13 +197,13 @@ class TweetDAO extends MySQLDAO {
         $q = "
 		
 			SELECT
-				t1.author_username as questioner, t1.author_avatar as questioner_avatar, t1.status_id, t1.tweet_html as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.author_username as answerer, t.author_avatar as answerer_avatar, t.tweet_html as answer, t.pub_date - interval 8 hour as answer_adj_pub_date
+				t1.author_username as questioner_username, t1.author_avatar as questioner_avatar, t1.post_id as question_post_id, t1.post_text as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.post_id as answer_post_id,  t.author_username as answerer_username, t.author_avatar as answerer_avatar, t.post_text as answer, t.pub_date - interval #gmt_offset# hour as answer_adj_pub_date
 			FROM 
-				#prefix#tweets t 
+				#prefix#posts t 
 			INNER JOIN 
-				#prefix#tweets t1 on t1.status_id = t.in_reply_to_status_id 
+				#prefix#posts t1 on t1.post_id = t.in_reply_to_post_id 
 			WHERE 
-				t.in_reply_to_status_id is not null AND
+				t.in_reply_to_post_id is not null AND
 				(t.author_user_id = ".$author_id." AND t1.author_user_id = ".$other_user_id.")
 				OR
 				(t1.author_user_id = ".$author_id." AND t.author_user_id = ".$other_user_id.")
@@ -215,73 +211,72 @@ class TweetDAO extends MySQLDAO {
 				t.pub_date desc";
 				
         $sql_result = $this->executeSQL($q);
-        $tweets_replied_to = array();
+        $posts_replied_to = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $tweets_replied_to[] = $row;
+            $posts_replied_to[] = $row;
         }
         mysql_free_result($sql_result); # Free up memory
-        return $tweets_replied_to;
+        return $posts_replied_to;
         
     }
 
     
-    function getPublicRepliesToTweet($status_id) {
-        return $this->getRepliesToTweet($status_id, true);
+    function getPublicRepliesToPost($post_id) {
+        return $this->getRepliesToPost($post_id, true);
     }
     
-    function addTweet($vals, $owner, $logger) {
-        if (!$this->isTweetInDB($vals['status_id'])) {
+    function addPost($vals, $owner, $logger) {
+        if (!$this->isPostInDB($vals['post_id'])) {
         
             foreach ($vals as $key=>$value) {
                 $vals[$key] = mysql_real_escape_string($value);
             }
-            $tweet_sql = $vals['tweet_text'];
-            $tweet_html_sql = $vals['tweet_html'];
+            $post_sql = $vals['post_text'];
             if ($vals['in_reply_to_user_id'] == '') {
-                $tweet_in_reply_to_user_id = 'NULL';
+                $post_in_reply_to_user_id = 'NULL';
             } else {
-                $tweet_in_reply_to_user_id = $vals['in_reply_to_user_id'];
+                $post_in_reply_to_user_id = $vals['in_reply_to_user_id'];
             }
             
-            if ($vals['in_reply_to_status_id'] == '') {
-                $tweet_in_reply_to_status_id = 'NULL';
+            if ($vals['in_reply_to_post_id'] == '') {
+                $post_in_reply_to_post_id = 'NULL';
             } else {
-                $tweet_in_reply_to_status_id = $vals['in_reply_to_status_id'];
+                $post_in_reply_to_post_id = $vals['in_reply_to_post_id'];
             }
-            if (isset($vals['in_retweet_of_status_id'])) {
-                if ($vals['in_retweet_of_status_id'] == '') {
-                    $tweet_in_retweet_of_status_id = 'NULL';
+            if (isset($vals['in_retweet_of_post_id'])) {
+                if ($vals['in_retweet_of_post_id'] == '') {
+                    $post_in_retweet_of_post_id = 'NULL';
                 } else {
-                    $tweet_in_retweet_of_status_id = $vals['in_retweet_of_status_id'];
+                    $post_in_retweet_of_post_id = $vals['in_retweet_of_post_id'];
                 }
             } else
-                $tweet_in_retweet_of_status_id = 'NULL';
+                $post_in_retweet_of_post_id = 'NULL';
 
                 
             $q = "
-				INSERT INTO #prefix#tweets
-					(status_id,
+				INSERT INTO #prefix#posts
+					(post_id,
 					author_username,author_fullname,author_avatar,author_user_id,
-					tweet_text,tweet_html,pub_date,in_reply_to_user_id,in_reply_to_status_id,in_retweet_of_status_id,source)
+					post_text,pub_date,in_reply_to_user_id,in_reply_to_post_id,in_retweet_of_post_id,source)
 				VALUES (
-					{$vals['status_id']}, '{$vals['user_name']}', 
+					{$vals['post_id']}, '{$vals['user_name']}', 
 					'{$vals['full_name']}', '{$vals['avatar']}', '{$vals['user_id']}',
-					'$tweet_sql','$tweet_html_sql',
-					'{$vals['pub_date']}', $tweet_in_reply_to_user_id, $tweet_in_reply_to_status_id,$tweet_in_retweet_of_status_id,'{$vals['source']}')
+					'$post_sql',
+					'{$vals['pub_date']}', $post_in_reply_to_user_id, $post_in_reply_to_post_id,$post_in_retweet_of_post_id,'{$vals['source']}')
 			";
             $foo = $this->executeSQL($q);
 
             
-            if ($vals['in_reply_to_status_id'] != '' && $this->isTweetInDB($vals['in_reply_to_status_id'])) {
-                $this->incrementReplyCountCache($vals['in_reply_to_status_id']);
-                $status_message = "Reply found for ".$vals['in_reply_to_status_id'].", ID: ".$vals["status_id"]."; updating reply cache count";
+            if ($vals['in_reply_to_post_id'] != '' && $this->isPostInDB($vals['in_reply_to_post_id'])) {
+                $this->incrementReplyCountCache($vals['in_reply_to_post_id']);
+                $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"]."; updating reply cache count";
                 $logger->logStatus($status_message, get_class($this));
                 $status_message = "";
             }
             
-            if (isset($vals['in_retweet_of_status_id']) && $vals['in_retweet_of_status_id'] != '' && $this->isTweetInDB($vals['in_retweet_of_status_id'])) {
-                $this->incrementRetweetCountCache($vals['in_retweet_of_status_id']);
-                $status_message = "Retweet of ".$vals['in_retweet_of_status_id'].", ID: ".$vals["status_id"]."; updating retweet cache count";
+            if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '' && $this->isPostInDB($vals['in_retweet_of_post_id'])) {
+                $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
+                $status_message = "Repost of ".$vals['in_retweet_of_post_id'].", ID: ".$vals["post_id"]."; updating repost cache count";
                 $logger->logStatus($status_message, get_class($this));
                 $status_message = "";
             }
@@ -295,13 +290,13 @@ class TweetDAO extends MySQLDAO {
     }
 
     
-    function isTweetInDB($status_id) {
+    function isPostInDB($post_id) {
         $q = "
 			SELECT 
-				status_id 
+				post_id 
 			FROM 
-				#prefix#tweets 
-			WHERE status_id = ".$status_id;
+				#prefix#posts 
+			WHERE post_id = ".$post_id;
         $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;
@@ -309,14 +304,14 @@ class TweetDAO extends MySQLDAO {
             return false;
     }
     
-    function isReplyInDB($status_id) {
+    function isReplyInDB($post_id) {
         $q = "
 			SELECT 
-				status_id 
+				post_id 
 			FROM 
-				#prefix#tweets 
+				#prefix#posts 
 			WHERE 
-				status_id = ".$status_id;
+				post_id = ".$post_id;
         $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;
@@ -324,50 +319,50 @@ class TweetDAO extends MySQLDAO {
             return false;
     }
     
-    function incrementReplyCountCache($status_id) {
-        return $this->incrementCacheCount($status_id, "mention");
+    function incrementReplyCountCache($post_id) {
+        return $this->incrementCacheCount($post_id, "mention");
     }
     
-    function incrementRetweetCountCache($status_id) {
-        return $this->incrementCacheCount($status_id, "retweet");
+    function incrementRepostCountCache($post_id) {
+        return $this->incrementCacheCount($post_id, "repost");
     }
     
-    private function incrementCacheCount($status_id, $fieldname) {
+    private function incrementCacheCount($post_id, $fieldname) {
         $q = "
 			UPDATE 
-				#prefix#tweets
+				#prefix#posts
 			SET 
 				".$fieldname."_count_cache = ".$fieldname."_count_cache + 1
 			WHERE 
-				status_id = ".$status_id."
+				post_id = ".$post_id."
 		";
         $foo = $this->executeSQL($q);
         return mysql_affected_rows();
     }
 
     
-    function decrementReplyCountCache($status_id) {
+    function decrementReplyCountCache($post_id) {
         $q = "
 			UPDATE 
-				#prefix#tweets
+				#prefix#posts
 			SET 
 				mention_count_cache = mention_count_cache - 1
 			WHERE 
-				status_id = ".$status_id."
+				post_id = ".$post_id."
 		";
         $foo = $this->executeSQL($q);
         return mysql_affected_rows();
     }
     
-    function getAllTweets($author_id, $count) {
+    function getAllPosts($author_id, $count) {
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			LEFT JOIN
 				#prefix#links l
-			ON t.status_id = l.status_id
+			ON t.post_id = l.post_id
 			WHERE 
 				author_user_id = ".$author_id."
 			ORDER BY 
@@ -375,32 +370,32 @@ class TweetDAO extends MySQLDAO {
 			LIMIT ".$count.";";
 			
         $sql_result = $this->executeSQL($q);
-        $all_tweets = array();
+        $all_posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $all_tweets[] = $this->setTweetWithLink($row);
+            $all_posts[] = $this->setPostWithLink($row);
         }
         mysql_free_result($sql_result);
-        return $all_tweets;
+        return $all_posts;
     }
     
-    function getAllTweetsByUsername($username) {
+    function getAllPostsByUsername($username) {
     
         $q = "
 			SELECT 
 				t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			WHERE 
 				author_username = '".$username."'
 			ORDER BY 
 				pub_date ASC";
         $sql_result = $this->executeSQL($q);
-        $all_tweets = array();
+        $all_posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $all_tweets[] = new Tweet($row);
+            $all_posts[] = new Post($row);
         }
         mysql_free_result($sql_result);
-        return $all_tweets;
+        return $all_posts;
     }
 
     
@@ -409,7 +404,7 @@ class TweetDAO extends MySQLDAO {
 			SELECT 
 				source, count(source) as total 
 			FROM 
-				#prefix#tweets
+				#prefix#posts
 			WHERE 
 				author_user_id = ".$author_id."			
 			GROUP BY source
@@ -427,19 +422,19 @@ class TweetDAO extends MySQLDAO {
     function getAllMentions($author_username, $count) {
     
         $q = " SELECT l.*, t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
-        $q .= " FROM #prefix#tweets AS t ";
+        $q .= " FROM #prefix#posts AS t ";
         $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
-        $q .= " LEFT JOIN #prefix#links AS l ON t.status_id = l.status_id ";
-        $q .= " WHERE MATCH (`tweet_text`) AGAINST('%".$author_username."%') ";
+        $q .= " LEFT JOIN #prefix#links AS l ON t.post_id = l.post_id ";
+        $q .= " WHERE MATCH (`post_text`) AGAINST('%".$author_username."%') ";
         $q .= " ORDER BY pub_date DESC ";
         $q .= " LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
-        $all_tweets = array();
+        $all_posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $all_tweets[] = $this->setTweetWithAuthorAndLink($row);
+            $all_posts[] = $this->setPostWithAuthorAndLink($row);
         }
         mysql_free_result($sql_result);
-        return $all_tweets;
+        return $all_posts;
     }
     
     function getAllReplies($user_id, $count) {
@@ -448,10 +443,10 @@ class TweetDAO extends MySQLDAO {
 			SELECT 
 				l.*, t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			LEFT JOIN
 				#prefix#links l
-			ON t.status_id = l.status_id				
+			ON t.post_id = l.post_id				
 			INNER JOIN
 				#prefix#users u
 			ON
@@ -462,79 +457,79 @@ class TweetDAO extends MySQLDAO {
 				pub_date DESC 
 			LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
-        $all_tweets = array();
+        $all_posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $all_tweets[] = $this->setTweetWithAuthorAndLink($row);
+            $all_posts[] = $this->setPostWithAuthorAndLink($row);
         }
         mysql_free_result($sql_result);
-        return $all_tweets;
+        return $all_posts;
     }
 
     
-    function getMostRepliedToTweets($user_id, $count) {
+    function getMostRepliedToPosts($user_id, $count) {
         $q = "
 			SELECT 
 				l.*, t.* , pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			LEFT JOIN
 				#prefix#links l
-			ON t.status_id = l.status_id				
+			ON t.post_id = l.post_id				
 			WHERE
 				author_user_id = ".$user_id."
 			ORDER BY
 				mention_count_cache DESC 
 			LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
-        $most_replied_to_tweets = array();
+        $most_replied_to_posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $most_replied_to_tweets[] = $this->setTweetWithLink($row);
+            $most_replied_to_posts[] = $this->setPostWithLink($row);
         }
         mysql_free_result($sql_result);
-        return $most_replied_to_tweets;
+        return $most_replied_to_posts;
         
     }
     
-    function getMostRetweetedTweets($user_id, $count, $public = false) {
+    function getMostRetweetedPosts($user_id, $count, $public = false) {
     
         $q = "
 			SELECT 
 				l.*, t.* , pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			LEFT JOIN
 				#prefix#links l
-			ON t.status_id = l.status_id				
+			ON t.post_id = l.post_id				
 			WHERE
 				author_user_id = ".$user_id."
 			ORDER BY
 				retweet_count_cache DESC 
 			LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
-        $most_retweeted_tweets = array();
+        $most_reposted_posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $most_retweeted_tweets[] = $this->setTweetWithLink($row);
+            $most_reposted_posts[] = $this->setPostWithLink($row);
         }
         mysql_free_result($sql_result);
-        return $most_retweeted_tweets;
+        return $most_reposted_posts;
         
     }
     
     function getOrphanReplies($username, $count) {
     
         $q = " SELECT t.* , u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
-        $q .= " FROM #prefix#tweets AS t ";
+        $q .= " FROM #prefix#posts AS t ";
         $q .= " INNER JOIN #prefix#users AS u ON u.user_id = t.author_user_id ";
         $q .= " WHERE ";
-        $q .= " MATCH (`tweet_text`) AGAINST('%".$username."%') ";
-        $q .= " AND in_reply_to_status_id is null ";
-        $q .= " AND in_retweet_of_status_id is null ";
+        $q .= " MATCH (`post_text`) AGAINST('%".$username."%') ";
+        $q .= " AND in_reply_to_post_id is null ";
+        $q .= " AND in_retweet_of_post_id is null ";
         $q .= " ORDER BY pub_date DESC ";
         $q .= " LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
         $orphan_replies = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $orphan_replies[] = $this->setTweetWithAuthor($row);
+            $orphan_replies[] = $this->setPostWithAuthor($row);
         }
         mysql_free_result($sql_result);
         return $orphan_replies;
@@ -543,20 +538,20 @@ class TweetDAO extends MySQLDAO {
     function getLikelyOrphansForParent($parent_pub_date, $author_user_id, $author_username, $count) {
     
         $q = " SELECT t.* , u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
-        $q .= " FROM #prefix#tweets AS t ";
+        $q .= " FROM #prefix#posts AS t ";
         $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
         $q .= " WHERE ";
-        $q .= " MATCH (`tweet_text`) AGAINST('%".$author_username."%') ";
+        $q .= " MATCH (`post_text`) AGAINST('%".$author_username."%') ";
         $q .= " AND pub_date > '".$parent_pub_date."' ";
-        $q .= " AND in_reply_to_status_id IS NULL ";
-        $q .= " AND in_retweet_of_status_id IS NULL ";
+        $q .= " AND in_reply_to_post_id IS NULL ";
+        $q .= " AND in_retweet_of_post_id IS NULL ";
         $q .= " AND t.author_user_id != ".$author_user_id;
         $q .= " ORDER BY pub_date ASC ";
         $q .= " LIMIT ".$count;
         $sql_result = $this->executeSQL($q);
         $likely_orphans = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $likely_orphans[] = $this->setTweetWithAuthor($row);
+            $likely_orphans[] = $this->setPostWithAuthor($row);
         }
         mysql_free_result($sql_result);
         return $likely_orphans;
@@ -566,11 +561,11 @@ class TweetDAO extends MySQLDAO {
     function assignParent($parent_id, $orphan_id, $former_parent_id = -1) {
         $q = "
 			UPDATE 
-				#prefix#tweets
+				#prefix#posts
 			SET 
-				in_reply_to_status_id = ".$parent_id."
+				in_reply_to_post_id = ".$parent_id."
 			WHERE
-				status_id = ".$orphan_id;
+				post_id = ".$orphan_id;
         $this->executeSQL($q);
         if ($parent_id > 0)
             $this->incrementReplyCountCache($parent_id);
@@ -579,16 +574,16 @@ class TweetDAO extends MySQLDAO {
         return mysql_affected_rows();
     }
     
-    function getStrayRepliedToTweets($author_id) {
+    function getStrayRepliedToPosts($author_id) {
         $q = "
 			SELECT
-				in_reply_to_status_id
+				in_reply_to_post_id
 			FROM 
-				#prefix#tweets t 
+				#prefix#posts t 
 			WHERE 
 				t.author_user_id=".$author_id."
-				AND t.in_reply_to_status_id NOT IN (select status_id from #prefix#tweets) 
-			 	AND t.in_reply_to_status_id NOT IN (select status_id from #prefix#tweet_errors);";
+				AND t.in_reply_to_post_id NOT IN (select post_id from #prefix#posts) 
+			 	AND t.in_reply_to_post_id NOT IN (select post_id from #prefix#post_errors);";
         $sql_result = $this->executeSQL($q);
         $strays = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -598,51 +593,51 @@ class TweetDAO extends MySQLDAO {
         return $strays;
     }
     
-    private function getTweetsByPublicInstancesOrderedBy($count = 15, $orderby = "pub_date") {
+    private function getPostsByPublicInstancesOrderedBy($count = 15, $orderby = "pub_date") {
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			INNER JOIN
 				#prefix#instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			LEFT JOIN
 				#prefix#links l
-			ON t.status_id = l.status_id
+			ON t.post_id = l.post_id
 
 			WHERE
-				i.is_public = 1 and (t.mention_count_cache > 0 or t.retweet_count_cache > 0) and in_reply_to_status_id is NULL
+				i.is_public = 1 and (t.mention_count_cache > 0 or t.retweet_count_cache > 0) and in_reply_to_post_id is NULL
 			ORDER BY
 				t.".$orderby." DESC
 			LIMIT ".$count;
         $sql_result = $this->executeSQL($q);
-        $tweets = array();
+        $posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $tweets[] = $this->setTweetWithLink($row);
+            $posts[] = $this->setPostWithLink($row);
         }
         mysql_free_result($sql_result);
-        return $tweets;
+        return $posts;
     }
     
-    function getTweetsByPublicInstances($count = 15) {
-        return $this->getTweetsByPublicInstancesOrderedBy($count, "pub_date");
+    function getPostsByPublicInstances($count = 15) {
+        return $this->getPostsByPublicInstancesOrderedBy($count, "pub_date");
     }
     
-    function getPhotoTweetsByPublicInstances($count = 15) {
+    function getPhotoPostsByPublicInstances($count = 15) {
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			INNER JOIN
 				#prefix#instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			LEFT JOIN
 				#prefix#links l
-			ON t.status_id = l.status_id
+			ON t.post_id = l.post_id
 
 			WHERE
 				i.is_public = 1 and l.is_image = 1 
@@ -650,27 +645,27 @@ class TweetDAO extends MySQLDAO {
 				t.pub_date DESC
 			LIMIT ".$count;
         $sql_result = $this->executeSQL($q);
-        $tweets = array();
+        $posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $tweets[] = $this->setTweetWithLink($row);
+            $posts[] = $this->setPostWithLink($row);
         }
         mysql_free_result($sql_result);
-        return $tweets;
+        return $posts;
     }
     
-    function getLinkTweetsByPublicInstances($count = 15) {
+    function getLinkPostsByPublicInstances($count = 15) {
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			INNER JOIN
 				#prefix#instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			LEFT JOIN
 				#prefix#links l
-			ON t.status_id = l.status_id
+			ON t.post_id = l.post_id
 
 			WHERE
 				i.is_public = 1 and l.expanded_url != '' and l.is_image = 0 
@@ -678,36 +673,36 @@ class TweetDAO extends MySQLDAO {
 				t.pub_date DESC
 			LIMIT ".$count;
         $sql_result = $this->executeSQL($q);
-        $tweets = array();
+        $posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $tweets[] = $this->setTweetWithLink($row);
+            $posts[] = $this->setPostWithLink($row);
         }
         mysql_free_result($sql_result);
-        return $tweets;
+        return $posts;
     }
 
     
-    function getMostRepliedToTweetsByPublicInstances($count = 15) {
-        return $this->getTweetsByPublicInstancesOrderedBy($count, "mention_count_cache");
+    function getMostRepliedToPostsByPublicInstances($count = 15) {
+        return $this->getPostsByPublicInstancesOrderedBy($count, "mention_count_cache");
     }
     
-    function getMostRetweetedTweetsByPublicInstances($count = 15) {
-        return $this->getTweetsByPublicInstancesOrderedBy($count, "retweet_count_cache");
+    function getMostRetweetedPostsByPublicInstances($count = 15) {
+        return $this->getPostsByPublicInstancesOrderedBy($count, "retweet_count_cache");
     }
 
     
-    function isTweetByPublicInstance($id) {
+    function isPostByPublicInstance($id) {
         $q = "
 			SELECT 
 				*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			FROM 
-				#prefix#tweets t
+				#prefix#posts t
 			INNER JOIN
 				#prefix#instances i
 			ON
 				t.author_user_id = i.twitter_user_id
 			WHERE
-				i.is_public = 1 and t.status_id = ".$id.";";
+				i.is_public = 1 and t.post_id = ".$id.";";
         $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             $r = true;
@@ -720,13 +715,13 @@ class TweetDAO extends MySQLDAO {
     
 }
 
-class TweetErrorDAO extends MySQLDAO {
+class PostErrorDAO extends MySQLDAO {
     //Construct is located in parent
     
     function insertError($id, $error_code, $error_text, $issued_to) {
         $q = "
 			INSERT INTO
-			 	#prefix#tweet_errors (status_id, error_code, error_text, error_issued_to_user_id)
+			 	#prefix#post_errors (post_id, error_code, error_text, error_issued_to_user_id)
 			VALUES 
 				(".$id.", ".$error_code.", '".$error_text."', ".$issued_to.") ";
         $sql_result = $this->executeSQL($q);
@@ -742,23 +737,23 @@ class RetweetDetector {
     public function __construct() {
     }
     
-    public static function isRetweet($tweet, $ownerName) {
-        if (strpos(strtolower($tweet), strtolower("RT @".$ownerName)) === false)
+    public static function isRetweet($post, $ownerName) {
+        if (strpos(strtolower($post), strtolower("RT @".$ownerName)) === false)
             return false;
         else
             return true;
     }
 
     
-    public static function detectOriginalTweet($retweet_text, $recentTweets) {
-        $originalTweetId = false;
-        foreach ($recentTweets as $t) {
-            $snip = substr($t->tweet_text, 0, 12);
-            if (strpos($retweet_text, $snip) != false)
-                $originalTweetId = $t->status_id;
+    public static function detectOriginalTweet($repost_text, $recentPosts) {
+        $originalPostId = false;
+        foreach ($recentPosts as $t) {
+            $snip = substr($t->post_text, 0, 12);
+            if (strpos($repost_text, $snip) != false)
+                $originalPostId = $t->post_id;
         }
         
-        return $originalTweetId;
+        return $originalPostId;
     }
 }
 ?>

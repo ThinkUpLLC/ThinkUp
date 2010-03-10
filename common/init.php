@@ -11,7 +11,7 @@ require_once 'class.Database.php';
 require_once 'class.MySQLDAO.php';
 require_once 'class.User.php';
 require_once 'class.Owner.php';
-require_once 'class.Tweet.php';
+require_once 'class.Post.php';
 require_once 'class.Link.php';
 require_once 'class.Instance.php';
 require_once 'class.OwnerInstance.php';

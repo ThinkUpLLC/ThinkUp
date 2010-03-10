@@ -11,7 +11,7 @@ require_once("init.php");
 $od = new OwnerDAO($db);
 $owner = $od->getByEmail($_SESSION['user']);
 
-$td = new TweetDAO($db);
+$pd = new PostDAO($db);
 $id = new InstanceDAO($db);
 
 if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 		echo 'Insufficient privileges. <a href="/">Back</a>.';
 		die;
 	} else {
-		$tweets = $td->getAllTweetsByUsername($username);	
+		$tweets = $pd->getAllPostsByUsername($username);	
 	}
 } else {
 	echo 'No access';
@@ -33,7 +33,7 @@ $db->closeConnection($conn);
 
 $s = new SmartyThinkTank();
 $s->assign('tweets', $tweets);
-$s->display('status.export.tpl', $username);
+$s->display('post.export.tpl', $username);
 
 
 ?>

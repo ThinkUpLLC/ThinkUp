@@ -13,7 +13,7 @@ require_once("init.php");
 $ud = new UserDAO($db);
 $fd = new FollowDAO($db);
 $id = new InstanceDAO($db);
-$td = new TweetDAO($db);
+$pd = new PostDAO($db);
 $s = new SmartyThinkTank();
 
 if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_REQUEST['i']) ){
@@ -25,11 +25,11 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 		if(!$s->is_cached('user.index.tpl', $i->twitter_username."-".$user->user_name)) {
 
 			$s->assign('profile', $user);
-			$s->assign('user_statuses',  $td->getAllTweets($user->user_id, 20));
-			$s->assign('sources', $td->getStatusSources($user->user_id));
+			$s->assign('user_statuses',  $pd->getAllPosts($user->user_id, 20));
+			$s->assign('sources', $pd->getStatusSources($user->user_id));
 			$s->assign('cfg', $cfg);
 			$s->assign('instance', $i);
-			$exchanges =  $td->getExchangesBetweenUsers($cfg->twitter_user_id, $user->user_id);
+			$exchanges =  $pd->getExchangesBetweenUsers($cfg->twitter_user_id, $user->user_id);
 			$s->assign('exchanges', $exchanges);
 			$s->assign('total_exchanges', count($exchanges));
 			$mutual_friends = $fd->getMutualFriends($user->user_id, $i->twitter_user_id);

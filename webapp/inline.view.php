@@ -43,7 +43,7 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 
 	// instantiate data access objects
 	$ud = new UserDAO($db);
-	$td = new TweetDAO($db);
+	$pd = new PostDAO($db);
 	$fd = new FollowDAO($db);
 	$ld = new LinkDAO($db);
 
@@ -54,42 +54,42 @@ if(!$s->is_cached('inline.view.tpl', $i->twitter_username."-".$_SESSION['user'].
 	switch ($_REQUEST['d']) {
 		case "tweets-all":
 			$s->assign('header', 'All Tweets' );
-			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
+			$s->assign('all_tweets', $pd->getAllPosts($cfg->twitter_user_id, 15) );
 			break;
 		case "tweets-mostreplies":
 			$s->assign('header', 'Most Replied-To Tweets' );
-			$s->assign('most_replied_to_tweets', $td->getMostRepliedToTweets($cfg->twitter_user_id, 15));
+			$s->assign('most_replied_to_tweets', $pd->getMostRepliedToPosts($cfg->twitter_user_id, 15));
 			break;
 		case "tweets-mostretweeted":
 			$s->assign('header', 'Most Retweeted' );
-			$s->assign('most_retweeted', $td->getMostRetweetedTweets($cfg->twitter_user_id, 15));
+			$s->assign('most_retweeted', $pd->getMostRetweetedPosts($cfg->twitter_user_id, 15));
 			break;
 		case "tweets-convo":
 			$s->assign('header', 'Conversations' );
-			$s->assign('author_replies', $td->getTweetsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
+			$s->assign('author_replies', $pd->getPostsAuthorHasRepliedTo($cfg->twitter_user_id, 15));
 			break;
 		case "mentions-all":
 			$s->assign('header', 'All Mentions' );
 			$s->assign('description', 'Any tweet that mentions you.');
-			$s->assign('all_mentions', $td->getAllMentions($cfg->twitter_username, 15) );
-			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
+			$s->assign('all_mentions', $pd->getAllMentions($cfg->twitter_username, 15) );
+			$s->assign('all_tweets', $pd->getAllPosts($cfg->twitter_user_id, 15) );
 			break;
 		case "mentions-allreplies":
 			$s->assign('header', 'Replies' );
 			$s->assign('description', 'Tweets that directly reply to you (i.e., start with your name).');
-			$s->assign('all_replies', $td->getAllReplies($cfg->twitter_user_id, 15) );
+			$s->assign('all_replies', $pd->getAllReplies($cfg->twitter_user_id, 15) );
 			break;
 		case "mentions-orphan":
 			$s->assign('header', 'Not Replies or Retweets' );
 			$s->assign('description', 'Mentions that are not associated with a specific tweet.');
-			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
-			$s->assign('orphan_replies', $td->getOrphanReplies($cfg->twitter_username, 5));
+			$s->assign('all_tweets', $pd->getAllPosts($cfg->twitter_user_id, 15) );
+			$s->assign('orphan_replies', $pd->getOrphanReplies($cfg->twitter_username, 5));
 			break;
 		case "mentions-standalone":
 			$s->assign('header', 'Standalone Mentions' );
 			$s->assign('description', 'Mentions you have marked as standalone.');
-			$s->assign('all_tweets', $td->getAllTweets($cfg->twitter_user_id, 15) );
-			$s->assign('standalone_replies', $td->getStandaloneReplies($cfg->twitter_username, 15));
+			$s->assign('all_tweets', $pd->getAllPosts($cfg->twitter_user_id, 15) );
+			$s->assign('standalone_replies', $pd->getStandaloneReplies($cfg->twitter_username, 15));
 			break;
 		case "followers-mostfollowed":
 			$s->assign('header', 'Most-Followed Followers' );

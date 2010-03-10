@@ -16,20 +16,20 @@
 
 
 <div class="section" id="tweets">
-<h1>{$tweet->tweet_text}</h1>
+<h1>{$tweet->post_text}</h1>
 <br /><br />
 	{foreach from=$replies key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-		{include file="_status.other.tpl" t=$t}
+		{include file="_post.other.tpl" t=$t}
 
-		<div id="div{$t->status_id}">
+		<div id="div{$t->post_id}">
 		<form action="">
-			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as Reply To:" />
-		<select name="pid{$t->status_id}" id="pid{$t->status_id}">
+			<input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save as Reply To:" />
+		<select name="pid{$t->post_id}" id="pid{$t->post_id}">
 			<option value="0">No Tweet in Particular (Mark as standalone)</option>
 			<option disabled>Set as a reply to:</option>
 		{foreach from=$all_tweets key=aid item=a}
-			<option value="{$a->status_id}">&nbsp;&nbsp;{$a->tweet_html|truncate_for_select}</option>
+			<option value="{$a->post_id}">&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
 		{/foreach}
 		</select>  
 		</form>
@@ -41,22 +41,22 @@
 
 {if $retweets}
 <div class="section" id="retweets">
-<h1>{$tweet->tweet_text}</h1>
+<h1>{$tweet->post_text}</h1>
 <br /><br />
 <p>In addition to the original author's followers, this tweet reached {$retweet_reach|number_format} users via retweets.</p>
 
 	{foreach from=$retweets key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-		{include file="_status.other.tpl" t=$t}
+		{include file="_post.other.tpl" t=$t}
 
-		<div id="div{$t->status_id}">
+		<div id="div{$t->post_id}">
 		<form action="">
-			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as Reply To:" />
-		<select name="pid{$t->status_id}" id="pid{$t->status_id}">
+			<input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save as Reply To:" />
+		<select name="pid{$t->post_id}" id="pid{$t->post_id}">
 			<option value="0">No Tweet in Particular (Mark as standalone)</option>
 			<option disabled>Set as a reply to:</option>
 		{foreach from=$all_tweets key=aid item=a}
-			<option value="{$a->status_id}">&nbsp;&nbsp;{$a->tweet_html|truncate_for_select}</option>
+			<option value="{$a->post_id}">&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
 		{/foreach}
 		</select>  
 		</form>
@@ -70,22 +70,22 @@
 {if $likely_orphans}
 <div class="section" id="replies">
 
-<h1>{$tweet->tweet_text}</h1>
+<h1>{$tweet->post_text}</h1>
 <br /><br />
 <p>Posted right around the time of this update:</p><br /><br />
 
 
 	{foreach from=$likely_orphans key=tid item=t}
 		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-		{include file="_status.other.tpl" t=$t}
+		{include file="_post.other.tpl" t=$t}
 
-		<div id="div{$t->status_id}">
+		<div id="div{$t->post_id}">
 		<form action="">
-			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as Reply To:" />  
-		<select name="pid{$t->status_id}" id="pid{$t->status_id}">
+			<input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save as Reply To:" />  
+		<select name="pid{$t->post_id}" id="pid{$t->post_id}">
 			<option value="0">No Tweet in Particular (Mark as standalone)</option>
 		{foreach from=$all_tweets key=aid item=a}
-			<option value="{$a->status_id}" {if $a->status_id eq $tweet->status_id} selected="true" {/if}>{$a->tweet_html|truncate_for_select}</option>
+			<option value="{$a->post_id}" {if $a->post_id eq $tweet->post_id} selected="true" {/if}>{$a->post_text|truncate_for_select}</option>
 		{/foreach}
 		</select>
 		</form>
@@ -100,10 +100,10 @@
 {if $replies}
 <div class="section" id="followers">
 
-<h1>{$tweet->tweet_text}</h1>
+<h1>{$tweet->post_text}</h1>
 <br /><br />
 {foreach from=$replies key=tid item=t}
-{if $t->is_protected}Anonymous says {else}<a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a> <a href="http://twitter.com/{$t->author_username}/status/{$t->status_id}">says</a>{/if}, "{$t->tweet_html|regex_replace:"/^@[a-zA-Z0-9_]+ /":""}"<br /><br />
+{if $t->is_protected}Anonymous says {else}<a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a> <a href="http://twitter.com/{$t->author_username}/post/{$t->post_id}">says</a>{/if}, "{$t->post_html|regex_replace:"/^@[a-zA-Z0-9_]+ /":""}"<br /><br />
 {/foreach}
 </div>
 {/if}
@@ -140,13 +140,13 @@
 			var pid = $("select#pid"+Id+" option:selected").val();
 			var u = '{/literal}{$instance->twitter_username}{literal}';
 			
-			var t = 'status.index.tpl';
-			var ck = '{/literal}{$tweet->status_id}{literal}';
+			var t = 'post.index.tpl';
+			var ck = '{/literal}{$tweet->post_id}{literal}';
 			var dataString = 'u='+ u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;  
 			//alert (dataString);return false;  
 			    $.ajax({  
 			      type: "GET",  
-			      url: "{/literal}{$cfg->site_root_path}{literal}status/mark-parent.php",  
+			      url: "{/literal}{$cfg->site_root_path}{literal}post/mark-parent.php",  
 			      data: dataString,  
 			      success: function() {  
 				$('#div'+Id).html("<div class='success' id='message"+Id+"'></div>");  

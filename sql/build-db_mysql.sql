@@ -94,45 +94,73 @@ CREATE TABLE IF NOT EXISTS `tt_owner_instances` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tweets`
+-- Table structure for table `posts`
 --
 
-CREATE TABLE IF NOT EXISTS `tt_tweets` (
-  `id` int(11) NOT NULL auto_increment,
-  `status_id` bigint(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `tt_posts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `post_id` bigint(11) NOT NULL,
   `author_user_id` int(11) NOT NULL,
-  `author_username` varchar(50) collate utf8_bin NOT NULL,
-  `author_fullname` varchar(50) collate utf8_bin NOT NULL,
-  `author_avatar` varchar(255) collate utf8_bin NOT NULL,
-  `tweet_text` varchar(160) collate utf8_bin NOT NULL,
-  `tweet_html` varchar(255) collate utf8_bin NOT NULL,
-  `source` varchar(255) collate utf8_bin NOT NULL,
-  `pub_date` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `in_reply_to_user_id` int(11) default NULL,
-  `in_reply_to_status_id` bigint(11) default NULL,
-  `mention_count_cache` int(11) NOT NULL default '0',
-  `in_retweet_of_status_id` bigint(11) default NULL,
-  `retweet_count_cache` int(11) NOT NULL default '0',
-  `network` VARCHAR( 10 ) NOT NULL DEFAULT  'twitter',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `status_id` (`status_id`),
+  `author_username` varchar(50) COLLATE utf8_bin NOT NULL,
+  `author_fullname` varchar(50) COLLATE utf8_bin NOT NULL,
+  `author_avatar` varchar(255) COLLATE utf8_bin NOT NULL,
+  `post_text` varchar(160) COLLATE utf8_bin NOT NULL,
+  `source` varchar(255) COLLATE utf8_bin NOT NULL,
+  `pub_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `in_reply_to_user_id` int(11) DEFAULT NULL,
+  `in_reply_to_post_id` bigint(11) DEFAULT NULL,
+  `mention_count_cache` int(11) NOT NULL DEFAULT '0',
+  `in_retweet_of_post_id` bigint(11) DEFAULT NULL,
+  `retweet_count_cache` int(11) NOT NULL DEFAULT '0',
+  `network` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `post_id` (`post_id`),
   KEY `author_username` (`author_username`),
   KEY `pub_date` (`pub_date`),
-  KEY `in_reply_to_user_id` (`in_reply_to_user_id`),
   KEY `author_user_id` (`author_user_id`),
-  KEY `in_retweet_of_status_id` ( `in_retweet_of_status_id` ),
-  FULLTEXT KEY `tweets_fulltext` (`tweet_text`)
+  KEY `in_reply_to_user_id` (`in_reply_to_user_id`),
+  KEY `in_retweet_of_post_id` (`in_retweet_of_post_id`),
+  FULLTEXT KEY `posts_fulltext` (`post_text`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tweet_errors`
+-- Table structure for table `replies`
 --
 
-CREATE TABLE IF NOT EXISTS `tt_tweet_errors` (
+CREATE TABLE IF NOT EXISTS `tt_replies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reply_id` bigint(11) NOT NULL,
+  `author_user_id` int(11) NOT NULL,
+  `author_username` varchar(50) COLLATE utf8_bin NOT NULL,
+  `author_fullname` varchar(50) COLLATE utf8_bin NOT NULL,
+  `author_avatar` varchar(255) COLLATE utf8_bin NOT NULL,
+  `post_text` varchar(160) COLLATE utf8_bin NOT NULL,
+  `source` varchar(255) COLLATE utf8_bin NOT NULL,
+  `pub_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `in_reply_to_user_id` int(11) DEFAULT NULL,
+  `in_reply_to_post_id` bigint(11) DEFAULT NULL,
+  `in_retweet_of_post_id` bigint(11) DEFAULT NULL,
+  `network` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `reply_id` (`reply_id`),
+  KEY `author_username` (`author_username`),
+  KEY `pub_date` (`pub_date`),
+  KEY `author_user_id` (`author_user_id`),
+  KEY `in_reply_to_user_id` (`in_reply_to_user_id`),
+  KEY `in_retweet_of_post_id` (`in_retweet_of_post_id`),
+  FULLTEXT KEY `post_fulltext` (`post_text`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `post_errors`
+--
+
+CREATE TABLE IF NOT EXISTS `tt_post_errors` (
   `id` int(11) NOT NULL auto_increment,
-  `status_id` bigint(20) NOT NULL,
+  `post_id` bigint(20) NOT NULL,
   `error_code` int(11) NOT NULL,
   `error_text` varchar(255) collate utf8_bin NOT NULL,
   `error_issued_to_user_id` int(11) NOT NULL,
@@ -199,10 +227,10 @@ CREATE TABLE IF NOT EXISTS `tt_links` (
   `expanded_url` varchar(255) collate utf8_bin NOT NULL,
   `title` varchar(255) collate utf8_bin NOT NULL,
   `clicks` int(11) NOT NULL default '0',
-  `status_id` bigint(11) NOT NULL,
+  `post_id` bigint(11) NOT NULL,
   `is_image` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  KEY `status_id` (`status_id`),
+  KEY `post_id` (`post_id`),
   KEY `is_image` (`is_image`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 

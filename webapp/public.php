@@ -15,7 +15,7 @@ $db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
 $cfg = new Config();
 
-$td = new TweetDAO($db);
+$pd = new PostDAO($db);
 $id = new InstanceDAO($db);
 $s = new SmartyThinkTank();
 
@@ -24,12 +24,12 @@ $i = $id->getInstanceFreshestOne();
 $s->assign('crawler_last_run', $i->crawler_last_run);
 
 // show tweet with public replies
-if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
+if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     if (!$s->is_cached('public.tpl', $_REQUEST['t'])) {
-        $tweet = $td->getTweet($_REQUEST['t']);
-        $public_tweet_replies = $td->getPublicRepliesToTweet($tweet->status_id);
-        $public_retweets = $td->getRetweetsOfTweet($tweet->status_id, true);
-        $s->assign('tweet', $tweet);
+        $post = $pd->getPost($_REQUEST['t']);
+        $public_tweet_replies = $pd->getPublicRepliesToPost($post->post_id);
+        $public_retweets = $pd->getRetweetsOfPost($post->post_id, true);
+        $s->assign('post', $post);
         $s->assign('replies', $public_tweet_replies);
         $s->assign('retweets', $public_retweets);
         $rtreach = 0;
@@ -47,7 +47,7 @@ if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
     switch ($view) {
         case 'timeline':
             if (!$s->is_cached('public.tpl')) {
-                $s->assign('tweets', $td->getTweetsByPublicInstances());
+                $s->assign('posts', $pd->getPostsByPublicInstances());
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Latest');
@@ -56,7 +56,7 @@ if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
             break;
         case 'mostretweets':
             if (!$s->is_cached('public.tpl', 'mostretweets')) {
-                $s->assign('tweets', $td->getMostRetweetedTweetsByPublicInstances());
+                $s->assign('posts', $pd->getMostRetweetedPostsByPublicInstances());
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Most retweeted');
@@ -65,7 +65,7 @@ if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
             break;
         case 'mostreplies':
             if (!$s->is_cached('public.tpl', 'mostreplies')) {
-                $s->assign('tweets', $td->getMostRepliedToTweetsByPublicInstances());
+                $s->assign('posts', $pd->getMostRepliedToPostsByPublicInstances());
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Most replied to');
@@ -74,7 +74,7 @@ if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
             break;
         case 'photos':
             if (!$s->is_cached('public.tpl', 'photos')) {
-                $s->assign('tweets', $td->getPhotoTweetsByPublicInstances());
+                $s->assign('posts', $pd->getPhotoPostsByPublicInstances());
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Photos');
@@ -83,7 +83,7 @@ if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
             break;
         case 'links':
             if (!$s->is_cached('public.tpl', 'links')) {
-                $s->assign('tweets', $td->getLinkTweetsByPublicInstances());
+                $s->assign('posts', $pd->getLinkPostsByPublicInstances());
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Links');
@@ -95,11 +95,11 @@ if (isset($_REQUEST['t']) && $td->isTweetByPublicInstance($_REQUEST['t'])) {
     
 } else {
     if (!$s->is_cached('public.tpl', 'timeline')) {
-        $s->assign('tweets', $td->getTweetsByPublicInstances());
+        $s->assign('posts', $pd->getPostsByPublicInstances());
         $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
     }
     $s->assign('header', 'Latest');
-    $s->assign('description', 'Latest public tweets, replies, and retweets');
+    $s->assign('description', 'Latest public posts, replies, and retweets');
     $s->display('public.tpl', 'timeline');
     
 }

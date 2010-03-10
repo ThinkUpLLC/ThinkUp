@@ -62,7 +62,7 @@
                             <div class="grid_22 push_1">
                             {foreach from=$user_statuses key=tid item=t name=foo}
                                 <div>
-                                    {include file="_status.mine.tpl" t=$t}
+                                    {include file="_post.mine.tpl" t=$t}
                                 </div>
                             {/foreach}
                             </div>
@@ -80,7 +80,7 @@
                             <div class="grid_22 push_1 append_20">
                                	{if $exchanges}
                             		{foreach from=$exchanges key=tahrt item=r name=foo}
-                                        {include file="_status.qa.tpl" t=$t}
+                                        {include file="_post.qa.tpl" t=$t}
                             		{/foreach}
                                 {else}
                                     ThinkTank has not captured any conversations between {$instance->twitter_username} and {$profile->user_name}.

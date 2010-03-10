@@ -78,10 +78,10 @@ class TwitterCrawler {
 					$count = 0;
 					$tweets = $this->api->parseXML($twitter_data);
 
-					$td = new TweetDAO($this->db, $this->logger);
+					$pd = new PostDAO($this->db, $this->logger);
 					foreach ($tweets as $tweet) {
 
-						if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
+						if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
 							$count = $count + 1;
 							$this->instance->total_tweets_in_system = $this->instance->total_tweets_in_system + 1;
 
@@ -89,8 +89,8 @@ class TwitterCrawler {
 							$this->processTweetURLs($tweet, $lurl, $fa);
 
 						}
-						if ($tweet['status_id'] > $this->instance->last_status_id)
-						$this->instance->last_status_id = $tweet['status_id'];
+						if ($tweet['post_id'] > $this->instance->last_status_id)
+						$this->instance->last_status_id = $tweet['post_id'];
 
 					}
 					$status_message .= count($tweets)." tweet(s) found and $count saved";
@@ -170,10 +170,10 @@ class TwitterCrawler {
 					$count = 0;
 					$tweets = $this->api->parseXML($twitter_data);
 
-					$td = new TweetDAO($this->db, $this->logger);
+					$pd = new PostDAO($this->db, $this->logger);
 					foreach ($tweets as $tweet) {
 
-						if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
+						if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
 							$count = $count + 1;
 							$this->instance->total_tweets_in_system = $this->instance->total_tweets_in_system + 1;
 
@@ -181,8 +181,8 @@ class TwitterCrawler {
 							$this->processTweetURLs($tweet, $lurl, $fa);
 
 						}
-						if ($tweet['status_id'] > $this->instance->last_status_id)
-						$this->instance->last_status_id = $tweet['status_id'];
+						if ($tweet['post_id'] > $this->instance->last_status_id)
+						$this->instance->last_status_id = $tweet['post_id'];
 
 					}
 					$status_message .= count($tweets)." retweet(s) found and $count saved";
@@ -232,7 +232,7 @@ class TwitterCrawler {
 
 		$ld = new LinkDAO($this->db, $this->logger);
 
-		$urls = Tweet::extractURLs($tweet['tweet_text']);
+		$urls = Post::extractURLs($tweet['post_text']);
 		foreach ($urls as $u) {
 			//if it's an image (Twitpic/Twitgoo/Yfrog/Flickr for now), insert direct path to thumb as expanded url, otherwise, just expand
 			//set defaults
@@ -261,7 +261,7 @@ class TwitterCrawler {
 				}
 			}
 
-			if ($ld->insert($u, $eurl, $title, $tweet['status_id'], $is_image))
+			if ($ld->insert($u, $eurl, $title, $tweet['post_id'], $is_image))
 			$this->logger->logStatus("Inserted ".$u." (".$eurl.") into links table", get_class($this));
 			else
 			$this->logger->logStatus("Did NOT insert ".$u." (".$eurl.") into links table", get_class($this));
@@ -270,7 +270,7 @@ class TwitterCrawler {
 
 	}
 
-	private function fetchAndAddTweetRepliedTo($tid, $td, $lurl, $fa) {
+	private function fetchAndAddTweetRepliedTo($tid, $pd, $lurl, $fa) {
 		//fetch tweet from Twitter and add to DB
 		$status_message = "";
 		$tweet_deets = str_replace("[id]", $tid, $this->api->cURL_source['show_tweet']);
@@ -280,7 +280,7 @@ class TwitterCrawler {
 			try {
 				$tweets = $this->api->parseXML($twitter_data);
 				foreach ($tweets as $tweet) {
-					if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
+					if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
 						$status_message = 'Added replied to tweet ID '.$tid." to database.";
 						//expand and insert links contained in tweet
 						$this->processTweetURLs($tweet, $lurl, $fa);
@@ -293,8 +293,8 @@ class TwitterCrawler {
 		} elseif ($cURL_status == 404 || $cURL_status == 403) {
 			try {
 				$e = $this->api->parseError($twitter_data);
-				$td = new TweetErrorDAO($this->db, $this->logger);
-				$td->insertError($tid, $cURL_status, $e['error'], $this->owner_object->user_id);
+				$ped = new PostErrorDAO($this->db, $this->logger);
+				$ped->insertError($tid, $cURL_status, $e['error'], $this->owner_object->user_id);
 				$status_message = 'Error saved to tweets.';
 			}
 			catch(Exception $e) {
@@ -340,23 +340,23 @@ class TwitterCrawler {
 						}
 
 
-						$td = new TweetDAO($this->db, $this->logger);
+						$pd = new PostDAO($this->db, $this->logger);
 						if (!isset($recentTweets)) {
-							$recentTweets = $td->getAllTweets($this->owner_object->user_id, 15);
+							$recentTweets = $pd->getAllPosts($this->owner_object->user_id, 15);
 						}
 						$count = 0;
 						foreach ($tweets as $tweet) {
 							// Figure out if the mention is a retweet
-							if (RetweetDetector::isRetweet($tweet['tweet_text'], $this->owner_object->username)) {
-								$this->logger->logStatus("Retweet found, ".substr($tweet['tweet_text'], 0, 50)."... ", get_class($this));
-								$originalTweetId = RetweetDetector::detectOriginalTweet($tweet['tweet_text'], $recentTweets);
+							if (RetweetDetector::isRetweet($tweet['post_text'], $this->owner_object->username)) {
+								$this->logger->logStatus("Retweet found, ".substr($tweet['post_text'], 0, 50)."... ", get_class($this));
+								$originalTweetId = RetweetDetector::detectOriginalTweet($tweet['post_text'], $recentTweets);
 								if ($originalTweetId != false) {
-									$tweet['in_retweet_of_status_id'] = $originalTweetId;
+									$tweet['in_retweet_of_post_id'] = $originalTweetId;
 									$this->logger->logStatus("Retweet original status ID found: ".$originalTweetId, get_class($this));
 								}
 							}
 
-							if ($td->addTweet($tweet, $this->owner_object, $this->logger) > 0) {
+							if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
 								$count++;
 								//expand and insert links contained in tweet
 								$this->processTweetURLs($tweet, $lurl, $fa);
@@ -632,7 +632,7 @@ class TwitterCrawler {
 
 	function fetchFriendTweetsAndFriends($lurl, $fa) {
 		$fd = new FollowDAO($this->db, $this->logger);
-		$td = new TweetDAO($this->db, $this->logger);
+		$pd = new PostDAO($this->db, $this->logger);
 		$ud = new UserDAO($this->db, $this->logger);
 
 		$continue_fetching = true;
@@ -659,7 +659,7 @@ class TwitterCrawler {
 							$stale_friend_updated_from_tweets = false;
 							foreach ($tweets as $tweet) {
 
-								if ($td->addTweet($tweet, $stale_friend, $this->logger) > 0) {
+								if ($pd->addPost($tweet, $stale_friend, $this->logger) > 0) {
 									$count++;
 									//expand and insert links contained in tweet
 									$this->processTweetURLs($tweet, $lurl, $fa);
@@ -677,8 +677,8 @@ class TwitterCrawler {
 									$stale_friend->tweet_count = $tweet['tweet_count'];
 									$stale_friend->joined = date_format(date_create($tweet['joined']), "Y-m-d H:i:s");
 
-									if ($tweet['status_id'] > $stale_friend->last_status_id) {
-										$stale_friend->last_status_id = $tweet['status_id'];
+									if ($tweet['post_id'] > $stale_friend->last_status_id) {
+										$stale_friend->last_status_id = $tweet['post_id'];
 									}
 									$ud->updateUser($stale_friend);
 									$stale_friend_updated_from_tweets = true;
@@ -714,14 +714,14 @@ class TwitterCrawler {
 	}
 
 	function fetchStrayRepliedToTweets($lurl, $fa) {
-		$td = new TweetDAO($this->db, $this->logger);
-		$strays = $td->getStrayRepliedToTweets($this->owner_object->user_id);
+		$pd = new PostDAO($this->db, $this->logger);
+		$strays = $pd->getStrayRepliedToPosts($this->owner_object->user_id);
 		$status_message = count($strays).' stray replied-to tweets to load.';
 		$this->logger->logStatus($status_message, get_class($this));
 
 		foreach ($strays as $s) {
 			if ($this->api->available && $this->api->available_api_calls_for_crawler > 0)
-			$this->fetchAndAddTweetRepliedTo($s['in_reply_to_status_id'], $td, $lurl, $fa);
+			$this->fetchAndAddTweetRepliedTo($s['in_reply_to_post_id'], $pd, $lurl, $fa);
 		}
 	}
 

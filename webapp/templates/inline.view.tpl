@@ -11,25 +11,25 @@
 	
 	{if $all_tweets and $display eq 'tweets-all'}
 		{foreach from=$all_tweets key=tid item=t name=foo}
-			{include file="_status.mine.tpl" t=$t}
+			{include file="_post.mine.tpl" t=$t}
 		{/foreach}
 	{/if}
 	
 	{if $most_replied_to_tweets}
 		{foreach from=$most_replied_to_tweets key=tid item=t name=foo}
-			{include file="_status.mine.tpl" t=$t}
+			{include file="_post.mine.tpl" t=$t}
 		{/foreach}
 	{/if}
 
 	{if $most_retweeted}
 		{foreach from=$most_retweeted key=tid item=t name=foo}
-			{include file="_status.mine.tpl" t=$t}
+			{include file="_post.mine.tpl" t=$t}
 		{/foreach}
 	{/if}
 
 	{if $author_replies}
 		{foreach from=$author_replies key=tahrt item=r name=foo}
-			{include file="_status.qa.tpl" t=$t}
+			{include file="_post.qa.tpl" t=$t}
 		{/foreach}
 	{/if}
 
@@ -43,7 +43,7 @@
 
 	{if $orphan_replies}
 		{foreach from=$orphan_replies key=tid item=t name=foo}
-			{include file="_status.otherorphan.tpl" t=$t}
+			{include file="_post.otherorphan.tpl" t=$t}
 		{/foreach}
 		</form>		
 	{/if} 
@@ -51,32 +51,20 @@
 
 	{if $all_mentions}
 		{foreach from=$all_mentions key=tid item=t name=foo}
-			{include file="_status.otherorphan.tpl" t=$t}
+			{include file="_post.otherorphan.tpl" t=$t}
 		{/foreach}
 	{/if}
 
 	{if $all_replies}
 		{foreach from=$all_replies key=tid item=t name=foo}
-			{include file="_status.other.tpl" t=$t}
+			{include file="_post.other.tpl" t=$t}
 		{/foreach}
 	{/if}
 
 	{if $standalone_replies}
 		{foreach from=$standalone_replies key=tid item=t name=foo}
-			{include file="_status.otherorphan.tpl" t=$t}
+			{include file="_post.otherorphan.tpl" t=$t}
 
-<!--			
-			<div id="div{$t->status_id}">
-			<form action="">
-			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as reply to:" /> <select name="pid{$t->status_id}" id="pid{$t->status_id}">
-			{foreach from=$all_tweets key=aid item=a}
-				<option value="{$a->status_id}">{$a->tweet_html|truncate_for_select}</option>
-			{/foreach}
-			</select>
-			</form>
-			</div>
--->			
-			
 		{/foreach}
 		
 	{/if}	
