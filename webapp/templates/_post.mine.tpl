@@ -31,10 +31,10 @@
 		{if $t->location}<br />[location: {$t->location}]{/if}
     </div>
     <div class="grid_2 center">
-		{if $t->mention_count_cache > 0}<span class="reply-count"><a href="{$cfg->site_root_path}status/?t={$t->status_id}">{$t->mention_count_cache}<!-- repl{if $t->mention_count_cache eq 1}y{else}ies{/if}--></a></span>{else}&nbsp;{/if} 
+		{if $t->mention_count_cache > 0}<span class="reply-count"><a href="{$cfg->site_root_path}post/?t={$t->post_id}">{$t->mention_count_cache}<!-- repl{if $t->mention_count_cache eq 1}y{else}ies{/if}--></a></span>{else}&nbsp;{/if} 
     </div>
     <div class="grid_2 center omega">
-		{if $t->retweet_count_cache > 0}<span class="reply-count"><a href="{$cfg->site_root_path}status/?t={$t->status_id}">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>{else}&nbsp;{/if} 
+		{if $t->retweet_count_cache > 0}<span class="reply-count"><a href="{$cfg->site_root_path}post/?t={$t->post_id}">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>{else}&nbsp;{/if} 
 	</div>
 
 </div>
