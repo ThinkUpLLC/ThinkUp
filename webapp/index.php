@@ -12,9 +12,6 @@ if (!isset($_SESSION['user'])) {
 	ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 	require_once("init.php");
 
-	$db = new Database($THINKTANK_CFG);
-	$conn = $db->getConnection();
-
 	$od = new OwnerDAO($db);
 	$owner = $od->getByEmail($_SESSION['user']);
 
@@ -41,19 +38,19 @@ if (!isset($_SESSION['user'])) {
 
 	$s = new SmartyThinkTank();
 
-	if(!$s->is_cached('index.tpl', $i->twitter_username."-".$_SESSION['user'])) {
+	if(!$s->is_cached('index.tpl', $i->network_username."-".$_SESSION['user'])) {
 
-		$cfg = new Config($i->twitter_username, $i->twitter_user_id);
+		$cfg = new Config($i->network_username, $i->network_user_id);
 
 		$u = new Utils();
 
 		// instantiate data access objects
 		$ud = new UserDAO($db);
-		$td = new TweetDAO($db);
+		$pd = new PostDAO($db);
 		$fd = new FollowDAO($db);
 
 		// pass data to smarty
-		$owner_stats = $ud->getDetails($cfg->twitter_user_id);
+		$owner_stats = $ud->getDetails($i->network_user_id);
 		$s->assign('owner_stats', $owner_stats);
 
 		$s->assign('instance', $i);
@@ -82,7 +79,7 @@ if (!isset($_SESSION['user'])) {
 		//Percentages
 		$percent_followers_loaded = $u->getPercentage($owner_stats->follower_count, ($total_follows_with_full_details + $total_follows_with_errors));
 		$percent_followers_loaded = ($percent_followers_loaded  > 100) ? 100 : $percent_followers_loaded;
-		$percent_tweets_loaded = $u->getPercentage($owner_stats->tweet_count,$i->total_tweets_in_system );
+		$percent_tweets_loaded = $u->getPercentage($owner_stats->post_count,$i->total_posts_in_system );
 		$percent_tweets_loaded = ($percent_tweets_loaded  > 100) ? 100 : $percent_tweets_loaded;
 
 		$percent_friends_loaded = $u->getPercentage($owner_stats->friend_count, ($total_friends_loaded));
@@ -102,7 +99,7 @@ if (!isset($_SESSION['user'])) {
 	# clean up
 	$db->closeConnection($conn);
 
-	$s->display('index.tpl', $i->twitter_username."-".$_SESSION['user']);
+	$s->display('index.tpl', $i->network_username."-".$_SESSION['user']);
 
 }
 ?>

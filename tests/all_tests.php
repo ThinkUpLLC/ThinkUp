@@ -17,6 +17,7 @@ require_once('followdao_test.php');
 require_once('frontend_test.php');
 require_once('friends_paging_test.php');
 require_once('longurlapi_test.php');
+require_once('plugindao_test.php');
 //require_once('mailer_test.php');
 //require_once('retweet_detector_test.php');
 
@@ -32,6 +33,7 @@ $test->addTestCase(new TestOfFollowDAO());
 $test->addTestCase(new TestOfThinkTankFrontEnd());
 $test->addTestCase(new TestOfFriendsPaging());
 $test->addTestCase(new TestOfLongUrlAPIAccessor());
+$test->addTestCase(new TestOfPluginDAO());
 //$test->addTestCase(new TestOfMailer());
 //$test->addTestCase(new TestOfRetweetDetector());
 

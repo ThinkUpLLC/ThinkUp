@@ -33,12 +33,12 @@ class TestOfFriendsPaging extends UnitTestCase {
 
 		$r = array();
 		$r["id"] = 0;
-		$r['twitter_username'] = 'user';
-		$r['twitter_user_id'] = 0;
+		$r['network_username'] = 'user';
+		$r['network_user_id'] = 0;
 		$r['last_status_id'] = 0;
 		$r['last_page_fetched_replies'] = 0;
 		$r['last_page_fetched_tweets'] = 0;
-		$r['total_tweets_in_system'] = 0;
+		$r['total_posts_in_system'] = 0;
 		$r['total_replies_in_system'] = 0;
 		$r['total_follows_in_system'] = 0;
 		$r['total_users_in_system'] = 0;
@@ -68,12 +68,12 @@ class TestOfFriendsPaging extends UnitTestCase {
 
 		$r = array();
 		$r["id"] = 0;
-		$r['twitter_username'] = 'user';
-		$r['twitter_user_id'] = 0;
+		$r['network_username'] = 'user';
+		$r['network_user_id'] = 0;
 		$r['last_status_id'] = 0;
 		$r['last_page_fetched_replies'] = 0;
 		$r['last_page_fetched_tweets'] = 0;
-		$r['total_tweets_in_system'] = 0;
+		$r['total_posts_in_system'] = 0;
 		$r['total_replies_in_system'] = 0;
 		$r['total_follows_in_system'] = 0;
 		$r['total_users_in_system'] = 0;

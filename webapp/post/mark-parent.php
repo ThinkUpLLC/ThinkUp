@@ -28,19 +28,16 @@ require_once("init.php");
 
 $cfg = new Config();
 
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
-
-$td = new TweetDAO($db);
+$pd = new PostDAO($db);
 
 
 foreach ($oid as $o) {
 	echo "<br />";
 	
 	if ( isset($_GET["fp"]))
-		$td->assignParent($pid, $o, $_GET["fp"]);
+		$pd->assignParent($pid, $o, $_GET["fp"]);
 	else
-		$td->assignParent($pid, $o);
+		$pd->assignParent($pid, $o);
 	
 }
 

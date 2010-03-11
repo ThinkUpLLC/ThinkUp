@@ -222,7 +222,7 @@ class FollowDAO extends MySQLDAO {
 
 
 	private function getAverageTweetCount() {
-		return "round(tweet_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
+		return "round(post_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
 	}
 
 

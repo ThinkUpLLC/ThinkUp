@@ -15,7 +15,7 @@
         
             	<ul>
             		<li><a href="#updates"><div class="key-stat">
-                        <h1>{$owner_stats->tweet_count|number_format}</h1> 
+                        <h1>{$owner_stats->post_count|number_format}</h1> 
                         <h3>Tweets</h3></div></a></li>
             		<li><a href="#mentions"><div class="key-stat">        
                         <h1>{$instance->total_replies_in_system|number_format}</h1> 
@@ -38,7 +38,7 @@
                         <div class="container_24">
                         
                             <div class="grid_24 right gray small footnote">
-                                {$owner_stats->tweet_count|number_format} total Tweets | {$owner_stats->avg_tweets_per_day} per day since {$owner_stats->joined|date_format:"%D"}                        
+                                {$owner_stats->post_count|number_format} total Tweets | {$owner_stats->avg_tweets_per_day} per day since {$owner_stats->joined|date_format:"%D"}                        
                             </div>
                            
                             <div class="grid_1 prefix_1">
@@ -99,8 +99,9 @@
                         <div class="container_24">
                             <div class="grid_24 right gray small footnote">
                                 {$owner_stats->follower_count|number_format} Twitter followers
-                                {if $total_follows_protected>0} | {$total_follows_protected|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkTank protected ({$percent_followers_protected}%){/if}
-                                {if $total_follows_with_errors>0} | {$total_follows_with_errors|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkTank suspended ({$percent_followers_suspended}%){/if}
+								| {$total_follows_with_full_details} loaded
+                                {if $total_follows_protected>0} | {$total_follows_protected|number_format} protected ({$percent_followers_protected}%){/if}
+                                {if $total_follows_with_errors>0} | {$total_follows_with_errors|number_format} suspended ({$percent_followers_suspended}%){/if}
                             </div>
                             
                             <div class="grid_1 prefix_1">
@@ -130,8 +131,9 @@
                         
                             <div class="grid_24 right gray small footnote">
                                 {$owner_stats->friend_count|number_format} Twitter friends
-                                {if $total_friends_protected} | {$total_friends_protected|number_format} friend profiles loaded into ThinkTank protected{/if}
-                                {if $total_friends_with_errors>0} | {$total_friends_with_errors|number_format} friends suspended{/if}                        
+                                | {$total_friends|number_format} profiles loaded
+                                {if $total_friends_protected>0} | {$total_friends_protected|number_format} protected{/if}
+                                {if $total_friends_with_errors>0} | {$total_friends_with_errors|number_format} suspended{/if}                        
                             </div>
                             
                             <div class="grid_1 prefix_1">
@@ -248,8 +250,8 @@
         <h2>Twitter Accounts</h2>
         <ul>
         	{foreach from=$instances key=tid item=i}
-        	{if $i->twitter_user_id != $instance->twitter_user_id}
-        	<li><a href="?u={$i->twitter_username}">{$i->twitter_username}</a><br /><small>updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if}</small></li>
+        	{if $i->network_user_id != $instance->network_user_id}
+        	<li><a href="?u={$i->network_username}">{$i->network_username}</a><br /><small>updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if}</small></li>
         	{/if}
         	{/foreach}	
         	<li><a href="{$cfg->site_root_path}account/">Add an account&rarr;</a></li>

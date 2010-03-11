@@ -14,8 +14,6 @@ if ($session->isLoggedIn()) {
 	header("Location: ../index.php");
 }
 
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
 $od = new OwnerDAO($db);
 $s = new SmartyThinkTank();
 $s->caching=false;

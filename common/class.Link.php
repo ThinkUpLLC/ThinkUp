@@ -5,7 +5,7 @@ class Link {
     var $expanded_url;
     var $title;
     var $clicks;
-    var $status_id;
+    var $post_id;
     var $is_image;
     
     var $img_src; //optional
@@ -23,8 +23,8 @@ class Link {
         if (isset($val["clicks"]))
             $this->clicks = $val["clicks"];
             
-        if (isset($val["status_id"]))
-            $this->status_id = $val["status_id"];
+        if (isset($val["post_id"]))
+            $this->post_id = $val["post_id"];
             
         if (isset($val["is_image"]) && $val["is_image"] == 1)
             $this->is_image = true;
@@ -40,15 +40,15 @@ class Link {
 class LinkDAO extends MySQLDAO {
     //Construct is located in parent
 
-    function insert($url, $expanded, $title, $status_id, $is_image = 0) {
+    function insert($url, $expanded, $title, $post_id, $is_image = 0) {
         $expanded = mysql_real_escape_string($expanded);
         $title = mysql_real_escape_string($title);
         
         $q = "
 			INSERT INTO
-				#prefix#links (url, expanded_url, title, status_id, is_image)
+				#prefix#links (url, expanded_url, title, post_id, is_image)
 				VALUES (
-					'{$url}', '{$expanded}', '{$title}', ".$status_id.", ".$is_image.");";
+					'{$url}', '{$expanded}', '{$title}', ".$post_id.", ".$is_image.");";
 					
         $foo = $this->executeSQL($q);
         if (mysql_affected_rows() > 0)
@@ -58,13 +58,13 @@ class LinkDAO extends MySQLDAO {
     }
 
     
-    function update($url, $expanded, $title, $status_id, $is_image = 0) {
+    function update($url, $expanded, $title, $post_id, $is_image = 0) {
         $expanded = mysql_real_escape_string($expanded);
         $title = mysql_real_escape_string($title);
         
         $q = "
 			UPDATE #prefix#links 
-			SET expanded_url = '{$expanded}', title = '{$title}', status_id=".$status_id.", is_image=".$is_image."
+			SET expanded_url = '{$expanded}', title = '{$title}', post_id=".$post_id.", is_image=".$is_image."
 			WHERE url = '{$url}';";
 			
         $foo = $this->executeSQL($q);
@@ -77,19 +77,19 @@ class LinkDAO extends MySQLDAO {
     
     function getLinksByFriends($user_id) {
         $q = "
-			SELECT l.*, t.*, pub_date - interval 8 hour as adj_pub_date  
+			SELECT l.*, p.*, pub_date - interval 8 hour as adj_pub_date  
 			FROM #prefix#links l
-			INNER JOIN #prefix#tweets t
-			ON t.status_id = l.status_id
-			WHERE t.author_user_id in (SELECT user_id FROM #prefix#follows f WHERE f.follower_id = ".$user_id.")
-			ORDER BY l.status_id DESC
+			INNER JOIN #prefix#posts p
+			ON p.post_id = l.post_id
+			WHERE p.author_user_id in (SELECT user_id FROM #prefix#follows f WHERE f.follower_id = ".$user_id.")
+			ORDER BY l.post_id DESC
 			LIMIT 15";
 			
         $sql_result = $this->executeSQL($q);
         $links = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $l = new Link($row);
-            $l->container_tweet = new Tweet($row);
+            $l->container_tweet = new Post($row);
             $links[] = $l;
         }
         mysql_free_result($sql_result);
@@ -98,19 +98,19 @@ class LinkDAO extends MySQLDAO {
     
     function getPhotosByFriends($user_id) {
         $q = "
-			SELECT l.*, t.*, pub_date - interval 8 hour as adj_pub_date  
+			SELECT l.*, p.*, pub_date - interval 8 hour as adj_pub_date  
 			FROM #prefix#links l
-			INNER JOIN #prefix#tweets t
-			ON t.status_id = l.status_id
-			WHERE is_image = 1 and t.author_user_id in (SELECT user_id FROM #prefix#follows f WHERE f.follower_id = ".$user_id.")
-			ORDER BY l.status_id DESC
+			INNER JOIN #prefix#posts p
+			ON p.post_id = l.post_id
+			WHERE is_image = 1 and p.author_user_id in (SELECT user_id FROM #prefix#follows f WHERE f.follower_id = ".$user_id.")
+			ORDER BY l.post_id DESC
 			LIMIT 15";
 			
         $sql_result = $this->executeSQL($q);
         $links = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $l = new Link($row);
-            $l->container_tweet = new Tweet($row);
+            $l->container_tweet = new Post($row);
             $links[] = $l;
         }
         mysql_free_result($sql_result);
@@ -122,7 +122,7 @@ class LinkDAO extends MySQLDAO {
 			SELECT l.*
 			FROM #prefix#links l
 			WHERE /*l.expanded_url = '' and */(l.url like '%flic.kr%' OR l.url like '%twitpic%') and is_image = 0
-			ORDER BY l.status_id DESC
+			ORDER BY l.post_id DESC
 			LIMIT 15";
 			
         $sql_result = $this->executeSQL($q);

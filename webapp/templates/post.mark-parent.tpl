@@ -6,11 +6,11 @@
 <h1>Mark Parent</h1>
 
 <a href="index.php">back to dashboard</a>
-<p>{$reply.tweet_html}</p>
+<p>{$reply->post_text}</p>
 
 <ul>
 {foreach from=$possible_parents key=tid item=t}
-<li><a href="mark-parent.php?t={$reply.status_id}&amp;p={$t.status_id}">use this one</a> {$t.tweet_html}</li>
+<li><a href="mark-parent.php?t={$reply->post_id}&amp;p={$t->post_id}">use this one</a> {$t->post_text}</li>
 {/foreach}
 </ul>
 

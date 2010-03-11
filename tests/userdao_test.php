@@ -31,27 +31,28 @@ class TestOfUserDAO extends UnitTestCase {
 
 		//Build test table
 		$q = "CREATE TABLE IF NOT EXISTS `tt_users` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `user_name` varchar(255) collate utf8_bin NOT NULL,
-  `full_name` varchar(255) collate utf8_bin NOT NULL,
-  `avatar` varchar(255) collate utf8_bin NOT NULL,
-  `location` varchar(255) collate utf8_bin default NULL,
-  `description` text collate utf8_bin,
-  `url` varchar(255) collate utf8_bin default NULL,
+  `user_name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `full_name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `avatar` varchar(255) COLLATE utf8_bin NOT NULL,
+  `location` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `description` text COLLATE utf8_bin,
+  `url` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `is_protected` tinyint(1) NOT NULL,
   `follower_count` int(11) NOT NULL,
-  `friend_count` int(11) NOT NULL default '0',
-  `tweet_count` int(11) NOT NULL,
-  `last_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `found_in` varchar(100) collate utf8_bin default NULL,
-  `last_post` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `joined` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `last_status_id` bigint(20) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
+  `friend_count` int(11) NOT NULL DEFAULT '0',
+  `post_count` int(11) NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `found_in` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `last_post` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `joined` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_post_id` bigint(20) NOT NULL DEFAULT '0',
+  `network` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
+  PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`),
   KEY `last_updated_user_id` (`last_updated`,`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 		";
 
 		$this->logger = new Logger($THINKTANK_CFG['log_location']);
@@ -100,7 +101,7 @@ class TestOfUserDAO extends UnitTestCase {
 	function testUpdateUser() {
 		$udao = new UserDAO($this->db, $this->logger);
 
-		$uarr = array('id'=>2, 'user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani', 'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'tweet_count'=>1000, 'joined'=>'3/6/2007');
+		$uarr = array('id'=>2, 'user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani', 'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
 		$u = new User($uarr, 'Test');
 		$this->assertTrue($udao->updateUser($u));
 	}
@@ -108,9 +109,9 @@ class TestOfUserDAO extends UnitTestCase {
 	function testUpdateUsers() {
 		$udao = new UserDAO($this->db, $this->logger);
 
-		$user_array1 = array('id'=>2, 'user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani', 'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'tweet_count'=>1000, 'joined'=>'3/6/2007');
+		$user_array1 = array('id'=>2, 'user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani', 'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
 		$user1 = new User($user_array1, 'Test');
-		$user_array2 = array('id'=>3, 'user_id'=>14, 'user_name'=>'anildash', 'full_name'=>'Anil Dash', 'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'tweet_count'=>1000, 'joined'=>'3/6/2007');
+		$user_array2 = array('id'=>3, 'user_id'=>14, 'user_name'=>'anildash', 'full_name'=>'Anil Dash', 'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
 		$user2 = new User($user_array2, 'Test');
 
 		$users_to_update = array($user1, $user2);

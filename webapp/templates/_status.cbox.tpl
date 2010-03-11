@@ -1,1 +1,0 @@
-<input type="checkbox" value="{$t.status_id}" name="oid[]"}">{include file="_status.other.tpl" t=$t}
