@@ -16,7 +16,8 @@
 		<a href="{$cfg->site_root_path}user/?u={$r.questioner}&i={$i->twitter_username}">{if $r.questioner eq $instance->twitter_username}You{else}{$r.questioner}{/if}</a>
     </div>
     <div class="grid_3 right small">
-		{$t->follower_count|number_format}
+		{$t->follower_count|number_format}???
+		
     </div>
     <div class="grid_3 right small">
         <a href="{$cfg->site_root_path}status/?t={$r.status_id}">{$r->question_adj_pub_date|relative_datetime}</a>
@@ -37,7 +38,7 @@
 	<div class="grid_3 alpha small">
 		<a href="{$cfg->site_root_path}user/?u={$r.answerer}&i={$i->twitter_username}">{if $r.answerer eq $instance->twitter_username}You{else}{$r.answerer}{/if}</a>
     </div>
-    <div class="grid_3 right small">&nbsp;
+    <div class="grid_3 right small">&nbsp;???
 	</div>
 	<div class="grid_3 right small">
 	   <a href="{$cfg->site_root_path}status/?t={$r.status_id}">{$r.answer_adj_pub_date|relative_datetime}</a>

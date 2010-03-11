@@ -6,37 +6,47 @@
 	<div class="yui-b">
 	<div role="application" class="yui-g" id="tabs">
 
-				<ul>
-					<li><a href="#tweets">Status</a></li>
-					{if $retweets}<li><a href="#retweets">Retweets</a></li>{/if}
-					{if $likely_orphans}<li><a href="#replies">Likely Replies</a></li>{/if}
-					{if $replies}<li><a href="#followers">Public/Republishable Replies</a></li>{/if}
-					
-				</ul>		
+    	<ul>
+    		<li><a href="#tweets">Status</a></li>
+    		{if $retweets}<li><a href="#retweets">Retweets</a></li>{/if}
+    		{if $likely_orphans}<li><a href="#replies">Likely Replies</a></li>{/if}
+    		{if $replies}<li><a href="#followers">Public/Republishable Replies</a></li>{/if}
+    
+    	</ul>
 
+<div class="section thinktank-canvas" id="tweets">
+    <div id="top" class="clearfix">
+        <div class="thinktank-canvas container_24">
+            <div class="clearfix append_20">
+                <div class="grid_2 alpha">
+                    <a href="http://twitter.com/{$tweet->author_username}/"><img src="{$tweet->author_avatar}" class="avatar2"></a>
+                </div>
+                <div class="grid_20 omega">
+                    <span class="tweet">{$tweet->tweet_text}</span>
+                    
+                    <div class="small">(<a href="http://twitter.com/{$tweet->author_username}/">{$tweet->author_username}</a>, 
+                            <a href="http://twitter.com/{$tweet->author_username}/status/{$tweet->status_id}/">{$tweet->pub_date|relative_datetime}</a>)</div>
+                </div>
 
-<div class="section" id="tweets">
-<h1>{$tweet->tweet_text}</h1>
-<br /><br />
-	{foreach from=$replies key=tid item=t}
-		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-		{include file="_status.other.tpl" t=$t}
+            </div> <!-- .clearfix -->
 
-		<div id="div{$t->status_id}">
-		<form action="">
-			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as Reply To:" />
-		<select name="pid{$t->status_id}" id="pid{$t->status_id}">
-			<option value="0">No Tweet in Particular (Mark as standalone)</option>
-			<option disabled>Set as a reply to:</option>
-		{foreach from=$all_tweets key=aid item=a}
-			<option value="{$a->status_id}">&nbsp;&nbsp;{$a->tweet_html|truncate_for_select}</option>
-		{/foreach}
-		</select>  
-		</form>
-		</div>
-		
-		</div>
-	{/foreach}
+        	{foreach from=$replies key=tid item=t name=foo}
+        		<div class="clearfix">
+        		  {include file="_status.other.tpl" t=$t}
+        
+            		<div id="div{$t->status_id}">
+                        <form action="">
+                        <input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as Reply To:" />
+                            {include file='_status.selectparent.tpl' t=$t all_tweets=$all_tweets tweet=$tweet}
+                        </form>
+            		</div>
+        
+        		</div>
+        	{/foreach}
+	
+	   </div>
+    </div>
+    
 </div>
 
 {if $retweets}
@@ -58,10 +68,10 @@
 		{foreach from=$all_tweets key=aid item=a}
 			<option value="{$a->status_id}">&nbsp;&nbsp;{$a->tweet_html|truncate_for_select}</option>
 		{/foreach}
-		</select>  
+		</select>
 		</form>
 		</div>
-		
+
 		</div>
 	{/foreach}
 </div>
@@ -81,7 +91,7 @@
 
 		<div id="div{$t->status_id}">
 		<form action="">
-			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as Reply To:" />  
+			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save as Reply To:" />
 		<select name="pid{$t->status_id}" id="pid{$t->status_id}">
 			<option value="0">No Tweet in Particular (Mark as standalone)</option>
 		{foreach from=$all_tweets key=aid item=a}
@@ -90,7 +100,7 @@
 		</select>
 		</form>
 		</div>
-		
+
 		</div>
 	{/foreach}
 </div>
@@ -131,35 +141,35 @@
 	{literal}
 	$(function() {
 		//begin reply assignment actions
-		$(".button").click(function() {  
-		// validate and process form here  
+		$(".button").click(function() {
+		// validate and process form here
 			var element = $(this);
 			var Id = element.attr("id");
-			
+
 			var oid = Id;
 			var pid = $("select#pid"+Id+" option:selected").val();
 			var u = '{/literal}{$instance->twitter_username}{literal}';
-			
+
 			var t = 'status.index.tpl';
 			var ck = '{/literal}{$tweet->status_id}{literal}';
-			var dataString = 'u='+ u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;  
-			//alert (dataString);return false;  
-			    $.ajax({  
-			      type: "GET",  
-			      url: "{/literal}{$cfg->site_root_path}{literal}status/mark-parent.php",  
-			      data: dataString,  
-			      success: function() {  
-				$('#div'+Id).html("<div class='success' id='message"+Id+"'></div>");  
-				$('#message'+Id).html("<p>Saved!</p>") 
-			       .hide()  
-			       .fadeIn(1500, function() {  
-				 $('#message'+Id);  
-			       });  
-			    }  
-			   });  
-			   return false;  
-		      });  
-	});	
+			var dataString = 'u='+ u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
+			//alert (dataString);return false;
+			    $.ajax({
+			      type: "GET",
+			      url: "{/literal}{$cfg->site_root_path}{literal}status/mark-parent.php",
+			      data: dataString,
+			      success: function() {
+				$('#div'+Id).html("<div class='success' id='message"+Id+"'></div>");
+				$('#message'+Id).html("<p>Saved!</p>")
+			       .hide()
+			       .fadeIn(1500, function() {
+				 $('#message'+Id);
+			       });
+			    }
+			   });
+			   return false;
+		      });
+	});
 
 	{/literal}
 </script>

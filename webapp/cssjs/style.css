@@ -12,7 +12,7 @@ a img {border:none;}
 
 html {
 background: #EEEEEA;
-font-family: Candara, "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #hd, #ft {padding : 20px 20px 20px 0px;}
@@ -123,15 +123,7 @@ visibility:visible;
 
 
 
-.reply-count {
-font-size: 3em;
-background-color: #222;
-}
-.reply-count a:link, .reply-count a:visited {
-color: #FFF;
-padding: 0 10px;
-text-decoration: underline;
-}
+
 .individual-tweet:hover h4, individual-tweet:hover form {
 visibility: visible; 
 color : #666;
@@ -156,9 +148,9 @@ font-size:1.2em;
 }
 .pic {
 float: right;
-margin-left: 10px;
+margin: 10px 0 10px 10px;
 border: 1px solid #CCC;
-padding: 5px;
+padding: 5px 5px 0px 5px;
 }
 .error {
 background-color:#FF8080;
@@ -184,9 +176,11 @@ font-weight:bold;
 #app-title {float:left;margin-bottom:20px;}
 #app-title h1 {font-size: 50px;letter-spacing: -.08em;margin:0;padding:0;line-height:.8em;}
 #app-title h2 {font-size: 19px;color: #0060e0;margin:0;padding:0 0 0 10px;line-height:.8em;}
+#app-title a:hover h1  {color: #000;}
 
 .thinktank-canvas h1 {color: #666;font-size:1.6em;font-weight:700;margin:0;padding:0 0 0 35px;}
 .thinktank-canvas h4 {color: #000;line-height:1em;font-size:1em;font-weight:700;margin:0;padding:0 0 10px 35px;}
+.thinktank-canvas h1.user {margin:0;padding:0;}
 
 .bt {border-top: 1px solid #CCC;}
 .br {border-right: 1px solid #CCC;}
@@ -263,7 +257,7 @@ top: -20px;
 .key-stat h1 {font-size: 1.7em;font-weight:700;letter-spacing:-4px}
 .key-stat h3 {font-size: .8;font-weight:500;}
 
-
+/* numbers */
 .big-number {
 color: #000;
 font-size: 1.7em;
@@ -278,9 +272,26 @@ margin: 0;
 }
 .big-number h3 {
 color: #666;
+font-size: .8em;
 }
+.reply-count {
+font-size: 24px;
+font-weight: bold;
+background-color: #222;
+padding: 10px;
+display:block;
+margin-top:2px;
+text-align:center;
+line-height: 1.8em;
+}
+.reply-count a:link, .reply-count a:visited {
+color: #FFF;
+text-decoration: underline;
+}
+
+
 .tweet {
-font-size: 2em;
+font-size: 1.6em; /* knocked down from 2em */
 line-height: 1.1em;
 }
 

@@ -34,7 +34,9 @@
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_24 right small gray footnote">
-                                {$profile->user_name} averages {$profile->avg_tweets_per_day} updates per day since joining {$profile->joined|relative_datetime} on {$profile->joined|date_format:"%D"} 
+                                Joined {$profile->joined|relative_datetime} on {$profile->joined|date_format:"%D"}
+                                
+                                {if $profile->avg_tweets_per_day} | Averages {$profile->avg_tweets_per_day} updates per day.{/if}
                                     <!--{if $sources} | Most-used Twitter client: {$sources[0].source}{/if}-->
                                     <br />
                                    	{if count($sources > 0)}
@@ -43,16 +45,18 @@
                                             {if $smarty.foreach.foo.last}<br />{else} | {/if} 
                                     	{/foreach}
                                 	{/if}
-                                	ThankTank last updated {$profile->user_name} {$profile->last_updated|relative_datetime}<br />
+                                	ThankTank last updated @{$profile->user_name} {$profile->last_updated|relative_datetime}<br />
                             </div>
 
-                            <div class="grid_22 push_1 clearfix">
+                            <div class="grid_2 prefix_1 alpha">
                                 <img src="{$profile->avatar}" class="avatar"> 
-                                <h1><a href="http://twitter.com/{$profile->user_name}">@{$profile->user_name}</a></h1> 
+                            </div>
+                            <div class="grid_19 omega">
+                                <h1 class="user"><a href="http://twitter.com/{$profile->user_name}">@{$profile->user_name}</a></h1> 
                                 <!--
                                 [{$profile->follower_count|number_format} followers, following {$profile->friend_count|number_format}]
                                 -->
-                                {if $profile->description}<br />{$profile->description}{/if}
+                                {if $profile->description}{$profile->description}{/if}
                                 {if $profile->tweet_count > 0}
                                     <br />
                                     Last post {$profile->last_post|relative_datetime}
@@ -97,7 +101,7 @@
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_22 push_1 append_20">
-                                Follower data not yet available in ThinkTank.
+                                Detailed data about the {$profile->follower_count|number_format} followers not yet available in ThinkTank.
                             </div>
                         </div>
                     </div>                
@@ -109,7 +113,7 @@
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_22 push_1 append_20">
-                                Friend data not yet available in ThinkTank.
+                                Detailed data about the {$profile->friend_count|number_format} friends not yet available in ThinkTank.
                             </div>
                         </div>
                     </div>                

@@ -5,8 +5,8 @@
         <div class="grid_3 right">date</div>
          
         <div class="grid_10">post</div> 
-        <div class="grid_2 right">replies</div> 
-        <div class="grid_2 right omega">retweets</div> 
+        <div class="grid_2 center">replies</div> 
+        <div class="grid_2 center omega">retweets</div> 
     </div> 
 {/if}
 
@@ -26,14 +26,14 @@
 
 		<p>{$t->tweet_html|link_usernames} {if $t->in_reply_to_status_id}[<a href="{$cfg->site_root_path}status/?t={$t->in_reply_to_status_id}">in reply to</a>]{/if}</p>
 		
-		{if $t->link->expanded_url}<ul><li><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->title}</a></li></ul>{/if}
+		{if $t->link->expanded_url}<ul><li><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}" target="_blank">{if $t->link->title neq ''}{$t->link->title}{else}{$t->link->expanded_url}{/if}</a></li></ul>{/if}
 		
 		{if $t->location}<br />[location: {$t->location}]{/if}
     </div>
-    <div class="grid_2 right">
+    <div class="grid_2 center">
 		{if $t->mention_count_cache > 0}<span class="reply-count"><a href="{$cfg->site_root_path}status/?t={$t->status_id}">{$t->mention_count_cache}<!-- repl{if $t->mention_count_cache eq 1}y{else}ies{/if}--></a></span>{else}&nbsp;{/if} 
     </div>
-    <div class="grid_2 right omega">
+    <div class="grid_2 center omega">
 		{if $t->retweet_count_cache > 0}<span class="reply-count"><a href="{$cfg->site_root_path}status/?t={$t->status_id}">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>{else}&nbsp;{/if} 
 	</div>
 

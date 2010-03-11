@@ -30,10 +30,10 @@
 		{if $t->author->location}<div class="small gray">Location: {$t->author->location}</div>{/if}
     </div>
     <div class="grid_2 center">
-		{if $t->mention_count_cache > 0}<span class="reply-count"><a href="{$site_root}public.php?t={$t->status_id}">{$t->mention_count_cache}<!-- repl{if $t->mention_count_cache eq 1}y{else}ies{/if}--></a></span>{else}&nbsp;{/if} 
+		{if $t->mention_count_cache > 0}<div class="reply-count"><a href="{$site_root}public.php?t={$t->status_id}">{$t->mention_count_cache}<!-- repl{if $t->mention_count_cache eq 1}y{else}ies{/if}--></a></div>{else}&nbsp;{/if} 
     </div>
     <div class="grid_2 center omega">
-		{if $t->retweet_count_cache > 0}<span class="reply-count"><a href="{$site_root}public.php?t={$t->status_id}">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>{else}&nbsp;{/if} 
+		{if $t->retweet_count_cache > 0}<div class="reply-count"><a href="{$site_root}public.php?t={$t->status_id}">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></div>{else}&nbsp;{/if} 
 	</div>
     
  

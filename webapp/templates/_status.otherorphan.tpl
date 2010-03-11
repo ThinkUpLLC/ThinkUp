@@ -1,11 +1,11 @@
 {if $smarty.foreach.foo.first}
-	<div class="header clearfix"> 
-        <div class="grid_2 alpha">&nbsp;</div> 
-        <div class="grid_3 right">name</div>        
-        <div class="grid_3 right">followers</div>        
+	<div class="header clearfix">
+        <div class="grid_2 alpha">&nbsp;</div>
+        <div class="grid_3 right">name</div>
+        <div class="grid_3 right">followers</div>
         <div class="grid_3 right">date</div>
-        <div class="grid_11 omega">post</div> 
-    </div> 
+        <div class="grid_11 omega">post</div>
+    </div>
 {/if}
 
 <div class="individual-tweet clearfix{if $t->is_protected} private{/if}">
@@ -21,32 +21,28 @@
 	<div class="grid_3 right small">
         <a href="{$cfg->site_root_path}status/?t={$t->status_id}">{$t->adj_pub_date|relative_datetime}</a>
 	</div>
-	
+
 	<div class="grid_11 omega">
-		
+
     	<div class="tweet-body">
     		{if $t->link->is_image}<a href="{$t->link->url}"><img src="{$t->link->expanded_url}" style="float:right;background:#eee;padding:5px" /></a>{/if}
-    		
+
     		<p>{$t->tweet_html|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames}{if $t->in_reply_to_status_id} <a href="{$cfg->site_root_path}status/?t={$t->in_reply_to_status_id}">in reply to</a> {/if}</p>
-    
+
     		{if $t->link->expanded_url}<a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->title}</a>{/if}
-       		
+
     		{if $t->author->location}<div class="small gray">Location: {$t->author->location}</div>{/if}
     		{if $t->author->description}<div class="small gray">Description: {$t->author->description}</div>{/if}
-    
+
+            {$a->status_id}
+
     		<div id="div{$t->status_id}">
         		<form action="" class="tweet-setparent">
-        			<select name="pid{$t->status_id}" id="pid{$t->status_id}" onselect>
-        				<option disabled="disabled">Is in reply to...</option>					
-        				<option value="0">No particular tweet (standalone)</option>
-        				{foreach from=$all_tweets key=aid item=a}
-        				<option value="{$a->status_id}">{$a->tweet_html|truncate_for_select}</option>
-        				{/foreach}
-        			</select>
+        			{include file='_status.selectparent.tpl' t=$t all_tweets=$all_tweets tweet=$t->in_reply_to_status_id|tweet_from_id}
         			<input type="submit" name="submit" class="button" id="{$t->status_id}" value="Save" />
         		</form>
     		</div>
-    
+
     	</div>
 
     </div>
