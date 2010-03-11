@@ -28,7 +28,7 @@ class OwnerInstanceDAO extends MySQLDAO {
 				ON 
 					i.id = oi.instance_id
 				WHERE 
-					i.twitter_username = '".$username."' AND oi.owner_id = ".$owner->id.";";
+					i.network_username = '".$username."' AND oi.owner_id = ".$owner->id.";";
             $sql_result = $this->executeSQL($q);
             if (mysql_num_rows($sql_result) == 0) {
                 return false;
