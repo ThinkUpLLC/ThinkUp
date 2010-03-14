@@ -1,10 +1,9 @@
 <?php 
 session_start();
-if (!isset($_SESSION['user'])) {
-    $loggedin = false;
-} else {
-    $loggedin = true;
-}
+(isset($_SESSION['user'])) ? $_u = $_SESSION['user']: $_u = '';
+(isset($_SESSION['instance'])) ? $_i = $_SESSION['instance'] : $_i = '';
+
+//Print_r  ($_i);
 
 // set up
 require_once ('config.webapp.inc.php');
@@ -22,6 +21,7 @@ $s = new SmartyThinkTank();
 $s->assign('cfg', $cfg);
 $i = $id->getInstanceFreshestOne();
 $s->assign('crawler_last_run', $i->crawler_last_run);
+$s->assign('i', $_i);
 
 // show tweet with public replies
 if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
@@ -43,7 +43,6 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     
 } elseif (isset($_REQUEST['v'])) {
     $view = $_REQUEST['v'];
-    $s->assign('loggedin', $loggedin);
     switch ($view) {
         case 'timeline':
             if (!$s->is_cached('public.tpl')) {
@@ -51,7 +50,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Latest');
-            $s->assign('description', 'Latest public tweets and public replies');
+            $s->assign('description', 'Latest public post and public replies');
             $s->display('public.tpl', 'timeline');
             break;
         case 'mostretweets':
@@ -60,7 +59,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Most retweeted');
-            $s->assign('description', 'Updates that have been forwarded most often');
+            $s->assign('description', 'Posts that have been forwarded most often');
             $s->display('public.tpl', 'mostretweets');
             break;
         case 'mostreplies':
@@ -69,7 +68,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Most replied to');
-            $s->assign('description', 'Updates that have been replied to most often');
+            $s->assign('description', 'Posts that have been replied to most often');
             $s->display('public.tpl', 'mostreplies');
             break;
         case 'photos':
@@ -94,13 +93,13 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     }
     
 } else {
-    if (!$s->is_cached('public.tpl', 'timeline')) {
+    if (!$s->is_cached('public.tpl', 'timeline-'.$i->network_username."-".$_u)) {
         $s->assign('posts', $pd->getPostsByPublicInstances());
         $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
     }
     $s->assign('header', 'Latest');
-    $s->assign('description', 'Latest public posts, replies, and retweets');
-    $s->display('public.tpl', 'timeline');
+    $s->assign('description', 'Latest public posts, replies, and forwards');
+    $s->display('public.tpl', 'timeline-'.$i->network_username."-".$_u);
     
 }
 
