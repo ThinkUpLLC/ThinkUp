@@ -30,7 +30,7 @@ if (!isset($_SESSION['user'])) {
 	} else {
 		$i = $id->getFreshestByOwnerId($owner->id);
 		if ( !isset($i) && $i == null ) {
-			echo 'You have no Twitter accounts configured. <a href="'.$THINKTANK_CFG['site_root_path'].'account/">Set up a Twitter account here</a>';
+			echo 'You have no Twitter accounts configured. <a href="'.$THINKTANK_CFG['site_root_path'].'account/?p=twitter">Set up a Twitter account here</a>';
 			$db->closeConnection($conn);
 			die;
 		}
