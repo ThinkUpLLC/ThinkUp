@@ -30,7 +30,7 @@ CREATE TABLE `tt_instances` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `network_user_id` int(11) NOT NULL,
   `network_username` varchar(255) COLLATE utf8_bin NOT NULL,
-  `last_post_id` bigint(11) DEFAULT '0',
+  `last_status_id` bigint(11) DEFAULT '0',
   `crawler_last_run` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_page_fetched_replies` int(11) NOT NULL DEFAULT '1',
   `last_page_fetched_tweets` int(11) NOT NULL DEFAULT '1',
