@@ -1,0 +1,28 @@
+/* WIREFRAME
+======================= */
+
+#content {margin:0;padding:0;}
+.container {padding:0px;width:960px;margin: 0 auto;}
+
+.top {position:relative;top-20px;}
+.thinktank-canvas {background-color: #FFF;}
+#tweets_content, #mentions_content, #followers_content, #friends_content, #links_content {position:relative;top:-40px;}
+
+#hd, #ft {padding : 20px 20px 20px 0px;}
+#yui-main .yui-g {/*margin-left : 50px;width : 600px;*/width:960px;margin:0 auto;}
+#bd {text-align:left;width:960px;margin:0 auto;}
+
+.left {text-align:left}
+.right {text-align:right}
+.center {text-align:center}
+.float-l {float:left;}
+.float-r {float:right;}
+
+.append {padding-bottom:10px}
+.prepend {padding-top:10px}
+.append_20 {padding-bottom:20px}
+.prepend_20 {padding-top:20px}
+
+.footnote {float:right;position: relative;top: -40px;}
+
+
