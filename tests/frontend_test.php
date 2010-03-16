@@ -274,8 +274,8 @@ VALUES (  'My Test Plugin',  'testplugin',  'Proof of concept plugin',  'Gina Tr
 			
 		$this->get($TEST_SERVER_DOMAIN.'/public.php');
 		$this->assertTitle('ThinkTank Public Timeline');
-		$this->assertText('Sign in');
-		$this->click('Sign in');
+		$this->assertText('Log In');
+		$this->click('Log In');
 		$this->assertTitle('ThinkTank Sign In');
 	}
 
