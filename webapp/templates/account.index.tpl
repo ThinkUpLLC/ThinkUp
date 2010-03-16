@@ -97,7 +97,7 @@
                         	{if $o->instances neq null}
                         	<ul>
                         		{foreach from=$o->instances key=iid item=i}
-                        		<li>&rarr; {$i->twitter_username}{if !$i->is_active} (paused){/if}</li>
+                        		<li>&rarr; {$i->network_username}{if !$i->is_active} (paused){/if}</li>
                         		{/foreach}
                         	</ul>
                         	{/if}

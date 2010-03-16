@@ -13,9 +13,9 @@
                     <ul>
                         {foreach from=$owner_instances key=iid item=i}
                         <li>
-                            <a href="{$cfg->site_root_path}?u={$i->twitter_username}">{$i->twitter_username}</a>
-                            <span id="div{$i->twitter_username}"><input type="submit" name="submit" class="{if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->twitter_username}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
-							<span id="divactivate{$i->twitter_username}"><input type="submit" name="submit" class="{if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->twitter_username}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+                            <a href="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username}</a>
+                            <span id="div{$i->network_username}"><input type="submit" name="submit" class="{if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->network_username}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
+							<span id="divactivate{$i->network_username}"><input type="submit" name="submit" class="{if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->network_username}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
                         </li>{/foreach}
                     </ul>{else}
                     You have no Twitter accounts configured.
