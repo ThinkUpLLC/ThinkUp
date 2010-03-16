@@ -19,7 +19,7 @@
 		{$t->author->follower_count|number_format}
 	</div>
 	<div class="grid_3 right small">
-        <a href="{$cfg->site_root_path}post/?t={$t->post_id}">{$t->adj_pub_date|relative_datetime}</a>
+        <a href="{$cfg->site_root_path}post/?t={$t->post_id}">{$t->pub_date|relative_datetime}</a>
 	</div>
 
 	<div class="grid_12 omega">
