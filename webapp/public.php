@@ -50,7 +50,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Latest');
-            $s->assign('description', 'Latest public post and public replies');
+            $s->assign('description', 'Latest public posts and public replies');
             $s->display('public.tpl', 'timeline');
             break;
         case 'mostretweets':
@@ -98,7 +98,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
         $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
     }
     $s->assign('header', 'Latest');
-    $s->assign('description', 'Latest public posts, replies, and forwards');
+    $s->assign('description', 'Latest public posts, replies and forwards');
     $s->display('public.tpl', 'timeline-'.$i->network_username."-".$_u);
     
 }

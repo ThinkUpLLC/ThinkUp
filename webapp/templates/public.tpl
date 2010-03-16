@@ -24,7 +24,7 @@
                 {if $post and ($replies OR $retweets) }
                 
                     <div class="prepend_20">
-                    <ul id="menu">
+                    <ul class="menu">
                         <!-- <li>Archived and Curated with <a href="http://thinktankapp.com">ThinkTank</a></li> -->
                         <li><a href="{$site_root}public.php">&larr; Back to the public timeline</a></li>
                     </ul>
@@ -69,10 +69,10 @@
                 {else}                
                 
                 <div class="prepend_20">
-                    <ul id="menu">
+                    <ul class="menu">
                         <li><a href="{$cfg->site_root_path}public.php">Latest</a></li> 
-                        <li><a href="{$cfg->site_root_path}public.php?v=mostreplies">Most Replied-To</a></li> 
-                        <li><a href="{$cfg->site_root_path}public.php?v=mostretweets">Most Retweeted</a></li> 
+                        <li><a href="{$cfg->site_root_path}public.php?v=mostreplies">Most replied-to</a></li> 
+                        <li><a href="{$cfg->site_root_path}public.php?v=mostretweets">Most forwarded</a></li> 
                         <li><a href="{$cfg->site_root_path}public.php?v=photos">Photos</a></li> 
                         <li><a href="{$cfg->site_root_path}public.php?v=links">Links</a></li>
                     </ul>

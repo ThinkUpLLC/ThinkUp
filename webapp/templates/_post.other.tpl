@@ -1,15 +1,15 @@
 {if $smarty.foreach.foo.first}
 	<div class="header clearfix"> 
-	    <div class="grid_2 alpha">&nbsp;</div>
+	    <div class="grid_1 alpha">&nbsp;</div>
         <div class="grid_3 right">name</div> 
         <div class="grid_3 right">followers</div>
         <div class="grid_3 right">date</div>
-        <div class="grid_11 omega">post</div> 
+        <div class="grid_12 omega">post</div> 
     </div> 
 {/if}
 
 <div class="individual-tweet clearfix{if $t->is_protected} private{/if}{if $t->in_reply_to_post_id} reply{/if}">
-    <div class="grid_2 alpha">
+    <div class="grid_1 alpha">
 		<a href="{$cfg->site_root_path}user/?u={$t->author_username}&i={$i->network_username}"><img src="{$t->author_avatar}" class="avatar"></a>
     </div>
 	<div class="grid_3 right small">
@@ -22,7 +22,7 @@
         <a href="{$cfg->site_root_path}post/?t={$t->post_id}">{$t->adj_pub_date|relative_datetime}</a>
 	</div>
 
-	<div class="grid_11 omega">
+	<div class="grid_12 omega">
 		
     	<div class="tweet-body">
     		{if $t->link->is_image}<a href="{$t->link->url}"><img src="{$t->link->expanded_url}" style="float:right;background:#eee;padding:5px" /></a>{/if}

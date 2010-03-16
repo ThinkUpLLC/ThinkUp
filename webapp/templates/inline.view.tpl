@@ -1,6 +1,6 @@
-<div class="append">
-    {if $header}<h1>{$header}</h1>{/if}
-    {if $description}<h4>{$description}</h4>{/if}
+<div class="">
+    <!--{if $header}<h1>{$header}</h1>{/if}-->
+    <!--{if $description}<h4>{$description}</h4>{/if}-->
 </div>
 	{if ($display eq 'tweets-all' and not $all_tweets) or 
 		($display eq 'tweets-mostreplies' and not $most_replied_to_tweets) or
@@ -86,8 +86,8 @@
 		<h2 class="alert">&#9888; No tweets to display.</h2>
 	{/if}		
 	{if $links}
-		{foreach from=$links key=lid item=l}
-		{include file="_link.tpl" t=$f}
+		{foreach from=$links key=lid item=l name=foo}
+		  {include file="_link.tpl" t=$f}
 		{/foreach}	
 	{/if}
 		

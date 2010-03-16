@@ -53,15 +53,15 @@ if(!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user'].
 	// pass data to smarty
 	switch ($_REQUEST['d']) {
 		case "tweets-all":
-			$s->assign('header', 'All Tweets' );
+			$s->assign('header', 'All Posts' );
 			$s->assign('all_tweets', $pd->getAllPosts($i->network_user_id, 15) );
 			break;
 		case "tweets-mostreplies":
-			$s->assign('header', 'Most Replied-To Tweets' );
+			$s->assign('header', 'Most Replied-To Posts' );
 			$s->assign('most_replied_to_tweets', $pd->getMostRepliedToPosts($i->network_user_id, 15));
 			break;
 		case "tweets-mostretweeted":
-			$s->assign('header', 'Most Retweeted' );
+			$s->assign('header', 'Most Forwarded' );
 			$s->assign('most_retweeted', $pd->getMostRetweetedPosts($i->network_user_id, 15));
 			break;
 		case "tweets-convo":
@@ -70,35 +70,35 @@ if(!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user'].
 			break;
 		case "mentions-all":
 			$s->assign('header', 'All Mentions' );
-			$s->assign('description', 'Any tweet that mentions you.');
+			$s->assign('description', 'Any post that mentions you');
 			$s->assign('all_mentions', $pd->getAllMentions($i->network_username, 15) );
 			$s->assign('all_tweets', $pd->getAllPosts($cfg->twitter_user_id, 15) );
 			break;
 		case "mentions-allreplies":
 			$s->assign('header', 'Replies' );
-			$s->assign('description', 'Tweets that directly reply to you (i.e., start with your name).');
+			$s->assign('description', 'Posts that directly reply to you (i.e., start with your name)');
 			$s->assign('all_replies', $pd->getAllReplies($i->network_user_id, 15) );
 			break;
 		case "mentions-orphan":
-			$s->assign('header', 'Not Replies or Retweets' );
-			$s->assign('description', 'Mentions that are not associated with a specific tweet.');
+			$s->assign('header', 'Not Replies or Forwards' );
+			$s->assign('description', 'Mentions that are not associated with a specific post');
 			$s->assign('all_tweets', $pd->getAllPosts($i->network_user_id, 15) );
 			$s->assign('orphan_replies', $pd->getOrphanReplies($cfg->twitter_username, 5));
 			break;
 		case "mentions-standalone":
 			$s->assign('header', 'Standalone Mentions' );
-			$s->assign('description', 'Mentions you have marked as standalone.');
+			$s->assign('description', 'Mentions you have marked as standalone');
 			$s->assign('all_tweets', $pd->getAllPosts($i->network_user_id, 15) );
 			$s->assign('standalone_replies', $pd->getStandaloneReplies($i->network_username, 15));
 			break;
 		case "followers-mostfollowed":
 			$s->assign('header', 'Most-Followed Followers' );
-			$s->assign('description', 'Followers with most followers.');
+			$s->assign('description', 'Followers with most followers');
 			$s->assign('people', $fd->getMostFollowedFollowers($i->network_user_id, 15));
 			break;
 		case "followers-leastlikely":
 			$s->assign('header', 'Least-Likely Followers' );
-			$s->assign('description', 'Followers with the greatest follower-to-friend ratio.');
+			$s->assign('description', 'Followers with the greatest follower-to-friend ratio');
 			$s->assign('people', $fd->getLeastLikelyFollowers($i->network_user_id, 15));
 			break;
 		case "followers-former":
@@ -131,17 +131,17 @@ if(!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user'].
 			break;
 		case "links-friends":
 			$s->assign('header', 'Links From Friends' );
-			$s->assign('description', 'Links your friends tweeted.');
+			$s->assign('description', 'Links your friends posted');
 			$s->assign('links', $ld->getLinksByFriends($i->network_user_id));
 			break;
 		case "links-favorites":
 			$s->assign('header', 'Links From Favorites' );
-			$s->assign('description', 'Links in tweets you favorited.');
+			$s->assign('description', 'Links in posts you favorited');
 			//$s->assign('links', $ld->getLinksByFriends($cfg->twitter_user_id));
 			break;
 		case "links-photos":
 			$s->assign('header', 'Photos' );
-			$s->assign('description', 'Photos your friends have tweeted.');
+			$s->assign('description', 'Photos your friends have posted');
 			$s->assign('links', $ld->getPhotosByFriends($i->network_user_id));
 			break;
 

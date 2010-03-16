@@ -1,5 +1,26 @@
 {include file="_header.tpl" load="no"}
 
+{literal}
+<script>
+$(document).ready(function() {
+
+	$(".toggle_container").hide(); 
+
+    $("h4.trigger").toggle(function(){
+		$(this).addClass("active");
+		}, function () {
+		$(this).removeClass("active");
+	});
+
+    //Slide up and down on click
+	$("h4.trigger").click(function(){
+		$(this).next(".toggle_container").slideToggle("slow");
+	});
+	
+});
+</script>
+{/literal}
+
 <div id="bd" role="main">
 	<div id="yui-main">
 	<div class="yui-b">
@@ -9,8 +30,8 @@
         
             	<ul>
             		<li><a href="#updates"><div class="key-stat">
-                        <h1>{$profile->tweet_count|number_format}</h1> 
-                        <h3>Updates</h3></div></a></li>
+                        <h1>{$profile->post_count|number_format}</h1> 
+                        <h3>Posts</h3></div></a></li>
             		<li><a href="#conversations"><div class="key-stat">        
                         <h1>{$total_exchanges}</h1> 
                         <h3>Conversations</h3></div></a></li>
@@ -33,26 +54,54 @@
                     <div id="top" class="clearfix">
                     
                         <div class="thinktank-canvas container_24">
-                            <div class="grid_24 right small gray footnote">
-                                Joined {$profile->joined|relative_datetime} on {$profile->joined|date_format:"%D"}
+
+                            <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>                        
+
+                            <div class="footnote toggle_container clearfix">
+                            
+                            <div class="grid_13 push_10 append_20">
+                                <div class="clearfix bt">
+                                    <div class="grid_6 bold alpha">Joined</div>
+                                    <div class="grid_7 right omega">{$profile->joined|relative_datetime} on {$profile->joined|date_format:"%D"}</div>
+                                </div>
+                                {if $profile->avg_tweets_per_day}
+                                <div class="clearfix bt">
+                                    <div class="grid_6 bold alpha">Averages</div>
+                                    <div class="grid_7 right omega">{$profile->avg_tweets_per_day} updates per day</div>
+                                </div>
+                                {/if}
+                                <div class="clearfix bt">
+                                    <div class="grid_11 bold alpha">ThankTank last updated @{$profile->user_name}</div>
+                                    <div class="grid_2 right omega">{$profile->last_updated|relative_datetime}</div>
+                                </div>
+                                 {if $sources}
+                                <div class="clearfix bt">
+                                    <div class="grid_9 bold alpha">Most-used Twitter client</div>
+                                    <div class="grid_4 right omega">{$sources[0].source}</div>
+                                </div>
+                                {/if}
+                               	{if count($sources > 0)}
+                                	{foreach from=$sources key=tid item=s name=foo}
+                                        <div class="clearfix bt">
+                                            <div class="grid_9 bold alpha">{$s.total} statuses posted via</div>
+                                            <div class="grid_4 right omega">{if $s.source eq 'web'} the {$s.source}{else}{$s.source}{/if}</div>
+                                        </div>
+                                	{/foreach}
+                            	{/if}
+                                <div class="clearfix bt">
+                                    <div class="grid_13 bold alpha omega">&nbsp;</div>
+                                </div> 
+                            </div>
+                                                        
                                 
-                                {if $profile->avg_tweets_per_day} | Averages {$profile->avg_tweets_per_day} updates per day.{/if}
-                                    <!--{if $sources} | Most-used Twitter client: {$sources[0].source}{/if}-->
-                                    <br />
-                                   	{if count($sources > 0)}
-                                    	{foreach from=$sources key=tid item=s name=foo}
-                                            {$s.total} statuses posted {if $s.source eq 'web'}on the {$s.source}{else}with {$s.source}{/if}
-                                            {if $smarty.foreach.foo.last}<br />{else} | {/if} 
-                                    	{/foreach}
-                                	{/if}
-                                	ThankTank last updated @{$profile->user_name} {$profile->last_updated|relative_datetime}<br />
+                                 
                             </div>
 
                             <div class="grid_2 prefix_1 alpha">
-                                <img src="{$profile->avatar}" class="avatar"> 
+                                <img src="{$profile->avatar}" class="avatar2"> 
                             </div>
                             <div class="grid_19 omega">
-                                <h1 class="user"><a href="http://twitter.com/{$profile->user_name}">@{$profile->user_name}</a></h1> 
+                                <h1 class="user">@{$profile->user_name}</h1> 
                                 <!--
                                 [{$profile->follower_count|number_format} followers, following {$profile->friend_count|number_format}]
                                 -->
@@ -88,7 +137,7 @@
                                         {include file="_post.qa.tpl" t=$t}
                             		{/foreach}
                                 {else}
-                                    ThinkTank has not captured any conversations between {$instance->twitter_username} and {$profile->user_name}.
+                                    ThinkTank has not captured any conversations between {$instance->network_username} and {$profile->user_name}.
                                 {/if}
                         	</div>
                         </div>
@@ -101,7 +150,7 @@
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_22 push_1 append_20">
-                                Detailed data about the {$profile->follower_count|number_format} followers not yet available in ThinkTank.
+                                Detailed data about {$profile->user_name}'s {$profile->follower_count|number_format} followers not yet available in ThinkTank.
                             </div>
                         </div>
                     </div>                
@@ -113,7 +162,7 @@
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_22 push_1 append_20">
-                                Detailed data about the {$profile->friend_count|number_format} friends not yet available in ThinkTank.
+                                Detailed data about {$profile->user_name}'s {$profile->friend_count|number_format} friends not yet available in ThinkTank.
                             </div>
                         </div>
                     </div>                
@@ -126,6 +175,7 @@
                         <div class="thinktank-canvas container_24">
                             <div class="grid_22 push_1 append_20">
                             	{if count($mutual_friends > 0)}
+                            	<h1>Mutual friends shared between {$profile->user_name} and {$instance->network_username} </h1>
                             	{foreach from=$mutual_friends key=tid item=f name=foo}
                                     {include file="_user.tpl" t=$f}
                             	{/foreach}

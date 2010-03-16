@@ -12,7 +12,7 @@
 
 <div class="individual-tweet post clearfix">
 	<div class="grid_1 alpha">
-		<img src="{$t->author_avatar}" class="avatar">
+		<a href="http://twitter.com/{$t->author_username}"><img src="{$t->author_avatar}" class="avatar"></a>
     </div>
     <div class="grid_3 right small">
         <a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
@@ -28,7 +28,7 @@
 		
 		{if $t->link->expanded_url}<ul><li><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}" target="_blank">{if $t->link->title neq ''}{$t->link->title}{else}{$t->link->expanded_url}{/if}</a></li></ul>{/if}
 		
-		{if $t->location}<br />[location: {$t->location}]{/if}
+		{if $t->location}<div class="small gray">location: {$t->location}</div>{/if}
     </div>
     <div class="grid_2 center">
 		{if $t->mention_count_cache > 0}<span class="reply-count"><a href="{$cfg->site_root_path}post/?t={$t->post_id}">{$t->mention_count_cache}</a></span>{else}&nbsp;{/if} 
