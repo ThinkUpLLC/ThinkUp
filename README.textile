@@ -18,12 +18,13 @@ h3. System Requirements
 * "PHP 5":http://php.net with cURL and GD enabled
 * "Smarty":http://smarty.net
 * "MySQL 5":http://mysql.com/
+* A public web server. (Twitter authorization requires a public callback URL, so you'll need to expose a local dev server to the internet for initial authorization; after that the server doesn't have to be publicly available.)
 
 h3. Install application files
 
-* Download source code. Save it one level below your web site's DocumentRoot. For example, if your site's DocumentRoot is 
+* Download source code. Save the <code>thinktank</code> directory one level above your web site's DocumentRoot. For example, if your site's DocumentRoot is 
 <code>/var/www/vhosts/example.com/httpdocs/</code> 
-Save ThinkTank files in 
+Put the <code>thinktank</code> directory here: 
 <code>/var/www/vhosts/example.com/thinktank/</code>
 * Create a symbolic link to the <code>thinktank/webapp</code> directory in your site's DocumentRoot folder. To do so, <code>cd</code> to the DocumentRoot, and use the command: 
 <code>ln -s ../thinktank/webapp/ thinktank</code>
