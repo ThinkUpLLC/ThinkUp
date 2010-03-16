@@ -28,7 +28,7 @@
 {literal}	
 	$(document).ready(function(){
 		//References
-		var sections = $("#menu li");
+		var sections = $(".menu li");
 		
 		var loading = $("#loading");
 		var loading_mentions = $("#loading_mentions");
@@ -52,9 +52,18 @@
 		
 		{literal}
 		//Manage click events
-		sections.click(function(){  	
-			//$(this).css('background-color', '#ccc');
-		
+		sections.click(function(){  
+		    //var _mi = this.id;
+			//alert(_mi);
+			
+			// change all sibling list items to a white background
+			//$(this).siblings().css('background-color', '#FFFFFF');
+			$(this).siblings().removeClass('selected');
+			
+			// make this item background black
+			//$(this).css('background-color', '#000');
+		    $(this).addClass('selected');
+		    
 			//show the loading bar
 			showLoading();
 			//load selected section

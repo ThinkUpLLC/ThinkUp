@@ -1,4 +1,6 @@
-    <br clear="all">
+
+<div class="container small center">
+
 	<div id="ft" role="contentinfo">
 	
         {if $stats neq 'no'}

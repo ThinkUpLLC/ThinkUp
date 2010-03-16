@@ -35,6 +35,9 @@ if (!isset($_SESSION['user'])) {
 			die;
 		}
 	}
+	
+	// set the session instance to the current instance
+	$_SESSION['instance']=$i;
 
 	$s = new SmartyThinkTank();
 

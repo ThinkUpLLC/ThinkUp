@@ -171,11 +171,15 @@ class PostDAO extends MySQLDAO {
         
         $q = "
 			SELECT
-				t1.author_username as questioner_username, t1.author_avatar as questioner_avatar, t1.post_id as question_post_id, t1.post_text as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.post_id as answer_post_id, t.author_username as answerer_username, t.author_avatar as answerer_avatar, t.post_text as answer, t.pub_date - interval #gmt_offset# hour as answer_adj_pub_date
+				t1.author_username as questioner_username, t1.author_avatar as questioner_avatar, t2.follower_count as answerer_follower_count, t1.post_id as question_post_id, t1.post_text as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.post_id as answer_post_id, t.author_username as answerer_username, t.author_avatar as answerer_avatar, t3.follower_count as questioner_follower_count, t.post_text as answer, t.pub_date - interval #gmt_offset# hour as answer_adj_pub_date
 			FROM 
 				#prefix#posts t 
 			INNER JOIN 
 				#prefix#posts t1 on t1.post_id = t.in_reply_to_post_id 
+            JOIN 
+                #prefix#users t2 on t2.user_id = ".$author_id."
+            JOIN 
+                #prefix#users t3 on t3.user_id = t.in_reply_to_user_id 
 			WHERE 
 				t.author_user_id = ".$author_id." AND t.in_reply_to_post_id is not null 
 			ORDER BY
@@ -197,11 +201,15 @@ class PostDAO extends MySQLDAO {
         $q = "
 		
 			SELECT
-				t1.author_username as questioner_username, t1.author_avatar as questioner_avatar, t1.post_id as question_post_id, t1.post_text as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.post_id as answer_post_id,  t.author_username as answerer_username, t.author_avatar as answerer_avatar, t.post_text as answer, t.pub_date - interval #gmt_offset# hour as answer_adj_pub_date
+				t1.author_username as questioner_username, t1.author_avatar as questioner_avatar, t2.follower_count as questioner_follower_count, t1.post_id as question_post_id, t1.post_text as question, t1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, t.post_id as answer_post_id,  t.author_username as answerer_username, t.author_avatar as answerer_avatar, t3.follower_count as answerer_follower_count, t.post_text as answer, t.pub_date - interval #gmt_offset# hour as answer_adj_pub_date
 			FROM 
 				#prefix#posts t 
 			INNER JOIN 
 				#prefix#posts t1 on t1.post_id = t.in_reply_to_post_id 
+            JOIN 
+                #prefix#users t2 on t2.user_id = ".$author_id."
+            JOIN 
+                #prefix#users t3 on t3.user_id = ".$other_user_id."
 			WHERE 
 				t.in_reply_to_post_id is not null AND
 				(t.author_user_id = ".$author_id." AND t1.author_user_id = ".$other_user_id.")
@@ -209,7 +217,7 @@ class PostDAO extends MySQLDAO {
 				(t1.author_user_id = ".$author_id." AND t.author_user_id = ".$other_user_id.")
 			ORDER BY
 				t.pub_date desc";
-				
+								
         $sql_result = $this->executeSQL($q);
         $posts_replied_to = array();
         while ($row = mysql_fetch_assoc($sql_result)) {

@@ -1,0 +1,94 @@
+/* APPLICATION TITLE 
+======================= */
+#app-title {width:300px;float:left;margin-top:10px;}
+#app-title h1 {font-size: 50px;letter-spacing: -.08em;margin:0;padding:15px 0 0 0;line-height:.8em;}
+#app-title h2 {font-size: 19px;color: #0060e0;margin:0;padding:0 0 0 10px;line-height:.8em;}
+#app-title a:hover h1  {color: #000;}
+#app-title img {float:left;margin-right:2px;}
+
+/* DATA GRIDS
+======================= */
+
+.header {padding: 10px 0 0 0;font-weight: 500;color: #999;font-size: .8em;}
+
+.footnote h2 {font-size: 1.6em;padding-left: 80px;}
+
+/* HEADLINES
+======================= */
+
+.thinktank-canvas h1 {color: #666;font-size:1.6em;font-weight:700;margin:0;padding:0 0 0 35px;}
+.thinktank-canvas h4 {color: #000;line-height:1em;font-size:1em;font-weight:700;margin:0;padding:0 0 10px 35px;}
+.thinktank-canvas h1.user {margin:0;padding:0;}
+
+/* CONTENT 
+======================= */
+
+.post {padding: 5px 0;border-top: 1px solid #CCC;margin-top : 5px;/*padding:5px;clear:left;*/}
+
+.tweet {font-size: 1.6em; /* knocked down from 2em */line-height: 1.1em;}
+.individual-tweet {padding: 0 0 0 0;border-top: 1px solid #CCC;}
+.individual-tweet a:link, .individual-tweet a:visited {color:#0060E0;text-decoration: none;}
+.individual-tweet a:hover {color: red;text-decoration: underline;}
+.individual-tweet p {}
+.individual-tweet ul {margin:10px 0 0 5px;padding-left:10px;}
+.individual-tweet li {font-size: .8em;}
+
+.reply {/*padding-left : 85px;*/border-top: 0px;}
+
+/*
+.individual-tweet h3 a {color : #666;}
+.individual-tweet h4, individual-tweet form {font-size : xx-small;visibility:hidden;}
+.individual-tweet h4.reply-count {font-size : medium;visibility:visible;}
+.individual-tweet:hover h4, individual-tweet:hover form {visibility: visible;color : #666;}
+.individual-tweet:hover h3 a {color: #0060e0;}		 
+.individual-tweet h3 a.most-popular {font-size : medium;font-weight : strong;}
+*/
+
+
+.private {background-color : #eee;}
+
+.person-info {float: left;margin-right: 10px;width : 80px;text-align : center;font-size:1.2em;/*border-top: 1px solid #999;*/}
+
+/* FORMS
+======================= */
+
+form.tweet-setparent select {width: 350px;}
+form.tweet-setparent {font-size: .8em;margin:5px 0;}
+
+/* IMAGES AND GRAPHICS
+======================= */
+
+img.avatar {float:left;margin:5px 0px 5px 0px;width:40px;height:40px;}
+img.avatar2 {float:left;margin:6px 15px 2px 5px;width:48px;height:48px;}
+.pic {float: right;margin: 10px 0 10px 10px;border: 1px solid #CCC;padding: 5px 5px 0px 5px;}
+
+#dart1 {position:relative;top:-45px;left: 50px;height: 45px;}
+#dart2 {position:relative;top:-45px;left: 235px;height: 45px;}
+#dart3 {position:relative;top:-45px;left: 430px;height: 45px;}
+#dart4 {position:relative;top:-45px;left: 620px;height: 45px;}
+#dart5 {position:relative;top:-45px;left: 810px;height: 45px;}
+
+/* SYSTEM MESSAGING 
+======================= */
+
+.success {background-color:#BFDFBF;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;}
+.info {background-color:#FFFFAD;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;}
+.error {background-color:#FF8080;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;color:white;text-align:center;font-weight:bold;}
+
+#loading_updates, #loading_mentions, #loading_followers, #loading_friends, #loading_links {  
+visibility: hidden;  
+position:relative;
+top: -5px;
+}  
+
+
+/* NUMBERS
+======================= */
+#keystats {padding : 5px;font-size : medium;display:none;}
+
+.big-number {color: #000;font-size: 1.7em;line-height: 1.8em;}
+.big-number h1 {font-size: 2.7em;font-weight:700;letter-spacing:-4px;padding: 10px 0 0 0;margin: 0;}
+.big-number h3 {color: #666;font-size: .8em;}
+
+.reply-count {font-size: 1.3em;font-weight: bold;background-color: #222;padding: 10px;display:block;margin-top:2px;text-align:center;line-height: 1.8em;height:2.2em;}
+.reply-count a:link, .reply-count a:visited {color: #FFF;text-decoration: underline;}
