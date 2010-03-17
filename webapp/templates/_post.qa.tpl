@@ -19,7 +19,7 @@
 		{$r.questioner_follower_count|number_format}
     </div>
     <div class="grid_3 right small">
-        <a href="{$cfg->site_root_path}post/?t={$r.question_post_id}">{$r.question_adj_pub_date|relative_datetime}</a>
+        <a href="{$cfg->site_root_path}post/?t={$r.question_post_id}">{$r.question_pub_date|relative_datetime}</a>
     </div>
 	<div class="grid_12 omega">
 		<p>{$r.question|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames}</p>
@@ -41,7 +41,7 @@
         {$r.answerer_follower_count|number_format}
 	</div>
 	<div class="grid_3 right small">
-	   <a href="{$cfg->site_root_path}post/?t={$r.answer_post_id}">{$r.answer_adj_pub_date|relative_datetime}</a>
+	   <a href="{$cfg->site_root_path}post/?t={$r.answer_post_id}">{$r.answer_pub_date|relative_datetime}</a>
 	</div>
 	<div class="grid_12 omega">
 		<p>{$r.answer|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames} </p>
