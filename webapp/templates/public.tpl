@@ -35,7 +35,7 @@
                             <a href="http://twitter.com/{$post->author_username}/"><img src="{$post->author_avatar}" class="avatar2"></a>
                             <span class="tweet">{$post->post_text|link_usernames_to_twitter}</span>
                             <div class="small">(<a href="http://twitter.com/{$post->author_username}/">{$post->author_username}</a>, 
-                            <a href="http://twitter.com/{$post->author_username}/status/{$post->post_id}/">{$post->pub_date|relative_datetime}</a>)</div>
+                            <a href="http://twitter.com/{$post->author_username}/status/{$post->post_id}/">{$post->adj_pub_date|relative_datetime}</a>)</div>
                         </div>
                         {if $retweets}
                         <div class="grid_7 center big-number omega">
