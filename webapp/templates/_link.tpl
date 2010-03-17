@@ -17,7 +17,7 @@
 		<a href="http://twitter.com/{$l->container_tweet->author_username}">{$l->container_tweet->author_username}</a>
     </div>
     <div class="grid_3 right small">
-        <a href="http://twitter.com/{$l->container_tweet->author_username}/post/{$l->container_tweet->post_id}">{$l->container_tweet->pub_date|relative_datetime}</a>
+        <a href="http://twitter.com/{$l->container_tweet->author_username}/post/{$l->container_tweet->post_id}">{$l->container_tweet->adj_pub_date|relative_datetime}</a>
     </div>
     <div class="grid_13">
 		{if $l->is_image}<a href="{$l->url}"><div class="pic"><img src="{$l->expanded_url}" /></div></a>

@@ -18,7 +18,7 @@
         <a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
 	</div>
     <div class="grid_3 right small">
-		<a href="http://twitter.com/{$t->author_username}/status/{$t->post_id}">{$t->pub_date|relative_datetime}</a>
+		<a href="http://twitter.com/{$t->author_username}/status/{$t->post_id}">{$t->adj_pub_date|relative_datetime}</a>
 	</div>
 	
     <div class="grid_11">            				

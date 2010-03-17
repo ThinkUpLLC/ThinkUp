@@ -18,7 +18,7 @@
         {if $t->author->follower_count > 0}<br />Followers: {$t->author->follower_count|number_format}{/if}
     </div>
     <div class="grid_3 right small">
-        <a href="http://twitter.com/{$t->author_username}/status/{$t->post_id}">{$t->pub_date|relative_datetime}</a>
+        <a href="http://twitter.com/{$t->author_username}/status/{$t->post_id}">{$t->adj_pub_date|relative_datetime}</a>
     </div>
     <div class="grid_11">
 		{if $t->link->is_image}<div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>{/if}
