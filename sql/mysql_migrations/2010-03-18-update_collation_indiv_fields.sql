@@ -1,3 +1,16 @@
+ALTER TABLE `tt_follows`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_instances`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_links`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_owners`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_owner_instances`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_plugins`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_plugin_options`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_posts`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_post_errors`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_user_errors`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_users`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `tt_replies`  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 ALTER TABLE `tt_follows` CHANGE `network` `network` VARCHAR( 10 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'twitter';
 
 ALTER TABLE `tt_instances` CHANGE `network_username` `network_username` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
@@ -45,4 +58,3 @@ CHANGE `description` `description` TEXT CHARACTER SET utf8 COLLATE utf8_general_
 CHANGE `url` `url` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
 CHANGE `network` `network` VARCHAR( 10 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'twitter',
 CHANGE `found_in` `found_in` VARCHAR( 100 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
-
