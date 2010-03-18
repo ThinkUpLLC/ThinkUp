@@ -40,7 +40,6 @@ CREATE TABLE `instances` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `twitter_user_id` int(11) NOT NULL,
   `twitter_username` varchar(255) COLLATE utf8_bin NOT NULL,
-  `twitter_password` varchar(255) COLLATE utf8_bin NOT NULL,
   `last_status_id` bigint(11) DEFAULT NULL,
   `crawler_last_run` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_page_fetched_followers` int(11) NOT NULL,
@@ -56,7 +55,7 @@ CREATE TABLE `instances` (
   `is_archive_loaded_replies` int(11) NOT NULL DEFAULT '0',
   `is_archive_loaded_follows` int(11) NOT NULL DEFAULT '0',
   `api_calls_to_leave_unmade` int(11) NOT NULL DEFAULT '50',
-    `is_public` int(1) NOT NULL DEFAULT '0',
+   `is_public` int(1) NOT NULL DEFAULT '0',
   
   PRIMARY KEY (`id`),
   KEY `twitter_user_id` (`twitter_user_id`)

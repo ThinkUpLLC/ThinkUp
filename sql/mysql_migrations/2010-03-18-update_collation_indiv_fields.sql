@@ -1,7 +1,6 @@
 ALTER TABLE `tt_follows` CHANGE `network` `network` VARCHAR( 10 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'twitter';
 
 ALTER TABLE `tt_instances` CHANGE `network_username` `network_username` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-CHANGE `twitter_password` `twitter_password` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 CHANGE `network` `network` VARCHAR( 10 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'twitter';
 
 ALTER TABLE `tt_links` CHANGE `url` `url` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
