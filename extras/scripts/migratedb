@@ -1,0 +1,20 @@
+#!/bin/bash
+
+cd `dirname $0`/../..
+source ./extras/scripts/migratedb-conf
+cd sql/mysql_migrations/
+
+echo "DROP DATABASE $db_name;" | $mysql_location/mysql -u $db_user -p$db_password   
+echo "CREATE DATABASE $db_name COLLATE utf8_bin;" | $mysql_location/mysql -u $db_user -p$db_password   
+
+for f in *.sql
+do
+  echo "$mysql_location/mysql -u $db_user -p$db_password $db_name < $f"
+  cat $f | $mysql_location/mysql -u $db_user -p$db_password $db_name
+done
+
+echo "CREATE DATABASE thinktank DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; 
+USE thinktank; 
+" > build-db_mysql.sql
+$mysql_location/mysqldump --create-options --skip-set-charset --skip-add-drop-table --no-data --skip-add-locks --skip-disable-keys -u $db_user -p$db_password $db_name |egrep -v "(^SET|^/\*\!)" >> build-db_mysql.sql
+mv build-db_mysql.sql ../.

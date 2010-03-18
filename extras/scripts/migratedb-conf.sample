@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#Database credentials
+db_name="thinktank_migration"
+db_user="thinktank_user"
+db_password="password"
+
+#MySQL bin location
+mysql_location="/cygdrive/c/xampp/mysql/bin"
+
+
+
+#############################
+#Don't Alter anything below 
+#this mark unless you know 
+#what you are doing
+#############################
+

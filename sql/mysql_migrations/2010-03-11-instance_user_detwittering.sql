@@ -1,5 +1,4 @@
 ALTER TABLE  `tt_users` CHANGE  `tweet_count` `post_count` int(11) NOT NULL;
-ALTER TABLE  `tt_users` CHANGE  `last_status_id` `last_post_id` bigint(20) NOT NULL default '0';
 
 ALTER TABLE  `tt_instances` CHANGE  `twitter_user_id` `network_user_id` int(11) NOT NULL;
 ALTER TABLE  `tt_instances` CHANGE  `twitter_username` `network_username` varchar(255) collate utf8_bin NOT NULL;
