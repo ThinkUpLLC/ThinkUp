@@ -23,6 +23,19 @@ $i = $id->getInstanceFreshestOne();
 $s->assign('crawler_last_run', $i->crawler_last_run);
 $s->assign('i', $_i);
 
+//Pagination
+if(isset($_REQUEST['page'])) {
+    $page = $_REQUEST['page'];
+}else{
+    $page = 1;
+}
+if($page > 1){
+    $s->assign('prev_page', $page - 1);
+}
+$next_page = $page + 1;
+$s->assign('next_page', $next_page);
+    
+
 // show tweet with public replies
 if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     if (!$s->is_cached('public.tpl', $_REQUEST['t'])) {
