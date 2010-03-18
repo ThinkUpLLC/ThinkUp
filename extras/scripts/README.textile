@@ -1,0 +1,33 @@
+h1. ThinkTank Scripts
+
+Bash scripts that automate common use and development tasks in ThinkTank.
+
+h2. autodeploy (for developers testing file changes)
+
+Automates the process of uploading ThinkTank changes to your webserver when you're editing them locally.
+
+* <code>autodeploy-scp</code> - autodeploy via SCP
+* <code>autodeploy-conf</code> - configuration
+
+h3. Set up autodeploy
+
+* Copy autodeploy-conf.sample to autodeploy-conf
+* Edit autodeploy-conf to match your settings
+* Run desired autodeploy script from thinktank root directory
+
+Example: <code>./extras/scripts/autdeploy-scp</code>
+  
+h2. migratedb (for developers changing the database)
+
+Iterates through all database migration files (including any new ones you're testing) and generates the final <code>build-db_mysql.sql</code>.
+ 
+* <code>migratedb</code> - run through all migrations start to finish
+* <code>migratedb-conf</code> - configuration
+ 
+h3. Set up migratedb
+
+* Copy migratedb-conf.sample to migratedb-conf
+* Edit migratedb-conf to match your settings
+* Run migratedb script from <code>thinktank/sql/mysql_migrations</code> directory
+
+Example: <code>migratedb</code>

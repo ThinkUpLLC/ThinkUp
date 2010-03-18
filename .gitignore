@@ -12,3 +12,4 @@ smarty/*
 .*
 extras/cron/config
 extras/scripts/autodeploy-conf
+extras/scripts/migratedb-conf
