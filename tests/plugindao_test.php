@@ -28,30 +28,23 @@ class TestOfPluginDAO extends UnitTestCase {
         //Override default CFG values
         $THINKTANK_CFG['db_name'] = "thinktank_tests";
         
-        //Build test table
-        $q = "CREATE TABLE  IF NOT EXISTS `tt_plugins` (
-`id` INT NOT NULL AUTO_INCREMENT,
-`name` VARCHAR( 255 ) NOT NULL ,
-`folder_name` VARCHAR( 255 ) NOT NULL ,
-`description` VARCHAR( 255 ),
-`author` VARCHAR( 255 ),
-`homepage` VARCHAR( 255 ),
-`version` VARCHAR( 255 ),
-`is_active` TINYINT NOT NULL ,
-PRIMARY KEY (  `id` )
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-		";
-		
         $this->logger = new Logger($THINKTANK_CFG['log_location']);
         $this->db = new Database($THINKTANK_CFG);
         $this->conn = $this->db->getConnection();
-        $this->db->exec($q);
+        
+        //Create all the tables based on the build script
+        $create_db_script = file_get_contents($THINKTANK_CFG['source_root_path']."sql/build-db_mysql.sql");
+        $create_db_script = str_replace("ALTER DATABASE thinktank", "ALTER DATABASE thinktank_tests", $create_db_script);
+        $create_statements = split(";", $create_db_script);
+        foreach ($create_statements as $q) {
+            if (trim($q) != '') {
+                $this->db->exec($q.";");
+            }
+        }
         
         //Insert test data into test table
-        $q = "INSERT INTO  `tt_plugins` ( `name` , `folder_name` , `description` , `author` , `homepage` , `version` , `is_active` ) 
-VALUES ( 'Twitter',  'twitter',  'Twitter support',  'Gina Trapani',  'http://thinktankapp.com',  '0.01',  '1' );";
-        $this->db->exec($q);
-		
+        //The default Twitter plugin is inserted by default
+        
         $q = "INSERT INTO  `tt_plugins` (`name` , `folder_name` , `description` , `author` , `homepage` , `version` , `is_active` )
 VALUES (  'My Test Plugin',  'testplugin',  'Proof of concept plugin',  'Gina Trapani',  'http://thinktankapp.com',  '0.01',  '0' );";
         $this->db->exec($q);
@@ -62,7 +55,7 @@ VALUES (  'My Test Plugin',  'testplugin',  'Proof of concept plugin',  'Gina Tr
         $this->logger->close();
         
         //Delete test data
-        $q = "DROP TABLE tt_plugins;";
+        $q = "DROP TABLE `tt_follows`, `tt_instances`, `tt_links`, `tt_owners`, `tt_owner_instances`, `tt_users`, `tt_user_errors`, `tt_plugins`, `tt_plugin_options`, `tt_posts`, `tt_post_errors`, `tt_replies`;";
         $this->db->exec($q);
         
         //Clean up
