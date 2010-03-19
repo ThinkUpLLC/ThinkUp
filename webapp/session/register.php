@@ -59,7 +59,7 @@ if (!$THINKTANK_CFG['is_registration_open']) {
 
 				Mailer::mail($_POST['email'], "Activate Your ".$THINKTANK_CFG['app_title'] ." Account", $message);
 
-				echo $message;
+				//echo $message;
 				
 				unset($_SESSION['ckey']);
 				$successmsg = "Success! Check your email for an activation link.";

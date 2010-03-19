@@ -4,17 +4,37 @@ cd `dirname $0`/../..
 source ./extras/scripts/migratedb-conf
 cd sql/mysql_migrations/
 
-echo "DROP DATABASE $db_name;" | $mysql_location/mysql -u $db_user -p$db_password   
-echo "CREATE DATABASE $db_name COLLATE utf8_bin;" | $mysql_location/mysql -u $db_user -p$db_password   
+echo "DROP DATABASE $db_name;" | $mysql -u $db_user -p$db_password
+echo "CREATE DATABASE $db_name COLLATE utf8_bin;" | $mysql -u $db_user -p$db_password
 
 for f in *.sql
 do
-  echo "$mysql_location/mysql -u $db_user -p$db_password $db_name < $f"
-  cat $f | $mysql_location/mysql -u $db_user -p$db_password $db_name
+  echo "mysql -u $db_user -p$db_password $db_name < $f"
+  cat $f | $mysql -u $db_user -p$db_password $db_name
 done
 
-echo "CREATE DATABASE thinktank DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; 
-USE thinktank; 
+now=`date '+%Y-%m-%d'`
+echo "-- 
+-- ThinkTank Database Creation Script
+-- Auto-generated based on migration scripts by thinktank/extras/scripts/migratedb script on $now
+--
+
+ALTER DATABASE thinktank DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 " > build-db_mysql.sql
-$mysql_location/mysqldump --create-options --skip-set-charset --skip-add-drop-table --no-data --skip-add-locks --skip-disable-keys -u $db_user -p$db_password $db_name |egrep -v "(^SET|^/\*\!)" >> build-db_mysql.sql
+$mysqldump --create-options --skip-set-charset --skip-add-drop-table --no-data --skip-add-locks --skip-disable-keys -u $db_user -p$db_password $db_name |egrep -v "(^SET|^/\*\!)" | tail -n+7 >> build-db_mysql.sql
+
+echo "
+--
+-- Insert default plugin(s)
+--
+
+INSERT INTO tt_plugins (name , folder_name, description, author, homepage, version, is_active )
+VALUES ('Twitter', 'twitter', 'Twitter support', 'Gina Trapani', 'http://thinktankapp.com', '0.01', '1'); " >> build-db_mysql.sql
+
+
 mv build-db_mysql.sql ../.
+
+echo "
+
+Check the output for errors.
+Complete build script generated and saved as thinktank/sql/build-db_mysql.sql"
