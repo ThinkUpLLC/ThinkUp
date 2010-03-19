@@ -23,7 +23,7 @@ $i = $id->getInstanceFreshestOne();
 $s->assign('crawler_last_run', $i->crawler_last_run);
 $s->assign('i', $_i);
 
-//Pagination
+//Pagination setup
 if(isset($_REQUEST['page'])) {
     $page = $_REQUEST['page'];
 }else{
@@ -32,9 +32,9 @@ if(isset($_REQUEST['page'])) {
 if($page > 1){
     $s->assign('prev_page', $page - 1);
 }
+$count = 15;
 $next_page = $page + 1;
-$s->assign('next_page', $next_page);
-    
+$start_on_record = ($page - 1) * $count;
 
 // show tweet with public replies
 if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
@@ -56,10 +56,11 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     
 } elseif (isset($_REQUEST['v'])) {
     $view = $_REQUEST['v'];
+    $s->assign('next_page', $next_page);
     switch ($view) {
         case 'timeline':
             if (!$s->is_cached('public.tpl')) {
-                $s->assign('posts', $pd->getPostsByPublicInstances());
+                $s->assign('posts', $pd->getPostsByPublicInstances($start_on_record, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Latest');
@@ -68,7 +69,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
             break;
         case 'mostretweets':
             if (!$s->is_cached('public.tpl', 'mostretweets')) {
-                $s->assign('posts', $pd->getMostRetweetedPostsByPublicInstances());
+                $s->assign('posts', $pd->getMostRetweetedPostsByPublicInstances($start_on_record, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Most retweeted');
@@ -77,7 +78,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
             break;
         case 'mostreplies':
             if (!$s->is_cached('public.tpl', 'mostreplies')) {
-                $s->assign('posts', $pd->getMostRepliedToPostsByPublicInstances());
+                $s->assign('posts', $pd->getMostRepliedToPostsByPublicInstances($start_on_record, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Most replied to');
@@ -86,7 +87,9 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
             break;
         case 'photos':
             if (!$s->is_cached('public.tpl', 'photos')) {
-                $s->assign('posts', $pd->getPhotoPostsByPublicInstances());
+                $totals = $pd->getCountPhotoPostsByPublicInstances($count);
+                echo $totals['total']." ".$totals['pages'];
+                $s->assign('posts', $pd->getPhotoPostsByPublicInstances($start_on_record, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Photos');
@@ -95,7 +98,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
             break;
         case 'links':
             if (!$s->is_cached('public.tpl', 'links')) {
-                $s->assign('posts', $pd->getLinkPostsByPublicInstances());
+                $s->assign('posts', $pd->getLinkPostsByPublicInstances($start_on_record, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Links');
@@ -107,11 +110,12 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     
 } else {
     if (!$s->is_cached('public.tpl', 'timeline-'.$i->network_username."-".$_u)) {
-        $s->assign('posts', $pd->getPostsByPublicInstances());
+        $s->assign('posts', $pd->getPostsByPublicInstances($start_on_record, $count));
         $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
     }
     $s->assign('header', 'Latest');
     $s->assign('description', 'Latest public posts, replies and forwards');
+    $s->assign('next_page', $next_page);
     $s->display('public.tpl', 'timeline-'.$i->network_username."-".$_u);
     
 }

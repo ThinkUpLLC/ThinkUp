@@ -601,7 +601,7 @@ class PostDAO extends MySQLDAO {
         return $strays;
     }
     
-    private function getPostsByPublicInstancesOrderedBy($start_on = 0, $count = 15, $orderby = "pub_date") {
+    private function getPostsByPublicInstancesOrderedBy($start_on_record, $count = 15, $orderby = "pub_date") {
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
@@ -619,7 +619,7 @@ class PostDAO extends MySQLDAO {
 				i.is_public = 1 and (t.mention_count_cache > 0 or t.retweet_count_cache > 0) and in_reply_to_post_id is NULL
 			ORDER BY
 				t.".$orderby." DESC
-			LIMIT ".$start_on.", ".$count;
+			LIMIT ".$start_on_record.", ".$count;
         $sql_result = $this->executeSQL($q);
         $posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -629,23 +629,11 @@ class PostDAO extends MySQLDAO {
         return $posts;
     }
 
-    function getPostsByPublicInstances($start_on = 0, $count = 15) {
-	if(isset($_REQUEST['page'])){
-		$page = $_GET['page'];
-	}else{
-		$page = 1;
-	}
-	$start_on = ($page - 1) * $count;
-        return $this->getPostsByPublicInstancesOrderedBy($start_on, $count, "pub_date");
+    function getPostsByPublicInstances($start_on_record, $count = 15) {
+        return $this->getPostsByPublicInstancesOrderedBy($start_on_record, $count, "pub_date");
     }
     
-    function getPhotoPostsByPublicInstances($count = 15) {
-	if(isset($_REQUEST['page'])){
-		$page = $_GET['page'];
-	}else{
-		$page = 1;
-	}
-	$start_on = ($page - 1) * $count;
+    function getPhotoPostsByPublicInstances($start_on_record, $count = 15) {
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
@@ -663,7 +651,7 @@ class PostDAO extends MySQLDAO {
 				i.is_public = 1 and l.is_image = 1 
 			ORDER BY
 				t.pub_date DESC
-			LIMIT ".$start_on.", ".$count;
+			LIMIT ".$start_on_record.", ".$count;
         $sql_result = $this->executeSQL($q);
         $posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -673,13 +661,32 @@ class PostDAO extends MySQLDAO {
         return $posts;
     }
     
-    function getLinkPostsByPublicInstances($count = 15) {
-	if(isset($_REQUEST['page'])){
-		$page = $_GET['page'];
-	}else{
-		$page = 1;
-	}
-	$start_on = ($page - 1) * $count;
+    function getCountPhotoPostsByPublicInstances($count) {
+        $q = "
+			SELECT 
+                                count(*) as total, ceil(count(*) / 15) as pages
+			FROM 
+				#prefix#posts t
+			INNER JOIN
+				#prefix#instances i
+			ON
+				t.author_user_id = i.network_user_id
+			LEFT JOIN
+				#prefix#links l
+			ON t.post_id = l.post_id
+
+			WHERE
+				i.is_public = 1 and l.is_image = 1 
+                        ";
+        $sql_result = $this->executeSQL($q);
+        $totals = array();
+        $row = mysql_fetch_assoc($sql_result);
+        $totals['total'] = $row['total'];
+        $totals['pages'] = $row['pages'];
+        return $totals;
+    }
+    
+    function getLinkPostsByPublicInstances($start_on_record, $count = 15) {
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
@@ -697,7 +704,7 @@ class PostDAO extends MySQLDAO {
 				i.is_public = 1 and l.expanded_url != '' and l.is_image = 0 
 			ORDER BY
 				t.pub_date DESC
-			LIMIT ".$start_on.", ".$count;
+			LIMIT ".$start_on_record.", ".$count;
         $sql_result = $this->executeSQL($q);
         $posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -708,24 +715,12 @@ class PostDAO extends MySQLDAO {
     }
 
     
-    function getMostRepliedToPostsByPublicInstances($count = 15) {
-	if(isset($_REQUEST['page'])){
-		$page = $_GET['page'];
-	}else{
-		$page = 1;
-	}
-	$start_on = ($page - 1) * $count;
-        return $this->getPostsByPublicInstancesOrderedBy($start_on, $count, "mention_count_cache");
+    function getMostRepliedToPostsByPublicInstances($start_on_record, $count = 15) {
+        return $this->getPostsByPublicInstancesOrderedBy($start_on_record, $count, "mention_count_cache");
     }
     
-    function getMostRetweetedPostsByPublicInstances($count = 15) {
-	if(isset($_REQUEST['page'])){
-		$page = $_GET['page'];
-	}else{
-		$page = 1;
-	}
-	$start_on = ($page - 1) * $count;
-        return $this->getPostsByPublicInstancesOrderedBy($start_on, $count, "retweet_count_cache");
+    function getMostRetweetedPostsByPublicInstances($start_on_record, $count = 15) {
+        return $this->getPostsByPublicInstancesOrderedBy($start_on_record, $count, "retweet_count_cache");
     }
 
     
