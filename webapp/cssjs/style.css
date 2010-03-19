@@ -32,6 +32,9 @@ a:hover {text-decoration : none;color : red;}
 ==============================*/
 
 /* JQuery UI resets */
+
+.ui-tabs .ui-tabs-panel {padding:0;}
+
 /* added to tab id */
 #thinktank-tabs .ui-tabs {-moz-border-radius: 10px;-webkit-border-radius: 10px;margin: 0px;} 
 #thinktank-tabs .ui-widget {margin-top: 10px;font-size:1em;}
@@ -106,9 +109,9 @@ text-align: center;
 .menu {margin-bottom:30px;}
 .menu li {margin-right: 40px;display:inline;padding:4px 10px;}
 .menu li a {color:#000}
-.menu li:hover{color: #0060e0;cursor: pointer;border-top:4px solid #0060e0;}  
-.menu li.selected {border-top:4px solid #000;}
-.menu li.selected:hover {border-top:4px solid #0060e0;}
+.menu li:hover{color: #0060e0;cursor: pointer;border-top:1px solid #0060e0;}  
+.menu li.selected {border-top:1px solid #000;}
+.menu li.selected:hover {border-top:1px solid #0060e0;}
 
 
 .submenu {padding-left : 20px;}

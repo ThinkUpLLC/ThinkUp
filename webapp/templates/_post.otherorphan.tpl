@@ -47,7 +47,7 @@
                 Description: {$t->author->description}
             </div>{/if}
             <div id="div{$t->post_id}">
-                <form action="" class="tweet-setparent">
+                <form action="" class="post-setparent">
                     <select name="pid{$t->post_id}" id="pid{$t->post_id}" onselect>
                         <option disabled="disabled">Is in reply to...</option>
                         <option value="0">No particular tweet (standalone)</option>

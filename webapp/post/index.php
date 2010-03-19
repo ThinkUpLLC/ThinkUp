@@ -55,6 +55,8 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
 
 		$s->assign('cfg', $cfg);
 		$s->assign('instance', $i);
+		$s->assign('i', $i);
+		
 	}
 	# clean up
 	$db->closeConnection($conn);
