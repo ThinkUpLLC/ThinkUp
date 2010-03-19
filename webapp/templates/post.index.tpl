@@ -8,92 +8,180 @@
 
 
 				<ul>
-					<li><a href="#tweets">Status</a></li>
-					{if $retweets}<li><a href="#retweets">Retweets</a></li>{/if}
+					<li><a href="#posts">Post</a></li>
+					{if $retweets}<li><a href="#forwards">Forwards</a></li>{/if}
 					{if $likely_orphans}<li><a href="#replies">Likely Replies</a></li>{/if}
 					{if $replies}<li><a href="#followers">Public/Republishable Replies</a></li>{/if}
 					
 				</ul>		
 
+<div class="section" id="posts">
 
-<div class="section" id="tweets">
-<h1>{$tweet->post_text}</h1>
-<br /><br />
-	{foreach from=$replies key=tid item=t}
-		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-		{include file="_post.other.tpl" t=$t}
+    <div class="container_24 thinktank-canvas clearfix">
 
-		<div id="div{$t->post_id}">
-		<form action="">
-			<input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save as Reply To:" />
-		<select name="pid{$t->post_id}" id="pid{$t->post_id}">
-			<option value="0">No Tweet in Particular (Mark as standalone)</option>
-			<option disabled>Set as a reply to:</option>
-		{foreach from=$all_tweets key=aid item=a}
-			<option value="{$a->post_id}">&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
-		{/foreach}
-		</select>  
-		</form>
-		</div>
-		
-		</div>
-	{/foreach}
+	   <!--<a {if $instance}href="{$cfg->site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a>-->
+        
+        <div class="clearfix prepend_20 append_20">
+            <div class="grid_2 prefix_1 alpha">
+                <img src="{$tweet->author_avatar}" class="avatar2"> 
+            </div>
+            <div class="grid_19 omega">
+                <h1 class="post">{$tweet->post_text}</h1>
+                <div class="small gray right">
+                    Post {$tweet->adj_pub_date|relative_datetime} at {$tweet->pub_date} via {$tweet->source}
+                </div>
+                 
+            </div>
+        </div>
+
+        <div class="grid_1 alpha">&nbsp;</div>
+        <div class="grid_23 omega">
+            {if $replies}
+                <h2 class="subhead">
+                {if $reply_count eq 1}1 Reply{else}{$reply_count}Replies{/if} ({$private_reply_count} private)</h2>
+            {/if}
+        	{foreach from=$replies key=tid item=t name=foo}
+        		<div class="clearfix">
+        		
+            		{include file="_post.other.tpl" t=$t}
+        
+            		<div id="div{$t->post_id}" class="grid_22 prefix_10">
+            		
+            		<form action="" class="post-setparent">
+                		<select name="pid{$t->post_id}" id="pid{$t->post_id}">
+                			<option value="0">No Tweet in Particular (Mark as standalone)</option>
+                			<option disabled>Set as a reply to:</option>
+                    		{foreach from=$all_tweets key=aid item=a}
+                    			<option value="{$a->post_id}">&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
+                    		{/foreach}
+                		</select>  
+            			<input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
+            		</form>
+            		
+            		</div>
+        		
+        		</div>
+        	{/foreach}
+        </div>
+        
+	</div>
 </div>
 
 {if $retweets}
-<div class="section" id="retweets">
-<h1>{$tweet->post_text}</h1>
-<br /><br />
-<p>In addition to the original author's followers, this tweet reached {$retweet_reach|number_format} users via retweets.</p>
+<div class="section" id="forwards">
 
-	{foreach from=$retweets key=tid item=t}
-		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-		{include file="_post.other.tpl" t=$t}
+    <div class="container_24 thinktank-canvas clearfix">
 
-		<div id="div{$t->post_id}">
-		<form action="">
-			<input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save as Reply To:" />
-		<select name="pid{$t->post_id}" id="pid{$t->post_id}">
-			<option value="0">No Tweet in Particular (Mark as standalone)</option>
-			<option disabled>Set as a reply to:</option>
-		{foreach from=$all_tweets key=aid item=a}
-			<option value="{$a->post_id}">&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
-		{/foreach}
-		</select>
-		</form>
-		</div>
+        <div class="clearfix prepend_20 append_20">
+        
+            <div class="grid_2 prefix_1 alpha">
+                <img src="{$tweet->author_avatar}" class="avatar2"> 
+            </div>
+            
+            <div class="grid_12">
+                <h1 class="post">{$tweet->post_text}</h1>
+                <div class="small gray right">
+                    Post {$tweet->adj_pub_date|relative_datetime} at {$tweet->pub_date} via {$tweet->source}
+                </div>
+            </div>   
+            
+            <div class="grid_7 center big-number omega">
+                <div class="bl">
+                <div class="key-stat">
+                    <h1>{$retweet_reach|number_format}</h1>
+                    <h3>retweets to followers</h3>
+                </div>
+                </div>
+            </div>
 
-		</div>
-	{/foreach}
+        </div>
+
+        <div class="grid_1 alpha">&nbsp;</div>
+        <div class="grid_23 omega">
+            <h2 class="subhead">Forwards</h2>
+    
+            {foreach from=$retweets key=tid item=t name=foo}
+                <div class="clearfix">
+                    {include file="_post.other.tpl" t=$t}
+                    
+                    <div id="div{$t->post_id}" class="grid_22 prefix_10">
+                        <form action="" class="post-setparent">
+                        <select name="pid{$t->post_id}" id="pid{$t->post_id}">
+                        <option value="0">No Tweet in Particular (Mark as standalone)</option>
+                        <option disabled>Set as a reply to:</option>
+                        {foreach from=$all_tweets key=aid item=a}
+                        <option value="{$a->post_id}">&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
+                        {/foreach}
+                        </select>
+                        <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
+                        </form>
+                    </div>
+                
+                </div>
+            {/foreach}
+        </div>
+        
+    </div>	
 </div>
 {/if}
 
 {if $likely_orphans}
 <div class="section" id="replies">
 
-<h1>{$tweet->post_text}</h1>
-<br /><br />
-<p>Posted right around the time of this update:</p><br /><br />
+    <div class="container_24 thinktank-canvas clearfix">
+
+        <div class="clearfix prepend_20 append_20">
+        
+            <div class="grid_2 prefix_1 alpha">
+                <img src="{$tweet->author_avatar}" class="avatar2"> 
+            </div>
+            
+            <div class="grid_12">
+                <h1 class="post">{$tweet->post_text}</h1>
+                <div class="small gray">
+                    Post {$tweet->adj_pub_date|relative_datetime} at {$tweet->pub_date} via {$tweet->source}
+                </div>
+            </div>
+            
+            <div class="grid_7 center big-number omega">
+                <div class="bl">
+                <div class="key-stat">
+                    <h1>{$retweet_reach|number_format}</h1>
+                    <h3>retweets to followers</h3>
+                </div>
+                </div>
+            </div>
+
+        </div>
 
 
-	{foreach from=$likely_orphans key=tid item=t}
-		<div style="padding:5px;background-color:{cycle values="#eeeeee,#ffffff"}">
-		{include file="_post.other.tpl" t=$t}
+        <div class="grid_1 alpha">&nbsp;</div>
+        <div class="grid_23 omega">
 
-		<div id="div{$t->post_id}">
-		<form action="">
-			<input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save as Reply To:" />  
-		<select name="pid{$t->post_id}" id="pid{$t->post_id}">
-			<option value="0">No Tweet in Particular (Mark as standalone)</option>
-		{foreach from=$all_tweets key=aid item=a}
-			<option value="{$a->post_id}" {if $a->post_id eq $tweet->post_id} selected="true" {/if}>{$a->post_text|truncate_for_select}</option>
-		{/foreach}
-		</select>
-		</form>
-		</div>
+        <h2 class="subhead">Possible replies posted near the time of this update</h2>
 
-		</div>
-	{/foreach}
+    	{foreach from=$likely_orphans key=tid item=t name=foo}
+    		<div class="clearfix">
+    		{include file="_post.other.tpl" t=$t}
+    
+    		<div id="div{$t->post_id}" class="grid_22 prefix_10">
+        		<form action="" class="post-setparent">
+             		<select name="pid{$t->post_id}" id="pid{$t->post_id}">
+            			<option value="0">No Tweet in Particular (Mark as standalone)</option>
+                		{foreach from=$all_tweets key=aid item=a}
+                			<option value="{$a->post_id}" {if $a->post_id eq $tweet->post_id} selected="true" {/if}>{$a->post_text|truncate_for_select}</option>
+                		{/foreach}
+            		</select>
+        			<input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />  
+           		</form>
+    		</div>
+    
+    		</div>
+    	{/foreach}
+        </div>
+    
+    </div>
+    
 </div>
 {/if}
 
@@ -101,32 +189,44 @@
 {if $replies}
 <div class="section" id="followers">
 
-<h1>{$tweet->post_text}</h1>
-<br /><br />
-{foreach from=$replies key=tid item=t}
-{if $t->is_protected}Anonymous says {else}<a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a> <a href="http://twitter.com/{$t->author_username}/post/{$t->post_id}">says</a>{/if}, "{$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+ /":""}"<br /><br />
-{/foreach}
+    <div class="container_24 thinktank-canvas clearfix">
+        
+        <div class="clearfix prepend_20 append_20">
+            <div class="grid_2 prefix_1 alpha">
+                <img src="{$tweet->author_avatar}" class="avatar2"> 
+            </div>
+            <div class="grid_17 omega">
+                <h1 class="post">{$tweet->post_text}</h1>
+                <div class="small gray">
+                    {$tweet->adj_pub_date|relative_datetime} via {$tweet->source}
+                </div>
+                 
+            </div>
+        </div>
+    
+        <div class="grid_1 alpha">&nbsp;</div>
+        <div class="grid_23 omega">
+            {foreach from=$replies key=tid item=t}
+            <div class="post">
+                {if $t->is_protected}
+                    Anonymous
+                {else}
+                    <a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a> <a href="http://twitter.com/{$t->author_username}/post/{$t->post_id}"></a>
+                {/if}
+                says: "{$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+ /":""}"
+            </div>
+            {/foreach}
+        </div>
+    
+    </div>
+
 </div>
+
 {/if}
 
 </div>
 </div>
 </div>
-
-
-
-
-<div role="contentinfo" id="keystats" class="yui-b">
-
-<h2>Tweet Stats</h2>
-<ul>
-	<li>Posted at {$tweet->pub_date}</li>
-	<li>{$reply_count} total replies</li>
-	<li>{$private_reply_count} private</li>
-	<li><a {if $instance}href="{$cfg->site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a></li>
-</ul>
-</div>
-
 
 <script type="text/javascript">
 	{literal}

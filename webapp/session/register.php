@@ -20,7 +20,7 @@ $s->caching=false;
 
 if (!$THINKTANK_CFG['is_registration_open']) {
 	$s->assign('closed', true);
-	$errormsg = 'Sorry, registration on this instance of ThinkTank is closed. <br /><br /><a href="http://github.com/ginatrapani/thinktank/tree/master">Install ThinkTank on your own server</a> or go back to <a href="'.$THINKTANK_CFG['site_root_path'].'public.php">the public timeline</a>.';
+	$errormsg = 'Sorry, registration is closed on this ThinkTank installation. <br /><br /><a href="http://github.com/ginatrapani/thinktank/tree/master">Install ThinkTank on your own server.</a>';
 } else {
 	$db = new Database($THINKTANK_CFG);
 	$conn = $db->getConnection();

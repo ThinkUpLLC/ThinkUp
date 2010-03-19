@@ -29,6 +29,7 @@
 </div>
 
 
+<p><a href="{$cfg->site_root_path}">Go to the public timeline</a></p>
 <p>Set up your own <a href="http://thinktankapp.com">ThinkTank</a></p>
 <p>It is nice to be nice</p>
 	</center>
