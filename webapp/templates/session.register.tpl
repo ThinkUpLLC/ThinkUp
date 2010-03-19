@@ -1,4 +1,4 @@
-{include file="session._header.tpl" title="Registration"}<h1>Register For ThinkTank</h1>
+{include file="session._header.tpl" title="Registration"}<h1>Create a ThinkTank Account</h1>
 <div class="content">
     {if isset($errormsg)} 
     <div class="error">
@@ -21,7 +21,7 @@
                     <input name="full_name" type="text" id="full_name"{if  isset($name)}  value="{$name}"{/if}>
                     <br/>
                     <small>
-                        Ex. John Wilson
+                        Ex. Angelina Jolie
                     </small>
                 </td>
             </tr>
@@ -33,7 +33,7 @@
                     <input name="email" type="text" id="email" {if  isset($mail)}  value="{$mail}"{/if}>
                     <br/>
                     <small>
-                        Ex. john@domain.com
+                        Ex. angie@example.com
                     </small>
                 </td>
             </tr>
@@ -253,10 +253,13 @@
             </tr>
         </form>
         </table>{/if}
+		</div>
         <br/>
         <br/>
         <center>
-            Already have an account? <a href="login.php">Sign in</a>
+            <p>Already have an account? <a href="login.php">Sign in</a>.</p>
+			<p><a href="{$cfg->site_root_path}">Go to the public timeline</a></p>
+			<p>It is nice to be nice</p>
         </center>
         <br/>
     </body>

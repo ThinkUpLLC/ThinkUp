@@ -25,16 +25,18 @@
     </form>
 </div>
 <br/>
-<br/>
+
 <center>
-    Already have an account? <a href="login.php">Sign in</a>
+    <p>
+        Already have an account? <a href="login.php">Sign in</a>.
+    </p>
+    <p>
+        <a href="{$cfg->site_root_path}">Go to the public timeline</a>
+    </p>
+    <p>
+        It is nice to be nice
+    </p>
 </center>
-<p>
-    Set up your own <a href="http://thinktankapp.com">ThinkTank</a>
-</p>
-<p>
-    It is nice to be nice
-</p>
 </center>
 </body>
 </html>
