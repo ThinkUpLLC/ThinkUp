@@ -26,7 +26,9 @@ CREATE TABLE `follows` (
   `user_id` int(11) NOT NULL,
   `follower_id` int(11) NOT NULL,
   `last_seen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`,`follower_id`)
+  `active` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`user_id`,`follower_id`),
+  KEY `active` (`active`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -54,9 +56,8 @@ CREATE TABLE `instances` (
   `earliest_reply_in_system` datetime DEFAULT NULL,
   `is_archive_loaded_replies` int(11) NOT NULL DEFAULT '0',
   `is_archive_loaded_follows` int(11) NOT NULL DEFAULT '0',
-  `api_calls_to_leave_unmade` int(11) NOT NULL DEFAULT '50',
-   `is_public` int(1) NOT NULL DEFAULT '0',
-  
+  `api_calls_to_leave_unmade_per_minute` decimal(11,1) NOT NULL DEFAULT '2.0',
+  `is_public` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `twitter_user_id` (`twitter_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -72,7 +73,8 @@ CREATE TABLE `owner_instances` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `owner_id` int(10) NOT NULL,
   `instance_id` int(10) NOT NULL,
-  `twitter_password` varchar(255) NOT NULL DEFAULT '',
+  `oauth_access_token` varchar(255) NOT NULL DEFAULT '',
+  `oauth_access_token_secret` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
