@@ -60,13 +60,13 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         
         $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 12, '1/1/2006');";
         $this->db->exec($q);
-
+        
         $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) VALUES (13, 'ev', 1);";
         $this->db->exec($q);
-
+        
         $counter = 0;
-        while($counter < 40){
-            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT); 
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
             $this->db->exec($q);
             $counter++;
@@ -120,9 +120,10 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->assertText('This user is not in the system.');
         
     }
+    
     function testNextAndPreviousLinks() {
         global $TEST_SERVER_DOMAIN;
-
+        
         $this->get($TEST_SERVER_DOMAIN.'/public.php');
         $this->assertTitle('ThinkTank Public Timeline');
         
@@ -134,15 +135,15 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->assertNoLinkById("prev_page");
         
         $this->clickLinkById("next_page");
-
+        
         $this->assertText('Page 2 of 3');
         $this->assertText('This is post 24');
         $this->assertText('This is post 10');
         $this->assertLinkById("next_page");
         $this->assertLinkById("prev_page");
-       
+        
         $this->clickLinkById("next_page");
-
+        
         $this->assertNoLinkById("next_page");
         $this->assertLinkById("prev_page");
         $this->assertText('This is post 9');

@@ -26,15 +26,15 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
         //Insert test data into test table
         $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
         $this->db->exec($q);
-
+        
         //Make public
         $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) VALUES (13, 'ev', 1);";
         $this->db->exec($q);
-
+        
         //Add a bunch of posts
         $counter = 0;
-        while($counter < 40){
-            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT); 
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
             $this->db->exec($q);
             $counter++;
@@ -81,23 +81,53 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
         $this->assertTrue(RetweetDetector::detectOriginalTweet($startwithcolon, $recent_tweets) == 8925077246);
         $this->assertTrue(RetweetDetector::detectOriginalTweet($nonexistent, $recent_tweets) === false);
     }
-
+    
     function testGetPageOneOfPublicPosts() {
         //Instantiate DAO
         $pdao = new PostDAO($this->db, $this->logger);
-
+        
         //Get page 1 containing 15 public posts
         $page_of_posts = $pdao->getPostsByPublicInstances(1, 15);
-
+        
         //Assert DAO returns 15 posts
-        $this->assertTrue(sizeof($page_of_posts)==15);
-
+        $this->assertTrue(sizeof($page_of_posts) == 15);
+        
         //Assert first post 1 contains the right text
         $this->assertTrue($page_of_posts[0]->post_text == "This is post 39");
-
+        
         //Asert last post 14 contains the right text
         $this->assertTrue($page_of_posts[14]->post_text == "This is post 25");
-    } 
-    
+    }
+
+    function testGetPageTwoOfPublicPosts() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        
+        $page_of_posts = $pdao->getPostsByPublicInstances(2, 15);
+        
+        $this->assertTrue(sizeof($page_of_posts) == 15);
+        $this->assertTrue($page_of_posts[0]->post_text == "This is post 24");
+        $this->assertTrue($page_of_posts[14]->post_text == "This is post 10");
+    }
+
+    function testGetPageThreeOfPublicPosts() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        
+        $page_of_posts = $pdao->getPostsByPublicInstances(3, 15);
+        
+        //Assert DAO returns 10 posts
+        $this->assertTrue(sizeof($page_of_posts) == 10);
+        
+        $this->assertTrue($page_of_posts[0]->post_text == "This is post 9");
+        $this->assertTrue($page_of_posts[9]->post_text == "This is post 0");
+    }
+	
+	function testGetTotalPagesAndPostsByPublicInstances() {
+        $pdao = new PostDAO($this->db, $this->logger);
+		
+		$totals = $pdao->getTotalPagesAndPostsByPublicInstances(15);
+		
+		$this->assertTrue($totals["total_posts"] == 40);
+		$this->assertTrue($totals["total_pages"] == 3);
+	}
 }
 ?>

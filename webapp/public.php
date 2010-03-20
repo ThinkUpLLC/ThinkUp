@@ -106,12 +106,12 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     
 } else {
     if (!$s->is_cached('public.tpl', 'timeline-'.$i->network_username."-".$_u)) {
-        $totals = $pd->getPagesPostsByPublicInstances($count);
-        if($totals['pages'] > $page){
+        $totals = $pd->getTotalPagesAndPostsByPublicInstances($count);
+        if($totals['total_pages'] > $page){
             $s->assign('next_page', $page + 1);
         }
         $s->assign('current_page', $page);
-        $s->assign('total_pages', $totals['pages']);
+        $s->assign('total_pages', $totals['total_pages']);
         $s->assign('posts', $pd->getPostsByPublicInstances($page, $count));
         $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
     }
