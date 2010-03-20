@@ -8,6 +8,8 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once ("class.MySQLDAO.php");
 require_once ("class.Database.php");
 require_once ("class.Post.php");
+require_once ("class.Logger.php");
+require_once ("class.LoggerSlowSQL.php");
 require_once ("config.inc.php");
 
 
@@ -83,6 +85,12 @@ class TestOfPostDAO extends UnitTestCase {
         $this->assertTrue(RetweetDetector::detectOriginalTweet($startwithcoloncutoff, $recent_tweets) == 9031523906);
         $this->assertTrue(RetweetDetector::detectOriginalTweet($startwithcolon, $recent_tweets) == 8925077246);
         $this->assertTrue(RetweetDetector::detectOriginalTweet($nonexistent, $recent_tweets) === false);
+    }
+
+    function testPagination() {
+        
+        $this->assertTrue(1 == 1);
+
     }
     
 }

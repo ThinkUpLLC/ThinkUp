@@ -84,6 +84,16 @@ class TestOfThinkTankFrontEnd extends WebTestCase {
         
         $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 12, '1/1/2006');";
         $this->db->exec($q);
+
+        $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) VALUES (13, 'ev', 1);";
+        $this->db->exec($q);
+
+        $counter = 0;
+        while($counter < 40){
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (".($counter + 1000).", 13, 'ev', 'Ev Williams', 'avatar.jpg', 'All work and no play makes Jack a dull boy.', 'web', '2006-01-01 00:00:00', ".rand(0, 4).", 5);";
+            $this->db->exec($q);
+            $counter++;
+        }
     }
     
     function tearDown() {
@@ -139,6 +149,26 @@ class TestOfThinkTankFrontEnd extends WebTestCase {
         $this->get($TEST_SERVER_DOMAIN.'/user/index.php?i=thinktankapp&u=usernotinsystem');
         $this->assertText('This user is not in the system.');
         
+    }
+    function testNextAndPreviousLinks() {
+        global $TEST_SERVER_DOMAIN;
+
+        $this->get($TEST_SERVER_DOMAIN.'/public.php?v=mostreplies');
+        $this->assertTitle('ThinkTank Public Timeline');
+        
+        $this->assertText('Page 1 of 2');
+        
+        $this->assertLinkById("next_page");
+        $this->assertNoLinkById("prev_page");
+        $this->clickLinkById("next_page");
+
+        $this->assertLinkById("next_page");
+        $this->assertLinkById("prev_page");
+        $this->clickLinkById("next_page");
+
+        $this->assertNoLinkById("next_page");
+        $this->assertLinkById("prev_page");
+        $this->clickLinkById("next_page");
     }
     
     //TODO Write account page and status page tests
