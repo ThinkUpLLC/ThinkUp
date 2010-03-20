@@ -25,7 +25,6 @@ if(isset($_REQUEST['page'])){
 }else{
     $page = 1;
 }
-$start_on_record = ($page - 1) * $count;
 if($page > 1){
     $s->assign('prev_page', $page - 1);
 }
@@ -59,7 +58,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     switch ($view) {
         case 'timeline':
             if (!$s->is_cached('public.tpl')) {
-                $s->assign('posts', $pd->getPostsByPublicInstances($start_on_record, $count));
+                $s->assign('posts', $pd->getPostsByPublicInstances($page, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Latest');
@@ -68,7 +67,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
             break;
         case 'mostretweets':
             if (!$s->is_cached('public.tpl', 'mostretweets')) {
-                $s->assign('posts', $pd->getMostRetweetedPostsByPublicInstances($start_on_record, $count));
+                $s->assign('posts', $pd->getMostRetweetedPostsByPublicInstances($page, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Most retweeted');
@@ -77,7 +76,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
             break;
         case 'mostreplies':
             if (!$s->is_cached('public.tpl', 'mostreplies')) {
-                $s->assign('posts', $pd->getMostRepliedToPostsByPublicInstances($start_on_record, $count));
+                $s->assign('posts', $pd->getMostRepliedToPostsByPublicInstances($page, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Most replied to');
@@ -86,7 +85,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
             break;
         case 'photos':
             if (!$s->is_cached('public.tpl', 'photos')) {
-                $s->assign('posts', $pd->getPhotoPostsByPublicInstances($start_on_record, $count));
+                $s->assign('posts', $pd->getPhotoPostsByPublicInstances($page, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Photos');
@@ -95,7 +94,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
             break;
         case 'links':
             if (!$s->is_cached('public.tpl', 'links')) {
-                $s->assign('posts', $pd->getLinkPostsByPublicInstances($start_on_record, $count));
+                $s->assign('posts', $pd->getLinkPostsByPublicInstances($page, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
             $s->assign('header', 'Links');
@@ -113,7 +112,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
         }
         $s->assign('current_page', $page);
         $s->assign('total_pages', $totals['pages']);
-        $s->assign('posts', $pd->getPostsByPublicInstances($start_on_record, $count));
+        $s->assign('posts', $pd->getPostsByPublicInstances($page, $count));
         $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
     }
     $s->assign('header', 'Latest');

@@ -601,7 +601,8 @@ class PostDAO extends MySQLDAO {
         return $strays;
     }
     
-    private function getPostsByPublicInstancesOrderedBy($start_on_record, $count, $orderby) {
+    private function getPostsByPublicInstancesOrderedBy($page, $count, $orderby) {
+        $start_on_record = ($page - 1) * $count;
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
@@ -653,11 +654,12 @@ class PostDAO extends MySQLDAO {
         $totals['pages'] = $row['pages'];
         return $totals;
     }
-    function getPostsByPublicInstances($start_on_record, $count) {
-        return $this->getPostsByPublicInstancesOrderedBy($start_on_record, $count, "pub_date");
+    function getPostsByPublicInstances($page, $count) {
+        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "pub_date");
     }
     
-    function getPhotoPostsByPublicInstances($start_on_record, $count) {
+    function getPhotoPostsByPublicInstances($page, $count) {
+        $start_on_record = ($page - 1) * $count;
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
@@ -710,7 +712,8 @@ class PostDAO extends MySQLDAO {
         return $totals;
     }
     
-    function getLinkPostsByPublicInstances($start_on_record, $count) {
+    function getLinkPostsByPublicInstances($page, $count) {
+        $start_on_record = ($page - 1) * $count;
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
@@ -763,12 +766,12 @@ class PostDAO extends MySQLDAO {
         return $totals;
     }
     
-    function getMostRepliedToPostsByPublicInstances($start_on_record, $count) {
-        return $this->getPostsByPublicInstancesOrderedBy($start_on_record, $count, "mention_count_cache");
+    function getMostRepliedToPostsByPublicInstances($page, $count) {
+        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "mention_count_cache");
     }
     
-    function getMostRetweetedPostsByPublicInstances($start_on_record, $count) {
-        return $this->getPostsByPublicInstancesOrderedBy($start_on_record, $count, "retweet_count_cache");
+    function getMostRetweetedPostsByPublicInstances($page, $count) {
+        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "retweet_count_cache");
     }
 
     

@@ -66,7 +66,8 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
 
         $counter = 0;
         while($counter < 40){
-            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (".($counter + 1000).", 13, 'ev', 'Ev Williams', 'avatar.jpg', 'All work and no play makes Jack a dull boy.', 'web', '2006-01-01 00:00:00', ".rand(0, 4).", 5);";
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT); 
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (".($counter + 1000).", 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
             $this->db->exec($q);
             $counter++;
         }
@@ -126,6 +127,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->assertTitle('ThinkTank Public Timeline');
         
         $this->assertText('Page 1 of 3');
+        $this->assertText('This is post 39');
         
         $this->assertLinkById("next_page");
         $this->assertNoLinkById("prev_page");
@@ -137,7 +139,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
 
         $this->assertNoLinkById("next_page");
         $this->assertLinkById("prev_page");
-        $this->assertText('dull boy');
+        $this->assertText('This is post 0');
         $this->assertText('Page 3 of 3');
     }
     
