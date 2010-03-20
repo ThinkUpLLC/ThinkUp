@@ -126,19 +126,26 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->get($TEST_SERVER_DOMAIN.'/public.php');
         $this->assertTitle('ThinkTank Public Timeline');
         
-        $this->assertText('Page 1 of 3');
         $this->assertText('This is post 39');
+        $this->assertText('This is post 25');
+        $this->assertText('Page 1 of 3');
         
         $this->assertLinkById("next_page");
         $this->assertNoLinkById("prev_page");
+        
         $this->clickLinkById("next_page");
 
+        $this->assertText('Page 2 of 3');
+        $this->assertText('This is post 24');
+        $this->assertText('This is post 10');
         $this->assertLinkById("next_page");
         $this->assertLinkById("prev_page");
+       
         $this->clickLinkById("next_page");
 
         $this->assertNoLinkById("next_page");
         $this->assertLinkById("prev_page");
+        $this->assertText('This is post 9');
         $this->assertText('This is post 0');
         $this->assertText('Page 3 of 3');
     }
