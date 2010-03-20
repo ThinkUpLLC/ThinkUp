@@ -122,10 +122,10 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
     function testNextAndPreviousLinks() {
         global $TEST_SERVER_DOMAIN;
 
-        $this->get($TEST_SERVER_DOMAIN.'/public.php?v=mostreplies');
+        $this->get($TEST_SERVER_DOMAIN.'/public.php');
         $this->assertTitle('ThinkTank Public Timeline');
         
-        $this->assertText('Page 1 of 2');
+        $this->assertText('Page 1 of 3');
         
         $this->assertLinkById("next_page");
         $this->assertNoLinkById("prev_page");
@@ -137,7 +137,8 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
 
         $this->assertNoLinkById("next_page");
         $this->assertLinkById("prev_page");
-        $this->clickLinkById("next_page");
+        $this->assertText('dull boy');
+        $this->assertText('Page 3 of 3');
     }
     
     //TODO Write account page and status page tests
