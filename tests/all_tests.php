@@ -18,8 +18,8 @@ require_once('frontend_test.php');
 require_once('friends_paging_test.php');
 require_once('longurlapi_test.php');
 require_once('plugindao_test.php');
-//require_once('mailer_test.php');
-//require_once('retweet_detector_test.php');
+require_once('postdao_test.php');
+require_once('twittercrawler_test.php');
 
 $test = &new GroupTest('All tests');
 
@@ -34,8 +34,8 @@ $test->addTestCase(new TestOfThinkTankFrontEnd());
 $test->addTestCase(new TestOfFriendsPaging());
 $test->addTestCase(new TestOfLongUrlAPIAccessor());
 $test->addTestCase(new TestOfPluginDAO());
-//$test->addTestCase(new TestOfMailer());
-//$test->addTestCase(new TestOfRetweetDetector());
+$test->addTestCase(new TestOfPostDAO());
+$test->addTestCase(new TestOfTwitterCrawler());
 
 //$test->run(new HtmlReporter());
 $test->run(new TextReporter());
