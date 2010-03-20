@@ -79,3 +79,7 @@ To discuss ThinkTank, "post to the project mailing list":http://groups.google.co
 h2. LICENSE
 
 ThinkTank's source code is licensed under the "GNU General Public License":http://github.com/ginatrapani/thinktank/blob/master/GPL-LICENSE.txt, except for "Twitter OAuth by Abraham Williams":http://github.com/abraham/twitteroauth, which is released under the MIT license.
+
+h2. CREDITS
+
+Social icons provided by "Function":http://wefunction.com/2009/05/free-social-icons-app-icons/

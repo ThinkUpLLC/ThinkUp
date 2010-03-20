@@ -10,7 +10,6 @@
 ======================= */
 
 .header {padding: 10px 0 0 0;font-weight: 500;color: #999;font-size: .8em;}
-
 .footnote h2 {font-size: 1.6em;padding-left: 80px;}
 
 /* HEADLINES
@@ -46,22 +45,31 @@
 .individual-tweet h3 a.most-popular {font-size : medium;font-weight : strong;}
 */
 
-
 .private {background-color : #eee;}
 
 .person-info {float: left;margin-right: 10px;width : 80px;text-align : center;font-size:1.2em;/*border-top: 1px solid #999;*/}
+
+/* LISTS
+======================= */
+
+ul.list-plugins {margin-left:0px;}
+ul.list-plugins li {list-style:none;}
 
 /* FORMS
 ======================= */
 
 form.post-setparent select {width: 350px;}
 form.post-setparent {font-size: .8em;margin:5px 0;}
+form.login label {margin-right:.5em;float:left;width:300px;text-align:right;font-weight:700;}
+form.login input {float:left;margin-right:1em;}
+form.login p {margin-top:5px;}
+form.login #login-save {margin-left:310px;}
 
 /* IMAGES AND GRAPHICS
 ======================= */
 
 img.avatar {float:left;margin:5px 0px 5px 0px;width:40px;height:40px;}
-img.avatar2 {float:left;margin:6px 15px 2px 5px;width:48px;height:48px;}
+img.avatar2 {float:left;margin:6px 0px 0px 0px;width:48px;height:48px;}
 .pic {float: right;margin: 10px 0 10px 10px;border: 1px solid #CCC;padding: 5px 5px 0px 5px;}
 
 #dart1 {position:relative;top:-45px;left: 50px;height: 45px;}
@@ -73,7 +81,7 @@ img.avatar2 {float:left;margin:6px 15px 2px 5px;width:48px;height:48px;}
 /* SYSTEM MESSAGING 
 ======================= */
 
-.success {background-color:#BFDFBF;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;}
+.success {background-color:#BFDFBF;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;width:400px;}
 .info {background-color:#FFFFAD;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;}
 .error {background-color:#FF8080;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;color:white;text-align:center;font-weight:bold;}
 
@@ -83,14 +91,43 @@ position:relative;
 top: -5px;
 }  
 
-
 /* NUMBERS
 ======================= */
+
 #keystats {padding : 5px;font-size : medium;display:none;}
 
 .big-number {color: #000;font-size: 1.7em;line-height: 1.8em;}
-.big-number h1 {font-size: 2.7em;font-weight:700;letter-spacing:-4px;padding: 10px 0 0 0;margin: 0;}
+.big-number h1 {font-size: 2.7em;font-weight:700;letter-spacing:-4px;padding: 0 0 0 0;margin: 0;}
 .big-number h3 {color: #666;font-size: .8em;}
 
 .reply-count {font-size: 1.3em;font-weight: bold;background-color: #222;padding: 10px;display:block;margin-top:2px;text-align:center;line-height: 1.8em;height:2.2em;}
 .reply-count a:link, .reply-count a:visited {color: #FFF;text-decoration: underline;}
+
+/* BUTTONS
+adapted from the filament group: http://www.filamentgroup.com/examples/buttonFrameworkCSS/
+======================= */
+
+.tt-button { outline: 0; margin:4px 4px 4px 0; padding: .4em 1em; text-decoration:none !important; cursor:pointer; position: relative; text-align: center; zoom: 1; }
+.tt-button .ui-icon { position: absolute; top: 50%; margin-top: -8px; left: 50%; margin-left: -8px; }
+
+a.tt-button { float:left; }
+
+/* remove extra button width in IE */
+button.fg-button { width:auto; overflow:visible; }
+
+.tt-button-icon-left { padding-left: 2.1em; }
+.tt-button-icon-right { padding-right: 2.1em; }
+.tt-button-icon-left .ui-icon { right: auto; left: .2em; margin-left: 0; }
+.tt-button-icon-right .ui-icon { left: auto; right: .2em; margin-left: 0; }
+
+.tt-button-icon-solo { display:block; width:8px; text-indent: -9999px; }	 /* solo icon buttons must have block properties for the text-indent to work */	
+
+.tt-buttonset { float:left; }
+.tt-buttonset .fg-button { float: left; }
+.tt-buttonset-single .fg-button, 
+.tt-buttonset-multi .fg-button { margin-right: -1px;}
+
+.tt-toolbar { padding: .5em; margin: 0;  }
+.tt-toolbar .fg-buttonset { margin-right:1.5em; padding-left: 1px; }
+.tt-toolbar .fg-button { font-size: 1em;  }
+
