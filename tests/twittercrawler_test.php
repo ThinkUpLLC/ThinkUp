@@ -1,27 +1,19 @@
 <?php 
 require_once (dirname(__FILE__).'/simpletest/autorun.php');
-
+require_once (dirname(__FILE__).'/simpletest/web_tester.php');
 
 require_once (dirname(__FILE__).'/config.tests.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$TEST_CLASS_PATH);
 
-require_once ("class.MySQLDAO.php");
+require_once ("classes/class.ThinkTankTestCase.php");
 require_once ("class.User.php");
 require_once ("class.Instance.php");
 require_once ("mock.TwitterOAuth.php");
-require_once ("class.Logger.php");
-require_once ("class.LoggerSlowSQL.php");
-require_once ("class.Database.php");
 require_once ("class.User.php");
 require_once ("plugins/twitter/class.TwitterAPIAccessorOAuth.php");
 require_once ("plugins/twitter/class.TwitterCrawler.php");
-require_once ("config.inc.php");
 
-class TestOfTwitterCrawler extends UnitTestCase {
-    var $logger;
-    var $db;
-    var $conn;
+class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     var $api;
     var $instance;
     
@@ -30,39 +22,17 @@ class TestOfTwitterCrawler extends UnitTestCase {
     }
     
     function setUp() {
-        global $THINKTANK_CFG;
-        
-        //Override default CFG values
-        $THINKTANK_CFG['db_name'] = "thinktank_tests";
-        
-        $this->logger = new Logger($THINKTANK_CFG['log_location']);
-        $this->db = new Database($THINKTANK_CFG);
-        $this->conn = $this->db->getConnection();
+        parent::setUp();
 
+        global $THINKTANK_CFG;
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'930061', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0');
         $this->instance = new Instance($r);
         
         $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $this->instance, $THINKTANK_CFG['archive_limit']);
-        
-        //Create all the tables based on the build script
-        $create_db_script = file_get_contents($THINKTANK_CFG['source_root_path']."sql/build-db_mysql.sql");
-        $create_db_script = str_replace("ALTER DATABASE thinktank", "ALTER DATABASE thinktank_tests", $create_db_script);
-        $create_statements = split(";", $create_db_script);
-        
-        foreach ($create_statements as $q) {
-            if (trim($q) != '') {
-                $this->db->exec($q.";");
-            }
-        }
     }
     
     function tearDown() {
-        //Delete test data
-        $q = "DROP TABLE `tt_follows`, `tt_instances`, `tt_links`, `tt_owners`, `tt_owner_instances`, `tt_users`, `tt_user_errors`, `tt_plugins`, `tt_plugin_options`, `tt_posts`, `tt_post_errors`, `tt_replies`;";
-        $this->db->exec($q);
-        
-        //Clean up
-        $this->db->closeConnection($this->conn);
+        parent::tearDown();
     }
     
     function testConstructor() {
@@ -83,8 +53,8 @@ class TestOfTwitterCrawler extends UnitTestCase {
         $this->assertTrue($user->user_name == 'anildash');
         $this->assertTrue($user->found_in == 'Owner Status');
     }
-	
-	//TODO: Test the rest of the TwitterCrawler methods
+    
+    //TODO: Test the rest of the TwitterCrawler methods
     
 }
 ?>
