@@ -101,4 +101,3 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
     
 }
 ?>
-
