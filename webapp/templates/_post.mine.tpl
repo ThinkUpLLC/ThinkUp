@@ -12,13 +12,13 @@
 
 <div class="individual-tweet post clearfix">
 	<div class="grid_1 alpha">
-		<a href="http://twitter.com/{$t->author_username}"><img src="{$t->author_avatar}" class="avatar"></a>
+		<a href="{$cfg->site_root_path}user/?u={$t->author_username}&i={$i->network_username}"><img src="{$t->author_avatar}" class="avatar"></a>
     </div>
     <div class="grid_3 right small">
-        <a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
+        <a href="{$cfg->site_root_path}user/?u={$t->author_username}&i={$i->network_username}">{$t->author_username}</a>
 	</div>
     <div class="grid_3 right small">
-		<a href="http://twitter.com/{$t->author_username}/status/{$t->post_id}">{$t->adj_pub_date|relative_datetime}</a>
+		<a href="{$cfg->site_root_path}post/?t={$t->post_id}">{$t->adj_pub_date|relative_datetime}</a>
 	</div>
 	
     <div class="grid_11">            				

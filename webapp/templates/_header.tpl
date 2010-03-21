@@ -12,17 +12,44 @@
 	{/if}
 	
 	<!-- jquery -->
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>	
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
-	<link type="text/css" href="{$cfg->site_root_path}cssjs/jquery-ui-1.7.1.custom.css" rel="stylesheet" />
+	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
     <!-- custom css -->
 	<link type="text/css" href="{$cfg->site_root_path}cssjs/style.css" rel="stylesheet" />
 
 	<script type="text/javascript">
-	{literal}$(function() {
+	{literal}
+	// tabs functionality
+	$(function() {
 		$("#tabs").tabs();
-	});{/literal}
+	});
+
+    // buttons functionality
+	$(function(){
+		//all hover and click logic for buttons
+		$(".tt-button:not(.ui-state-disabled)")
+		.hover(
+			function(){ 
+				$(this).addClass("ui-state-hover"); 
+			},
+			function(){ 
+				$(this).removeClass("ui-state-hover"); 
+			}
+		)
+		.mousedown(function(){
+				$(this).parents('.tt-buttonset-single:first').find(".tt-button.ui-state-active").removeClass("ui-state-active");
+				if( $(this).is('.ui-state-active.tt-button-toggleable, .tt-buttonset-multi .ui-state-active') ){ $(this).removeClass("ui-state-active"); }
+				else { $(this).addClass("ui-state-active"); }	
+		})
+		.mouseup(function(){
+			if(! $(this).is('.tt-button-toggleable, .tt-buttonset-single .tt-button,  .tt-buttonset-multi .tt-button') ){
+				$(this).removeClass("ui-state-active");
+			}
+		});
+	});
+	{/literal}
 	
 {if $load neq 'no'}
 {literal}	

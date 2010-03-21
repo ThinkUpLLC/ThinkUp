@@ -32,8 +32,11 @@ a:hover {text-decoration : none;color : red;}
 ==============================*/
 
 /* JQuery UI resets */
-
 .ui-tabs .ui-tabs-panel {padding:0;}
+
+/*.ui-tabs {padding:0}
+.ui-widget-content {border:0px;}
+.ui-widget-header {margin:1em;background-image:none;background-color:#FFF;border:none;}*/
 
 /* added to tab id */
 #thinktank-tabs .ui-tabs {-moz-border-radius: 10px;-webkit-border-radius: 10px;margin: 0px;} 
