@@ -23,6 +23,8 @@
 .append_20 {padding-bottom:20px}
 .prepend_20 {padding-top:20px}
 
+.mt_10 {margin-top:10px;}
+
 h4.trigger a:link, h4.trigger a:visited {position:relative;top:-50px;left: 384px;font-size:.8em;color:#9D9C9C;font-weight:500;text-decoration:underline;}
 h4.trigger a:hover {color:#222}
 h4.trigger a:active {border:none}

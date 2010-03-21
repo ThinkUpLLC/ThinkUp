@@ -15,6 +15,7 @@ class Post {
     var $mention_count_cache;
     var $in_retweet_of_post_id;
     var $retweet_count_cache;
+    var $network;
     
     var $author; //optional user object
     
@@ -33,6 +34,7 @@ class Post {
         $this->mention_count_cache = $val["mention_count_cache"];
         $this->in_retweet_of_post_id = $val["in_retweet_of_post_id"];
         $this->retweet_count_cache = $val["retweet_count_cache"];
+        $this->network = $val["network"];
     }
     
     public static function extractURLs($post_text) {
