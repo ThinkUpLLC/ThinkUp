@@ -39,12 +39,12 @@ class Post {
         preg_match_all('!https?://[\S]+!', $post_text, $matches);
         return $matches[0];
     }
-
+    
 }
 
 
 class PostDAO extends MySQLDAO {
-    
+
     function getPost($post_id) {
         $q = "
 			SELECT 
@@ -217,7 +217,7 @@ class PostDAO extends MySQLDAO {
 				(t1.author_user_id = ".$author_id." AND t.author_user_id = ".$other_user_id.")
 			ORDER BY
 				t.pub_date desc";
-								
+				
         $sql_result = $this->executeSQL($q);
         $posts_replied_to = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -629,11 +629,11 @@ class PostDAO extends MySQLDAO {
         mysql_free_result($sql_result);
         return $posts;
     }
-
-    function getPagesPostsByPublicInstances($count) {
+    
+    function getTotalPagesAndPostsByPublicInstances($count) {
         $q = "
 			SELECT 
-                                count(*) as total, ceil(count(*) / $count) as pages
+                count(*) as total_posts, ceil(count(*) / $count) as total_pages
 			FROM 
 				#prefix#posts t
 			INNER JOIN
@@ -645,15 +645,12 @@ class PostDAO extends MySQLDAO {
 			ON t.post_id = l.post_id
 
 			WHERE
-				i.is_public = 1 and (t.mention_count_cache > 0 or t.retweet_count_cache > 0) and in_reply_to_post_id is NULL
-                        ";
+				i.is_public = 1 and (t.mention_count_cache > 0 or t.retweet_count_cache > 0) and in_reply_to_post_id is NULL ";
         $sql_result = $this->executeSQL($q);
-        $totals = array();
         $row = mysql_fetch_assoc($sql_result);
-        $totals['total'] = $row['total'];
-        $totals['pages'] = $row['pages'];
-        return $totals;
+        return $row;
     }
+	
     function getPostsByPublicInstances($page, $count) {
         return $this->getPostsByPublicInstancesOrderedBy($page, $count, "pub_date");
     }
@@ -740,7 +737,7 @@ class PostDAO extends MySQLDAO {
         mysql_free_result($sql_result);
         return $posts;
     }
-
+    
     function getCountLinkPostsByPublicInstances($count) {
         $q = "
 			SELECT 
