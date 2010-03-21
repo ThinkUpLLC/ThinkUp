@@ -95,7 +95,7 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
         //Assert first post 1 contains the right text
         $this->assertTrue($page_of_posts[0]->post_text == "This is post 39");
 
-        //Asert last post 14 contains the right text
+        //Asert last post 15 contains the right text
         $this->assertTrue($page_of_posts[14]->post_text == "This is post 25");
     } 
     
