@@ -6,6 +6,7 @@ tests/config.tests.inc.php
 webapp/templates_c/*.php
 webapp/templates_c/cache/*.tpl
 crawler/logs/*.log
+crawler/logs/crawler.log
 crawler/logs/archive/*.bz2
 libs/*
 smarty/*
