@@ -16,17 +16,20 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
 	$s = new SmartyThinkTank();
 
 	if(!$s->is_cached('status.index.tpl', $status_id)) {
-		$tweet = $pd->getPost($status_id);
+		$post = $pd->getPost($status_id);
 
 		$u = new Utils();
 
+        // BUG: THIS ISN'T GOING TO WORK WHEN LOOKING AT POSTS OF OTHER USERS BECAUSE THEY DON'T HAVE INSTANCES
 		$id = new InstanceDAO($db);
-		$i = $id->getByUsername($tweet->author_username);
-		if ( isset($i) ) {
-			$s->assign('likely_orphans', $pd->getLikelyOrphansForParent($tweet->pub_date, $i->network_user_id,$tweet->author_username, 15) );
+		$i = $id->getByUsername($post->author_username);
+		
+    	if ( isset($i) ) {
+			$s->assign('likely_orphans', $pd->getLikelyOrphansForParent($post->pub_date, $i->network_user_id,$post->author_username, 15) );
 			$s->assign('all_tweets', $pd->getAllPosts($i->network_user_id, 15) );
 
 		}
+		
 		$cfg = new Config($i->network_username, $i->network_user_id);
 
 
@@ -41,10 +44,10 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
 		$public_replies = $pd->getPublicRepliesToPost($status_id);
 		$public_replies_count = count($public_replies);
 		$private_replies_count = $all_replies_count - $public_replies_count;
-		$tweet = $pd->getPost($status_id);
+		$post = $pd->getPost($status_id);
 
 
-		$s->assign('tweet', $tweet);
+		$s->assign('post', $post);
 		$s->assign('replies', $all_replies );
 		$s->assign('retweets', $all_retweets );
 		$s->assign('retweet_reach', $retweet_reach);

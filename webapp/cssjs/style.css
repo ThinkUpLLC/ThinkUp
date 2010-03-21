@@ -33,6 +33,7 @@ a:hover {text-decoration : none;color : red;}
 
 /* JQuery UI resets */
 .ui-tabs .ui-tabs-panel {padding:0;}
+.ui-widget {font-size:1em;}
 
 /*.ui-tabs {padding:0}
 .ui-widget-content {border:0px;}

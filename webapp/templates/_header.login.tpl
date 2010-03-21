@@ -1,3 +1,4 @@
+{if $statusbar neq 'no'}	
 <div id="status-bar" class="clearfix"> 
 
     <div class="status-bar-left">
@@ -61,6 +62,7 @@
     </div>
 
 </div> <!-- #status-bar -->
+{/if}
     
 <div class="container clearfix"> <!-- menu-bar -->
 

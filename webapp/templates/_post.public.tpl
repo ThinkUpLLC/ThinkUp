@@ -5,7 +5,7 @@
         <div class="grid_3 right">date</div>
         <div class="grid_11">post</div> 
         <div class="grid_2 center">replies</div> 
-        <div class="grid_2 center omega">retweets</div> 
+        <div class="grid_2 center omega">forwards</div> 
     </div> 
 {/if}
 

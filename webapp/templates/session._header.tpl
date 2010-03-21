@@ -1,9 +1,10 @@
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
  <HEAD>
   <TITLE>ThinkTank {$title}</TITLE>
   	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
+    <!-- custom css -->
+	<link type="text/css" href="{$cfg->site_root_path}cssjs/style.css" rel="stylesheet" />
 
 	<style type="text/css">{literal}
 	

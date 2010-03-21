@@ -31,18 +31,32 @@
                     </div>
                     
                     <div class="clearfix">
-                        {if $retweets}<div class="grid_15 alpha">{else}<div class="grid_22">{/if}
+                        <div class="grid_2 alpha">
                             <a href="http://twitter.com/{$post->author_username}/"><img src="{$post->author_avatar}" class="avatar2"></a>
+                        </div>
+                        
+                        {if $retweets}<div class="grid_13">{else}<div class="grid_19">{/if}
+                        
                             <span class="tweet">{$post->post_text|link_usernames_to_twitter}</span>
+                            
+                            {if $retweets}<div class="grid_10 prefix_3 omega small gray">{else}<div class="grid_10 prefix_10 omega small gray">{/if}
+                                <img src="{$cfg->site_root_path}/cssjs/images/social_icons/{$post->network}.png" class="float-l">
+                                 Posted {$post->adj_pub_date|relative_datetime} at {$post->adj_pub_date} via {$post->source}
+                            </div>
+                            <!--
                             <div class="small">(<a href="http://twitter.com/{$post->author_username}/">{$post->author_username}</a>, 
                             <a href="http://twitter.com/{$post->author_username}/status/{$post->post_id}/">{$post->adj_pub_date|relative_datetime}</a>)</div>
+                            -->
                         </div>
+                        
+                        
+                        
                         {if $retweets}
                         <div class="grid_7 center big-number omega">
                             <div class="bl">
                             <div class="key-stat">
                                 <h1>{$rtreach|number_format}</h1>
-                                <h3>retweets to followers</h3>
+                                <h3>forwards to followers</h3>
                             </div>
                             </div>
                         </div>

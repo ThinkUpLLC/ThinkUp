@@ -2,7 +2,7 @@
  "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <title>ThinkTank</title>
+    <title>ThinkTank {$title}</title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>

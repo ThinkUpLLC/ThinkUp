@@ -59,11 +59,16 @@ ul.list-plugins li {list-style:none;}
 ======================= */
 
 form.post-setparent select {width: 350px;}
-form.post-setparent {font-size: .8em;margin:5px 0;}
-form.login label {margin-right:.5em;float:left;width:300px;text-align:right;font-weight:700;}
-form.login input {float:left;margin-right:1em;}
-form.login p {margin-top:5px;}
-form.login #login-save {margin-left:310px;}
+form.post-setparent {font-size: .8em; margin:5px 0;}
+
+form.login label {
+font-size:24px;
+line-height:2.2em;
+}
+form.login input {
+margin: .5em 0 0 0;
+font-size: 1.4em;
+}
 
 /* IMAGES AND GRAPHICS
 ======================= */
@@ -82,8 +87,8 @@ img.avatar2 {float:left;margin:6px 0px 0px 0px;width:48px;height:48px;}
 ======================= */
 
 .success {background-color:#BFDFBF;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;width:400px;}
-.info {background-color:#FFFFAD;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;}
-.error {background-color:#FF8080;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;color:white;text-align:center;font-weight:bold;}
+.info {background-color:#FFFFAD;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;margin:.5em 0;}
+.error {background-color:#920000;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;color:white;text-align:center;font-weight:700;margin-bottom:.5em;}
 
 #loading_updates, #loading_mentions, #loading_followers, #loading_friends, #loading_links {  
 visibility: hidden;  

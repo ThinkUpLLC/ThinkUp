@@ -5,7 +5,7 @@
 <div role="application" class="yui-g" id="tabs">
     <ul>
         <li><a href="#plugins">Plug-ins</a></li>
-        <li><a href="#instances">Your ThinkTank Account</a></li>
+        <li><a href="#instances">Your ThinkTank Password</a></li>
         {if $owner->is_admin}
             <li><a href="#ttusers">All ThinkTank Accounts</a></li>
         {/if} 
@@ -48,21 +48,33 @@
                 </div>
             {/if}
     
-            <h2 class="subhead">Your ThinkTank Password</h2>
-
             <form name="changepass" method="post" action="index.php" class="login prepend_20">
-            
-                <p class="clearfix"><label>Current password:</label>
-                <input name="oldpass" type="password" id="oldpass"></p>
+
+                <div class="clearfix">
+                    <div class="grid_9 prefix_1 right"><label>Current password:</label></div>
+                    <div class="grid_9 left"><input name="oldpass" type="password" id="oldpass"></div>
+                </div>
+    
+                <div class="clearfix">
+                    <div class="grid_9 prefix_1 right"><label>New password:</label></div>
+                    <div class="grid_9 left">
+                        <input name="pass1" type="password" id="pass1">
+                        <br /><div class="info small">Must be at least 5 characters</div>
+                    </div>
+                </div>
                 
-                <p class="clearfix"><label>New password:</label>
-                <input name="pass1" type="password" id="pass1">
-                <span class="info small">Must be at least 5 characters</span></p>
+                <div class="clearfix append_bottom">
+                    <div class="grid_9 prefix_1 right"><label>Re-type new password:</label></div>
+                    <div class="grid_9 left">
+                        <input name="pass2" type="password" id="pass2">
+                        
+                    </div>
+                </div>
                 
-                <p class="clearfix"><label>Re-type New Password:</label>
-                <input name="pass2" type="password" id="pass2"></p>
                 
-                <p class="clearfix"><input type="submit" id="login-save" name="changepass" value="Change Password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" /></p>
+                <div class="prefix_10 grid_9 left">
+                    <input type="submit" id="login-save" name="changepass" value="Change password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" />
+                </div>
                 
             </form>
         
