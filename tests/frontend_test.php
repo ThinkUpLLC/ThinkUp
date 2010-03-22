@@ -82,33 +82,33 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', $reply_or_forward_count, $reply_or_forward_count);";
             $this->db->exec($q);
-
+            
             $counter++;
         }
-
+        
         $counter = 0;
         while ($counter < 40) {
             $post_id = $counter + 40;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($post_id, 18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 'This is image post $counter', 'web', '2006-01-02 00:$pseudo_minute:00', 0, 0);";
             $this->db->exec($q);
-
+            
             $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".jpg', '', 0, $post_id, 1);";
             $this->db->exec($q);
-
+            
             $counter++;
         }
-
+        
         $counter = 0;
         while ($counter < 40) {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($post_id, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is link post $counter', 'web', '2006-03-01 00:$pseudo_minute:00', 0, 0);";
             $this->db->exec($q);
-
+            
             $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".html', 'Link $counter', 0, $post_id, 0);";
             $this->db->exec($q);
-
+            
             $counter++;
         }
     }
@@ -163,12 +163,12 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
     
     function testNextAndPreviousControls() {
         global $TEST_SERVER_DOMAIN;
-
+        
         $categories[] = "";
         $categories[] = "?v=mostreplies";
         $categories[] = "?v=mostretweets";
-
-        foreach($categories as $category){
+        
+        foreach ($categories as $category) {
         
             $this->get($TEST_SERVER_DOMAIN.'/public.php'.$category);
             $this->assertTitle('ThinkTank Public Timeline');
@@ -205,31 +205,31 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         
         $this->get($TEST_SERVER_DOMAIN.'/public.php?v=photos');
         $this->assertTitle('ThinkTank Public Timeline');
-            
+        
         $this->assertText('@shutterbug');
         $this->assertText('This is image post 39');
         $this->assertText('This is image post 25');
         $this->assertText('Page 1 of 3');
-            
+        
         $this->assertLinkById("next_page");
         $this->assertNoLinkById("prev_page");
-            
+        
         $this->clickLinkById("next_page");
-            
+        
         $this->assertText('Page 2 of 3');
         $this->assertText('This is image post 24');
         $this->assertText('This is image post 10');
         $this->assertLinkById("next_page");
         $this->assertLinkById("prev_page");
-            
+        
         $this->clickLinkById("next_page");
-            
+        
         $this->assertNoLinkById("next_page");
         $this->assertLinkById("prev_page");
         $this->assertText('This is image post 9');
         $this->assertText('This is image post 0');
         $this->assertText('Page 3 of 3');
-       
+        
     }
     
     function testNextAndPreviousLinksControls() {
@@ -238,31 +238,31 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         
         $this->get($TEST_SERVER_DOMAIN.'/public.php?v=links');
         $this->assertTitle('ThinkTank Public Timeline');
-            
+        
         $this->assertText('@linkbaiter');
         $this->assertText('This is link post 39');
         $this->assertText('This is link post 25');
         $this->assertText('Page 1 of 3');
-            
+        
         $this->assertLinkById("next_page");
         $this->assertNoLinkById("prev_page");
-            
+        
         $this->clickLinkById("next_page");
-            
+        
         $this->assertText('Page 2 of 3');
         $this->assertText('This is link post 24');
         $this->assertText('This is link post 10');
         $this->assertLinkById("next_page");
         $this->assertLinkById("prev_page");
-            
+        
         $this->clickLinkById("next_page");
-            
+        
         $this->assertNoLinkById("next_page");
         $this->assertLinkById("prev_page");
         $this->assertText('This is link post 9');
         $this->assertText('This is link post 0');
         $this->assertText('Page 3 of 3');
-       
+        
     }
     
     //TODO Write account page and status page tests
