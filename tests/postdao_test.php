@@ -27,8 +27,20 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
         $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
         $this->db->exec($q);
         
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 0, 10);";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 0, 10);";
+        $this->db->exec($q);
+        
         //Make public
         $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) VALUES (13, 'ev', 1);";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) VALUES (18, 'shutterbug', 1);";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) VALUES (19, 'linkbaiter', 1);";
         $this->db->exec($q);
         
         //Add a bunch of posts
@@ -37,6 +49,34 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
             $this->db->exec($q);
+            $counter++;
+        }
+        
+        //Add some photo posts
+        $counter = 0;
+        while ($counter < 40) {
+            $post_id = $counter + 40;
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($post_id, 18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 'This is image post $counter', 'web', '2006-01-02 00:$pseudo_minute:00', 0, 0);";
+            $this->db->exec($q);
+            
+            $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".jpg', '', 0, $post_id, 1);";
+            $this->db->exec($q);
+            
+            $counter++;
+        }
+        
+        //Add some link posts
+        $counter = 0;
+        while ($counter < 40) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($post_id, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is link post $counter', 'web', '2006-03-01 00:$pseudo_minute:00', 0, 0);";
+            $this->db->exec($q);
+            
+            $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".html', 'Link $counter', 0, $post_id, 0);";
+            $this->db->exec($q);
+            
             $counter++;
         }
         
@@ -95,10 +135,10 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
         //Assert first post 1 contains the right text
         $this->assertTrue($page_of_posts[0]->post_text == "This is post 39");
         
-        //Asert last post 14 contains the right text
+        //Asert last post 15 contains the right text
         $this->assertTrue($page_of_posts[14]->post_text == "This is post 25");
     }
-
+    
     function testGetPageTwoOfPublicPosts() {
         $pdao = new PostDAO($this->db, $this->logger);
         
@@ -108,7 +148,7 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
         $this->assertTrue($page_of_posts[0]->post_text == "This is post 24");
         $this->assertTrue($page_of_posts[14]->post_text == "This is post 10");
     }
-
+    
     function testGetPageThreeOfPublicPosts() {
         $pdao = new PostDAO($this->db, $this->logger);
         
@@ -120,14 +160,110 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
         $this->assertTrue($page_of_posts[0]->post_text == "This is post 9");
         $this->assertTrue($page_of_posts[9]->post_text == "This is post 0");
     }
-	
-	function testGetTotalPagesAndPostsByPublicInstances() {
+    
+    function testGetTotalPagesAndPostsByPublicInstances() {
         $pdao = new PostDAO($this->db, $this->logger);
-		
-		$totals = $pdao->getTotalPagesAndPostsByPublicInstances(15);
-		
-		$this->assertTrue($totals["total_posts"] == 40);
-		$this->assertTrue($totals["total_pages"] == 3);
-	}
+        
+        $totals = $pdao->getTotalPagesAndPostsByPublicInstances(15);
+        
+        $this->assertTrue($totals["total_posts"] == 40);
+        $this->assertTrue($totals["total_pages"] == 3);
+    }
+    
+    //Start Public Photo Tests
+    function testGetPageOneOfPhotoPublicPosts() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        
+        $page_of_posts = $pdao->getPhotoPostsByPublicInstances(1, 15);
+        
+        $this->assertTrue(sizeof($page_of_posts) == 15);
+        
+        $this->assertTrue($page_of_posts[0]->post_text == "This is image post 39");
+        
+        $this->assertTrue($page_of_posts[14]->post_text == "This is image post 25");
+        
+    }
+    
+    function testGetPageTwoOfPhotoPublicPosts() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        
+        $page_of_posts = $pdao->getPhotoPostsByPublicInstances(2, 15);
+        
+        $this->assertTrue(sizeof($page_of_posts) == 15);
+        
+        $this->assertTrue($page_of_posts[0]->post_text == "This is image post 24");
+        
+        $this->assertTrue($page_of_posts[14]->post_text == "This is image post 10");
+        
+    }
+    
+    function testGetPageThreeOfPhotoPublicPosts() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        
+        $page_of_posts = $pdao->getPhotoPostsByPublicInstances(3, 15);
+        
+        $this->assertTrue(sizeof($page_of_posts) == 10);
+        
+        $this->assertTrue($page_of_posts[0]->post_text == "This is image post 9");
+        
+        $this->assertTrue($page_of_posts[9]->post_text == "This is image post 0");
+        
+    }
+    
+    function testGetTotalPhotoPagesAndPostsByPublicInstances() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        $totals = $pdao->getTotalPhotoPagesAndPostsByPublicInstances(15);
+        
+        $this->assertTrue($totals["total_posts"] == 40);
+        $this->assertTrue($totals["total_pages"] == 3);
+    }
+    
+    //Start Public Link Tests
+    function testGetPageOneOfLinkPublicPosts() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        
+        $page_of_posts = $pdao->getLinkPostsByPublicInstances(1, 15);
+        
+        $this->assertTrue(sizeof($page_of_posts) == 15);
+        
+        $this->assertTrue($page_of_posts[0]->post_text == "This is link post 39");
+        
+        $this->assertTrue($page_of_posts[14]->post_text == "This is link post 25");
+        
+    }
+    
+    function testGetPageTwoOfLinkPublicPosts() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        
+        $page_of_posts = $pdao->getLinkPostsByPublicInstances(2, 15);
+        
+        $this->assertTrue(sizeof($page_of_posts) == 15);
+        
+        $this->assertTrue($page_of_posts[0]->post_text == "This is link post 24");
+        
+        $this->assertTrue($page_of_posts[14]->post_text == "This is link post 10");
+        
+    }
+    
+    function testGetPageThreeOfLinkPublicPosts() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        
+        $page_of_posts = $pdao->getLinkPostsByPublicInstances(3, 15);
+        
+        $this->assertTrue(sizeof($page_of_posts) == 10);
+        
+        $this->assertTrue($page_of_posts[0]->post_text == "This is link post 9");
+        
+        $this->assertTrue($page_of_posts[9]->post_text == "This is link post 0");
+        
+    }
+    
+    function testGetTotalLinkPagesAndPostsByPublicInstances() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        $totals = $pdao->getTotalLinkPagesAndPostsByPublicInstances(15);
+        
+        $this->assertTrue($totals["total_posts"] == 40);
+        $this->assertTrue($totals["total_pages"] == 3);
+    }
 }
 ?>
