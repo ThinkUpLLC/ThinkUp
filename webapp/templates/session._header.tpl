@@ -3,8 +3,6 @@
  <HEAD>
   <TITLE>ThinkTank {$title}</TITLE>
   	<link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
-    <!-- custom css -->
-	<link type="text/css" href="{$cfg->site_root_path}cssjs/style.css" rel="stylesheet" />
 
 	<style type="text/css">{literal}
 	

@@ -6,8 +6,8 @@ db_user="thinktank_user"
 db_password="password"
 
 #MySQL bin location
-mysql_location="/cygdrive/c/xampp/mysql/bin"
-
+mysql="mysql"
+mysqldump="mysqldump"
 
 
 #############################

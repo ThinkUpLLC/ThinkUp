@@ -30,10 +30,10 @@
     <div class="center prepend_20 append_20">
         <a href="register.php">Register</a> | <a href="forgot.php">Forgot password</a>
     </div>
-
     
     </form>
 
 </div>
 
 {include file="_footer.tpl" stats="no"}
+

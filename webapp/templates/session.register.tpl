@@ -1,9 +1,10 @@
 {include file="_header.tpl" title="Registration" statusbar="no"}
 
-<div class="container_24 thinktank-canvas round-all center">
+<div class="container_24 thinktank-canvas round-all">
 
-<h1>Register For ThinkTank</h1>
-
+<div class="prepend_20">
+    <h1>Register</h1>
+</div>
 
     <div class="clearfix prepend_20">
         <div class="grid_17 prefix_3 left">
@@ -13,8 +14,8 @@
     </div>
     
     {if !$closed} 
-    
-    <form name="form1" method="post" action="register.php" class="login">
+   
+    <form name="form1" method="post" action="register.php" class="login append_20">
 
     <div class="clearfix">
         <div class="grid_4 prefix_5 right"><label>Name:</label></div>
@@ -228,31 +229,26 @@
         </div>
     </div>
 
+    <div class="clearfix">
+        <div class="grid_6 prefix_3 right"><label>Prove you're human:</label></div>
+        <div class="grid_10 left">
+            <div class="captcha">{$captcha}</div>
+        </div>
+    </div>
 
-        <table border="0" cellpadding="0" cellspacing="5" align="center">
-            <tr>
-                <td>
-                    Prove you're human:
-                </td>
-                <td>
-                    {$captcha} 
-                </td>
-            </tr>
-            <tr>
-                <td>
-                </td>
-                <td>
-                    <input type="submit" name="Submit" value="Register">
-                </td>
-            </tr>
-        </form>
-        </table>
+    <div class="clearfix">
+        <div class="grid_10 prefix_9 left">
+            <input type="submit" name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Register">
+        </div>
+    </div>
+    
+    </form>
+    {/if}
+
+    <div class="center prepend_20 append_20">
+        <a href="login.php">Login</a> | <a href="forgot.php">Forgot password</a>
+    </div>
         
-        {/if}
-        
-
-        <center>
-            Already have an account? <a href="login.php">Sign in</a>
-        </center>
-
 </div>
+
+{include file="_footer.tpl" stats="no"}

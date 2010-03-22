@@ -1,6 +1,6 @@
 h1. ThinkTank
 
-ThinkTank is an installable web application that captures and organize replies to status updates on Twitter and beyond. See screenshots and more at "http://thinktankapp.com":http://thinktankapp.com. 
+ThinkTank is an installable web application that helps you answer your questions by giving you insight into conversations on social networks. ThinkTank does this by capturing and organizing replies to status updates on social networks like Twitter and (soon) Facebook. See screenshots and more at "http://thinktankapp.com":http://thinktankapp.com. 
 
 ThinkTank is sponsored by "Expert Labs":http://expertlabs.org, led by "Gina Trapani":http://ginatrapani.org, and used to be named Twitalytic.
 

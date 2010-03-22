@@ -1,12 +1,12 @@
 h1. ThinkTank Tests
 
-All code submitted to the repository should have corresponding tests that pass.
-
-The test suite assumes there is a <code>thinktank_tests</code> database which the default ThinkTank db user can access. Each test should set up the appropriate test data in the <code>setUp()</code> method and drop those tables in the <code>tearDown()</code> method.
+All code submitted to the repository should have corresponding tests that pass. Here's how to run and write tests.
 
 h2. Running Tests
 
-To run a particular test, like the UserDAO test, in the thinktank source code root folder, use this command:
+First, configure your test environment. Copy <code>tests/config.tests.sample.inc.php</code> to <code>tests/config.tests.inc.php</code> and set the appropriate paths.
+
+Then, to run a particular test, like the UserDAO test, in the thinktank source code root folder, use this command:
 
 <code>$ php tests/userdao_test.php</code>
 
@@ -18,6 +18,8 @@ The webapp tests contained in <code>tests/frontend_test.php</code> assumes you h
 
 h2. Writing Tests
 
+The test suite assumes there is a <code>thinktank_tests</code> database which the default ThinkTank db user can access. If your test needs to read and write to the ThinkTank database, extend <code>ThinkTankUnitTestCase</code> and run <code>parent::setUp()</code> in your <code>setUp()</code> method, and <code>parent::tearDown()</code> in your <code>tearDown()</code> method. These methods will create a clean, empty copy of the ThinkTank database structure. After you call the parent setUp() method in your test's setUp(), insert the data your test requires.
+
 Best practices for writing tests are still getting developed. In the meantime, use some existing tests as examples.
 
 h3. DAO Tests
@@ -28,9 +30,11 @@ h3. Web Page Tests
 
 Add tests for particular pages inside the webapp to <code>frontend_test.php</code>.
 
-h3. Crawler Consumption Tests
+h3. Crawler Tests
 
-To test consumption of data from web services, mock up the appropriate classes and store test data to local files.
-For example, the <code>classes/mock.TwitterOAuth.php</code> class reads data from the files in the <code>testdata</code> directory.
+To test consumption of data from web services, mock up the appropriate classes and store test data to local files in the format the API would return them in.
+For example, the <code>classes/mock.TwitterOAuth.php</code> class reads Twitter data from the files in the <code>testdata</code> directory.
+
+See <code>twittercrawler_test.php</code> as an example of the Twitter crawler test.
 
 Once your tests work, add them to the <code>all_tests.php</code> file to run along with the existing tests.

@@ -3,7 +3,7 @@
 
 {if $owner->is_admin}
     <p class="info">
-        You are an administrator so you can see all accounts in the system.
+        As an administrator you can see all accounts in the system.
     </p>
 {/if}
 

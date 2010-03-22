@@ -3,7 +3,9 @@ class Session {
     private $data;
     private $salt = "ab194d42da0dff4a5c01ad33cb4f650a7069178b";
     public function __construct() {
-        $data = $_SESSION;
+        if (isset($_SESSION)) {
+            $data = $_SESSION;
+        }
     }
     public function isLoggedIn() {
         if (!isset($_SESSION['user'])) {

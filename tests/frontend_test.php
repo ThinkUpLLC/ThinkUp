@@ -1,318 +1,156 @@
-<?php
-
+<?php 
 require_once (dirname(__FILE__).'/simpletest/autorun.php');
 require_once (dirname(__FILE__).'/simpletest/web_tester.php');
 require_once (dirname(__FILE__).'/config.tests.inc.php');
 
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once ("class.MySQLDAO.php");
+require_once ("classes/class.ThinkTankTestCase.php");
 require_once ("class.User.php");
-require_once ("class.Database.php");
-require_once ("class.Logger.php");
-require_once ("class.LoggerSlowSQL.php");
 require_once ("class.Follow.php");
-require_once ("config.inc.php");
+require_once ("class.Session.php");
 
 
-class TestOfThinkTankFrontEnd extends WebTestCase {
-	var $logger;
-	var $db;
-	var $conn;
+class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
 
-	function setUp() {
-		global $THINKTANK_CFG;
-
-		//Override default CFG values
-		$THINKTANK_CFG['db_name'] ="thinktank_tests";
-
-		$this->logger = new Logger($THINKTANK_CFG['log_location']);
-		$this->db = new Database($THINKTANK_CFG);
-		$this->conn = $this->db->getConnection();
-
-		//Build test table
-		$q = "CREATE TABLE IF NOT EXISTS `tt_users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `user_name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `full_name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `avatar` varchar(255) COLLATE utf8_bin NOT NULL,
-  `location` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `description` text COLLATE utf8_bin,
-  `url` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `is_protected` tinyint(1) NOT NULL,
-  `follower_count` int(11) NOT NULL,
-  `friend_count` int(11) NOT NULL DEFAULT '0',
-  `post_count` int(11) NOT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `found_in` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `last_post` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `joined` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `last_post_id` bigint(20) NOT NULL DEFAULT '0',
-  `network` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_id` (`user_id`),
-  KEY `last_updated_user_id` (`last_updated`,`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-";
-		$this->db->exec($q);
-
-
-		$q = "CREATE TABLE IF NOT EXISTS `tt_user_errors` (
-  `id` int(11) NOT NULL auto_increment,
-  `user_id` int(20) NOT NULL,
-  `error_code` int(11) NOT NULL,
-  `error_text` varchar(255) collate utf8_bin NOT NULL,
-  `error_issued_to_user_id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
-		$this->db->exec($q);
-
-
-
-		$q = "CREATE TABLE IF NOT EXISTS `tt_follows` (
-  `user_id` int(11) NOT NULL,
-  `follower_id` int(11) NOT NULL,
-  `last_seen` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `active` int(11) NOT NULL default '1',
-  PRIMARY KEY  (`user_id`,`follower_id`),
-  KEY `active` (`active`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-";
-		$this->db->exec($q);
-
-		$q = "CREATE TABLE `tt_instances` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `network_user_id` int(11) NOT NULL,
-  `network_username` varchar(255) COLLATE utf8_bin NOT NULL,
-  `last_status_id` bigint(11) DEFAULT '0',
-  `crawler_last_run` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_page_fetched_replies` int(11) NOT NULL DEFAULT '1',
-  `last_page_fetched_tweets` int(11) NOT NULL DEFAULT '1',
-  `total_posts_by_owner` int(11) DEFAULT '0',
-  `total_posts_in_system` int(11) DEFAULT '0',
-  `total_replies_in_system` int(11) DEFAULT NULL,
-  `total_users_in_system` int(11) DEFAULT NULL,
-  `total_follows_in_system` int(11) DEFAULT NULL,
-  `earliest_post_in_system` datetime DEFAULT NULL,
-  `earliest_reply_in_system` datetime DEFAULT NULL,
-  `is_archive_loaded_replies` int(11) NOT NULL DEFAULT '0',
-  `is_archive_loaded_follows` int(11) NOT NULL DEFAULT '0',
-  `api_calls_to_leave_unmade_per_minute` decimal(11,1) NOT NULL DEFAULT '2.0',
-  `is_public` int(1) NOT NULL DEFAULT '0',
-  `is_active` int(1) NOT NULL DEFAULT '1',
-  `network` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
-  PRIMARY KEY (`id`),
-  KEY `twitter_user_id` (`network_user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-";
-		$this->db->exec($q);
-
-
-		$q = "CREATE TABLE IF NOT EXISTS `tt_owners` (
-  `id` int(20) NOT NULL auto_increment,
-  `full_name` varchar(200) character set latin1 collate latin1_general_ci NOT NULL default '',
-  `user_name` varchar(200) character set latin1 collate latin1_general_ci NOT NULL default '',
-  `user_pwd` varchar(200) character set latin1 collate latin1_general_ci NOT NULL default '',
-  `user_email` varchar(200) character set latin1 collate latin1_general_ci NOT NULL default '',
-  `activation_code` int(10) NOT NULL default '0',
-  `joined` date NOT NULL default '0000-00-00',
-  `country` varchar(100) character set latin1 collate latin1_general_ci NOT NULL default '',
-  `user_activated` int(1) NOT NULL default '0',
-  `is_admin` int(1) NOT NULL default '0',
-  `last_login` date NOT NULL default '0000-00-00',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-";
-		$this->db->exec($q);
-
-
-		$q = "CREATE TABLE IF NOT EXISTS `tt_owner_instances` (
-  `id` int(20) NOT NULL auto_increment,
-  `owner_id` int(10) NOT NULL,
-  `instance_id` int(10) NOT NULL,
-  `oauth_access_token` varchar(255) NOT NULL default '',
-  `oauth_access_token_secret` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-		";
-
-		$this->db->exec($q);
-
-		$q = "CREATE TABLE IF NOT EXISTS `tt_posts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `post_id` bigint(11) NOT NULL,
-  `author_user_id` int(11) NOT NULL,
-  `author_username` varchar(50) COLLATE utf8_bin NOT NULL,
-  `author_fullname` varchar(50) COLLATE utf8_bin NOT NULL,
-  `author_avatar` varchar(255) COLLATE utf8_bin NOT NULL,
-  `post_text` varchar(160) COLLATE utf8_bin NOT NULL,
-  `post_html` varchar(255) COLLATE utf8_bin NOT NULL,
-  `source` varchar(255) COLLATE utf8_bin NOT NULL,
-  `pub_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `in_reply_to_user_id` int(11) DEFAULT NULL,
-  `in_reply_to_post_id` bigint(11) DEFAULT NULL,
-  `mention_count_cache` int(11) NOT NULL DEFAULT '0',
-  `in_retweet_of_post_id` bigint(11) DEFAULT NULL,
-  `retweet_count_cache` int(11) NOT NULL DEFAULT '0',
-  `network` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `status_id` (`post_id`),
-  KEY `author_username` (`author_username`),
-  KEY `pub_date` (`pub_date`),
-  KEY `author_user_id` (`author_user_id`),
-  KEY `in_reply_to_user_id` (`in_reply_to_user_id`),
-  KEY `in_retweet_of_status_id` (`in_retweet_of_post_id`),
-  FULLTEXT KEY `tweets_fulltext` (`post_text`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-		";
-
-		$this->db->exec($q);
-
-		$q = "CREATE TABLE IF NOT EXISTS `tt_links` (
-  `id` int(11) NOT NULL auto_increment,
-  `url` varchar(255) collate utf8_bin NOT NULL,
-  `expanded_url` varchar(255) collate utf8_bin NOT NULL,
-  `title` varchar(255) collate utf8_bin NOT NULL,
-  `clicks` int(11) NOT NULL default '0',
-  `post_id` bigint(11) NOT NULL,
-  `is_image` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `post_id` (`post_id`),
-  KEY `is_image` (`is_image`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-		";
-
-		$this->db->exec($q);
-		
-		
-		//Add owner
-		$q = "INSERT INTO tt_owners (id, user_email, user_pwd, user_activated) VALUES (1, 'me@example.com', '70b0796c3c45a335b7a8459678e393d6bf3b208e', 1)";
-		$this->db->exec($q);
-
-
-		//Add instance
-		$q = "INSERT INTO tt_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234, 'thinktankapp', 1)";
-		$this->db->exec($q);
-
-		//Add instance_owner
-		$q = "INSERT INTO tt_owner_instances (owner_id, instance_id) VALUES (1, 1)";
-		$this->db->exec($q);
-
-
-		//Insert test data into test table
-		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg');";
-		$this->db->exec($q);
-
-		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
-		$this->db->exec($q);
-
-		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected) VALUES (16, 'private', 'Private Poster', 'avatar.jpg', 1);";
-		$this->db->exec($q);
-
-		$q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (17, 'thinktankapp', 'ThinkTankers', 'avatar.jpg', 0, 10);";
-		$this->db->exec($q);
-		
-		$q = "INSERT INTO tt_user_errors (user_id, error_code, error_text, error_issued_to_user_id) VALUES (15, 404, 'User not found', 13);";
-		$this->db->exec($q);
-
-		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 12, '1/1/2006');";
-		$this->db->exec($q);
-
-		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 14, '1/1/2006');";
-		$this->db->exec($q);
-
-		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 15, '1/1/2006');";
-		$this->db->exec($q);
-
-		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 16, '1/1/2006');";
-		$this->db->exec($q);
-
-		$q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 12, '1/1/2006');";
-		$this->db->exec($q);
-
-		// Plugin data
-        $q = "CREATE TABLE  IF NOT EXISTS `tt_plugins` (
-`id` INT NOT NULL AUTO_INCREMENT,
-`name` VARCHAR( 255 ) NOT NULL ,
-`folder_name` VARCHAR( 255 ) NOT NULL ,
-`description` VARCHAR( 255 ),
-`author` VARCHAR( 255 ),
-`homepage` VARCHAR( 255 ),
-`version` VARCHAR( 255 ),
-`is_active` TINYINT NOT NULL ,
-PRIMARY KEY (  `id` )
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-		";
+    function setUp() {
+        parent::setUp();
+        
+        //Add owner
+        $session = new Session();
+        $cryptpass = $session->pwdcrypt("secretpassword");
+        $q = "INSERT INTO tt_owners (id, user_email, user_pwd, user_activated) VALUES (1, 'me@example.com', '".$cryptpass."', 1)";
         $this->db->exec($q);
         
-        $q = "INSERT INTO  `tt_plugins` ( `name` , `folder_name` , `description` , `author` , `homepage` , `version` , `is_active` ) 
-VALUES ( 'Twitter',  'twitter',  'Twitter support',  'Gina Trapani',  'http://thinktankapp.com',  '0.01',  '1' );";
+        //Add instance
+        $q = "INSERT INTO tt_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234, 'thinktankapp', 1)";
         $this->db->exec($q);
-		
-        $q = "INSERT INTO  `tt_plugins` (`name` , `folder_name` , `description` , `author` , `homepage` , `version` , `is_active` )
-VALUES (  'My Test Plugin',  'testplugin',  'Proof of concept plugin',  'Gina Trapani',  'http://thinktankapp.com',  '0.01',  '0' );";
+        
+        //Add instance_owner
+        $q = "INSERT INTO tt_owner_instances (owner_id, instance_id) VALUES (1, 1)";
         $this->db->exec($q);
-	}
+        
+        //Insert test data into test table
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg');";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected) VALUES (16, 'private', 'Private Poster', 'avatar.jpg', 1);";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (17, 'thinktankapp', 'ThinkTankers', 'avatar.jpg', 0, 10);";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_user_errors (user_id, error_code, error_text, error_issued_to_user_id) VALUES (15, 404, 'User not found', 13);";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 12, '1/1/2006');";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 14, '1/1/2006');";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 15, '1/1/2006');";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 16, '1/1/2006');";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 12, '1/1/2006');";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) VALUES (13, 'ev', 1);";
+        $this->db->exec($q);
+        
+        $counter = 0;
+        while ($counter < 40) {
+            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
+            $this->db->exec($q);
+            $counter++;
+        }
+    }
+    
+    function tearDown() {
+        parent::tearDown();
+    }
+    
+    function testPublicTimeline() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/public.php');
+        $this->assertTitle('ThinkTank Public Timeline');
+        $this->assertText('Log In');
+        $this->click('Log In');
+        $this->assertTitle('ThinkTank Sign In');
+    }
 
-	function tearDown() {
-		$this->logger->close();
-
-		//Delete test data
-		$q = "DROP TABLE tt_users, tt_user_errors, tt_follows, tt_owners, tt_instances, tt_owner_instances, tt_plugins, tt_posts, tt_links";
-		$this->db->exec($q);
-
-		//Clean up
-		$this->db->closeConnection($this->conn);
-	}
-
-	function testPublicTimeline() {
-		global $TEST_SERVER_DOMAIN;
-			
-		$this->get($TEST_SERVER_DOMAIN.'/public.php');
-		$this->assertTitle('ThinkTank Public Timeline');
-		$this->assertText('Log In');
-		$this->click('Log In');
-		$this->assertTitle('ThinkTank Sign In');
-	}
-
-
-	function testSignInAndPrivateDashboard() {
-		global $TEST_SERVER_DOMAIN;
-
-		$this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-		$this->setField('email', 'me@example.com');
-		$this->setField('pwd', 'secretpassword');
-
-		$this->click("Login");
-		$this->assertTitle('ThinkTank');
-		$this->assertText('Logged in as: me@example.com');
-				
-	}
-
-	function testUserPage() {
-		global $TEST_SERVER_DOMAIN;
-
-		$this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-		$this->setField('email', 'me@example.com');
-		$this->setField('pwd', 'secretpassword');
-
-		$this->click("Login");
-		$this->assertTitle('ThinkTank');
-
-		$this->get($TEST_SERVER_DOMAIN.'/user/index.php?i=thinktankapp&u=ev');
-		$this->assertTitle('ThinkTank');
-		$this->assertText('Logged in as: me@example.com');
-		$this->assertText('ev');
-		
-		$this->get($TEST_SERVER_DOMAIN.'/user/index.php?i=thinktankapp&u=usernotinsystem');
-		$this->assertText('This user is not in the system.');
-		
-	}
-
-	//TODO Write account page and status page tests
+    
+    function testSignInAndPrivateDashboard() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+        
+        $this->click("Login");
+        $this->assertTitle('ThinkTank');
+        $this->assertText('Logged in as: me@example.com');
+        
+    }
+    
+    function testUserPage() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+        
+        $this->click("Login");
+        $this->assertTitle('ThinkTank');
+        
+        $this->get($TEST_SERVER_DOMAIN.'/user/index.php?i=thinktankapp&u=ev');
+        $this->assertTitle('ThinkTank');
+        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('ev');
+        
+        $this->get($TEST_SERVER_DOMAIN.'/user/index.php?i=thinktankapp&u=usernotinsystem');
+        $this->assertText('This user is not in the system.');
+        
+    }
+    
+    function testNextAndPreviousLinks() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/public.php');
+        $this->assertTitle('ThinkTank Public Timeline');
+        
+        $this->assertText('This is post 39');
+        $this->assertText('This is post 25');
+        $this->assertText('Page 1 of 3');
+        
+        $this->assertLinkById("next_page");
+        $this->assertNoLinkById("prev_page");
+        
+        $this->clickLinkById("next_page");
+        
+        $this->assertText('Page 2 of 3');
+        $this->assertText('This is post 24');
+        $this->assertText('This is post 10');
+        $this->assertLinkById("next_page");
+        $this->assertLinkById("prev_page");
+        
+        $this->clickLinkById("next_page");
+        
+        $this->assertNoLinkById("next_page");
+        $this->assertLinkById("prev_page");
+        $this->assertText('This is post 9');
+        $this->assertText('This is post 0');
+        $this->assertText('Page 3 of 3');
+    }
+    
+    //TODO Write account page and status page tests
 }
 ?>

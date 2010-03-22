@@ -16,5 +16,9 @@ class TwitterOAuth {/*{{{*/
         $url = str_replace('&', '-', $url);
         return file_get_contents($FAUX_DATA_PATH.$url);
     }
+	
+    function lastStatusCode() {
+        return 200;
+    }
 }
 ?>
