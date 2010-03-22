@@ -686,10 +686,10 @@ class PostDAO extends MySQLDAO {
         return $posts;
     }
     
-    function getCountPhotoPostsByPublicInstances($count) {
+    function getTotalPhotoPagesAndPostsByPublicInstances($count) {
         $q = "
 			SELECT 
-                                count(*) as total, ceil(count(*) / $count) as pages
+                                count(*) as total_posts, ceil(count(*) / $count) as total_pages
 			FROM 
 				#prefix#posts t
 			INNER JOIN
@@ -704,11 +704,8 @@ class PostDAO extends MySQLDAO {
 				i.is_public = 1 and l.is_image = 1 
                         ";
         $sql_result = $this->executeSQL($q);
-        $totals = array();
         $row = mysql_fetch_assoc($sql_result);
-        $totals['total'] = $row['total'];
-        $totals['pages'] = $row['pages'];
-        return $totals;
+        return $row;
     }
     
     function getLinkPostsByPublicInstances($page, $count) {
@@ -740,10 +737,10 @@ class PostDAO extends MySQLDAO {
         return $posts;
     }
     
-    function getCountLinkPostsByPublicInstances($count) {
+    function getTotalLinkPagesAndPostsByPublicInstances($count) {
         $q = "
 			SELECT 
-                                count(*) as total, ceil(count(*) / $count) as pages
+                                count(*) as total_posts, ceil(count(*) / $count) as total_pages
 			FROM 
 				#prefix#posts t
 			INNER JOIN
@@ -758,11 +755,8 @@ class PostDAO extends MySQLDAO {
 				i.is_public = 1 and l.expanded_url != '' and l.is_image = 0 
                         ";
         $sql_result = $this->executeSQL($q);
-        $totals = array();
         $row = mysql_fetch_assoc($sql_result);
-        $totals['total'] = $row['total'];
-        $totals['pages'] = $row['pages'];
-        return $totals;
+        return $row;
     }
     
     function getMostRepliedToPostsByPublicInstances($page, $count) {
