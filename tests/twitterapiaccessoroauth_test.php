@@ -9,7 +9,7 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$TEST_CLASS_PATH)
 require_once ("class.MySQLDAO.php");
 require_once ("class.Instance.php");
 require_once ("mock.TwitterOAuth.php");
-require_once ("plugins/twitter/class.TwitterAPIAccessorOAuth.php");
+require_once ("plugins/twitter/lib/class.TwitterAPIAccessorOAuth.php");
 require_once ("config.inc.php");
 
 class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
@@ -50,6 +50,7 @@ class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
         $r['avg_replies_per_day'] = 0;
         $r['is_public'] = 1;
         $r['is_active'] = 1;
+		$r['network'] = 'twitter';
         
         $i = new Instance($r);
         
@@ -85,6 +86,8 @@ class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
         $r['avg_replies_per_day'] = 0;
         $r['is_public'] = 1;
         $r['is_active'] = 1;
+		$r['network'] = 'twitter';
+
         
         $i = new Instance($r);
         

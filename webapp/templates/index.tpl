@@ -25,10 +25,6 @@ $(document).ready(function() {
 
     <!-- session instance info: {$smarty.session.instance->network_username} -->
 
-    {if not $instance->total_users_in_system }
-        <!-- //TODO this is hacky way to determine if the crawler has run and should be improved -->
-        <div align="center" style="border:solid red 1px;background:white;margin:10px;"><b>There's nothing to see here. Yet! First the crawler has to run to load all that tasty Twitter data.</b></div>
-    {/if}
 
     <div id="thinktank-tabs">
         <div role="application" id="tabs">
@@ -364,7 +360,7 @@ $(document).ready(function() {
         <ul>
         	{foreach from=$instances key=tid item=i}
         	{if $i->network_user_id != $instance->network_user_id}
-        	<li><a href="?u={$i->network_username}">{$i->network_username}</a><br /><small>updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if}</small></li>
+        	<li><a href="?u={$i->network_username|urlencode}">{$i->network_username}</a><br /><small>updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if}</small></li>
         	{/if}
         	{/foreach}	
         	<li><a href="{$cfg->site_root_path}account/">Add an account&rarr;</a></li>

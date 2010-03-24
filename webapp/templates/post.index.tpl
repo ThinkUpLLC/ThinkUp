@@ -25,7 +25,7 @@
             </div>
             <div class="clearfix append_20">
                 <div class="grid_11 prefix_11 alpha omega small gray">
-                    <img src="{$cfg->site_root_path}/cssjs/images/social_icons/{$post->network}.png" class="float-l">
+                    <img src="{$cfg->site_root_path}cssjs/images/social_icons/Social_{$post->network}.png" class="float-l">
                      Posted {$post->adj_pub_date|relative_datetime} at {$post->adj_pub_date} via {$post->source}
                 </div>
             </div>

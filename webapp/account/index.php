@@ -37,6 +37,7 @@ $s->caching = 0;
 $cfg = new Config();
 $id = new InstanceDAO($db);
 $od = new OwnerDAO($db);
+$oid = new OwnerInstanceDAO($db);
 
 $owner = $od->getByEmail($_SESSION['user']);
 
@@ -52,13 +53,17 @@ if ( $owner->is_admin ) {
 	$s->assign('owners', $owners);
 }
 
+$cmi = $webapp->getConfigMenu();
+$s-> assign('config_menu', $cmi);
 if (isset($_GET['p'])) {
 	$webapp->configuration($_GET['p']);
 	array_push( $s->template_dir, 'plugins/'.$_GET['p']);
 	$s->assign('body', $THINKTANK_CFG['source_root_path'].'common//plugins//'.$_GET['p'].'//templates/'.$_GET['p'].'.account.index.tpl');
+} else  {
+	//default to the first plugin on the stack
+	$s->assign('body', $THINKTANK_CFG['source_root_path'].'common//plugins//'.$cmi[0][0].'//templates/'.$cmi[0][0].'.account.index.tpl');
 }
 
-$s-> assign('config_menu', $webapp->getConfigMenu());
 /* End plugin-specific configuration handling */
 
 

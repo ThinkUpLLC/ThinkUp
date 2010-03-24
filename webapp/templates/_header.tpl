@@ -71,11 +71,11 @@
 		
 		{/literal}
 		showLoading();
-		tweets_content.load("inline.view.php?u={$instance->network_username}&d=tweets-all", hideLoading);
-		mentions_content.load("inline.view.php?u={$instance->network_username}&d=mentions-all", hideLoading); 
-		followers_content.load("inline.view.php?u={$instance->network_username}&d=followers-mostfollowed", hideLoading); 
-		friends_content.load("inline.view.php?u={$instance->network_username}&d=friends-mostactive", hideLoading); 
-		links_content.load("inline.view.php?u={$instance->network_username}&d=links-friends", hideLoading); 
+		tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=tweets-all", hideLoading);
+		mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=mentions-all", hideLoading); 
+		followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=followers-mostfollowed", hideLoading); 
+		friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=friends-mostactive", hideLoading); 
+		links_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=links-friends", hideLoading); 
 		
 		{literal}
 		//Manage click events

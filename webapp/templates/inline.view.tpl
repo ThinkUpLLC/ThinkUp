@@ -105,10 +105,10 @@
 			
 			var oid = Id;
 			var pid = $("select#pid"+Id+" option:selected").val();
-			var u = '{/literal}{$i->twitter_username}{literal}';
+			var u = '{/literal}{$i->network_username|escape:'url'}{literal}';
 			
 			var t = 'inline.view.tpl';
-			var ck = '{/literal}{$i->twitter_username}-{$smarty.session.user}-{$display}{literal}';
+			var ck = '{/literal}{$i->network_username|escape:'url'}-{$smarty.session.user}-{$display}{literal}';
 			var dataString = 'u='+ u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;  
 			//alert (dataString);return false;  
 			    $.ajax({  

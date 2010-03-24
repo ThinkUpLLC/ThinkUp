@@ -43,13 +43,20 @@ $webapp = new Webapp();
 $crawler = new Crawler();
 
 // Instantiate global database variable
-$db = new Database($THINKTANK_CFG);
-$conn = $db->getConnection();
-
+try {
+    $db = new Database($THINKTANK_CFG);
+    $conn = $db->getConnection();
+}
+catch(Exception $e) {
+    echo $e->message;
+}
 /* Start plugin-specific configuration handling */
 $pdao = new PluginDAO($db);
 $active_plugins = $pdao->getActivePlugins();
 foreach ($active_plugins as $ap) {
+    foreach (glob($THINKTANK_CFG['source_root_path'].'common/plugins/'.$ap->folder_name."/lib/*.php") as $includefile) {
+        require_once ($includefile);
+    }
     foreach (glob($THINKTANK_CFG['source_root_path'].'common/plugins/'.$ap->folder_name."/*.php") as $includefile) {
         require_once ($includefile);
     }

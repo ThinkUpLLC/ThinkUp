@@ -80,6 +80,7 @@ class TwitterCrawler {
 
 					$pd = new PostDAO($this->db, $this->logger);
 					foreach ($tweets as $tweet) {
+						$tweet['network'] = 'twitter';
 
 						if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
 							$count = $count + 1;

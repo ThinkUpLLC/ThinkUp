@@ -60,7 +60,7 @@ class OwnerInstanceDAO extends MySQLDAO {
 
     
     
-    function insert($owner_id, $instance_id, $oauth_token, $oauth_token_secret) {
+    function insert($owner_id, $instance_id, $oauth_token='', $oauth_token_secret='') {
         $q = "
 			INSERT INTO 
 				#prefix#owner_instances (`owner_id`, `instance_id`, `oauth_access_token`, `oauth_access_token_secret`)

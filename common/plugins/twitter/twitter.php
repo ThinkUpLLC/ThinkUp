@@ -11,7 +11,7 @@ function twitter_crawl() {
     $flickrapi = new FlickrAPIAccessor($THINKTANK_CFG['flickr_api_key']);
 
     
-    $instances = $id->getAllActiveInstancesStalestFirst();
+    $instances = $id->getAllActiveInstancesStalestFirstByNetwork('twitter');
     foreach ($instances as $i) {
         $logger->setUsername($i->network_username);
         $tokens = $oid->getOAuthTokens($i->id);
@@ -55,9 +55,6 @@ function twitter_crawl() {
     
     $logger->close(); # Close logging
     
-    if (isset($conn))
-        $db->closeConnection($conn); // Clean up
-        
 }
 
 function twitter_webapp_configuration() {
@@ -76,7 +73,7 @@ function twitter_webapp_configuration() {
     /* Build the authorization URL */
     $oauthorize_link = $to->getAuthorizeURL($token);
     
-    $owner_instances = $id->getByOwner($owner);
+    $owner_instances = $id->getByOwnerAndNetwork($owner, 'twitter');
     
     $s->assign('owner_instances', $owner_instances);
     $s->assign('oauthorize_link', $oauthorize_link);

@@ -235,7 +235,7 @@ class PostDAO extends MySQLDAO {
         return $this->getRepliesToPost($post_id, true);
     }
     
-    function addPost($vals, $owner, $logger) {
+    function addPost($vals) {
         if (!$this->isPostInDB($vals['post_id'])) {
         
             foreach ($vals as $key=>$value) {
@@ -267,27 +267,26 @@ class PostDAO extends MySQLDAO {
 				INSERT INTO #prefix#posts
 					(post_id,
 					author_username,author_fullname,author_avatar,author_user_id,
-					post_text,pub_date,in_reply_to_user_id,in_reply_to_post_id,in_retweet_of_post_id,source)
+					post_text,pub_date,in_reply_to_user_id,in_reply_to_post_id,in_retweet_of_post_id,source,network)
 				VALUES (
 					{$vals['post_id']}, '{$vals['user_name']}', 
 					'{$vals['full_name']}', '{$vals['avatar']}', '{$vals['user_id']}',
 					'$post_sql',
-					'{$vals['pub_date']}', $post_in_reply_to_user_id, $post_in_reply_to_post_id,$post_in_retweet_of_post_id,'{$vals['source']}')
+					'{$vals['pub_date']}', $post_in_reply_to_user_id, $post_in_reply_to_post_id,$post_in_retweet_of_post_id,'{$vals['source']}','{$vals['network']}')
 			";
             $foo = $this->executeSQL($q);
-
             
             if ($vals['in_reply_to_post_id'] != '' && $this->isPostInDB($vals['in_reply_to_post_id'])) {
                 $this->incrementReplyCountCache($vals['in_reply_to_post_id']);
                 $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"]."; updating reply cache count";
-                $logger->logStatus($status_message, get_class($this));
+                $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
             }
             
             if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '' && $this->isPostInDB($vals['in_retweet_of_post_id'])) {
                 $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
                 $status_message = "Repost of ".$vals['in_retweet_of_post_id'].", ID: ".$vals["post_id"]."; updating retweet cache count";
-                $logger->logStatus($status_message, get_class($this));
+                $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
             }
 

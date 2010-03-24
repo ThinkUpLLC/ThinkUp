@@ -19,7 +19,8 @@ class Instance {
     var $api_calls_to_leave_unmade_per_minute;
     var $avg_replies_per_day;
     var $is_public = false;
-	var $is_active = true;
+    var $is_active = true;
+    var $network;
     
     function Instance($r) {
         $this->id = $r["id"];
@@ -47,6 +48,8 @@ class Instance {
         $this->earliest_reply_in_system = $r['earliest_reply_in_system'];
         $this->api_calls_to_leave_unmade_per_minute = $r['api_calls_to_leave_unmade_per_minute'];
         $this->avg_replies_per_day = $r['avg_replies_per_day'];
+        $this->network = $r['network'];
+        
         if ($r['is_public'] == 1)
             $this->is_public = true;
         if ($r['is_active'] == 0)
@@ -67,12 +70,12 @@ class InstanceDAO extends MySQLDAO {
         return $this->getInstanceOneByLastRun("DESC");
     }
     
-    function insert($id, $user) {
+    function insert($id, $user, $network = "twitter") {
         $q = "
 			INSERT INTO 
-				#prefix#instances (`network_user_id`, `network_username`)
+				#prefix#instances (`network_user_id`, `network_username`, `network`)
 			 VALUES
-				(".$id." , '".$user."')";
+				(".$id." , '".$user."', '".$network."')";
         $sql_result = $this->executeSQL($q);
     }
 
@@ -142,6 +145,26 @@ class InstanceDAO extends MySQLDAO {
         mysql_free_result($sql_result);
         return $i;
     }
+    
+    function getByUserId($id) {
+        $q = "
+			SELECT 
+				* , ".$this->getAverageReplyCount()."
+			FROM 
+				#prefix#instances 
+			WHERE 
+				network_user_id = '".$id."'";
+        $sql_result = $this->executeSQL($q);
+        
+        if (mysql_num_rows($sql_result) == 0) {
+            $i = null;
+        } else {
+            $row = mysql_fetch_assoc($sql_result);
+            $i = new Instance($row);
+        }
+        mysql_free_result($sql_result);
+        return $i;
+    }
 
     
     function updateLastRun($id) {
@@ -167,7 +190,7 @@ class InstanceDAO extends MySQLDAO {
         $sql_result = $this->executeSQL($q);
         
     }
-
+    
     function setActive($u, $p) {
         $q = "
 			UPDATE 
@@ -259,21 +282,21 @@ class InstanceDAO extends MySQLDAO {
     function getAllInstancesStalestFirst() {
         return $this->getAllInstances("ASC");
     }
-
-    function getAllActiveInstancesStalestFirst() {
-        return $this->getAllInstances("ASC", true);
+    
+    function getAllActiveInstancesStalestFirstByNetwork($network="twitter") {
+        return $this->getAllInstances("ASC", true, $network);
     }
 
     
-    function getAllInstances($last_run = "DESC", $only_active = false) {
-    	$condition = "";
-		if ($only_active)
-			$condition .= " WHERE is_active = 1 ";
+    function getAllInstances($last_run = "DESC", $only_active = false, $network="twitter") {
+        $condition = "WHERE network='$network'";
+        if ($only_active)
+            $condition .= " AND is_active = 1 ";
         $q = "
 			SELECT 
 				*, ".$this->getAverageReplyCount()."
 			FROM
-				#prefix#instances ". $condition ."
+				#prefix#instances ".$condition."
 			ORDER BY
 				crawler_last_run
 			".$last_run."";
@@ -286,7 +309,7 @@ class InstanceDAO extends MySQLDAO {
         return $instances;
     }
     
-    function getByOwner($o, $disregard_admin_status=false) {
+    function getByOwner($o, $disregard_admin_status = false) {
         if (!$disregard_admin_status && $o->is_admin) {
             $q = "
 				SELECT 
@@ -308,6 +331,42 @@ class InstanceDAO extends MySQLDAO {
 					i.id = oi.instance_id
 				WHERE
 					oi.owner_id = ".$o->id."
+				ORDER BY
+					crawler_last_run 
+				DESC;";
+        }
+        $sql_result = $this->executeSQL($q);
+        $instances = array();
+        while ($row = mysql_fetch_assoc($sql_result)) {
+            $instances[] = new Instance($row);
+        }
+        mysql_free_result($sql_result); # Free up memory
+        return $instances;
+    }
+    
+    function getByOwnerAndNetwork($o, $network, $disregard_admin_status = false) {
+        if (!$disregard_admin_status && $o->is_admin) {
+            $q = "
+				SELECT 
+					*, ".$this->getAverageReplyCount()."
+				FROM
+					#prefix#instances i
+				WHERE network='$network'
+				ORDER BY
+					crawler_last_run 
+				DESC;";
+        } else {
+            $q = "
+				SELECT 
+					*, ".$this->getAverageReplyCount()."
+				FROM
+					#prefix#owner_instances oi
+				INNER JOIN
+					#prefix#instances i
+				ON
+					i.id = oi.instance_id
+				WHERE
+					oi.owner_id = ".$o->id." AND network='$network'
 				ORDER BY
 					crawler_last_run 
 				DESC;";
