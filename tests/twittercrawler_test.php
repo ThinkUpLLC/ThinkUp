@@ -50,7 +50,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $user = $udao->getDetails(36823);
         $this->assertTrue($user->id == 1);
         $this->assertTrue($user->user_id == 36823);
-        $this->assertTrue($user->user_name == 'anildash');
+        $this->assertTrue($user->username == 'anildash');
         $this->assertTrue($user->found_in == 'Owner Status');
     }
     

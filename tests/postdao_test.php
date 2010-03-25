@@ -265,5 +265,11 @@ class TestOfPostDAO extends ThinkTankUnitTestCase {
         $this->assertTrue($totals["total_posts"] == 40);
         $this->assertTrue($totals["total_pages"] == 3);
     }
+    
+    function getTotalPostsByUser() {
+        $pdao = new PostDAO($this->db, $this->logger);
+        $total_posts = $pdao->getTotalPostsByUser(13);
+        $this->assertTrue($total_posts == 40);
+    }
 }
 ?>

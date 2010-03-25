@@ -19,8 +19,13 @@ function facebook_crawl() {
         
         $cfg = new Config($i->network_username, $i->network_user_id);
         
+        $id->updateLastRun($i->id);
         $crawler = new FacebookCrawler($i, $logger, $fb, $db);
+        
+        $crawler->fetchInstanceUserInfo($i->network_user_id, $session_key);
         $crawler->fetchUserPostsAndReplies($i->network_user_id, $session_key);
+        
+        $id->save($crawler->instance, $crawler->owner_object->post_count, $logger, $fb);
         
     }
     $logger->close(); # Close logging

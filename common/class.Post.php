@@ -261,6 +261,10 @@ class PostDAO extends MySQLDAO {
                 }
             } else
                 $post_in_retweet_of_post_id = 'NULL';
+				
+			if (!isset($vals["network"])) {
+				$vals["network"] = 'twitter';
+			}
 
                 
             $q = "
@@ -406,7 +410,21 @@ class PostDAO extends MySQLDAO {
         mysql_free_result($sql_result);
         return $all_posts;
     }
-
+    
+    function getTotalPostsByUser($userid) {
+        $q = "
+			SELECT 
+				COUNT(*) as total 
+			FROM 
+				#prefix#posts t
+			WHERE 
+				author_user_id = '".$userid."'
+			ORDER BY 
+				pub_date ASC";
+        $sql_result = $this->executeSQL($q);
+        $row = mysql_fetch_assoc($sql_result);
+        return $row["total"];
+    }
     
     function getStatusSources($author_id) {
         $q = "
@@ -651,7 +669,7 @@ class PostDAO extends MySQLDAO {
         $row = mysql_fetch_assoc($sql_result);
         return $row;
     }
-	
+    
     function getPostsByPublicInstances($page, $count) {
         return $this->getPostsByPublicInstancesOrderedBy($page, $count, "pub_date");
     }
