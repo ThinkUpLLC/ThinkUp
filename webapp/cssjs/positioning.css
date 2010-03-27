@@ -25,6 +25,7 @@
 
 .mt_10 {margin-top:10px;}
 
-h4.trigger a:link, h4.trigger a:visited {position:relative;top:-50px;left: 384px;font-size:.8em;color:#9D9C9C;font-weight:500;text-decoration:underline;}
+h4.trigger {position:relative; margin:0 auto !important; width:65px; margin-top:-45px !important; margin-bottom:50px !important; padding:0 !important;}
+h4.trigger a:link, h4.trigger a:visited {font-size:.8em;color:#9D9C9C;font-weight:500;text-decoration:underline;}
 h4.trigger a:hover {color:#222}
 h4.trigger a:active {border:none}
