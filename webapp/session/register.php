@@ -68,7 +68,7 @@ if (!$THINKTANK_CFG['is_registration_open']) {
 		$s->assign('name', $_POST["full_name"]);
 		$s->assign('mail', $_POST["email"]);
 	}
-	$challenge = $captcha->generate($msg);
+	$challenge = $captcha->generate();
 	$s->assign('captcha', $challenge);
 
 }
