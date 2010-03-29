@@ -97,9 +97,9 @@ img.avatar2 {float:left;margin:6px 0px 0px 0px;width:48px;height:48px;}
 /* SYSTEM MESSAGING 
 ======================= */
 
-.success {background-color:#BFDFBF;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;width:400px;}
-.info {background-color:#FFFFAD;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;margin:.5em 0;}
-.error {background-color:#920000;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;color:white;text-align:center;font-weight:700;margin-bottom:.5em;}
+.success {background-color:#BFDFBF;padding:1em 2em;-moz-border-radius: 5px;-webkit-border-radius: 5px;margin:.5em 0;}
+.info {background-color:#FFFFAD;padding:1em 2em;-moz-border-radius: 5px;-webkit-border-radius: 5px;margin:.5em 0;}
+.error {background-color:#920000;padding:1em 2em;-moz-border-radius: 5px;-webkit-border-radius: 5px;color:white;text-align:center;font-weight:700;margin-bottom:.5em;}
 
 #loading_updates, #loading_mentions, #loading_followers, #loading_friends, #loading_links {  
 visibility: hidden;  
@@ -131,6 +131,7 @@ a.tt-button { float:left; }
 /* remove extra button width in IE */
 button.fg-button { width:auto; overflow:visible; }
 
+.tt-icon-left {float:left;margin:.3em .5em;}
 .tt-button-icon-left { padding-left: 2.1em; }
 .tt-button-icon-right { padding-right: 2.1em; }
 .tt-button-icon-left .ui-icon { right: auto; left: .2em; margin-left: 0; }

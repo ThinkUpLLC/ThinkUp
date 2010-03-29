@@ -11,12 +11,15 @@ a:hover {text-decoration : none;color : red;}
 .br {border-right: 1px solid #CCC;}
 .bb {border-bottom: 1px solid #CCC;}
 .bl {border-left: 1px solid #CCC;}
+.border-all {border: 1px solid #CCC;}
 
 .round-tl {-moz-border-radius-topleft: 10px;-webkit-border-top-left-radius: 10px;}
 .round-tr {-moz-border-radius-topright: 10px;-webkit-border-top-right-radius: 10px;}
 .round-br {-moz-border-radius-bottomright: 10px;-webkit-border-bottom-right-radius: 10px;}
 .round-bl {-moz-border-radius-bottomleft: 10px;-webkit-border-bottom-left-radius: 10px;}
 .round-all {-moz-border-radius: 10px;-webkit-border-radius: 10px}
+
+.padding {padding:1em;}
 
 .bold {font-weight:700}
 .gray {color: #666;}
@@ -113,9 +116,9 @@ text-align: center;
 .menu {margin-bottom:30px;}
 .menu li {margin-right: 40px;display:inline;padding:4px 10px;}
 .menu li a {color:#000}
-.menu li:hover{color: #0060e0;cursor: pointer;border-top:1px solid #0060e0;}  
-.menu li.selected {border-top:1px solid #000;}
-.menu li.selected:hover {border-top:1px solid #0060e0;}
+.menu li:hover{color: #0060e0;cursor: pointer;border-top:2px solid #0060e0;}  
+.menu li.selected {border-top:2px solid #000;}
+.menu li.selected:hover {border-top:2px solid #0060e0;}
 
 
 .submenu {padding-left : 20px;}

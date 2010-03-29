@@ -1,4 +1,5 @@
 {include file="_header.tpl" load="no"}
+
 <div class="container_24">
 <div role="application" id="tabs">
     <ul>
@@ -9,24 +10,23 @@
         {/if} 
     </ul>
                 
-    <div class="section" id="plugins">
-        <div class="thinktank-canvas clearfix">
-    
-            <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-    
-                <div class="append_20">        
-                <ul class="list-plugins">
-                    {foreach from=$config_menu key=cmindex item=cmitem}
-                    	<li><a href="?p={$cmitem[0]}">{$cmitem[1]}</a></li>
-                    {/foreach}
-                </ul>
-                </div>
-    
-                {if $body}
-                {include file=$body}
-                {/if}
-            
+    <div class="section thinktank-canvas clearfix" id="plugins">
+        <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
+
+            <div class="append_20 clearfix">        
+                {foreach from=$config_menu key=cmindex item=cmitem}
+                    <div class="grid_7 border-all">
+                        <div class="padding clearfix">
+                            <img src="{$cfg->site_root_path}/cssjs/images/social_icons/{$cmitem[0]}.png" class="float-l">
+                            <a href="?p={$cmitem[0]}">{$cmitem[1]}</a>
+                        </div>
+                	</div>
+                {/foreach}
             </div>
+
+            {if $body}
+            {include file=$body}
+            {/if}
         
         </div>
     </div>
@@ -34,9 +34,19 @@
     <div class="section" id="instances">
         <div class="thinktank-canvas clearfix">
         
-            <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-                {if isset($errormsg)}<div class="error">{$errormsg}</div>{/if}
-                {if isset($successmsg)}<div class="success">{$successmsg}</div>{/if}
+            <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
+                {if isset($errormsg)}
+                	<div class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+                		<p><span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
+                		{$errormsg}</p>
+                	</div>
+                {/if}
+                {if isset($successmsg)}
+                	<div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+                		<p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
+                		{$successmsg}</p>
+                	</div>
+                {/if}
                 
                 <form name="changepass" method="post" action="index.php" class="login prepend_20">
     
@@ -49,7 +59,12 @@
                         <div class="grid_9 prefix_1 right"><label>New password:</label></div>
                         <div class="grid_9 left">
                             <input name="pass1" type="password" id="pass1">
-                            <br /><div class="info small">Must be at least 5 characters</div>
+                            <br />
+                            	<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: .5em 0.7em;"> 
+                            		<p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
+                            		Must be at least 5 characters.</p>
+                                </div>
+    
                         </div>
                     </div>
                     
@@ -79,9 +94,10 @@
             <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
                 <h2 class="subhead">User accounts in this ThinkTank instance</h2>
 
-                <p class="info">
-                    As an administrator you can see all accounts in the system.
-                </p>
+            	<div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+            		<p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
+            		As an administrator you can see all accounts in the system.</p>
+            	</div>
 
                 <ul>
                     {foreach from=$owners key=oid item=o}
@@ -106,6 +122,8 @@
         
 </div>
 </div>
+
+{include file="_footer.tpl" stats="no"} 
 
 <script type="text/javascript">
                 		{literal}
@@ -215,4 +233,3 @@
                 		{/literal}
                 	
 </script>
-{include file="_footer.tpl" stats="no"} 

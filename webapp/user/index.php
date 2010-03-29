@@ -10,6 +10,7 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
+$od = new OwnerDAO($db);
 $ud = new UserDAO($db);
 $fd = new FollowDAO($db);
 $id = new InstanceDAO($db);
@@ -18,11 +19,17 @@ $s = new SmartyThinkTank();
 
 if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_REQUEST['i']) ){
 	$user = $ud->getUserByName($_REQUEST['u']);
-	$i = $id->getByUsername($_REQUEST['i']);
+	$owner = $od->getByEmail($_SESSION['user']);
 
+    // let's use the session variable to guarantee a value rather than the $i POST value, which can be blank	
+	$i = $id->getByUsername($_SESSION['network_username']);
+	//$i = $id->getByUsername($_SESSION['i']);
+	
 	if ( isset($i)) {
 		$cfg = new Config($i->network_username, $i->network_user_id);
 		if(!$s->is_cached('user.index.tpl', $i->network_username."-".$user->user_name)) {
+
+            $s->assign('instances', $id->getByOwner($owner));
 
 			$s->assign('profile', $user);
 			$s->assign('user_statuses',  $pd->getAllPosts($user->user_id, 20));
@@ -41,7 +48,7 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 		}
 		$db->closeConnection($conn);
 
-		$s->display('user.index.tpl', $i->network_username."-".$user->user_name);
+		$s->display('index.user.tpl', $i->network_username."-".$user->user_name);
 	}
 } else {
 	echo 'This user is not in the system.<br /><a href="'. $THINKTANK_CFG['site_root_path'] .'">back home</a>';

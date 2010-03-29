@@ -50,7 +50,7 @@
     
         <ul> 
             {if $smarty.session.user}
-                <li>Logged in as: {$smarty.session.user} | 
+                <li>Logged in as: {$smarty.session.full_name} | 
                 <a href="{$cfg->site_root_path}session/logout.php">Log Out</a> | </li>
                 <li>Plug-ins:</li> 
                 <li>Twitter</li> 
@@ -69,6 +69,8 @@
     <div id="app-title"><a href="{$cfg->site_root_path}?u={$instance->network_username}">
         <h1><span class="bold">Think</span><span class="gray">Tank</span></h1>
         <h2>Ask your friends</h2></a>
+        
+
     </div>
         
     <div id="menu-bar"> 

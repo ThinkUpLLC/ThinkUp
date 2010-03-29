@@ -13,7 +13,6 @@ if (!$session->isLoggedIn()) {
 
 $od = new OwnerDAO($db);
 
-
 if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change Password') {
 	$originalpass = $od->getPass($_SESSION['user']);
 	$origpass = $originalpass['pwd'];
@@ -27,7 +26,6 @@ if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change Password') {
 		$cryptpass = $session->pwdcrypt($_POST['pass1']);
 		$od->updatePassword($_SESSION['user'], $cryptpass);
 		$successmsg = "Your password has been updated.";
-
 	}
 }
 
@@ -55,7 +53,7 @@ if ( $owner->is_admin ) {
 if (isset($_GET['p'])) {
 	$webapp->configuration($_GET['p']);
 	array_push( $s->template_dir, 'plugins/'.$_GET['p']);
-	$s->assign('body', $THINKTANK_CFG['source_root_path'].'common//plugins//'.$_GET['p'].'//templates/'.$_GET['p'].'.account.index.tpl');
+	$s->assign('body', $THINKTANK_CFG['source_root_path'].'common/plugins/'.$_GET['p'].'/templates/'.$_GET['p'].'.account.index.tpl');
 }
 
 $s-> assign('config_menu', $webapp->getConfigMenu());
@@ -65,7 +63,6 @@ $s-> assign('config_menu', $webapp->getConfigMenu());
 # clean up
 $db->closeConnection($conn);
 
-
 if (isset($errormsg)) {
 	$s->assign('errormsg', $errormsg);
 }
@@ -73,5 +70,5 @@ if (isset($successmsg)) {
 	$s->assign('successmsg', $successmsg);
 }
 
-$s->display('account.index.tpl');
+$s->display('index.account.tpl');
 ?>

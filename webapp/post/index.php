@@ -64,7 +64,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
 	# clean up
 	$db->closeConnection($conn);
 
-	$s->display('post.index.tpl', $status_id);
+	$s->display('index.post.tpl', $status_id);
 } else {
 	echo 'This update is not in the system.<br /><a href="'. $cfg->site_root_path .'">back home</a>';
 }

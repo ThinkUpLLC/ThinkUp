@@ -34,7 +34,7 @@
             <div class="grid_23 omega">
                 {if $replies}
                     <h2 class="subhead">
-                    {if $reply_count eq 1}1 Reply{else}{$reply_count}Replies{/if} ({$private_reply_count} private)</h2>
+                    {if $reply_count eq 1}Reply{else}{$reply_count} Replies{/if} ({$private_reply_count} private)</h2>
                 {/if}
             	{foreach from=$replies key=tid item=t name=foo}
             		<div class="clearfix">
