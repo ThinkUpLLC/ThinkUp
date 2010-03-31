@@ -1,4 +1,12 @@
 <?php 
+/*
+ Plugin Name: Twitter
+ Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/twitter/
+ Description: Crawler plugin fetches data from Twitter.com for the authorized user.
+ Version: 0.01
+ Author: Gina Trapani
+*/
+
 function twitter_crawl() {
     global $THINKTANK_CFG;
     global $db;

@@ -1,5 +1,10 @@
 <div class="append_20">
     <h2 class="subhead">Facebook Configuration</h2>
+	{if $error}
+	<p class="error">
+		{$error}
+	</p>	
+	{/if}
     {if $owner->is_admin}
     <p class="info">
         As an administrator you can see all accounts in the system.

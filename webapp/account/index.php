@@ -53,19 +53,26 @@ if ($owner->is_admin) {
     $s->assign('owners', $owners);
 }
 
+/* Begin plugin-specific configuration handling */
 $cmi = $webapp->getConfigMenu();
 $s->assign('config_menu', $cmi);
-if (isset($_GET['p'])) {
+if (!isset($_GET['m']) && isset($_GET['p'])) {
     $active_plugin = $_GET['p'];
 } else {
-    //default to the first plugin on the stack
-    $active_plugin = $cmi[0][0];
+    if (isset($_GET['m']) && $_GET['m'] == 'manage') {
+        $pld = new PluginDAO($db);
+        $installed_plugins = $pld->getInstalledPlugins($THINKTANK_CFG["source_root_path"]);
+        $s->assign('installed_plugins', $installed_plugins);
+    } else {
+        //default to the first plugin on the stack
+        $active_plugin = $cmi[0][0];
+    }
 }
-
-$webapp->configuration($active_plugin);
-array_push($s->template_dir, 'plugins/'.$active_plugin);
-$s->assign('body', $THINKTANK_CFG['source_root_path'].'common//plugins//'.$active_plugin.'//templates/'.$active_plugin.'.account.index.tpl');
-
+if (isset($active_plugin)) {
+    $webapp->configuration($active_plugin);
+    array_push($s->template_dir, 'plugins/'.$active_plugin);
+    $s->assign('body', $THINKTANK_CFG['source_root_path'].'common/plugins/'.$active_plugin.'/templates/'.$active_plugin.'.account.index.tpl');
+}
 /* End plugin-specific configuration handling */
 
 
