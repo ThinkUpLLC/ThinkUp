@@ -92,7 +92,7 @@ function thinktank_replies_handler($atts) {
         $output .= "{$before}";
         $output .= "{$modified_title}";
         foreach ($replies as $t) {
-            $tweet_content = strip_starter_username($t->tweet_html);
+            $tweet_content = strip_starter_username($t->post_text);
             $tweet_content = linkUrls($tweet_content);
             $tweet_content = linkTwitterUsers($tweet_content);
             $output .= "{$before_tweet}{$before_user}<a href=\"http://twitter.com/{$t->author_username}/statuses/{$t->post_id}/\">{$t->author_username}</a>{$after_user}: {$before_tweet_html}{$tweet_content}{$after_tweet_html}{$after_tweet}";
