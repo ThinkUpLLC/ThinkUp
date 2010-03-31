@@ -397,7 +397,7 @@ class FollowDAO extends MySQLDAO {
 	}
 
 	function getFriendsNotFollowingBack($uid) {
-		$q = "SELECT u.* FROM #prefix#follows f INNER JOIN #prefix#users u ";
+		$q = "SELECT u.*, ".$this->getAverageTweetCount()." FROM #prefix#follows f INNER JOIN #prefix#users u ";
 		$q .= "ON f.user_id = u.user_id WHERE f.follower_id = %s ";
 		$q .= "AND f.user_id NOT IN (SELECT follower_id FROM #prefix#follows WHERE user_id = %s) ";
 		$q .= "ORDER BY follower_count	";
