@@ -79,7 +79,7 @@
                     <li class="round-tl round-bl"><a href="{$cfg->site_root_path}?u={$smarty.session.network_username}">{if $instance}{$instance->network_username}{else}Home{/if}</a></li>
                     <li><a href="{$cfg->site_root_path}public.php">Public Timeline</a></li>
                 {/if}
-                <li class="round-tr round-br"><a href="{$cfg->site_root_path}account/">Configuration</a></li>
+                <li class="round-tr round-br"><a href="{$cfg->site_root_path}account/?m=manage">Configuration</a></li>
             {else}
                 <li class="round-tr round-br round-tl round-bl"><a href="http://thinktankapp.com/">Get ThinkTank</a></li>
             {/if}
