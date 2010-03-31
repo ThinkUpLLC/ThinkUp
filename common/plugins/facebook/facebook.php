@@ -1,4 +1,12 @@
 <?php 
+/* 
+ Plugin Name: Facebook
+ Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/facebook/
+ Description: Crawler plugin pulls data from Facebook for authorized user.
+ Version: 0.01
+ Author: Gina Trapani
+ */
+
 function facebook_crawl() {
     //TODO Crawl Facebook posts and comments and insert them into the database
     global $THINKTANK_CFG;
@@ -41,7 +49,11 @@ function facebook_webapp_configuration() {
     global $owner;
     global $oid;
     
-    $facebook = new Facebook($THINKTANK_CFG['facebook_api_key'], $THINKTANK_CFG['facebook_api_secret']);
+    if (isset($THINKTANK_CFG['facebook_api_key']) && isset($THINKTANK_CFG['facebook_api_secret'])) {
+        $facebook = new Facebook($THINKTANK_CFG['facebook_api_key'], $THINKTANK_CFG['facebook_api_secret']);
+    } else {
+    	$s->assign("error", "Please set your Facebook API key and secret in config.inc.php");
+    }
     
     $owner_instances = $id->getByOwnerAndNetwork($owner, 'facebook');
     //$fb_user = $facebook->require_login($required_permissions = 'email,read_stream');
@@ -50,7 +62,9 @@ function facebook_webapp_configuration() {
     //$fbconnect_link = '<fb:login-button size="medium" background="light" length="long" onlogin="facebook_onlogin_ready();"></fb:login-button>';
     $s->assign('fbconnect_link', $fbconnect_link);
     $s->assign('owner_instances', $owner_instances);
-    $s->assign('fb_api_key', $THINKTANK_CFG['facebook_api_key']);
+	if (isset($THINKTANK_CFG['facebook_api_key'])) {
+    	$s->assign('fb_api_key', $THINKTANK_CFG['facebook_api_key']);
+	}
 }
 
 

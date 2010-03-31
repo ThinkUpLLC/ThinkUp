@@ -21,7 +21,7 @@ echo "--
 
 ALTER DATABASE DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 " > build-db_mysql.sql
-$mysqldump --create-options --skip-set-charset --skip-add-drop-table --no-data --skip-add-locks --skip-disable-keys -u $db_user -p$db_password $db_name |egrep -v "(^SET|^/\*\!)" | tail -n+7 >> build-db_mysql.sql
+$mysqldump --create-options --skip-set-charset --skip-add-drop-table --no-data --skip-add-locks --skip-disable-keys -u $db_user -p$db_password $db_name |egrep -v "(^SET|^/\*\!)" | sed 's/AUTO_INCREMENT=[0-9]*\b//' | tail -n+7 >> build-db_mysql.sql
 
 echo "
 --

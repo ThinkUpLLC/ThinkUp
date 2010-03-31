@@ -1,5 +1,10 @@
 <div class="append_20">
     <h2 class="subhead">Facebook Configuration</h2>
+	{if $error}
+	<p class="error">
+		{$error}
+	</p>	
+	{/if}
     {if $owner->is_admin}
 	<div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
 		<p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>

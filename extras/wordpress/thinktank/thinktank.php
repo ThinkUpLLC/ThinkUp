@@ -26,7 +26,7 @@
 // [thinktank_chronological_archive]
 function thinktank_chron_archive_handler($atts) {
 
-    extract(shortcode_atts(array('twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order (sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
+    extract(shortcode_atts(array('twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order (sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>get_option('gmt_offset'), ), $atts));
     
     $options_array = thinktank_get_options_array();
     
@@ -37,7 +37,7 @@ function thinktank_chron_archive_handler($atts) {
         $wpdb2 = $wpdb;
     }
     
-    $sql = $wpdb2->prepare("select pub_date, tweet_html, status_id from ".$options_array['thinktank_table_prefix']['value']."tweets where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc", $twitter_username);
+    $sql = $wpdb2->prepare("select pub_date, post_text, post_id from ".$options_array['thinktank_table_prefix']['value']."posts where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc", $twitter_username);
     
     $tweets = $wpdb2->get_results($sql);
     
@@ -45,9 +45,9 @@ function thinktank_chron_archive_handler($atts) {
         echo str_replace('#twitter_username#', $twitter_username, $title);
         echo "{$before}";
         foreach ($tweets as $t) {
-            $tweet_content = linkUrls($t->tweet_html);
+            $tweet_content = linkUrls($t->post_text);
             $tweet_content = linkTwitterUsers($tweet_content);
-            echo "{$before_tweet}{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}<a href=\"http://twitter.com/{$twitter_username}/statuses/{$t->status_id}/\">".actual_time($date_format, $gmt_offset, strtotime($t->pub_date))."</a>{$after_date}{$after_tweet}";
+            echo "{$before_tweet}{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}<a href=\"http://twitter.com/{$twitter_username}/statuses/{$t->post_id}/\">".actual_time($date_format, $gmt_offset, strtotime($t->pub_date))."</a>{$after_date}{$after_tweet}";
         }
         echo "{$after}";
     } else {
@@ -55,10 +55,10 @@ function thinktank_chron_archive_handler($atts) {
     }
 }
 
-// [thinktank_status_replies status_id="12345"]
+// [thinktank_status_replies post_id="12345"]
 function thinktank_replies_handler($atts) {
 
-    extract(shortcode_atts(array('status_id'=>0, 'twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#status_id#/">@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
+    extract(shortcode_atts(array('post_id'=>0, 'twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#post_id#/">@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
     
     $options_array = thinktank_get_options_array();
     
@@ -72,41 +72,41 @@ function thinktank_replies_handler($atts) {
     $sql = $wpdb2->prepare("select 
 				t.*, u.*
 			from 
-				".$options_array['thinktank_table_prefix']['value']."tweets t
+				".$options_array['thinktank_table_prefix']['value']."posts t
 			inner join 
 				".$options_array['thinktank_table_prefix']['value']."users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
-				in_reply_to_status_id = %0.0f 
+				in_reply_to_post_id = %0.0f 
 				AND u.is_protected = 0	
 			order by 
-				follower_count desc;", $status_id);
+				follower_count desc;", $post_id);
 				
     $replies = $wpdb2->get_results($sql);
     
     $output = '';
     if ($replies) {
         $modified_title = str_replace('#twitter_username#', $twitter_username, $title);
-        $modified_title = str_replace('#status_id#', $status_id, $modified_title);
+        $modified_title = str_replace('#post_id#', $post_id, $modified_title);
         $output .= "{$before}";
         $output .= "{$modified_title}";
         foreach ($replies as $t) {
-            $tweet_content = strip_starter_username($t->tweet_html);
+            $tweet_content = strip_starter_username($t->post_text);
             $tweet_content = linkUrls($tweet_content);
             $tweet_content = linkTwitterUsers($tweet_content);
-            $output .= "{$before_tweet}{$before_user}<a href=\"http://twitter.com/{$t->author_username}/statuses/{$t->status_id}/\">{$t->author_username}</a>{$after_user}: {$before_tweet_html}{$tweet_content}{$after_tweet_html}{$after_tweet}";
+            $output .= "{$before_tweet}{$before_user}<a href=\"http://twitter.com/{$t->author_username}/statuses/{$t->post_id}/\">{$t->author_username}</a>{$after_user}: {$before_tweet_html}{$tweet_content}{$after_tweet_html}{$after_tweet}";
         }
         $output .= "{$after}";
     } else {
-        $output .= "No replies found for status {$status_id}.";
+        $output .= "No replies found for status {$post_id}.";
     }
     return $output;
 }
 
-// [thinktank_status_reply_count status_id="12345"]
+// [thinktank_status_reply_count post_id="12345"]
 function thinktank_reply_count_handler($atts) {
-    extract(shortcode_atts(array('status_id'=>0, 'before'=>'<a href="#permalink#">', 'after'=>' Twitter replies</a>', ), $atts));
+    extract(shortcode_atts(array('post_id'=>0, 'before'=>'<a href="#permalink#">', 'after'=>' Twitter replies</a>', ), $atts));
     
     $options_array = thinktank_get_options_array();
     
@@ -121,16 +121,16 @@ function thinktank_reply_count_handler($atts) {
     $sql = $wpdb2->prepare("select 
 				count(*)
 			from 
-				".$options_array['thinktank_table_prefix']['value']."tweets t
+				".$options_array['thinktank_table_prefix']['value']."posts t
 			inner join 
 				".$options_array['thinktank_table_prefix']['value']."users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
-				in_reply_to_status_id=%0.0f
+				in_reply_to_post_id=%0.0f
 				AND u.is_protected = 0	
 			order by 
-				follower_count desc;", $status_id);
+				follower_count desc;", $post_id);
     //echo $sql;
     $count = $wpdb2->get_var($sql);
     $before_mod = str_replace('#permalink#', get_permalink(), $before);

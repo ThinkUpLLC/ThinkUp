@@ -1,6 +1,6 @@
 -- 
 -- ThinkTank Database Creation Script
--- Auto-generated based on migration scripts by thinktank/extras/scripts/migratedb script on 2010-03-29
+-- Auto-generated based on migration scripts by thinktank/extras/scripts/migratedb script on 2010-03-30
 --
 
 ALTER DATABASE DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -124,7 +124,7 @@ CREATE TABLE `tt_plugins` (
   `version` varchar(255) DEFAULT NULL,
   `is_active` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `tt_post_errors`
@@ -240,7 +240,7 @@ CREATE TABLE `tt_users` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2010-03-29  7:20:44
+-- Dump completed on 2010-03-30 23:16:51
 
 --
 -- Insert default plugin(s)
