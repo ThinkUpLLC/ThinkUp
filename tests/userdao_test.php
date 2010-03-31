@@ -74,7 +74,7 @@ class TestOfUserDAO extends ThinkTankUnitTestCase {
         $user = $udao->getDetails(12);
         $this->assertTrue($user->id == 1);
         $this->assertTrue($user->user_id == 12);
-        $this->assertTrue($user->user_name == 'jack');
+        $this->assertTrue($user->username == 'jack');
     }
     
     function testGetDetailsUserDoesNotExist() {
@@ -91,7 +91,7 @@ class TestOfUserDAO extends ThinkTankUnitTestCase {
         $user = $udao->getUserByName('jack');
         $this->assertTrue($user->id == 1);
         $this->assertTrue($user->user_id == 12);
-        $this->assertTrue($user->user_name == 'jack');
+        $this->assertTrue($user->username == 'jack');
     }
     
     function testGetUserByNameUserDoesNotExist() {

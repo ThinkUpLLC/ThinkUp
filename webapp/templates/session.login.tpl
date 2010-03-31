@@ -11,27 +11,27 @@
     
     <form name="form1" method="post" action="" class="login">
     
-    <div class="clearfix">
-        <div class="grid_4 prefix_5 right"><label>Email:</label></div>
-        <div class="grid_10 left"><input name="email" type="text" id="email"></div>
-    </div>
-    
-    <div class="clearfix">
-        <div class="grid_4 prefix_5 right"><label>Password:</label></div>
-        <div class="grid_10 left"><input name="pwd" type="password" id="pwd"></div>
-    </div>
-    
-    <div class="clearfix">
-        <div class="grid_10 prefix_9 left">
-            <input type="submit" name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Login">
+        <div class="clearfix">
+            <div class="grid_4 prefix_5 right"><label>Email:</label></div>
+            <div class="grid_10 left"><input name="email" type="text" id="email"></div>
         </div>
-    </div>
-    
+        
+        <div class="clearfix">
+            <div class="grid_4 prefix_5 right"><label>Password:</label></div>
+            <div class="grid_10 left"><input name="pwd" type="password" id="pwd"></div>
+        </div>
+        
+        <div class="clearfix">
+            <div class="grid_10 prefix_9 left">
+                <input type="submit" id="login-save" name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Login">
+            </div>
+        </div>
+   
+    </form>
+
     <div class="center prepend_20 append_20">
         <a href="register.php">Register</a> | <a href="forgot.php">Forgot password</a>
     </div>
-    
-    </form>
 
 </div>
 

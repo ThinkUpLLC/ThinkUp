@@ -35,7 +35,7 @@
                     
                         <span class="tweet">{$post->post_text|link_usernames_to_twitter}</span>
                         
-                        {if $retweets}<div class="grid_10 prefix_3 omega small gray">{else}<div class="grid_10 prefix_10 omega small gray">{/if}
+                        {if $retweets}<div class="grid_10 prefix_3 omega small gray prepend">{else}<div class="grid_10 prefix_10 omega small gray">{/if}
                             <img src="{$cfg->site_root_path}/cssjs/images/social_icons/{$post->network}.png" class="float-l">
                              Posted {$post->adj_pub_date|relative_datetime} at {$post->adj_pub_date} via {$post->source}
                         </div>

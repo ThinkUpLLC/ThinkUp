@@ -238,7 +238,7 @@
 
     <div class="clearfix">
         <div class="grid_10 prefix_9 left">
-            <input type="submit" name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Register">
+            <input type="submit" name="Submit" id="login-save" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Register">
         </div>
     </div>
     

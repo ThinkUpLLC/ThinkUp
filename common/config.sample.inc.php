@@ -50,4 +50,10 @@ $THINKTANK_CFG['db_password'] = "s3cret";
 $THINKTANK_CFG['db_name'] ="thinktank";
 $THINKTANK_CFG['table_prefix'] = 'tt_';
  
+// Facebook plugin settings 
+// TODO put these in a plugin options tables
+$THINKTANK_CFG['facebook_callback_url']    = 'http://yourdomain/pathtothinktank/account/';
+$THINKTANK_CFG['facebook_api_key']         = 'XXX';
+$THINKTANK_CFG['facebook_api_secret']      = 'YYY';
+$THINKTANK_CFG['facebook_base_fb_url']     = 'connect.facebook.com';
 ?>

@@ -27,7 +27,7 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 	
 	if ( isset($i)) {
 		$cfg = new Config($i->network_username, $i->network_user_id);
-		if(!$s->is_cached('user.index.tpl', $i->network_username."-".$user->user_name)) {
+		if(!$s->is_cached('user.index.tpl', $i->network_username."-".$user->username)) {
 
             $s->assign('instances', $id->getByOwner($owner));
 
@@ -48,7 +48,7 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
 		}
 		$db->closeConnection($conn);
 
-		$s->display('index.user.tpl', $i->network_username."-".$user->user_name);
+		$s->display('index.user.tpl', $i->network_username."-".$user->username);
 	}
 } else {
 	echo 'This user is not in the system.<br /><a href="'. $THINKTANK_CFG['site_root_path'] .'">back home</a>';

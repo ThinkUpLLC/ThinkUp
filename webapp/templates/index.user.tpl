@@ -1,6 +1,4 @@
-{assign var=title value=$profile->user_name}
-
-{include file="_header.tpl" load="no" title=$title}
+{include file="_header.tpl" load="no" title=$profile->username}
 
 {literal}
 <script>
@@ -168,7 +166,7 @@ $(document).ready(function() {
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_22 push_1 append_20">
-                                Detailed data about {$profile->user_name}'s {$profile->follower_count|number_format} followers not yet available in ThinkTank.
+                                Detailed data about this user's {$profile->follower_count|number_format} followers not yet available in ThinkTank.
                             </div>
                         </div>
                     </div>                
@@ -180,7 +178,7 @@ $(document).ready(function() {
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_22 push_1 append_20">
-                                Detailed data about {$profile->user_name}'s {$profile->friend_count|number_format} friends not yet available in ThinkTank.
+                                Detailed data about this user's {$profile->friend_count|number_format} friends not yet available in ThinkTank.
                             </div>
                         </div>
                     </div>                

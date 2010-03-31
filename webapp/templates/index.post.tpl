@@ -1,4 +1,4 @@
-{include file="_header.tpl" load="no"}
+{include file="_header.tpl" load="no" title="Post detail"}
 
 <div class="container_24">
     <div role="application" id="tabs">
@@ -25,13 +25,13 @@
             </div>
             <div class="clearfix append_20">
                 <div class="grid_11 prefix_11 alpha omega small gray">
-                    <img src="{$cfg->site_root_path}/cssjs/images/social_icons/{$post->network}.png" class="float-l">
+                    <img src="{$cfg->site_root_path}cssjs/images/social_icons/{$post->network}.png" class="float-l">
                      Posted {$post->adj_pub_date|relative_datetime} at {$post->adj_pub_date} via {$post->source}
                 </div>
             </div>
     
             <div class="grid_1 alpha">&nbsp;</div>
-            <div class="grid_23 omega">
+            <div class="grid_23 omega append_20">
                 {if $replies}
                     <h2 class="subhead">
                     {if $reply_count eq 1}Reply{else}{$reply_count} Replies{/if} ({$private_reply_count} private)</h2>
@@ -147,7 +147,7 @@
     
     
             <div class="grid_1 alpha">&nbsp;</div>
-            <div class="grid_23 omega">
+            <div class="grid_23 omega append_20">
     
             <h2 class="subhead">Possible replies posted near the time of this update</h2>
     
@@ -196,9 +196,9 @@
             </div>
         
             <div class="grid_1 alpha">&nbsp;</div>
-            <div class="grid_23 omega">
+            <div class="grid_23 omega append_20">
                 {foreach from=$replies key=tid item=t}
-                <div class="post"><strong>
+                <div class="reply"><strong>
                     {if $t->is_protected}
                         Anonymous
                     {else}

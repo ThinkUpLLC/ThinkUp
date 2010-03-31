@@ -15,6 +15,7 @@ class User {
     var $last_post;
     var $joined;
     var $last_post_id;
+	var $network;
 
     
     function User($val, $found_in) {
@@ -24,7 +25,6 @@ class User {
         $this->username = $val['user_name'];
         $this->full_name = $val['full_name'];
         $this->user_id = $val['user_id'];
-        $this->user_name = $val['user_name'];
         $this->avatar = $val['avatar'];
         $this->location = $val['location'];
         $this->description = $val['description'];
@@ -52,6 +52,11 @@ class User {
         if (isset($val['avg_tweets_per_day'])) {
             $this->avg_tweets_per_day = $val['avg_tweets_per_day'];
         }
+		
+        if (isset($val['network'])) {
+            $this->network = $val['network'];
+        }
+
     }
     
 }
@@ -115,6 +120,7 @@ class UserDAO extends MySQLDAO {
         $has_friend_count = $user->friend_count != '' ? true : false;
         $has_last_post = $user->last_post != '' ? true : false;
         $has_last_post_id = $user->last_post_id != '' ? true : false;
+		$network = $user->network != '' ? $user->network : 'twitter';
         
         $q = "
 			INSERT INTO
@@ -123,15 +129,15 @@ class UserDAO extends MySQLDAO {
 					description, url, is_protected,
 					follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")."
 					".($has_last_post ? "last_post, " : "")."
-					found_in, joined  ".($has_last_post_id ? ", last_post_id" : "").")
+					found_in, joined, network  ".($has_last_post_id ? ", last_post_id" : "").")
 				VALUES (
 					".mysql_real_escape_string($user->user_id).", 
-					'".mysql_real_escape_string($user->user_name)."','".mysql_real_escape_string($user->full_name)."','".mysql_real_escape_string($user->avatar)."','".mysql_real_escape_string($user->location)."',  
+					'".mysql_real_escape_string($user->username)."','".mysql_real_escape_string($user->full_name)."','".mysql_real_escape_string($user->avatar)."','".mysql_real_escape_string($user->location)."',  
 					'".mysql_real_escape_string($user->description)."', '".mysql_real_escape_string($user->url)."',".$user->is_protected.",  							
 					".$user->follower_count.",".$user->post_count.",
 					".($has_friend_count ? $user->friend_count.", " : "")."
 					".($has_last_post ? "'".mysql_real_escape_string($user->last_post)."', " : "")."					
-					'".mysql_real_escape_string($user->found_in)."', '".mysql_real_escape_string($user->joined)."'
+					'".mysql_real_escape_string($user->found_in)."', '".mysql_real_escape_string($user->joined)."', '$network'
 					 ".($has_last_post_id ? ",".$user->last_post_id : "")."
 					)
 				ON DUPLICATE KEY UPDATE 
@@ -147,19 +153,20 @@ class UserDAO extends MySQLDAO {
 					".($has_last_post ? "last_post= '".mysql_real_escape_string($user->last_post)."', " : "")."
 					last_updated = NOW(),
 					found_in = '".mysql_real_escape_string($user->found_in)."', 
-					joined = '".mysql_real_escape_string($user->joined)."'
+					joined = '".mysql_real_escape_string($user->joined)."',
+					network = '".$network."'
 					".($has_last_post_id ? ", last_post_id = ".$user->last_post_id : "").";";
         $foo = $this->executeSQL($q);
         if (mysql_affected_rows() > 0) {
             if (isset($this->logger) && $this->logger != null) {
-                $status_message = "User ".$user->user_name." updated in system.";
+                $status_message = "User ".$user->username." updated in system.";
                 $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
             }
             return 1;
         } else {
             if (isset($this->logger) && $this->logger != null) {
-                $status_message = "User ".$user->user_name." was NOT updated in system.";
+                $status_message = "User ".$user->username." was NOT updated in system.";
                 $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
             }

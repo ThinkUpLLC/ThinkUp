@@ -1,42 +1,36 @@
-{include file="session._header.tpl" title="Password Recovery"}<h1>Forgot Password</h1>
-<div class="content">
-    {if isset($errormsg)}
-    <div class="error">
-        {$errormsg} 
-    </div>{/if}
-    {if isset($successmsg)}
-    <div class="success">
-        {$successmsg} 
-    </div>{/if}
-    <br/>
-    <br/>
-    <form name="form1" method="post" action="">
-        <table border="0" width="100%" cellpadding="5" cellspacing="0">
-            <tr>
-                <td align="right">
-                    Enter your email address:
-                </td>
-                <td>
-                    <input name="email" type="text" id="email"><input type="submit" name="Submit" value="Send">
-                </td>
-                </td>
-            </tr>
-        </table>
-    </form>
-</div>
-<br/>
+{include file="_header.tpl" title="Forgot password" statusbar="no"}
 
-<center>
-    <p>
-        Already have an account? <a href="login.php">Sign in</a>.
-    </p>
-    <p>
-        <a href="{$cfg->site_root_path}">Go to the public timeline</a>
-    </p>
-    <p>
-        It is nice to be nice
-    </p>
-</center>
-</center>
-</body>
-</html>
+<div class="container_24 thinktank-canvas round-all center">
+
+    <div class="clearfix prepend_20">
+        <div class="grid_17 prefix_3 left">
+    	{if isset($errormsg)}<div class="error"> {$errormsg} </div>{/if}
+    	{if isset($successmsg)}<div class="success"> {$successmsg} </div>{/if}
+        </div>
+    </div>
+
+    <div class="clearfix append_20">
+        <form name="form1" method="post" action="" class="login">
+    
+            <div class="clearfix">
+                <div class="grid_4 prefix_5 right"><label>Email:</label></div>
+                <div class="grid_10 left"><input name="email" type="text" id="email"></div>
+            </div>
+    
+            <div class="clearfix">
+                <div class="grid_10 prefix_9 left">
+                    <input type="submit" id="login-save" name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Send">
+                </div>
+            </div>
+    
+        </form>
+
+        <div class="center prepend_20 append_20">
+            <a href="register.php">Register</a> | <a href="login.php">Login</a>
+        </div>
+
+    </div>
+</div>
+
+{include file="_footer.tpl" stats="no"}
+

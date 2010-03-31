@@ -27,9 +27,10 @@ a:hover {text-decoration : none;color : red;}
 .small {font-size: .8em;}
 .large {font-size: 1.6em;}
 .x-large {font-size: 3em;}
+.underline {text-decoration:underline;}
 
-/*li {padding-bottom : 10px;line-height : 125%;}*/
-
+ul.user-accounts li {padding-bottom:.5em;list-style-position: inside;}
+ul.user-accounts li ul li {margin-left:2em;}
 
 /* TABS, MENUS, NAVIGATION, STATUS BAR, ETC 
 ==============================*/
@@ -103,15 +104,15 @@ text-align: center;
 */
 
 #status-bar {padding:4px 20px;margin:0;font-size:.9em;color:#FFF;background-color:#444;}
-#status-bar .status-bar-left {float:left;width:40%;}
-#status-bar .status-bar-right {float:right;width:60%;}
+#status-bar .status-bar-left {float:left;width:50%;}
+#status-bar .status-bar-right {float:right;width:50%;}
 
 #status-bar ul {float:right;margin:0;padding:0;}
 #status-bar li {display: inline;}
 #status-bar a:link, #status-bar a:visited {color: #FFF;text-decoration:underline}
 #status-bar a:hover {text-decoration: none}
 
-#choose-instance, #cancel-instance {cursor: pointer;text-decoration: underline;}
+#choose-instance, #cancel-instance {cursor: pointer;}
 
 .menu {margin-bottom:30px;}
 .menu li {margin-right: 40px;display:inline;padding:4px 10px;}

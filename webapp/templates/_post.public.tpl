@@ -21,7 +21,7 @@
     </div>
     <div class="grid_3 right small">
         {$t->author_username}
-        {if $t->author->follower_count > 0}<br />Followers: {$t->author->follower_count|number_format}{/if}
+        {if $t->author->follower_count > 0}<br />{$t->author->follower_count|number_format} followers{/if}
     </div>
     <div class="grid_3 right small">
         {$t->adj_pub_date|relative_datetime}
@@ -29,7 +29,7 @@
     <div class="grid_11">
 		{if $t->link->is_image}<div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>{/if}
 
-		<p>{$t->post_text|link_usernames_to_twitter} {if $t->in_reply_to_post_id}[<a href="{$cfg->site_root_path}post/?t={$t->in_reply_to_post_id}">in reply to</a>]{/if}</p>
+		<p>{$t->post_text|link_usernames_to_twitter} {if $t->in_reply_to_post_id && $smarty.session.user }[<a href="{$cfg->site_root_path}post/?t={$t->in_reply_to_post_id}">in reply to</a>]{/if}</p>
 		
 		{if $t->link->expanded_url and !$t->link->is_image}<ul><li><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->title}</a></li></ul>{/if}
 		

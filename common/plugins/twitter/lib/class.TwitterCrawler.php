@@ -80,6 +80,7 @@ class TwitterCrawler {
 
 					$pd = new PostDAO($this->db, $this->logger);
 					foreach ($tweets as $tweet) {
+						$tweet['network'] = 'twitter';
 
 						if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
 							$count = $count + 1;
@@ -127,7 +128,7 @@ class TwitterCrawler {
 		}
 
 		if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
-		$status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
+		$status_message .= "All of ".$this->owner_object->username."'s tweets are in the system; Stopping tweet fetch.";
 
 
 		$this->logger->logStatus($status_message, get_class($this));
@@ -219,7 +220,7 @@ class TwitterCrawler {
 		}
 
 		if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
-		$status_message .= "All of ".$this->owner_object->user_name."'s tweets are in the system; Stopping tweet fetch.";
+		$status_message .= "All of ".$this->owner_object->username."'s tweets are in the system; Stopping tweet fetch.";
 
 
 		$this->logger->logStatus($status_message, get_class($this));
@@ -639,8 +640,8 @@ class TwitterCrawler {
 		while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
 			$stale_friend = $fd->getStalestFriend($this->owner_object->user_id);
 			if ($stale_friend != null) {
-				$this->logger->logStatus($stale_friend->user_name." is friend most need of update", get_class($this));
-				$stale_friend_tweets = str_replace("[id]", $stale_friend->user_name, $this->api->cURL_source['user_timeline']);
+				$this->logger->logStatus($stale_friend->username." is friend most need of update", get_class($this));
+				$stale_friend_tweets = str_replace("[id]", $stale_friend->username, $this->api->cURL_source['user_timeline']);
 				$args = array();
 				$args["count"] = 200;
 

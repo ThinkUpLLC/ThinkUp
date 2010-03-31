@@ -6,7 +6,10 @@
 		($display eq 'tweets-mostreplies' and not $most_replied_to_tweets) or
 		($display eq 'tweets-mostretweeted' and not $most_retweeted) or
 		($display eq 'tweets-convo' and not $author_replies)}
-		<h2 class="alert">&#9888; No tweets to display.</h2>
+        <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+        <p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
+        No data to display.</p>
+        </div>
 	{/if}
 	
 	{if $all_tweets and $display eq 'tweets-all'}
@@ -38,7 +41,10 @@
 		($display eq 'mentions-allreplies' and not $all_replies) or
 		($display eq 'mentions-orphan' and not $orphan_replies) or 
 		($display eq 'mentions-standalone' and not $standalone_replies)}
-		<h2 class="info">&#9888; No mentions to display.</h2> 
+        <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+        <p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
+        No data to display.</p>
+        </div>
 	{/if}
 
 	{if $orphan_replies}
@@ -71,7 +77,10 @@
 
 	{if ($display eq 'followers-former' and not $people)or 
 		($display eq 'friends-former' and not $people) }
-		<h2 class="info">&#9888; Not found.</h2> 
+        <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+        <p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
+        Not found.</p>
+        </div>
 	{/if}
 
 
@@ -83,7 +92,10 @@
 
 	{if ($display eq 'links-friends' and not $links) or 
 		($display eq 'links-favorites' and not $links)}
-		<h2 class="alert">&#9888; No tweets to display.</h2>
+        <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+        <p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
+        No data to display.</p>
+        </div>
 	{/if}		
 	{if $links}
 		{foreach from=$links key=lid item=l name=foo}
@@ -105,10 +117,10 @@
 			
 			var oid = Id;
 			var pid = $("select#pid"+Id+" option:selected").val();
-			var u = '{/literal}{$i->twitter_username}{literal}';
+			var u = '{/literal}{$i->network_username|escape:'url'}{literal}';
 			
 			var t = 'inline.view.tpl';
-			var ck = '{/literal}{$i->twitter_username}-{$smarty.session.user}-{$display}{literal}';
+			var ck = '{/literal}{$i->network_username|escape:'url'}-{$smarty.session.user}-{$display}{literal}';
 			var dataString = 'u='+ u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;  
 			//alert (dataString);return false;  
 			    $.ajax({  

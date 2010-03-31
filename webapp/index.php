@@ -40,8 +40,9 @@ if (!isset($_SESSION['user'])) {
 		}
 	}
 	
-	// set the session instance network username to the current instance
+	// save the session instance network username to the current instance
 	$_SESSION['network_username']=$i->network_username;
+    $_SESSION['instance'] = serialize($i);
 
 	if(!$s->is_cached('index.tpl', $i->network_username."-".$_SESSION['user'])) {
 
