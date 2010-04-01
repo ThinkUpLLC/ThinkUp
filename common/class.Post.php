@@ -586,7 +586,17 @@ class PostDAO extends MySQLDAO {
     }
     
     function assignParent($parent_id, $orphan_id, $former_parent_id = -1) {
-        $q = "
+
+    	$post = $this->getPost($orphan_id);
+        
+    	// Check for former_parent_id. The current webfront doesn't send this to us
+    	// We may even want to remove $former_parent_id as a parameter and just look it up here always -FL
+    	if ($former_parent_id < 0 && isset($post->in_reply_to_post_id) && $this->isPostInDB($post->in_reply_to_post_id)) {
+    	
+    		$former_parent_id = $post->in_reply_to_post_id;
+    	}
+    	
+    	$q = "
 			UPDATE 
 				#prefix#posts
 			SET 
@@ -594,9 +604,11 @@ class PostDAO extends MySQLDAO {
 			WHERE
 				post_id = ".$orphan_id;
         $this->executeSQL($q);
+        
+        
         if ($parent_id > 0)
             $this->incrementReplyCountCache($parent_id);
-        elseif ($former_parent_id > 0)
+        if ($former_parent_id > 0)
             $this->decrementReplyCountCache($former_parent_id);
         return mysql_affected_rows();
     }
