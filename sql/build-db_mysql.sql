@@ -1,6 +1,6 @@
 -- 
 -- ThinkTank Database Creation Script
--- Auto-generated based on migration scripts by thinktank/extras/scripts/migratedb script on 2010-03-30
+-- Auto-generated based on migration scripts by thinktank/extras/scripts/migratedb script on 2010-04-02
 --
 
 ALTER DATABASE DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -234,13 +234,14 @@ CREATE TABLE `tt_users` (
   `found_in` varchar(100) DEFAULT NULL,
   `last_post` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `joined` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_post_id` bigint(11) NOT NULL DEFAULT '0',
   `network` varchar(10) NOT NULL DEFAULT 'twitter',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2010-03-30 23:16:51
+-- Dump completed on 2010-04-02 21:37:43
 
 --
 -- Insert default plugin(s)

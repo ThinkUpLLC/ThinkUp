@@ -185,6 +185,7 @@ CREATE TABLE `users` (
   `found_in` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `last_post` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `joined` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_post_id` bigint(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
