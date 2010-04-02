@@ -152,7 +152,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->assertTitle('ThinkTank');
         
         $this->get($TEST_SERVER_DOMAIN.'/user/index.php?i=thinktankapp&u=ev');
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('ThinkTank ev');
         $this->assertText('Logged in as: me@example.com');
         $this->assertText('ev');
         
@@ -173,7 +173,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
             $this->get($TEST_SERVER_DOMAIN.'/public.php'.$category);
             $this->assertTitle('ThinkTank Public Timeline');
             
-            $this->assertText('@ev');
+            $this->assertText('ev');
             $this->assertText('This is post 39');
             $this->assertText('This is post 25');
             $this->assertText('Page 1 of 3');
@@ -206,7 +206,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->get($TEST_SERVER_DOMAIN.'/public.php?v=photos');
         $this->assertTitle('ThinkTank Public Timeline');
         
-        $this->assertText('@shutterbug');
+        $this->assertText('shutterbug');
         $this->assertText('This is image post 39');
         $this->assertText('This is image post 25');
         $this->assertText('Page 1 of 3');
@@ -239,7 +239,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->get($TEST_SERVER_DOMAIN.'/public.php?v=links');
         $this->assertTitle('ThinkTank Public Timeline');
         
-        $this->assertText('@linkbaiter');
+        $this->assertText('linkbaiter');
         $this->assertText('This is link post 39');
         $this->assertText('This is link post 25');
         $this->assertText('Page 1 of 3');
