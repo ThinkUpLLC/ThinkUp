@@ -3,6 +3,7 @@
  Plugin Name: Twitter
  Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/twitter/
  Description: Crawler plugin fetches data from Twitter.com for the authorized user.
+ Icon: twitter_icon.png
  Version: 0.01
  Author: Gina Trapani
 */
@@ -15,10 +16,7 @@ function twitter_crawl() {
     $logger = new Logger($THINKTANK_CFG['log_location']);
     $id = new InstanceDAO($db, $logger);
     $oid = new OwnerInstanceDAO($db, $logger);
-    $lurlapi = new LongUrlAPIAccessor($THINKTANK_CFG['app_title']);
-    $flickrapi = new FlickrAPIAccessor($THINKTANK_CFG['flickr_api_key']);
 
-    
     $instances = $id->getAllActiveInstancesStalestFirstByNetwork('twitter');
     foreach ($instances as $i) {
         $logger->setUsername($i->network_username);
@@ -35,21 +33,21 @@ function twitter_crawl() {
             
             $crawler->fetchInstanceUserInfo();
             
-            $crawler->fetchInstanceUserTweets($lurlapi, $flickrapi);
+            $crawler->fetchInstanceUserTweets();
             
-            $crawler->fetchInstanceUserRetweetsByMe($lurlapi, $flickrapi);
+            $crawler->fetchInstanceUserRetweetsByMe();
             
-            $crawler->fetchInstanceUserMentions($lurlapi, $flickrapi);
+            $crawler->fetchInstanceUserMentions();
             
             $crawler->fetchInstanceUserFriends();
             
             $crawler->fetchInstanceUserFollowers();
             
-            $crawler->fetchStrayRepliedToTweets($lurlapi, $flickrapi);
+            $crawler->fetchStrayRepliedToTweets();
             
             $crawler->fetchUnloadedFollowerDetails();
             
-            $crawler->fetchFriendTweetsAndFriends($lurlapi, $flickrapi);
+            $crawler->fetchFriendTweetsAndFriends();
             
             // TODO: Get direct messages
             // TODO: Gather favorites data

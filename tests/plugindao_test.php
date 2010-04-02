@@ -41,16 +41,16 @@ VALUES (  'My Test Plugin Activated',  'testpluginact',  'Proof of concept plugi
         
 		$plugins = $dao->getInstalledPlugins($THINKTANK_CFG["source_root_path"]);
 		
-        $this->assertTrue(count($plugins) == 3);
+        $this->assertTrue(count($plugins) == 5);
 		
         $this->assertTrue($plugins[0]->name == "Facebook");
         $this->assertTrue($plugins[0]->folder_name == "facebook");
 
-        $this->assertTrue($plugins[1]->name == "Hello ThinkTank");
-        $this->assertTrue($plugins[1]->folder_name == "testplugin");
+        $this->assertTrue($plugins[1]->name == "Flickr");
+        $this->assertTrue($plugins[1]->folder_name == "flickr");
         
-        $this->assertTrue($plugins[2]->name == "Twitter");
-        $this->assertTrue($plugins[2]->folder_name == "twitter");
+        $this->assertTrue($plugins[2]->name == "LongURL");
+        $this->assertTrue($plugins[2]->folder_name == "longurl");
 
     }
     

@@ -3,6 +3,7 @@
  Plugin Name: Facebook
  Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/facebook/
  Description: Crawler plugin pulls data from Facebook for authorized user.
+ Icon: facebook_icon.png
  Version: 0.01
  Author: Gina Trapani
  */

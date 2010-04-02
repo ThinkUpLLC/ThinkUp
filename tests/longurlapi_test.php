@@ -6,7 +6,7 @@ require_once (dirname(__FILE__).'/config.tests.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once ("class.Utils.php");
-require_once ("class.LongUrlAPIAccessor.php");
+require_once ("common/plugins/longurl/lib/class.LongUrlAPIAccessor.php");
 require_once ("config.inc.php");
 
 
