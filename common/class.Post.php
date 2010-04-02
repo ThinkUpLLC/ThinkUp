@@ -261,12 +261,12 @@ class PostDAO extends MySQLDAO {
                 }
             } else
                 $post_in_retweet_of_post_id = 'NULL';
-				
-			if (!isset($vals["network"])) {
-				$vals["network"] = 'twitter';
-			}
-
                 
+            if (!isset($vals["network"])) {
+                $vals["network"] = 'twitter';
+            }
+
+            
             $q = "
 				INSERT INTO #prefix#posts
 					(post_id,
@@ -586,17 +586,16 @@ class PostDAO extends MySQLDAO {
     }
     
     function assignParent($parent_id, $orphan_id, $former_parent_id = -1) {
-
-    	$post = $this->getPost($orphan_id);
+    
+        $post = $this->getPost($orphan_id);
         
-    	// Check for former_parent_id. The current webfront doesn't send this to us
-    	// We may even want to remove $former_parent_id as a parameter and just look it up here always -FL
-    	if ($former_parent_id < 0 && isset($post->in_reply_to_post_id) && $this->isPostInDB($post->in_reply_to_post_id)) {
-    	
-    		$former_parent_id = $post->in_reply_to_post_id;
-    	}
-    	
-    	$q = "
+        // Check for former_parent_id. The current webfront doesn't send this to us
+        // We may even want to remove $former_parent_id as a parameter and just look it up here always -FL
+        if ($former_parent_id < 0 && isset($post->in_reply_to_post_id) && $this->isPostInDB($post->in_reply_to_post_id)) {
+            $former_parent_id = $post->in_reply_to_post_id;
+        }
+        
+        $q = "
 			UPDATE 
 				#prefix#posts
 			SET 
@@ -604,12 +603,14 @@ class PostDAO extends MySQLDAO {
 			WHERE
 				post_id = ".$orphan_id;
         $this->executeSQL($q);
+
         
-        
-        if ($parent_id > 0)
+        if ($parent_id > 0) {
             $this->incrementReplyCountCache($parent_id);
-        if ($former_parent_id > 0)
+		}
+        if ($former_parent_id > 0) {
             $this->decrementReplyCountCache($former_parent_id);
+		}
         return mysql_affected_rows();
     }
     
