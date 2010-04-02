@@ -13,7 +13,6 @@ if (!$session->isLoggedIn()) {
 
 $od = new OwnerDAO($db);
 
-
 if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change Password') {
     $originalpass = $od->getPass($_SESSION['user']);
     $origpass = $originalpass['pwd'];
@@ -27,7 +26,6 @@ if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change Password') {
         $cryptpass = $session->pwdcrypt($_POST['pass1']);
         $od->updatePassword($_SESSION['user'], $cryptpass);
         $successmsg = "Your password has been updated.";
-        
     }
 }
 
@@ -44,6 +42,10 @@ $owner = $od->getByEmail($_SESSION['user']);
 $s->assign('cfg', $cfg);
 $s->assign('owner', $owner);
 
+// grab instance from session variable
+$i = unserialize($_SESSION['instance']); 
+$s->assign('instance', $i);
+
 if ($owner->is_admin) {
     $owners = $od->getAllOwners();
     foreach ($owners as $o) {
@@ -52,6 +54,8 @@ if ($owner->is_admin) {
     }
     $s->assign('owners', $owners);
 }
+
+$s->assign('instances', $id->getByOwner($owner));
 
 /* Begin plugin-specific configuration handling */
 $cmi = $webapp->getConfigMenu();
@@ -79,7 +83,6 @@ if (isset($active_plugin)) {
 # clean up
 $db->closeConnection($conn);
 
-
 if (isset($errormsg)) {
     $s->assign('errormsg', $errormsg);
 }
@@ -87,5 +90,5 @@ if (isset($successmsg)) {
     $s->assign('successmsg', $successmsg);
 }
 
-$s->display('account.index.tpl');
+$s->display('index.account.tpl');
 ?>

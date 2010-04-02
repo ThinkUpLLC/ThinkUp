@@ -24,14 +24,14 @@
             </script>
             {/literal}
             
-            Last update: {$instance->crawler_last_run|relative_datetime} | 
-        	<span id="choose-instance">{$instance->network_username}</span>
+            Updated: {$instance->crawler_last_run|relative_datetime} | 
+        	<span id="choose-instance"><span class="underline">{$instance->network_username}</span> ({$instance->network})</span>
         	<span id="instance-selector" style="display: none;">
         		<select id="instance-select" onchange="changeMe();">
         				<option value="">-- Select an instance --</option>
                         {foreach from=$instances key=tid item=i}
                             {if $i->network_user_id != $instance->network_user_id}
-                            <option value="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username} (updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if})</option>
+                            <option value="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username} - {$i->network} (updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if})</option>
                             {/if}
                         {/foreach}  				
         		</select>
@@ -51,9 +51,7 @@
         <ul> 
             {if $smarty.session.user}
                 <li>Logged in as: {$smarty.session.user} | 
-                <a href="{$cfg->site_root_path}session/logout.php">Log Out</a> | </li>
-                <li>Plug-ins:</li> 
-                <li>Twitter</li> 
+                <a href="{$cfg->site_root_path}session/logout.php">Log Out</a></li>
             {else}
                 <li><a href="{$cfg->site_root_path}session/login.php">Log In</a></li>
             {/if}
@@ -63,12 +61,13 @@
 
 </div> <!-- #status-bar -->
 {/if}
-    
+  
 <div class="container clearfix"> <!-- menu-bar -->
 
-    <div id="app-title"><a href="{$cfg->site_root_path}?u={$instance->network_username}">
+    <div id="app-title"><a href="{$cfg->site_root_path}?u={$smarty.session.network_username}">
         <h1><span class="bold">Think</span><span class="gray">Tank</span></h1>
         <h2>Ask your friends</h2></a>
+
     </div>
         
     <div id="menu-bar"> 
@@ -77,10 +76,10 @@
                 {if $mode eq "public"} <!-- this is the public timeline -->
                     <li class="round-tl round-bl"><a href="{$cfg->site_root_path}">Private Dashboard</a></li>
                 {else}
-                    <li class="round-tl round-bl"><a href="{$cfg->site_root_path}?u={$instance->network_username}">{if $instance}{$instance->network_username}{else}Home{/if}</a></li>
+                    <li class="round-tl round-bl"><a href="{$cfg->site_root_path}?u={$smarty.session.network_username}">{if $instance}{$instance->network_username}{else}Home{/if}</a></li>
                     <li><a href="{$cfg->site_root_path}public.php">Public Timeline</a></li>
                 {/if}
-                <li class="round-tr round-br"><a href="{$cfg->site_root_path}account/">Configuration</a></li>
+                <li class="round-tr round-br"><a href="{$cfg->site_root_path}account/?m=manage">Configuration</a></li>
             {else}
                 <li class="round-tr round-br round-tl round-bl"><a href="http://thinktankapp.com/">Get ThinkTank</a></li>
             {/if}

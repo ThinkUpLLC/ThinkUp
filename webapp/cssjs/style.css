@@ -11,6 +11,7 @@ a:hover {text-decoration : none;color : red;}
 .br {border-right: 1px solid #CCC;}
 .bb {border-bottom: 1px solid #CCC;}
 .bl {border-left: 1px solid #CCC;}
+.border-all {border: 1px solid #CCC;}
 
 .round-tl {-moz-border-radius-topleft: 10px;-webkit-border-top-left-radius: 10px;}
 .round-tr {-moz-border-radius-topright: 10px;-webkit-border-top-right-radius: 10px;}
@@ -18,15 +19,18 @@ a:hover {text-decoration : none;color : red;}
 .round-bl {-moz-border-radius-bottomleft: 10px;-webkit-border-bottom-left-radius: 10px;}
 .round-all {-moz-border-radius: 10px;-webkit-border-radius: 10px}
 
+.padding {padding:1em;}
+
 .bold {font-weight:700}
 .gray {color: #666;}
 
 .small {font-size: .8em;}
 .large {font-size: 1.6em;}
 .x-large {font-size: 3em;}
+.underline {text-decoration:underline;}
 
-/*li {padding-bottom : 10px;line-height : 125%;}*/
-
+ul.user-accounts li {padding-bottom:.5em;list-style-position: inside;}
+ul.user-accounts li ul li {margin-left:2em;}
 
 /* TABS, MENUS, NAVIGATION, STATUS BAR, ETC 
 ==============================*/
@@ -100,22 +104,22 @@ text-align: center;
 */
 
 #status-bar {padding:4px 20px;margin:0;font-size:.9em;color:#FFF;background-color:#444;}
-#status-bar .status-bar-left {float:left;width:40%;}
-#status-bar .status-bar-right {float:right;width:60%;}
+#status-bar .status-bar-left {float:left;width:50%;}
+#status-bar .status-bar-right {float:right;width:50%;}
 
 #status-bar ul {float:right;margin:0;padding:0;}
 #status-bar li {display: inline;}
 #status-bar a:link, #status-bar a:visited {color: #FFF;text-decoration:underline}
 #status-bar a:hover {text-decoration: none}
 
-#choose-instance, #cancel-instance {cursor: pointer;text-decoration: underline;}
+#choose-instance, #cancel-instance {cursor: pointer;}
 
 .menu {margin-bottom:30px;}
 .menu li {margin-right: 40px;display:inline;padding:4px 10px;}
 .menu li a {color:#000}
-.menu li:hover{color: #0060e0;cursor: pointer;border-top:1px solid #0060e0;}  
-.menu li.selected {border-top:1px solid #000;}
-.menu li.selected:hover {border-top:1px solid #0060e0;}
+.menu li:hover{color: #0060e0;cursor: pointer;border-top:2px solid #0060e0;}  
+.menu li.selected {border-top:2px solid #000;}
+.menu li.selected:hover {border-top:2px solid #0060e0;}
 
 
 .submenu {padding-left : 20px;}

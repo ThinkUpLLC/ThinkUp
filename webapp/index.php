@@ -17,6 +17,8 @@ if (!isset($_SESSION['user'])) {
 
 	$id = new InstanceDAO($db);
 
+	$s = new SmartyThinkTank();
+
 	if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
 		$username = $_REQUEST['u'];
 		$oid = new OwnerInstanceDAO($db);
@@ -30,16 +32,17 @@ if (!isset($_SESSION['user'])) {
 	} else {
 		$i = $id->getFreshestByOwnerId($owner->id);
 		if ( !isset($i) && $i == null ) {
-			echo 'You have no Twitter accounts configured. <a href="'.$THINKTANK_CFG['site_root_path'].'account/?p=twitter">Set up a Twitter account here</a>';
+			$s->assign('msg', 'You have no Twitter accounts configured. <a href="'.$THINKTANK_CFG['site_root_path'].'account/?p=twitter">Set up a Twitter account here</a>');
+			$s->display('message.tpl');
+			
 			$db->closeConnection($conn);
 			die;
 		}
 	}
 	
-	// set the session instance to the current instance
-	$_SESSION['instance']=$i;
-
-	$s = new SmartyThinkTank();
+	// save the session instance network username to the current instance
+	$_SESSION['network_username']=$i->network_username;
+    $_SESSION['instance'] = serialize($i);
 
 	if(!$s->is_cached('index.tpl', $i->network_username."-".$_SESSION['user'])) {
 

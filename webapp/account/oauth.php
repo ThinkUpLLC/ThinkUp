@@ -8,6 +8,8 @@ require_once('config.webapp.inc.php');
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once("init.php");
 
+$s = new SmartyThinkTank();
+
 $cfg = new Config();
 
 $request_token = $_GET['oauth_token'];
@@ -31,43 +33,49 @@ if ( isset( $tok['oauth_token'] ) && isset($tok['oauth_token_secret']) ) {
 	$tu = $u['user_name'];
 
 	$od = new OwnerDAO($db);
-
 	$owner = $od->getByEmail($_SESSION['user']);
 
-	if ( $twitter_id > 0 ) {
-		echo "Twitter authentication successful.<br />";
+	if ( $twitter_id > 0 ) {      
+        $msg = "<h2 class=\"subhead\">Twitter authentication successful!</h2>";
+        
+        $id = new InstanceDAO($db);
+        $i = $id->getByUsername($tu);
+        $oid = new OwnerInstanceDAO($db);
+        
+        if ( isset($i) ) {
+            $msg .= "Instance already exists.<br />";
+            
+            $oi = $oid -> get($owner->id, $i->id);
+            if ( $oi != null ) {
+                $msg .= "Owner already has this instance, no insert or update required.<br />";
+            } else {
+                $oid->insert($owner->id, $i->id, $tok['oauth_token'], $tok['oauth_token_secret']);
+                $msg .= "Added owner instance.<br />";
+            }
+        
+        } else {
+            $msg .= "Instance does not exist.<br />";
+            
+            $id->insert($twitter_id, $tu);
+            $msg .= "Created instance.<br />";
+            
+            $i = $id->getByUsername($tu);
+            $oid->insert($owner->id, $i->id, $tok['oauth_token'], $tok['oauth_token_secret']);
+            $msg .= "Created an owner instance.<br />";
+        }
 
-		$id = new InstanceDAO($db);
-		$i = $id->getByUsername($tu);
-		$oid = new OwnerInstanceDAO($db);
+    	$cfg = new Config($i->network_username, $i->network_user_id);
+        $s->assign('cfg',$cfg);
 
-		if ( isset($i) ) {
-			echo "Instance already exists.<br />";
-
-			$oi = $oid -> get($owner->id, $i->id);
-			if ( $oi != null ) {
-				echo "Owner already has this instance, no insert or update.<br />";
-			} else {
-				$oid->insert($owner->id, $i->id, $tok['oauth_token'], $tok['oauth_token_secret']);
-				echo "Added owner instance.<br />";
-			}
-
-		} else {
-			echo "Instance does not exist.<br />";
-
-			$id->insert($twitter_id, $tu);
-			echo "Created instance.<br />";
-
-			$i = $id->getByUsername($tu);
-			$oid->insert($owner->id, $i->id, $tok['oauth_token'], $tok['oauth_token_secret']);
-			echo "Created an owner_instance.<br />";
-		}
 	}
+	
 	# clean up
 	$db->closeConnection($conn);
 
 }
+$msg .= '<a href="'.$THINKTANK_CFG['site_root_path'].'account/" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Back to your account</a>';
 
-echo '<br /> <a href="'.$THINKTANK_CFG['site_root_path'].'account/">Back to your account</a>.';
+$s->assign('msg', $msg);
+$s->display('message.tpl');
 
 ?>

@@ -81,7 +81,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
                 $s->assign('posts', $pd->getMostRetweetedPostsByPublicInstances($page, $count));
                 $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
             }
-            $s->assign('header', 'Most retweeted');
+            $s->assign('header', 'Most forwarded');
             $s->assign('description', 'Posts that have been forwarded most often');
             $s->display('public.tpl', 'mostretweets-'.$i->network_username."-".$_u."-".$page);
             break;

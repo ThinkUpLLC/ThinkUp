@@ -10,10 +10,10 @@
 
 <div class="individual-tweet clearfix{if $t->is_protected} private{/if}{if $t->in_reply_to_post_id} reply{/if}">
     <div class="grid_1 alpha">
-		<a href="{$cfg->site_root_path}user/?u={$t->author_username}&i={$i->network_username}"><img src="{$t->author_avatar}" class="avatar"></a>
+		<a href="{$cfg->site_root_path}user/?u={$t->author_username}&i={$smarty.session.network_username}"><img src="{$t->author_avatar}" class="avatar"></a>
     </div>
 	<div class="grid_3 right small">
-		<a href="{$cfg->site_root_path}user/?u={$t->author_username}&i={$i->network_username}">{$t->author_username}</a>
+		<a href="{$cfg->site_root_path}user/?u={$t->author_username}&i={$smarty.session.network_username}">{$t->author_username}</a> 
     </div>
     <div class="grid_3 right small">
 		{$t->author->follower_count|number_format}

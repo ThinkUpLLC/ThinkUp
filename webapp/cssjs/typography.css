@@ -1,9 +1,9 @@
 /* APPLICATION TITLE 
 ======================= */
 #app-title {width:300px;float:left;margin-top:10px;}
-#app-title h1 {font-size: 50px;letter-spacing: -.08em;margin:0;padding:15px 0 0 0;line-height:.8em;}
+#app-title h1 {color:#222;font-size: 50px;letter-spacing: -.08em;margin:0;padding:15px 0 0 0;line-height:.8em;}
 #app-title h2 {font-size: 19px;color: #0060e0;margin:0;padding:0 0 0 10px;line-height:.8em;}
-#app-title a:hover h1  {color: #000;}
+#app-title a:hover h1  {color: #0060e0;}
 #app-title img {float:left;margin-right:2px;}
 
 /* DATA GRIDS
@@ -34,7 +34,7 @@
 .individual-tweet ul {margin:10px 0 0 5px;padding-left:10px;}
 .individual-tweet li {font-size: .8em;}
 
-.reply {/*padding-left : 85px;border-top: 0px;*/}
+.reply {border-top:1px dashed #CCC;/*padding-left : 85px;border-top: 0px;*/}
 
 /*
 .individual-tweet h3 a {color : #666;}
@@ -68,6 +68,13 @@ line-height:2.2em;
 form.login input {
 margin: .5em 0 0 0;
 font-size: 1.4em;
+width:345px;
+}
+form.login input#login-save {
+width:230px;
+}
+form.login .captcha input {
+width:180px;
 }
 form.login .captcha img {
 margin-top:.6em;
@@ -75,10 +82,10 @@ padding-right:90px;
 float:right;
 }
 #select8 {
-font-size:.8em;
+font-size:.9em;
 margin:.8em 0 0 0;
-padding:4px;
-width:316px;
+padding:6px;
+width:350px;
 }
 
 /* IMAGES AND GRAPHICS
@@ -97,9 +104,17 @@ img.avatar2 {float:left;margin:6px 0px 0px 0px;width:48px;height:48px;}
 /* SYSTEM MESSAGING 
 ======================= */
 
-.success {background-color:#BFDFBF;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;width:400px;}
-.info {background-color:#FFFFAD;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;margin:.5em 0;}
-.error {background-color:#920000;padding:10px;-moz-border-radius: 5px;-webkit-border-radius: 5px;color:white;text-align:center;font-weight:700;margin-bottom:.5em;}
+.success {
+position:relative;
+background-color:#BFDFBF;
+padding:.5em .5em;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+top: 10px;
+line-height:1.6em;
+}
+.info {background-color:#FFFFAD;padding:1em 2em;-moz-border-radius: 5px;-webkit-border-radius: 5px;margin:.5em 0;}
+.error {background-color:#920000;padding:1em 2em;-moz-border-radius: 5px;-webkit-border-radius: 5px;color:white;text-align:center;font-weight:700;margin-bottom:.5em;}
 
 #loading_updates, #loading_mentions, #loading_followers, #loading_friends, #loading_links {  
 visibility: hidden;  
@@ -131,6 +146,7 @@ a.tt-button { float:left; }
 /* remove extra button width in IE */
 button.fg-button { width:auto; overflow:visible; }
 
+.tt-icon-left {float:left;margin:.3em .5em;}
 .tt-button-icon-left { padding-left: 2.1em; }
 .tt-button-icon-right { padding-right: 2.1em; }
 .tt-button-icon-left .ui-icon { right: auto; left: .2em; margin-left: 0; }

@@ -6,14 +6,15 @@
 	</p>	
 	{/if}
     {if $owner->is_admin}
-    <p class="info">
-        As an administrator you can see all accounts in the system.
-    </p>
+	<div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+		<p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
+		As an administrator you can see all accounts in the system.</p>
+	</div>
     {/if}
     {if count($owner_instances) > 0 }
     {foreach from=$owner_instances key=iid item=i name=foo}
     <div class="clearfix">
-        <div class="grid_4">
+        <div class="grid_4 right" style="padding-top:.5em;">
             <a href="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username}</a>
         </div>
         <div class="grid_8">

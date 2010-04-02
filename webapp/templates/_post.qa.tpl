@@ -10,10 +10,10 @@
 
 <div class="individual-tweet post clearfix">
     <div class="grid_1 alpha">
-        <a href="{$cfg->site_root_path}user/?u={$r.questioner_username}&i={$i->network_username}"><img src="{$r.questioner_avatar}" class="avatar"></a>
+        <a href="{$cfg->site_root_path}user/?u={$r.questioner_username}&i={$smarty.session.network_username}"><img src="{$r.questioner_avatar}" class="avatar"></a>
     </div>
     <div class="grid_3 right small">
-		<a href="{$cfg->site_root_path}user/?u={$r.questioner_username}&i={$i->network_username}">{if $r.questioner_username eq $i->network_username}You{else}{$r.questioner_username}{/if}</a>
+		<a href="{$cfg->site_root_path}user/?u={$r.questioner_username}&i={$smarty.session.network_username}">{if $r.questioner_username eq $i->network_username}You{else}{$r.questioner_username}{/if}</a>
     </div>
     <div class="grid_3 right small">
 		{$r.questioner_follower_count|number_format}
@@ -32,10 +32,10 @@
 
 <div class="individual-tweet reply clearfix">
     <div class="grid_1 alpha">
-		<a href="{$cfg->site_root_path}user/?u={$r.answerer_username}&i={$i->network_username}"><img src="{$r.answerer_avatar}" width="48" height="48" class="avatar"></a>
+		<a href="{$cfg->site_root_path}user/?u={$r.answerer_username}&i={$smarty.session.network_username}"><img src="{$r.answerer_avatar}" width="48" height="48" class="avatar"></a>
     </div>
 	<div class="grid_3 right small">
-		<a href="{$cfg->site_root_path}user/?u={$r.answerer_username}&i={$i->network_username}">{if $r.answerer_username eq $i->network_username}You{else}{$r.answerer_username}{/if}</a>
+		<a href="{$cfg->site_root_path}user/?u={$r.answerer_username}&i={$smarty.session.network_username}">{if $r.answerer_username eq $i->network_username}You{else}{$r.answerer_username}{/if}</a>
     </div>
     <div class="grid_3 right small">
         {$r.answerer_follower_count|number_format}
