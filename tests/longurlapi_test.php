@@ -1,5 +1,4 @@
-<?php
- 
+<?php 
 require_once (dirname(__FILE__).'/simpletest/autorun.php');
 
 
@@ -12,7 +11,7 @@ require_once ("config.inc.php");
 
 
 class TestOfLongUrlAPIAccessor extends UnitTestCase {
-	
+
     function TestOfLongUrlAPIAccessor() {
         $this->UnitTestCase('LongURLAPIAccessor class test');
     }
@@ -24,13 +23,14 @@ class TestOfLongUrlAPIAccessor extends UnitTestCase {
     }
     
     function testExpandingLongURL() {
-		$lur = new LongUrlAPIAccessor('ThinkTank');
+        $lur = new LongUrlAPIAccessor('ThinkTank');
+        
+        //TODO Mock LongURL API; we shouldn't hit the LongURL service live with every test
+        //$eurl = $lur->expandURL('http://bit.ly/cZu3sF');
+        //$this->assertEqual($eurl['long-url'], 'http://www.voiceofsandiego.org/credentialed/article_db5908a4-182f-11df-a2be-001cc4c002e0.html');
 
-		$eurl = $lur->expandURL('http://bit.ly/cZu3sF');
-		$this->assertTrue($eurl['long-url'] == 'http://www.voiceofsandiego.org/credentialed/article_db5908a4-182f-11df-a2be-001cc4c002e0.html');
-
-
+        
     }
-	
+    
 }
 ?>
