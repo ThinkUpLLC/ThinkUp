@@ -1,9 +1,9 @@
 <?php 
 // set up
 chdir("..");
-require_once ('config.webapp.inc.php');
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-require_once ("init.php");
+
+
+require_once ("common/init.php");
 
 session_start();
 $session = new Session();
@@ -75,7 +75,7 @@ if (!isset($_GET['m']) && isset($_GET['p'])) {
 if (isset($active_plugin)) {
     $webapp->configuration($active_plugin);
     array_push($s->template_dir, 'plugins/'.$active_plugin);
-    $s->assign('body', $THINKTANK_CFG['source_root_path'].'common/plugins/'.$active_plugin.'/templates/'.$active_plugin.'.account.index.tpl');
+    $s->assign('body', $THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$active_plugin.'/templates/'.$active_plugin.'.account.index.tpl');
 }
 /* End plugin-specific configuration handling */
 

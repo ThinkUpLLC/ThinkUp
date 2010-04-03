@@ -1,6 +1,6 @@
 <?php
 
-$INCLUDE_PATH = "/your-path-to/thinktank/common/";
+$INCLUDE_PATH = "/your-path-to/thinktank/webapp/common/";
 
 $TEST_CLASS_PATH = "/your-path-to/thinktank/tests/classes/";
 

@@ -3,11 +3,11 @@ require_once (dirname(__FILE__).'/simpletest/autorun.php');
 require_once (dirname(__FILE__).'/simpletest/web_tester.php');
 
 require_once (dirname(__FILE__).'/config.tests.inc.php');
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
+
 
 require_once ("classes/class.ThinkTankTestCase.php");
-require_once ("class.Utils.php");
-require_once ("class.Plugin.php");
+require_once ("common/class.Utils.php");
+require_once ("common/class.Plugin.php");
 
 
 class TestOfPluginDAO extends ThinkTankUnitTestCase {

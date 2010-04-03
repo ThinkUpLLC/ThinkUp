@@ -8,6 +8,7 @@ class Plugin {
     var $homepage;
     var $version;
     var $is_active = false;
+    var $icon;
     
     function Plugin($val) {
         if (isset($val["id"])) {
@@ -19,6 +20,9 @@ class Plugin {
         $this->author = $val['author'];
         $this->homepage = $val['homepage'];
         $this->version = $val['version'];
+        if (isset($val['icon'])) {
+            $this->icon = $val['icon'];
+        }
         if ($val['is_active'] == 1) {
             $this->is_active = true;
         } else {
@@ -129,9 +133,9 @@ class PluginDAO extends MySQLDAO {
     public function getInstalledPlugins($plugin_path) {
         // Detect what plugins exist in the filesystem; parse their header comments for plugin metadata
         $installed_plugins = array();
-        $plugin_files = Utils::getPlugins($plugin_path.'common/plugins');
+        $plugin_files = Utils::getPlugins($plugin_path.'webapp/plugins');
         foreach ($plugin_files as $pf) {
-            foreach (glob($plugin_path.'common/plugins/'.$pf."/*.php") as $includefile) {
+            foreach (glob($plugin_path.'webapp/plugins/'.$pf."/*.php") as $includefile) {
                 $fhandle = fopen($includefile, "r");
                 $contents = fread($fhandle, filesize($includefile));
                 fclose($fhandle);
@@ -177,6 +181,10 @@ class PluginDAO extends MySQLDAO {
                 if (preg_match('/Author:(.*)/', $line, $m)) {
                     $plugin_vals['author'] = trim($m[1]);
                 }
+                if (preg_match('/Icon:(.*)/', $line, $m)) {
+                    $plugin_vals['icon'] = trim($m[1]);
+                }
+                
             }
             $plugin_vals["folder_name"] = $pf;
             $plugin_vals["id"] = $this->getPluginId($pf);
