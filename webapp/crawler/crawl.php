@@ -4,7 +4,7 @@ require_once ("common/init.php");
 
 $authorized = false;
 
-if ($argc > 1) { // check for CLI credentials
+if (isset($argc) && $argc > 1) { // check for CLI credentials
     $session = new Session();
     $username = $argv[1];
     $pw = $argv[2];
