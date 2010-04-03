@@ -3,12 +3,12 @@
 /** APPLICATION CONFIG **/
 $THINKTANK_CFG['debug'] = true;
 $THINKTANK_CFG['GMT_offset'] = 7; //Pacific: 7, Eastern: 4
-$THINKTANK_CFG['cache_pages'] = 1;
+$THINKTANK_CFG['cache_pages'] = 1; //1 = Smarty caching on; 0 = Smarty caching off
 
 $THINKTANK_CFG['app_title'] = 'ThinkTank';
-$THINKTANK_CFG['log_location'] = '/your-path-to/thinktank/crawler/logs/crawler.log';
+$THINKTANK_CFG['log_location'] = '/your-path-to/thinktank/logs/crawler.log';
 
-$THINKTANK_CFG['sql_log_location'] = '/your-path-to/thinktank/crawler/logs/sql.log'; //Set to null to not log queries
+$THINKTANK_CFG['sql_log_location'] = '/your-path-to/thinktank/logs/sql.log'; //Set to null to not log queries
 $THINKTANK_CFG['slow_query_log_threshold'] = 2.0; //how many seconds does a query take before it gets logged as a slow query
 
 $THINKTANK_CFG['smarty_path'] = '/usr/local/php5/lib/php/smarty/libs/';
