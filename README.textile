@@ -56,7 +56,9 @@ Visit the web application on your server, register and log in, and set up your T
 
 Then, run the crawler to load your Twitter data, <code>cd</code> to <code>/your-path-to-thinktank/webapp/crawler/</code>, and run:
 
-<code>$ php crawl.php</code>
+<code>$ php crawl.php you@example.com yourttpassword</code>
+
+Where <code>you@example.com</code> is your ThinkTank login email address, and <code>yourttpassword</code> is your ThinkTank password.
 
 To view what's going on with the crawler, use this command:
 
