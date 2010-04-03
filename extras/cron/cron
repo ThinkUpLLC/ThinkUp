@@ -17,6 +17,7 @@ else
 fi
 
 calog_lines1=`set $(wc -l $crawllog) && echo $1`
+cd $thinktank/webapp/crawler
 $php $crawler $thinktank_username $thinktank_password
 calog_lines2=`set $(wc -l $crawllog) && echo $1`
 calog_lines_diff=$((calog_lines2-calog_lines1))
