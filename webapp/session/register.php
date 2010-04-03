@@ -7,7 +7,7 @@ chdir("..");
 
 require_once ("common/init.php");
 
-require_once ("class.Mailer.php");
+require_once ("common/class.Mailer.php");
 
 $session = new Session();
 if ($session->isLoggedIn()) {
