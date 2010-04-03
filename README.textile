@@ -47,7 +47,7 @@ Write down the items labeled "Consumer key" and "Consumer secret."
 
 h3. Configure the app
 
-* Rename <code>thinktank/webapp/config.sample.inc.php</code> to <code>config.inc.php</code> and set the appropriate Application, Database, and Plugin values for your server
+* Rename <code>thinktank/webapp/config.sample.inc.php</code> to <code>config.inc.php</code> and set the appropriate application, database, and plugin values for your environment and plugins.
 
 
 h2. RUN
@@ -76,7 +76,7 @@ To discuss ThinkTank, "post to the project mailing list":http://groups.google.co
 
 h2. LICENSE
 
-ThinkTank's source code is licensed under the "GNU General Public License":http://github.com/ginatrapani/thinktank/blob/master/GPL-LICENSE.txt, except for the externa libraries listed below.
+ThinkTank's source code is licensed under the "GNU General Public License":http://github.com/ginatrapani/thinktank/blob/master/GPL-LICENSE.txt, except for the external libraries listed below.
 
 
 h2. EXTERNAL LIBRARIES
