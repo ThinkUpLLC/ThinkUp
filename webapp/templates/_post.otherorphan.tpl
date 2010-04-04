@@ -54,7 +54,7 @@
                         {foreach from=$all_tweets key=aid item=a}<option value="{$a->post_id}">{$a->post_text|truncate_for_select}</option>
                         {/foreach}
                     </select>
-					<input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
+          <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
                 </form>
             </div>
         </div>

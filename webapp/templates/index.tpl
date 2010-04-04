@@ -31,24 +31,24 @@ $(document).ready(function() {
     <div id="thinktank-tabs">
         <div role="application" id="tabs">
     
-        	<ul>
-        		<li><a href="#updates"><div class="key-stat">
+          <ul>
+            <li><a href="#updates"><div class="key-stat">
                     <h1>{$owner_stats->post_count|number_format}</h1> 
                     <h3>Posts</h3></div></a></li>
-        		<li><a href="#mentions"><div class="key-stat">        
+            <li><a href="#mentions"><div class="key-stat">        
                     <h1>{$instance->total_replies_in_system|number_format}</h1> 
                     <h3>Replies</h3></div></a></li>
-        		<li><a href="#followers"><div class="key-stat">        
+            <li><a href="#followers"><div class="key-stat">        
                     <h1>{$owner_stats->follower_count|number_format}</h1> 
                     <h3>Followers</h3></div></a></li>
-        		<li><a href="#friends"><div class="key-stat">
+            <li><a href="#friends"><div class="key-stat">
                     <h1>{$owner_stats->friend_count|number_format}</h1> 
                     <h3>Friends</h3></div></a></li>
-        		<li class="no-border"><a href="#links"><div class="key-stat">
+            <li class="no-border"><a href="#links"><div class="key-stat">
                     <h1>&nbsp;</h1> 
                     <h3>Links</h3></div></a></li>
-        	</ul>
-        	    
+          </ul>
+              
             <div class="section" id="updates">
                 <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart1"> 
                 <div class="thinktank-canvas clearfix">
@@ -256,7 +256,7 @@ $(document).ready(function() {
                                 <li class="menu-item" id="friends-leastactive">Deadbeats</li>
                                 <li class="menu-item" id="friends-mostfollowed">Popular</li>
                                 <li class="menu-item" id="friends-former">Former</li>
-                                <li class="menu-item" id="friends-notmutual">Not&nbsp;mutual</li>			
+                                <li class="menu-item" id="friends-notmutual">Not&nbsp;mutual</li>      
                             </ul>
                         </div>
                         <div class="grid_22 prefix_1">
@@ -297,11 +297,11 @@ $(document).ready(function() {
                 </div> <!-- #top -->
             </div> <!-- #links -->
     
-    	</div> <!-- #tabs -->
+      </div> <!-- #tabs -->
     </div> <!-- #thinktank-tabs -->
     
-    	
-	<div role="contentinfo" id="keystats">
+      
+  <div role="contentinfo" id="keystats">
 
         <h2>Key Stats</h2>
 
@@ -314,44 +314,44 @@ $(document).ready(function() {
         </ul>
 
         <ul id="sidemenu">
-        	<li>Conversations
-        		<ul class="submenu">
-        			<li>Your Tweets</li>
-        			<li>Mentions</li>
-        			<li>Messages</li>
-        			<li>Recent Links</li>
-        			<li>Favorited</li>
-        			<li>Retweets</li>
-        		</ul>
-        	</li>
-        	<li>Stats
-        		<ul class="submenu">
-        			<li>Followers Over Time</li>
-        			<li>Tweets per Day</li>
-        			<li>Replies per Day</li>
-        			<li>Retweets per Day</li>
-        			<li>Mentions per Day</li>
-        			<li>Noise Level by Day</li>
-        		</ul>		
-        	</li>
-        	<li>People
-        		<ul class="submenu">
-        			<li>Most Popular Followers</li>
-        			<li>Least Likely</li>
-        			<li>Chatterboxes</li>
-        			<li id="friends-leastactive">Deadbeats</li>
-        			<li>Repliers</li>
-        			<li>Messagers</li>
-        			<li>Messagees</li>
-        			<li>Favoritees</li>
-        		</ul>		
-        	</li>
-        	<li>Relationships
-        		<ul class="submenu">
-        			<li>Former Followers</li>
-        			<li>Not-Mutual</li>
-        		</ul>		
-        	</li>
+          <li>Conversations
+            <ul class="submenu">
+              <li>Your Tweets</li>
+              <li>Mentions</li>
+              <li>Messages</li>
+              <li>Recent Links</li>
+              <li>Favorited</li>
+              <li>Retweets</li>
+            </ul>
+          </li>
+          <li>Stats
+            <ul class="submenu">
+              <li>Followers Over Time</li>
+              <li>Tweets per Day</li>
+              <li>Replies per Day</li>
+              <li>Retweets per Day</li>
+              <li>Mentions per Day</li>
+              <li>Noise Level by Day</li>
+            </ul>    
+          </li>
+          <li>People
+            <ul class="submenu">
+              <li>Most Popular Followers</li>
+              <li>Least Likely</li>
+              <li>Chatterboxes</li>
+              <li id="friends-leastactive">Deadbeats</li>
+              <li>Repliers</li>
+              <li>Messagers</li>
+              <li>Messagees</li>
+              <li>Favoritees</li>
+            </ul>    
+          </li>
+          <li>Relationships
+            <ul class="submenu">
+              <li>Former Followers</li>
+              <li>Not-Mutual</li>
+            </ul>    
+          </li>
         </ul>
         
         <br /><br />
@@ -360,12 +360,12 @@ $(document).ready(function() {
         <br /><br />
         <h2>Twitter Accounts</h2>
         <ul>
-        	{foreach from=$instances key=tid item=i}
-        	{if $i->network_user_id != $instance->network_user_id}
-        	<li><a href="?u={$i->network_username|urlencode}">{$i->network_username}</a><br /><small>updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if}</small></li>
-        	{/if}
-        	{/foreach}	
-        	<li><a href="{$cfg->site_root_path}account/">Add an account&rarr;</a></li>
+          {foreach from=$instances key=tid item=i}
+          {if $i->network_user_id != $instance->network_user_id}
+          <li><a href="?u={$i->network_username|urlencode}">{$i->network_username}</a><br /><small>updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if}</small></li>
+          {/if}
+          {/foreach}  
+          <li><a href="{$cfg->site_root_path}account/">Add an account&rarr;</a></li>
         </ul>
         {/if}
 

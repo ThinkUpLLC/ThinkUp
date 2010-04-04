@@ -25,26 +25,26 @@
                                     <a href="?p={$cmitem[0]}">{$cmitem[1]}</a>
                                 </li>
                                 {/foreach}
-								<li>
+                <li>
                                     <a href="?m=manage">Manage Plugins</a>
-								</li>
+                </li>
                             </ul>
                         </div>
                     </div>
                     {if $body}
                     {include file=$body}
                     {/if}
-					{if $installed_plugins}
-						{foreach from=$installed_plugins key=ipindex item=ip}
-							<p><a href="{$ip->homepage}">{$ip->name}</a> <small>(Currently {if $ip->is_active}Active{else}Inactive{/if})<br />{$ip->description}<br />Version {$ip->version} by {$ip->author}</small></p>
-							<p></p>
-							<p>
+          {if $installed_plugins}
+            {foreach from=$installed_plugins key=ipindex item=ip}
+              <p><a href="{$ip->homepage}">{$ip->name}</a> <small>(Currently {if $ip->is_active}Active{else}Inactive{/if})<br />{$ip->description}<br />Version {$ip->version} by {$ip->author}</small></p>
+              <p></p>
+              <p>
 <span id="divpluginactivation{$ip->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
 {if $ip->is_active}btnDeactivate{else}btnActivate{/if}" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" /></span>
-								
-							</p><br /><br />
-						{/foreach}
-					{/if}
+                
+              </p><br /><br />
+            {/foreach}
+          {/if}
                 </div>
             </div>
         </div>
@@ -131,161 +131,161 @@
     </div>
 </div>
 <script type="text/javascript">
-                    		{literal}
-                    		$(function() {
-                    			$(".btnPub").click(function() {  
-                    			// validate and process form here  
-                    				var element = $(this);
-                    				var u = element.attr("id");
-                    				
-                    				var dataString = 'u='+ u+ "&p=1";  
-                    				//alert (dataString);return false;  
-                    				    $.ajax({  
-                    				      type: "GET",  
-                    				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-public.php",  
-                    				      data: dataString,  
-                    				      success: function() {  
-                    					$('#div'+u).html("<span class='success' id='message"+u+"'></span>");  
-                    					$('#message'+u).html("Added to public timeline!") 
-                    				       .hide()  
-                    				       .fadeIn(1500, function() {  
-                    					 $('#message'+u);  
-                    				       });  
-                    				    }  
-                    				   });  
-                    				   return false;  
-                    			  });
-                    			
-                    			$(".btnPriv").click(function() {  
-                    			// validate and process form here  
-                    				var element = $(this);
-                    				var u = element.attr("id");
+                        {literal}
+                        $(function() {
+                          $(".btnPub").click(function() {  
+                          // validate and process form here  
+                            var element = $(this);
+                            var u = element.attr("id");
+                            
+                            var dataString = 'u='+ u+ "&p=1";  
+                            //alert (dataString);return false;  
+                                $.ajax({  
+                                  type: "GET",  
+                                  url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-public.php",  
+                                  data: dataString,  
+                                  success: function() {  
+                              $('#div'+u).html("<span class='success' id='message"+u+"'></span>");  
+                              $('#message'+u).html("Added to public timeline!") 
+                                   .hide()  
+                                   .fadeIn(1500, function() {  
+                               $('#message'+u);  
+                                   });  
+                                }  
+                               });  
+                               return false;  
+                            });
+                          
+                          $(".btnPriv").click(function() {  
+                          // validate and process form here  
+                            var element = $(this);
+                            var u = element.attr("id");
                     
-                    				var dataString = 'u='+ u+ "&p=0";  
-                    				//alert (dataString);return false;  
-                    				    $.ajax({  
-                    				      type: "GET",  
-                    				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-public.php",  
-                    				      data: dataString,  
-                    				      success: function() {  
-                    					$('#div'+u).html("<span class='success' id='message"+u+"'></span>");  
-                    					$('#message'+u).html("Removed from public timeline!") 
-                    				       .hide()  
-                    				       .fadeIn(1500, function() {  
-                    					 $('#message'+u);  
-                    				       });  
-                    				    }  
-                    				   });  
-                    				   return false;  
-                    			      });  
-                    			
-                    			  
+                            var dataString = 'u='+ u+ "&p=0";  
+                            //alert (dataString);return false;  
+                                $.ajax({  
+                                  type: "GET",  
+                                  url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-public.php",  
+                                  data: dataString,  
+                                  success: function() {  
+                              $('#div'+u).html("<span class='success' id='message"+u+"'></span>");  
+                              $('#message'+u).html("Removed from public timeline!") 
+                                   .hide()  
+                                   .fadeIn(1500, function() {  
+                               $('#message'+u);  
+                                   });  
+                                }  
+                               });  
+                               return false;  
+                                });  
+                          
+                            
                     
-                    		});	
+                        });  
             
-                    		$(function() {
-                    			$(".btnPlay").click(function() {  
-                    			// validate and process form here  
-                    				var element = $(this);
-                    				var u = element.attr("id");
-                    				
-                    				var dataString = 'u='+ u+ "&p=1";  
-                    				//alert (dataString);return false;  
-                    				    $.ajax({  
-                    				      type: "GET",  
-                    				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-active.php",  
-                    				      data: dataString,  
-                    				      success: function() {  
-                    					$('#divactivate'+u).html("<span class='success mt_10' id='message"+u+"'></span>");  
-                    					$('#message'+u).html("Crawling has been started!") 
-                    				       .hide()  
-                    				       .fadeIn(1500, function() {  
-                    					 $('#message'+u);  
-                    				       });  
-                    				    }  
-                    				   });  
-                    				   return false;  
-                    			  });
-                    			
-                    			$(".btnPause").click(function() {  
-                    			// validate and process form here  
-                    				var element = $(this);
-                    				var u = element.attr("id");
+                        $(function() {
+                          $(".btnPlay").click(function() {  
+                          // validate and process form here  
+                            var element = $(this);
+                            var u = element.attr("id");
+                            
+                            var dataString = 'u='+ u+ "&p=1";  
+                            //alert (dataString);return false;  
+                                $.ajax({  
+                                  type: "GET",  
+                                  url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-active.php",  
+                                  data: dataString,  
+                                  success: function() {  
+                              $('#divactivate'+u).html("<span class='success mt_10' id='message"+u+"'></span>");  
+                              $('#message'+u).html("Crawling has been started!") 
+                                   .hide()  
+                                   .fadeIn(1500, function() {  
+                               $('#message'+u);  
+                                   });  
+                                }  
+                               });  
+                               return false;  
+                            });
+                          
+                          $(".btnPause").click(function() {  
+                          // validate and process form here  
+                            var element = $(this);
+                            var u = element.attr("id");
                     
-                    				var dataString = 'u='+ u+ "&p=0";  
-                    				//alert (dataString);return false;  
-                    				    $.ajax({  
-                    				      type: "GET",  
-                    				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-active.php",  
-                    				      data: dataString,  
-                    				      success: function() {  
-                    					$('#divactivate'+u).html("<span class='success mt_10' id='message"+u+"'></span>");  
-                    					$('#message'+u).html("Crawling has been paused!") 
-                    				       .hide()  
-                    				       .fadeIn(1500, function() {  
-                    					 $('#message'+u);  
-                    				       });  
-                    				    }  
-                    				   });  
-                    				   return false;  
-                    			      });  
-                    			
-                    			  
+                            var dataString = 'u='+ u+ "&p=0";  
+                            //alert (dataString);return false;  
+                                $.ajax({  
+                                  type: "GET",  
+                                  url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-active.php",  
+                                  data: dataString,  
+                                  success: function() {  
+                              $('#divactivate'+u).html("<span class='success mt_10' id='message"+u+"'></span>");  
+                              $('#message'+u).html("Crawling has been paused!") 
+                                   .hide()  
+                                   .fadeIn(1500, function() {  
+                               $('#message'+u);  
+                                   });  
+                                }  
+                               });  
+                               return false;  
+                                });  
+                          
+                            
                     
-                    		});	
+                        });  
             
-			
-  							$(function() {
-                    			$(".btnActivate").click(function() {  
-                    			// validate and process form here  
-                    				var element = $(this);
-                    				var u = element.attr("id");
-                    				
-                    				var dataString = 'pid='+ u+ "&a=1";  
-                    				//alert (dataString);return false;  
-                    				    $.ajax({  
-                    				      type: "GET",  
-                    				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-pluginactive.php",  
-                    				      data: dataString,  
-                    				      success: function() {  
-                    					$('#divpluginactivation'+u).html("<span class='success mt_10' id='message"+u+"'></span>");  
-                    					$('#message'+u).html("Activated plugin!") 
-                    				       .hide()  
-                    				       .fadeIn(1500, function() {  
-                    					 $('#message'+u);  
-                    				       });  
-                    				    }  
-                    				   });  
-                    				   return false;  
-                    			  });
-                    			
-                    			$(".btnDeactivate").click(function() {  
-                    			// validate and process form here  
-                    				var element = $(this);
-                    				var u = element.attr("id");
+      
+                $(function() {
+                          $(".btnActivate").click(function() {  
+                          // validate and process form here  
+                            var element = $(this);
+                            var u = element.attr("id");
+                            
+                            var dataString = 'pid='+ u+ "&a=1";  
+                            //alert (dataString);return false;  
+                                $.ajax({  
+                                  type: "GET",  
+                                  url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-pluginactive.php",  
+                                  data: dataString,  
+                                  success: function() {  
+                              $('#divpluginactivation'+u).html("<span class='success mt_10' id='message"+u+"'></span>");  
+                              $('#message'+u).html("Activated plugin!") 
+                                   .hide()  
+                                   .fadeIn(1500, function() {  
+                               $('#message'+u);  
+                                   });  
+                                }  
+                               });  
+                               return false;  
+                            });
+                          
+                          $(".btnDeactivate").click(function() {  
+                          // validate and process form here  
+                            var element = $(this);
+                            var u = element.attr("id");
                     
-                    				var dataString = 'pid='+ u+ "&p=0";  
-                    				//alert (dataString);return false;  
-                    				    $.ajax({  
-                    				      type: "GET",  
-                    				      url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-pluginactive.php",  
-                    				      data: dataString,  
-                    				      success: function() {  
-                    					$('#divpluginactivation'+u).html("<span class='success mt_10' id='message"+u+"'></span>");  
-                    					$('#message'+u).html("Deactivated plugin!") 
-                    				       .hide()  
-                    				       .fadeIn(1500, function() {  
-                    					 $('#message'+u);  
-                    				       });  
-                    				    }  
-                    				   });  
-                    				   return false;  
-                    			      });  
-                    			
-                    			  
+                            var dataString = 'pid='+ u+ "&p=0";  
+                            //alert (dataString);return false;  
+                                $.ajax({  
+                                  type: "GET",  
+                                  url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-pluginactive.php",  
+                                  data: dataString,  
+                                  success: function() {  
+                              $('#divpluginactivation'+u).html("<span class='success mt_10' id='message"+u+"'></span>");  
+                              $('#message'+u).html("Deactivated plugin!") 
+                                   .hide()  
+                                   .fadeIn(1500, function() {  
+                               $('#message'+u);  
+                                   });  
+                                }  
+                               });  
+                               return false;  
+                                });  
+                          
+                            
                     
-                    		});	                  
-                    		{/literal}
-                    	
+                        });                    
+                        {/literal}
+                      
 </script>
 {include file="_footer.tpl" stats="no"} 

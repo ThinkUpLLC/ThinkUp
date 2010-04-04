@@ -4,47 +4,47 @@
 <script>
 $(document).ready(function() {
 
-	$(".toggle_container").hide(); 
+  $(".toggle_container").hide(); 
 
     $("h4.trigger").toggle(function(){
-		$(this).addClass("active");
-		}, function () {
-		$(this).removeClass("active");
-	});
+    $(this).addClass("active");
+    }, function () {
+    $(this).removeClass("active");
+  });
 
     //Slide up and down on click
-	$("h4.trigger").click(function(){
-		$(this).next(".toggle_container").slideToggle("slow");
-	});
-	
+  $("h4.trigger").click(function(){
+    $(this).next(".toggle_container").slideToggle("slow");
+  });
+  
 });
 </script>
 {/literal}
 
 <div id="bd" role="main">
-	<div id="yui-main">
-	<div class="yui-b">
+  <div id="yui-main">
+  <div class="yui-b">
 
         <div id="thinktank-tabs">
             <div role="application" id="tabs">
         
-            	<ul>
-            		<li><a href="#updates"><div class="key-stat">
+              <ul>
+                <li><a href="#updates"><div class="key-stat">
                         <h1>{$profile->post_count|number_format}</h1> 
                         <h3>Posts</h3></div></a></li>
-            		<li><a href="#conversations"><div class="key-stat">        
+                <li><a href="#conversations"><div class="key-stat">        
                         <h1>{$total_exchanges}</h1> 
                         <h3>Conversations</h3></div></a></li>
-            		<li><a href="#followers"><div class="key-stat">        
+                <li><a href="#followers"><div class="key-stat">        
                         <h1>{$profile->follower_count|number_format}</h1> 
                         <h3>Followers</h3></div></a></li>
-            		<li><a href="#friends"><div class="key-stat">
+                <li><a href="#friends"><div class="key-stat">
                         <h1>{$profile->friend_count|number_format}</h1> 
                         <h3>Friends</h3></div></a></li>
-            		<li class="no-border"><a href="#mutual"><div class="key-stat">
+                <li class="no-border"><a href="#mutual"><div class="key-stat">
                         <h1>{$total_mutual_friends}</h1> 
                         <h3>Mutual</h3></div></a></li>
-            	</ul>		
+              </ul>    
 
 
                 <div class="section" id="updates">
@@ -63,14 +63,14 @@ $(document).ready(function() {
                                 <div class="clearfix">
                                     <div class="grid_11 alpha omega">Clients:</div>
                                 </div> 
-                               	{if count($sources > 0)}
-                                	{foreach from=$sources key=tid item=s name=foo}
+                                 {if count($sources > 0)}
+                                  {foreach from=$sources key=tid item=s name=foo}
                                         <div class="clearfix bt">
                                             <div class="grid_7 bold alpha">{$s.total} statuses posted via</div>
                                             <div class="grid_4 right omega">{if $s.source eq 'web'} the {$s.source}{else}{$s.source}{/if}</div>
                                         </div>
-                                	{/foreach}
-                            	{/if}
+                                  {/foreach}
+                              {/if}
                                 <div class="clearfix bt">
                                     <div class="grid_11 alpha omega">&nbsp;</div>
                                 </div> 
@@ -148,14 +148,14 @@ $(document).ready(function() {
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_22 push_1 append_20">
-                               	{if $exchanges}
-                            		{foreach from=$exchanges key=tahrt item=r name=foo}
+                                 {if $exchanges}
+                                {foreach from=$exchanges key=tahrt item=r name=foo}
                                         {include file="_post.qa.tpl" t=$t}
-                            		{/foreach}
+                                {/foreach}
                                 {else}
                                     ThinkTank has not captured any conversations between {$instance->network_username} and {$profile->user_name}.
                                 {/if}
-                        	</div>
+                          </div>
                         </div>
                     </div>                
                 </div>
@@ -190,13 +190,13 @@ $(document).ready(function() {
                     
                         <div class="thinktank-canvas container_24">
                             <div class="grid_22 push_1 append_20">
-                            	{if count($mutual_friends > 0)}
-                            	{foreach from=$mutual_friends key=tid item=f name=foo}
+                              {if count($mutual_friends > 0)}
+                              {foreach from=$mutual_friends key=tid item=f name=foo}
                                     {include file="_user.tpl" t=$f}
-                            	{/foreach}
-                            	{else}
-                            	   No mutual friends identified.
-                            	{/if}
+                              {/foreach}
+                              {else}
+                                 No mutual friends identified.
+                              {/if}
                             </div>
                         </div>
                     </div>
@@ -205,22 +205,22 @@ $(document).ready(function() {
 
 
         
-        	</div> <!-- #tabs -->
-        </div> <!-- #thinktank-tabs -->	
+          </div> <!-- #tabs -->
+        </div> <!-- #thinktank-tabs -->  
 
-        <!--	
-    	<div role="application" class="yui-g" id="ttabs">
+        <!--  
+      <div role="application" class="yui-g" id="ttabs">
     
-    				<ul>
-    					<li><a href="#tweets">User</a></li>
-    					{if $exchanges}<li><a href="#replies">Conversations ({$total_exchanges})</a></li>{/if}
-    					{if count($mutual_friends) > 0}<li><a href="#mutualfriends">Mutual Friends ({$total_mutual_friends})</a></li>{/if}
-    					{if count($sources) > 0 }<li><a href="#sources">Clients</a></li>{/if}
-    				</ul>		
+            <ul>
+              <li><a href="#tweets">User</a></li>
+              {if $exchanges}<li><a href="#replies">Conversations ({$total_exchanges})</a></li>{/if}
+              {if count($mutual_friends) > 0}<li><a href="#mutualfriends">Mutual Friends ({$total_mutual_friends})</a></li>{/if}
+              {if count($sources) > 0 }<li><a href="#sources">Clients</a></li>{/if}
+            </ul>    
     
     
-    		<div class="section" id="tweets"></div>
-    	
+        <div class="section" id="tweets"></div>
+      
         </div>
         -->
     
@@ -230,8 +230,8 @@ $(document).ready(function() {
         <!--
         <h2>User Stats</h2>
         <ul>
-        	<li>Last updated {$profile->last_updated|relative_datetime}</li>
-        	<li><a {if $instance}href="{$cfg->site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a></li>
+          <li>Last updated {$profile->last_updated|relative_datetime}</li>
+          <li><a {if $instance}href="{$cfg->site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a></li>
         </ul>
         -->
 
