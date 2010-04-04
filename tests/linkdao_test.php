@@ -31,7 +31,7 @@ class TestOfLinkDAO extends ThinkTankUnitTestCase {
         }
         
         //Insert test links (images from Flickr, not expanded)
-		$counter = 0;
+        $counter = 0;
         while ($counter < 5) {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
@@ -41,7 +41,18 @@ class TestOfLinkDAO extends ThinkTankUnitTestCase {
             
             $counter++;
         }
-
+        
+        //Insert test links with errors (images from Flickr, not expanded)
+        $counter = 0;
+        while ($counter < 5) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+            
+            $q = "INSERT INTO tt_links (url, title, clicks, post_id, is_image, error) VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1, 'Generic test error message, Photo not found');";
+            $this->db->exec($q);
+            
+            $counter++;
+        }
         
     }
     
@@ -74,20 +85,28 @@ class TestOfLinkDAO extends ThinkTankUnitTestCase {
         
         $updatedlink = $ldao->getLinkById($link->id);
         $this->assertEqual($updatedlink->expanded_url, "http://expandedurl.com");
-
+        
         $ldao->saveExpandedUrl($link->id, "http://expandedurl1.com", 'my title');
         $updatedlink = $ldao->getLinkById($link->id);
         $this->assertEqual($updatedlink->expanded_url, "http://expandedurl1.com");
         $this->assertEqual($updatedlink->title, "my title");
-		
+        
         $ldao->saveExpandedUrl($link->id, "http://expandedurl2.com", 'my title1', 1);
         $updatedlink = $ldao->getLinkById($link->id);
         $this->assertEqual($updatedlink->expanded_url, "http://expandedurl2.com");
         $this->assertEqual($updatedlink->title, "my title1");
         $this->assertTrue($updatedlink->is_image);
-		
-
+    }
+    
+    function testSaveExpansionError() {
+        $ldao = new LinkDAO($this->db, $this->logger);
+        $linktogeterror = $ldao->getLinkById(10);
         
+        $this->assertEqual($linktogeterror->error, '');
+        $ldao->saveExpansionError(10, "This is expansion error text");
+        
+        $linkthathaserror = $ldao->getLinkById(10);
+        $this->assertEqual($linkthathaserror->error, "This is expansion error text");
     }
     
     function testGetLinksToExpandByURL() {

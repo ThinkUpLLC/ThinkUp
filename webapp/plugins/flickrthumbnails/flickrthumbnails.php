@@ -1,14 +1,14 @@
 <?php 
 /*
- Plugin Name: Flickr
- Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/longurl/
+ Plugin Name: Flickr Thumbnails
+ Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/flickr/
  Icon: flickr_icon.png
- Description: On each crawler run, checks links table for shortened Flickr links and expands them to the full thumbnail.
+ Description: Expands shorted Flickr photo links to thumbnail locations.
  Version: 0.01
  Author: Gina Trapani
  */
 
-function flickr_crawl() {
+function flickrthumbnails_crawl() {
     global $THINKTANK_CFG;
     global $db;
     global $conn;
@@ -27,23 +27,23 @@ function flickr_crawl() {
         
         foreach ($flickrlinkstoexpand as $fl) {
             $eurl = $fa->getFlickrPhotoSource($fl->url);
-            if ($eurl != '') {
-                $is_image = 1;
+            if ($eurl["expanded_url"] != '') {
+                $ldao->saveExpandedUrl($fl->id, $eurl["expanded_url"], '', 1);
+            } elseif ($eurl["error"] != '') {
+                $ldao->saveExpansionError($fl->id, $eurl["error"]);
             }
-            $ldao->saveExpandedUrl($fl->id, $eurl, '', 1);
         }
         $logger->close(); # Close logging
     }
 }
 
-function flickr_webapp_configuration() {
-
+function flickrthumbnails_webapp_configuration() {
     // TODO Add setting for the Flickr API key here
 }
 
 
-$crawler->registerCallback('flickr_crawl', 'crawl');
+$crawler->registerCallback('flickrthumbnails_crawl', 'crawl');
 
-$webapp->addToConfigMenu('flickr', 'Twitter');
-$webapp->registerCallback('flickr_webapp_configuration', 'configuration|flickr');
+$webapp->addToConfigMenu('flickrthumbnails', 'Flickr Thumbnails');
+$webapp->registerCallback('flickrthumbnails_webapp_configuration', 'configuration|flickrthumbnails');
 ?>

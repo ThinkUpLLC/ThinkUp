@@ -8,7 +8,7 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once ("common/class.Logger.php");
 require_once ("common/class.Utils.php");
-require_once ("webapp/plugins/flickr/lib/class.FlickrAPIAccessor.php");
+require_once ("webapp/plugins/flickrthumbnails/lib/class.FlickrAPIAccessor.php");
 require_once ("config.inc.php");
 
 
@@ -32,7 +32,11 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
         $this->assertTrue(isset($fa));
         
         $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/7QAWC7');
-        $this->assertEqual($eurl, 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
+        $this->assertEqual($eurl["expanded_url"], 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
+        
+        $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AE');
+        $this->assertEqual($eurl["expanded_url"], '');
+        $this->assertEqual($eurl["error"], 'Photo not found');
         
         $logger->close();
         

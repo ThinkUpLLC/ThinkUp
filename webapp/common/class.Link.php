@@ -7,7 +7,7 @@ class Link {
     var $clicks;
     var $post_id;
     var $is_image;
-    
+    var $error;
     var $img_src; //optional
     
     var $container_tweet; //optional
@@ -39,7 +39,9 @@ class Link {
         } else {
             $this->is_image = false;
         }
-        
+        if (isset($val["error"])) {
+            $this->error = $val["error"];
+        }
     }
     
 }
@@ -79,6 +81,24 @@ class LinkDAO extends MySQLDAO {
             return true;
         } else {
             $this->logger->logStatus("Expanded URL NOT saved", get_class($this));
+            return false;
+        }
+    }
+    
+    function saveExpansionError($link_id, $error_text) {
+        $error_text = mysql_real_escape_string($error_text);
+        
+        $q = "
+			UPDATE #prefix#links 
+			SET error = '{$error_text}'
+			WHERE id = $link_id";
+			
+        $this->executeSQL($q);
+        if (mysql_affected_rows() > 0) {
+            $this->logger->logStatus("Error '$error_text' saved for link ID $link_id saved", get_class($this));
+            return true;
+        } else {
+            $this->logger->logStatus("Error '$error_text' for URL NOT saved", get_class($this));
             return false;
         }
     }
@@ -146,7 +166,7 @@ class LinkDAO extends MySQLDAO {
         $q = "
 			SELECT l.*
 			FROM #prefix#links l
-			WHERE l.expanded_url = ''
+			WHERE l.expanded_url = '' and l.error = ''
 			ORDER BY l.post_id DESC";
 			
         $sql_result = $this->executeSQL($q);
@@ -162,7 +182,7 @@ class LinkDAO extends MySQLDAO {
         $q = "
 			SELECT l.*
 			FROM #prefix#links l
-			WHERE l.expanded_url = '' and l.url LIKE '$url%'
+			WHERE l.expanded_url = '' AND l.url LIKE '$url%' AND l.error = '' 
 			ORDER BY l.post_id DESC";
 			
         $sql_result = $this->executeSQL($q);

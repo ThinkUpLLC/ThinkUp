@@ -47,7 +47,7 @@ try {
     $db = new Database($THINKTANK_CFG);
     $conn = $db->getConnection();
 } catch(Exception $e) {
-    echo $e->message;
+    echo $e->getMessage();
 }
 
 /* Start plugin-specific configuration handling */
