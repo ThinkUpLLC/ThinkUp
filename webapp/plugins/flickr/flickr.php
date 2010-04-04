@@ -3,7 +3,7 @@
  Plugin Name: Flickr
  Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/longurl/
  Icon: flickr_icon.png
- Description: Expands shortened links to Flickr photos to the image thumbnail. (NOT YET IMPLEMENTED; DOES NOTHING RIGHT NOW.)
+ Description: On each crawler run, checks links table for shortened Flickr links and expands them to the full thumbnail.
  Version: 0.01
  Author: Gina Trapani
  */
