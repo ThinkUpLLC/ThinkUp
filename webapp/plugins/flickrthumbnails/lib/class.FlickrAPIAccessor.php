@@ -37,19 +37,19 @@ class FlickrAPIAccessor {
                         if ($s['label'] == 'Small')
                             $src = $s['source'];
                     }
-                    return $src;
+                    return array("expanded_url"=>$src, "error"=>'');
                 } else {
-                    $this->logger->logStatus("ERROR: Photo stat not ok", get_class($this));
-                    return '';
+                    $this->logger->logStatus("ERROR: '".$fphoto['message']."'", get_class($this));
+                    return array("expanded_url"=>'', "error"=>$fphoto['message']);
                 }
                 
             } else {
                 $this->logger->logStatus("ERROR: No response from Flickr API", get_class($this));
-                return '';
+                return array("expanded_url"=>'', "error"=>'No response from Flickr API');
             }
         } else {
             $this->logger->logStatus("ERROR: Flickr API key is not set", get_class($this));
-            return '';
+            return array("expanded_url"=>'', "error"=>'');
         }
     }
 
