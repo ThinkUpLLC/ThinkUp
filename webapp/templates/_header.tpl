@@ -1,22 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
- "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+
+<html lang="en">
 
 <head>
+  <meta charset="utf-8">
   <title>ThinkTank {$title}</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico"/>
+  <link rel="shortcut icon" type="image/x-icon" href="{$cfg->site_root_path}favicon.ico">
   {if $cfg->bitly_api_key}
-    <script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login={$cfg->bitly_login}&apiKey={$cfg->bitly_api_key}"></script>
+    <script type="text/javascript" src="http://bit.ly/javascript-api.js?version=latest&login={$cfg->bitly_login}&apiKey={$cfg->bitly_api_key}"></script>
   {/if}
   
   <!-- jquery -->
-  <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" />
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>  
+  <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
   <!-- custom css -->
-  <link type="text/css" href="{$cfg->site_root_path}cssjs/style.css" rel="stylesheet" />
+  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}cssjs/style.css">
 
   <script type="text/javascript">
     {literal}
