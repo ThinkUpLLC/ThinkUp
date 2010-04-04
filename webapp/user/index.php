@@ -6,9 +6,9 @@ if (!isset($_SESSION['user']))  {
 
 // set up
 chdir("..");
-require_once('config.webapp.inc.php');
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-require_once("init.php");
+
+
+require_once("common/init.php");
 
 $od = new OwnerDAO($db);
 $ud = new UserDAO($db);

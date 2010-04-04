@@ -26,7 +26,7 @@
     				    </div>
     				{/if}
     				<div class="clearfix bt append prepend">
-        				<div class="grid_4 small alpha"><img src="{$cfg->site_root_path}cssjs/images/social_icons/{$ip->folder_name}.png" class="float-l">{if $ip->is_active}<a href="?p={$ip->folder_name}">{/if}{$ip->name}{if $ip->is_active}</a>{/if}</div>
+        				<div class="grid_4 small alpha"><img src="{$cfg->site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l">{if $ip->is_active}<a href="?p={$ip->folder_name}">{/if}{$ip->name}{if $ip->is_active}</a>{/if}</div>
         				<div class="grid_4 small"><!--(Currently {if $ip->is_active}Active{else}Inactive{/if})<br />-->Version {$ip->version}<br />by {$ip->author}</div>
         				<div class="grid_10">{$ip->description}
         				<a href="{$ip->homepage}">[Plug-in home]</a>

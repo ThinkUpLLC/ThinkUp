@@ -3,13 +3,14 @@ require_once (dirname(__FILE__).'/simpletest/autorun.php');
 require_once (dirname(__FILE__).'/simpletest/web_tester.php');
 
 require_once (dirname(__FILE__).'/config.tests.inc.php');
+
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once ("classes/class.ThinkTankTestCase.php");
-require_once ("class.User.php");
-require_once ("class.Instance.php");
+require_once ("common/class.User.php");
+require_once ("common/class.Instance.php");
 require_once ("mock.TwitterOAuth.php");
-require_once ("class.User.php");
+require_once ("common/class.User.php");
 require_once ("plugins/twitter/lib/class.TwitterAPIAccessorOAuth.php");
 require_once ("plugins/twitter/lib/class.TwitterCrawler.php");
 

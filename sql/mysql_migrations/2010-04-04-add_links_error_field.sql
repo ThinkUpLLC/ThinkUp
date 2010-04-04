@@ -1,0 +1,1 @@
+ALTER TABLE  `tt_links` ADD  `error` VARCHAR( 255 ) NOT NULL DEFAULT  '';

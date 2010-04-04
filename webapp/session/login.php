@@ -3,9 +3,9 @@ session_start();
 
 // set up
 chdir("..");
-require_once ('config.webapp.inc.php');
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-require_once ("init.php");
+
+
+require_once ("common/init.php");
 
 $session = new Session();
 if ($session->isLoggedIn()) {
@@ -17,7 +17,7 @@ $user_email = mysql_real_escape_string($_POST['email']);
 $s = new SmartyThinkTank();
 $s->caching=false;
 
-if ($_POST['Submit'] == 'Login') {
+if ($_POST['Submit'] == 'Log In') {
     $result = $od->getForLogin($user_email);
     if (!$result) {
         header("Location: login.php?emsg=Invalid+email+or+password");

@@ -1,6 +1,6 @@
 h1. ThinkTank
 
-ThinkTank is an installable web application that helps you answer your questions by giving you insight into conversations on social networks. ThinkTank does this by capturing and organizing replies to status updates on social networks like Twitter and (soon) Facebook. See screenshots and more at "http://thinktankapp.com":http://thinktankapp.com. 
+ThinkTank is a free installable web application that lets you capture the insights and expertise of your social network by collecting and organizing replies to your conversations on Twitter, Facebook and (soon!) other networks. See screenshots and more at "http://thinktankapp.com":http://thinktankapp.com.
 
 ThinkTank is sponsored by "Expert Labs":http://expertlabs.org, led by "Gina Trapani":http://ginatrapani.org, and used to be named Twitalytic.
 
@@ -31,7 +31,7 @@ Put the <code>thinktank</code> directory here:
 * Make the following directories writable by the web server:
   <code>thinktank/webapp/templates_c/</code> 
   <code>thinktank/webapp/templates_c/cache/</code>
-  <code>thinktank/crawler/logs/</code>
+  <code>thinktank/logs/</code>
 * *Note for upgraders:* If you're upgrading a previous installation, delete your cookies (in Firefox under Preferences / Privacy / delete individual cookies).
 
 h3. Set up database
@@ -47,22 +47,22 @@ Write down the items labeled "Consumer key" and "Consumer secret."
 
 h3. Configure the app
 
-* *Shared libraries*: Rename <code>thinktank/common/config.sample.inc.php</code> to <code>config.inc.php</code>. Add your database credentials, file and webapp paths, and the key/secret you got from Twitter in the previous step.
-* *Crawler*: Rename <code>thinktank/crawler/config.crawler.sample.inc.php</code> to <code>config.crawler.inc.php</code> and set include path to the absolute location of <code>thintank/common</code>
-* *Webapp*: Rename <code>thinktank/webapp/config.webapp.sample.inc.php</code> to <code>config.webapp.inc.php</code> and set include path to the absolute location of <code>thinktank/common</code>
+* Rename <code>thinktank/webapp/config.sample.inc.php</code> to <code>config.inc.php</code> and set the appropriate application, database, and plugin values for your environment and plugins.
 
 
 h2. RUN
 
 Visit the web application on your server, register and log in, and set up your Twitter accounts.
 
-Then, run the crawler to load your Twitter data:
+Then, run the crawler to load your Twitter data, <code>cd</code> to <code>/your-path-to-thinktank/webapp/crawler/</code>, and run:
 
-<code>$ php crawler/crawl.php</code>
+<code>$ php crawl.php you@example.com yourttpassword</code>
+
+Where <code>you@example.com</code> is your ThinkTank login email address, and <code>yourttpassword</code> is your ThinkTank password.
 
 To view what's going on with the crawler, use this command:
 
-<code>$ tail -f crawler/logs/crawler.log</code>
+<code>$ tail -f /your-path-to-thinkank/logs/crawler.log</code>
 
 Cron the crawler's run command to go at least once an hour. Hint: you may configure and cron this pre-fab bash script, which will run the crawler and rotate its logs:
 
@@ -78,8 +78,16 @@ To discuss ThinkTank, "post to the project mailing list":http://groups.google.co
 
 h2. LICENSE
 
-ThinkTank's source code is licensed under the "GNU General Public License":http://github.com/ginatrapani/thinktank/blob/master/GPL-LICENSE.txt, except for "Twitter OAuth by Abraham Williams":http://github.com/abraham/twitteroauth, which is released under the MIT license.
+ThinkTank's source code is licensed under the "GNU General Public License":http://github.com/ginatrapani/thinktank/blob/master/GPL-LICENSE.txt, except for the external libraries listed below.
+
+
+h2. EXTERNAL LIBRARIES
+
+* "Facebook Platform PHP5 client":http://wiki.developers.facebook.com/index.php/PHP (Included) 
+* "SimpleTest":http://www.simpletest.org/ (Included)
+* "Smarty":http://smarty.net (Not included)
+* "Twitter OAuth by Abraham Williams":http://github.com/abraham/twitteroauth (Included)
 
 h2. CREDITS
 
-Social icons provided by "Function":http://wefunction.com/2009/05/free-social-icons-app-icons/
+Social icons provided by "Function":http://wefunction.com/2009/05/free-social-icons-app-icons/.

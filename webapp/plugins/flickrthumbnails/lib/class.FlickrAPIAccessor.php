@@ -4,23 +4,29 @@ class FlickrAPIAccessor {
     var $format = "php_serial";
     var $method = "flickr.photos.getSizes";
     var $api_key;
+    var $logger;
     
-    function FlickrAPIAccessor($flickr_api_key) {
+    function FlickrAPIAccessor($flickr_api_key, $logger) {
         $this->api_key = $flickr_api_key;
+        $this->logger = $logger;
     }
     
     function getFlickrPhotoSource($u) {
         if ($this->api_key != '') {
+            $this->logger->logStatus("Flickr API key set", get_class($this));
             $photo_short_id = substr($u, strlen('http://flic.kr/p/'));
             $photo_id = $this->base_decode($photo_short_id);
             $params = array('method'=>$this->method, 'photo_id'=>$photo_id, 'api_key'=>$this->api_key, 'format'=>$this->format, );
             
             $encoded_params = array();
             
-            foreach ($params as $k=>$v)
+            foreach ($params as $k=>$v) {
                 $encoded_params[] = urlencode($k).'='.urlencode($v);
-                
+            }
+            
             $api_call = $this->api_url.implode('&', $encoded_params);
+            
+            $this->logger->logStatus("Flickr API call: $api_call", get_class($this));
             
             $resp = Utils::curl_get_file_contents($api_call);
             if ($resp != false) {
@@ -31,14 +37,20 @@ class FlickrAPIAccessor {
                         if ($s['label'] == 'Small')
                             $src = $s['source'];
                     }
-                    return $src;
-                } else
-                    return '';
+                    return array("expanded_url"=>$src, "error"=>'');
+                } else {
+                    $this->logger->logStatus("ERROR: '".$fphoto['message']."'", get_class($this));
+                    return array("expanded_url"=>'', "error"=>$fphoto['message']);
+                }
+                
             } else {
-                return '';
+                $this->logger->logStatus("ERROR: No response from Flickr API", get_class($this));
+                return array("expanded_url"=>'', "error"=>'No response from Flickr API');
             }
-        } else
-            return '';
+        } else {
+            $this->logger->logStatus("ERROR: Flickr API key is not set", get_class($this));
+            return array("expanded_url"=>'', "error"=>'');
+        }
     }
 
     

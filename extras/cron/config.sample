@@ -1,11 +1,13 @@
 #!/bin/bash
 
 thinktank="/your-path-to/thinktank"
+thinktank_username="you@example.com"
+thinktank_password="yourttpassword"
 
 #Some Simple Paths
-logdir="$thinktank/crawler/logs"
-logarchive="$thinktank/crawler/logs/archive"
-crawler="$thinktank/crawler/crawl.php"
+logdir="$thinktank/logs"
+logarchive="$thinktank/logs/archive"
+crawler="$thinktank/webapp/crawler/crawl.php"
 
 #PHP exe path
 php="/usr/local/php5/bin/php"
