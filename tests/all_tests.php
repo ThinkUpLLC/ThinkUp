@@ -21,6 +21,7 @@ require_once('twittercrawler_test.php');
 require_once('twitteroauth_test.php');
 require_once('userdao_test.php');
 require_once('facebookcrawler_test.php');
+require_once('flickrapi_test.php');
 
 $test = &new GroupTest('All tests');
 
@@ -39,6 +40,7 @@ $test->addTestCase(new TestOfPluginDAO());
 $test->addTestCase(new TestOfPostDAO());
 $test->addTestCase(new TestOfTwitterCrawler());
 $test->addTestCase(new TestOfFacebookCrawler());
+$test->addTestCase(new TestOfFlickrAPIAccessor());
 
 //$test->run(new HtmlReporter());
 $test->run(new TextReporter());

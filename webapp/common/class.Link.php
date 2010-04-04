@@ -64,20 +64,23 @@ class LinkDAO extends MySQLDAO {
             return false;
     }
     
-    function saveExpandedURL($link_id, $expanded_url, $title = '') {
+    function saveExpandedURL($link_id, $expanded_url, $title = '', $is_image = 0) {
         $expanded_url = mysql_real_escape_string($expanded_url);
         $title = mysql_real_escape_string($title);
         
         $q = "
 			UPDATE #prefix#links 
-			SET expanded_url = '{$expanded_url}', title = '{$title}'
+			SET expanded_url = '{$expanded_url}', title = '{$title}', is_image = $is_image
 			WHERE id = $link_id";
 			
         $this->executeSQL($q);
-        if (mysql_affected_rows() > 0)
+        if (mysql_affected_rows() > 0) {
+            $this->logger->logStatus("Expanded URL $expanded_url for link ID $link_id saved", get_class($this));
             return true;
-        else
+        } else {
+            $this->logger->logStatus("Expanded URL NOT saved", get_class($this));
             return false;
+        }
     }
     
     function update($url, $expanded, $title, $post_id, $is_image = 0) {
@@ -144,6 +147,22 @@ class LinkDAO extends MySQLDAO {
 			SELECT l.*
 			FROM #prefix#links l
 			WHERE l.expanded_url = ''
+			ORDER BY l.post_id DESC";
+			
+        $sql_result = $this->executeSQL($q);
+        $links = array();
+        while ($row = mysql_fetch_assoc($sql_result)) {
+            $links[] = new Link($row);
+        }
+        mysql_free_result($sql_result);
+        return $links;
+    }
+    
+    function getLinksToExpandByURL($url) {
+        $q = "
+			SELECT l.*
+			FROM #prefix#links l
+			WHERE l.expanded_url = '' and l.url LIKE '$url%'
 			ORDER BY l.post_id DESC";
 			
         $sql_result = $this->executeSQL($q);
