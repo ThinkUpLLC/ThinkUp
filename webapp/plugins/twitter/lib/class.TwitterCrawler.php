@@ -240,6 +240,7 @@ class TwitterCrawler {
             $is_image = 0;
             $title = '';
             $eurl = '';
+			//TODO Abstract out this image thumbnail link expansion into an Image Thumbnail plugin, modeled after the Flickr Thumbnails plugin
             if (substr($u, 0, strlen('http://twitpic.com/')) == 'http://twitpic.com/') {
                 $eurl = 'http://twitpic.com/show/thumb/'.substr($u, strlen('http://twitpic.com/'));
                 $is_image = 1;
@@ -250,22 +251,6 @@ class TwitterCrawler {
                 $eurl = 'http://twitgoo.com/show/thumb/'.substr($u, strlen('http://twitgoo.com/'));
                 $is_image = 1;
             }
-			/*
-			TODO Move Flickr and LongURL handling to separate plugin
-			 elseif ($fa->api_key != null && substr($u, 0, strlen('http://flic.kr/p/')) == 'http://flic.kr/p/') {
-                $eurl = $fa->getFlickrPhotoSource($u);
-                if ($eurl != '') {
-                    $is_image = 1;
-                }
-            } else {
-                $eurl_arr = $lurl->expandUrl($u);
-                if (isset($eurl_arr['response-code']) && $eurl_arr['response-code'] == 200) {
-                    $eurl = $eurl_arr['long-url'];
-                    if (isset($eurl_arr['title']))
-                        $title = $eurl_arr['title'];
-                }
-            }*/
-            
             if ($ld->insert($u, $eurl, $title, $tweet['post_id'], $is_image))
                 $this->logger->logStatus("Inserted ".$u." (".$eurl.") into links table", get_class($this));
             else
