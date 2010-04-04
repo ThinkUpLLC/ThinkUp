@@ -1,22 +1,22 @@
 {include file="_header.tpl"}
 
 {literal}
-<script>
+<script type="text/javascript">
 $(document).ready(function() {
+  $(".toggle_container").hide();
+  $("h4.trigger").toggle(
+    function () {
+      $(this).addClass("active");
+    },
+    function () {
+      $(this).removeClass("active");
+    }
+  );
 
-	$(".toggle_container").hide(); 
-
-    $("h4.trigger").toggle(function(){
-		$(this).addClass("active");
-		}, function () {
-		$(this).removeClass("active");
-	});
-
-    //Slide up and down on click
-	$("h4.trigger").click(function(){
-		$(this).next(".toggle_container").slideToggle("slow");
-	});
-	
+  // Slide up and down on click
+  $("h4.trigger").click(function(){
+    $(this).next(".toggle_container").slideToggle("slow");
+  });
 });
 </script>
 {/literal}
