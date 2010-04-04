@@ -14,9 +14,11 @@ $(document).ready(function() {
   );
 
   // Slide up and down on click
-  $("h4.trigger").click(function(){
-    $(this).next(".toggle_container").slideToggle("slow");
-  });
+  $("h4.trigger").click(
+    function () {
+      $(this).next(".toggle_container").slideToggle("slow");
+    }
+  );
 });
 </script>
 {/literal}
