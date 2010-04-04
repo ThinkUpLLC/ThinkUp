@@ -3,12 +3,11 @@ require_once (dirname(__FILE__).'/simpletest/autorun.php');
 require_once (dirname(__FILE__).'/simpletest/web_tester.php');
 require_once (dirname(__FILE__).'/config.tests.inc.php');
 
-
-
-require_once ("classes/class.ThinkTankTestCase.php");
-require_once ("common/class.User.php");
-require_once ("common/class.Follow.php");
-require_once ("common/class.Session.php");
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
+require_once ("tests/classes/class.ThinkTankTestCase.php");
+require_once ("webapp/common/class.User.php");
+require_once ("webapp/common/class.Follow.php");
+require_once ("webapp/common/class.Session.php");
 
 
 class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
@@ -117,14 +116,20 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         parent::tearDown();
     }
     
-    function testPublicTimeline() {
+    function testPublicTimelineAndPages() {
         global $TEST_SERVER_DOMAIN;
         
         $this->get($TEST_SERVER_DOMAIN.'/public.php');
         $this->assertTitle('ThinkTank Public Timeline');
         $this->assertText('Log In');
         $this->click('Log In');
-        $this->assertTitle('ThinkTank Sign In');
+        $this->assertTitle('ThinkTank Log In');
+        $this->assertText('Register');
+        $this->click('Register');
+        $this->assertTitle('ThinkTank Registration');
+        $this->assertText('Forgot password');
+        $this->click('Forgot password');
+        $this->assertTitle('ThinkTank Forgot password');
     }
 
     
@@ -135,7 +140,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
         
-        $this->click("Login");
+        $this->click("Log In");
         $this->assertTitle('ThinkTank');
         $this->assertText('Logged in as: me@example.com');
         
@@ -148,7 +153,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
         
-        $this->click("Login");
+        $this->click("Log In");
         $this->assertTitle('ThinkTank');
         
         $this->get($TEST_SERVER_DOMAIN.'/user/index.php?i=thinktankapp&u=ev');

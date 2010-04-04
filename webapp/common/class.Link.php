@@ -13,33 +13,40 @@ class Link {
     var $container_tweet; //optional
     
     function Link($val) {
+        if (isset($val["id"])) {
+            $this->id = $val["id"];
+        }
+        
         $this->url = $val["url"];
-        if (isset($val["expanded_url"]))
+        if (isset($val["expanded_url"])) {
             $this->expanded_url = $val["expanded_url"];
-            
-        if (isset($val["title"]))
+        }
+        
+        if (isset($val["title"])) {
             $this->title = $val["title"];
-            
-        if (isset($val["clicks"]))
+        }
+        
+        if (isset($val["clicks"])) {
             $this->clicks = $val["clicks"];
-            
-        if (isset($val["post_id"]))
+        }
+        
+        if (isset($val["post_id"])) {
             $this->post_id = $val["post_id"];
-            
-        if (isset($val["is_image"]) && $val["is_image"] == 1)
+        }
+        
+        if (isset($val["is_image"]) && $val["is_image"] == 1) {
             $this->is_image = true;
-        else
+        } else {
             $this->is_image = false;
-
-            
-        //TODO: Get more image services to work, like Phodroid, img.ly, etc.
+        }
+        
     }
     
 }
 
 class LinkDAO extends MySQLDAO {
     //Construct is located in parent
-
+    
     function insert($url, $expanded, $title, $post_id, $is_image = 0) {
         $expanded = mysql_real_escape_string($expanded);
         $title = mysql_real_escape_string($title);
@@ -56,7 +63,25 @@ class LinkDAO extends MySQLDAO {
         else
             return false;
     }
-
+    
+    function saveExpandedURL($link_id, $expanded_url, $title = '', $is_image = 0) {
+        $expanded_url = mysql_real_escape_string($expanded_url);
+        $title = mysql_real_escape_string($title);
+        
+        $q = "
+			UPDATE #prefix#links 
+			SET expanded_url = '{$expanded_url}', title = '{$title}', is_image = $is_image
+			WHERE id = $link_id";
+			
+        $this->executeSQL($q);
+        if (mysql_affected_rows() > 0) {
+            $this->logger->logStatus("Expanded URL $expanded_url for link ID $link_id saved", get_class($this));
+            return true;
+        } else {
+            $this->logger->logStatus("Expanded URL NOT saved", get_class($this));
+            return false;
+        }
+    }
     
     function update($url, $expanded, $title, $post_id, $is_image = 0) {
         $expanded = mysql_real_escape_string($expanded);
@@ -117,21 +142,49 @@ class LinkDAO extends MySQLDAO {
         return $links;
     }
     
-    function getLinksToUpdate() {
+    function getLinksToExpand() {
         $q = "
 			SELECT l.*
 			FROM #prefix#links l
-			WHERE /*l.expanded_url = '' and */(l.url like '%flic.kr%' OR l.url like '%twitpic%') and is_image = 0
-			ORDER BY l.post_id DESC
-			LIMIT 15";
+			WHERE l.expanded_url = ''
+			ORDER BY l.post_id DESC";
 			
         $sql_result = $this->executeSQL($q);
         $links = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $links[] = $row;
+            $links[] = new Link($row);
         }
         mysql_free_result($sql_result);
         return $links;
+    }
+    
+    function getLinksToExpandByURL($url) {
+        $q = "
+			SELECT l.*
+			FROM #prefix#links l
+			WHERE l.expanded_url = '' and l.url LIKE '$url%'
+			ORDER BY l.post_id DESC";
+			
+        $sql_result = $this->executeSQL($q);
+        $links = array();
+        while ($row = mysql_fetch_assoc($sql_result)) {
+            $links[] = new Link($row);
+        }
+        mysql_free_result($sql_result);
+        return $links;
+    }
+    
+    function getLinkById($id) {
+        $q = "
+			SELECT l.*
+			FROM #prefix#links l
+			WHERE l.id = $id";
+			
+        $sql_result = $this->executeSQL($q);
+        $row = mysql_fetch_assoc($sql_result);
+        $link = new Link($row);
+        mysql_free_result($sql_result);
+        return $link;
     }
     
 }

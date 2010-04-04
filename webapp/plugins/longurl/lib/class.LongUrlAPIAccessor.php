@@ -5,9 +5,11 @@ class LongUrlAPIAccessor {
     var $user_agent;
     var $response_code = 1;
     var $title = 1;
+    var $logger;
     
-    function LongUrlAPIAccessor($app_title) {
+    function LongUrlAPIAccessor($app_title, $logger) {
         $this->user_agent = $app_title;
+        $this->logger = $logger;
     }
     
     function expandUrl($u) {
@@ -15,23 +17,28 @@ class LongUrlAPIAccessor {
         
         $encoded_params = array();
         
-        foreach ($params as $k=>$v)
+        foreach ($params as $k=>$v) {
             $encoded_params[] = urlencode($k).'='.urlencode($v);
-            
+        }
+        
         $api_call = $this->api_url.implode('&', $encoded_params);
         
-        $resp = Utils::curl_get_file_contents($api_call);
+        $this->logger->logStatus("API call: $api_call", get_class($this));
+        
+        $ctx = stream_context_create(array('http'=>array('timeout'=>1)));
+        $resp = Utils::curl_get_file_contents($api_call, 0, $ctx);
         if ($resp == false)
             return null;
         else {
-        	//suppress unserialize notice with @ sign
-        	$result = @unserialize($resp); 
-            if ( $result == false )
-				return null;
-			else
-				return $result;
-		}
-            
+            //suppress unserialize notice with @ sign
+            $result = @unserialize($resp);
+            if ($result == false) {
+                return null;
+            } else {
+                return $result;
+            }
+        }
+        
     }
 }
 ?>
