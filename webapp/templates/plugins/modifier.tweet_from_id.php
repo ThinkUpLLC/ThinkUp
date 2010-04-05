@@ -20,14 +20,14 @@
  * @return object
  */
 function smarty_modifier_tweet_from_id($status_id) {
-	global $db, $cfg, $i; // Necessary evil.
-	$conn = $db->getConnection();
-	$td = new PostDAO( $db );
-	if( $status_id > 0 ){
-		$tweet = $td->getPost( $status_id );
-	} else {
-		$tweet = new Post( array( 'id' => 0, 'status_id' => 0 ) );
-	}
-	return $tweet;
+    global $db, $cfg, $i; // Necessary evil.
+    $conn = $db->getConnection();
+    $td = new PostDAO( $db );
+    if( $status_id > 0 ){
+        $tweet = $td->getPost( $status_id );
+    } else {
+        $tweet = new Post( array( 'id' => 0, 'status_id' => 0 ) );
+    }
+    return $tweet;
 }
 ?>
