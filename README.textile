@@ -16,7 +16,6 @@ In future versions, this will get easier.
 h3. System Requirements
 
 * "PHP 5":http://php.net with cURL and GD enabled
-* "Smarty":http://smarty.net
 * "MySQL 5":http://mysql.com/
 * A public web server. (Twitter authorization requires a public callback URL, so you'll need to expose a local dev server to the internet for initial authorization; after that the server doesn't have to be publicly available.)
 
@@ -39,22 +38,31 @@ h3. Set up database
 * Create a database and select it, i.e., <code>CREATE DATABASE thinktank</code>
 * Build tables with <code>thinktank/sql/build-db_mysql.sql</code>
 
-h3. Register your app with Twitter (for OAuth support)
+h3. Configure the application and its plugins
+
+* Rename <code>thinktank/webapp/config.sample.inc.php</code> to <code>config.inc.php</code> and set the appropriate application, database, and plugin values for your environment and plugins.
+
+h4. Twitter Plugin Support: Register your app with Twitter (for OAuth support)
 
 * Log into Twitter and "register your ThinkTank instance":http://twitter.com/oauth_clients/. Set the callback URL to 
 <code>http://yourserver.com/path-to-thinktank-webapp/account/oauth.php</code> 
-Write down the items labeled "Consumer key" and "Consumer secret."
+Write down the items labeled "Consumer key" and "Consumer secret" and add them to the <code>config.inc.php</code> file.
 
-h3. Configure the app
+h4. Facebook Plugin Support: Create a new Facebook application
 
-* Rename <code>thinktank/webapp/config.sample.inc.php</code> to <code>config.inc.php</code> and set the appropriate application, database, and plugin values for your environment and plugins.
+* "Create a new Facebook Application":http://facebook.com/developers/ and set the Connect URL to <code>http://yourserver.com/path-to-thinktank-webapp/account/</code> and the Post-Remove and Post-Authorize URLs to <code>http://yourserver.com/path-to-thinktank-webapp/account/?p=facebook</code>.
+* Write down your API Key and Application Secret, and enter those values into the <code>config.inc.php</code> file.
+
+h4. Flickr, Bit.ly, and ReCAPTCHA Plugins/Support (In-Progress)
+
+* Add the appropriate API keys for each service in your <code>config.inc.php</code> file.
 
 
 h2. RUN
 
-Visit the web application on your server, register and log in, and set up your Twitter accounts.
+Visit the web application on your server, register and log in. On the Plugins page, activate Twitter, Facebook, and any other plugins you want. Once they're activated, click on the plugin link and authorize your Twitter and/or Facebook accounts in ThinkTank.
 
-Then, run the crawler to load your Twitter data, <code>cd</code> to <code>/your-path-to-thinktank/webapp/crawler/</code>, and run:
+Then, to run the crawler to load your social network data, <code>cd</code> to <code>/your-path-to-thinktank/webapp/crawler/</code>, and run:
 
 <code>$ php crawl.php you@example.com yourttpassword</code>
 
@@ -85,7 +93,7 @@ h2. EXTERNAL LIBRARIES
 
 * "Facebook Platform PHP5 client":http://wiki.developers.facebook.com/index.php/PHP (Included) 
 * "SimpleTest":http://www.simpletest.org/ (Included)
-* "Smarty":http://smarty.net (Not included)
+* "Smarty":http://smarty.net (Included)
 * "Twitter OAuth by Abraham Williams":http://github.com/abraham/twitteroauth (Included)
 
 h2. CREDITS
