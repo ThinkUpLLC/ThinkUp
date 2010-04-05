@@ -11,12 +11,12 @@ $THINKTANK_CFG['log_location'] = '/your-path-to/thinktank/logs/crawler.log';
 $THINKTANK_CFG['sql_log_location'] = '/your-path-to/thinktank/logs/sql.log'; //Set to null to not log queries
 $THINKTANK_CFG['slow_query_log_threshold'] = 2.0; //how many seconds does a query take before it gets logged as a slow query
 
-$THINKTANK_CFG['smarty_path'] = '/usr/local/php5/lib/php/smarty/libs/';
-
 // Set the following to the public path of the webapp on your web server
 // For example, if it will belocated at http://example.com/tweets/, set this to '/tweets/'
 $THINKTANK_CFG['site_root_path'] = '/';
 $THINKTANK_CFG['source_root_path'] = '/your-path-to/thinktank/';
+$THINKTANK_CFG['smarty_path'] = $THINKTANK_CFG['source_root_path'].'extlib/Smarty-2.6.26/libs/';
+
 
 // Set whether or not your site's registration page is available
 // TODO Build email invitation system so this isn't a binary thing
