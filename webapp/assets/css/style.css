@@ -1,7 +1,3 @@
-@import url("grid.css");
-@import url("positioning.css");
-@import url("typography.css");
-
 html {background: #EEEEEA;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
 a, a:link, a:visited {text-decoration: none;color: #0060e0;outline: none;}
 a:hover {text-decoration : none;color : red;}

@@ -4,7 +4,8 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Mark Parent</title>
+  <title>ThinkTank {$title} | Mark Parent</title>
+  <link rel="shortcut icon" href="{$cfg->site_root_path}assets/img/favicon.ico">
 </head>
 
 <body>

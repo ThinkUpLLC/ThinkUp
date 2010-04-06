@@ -76,7 +76,7 @@ $THINKTANK_CFG['oauth_consumer_secret']     = 'your_consumer_secret';
 $THINKTANK_CFG['facebook_base_fb_url']      = 'connect.facebook.com';
 
 // To integrate with Facebook, get a Facebook API key and fill in the values below.
-// Otherwise, set both facebook_api_key and facebook_api_secret to ''.
+// Otherwise, set all three to ''.
 $THINKTANK_CFG['facebook_api_key']          = 'your_facebook_api_key';
 $THINKTANK_CFG['facebook_api_secret']       = 'your_facebook_api_secret';
 $THINKTANK_CFG['facebook_callback_url']     = 'http://yourdomain/path-to-webapp/account/';

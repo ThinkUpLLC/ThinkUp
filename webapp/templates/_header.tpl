@@ -5,9 +5,9 @@
 <head>
   <meta charset="utf-8">
   <title>ThinkTank {$title}</title>
-  <link rel="shortcut icon" type="image/x-icon" href="{$cfg->site_root_path}favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="{$cfg->site_root_path}assets/img/favicon.ico">
   {if $cfg->bitly_api_key}
-    <script type="text/javascript" src="http://bit.ly/javascript-api.js?version=latest&login={$cfg->bitly_login}&apiKey={$cfg->bitly_api_key}"></script>
+    <script type="text/javascript" src="http://bit.ly/javascript-api.js?version=latest&amp;login={$cfg->bitly_login}&amp;apiKey={$cfg->bitly_api_key}"></script>
   {/if}
   
   <!-- jquery -->
@@ -16,7 +16,9 @@
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
   <!-- custom css -->
-  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}cssjs/style.css">
+  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/base.css">
+  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/positioning.css">
+  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/style.css">
 
   <script type="text/javascript">
     {literal}

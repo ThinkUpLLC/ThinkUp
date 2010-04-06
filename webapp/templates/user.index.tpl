@@ -50,7 +50,7 @@
           </ul>
           
           <div class="section" id="updates">
-            <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart1">
+            <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart1">
             <div id="top" class="clearfix">
               <div class="thinktank-canvas container_24">
                 <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
@@ -122,7 +122,7 @@
           </div> <!-- end #updates-->
           
           <div class="section" id="conversations">
-            <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart2"> 
+            <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart2"> 
             <div id="top" class="clearfix append">
               <div class="thinktank-canvas container_24">
                 <div class="grid_22 push_1 append_20">
@@ -139,7 +139,7 @@
           </div> <!-- end #conversations -->
           
           <div class="section" id="followers">
-            <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart3">
+            <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart3">
             <div id="top" class="clearfix">
               <div class="thinktank-canvas container_24">
                 <div class="grid_22 push_1 append_20">
@@ -150,7 +150,7 @@
           </div> <!-- end #followers -->
           
           <div class="section" id="friends">
-            <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart4">
+            <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart4">
             <div id="top" class="clearfix">
               <div class="thinktank-canvas container_24">
                 <div class="grid_22 push_1 append_20">
@@ -161,7 +161,7 @@
           </div> <!-- end #friends -->
           
           <div class="section" id="mutual">
-            <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart5">
+            <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart5">
             <div id="top" class="clearfix">
               <div class="thinktank-canvas container_24">
                 <div class="grid_22 push_1 append_20">

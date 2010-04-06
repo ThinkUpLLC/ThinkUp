@@ -106,8 +106,8 @@
   {/foreach}  
 {/if}
 
-<script type="text/javascript" src="{$cfg->site_root_path}cssjs/linkify.js"></script>
-<script type="text/javascript" src="{$cfg->site_root_path}cssjs/bitly.js"></script>
+<script type="text/javascript" src="{$cfg->site_root_path}assets/js/linkify.js"></script>
+<script type="text/javascript" src="{$cfg->site_root_path}assets/js/bitly.js"></script>
 
 <script type="text/javascript">
   {literal}

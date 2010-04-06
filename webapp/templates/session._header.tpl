@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <title>ThinkTank {$title}</title>
-  <link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico">
+  <link rel="shortcut icon" href="{$cfg->site_root_path}assets/img/favicon.ico">
   <style type="text/css">{literal}
 html {
   background: #EEEEEA;

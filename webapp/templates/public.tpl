@@ -5,9 +5,11 @@
 <head>
   <meta charset="utf-8">
   <title>ThinkTank Public Timeline</title>
-  <link rel="shortcut icon" href="{$cfg->site_root_path}favicon.ico">
-  <link type="text/css" href="{$cfg->site_root_path}cssjs/jquery-ui-1.7.1.custom.css" rel="stylesheet">
-  <link type="text/css" href="{$cfg->site_root_path}cssjs/style.css" rel="stylesheet">
+  <link rel="shortcut icon" href="{$cfg->site_root_path}assets/img/favicon.ico">
+  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/base.css">
+  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/positioning.css">
+  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/style.css">
+  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/jquery-ui-1.7.1.custom.css">
 </head>
 
 <body>
@@ -28,7 +30,7 @@
     {/if}
               
               {if $replies or $retweets}<div class="grid_10 prefix_3 omega small gray prepend">{else}<div class="grid_10 prefix_10 omega small gray">{/if}
-                <img src="{$cfg->site_root_path}cssjs/images/social_icons/{$post->network}.png" class="float-l">
+                <img src="{$cfg->site_root_path}assets/img/social_icons/{$post->network}.png" class="float-l">
                 Posted at {$post->adj_pub_date} via {$post->source}
               </div>
             </div>
@@ -117,9 +119,6 @@
     </div>
   </div> <!-- end .thinktank-canvas -->
 
-  <script type="text/javascript" src="{$cfg->site_root_path}cssjs/linkify.js"></script>
+  <script type="text/javascript" src="{$cfg->site_root_path}assets/js/linkify.js"></script>
 
-  {include file="_footer.tpl" stats="no"}
-</body>
-
-</html>
+{include file="_footer.tpl" stats="no"}

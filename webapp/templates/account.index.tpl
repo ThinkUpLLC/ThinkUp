@@ -48,7 +48,7 @@
       <div class="thinktank-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
           {if isset($errormsg)}
-            <div class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
+            <div class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
               <p>
                 <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
                 {$errormsg}
@@ -62,11 +62,11 @@
           {/if}
           <form name="changepass" method="post" action="index.php?m=manage#instances" class="login prepend_20 append_20">
             <div class="clearfix">
-              <div class="grid_9 prefix_1 right"><label>Current password:</label></div>
+              <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>
               <div class="grid_9 left"><input name="oldpass" type="password" id="oldpass"></div>
             </div>
             <div class="clearfix">
-              <div class="grid_9 prefix_1 right"><label>New password:</label></div>
+              <div class="grid_9 prefix_1 right"><label for="pass1">New password:</label></div>
               <div class="grid_9 left">
                 <input name="pass1" type="password" id="pass1">
                 <br>
@@ -79,17 +79,17 @@
               </div>
               <div class="clearfix append_bottom">
                 <div class="grid_9 prefix_1 right">
-                  <label for="">Re-type new password:</label>
+                  <label for="pass2">Re-type new password:</label>
                 </div>
                 <div class="grid_9 left">
                   <input name="pass2" type="password" id="pass2">
                 </div>
               </div>
               <div class="prefix_10 grid_9 left">
-                <input type="submit" id="login-save" name="changepass" value="Change password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" />
+                <input type="submit" id="login-save" name="changepass" value="Change password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div> <!-- end #instances -->
@@ -130,8 +130,6 @@
     
   </div>
 </div>
-
-{include file="_footer.tpl" stats="no"}
 
 <script type="text/javascript">
   {literal}
@@ -250,3 +248,5 @@
   });
   {/literal}
 </script>
+
+{include file="_footer.tpl" stats="no"}

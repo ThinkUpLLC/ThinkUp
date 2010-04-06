@@ -47,7 +47,7 @@
         </div></a></li>
       </ul>
       <div class="section" id="updates">
-        <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart1">
+        <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart1">
         <div class="thinktank-canvas clearfix">
           <div class="container_24">
             <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
@@ -68,7 +68,7 @@
             </div> <!-- end .footnote -->
             <div class="clearfix append_20">
               <div class="grid_1 prefix_1">
-                <div id="loading_updates"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..."></div>
+                <div id="loading_updates"><img src="{$cfg->site_root_path}assets/img/ui_throbber.gif" alt="Loading..."></div>
               </div>
               <div class="grid_22 alpha append_20 clearfix">
                 <ul id="updates-menu" class="menu">
@@ -87,7 +87,7 @@
       </div> <!-- end #updates -->
       
       <div class="section" id="mentions">
-        <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart2">
+        <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart2">
         <div class="thinktank-canvas clearfix">
           <div class="container_24">
             <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
@@ -113,7 +113,7 @@
               </div>
             </div>
             <div class="grid_1 prefix_1">
-              <div id="loading_mentions"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..."></div>
+              <div id="loading_mentions"><img src="{$cfg->site_root_path}assets/img/ui_throbber.gif" alt="Loading..."></div>
             </div>
             <div class="grid_22 alpha append_20 clearfix">
               <ul id="mentions-menu" class="menu">
@@ -131,7 +131,7 @@
       </div> <!-- end #mentions -->
       
       <div class="section" id="followers">
-        <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart3">
+        <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart3">
         <div class="thinktank-canvas clearfix">
           <div class="container_24">
             <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
@@ -159,7 +159,7 @@
               </div>
             </div> <!-- end .grid_24 -->
             <div class="grid_1 prefix_1">
-              <div id="loading_followers"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..."></div>
+              <div id="loading_followers"><img src="{$cfg->site_root_path}assets/img/ui_throbber.gif" alt="Loading..."></div>
             </div>
             <div class="grid_22 alpha append_20 clearfix">
               <ul id="followers-menu" class="menu">
@@ -177,7 +177,7 @@
       </div> <!-- end #followers -->
       
       <div class="section" id="friends">
-        <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart4">
+        <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart4">
         <div class="thinktank-canvas clearfix">
           <div class="container_24">
             <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
@@ -209,7 +209,7 @@
               </div>
             </div>
             <div class="grid_1 prefix_1">
-              <div id="loading_friends"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..."></div>
+              <div id="loading_friends"><img src="{$cfg->site_root_path}assets/img/ui_throbber.gif" alt="Loading..."></div>
             </div>
             <div class="grid_22 alpha append_20 clearfix">
               <ul id="friends-menu" class="menu">
@@ -228,13 +228,13 @@
       </div> <!-- end #friends -->
       
       <div class="section" id="links">
-        <img src="{$cfg->site_root_path}cssjs/images/dart_wht.png" alt="" class="dart" id="dart5">
+        <img src="{$cfg->site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart5">
         <div class="thinktank-canvas clearfix">
           <div class="container_24">
             <!--<h4 class="trigger clearfix"><a href="#">Statistics</a></h4>-->
             <div class="grid_24 footnote toggle_container">&nbsp;</div>
             <div class="grid_1 prefix_1">
-              <div id="loading_links"><img src="{$cfg->site_root_path}cssjs/images/ui_throbber.gif" alt="Loading..."></div>
+              <div id="loading_links"><img src="{$cfg->site_root_path}assets/img/ui_throbber.gif" alt="Loading..."></div>
             </div>
             <div class="grid_22 alpha append_20 clearfix">
               <ul id="links-menu" class="menu">
