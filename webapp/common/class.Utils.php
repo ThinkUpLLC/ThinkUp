@@ -16,10 +16,15 @@ class Utils {
     }
     
     function getPercentage($num, $denom) {
-        if ($num > 0)
-            return ($denom * 100) / ($num);
-        else
+        if ((isset($num)) && (isset($denom))) {
+            if ($num > 0) {
+                return ($denom * 100) / ($num);
+            } else {
+                return 0;
+            }
+        } else {
             return 0;
+        }
     }
     
     public static function curl_get_file_contents($URL) {
@@ -60,7 +65,6 @@ class Utils {
         unset($dh, $dir, $file, $requiredFile);
         return $plugins;
     }
-
     
 }
 
