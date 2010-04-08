@@ -121,6 +121,8 @@ class UserDAO extends MySQLDAO {
         $has_last_post = $user->last_post != '' ? true : false;
         $has_last_post_id = $user->last_post_id != '' ? true : false;
 		$network = $user->network != '' ? $user->network : 'twitter';
+		$user->follower_count = $user->follower_count != '' ? $user->follower_count : 0;
+		$user->post_count = $user->post_count != '' ? $user->post_count : 0;
         
         $q = "
 			INSERT INTO

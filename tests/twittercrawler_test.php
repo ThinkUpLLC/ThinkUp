@@ -8,8 +8,11 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once ("classes/class.ThinkTankTestCase.php");
 require_once ("common/class.User.php");
+require_once ("common/class.Post.php");
+require_once ("common/class.Link.php");
 require_once ("common/class.Instance.php");
-require_once ("mock.TwitterOAuth.php");
+require_once ("classes/mock.TwitterOAuth.php");
+//require_once ("plugins/twitter/lib/twitterOAuth.php");
 require_once ("common/class.User.php");
 require_once ("plugins/twitter/lib/class.TwitterAPIAccessorOAuth.php");
 require_once ("plugins/twitter/lib/class.TwitterCrawler.php");
@@ -33,7 +36,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     }
     
     function tearDown() {
-        parent::tearDown();
+       parent::tearDown();
     }
     
     function testConstructor() {
@@ -41,6 +44,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         
         $this->assertTrue($tc != null);
     }
+
     
     function testFetchInstanceUserInfo() {
         $tc = new TwitterCrawler($this->instance, $this->logger, $this->api, $this->db);
@@ -54,6 +58,22 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->assertTrue($user->username == 'anildash');
         $this->assertTrue($user->found_in == 'Owner Status');
     }
+
+    function testFetchSearchResults() {
+    	$this->api->available = true;
+		$this->api->available_api_calls_for_crawler = 1;
+        $tc = new TwitterCrawler($this->instance, $this->logger, $this->api, $this->db);
+        
+		$tc->fetchInstanceUserInfo();
+        $tc->fetchSearchResults('@whitehouse');
+        $pdao = new PostDAO($this->db, $this->logger);
+		$this->assertTrue($pdao->isPostInDB(11841192840));
+		
+		$post = $pdao->getPost(11841192840);
+		$this->assertEqual($post->post_text, "RT @CindyPDX: @whitehouse PLS send to my President: http://familiesofautistickids.ning.com/video/through-my-eyes-thanh-bui  &lt;Does he remember our son?");
+
+    }
+
     
     //TODO: Test the rest of the TwitterCrawler methods
     

@@ -40,7 +40,7 @@ class TwitterAPIAccessorOAuth {
         $api_domain = 'https://twitter.com';
         $api_format = 'xml';
         $search_domain = 'http://search.twitter.com';
-        $search_format = 'atom';
+        $search_format = 'json';
         
         # Define method paths ... [id] is a placeholder
         $api_method = array("end_session"=>"/account/end_session", "rate_limit"=>"/account/rate_limit_status", "delivery_device"=>"/account/update_delivery_device", "location"=>"/account/update_location", "profile"=>"/account/update_profile", "profile_background"=>"/account/update_profile_background_image", "profile_colors"=>"/account/update_profile_colors", "profile_image"=>"/account/update_profile_image", "credentials"=>"/account/verify_credentials", "block"=>"/blocks/create/[id]", "remove_block"=>"/blocks/destroy/[id]", "messages_received"=>"/direct_messages", "delete_message"=>"/direct_messages/destroy/[id]", "post_message"=>"/direct_messages/new", "messages_sent"=>"/direct_messages/sent", "bookmarks"=>"/favorites/[id]", "create_bookmark"=>"/favorites/create/[id]", "remove_bookmark"=>"/favorites/destroy/[id]", "followers_ids"=>"/followers/ids", "following_ids"=>"/friends/ids", "follow"=>"/friendships/create/[id]", "unfollow"=>"/friendships/destroy/[id]", "confirm_follow"=>"/friendships/exists", "show_friendship"=>"/friendships/show", "test"=>"/help/test", "turn_on_notification"=>"/notifications/follow/[id]", "turn_off_notification"=>"/notifications/leave/[id]", "delete_tweet"=>"/statuses/destroy/[id]", "followers"=>"/statuses/followers", "following"=>"/statuses/friends", "friends_timeline"=>"/statuses/friends_timeline", "public_timeline"=>"/statuses/public_timeline", "mentions"=>"/statuses/mentions", "show_tweet"=>"/statuses/show/[id]", "post_tweet"=>"/statuses/update", "user_timeline"=>"/statuses/user_timeline/[id]", "show_user"=>"/users/show/[id]", "retweeted_by_me"=>"/statuses/retweeted_by_me");
@@ -93,6 +93,16 @@ class TwitterAPIAccessorOAuth {
         return array($thisFeed, $feed_title);
     }
     
+	function parseJSON($data) {
+        $pj = json_decode($data);
+		//print_r($pj);
+        $thisFeed = array();
+		foreach ($pj->results as $p) {
+   	    	$thisFeed[] = array('post_id'=>$p->id, 'user_id'=>$p->from_user_id, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($p->created_at)), 'post_text'=>$p->text, 'user_name'=>$p->from_user, 'in_reply_to_user_id'=>$p->to_user_id, 'avatar'=>$p->profile_image_url, 'in_reply_to_post_id'=>'', 'full_name'=>'', 'source'=>'twitter', 'location'=>'', 'url'=>'', 'description'=>'', 'is_protected'=>0, 'follower_count'=>0, 'post_count'=>0, 'joined'=>'');
+		}
+		return $thisFeed;
+	}
+	
     function parseError($data) {
         $thisFeed = array();
         try {
@@ -123,7 +133,8 @@ class TwitterAPIAccessorOAuth {
                 $root = $xml->getName();
                 switch ($root) {
                     case 'user':
-                        $thisFeed[] = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name, 'full_name'=>$xml->name, 'avatar'=>$xml->profile_image_url, 'location'=>$xml->location, 'description'=>$xml->description, 'url'=>$xml->url, 'is_protected'=>$xml->protected , 'follower_count'=>$xml->followers_count, 'friend_count'=>$xml->friends_count, 'post_count'=>$xml->statuses_count, 'favorites_count'=>$xml->favourites_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), );
+                        $thisFeed[] = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name, 'full_name'=>$xml->name, 'avatar'=>$xml->profile_image_url, 'location'=>$xml->location, 'description'=>$xml->description, 'url'=>$xml->url, 
+						'is_protected'=>$xml->protected , 'follower_count'=>$xml->followers_count, 'friend_count'=>$xml->friends_count, 'post_count'=>$xml->statuses_count, 'favorites_count'=>$xml->favourites_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), );
                         break;
                     case 'ids':
                         foreach ($xml->children() as $item) {
@@ -198,6 +209,8 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     var $available_api_calls_for_twitter = null;
     var $api_hourly_limit = null;
     var $archive_limit;
+    var $noauth_http_status;
+    var $noauth_last_api_call;
     
     function CrawlerTwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret, $instance, $archive_limit) {
         parent::TwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret);
@@ -253,44 +266,88 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
         
     }
     
-    function apiRequest($url, $logger, $args = array()) {
-        $content = $this->to->OAuthRequest($url, $args, 'GET');
-        $status = $this->to->lastStatusCode();
-        
-        $this->available_api_calls_for_twitter = $this->available_api_calls_for_twitter - 1;
-        $this->available_api_calls_for_crawler = $this->available_api_calls_for_crawler - 1;
-        $status_message = "";
-        if ($status > 200) {
-            $status_message = "Could not retrieve $url";
-            if (sizeof($args) > 0)
-                $status_message .= "?";
-            foreach ($args as $key=>$value)
-                $status_message .= $key."=".$value."&";
-            $status_message .= " | API ERROR: $status";
-            $status_message .= "\n\n$content\n\n";
-            if ($status != 404 && $status != 403)
-                $this->available = false;
+    function apiRequest($url, $logger, $args = array(), $auth = true) {
+        if ($auth) {
+            $content = $this->to->OAuthRequest($url, $args, 'GET');
+            $status = $this->to->lastStatusCode();
+            
+            $this->available_api_calls_for_twitter = $this->available_api_calls_for_twitter - 1;
+            $this->available_api_calls_for_crawler = $this->available_api_calls_for_crawler - 1;
+            $status_message = "";
+            if ($status > 200) {
+                $status_message = "Could not retrieve $url";
+                if (sizeof($args) > 0)
+                    $status_message .= "?";
+                foreach ($args as $key=>$value)
+                    $status_message .= $key."=".$value."&";
+                $status_message .= " | API ERROR: $status";
+                $status_message .= "\n\n$content\n\n";
+                if ($status != 404 && $status != 403)
+                    $this->available = false;
+                $logger->logStatus($status_message, get_class($this));
+                $status_message = "";
+            } else {
+                $status_message = "API request: ".$url;
+                if (sizeof($args) > 0)
+                    $status_message .= "?";
+                foreach ($args as $key=>$value)
+                    $status_message .= $key."=".$value."&";
+            }
+            
             $logger->logStatus($status_message, get_class($this));
             $status_message = "";
+            
+            if ($url != "https://twitter.com/account/rate_limit_status.xml") {
+                $status_message = $this->getStatus();
+                $logger->logStatus($status_message, get_class($this));
+                $status_message = "";
+            }
         } else {
-            $status_message = "API request: ".$url;
-            if (sizeof($args) > 0)
-                $status_message .= "?";
-            foreach ($args as $key=>$value)
-                $status_message .= $key."=".$value."&";
-        }
-        
-        $logger->logStatus($status_message, get_class($this));
-        $status_message = "";
-        
-        if ($url != "https://twitter.com/account/rate_limit_status.xml") {
-            $status_message = $this->getStatus();
-            $logger->logStatus($status_message, get_class($this));
-            $status_message = "";
+            $logger->logStatus("OAuth-free request: $url", get_class($this));
+            $content = $this->noAuthRequest($url);
+            $status = $this->lastStatusCode();
+            //$logger->logStatus("no OAuth content returned: $content", get_class($this));
         }
         
         return array($status, $content);
         
+    }
+    
+    //TODO Make this function take $args parameter and parse it correctly, like OAuth does
+    function noAuthRequest($url) {
+        return $this->http($url);
+    }
+
+    
+    function http($url, $post_data = null) {
+        $ch = curl_init();
+        if (defined("CURL_CA_BUNDLE_PATH"))
+            curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        //////////////////////////////////////////////////
+        ///// Set to 1 to verify Twitter's SSL Cert //////
+        //////////////////////////////////////////////////
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        if (isset($post_data)) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        }
+        $response = curl_exec($ch);
+        $this->noauth_http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $this->noauth_last_api_call = $url;
+        curl_close($ch);
+        return $response;
+    }
+    
+    function lastStatusCode() {
+        return $this->noauth_http_status;
+    }
+    
+    function lastAPICall() {
+        return $this->noauth_last_api_call;
     }
     
     function getStatus() {

@@ -12,8 +12,21 @@ class TwitterOAuth {/*{{{*/
     function oAuthRequest($url, $args = array(), $method = NULL) {/*{{{*/
         global $FAUX_DATA_PATH;
         $url = str_replace('https://twitter.com/', '', $url);
+        $url = str_replace('http://search.twitter.com/', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
+		//echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url;
+        return file_get_contents($FAUX_DATA_PATH.$url);
+    }
+
+    function noAuthRequest($url) {/*{{{*/
+        global $FAUX_DATA_PATH;
+        $url = str_replace('https://twitter.com/', '', $url);
+        $url = str_replace('http://search.twitter.com/', '', $url);
+        $url = str_replace('/', '_', $url);
+        $url = str_replace('&', '-', $url);
+		$url = str_replace('?', '-', $url);
+		//echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url;
         return file_get_contents($FAUX_DATA_PATH.$url);
     }
 	

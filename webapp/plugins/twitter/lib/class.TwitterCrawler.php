@@ -43,6 +43,41 @@ class TwitterCrawler {
         $this->logger->logStatus($status_message, get_class($this));
     }
     
+    function fetchSearchResults($term) {
+        $continue_fetching = true;
+		$page = 1;
+        while ($continue_fetching) {
+            $search_results = $this->api->cURL_source['search']."?q=".urlencode($term)."&result_type=recent&rpp=100&page=".$page;
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, $this->logger, null, false);
+            if ($cURL_status == 200) {
+                $tweets = $this->api->parseJSON($twitter_data);
+                $pd = new PostDAO($this->db, $this->logger);
+                $count = 0;
+                foreach ($tweets as $tweet) {
+                    $tweet['network'] = 'twitter';
+                    
+                    if ($pd->addPost($tweet) > 0) {
+                        $count = $count + 1;
+                        $this->processTweetURLs($tweet);
+                        
+                        if ($tweet['user_id'] != $this->owner_object->user_id) { //don't update owner info from reply
+                            $u = new User($tweet, 'mentions');
+                            $this->ud->updateUser($u);
+                        }
+                    }
+                }
+                $this->logger->logStatus(count($tweets)." tweet(s) found and $count saved", get_class($this));
+                if (count($tweets) > $count) {
+                    $continue_fetching = false; //Stop fetching when more tweets have been retrieved than were saved b/c they already existed
+                }
+				$page = $page+1;
+            } else {
+                $this->logger->logStatus("cURL status $cURL_status", get_class($this));
+				$continue_fetching = false;
+            }
+        }
+    }
+    
     function fetchInstanceUserTweets() {
         // Get owner's tweets
         $status_message = "";
@@ -240,7 +275,7 @@ class TwitterCrawler {
             $is_image = 0;
             $title = '';
             $eurl = '';
-			//TODO Abstract out this image thumbnail link expansion into an Image Thumbnail plugin, modeled after the Flickr Thumbnails plugin
+            //TODO Abstract out this image thumbnail link expansion into an Image Thumbnail plugin, modeled after the Flickr Thumbnails plugin
             if (substr($u, 0, strlen('http://twitpic.com/')) == 'http://twitpic.com/') {
                 $eurl = 'http://twitpic.com/show/thumb/'.substr($u, strlen('http://twitpic.com/'));
                 $is_image = 1;
@@ -304,7 +339,7 @@ class TwitterCrawler {
             
             while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
                 # Get the most recent mentions
-                $mentions = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['mentions']);
+                $mentions = $this->api->cURL_source['mentions'];
                 $args = array();
                 $args['count'] = 200;
                 
@@ -869,4 +904,5 @@ class TwitterCrawler {
         }
     }
 }
+
 ?>
