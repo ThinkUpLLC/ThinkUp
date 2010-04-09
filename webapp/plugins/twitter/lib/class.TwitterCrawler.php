@@ -67,7 +67,7 @@ class TwitterCrawler {
                     }
                 }
                 $this->logger->logStatus(count($tweets)." tweet(s) found and $count saved", get_class($this));
-                if (count($tweets) > $count) {
+                if ( $count == 0 ) { // all tweets on the page were already saved
                     $continue_fetching = false; //Stop fetching when more tweets have been retrieved than were saved b/c they already existed
                 }
 				$page = $page+1;

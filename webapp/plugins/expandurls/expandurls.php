@@ -17,6 +17,7 @@ function expandurls_crawl() {
     $ldao = new LinkDAO($db, $logger);
     $linkstoexpand = $ldao->getLinksToExpand();
     
+	$logger->logStatus(count($linkstoexpand)." links to expand", "Expand URLs Plugin");
     foreach ($linkstoexpand as $l) {
         $eurl = untinyurl($l->url, $logger, $l->id, $ldao);
         if ($eurl != '') {
