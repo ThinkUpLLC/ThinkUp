@@ -26,11 +26,11 @@ function flickrthumbnails_crawl() {
         }
         
         foreach ($flickrlinkstoexpand as $fl) {
-            $eurl = $fa->getFlickrPhotoSource($fl->url);
+            $eurl = $fa->getFlickrPhotoSource($fl);
             if ($eurl["expanded_url"] != '') {
-                $ldao->saveExpandedUrl($fl->id, $eurl["expanded_url"], '', 1);
+                $ldao->saveExpandedUrl($fl, $eurl["expanded_url"], '', 1);
             } elseif ($eurl["error"] != '') {
-                $ldao->saveExpansionError($fl->id, $eurl["error"]);
+                $ldao->saveExpansionError($fl, $eurl["error"]);
             }
         }
         $logger->close(); # Close logging

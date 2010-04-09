@@ -18,12 +18,14 @@ function expandurls_crawl() {
     $linkstoexpand = $ldao->getLinksToExpand();
     
 	$logger->logStatus(count($linkstoexpand)." links to expand", "Expand URLs Plugin");
+	
     foreach ($linkstoexpand as $l) {
-        $eurl = untinyurl($l->url, $logger, $l->id, $ldao);
+        $eurl = untinyurl($l, $logger, $ldao);
         if ($eurl != '') {
-            $ldao->saveExpandedUrl($l->id, $eurl);
+            $ldao->saveExpandedUrl($l, $eurl);
         }
     }
+	$logger->logStatus("URL expansion complete for this run", "Expand URLs Plugin");
     $logger->close(); # Close logging
 }
 
@@ -33,7 +35,7 @@ function expandurls_webapp_configuration() {
 
 //Thanks to Probably Programming
 //http://probablyprogramming.com/2009/04/11/untiny-that-url/
-function untinyurl($tinyurl, $logger, $id, $ldao) {
+function untinyurl($tinyurl, $logger, $ldao) {
     $url = parse_url($tinyurl);
     $host = $url['host'];
     $port = isset($url['port']) ? $url['port'] : 80;
@@ -47,7 +49,7 @@ function untinyurl($tinyurl, $logger, $id, $ldao) {
     
     if (!isset($url['path'])) {
         $logger->logstatus("$tinyurl has no path", "Expand URLs Plugin");
-        $ldao->saveExpansionError($id, "Error expanding URL");
+        $ldao->saveExpansionError($tinyurl, "Error expanding URL");
         return '';
     } else {
         $url = $url['path'].$query.$fragment;
@@ -71,7 +73,7 @@ function untinyurl($tinyurl, $logger, $id, $ldao) {
 
 $crawler->registerCallback('expandurls_crawl', 'crawl');
 
-$webapp->addToConfigMenu('expandurls', 'Twitter');
+$webapp->addToConfigMenu('expandurls', 'Expand URLs');
 
 $webapp->registerCallback('expandurls_webapp_configuration', 'configuration|expandurls');
 ?>
