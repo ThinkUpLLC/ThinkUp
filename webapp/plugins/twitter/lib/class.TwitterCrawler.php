@@ -285,9 +285,11 @@ class TwitterCrawler {
             } elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
                 $eurl = 'http://twitgoo.com/show/thumb/'.substr($u, strlen('http://twitgoo.com/'));
                 $is_image = 1;
+            } elseif (substr($u, 0, strlen('http://flic.kr/')) == 'http://flic.kr/') {
+                $is_image = 1;
             }
             if ($ld->insert($u, $eurl, $title, $tweet['post_id'], $is_image))
-                $this->logger->logStatus("Inserted ".$u." (".$eurl.") into links table", get_class($this));
+                $this->logger->logStatus("Inserted ".$u." (".$eurl.", ".$is_image."),  into links table", get_class($this));
             else
                 $this->logger->logStatus("Did NOT insert ".$u." (".$eurl.") into links table", get_class($this));
                 
