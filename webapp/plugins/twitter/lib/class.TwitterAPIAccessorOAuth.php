@@ -93,16 +93,16 @@ class TwitterAPIAccessorOAuth {
         return array($thisFeed, $feed_title);
     }
     
-	function parseJSON($data) {
+    function parseJSON($data) {
         $pj = json_decode($data);
-		//print_r($pj);
+        //print_r($pj);
         $thisFeed = array();
-		foreach ($pj->results as $p) {
-   	    	$thisFeed[] = array('post_id'=>$p->id, 'user_id'=>$p->from_user_id, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($p->created_at)), 'post_text'=>$p->text, 'user_name'=>$p->from_user, 'in_reply_to_user_id'=>$p->to_user_id, 'avatar'=>$p->profile_image_url, 'in_reply_to_post_id'=>'', 'full_name'=>'', 'source'=>'twitter', 'location'=>'', 'url'=>'', 'description'=>'', 'is_protected'=>0, 'follower_count'=>0, 'post_count'=>0, 'joined'=>'');
-		}
-		return $thisFeed;
-	}
-	
+        foreach ($pj->results as $p) {
+            $thisFeed[] = array('post_id'=>$p->id, 'user_id'=>$p->from_user_id, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($p->created_at)), 'post_text'=>$p->text, 'user_name'=>$p->from_user, 'in_reply_to_user_id'=>$p->to_user_id, 'avatar'=>$p->profile_image_url, 'in_reply_to_post_id'=>'', 'full_name'=>'', 'source'=>'twitter', 'location'=>'', 'url'=>'', 'description'=>'', 'is_protected'=>0, 'follower_count'=>0, 'post_count'=>0, 'joined'=>'');
+        }
+        return $thisFeed;
+    }
+    
     function parseError($data) {
         $thisFeed = array();
         try {
@@ -133,8 +133,7 @@ class TwitterAPIAccessorOAuth {
                 $root = $xml->getName();
                 switch ($root) {
                     case 'user':
-                        $thisFeed[] = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name, 'full_name'=>$xml->name, 'avatar'=>$xml->profile_image_url, 'location'=>$xml->location, 'description'=>$xml->description, 'url'=>$xml->url, 
-						'is_protected'=>$xml->protected , 'follower_count'=>$xml->followers_count, 'friend_count'=>$xml->friends_count, 'post_count'=>$xml->statuses_count, 'favorites_count'=>$xml->favourites_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), );
+                        $thisFeed[] = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name, 'full_name'=>$xml->name, 'avatar'=>$xml->profile_image_url, 'location'=>$xml->location, 'description'=>$xml->description, 'url'=>$xml->url, 'is_protected'=>$xml->protected , 'follower_count'=>$xml->followers_count, 'friend_count'=>$xml->friends_count, 'post_count'=>$xml->statuses_count, 'favorites_count'=>$xml->favourites_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), );
                         break;
                     case 'ids':
                         foreach ($xml->children() as $item) {
@@ -149,7 +148,7 @@ class TwitterAPIAccessorOAuth {
                         break;
                     case 'status':
                         $thisFeed[] = array('post_id'=>$xml->id, 'user_id'=>$xml->user->id, 'user_name'=>$xml->user->screen_name, 'full_name'=>$xml->user->name, 'avatar'=>$xml->user->profile_image_url, 'location'=>$xml->user->location, 'description'=>$xml->user->description, 'url'=>$xml->user->url, 'is_protected'=>$xml->user->protected , 'followers'=>$xml->user->followers_count, 'following'=>$xml->user->friends_count, 'tweets'=>$xml->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)), 'post_text'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 'in_reply_to_post_id'=>$xml->in_reply_to_status_id, 'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 'source'=>$xml->source);
-                        break;
+							break;
                     case 'users_list':
                         $this->next_cursor = $xml->next_cursor;
                         foreach ($xml->users->children() as $item) {
@@ -159,7 +158,7 @@ class TwitterAPIAccessorOAuth {
                     case 'users':
                         foreach ($xml->children() as $item) {
                             $thisFeed[] = array('post_id'=>$item->status->id, 'user_id'=>$item->id, 'user_name'=>$item->screen_name, 'full_name'=>$item->name, 'avatar'=>$item->profile_image_url, 'location'=>$item->location, 'description'=>$item->description, 'url'=>$item->url, 'is_protected'=>$item->protected , 'friend_count'=>$item->friends_count, 'follower_count'=>$item->followers_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 'post_text'=>$item->status->text, 'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'favorites_count'=>$item->favourites_count, 'post_count'=>$item->statuses_count);
-                        }
+						}
                         break;
                     case 'statuses':
                         foreach ($xml->children() as $item) {
@@ -220,49 +219,59 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     
     function init($logger) {
         $status_message = "";
-        $account_status = $this->cURL_source['rate_limit'];
-        list($cURL_status, $twitter_data) = $this->apiRequest($account_status, $logger);
-        $this->available_api_calls_for_crawler++; //status check doesnt' count against balance
         
-        if ($cURL_status > 200) {
-            $this->available = false;
+/*        if ($this->oauth_access_token = "NOAUTH") {
+            $this->available_api_calls_for_twitter = 150;
+            $this->api_hourly_limit = 150;
+            $this->next_api_reset = null;
+            $this->api_calls_to_leave_unmade = 0;
+            //echo "  ".$this->api_calls_to_leave_unmade . " API calls to leave unmade\n";
+            $this->available_api_calls_for_crawler = 150;
         } else {
-            try {
-                # Parse file
-                $status_message = "Parsing XML data from $account_status ";
-                $status = $this->parseXML($twitter_data);
-                
-                if (isset($status['remaining-hits']) && isset($status['hourly-limit']) && isset($status['reset-time'])) {
-                    $this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
-                    $this->api_hourly_limit = $status['hourly-limit'];//get this from API
-                    $this->next_api_reset = $status['reset-time'];//get this from API
-                } else
-                    throw new Exception('API status came back malformed');
+  */      
+            $account_status = $this->cURL_source['rate_limit'];
+            list($cURL_status, $twitter_data) = $this->apiRequest($account_status, $logger);
+            $this->available_api_calls_for_crawler++; //status check doesnt' count against balance
+            
+            if ($cURL_status > 200) {
+                $this->available = false;
+            } else {
+                try {
+                    # Parse file
+                    $status_message = "Parsing XML data from $account_status ";
+                    $status = $this->parseXML($twitter_data);
                     
-                //Figure out how many minutes are left in the hour, then multiply that x 1 for api calls to leave unmade
-                $next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
-                $current_time_in_minutes = (int) date("i", time());
-                $minutes_left_in_hour = 60;
-                if ($next_reset_in_minutes > $current_time_in_minutes)
-                    $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
-                elseif ($next_reset_in_minutes < $current_time_in_minutes)
-                    $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
+                    if (isset($status['remaining-hits']) && isset($status['hourly-limit']) && isset($status['reset-time'])) {
+                        $this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
+                        $this->api_hourly_limit = $status['hourly-limit'];//get this from API
+                        $this->next_api_reset = $status['reset-time'];//get this from API
+                    } else {
+                        throw new Exception('API status came back malformed');
+                    }
+                    //Figure out how many minutes are left in the hour, then multiply that x 1 for api calls to leave unmade
+                    $next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
+                    $current_time_in_minutes = (int) date("i", time());
+                    $minutes_left_in_hour = 60;
+                    if ($next_reset_in_minutes > $current_time_in_minutes)
+                        $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
+                    elseif ($next_reset_in_minutes < $current_time_in_minutes)
+                        $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
+
+                        
+                    //echo $minutes_left_in_hour . " minutes left in the hour till ".  date('H:i:s', (int) $this->next_api_reset);
+                    $this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
+                    //echo "  ".$this->api_calls_to_leave_unmade . " API calls to leave unmade\n";
+                    $this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - round($this->api_calls_to_leave_unmade);
 
                     
-                //echo $minutes_left_in_hour . " minutes left in the hour till ".  date('H:i:s', (int) $this->next_api_reset);
-                $this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
-                //echo "  ".$this->api_calls_to_leave_unmade . " API calls to leave unmade\n";
-                $this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - round($this->api_calls_to_leave_unmade);
-
-                
+                }
+                catch(Exception $e) {
+                    $status_message = 'Could not parse account status: '.$e->getMessage();
+                }
             }
-            catch(Exception $e) {
-                $status_message = 'Could not parse account status: '.$e->getMessage();
-            }
-        }
-        $logger->logStatus($status_message, get_class($this));
-        $logger->logStatus($this->getStatus(), get_class($this));
-
+            $logger->logStatus($status_message, get_class($this));
+            $logger->logStatus($this->getStatus(), get_class($this));
+      /*  } */
         
     }
     

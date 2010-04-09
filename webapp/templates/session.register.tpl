@@ -30,7 +30,7 @@
           <input name="full_name" type="text" id="full_name"{if  isset($name)} value="{$name}"{/if}>
           <small>
             <br>
-            Example: John Wilson
+            Example: Angelina Jolie
           </small>
         </div>
       </div>
@@ -44,7 +44,7 @@
           <input name="email" type="text" id="email"{if  isset($mail)} value="{$mail}"{/if}>
           <small>
             <br>
-            Example: john@domain.com
+            Example: angie@example.com
           </small>
         </div>
       </div>

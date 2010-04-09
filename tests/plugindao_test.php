@@ -44,14 +44,17 @@ VALUES (  'My Test Plugin Activated',  'testpluginact',  'Proof of concept plugi
 		
         $this->assertTrue(count($plugins) == 5);
 		
-        $this->assertTrue($plugins[0]->name == "Facebook");
-        $this->assertTrue($plugins[0]->folder_name == "facebook");
+        $this->assertTrue($plugins[0]->name == "Expand URLs");
+        $this->assertTrue($plugins[0]->folder_name == "expandurls");
 
-        $this->assertTrue($plugins[1]->name == "Flickr Thumbnails");
-        $this->assertTrue($plugins[1]->folder_name == "flickrthumbnails");
+        $this->assertTrue($plugins[1]->name == "Facebook");
+        $this->assertTrue($plugins[1]->folder_name == "facebook");
+
+        $this->assertTrue($plugins[2]->name == "Flickr Thumbnails");
+        $this->assertTrue($plugins[2]->folder_name == "flickrthumbnails");
         
-        $this->assertTrue($plugins[2]->name == "Hello ThinkTank");
-        $this->assertTrue($plugins[2]->folder_name == "hellothinktank");
+        $this->assertTrue($plugins[3]->name == "Hello ThinkTank");
+        $this->assertTrue($plugins[3]->folder_name == "hellothinktank");
 
     }
     
