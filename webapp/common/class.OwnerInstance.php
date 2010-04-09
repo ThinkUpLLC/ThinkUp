@@ -13,7 +13,7 @@ class OwnerInstance {
 
 class OwnerInstanceDAO extends MySQLDAO {
     //Construct is located in parent
-
+    
     function doesOwnerHaveAccess($owner, $username) {
         if ($owner->is_admin) {
             return true;
@@ -59,16 +59,36 @@ class OwnerInstanceDAO extends MySQLDAO {
     }
 
     
-    
-    function insert($owner_id, $instance_id, $oauth_token='', $oauth_token_secret='') {
+    function insert($owner_id, $instance_id, $oauth_token = '', $oauth_token_secret = '') {
         $q = "
 			INSERT INTO 
 				#prefix#owner_instances (`owner_id`, `instance_id`, `oauth_access_token`, `oauth_access_token_secret`)
 			 VALUES
 				(".$owner_id.", ".$instance_id.", '".$oauth_token."', '".$oauth_token_secret."')";
         $sql_result = $this->executeSQL($q);
+        if (mysql_affected_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
+    
+    function updateTokens($owner_id, $instance_id, $oauth_token, $oauth_token_secret) {
+        $oauth_token = mysql_real_escape_string($oauth_token);
+        $oauth_token_secret = mysql_real_escape_string($oauth_token_secret);
+        
+        $q = "UPDATE
+				#prefix#owner_instances 
+			SET oauth_access_token='{$oauth_token}', oauth_access_token_secret='{$oauth_token_secret}'
+			WHERE
+			owner_id = $owner_id AND instance_id = $instance_id;";
+        $this->executeSQL($q);
+        if (mysql_affected_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
     function getOAuthTokens($id) {
         $q = "
