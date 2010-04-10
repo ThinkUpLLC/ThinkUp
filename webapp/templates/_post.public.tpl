@@ -36,7 +36,7 @@
     </p>
     {if $t->link->expanded_url and !$t->link->is_image}
       <ul>
-        <li><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->title}</a></li>
+        <li><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a></li>
       </ul>
     {/if}
     {if $t->author->location}
