@@ -144,7 +144,114 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->assertTitle('ThinkTank');
         $this->assertText('Logged in as: me@example.com');
         
+		//TODO Test Export link here
+        /*
+         * $this->click("Export");
+		$this->assertTitle('');
+        $this->assertText('This is post');
+        */
     }
+    
+    function testChangePasswordSuccess() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+        
+        $this->click("Log In");
+        $this->assertTitle('ThinkTank');
+        $this->assertText('Logged in as: me@example.com');
+        
+        $this->click("Configuration");
+        $this->assertText('Your ThinkTank Password');
+        $this->setField('oldpass', 'secretpassword');
+        $this->setField('pass1', 'secretpassword1');
+        $this->setField('pass2', 'secretpassword1');
+        $this->click('Change password');
+        $this->assertText('Your password has been updated.');
+        
+    }
+    
+    function testChangePasswordWrongExistingPassword() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+        
+        $this->click("Log In");
+        $this->assertTitle('ThinkTank');
+        $this->assertText('Logged in as: me@example.com');
+        
+        $this->click("Configuration");
+        $this->assertText('Your ThinkTank Password');
+        $this->setField('oldpass', 'secretpassworddd');
+        $this->setField('pass1', 'secretpassword1');
+        $this->setField('pass2', 'secretpassword1');
+        $this->click('Change password');
+        $this->assertText('Old password does not match or empty.');
+    }
+    
+    function testChangePasswordEmptyExistingPassword() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+        
+        $this->click("Log In");
+        $this->assertTitle('ThinkTank');
+        $this->assertText('Logged in as: me@example.com');
+        
+        $this->click("Configuration");
+        $this->assertText('Your ThinkTank Password');
+        $this->setField('pass1', 'secretpassword1');
+        $this->setField('pass2', 'secretpassword1');
+        $this->click('Change password');
+        $this->assertText('Old password does not match or empty.');
+    }
+    
+    function testChangePasswordNewPasswordsDontMatch() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+        
+        $this->click("Log In");
+        $this->assertTitle('ThinkTank');
+        $this->assertText('Logged in as: me@example.com');
+        
+        $this->click("Configuration");
+        $this->assertText('Your ThinkTank Password');
+        $this->setField('oldpass', 'secretpassword');
+        $this->setField('pass1', 'secretpassword1');
+        $this->setField('pass2', 'secretpassword2');
+        $this->click('Change password');
+        $this->assertText('New passwords did not match. Your password has not been changed.');
+    }
+    
+    function testChangePasswordNewPasswordsNotLongEnough() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+        
+        $this->click("Log In");
+        $this->assertTitle('ThinkTank');
+        $this->assertText('Logged in as: me@example.com');
+        
+        $this->click("Configuration");
+        $this->assertText('Your ThinkTank Password');
+        $this->setField('oldpass', 'secretpassword');
+        $this->setField('pass1', 'dd');
+        $this->setField('pass2', 'dd');
+        $this->click('Change password');
+        $this->assertText('New password must be at least 5 characters. Your password has not been changed.');
+    }
+
     
     function testUserPage() {
         global $TEST_SERVER_DOMAIN;
@@ -270,6 +377,6 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         
     }
     
-    //TODO Write account page and status page tests
+    //TODO Write post page tests
 }
 ?>

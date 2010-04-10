@@ -13,7 +13,7 @@ if (!$session->isLoggedIn()) {
 
 $od = new OwnerDAO($db);
 
-if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change Password') {
+if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password') {
     $originalpass = $od->getPass($_SESSION['user']);
     $origpass = $originalpass['pwd'];
     if (!$session->pwdCheck($_POST['oldpass'], $origpass)) {
@@ -27,7 +27,7 @@ if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change Password') {
         $od->updatePassword($_SESSION['user'], $cryptpass);
         $successmsg = "Your password has been updated.";
     }
-}
+} 
 
 $s = new SmartyThinkTank();
 $s->caching = 0;
@@ -90,5 +90,5 @@ if (isset($successmsg)) {
     $s->assign('successmsg', $successmsg);
 }
 
-$s->display('index.account.tpl');
+$s->display('account.index.tpl');
 ?>
