@@ -31,19 +31,19 @@ class TestOfFollowDAO extends ThinkTankUnitTestCase {
         $q = "INSERT INTO tt_user_errors (user_id, error_code, error_text, error_issued_to_user_id) VALUES (15, 404, 'User not found', 13);";
         $this->db->exec($q);
         
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 12, '1/1/2006');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 12, '2006-01-08 23:54:41');";
         $this->db->exec($q);
         
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 14, '1/1/2006');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 14, '2006-01-08 23:54:41');";
         $this->db->exec($q);
         
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 15, '1/1/2006');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 15, '2006-01-08 23:54:41');";
         $this->db->exec($q);
         
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 16, '1/1/2006');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 16, '2006-01-08 23:54:41');";
         $this->db->exec($q);
         
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 12, '1/1/2006');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 12, '2006-01-08 23:54:41');";
         $this->db->exec($q);
         
     }
@@ -140,6 +140,18 @@ class TestOfFollowDAO extends ThinkTankUnitTestCase {
         
         $this->assertTrue($stalest_friend != null);
         $this->assertTrue($stalest_friend->user_id == 13);
+    }
+    
+    function testGetOldestFollow() {
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen, active) VALUES (930061, 20, '2001-04-08 23:54:41', 1);";
+        $this->db->exec($q);
+
+        $dao = new FollowDAO($this->db, $this->logger);
+        $oldest_follow = $dao->getOldestFollow();
+        
+        $this->assertTrue($oldest_follow != null);
+        $this->assertEqual($oldest_follow["followee_id"], 930061);
+		$this->assertEqual($oldest_follow["follower_id"], 20);
     }
     
     //TODO Complete FollowDAO tests for the rest of the methods
