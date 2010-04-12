@@ -862,7 +862,7 @@ class RetweetDetector {
     public static function detectOriginalTweet($retweet_text, $recentPosts) {
         $originalPostId = false;
         foreach ($recentPosts as $t) {
-            $snip = substr($t->post_text, 0, 12);
+            $snip = substr($t->post_text, 0, 24);
             if (strpos($retweet_text, $snip) != false)
                 $originalPostId = $t->post_id;
         }
