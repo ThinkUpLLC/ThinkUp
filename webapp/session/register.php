@@ -56,7 +56,7 @@ else {
                 $es->assign('apptitle', $THINKTANK_CFG['app_title'] );
                 $es->assign('server', $server );
                 $es->assign('site_root_path', $THINKTANK_CFG['site_root_path'] );
-                $es->assign('email', urlencode($_POST[email]) );
+                $es->assign('email', urlencode($_POST['email']) );
                 $es->assign('activ_code', $activ_code );
                 $message = $es->fetch('_email.registration.tpl');
                 
