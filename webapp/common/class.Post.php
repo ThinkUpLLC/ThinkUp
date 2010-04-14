@@ -111,10 +111,10 @@ class PostDAO extends MySQLDAO {
         $condition = "";
         if ($public)
             $condition = "AND u.is_protected = 0";
-        $q = " SELECT t.*, l.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = " SELECT t.*, l.url, l.expanded_url, l.is_image, l.error, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts t ";
-        $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
         $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = t.post_id ";
+        $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
         $q .= " WHERE in_reply_to_post_id=".$post_id." ".$condition;
         $q .= " ORDER BY follower_count desc;";
         $sql_result = $this->executeSQL($q);
@@ -133,7 +133,7 @@ class PostDAO extends MySQLDAO {
             
         $q = "
 			select 
-				t.*, u.*, l.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
+				t.*, u.*,  l.url, l.expanded_url, l.is_image, l.error, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			from 
 				#prefix#posts t
 			LEFT JOIN #prefix#links AS l ON l.post_id = t.post_id	
