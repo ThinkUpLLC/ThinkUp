@@ -16,13 +16,25 @@
     <img src="{$t->author_avatar}" class="avatar">
   </div>
   <div class="grid_3 right small">
+    {if $t->network == 'twitter'}
+    <a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
+    {else}
     {$t->author_username}
+    {/if}
     {if $t->author->follower_count > 0}
       <br>{$t->author->follower_count|number_format} followers
     {/if}
+    {if $t->author->location}
+      <div class="small gray">{$t->author->location}</div>
+    {/if}
+    
   </div>
   <div class="grid_3 right small">
-    {$t->adj_pub_date|relative_datetime}
+    {if $t->network == 'twitter'}
+    <a href="http://twitter.com/{$t->author_username}/statuses/{$t->post_id}">{$t->adj_pub_date|relative_datetime} ago</a>
+    {else}
+    {$t->adj_pub_date|relative_datetime} ago
+    {/if}
   </div>
   <div class="grid_11">
     {if $t->link->is_image}
@@ -30,17 +42,12 @@
     {/if}
     <p>
       {$t->post_text|link_usernames_to_twitter}
-      {if $t->in_reply_to_post_id && $smarty.session.user }
-        [<a href="{$cfg->site_root_path}post/?t={$t->in_reply_to_post_id}">in reply to</a>]
+      {if !$post && $t->in_reply_to_post_id }
+        <a href="{$cfg->site_root_path}post/?t={$t->in_reply_to_post_id}">&larr;</a>
       {/if}
     </p>
-    {if $t->link->expanded_url and !$t->link->is_image}
-      <ul>
-        <li><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a></li>
-      </ul>
-    {/if}
-    {if $t->author->location}
-      <div class="small gray">Location: {$t->author->location}</div>
+    {if $t->link->expanded_url and !$t->link->is_image and ($t->link->expanded_url != $t->link->url)}
+      <small><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a></small>
     {/if}
   </div>
   <div class="grid_2 center">
@@ -52,7 +59,7 @@
   </div>
   <div class="grid_2 center omega">
     {if $t->retweet_count_cache > 0}
-      <span class="reply-count"><a href="{$site_root}public.php?t={$t->post_id}">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
+      <span class="reply-count"><a href="{$site_root}public.php?t={$t->post_id}#fwds">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
     {else}
       &#160;
     {/if}

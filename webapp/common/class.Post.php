@@ -50,13 +50,18 @@ class PostDAO extends MySQLDAO {
     function getPost($post_id) {
         $q = "
 			SELECT 
-				t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
+				p.*, l.*, pub_date - interval #gmt_offset# hour as adj_pub_date
 			FROM 
-				#prefix#posts t
+				#prefix#posts p
+		    LEFT JOIN
+				#prefix#links l
+			ON 
+				l.post_id = p.post_id
 			WHERE
-			 	post_id=".$post_id.";";
+			 	p.post_id=".$post_id.";";
         $sql_result = $this->executeSQL($q);
-        $post = new Post(mysql_fetch_assoc($sql_result));
+        $row = mysql_fetch_assoc($sql_result);
+        $post = $this->setPostWithLink($row);
         mysql_free_result($sql_result); # Free up memory
         return $post;
     }
@@ -106,15 +111,16 @@ class PostDAO extends MySQLDAO {
         $condition = "";
         if ($public)
             $condition = "AND u.is_protected = 0";
-        $q = " SELECT t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = " SELECT t.*, l.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts t ";
         $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
+        $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = t.post_id ";
         $q .= " WHERE in_reply_to_post_id=".$post_id." ".$condition;
         $q .= " ORDER BY follower_count desc;";
         $sql_result = $this->executeSQL($q);
         $posts_stored = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $posts_stored[] = $this->setPostWithAuthor($row);
+            $posts_stored[] = $this->setPostWithAuthorAndLink($row);
         }
         mysql_free_result($sql_result); # Free up memory
         return $posts_stored;
@@ -127,9 +133,10 @@ class PostDAO extends MySQLDAO {
             
         $q = "
 			select 
-				t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
+				t.*, u.*, l.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
 			from 
 				#prefix#posts t
+			LEFT JOIN #prefix#links AS l ON l.post_id = t.post_id	
 			inner join 
 				#prefix#users u 
 			on 
@@ -142,7 +149,7 @@ class PostDAO extends MySQLDAO {
         $sql_result = $this->executeSQL($q);
         $posts_stored = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
-            $posts_stored[] = $this->setPostWithAuthor($row);
+            $posts_stored[] = $this->setPostWithAuthorAndLink($row);
         }
         mysql_free_result($sql_result); # Free up memory
         return $posts_stored;

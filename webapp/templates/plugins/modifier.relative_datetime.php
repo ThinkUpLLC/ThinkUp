@@ -31,12 +31,12 @@ function smarty_modifier_relative_datetime($timestamp)
     $lengths = array("60","60","24","7","4.35","12","10");
     $total_lengths = count($lengths);
  
-    if ($difference > 0) { // this was in the past
+   /* if ($difference > 0) { // this was in the past
         $ending = "ago";
     } else { // this was in the future
         $difference = -$difference;
         $ending = " ago";
-    }
+    }*/
     //return;
  
     for($j = 0; $difference > $lengths[$j] && $total_lengths > $j; $j++) {
@@ -52,4 +52,6 @@ function smarty_modifier_relative_datetime($timestamp)
  
     return $text;
 }
+
+
 ?>

@@ -17,7 +17,7 @@
     <a href="{$cfg->site_root_path}user/?u={$t->author_username}&i={$smarty.session.network_username}">{$t->author_username}</a>
   </div>
   <div class="grid_3 right small">
-    <a href="{$cfg->site_root_path}post/?t={$t->post_id}">{$t->adj_pub_date|relative_datetime}</a>
+    <a href="{$cfg->site_root_path}post/?t={$t->post_id}">{$t->adj_pub_date|relative_datetime} ago</a>
   </div>
   <div class="grid_11">
     {if $t->link->is_image}
