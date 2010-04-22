@@ -16,6 +16,12 @@ php="/usr/local/php5/bin/php"
 #default YYYYWW (year Week)
 namevar=`date +%Y%W`
 
+#Time between crawls - Optional
+#Set this in minutes, and set your cron
+#job to run at more frequent intervals.
+#crawl_interval=20
+
+
 #############################
 #Don't Alter anything below 
 #this mark unless you know 
