@@ -18,6 +18,7 @@ class Post {
     var $network;
     
     var $author; //optional user object
+    var $link; //optional link object
     
     function Post($val) {
         $this->id = $val["id"];
@@ -50,7 +51,7 @@ class PostDAO extends MySQLDAO {
     function getPost($post_id) {
         $q = "
 			SELECT 
-				p.*, l.*, pub_date - interval #gmt_offset# hour as adj_pub_date
+				p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, pub_date - interval #gmt_offset# hour as adj_pub_date
 			FROM 
 				#prefix#posts p
 		    LEFT JOIN
@@ -58,7 +59,7 @@ class PostDAO extends MySQLDAO {
 			ON 
 				l.post_id = p.post_id
 			WHERE
-			 	p.post_id=".$post_id.";";
+			 	p.post_id='".$post_id."';";
         $sql_result = $this->executeSQL($q);
         $row = mysql_fetch_assoc($sql_result);
         $post = $this->setPostWithLink($row);
@@ -83,10 +84,10 @@ class PostDAO extends MySQLDAO {
     }
     
     private function setPostWithLink($row) {
+        $p = new Post($row);
         $l = new Link($row);
-        $t = new Post($row);
-        $t->link = $l;
-        return $t;
+        $p->link = $l;
+        return $p;
     }
 
     

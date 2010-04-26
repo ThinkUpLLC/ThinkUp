@@ -12,12 +12,12 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
 	$post_id = $_REQUEST['t'];
 	$s = new SmartyThinkTank();
 
-	if(!$s->is_cached('status.index.tpl', $post_id)) {
+	if(!$s->is_cached('post.index.tpl', $post_id)) {
 		$post = $pd->getPost($post_id);
 
 		$u = new Utils();
 
-        // BUG: THIS ISN'T GOING TO WORK WHEN LOOKING AT POSTS OF OTHER USERS BECAUSE THEY DON'T HAVE INSTANCES
+        // TODO: FIX BUG: THIS ISN'T GOING TO WORK WHEN LOOKING AT POSTS OF OTHER USERS BECAUSE THEY DON'T HAVE INSTANCES
 		//$id = new InstanceDAO($db);
 		//$i = $id->getByUsername($post->author_username);
 		
@@ -41,7 +41,6 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
 		$public_replies = $pd->getPublicRepliesToPost($post_id);
 		$public_replies_count = count($public_replies);
 		$private_replies_count = $all_replies_count - $public_replies_count;
-		$post = $pd->getPost($post_id);
 
 
 		$s->assign('post', $post);
