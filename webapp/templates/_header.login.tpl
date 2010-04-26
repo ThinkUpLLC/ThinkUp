@@ -31,7 +31,7 @@
             <option value="">-- Select an instance --</option>
             {foreach from=$instances key=tid item=i}
               {if $i->network_user_id != $instance->network_user_id}
-                <option value="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username} - {$i->network|capitalize} (updated {$i->crawler_last_run|relative_datetime}{if !$i->is_active} (paused){/if})</option>
+                <option value="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username} - {$i->network|capitalize} (updated {$i->crawler_last_run|relative_datetime} ago{if !$i->is_active} (paused){/if})</option>
               {/if}
             {/foreach}
           </select>
