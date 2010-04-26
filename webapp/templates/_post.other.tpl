@@ -40,7 +40,7 @@
       {/if}
       {if $t->link->expanded_url}
         <ul>
-          <li><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->title}</a></li>
+          <li><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{if $t->link->title}{$t->link->title}{else}{$t->link->expanded_url}{/if}</a></li>
         </ul>
       {/if}
     </div>
