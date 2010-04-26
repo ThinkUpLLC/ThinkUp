@@ -32,7 +32,7 @@
         <div class="grid_23 omega append_20">
           {if $replies}
             <h2 class="subhead">
-              {if $reply_count eq 1}Reply{else}{$reply_count} Replies{/if}
+              {if $post->mention_count_cache eq 1}Reply{else}{$post->mention_count_cache} Replies{/if}
               ({$private_reply_count} private)
             </h2>
           {/if}

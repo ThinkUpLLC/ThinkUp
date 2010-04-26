@@ -38,7 +38,7 @@
               <div class="grid_7 center big-number omega">
                 <div class="bl">
                   <div class="key-stat">
-                    <h1>{$replies|@count|number_format}</h1>
+                    <h1>{$post->mention_count_cache|number_format}</h1>
                     <h3>replies in {$post->adj_pub_date|relative_datetime}</h3>
                   </div>
                 </div>

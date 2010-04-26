@@ -108,7 +108,7 @@ class PostDAO extends MySQLDAO {
         return $strays;
     }
     
-    function getRepliesToPost($post_id, $public = false) {
+    function getRepliesToPost($post_id, $public = false, $count=350) {
         $condition = "";
         if ($public)
             $condition = "AND u.is_protected = 0";
@@ -117,7 +117,9 @@ class PostDAO extends MySQLDAO {
         $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = t.post_id ";
         $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
         $q .= " WHERE in_reply_to_post_id=".$post_id." ".$condition;
-        $q .= " ORDER BY follower_count desc;";
+        $q .= " ORDER BY follower_count desc ";
+        $q .= " LIMIT $count; ";
+		
         $sql_result = $this->executeSQL($q);
         $posts_stored = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
