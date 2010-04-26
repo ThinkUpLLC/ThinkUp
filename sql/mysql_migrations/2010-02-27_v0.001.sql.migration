@@ -190,11 +190,6 @@ CREATE TABLE `users` (
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-
-
-
-
-
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -202,3 +197,60 @@ CREATE TABLE `users` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+CREATE TABLE IF NOT EXISTS links (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  url varchar(255) COLLATE utf8_bin NOT NULL,
+  expanded_url varchar(255) COLLATE utf8_bin NOT NULL,
+  title varchar(255) COLLATE utf8_bin NOT NULL,
+  clicks int(11) NOT NULL DEFAULT '0',
+  status_id bigint(11) NOT NULL,
+  PRIMARY KEY (id),
+  KEY status_id (status_id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+ALTER TABLE `links` ADD `is_image` TINYINT NOT NULL DEFAULT '0';
+
+ALTER TABLE `links` ADD INDEX ( `is_image` ) ;
+
+RENAME TABLE follows TO ta_follows;
+RENAME TABLE tweets TO ta_tweets;
+RENAME TABLE users TO ta_users;
+RENAME TABLE instances TO ta_instances;
+RENAME TABLE owners TO ta_owners;
+RENAME TABLE owner_instances TO ta_owner_instances;
+RENAME TABLE tweet_errors TO ta_tweet_errors;
+RENAME TABLE user_errors TO ta_user_errors;
+RENAME TABLE links TO ta_links;
+
+RENAME TABLE ta_follows TO tt_follows;
+RENAME TABLE ta_tweets TO tt_tweets;
+RENAME TABLE ta_users TO tt_users;
+RENAME TABLE ta_instances TO tt_instances;
+RENAME TABLE ta_owners TO tt_owners;
+RENAME TABLE ta_owner_instances TO tt_owner_instances;
+RENAME TABLE ta_tweet_errors TO tt_tweet_errors;
+RENAME TABLE ta_user_errors TO tt_user_errors;
+RENAME TABLE ta_links TO tt_links;
+
+ALTER TABLE `tt_tweets` CHANGE `reply_count_cache` `mention_count_cache` int(11) NOT NULL default '0';
+
+ALTER TABLE `tt_tweets` ADD `in_retweet_of_status_id` bigint(11) default NULL;
+
+ALTER TABLE `tt_tweets` ADD `retweet_count_cache` int(11) NOT NULL default '0';
+
+ALTER TABLE `tt_instances` DROP `last_page_fetched_followers`;
+
+ALTER TABLE `tt_tweets` ADD KEY `in_retweet_of_status_id` ( `in_retweet_of_status_id` );
+
+ALTER TABLE `tt_tweets` ADD KEY `in_reply_to_user_id` (`in_reply_to_user_id`);
+
+ALTER TABLE `tt_instances` ADD `is_active` int(1) NOT NULL default '1';
+
+ALTER TABLE `tt_owners` ADD `last_login` date NOT NULL default '0000-00-00';
+
+ALTER TABLE `tt_tweets` ADD FULLTEXT `tweets_fulltext` (`tweet_text`) 
+
+
+
