@@ -24,7 +24,6 @@ class ThinkTankUnitTestCase extends UnitTestCase {
         
         //Create all the tables based on the build script
         $create_db_script = file_get_contents($THINKTANK_CFG['source_root_path']."sql/build-db_mysql.sql");
-        $create_db_script = str_replace("ALTER DATABASE thinktank", "ALTER DATABASE thinktank_tests", $create_db_script);
         $create_statements = split(";", $create_db_script);
         foreach ($create_statements as $q) {
             if (trim($q) != '') {
@@ -37,7 +36,7 @@ class ThinkTankUnitTestCase extends UnitTestCase {
         $this->logger->close();
         
         //Delete test data
-        $q = "DROP TABLE `tt_follows`, `tt_instances`, `tt_links`, `tt_owners`, `tt_owner_instances`, `tt_users`, `tt_user_errors`, `tt_plugins`, `tt_plugin_options`, `tt_posts`, `tt_post_errors`, `tt_replies`;";
+        $q = "DROP TABLE `tt_follows`, `tt_instances`, `tt_links`, `tt_owners`, `tt_owner_instances`, `tt_users`, `tt_user_errors`, `tt_plugins`, `tt_plugin_options`, `tt_posts`, `tt_post_errors`, `tt_replies`, `tt_channels`, `tt_instance_channels`;";
         $this->db->exec($q);
         
         //Clean up
@@ -76,7 +75,7 @@ class ThinkTankWebTestCase extends WebTestCase {
         $this->logger->close();
         
         //Delete test data
-        $q = "DROP TABLE `tt_follows`, `tt_instances`, `tt_links`, `tt_owners`, `tt_owner_instances`, `tt_users`, `tt_user_errors`, `tt_plugins`, `tt_plugin_options`, `tt_posts`, `tt_post_errors`, `tt_replies`;";
+        $q = "DROP TABLE `tt_follows`, `tt_instances`, `tt_links`, `tt_owners`, `tt_owner_instances`, `tt_users`, `tt_user_errors`, `tt_plugins`, `tt_plugin_options`, `tt_posts`, `tt_post_errors`, `tt_replies`, `tt_channels`, `tt_instance_channels`;";
         $this->db->exec($q);
         
         //Clean up

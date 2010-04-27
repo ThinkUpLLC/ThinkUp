@@ -15,6 +15,8 @@ require_once ('mysqldao_test.php');
 require_once ('plugindao_test.php');
 require_once ('ownerinstancedao_test.php');
 require_once ('postdao_test.php');
+require_once ('channeldao_test.php');
+require_once ('instancechanneldao_test.php');
 require_once ('twitterapiaccessoroauth_test.php');
 require_once ('twittercrawler_test.php');
 require_once ('twitteroauth_test.php');
@@ -45,6 +47,8 @@ $test->addTestCase( new TestOfFlickrAPIAccessor());
 //$test->addTestCase( new TestOfFlickrPlugin());
 $test->addTestCase( new TestOfExpandURLsPlugin());
 $test->addTestCase( new TestOfOwnerInstanceDAO());
+$test->addTestCase( new TestOfChannelDAO());
+$test->addTestCase( new TestOfInstanceChannelDAO());
 
 //$test->run(new HtmlReporter());
 $test->run( new TextReporter());
