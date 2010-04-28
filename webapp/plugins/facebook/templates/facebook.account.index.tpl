@@ -61,7 +61,7 @@
     };
 </script>
 
-<script src="{/literal}{$cfg->site_root_path}{literal}cssjs/fbconnect.js" type="text/javascript">
+<script src="{/literal}{$cfg->site_root_path}{literal}plugins/facebook/fbconnect.js" type="text/javascript">
 </script>
 <script type="text/javascript">
     window.onload = function(){
