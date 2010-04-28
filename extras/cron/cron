@@ -93,7 +93,9 @@ cd $thinktank/webapp/crawler
 $php $crawler $thinktank_username $thinktank_password
 calog_lines2=`set $(wc -l $crawllog) && echo $1`
 calog_lines_diff=$((calog_lines2-calog_lines1))
-tail -n $calog_lines_diff $crawllog
+if test $DEBUG; then
+  tail -n $calog_lines_diff $crawllog
+fi
 
 # if we have a crawl interval set
 # set our last run timestamp and clean up pid file
