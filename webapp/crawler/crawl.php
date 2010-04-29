@@ -13,15 +13,16 @@ if (isset($argc) && $argc > 1) { // check for CLI credentials
     $result = $od->getForLogin($username);
     if ($session->pwdCheck($pw, $result['pwd'])) {
         $authorized = true;
-        echo "Authorized to run crawler.";
     } else {
-        echo "Incorrect username and password.";
+        echo "ERROR: Incorrect username and password.";
     }
 } else { // check user is logged in on the web
     session_start();
     $session = new Session();
     if ($session->isLoggedIn()) {
         $authorized = true;
+    } else {
+        echo "ERROR: Invalid or missing username and password.";
     }
 }
 
