@@ -10,6 +10,7 @@ require_once ("common/class.MySQLDAO.php");
 require_once ("common/class.Instance.php");
 require_once ("classes/mock.TwitterOAuth.php");
 require_once ("plugins/twitter/lib/class.TwitterAPIAccessorOAuth.php");
+require_once ("plugins/twitter/lib/class.TwitterOAuthThinkTank.php");
 require_once ("config.inc.php");
 
 class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
@@ -127,7 +128,7 @@ class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
         $i = new Instance($r);
 
         $to = new TwitterOAuth('', '', '', '');
-        $twitter_data = $to->noAuthRequest('http://search.twitter.com/search.json?q=%40whitehouse&result_type=recent');
+        $twitter_data = $to->http('http://search.twitter.com/search.json?q=%40whitehouse&result_type=recent');
 
         $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $i, $THINKTANK_CFG['archive_limit']);
 

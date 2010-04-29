@@ -16,6 +16,7 @@ require_once ("classes/mock.TwitterOAuth.php");
 require_once ("common/class.User.php");
 require_once ("plugins/twitter/lib/class.TwitterAPIAccessorOAuth.php");
 require_once ("plugins/twitter/lib/class.TwitterCrawler.php");
+require_once ("plugins/twitter/lib/class.TwitterOAuthThinkTank.php");
 
 class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     var $api;
@@ -67,10 +68,10 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 		$tc->fetchInstanceUserInfo();
         $tc->fetchSearchResults('@whitehouse');
         $pdao = new PostDAO($this->db, $this->logger);
-		$this->assertTrue($pdao->isPostInDB(11841192840));
+		$this->assertTrue($pdao->isPostInDB(11837263794));
 		
-		$post = $pdao->getPost(11841192840);
-		$this->assertEqual($post->post_text, "RT @CindyPDX: @whitehouse PLS send to my President: http://familiesofautistickids.ning.com/video/through-my-eyes-thanh-bui  &lt;Does he remember our son?");
+		$post = $pdao->getPost(11837263794);
+		$this->assertEqual($post->post_text, "RT @whitehouse: The New Start Treaty: Read the text and remarks by President Obama &amp; President Medvedev http://bit.ly/cAm9hF");
 
     }
 

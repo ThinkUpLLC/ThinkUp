@@ -19,7 +19,7 @@ class TwitterOAuth {/*{{{*/
         return file_get_contents($FAUX_DATA_PATH.$url);
     }
 
-    function noAuthRequest($url) {/*{{{*/
+    function http($url) {/*{{{*/
         global $FAUX_DATA_PATH;
         $url = str_replace('https://twitter.com/', '', $url);
         $url = str_replace('http://search.twitter.com/', '', $url);

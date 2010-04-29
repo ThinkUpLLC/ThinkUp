@@ -12,7 +12,7 @@ class TwitterAPIAccessorOAuth {
         $this->$oauth_access_token = $oauth_access_token;
         $this->$oauth_access_token_secret = $oauth_access_token_secret;
         
-        $this->to = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token, $this->$oauth_access_token_secret);
+        $this->to = new TwitterOAuthThinkTank($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token, $this->$oauth_access_token_secret);
         $this->cURL_source = $this->prepAPI();
     }
     
@@ -148,7 +148,7 @@ class TwitterAPIAccessorOAuth {
                         break;
                     case 'status':
                         $thisFeed[] = array('post_id'=>$xml->id, 'user_id'=>$xml->user->id, 'user_name'=>$xml->user->screen_name, 'full_name'=>$xml->user->name, 'avatar'=>$xml->user->profile_image_url, 'location'=>$xml->user->location, 'description'=>$xml->user->description, 'url'=>$xml->user->url, 'is_protected'=>$xml->user->protected , 'followers'=>$xml->user->followers_count, 'following'=>$xml->user->friends_count, 'tweets'=>$xml->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)), 'post_text'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 'in_reply_to_post_id'=>$xml->in_reply_to_status_id, 'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 'source'=>$xml->source);
-							break;
+                        break;
                     case 'users_list':
                         $this->next_cursor = $xml->next_cursor;
                         foreach ($xml->users->children() as $item) {
@@ -158,7 +158,7 @@ class TwitterAPIAccessorOAuth {
                     case 'users':
                         foreach ($xml->children() as $item) {
                             $thisFeed[] = array('post_id'=>$item->status->id, 'user_id'=>$item->id, 'user_name'=>$item->screen_name, 'full_name'=>$item->name, 'avatar'=>$item->profile_image_url, 'location'=>$item->location, 'description'=>$item->description, 'url'=>$item->url, 'is_protected'=>$item->protected , 'friend_count'=>$item->friends_count, 'follower_count'=>$item->followers_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 'post_text'=>$item->status->text, 'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'favorites_count'=>$item->favourites_count, 'post_count'=>$item->statuses_count);
-						}
+                        }
                         break;
                     case 'statuses':
                         foreach ($xml->children() as $item) {
@@ -208,8 +208,6 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     var $available_api_calls_for_twitter = null;
     var $api_hourly_limit = null;
     var $archive_limit;
-    var $noauth_http_status;
-    var $noauth_last_api_call;
     
     function CrawlerTwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret, $instance, $archive_limit) {
         parent::TwitterAPIAccessorOAuth($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret);
@@ -220,58 +218,48 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     function init($logger) {
         $status_message = "";
         
-/*        if ($this->oauth_access_token = "NOAUTH") {
-            $this->available_api_calls_for_twitter = 150;
-            $this->api_hourly_limit = 150;
-            $this->next_api_reset = null;
-            $this->api_calls_to_leave_unmade = 0;
-            //echo "  ".$this->api_calls_to_leave_unmade . " API calls to leave unmade\n";
-            $this->available_api_calls_for_crawler = 150;
+        $account_status = $this->cURL_source['rate_limit'];
+        list($cURL_status, $twitter_data) = $this->apiRequest($account_status, $logger);
+        $this->available_api_calls_for_crawler++; //status check doesnt' count against balance
+        
+        if ($cURL_status > 200) {
+            $this->available = false;
         } else {
-  */      
-            $account_status = $this->cURL_source['rate_limit'];
-            list($cURL_status, $twitter_data) = $this->apiRequest($account_status, $logger);
-            $this->available_api_calls_for_crawler++; //status check doesnt' count against balance
-            
-            if ($cURL_status > 200) {
-                $this->available = false;
-            } else {
-                try {
-                    # Parse file
-                    $status_message = "Parsing XML data from $account_status ";
-                    $status = $this->parseXML($twitter_data);
-                    
-                    if (isset($status['remaining-hits']) && isset($status['hourly-limit']) && isset($status['reset-time'])) {
-                        $this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
-                        $this->api_hourly_limit = $status['hourly-limit'];//get this from API
-                        $this->next_api_reset = $status['reset-time'];//get this from API
-                    } else {
-                        throw new Exception('API status came back malformed');
-                    }
-                    //Figure out how many minutes are left in the hour, then multiply that x 1 for api calls to leave unmade
-                    $next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
-                    $current_time_in_minutes = (int) date("i", time());
-                    $minutes_left_in_hour = 60;
-                    if ($next_reset_in_minutes > $current_time_in_minutes)
-                        $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
-                    elseif ($next_reset_in_minutes < $current_time_in_minutes)
-                        $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
-
-                        
-                    //echo $minutes_left_in_hour . " minutes left in the hour till ".  date('H:i:s', (int) $this->next_api_reset);
-                    $this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
-                    //echo "  ".$this->api_calls_to_leave_unmade . " API calls to leave unmade\n";
-                    $this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - round($this->api_calls_to_leave_unmade);
+            try {
+                # Parse file
+                $status_message = "Parsing XML data from $account_status ";
+                $status = $this->parseXML($twitter_data);
+                
+                if (isset($status['remaining-hits']) && isset($status['hourly-limit']) && isset($status['reset-time'])) {
+                    $this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
+                    $this->api_hourly_limit = $status['hourly-limit'];//get this from API
+                    $this->next_api_reset = $status['reset-time'];//get this from API
+                } else {
+                    throw new Exception('API status came back malformed');
+                }
+                //Figure out how many minutes are left in the hour, then multiply that x 1 for api calls to leave unmade
+                $next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
+                $current_time_in_minutes = (int) date("i", time());
+                $minutes_left_in_hour = 60;
+                if ($next_reset_in_minutes > $current_time_in_minutes)
+                    $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
+                elseif ($next_reset_in_minutes < $current_time_in_minutes)
+                    $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
 
                     
-                }
-                catch(Exception $e) {
-                    $status_message = 'Could not parse account status: '.$e->getMessage();
-                }
+                //echo $minutes_left_in_hour . " minutes left in the hour till ".  date('H:i:s', (int) $this->next_api_reset);
+                $this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
+                //echo "  ".$this->api_calls_to_leave_unmade . " API calls to leave unmade\n";
+                $this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter - round($this->api_calls_to_leave_unmade);
+
+                
             }
-            $logger->logStatus($status_message, get_class($this));
-            $logger->logStatus($this->getStatus(), get_class($this));
-      /*  } */
+            catch(Exception $e) {
+                $status_message = 'Could not parse account status: '.$e->getMessage();
+            }
+        }
+        $logger->logStatus($status_message, get_class($this));
+        $logger->logStatus($this->getStatus(), get_class($this));
         
     }
     
@@ -313,50 +301,13 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
             }
         } else {
             $logger->logStatus("OAuth-free request: $url", get_class($this));
-            $content = $this->noAuthRequest($url);
-            $status = $this->lastStatusCode();
+            $content = $this->to->noAuthRequest($url);
+            $status = $this->to->lastStatusCode();
             //$logger->logStatus("no OAuth content returned: $content", get_class($this));
         }
         
         return array($status, $content);
         
-    }
-    
-    //TODO Make this function take $args parameter and parse it correctly, like OAuth does
-    function noAuthRequest($url) {
-        return $this->http($url);
-    }
-
-    
-    function http($url, $post_data = null) {
-        $ch = curl_init();
-        if (defined("CURL_CA_BUNDLE_PATH"))
-            curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        //////////////////////////////////////////////////
-        ///// Set to 1 to verify Twitter's SSL Cert //////
-        //////////////////////////////////////////////////
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        if (isset($post_data)) {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        }
-        $response = curl_exec($ch);
-        $this->noauth_http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $this->noauth_last_api_call = $url;
-        curl_close($ch);
-        return $response;
-    }
-    
-    function lastStatusCode() {
-        return $this->noauth_http_status;
-    }
-    
-    function lastAPICall() {
-        return $this->noauth_last_api_call;
     }
     
     function getStatus() {
