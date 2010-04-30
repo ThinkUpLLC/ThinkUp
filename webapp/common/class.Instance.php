@@ -233,7 +233,7 @@ class InstanceDAO extends MySQLDAO {
                 crawler_last_run = NOW(),
                 total_posts_in_system = (select count(*) from #prefix#posts where author_user_id=".$i->network_user_id."),
                 ".$owner_tweets."
-                total_replies_in_system = (select count(*) from #prefix#posts WHERE MATCH (`post_text`) AGAINST('%".$i->network_username."%'),
+                total_replies_in_system = (select count(*) from #prefix#posts WHERE MATCH (`post_text`) AGAINST('%".$i->network_username."%')),
                 total_follows_in_system = (select count(*) from #prefix#follows where user_id=".$i->network_user_id." and active=1),
                 total_users_in_system = (select count(*) from #prefix#users),
                 is_archive_loaded_follows = ".$is_archive_loaded_follows.",
