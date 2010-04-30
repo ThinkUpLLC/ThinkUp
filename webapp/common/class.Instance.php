@@ -72,10 +72,10 @@ class InstanceDAO extends MySQLDAO {
     
     function insert($id, $user, $network = "twitter") {
         $q = "
-			INSERT INTO 
-				#prefix#instances (`network_user_id`, `network_username`, `network`)
-			 VALUES
-				(".$id." , '".$user."', '".$network."')";
+            INSERT INTO 
+                #prefix#instances (`network_user_id`, `network_username`, `network`)
+             VALUES
+                (".$id." , '".$user."', '".$network."')";
         $sql_result = $this->executeSQL($q);
     }
 
@@ -87,18 +87,18 @@ class InstanceDAO extends MySQLDAO {
     
     function getFreshestByOwnerId($owner_id) {
         $q = "
-			SELECT 
-				* , ".$this->getAverageReplyCount()."
-			FROM 
-				#prefix#instances i
-			INNER JOIN
-				#prefix#owner_instances oi
-			ON 
-				i.id = oi.instance_id
-			WHERE 
-				oi.owner_id = ".$owner_id."
-			ORDER BY 
-				crawler_last_run DESC";
+            SELECT 
+                * , ".$this->getAverageReplyCount()."
+            FROM 
+                #prefix#instances i
+            INNER JOIN
+                #prefix#owner_instances oi
+            ON 
+                i.id = oi.instance_id
+            WHERE 
+                oi.owner_id = ".$owner_id."
+            ORDER BY 
+                crawler_last_run DESC";
         $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) == 0) {
             $i = null;
@@ -113,12 +113,12 @@ class InstanceDAO extends MySQLDAO {
     
     function getInstanceOneByLastRun($order) {
         $q = "
-			SELECT *, ".$this->getAverageReplyCount()."
-			FROM 
-				#prefix#instances 
-			ORDER BY 
-				crawler_last_run
-			".$order." LIMIT 1";
+            SELECT *, ".$this->getAverageReplyCount()."
+            FROM 
+                #prefix#instances 
+            ORDER BY 
+                crawler_last_run
+            ".$order." LIMIT 1";
         $sql_result = $this->executeSQL($q);
         $row = mysql_fetch_assoc($sql_result);
         $i = new Instance($row);
@@ -128,12 +128,12 @@ class InstanceDAO extends MySQLDAO {
     
     function getByUsername($username) {
         $q = "
-			SELECT 
-				* , ".$this->getAverageReplyCount()."
-			FROM 
-				#prefix#instances 
-			WHERE 
-				network_username = '".$username."'";
+            SELECT 
+                * , ".$this->getAverageReplyCount()."
+            FROM 
+                #prefix#instances 
+            WHERE 
+                network_username = '".$username."'";
         $sql_result = $this->executeSQL($q);
         
         if (mysql_num_rows($sql_result) == 0) {
@@ -148,12 +148,12 @@ class InstanceDAO extends MySQLDAO {
     
     function getByUserId($id) {
         $q = "
-			SELECT 
-				* , ".$this->getAverageReplyCount()."
-			FROM 
-				#prefix#instances 
-			WHERE 
-				network_user_id = '".$id."'";
+            SELECT 
+                * , ".$this->getAverageReplyCount()."
+            FROM 
+                #prefix#instances 
+            WHERE 
+                network_user_id = '".$id."'";
         $sql_result = $this->executeSQL($q);
         
         if (mysql_num_rows($sql_result) == 0) {
@@ -169,36 +169,36 @@ class InstanceDAO extends MySQLDAO {
     
     function updateLastRun($id) {
         $q = "
-			UPDATE 
-				#prefix#instances
-			 SET 
-				crawler_last_run = NOW()
-			WHERE
-				id = ".$id.";";
+            UPDATE 
+                #prefix#instances
+             SET 
+                crawler_last_run = NOW()
+            WHERE
+                id = ".$id.";";
         $sql_result = $this->executeSQL($q);
         
     }
     
     function setPublic($u, $p) {
         $q = "
-			UPDATE 
-				#prefix#instances
-			 SET 
-				is_public = ".$p."
-			WHERE
-				network_username = '".$u."';";
+            UPDATE 
+                #prefix#instances
+             SET 
+                is_public = ".$p."
+            WHERE
+                network_username = '".$u."';";
         $sql_result = $this->executeSQL($q);
         
     }
     
     function setActive($u, $p) {
         $q = "
-			UPDATE 
-				#prefix#instances
-			 SET 
-				is_active = ".$p."
-			WHERE
-				network_username = '".$u."';";
+            UPDATE 
+                #prefix#instances
+             SET 
+                is_active = ".$p."
+            WHERE
+                network_username = '".$u."';";
         $sql_result = $this->executeSQL($q);
         
     }
@@ -224,38 +224,38 @@ class InstanceDAO extends MySQLDAO {
             $lsi = "last_status_id = ".$i->last_status_id.",";
             
         $q = "
-			UPDATE 
-				#prefix#instances
-			SET
-				".$lsi."
-				last_page_fetched_replies = ".$i->last_page_fetched_replies.",
-				last_page_fetched_tweets = ".$i->last_page_fetched_tweets.",
-				crawler_last_run = NOW(),
-				total_posts_in_system = (select count(*) from #prefix#posts where author_user_id=".$i->network_user_id."),
-				".$owner_tweets."
-				total_replies_in_system = (select count(*) from #prefix#posts where post_text like '%@".$i->network_username."%'),
-				total_follows_in_system = (select count(*) from #prefix#follows where user_id=".$i->network_user_id." and active=1),
-				total_users_in_system = (select count(*) from #prefix#users),
-				is_archive_loaded_follows = ".$is_archive_loaded_follows.",
-				is_archive_loaded_replies = ".$is_archive_loaded_replies.",
-				earliest_reply_in_system = (select
-					pub_date
-				from 
-					#prefix#posts
-				where post_text like '%@".$i->network_username."%'
-				order by
-					pub_date asc
-				limit 1),
-				earliest_post_in_system = (select
-					pub_date
-				from 
-					#prefix#posts
-				where author_user_id = ".$i->network_user_id."
-				order by
-					pub_date asc
-				limit 1)
-			WHERE
-				network_user_id = ".$i->network_user_id.";";
+            UPDATE 
+                #prefix#instances
+            SET
+                ".$lsi."
+                last_page_fetched_replies = ".$i->last_page_fetched_replies.",
+                last_page_fetched_tweets = ".$i->last_page_fetched_tweets.",
+                crawler_last_run = NOW(),
+                total_posts_in_system = (select count(*) from #prefix#posts where author_user_id=".$i->network_user_id."),
+                ".$owner_tweets."
+                total_replies_in_system = (select count(*) from #prefix#posts WHERE MATCH (`post_text`) AGAINST('%".$i->network_username."%'),
+                total_follows_in_system = (select count(*) from #prefix#follows where user_id=".$i->network_user_id." and active=1),
+                total_users_in_system = (select count(*) from #prefix#users),
+                is_archive_loaded_follows = ".$is_archive_loaded_follows.",
+                is_archive_loaded_replies = ".$is_archive_loaded_replies.",
+                earliest_reply_in_system = (select
+                    pub_date
+                from 
+                    #prefix#posts
+                where match (`post_text`) AGAINST('%".$i->network_username."%') 
+                order by
+                    pub_date asc
+                limit 1),
+                earliest_post_in_system = (select
+                    pub_date
+                from 
+                    #prefix#posts
+                where author_user_id = ".$i->network_user_id."
+                order by
+                    pub_date asc
+                limit 1)
+            WHERE
+                network_user_id = ".$i->network_user_id.";";
         $foo = $this->executeSQL($q);
         
         $status_message = "Updated ".$i->network_username."'s system status.";
@@ -266,12 +266,12 @@ class InstanceDAO extends MySQLDAO {
     
     function isUserConfigured($un) {
         $q = "
-			SELECT 
-				network_username 
-			FROM 
-				#prefix#instances
-			WHERE 
-				network_username = '".$un."'";
+            SELECT 
+                network_username 
+            FROM 
+                #prefix#instances
+            WHERE 
+                network_username = '".$un."'";
         $sql_result = $this->executeSQL($q);
         if (mysql_num_rows($sql_result) > 0)
             return true;
@@ -283,23 +283,23 @@ class InstanceDAO extends MySQLDAO {
         return $this->getAllInstances("ASC");
     }
     
-    function getAllActiveInstancesStalestFirstByNetwork($network="twitter") {
+    function getAllActiveInstancesStalestFirstByNetwork($network = "twitter") {
         return $this->getAllInstances("ASC", true, $network);
     }
 
     
-    function getAllInstances($last_run = "DESC", $only_active = false, $network="twitter") {
+    function getAllInstances($last_run = "DESC", $only_active = false, $network = "twitter") {
         $condition = "WHERE network='$network'";
         if ($only_active)
             $condition .= " AND is_active = 1 ";
         $q = "
-			SELECT 
-				*, ".$this->getAverageReplyCount()."
-			FROM
-				#prefix#instances ".$condition."
-			ORDER BY
-				crawler_last_run
-			".$last_run."";
+            SELECT 
+                *, ".$this->getAverageReplyCount()."
+            FROM
+                #prefix#instances ".$condition."
+            ORDER BY
+                crawler_last_run
+            ".$last_run."";
         $sql_result = $this->executeSQL($q);
         $instances = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -312,28 +312,28 @@ class InstanceDAO extends MySQLDAO {
     function getByOwner($o, $disregard_admin_status = false) {
         if (!$disregard_admin_status && $o->is_admin) {
             $q = "
-				SELECT 
-					*, ".$this->getAverageReplyCount()."
-				FROM
-					#prefix#instances i
-				ORDER BY
-					crawler_last_run 
-				DESC;";
+                SELECT 
+                    *, ".$this->getAverageReplyCount()."
+                FROM
+                    #prefix#instances i
+                ORDER BY
+                    crawler_last_run 
+                DESC;";
         } else {
             $q = "
-				SELECT 
-					*, ".$this->getAverageReplyCount()."
-				FROM
-					#prefix#owner_instances oi
-				INNER JOIN
-					#prefix#instances i
-				ON
-					i.id = oi.instance_id
-				WHERE
-					oi.owner_id = ".$o->id."
-				ORDER BY
-					crawler_last_run 
-				DESC;";
+                SELECT 
+                    *, ".$this->getAverageReplyCount()."
+                FROM
+                    #prefix#owner_instances oi
+                INNER JOIN
+                    #prefix#instances i
+                ON
+                    i.id = oi.instance_id
+                WHERE
+                    oi.owner_id = ".$o->id."
+                ORDER BY
+                    crawler_last_run 
+                DESC;";
         }
         $sql_result = $this->executeSQL($q);
         $instances = array();
@@ -347,29 +347,29 @@ class InstanceDAO extends MySQLDAO {
     function getByOwnerAndNetwork($o, $network, $disregard_admin_status = false) {
         if (!$disregard_admin_status && $o->is_admin) {
             $q = "
-				SELECT 
-					*, ".$this->getAverageReplyCount()."
-				FROM
-					#prefix#instances i
-				WHERE network='$network'
-				ORDER BY
-					crawler_last_run 
-				DESC;";
+                SELECT 
+                    *, ".$this->getAverageReplyCount()."
+                FROM
+                    #prefix#instances i
+                WHERE network='$network'
+                ORDER BY
+                    crawler_last_run 
+                DESC;";
         } else {
             $q = "
-				SELECT 
-					*, ".$this->getAverageReplyCount()."
-				FROM
-					#prefix#owner_instances oi
-				INNER JOIN
-					#prefix#instances i
-				ON
-					i.id = oi.instance_id
-				WHERE
-					oi.owner_id = ".$o->id." AND network='$network'
-				ORDER BY
-					crawler_last_run 
-				DESC;";
+                SELECT 
+                    *, ".$this->getAverageReplyCount()."
+                FROM
+                    #prefix#owner_instances oi
+                INNER JOIN
+                    #prefix#instances i
+                ON
+                    i.id = oi.instance_id
+                WHERE
+                    oi.owner_id = ".$o->id." AND network='$network'
+                ORDER BY
+                    crawler_last_run 
+                DESC;";
         }
         $sql_result = $this->executeSQL($q);
         $instances = array();
