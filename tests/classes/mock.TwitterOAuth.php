@@ -16,7 +16,7 @@ class TwitterOAuth {/*{{{*/
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
 		//echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url;
-        return file_get_contents($FAUX_DATA_PATH.$url);
+        return file_get_contents($FAUX_DATA_PATH.'twitter/'.$url);
     }
 
     function http($url) {/*{{{*/
@@ -27,7 +27,7 @@ class TwitterOAuth {/*{{{*/
         $url = str_replace('&', '-', $url);
 		$url = str_replace('?', '-', $url);
 		//echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url;
-        return file_get_contents($FAUX_DATA_PATH.$url);
+        return file_get_contents($FAUX_DATA_PATH.'twitter/'.$url);
     }
 	
     function lastStatusCode() {
