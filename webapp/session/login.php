@@ -20,9 +20,9 @@ $s->caching=false;
 if ($_POST['Submit'] == 'Log In') {
     $result = $od->getForLogin($user_email);
     if (!$result) {
-        header("Location: login.php?emsg=Invalid+email+or+password");
+        $emsg = "Incorrect email or password";
     } elseif (!$session->pwdCheck($_POST['pwd'], $result['pwd'])) {
-        header("Location: login.php?emsg=Incorrect+email+or+password");
+        $emsg = "Incorrect email or password";
     } else {
         // this sets variables in the session
         $session->completeLogin($result);
@@ -35,22 +35,21 @@ if ($_POST['Submit'] == 'Log In') {
         exit();
     }
 }
-if (isset($_GET["emsg"]))
-    $emsg = $_GET["emsg"];
-    
-if (isset($_GET["smsg"]))
+if (isset($_GET["smsg"])){
     $smsg = $_GET["smsg"];
-    
+}
 if (isset($emsg)) {
     $s->assign('errormsg', $emsg);
 } elseif (isset($smsg)) {
     $s->assign('successmsg', $smsg);
+}
+if (isset($_POST["email"])){
+	$s->assign('email', $_POST["email"]);
 }
 
 $db->closeConnection($conn);
 $cfg = new Config();
 $s->assign('cfg', $cfg);
 $s->display('session.login.tpl');
-
 
 ?>

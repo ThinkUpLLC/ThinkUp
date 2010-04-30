@@ -37,9 +37,10 @@ class TestOfDatabase extends UnitTestCase {
 
 	function testExecutingSQLWithTablePrefixAndGMTOffset() {
 		global $THINKTANK_CFG;
+		global $TEST_DATABASE;
 
 		//Override default CFG values
-		$THINKTANK_CFG['db_name'] ="thinktank_tests";
+		$THINKTANK_CFG['db_name'] = $TEST_DATABASE;
 
 		$this->logger = new Logger($THINKTANK_CFG['log_location']);
 		$this->db = new Database($THINKTANK_CFG);

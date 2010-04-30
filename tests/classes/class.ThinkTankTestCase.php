@@ -14,10 +14,11 @@ class ThinkTankUnitTestCase extends UnitTestCase {
     
     function setUp() {
         global $THINKTANK_CFG;
+        global $TEST_DATABASE;
         error_reporting(22527); //Don't show E_DEPRECATED PHP messages, split() is deprecated
         
         //Override default CFG values
-        $THINKTANK_CFG['db_name'] = "thinktank_tests";
+        $THINKTANK_CFG['db_name'] = $TEST_DATABASE;
         
         $this->logger = new Logger($THINKTANK_CFG['log_location']);
         $this->db = new Database($THINKTANK_CFG);
@@ -52,9 +53,10 @@ class ThinkTankWebTestCase extends WebTestCase {
     
     function setUp() {
         global $THINKTANK_CFG;
+        global $TEST_DATABASE;
         
         //Override default CFG values
-        $THINKTANK_CFG['db_name'] = "thinktank_tests";
+        $THINKTANK_CFG['db_name'] = $TEST_DATABASE;
         
         $this->logger = new Logger($THINKTANK_CFG['log_location']);
         $this->db = new Database($THINKTANK_CFG);
@@ -63,7 +65,6 @@ class ThinkTankWebTestCase extends WebTestCase {
         
         //Create all the tables based on the build script
         $create_db_script = file_get_contents($THINKTANK_CFG['source_root_path']."sql/build-db_mysql.sql");
-        $create_db_script = str_replace("ALTER DATABASE thinktank", "ALTER DATABASE thinktank_tests", $create_db_script);
         $create_statements = split(";", $create_db_script);
         foreach ($create_statements as $q) {
             if (trim($q) != '') {

@@ -132,25 +132,38 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->assertTitle('ThinkTank Forgot password');
     }
 
-    
-    function testSignInAndPrivateDashboard() {
+    function testSignInSuccessAndPrivateDashboard() {
         global $TEST_SERVER_DOMAIN;
         
         $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
-        
         $this->click("Log In");
+        
         $this->assertTitle('ThinkTank');
         $this->assertText('Logged in as: me@example.com');
         
-		//TODO Test Export link here
-        /*
-         * $this->click("Export");
-		$this->assertTitle('');
-        $this->assertText('This is post');
-        */
+        //TODO: test export link
     }
+
+    function testSignInFailureAttemptThenSuccess() {
+        global $TEST_SERVER_DOMAIN;
+        
+        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'wrongpassword');
+        $this->click("Log In");
+        
+        $this->assertText('Incorrect email or password');
+        $this->assertField('email', 'me@example.com');
+        
+        $this->setField('pwd', 'secretpassword');
+        $this->click("Log In");
+        
+        $this->assertTitle('ThinkTank');
+        $this->assertText('Logged in as: me@example.com');
+    }
+    
     
     function testChangePasswordSuccess() {
         global $TEST_SERVER_DOMAIN;

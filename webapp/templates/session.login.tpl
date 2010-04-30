@@ -26,7 +26,7 @@
         </label>
       </div>
       <div class="grid_10 left">
-        <input type="text" name="email" id="email">
+        <input type="text" name="email" id="email"{if isset($email)} value="{$email}"{/if}>
       </div>
     </div>
     <div class="clearfix">
