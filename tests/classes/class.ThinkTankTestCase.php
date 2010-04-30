@@ -14,6 +14,7 @@ class ThinkTankUnitTestCase extends UnitTestCase {
     
     function setUp() {
         global $THINKTANK_CFG;
+        error_reporting(22527); //Don't show E_DEPRECATED PHP messages, split() is deprecated
         
         //Override default CFG values
         $THINKTANK_CFG['db_name'] = "thinktank_tests";
