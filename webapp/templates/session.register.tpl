@@ -18,7 +18,7 @@
       {/if}
     </div>
   </div>
-  {if !$closed}
+  {if !$closed and !$successmsg}
     <form name="form1" method="post" action="register.php" class="login append_20">
       <div class="clearfix">
         <div class="grid_4 prefix_5 right">
@@ -277,8 +277,10 @@
     </form>
   {/if}
   <div class="center prepend_20 append_20">
+  {if !$successmsg}
     <a href="login.php">Log In</a> |
     <a href="forgot.php">Forgot password</a>
+  {/if}
   </div>
 </div>
 
