@@ -63,7 +63,7 @@ fi
 
 # if we have a crawl interval set in our config, see if it is time to crawl,
 # else ignore
-if test crawl_interval; then
+if test $crawl_interval; then
   if [ -f $PID ]; then
     echo "Crawler pid file exists '${PID}', is the crawler process already running?"
     exit
