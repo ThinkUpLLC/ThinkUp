@@ -1,19 +1,20 @@
 <?php 
-require_once (dirname(__FILE__).'/simpletest/autorun.php');
-require_once (dirname(__FILE__).'/simpletest/web_tester.php');
-
-require_once (dirname(__FILE__).'/config.tests.inc.php');
-
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+    require_once '../../../../tests/config.tests.inc.php';
+}
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once ("classes/class.ThinkTankTestCase.php");
-require_once ("common/class.Link.php");
-require_once ("common/class.Logger.php");
-require_once ("common/class.PluginHook.php");
-require_once ("common/class.Crawler.php");
-require_once ("common/class.Webapp.php");
-require_once ("common/class.Utils.php");
-require_once ("plugins/flickrthumbnails/lib/class.FlickrAPIAccessor.php");
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Link.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Logger.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.PluginHook.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Crawler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Webapp.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Utils.php';
+//require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/lib/class.FlickrAPIAccessor.php';
 
 /* Replicate all the global objects a plugin depends on; normally this is done in init.php */
 // TODO Figure out a better way to do all this than global objects in init.php

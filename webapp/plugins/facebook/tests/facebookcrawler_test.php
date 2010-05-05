@@ -1,20 +1,20 @@
 <?php
-require_once (dirname(__FILE__).'/simpletest/autorun.php');
-require_once (dirname(__FILE__).'/simpletest/web_tester.php');
-
-require_once (dirname(__FILE__).'/config.tests.inc.php');
-
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+    require_once '../../../../tests/config.tests.inc.php';
+}
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-require_once ("classes/class.ThinkTankTestCase.php");
-require_once ("common/class.User.php");
-require_once ("common/class.Instance.php");
-require_once ("common/class.OwnerInstance.php");
-require_once ("common/class.User.php");
-require_once ("common/class.Link.php");
-require_once ("common/class.Post.php");
-require_once ("plugins/facebook/lib/class.FacebookCrawler.php");
-//require_once ("plugins/facebook/lib/facebook.php");
-require_once ("classes/mock.facebook.php");
+
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.User.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Instance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.OwnerInstance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Link.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Post.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/lib/class.FacebookCrawler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.facebook.php';
+//require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/lib/facebook.php';
 
 class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
     var $fb;

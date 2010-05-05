@@ -1,13 +1,11 @@
 <?php
-require_once (dirname(__FILE__).'/simpletest/autorun.php');
-require_once (dirname(__FILE__).'/simpletest/web_tester.php');
-
-require_once (dirname(__FILE__).'/config.tests.inc.php');
-
+require_once dirname(__FILE__).'/config.tests.inc.php';
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once ("classes/class.ThinkTankTestCase.php");
-require_once ("common/class.InstanceChannel.php");
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.InstanceChannel.php';
 
 class TestOfInstanceChannelDAO extends ThinkTankUnitTestCase {
     function TestofInstanceChannelDAO() {

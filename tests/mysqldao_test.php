@@ -1,15 +1,14 @@
 <?php
- 
-require_once (dirname(__FILE__).'/simpletest/autorun.php');
-
-require_once (dirname(__FILE__).'/config.tests.inc.php');
-
+require_once dirname(__FILE__).'/config.tests.inc.php';
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once ("common/class.MySQLDAO.php");
-require_once ("common/class.Database.php");
-require_once ("common/class.Logger.php");
-require_once ("config.inc.php");
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.MySQLDAO.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Database.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.Logger.php';
+require_once $SOURCE_ROOT_PATH.'webapp/common/class.LoggerSlowSQL.php';
+require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
 
 class TestOfMySQLDAO extends UnitTestCase {
