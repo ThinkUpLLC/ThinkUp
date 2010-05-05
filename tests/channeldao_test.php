@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once (dirname(__FILE__).'/simpletest/autorun.php');
 require_once (dirname(__FILE__).'/simpletest/web_tester.php');
 
@@ -13,63 +13,76 @@ class TestOfChannelDAO extends ThinkTankUnitTestCase {
     function TestofChannelDAO() {
         $this->UnitTestCase('ChannelDAO class test');
     }
-    
+
     function setUp() {
         parent::setUp();
-        $q = "INSERT INTO tt_channels (keyword, network) VALUES ('#mysavedhashtagsearch', 'twitter');";
+        $q = "INSERT INTO tt_channels (name, network_id, network) VALUES ('#mysavedhashtagsearch', 100, 'twitter');";
         $this->db->exec($q);
-        
-        $q = "INSERT INTO tt_channels (keyword, network) VALUES ('whitehouse', 'facebook');";
+
+        $q = "INSERT INTO tt_channels (name, network_id, network) VALUES ('whitehouse', 200, 'facebook');";
         $this->db->exec($q);
-        
+
     }
-    
+
     function tearDown() {
         parent::tearDown();
     }
-    
+
     function testGetExists() {
         $cdao = new ChannelDAO($this->db, $this->logger);
-        
+
         $c = $cdao->get(1);
 
         $this->assertEqual($c->id, 1);
-        $this->assertEqual($c->keyword, '#mysavedhashtagsearch');
+        $this->assertEqual($c->name, '#mysavedhashtagsearch');
         $this->assertEqual($c->network, 'twitter');
     }
-    
+
     function testGetDoesntExist() {
         $cdao = new ChannelDAO($this->db, $this->logger);
-        
+
         $c = $cdao->get(4);
-        
+
         $this->assertEqual($c, null);
     }
 
-    
-    function testGetByKeywordExists() {
+
+    function testGetByNetworkIdExists() {
         $cdao = new ChannelDAO($this->db, $this->logger);
-        
-        $c = $cdao->getByKeyword('#mysavedhashtagsearch', 'twitter');
-        
-        $this->assertEqual($c->keyword, '#mysavedhashtagsearch');
+
+        $c = $cdao->getByNetworkId(100, 'twitter');
+
+        $this->assertEqual($c->name, '#mysavedhashtagsearch');
         $this->assertEqual($c->id, 1);
         $this->assertEqual($c->network, 'twitter');
+        $this->assertEqual($c->network_id, 100);
     }
-    
-    function testGetByKeywordDoesntExist() {
+
+    function testGetByNetworkIdDoesntExist() {
         $cdao = new ChannelDAO($this->db, $this->logger);
-        
-        $c = $cdao->getByKeyword('#idontexist', 'twitter');
-        
+
+        $c = $cdao->getByNetworkId(300, 'twitter');
+
         $this->assertEqual($c, null);
     }
-    
+
     function testInsert() {
         $cdao = new ChannelDAO($this->db, $this->logger);
-        $newchannelid = $cdao->insert('#thatswhatshesaid', 'twitter');
+        $newchannelid = $cdao->insert('#thatswhatshesaid', 'twitter', 0, 'htttp://search.twitter.com/?q=#thatswhatshesaid');
         $this->assertEqual(3, $newchannelid);
     }
-    
+
+    function testDeleteExistingChannel(){
+        $cdao = new ChannelDAO($this->db, $this->logger);
+        $result = $cdao->delete(100, 'twitter');
+        $this->assertTrue($result);
+    }
+
+    function testDeleteNonExistentChannel(){
+        $cdao = new ChannelDAO($this->db, $this->logger);
+        $result = $cdao->delete(300, 'twitter');
+        $this->assertTrue(!$result);
+    }
+
 }
 ?>

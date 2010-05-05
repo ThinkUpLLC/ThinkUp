@@ -1,4 +1,4 @@
-<?php 
+<?php
 class FacebookCrawler {
     var $instance;
     var $logger;
@@ -7,7 +7,7 @@ class FacebookCrawler {
     var $ud;
     var $pd;
     var $db;
-    
+
     function FacebookCrawler($instance, $logger, $facebook, $db) {
         $this->instance = $instance;
         $this->facebook = $facebook;
@@ -16,7 +16,7 @@ class FacebookCrawler {
         $this->ud = new UserDAO($this->db, $this->logger);
         $this->pd = new PostDAO($this->db, $this->logger);
     }
-    
+
     function fetchInstanceUserInfo($uid, $session_key) {
         $user = $this->fetchUserInfo($uid, $session_key, "Owner Status");
         $this->owner_object = $user;
@@ -27,24 +27,41 @@ class FacebookCrawler {
         }
         $this->logger->logStatus($status_message, get_class($this));
     }
-    
+
     function fetchUserInfo($uid, $session_key, $found_in) {
         // Get owner user details and save them to DB
         $user_details = $this->facebook->api_client->users_getInfo($uid, 'first_name,last_name,current_location,username,website,pic_square,about_me');
-        
+
         /*
          $serialized = serialize($user_details);
          echo "SERIALIZED USER DETAILS FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
          print_r($user_details);*/
 
-        
+
         $user = $this->parseUserDetails($user_details);
         $user["post_count"] = $this->pd->getTotalPostsByUser($uid);
         $user_object = new User($user, $found_in);
         $this->ud->updateUser($user_object);
         return $user_object;
     }
-    
+
+    function fetchPagesUserIsFanOf($uid, $session_key) {
+        $query = "SELECT page_id, name, page_url FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = ".$uid.")";
+
+        try{
+            $pages = $this->facebook->api_client->fql_query($query);
+             
+//         $serialized = serialize($pages);
+//         echo "SERIALIZED PAGES FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
+//         print_r($pages);
+         
+        } catch (Exception $e){
+            $this->logger->logStatus("Exception '".$e->getMessage()."' thrown when trying to retrieve pages for $uid", get_class($this));
+            $pages = false;
+        }
+        return $pages;
+    }
+
     private function parseUserDetails($details) {
         $ua = array();
         $ua["user_name"] = $details[0]["username"];
@@ -75,25 +92,25 @@ class FacebookCrawler {
         return $ua;
     }
 
-    
+
     function fetchUserPostsAndReplies($uid, $session_key) {
         $stream = $this->facebook->api_client->stream_get($uid, $uid, '', '', 10, $session_key, '');
-        
+
         /*$serialized = serialize($stream);
-        echo "SERIALIZED STREAM FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-        print_r($stream);*/
-        
+         echo "SERIALIZED STREAM FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
+         print_r($stream);*/
+
         if (is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
             $this->logger->logStatus(sizeof($stream["posts"])." Facebook posts found for user ID $uid with session key $session_key", get_class($this));
-            
+
             $thinktank_data = $this->parseStream($stream);
             $posts = $thinktank_data["posts"];
-            
+
             foreach ($posts as $post) {
                 $added_posts = $this->pd->addPost($post);
                 $this->logger->logStatus("Added $added_posts post for ".$post["user_name"].":".$post["post_text"], get_class($this));
             }
-            
+
             $users = $thinktank_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
@@ -103,10 +120,10 @@ class FacebookCrawler {
         } else {
             $this->logger->logStatus("No Facebook posts found for user ID $uid", get_class($this));
         }
-        
+
     }
 
-    
+
     private function parseStream($stream) {
         $thinktank_posts = array();
         $thinktank_users = array();
@@ -133,7 +150,7 @@ class FacebookCrawler {
         }
         return array("posts"=>$thinktank_posts, "users"=>$thinktank_users);
     }
-    
+
     private function getProfile($userid, $profiles) {
         foreach ($profiles as $p) {
             if ($p['id'] == $userid) {
