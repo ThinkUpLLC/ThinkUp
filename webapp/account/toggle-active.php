@@ -10,7 +10,7 @@ if (!$session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
-$u = $_GET["u"];
+$uid = $_GET["u"];
 $p = $_GET["p"];
 if ($p != 1) {
 	$p = 0;
@@ -18,7 +18,7 @@ if ($p != 1) {
 
 $id = new InstanceDAO($db);
 
-$id->setActive($u, $p);
+$id->setActive($uid, $p);
 
 $db->closeConnection($conn);	
 ?>

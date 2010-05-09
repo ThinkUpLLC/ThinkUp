@@ -24,11 +24,11 @@
             <a href="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username}</a>
         </div>
         <div class="grid_8">
-            <span id="div{$i->network_username}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
-            {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->network_username}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
+            <span id="div{$i->network_user_id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
+            {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->network_user_id}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
         </div>
         <div class="grid_9">
-    		<span id="divactivate{$i->network_username}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->network_username}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+    		<span id="divactivate{$i->network_user_id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->network_user_id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
         </div>
     {/foreach}

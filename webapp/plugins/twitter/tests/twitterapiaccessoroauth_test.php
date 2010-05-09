@@ -36,6 +36,7 @@ class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
         $r["id"] = 0;
         $r['network_username'] = 'user';
         $r['network_user_id'] = 0;
+        $r['network_viewer_id'] = 0;
         $r['last_status_id'] = 0;
         $r['last_page_fetched_replies'] = 0;
         $r['last_page_fetched_tweets'] = 0;
@@ -72,6 +73,7 @@ class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
         $r["id"] = 0;
         $r['network_username'] = 'user';
         $r['network_user_id'] = 0;
+        $r['network_viewer_id'] = 0;
         $r['last_status_id'] = 0;
         $r['last_page_fetched_replies'] = 0;
         $r['last_page_fetched_tweets'] = 0;
@@ -106,6 +108,7 @@ class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
         $r["id"] = 0;
         $r['network_username'] = 'user';
         $r['network_user_id'] = 0;
+        $r['network_viewer_id'] = 0;
         $r['last_status_id'] = 0;
         $r['last_page_fetched_replies'] = 0;
         $r['last_page_fetched_tweets'] = 0;
