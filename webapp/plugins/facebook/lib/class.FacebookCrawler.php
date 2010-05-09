@@ -47,14 +47,13 @@ class FacebookCrawler {
 
     function fetchPagesUserIsFanOf($uid, $session_key) {
         $query = "SELECT page_id, name, page_url FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = ".$uid.")";
-
         try{
             $pages = $this->facebook->api_client->fql_query($query);
              
-//         $serialized = serialize($pages);
-//         echo "SERIALIZED PAGES FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-//         print_r($pages);
-         
+            //         $serialized = serialize($pages);
+            //         echo "SERIALIZED PAGES FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
+            //         print_r($pages);
+             
         } catch (Exception $e){
             $this->logger->logStatus("Exception '".$e->getMessage()."' thrown when trying to retrieve pages for $uid", get_class($this));
             $pages = false;
@@ -119,6 +118,36 @@ class FacebookCrawler {
             }
         } else {
             $this->logger->logStatus("No Facebook posts found for user ID $uid", get_class($this));
+        }
+
+    }
+
+    function fetchPagePostsAndReplies($pid, $uid, $session_key) {
+        $stream = $this->facebook->api_client->stream_get($uid, $pid, '', '', 2, $session_key, '');
+
+        //        $serialized = serialize($stream);
+        //        echo "SERIALIZED STREAM FOR PAGE $pid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
+        //        print_r($stream);
+
+        if (is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
+            $this->logger->logStatus(sizeof($stream["posts"])." Facebook posts found for page ID $pid with session key $session_key", get_class($this));
+
+            $thinktank_data = $this->parseStream($stream);
+            $posts = $thinktank_data["posts"];
+
+            foreach ($posts as $post) {
+                $added_posts = $this->pd->addPost($post);
+                $this->logger->logStatus("Added $added_posts post for ".$post["user_name"].":".$post["post_text"], get_class($this));
+            }
+
+            $users = $thinktank_data["users"];
+            if (count($users) > 0) {
+                foreach ($users as $user) {
+                    $this->fetchUserInfo($user["user_id"], $session_key, "Comments");
+                }
+            }
+        } else {
+            $this->logger->logStatus("No Facebook posts found for page ID $pid", get_class($this));
         }
 
     }
