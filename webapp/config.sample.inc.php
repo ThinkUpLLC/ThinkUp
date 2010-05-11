@@ -113,8 +113,6 @@ $THINKTANK_CFG['flickr_api_key']            = 'your_flickr_api_key';
 // To enable reCAPTCHA, set enable to true and fill in your keys and libpath; more info at http://recaptcha.net/plugins/php/
 // Otherwise, leave these settings as-is.
 $THINKTANK_CFG['recaptcha_enable']          = false;
-$THINKTANK_CFG['recaptcha_path']            = '';
 $THINKTANK_CFG['recaptcha_public_key']      = '';
 $THINKTANK_CFG['recaptcha_private_key']     = '';
-
 ?>

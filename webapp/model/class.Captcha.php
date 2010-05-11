@@ -11,7 +11,7 @@ class Captcha {
         
         if ($config['recaptcha_enable']) {
             $this->type = 1;
-            require_once ($config['recaptcha_path']."/recaptchalib.php");
+            require_once ($config['source_root_path']."extlib/recaptchalib.php");
             $this->pubkey = $config['recaptcha_public_key'];
             $this->prikey = $config['recaptcha_private_key'];
         } else {
