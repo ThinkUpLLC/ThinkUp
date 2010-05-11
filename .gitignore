@@ -1,11 +1,13 @@
 webapp/config.inc.php
 webapp/common/recaptchalib.php
-webapp/templates_c/*.php
-webapp/templates_c/cache/*.tpl
+webapp/view/compiled_view/*.php
+webapp/view/compiled_view/cache/*.tpl
 logs/crawler.log
 logs/sql.log
 logs/archive/*.bz2
 logs/*.log
+logs/crawl.pid
+logs/lastcrawl
 libs/*
 smarty/*
 tests/config.tests.inc.php
