@@ -111,7 +111,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript">
 </script>
 <script type="text/javascript">
-                FB.init("{$fb_api_key}", "{$cfg->site_root_path}account/xd_receiver.php", {literal}{
+                FB.init("{$fb_api_key}", "{$cfg->site_root_path}plugins/facebook/xd_receiver.php", {literal}{
                     permsToRequestOnConnect: "read_stream,offline_access",
                 });
 </script>
@@ -121,7 +121,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
         var sessionKey = session.session_key;
         $.ajax({
             type: "GET",
-            url: '{/literal}{$cfg->site_root_path}{literal}account/fbsavesession.php',
+            url: '{/literal}{$cfg->site_root_path}{literal}plugins/facebook/auth.php',
             data: {
                 sessionKey: sessionKey
             },
@@ -135,7 +135,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     };
 </script>
 
-<script src="{/literal}{$cfg->site_root_path}{literal}plugins/facebook/fbconnect.js" type="text/javascript">
+<script src="{/literal}{$cfg->site_root_path}{literal}plugins/facebook/assets/js/fbconnect.js" type="text/javascript">
 </script>
 <script type="text/javascript">
     window.onload = function(){

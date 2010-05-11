@@ -3,7 +3,7 @@
  Plugin Name: Twitter
  Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/twitter/
  Description: Crawler plugin fetches data from Twitter.com for the authorized user.
- Icon: twitter_icon.png
+ Icon: assets/img/twitter_icon.png
  Version: 0.01
  Author: Gina Trapani
  */

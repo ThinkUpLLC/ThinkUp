@@ -135,7 +135,7 @@ class PluginDAO extends MySQLDAO {
         $installed_plugins = array();
         $plugin_files = Utils::getPlugins($plugin_path.'webapp/plugins');
         foreach ($plugin_files as $pf) {
-            foreach (glob($plugin_path.'webapp/plugins/'.$pf."/*.php") as $includefile) {
+            foreach (glob($plugin_path.'webapp/plugins/'.$pf."/controller/*.php") as $includefile) {
                 $fhandle = fopen($includefile, "r");
                 $contents = fread($fhandle, filesize($includefile));
                 fclose($fhandle);

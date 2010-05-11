@@ -45,12 +45,12 @@ h3. Configure the application and its plugins
 h4. Twitter Plugin Support: Register your app with Twitter (for OAuth support)
 
 * Log into Twitter and "register your ThinkTank instance":http://twitter.com/oauth_clients/. Set the callback URL to 
-<code>http://yourserver.com/path-to-thinktank-webapp/account/oauth.php</code> 
+<code>http://yourserver.com/path-to-thinktank-webapp/plugins/twitter/auth.php</code> 
 Write down the items labeled "Consumer key" and "Consumer secret" and add them to the <code>config.inc.php</code> file.
 
 h4. Facebook Plugin Support: Create a new Facebook application
 
-* "Create a new Facebook Application":http://facebook.com/developers/ and set the Connect URL to <code>http://yourserver.com/path-to-thinktank-webapp/account/</code> and the Post-Remove and Post-Authorize URLs to <code>http://yourserver.com/path-to-thinktank-webapp/account/?p=facebook</code>.
+* "Create a new Facebook Application":http://facebook.com/developers/ and set the Connect URL to <code>http://yourserver.com/path-to-thinktank-webapp/plugins/facebook/</code> and the Post-Remove and Post-Authorize URLs to <code>http://yourserver.com/path-to-thinktank-webapp/account/?p=facebook</code>.
 * Write down your API Key and Application Secret, and enter those values into the <code>config.inc.php</code> file.
 
 h4. Flickr, Bit.ly, and ReCAPTCHA Plugins/Support (In-Progress)

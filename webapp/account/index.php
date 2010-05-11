@@ -75,7 +75,7 @@ if (!isset($_GET['m']) && isset($_GET['p'])) {
 if (isset($active_plugin)) {
     $webapp->configuration($active_plugin);
     array_push($s->template_dir, 'plugins/'.$active_plugin);
-    $s->assign('body', $THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$active_plugin.'/templates/'.$active_plugin.'.account.index.tpl');
+    $s->assign('body', $THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$active_plugin.'/view/'.$active_plugin.'.account.index.tpl');
 }
 /* End plugin-specific configuration handling */
 

@@ -5,7 +5,7 @@
  Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/hellothinktank/
  Description: The "Hello, world!" of ThinkTank plugins.
  Version: 0.01
- Icon: plugin_icon.png
+ Icon: assets/img/plugin_icon.png
  Author: Gina Trapani
 */
 

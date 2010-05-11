@@ -13,8 +13,8 @@ require_once $SOURCE_ROOT_PATH.'webapp/common/class.PluginHook.php';
 require_once $SOURCE_ROOT_PATH.'webapp/common/class.Crawler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/common/class.Webapp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/common/class.Utils.php';
-//require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/lib/class.FlickrAPIAccessor.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php';
+//require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/model/class.FlickrAPIAccessor.php';
 
 /* Replicate all the global objects a plugin depends on; normally this is done in init.php */
 // TODO Figure out a better way to do all this than global objects in init.php
@@ -28,7 +28,11 @@ try {
 catch(Exception $e) {
     echo $e->getMessage();
 }
-require_once ("plugins/flickrthumbnails/flickrthumbnails.php");
+
+//use fake Flickr API key
+$THINKTANK_CFG['flickr_api_key'] = 'dummykey';
+
+require_once ("plugins/flickrthumbnails/controller/flickrthumbnails.php");
 
 
 class TestOfFlickrPlugin extends ThinkTankUnitTestCase {
@@ -94,16 +98,16 @@ class TestOfFlickrPlugin extends ThinkTankUnitTestCase {
         $ldao = new LinkDAO($this->db, $this->logger);
         
         $link = $ldao->getLinkById(43);
-        $this->assertEqual($link->expanded_url, 'http://farm5.static.flickr.com/4027/4490817394_70452f4cfd_m.jpg');
+        $this->assertEqual($link->expanded_url, 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
         $this->assertEqual($link->error, '');
         
         $link = $ldao->getLinkById(42);
         $this->assertEqual($link->expanded_url, '');
-        $this->assertEqual($link->error, 'Photo not found');
+        $this->assertEqual($link->error, 'No response from Flickr API');
         
         $link = $ldao->getLinkById(41);
         $this->assertEqual($link->expanded_url, '');
-        $this->assertEqual($link->error, 'Photo not found');
+        $this->assertEqual($link->error, 'No response from Flickr API');
     }
     
 }

@@ -26,7 +26,7 @@ try {
 catch(Exception $e) {
     echo $e->getMessage();
 }
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/expandurls.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/controller/expandurls.php';
 
 
 class TestOfExpandURLsPlugin extends ThinkTankUnitTestCase {

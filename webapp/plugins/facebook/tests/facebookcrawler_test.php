@@ -12,9 +12,9 @@ require_once $SOURCE_ROOT_PATH.'webapp/common/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/common/class.OwnerInstance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/common/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/common/class.Post.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/lib/class.FacebookCrawler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookCrawler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.facebook.php';
-//require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/lib/facebook.php';
+//require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/model/facebook.php';
 
 class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
     var $fb;

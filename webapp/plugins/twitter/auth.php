@@ -6,6 +6,7 @@ if (!isset($_SESSION['user'])) {
 
 // set up
 chdir("..");
+chdir("..");
 
 
 require_once ("common/init.php");

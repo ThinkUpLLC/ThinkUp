@@ -15,8 +15,6 @@ require_once 'class.Post.php';
 require_once 'class.Link.php';
 require_once 'class.Instance.php';
 require_once 'class.OwnerInstance.php';
-//require_once 'class.LongUrlAPIAccessor.php';
-//require_once 'class.FlickrAPIAccessor.php';
 require_once 'class.PluginHook.php';
 require_once 'class.Crawler.php';
 require_once 'class.Utils.php';
@@ -56,10 +54,10 @@ try {
 $pdao = new PluginDAO($db);
 $active_plugins = $pdao->getActivePlugins();
 foreach ($active_plugins as $ap) {
-    foreach (glob($THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$ap->folder_name."/lib/*.php") as $includefile) {
+    foreach (glob($THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$ap->folder_name."/model/*.php") as $includefile) {
         require_once ($includefile);
     }
-    foreach (glob($THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$ap->folder_name."/*.php") as $includefile) {
+    foreach (glob($THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$ap->folder_name."/controller/*.php") as $includefile) {
         require_once ($includefile);
     }
 }
