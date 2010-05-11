@@ -1,5 +1,5 @@
 <?php
-//require_once ($THINKTANK_CFG['source_root_path'].'webapp/common/OAuth.php');
+//require_once ($THINKTANK_CFG['source_root_path'].'webapp/model/OAuth.php');
 
 /**
  * Twitter OAuth class mock

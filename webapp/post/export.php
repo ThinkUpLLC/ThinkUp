@@ -6,7 +6,7 @@ if (!isset($_SESSION['user'])) { header("Location: /session/login.php"); }
 chdir("..");
 
 
-require_once("common/init.php");
+require_once("init.php");
 
 $od = new OwnerDAO($db);
 $owner = $od->getByEmail($_SESSION['user']);

@@ -7,12 +7,12 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.Link.php';
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.Logger.php';
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.PluginHook.php';
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.Crawler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.Webapp.php';
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.Utils.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 
 /* Replicate all the global objects a plugin depends on; normally this is done in init.php */
 // TODO Figure out a better way to do all this than global objects in init.php

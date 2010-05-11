@@ -4,7 +4,7 @@ if (!isset($_SESSION['user'])) { header("Location: /session/login.php"); }
 
 // set up
 chdir("..");
-require_once("common/init.php");
+require_once("init.php");
 
 $pd = new PostDAO($db);
 

@@ -6,38 +6,38 @@ if ($version[0] < 5) {
     die();
 }
 
-require_once 'class.Config.php';
-require_once 'class.Database.php';
-require_once 'class.MySQLDAO.php';
-require_once 'class.User.php';
-require_once 'class.Owner.php';
-require_once 'class.Post.php';
-require_once 'class.Link.php';
-require_once 'class.Instance.php';
-require_once 'class.OwnerInstance.php';
-require_once 'class.PluginHook.php';
-require_once 'class.Crawler.php';
-require_once 'class.Utils.php';
-require_once 'class.Captcha.php';
-require_once 'class.Session.php';
-require_once 'class.Plugin.php';
-require_once 'class.Channel.php';
-require_once 'class.InstanceChannel.php';
+require_once 'model/class.Config.php';
+require_once 'model/class.Database.php';
+require_once 'model/class.MySQLDAO.php';
+require_once 'model/class.User.php';
+require_once 'model/class.Owner.php';
+require_once 'model/class.Post.php';
+require_once 'model/class.Link.php';
+require_once 'model/class.Instance.php';
+require_once 'model/class.OwnerInstance.php';
+require_once 'model/class.PluginHook.php';
+require_once 'model/class.Crawler.php';
+require_once 'model/class.Utils.php';
+require_once 'model/class.Captcha.php';
+require_once 'model/class.Session.php';
+require_once 'model/class.Plugin.php';
+require_once 'model/class.Channel.php';
+require_once 'model/class.InstanceChannel.php';
 
-require_once 'OAuth.php';
+require_once 'model/OAuth.php';
 
-require_once 'class.LoggerSlowSQL.php';
+require_once 'model/class.LoggerSlowSQL.php';
 
 # crawler only
-require_once 'class.Logger.php';
+require_once 'model/class.Logger.php';
 
 # webapp only
-require_once 'class.Follow.php';
-require_once 'class.Webapp.php';
+require_once 'model/class.Follow.php';
+require_once 'model/class.Webapp.php';
 
 require_once 'config.inc.php';
 require_once ($THINKTANK_CFG['smarty_path'].'Smarty.class.php');
-require_once 'class.SmartyThinkTank.php';
+require_once 'model/class.SmartyThinkTank.php';
 
 $webapp = new Webapp();
 $crawler = new Crawler();

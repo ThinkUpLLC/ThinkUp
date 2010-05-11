@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Twitter
- Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/twitter/
+ Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/model/plugins/twitter/
  Description: Crawler plugin fetches data from Twitter.com for the authorized user.
  Icon: assets/img/twitter_icon.png
  Version: 0.01

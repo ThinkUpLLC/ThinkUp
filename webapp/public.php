@@ -5,7 +5,7 @@ session_start();
 
 //Print_r  ($_i);
 
-require_once ("common/init.php");
+require_once ("init.php");
 
 $db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();

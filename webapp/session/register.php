@@ -5,8 +5,8 @@ session_start();
 // set up
 chdir("..");
 
-require_once ("common/init.php");
-require_once ("common/class.Mailer.php");
+require_once ("init.php");
+require_once ("model/class.Mailer.php");
 
 $session = new Session();
 if ($session->isLoggedIn()) {

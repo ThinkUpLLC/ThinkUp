@@ -2,7 +2,7 @@
 chdir("..");
 
 
-require_once ("common/init.php");
+require_once ("init.php");
 
 session_start();
 $session = new Session();

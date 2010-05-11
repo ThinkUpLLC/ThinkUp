@@ -5,7 +5,7 @@ session_start();
 chdir("..");
 
 
-require_once("common/init.php");
+require_once("init.php");
 
 if (!isset($_GET['usr']) || !isset($_GET['code']) ) {
 	echo "ERROR: Invalid code given...";

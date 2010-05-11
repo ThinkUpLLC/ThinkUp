@@ -2,7 +2,7 @@
 
 /* 
  Plugin Name: Hello ThinkTank
- Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/common/plugins/hellothinktank/
+ Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/model/plugins/hellothinktank/
  Description: The "Hello, world!" of ThinkTank plugins.
  Version: 0.01
  Icon: assets/img/plugin_icon.png

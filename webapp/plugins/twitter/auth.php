@@ -9,7 +9,7 @@ chdir("..");
 chdir("..");
 
 
-require_once ("common/init.php");
+require_once ("init.php");
 
 $s = new SmartyThinkTank();
 

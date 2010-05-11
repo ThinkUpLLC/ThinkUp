@@ -6,7 +6,7 @@ if (!isset($_SESSION['user'])) {
     die();
 }
 else {
-    require_once("common/init.php");
+    require_once("init.php");
     $od = new OwnerDAO($db);
     $owner = $od->getByEmail($_SESSION['user']);
     $id = new InstanceDAO($db);

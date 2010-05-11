@@ -8,7 +8,7 @@ if (!isset($_SESSION['user']))  {
 chdir("..");
 
 
-require_once("common/init.php");
+require_once("init.php");
 
 $od = new OwnerDAO($db);
 $ud = new UserDAO($db);

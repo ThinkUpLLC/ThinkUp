@@ -1,9 +1,9 @@
 <?php 
 
-require_once ("common/class.MySQLDAO.php");
-require_once ("common/class.Database.php");
-require_once ("common/class.Logger.php");
-require_once ("common/class.LoggerSlowSQL.php");
+require_once ("model/class.MySQLDAO.php");
+require_once ("model/class.Database.php");
+require_once ("model/class.Logger.php");
+require_once ("model/class.LoggerSlowSQL.php");
 require_once ("config.inc.php");
 
 

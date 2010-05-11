@@ -5,8 +5,8 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.Utils.php';
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.Plugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Plugin.php';
 
 class TestOfPluginDAO extends ThinkTankUnitTestCase {
 

@@ -6,8 +6,8 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.Logger.php';
-require_once $SOURCE_ROOT_PATH.'webapp/common/class.Utils.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 //require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/lib/class.FlickrAPIAccessor.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';

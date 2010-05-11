@@ -24,7 +24,7 @@ foreach ($oid as $o) {
 chdir("..");
 
 
-require_once("common/init.php");
+require_once("init.php");
 
 $cfg = new Config();
 
