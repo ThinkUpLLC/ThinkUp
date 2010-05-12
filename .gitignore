@@ -1,5 +1,4 @@
 webapp/config.inc.php
-webapp/model/recaptchalib.php
 webapp/view/compiled_view/*.php
 webapp/view/compiled_view/cache/*.tpl
 logs/crawler.log
