@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs for page JSON.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="file-name">/plugins/facebook/model/jsonwrapper/JSON/JSON.php</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-classes">Classes</a>
+			|									<a href="#sec-constants">Constants</a>
+										</div>
+	<div class="info-box-body">	
+		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Converts to and from JSON format.</p>
+<p class="description"><p>JSON (JavaScript Object Notation) is a lightweight data-interchange  format. It is easy for humans to read and write. It is easy for machines  to parse and generate. It is based on a subset of the JavaScript  Programming Language, Standard ECMA-262 3rd Edition - December 1999.  This feature can also be found in  Python. JSON is a text format that is  completely language independent but uses conventions that are familiar  to programmers of the C-family of languages, including C, C++, C#, Java,  JavaScript, Perl, TCL, and many others. These properties make JSON an  ideal data-interchange language.</p><p>This package provides a simple encoder and decoder for JSON notation. It  is intended for use with client-side Javascript applications that make  use of HTTPRequest to perform server communication functions - data can  be encoded into JSON notation for use in a client-side javascript, or  decoded from incoming Javascript requests. JSON format is native to  Javascript, and can be directly eval()'ed with no further parsing  overhead</p><p>All strings should be in ASCII or UTF-8 format!</p><p>LICENSE: Redistribution and use in source and binary forms, with or  without modification, are permitted provided that the following  conditions are met: Redistributions of source code must retain the  above copyright notice, this list of conditions and the following  disclaimer. Redistributions in binary form must reproduce the above  copyright notice, this list of conditions and the following disclaimer  in the documentation and/or other materials provided with the  distribution.</p><p>THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  NO EVENT SHALL CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH  DAMAGE.</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Brett Stimmerman &lt;<a href="mailto:brettstimmerman[at]gmail[dot]com">brettstimmerman[at]gmail[dot]com</a>&gt;</li>
+				<li><span class="field">author:</span> Michal Migurski &lt;<a href="mailto:mike-json@teczno.com">mike-json@teczno.com</a>&gt;</li>
+				<li><span class="field">author:</span> Matt Knapp &lt;<a href="mailto:mdknapp[at]gmail[dot]com">mdknapp[at]gmail[dot]com</a>&gt;</li>
+				<li><span class="field">version:</span> CVS: $Id: JSON.php,v 1.31 2006/06/28 05:54:17 migurski Exp $</li>
+				<li><span class="field">copyright:</span> 2005 Michal Migurski</li>
+				<li><span class="field">link:</span> <a href="http://pear.php.net/pepr/pepr-proposal-show.php?id=198">http://pear.php.net/pepr/pepr-proposal-show.php?id=198</a></li>
+				<li><span class="field">license:</span> <a href="http://www.opensource.org/licenses/bsd-license.php">http://www.opensource.org/licenses/bsd-license.php</a></li>
+			</ul>
+		
+			</div>
+</div>
+		
+	<a name="sec-classes"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Classes</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Classes</span>
+			|										<a href="#sec-constants">Constants</a>
+															</div>
+		<div class="info-box-body">	
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; vertical-align: top">
+						<a href="../Services_JSON/Services_JSON.html">Services_JSON</a>
+					</td>
+					<td>
+											Converts to and from JSON format.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; vertical-align: top">
+						<a href="../Services_JSON/Services_JSON_Error.html">Services_JSON_Error</a>
+					</td>
+					<td>
+											
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+	
+	<a name="sec-constants"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-classes">Classes</a>
+				|									<span class="disabled">Constants</span>
+											</div>
+		<div class="info-box-body">	
+			<a name="defineSERVICES_JSON_IN_ARR"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="const-title">
+			<span class="const-name">SERVICES_JSON_IN_ARR</span> = 3
+			(line <span class="line-number">72</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Marker constant for Services_JSON::decode(), used to flag stack state</p>
+	
+		
+</div>
+<a name="defineSERVICES_JSON_IN_CMT"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="const-title">
+			<span class="const-name">SERVICES_JSON_IN_CMT</span> = 5
+			(line <span class="line-number">82</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Marker constant for Services_JSON::decode(), used to flag stack state</p>
+	
+		
+</div>
+<a name="defineSERVICES_JSON_IN_OBJ"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="const-title">
+			<span class="const-name">SERVICES_JSON_IN_OBJ</span> = 4
+			(line <span class="line-number">77</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Marker constant for Services_JSON::decode(), used to flag stack state</p>
+	
+		
+</div>
+<a name="defineSERVICES_JSON_IN_STR"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="const-title">
+			<span class="const-name">SERVICES_JSON_IN_STR</span> = 2
+			(line <span class="line-number">67</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Marker constant for Services_JSON::decode(), used to flag stack state</p>
+	
+		
+</div>
+<a name="defineSERVICES_JSON_LOOSE_TYPE"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="const-title">
+			<span class="const-name">SERVICES_JSON_LOOSE_TYPE</span> = 16
+			(line <span class="line-number">87</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Behavior switch for Services_JSON::decode()</p>
+	
+		
+</div>
+<a name="defineSERVICES_JSON_SLICE"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="const-title">
+			<span class="const-name">SERVICES_JSON_SLICE</span> = 1
+			(line <span class="line-number">62</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Marker constant for Services_JSON::decode(), used to flag stack state</p>
+	
+		
+</div>
+<a name="defineSERVICES_JSON_SUPPRESS_ERRORS"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="const-title">
+			<span class="const-name">SERVICES_JSON_SUPPRESS_ERRORS</span> = 32
+			(line <span class="line-number">92</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Behavior switch for Services_JSON::decode()</p>
+	
+		
+</div>
+		</div>
+	</div>
+	
+	
+	
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 13 May 2010 12:21:02 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

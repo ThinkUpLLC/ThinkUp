@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class FacebookCrawler</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class FacebookCrawler</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_plugins---facebook---model---class.FacebookCrawler.php.html">/plugins/facebook/model/class.FacebookCrawler.php</a> (line <span class="field">2</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																																																																								<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$db" title="details" class="var-name">$db</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$facebook" title="details" class="var-name">$facebook</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$instance" title="details" class="var-name">$instance</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$logger" title="details" class="var-name">$logger</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$owner_object" title="details" class="var-name">$owner_object</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$pd" title="details" class="var-name">$pd</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$ud" title="details" class="var-name">$ud</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																				
+												<div class="method-definition">
+											<span class="method-result">FacebookCrawler</span>
+										<a href="#FacebookCrawler" title="details" class="method-name">FacebookCrawler</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$logger</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$facebook</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$db</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#fetchInstanceUserInfo" title="details" class="method-name">fetchInstanceUserInfo</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#fetchPagePostsAndReplies" title="details" class="method-name">fetchPagePostsAndReplies</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#fetchPagesUserIsFanOf" title="details" class="method-name">fetchPagesUserIsFanOf</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#fetchUserInfo" title="details" class="method-name">fetchUserInfo</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$found_in</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#fetchUserPostsAndReplies" title="details" class="method-name">fetchUserPostsAndReplies</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$db" id="$db"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$db</span>
+						(line <span class="line-number">9</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$facebook" id="$facebook"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$facebook</span>
+						(line <span class="line-number">5</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$instance" id="$instance"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$instance</span>
+						(line <span class="line-number">3</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$logger" id="$logger"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$logger</span>
+						(line <span class="line-number">4</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$owner_object" id="$owner_object"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$owner_object</span>
+						(line <span class="line-number">6</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$pd" id="$pd"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$pd</span>
+						(line <span class="line-number">8</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$ud" id="$ud"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$ud</span>
+						(line <span class="line-number">7</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodFacebookCrawler" id="FacebookCrawler"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor FacebookCrawler</span> (line <span class="line-number">11</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">FacebookCrawler</span>
+		<span class="method-name">
+			FacebookCrawler
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$logger</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$facebook</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$db</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$instance</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$logger</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$facebook</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$db</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfetchInstanceUserInfo" id="fetchInstanceUserInfo"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetchInstanceUserInfo</span> (line <span class="line-number">20</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			fetchInstanceUserInfo
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$uid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$session_key</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfetchPagePostsAndReplies" id="fetchPagePostsAndReplies"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetchPagePostsAndReplies</span> (line <span class="line-number">125</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			fetchPagePostsAndReplies
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$uid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$session_key</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfetchPagesUserIsFanOf" id="fetchPagesUserIsFanOf"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetchPagesUserIsFanOf</span> (line <span class="line-number">48</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			fetchPagesUserIsFanOf
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$uid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$session_key</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfetchUserInfo" id="fetchUserInfo"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetchUserInfo</span> (line <span class="line-number">31</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			fetchUserInfo
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$found_in</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$uid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$session_key</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$found_in</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfetchUserPostsAndReplies" id="fetchUserPostsAndReplies"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetchUserPostsAndReplies</span> (line <span class="line-number">95</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			fetchUserPostsAndReplies
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$session_key</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$uid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$session_key</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 13 May 2010 12:21:00 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>
