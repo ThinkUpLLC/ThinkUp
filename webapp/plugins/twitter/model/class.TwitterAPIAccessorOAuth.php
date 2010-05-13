@@ -29,7 +29,7 @@ class TwitterAPIAccessorOAuth {
     }
     
     function apiRequestFromWebapp($url) {
-        $content = $this->to->OAuthRequest($url, array(), 'GET');
+        $content = $this->to->OAuthRequest($url, 'GET', array());
         $status = $this->to->lastStatusCode();
         return array($status, $content);
     }
@@ -265,7 +265,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     
     function apiRequest($url, $logger, $args = array(), $auth = true) {
         if ($auth) {
-            $content = $this->to->OAuthRequest($url, $args, 'GET');
+            $content = $this->to->OAuthRequest($url, 'GET', $args);
             $status = $this->to->lastStatusCode();
             
             $this->available_api_calls_for_twitter = $this->available_api_calls_for_twitter - 1;
