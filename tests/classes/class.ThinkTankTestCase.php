@@ -1,5 +1,4 @@
 <?php 
-
 require_once ("model/class.MySQLDAO.php");
 require_once ("model/class.Database.php");
 require_once ("model/class.Logger.php");
@@ -35,11 +34,17 @@ class ThinkTankUnitTestCase extends UnitTestCase {
     }
     
     function tearDown() {
+        global $TEST_DATABASE;
+        
         $this->logger->close();
         
-        //Delete test data
-        $q = "DROP TABLE `tt_follows`, `tt_instances`, `tt_links`, `tt_owners`, `tt_owner_instances`, `tt_users`, `tt_user_errors`, `tt_plugins`, `tt_plugin_options`, `tt_posts`, `tt_post_errors`, `tt_replies`, `tt_channels`, `tt_instance_channels`;";
-        $this->db->exec($q);
+        //Delete test data by dropping all existing tables
+        $q = "SHOW TABLES FROM ".$TEST_DATABASE;
+        $result = $this->db->exec($q);
+        while ($row = mysql_fetch_assoc($result)) {
+            $q = "DROP TABLE ".$row['Tables_in_'.$TEST_DATABASE];
+            $this->db->exec($q);
+        }
         
         //Clean up
         $this->db->closeConnection($this->conn);
