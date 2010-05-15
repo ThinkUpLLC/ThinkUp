@@ -117,7 +117,7 @@ function facebook_process_page_actions() {
     
     //insert pages
     if (isset($_GET["action"]) && $_GET["action"] == "add page" && isset($_GET["facebook_page_id"]) && isset($_GET["viewer_id"]) && isset($_GET["owner_id"]) && isset($_GET["instance_id"])) {
-        $page_data = json_decode($_GET["facebook_page_id"]);
+        $page_data = json_decode(str_replace("\\", "", $_GET["facebook_page_id"]));
         $messages = facebook_insert_page($page_data->page_id, $_GET["viewer_id"], $_GET["owner_id"], $_GET["instance_id"], $page_data->name, $db, $messages);
     }
     
