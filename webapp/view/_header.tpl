@@ -74,11 +74,11 @@
           var links_content =  $("#links_content");
       {/literal}
       showLoading();
-      tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=tweets-all", hideLoading);
-      mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=mentions-all", hideLoading);
-      followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=followers-mostfollowed", hideLoading);
-      friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=friends-mostactive", hideLoading);
-      links_content.load("inline.view.php?u={$instance->network_username|urlencode}&d=links-friends", hideLoading);
+      tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-all", hideLoading);
+      mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-all", hideLoading);
+      followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-mostfollowed", hideLoading);
+      friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-mostactive", hideLoading);
+      links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=links-friends", hideLoading);
       {literal}
           // Manage click events.
           sections.click(function() {
@@ -91,64 +91,64 @@
             // Load selected section.
             switch (this.id) {
               case "tweets-all": {/literal}
-                tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d=tweets-all", hideLoading);
+                tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-all", hideLoading);
                 break;
               case "tweets-mostreplies":
-                tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d=tweets-mostreplies", hideLoading);
+                tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-mostreplies", hideLoading);
                 break;
               case "tweets-mostretweeted":
-                tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d=tweets-mostretweeted", hideLoading);
+                tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-mostretweeted", hideLoading);
                 break;
               case "tweets-convo":
-                tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d=tweets-convo", hideLoading);
+                tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-convo", hideLoading);
                 break;
               case "mentions-all":
-                mentions_content.load("inline.view.php?u={$smarty.session.network_username}&d=mentions-all", hideLoading);
+                mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-all", hideLoading);
                 break;
               case "mentions-allreplies":
-                mentions_content.load("inline.view.php?u={$smarty.session.network_username}&d=mentions-allreplies", hideLoading);
+                mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-allreplies", hideLoading);
                 break;
               case "mentions-orphan":
-                mentions_content.load("inline.view.php?u={$smarty.session.network_username}&d=mentions-orphan", hideLoading);
+                mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-orphan", hideLoading);
                 break;
               case "mentions-standalone":
-                mentions_content.load("inline.view.php?u={$smarty.session.network_username}&d=mentions-standalone", hideLoading);
+                mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-standalone", hideLoading);
                 break;
               case "followers-mostfollowed":
-                followers_content.load("inline.view.php?u={$smarty.session.network_username}&d=followers-mostfollowed", hideLoading);
+                followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-mostfollowed", hideLoading);
                 break;
               case "followers-leastlikely":
-                followers_content.load("inline.view.php?u={$smarty.session.network_username}&d=followers-leastlikely", hideLoading);
+                followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-leastlikely", hideLoading);
                 break;
               case "followers-earliest":
-                followers_content.load("inline.view.php?u={$smarty.session.network_username}&d=followers-earliest", hideLoading);
+                followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-earliest", hideLoading);
                 break;
               case "followers-former":
-                followers_content.load("inline.view.php?u={$smarty.session.network_username}&d=followers-former", hideLoading);
+                followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-former", hideLoading);
                 break;
               case "friends-mostactive":
-                friends_content.load("inline.view.php?u={$smarty.session.network_username}&d=friends-mostactive", hideLoading);
+                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-mostactive", hideLoading);
                 break;
               case "friends-leastactive":
-                friends_content.load("inline.view.php?u={$smarty.session.network_username}&d=friends-leastactive", hideLoading);
+                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-leastactive", hideLoading);
                 break;
               case "friends-mostfollowed":
-                friends_content.load("inline.view.php?u={$smarty.session.network_username}&d=friends-mostfollowed", hideLoading);
+                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-mostfollowed", hideLoading);
                 break;
               case "friends-former":
-                friends_content.load("inline.view.php?u={$smarty.session.network_username}&d=friends-former", hideLoading);
+                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-former", hideLoading);
                 break;
               case "friends-notmutual":
-                friends_content.load("inline.view.php?u={$smarty.session.network_username}&d=friends-notmutual", hideLoading);
+                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-notmutual", hideLoading);
                 break;
               case "links-friends":
-                links_content.load("inline.view.php?u={$smarty.session.network_username}&d=links-friends", hideLoading);
+                links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=links-friends", hideLoading);
                 break;
               case "links-favorites":
-                links_content.load("inline.view.php?u={$smarty.session.network_username}&d=links-favorites", hideLoading);
+                links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=links-favorites", hideLoading);
                 break;
               case "links-photos":
-                links_content.load("inline.view.php?u={$smarty.session.network_username}&d=links-photos", hideLoading);
+                links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=links-photos", hideLoading);
                 break;
               default:
                 // Hide loading bar if there is no selected section.

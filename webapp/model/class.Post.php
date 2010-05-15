@@ -94,8 +94,8 @@ class PostDAO extends MySQLDAO {
     function getStandaloneReplies($username, $limit) {
         $q = " SELECT t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts AS t ";
-        $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
-        $q .= " WHERE  MATCH(`post_text`) AGAINST('%".$username."%') ";
+        $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id WHERE ";
+        $q .= ' MATCH (`post_text`) AGAINST(\'"'.$username.'"\' IN BOOLEAN MODE)';
         $q .= " AND in_reply_to_post_id=0 ";
         $q .= " ORDER BY adj_pub_date DESC ";
         $q .= " LIMIT ".$limit;
@@ -108,7 +108,7 @@ class PostDAO extends MySQLDAO {
         return $strays;
     }
     
-    function getRepliesToPost($post_id, $public = false, $count=350) {
+    function getRepliesToPost($post_id, $public = false, $count = 350) {
         $condition = "";
         if ($public)
             $condition = "AND u.is_protected = 0";
@@ -119,7 +119,7 @@ class PostDAO extends MySQLDAO {
         $q .= " WHERE in_reply_to_post_id=".$post_id." ".$condition;
         $q .= " ORDER BY follower_count desc ";
         $q .= " LIMIT $count; ";
-		
+        
         $sql_result = $this->executeSQL($q);
         $posts_stored = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
@@ -456,13 +456,14 @@ class PostDAO extends MySQLDAO {
     }
 
     
-    function getAllMentions($author_username, $count) {
+    function getAllMentions($author_username, $count, $network = "twitter") {
     
         $q = " SELECT l.*, t.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts AS t ";
         $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
         $q .= " LEFT JOIN #prefix#links AS l ON t.post_id = l.post_id ";
-        $q .= " WHERE MATCH (`post_text`) AGAINST('%".$author_username."%') ";
+        $q .= ' WHERE t.network = \''.$network.'\'';
+        $q .= ' AND MATCH (`post_text`) AGAINST(\'"'.$author_username.'"\' IN BOOLEAN MODE)';
         $q .= " ORDER BY pub_date DESC ";
         $q .= " LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
@@ -552,15 +553,16 @@ class PostDAO extends MySQLDAO {
         
     }
     
-    function getOrphanReplies($username, $count) {
+    function getOrphanReplies($username, $count, $network = "twitter") {
     
         $q = " SELECT t.* , u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts AS t ";
         $q .= " INNER JOIN #prefix#users AS u ON u.user_id = t.author_user_id ";
         $q .= " WHERE ";
-        $q .= " MATCH (`post_text`) AGAINST('%".$username."%') ";
+        $q .= ' MATCH (`post_text`) AGAINST(\'"'.$username.'"\' IN BOOLEAN MODE)';
         $q .= " AND in_reply_to_post_id is null ";
         $q .= " AND in_retweet_of_post_id is null ";
+        $q .= " AND t.network = '".$network."' ";
         $q .= " ORDER BY pub_date DESC ";
         $q .= " LIMIT ".$count.";";
         $sql_result = $this->executeSQL($q);
@@ -578,7 +580,7 @@ class PostDAO extends MySQLDAO {
         $q .= " FROM #prefix#posts AS t ";
         $q .= " INNER JOIN #prefix#users AS u ON t.author_user_id = u.user_id ";
         $q .= " WHERE ";
-        $q .= " MATCH (`post_text`) AGAINST('%".$author_username."%') ";
+        $q .= ' MATCH (`post_text`) AGAINST(\'"'.$author_username.'"\' IN BOOLEAN MODE)';
         $q .= " AND pub_date > '".$parent_pub_date."' ";
         $q .= " AND in_reply_to_post_id IS NULL ";
         $q .= " AND in_retweet_of_post_id IS NULL ";
@@ -617,10 +619,10 @@ class PostDAO extends MySQLDAO {
         
         if ($parent_id > 0) {
             $this->incrementReplyCountCache($parent_id);
-		}
+        }
         if ($former_parent_id > 0) {
             $this->decrementReplyCountCache($former_parent_id);
-		}
+        }
         return mysql_affected_rows();
     }
     
