@@ -164,13 +164,14 @@ class LinkDAO extends MySQLDAO {
         return $links;
     }
     
-    function getLinksToExpand($limit=500) {
-        $q = "
-			SELECT l.url
-			FROM #prefix#links l
-			WHERE l.expanded_url = '' and l.error = ''
-			GROUP BY l.url DESC
-			LIMIT $limit";
+    function getLinksToExpand($limit = 1500) {
+        $q = "SELECT l1.url
+FROM (
+SELECT l.url, l.post_id 
+FROM #prefix#links l
+WHERE l.expanded_url = '' and l.error = ''
+ORDER BY post_id DESC LIMIT $limit) as l1
+GROUP BY l1.url";
 			
         $sql_result = $this->executeSQL($q);
         $links = array();
