@@ -1,0 +1,41 @@
+--
+-- 2010-04-27
+--
+CREATE TABLE tt_channels (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`keyword` VARCHAR( 255 ) NOT NULL ,
+`network` VARCHAR( 10 ) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE tt_instance_channels (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`instance_id` INT NOT NULL ,
+`channel_id` INT NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `tt_instance_channels` ADD INDEX ( `instance_id` ); 
+
+--
+-- 2010-05-04
+--
+ALTER TABLE `tt_channels` CHANGE `keyword` `name` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+ALTER TABLE `tt_channels` ADD `url` VARCHAR( 255 ) NOT NULL AFTER `name` ,
+ADD `network_id`  BIGINT( 11 ) NULL AFTER `name`;
+
+--
+-- 2010-05-08
+--
+ALTER TABLE `tt_instances` CHANGE `network_user_id` `network_user_id` BIGINT( 11 ) NOT NULL ; 
+ALTER TABLE  `tt_instances` CHANGE  `network`  `network` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'twitter' ;
+ALTER TABLE `tt_instances` ADD `network_viewer_id` BIGINT NOT NULL DEFAULT '1' AFTER `network_user_id` ;
+UPDATE tt_instances SET network_viewer_id = network_user_id;
+
+
+ALTER TABLE `tt_posts` CHANGE `author_user_id` `author_user_id` BIGINT( 11 ) NOT NULL  ;
+
+--
+-- 2010-05-15
+--
+DROP TABLE `tt_channels`, `tt_instance_channels`, `tt_replies`;

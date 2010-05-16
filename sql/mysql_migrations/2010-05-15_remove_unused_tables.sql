@@ -1,1 +1,0 @@
-DROP TABLE `tt_channels`, `tt_instance_channels`, `tt_replies`;
