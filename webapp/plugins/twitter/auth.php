@@ -90,6 +90,5 @@ if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
 $msg .= '<a href="'.$THINKTANK_CFG['site_root_path'].'account/" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Back to your account</a>';
 
 $s->assign('msg', $msg);
-$s->display('message.tpl');
-
+$s->display($THINKTANK_CFG['source_root_path'].'webapp/plugins/twitter/view/auth.tpl');
 ?>

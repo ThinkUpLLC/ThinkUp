@@ -42,7 +42,11 @@ $s->assign('cfg', $cfg);
 $s->assign('owner', $owner);
 
 // grab instance from session variable
-$i = unserialize($_SESSION['instance']);
+if (isset($_SESSION['instance'])) {
+    $i = unserialize($_SESSION['instance']);
+} else {
+    $i = '';
+}
 $s->assign('instance', $i);
 
 if ($owner->is_admin) {

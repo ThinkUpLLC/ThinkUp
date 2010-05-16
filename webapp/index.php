@@ -22,8 +22,8 @@ if (!isset($_SESSION['user'])) {
     } else {
         $i = $id->getFreshestByOwnerId($owner->id);
         if ( !isset($i) && $i == null ) {
-            $s->assign('msg', 'You have no Twitter or Facebook accounts configured. <a href="'.$THINKTANK_CFG['site_root_path'].'account/?p=twitter">Set up an account here&rarr;</a>');
-            $s->display('message.tpl');
+            $s->assign('msg', 'You have no Twitter accounts configured. <a href="'.$THINKTANK_CFG['site_root_path'].'account/?p=twitter">Set up an account&rarr;</a>');
+            $s->display('index.tpl');
             $db->closeConnection($conn);
             die;
         }

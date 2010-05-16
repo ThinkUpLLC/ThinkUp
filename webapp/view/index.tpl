@@ -21,6 +21,27 @@
 </script>
 
 <div class="container">
+    {if $error}
+    <p class="error">
+        {$error}
+    </p>    
+    {/if}
+    {if $info}
+    <p class="info">
+        {$info}
+    </p>    
+    {/if}
+    {if $msg}
+    <p class="info">
+        {$msg}
+    </p>    
+    {/if}
+    {if $success}
+    <p class="success">
+        {$success}
+    </p>    
+    {/if}
+
   <!-- session instance info: {$smarty.session.instance->network_username} -->
   <div id="thinktank-tabs">
     <div role="application" id="tabs">
