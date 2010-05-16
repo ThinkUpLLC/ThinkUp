@@ -14,17 +14,14 @@ $template = $_GET["t"];
 $cache_key = $_GET["ck"];
 
 foreach ($oid as $o) {
-	echo $o;
-	echo "<br />";	
+    echo $o;
+    echo "<br />";
 }
-
-
 
 // set up
 chdir("..");
 
-
-require_once("init.php");
+require_once 'init.php';
 
 $cfg = new Config();
 
@@ -32,16 +29,16 @@ $pd = new PostDAO($db);
 
 
 foreach ($oid as $o) {
-	echo "<br />";
-	
-	if ( isset($_GET["fp"]))
-		$pd->assignParent($pid, $o, $_GET["fp"]);
-	else
-		$pd->assignParent($pid, $o);
-	
+    echo "<br />";
+
+    if ( isset($_GET["fp"]))
+    $pd->assignParent($pid, $o, $_GET["fp"]);
+    else
+    $pd->assignParent($pid, $o);
+
 }
 
-$db->closeConnection($conn);	
+$db->closeConnection($conn);
 
 $s = new SmartyThinkTank();
 $s->clear_cache($template, $cache_key);

@@ -430,8 +430,5 @@ class InstanceDAO extends MySQLDAO {
         mysql_free_result($sql_result); # Free up memory
         return $instances;
     }
-
-
 }
-
 ?>

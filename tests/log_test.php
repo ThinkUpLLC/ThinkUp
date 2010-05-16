@@ -37,5 +37,4 @@ class TestOfLogging extends UnitTestCase {
 
     }
 }
-
 ?>

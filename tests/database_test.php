@@ -114,16 +114,15 @@ class TestOfDatabase extends UnitTestCase {
         $db = new Database($THINKTANK_TEST_CFG);
         $conn = $db->getConnection();
         $sql_result = $db->exec("SELECT
-				user_id 
-			FROM 
-				#prefix#users 
-			WHERE 
-				user_id = 930061");
+                user_id 
+            FROM 
+                #prefix#users 
+            WHERE 
+                user_id = 930061");
 
         $db->closeConnection($conn);
 
     }
 
 }
-
 ?>

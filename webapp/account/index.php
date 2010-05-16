@@ -1,9 +1,8 @@
-<?php 
+<?php
 // set up
 chdir("..");
 
-
-require_once ("init.php");
+require_once 'init.php';
 
 session_start();
 $session = new Session();
@@ -27,7 +26,7 @@ if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password') {
         $od->updatePassword($_SESSION['user'], $cryptpass);
         $successmsg = "Your password has been updated.";
     }
-} 
+}
 
 $s = new SmartyThinkTank();
 $s->caching = 0;
@@ -43,7 +42,7 @@ $s->assign('cfg', $cfg);
 $s->assign('owner', $owner);
 
 // grab instance from session variable
-$i = unserialize($_SESSION['instance']); 
+$i = unserialize($_SESSION['instance']);
 $s->assign('instance', $i);
 
 if ($owner->is_admin) {

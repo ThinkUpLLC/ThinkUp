@@ -1,4 +1,4 @@
-<?php 
+<?php
 class Plugin {
     var $id;
     var $name;
@@ -9,7 +9,7 @@ class Plugin {
     var $version;
     var $is_active = false;
     var $icon;
-    
+
     function Plugin($val) {
         if (isset($val["id"])) {
             $this->id = $val["id"];
@@ -29,7 +29,7 @@ class Plugin {
             $this->is_active = false;
         }
     }
-    
+
 }
 
 class PluginDAO extends MySQLDAO {
@@ -41,7 +41,7 @@ class PluginDAO extends MySQLDAO {
         }
         //echo $q;
         $sql_result = $this->executeSQL($q);
-        
+
         $plugins = array();
         while ($row = mysql_fetch_assoc($sql_result)) {
             $plugins[] = new Plugin($row);
@@ -49,11 +49,11 @@ class PluginDAO extends MySQLDAO {
         mysql_free_result($sql_result);
         return $plugins;
     }
-    
+
     public function getActivePlugins() {
         return $this->getAllPlugins(" WHERE p.is_active = 1");
     }
-    
+
     public function isPluginActive($id) {
         $q = "SELECT is_active FROM #prefix#plugins p WHERE p.id=$id ";
         $sql_result = $this->executeSQL($q);
@@ -68,18 +68,18 @@ class PluginDAO extends MySQLDAO {
             return false;
         }
     }
-    
+
     public function insertPlugin($p) {
         $q = "INSERT INTO
-				#prefix#plugins (name, folder_name, description, author, version, is_active)
-				VALUES (
-					'".mysql_real_escape_string($p->name)."', 
-					'".mysql_real_escape_string($p->folder_name)."',
-					'".mysql_real_escape_string($p->description)."',
-					'".mysql_real_escape_string($p->author)."',
-					'".mysql_real_escape_string($p->version)."',
-					".($p->is_active ? 1 : 0)."
-					)";
+                #prefix#plugins (name, folder_name, description, author, version, is_active)
+                VALUES (
+                    '".mysql_real_escape_string($p->name)."', 
+                    '".mysql_real_escape_string($p->folder_name)."',
+                    '".mysql_real_escape_string($p->description)."',
+                    '".mysql_real_escape_string($p->author)."',
+                    '".mysql_real_escape_string($p->version)."',
+                    ".($p->is_active ? 1 : 0)."
+                    )";
         $sql_result = $this->executeSQL($q);
         if (mysql_affected_rows() > 0) {
             return true;
@@ -87,19 +87,19 @@ class PluginDAO extends MySQLDAO {
             return false;
         }
     }
-    
+
     public function updatePlugin($p) {
         $q = "UPDATE
-				#prefix#plugins 
-			SET
-				name = '".mysql_real_escape_string($p->name)."',
-				folder_name = '".mysql_real_escape_string($p->folder_name)."',
-				description = '".mysql_real_escape_string($p->description)."',
-				author = '".mysql_real_escape_string($p->author)."',
-				version = '".mysql_real_escape_string($p->version)."', 
-				is_active =".($p->is_active ? 1 : 0)."
-			WHERE
-				id = ".$p->id;
+                #prefix#plugins 
+            SET
+                name = '".mysql_real_escape_string($p->name)."',
+                folder_name = '".mysql_real_escape_string($p->folder_name)."',
+                description = '".mysql_real_escape_string($p->description)."',
+                author = '".mysql_real_escape_string($p->author)."',
+                version = '".mysql_real_escape_string($p->version)."', 
+                is_active =".($p->is_active ? 1 : 0)."
+            WHERE
+                id = ".$p->id;
         $sql_result = $this->executeSQL($q);
         if (mysql_affected_rows() > 0) {
             return true;
@@ -107,7 +107,7 @@ class PluginDAO extends MySQLDAO {
             return false;
         }
     }
-    
+
     public function getPluginId($folder_name) {
         $q = " SELECT id FROM #prefix#plugins p WHERE p.folder_name='$folder_name'";
         $sql_result = $this->executeSQL($q);
@@ -118,18 +118,18 @@ class PluginDAO extends MySQLDAO {
             return null;
         }
     }
-    
+
     function setActive($pid, $p) {
         $q = "
-			UPDATE 
-				#prefix#plugins
-			 SET 
-				is_active = ".$p."
-			WHERE
-				id = '".$pid."';";
+            UPDATE 
+                #prefix#plugins
+             SET 
+                is_active = ".$p."
+            WHERE
+                id = '".$pid."';";
         $sql_result = $this->executeSQL($q);
     }
-    
+
     public function getInstalledPlugins($plugin_path) {
         // Detect what plugins exist in the filesystem; parse their header comments for plugin metadata
         $installed_plugins = array();
@@ -155,14 +155,14 @@ class PluginDAO extends MySQLDAO {
         }
         return $installed_plugins;
     }
-    
+
     private function parseFileContents($contents, $pf) {
         $plugin_vals = array();
         $start = strpos($contents, '/*');
         $end = strpos($contents, '*/');
         if ($start > 0 && $end > $start) {
             $scriptData = substr($contents, $start + 2, $end - $start - 2);
-            
+
             $scriptData = preg_split('/[\n\r]+/', $scriptData);
             foreach ($scriptData as $line) {
                 $m = array();
@@ -184,7 +184,7 @@ class PluginDAO extends MySQLDAO {
                 if (preg_match('/Icon:(.*)/', $line, $m)) {
                     $plugin_vals['icon'] = trim($m[1]);
                 }
-                
+
             }
             $plugin_vals["folder_name"] = $pf;
             $plugin_vals["id"] = $this->getPluginId($pf);
@@ -197,7 +197,7 @@ class PluginDAO extends MySQLDAO {
         } else {
             return null;
         }
-        
+
     }
 }
 

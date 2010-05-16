@@ -1,6 +1,6 @@
 <?php
 chdir("..");
-require_once ("init.php");
+require_once 'init.php';
 
 session_start();
 header ("Content-type: image/png");

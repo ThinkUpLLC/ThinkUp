@@ -31,9 +31,9 @@ class InstanceChannelDAO extends MySQLDAO {
 
     function insert($instance_id, $channel_id) {
         $q = "
-			INSERT INTO
-				#prefix#instance_channels (instance_id, channel_id)
-				VALUES ('{$instance_id}', '{$channel_id}');";
+            INSERT INTO
+                #prefix#instance_channels (instance_id, channel_id)
+                VALUES ('{$instance_id}', '{$channel_id}');";
         $this->executeSQL($q);
         if (mysql_affected_rows() > 0 and mysql_insert_id() > 0) {
             return mysql_insert_id();
@@ -63,10 +63,10 @@ class InstanceChannelDAO extends MySQLDAO {
 
     function getByInstanceAndNetwork($instance_id, $network) {
         $q = "SELECT ic.id, ic.instance_id, ic.channel_id, c.name, c.network_id, c.url, c.network
-			FROM #prefix#instance_channels ic
-			INNER JOIN #prefix#channels c
-			ON c.id = ic.channel_id
-			WHERE ic.instance_id='{$instance_id}' AND c.network='{$network}';";
+            FROM #prefix#instance_channels ic
+            INNER JOIN #prefix#channels c
+            ON c.id = ic.channel_id
+            WHERE ic.instance_id='{$instance_id}' AND c.network='{$network}';";
          
         $sql_result = $this->executeSQL($q);
 

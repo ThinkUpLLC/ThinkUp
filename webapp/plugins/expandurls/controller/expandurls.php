@@ -15,18 +15,18 @@ function expandurls_crawl() {
     
     $logger = new Logger($THINKTANK_CFG['log_location']);
     $ldao = new LinkDAO($db, $logger);
-	//TODO Set limit on total number of links to expand per crawler run in the plugin settings, now set here to 1500
+    //TODO Set limit on total number of links to expand per crawler run in the plugin settings, now set here to 1500
     $linkstoexpand = $ldao->getLinksToExpand(1500);
     
-	$logger->logStatus(count($linkstoexpand)." links to expand", "Expand URLs Plugin");
-	
+    $logger->logStatus(count($linkstoexpand)." links to expand", "Expand URLs Plugin");
+    
     foreach ($linkstoexpand as $l) {
         $eurl = untinyurl($l, $logger, $ldao);
         if ($eurl != '') {
             $ldao->saveExpandedUrl($l, $eurl);
         }
     }
-	$logger->logStatus("URL expansion complete for this run", "Expand URLs Plugin");
+    $logger->logStatus("URL expansion complete for this run", "Expand URLs Plugin");
     $logger->close(); # Close logging
 }
 

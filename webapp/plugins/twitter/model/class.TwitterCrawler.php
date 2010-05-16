@@ -45,7 +45,7 @@ class TwitterCrawler {
     
     function fetchSearchResults($term) {
         $continue_fetching = true;
-		$page = 1;
+        $page = 1;
         while ($continue_fetching) {
             $search_results = $this->api->cURL_source['search']."?q=".urlencode($term)."&result_type=recent&rpp=100&page=".$page;
             list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, $this->logger, null, false);
@@ -70,10 +70,10 @@ class TwitterCrawler {
                 if ( $count == 0 ) { // all tweets on the page were already saved
                     $continue_fetching = false; //Stop fetching when more tweets have been retrieved than were saved b/c they already existed
                 }
-				$page = $page+1;
+                $page = $page+1;
             } else {
                 $this->logger->logStatus("cURL status $cURL_status", get_class($this));
-				$continue_fetching = false;
+                $continue_fetching = false;
             }
         }
     }

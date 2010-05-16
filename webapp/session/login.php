@@ -1,11 +1,11 @@
-<?php 
+<?php
 session_start();
 
 // set up
 chdir("..");
 
 
-require_once ("init.php");
+require_once 'init.php';
 
 $session = new Session();
 if ($session->isLoggedIn()) {
@@ -26,7 +26,7 @@ if ($_POST['Submit'] == 'Log In') {
     } else {
         // this sets variables in the session
         $session->completeLogin($result);
-		$od->updateLastLogin($user_email);
+        $od->updateLastLogin($user_email);
         if (isset($_GET['ret']) && ! empty($_GET['ret'])) {
             header("Location: $_GET[ret]");
         } else {
@@ -44,7 +44,7 @@ if (isset($emsg)) {
     $s->assign('successmsg', $smsg);
 }
 if (isset($_POST["email"])){
-	$s->assign('email', $_POST["email"]);
+    $s->assign('email', $_POST["email"]);
 }
 
 $db->closeConnection($conn);

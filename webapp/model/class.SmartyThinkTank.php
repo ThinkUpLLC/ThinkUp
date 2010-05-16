@@ -1,4 +1,4 @@
-<?php 
+<?php
 class SmartyThinkTank extends Smarty {
 
     function SmartyThinkTank() {
@@ -12,8 +12,5 @@ class SmartyThinkTank extends Smarty {
         $this->caching = $THINKTANK_CFG['cache_pages'];
         $this->assign('app_name', $THINKTANK_CFG['app_title']);
     }
-    
 }
-
-
 ?>

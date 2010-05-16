@@ -1,20 +1,20 @@
-<?php 
+<?php
 class Utils {
 
     function GetDeltaTime($dtTime1, $dtTime2) {
         $nUXDate1 = strtotime($dtTime1->format("Y-m-d H:i:s"));
         $nUXDate2 = strtotime($dtTime2->format("Y-m-d H:i:s"));
-        
+
         $nUXDelta = $nUXDate1 - $nUXDate2;
         $strDeltaTime = "".$nUXDelta / 60 / 60; // sec -> hour
-        
+
         $nPos = strpos($strDeltaTime, ".");
         if ($nPos !== false)
-            $strDeltaTime = substr($strDeltaTime, 0, $nPos + 3);
-            
+        $strDeltaTime = substr($strDeltaTime, 0, $nPos + 3);
+
         return $strDeltaTime;
     }
-    
+
     function getPercentage($num, $denom) {
         if ((isset($num)) && (isset($denom))) {
             if ($num > 0) {
@@ -26,7 +26,7 @@ class Utils {
             return 0;
         }
     }
-    
+
     public static function curl_get_file_contents($URL) {
         $c = curl_init();
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
@@ -34,17 +34,17 @@ class Utils {
         $contents = curl_exec($c);
         $status = curl_getinfo($c, CURLINFO_HTTP_CODE);
         curl_close($c);
-        
-		//echo "URL: ".$URL."\n";
+
+        //echo "URL: ".$URL."\n";
         //echo $contents;
-		//echo "STATUS: ".$status."\n";
+        //echo "STATUS: ".$status."\n";
         if (isset($contents)) {
             return $contents;
         } else {
             return null;
         }
     }
-    
+
     static public function getPlugins($dir) {
         $dh = @opendir($dir);
         $plugins = array();
@@ -61,11 +61,11 @@ class Utils {
             }
             closedir($dh);
         }
-        
+
         unset($dh, $dir, $file, $requiredFile);
         return $plugins;
     }
-    
+
 }
 
 

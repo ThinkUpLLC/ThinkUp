@@ -5,8 +5,8 @@ session_start();
 // set up
 chdir("..");
 
-require_once ("init.php");
-require_once ("model/class.Mailer.php");
+require_once 'init.php';
+require_once 'model/class.Mailer.php';
 
 $session = new Session();
 if ($session->isLoggedIn()) {
@@ -25,7 +25,7 @@ else {
     $db = new Database($THINKTANK_CFG);
     $conn = $db->getConnection();
     $od = new OwnerDAO($db);
-    
+
     $s->assign('closed', false);
     $captcha = new Captcha($THINKTANK_CFG);
     if ($_POST['Submit'] == 'Register') {
@@ -47,22 +47,22 @@ else {
             else {
                 $es = new SmartyThinkTank();
                 $es->caching=false;
-                
+
                 $activ_code = rand(1000, 9999);
                 $cryptpass = $session->pwdcrypt($_POST['pass2']);
                 $server = $_SERVER['HTTP_HOST'];
                 $od->create($_POST['email'], $cryptpass, $_POST['country'], $activ_code, $_POST['full_name']);
-                
+
                 $es->assign('apptitle', $THINKTANK_CFG['app_title'] );
                 $es->assign('server', $server );
                 $es->assign('site_root_path', $THINKTANK_CFG['site_root_path'] );
                 $es->assign('email', urlencode($_POST['email']) );
                 $es->assign('activ_code', $activ_code );
                 $message = $es->fetch('_email.registration.tpl');
-                
+
                 Mailer::mail($_POST['email'], "Activate Your ".$THINKTANK_CFG['app_title'] ." Account", $message);
                 // echo $message; // debug
-                
+
                 unset($_SESSION['ckey']);
                 $successmsg = "Success! Check your email for an activation link.";
             }

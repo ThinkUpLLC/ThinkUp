@@ -1,8 +1,8 @@
-<?php 
+<?php
 class MySQLDAO {
     var $logger;
     var $db;
-    
+
     public function __construct($d, $l=null) {
         $this->logger = $l;
         $this->db = $d;

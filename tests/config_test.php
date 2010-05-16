@@ -23,5 +23,4 @@ class TestOfConfig extends UnitTestCase {
         $this->assertTrue($cfg->log_location == $THINKTANK_CFG['log_location'], 'Log location set');
     }
 }
-
 ?>

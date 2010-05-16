@@ -32,7 +32,7 @@ catch(Exception $e) {
 //use fake Flickr API key
 $THINKTANK_CFG['flickr_api_key'] = 'dummykey';
 
-require_once ("plugins/flickrthumbnails/controller/flickrthumbnails.php");
+require_once 'plugins/flickrthumbnails/controller/flickrthumbnails.php';
 
 
 class TestOfFlickrPlugin extends ThinkTankUnitTestCase {

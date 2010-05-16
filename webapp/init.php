@@ -1,4 +1,4 @@
-<?php 
+<?php
 //Before we do anything, make sure we've got PHP 5
 $version = explode('.', PHP_VERSION);
 if ($version[0] < 5) {
@@ -33,7 +33,7 @@ require_once 'model/class.Follow.php';
 require_once 'model/class.Webapp.php';
 
 require_once 'config.inc.php';
-require_once ($THINKTANK_CFG['smarty_path'].'Smarty.class.php');
+require_once $THINKTANK_CFG['smarty_path'].'Smarty.class.php';
 require_once 'model/class.SmartyThinkTank.php';
 require_once $THINKTANK_CFG['source_root_path'].'extlib/twitteroauth/twitteroauth.php';
 
@@ -53,12 +53,10 @@ $pdao = new PluginDAO($db);
 $active_plugins = $pdao->getActivePlugins();
 foreach ($active_plugins as $ap) {
     foreach (glob($THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$ap->folder_name."/model/*.php") as $includefile) {
-        require_once ($includefile);
+        require_once $includefile;
     }
     foreach (glob($THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$ap->folder_name."/controller/*.php") as $includefile) {
-        require_once ($includefile);
+        require_once $includefile;
     }
 }
-
-
 ?>

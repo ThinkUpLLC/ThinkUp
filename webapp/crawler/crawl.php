@@ -1,6 +1,6 @@
-<?php 
+<?php
 chdir("..");
-require_once ("init.php");
+require_once 'init.php';
 
 $authorized = false;
 
@@ -8,7 +8,7 @@ if (isset($argc) && $argc > 1) { // check for CLI credentials
     $session = new Session();
     $username = $argv[1];
     $pw = $argv[2];
-    
+
     $od = new OwnerDAO($db);
     $result = $od->getForLogin($username);
     if ($session->pwdCheck($pw, $result['pwd'])) {
@@ -28,7 +28,7 @@ if (isset($argc) && $argc > 1) { // check for CLI credentials
 
 if ($authorized) {
     $crawler->crawl();
-    
+
     if (isset($conn)) {
         $db->closeConnection($conn); // Clean up
     }

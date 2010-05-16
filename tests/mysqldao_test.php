@@ -12,27 +12,27 @@ require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
 
 class TestOfMySQLDAO extends UnitTestCase {
-	var $logger;
-	var $db;
+    var $logger;
+    var $db;
     function TestOfMySQLDAO() {
         $this->UnitTestCase('MySQLDAO class test');
     }
     
     function setUp() {
-		global $THINKTANK_CFG;
+        global $THINKTANK_CFG;
         $this->logger = new Logger($THINKTANK_CFG['log_location']);
-		$this->db = new Database($THINKTANK_CFG);
+        $this->db = new Database($THINKTANK_CFG);
     }
     
     function tearDown() {
-		$this->logger->close();
-    	
+        $this->logger->close();
+        
     }
     
     function testCreatingNewMySQLDAO() {
-		$dao = new MySQLDAO($this->logger, $this->db);
-		$this->assertTrue(isset($dao->logger), "Logger set");
-		$this->assertTrue(isset($dao->db), "DB set");
+        $dao = new MySQLDAO($this->logger, $this->db);
+        $this->assertTrue(isset($dao->logger), "Logger set");
+        $this->assertTrue(isset($dao->db), "DB set");
 
     }
 }

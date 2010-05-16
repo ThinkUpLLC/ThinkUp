@@ -1,11 +1,11 @@
-<?php 
+<?php
 session_start();
 
 if (!isset($_SESSION['user'])) {
     header("Location: session/login.php");
 }
 
-require_once ("init.php");
+require_once 'init.php';
 
 $od = new OwnerDAO($db);
 $owner = $od->getByEmail($_SESSION['user']);
@@ -38,18 +38,18 @@ if (!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user']
     $cfg = new Config($i->network_username, $i->network_user_id);
     $s->assign('cfg', $cfg);
     $s->assign('i', $i);
-    
+
     $u = new Utils();
-    
+
     // instantiate data access objects
     $ud = new UserDAO($db);
     $pd = new PostDAO($db);
     $fd = new FollowDAO($db);
     $ld = new LinkDAO($db);
 
-    
+
     $s->assign('display', $_REQUEST['d']);
-    
+
     // pass data to smarty
     switch ($_REQUEST['d']) {
         case "tweets-all":
@@ -144,7 +144,7 @@ if (!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user']
             $s->assign('description', 'Photos your friends have posted');
             $s->assign('links', $ld->getPhotosByFriends($i->network_user_id));
             break;
-            
+
     }
 }
 

@@ -1,11 +1,11 @@
-<?php 
+<?php
 session_start();
 (isset($_SESSION['user'])) ? $_u = $_SESSION['user'] : $_u = '';
 (isset($_SESSION['instance'])) ? $_i = $_SESSION['instance'] : $_i = '';
 
 //Print_r  ($_i);
 
-require_once ("init.php");
+require_once 'init.php';
 
 $db = new Database($THINKTANK_CFG);
 $conn = $db->getConnection();
@@ -48,7 +48,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
         $s->assign('site_root', $THINKTANK_CFG['site_root_path']);
     }
     $s->display('public.tpl', $_REQUEST['t']);
-    
+
 } elseif (isset($_REQUEST['v'])) {
     $view = $_REQUEST['v'];
     switch ($view) {
@@ -127,9 +127,9 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
             $s->assign('description', 'Posted links');
             $s->display('public.tpl', 'links-'.$i->network_username."-".$_u."-".$page);
             break;
-            
+
     }
-    
+
 } else {
     if (!$s->is_cached('public.tpl', 'timeline-'.$i->network_username."-".$_u."-".$page)) {
         $totals = $pd->getTotalPagesAndPostsByPublicInstances($count);
@@ -144,7 +144,6 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     $s->assign('header', 'Latest');
     $s->assign('description', 'Latest public posts, replies and forwards');
     $s->display('public.tpl', 'timeline-'.$i->network_username."-".$_u."-".$page);
-    
-}
 
+}
 ?>

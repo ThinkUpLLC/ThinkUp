@@ -1,4 +1,4 @@
-<?php 
+<?php
 class Owner {
     var $id;
     var $user_name;
@@ -7,7 +7,7 @@ class Owner {
     var $is_admin = false;
     var $last_login;
     var $instances = null;
-    
+
     function Owner($val) {
         $this->id = $val["id"];
         $this->user_name = $val["user_name"];
@@ -18,16 +18,16 @@ class Owner {
             $this->is_admin = true;
         }
     }
-    
+
     function setInstances($instances) {
-    	$this->instances = $instances;
+        $this->instances = $instances;
     }
-    
+
 }
 
 class OwnerDAO extends MySQLDAO {
     //Construct is located in parent
-    
+
     public function getByEmail($email) {
         $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, is_admin, last_login ";
         $q .= " FROM #prefix#owners AS o ";
@@ -49,7 +49,7 @@ class OwnerDAO extends MySQLDAO {
         mysql_free_result($sql_result); # Free up memory
         return $owners;
     }
-    
+
     public function doesOwnerExist($email) {
         $q = " SELECT user_email ";
         $q .= " FROM #prefix#owners ";
@@ -118,7 +118,7 @@ class OwnerDAO extends MySQLDAO {
         $q .= " VALUES ('".$email."','".$pass."','".$country."',now(),'".$acode."','".$fullname."')";
         $this->executeSQL($q);
     }
-    
+
     public function updateLastLogin($email) {
         $q = " UPDATE #prefix#owners ";
         $q .= " SET last_login=now() ";

@@ -1,4 +1,4 @@
-<?php 
+<?php
 class User {
     var $id;
     var $username;
@@ -15,9 +15,9 @@ class User {
     var $last_post;
     var $joined;
     var $last_post_id;
-	var $network;
+    var $network;
 
-    
+
     function User($val, $found_in) {
         if (isset($val['id'])) {
             $this->id = $val['id'];
@@ -48,17 +48,17 @@ class User {
         }
         $this->joined = $val['joined'];
         $this->found_in = $found_in;
-        
+
         if (isset($val['avg_tweets_per_day'])) {
             $this->avg_tweets_per_day = $val['avg_tweets_per_day'];
         }
-		
+
         if (isset($val['network'])) {
             $this->network = $val['network'];
         }
 
     }
-    
+
 }
 
 class UserDAO extends MySQLDAO {
@@ -67,7 +67,7 @@ class UserDAO extends MySQLDAO {
         return "round(post_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
     }
 
-    
+
     function isUserInDB($user_id) {
         $q = "SELECT user_id ";
         $q .= "FROM #prefix#users ";
@@ -80,7 +80,7 @@ class UserDAO extends MySQLDAO {
             return false;
         }
     }
-    
+
     function isUserInDBByName($username) {
         $q = "SELECT user_id ";
         $q .= "FROM #prefix#users ";
@@ -94,11 +94,11 @@ class UserDAO extends MySQLDAO {
         }
     }
 
-    
+
     function updateUsers($users_to_update) {
         $status_message = "";
         $count = 0;
-        
+
         if (count($users_to_update) > 0) {
             $status_message .= count($users_to_update)." users queued for insert or update; ";
             foreach ($users_to_update as $user) {
@@ -106,58 +106,58 @@ class UserDAO extends MySQLDAO {
             }
             $status_message .= "$count users affected.";
         }
-        
+
         if (isset($this->logger) && $this->logger != null) {
             $this->logger->logStatus($status_message, get_class($this));
             $status_message = "";
         }
         return $count;
-        
+
     }
-    
+
     function updateUser($user) {
         $status_message = "";
         $has_friend_count = $user->friend_count != '' ? true : false;
         $has_last_post = $user->last_post != '' ? true : false;
         $has_last_post_id = $user->last_post_id != '' ? true : false;
-		$network = $user->network != '' ? $user->network : 'twitter';
-		$user->follower_count = $user->follower_count != '' ? $user->follower_count : 0;
-		$user->post_count = $user->post_count != '' ? $user->post_count : 0;
-        
+        $network = $user->network != '' ? $user->network : 'twitter';
+        $user->follower_count = $user->follower_count != '' ? $user->follower_count : 0;
+        $user->post_count = $user->post_count != '' ? $user->post_count : 0;
+
         $q = "
-			INSERT INTO
-				#prefix#users (user_id,
-					user_name,full_name,avatar,location,
-					description, url, is_protected,
-					follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")."
-					".($has_last_post ? "last_post, " : "")."
-					found_in, joined, network  ".($has_last_post_id ? ", last_post_id" : "").")
-				VALUES (
-					".mysql_real_escape_string($user->user_id).", 
-					'".mysql_real_escape_string($user->username)."','".mysql_real_escape_string($user->full_name)."','".mysql_real_escape_string($user->avatar)."','".mysql_real_escape_string($user->location)."',  
-					'".mysql_real_escape_string($user->description)."', '".mysql_real_escape_string($user->url)."',".$user->is_protected.",  							
-					".$user->follower_count.",".$user->post_count.",
-					".($has_friend_count ? $user->friend_count.", " : "")."
-					".($has_last_post ? "'".mysql_real_escape_string($user->last_post)."', " : "")."					
-					'".mysql_real_escape_string($user->found_in)."', '".mysql_real_escape_string($user->joined)."', '$network'
-					 ".($has_last_post_id ? ",".$user->last_post_id : "")."
-					)
-				ON DUPLICATE KEY UPDATE 
-					full_name = '".mysql_real_escape_string($user->full_name)."',
-					avatar =  '".mysql_real_escape_string($user->avatar)."',
-					location = '".mysql_real_escape_string($user->location)."',
-					description = '".mysql_real_escape_string($user->description)."',
-					url = '".mysql_real_escape_string($user->url)."',
-					is_protected = ".$user->is_protected.",
-					follower_count = ".$user->follower_count.",
-					post_count = ".$user->post_count.",
-					".($has_friend_count ? "friend_count= ".$user->friend_count.", " : "")."
-					".($has_last_post ? "last_post= '".mysql_real_escape_string($user->last_post)."', " : "")."
-					last_updated = NOW(),
-					found_in = '".mysql_real_escape_string($user->found_in)."', 
-					joined = '".mysql_real_escape_string($user->joined)."',
-					network = '".$network."'
-					".($has_last_post_id ? ", last_post_id = ".$user->last_post_id : "").";";
+            INSERT INTO
+                #prefix#users (user_id,
+                    user_name,full_name,avatar,location,
+                    description, url, is_protected,
+                    follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")."
+                    ".($has_last_post ? "last_post, " : "")."
+                    found_in, joined, network  ".($has_last_post_id ? ", last_post_id" : "").")
+                VALUES (
+                    ".mysql_real_escape_string($user->user_id).", 
+                    '".mysql_real_escape_string($user->username)."','".mysql_real_escape_string($user->full_name)."','".mysql_real_escape_string($user->avatar)."','".mysql_real_escape_string($user->location)."',  
+                    '".mysql_real_escape_string($user->description)."', '".mysql_real_escape_string($user->url)."',".$user->is_protected.",                              
+                    ".$user->follower_count.",".$user->post_count.",
+                    ".($has_friend_count ? $user->friend_count.", " : "")."
+                    ".($has_last_post ? "'".mysql_real_escape_string($user->last_post)."', " : "")."                    
+                    '".mysql_real_escape_string($user->found_in)."', '".mysql_real_escape_string($user->joined)."', '$network'
+                     ".($has_last_post_id ? ",".$user->last_post_id : "")."
+                    )
+                ON DUPLICATE KEY UPDATE 
+                    full_name = '".mysql_real_escape_string($user->full_name)."',
+                    avatar =  '".mysql_real_escape_string($user->avatar)."',
+                    location = '".mysql_real_escape_string($user->location)."',
+                    description = '".mysql_real_escape_string($user->description)."',
+                    url = '".mysql_real_escape_string($user->url)."',
+                    is_protected = ".$user->is_protected.",
+                    follower_count = ".$user->follower_count.",
+                    post_count = ".$user->post_count.",
+                    ".($has_friend_count ? "friend_count= ".$user->friend_count.", " : "")."
+                    ".($has_last_post ? "last_post= '".mysql_real_escape_string($user->last_post)."', " : "")."
+                    last_updated = NOW(),
+                    found_in = '".mysql_real_escape_string($user->found_in)."', 
+                    joined = '".mysql_real_escape_string($user->joined)."',
+                    network = '".$network."'
+                    ".($has_last_post_id ? ", last_post_id = ".$user->last_post_id : "").";";
         $foo = $this->executeSQL($q);
         if (mysql_affected_rows() > 0) {
             if (isset($this->logger) && $this->logger != null) {
@@ -175,7 +175,7 @@ class UserDAO extends MySQLDAO {
             return 0;
         }
     }
-    
+
     function getDetails($user_id) {
         $q = "SELECT * , ".$this->getAverageTweetCount()." ";
         $q .= "FROM #prefix#users u ";
@@ -190,7 +190,7 @@ class UserDAO extends MySQLDAO {
             return null;
         }
     }
-    
+
     function getUserByName($user_name) {
         $q = "SELECT * , ".$this->getAverageTweetCount()." ";
         $q .= "FROM #prefix#users u ";
@@ -204,10 +204,10 @@ class UserDAO extends MySQLDAO {
         } else {
             return null;
         }
-        
+
     }
 
-    
+
 }
 
 class UserErrorDAO extends MySQLDAO {

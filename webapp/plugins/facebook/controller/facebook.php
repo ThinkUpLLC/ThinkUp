@@ -103,7 +103,7 @@ function facebook_webapp_configuration() {
     $s->assign('owner_instance_pages', $owner_instance_pages);
 
     
-    $fbconnect_link = '<a href="#" onclick="FB.Connect.requireSession(); return false;" ><img id="fb_login_image" src="http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_long.gif" alt="Connect"/>	</a>';
+    $fbconnect_link = '<a href="#" onclick="FB.Connect.requireSession(); return false;" ><img id="fb_login_image" src="http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_long.gif" alt="Connect"/>    </a>';
     $s->assign('fbconnect_link', $fbconnect_link);
     $s->assign('owner_instances', $owner_instances);
     if (isset($THINKTANK_CFG['facebook_api_key'])) {

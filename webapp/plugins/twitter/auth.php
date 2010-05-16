@@ -9,7 +9,7 @@ chdir("..");
 chdir("..");
 
 
-require_once ("init.php");
+require_once 'init.php';
 
 $s = new SmartyThinkTank();
 
@@ -30,8 +30,8 @@ if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
     
     $u = $api->verifyCredentials();
     
-    //	echo "User ID: ". $u['user_id'];
-    //	echo "User name: ". $u['user_name'];
+    //    echo "User ID: ". $u['user_id'];
+    //    echo "User name: ". $u['user_name'];
     $twitter_id = $u['user_id'];
     $tu = $u['user_name'];
     

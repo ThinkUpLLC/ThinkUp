@@ -2,7 +2,7 @@
 chdir("..");
 
 
-require_once ("init.php");
+require_once 'init.php';
 
 session_start();
 $session = new Session();
@@ -13,12 +13,12 @@ if (!$session->isLoggedIn()) {
 $pid = $_GET["pid"];
 $a = $_GET["a"];
 if ($a != 1) {
-	$a = 0;
+    $a = 0;
 }
 
 $pd = new PluginDAO($db);
 
 $pd->setActive($pid, $a);
 
-$db->closeConnection($conn);	
+$db->closeConnection($conn);
 ?>

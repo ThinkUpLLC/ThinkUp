@@ -1,4 +1,4 @@
-<?PHP 
+<?PHP
 class Session {
     private $data;
     private $salt = "ab194d42da0dff4a5c01ad33cb4f650a7069178b";
@@ -23,7 +23,7 @@ class Session {
     private function saltedsha1($pwd) {
         return sha1(sha1($pwd.$this->salt).$this->salt);
     }
-    
+
     //Public Functions
     public function pwdcrypt($pwd) {
         return $this->saltedsha1($pwd);

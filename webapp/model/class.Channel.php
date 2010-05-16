@@ -26,10 +26,10 @@ class ChannelDAO extends MySQLDAO {
 
     function insert($name, $network, $network_id, $url) {
         $q = "
-			INSERT INTO
-				#prefix#channels (name, network, network_id, url)
-				VALUES (
-					'".mysql_real_escape_string($name)."', '".mysql_real_escape_string($network)."', ".$network_id. ", '". mysql_real_escape_string($url) . "');";
+            INSERT INTO
+                #prefix#channels (name, network, network_id, url)
+                VALUES (
+                    '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($network)."', ".$network_id. ", '". mysql_real_escape_string($url) . "');";
          
         $foo = $this->executeSQL($q);
         if (mysql_affected_rows() > 0 and mysql_insert_id() > 0) {
@@ -41,8 +41,8 @@ class ChannelDAO extends MySQLDAO {
 
     function get($channel_id) {
         $q = "SELECT c.*
-			FROM #prefix#channels c
-			WHERE c.id={$channel_id};";
+            FROM #prefix#channels c
+            WHERE c.id={$channel_id};";
          
         $sql_result = $this->executeSQL($q);
 
@@ -58,8 +58,8 @@ class ChannelDAO extends MySQLDAO {
 
     function getByNetworkID($network_id, $network) {
         $q = "SELECT c.*
-			FROM #prefix#channels c
-			WHERE c.network_id='{$network_id}' AND c.network='{$network}';";
+            FROM #prefix#channels c
+            WHERE c.network_id='{$network_id}' AND c.network='{$network}';";
          
         $sql_result = $this->executeSQL($q);
 
@@ -84,7 +84,5 @@ class ChannelDAO extends MySQLDAO {
             return false;
         }
     }
-
 }
-
 ?>

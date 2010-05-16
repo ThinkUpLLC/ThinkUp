@@ -10,8 +10,8 @@
 */
 
 function hellothinktank_configuration() {
-	global $s;
-	$s->assign('message', 'Hello, world! This is the configuration page for the test plugin.');
+    global $s;
+    $s->assign('message', 'Hello, world! This is the configuration page for the test plugin.');
 }
 
 
