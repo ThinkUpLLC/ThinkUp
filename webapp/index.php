@@ -2,11 +2,9 @@
 session_start();
 
 if (!isset($_SESSION['user'])) {
-    require_once('public.php');
-    die();
-}
-else {
-    require_once("init.php");
+    require_once 'public.php';
+} else {
+    require_once 'init.php';
     $od = new OwnerDAO($db);
     $owner = $od->getByEmail($_SESSION['user']);
     $id = new InstanceDAO($db);
