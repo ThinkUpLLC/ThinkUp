@@ -21,8 +21,6 @@ require_once 'model/class.Utils.php';
 require_once 'model/class.Captcha.php';
 require_once 'model/class.Session.php';
 require_once 'model/class.Plugin.php';
-require_once 'model/class.Channel.php';
-require_once 'model/class.InstanceChannel.php';
 require_once 'model/class.LoggerSlowSQL.php';
 
 # crawler only

@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once 'model/class.MySQLDAO.php';
 require_once 'model/class.Database.php';
 require_once 'model/class.Logger.php';
@@ -9,19 +9,19 @@ class ThinkTankUnitTestCase extends UnitTestCase {
     var $logger;
     var $db;
     var $conn;
-    
+
     function setUp() {
         global $THINKTANK_CFG;
         global $TEST_DATABASE;
         error_reporting(22527); //Don't show E_DEPRECATED PHP messages, split() is deprecated
-        
+
         //Override default CFG values
         $THINKTANK_CFG['db_name'] = $TEST_DATABASE;
-        
+
         $this->logger = new Logger($THINKTANK_CFG['log_location']);
         $this->db = new Database($THINKTANK_CFG);
         $this->conn = $this->db->getConnection();
-        
+
         //Create all the tables based on the build script
         $create_db_script = file_get_contents($THINKTANK_CFG['source_root_path']."sql/build-db_mysql.sql");
         $create_statements = split(";", $create_db_script);
@@ -31,12 +31,12 @@ class ThinkTankUnitTestCase extends UnitTestCase {
             }
         }
     }
-    
+
     function tearDown() {
         global $TEST_DATABASE;
-        
+
         $this->logger->close();
-        
+
         //Delete test data by dropping all existing tables
         $q = "SHOW TABLES FROM ".$TEST_DATABASE;
         $result = $this->db->exec($q);
@@ -44,7 +44,7 @@ class ThinkTankUnitTestCase extends UnitTestCase {
             $q = "DROP TABLE ".$row['Tables_in_'.$TEST_DATABASE];
             $this->db->exec($q);
         }
-        
+
         //Clean up
         $this->db->closeConnection($this->conn);
     }
@@ -54,19 +54,19 @@ class ThinkTankWebTestCase extends WebTestCase {
     var $logger;
     var $db;
     var $conn;
-    
+
     function setUp() {
         global $THINKTANK_CFG;
         global $TEST_DATABASE;
-        
+
         //Override default CFG values
         $THINKTANK_CFG['db_name'] = $TEST_DATABASE;
-        
+
         $this->logger = new Logger($THINKTANK_CFG['log_location']);
         $this->db = new Database($THINKTANK_CFG);
         $this->conn = $this->db->getConnection();
 
-        
+
         //Create all the tables based on the build script
         $create_db_script = file_get_contents($THINKTANK_CFG['source_root_path']."sql/build-db_mysql.sql");
         $create_statements = split(";", $create_db_script);
@@ -76,14 +76,20 @@ class ThinkTankWebTestCase extends WebTestCase {
             }
         }
     }
-    
+
     function tearDown() {
+        global $TEST_DATABASE;
+
         $this->logger->close();
-        
-        //Delete test data
-        $q = "DROP TABLE `tt_follows`, `tt_instances`, `tt_links`, `tt_owners`, `tt_owner_instances`, `tt_users`, `tt_user_errors`, `tt_plugins`, `tt_plugin_options`, `tt_posts`, `tt_post_errors`, `tt_replies`, `tt_channels`, `tt_instance_channels`;";
-        $this->db->exec($q);
-        
+
+        //Delete test data by dropping all existing tables
+        $q = "SHOW TABLES FROM ".$TEST_DATABASE;
+        $result = $this->db->exec($q);
+        while ($row = mysql_fetch_assoc($result)) {
+            $q = "DROP TABLE ".$row['Tables_in_'.$TEST_DATABASE];
+            $this->db->exec($q);
+        }
+
         //Clean up
         $this->db->closeConnection($this->conn);
     }
