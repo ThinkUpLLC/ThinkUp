@@ -10,7 +10,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Follow.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 
 
-class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
+class TestOfPublicTimeline extends ThinkTankWebTestCase {
 
     function setUp() {
         parent::setUp();
@@ -117,9 +117,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
     }
 
     function testPublicTimelineAndPages() {
-        global $TEST_SERVER_DOMAIN;
-
-        $this->get($TEST_SERVER_DOMAIN.'/public.php');
+        $this->get($this->url.'/public.php');
         $this->assertTitle('ThinkTank Public Timeline');
         $this->assertText('Log In');
         $this->click('Log In');
@@ -132,170 +130,14 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->assertTitle('ThinkTank Forgot password');
     }
 
-    function testSignInSuccessAndPrivateDashboard() {
-        global $TEST_SERVER_DOMAIN;
-
-        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'secretpassword');
-        $this->click("Log In");
-
-        $this->assertTitle('ThinkTank');
-        $this->assertText('Logged in as: me@example.com');
-
-        //TODO: test export link
-    }
-
-    function testSignInFailureAttemptThenSuccess() {
-        global $TEST_SERVER_DOMAIN;
-
-        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'wrongpassword');
-        $this->click("Log In");
-
-        $this->assertText('Incorrect email or password');
-        $this->assertField('email', 'me@example.com');
-
-        $this->setField('pwd', 'secretpassword');
-        $this->click("Log In");
-
-        $this->assertTitle('ThinkTank');
-        $this->assertText('Logged in as: me@example.com');
-    }
-
-
-    function testChangePasswordSuccess() {
-        global $TEST_SERVER_DOMAIN;
-
-        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'secretpassword');
-
-        $this->click("Log In");
-        $this->assertTitle('ThinkTank');
-        $this->assertText('Logged in as: me@example.com');
-
-        $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
-        $this->setField('oldpass', 'secretpassword');
-        $this->setField('pass1', 'secretpassword1');
-        $this->setField('pass2', 'secretpassword1');
-        $this->click('Change password');
-        $this->assertText('Your password has been updated.');
-
-    }
-
-    function testChangePasswordWrongExistingPassword() {
-        global $TEST_SERVER_DOMAIN;
-
-        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'secretpassword');
-
-        $this->click("Log In");
-        $this->assertTitle('ThinkTank');
-        $this->assertText('Logged in as: me@example.com');
-
-        $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
-        $this->setField('oldpass', 'secretpassworddd');
-        $this->setField('pass1', 'secretpassword1');
-        $this->setField('pass2', 'secretpassword1');
-        $this->click('Change password');
-        $this->assertText('Old password does not match or empty.');
-    }
-
-    function testChangePasswordEmptyExistingPassword() {
-        global $TEST_SERVER_DOMAIN;
-
-        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'secretpassword');
-
-        $this->click("Log In");
-        $this->assertTitle('ThinkTank');
-        $this->assertText('Logged in as: me@example.com');
-
-        $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
-        $this->setField('pass1', 'secretpassword1');
-        $this->setField('pass2', 'secretpassword1');
-        $this->click('Change password');
-        $this->assertText('Old password does not match or empty.');
-    }
-
-    function testChangePasswordNewPasswordsDontMatch() {
-        global $TEST_SERVER_DOMAIN;
-
-        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'secretpassword');
-
-        $this->click("Log In");
-        $this->assertTitle('ThinkTank');
-        $this->assertText('Logged in as: me@example.com');
-
-        $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
-        $this->setField('oldpass', 'secretpassword');
-        $this->setField('pass1', 'secretpassword1');
-        $this->setField('pass2', 'secretpassword2');
-        $this->click('Change password');
-        $this->assertText('New passwords did not match. Your password has not been changed.');
-    }
-
-    function testChangePasswordNewPasswordsNotLongEnough() {
-        global $TEST_SERVER_DOMAIN;
-
-        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'secretpassword');
-
-        $this->click("Log In");
-        $this->assertTitle('ThinkTank');
-        $this->assertText('Logged in as: me@example.com');
-
-        $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
-        $this->setField('oldpass', 'secretpassword');
-        $this->setField('pass1', 'dd');
-        $this->setField('pass2', 'dd');
-        $this->click('Change password');
-        $this->assertText('New password must be at least 5 characters. Your password has not been changed.');
-    }
-
-
-    function testUserPage() {
-        global $TEST_SERVER_DOMAIN;
-
-        $this->get($TEST_SERVER_DOMAIN.'/session/login.php');
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'secretpassword');
-
-        $this->click("Log In");
-        $this->assertTitle('ThinkTank');
-
-        $this->get($TEST_SERVER_DOMAIN.'/user/index.php?i=thinktankapp&u=ev');
-        $this->assertTitle('ThinkTank ev');
-        $this->assertText('Logged in as: me@example.com');
-        $this->assertText('ev');
-
-        $this->get($TEST_SERVER_DOMAIN.'/user/index.php?i=thinktankapp&u=usernotinsystem');
-        $this->assertText('This user is not in the system.');
-
-    }
-
     function testNextAndPreviousControls() {
-        global $TEST_SERVER_DOMAIN;
-
         $categories[] = "";
         $categories[] = "?v=mostreplies";
         $categories[] = "?v=mostretweets";
 
         foreach ($categories as $category) {
 
-            $this->get($TEST_SERVER_DOMAIN.'/public.php'.$category);
+            $this->get($this->url.'/public.php'.$category);
             $this->assertTitle('ThinkTank Public Timeline');
 
             $this->assertText('ev');
@@ -325,10 +167,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
     }
 
     function testNextAndPreviousPhotosControls() {
-        global $TEST_SERVER_DOMAIN;
-
-
-        $this->get($TEST_SERVER_DOMAIN.'/public.php?v=photos');
+        $this->get($this->url.'/public.php?v=photos');
         $this->assertTitle('ThinkTank Public Timeline');
 
         $this->assertText('shutterbug');
@@ -358,10 +197,7 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
     }
 
     function testNextAndPreviousLinksControls() {
-        global $TEST_SERVER_DOMAIN;
-
-
-        $this->get($TEST_SERVER_DOMAIN.'/public.php?v=links');
+        $this->get($this->url.'/public.php?v=links');
         $this->assertTitle('ThinkTank Public Timeline');
 
         $this->assertText('linkbaiter');
@@ -387,9 +223,6 @@ class TestOfThinkTankFrontEnd extends ThinkTankWebTestCase {
         $this->assertText('This is link post 9');
         $this->assertText('This is link post 0');
         $this->assertText('Page 3 of 3');
-
     }
-
-    //TODO Write post page tests
 }
 ?>

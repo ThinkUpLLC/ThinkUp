@@ -11,11 +11,14 @@ class ThinkTankWebTestCase extends WebTestCase {
     var $db;
     var $conn;
     var $testdb_helper;
-
+    var $url;
 
     function setUp() {
         global $THINKTANK_CFG;
         global $TEST_DATABASE;
+        global $TEST_SERVER_DOMAIN;
+
+        $this->url = $TEST_SERVER_DOMAIN;
 
         //Override default CFG values
         $THINKTANK_CFG['db_name'] = $TEST_DATABASE;
