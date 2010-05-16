@@ -160,26 +160,15 @@
           // Show loading bar
           function showLoading() {
             loading
-              .css({visibility:"visible"})
-              .css({opacity:"1"})
-              .css({display:"block"})
-            ;
+              .css({visibility:"visible", opacity:"1", display:"block"})
             loading_mentions
-              .css({visibility:"visible"})
-              .css({opacity:"1"})
-              .css({display:"block"})
+              .css({visibility:"visible", opacity:"1", display:"block"})
             loading_followers
-              .css({visibility:"visible"})
-              .css({opacity:"1"})
-              .css({display:"block"})
+              .css({visibility:"visible", opacity:"1", display:"block"})
             loading_friends
-              .css({visibility:"visible"})
-              .css({opacity:"1"})
-              .css({display:"block"})
+              .css({visibility:"visible", opacity:"1", display:"block"})
             loading_links
-              .css({visibility:"visible"})
-              .css({opacity:"1"})
-              .css({display:"block"})
+              .css({visibility:"visible", opacity:"1", display:"block"})
           }
           
           // Hide loading bar
