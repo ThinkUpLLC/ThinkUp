@@ -5,14 +5,14 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/mock_objects.php';
 
 /* PLUGIN TESTS */
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/tests/expandurlsplugin_test.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/facebookcrawler_test.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookCrawler.php';
 //TODO: Figure out why this test runs individually but not in a group
 //require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/flickrapi_test.php';
 //require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/flickrplugin_test.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/twitterapiaccessoroauth_test.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/twittercrawler_test.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/twitteroauth_test.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterAPIAccessorOAuth.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterCrawler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterOAuth.php';
 
 $plugintest = & new GroupTest('Plugin tests');
 

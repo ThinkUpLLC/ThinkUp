@@ -5,17 +5,17 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/mock_objects.php';
 
 /* MODEL TESTS */
-require_once $SOURCE_ROOT_PATH.'tests/config_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/database_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/followdao_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/instancedao_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/linkdao_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/log_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/mysqldao_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/ownerinstancedao_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/plugindao_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/postdao_test.php';
-require_once $SOURCE_ROOT_PATH.'tests/userdao_test.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfConfig.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfDatabase.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfFollowDAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfInstanceDAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfLinkDAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfLogging.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfMySQLDAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfOwnerInstanceDAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfPluginDAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfPostDAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfUserDAO.php';
 
 $modeltest = & new GroupTest('Model tests');
 

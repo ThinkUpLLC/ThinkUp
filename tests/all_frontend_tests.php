@@ -5,7 +5,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/mock_objects.php';
 
 /* FRONTEND TESTS */
-require_once $SOURCE_ROOT_PATH.'tests/frontend_test.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfThinkTankFrontEnd.php';
 
 $webtest = & new GroupTest('Frontend tests');
 
