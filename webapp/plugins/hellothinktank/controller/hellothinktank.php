@@ -15,8 +15,5 @@ function hellothinktank_configuration() {
 }
 
 
-$webapp->addToConfigMenu('hellothinktank', 'Hello ThinkTank');
 $webapp->registerCallback('hellothinktank_configuration', 'configuration|hellothinktank');
-
-
 ?>

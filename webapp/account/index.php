@@ -57,8 +57,6 @@ if ($owner->is_admin) {
 $s->assign('instances', $id->getByOwner($owner));
 
 /* Begin plugin-specific configuration handling */
-$cmi = $webapp->getConfigMenu();
-$s->assign('config_menu', $cmi);
 if (!isset($_GET['m']) && isset($_GET['p'])) {
     $active_plugin = $_GET['p'];
 } else {

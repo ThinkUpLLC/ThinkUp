@@ -40,10 +40,6 @@ function flickrthumbnails_crawl() {
 function flickrthumbnails_webapp_configuration() {
     // TODO Add setting for the Flickr API key here
 }
-
-
 $crawler->registerCallback('flickrthumbnails_crawl', 'crawl');
-
-$webapp->addToConfigMenu('flickrthumbnails', 'Flickr Thumbnails');
 $webapp->registerCallback('flickrthumbnails_webapp_configuration', 'configuration|flickrthumbnails');
 ?>

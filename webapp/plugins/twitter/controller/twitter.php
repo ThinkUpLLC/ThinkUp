@@ -175,8 +175,5 @@ function twitter_webapp_configuration() {
 
 
 $crawler->registerCallback('twitter_crawl', 'crawl');
-
-$webapp->addToConfigMenu('twitter', 'Twitter');
 $webapp->registerCallback('twitter_webapp_configuration', 'configuration|twitter');
-
 ?>
