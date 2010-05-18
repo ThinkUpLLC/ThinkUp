@@ -1,0 +1,78 @@
+<?php
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+	require_once '../../../../tests/config.tests.inc.php';
+}
+
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
+
+
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
+
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.iPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
+
+/* Replicate all the global objects a plugin depends on; normally this is done in init.php */
+// TODO Figure out a better way to do all this than global objects in init.php
+$crawler = new Crawler();
+$webapp = new Webapp();
+$i = new Instance(array("network_user_id"=>10, "id"=>1, "network_username"=>'test', "last_status_id"=>0, "last_page_fetched_replies"=>1, "last_page_fetched_tweets"=>0, "total_posts_in_system"=>20, "total_replies_in_system"=>10, "total_follows_in_system"=>10, "total_users_in_system"=>12, "is_archive_loaded_replies"=>0, "is_archive_loaded_follows"=>1, "crawler_last_run"=>"1/1/2010", "earliest_reply_in_system"=>"1/2/2009", "api_calls_to_leave_unmade_per_minute"=>2, "avg_replies_per_day"=>5, "network"=>"twitter", "is_public"=>0, "is_active"=>0, "network_viewer_id"=>101));
+
+// Instantiate global database variable
+try {
+	$db = new Database($THINKTANK_CFG);
+	$conn = $db->getConnection();
+}
+catch(Exception $e) {
+	echo $e->getMessage();
+}
+
+class TestOfTwitterPlugin extends ThinkTankUnitTestCase {
+	function TestOfTwitterPlugin() {
+		$this->UnitTestCase('TwitterPlugin class test');
+	}
+
+	function setUp() {
+		global $webapp;
+		global $crawler;
+		$webapp->registerPlugin('twitter', 'TwitterPlugin');
+		$crawler->registerCrawlerPlugin('TwitterPlugin');
+		$webapp->setActivePlugin('twitter');
+		parent::setUp();
+	}
+
+	function tearDown() {
+		parent::tearDown();
+	}
+
+	function testWebappTabRegistration() {
+		global $webapp;
+		$pd = new PostDAO($this->db, $this->logger);
+
+		$post_tabs = $webapp->getChildTabsUnderPosts();
+
+		$this->assertEqual(sizeof($post_tabs), 4, "Test number of post tabs");
+		$first_post_tab = $post_tabs[0];
+		$this->assertEqual($first_post_tab->short_name, "tweets-all", "Test short name of first post tab");
+		$this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
+		$this->assertEqual($first_post_tab->description, "All tweets", "Test description of first post tab");
+
+		$first_post_tab_datasets = $first_post_tab->getDatasets();
+		$first_post_tab_dataset = $first_post_tab_datasets[0];
+		$this->assertEqual($first_post_tab_dataset->name, "all_tweets", "Test first post tab's first dataset name");
+		$this->assertEqual($first_post_tab_dataset->fetching_method, "getAllPosts", "Test first post tab's first dataset fetching method");
+	}
+
+}
+?>

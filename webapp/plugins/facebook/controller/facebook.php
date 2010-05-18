@@ -9,6 +9,7 @@
  */
 
 $webapp->registerPlugin('facebook', 'FacebookPlugin');
+$webapp->registerPlugin('facebook page', 'FacebookPlugin');
 
 $crawler->registerCrawlerPlugin('FacebookPlugin');
 ?>

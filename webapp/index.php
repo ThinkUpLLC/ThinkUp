@@ -87,6 +87,13 @@ if (!isset($_SESSION['user'])) {
             $s->assign('percent_followers_protected', $percent_followers_protected);
 
         }
+		$webapp->setActivePlugin($i->network);
+		$s->assign('post_tabs', $webapp->getChildTabsUnderPosts());
+		$s->assign('replies_tabs', $webapp->getChildTabsUnderReplies());
+		$s->assign('friends_tabs', $webapp->getChildTabsUnderFriends());
+		$s->assign('followers_tabs', $webapp->getChildTabsUnderFollowers());
+		$s->assign('links_tabs', $webapp->getChildTabsUnderLinks());
+		
     }
 
     // clean up

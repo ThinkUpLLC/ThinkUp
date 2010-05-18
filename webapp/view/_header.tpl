@@ -62,23 +62,23 @@
           var sections = $(".menu li");
           
           var loading = $("#loading");
-          var loading_mentions = $("#loading_mentions");
+          var loading_replies = $("#loading_replies");
           var loading_followers = $("#loading_followers");
           var loading_friends = $("#loading_friends");
           var loading_links =  $("#loading_links");
           
-          var tweets_content = $("#tweets_content");
-          var mentions_content = $("#mentions_content");
+          var posts_content = $("#posts_content");
+          var replies_content = $("#replies_content");
           var followers_content = $("#followers_content");
           var friends_content = $("#friends_content");
           var links_content =  $("#links_content");
       {/literal}
       showLoading();
-      tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-all", hideLoading);
-      mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-all", hideLoading);
-      followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-mostfollowed", hideLoading);
-      friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-mostactive", hideLoading);
-      links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=links-friends", hideLoading);
+      posts_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}", hideLoading);
+      replies_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$replies_tabs[0]->short_name}", hideLoading);
+      followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$followers_tabs[0]->short_name}", hideLoading);
+      friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$friends_tabs[0]->short_name}", hideLoading);
+      links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$links_tabs[0]->short_name}", hideLoading);
       {literal}
           // Manage click events.
           sections.click(function() {
@@ -89,67 +89,34 @@
             showLoading();
             
             // Load selected section.
-            switch (this.id) {
-              case "tweets-all": {/literal}
-                tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-all", hideLoading);
-                break;
-              case "tweets-mostreplies":
-                tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-mostreplies", hideLoading);
-                break;
-              case "tweets-mostretweeted":
-                tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-mostretweeted", hideLoading);
-                break;
-              case "tweets-convo":
-                tweets_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=tweets-convo", hideLoading);
-                break;
-              case "mentions-all":
-                mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-all", hideLoading);
-                break;
-              case "mentions-allreplies":
-                mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-allreplies", hideLoading);
-                break;
-              case "mentions-orphan":
-                mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-orphan", hideLoading);
-                break;
-              case "mentions-standalone":
-                mentions_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=mentions-standalone", hideLoading);
-                break;
-              case "followers-mostfollowed":
-                followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-mostfollowed", hideLoading);
-                break;
-              case "followers-leastlikely":
-                followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-leastlikely", hideLoading);
-                break;
-              case "followers-earliest":
-                followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-earliest", hideLoading);
-                break;
-              case "followers-former":
-                followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=followers-former", hideLoading);
-                break;
-              case "friends-mostactive":
-                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-mostactive", hideLoading);
-                break;
-              case "friends-leastactive":
-                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-leastactive", hideLoading);
-                break;
-              case "friends-mostfollowed":
-                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-mostfollowed", hideLoading);
-                break;
-              case "friends-former":
-                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-former", hideLoading);
-                break;
-              case "friends-notmutual":
-                friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=friends-notmutual", hideLoading);
-                break;
-              case "links-friends":
-                links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=links-friends", hideLoading);
-                break;
-              case "links-favorites":
-                links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=links-favorites", hideLoading);
-                break;
-              case "links-photos":
-                links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d=links-photos", hideLoading);
-                break;
+            switch (this.id) { {/literal}
+            //posts tabs
+            {foreach from=$post_tabs key=ptkey item=pt name=tabloop}
+                case "{$pt->short_name}": 
+                    posts_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}", hideLoading);
+                    break;
+            {/foreach}
+            //replies tabs
+            {foreach from=$replies_tabs key=ptkey item=pt name=tabloop}
+                case "{$pt->short_name}":
+                    replies_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}", hideLoading);
+                    break;
+            {/foreach}
+            {foreach from=$followers_tabs key=ptkey item=pt name=tabloop}
+                case "{$pt->short_name}":
+                    followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}", hideLoading);
+                    break;
+            {/foreach}
+            {foreach from=$friends_tabs key=ptkey item=pt name=tabloop}
+                case "{$pt->short_name}":
+                    friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}", hideLoading);
+                    break;
+            {/foreach}
+            {foreach from=$links_tabs key=ptkey item=pt name=tabloop}
+                case "{$pt->short_name}":
+                    links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}", hideLoading);
+                    break;
+            {/foreach}
               default:
                 // Hide loading bar if there is no selected section.
                 hideLoading();
@@ -161,7 +128,7 @@
           function showLoading() {
             loading
               .css({visibility:"visible", opacity:"1", display:"block"})
-            loading_mentions
+            loading_replies
               .css({visibility:"visible", opacity:"1", display:"block"})
             loading_followers
               .css({visibility:"visible", opacity:"1", display:"block"})
@@ -174,7 +141,7 @@
           // Hide loading bar
           function hideLoading() {
             loading.fadeTo(1000, 0);
-            loading_mentions.fadeTo(1000, 0);
+            loading_replies.fadeTo(1000, 0);
             loading_followers.fadeTo(1000, 0);
             loading_friends.fadeTo(1000, 0);
             loading_links.fadeTo(1000, 0);

@@ -23,6 +23,8 @@ require_once 'model/class.Session.php';
 require_once 'model/class.Plugin.php';
 require_once 'model/class.LoggerSlowSQL.php';
 require_once 'model/interface.iPlugin.php';
+require_once 'model/class.WebappTab.php';
+require_once 'model/class.WebappTabDataset.php';
 
 # crawler only
 require_once 'model/class.Logger.php';

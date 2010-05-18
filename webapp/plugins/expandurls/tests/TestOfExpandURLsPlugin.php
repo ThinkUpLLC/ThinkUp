@@ -1,6 +1,6 @@
 <?php
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
-    require_once '../../../../tests/config.tests.inc.php';
+	require_once '../../../../tests/config.tests.inc.php';
 }
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
@@ -23,45 +23,45 @@ $crawler = new Crawler();
 $webapp = new Webapp();
 // Instantiate global database variable
 try {
-    $db = new Database($THINKTANK_CFG);
-    $conn = $db->getConnection();
+	$db = new Database($THINKTANK_CFG);
+	$conn = $db->getConnection();
 }
 catch(Exception $e) {
-    echo $e->getMessage();
+	echo $e->getMessage();
 }
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/controller/expandurls.php';
-
 
 class TestOfExpandURLsPlugin extends ThinkTankUnitTestCase {
 
-    function TestOfExpandURLsPlugin() {
-        $this->UnitTestCase('ExpandURLs plugin class test');
-    }
+	function TestOfExpandURLsPlugin() {
+		$this->UnitTestCase('ExpandURLs plugin class test');
+	}
 
-    function setUp() {
-        parent::setUp();
+	function setUp() {
+		global $crawler;
+		parent::setUp();
 
-        //Insert test links (not images, not expanded)
+		//Insert test links (not images, not expanded)
 
-        $q = "INSERT INTO tt_links (url, title, clicks, post_id, is_image) VALUES ('http://bit.ly/a5VmbO', '', 0, 1, 0);";
-        $this->db->exec($q);
+		$q = "INSERT INTO tt_links (url, title, clicks, post_id, is_image) VALUES ('http://bit.ly/a5VmbO', '', 0, 1, 0);";
+		$this->db->exec($q);
 
-    }
+		$crawler->registerCrawlerPlugin('ExpandURLsPlugin');
+	}
 
-    function tearDown() {
-        parent::tearDown();
-    }
+	function tearDown() {
+		parent::tearDown();
+	}
 
-    function testExpandURLsCrawl() {
-        global $crawler;
-        $crawler->emitObjectMethod("crawl");
+	function testExpandURLsCrawl() {
+		global $crawler;
+		$crawler->emitObjectMethod("crawl");
 
-        $ldao = new LinkDAO($this->db, $this->logger);
+		$ldao = new LinkDAO($this->db, $this->logger);
 
-        $link = $ldao->getLinkById(1);
-        $this->assertEqual($link->expanded_url, 'http://www.thewashingtonnote.com/archives/2010/04/communications/');
-        $this->assertEqual($link->error, '');
-    }
+		$link = $ldao->getLinkById(1);
+		$this->assertEqual($link->expanded_url, 'http://www.thewashingtonnote.com/archives/2010/04/communications/');
+		$this->assertEqual($link->error, '');
+	}
 
 }
 ?>
