@@ -72,7 +72,7 @@ if (!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user']
             $s->assign('header', 'All Mentions');
             $s->assign('description', 'Any post that mentions you');
             $s->assign('all_mentions', $pd->getAllMentions($i->network_username, 15, $i->network));
-            $s->assign('all_tweets', $pd->getAllPosts($cfg->twitter_user_id, 15));
+            $s->assign('all_tweets', $pd->getAllPosts($cfg->network_user_id, 15));
             break;
         case "mentions-allreplies":
             $s->assign('header', 'Replies');
@@ -137,7 +137,7 @@ if (!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user']
         case "links-favorites":
             $s->assign('header', 'Links From Favorites');
             $s->assign('description', 'Links in posts you favorited');
-            //$s->assign('links', $ld->getLinksByFriends($cfg->twitter_user_id));
+            //$s->assign('links', $ld->getLinksByFriends($cfg->network_user_id));
             break;
         case "links-photos":
             $s->assign('header', 'Photos');

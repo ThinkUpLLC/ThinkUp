@@ -38,7 +38,7 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
             $s->assign('instance', $i);
             $s->assign('i', $i); // HATE TO DO THIS BUT SOME TEMPLATES LOOKING FOR $i AND NOT $instance
                 
-            $exchanges =  $pd->getExchangesBetweenUsers($cfg->twitter_user_id, $user->user_id);
+            $exchanges =  $pd->getExchangesBetweenUsers($cfg->network_user_id, $user->user_id);
             $s->assign('exchanges', $exchanges);
             $s->assign('total_exchanges', count($exchanges));
                 
