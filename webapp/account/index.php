@@ -1,4 +1,4 @@
-<?php
+<?php 
 // set up
 chdir("..");
 
@@ -74,11 +74,9 @@ if (!isset($_GET['m']) && isset($_GET['p'])) {
     }
 }
 if (isset($active_plugin)) {
-	$pobj = $webapp->getPluginObject($active_plugin);
-	$p = new $pobj;
-	$p->renderConfiguration($s);
-	
-    //$webapp->configuration($active_plugin);
+    $pobj = $webapp->getPluginObject($active_plugin);
+    $p = new $pobj;
+    $p->renderConfiguration($s);
     array_push($s->template_dir, 'plugins/'.$active_plugin);
     $s->assign('body', $THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$active_plugin.'/view/'.$active_plugin.'.account.index.tpl');
 }
