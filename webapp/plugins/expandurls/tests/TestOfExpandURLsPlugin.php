@@ -13,6 +13,9 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.iPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/model/class.ExpandURLsPlugin.php';
+
 
 /* Replicate all the global objects a plugin depends on; normally this is done in init.php */
 // TODO Figure out a better way to do all this than global objects in init.php
@@ -51,7 +54,7 @@ class TestOfExpandURLsPlugin extends ThinkTankUnitTestCase {
 
     function testExpandURLsCrawl() {
         global $crawler;
-        $crawler->emit("crawl");
+        $crawler->emitObjectMethod("crawl");
 
         $ldao = new LinkDAO($this->db, $this->logger);
 

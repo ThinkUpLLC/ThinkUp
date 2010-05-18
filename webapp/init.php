@@ -22,6 +22,7 @@ require_once 'model/class.Captcha.php';
 require_once 'model/class.Session.php';
 require_once 'model/class.Plugin.php';
 require_once 'model/class.LoggerSlowSQL.php';
+require_once 'model/interface.iPlugin.php';
 
 # crawler only
 require_once 'model/class.Logger.php';

@@ -1,18 +1,30 @@
-<?php
+<?php 
 class PluginHook {
-    private $callbacks = array(); // All the registered callbacks, an array of arrays where the index is the action name
-
-    // Register a function/method as a callback function.
-    public function registerCallback($callback, $trigger) {
-        $this->callbacks[$trigger][] = $callback;
+    private $plugins = array(); // Array that associates plugin folder shortname with the plugin object name
+    private $object_method_callbacks = array(); // All the registered callbacks, an array of arrays where the index is the action name
+    
+    // Register an object method call
+    public function registerObjectMethod($trigger, $o, $m) {
+        $obj = new $o;
+        $this->object_method_callbacks[$trigger][] = array($o, $m);
     }
-
-    // Run all functions registered as callbacks
-    public function emit($trigger, $params = null) {
-        foreach ($this->callbacks[$trigger] as $callback) {
+    
+    // Run all object methods registered as callbacks
+    public function emitObjectMethod($trigger, $params = array()) {
+        foreach ($this->object_method_callbacks[$trigger] as $callback) {
             call_user_func($callback, $params);
         }
     }
+    
+    // Register an object plugin name
+    public function registerPlugin($shortname, $objectname) {
+        $this->plugins[$shortname] = $objectname;
+    }
+    
+    // Retrieve an object plugin name
+    public function getPluginObject($shortname) {
+        return $this->plugins[$shortname];
+    }
+    
 }
-
 ?>
