@@ -38,20 +38,20 @@ VALUES (  'My Test Plugin Activated',  'testpluginact',  'Proof of concept plugi
         $dao = new PluginDAO($this->db, $this->logger);
 
         $plugins = $dao->getInstalledPlugins($THINKTANK_CFG["source_root_path"]);
-
+        
         $this->assertTrue(count($plugins) == 5);
 
-        $this->assertTrue($plugins[0]->name == "Expand URLs");
-        $this->assertTrue($plugins[0]->folder_name == "expandurls");
+        $this->assertTrue($plugins[0]->name == "Expand URLs", "Ex-url 'name' Test");
+        $this->assertTrue($plugins[0]->folder_name == "expandurls", "Ex-url 'folder_name' test");
 
-        $this->assertTrue($plugins[1]->name == "Facebook");
-        $this->assertTrue($plugins[1]->folder_name == "facebook");
+        $this->assertTrue($plugins[1]->name == "Facebook", "Facebook 'name' Test");
+        $this->assertTrue($plugins[1]->folder_name == "facebook", "Facebook 'folder_name' test");
 
-        $this->assertTrue($plugins[2]->name == "Flickr Thumbnails");
-        $this->assertTrue($plugins[2]->folder_name == "flickrthumbnails");
+        $this->assertTrue($plugins[2]->name == "Flickr Thumbnails", "Flickr 'name' Test");
+        $this->assertTrue($plugins[2]->folder_name == "flickrthumbnails", "Flickr 'folder_name' test");
 
-        $this->assertTrue($plugins[3]->name == "Hello ThinkTank");
-        $this->assertTrue($plugins[3]->folder_name == "hellothinktank");
+        $this->assertTrue($plugins[3]->name == "Hello ThinkTank", "Hello 'name' Test");
+        $this->assertTrue($plugins[3]->folder_name == "hellothinktank", "Hello 'folder_name' test");
 
     }
 
@@ -95,6 +95,6 @@ VALUES (  'My Test Plugin Activated',  'testpluginact',  'Proof of concept plugi
         $this->assertTrue($plugins[0]->folder_name == "twitter");
 
     }
-
+    
 
 }

@@ -4,7 +4,12 @@
 /***  APPLICATION CONFIG                      ***/
 /************************************************/
 
-$THINKTANK_CFG['debug']                     = true;
+// Public path of thinktank's /webapp/ folder on your web server.
+// For example, if the /webapp/ folder is located at http://yourdomain/tweets/, set to '/tweets/'.
+$THINKTANK_CFG['site_root_path']            = '/';
+
+// Full server path to /thinktank/ folder.
+$THINKTANK_CFG['source_root_path']          = '/your-server-path-to/thinktank/';
 
 // Your GMT offset, not (necessarily) your web server's. Pacific: 7, Eastern: 4
 $THINKTANK_CFG['GMT_offset']                = 7;
@@ -12,24 +17,17 @@ $THINKTANK_CFG['GMT_offset']                = 7;
 // Toggle Smarty caching. 1: Smarty caching on, 0: Smarty caching off
 $THINKTANK_CFG['cache_pages']               = 1;
 
-// Application title.
+// Application title
 $THINKTANK_CFG['app_title']                 = 'ThinkTank';
 
 // Full server path to crawler.log.
-$THINKTANK_CFG['log_location']              = '/your-server-path-to/thinktank/logs/crawler.log';
+$THINKTANK_CFG['log_location']              = $THINKTANK_CFG['source_root_path'].'logs/crawler.log';
 
 // Full server path to sql.log. To not log queries, set to null.
-$THINKTANK_CFG['sql_log_location']          = '/your-server-path-to/thinktank/logs/sql.log';
+$THINKTANK_CFG['sql_log_location']          = $THINKTANK_CFG['source_root_path'].'logs/sql.log';
 
 // How many seconds does a query take before it gets logged as a slow query?
 $THINKTANK_CFG['slow_query_log_threshold']  = 2.0;
-
-// Public path of thinktank's /webapp/ folder on your web server.
-// For example, if the /webapp/ folder is located at http://yourdomain/tweets/, set to '/tweets/'.
-$THINKTANK_CFG['site_root_path']            = '/';
-
-// Full server path to /thinktank/ folder.
-$THINKTANK_CFG['source_root_path']          = '/your-server-path-to/thinktank/';
 
 // Full server path to bundled Smarty template library.
 $THINKTANK_CFG['smarty_path']               = $THINKTANK_CFG['source_root_path'].'extlib/Smarty-2.6.26/libs/';
@@ -38,15 +36,20 @@ $THINKTANK_CFG['smarty_path']               = $THINKTANK_CFG['source_root_path']
 // @TODO Build email invitation system so this isn't simply a binary choice.
 $THINKTANK_CFG['is_registration_open']      = true;
 
+$THINKTANK_CFG['debug']                     = true;
+
 /************************************************/
 /***  DATABASE CONFIG                         ***/
 /************************************************/
 
 $THINKTANK_CFG['db_host']                   = 'localhost';  // On a shared host? Try mysql.yourdomain.com, or see your web host's documentation.
+$THINKTANK_CFG['db_type']                   = 'mysql';
 $THINKTANK_CFG['db_user']                   = 'your_database_username';
 $THINKTANK_CFG['db_password']               = 'your_database_password';
 $THINKTANK_CFG['db_name']                   = 'your_thinktank_database_name';
+$THINKTANK_CFG['db_socket']                 = '/tmp/mysql.sock';
 $THINKTANK_CFG['table_prefix']              = 'tt_';
+
 
 /************************************************/
 /***  PLUGIN CONFIG                           ***/

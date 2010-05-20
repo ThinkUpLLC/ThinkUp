@@ -28,7 +28,8 @@ class Config {
     }
     
     public function getValue($key) {
-        return $this->config[$key];
+        $value = isset($this->config[$key]) ? $this->config[$key] : null;
+        return $value;
     }
     
     function Config($network_username = null, $network_user_id = null) {
