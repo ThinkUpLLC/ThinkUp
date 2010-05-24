@@ -37,7 +37,7 @@ class TwitterAPIAccessorOAuth {
     function prepAPI() {
     
         # Define how to access Twitter API
-        $api_domain = 'https://twitter.com';
+        $api_domain = 'https://api.twitter.com';
         $api_format = 'xml';
         $search_domain = 'http://search.twitter.com';
         $search_format = 'json';
