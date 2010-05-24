@@ -43,11 +43,11 @@
                 <form action="" class="post-setparent">
                   <select name="pid{$t->post_id}" id="pid{$t->post_id}">
                     <option value="0">No Post in Particular (Mark as standalone)</option>
-					{assign var='current_post_selected' value='false'}
+                    {assign var='current_post_selected' value='false'}
                     <option disabled>Set as a reply to:</option>
                     {foreach from=$all_tweets key=aid item=a}
                       <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
-					  {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
+                      {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
                     {/foreach}
                     {if $current_post_selected != 'true'}
                       <option value="{$post->post_id}" selected="selected">&nbsp;&nbsp;{$post->post_text|truncate_for_select}</option>
@@ -89,25 +89,23 @@
             {foreach from=$retweets key=tid item=t name=foo}
               <div class="clearfix">
                 {include file="_post.other.tpl" t=$t}
-              <div id="div{$t->post_id}" class="grid_22 prefix_10">
-                <form action="" class="post-setparent">
-                  <select name="pid{$t->post_id}" id="pid{$t->post_id}">
-                    <option value="0">No Post in Particular (Mark as standalone)</option>
-					{assign var='current_post_selected' value='false'}
-                    <option disabled>Set as a reply to:</option>
-                    {foreach from=$all_tweets key=aid item=a}
-                      <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
-					  {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
-                    {/foreach}
-                    {if $current_post_selected != 'true'}
-                      <option value="{$post->post_id}" selected="selected">&nbsp;&nbsp;{$post->post_text|truncate_for_select}</option>
-                    {/if}
-                  </select>  
-                  <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
-                </form>
-              </div>
-
-				
+                <div id="div{$t->post_id}" class="grid_22 prefix_10">
+                  <form action="" class="post-setparent">
+                    <select name="pid{$t->post_id}" id="pid{$t->post_id}">
+                      <option value="0">No Post in Particular (Mark as standalone)</option>
+                      {assign var='current_post_selected' value='false'}
+                      <option disabled>Set as a reply to:</option>
+                      {foreach from=$all_tweets key=aid item=a}
+                        <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
+                        {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
+                      {/foreach}
+                      {if $current_post_selected != 'true'}
+                        <option value="{$post->post_id}" selected="selected">&nbsp;&nbsp;{$post->post_text|truncate_for_select}</option>
+                      {/if}
+                    </select>  
+                    <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
+                  </form>
+                </div>
               </div>
             {/foreach}
           </div>
@@ -140,23 +138,23 @@
             {foreach from=$likely_orphans key=tid item=t name=foo}
               <div class="clearfix">
                 {include file="_post.other.tpl" t=$t}
-                  <div id="div{$t->post_id}" class="grid_22 prefix_10">
-                    <form action="" class="post-setparent">
-                      <select name="pid{$t->post_id}" id="pid{$t->post_id}">
-                        <option value="0">No Post in Particular (Mark as standalone)</option>
-    					{assign var='current_post_selected' value='false'}
-                        <option disabled>Set as a reply to:</option>
-                        {foreach from=$all_tweets key=aid item=a}
-                          <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
-    					  {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
-                        {/foreach}
-                        {if $current_post_selected != 'true'}
-                          <option value="{$post->post_id}" selected="selected">&nbsp;&nbsp;{$post->post_text|truncate_for_select}</option>
-                        {/if}
-                      </select>  
-                      <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
-                    </form>
-                  </div>
+                <div id="div{$t->post_id}" class="grid_22 prefix_10">
+                  <form action="" class="post-setparent">
+                    <select name="pid{$t->post_id}" id="pid{$t->post_id}">
+                      <option value="0">No Post in Particular (Mark as standalone)</option>
+                      {assign var='current_post_selected' value='false'}
+                      <option disabled>Set as a reply to:</option>
+                      {foreach from=$all_tweets key=aid item=a}
+                        <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
+                        {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
+                      {/foreach}
+                      {if $current_post_selected != 'true'}
+                        <option value="{$post->post_id}" selected="selected">&nbsp;&nbsp;{$post->post_text|truncate_for_select}</option>
+                      {/if}
+                    </select>  
+                    <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
+                  </form>
+                </div>
               </div>
             {/foreach}
           </div>

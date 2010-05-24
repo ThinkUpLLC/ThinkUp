@@ -22,7 +22,7 @@
     <form name="form1" method="post" action="register.php" class="login append_20">
       <div class="clearfix">
         <div class="grid_4 prefix_5 right">
-          <label>
+          <label for="full_name">
             Name:
           </label>
         </div>
@@ -36,7 +36,7 @@
       </div>
       <div class="clearfix">
         <div class="grid_4 prefix_5 right">
-          <label>
+          <label for="email">
             Email:
           </label>
         </div>
@@ -50,7 +50,7 @@
       </div>
       <div class="clearfix">
         <div class="grid_4 prefix_5 right">
-          <label>
+          <label for="pass1">
             Password:
           </label>
         </div>
@@ -64,7 +64,7 @@
       </div>
       <div class="clearfix">
         <div class="grid_6 prefix_3 right">
-          <label>
+          <label for="pass2">
             Retype password:
           </label>
         </div>
@@ -77,7 +77,7 @@
       </div>
       <div class="clearfix">
         <div class="grid_4 prefix_5 right">
-          <label>
+          <label for="country">
             Country:
           </label>
         </div>
@@ -259,8 +259,8 @@
       </div>
       <div class="clearfix">
         <div class="grid_6 prefix_3 right">
-          <label>
-            Prove you're human:
+          <label for="user_code">
+            Prove you&rsquo;re human:
           </label>
         </div>
         <div class="grid_10 left">
