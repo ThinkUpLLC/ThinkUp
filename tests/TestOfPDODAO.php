@@ -1,11 +1,13 @@
 <?php
 require_once dirname(__FILE__).'/config.tests.inc.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.TestDAO.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
+require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfPDODAO extends ThinkTankUnitTestCase {
 
 	function TestOfPDODAO() {
@@ -41,14 +43,14 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testInitDAO() {
-		$testdao = new TestDAO();
-		$this->assertNotNull(TestDAO::$PDO);
+		$testdao = DAOFactory::getDAO('TestDAO');
+		$this->assertNotNull(TestMysqlDAO::$PDO);
 		$this->assertNotNull($testdao->config);
 		$this->assertNotNull($testdao->logger);
 	}
 
 	function testConvertBetweenBoolAndDB() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 		$this->assertEqual(0, $testdao->testBoolToDB(null), 'should be 0');
 		$this->assertEqual(0, $testdao->testBoolToDB(''), 'should be 0');
 		$this->assertEqual(0, $testdao->testBoolToDB(false), 'should be 0');
@@ -63,15 +65,15 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testTwoObjectsOneConnection() {
-		$testdao = new TestDAO();
-		$this->assertNotNull(TestDAO::$PDO);
-		TestDAO::$PDO->tt_testing = "testing";
-		$testdao2 = new TestDAO();
-		$this->assertEqual(TestDAO::$PDO->tt_testing, "testing");
+		DAOFactory::getDAO('TestDAO');
+		$this->assertNotNull(TestMysqlDAO::$PDO);
+		TestMysqlDAO::$PDO->tt_testing = "testing";
+		$testdao2 = DAOFactory::getDAO('TestDAO');
+		$this->assertEqual(TestMysqlDAO::$PDO->tt_testing, "testing");
 	}
 
 	function testBasicSelectUsingStaementHandleDirectly() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 		$users = $testdao->getUserCount(0, 'mary');
 		$this->assertIsA($users, "array");
 		$this->assertEqual(count($users), 2);
@@ -80,7 +82,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testBadSql() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 		try {
 			$testdao->badSql();
 		} catch(PDOException $e) {
@@ -89,7 +91,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testBadBinds() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 		try {
 			$testdao->badBinds();
 		} catch(PDOException $e) {
@@ -98,7 +100,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testInsertData() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 
 		// ad a test_user with a test_id get insert count
 		$cnt = $testdao->insertDataGetCount('test_user', '1000');
@@ -123,7 +125,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testUpdateData() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 
 		// update a with a bad test_id get 0 insert count
 		$cnt = $testdao->update( 'sally', 9999);
@@ -139,7 +141,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testSelectSingleRecord() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 
 		$data_obj = $testdao->selectRecord(999);
 		$this->assertNull($data_obj);
@@ -151,7 +153,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testSelectSingleRecordAsArray() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 
 		$data_obj = $testdao->selectRecordAsArray(999);
 		$this->assertNull($data_obj);
@@ -163,7 +165,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testSelectRecords() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 
 		//this should return no records
 		$data_array = $testdao->selectRecords(999);
@@ -183,7 +185,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testSelectRecodsAsArray() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 
 		//this should return no records
 		$data_array = $testdao->selectRecordsAsArrays(999);
@@ -203,7 +205,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testDeleteData() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 
 		// nothing deleted
 		$cnt = $testdao->delete(9999);
@@ -219,7 +221,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
 	}
 
 	function testIsPattern() {
-		$testdao = new TestDAO();
+		$testdao = DAOFactory::getDAO('TestDAO');
 
 		// nothing deleted
 		$cnt = $testdao->isExisting(9999);

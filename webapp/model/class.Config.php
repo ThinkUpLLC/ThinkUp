@@ -31,7 +31,12 @@ class Config {
         $value = isset($this->config[$key]) ? $this->config[$key] : null;
         return $value;
     }
-    
+
+    public function setValue($key, $value) {
+        $value = $this->config[$key] = $value;
+        return $value;
+    }
+
     function Config($network_username = null, $network_user_id = null) {
         global $THINKTANK_CFG;
         $this->config = $THINKTANK_CFG;

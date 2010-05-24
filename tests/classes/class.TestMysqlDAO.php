@@ -1,13 +1,13 @@
 <?php
-class TestData {
-	var $id;
-	var $test_name;
-	var $test_id;
-}
 
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.PDODAO.php';
+require_once('tests/classes/interface.TestDAO.php');
 
-class TestDAO extends PDODAO {
+require_once('webapp/model/class.PDODAO.php');
+
+/*
+ * mysql TestDAO implementation class for TestOfPDODAO and TestOfDAOFactory
+ */
+class TestMysqlDAO extends PDODAO implements TestDAO {
 
 	// test select query using $stmt directly...
 	public function getUserCount($min_id, $user_name) {

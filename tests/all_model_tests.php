@@ -19,10 +19,12 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfPostDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfUserDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfUtils.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfPDODAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfDAOFactory.php';
 
 $modeltest = & new GroupTest('Model tests');
 $modeltest->addTestCase(new TestOfLogging());
 $modeltest->addTestCase(new TestOfPDODAO());
+$modeltest->addTestCase(new TestOfDAOFactory());
 $modeltest->addTestCase(new TestOfConfig());
 $modeltest->addTestCase(new TestOfDatabase());
 $modeltest->addTestCase(new TestOfFollowDAO());
