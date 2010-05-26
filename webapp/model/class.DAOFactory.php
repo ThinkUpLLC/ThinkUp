@@ -22,6 +22,10 @@ class DAOFactory {
         'TestDAO' => array( 
             'mysql' => array( 'class' => 'TestMysqlDAO', 'path' =>  'tests/classes/class.TestMysqlDAO.php'),
             'faux' => array( 'class' => 'TestFauxDAO', 'path' =>  'tests/classes/class.TestFauxDAO.php'),
+        ),
+        //Instance MySQL DAO
+        'InstanceDAO' => array(
+            'mysql' => array( 'class' => 'InstanceMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
         )
     );
 

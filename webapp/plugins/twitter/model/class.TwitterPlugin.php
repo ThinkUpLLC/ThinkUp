@@ -6,8 +6,8 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         $config = Config::getInstance();
         $logger = Logger::getInstance();
-        $id = new InstanceDAO($db, $logger);
-        $oid = new OwnerInstanceDAO($db, $logger);
+		$id = DAOFactory::getDAO('InstanceDAO');
+		$oid = new OwnerInstanceDAO($db, $logger);
 
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('twitter');
         foreach ($instances as $i) {

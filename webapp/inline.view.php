@@ -9,7 +9,7 @@ require_once 'init.php';
 
 $od = new OwnerDAO($db);
 $owner = $od->getByEmail($_SESSION['user']);
-$id = new InstanceDAO($db);
+$id = DAOFactory::getDAO('InstanceDAO');
 
 if (isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u'])) {
 	$username = $_REQUEST['u'];

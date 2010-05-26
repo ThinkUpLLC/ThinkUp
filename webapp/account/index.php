@@ -31,7 +31,7 @@ if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password') {
 $s = new SmartyThinkTank();
 $s->caching = 0;
 
-$id = new InstanceDAO($db);
+$id = DAOFactory::getDAO('InstanceDAO');
 $od = new OwnerDAO($db);
 $oid = new OwnerInstanceDAO($db);
 

@@ -16,7 +16,7 @@ if ($p != 1) {
     $p = 0;
 }
 
-$id = new InstanceDAO($db);
+$id = DAOFactory::getDAO('InstanceDAO');
 
 $id->setActive($uid, $p);
 

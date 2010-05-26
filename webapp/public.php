@@ -8,7 +8,7 @@ session_start();
 require_once 'init.php';
 
 $pd = new PostDAO($db);
-$id = new InstanceDAO($db);
+$id = DAOFactory::getDAO('InstanceDAO');
 $s = new SmartyThinkTank();
 
 //Pagination

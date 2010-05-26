@@ -6,7 +6,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
         $logger = Logger::getInstance();
         $config = Config::getInstance();
-        $id = new InstanceDAO($db, $logger);
+        $id = DAOFactory::getDAO('InstanceDAO');
         $oid = new OwnerInstanceDAO($db, $logger);
 
         //crawl Facebook user profiles
@@ -213,6 +213,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
         return $child_tabs;
     }
+
 
 }
 ?>

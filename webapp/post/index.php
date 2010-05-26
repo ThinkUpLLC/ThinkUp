@@ -18,7 +18,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
         $u = new Utils();
 
         // TODO: FIX BUG: THIS ISN'T GOING TO WORK WHEN LOOKING AT POSTS OF OTHER USERS BECAUSE THEY DON'T HAVE INSTANCES
-        //$id = new InstanceDAO($db);
+        //$id = DAOFactory::getDAO('InstanceDAO');
         //$i = $id->getByUsername($post->author_username);
 
         // instead, lets pull the instance object out of the session variable

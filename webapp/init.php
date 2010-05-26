@@ -9,6 +9,8 @@ if ($version[0] < 5) {
 require_once 'model/class.Config.php';
 require_once 'model/class.Database.php';
 require_once 'model/class.MySQLDAO.php';
+require_once 'model/class.PDODAO.php';
+require_once 'model/class.DAOFactory.php';
 require_once 'model/class.User.php';
 require_once 'model/class.Owner.php';
 require_once 'model/class.Post.php';

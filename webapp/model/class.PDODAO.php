@@ -135,4 +135,5 @@ abstract class PDODAO {
     public final function convertDBToBool($val){
         return $val == 0 ? false : true;
     }
+    
 }

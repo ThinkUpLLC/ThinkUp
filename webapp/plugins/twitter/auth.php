@@ -39,7 +39,7 @@ if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
     if ($twitter_id > 0) {
         $msg = "<h2 class=\"subhead\">Twitter authentication successful!</h2>";
         
-        $id = new InstanceDAO($db);
+        $id = DAOFactory::getDAO('InstanceDAO');
         $i = $id->getByUsername($tu);
         $oid = new OwnerInstanceDAO($db);
         
