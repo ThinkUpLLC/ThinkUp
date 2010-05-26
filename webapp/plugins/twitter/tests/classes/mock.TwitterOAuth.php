@@ -13,6 +13,7 @@ class TwitterOAuth {/*{{{*/
         global $SOURCE_ROOT_PATH;
         $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
         $url = str_replace('https://twitter.com/', '', $url);
+        $url = str_replace('https://api.twitter.com/', '', $url);
         $url = str_replace('http://search.twitter.com/', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
@@ -24,6 +25,7 @@ class TwitterOAuth {/*{{{*/
         global $SOURCE_ROOT_PATH;
         $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
         $url = str_replace('https://twitter.com/', '', $url);
+        $url = str_replace('https://api.twitter.com/', '', $url);
         $url = str_replace('http://search.twitter.com/', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
