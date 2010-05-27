@@ -89,6 +89,7 @@ class TwitterCrawler {
             $recent_tweets = str_replace("[id]", $this->owner_object->username, $this->api->cURL_source['user_timeline']);
             $args = array();
             $args["count"] = 200;
+            $args["include_rts"] = "true";
             $last_page_of_tweets = round($this->api->archive_limit / 200) + 1;
             
             //set page and since_id params for API call
@@ -344,6 +345,7 @@ class TwitterCrawler {
                 $mentions = $this->api->cURL_source['mentions'];
                 $args = array();
                 $args['count'] = 200;
+                $args['include_rts']='true';
                 
                 if ($got_newest_mentions) {
                     $this->last_page_fetched_mentions++;
@@ -369,7 +371,7 @@ class TwitterCrawler {
                         
                         $pd = new PostDAO($this->db, $this->logger);
                         if (!isset($recentTweets)) {
-                            $recentTweets = $pd->getAllPosts($this->owner_object->user_id, 15);
+                            $recentTweets = $pd->getAllPosts($this->owner_object->user_id, 100);
                         }
                         $count = 0;
                         foreach ($tweets as $tweet) {
