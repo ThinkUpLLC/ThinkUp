@@ -1,25 +1,25 @@
-<?php 
-class FlickrThumbnailsPlugin implements iCrawlerPlugin {
+<?php
+class FlickrThumbnailsPlugin implements CrawlerPlugin {
 
     function crawl() {
         global $db;
         global $conn;
-        
+
         $config = Config::getInstance();
         $api_key = $config->getValue('flickr_api_key');
-        
+
         if (isset($api_key) && $api_key != '') {
             $logger = Logger::getInstance();
             $fa = new FlickrAPIAccessor($api_key);
             $ldao = new LinkDAO($db, $logger);
-            
+
             $flickrlinkstoexpand = $ldao->getLinksToExpandByURL('http://flic.kr/');
             if (count($flickrlinkstoexpand > 0)) {
                 $logger->logStatus(count($flickrlinkstoexpand)." Flickr links to expand", "Flickr Plugin");
             } else {
                 $logger->logStatus("No Flickr links to expand", "Flickr Plugin");
             }
-            
+
             foreach ($flickrlinkstoexpand as $fl) {
                 $eurl = $fa->getFlickrPhotoSource($fl);
                 if ($eurl["expanded_url"] != '') {
@@ -31,7 +31,7 @@ class FlickrThumbnailsPlugin implements iCrawlerPlugin {
             $logger->close(); # Close logging
         }
     }
-    
+
     function renderConfiguration() {
         // TODO Add setting for the Flickr API key here
     }

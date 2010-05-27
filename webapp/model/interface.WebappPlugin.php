@@ -1,21 +1,13 @@
-<?php 
-interface iPlugin {
-    public function renderConfiguration();
-}
-
-interface iCrawlerPlugin extends iPlugin {
-    public function crawl();
-}
-
-interface iWebappPlugin extends iPlugin {
+<?php
+interface WebappPlugin extends ThinkTankPlugin {
     public function getChildTabsUnderPosts();
-	
+
     public function getChildTabsUnderReplies();
-	
+
     public function getChildTabsUnderFriends();
-	
+
     public function getChildTabsUnderFollowers();
-	
+
     public function getChildTabsUnderLinks();
 }
 ?>

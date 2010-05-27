@@ -22,7 +22,9 @@ require_once 'model/class.Captcha.php';
 require_once 'model/class.Session.php';
 require_once 'model/class.Plugin.php';
 require_once 'model/class.LoggerSlowSQL.php';
-require_once 'model/interface.iPlugin.php';
+require_once 'model/interface.ThinkTankPlugin.php';
+require_once 'model/interface.CrawlerPlugin.php';
+require_once 'model/interface.WebappPlugin.php';
 require_once 'model/class.WebappTab.php';
 require_once 'model/class.WebappTabDataset.php';
 

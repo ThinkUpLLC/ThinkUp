@@ -18,7 +18,9 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.iPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
