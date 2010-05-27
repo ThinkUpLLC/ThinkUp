@@ -67,8 +67,8 @@ class Utils {
 	}
 
 	static public function getPluginViewDirectory($shortname) {
-		$cfg = Config::getInstance();
-		$view_path = $cfg->getValue('source_root_path');
+		$config = Config::getInstance();
+		$view_path = $config->getValue('source_root_path');
 		$view_path .= 'webapp/plugins/'.$shortname.'/view/';
 		return $view_path;
 	}

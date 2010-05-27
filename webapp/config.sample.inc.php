@@ -14,6 +14,9 @@ $THINKTANK_CFG['source_root_path']          = '/your-server-path-to/thinktank/';
 // Your GMT offset, not (necessarily) your web server's. Pacific: 7, Eastern: 4
 $THINKTANK_CFG['GMT_offset']                = 7;
 
+// Your timezone
+$THINKTANK_CFG['timezone']                  = 'America/Los_Angeles';
+
 // Toggle Smarty caching. 1: Smarty caching on, 0: Smarty caching off
 $THINKTANK_CFG['cache_pages']               = 1;
 

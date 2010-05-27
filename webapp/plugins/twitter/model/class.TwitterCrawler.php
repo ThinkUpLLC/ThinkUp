@@ -7,11 +7,11 @@ class TwitterCrawler {
     var $ud;
     var $db;
     
-    function TwitterCrawler($instance, $logger, $api, $db) {
+    function TwitterCrawler($instance, $api, $db) {
         $this->instance = $instance;
         $this->api = $api;
         $this->db = $db;
-        $this->logger = $logger;
+        $this->logger = Logger::getInstance();
         $this->ud = new UserDAO($this->db, $this->logger);
     }
     
@@ -19,7 +19,7 @@ class TwitterCrawler {
         // Get owner user details and save them to DB
         $status_message = "";
         $owner_profile = str_replace("[id]", $this->instance->network_username, $this->api->cURL_source['show_user']);
-        list($cURL_status, $twitter_data) = $this->api->apiRequest($owner_profile, $this->logger);
+        list($cURL_status, $twitter_data) = $this->api->apiRequest($owner_profile);
         
         if ($cURL_status == 200) {
             try {
@@ -48,7 +48,7 @@ class TwitterCrawler {
         $page = 1;
         while ($continue_fetching) {
             $search_results = $this->api->cURL_source['search']."?q=".urlencode($term)."&result_type=recent&rpp=100&page=".$page;
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, $this->logger, null, false);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, null, false);
             if ($cURL_status == 200) {
                 $tweets = $this->api->parseJSON($twitter_data);
                 $pd = new PostDAO($this->db, $this->logger);
@@ -106,7 +106,7 @@ class TwitterCrawler {
                     $args["since_id"] = $this->instance->last_status_id;
             }
             
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $this->logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $args);
             if ($cURL_status == 200) {
                 # Parse the XML file
                 try {
@@ -199,7 +199,7 @@ class TwitterCrawler {
                     $args["since_id"] = $this->instance->last_status_id;
             }
             
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_retweets, $this->logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_retweets, $args);
             if ($cURL_status == 200) {
                 # Parse the XML file
                 try {
@@ -301,7 +301,7 @@ class TwitterCrawler {
         //fetch tweet from Twitter and add to DB
         $status_message = "";
         $tweet_deets = str_replace("[id]", $tid, $this->api->cURL_source['show_tweet']);
-        list($cURL_status, $twitter_data) = $this->api->apiRequest($tweet_deets, $this->logger);
+        list($cURL_status, $twitter_data) = $this->api->apiRequest($tweet_deets);
         
         if ($cURL_status == 200) {
             try {
@@ -350,7 +350,7 @@ class TwitterCrawler {
                     $args['page'] = $this->last_page_fetched_mentions;
                 }
                 
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($mentions, $this->logger, $args);
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($mentions, $args);
                 if ($cURL_status > 200) {
                     $continue_fetching = false;
                 } else {
@@ -440,7 +440,7 @@ class TwitterCrawler {
                 $next_cursor = -1;
             $args['cursor'] = strval($next_cursor);
             
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $this->logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $args);
             
             if ($cURL_status > 200) {
                 $continue_fetching = false;
@@ -525,7 +525,7 @@ class TwitterCrawler {
                 $next_cursor = -1;
             $args['cursor'] = strval($next_cursor);
             
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $this->logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $args);
             
             if ($cURL_status > 200) {
                 $continue_fetching = false;
@@ -602,7 +602,7 @@ class TwitterCrawler {
                 $next_cursor = -1;
             $args['cursor'] = strval($next_cursor);
             
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $this->logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $args);
             
             if ($cURL_status > 200) {
                 $continue_fetching = false;
@@ -674,7 +674,7 @@ class TwitterCrawler {
                     $args['since_id'] = $stale_friend->last_post_id;
                 }
                 
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($stale_friend_tweets, $this->logger, $args);
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($stale_friend_tweets, $args);
                 
                 if ($cURL_status == 200) {
                     try {
@@ -775,7 +775,7 @@ class TwitterCrawler {
                 $next_cursor = -1;
             $args['cursor'] = strval($next_cursor);
             
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $this->logger, $args);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $args);
             
             if ($cURL_status > 200) {
                 $continue_fetching = false;
@@ -832,7 +832,7 @@ class TwitterCrawler {
         //fetch user from Twitter and add to DB
         $status_message = "";
         $u_deets = str_replace("[id]", $fid, $this->api->cURL_source['show_user']);
-        list($cURL_status, $twitter_data) = $this->api->apiRequest($u_deets, $this->logger);
+        list($cURL_status, $twitter_data) = $this->api->apiRequest($u_deets);
         
         if ($cURL_status == 200) {
             try {
@@ -877,7 +877,7 @@ class TwitterCrawler {
                 $args["source_id"] = $oldfollow["followee_id"];
                 $args["target_id"] = $oldfollow["follower_id"];
                 
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($friendship_call, $this->logger, $args);
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($friendship_call, $args);
                 
                 if ($cURL_status == 200) {
                     try {

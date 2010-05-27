@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 
 // set up
@@ -13,11 +13,11 @@ if ($session->isLoggedIn()) {
 }
 
 $od = new OwnerDAO($db);
-$user_email = mysql_real_escape_string($_POST['email']);
 $s = new SmartyThinkTank();
-$s->caching=false;
+$s->caching = false;
 
-if ($_POST['Submit'] == 'Log In') {
+if (isset($_POST['Submit']) && $_POST['Submit'] == 'Log In') {
+    $user_email = mysql_real_escape_string($_POST['email']);
     $result = $od->getForLogin($user_email);
     if (!$result) {
         $emsg = "Incorrect email or password";
@@ -30,12 +30,12 @@ if ($_POST['Submit'] == 'Log In') {
         if (isset($_GET['ret']) && ! empty($_GET['ret'])) {
             header("Location: $_GET[ret]");
         } else {
-            header("Location: ".$THINKTANK_CFG['site_root_path']);
+            header("Location: ".$config->getValue('site_root_path'));
         }
         exit();
     }
 }
-if (isset($_GET["smsg"])){
+if (isset($_GET["smsg"])) {
     $smsg = $_GET["smsg"];
 }
 if (isset($emsg)) {
@@ -43,13 +43,12 @@ if (isset($emsg)) {
 } elseif (isset($smsg)) {
     $s->assign('successmsg', $smsg);
 }
-if (isset($_POST["email"])){
+if (isset($_POST["email"])) {
     $s->assign('email', $_POST["email"]);
 }
 
 $db->closeConnection($conn);
-$cfg = new Config();
-$s->assign('cfg', $cfg);
+$s->assign('site_root_path', $config->getValue('site_root_path'));
 $s->display('session.login.tpl');
 
 ?>

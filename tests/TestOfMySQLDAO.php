@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once dirname(__FILE__).'/config.tests.inc.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
@@ -20,7 +20,7 @@ class TestOfMySQLDAO extends UnitTestCase {
     
     function setUp() {
         global $THINKTANK_CFG;
-        $this->logger = new Logger($THINKTANK_CFG['log_location']);
+        $this->logger = Logger::getInstance();
         $this->db = new Database($THINKTANK_CFG);
     }
     
@@ -33,7 +33,7 @@ class TestOfMySQLDAO extends UnitTestCase {
         $dao = new MySQLDAO($this->logger, $this->db);
         $this->assertTrue(isset($dao->logger), "Logger set");
         $this->assertTrue(isset($dao->db), "DB set");
-
+        
     }
 }
 ?>

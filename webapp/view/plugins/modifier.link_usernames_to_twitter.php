@@ -21,7 +21,7 @@
  */
 function smarty_modifier_link_usernames_to_twitter($text) {
     //TODO: Find a more elegant way to do this that's totally regex-based, not loving this explod/implode approach
-    global $cfg, $i; //icky but necessary
+    global  $i; //icky but necessary
     $words = explode(" ", $text);
     $pattern = '/^@[a-zA-Z0-9_]+/';
     for($k = 0; $k < count($words); $k++) {

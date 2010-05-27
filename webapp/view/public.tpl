@@ -5,11 +5,11 @@
 <head>
   <meta charset="utf-8">
   <title>ThinkTank Public Timeline</title>
-  <link rel="shortcut icon" href="{$cfg->site_root_path}assets/img/favicon.ico">
-  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/base.css">
-  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/positioning.css">
-  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/style.css">
-  <link type="text/css" rel="stylesheet" href="{$cfg->site_root_path}assets/css/jquery-ui-1.7.1.custom.css">
+  <link rel="shortcut icon" href="{$site_root_path}assets/img/favicon.ico">
+  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
+  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/positioning.css">
+  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
+  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.7.1.custom.css">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
                 <br><a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">{$post->link->expanded_url}</a>
               {/if}
               <div class="grid_10 omega small gray {if $replies or $retweets}prefix_3 prepend{else}prefix_10{/if}">
-                <img src="{$cfg->site_root_path}assets/img/social_icons/{$post->network}.png" class="float-l">
+                <img src="{$site_root_path}assets/img/social_icons/{$post->network}.png" class="float-l">
                 Posted at {$post->adj_pub_date} via {$post->source}
               </div>
             </div>
@@ -99,6 +99,6 @@
     </div>
   </div> <!-- end .thinktank-canvas -->
 
-  <script type="text/javascript" src="{$cfg->site_root_path}assets/js/linkify.js"></script>
+  <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
 
 {include file="_footer.tpl" stats="no"}

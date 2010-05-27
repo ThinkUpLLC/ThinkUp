@@ -11,9 +11,9 @@ class Logger {
     
     // The singleton method
     public static function getInstance() {
-        global $THINKTANK_CFG;
+        $config = Config::getInstance();
         if (!isset(self::$instance)) {
-            self::$instance = new Logger($THINKTANK_CFG['log_location']);
+            self::$instance = new Logger($config->getValue('log_location'));
         }
         return self::$instance;
     }
@@ -36,6 +36,7 @@ class Logger {
     function close() {
         $this->addBreaks();
         $this->closeFile($this->log);
+        self::$instance = null;
     }
     
     function openFile($filename, $type) {

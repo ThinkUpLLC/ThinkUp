@@ -30,24 +30,9 @@ class TestOfLogging extends UnitTestCase {
         }
     }
     
-    function testCreatingNewLogger() {
-        global $THINKTANK_CFG;
-        $logger = new Logger($THINKTANK_CFG['log_location']);
-        $logger->logStatus('Should write this to the log', get_class($this));
-        $this->assertTrue(file_exists($THINKTANK_CFG['log_location']), 'File created');
-        
-        $messages = file($THINKTANK_CFG['log_location']);
-        $this->assertWantedPattern('/Should write this to the log/', $messages[sizeof($messages) - 1]);
-        
-        $logger->setUsername('ginatrapani');
-        $logger->logStatus('Should write this to the log with a username', get_class($this));
-        $this->assertWantedPattern('/ginatrapani | TestOfLogging:Should write this to the log/', $messages[sizeof($messages) - 1]);
-        
-        $logger->close();
-    }
-    
     function testNewLoggerSingleton() {
         global $THINKTANK_CFG;
+
         $logger = Logger::getInstance();
         $logger->logStatus('Singleton logger should write this to the log', get_class($this));
         $this->assertTrue(file_exists($THINKTANK_CFG['log_location']), 'File created');

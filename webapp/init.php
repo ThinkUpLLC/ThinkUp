@@ -1,4 +1,4 @@
-<?php
+<?php 
 //Before we do anything, make sure we've got PHP 5
 $version = explode('.', PHP_VERSION);
 if ($version[0] < 5) {
@@ -34,9 +34,21 @@ require_once 'model/class.Follow.php';
 require_once 'model/class.Webapp.php';
 
 require_once 'config.inc.php';
-require_once $THINKTANK_CFG['smarty_path'].'Smarty.class.php';
+
+$config = Config::getInstance();
+
+require_once $config->getValue('smarty_path').'Smarty.class.php';
 require_once 'model/class.SmartyThinkTank.php';
-require_once $THINKTANK_CFG['source_root_path'].'extlib/twitteroauth/twitteroauth.php';
+require_once $config->getValue('source_root_path').'extlib/twitteroauth/twitteroauth.php';
+
+
+if ($config->getValue('time_zone')) {
+    putenv($config->getValue('time_zone'));
+}
+if ($config->getValue('debug')) {
+    ini_set("display_errors", 1);
+    ini_set("error_reporting", E_ALL);
+}
 
 $webapp = new Webapp();
 $crawler = new Crawler();
@@ -45,7 +57,8 @@ $crawler = new Crawler();
 try {
     $db = new Database($THINKTANK_CFG);
     $conn = $db->getConnection();
-} catch(Exception $e) {
+}
+catch(Exception $e) {
     echo $e->getMessage();
 }
 
@@ -53,10 +66,10 @@ try {
 $pdao = new PluginDAO($db);
 $active_plugins = $pdao->getActivePlugins();
 foreach ($active_plugins as $ap) {
-    foreach (glob($THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$ap->folder_name."/model/*.php") as $includefile) {
+    foreach (glob($config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name."/model/*.php") as $includefile) {
         require_once $includefile;
     }
-    foreach (glob($THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$ap->folder_name."/controller/*.php") as $includefile) {
+    foreach (glob($config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name."/controller/*.php") as $includefile) {
         require_once $includefile;
     }
 }

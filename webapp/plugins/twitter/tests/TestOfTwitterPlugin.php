@@ -1,6 +1,6 @@
-<?php
-if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
-	require_once '../../../../tests/config.tests.inc.php';
+<?php 
+if (!isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS) {
+    require_once '../../../../tests/config.tests.inc.php';
 }
 
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
@@ -31,48 +31,52 @@ $i = new Instance(array("network_user_id"=>10, "id"=>1, "network_username"=>'tes
 
 // Instantiate global database variable
 try {
-	$db = new Database($THINKTANK_CFG);
-	$conn = $db->getConnection();
+    $db = new Database($THINKTANK_CFG);
+    $conn = $db->getConnection();
 }
 catch(Exception $e) {
-	echo $e->getMessage();
+    echo $e->getMessage();
 }
 
 class TestOfTwitterPlugin extends ThinkTankUnitTestCase {
-	function TestOfTwitterPlugin() {
-		$this->UnitTestCase('TwitterPlugin class test');
-	}
-
-	function setUp() {
-		global $webapp;
-		global $crawler;
-		$webapp->registerPlugin('twitter', 'TwitterPlugin');
-		$crawler->registerCrawlerPlugin('TwitterPlugin');
-		$webapp->setActivePlugin('twitter');
-		parent::setUp();
-	}
-
-	function tearDown() {
-		parent::tearDown();
-	}
-
-	function testWebappTabRegistration() {
-		global $webapp;
-		$pd = new PostDAO($this->db, $this->logger);
-
-		$post_tabs = $webapp->getChildTabsUnderPosts();
-
-		$this->assertEqual(sizeof($post_tabs), 4, "Test number of post tabs");
-		$first_post_tab = $post_tabs[0];
-		$this->assertEqual($first_post_tab->short_name, "tweets-all", "Test short name of first post tab");
-		$this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
-		$this->assertEqual($first_post_tab->description, "All tweets", "Test description of first post tab");
-
-		$first_post_tab_datasets = $first_post_tab->getDatasets();
-		$first_post_tab_dataset = $first_post_tab_datasets[0];
-		$this->assertEqual($first_post_tab_dataset->name, "all_tweets", "Test first post tab's first dataset name");
-		$this->assertEqual($first_post_tab_dataset->fetching_method, "getAllPosts", "Test first post tab's first dataset fetching method");
-	}
-
+    var $logger;
+    
+    function TestOfTwitterPlugin() {
+        $this->UnitTestCase('TwitterPlugin class test');
+    }
+    
+    function setUp() {
+        global $webapp;
+        global $crawler;
+        $webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $crawler->registerCrawlerPlugin('TwitterPlugin');
+        $webapp->setActivePlugin('twitter');
+        parent::setUp();
+        $this->logger = Logger::getInstance();
+    }
+    
+    function tearDown() {
+        parent::tearDown();
+        $this->logger->close();
+    }
+    
+    function testWebappTabRegistration() {
+        global $webapp;
+        $pd = new PostDAO($this->db, $this->logger);
+        
+        $post_tabs = $webapp->getChildTabsUnderPosts();
+        
+        $this->assertEqual(sizeof($post_tabs), 4, "Test number of post tabs");
+        $first_post_tab = $post_tabs[0];
+        $this->assertEqual($first_post_tab->short_name, "tweets-all", "Test short name of first post tab");
+        $this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
+        $this->assertEqual($first_post_tab->description, "All tweets", "Test description of first post tab");
+        
+        $first_post_tab_datasets = $first_post_tab->getDatasets();
+        $first_post_tab_dataset = $first_post_tab_datasets[0];
+        $this->assertEqual($first_post_tab_dataset->name, "all_tweets", "Test first post tab's first dataset name");
+        $this->assertEqual($first_post_tab_dataset->fetching_method, "getAllPosts", "Test first post tab's first dataset fetching method");
+    }
+    
 }
 ?>

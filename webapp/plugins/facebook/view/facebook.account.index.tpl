@@ -29,7 +29,7 @@
     {foreach from=$owner_instances key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
-            <a href="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username}</a> 
+            <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a> 
         </div>
         <div class="grid_8">
             <span id="div{$i->network_user_id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
@@ -52,7 +52,7 @@
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
-            <a href="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username}</a> 
+            <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a> 
         </div>
         <div class="grid_8">
             <span id="div{$i->network_user_id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
@@ -111,7 +111,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript">
 </script>
 <script type="text/javascript">
-                FB.init("{$fb_api_key}", "{$cfg->site_root_path}plugins/facebook/xd_receiver.php", {literal}{
+                FB.init("{$fb_api_key}", "{$site_root_path}plugins/facebook/xd_receiver.php", {literal}{
                     permsToRequestOnConnect: "read_stream,offline_access",
                 });
 </script>
@@ -121,7 +121,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
         var sessionKey = session.session_key;
         $.ajax({
             type: "GET",
-            url: '{/literal}{$cfg->site_root_path}{literal}plugins/facebook/auth.php',
+            url: '{/literal}{$site_root_path}{literal}plugins/facebook/auth.php',
             data: {
                 sessionKey: sessionKey
             },
@@ -135,7 +135,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     };
 </script>
 
-<script src="{/literal}{$cfg->site_root_path}{literal}plugins/facebook/assets/js/fbconnect.js" type="text/javascript">
+<script src="{/literal}{$site_root_path}{literal}plugins/facebook/assets/js/fbconnect.js" type="text/javascript">
 </script>
 <script type="text/javascript">
     window.onload = function(){

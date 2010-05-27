@@ -23,7 +23,7 @@
                 </div>
               {/if}
               <div class="clearfix bt append prepend">
-                <div class="grid_4 small alpha"><img src="{$cfg->site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l">{if $ip->is_active}<a href="?p={$ip->folder_name}">{/if}{$ip->name}{if $ip->is_active}</a>{/if}</div>
+                <div class="grid_4 small alpha"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l">{if $ip->is_active}<a href="?p={$ip->folder_name}">{/if}{$ip->name}{if $ip->is_active}</a>{/if}</div>
                 <div class="grid_4 small"><!--(Currently {if $ip->is_active}Active{else}Inactive{/if})<br />-->Version {$ip->version}<br />by {$ip->author}</div>
                 <div class="grid_10">
                   {$ip->description}
@@ -140,7 +140,7 @@
       var dataString = 'u=' + u + "&p=1";
       $.ajax({
         type: "GET",
-        url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-public.php",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
         data: dataString,
         success: function() {
           $('#div' + u).html("<span class='success' id='message" + u + "'></span>");
@@ -158,7 +158,7 @@
       var dataString = 'u=' + u + "&p=0";
       $.ajax({
         type: "GET",
-        url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-public.php",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
         data: dataString,
         success: function() {
           $('#div' + u).html("<span class='success' id='message" + u + "'></span>");
@@ -178,7 +178,7 @@
       var dataString = 'u=' + u + "&p=1";
       $.ajax({
         type: "GET",
-        url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-active.php",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
         data: dataString,
         success: function() {
           $('#divactivate' + u).html("<span class='success mt_10' id='message" + u + "'></span>");
@@ -196,7 +196,7 @@
       var dataString = 'u=' + u + "&p=0";
       $.ajax({
         type: "GET",
-        url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-active.php",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
         data: dataString,
         success: function() {
           $('#divactivate' + u).html("<span class='success mt_10' id='message" + u + "'></span>");
@@ -216,7 +216,7 @@
       var dataString = 'pid=' + u + "&a=1";
       $.ajax({
         type: "GET",
-        url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-pluginactive.php",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
         data: dataString,
         success: function() {
           $('#divpluginactivation' + u).html("<span class='success mt_10' id='message" + u + "'></span>");
@@ -234,7 +234,7 @@
       var dataString = 'pid=' + u + "&p=0";
       $.ajax({
         type: "GET",
-        url: "{/literal}{$cfg->site_root_path}{literal}account/toggle-pluginactive.php",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
         data: dataString,
         success: function() {
           $('#divpluginactivation' + u).html("<span class='success mt_10' id='message" + u + "'></span>");

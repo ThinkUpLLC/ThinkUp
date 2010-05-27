@@ -17,18 +17,16 @@ $od = new OwnerDAO($db);
 $s = new SmartyThinkTank();
 $s->caching=false;
 
-if (!$THINKTANK_CFG['is_registration_open']) {
+if (!$config->getValue('is_registration_open')) {
     $s->assign('closed', true);
     $errormsg = '<p>Sorry, registration is closed on this ThinkTank installation.</p><p><a href="http://github.com/ginatrapani/thinktank/tree/master">Install ThinkTank on your own server.</a></p>';
 }
 else {
-    $db = new Database($THINKTANK_CFG);
-    $conn = $db->getConnection();
     $od = new OwnerDAO($db);
 
     $s->assign('closed', false);
-    $captcha = new Captcha($THINKTANK_CFG);
-    if ($_POST['Submit'] == 'Register') {
+    $captcha = new Captcha();
+    if (isset($_POST['Submit']) && $_POST['Submit'] == 'Register') {
         if (strlen($_POST['email']) < 5) {
             $errormsg = "Incorrect email. Please enter valid email address.";
         }
@@ -53,14 +51,14 @@ else {
                 $server = $_SERVER['HTTP_HOST'];
                 $od->create($_POST['email'], $cryptpass, $_POST['country'], $activ_code, $_POST['full_name']);
 
-                $es->assign('apptitle', $THINKTANK_CFG['app_title'] );
+                $es->assign('apptitle', $config->getValue('app_title') );
                 $es->assign('server', $server );
-                $es->assign('site_root_path', $THINKTANK_CFG['site_root_path'] );
+                $es->assign('site_root_path', $config->getValue('site_root_path') );
                 $es->assign('email', urlencode($_POST['email']) );
                 $es->assign('activ_code', $activ_code );
                 $message = $es->fetch('_email.registration.tpl');
 
-                Mailer::mail($_POST['email'], "Activate Your ".$THINKTANK_CFG['app_title'] ." Account", $message);
+                Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title') ." Account", $message);
                 // echo $message; // debug
 
                 unset($_SESSION['ckey']);
@@ -82,8 +80,8 @@ elseif (isset($successmsg)) {
 }
 
 $db->closeConnection($conn);
-$cfg = new Config();
-$s->assign('cfg', $cfg);
+$config = Config::getInstance();
+$s->assign('site_root_path', $config->getValue('site_root_path'));
 $s->display('session.register.tpl');
 
 ?>

@@ -13,7 +13,7 @@
     
     <div class="section" id="posts">
       <div class="thinktank-canvas clearfix">
-        <!--<a {if $instance}href="{$cfg->site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a>-->
+        <!--<a {if $instance}href="{$site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a>-->
         <div class="clearfix prepend_20">
           <div class="grid_2 prefix_1 alpha">
             <img src="{$post->author_avatar}" class="avatar2">
@@ -24,7 +24,7 @@
         </div>
         <div class="clearfix append_20">
           <div class="grid_11 prefix_11 alpha omega small gray">
-            <img src="{$cfg->site_root_path}assets/img/social_icons/{$post->network}.png" class="float-l">
+            <img src="{$site_root_path}assets/img/social_icons/{$post->network}.png" class="float-l">
             Posted {$post->adj_pub_date|relative_datetime} at {$post->adj_pub_date} via {$post->source}
           </div>
         </div>
@@ -204,7 +204,7 @@
       var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
       $.ajax({
         type: "GET",
-        url: "{/literal}{$cfg->site_root_path}{literal}post/mark-parent.php",
+        url: "{/literal}{$site_root_path}{literal}post/mark-parent.php",
         data: dataString,
         success: function() {
           $('#div' + Id).html("<div class='success' id='message" + Id + "'></div>");

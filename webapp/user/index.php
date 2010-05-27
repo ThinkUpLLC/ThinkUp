@@ -7,7 +7,6 @@ if (!isset($_SESSION['user']))  {
 // set up
 chdir("..");
 
-
 require_once 'init.php';
 
 $od = new OwnerDAO($db);
@@ -26,7 +25,6 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
     //$i = $id->getByUsername($_SESSION['i']);
 
     if ( isset($i)) {
-        $cfg = new Config($i->network_username, $i->network_user_id);
         if(!$s->is_cached('user.index.tpl', $i->network_username."-".$user->username)) {
 
             $s->assign('instances', $id->getByOwner($owner));
@@ -34,11 +32,10 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
             $s->assign('profile', $user);
             $s->assign('user_statuses',  $pd->getAllPosts($user->user_id, 20));
             $s->assign('sources', $pd->getStatusSources($user->user_id));
-            $s->assign('cfg', $cfg);
+            $s->assign('site_root_path', $config->getValue('site_root_path'));
             $s->assign('instance', $i);
-            $s->assign('i', $i); // HATE TO DO THIS BUT SOME TEMPLATES LOOKING FOR $i AND NOT $instance
                 
-            $exchanges =  $pd->getExchangesBetweenUsers($cfg->network_user_id, $user->user_id);
+            $exchanges =  $pd->getExchangesBetweenUsers($i->network_user_id, $user->user_id);
             $s->assign('exchanges', $exchanges);
             $s->assign('total_exchanges', count($exchanges));
                 
@@ -51,6 +48,6 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
         $s->display('user.index.tpl', $i->network_username."-".$user->username);
     }
 } else {
-    echo 'This user is not in the system.<br /><a href="'. $THINKTANK_CFG['site_root_path'] .'">back home</a>';
+    echo 'This user is not in the system.<br /><a href="'. $config->getValue('site_root_path') .'">back home</a>';
 }
 ?>

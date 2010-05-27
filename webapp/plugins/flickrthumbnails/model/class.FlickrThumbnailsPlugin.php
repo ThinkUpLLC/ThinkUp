@@ -1,14 +1,16 @@
-<?php
+<?php 
 class FlickrThumbnailsPlugin implements iCrawlerPlugin {
 
     function crawl() {
-        global $THINKTANK_CFG;
         global $db;
         global $conn;
         
-        if (isset($THINKTANK_CFG['flickr_api_key']) && $THINKTANK_CFG['flickr_api_key'] != '') {
-            $logger = new Logger($THINKTANK_CFG['log_location']);
-            $fa = new FlickrAPIAccessor($THINKTANK_CFG['flickr_api_key'], $logger);
+        $config = Config::getInstance();
+        $api_key = $config->getValue('flickr_api_key');
+        
+        if (isset($api_key) && $api_key != '') {
+            $logger = Logger::getInstance();
+            $fa = new FlickrAPIAccessor($api_key);
             $ldao = new LinkDAO($db, $logger);
             
             $flickrlinkstoexpand = $ldao->getLinksToExpandByURL('http://flic.kr/');

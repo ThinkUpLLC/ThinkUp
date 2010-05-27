@@ -1,11 +1,9 @@
 <?php 
 class ExpandURLsPlugin implements iCrawlerPlugin {
     public function crawl() {
-        global $THINKTANK_CFG;
         global $db;
-        global $conn;
         
-        $logger = new Logger($THINKTANK_CFG['log_location']);
+        $logger = Logger::getInstance();
         $ldao = new LinkDAO($db, $logger);
         //TODO Set limit on total number of links to expand per crawler run in the plugin settings, now set here to 1500
         $linkstoexpand = $ldao->getLinksToExpand(1500);
@@ -13,7 +11,7 @@ class ExpandURLsPlugin implements iCrawlerPlugin {
         $logger->logStatus(count($linkstoexpand)." links to expand", "Expand URLs Plugin");
         
         foreach ($linkstoexpand as $l) {
-            $eurl = self::untinyurl($l, $logger, $ldao);
+            $eurl = self::untinyurl($l, $ldao);
             if ($eurl != '') {
                 $ldao->saveExpandedUrl($l, $eurl);
             }
@@ -28,7 +26,8 @@ class ExpandURLsPlugin implements iCrawlerPlugin {
     
     //Thanks to Probably Programming
     //http://probablyprogramming.com/2009/04/11/untiny-that-url/
-    function untinyurl($tinyurl, $logger, $ldao) {
+    function untinyurl($tinyurl, $ldao) {
+    	$logger = Logger::getInstance();
         $url = parse_url($tinyurl);
         $host = $url['host'];
         $port = isset($url['port']) ? $url['port'] : 80;

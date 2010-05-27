@@ -41,7 +41,6 @@ class TestOfDatabase extends UnitTestCase {
         //Override default CFG values
         $THINKTANK_CFG['db_name'] = $TEST_DATABASE;
 
-        $this->logger = new Logger($THINKTANK_CFG['log_location']);
         $this->db = new Database($THINKTANK_CFG);
         $this->conn = $this->db->getConnection();
 
@@ -72,8 +71,6 @@ class TestOfDatabase extends UnitTestCase {
 
         $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg');";
         $this->db->exec($q);
-
-        $this->logger->close();
 
         //Delete test data
         $q = "DROP TABLE tt_users;";

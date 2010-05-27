@@ -56,7 +56,8 @@ class TestOfFacebookPlugin extends ThinkTankUnitTestCase {
 
 	function testWebappTabRegistration() {
 		global $webapp;
-		$pd = new PostDAO($this->db, $this->logger);
+		$logger = Logger::getInstance();
+		$pd = new PostDAO($this->db, $logger);
 
 		$post_tabs = $webapp->getChildTabsUnderPosts();
 
@@ -70,6 +71,7 @@ class TestOfFacebookPlugin extends ThinkTankUnitTestCase {
 		$first_post_tab_dataset = $first_post_tab_datasets[0];
 		$this->assertEqual($first_post_tab_dataset->name, "all_facebook_posts", "Test first post tab's first dataset name");
 		$this->assertEqual($first_post_tab_dataset->fetching_method, "getAllPosts", "Test first post tab's first dataset fetching method");
+		$logger->close();
 	}
 
 }

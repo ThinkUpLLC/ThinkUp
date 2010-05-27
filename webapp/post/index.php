@@ -29,8 +29,6 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
             $s->assign('all_tweets', $pd->getAllPosts($i->network_user_id, 15) );
         }
 
-        $cfg = new Config($i->network_username, $i->network_user_id);
-
         // instantiate data access objects
         $ud = new UserDAO($db);
 
@@ -52,7 +50,7 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
         $s->assign('reply_count', $all_replies_count );
 
 
-        $s->assign('cfg', $cfg);
+        $s->assign('site_root_path', $config->getValue('site_root_path'));
         $s->assign('instance', $i);
         $s->assign('i', $i);
 
@@ -62,6 +60,6 @@ if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $pd->isPostInDB($_RE
 
     $s->display('post.index.tpl', $post_id);
 } else {
-    echo 'This update is not in the system.<br /><a href="'. $cfg->site_root_path .'">back home</a>';
+    echo 'This update is not in the system.<br /><a href="'. $config->site_root_path .'">back home</a>';
 }
 ?>

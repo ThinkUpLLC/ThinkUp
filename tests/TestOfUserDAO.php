@@ -8,7 +8,8 @@ require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 
 class TestOfUserDAO extends ThinkTankUnitTestCase {
-
+    var $logger;
+    
     function TestOfUserDAO() {
         $this->UnitTestCase('UserDAO class test');
     }
@@ -19,10 +20,12 @@ class TestOfUserDAO extends ThinkTankUnitTestCase {
         //Insert test data into test table
         $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg');";
         $this->db->exec($q);
+        $this->logger = Logger::getInstance();
     }
     
     function tearDown() {
         parent::tearDown();
+        $this->logger->close();
     }
     
     function testCreateNewUserDAO() {

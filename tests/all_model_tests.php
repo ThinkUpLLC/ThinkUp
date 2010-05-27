@@ -10,7 +10,7 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfDatabase.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfFollowDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfInstanceDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfLinkDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfLogging.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfLogger.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfOwnerInstanceDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfPluginDAO.php';

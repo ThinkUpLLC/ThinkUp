@@ -6,9 +6,9 @@ class FlickrAPIAccessor {
     var $api_key;
     var $logger;
     
-    function FlickrAPIAccessor($flickr_api_key, $logger) {
+    function FlickrAPIAccessor($flickr_api_key) {
         $this->api_key = $flickr_api_key;
-        $this->logger = $logger;
+        $this->logger = Logger::getInstance();
     }
     
     function getFlickrPhotoSource($u) {

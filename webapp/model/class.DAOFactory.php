@@ -46,7 +46,7 @@ class DAOFactory {
     }
 
     /**
-     * gets the db_type for our configured think tank instance, defaults to mysql,
+     * gets the db_type for our configured ThinkTank instance, defaults to mysql,
      * db_type can optionally be defined in webapp/config.inc.php as:
      * 
      *     $THINKTANK_CFG['db_type'] = 'somedb';

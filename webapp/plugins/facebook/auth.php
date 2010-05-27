@@ -17,7 +17,7 @@ if (!$session->isLoggedIn()) {
 
 
 $fb_user = null;
-$facebook = new Facebook($THINKTANK_CFG['facebook_api_key'], $THINKTANK_CFG['facebook_api_secret']);
+$facebook = new Facebook($config->getValue('facebook_api_key'), $config->getValue('facebook_api_secret'));
 
 try {
     $fb_user = $facebook->api_client->users_getLoggedInUser();
@@ -77,6 +77,6 @@ if (isset($_GET['sessionKey']) && isset($fb_user) && $fb_user > 0) {
 # clean up
 
 $db->closeConnection($conn);
-echo '<br /> <a href="'.$THINKTANK_CFG['site_root_path'].'account/">Back to your account</a>.';
+echo '<br /> <a href="'.$config->getValue('site_root_path').'account/">Back to your account</a>.';
 
 ?>

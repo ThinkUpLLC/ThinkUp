@@ -109,8 +109,8 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
   {/foreach}  
 {/if}
 
-<script type="text/javascript" src="{$cfg->site_root_path}assets/js/linkify.js"></script>
-<script type="text/javascript" src="{$cfg->site_root_path}assets/js/bitly.js"></script>
+<script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
+<script type="text/javascript" src="{$site_root_path}assets/js/bitly.js"></script>
 
 <script type="text/javascript">
   {literal}
@@ -127,7 +127,7 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
       var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
       $.ajax({
         type: "GET",
-        url: "{/literal}{$cfg->site_root_path}{literal}post/mark-parent.php",
+        url: "{/literal}{$site_root_path}{literal}post/mark-parent.php",
         data: dataString,
         success: function() {
           $('#div' + Id).html("<div class='success' id='message" + Id + "'></div>");

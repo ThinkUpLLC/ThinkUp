@@ -1,19 +1,20 @@
-<?PHP
+<?PHP 
 class Captcha {
     var $type;
     var $msg = FALSE;
     private $pubkey;
     private $prikey;
     private $site_root;
-
-    public function __construct($config) {
-        $this->site_root = $config['site_root_path'];
-
-        if ($config['recaptcha_enable']) {
+    
+    public function __construct() {
+        $config = Config::getInstance();
+        $this->site_root = $config->getValue('site_root_path');
+        
+        if ($config->getValue('recaptcha_enable')) {
             $this->type = 1;
-            require_once $config['source_root_path'].'extlib/recaptchalib.php';
-            $this->pubkey = $config['recaptcha_public_key'];
-            $this->prikey = $config['recaptcha_private_key'];
+            require_once $config->getValue('source_root_path').'extlib/recaptchalib.php';
+            $this->pubkey = $config->getValue('recaptcha_public_key');
+            $this->prikey = $config->getValue('recaptcha_private_key');
         } else {
             $this->type = 0;
         }

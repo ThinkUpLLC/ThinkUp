@@ -43,9 +43,7 @@ $ld = new LinkDAO($db);
 $view_template = $webapp->loadRequestedTabData($_GET["d"]);
 
 if (!$s->is_cached($view_template, $i->network_username."-".$_SESSION['user']."-".$_REQUEST['d'])) {
-
-	$cfg = new Config($i->network_username, $i->network_user_id);
-	$s->assign('cfg', $cfg);
+	$s->assign('site_root_path', $config->getValue('site_root_path'));
 	$s->assign('i', $i);
 	$u = new Utils();
 	$s->assign('display', $_REQUEST['d']);

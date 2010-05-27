@@ -22,7 +22,7 @@ if (!isset($_SESSION['user'])) {
     } else {
         $i = $id->getFreshestByOwnerId($owner->id);
         if ( !isset($i) && $i == null ) {
-            $s->assign('msg', 'You have no Twitter accounts configured. <a href="'.$THINKTANK_CFG['site_root_path'].'account/?p=twitter">Set up an account&rarr;</a>');
+            $s->assign('msg', 'You have no Twitter accounts configured. <a href="'.$config->getValue('site_root_path').'account/?p=twitter">Set up an account&rarr;</a>');
             $s->display('index.tpl');
             $db->closeConnection($conn);
             die;
@@ -32,7 +32,6 @@ if (!isset($_SESSION['user'])) {
     $_SESSION['network_username']=$i->network_username;
     $_SESSION['instance'] = serialize($i);
     if(!$s->is_cached('index.tpl', $i->network_username."-".$_SESSION['user'])) {
-        $cfg = new Config($i->network_username, $i->network_user_id);
         $u = new Utils();
 
         // instantiate data access objects
@@ -46,25 +45,25 @@ if (!isset($_SESSION['user'])) {
 
         $s->assign('instance', $i);
         $s->assign('instances', $id->getByOwner($owner));
-        $s->assign('cfg', $cfg);
+        $s->assign('site_root_path', $config->getValue('site_root_path'));
 
-        $total_follows_with_errors = $fd->getTotalFollowsWithErrors($cfg->network_user_id);
+        $total_follows_with_errors = $fd->getTotalFollowsWithErrors($i->network_user_id);
         $s->assign('total_follows_with_errors', $total_follows_with_errors);
 
-        $total_follows_with_full_details = $fd->getTotalFollowsWithFullDetails($cfg->network_user_id);
+        $total_follows_with_full_details = $fd->getTotalFollowsWithFullDetails($i->network_user_id);
         $s->assign('total_follows_with_full_details', $total_follows_with_full_details);
 
-        $total_follows_protected = $fd-> getTotalFollowsProtected($cfg->network_user_id);
+        $total_follows_protected = $fd-> getTotalFollowsProtected($i->network_user_id);
         $s->assign('total_follows_protected', $total_follows_protected);
 
         //TODO: Get friends with full details and also friends with errors, same as with followers
-        $total_friends_loaded = $fd->getTotalFriends($cfg->network_user_id);
+        $total_friends_loaded = $fd->getTotalFriends($i->network_user_id);
         $s->assign('total_friends', $total_friends_loaded);
 
-        $total_friends_with_errors = $fd->getTotalFriendsWithErrors($cfg->network_user_id);
+        $total_friends_with_errors = $fd->getTotalFriendsWithErrors($i->network_user_id);
         $s->assign('total_friends_with_errors', $total_friends_with_errors);
 
-        $total_friends_protected = $fd->getTotalFriendsProtected($cfg->network_user_id);
+        $total_friends_protected = $fd->getTotalFriendsProtected($i->network_user_id);
         $s->assign('total_friends_protected', $total_friends_protected);
 
         //Percentages

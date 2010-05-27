@@ -8,11 +8,11 @@ class FacebookCrawler {
     var $pd;
     var $db;
 
-    function FacebookCrawler($instance, $logger, $facebook, $db) {
+    function FacebookCrawler($instance, $facebook, $db) {
         $this->instance = $instance;
         $this->facebook = $facebook;
         $this->db = $db;
-        $this->logger = $logger;
+        $this->logger = Logger::getInstance();
         $this->ud = new UserDAO($this->db, $this->logger);
         $this->pd = new PostDAO($this->db, $this->logger);
     }

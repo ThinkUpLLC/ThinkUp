@@ -31,14 +31,13 @@ if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password') {
 $s = new SmartyThinkTank();
 $s->caching = 0;
 
-$cfg = new Config();
 $id = new InstanceDAO($db);
 $od = new OwnerDAO($db);
 $oid = new OwnerInstanceDAO($db);
 
 $owner = $od->getByEmail($_SESSION['user']);
 
-$s->assign('cfg', $cfg);
+$s->assign('site_root_path', $config->getValue('site_root_path'));
 $s->assign('owner', $owner);
 
 // grab instance from session variable
@@ -66,7 +65,7 @@ if (!isset($_GET['m']) && isset($_GET['p'])) {
 } else {
     if (isset($_GET['m']) && $_GET['m'] == 'manage') {
         $pld = new PluginDAO($db);
-        $installed_plugins = $pld->getInstalledPlugins($THINKTANK_CFG["source_root_path"]);
+        $installed_plugins = $pld->getInstalledPlugins($config->getValue("source_root_path"));
         $s->assign('installed_plugins', $installed_plugins);
     } else {
         //default to the first plugin on the stack
@@ -78,7 +77,7 @@ if (isset($active_plugin)) {
     $p = new $pobj;
     $p->renderConfiguration($s);
     array_push($s->template_dir, 'plugins/'.$active_plugin);
-    $s->assign('body', $THINKTANK_CFG['source_root_path'].'webapp/plugins/'.$active_plugin.'/view/'.$active_plugin.'.account.index.tpl');
+    $s->assign('body', $config->getValue('source_root_path').'webapp/plugins/'.$active_plugin.'/view/'.$active_plugin.'.account.index.tpl');
 }
 /* End plugin-specific configuration handling */
 

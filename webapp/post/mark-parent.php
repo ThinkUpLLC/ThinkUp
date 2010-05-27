@@ -23,8 +23,6 @@ chdir("..");
 
 require_once 'init.php';
 
-$cfg = new Config();
-
 $pd = new PostDAO($db);
 
 
@@ -43,6 +41,6 @@ $db->closeConnection($conn);
 $s = new SmartyThinkTank();
 $s->clear_cache($template, $cache_key);
 
-echo 'Assignment complete.<br /><a href="'.$THINKTANK_CFG['site_root_path'].'?u='.$_GET['u'].'#replies">Back home</a>.';
+echo 'Assignment complete.<br /><a href="'.$config->getValue('site_root_path').'?u='.$_GET['u'].'#replies">Back home</a>.';
 
 ?>

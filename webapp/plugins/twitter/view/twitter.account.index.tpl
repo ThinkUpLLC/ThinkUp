@@ -21,7 +21,7 @@
     {foreach from=$owner_instances key=iid item=i name=foo}
         <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
-            <a href="{$cfg->site_root_path}?u={$i->network_username}">{$i->network_username}</a>
+            <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a>
         </div>
         <div class="grid_8">
             <span id="div{$i->network_user_id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all

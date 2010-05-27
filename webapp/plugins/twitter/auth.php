@@ -13,8 +13,6 @@ require_once 'init.php';
 
 $s = new SmartyThinkTank();
 
-$cfg = new Config();
-
 $request_token = $_GET['oauth_token'];
 $request_token_secret = $_SESSION['oauth_request_token_secret'];
 /*
@@ -22,11 +20,11 @@ $request_token_secret = $_SESSION['oauth_request_token_secret'];
  echo "URL Request Token: ".$request_token."<br />";
  echo "Session Request Token: ".$request_token_secret."<br />";
  */
-$to = new TwitterOAuth($cfg->oauth_consumer_key, $cfg->oauth_consumer_secret, $request_token, $request_token_secret);
+$to = new TwitterOAuth($config->getValue('oauth_consumer_key'), $config->getValue('oauth_consumer_secret'), $request_token, $request_token_secret);
 $tok = $to->getAccessToken();
 
 if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
-    $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret']);
+    $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $config->getValue('oauth_consumer_key'), $config->getValue('oauth_consumer_secret'));
     
     $u = $api->verifyCredentials();
     
@@ -78,8 +76,7 @@ if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
             }
         }
         
-        $cfg = new Config($i->network_username, $i->network_user_id);
-        $s->assign('cfg', $cfg);
+        $s->assign('site_root_path', $config->getValue('site_root_path'));
         
     }
     
@@ -87,8 +84,8 @@ if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
     $db->closeConnection($conn);
     
 }
-$msg .= '<a href="'.$THINKTANK_CFG['site_root_path'].'account/" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Back to your account</a>';
+$msg .= '<a href="'.$config->getValue('site_root_path').'account/" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Back to your account</a>';
 
 $s->assign('msg', $msg);
-$s->display($THINKTANK_CFG['source_root_path'].'webapp/plugins/twitter/view/auth.tpl');
+$s->display($config->getValue('source_root_path').'webapp/plugins/twitter/view/auth.tpl');
 ?>
