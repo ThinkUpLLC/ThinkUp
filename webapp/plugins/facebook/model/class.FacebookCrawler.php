@@ -13,6 +13,7 @@ class FacebookCrawler {
         $this->facebook = $facebook;
         $this->db = $db;
         $this->logger = Logger::getInstance();
+        $this->logger->setUsername($instance->network_username);
         $this->ud = new UserDAO($this->db, $this->logger);
         $this->pd = new PostDAO($this->db, $this->logger);
     }

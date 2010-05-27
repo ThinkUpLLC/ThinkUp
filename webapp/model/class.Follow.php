@@ -1,4 +1,11 @@
 <?php
+/**
+ * Follow Data Access Object
+ * retrieves following relationships between users from database
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class FollowDAO extends MySQLDAO {
 
     function followExists($user_id, $follower_id) {
@@ -16,12 +23,12 @@ class FollowDAO extends MySQLDAO {
         }
     }
 
-    function update($user_id, $follower_id) {
+    function update($user_id, $follower_id, $debug_api_call = '') {
         $q = " UPDATE #prefix#follows ";
-        $q .= " SET last_seen=NOW() ";
+        $q .= " SET last_seen=NOW(), debug_api_call='%s' ";
         $q .= " WHERE user_id = %s AND follower_id= %s;";
 
-        $q = sprintf($q, mysql_real_escape_string($user_id), mysql_real_escape_string($follower_id));
+        $q = sprintf($q, mysql_real_escape_string($debug_api_call), mysql_real_escape_string($user_id), mysql_real_escape_string($follower_id));
 
         $sql_result = $this->executeSQL($q);
 
@@ -32,12 +39,12 @@ class FollowDAO extends MySQLDAO {
         }
     }
 
-    function deactivate($user_id, $follower_id) {
+    function deactivate($user_id, $follower_id, $debug_api_call = '') {
         $q = " UPDATE #prefix#follows ";
-        $q .= " SET active = 0 ";
+        $q .= " SET active = 0, debug_api_call='%s'  ";
         $q .= " WHERE user_id = %s AND follower_id= %s;";
 
-        $q = sprintf($q, mysql_real_escape_string($user_id), mysql_real_escape_string($follower_id));
+        $q = sprintf($q, mysql_real_escape_string($debug_api_call),  mysql_real_escape_string($user_id), mysql_real_escape_string($follower_id));
 
         $sql_result = $this->executeSQL($q);
         if (mysql_affected_rows() > 0) {
@@ -47,11 +54,11 @@ class FollowDAO extends MySQLDAO {
         }
     }
 
-    function insert($user_id, $follower_id) {
-        $q = "INSERT INTO #prefix#follows (user_id, follower_id, last_seen) ";
-        $q .= "    VALUES ( %s, %s, NOW() );";
+    function insert($user_id, $follower_id, $debug_api_call = '') {
+        $q = "INSERT INTO #prefix#follows (user_id, follower_id, last_seen, debug_api_call) ";
+        $q .= "    VALUES ( %s, %s, NOW(), '%s' );";
 
-        $q = sprintf($q, mysql_real_escape_string($user_id), mysql_real_escape_string($follower_id));
+        $q = sprintf($q, mysql_real_escape_string($user_id), mysql_real_escape_string($follower_id),  mysql_real_escape_string($debug_api_call));
 
         $sql_result = $this->executeSQL($q);
 

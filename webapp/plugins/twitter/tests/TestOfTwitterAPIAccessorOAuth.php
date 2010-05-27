@@ -29,7 +29,7 @@ class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
         global $THINKTANK_CFG;
 
         $to = new TwitterOAuth('', '', '', '');
-        $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', array(), 'GET');
+        $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', 'GET', array());
         $this->assertWantedPattern('/A or B/', $result);
 
         $r = array();
@@ -67,7 +67,7 @@ class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
         global $THINKTANK_CFG;
 
         $to = new TwitterOAuth('', '', '', '');
-        $result = $to->oAuthRequest('https://twitter.com/followers/ids.xml', array(), 'GET');
+        $result = $to->oAuthRequest('https://twitter.com/followers/ids.xml', 'GET', array());
 
         $r = array();
         $r["id"] = 0;
