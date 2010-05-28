@@ -49,11 +49,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
                 if (!$noauth) {
                     // Auth req'd, for calling user only
-                    //if include_rts is working, this next call isn't necessary to get a whole user's timeline
-                    //$crawler->fetchInstanceUserRetweetsByMe();
-
-                    // Auth req'd, for calling user only
-                    //$crawler->fetchInstanceUserMentions();
+                    $crawler->fetchInstanceUserMentions();
 
                     // Auth req'd, for calling user only
                     $crawler->fetchInstanceUserFriends();
