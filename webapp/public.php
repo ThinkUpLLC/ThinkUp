@@ -24,7 +24,9 @@ if ($page > 1) {
 
 $s->assign('site_root_path', $config->getValue('site_root_path'));
 $i = $id->getInstanceFreshestOne();
-$s->assign('crawler_last_run', $i->crawler_last_run);
+if (isset($i)) {
+    $s->assign('crawler_last_run', $i->crawler_last_run);
+}
 $s->assign('i', $_i);
 $s->assign('site_root', $config->getValue('site_root_path'));
 
@@ -122,7 +124,7 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     }
 
 } else {
-    if (!$s->is_cached('public.tpl', 'timeline-'.$i->network_username."-".$_u."-".$page)) {
+    if (isset($i) && !$s->is_cached('public.tpl', 'timeline-'.$i->network_username."-".$_u."-".$page)) {
         $totals = $pd->getTotalPagesAndPostsByPublicInstances($count);
         if ($totals['total_pages'] > $page) {
             $s->assign('next_page', $page + 1);
@@ -133,7 +135,11 @@ if (isset($_REQUEST['t']) && $pd->isPostByPublicInstance($_REQUEST['t'])) {
     }
     $s->assign('header', 'Latest');
     $s->assign('description', 'Latest public posts, replies and forwards');
-    $s->display('public.tpl', 'timeline-'.$i->network_username."-".$_u."-".$page);
+    if (isset($i)) {
+        $s->display('public.tpl', 'timeline-'.$i->network_username."-".$_u."-".$page);
+    } else {
+        $s->display('public.tpl', 'timeline--'.$_u."-".$page);
+    }
 
 }
 ?>
