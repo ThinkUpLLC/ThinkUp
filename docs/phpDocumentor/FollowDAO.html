@@ -1,0 +1,890 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class FollowDAO</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> FollowDAO</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-vars">Vars</a>
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_model---class.Follow.php.html">/model/class.Follow.php</a> (line <span class="field"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a2">2</a></span>)
+		</p>
+		
+				
+		<pre><a href="../phpDocumentor/MySQLDAO.html">MySQLDAO</a>
+   |
+   --FollowDAO</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-vars">Vars</a>
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																																																								<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#deactivate" title="details" class="method-name">deactivate</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#followExists" title="details" class="method-name">followExists</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getEarliestJoinerFollowers" title="details" class="method-name">getEarliestJoinerFollowers</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getFormerFollowees" title="details" class="method-name">getFormerFollowees</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getFormerFollowers" title="details" class="method-name">getFormerFollowers</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getFriendsNotFollowingBack" title="details" class="method-name">getFriendsNotFollowingBack</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getLeastActiveFollowees" title="details" class="method-name">getLeastActiveFollowees</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getLeastLikelyFollowers" title="details" class="method-name">getLeastLikelyFollowers</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getMostActiveFollowees" title="details" class="method-name">getMostActiveFollowees</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getMostFollowedFollowees" title="details" class="method-name">getMostFollowedFollowees</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getMostFollowedFollowers" title="details" class="method-name">getMostFollowedFollowers</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getMutualFriends" title="details" class="method-name">getMutualFriends</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$instance_uid</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getOldestFollow" title="details" class="method-name">getOldestFollow</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getStalestFriend" title="details" class="method-name">getStalestFriend</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalFollowsProtected" title="details" class="method-name">getTotalFollowsProtected</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalFollowsWithErrors" title="details" class="method-name">getTotalFollowsWithErrors</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalFollowsWithFullDetails" title="details" class="method-name">getTotalFollowsWithFullDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalFriends" title="details" class="method-name">getTotalFriends</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalFriendsProtected" title="details" class="method-name">getTotalFriendsProtected</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalFriendsWithErrors" title="details" class="method-name">getTotalFriendsWithErrors</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getUnloadedFollowerDetails" title="details" class="method-name">getUnloadedFollowerDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#insert" title="details" class="method-name">insert</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#update" title="details" class="method-name">update</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			
+							<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../phpDocumentor/MySQLDAO.html">MySQLDAO</a></span></p>
+					<blockquote>
+													<img src="../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../phpDocumentor/MySQLDAO.html#var$db">MySQLDAO::$db</a></span><br>
+							</span>
+													<img src="../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../phpDocumentor/MySQLDAO.html#var$logger">MySQLDAO::$logger</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-vars">Vars</a>
+														<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methoddeactivate" id="deactivate"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">deactivate</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a35">35</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			deactivate
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$follower_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfollowExists" id="followExists"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">followExists</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a4">4</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			followExists
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$follower_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetEarliestJoinerFollowers" id="getEarliestJoinerFollowers"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getEarliestJoinerFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a265">265</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getEarliestJoinerFollowers
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetFormerFollowees" id="getFormerFollowees"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getFormerFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a302">302</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getFormerFollowees
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetFormerFollowers" id="getFormerFollowers"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getFormerFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a319">319</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getFormerFollowers
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetFriendsNotFollowingBack" id="getFriendsNotFollowingBack"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getFriendsNotFollowingBack</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a394">394</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getFriendsNotFollowingBack
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$uid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetLeastActiveFollowees" id="getLeastActiveFollowees"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getLeastActiveFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a337">337</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getLeastActiveFollowees
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetLeastLikelyFollowers" id="getLeastLikelyFollowers"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getLeastLikelyFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a245">245</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getLeastLikelyFollowers
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetMostActiveFollowees" id="getMostActiveFollowees"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getMostActiveFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a283">283</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getMostActiveFollowees
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetMostFollowedFollowees" id="getMostFollowedFollowees"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getMostFollowedFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a357">357</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getMostFollowedFollowees
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetMostFollowedFollowers" id="getMostFollowedFollowers"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getMostFollowedFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a224">224</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getMostFollowedFollowers
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetMutualFriends" id="getMutualFriends"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getMutualFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a375">375</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getMutualFriends
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$instance_uid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$uid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$instance_uid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetOldestFollow" id="getOldestFollow"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getOldestFollow</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a204">204</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getOldestFollow
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetStalestFriend" id="getStalestFriend"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getStalestFriend</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a181">181</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getStalestFriend
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalFollowsProtected" id="getTotalFollowsProtected"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalFollowsProtected</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a133">133</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalFollowsProtected
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalFollowsWithErrors" id="getTotalFollowsWithErrors"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalFollowsWithErrors</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a83">83</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalFollowsWithErrors
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalFollowsWithFullDetails" id="getTotalFollowsWithFullDetails"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalFollowsWithFullDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a117">117</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalFollowsWithFullDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalFriends" id="getTotalFriends"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a149">149</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalFriends
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalFriendsProtected" id="getTotalFriendsProtected"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalFriendsProtected</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a165">165</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalFriendsProtected
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalFriendsWithErrors" id="getTotalFriendsWithErrors"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalFriendsWithErrors</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a100">100</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalFriendsWithErrors
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetUnloadedFollowerDetails" id="getUnloadedFollowerDetails"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getUnloadedFollowerDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a65">65</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getUnloadedFollowerDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodinsert" id="insert"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">insert</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a50">50</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			insert
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$follower_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodupdate" id="update"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">update</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Follow.php.html#a19">19</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			update
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$follower_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../phpDocumentor/MySQLDAO.html">MySQLDAO</a></span></p>
+					<blockquote>
+													<img src="../media/images/Constructor.png" alt=" "/>
+							<span class="method-name"><a href="../phpDocumentor/MySQLDAO.html#method__construct">MySQLDAO::__construct()</a></span><br>
+													<img src="../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../phpDocumentor/MySQLDAO.html#methodexecuteSQL">MySQLDAO::executeSQL()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Wed, 26 May 2010 10:58:52 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

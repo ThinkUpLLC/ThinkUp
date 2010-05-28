@@ -8,19 +8,22 @@
 			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
 		</head>
 		<body>
-						<a href="#Post-parsing">Post-parsing</a><br>
+						<a href="#Post-parsing">Post-parsing</a><br>
 <a href="#auth.php">auth.php</a><br>
 <a href="#captcha-img.php">captcha-img.php</a><br>
 <a href="#class.Captcha.php">class.Captcha.php</a><br>
-<a href="#class.Channel.php">class.Channel.php</a><br>
-<a href="#class.Config.php">class.Config.php</a><br>
 <a href="#class.Crawler.php">class.Crawler.php</a><br>
+<a href="#class.DAOFactory.php">class.DAOFactory.php</a><br>
 <a href="#class.Database.php">class.Database.php</a><br>
+<a href="#class.ExpandURLsPlugin.php">class.ExpandURLsPlugin.php</a><br>
 <a href="#class.FacebookCrawler.php">class.FacebookCrawler.php</a><br>
+<a href="#class.FacebookPlugin.php">class.FacebookPlugin.php</a><br>
 <a href="#class.FlickrAPIAccessor.php">class.FlickrAPIAccessor.php</a><br>
+<a href="#class.FlickrThumbnailsPlugin.php">class.FlickrThumbnailsPlugin.php</a><br>
 <a href="#class.Follow.php">class.Follow.php</a><br>
+<a href="#class.HelloThinkTankPlugin.php">class.HelloThinkTankPlugin.php</a><br>
 <a href="#class.Instance.php">class.Instance.php</a><br>
-<a href="#class.InstanceChannel.php">class.InstanceChannel.php</a><br>
+<a href="#class.InstanceMySQLDAO.php">class.InstanceMySQLDAO.php</a><br>
 <a href="#class.Link.php">class.Link.php</a><br>
 <a href="#class.Logger.php">class.Logger.php</a><br>
 <a href="#class.LoggerSlowSQL.php">class.LoggerSlowSQL.php</a><br>
@@ -28,6 +31,7 @@
 <a href="#class.MySQLDAO.php">class.MySQLDAO.php</a><br>
 <a href="#class.Owner.php">class.Owner.php</a><br>
 <a href="#class.OwnerInstance.php">class.OwnerInstance.php</a><br>
+<a href="#class.PDODAO.php">class.PDODAO.php</a><br>
 <a href="#class.Plugin.php">class.Plugin.php</a><br>
 <a href="#class.PluginHook.php">class.PluginHook.php</a><br>
 <a href="#class.Post.php">class.Post.php</a><br>
@@ -36,25 +40,29 @@
 <a href="#class.TwitterAPIAccessorOAuth.php">class.TwitterAPIAccessorOAuth.php</a><br>
 <a href="#class.TwitterCrawler.php">class.TwitterCrawler.php</a><br>
 <a href="#class.TwitterOAuthThinkTank.php">class.TwitterOAuthThinkTank.php</a><br>
+<a href="#class.TwitterPlugin.php">class.TwitterPlugin.php</a><br>
 <a href="#class.User.php">class.User.php</a><br>
 <a href="#class.Utils.php">class.Utils.php</a><br>
 <a href="#class.Webapp.php">class.Webapp.php</a><br>
+<a href="#class.WebappTab.php">class.WebappTab.php</a><br>
+<a href="#class.WebappTabDataset.php">class.WebappTabDataset.php</a><br>
+<a href="#config.inc.php">config.inc.php</a><br>
 <a href="#config.sample.inc.php">config.sample.inc.php</a><br>
 <a href="#crawl.php">crawl.php</a><br>
 <a href="#expandurls.php">expandurls.php</a><br>
-<a href="#expandurlsplugin_test.php">expandurlsplugin_test.php</a><br>
 <a href="#export.php">export.php</a><br>
 <a href="#facebook.php">facebook.php</a><br>
 <a href="#facebookapi_php5_restlib.php">facebookapi_php5_restlib.php</a><br>
-<a href="#facebookcrawler_test.php">facebookcrawler_test.php</a><br>
-<a href="#flickrapi_test.php">flickrapi_test.php</a><br>
-<a href="#flickrplugin_test.php">flickrplugin_test.php</a><br>
 <a href="#flickrthumbnails.php">flickrthumbnails.php</a><br>
 <a href="#forgot.php">forgot.php</a><br>
 <a href="#hellothinktank.php">hellothinktank.php</a><br>
 <a href="#index.php">index.php</a><br>
 <a href="#init.php">init.php</a><br>
 <a href="#inline.view.php">inline.view.php</a><br>
+<a href="#interface.CrawlerPlugin.php">interface.CrawlerPlugin.php</a><br>
+<a href="#interface.InstanceDAO.php">interface.InstanceDAO.php</a><br>
+<a href="#interface.ThinkTankPlugin.php">interface.ThinkTankPlugin.php</a><br>
+<a href="#interface.WebappPlugin.php">interface.WebappPlugin.php</a><br>
 <a href="#JSON.php">JSON.php</a><br>
 <a href="#jsonwrapper.php">jsonwrapper.php</a><br>
 <a href="#jsonwrapper_inner.php">jsonwrapper_inner.php</a><br>
@@ -64,232 +72,295 @@
 <a href="#mock.facebook.php">mock.facebook.php</a><br>
 <a href="#mock.FlickrAPIAccessor.php">mock.FlickrAPIAccessor.php</a><br>
 <a href="#mock.TwitterOAuth.php">mock.TwitterOAuth.php</a><br>
-<a href="#modifier.truncate_for_select.php">modifier.truncate_for_select.php</a><br>
-<a href="#modifier.tweet_from_id.php">modifier.tweet_from_id.php</a><br>
 <a href="#public.php">public.php</a><br>
 <a href="#register.php">register.php</a><br>
+<a href="#TestOfExpandURLsPlugin.php">TestOfExpandURLsPlugin.php</a><br>
+<a href="#TestOfFacebookCrawler.php">TestOfFacebookCrawler.php</a><br>
+<a href="#TestOfFacebookPlugin.php">TestOfFacebookPlugin.php</a><br>
+<a href="#TestOfFlickrAPIAccessor.php">TestOfFlickrAPIAccessor.php</a><br>
+<a href="#TestOfFlickrThumbnailsPlugin.php">TestOfFlickrThumbnailsPlugin.php</a><br>
+<a href="#TestOfTwitterAPIAccessorOAuth.php">TestOfTwitterAPIAccessorOAuth.php</a><br>
+<a href="#TestOfTwitterCrawler.php">TestOfTwitterCrawler.php</a><br>
+<a href="#TestOfTwitterOAuth.php">TestOfTwitterOAuth.php</a><br>
+<a href="#TestOfTwitterPlugin.php">TestOfTwitterPlugin.php</a><br>
 <a href="#toggle-active.php">toggle-active.php</a><br>
 <a href="#toggle-pluginactive.php">toggle-pluginactive.php</a><br>
 <a href="#toggle-public.php">toggle-public.php</a><br>
 <a href="#twitter.php">twitter.php</a><br>
-<a href="#twitterapiaccessoroauth_test.php">twitterapiaccessoroauth_test.php</a><br>
-<a href="#twittercrawler_test.php">twittercrawler_test.php</a><br>
-<a href="#twitteroauth_test.php">twitteroauth_test.php</a><br>
 <a href="#xd_receiver.php">xd_receiver.php</a><br>
 <a name="Post-parsing"></a>
 <h1>Post-parsing</h1>
 <h2>Warnings:</h2><br>
-<b>Warning</b> - Class TestOfFlickrPlugin parent ThinkTankUnitTestCase not found<br>
+<b>Warning</b> - class TestOfFacebookCrawler in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfFacebookCrawler in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfFacebookCrawler in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfFacebookCrawler in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfExpandURLsPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfExpandURLsPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfExpandURLsPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfFacebookPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfFacebookPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfFlickrThumbnailsPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfTwitterCrawler in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfFlickrThumbnailsPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfFlickrThumbnailsPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfFacebookPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfFlickrThumbnailsPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfExpandURLsPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class Services_JSON_Error in package Services_JSON parent not found in @see parent::PEAR_Error()<br>
+<b>Warning</b> - Class TestOfFacebookPlugin parent ThinkTankUnitTestCase not found<br>
 <b>Warning</b> - Class TestOfFlickrAPIAccessor parent UnitTestCase not found<br>
-<b>Warning</b> - Class Services_JSON_Error parent PEAR_Error not found<br>
+<b>Warning</b> - Class TestOfFlickrThumbnailsPlugin parent ThinkTankUnitTestCase not found<br>
 <b>Warning</b> - Class TestOfFacebookCrawler parent ThinkTankUnitTestCase not found<br>
+<b>Warning</b> - Class Services_JSON_Error parent PEAR_Error not found<br>
+<b>Warning</b> - Class SmartyThinkTank parent Smarty not found<br>
+<b>Warning</b> - Class TestOfExpandURLsPlugin parent ThinkTankUnitTestCase not found<br>
 <b>Warning</b> - Class TestOfTwitterAPIAccessorOAuth parent UnitTestCase not found<br>
 <b>Warning</b> - Class TestOfTwitterCrawler parent ThinkTankUnitTestCase not found<br>
+<b>Warning</b> - 
+duplicate class element "FlickrAPIAccessor" in file /Users/gina/Sites/thinktank/webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php will be ignored.
+Use an @ignore tag on the original if you want this case to be documented.<br>
+<b>Warning</b> - class Services_JSON_Error in package Services_JSON parent not found in @see parent::PEAR_Error()<br>
+<b>Warning</b> - 
+duplicate class element "FacebookRestClient" in file /Users/gina/Sites/thinktank/webapp/plugins/facebook/tests/classes/mock.facebook.php will be ignored.
+Use an @ignore tag on the original if you want this case to be documented.<br>
+<b>Warning</b> - 
+duplicate class element "Facebook" in file /Users/gina/Sites/thinktank/webapp/plugins/facebook/tests/classes/mock.facebook.php will be ignored.
+Use an @ignore tag on the original if you want this case to be documented.<br>
 <b>Warning</b> - Class TestOfTwitterOAuth parent UnitTestCase not found<br>
-<b>Warning</b> - Class TestOfExpandURLsPlugin parent ThinkTankUnitTestCase not found<br>
-<b>Warning</b> - 
-duplicate class element "FlickrAPIAccessor" in file /home/mlinford/git/twitalytic/webapp/plugins/flickrthumbnails/model/class.FlickrAPIAccessor.php will be ignored.
-Use an @ignore tag on the original if you want this case to be documented.<br>
-<b>Warning</b> - Class SmartyThinkTank parent Smarty not found<br>
-<b>Warning</b> - 
-duplicate class element "FacebookRestClient" in file /home/mlinford/git/twitalytic/webapp/plugins/facebook/model/facebookapi_php5_restlib.php will be ignored.
-Use an @ignore tag on the original if you want this case to be documented.<br>
-<b>Warning</b> - 
-duplicate class element "Facebook" in file /home/mlinford/git/twitalytic/webapp/plugins/facebook/model/facebook.php will be ignored.
-Use an @ignore tag on the original if you want this case to be documented.<br>
+<b>Warning</b> - Class TestOfTwitterPlugin parent ThinkTankUnitTestCase not found<br>
+<b>Warning</b> - class TestOfTwitterCrawler in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfFacebookPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfTwitterPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfTwitterPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfTwitterCrawler in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfTwitterPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - class TestOfTwitterPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
+<b>Warning</b> - class TestOfTwitterCrawler in package ThinkTank parent not found in @see parent::tearDown()<br>
 <a name="activate.php"></a>
 <h1>activate.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 32</b> - File "/home/mlinford/git/twitalytic/webapp/session/activate.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 32</b> - File "/Users/gina/Sites/thinktank/webapp/session/activate.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="auth.php"></a>
 <h1>auth.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 81</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/auth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<b>Warning on line 94</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/twitter/auth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 81</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/auth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 90</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/auth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="captcha-img.php"></a>
 <h1>captcha-img.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 17</b> - File "/home/mlinford/git/twitalytic/webapp/session/captcha-img.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 17</b> - File "/Users/gina/Sites/thinktank/webapp/session/captcha-img.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Captcha.php"></a>
 <h1>class.Captcha.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Captcha<br>
-<b>Warning on line 58</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Captcha.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="class.Channel.php"></a>
-<h1>class.Channel.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Channel<br>
-<b>Warning on line 24</b> - no @package tag was used in a DocBlock for class ChannelDAO<br>
-<b>Warning on line 89</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Channel.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="class.Config.php"></a>
-<h1>class.Config.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Config<br>
-<b>Warning on line 46</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Config.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 59</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Captcha.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Crawler.php"></a>
 <h1>class.Crawler.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 2</b> - no @package tag was used in a DocBlock for class Crawler<br>
-<b>Warning on line 8</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Crawler.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Crawler<br>
+<b>Warning on line 10</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Crawler.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.DAOFactory.php"></a>
+<h1>class.DAOFactory.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 14</b> - no @package tag was used in a DocBlock for class DAOFactory<br>
+<b>Warning on line 65</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.DAOFactory.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Database.php"></a>
 <h1>class.Database.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Database<br>
-<b>Warning on line 72</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Database.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 72</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Database.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.ExpandURLsPlugin.php"></a>
+<h1>class.ExpandURLsPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class ExpandURLsPlugin<br>
+<b>Warning on line 65</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/expandurls/model/class.ExpandURLsPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.FacebookCrawler.php"></a>
 <h1>class.FacebookCrawler.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class FacebookCrawler<br>
-<b>Warning on line 192</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/model/class.FacebookCrawler.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 192</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/model/class.FacebookCrawler.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.FacebookPlugin.php"></a>
+<h1>class.FacebookPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class FacebookPlugin<br>
+<b>Warning on line 218</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/model/class.FacebookPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.FlickrAPIAccessor.php"></a>
 <h1>class.FlickrAPIAccessor.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class FlickrAPIAccessor<br>
-<b>Warning on line 71</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/flickrthumbnails/model/class.FlickrAPIAccessor.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 71</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/flickrthumbnails/model/class.FlickrAPIAccessor.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.FlickrThumbnailsPlugin.php"></a>
+<h1>class.FlickrThumbnailsPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class FlickrThumbnailsPlugin<br>
+<b>Warning on line 38</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/flickrthumbnails/model/class.FlickrThumbnailsPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Follow.php"></a>
 <h1>class.Follow.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class FollowDAO<br>
-<b>Warning on line 412</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Follow.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 412</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Follow.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.HelloThinkTankPlugin.php"></a>
+<h1>class.HelloThinkTankPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class HelloThinkTankPlugin<br>
+<b>Warning on line 12</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/hellothinktank/model/class.HelloThinkTankPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Instance.php"></a>
 <h1>class.Instance.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Instance<br>
-<b>Warning on line 63</b> - no @package tag was used in a DocBlock for class InstanceDAO<br>
-<b>Warning on line 436</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Instance.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="class.InstanceChannel.php"></a>
-<h1>class.InstanceChannel.php</h1>
+<b>Warning on line 67</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Instance.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.InstanceMySQLDAO.php"></a>
+<h1>class.InstanceMySQLDAO.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class InstanceChannel<br>
-<b>Warning on line 29</b> - no @package tag was used in a DocBlock for class InstanceChannelDAO<br>
-<b>Warning on line 96</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.InstanceChannel.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 4</b> - no @package tag was used in a DocBlock for class InstanceMySQLDAO<br>
+<b>Warning on line 259</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.InstanceMySQLDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Link.php"></a>
 <h1>class.Link.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Link<br>
 <b>Warning on line 48</b> - no @package tag was used in a DocBlock for class LinkDAO<br>
-<b>Warning on line 229</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Link.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 228</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Link.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Logger.php"></a>
 <h1>class.Logger.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Logger<br>
-<b>Warning on line 52</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Logger.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 61</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Logger.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.LoggerSlowSQL.php"></a>
 <h1>class.LoggerSlowSQL.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class LoggerSlowSQL<br>
-<b>Warning on line 51</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.LoggerSlowSQL.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 51</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.LoggerSlowSQL.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Mailer.php"></a>
 <h1>class.Mailer.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Mailer<br>
-<b>Warning on line 12</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Mailer.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 8</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Mailer.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.MySQLDAO.php"></a>
 <h1>class.MySQLDAO.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class MySQLDAO<br>
-<b>Warning on line 24</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.MySQLDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 24</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.MySQLDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Owner.php"></a>
 <h1>class.Owner.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Owner<br>
 <b>Warning on line 27</b> - no @package tag was used in a DocBlock for class OwnerDAO<br>
-<b>Warning on line 129</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Owner.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 129</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Owner.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.OwnerInstance.php"></a>
 <h1>class.OwnerInstance.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class OwnerInstance<br>
 <b>Warning on line 13</b> - no @package tag was used in a DocBlock for class OwnerInstanceDAO<br>
-<b>Warning on line 107</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.OwnerInstance.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 107</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.OwnerInstance.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.PDODAO.php"></a>
+<h1>class.PDODAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class PDODAO<br>
+<b>Warning on line 138</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.PDODAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Plugin.php"></a>
 <h1>class.Plugin.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Plugin<br>
 <b>Warning on line 34</b> - no @package tag was used in a DocBlock for class PluginDAO<br>
-<b>Warning on line 205</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Plugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 205</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Plugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.PluginHook.php"></a>
 <h1>class.PluginHook.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class PluginHook<br>
-<b>Warning on line 17</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.PluginHook.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 32</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.PluginHook.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Post.php"></a>
 <h1>class.Post.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Post<br>
 <b>Warning on line 48</b> - no @package tag was used in a DocBlock for class PostDAO<br>
-<b>Warning on line 834</b> - no @package tag was used in a DocBlock for class PostErrorDAO<br>
-<b>Warning on line 851</b> - no @package tag was used in a DocBlock for class RetweetDetector<br>
-<b>Warning on line 875</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Post.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 836</b> - no @package tag was used in a DocBlock for class PostErrorDAO<br>
+<b>Warning on line 853</b> - no @package tag was used in a DocBlock for class RetweetDetector<br>
+<b>Warning on line 877</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Post.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Session.php"></a>
 <h1>class.Session.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Session<br>
-<b>Warning on line 44</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Session.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 44</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Session.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.SmartyThinkTank.php"></a>
 <h1>class.SmartyThinkTank.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class SmartyThinkTank<br>
-<b>Warning on line 18</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.SmartyThinkTank.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 15</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.SmartyThinkTank.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.TwitterAPIAccessorOAuth.php"></a>
 <h1>class.TwitterAPIAccessorOAuth.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class TwitterAPIAccessorOAuth<br>
 <b>Warning on line 203</b> - no @package tag was used in a DocBlock for class CrawlerTwitterAPIAccessorOAuth<br>
-<b>Warning on line 317</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 319</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.TwitterCrawler.php"></a>
 <h1>class.TwitterCrawler.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class TwitterCrawler<br>
-<b>Warning on line 909</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/twitter/model/class.TwitterCrawler.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 911</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/model/class.TwitterCrawler.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.TwitterOAuthThinkTank.php"></a>
 <h1>class.TwitterOAuthThinkTank.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class TwitterOAuthThinkTank<br>
-<b>Warning on line 9</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 9</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.TwitterPlugin.php"></a>
+<h1>class.TwitterPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class TwitterPlugin<br>
+<b>Warning on line 348</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/model/class.TwitterPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.User.php"></a>
 <h1>class.User.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class User<br>
 <b>Warning on line 63</b> - no @package tag was used in a DocBlock for class UserDAO<br>
 <b>Warning on line 212</b> - no @package tag was used in a DocBlock for class UserErrorDAO<br>
-<b>Warning on line 227</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.User.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 227</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.User.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Utils.php"></a>
 <h1>class.Utils.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Utils<br>
-<b>Warning on line 72</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Utils.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 76</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Utils.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Webapp.php"></a>
 <h1>class.Webapp.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 2</b> - no @package tag was used in a DocBlock for class Webapp<br>
-<b>Warning on line 18</b> - File "/home/mlinford/git/twitalytic/webapp/model/class.Webapp.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Webapp<br>
+<b>Warning on line 76</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Webapp.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.WebappTab.php"></a>
+<h1>class.WebappTab.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class WebappTab<br>
+<b>Warning on line 23</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.WebappTab.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.WebappTabDataset.php"></a>
+<h1>class.WebappTabDataset.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class WebappTabDataset<br>
+<b>Warning on line 14</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.WebappTabDataset.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="config.inc.php"></a>
+<h1>config.inc.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 4</b> - no @package tag was used in a DocBlock for file /Users/gina/Sites/thinktank/webapp/config.inc.php<br>
 <a name="config.sample.inc.php"></a>
 <h1>config.sample.inc.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 4</b> - no @package tag was used in a DocBlock for file /home/mlinford/git/twitalytic/webapp/config.sample.inc.php<br>
+<b>Warning on line 4</b> - no @package tag was used in a DocBlock for file /Users/gina/Sites/thinktank/webapp/config.sample.inc.php<br>
 <a name="crawl.php"></a>
 <h1>crawl.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 38</b> - File "/home/mlinford/git/twitalytic/webapp/crawler/crawl.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 38</b> - File "/Users/gina/Sites/thinktank/webapp/crawler/crawl.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="expandurls.php"></a>
 <h1>expandurls.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 79</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/expandurls/controller/expandurls.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="expandurlsplugin_test.php"></a>
-<h1>expandurlsplugin_test.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 31</b> - no @package tag was used in a DocBlock for class TestOfExpandURLsPlugin<br>
-<b>Warning on line 63</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/expandurls/tests/expandurlsplugin_test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 13</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/expandurls/controller/expandurls.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="export.php"></a>
 <h1>export.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 38</b> - File "/home/mlinford/git/twitalytic/webapp/post/export.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 38</b> - File "/Users/gina/Sites/thinktank/webapp/post/export.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="facebook.php"></a>
 <h1>facebook.php</h1>
 <h2>Warnings:</h2><br>
+<b>Warning on line 14</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/controller/facebook.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <b>Warning on line 36</b> - no @package tag was used in a DocBlock for class Facebook<br>
-<b>Warning on line 150</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/controller/facebook.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<b>Warning on line 628</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/model/facebook.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 628</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/model/facebook.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="facebookapi_php5_restlib.php"></a>
 <h1>facebookapi_php5_restlib.php</h1>
 <h2>Warnings:</h2><br>
@@ -341,149 +412,176 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <b>Warning on line 2873</b> - Unknown tag "@error" used<br>
 <b>Warning on line 3774</b> - no @package tag was used in a DocBlock for class FacebookRestClientException<br>
 <b>Warning on line 3783</b> - no @package tag was used in a DocBlock for class FacebookAPIErrorCodes<br>
-<b>Warning on line 4097</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/model/facebookapi_php5_restlib.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="facebookcrawler_test.php"></a>
-<h1>facebookcrawler_test.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 18</b> - no @package tag was used in a DocBlock for class TestOfFacebookCrawler<br>
-<b>Warning on line 120</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/tests/facebookcrawler_test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="flickrapi_test.php"></a>
-<h1>flickrapi_test.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 14</b> - no @package tag was used in a DocBlock for class TestOfFlickrAPIAccessor<br>
-<b>Warning on line 77</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/flickrthumbnails/tests/flickrapi_test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="flickrplugin_test.php"></a>
-<h1>flickrplugin_test.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 37</b> - no @package tag was used in a DocBlock for class TestOfFlickrPlugin<br>
-<b>Warning on line 113</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/flickrthumbnails/tests/flickrplugin_test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 4097</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/model/facebookapi_php5_restlib.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="flickrthumbnails.php"></a>
 <h1>flickrthumbnails.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 48</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/flickrthumbnails/controller/flickrthumbnails.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 12</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/flickrthumbnails/controller/flickrthumbnails.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="forgot.php"></a>
 <h1>forgot.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 54</b> - File "/home/mlinford/git/twitalytic/webapp/session/forgot.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 53</b> - File "/Users/gina/Sites/thinktank/webapp/session/forgot.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="hellothinktank.php"></a>
 <h1>hellothinktank.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 21</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/hellothinktank/controller/hellothinktank.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 13</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/hellothinktank/controller/hellothinktank.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="index.php"></a>
 <h1>index.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 6</b> - File "/home/mlinford/git/twitalytic/webapp/session/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<b>Warning on line 55</b> - File "/home/mlinford/git/twitalytic/webapp/user/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<b>Warning on line 66</b> - File "/home/mlinford/git/twitalytic/webapp/post/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<b>Warning on line 93</b> - File "/home/mlinford/git/twitalytic/webapp/account/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<b>Warning on line 99</b> - File "/home/mlinford/git/twitalytic/webapp/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 6</b> - File "/Users/gina/Sites/thinktank/webapp/session/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 52</b> - File "/Users/gina/Sites/thinktank/webapp/user/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 64</b> - File "/Users/gina/Sites/thinktank/webapp/post/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 95</b> - File "/Users/gina/Sites/thinktank/webapp/account/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 103</b> - File "/Users/gina/Sites/thinktank/webapp/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="init.php"></a>
 <h1>init.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 63</b> - File "/home/mlinford/git/twitalytic/webapp/init.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 79</b> - File "/Users/gina/Sites/thinktank/webapp/init.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="inline.view.php"></a>
 <h1>inline.view.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 156</b> - File "/home/mlinford/git/twitalytic/webapp/inline.view.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 57</b> - File "/Users/gina/Sites/thinktank/webapp/inline.view.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="interface.CrawlerPlugin.php"></a>
+<h1>interface.CrawlerPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for interface CrawlerPlugin<br>
+<b>Warning on line 4</b> - File "/Users/gina/Sites/thinktank/webapp/model/interface.CrawlerPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="interface.InstanceDAO.php"></a>
+<h1>interface.InstanceDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for interface InstanceDAO<br>
+<b>Warning on line 28</b> - File "/Users/gina/Sites/thinktank/webapp/model/interface.InstanceDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="interface.ThinkTankPlugin.php"></a>
+<h1>interface.ThinkTankPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for interface ThinkTankPlugin<br>
+<b>Warning on line 4</b> - File "/Users/gina/Sites/thinktank/webapp/model/interface.ThinkTankPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="interface.WebappPlugin.php"></a>
+<h1>interface.WebappPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for interface WebappPlugin<br>
+<b>Warning on line 12</b> - File "/Users/gina/Sites/thinktank/webapp/model/interface.WebappPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="JSON.php"></a>
 <h1>JSON.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 60</b> - package default is already in category default, will now replace with category <br>
+<b>Warning on line 60</b> - package ThinkTank is already in category Documentation, will now replace with category <br>
 <b>Warning on line 115</b> - no @package tag was used in a DocBlock for class Services_JSON<br>
 <b>Warning on line 781</b> - no @package tag was used in a DocBlock for class Services_JSON_Error<br>
 <b>Warning on line 795</b> - 
-duplicate class element "Services_JSON_Error" in file /home/mlinford/git/twitalytic/webapp/plugins/facebook/model/jsonwrapper/JSON/JSON.php will be ignored.
+duplicate class element "Services_JSON_Error" in file /Users/gina/Sites/thinktank/webapp/plugins/facebook/model/jsonwrapper/JSON/JSON.php will be ignored.
 Use an @ignore tag on the original if you want this case to be documented.<br>
 <b>Warning on line 795</b> - no @package tag was used in a DocBlock for class Services_JSON_Error<br>
 <a name="jsonwrapper.php"></a>
 <h1>jsonwrapper.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 5</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/model/jsonwrapper/jsonwrapper.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 5</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/model/jsonwrapper/jsonwrapper.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="jsonwrapper_inner.php"></a>
 <h1>jsonwrapper_inner.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 22</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/model/jsonwrapper/jsonwrapper_inner.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 22</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/model/jsonwrapper/jsonwrapper_inner.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="login.php"></a>
 <h1>login.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 54</b> - File "/home/mlinford/git/twitalytic/webapp/session/login.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 53</b> - File "/Users/gina/Sites/thinktank/webapp/session/login.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="logout.php"></a>
 <h1>logout.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 13</b> - File "/home/mlinford/git/twitalytic/webapp/session/logout.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 13</b> - File "/Users/gina/Sites/thinktank/webapp/session/logout.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="mark-parent.php"></a>
 <h1>mark-parent.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 50</b> - File "/home/mlinford/git/twitalytic/webapp/post/mark-parent.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 45</b> - File "/Users/gina/Sites/thinktank/webapp/post/mark-parent.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="mock.facebook.php"></a>
 <h1>mock.facebook.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Facebook<br>
 <b>Warning on line 11</b> - no @package tag was used in a DocBlock for class FacebookRestClient<br>
-<b>Warning on line 76</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/tests/classes/mock.facebook.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 76</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/tests/classes/mock.facebook.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="mock.FlickrAPIAccessor.php"></a>
 <h1>mock.FlickrAPIAccessor.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class FlickrAPIAccessor<br>
-<b>Warning on line 86</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 86</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="mock.TwitterOAuth.php"></a>
 <h1>mock.TwitterOAuth.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 6</b> - no @package tag was used in a DocBlock for class TwitterOAuth<br>
-<b>Warning on line 38</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="modifier.truncate_for_select.php"></a>
-<h1>modifier.truncate_for_select.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 29</b> - File "/home/mlinford/git/twitalytic/webapp/view/plugins/modifier.truncate_for_select.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="modifier.tweet_from_id.php"></a>
-<h1>modifier.tweet_from_id.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 20</b> - package default is already in category , will now replace with category default<br>
+<b>Warning on line 5</b> - no @package tag was used in a DocBlock for class TwitterOAuth<br>
+<b>Warning on line 38</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="public.php"></a>
 <h1>public.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 149</b> - File "/home/mlinford/git/twitalytic/webapp/public.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 138</b> - File "/Users/gina/Sites/thinktank/webapp/public.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="register.php"></a>
 <h1>register.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 88</b> - File "/home/mlinford/git/twitalytic/webapp/session/register.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 86</b> - File "/Users/gina/Sites/thinktank/webapp/session/register.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfExpandURLsPlugin.php"></a>
+<h1>TestOfExpandURLsPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 34</b> - no @package tag was used in a DocBlock for class TestOfExpandURLsPlugin<br>
+<b>Warning on line 68</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfFacebookCrawler.php"></a>
+<h1>TestOfFacebookCrawler.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 18</b> - no @package tag was used in a DocBlock for class TestOfFacebookCrawler<br>
+<b>Warning on line 122</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/tests/TestOfFacebookCrawler.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfFacebookPlugin.php"></a>
+<h1>TestOfFacebookPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 42</b> - no @package tag was used in a DocBlock for class TestOfFacebookPlugin<br>
+<b>Warning on line 79</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/tests/TestOfFacebookPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfFlickrAPIAccessor.php"></a>
+<h1>TestOfFlickrAPIAccessor.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 14</b> - no @package tag was used in a DocBlock for class TestOfFlickrAPIAccessor<br>
+<b>Warning on line 77</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/flickrthumbnails/tests/TestOfFlickrAPIAccessor.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfFlickrThumbnailsPlugin.php"></a>
+<h1>TestOfFlickrThumbnailsPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 39</b> - no @package tag was used in a DocBlock for class TestOfFlickrThumbnailsPlugin<br>
+<b>Warning on line 125</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfTwitterAPIAccessorOAuth.php"></a>
+<h1>TestOfTwitterAPIAccessorOAuth.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 15</b> - no @package tag was used in a DocBlock for class TestOfTwitterAPIAccessorOAuth<br>
+<b>Warning on line 146</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/tests/TestOfTwitterAPIAccessorOAuth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfTwitterCrawler.php"></a>
+<h1>TestOfTwitterCrawler.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 20</b> - no @package tag was used in a DocBlock for class TestOfTwitterCrawler<br>
+<b>Warning on line 83</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/tests/TestOfTwitterCrawler.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfTwitterOAuth.php"></a>
+<h1>TestOfTwitterOAuth.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 9</b> - no @package tag was used in a DocBlock for class TestOfTwitterOAuth<br>
+<b>Warning on line 21</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/tests/TestOfTwitterOAuth.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfTwitterPlugin.php"></a>
+<h1>TestOfTwitterPlugin.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 42</b> - no @package tag was used in a DocBlock for class TestOfTwitterPlugin<br>
+<b>Warning on line 83</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/tests/TestOfTwitterPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="toggle-active.php"></a>
 <h1>toggle-active.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 23</b> - File "/home/mlinford/git/twitalytic/webapp/account/toggle-active.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 23</b> - File "/Users/gina/Sites/thinktank/webapp/account/toggle-active.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="toggle-pluginactive.php"></a>
 <h1>toggle-pluginactive.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 23</b> - File "/home/mlinford/git/twitalytic/webapp/account/toggle-pluginactive.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 23</b> - File "/Users/gina/Sites/thinktank/webapp/account/toggle-pluginactive.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="toggle-public.php"></a>
 <h1>toggle-public.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 23</b> - File "/home/mlinford/git/twitalytic/webapp/account/toggle-public.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 23</b> - File "/Users/gina/Sites/thinktank/webapp/account/toggle-public.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="twitter.php"></a>
 <h1>twitter.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 181</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/twitter/controller/twitter.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="twitterapiaccessoroauth_test.php"></a>
-<h1>twitterapiaccessoroauth_test.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 15</b> - no @package tag was used in a DocBlock for class TestOfTwitterAPIAccessorOAuth<br>
-<b>Warning on line 146</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/twitter/tests/twitterapiaccessoroauth_test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="twittercrawler_test.php"></a>
-<h1>twittercrawler_test.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 20</b> - no @package tag was used in a DocBlock for class TestOfTwitterCrawler<br>
-<b>Warning on line 81</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/twitter/tests/twittercrawler_test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<a name="twitteroauth_test.php"></a>
-<h1>twitteroauth_test.php</h1>
-<h2>Warnings:</h2><br>
-<b>Warning on line 9</b> - no @package tag was used in a DocBlock for class TestOfTwitterOAuth<br>
-<b>Warning on line 21</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/twitter/tests/twitteroauth_test.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 13</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/controller/twitter.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="xd_receiver.php"></a>
 <h1>xd_receiver.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 22</b> - File "/home/mlinford/git/twitalytic/webapp/plugins/facebook/xd_receiver.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 22</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/xd_receiver.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 	<p class="notes" id="credit">
-		Documentation generated on Thu, 13 May 2010 12:21:03 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+		Documentation generated on Fri, 28 May 2010 09:08:23 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
 	</p>
 	</body>
-</html>
+</html>

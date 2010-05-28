@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>File Source for interface.iPlugin.php</title>
+<link rel="stylesheet" type="text/css" href="../media/style.css">
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+    <td class="header_top">ThinkTank</td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td class="header_menu">
+                                                                                              		  [ <a href="../classtrees_ThinkTank.html" class="menu">class tree: ThinkTank</a> ]
+		  [ <a href="../elementindex_ThinkTank.html" class="menu">index: ThinkTank</a> ]
+		  	    [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="200" class="menu">
+	<div id="todolist">
+			<p><a href="../todolist.html">Todo List</a></p>
+	</div>
+      <b>Packages:</b><br />
+              <a href="../li_ThinkTank.html">ThinkTank</a><br />
+              <a href="../li_Services_JSON.html">Services_JSON</a><br />
+            <br /><br />
+                  
+      
+                </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1 align="center">Source for file interface.iPlugin.php</h1>
+<p>Documentation is available at <a href="../ThinkTank/_model---interface.iPlugin.php.html">interface.iPlugin.php</a></p>
+<div class="src-code">
+<ol><li><div class="src-line"><a name="a1"></a><span class="src-php">&lt;?php&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a2"></a><span class="src-key">interface&nbsp;</span><a href="../ThinkTank/iPlugin.html">iPlugin</a>&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a3"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/iPlugin.html#methodrenderConfiguration">renderConfiguration</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a4"></a><span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a5"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a6"></a><span class="src-key">interface&nbsp;</span><a href="../ThinkTank/iCrawlerPlugin.html">iCrawlerPlugin</a>&nbsp;<span class="src-key">extends&nbsp;</span><a href="../ThinkTank/iPlugin.html">iPlugin</a>&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a7"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/iCrawlerPlugin.html#methodcrawl">crawl</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a8"></a><span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a9"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a10"></a><span class="src-key">interface&nbsp;</span><a href="../ThinkTank/iWebappPlugin.html">iWebappPlugin</a>&nbsp;<span class="src-key">extends&nbsp;</span><a href="../ThinkTank/iPlugin.html">iPlugin</a>&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a11"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/iWebappPlugin.html#methodgetChildTabsUnderPosts">getChildTabsUnderPosts</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a12"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a13"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/iWebappPlugin.html#methodgetChildTabsUnderReplies">getChildTabsUnderReplies</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a14"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a15"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/iWebappPlugin.html#methodgetChildTabsUnderFriends">getChildTabsUnderFriends</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a16"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a17"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/iWebappPlugin.html#methodgetChildTabsUnderFollowers">getChildTabsUnderFollowers</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a18"></a>&nbsp;&nbsp;&nbsp;&nbsp;</div></li>
+<li><div class="src-line"><a name="a19"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/iWebappPlugin.html#methodgetChildTabsUnderLinks">getChildTabsUnderLinks</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a20"></a><span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a21"></a><span class="src-php">?&gt;</span></div></li>
+</ol>
+</div>
+        <div class="credit">
+		    <hr />
+		    Documentation generated on Wed, 26 May 2010 11:07:11 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

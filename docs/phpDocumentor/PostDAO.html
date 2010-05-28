@@ -1,0 +1,1315 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class PostDAO</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> PostDAO</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-vars">Vars</a>
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_model---class.Post.php.html">/model/class.Post.php</a> (line <span class="field"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a49">49</a></span>)
+		</p>
+		
+				
+		<pre><a href="../phpDocumentor/MySQLDAO.html">MySQLDAO</a>
+   |
+   --PostDAO</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-vars">Vars</a>
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																																																																																																																																																								<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#addPost" title="details" class="method-name">addPost</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$vals</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#assignParent" title="details" class="method-name">assignParent</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$parent_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$orphan_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$former_parent_id</span> = <span class="var-default">-1</span>])
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#decrementReplyCountCache" title="details" class="method-name">decrementReplyCountCache</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getAllMentions" title="details" class="method-name">getAllMentions</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$author_username</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$network</span> = <span class="var-default">&quot;twitter&quot;</span>])
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getAllPosts" title="details" class="method-name">getAllPosts</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getAllPostsByUsername" title="details" class="method-name">getAllPostsByUsername</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$username</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getAllReplies" title="details" class="method-name">getAllReplies</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getExchangesBetweenUsers" title="details" class="method-name">getExchangesBetweenUsers</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$other_user_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getLikelyOrphansForParent" title="details" class="method-name">getLikelyOrphansForParent</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$parent_pub_date</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$author_user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$author_username</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getLinkPostsByPublicInstances" title="details" class="method-name">getLinkPostsByPublicInstances</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getMostRepliedToPosts" title="details" class="method-name">getMostRepliedToPosts</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getMostRepliedToPostsByPublicInstances" title="details" class="method-name">getMostRepliedToPostsByPublicInstances</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getMostRetweetedPosts" title="details" class="method-name">getMostRetweetedPosts</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$public</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getMostRetweetedPostsByPublicInstances" title="details" class="method-name">getMostRetweetedPostsByPublicInstances</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getOrphanReplies" title="details" class="method-name">getOrphanReplies</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$username</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$network</span> = <span class="var-default">&quot;twitter&quot;</span>])
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getPhotoPostsByPublicInstances" title="details" class="method-name">getPhotoPostsByPublicInstances</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getPost" title="details" class="method-name">getPost</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getPostReachViaRetweets" title="details" class="method-name">getPostReachViaRetweets</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getPostsAuthorHasRepliedTo" title="details" class="method-name">getPostsAuthorHasRepliedTo</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getPostsByPublicInstances" title="details" class="method-name">getPostsByPublicInstances</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getPublicRepliesToPost" title="details" class="method-name">getPublicRepliesToPost</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getRepliesToPost" title="details" class="method-name">getRepliesToPost</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$public</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">350</span>])
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getRetweetsOfPost" title="details" class="method-name">getRetweetsOfPost</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$public</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getStandaloneReplies" title="details" class="method-name">getStandaloneReplies</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$username</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$limit</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getStatusSources" title="details" class="method-name">getStatusSources</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getStrayRepliedToPosts" title="details" class="method-name">getStrayRepliedToPosts</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalLinkPagesAndPostsByPublicInstances" title="details" class="method-name">getTotalLinkPagesAndPostsByPublicInstances</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalPagesAndPostsByPublicInstances" title="details" class="method-name">getTotalPagesAndPostsByPublicInstances</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalPhotoPagesAndPostsByPublicInstances" title="details" class="method-name">getTotalPhotoPagesAndPostsByPublicInstances</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTotalPostsByUser" title="details" class="method-name">getTotalPostsByUser</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$userid</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#incrementReplyCountCache" title="details" class="method-name">incrementReplyCountCache</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#incrementRepostCountCache" title="details" class="method-name">incrementRepostCountCache</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#isPostByPublicInstance" title="details" class="method-name">isPostByPublicInstance</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#isPostInDB" title="details" class="method-name">isPostInDB</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#isReplyInDB" title="details" class="method-name">isReplyInDB</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			
+							<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../phpDocumentor/MySQLDAO.html">MySQLDAO</a></span></p>
+					<blockquote>
+													<img src="../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../phpDocumentor/MySQLDAO.html#var$db">MySQLDAO::$db</a></span><br>
+							</span>
+													<img src="../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../phpDocumentor/MySQLDAO.html#var$logger">MySQLDAO::$logger</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-vars">Vars</a>
+														<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodaddPost" id="addPost"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">addPost</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a248">248</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addPost
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$vals</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$vals</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodassignParent" id="assignParent"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">assignParent</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a600">600</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			assignParent
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$parent_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$orphan_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$former_parent_id</span> = <span class="var-default">-1</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$parent_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$orphan_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$former_parent_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddecrementReplyCountCache" id="decrementReplyCountCache"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">decrementReplyCountCache</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a367">367</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			decrementReplyCountCache
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetAllMentions" id="getAllMentions"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getAllMentions</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a459">459</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getAllMentions
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$author_username</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$network</span> = <span class="var-default">&quot;twitter&quot;</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$author_username</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$network</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetAllPosts" id="getAllPosts"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getAllPosts</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a380">380</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getAllPosts
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$author_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetAllPostsByUsername" id="getAllPostsByUsername"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getAllPostsByUsername</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a404">404</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getAllPostsByUsername
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$username</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$username</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetAllReplies" id="getAllReplies"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getAllReplies</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a478">478</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getAllReplies
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetExchangesBetweenUsers" id="getExchangesBetweenUsers"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getExchangesBetweenUsers</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a211">211</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getExchangesBetweenUsers
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$other_user_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$author_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$other_user_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetLikelyOrphansForParent" id="getLikelyOrphansForParent"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getLikelyOrphansForParent</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a577">577</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getLikelyOrphansForParent
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$parent_pub_date</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$author_user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$author_username</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$parent_pub_date</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$author_user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$author_username</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetLinkPostsByPublicInstances" id="getLinkPostsByPublicInstances"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getLinkPostsByPublicInstances</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a753">753</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getLinkPostsByPublicInstances
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$page</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetMostRepliedToPosts" id="getMostRepliedToPosts"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getMostRepliedToPosts</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a507">507</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getMostRepliedToPosts
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetMostRepliedToPostsByPublicInstances" id="getMostRepliedToPostsByPublicInstances"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getMostRepliedToPostsByPublicInstances</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a804">804</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getMostRepliedToPostsByPublicInstances
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$page</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetMostRetweetedPosts" id="getMostRetweetedPosts"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getMostRetweetedPosts</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a531">531</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getMostRetweetedPosts
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$public</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$user_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$public</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetMostRetweetedPostsByPublicInstances" id="getMostRetweetedPostsByPublicInstances"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getMostRetweetedPostsByPublicInstances</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a808">808</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getMostRetweetedPostsByPublicInstances
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$page</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetOrphanReplies" id="getOrphanReplies"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getOrphanReplies</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a556">556</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getOrphanReplies
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$username</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$network</span> = <span class="var-default">&quot;twitter&quot;</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$username</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$network</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetPhotoPostsByPublicInstances" id="getPhotoPostsByPublicInstances"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getPhotoPostsByPublicInstances</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a702">702</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getPhotoPostsByPublicInstances
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$page</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetPost" id="getPost"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getPost</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a51">51</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getPost
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetPostReachViaRetweets" id="getPostReachViaRetweets"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getPostReachViaRetweets</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a161">161</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getPostReachViaRetweets
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetPostsAuthorHasRepliedTo" id="getPostsAuthorHasRepliedTo"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getPostsAuthorHasRepliedTo</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a181">181</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getPostsAuthorHasRepliedTo
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$author_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetPostsByPublicInstances" id="getPostsByPublicInstances"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getPostsByPublicInstances</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a698">698</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getPostsByPublicInstances
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$page</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetPublicRepliesToPost" id="getPublicRepliesToPost"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getPublicRepliesToPost</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a244">244</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getPublicRepliesToPost
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetRepliesToPost" id="getRepliesToPost"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getRepliesToPost</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a111">111</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getRepliesToPost
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$public</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">350</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$public</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetRetweetsOfPost" id="getRetweetsOfPost"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getRetweetsOfPost</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a132">132</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getRetweetsOfPost
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$public</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$public</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetStandaloneReplies" id="getStandaloneReplies"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getStandaloneReplies</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a94">94</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getStandaloneReplies
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$username</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$limit</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$username</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$limit</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetStatusSources" id="getStatusSources"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getStatusSources</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a439">439</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getStatusSources
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$author_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetStrayRepliedToPosts" id="getStrayRepliedToPosts"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getStrayRepliedToPosts</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a629">629</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getStrayRepliedToPosts
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$author_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$author_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalLinkPagesAndPostsByPublicInstances" id="getTotalLinkPagesAndPostsByPublicInstances"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalLinkPagesAndPostsByPublicInstances</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a782">782</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalLinkPagesAndPostsByPublicInstances
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalPagesAndPostsByPublicInstances" id="getTotalPagesAndPostsByPublicInstances"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalPagesAndPostsByPublicInstances</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a677">677</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalPagesAndPostsByPublicInstances
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalPhotoPagesAndPostsByPublicInstances" id="getTotalPhotoPagesAndPostsByPublicInstances"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalPhotoPagesAndPostsByPublicInstances</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a731">731</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalPhotoPagesAndPostsByPublicInstances
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTotalPostsByUser" id="getTotalPostsByUser"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getTotalPostsByUser</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a424">424</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTotalPostsByUser
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$userid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$userid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodincrementReplyCountCache" id="incrementReplyCountCache"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">incrementReplyCountCache</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a345">345</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			incrementReplyCountCache
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodincrementRepostCountCache" id="incrementRepostCountCache"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">incrementRepostCountCache</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a349">349</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			incrementRepostCountCache
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisPostByPublicInstance" id="isPostByPublicInstance"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">isPostByPublicInstance</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a813">813</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			isPostByPublicInstance
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisPostInDB" id="isPostInDB"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">isPostInDB</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a316">316</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			isPostInDB
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisReplyInDB" id="isReplyInDB"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">isReplyInDB</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__modelclass.Post.php.html#a330">330</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			isReplyInDB
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$post_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$post_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../phpDocumentor/MySQLDAO.html">MySQLDAO</a></span></p>
+					<blockquote>
+													<img src="../media/images/Constructor.png" alt=" "/>
+							<span class="method-name"><a href="../phpDocumentor/MySQLDAO.html#method__construct">MySQLDAO::__construct()</a></span><br>
+													<img src="../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../phpDocumentor/MySQLDAO.html#methodexecuteSQL">MySQLDAO::executeSQL()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Wed, 26 May 2010 10:58:56 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

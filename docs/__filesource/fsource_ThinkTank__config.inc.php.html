@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>File Source for config.inc.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+						<h1>Source for file config.inc.php</h1>
+<p>Documentation is available at <a href="../ThinkTank/_config.inc.php.html">config.inc.php</a></p>
+<div class="src-code">
+<div class="src-code"><ol><li><div class="src-line"><a name="a1"></a><span class="src-php">&lt;?php</span></div></li>
+<li><div class="src-line"><a name="a2"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a3"></a><span class="src-comm">/************************************************/</span></div></li>
+<li><div class="src-line"><a name="a4"></a><span class="src-comm">/***&nbsp;&nbsp;APPLICATION&nbsp;CONFIG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;***/</span></div></li>
+<li><div class="src-line"><a name="a5"></a><span class="src-comm">/************************************************/</span></div></li>
+<li><div class="src-line"><a name="a6"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a7"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'debug'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-id">true</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a8"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a9"></a><span class="src-comm">//&nbsp;Your&nbsp;GMT&nbsp;offset,&nbsp;not&nbsp;(necessarily)&nbsp;your&nbsp;web&nbsp;server's.&nbsp;Pacific:&nbsp;7,&nbsp;Eastern:&nbsp;4</span></div></li>
+<li><div class="src-line"><a name="a10"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'GMT_offset'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-num">7</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a11"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a12"></a><span class="src-comm">//&nbsp;Toggle&nbsp;Smarty&nbsp;caching.&nbsp;1:&nbsp;Smarty&nbsp;caching&nbsp;on,&nbsp;0:&nbsp;Smarty&nbsp;caching&nbsp;off</span></div></li>
+<li><div class="src-line"><a name="a13"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'cache_pages'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-num">0</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a14"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a15"></a><span class="src-comm">//&nbsp;Application&nbsp;title.</span></div></li>
+<li><div class="src-line"><a name="a16"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'app_title'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'ThinkTank'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a17"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a18"></a><span class="src-comm">//&nbsp;Full&nbsp;server&nbsp;path&nbsp;to&nbsp;crawler.log.</span></div></li>
+<li><div class="src-line"><a name="a19"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'log_location'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'/Users/gina/Sites/thinktank/logs/crawler.log'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a20"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a21"></a><span class="src-comm">//&nbsp;Full&nbsp;server&nbsp;path&nbsp;to&nbsp;sql.log.&nbsp;To&nbsp;not&nbsp;log&nbsp;queries,&nbsp;set&nbsp;to&nbsp;null.</span></div></li>
+<li><div class="src-line"><a name="a22"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'sql_log_location'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'/Users/gina/Sites/thinktank/logs/sql.log'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a23"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a24"></a><span class="src-comm">//&nbsp;How&nbsp;many&nbsp;seconds&nbsp;does&nbsp;a&nbsp;query&nbsp;take&nbsp;before&nbsp;it&nbsp;gets&nbsp;logged&nbsp;as&nbsp;a&nbsp;slow&nbsp;query?</span></div></li>
+<li><div class="src-line"><a name="a25"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'slow_query_log_threshold'</span><span class="src-sym">]&nbsp;&nbsp;</span>=&nbsp;<span class="src-num">2.0</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a26"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a27"></a><span class="src-comm">//&nbsp;Public&nbsp;path&nbsp;of&nbsp;thinktank's&nbsp;/webapp/&nbsp;folder&nbsp;on&nbsp;your&nbsp;web&nbsp;server.</span></div></li>
+<li><div class="src-line"><a name="a28"></a><span class="src-comm">//&nbsp;For&nbsp;example,&nbsp;if&nbsp;the&nbsp;/webapp/&nbsp;folder&nbsp;is&nbsp;located&nbsp;at&nbsp;http://yourdomain/tweets/,&nbsp;set&nbsp;to&nbsp;'/tweets/'.</span></div></li>
+<li><div class="src-line"><a name="a29"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'site_root_path'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'/'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a30"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a31"></a><span class="src-comm">//&nbsp;Full&nbsp;server&nbsp;path&nbsp;to&nbsp;/thinktank/&nbsp;folder.</span></div></li>
+<li><div class="src-line"><a name="a32"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'source_root_path'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'/Users/gina/Sites/thinktank/'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a33"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a34"></a><span class="src-comm">//&nbsp;Full&nbsp;server&nbsp;path&nbsp;to&nbsp;bundled&nbsp;Smarty&nbsp;template&nbsp;library.</span></div></li>
+<li><div class="src-line"><a name="a35"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'smarty_path'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'source_root_path'</span><span class="src-sym">]</span>.<span class="src-str">'extlib/Smarty-2.6.26/libs/'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a36"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a37"></a><span class="src-comm">//&nbsp;Set&nbsp;whether&nbsp;or&nbsp;not&nbsp;your&nbsp;site's&nbsp;registration&nbsp;page&nbsp;is&nbsp;available.</span></div></li>
+<li><div class="src-line"><a name="a38"></a><span class="src-comm">//&nbsp;@TODO&nbsp;Build&nbsp;email&nbsp;invitation&nbsp;system&nbsp;so&nbsp;this&nbsp;isn't&nbsp;simply&nbsp;a&nbsp;binary&nbsp;choice.</span></div></li>
+<li><div class="src-line"><a name="a39"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'is_registration_open'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-id">true</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a40"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a41"></a><span class="src-comm">/************************************************/</span></div></li>
+<li><div class="src-line"><a name="a42"></a><span class="src-comm">/***&nbsp;&nbsp;DATABASE&nbsp;CONFIG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;***/</span></div></li>
+<li><div class="src-line"><a name="a43"></a><span class="src-comm">/************************************************/</span></div></li>
+<li><div class="src-line"><a name="a44"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a45"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'db_host'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'localhost'</span><span class="src-sym">;&nbsp;&nbsp;</span><span class="src-comm">//&nbsp;On&nbsp;a&nbsp;shared&nbsp;host?&nbsp;Try&nbsp;mysql.yourdomain.com,&nbsp;or&nbsp;see&nbsp;your&nbsp;web&nbsp;host's&nbsp;documentation.</span></div></li>
+<li><div class="src-line"><a name="a46"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'db_user'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'root'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a47"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'db_type'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'mysql'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a48"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'db_password'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'g3n3r0sity'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a49"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'db_name'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'thinktank_0501'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a50"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'db_socket'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'/tmp/mysql.sock'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a51"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'table_prefix'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'tt_'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a52"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a53"></a><span class="src-comm">/************************************************/</span></div></li>
+<li><div class="src-line"><a name="a54"></a><span class="src-comm">/***&nbsp;&nbsp;PLUGIN&nbsp;CONFIG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;***/</span></div></li>
+<li><div class="src-line"><a name="a55"></a><span class="src-comm">/************************************************/</span></div></li>
+<li><div class="src-line"><a name="a56"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a57"></a><span class="src-comm">/*------------------------------------------------</span></div></li>
+<li><div class="src-line"><a name="a58"></a><span class="src-comm">&nbsp;&nbsp;TWITTER</span></div></li>
+<li><div class="src-line"><a name="a59"></a><span class="src-comm">&nbsp;&nbsp;@TODO&nbsp;Put&nbsp;the&nbsp;Twitter-specific&nbsp;settings&nbsp;into&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a60"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;Twitter&nbsp;plugin's&nbsp;configuration&nbsp;page.</span></div></li>
+<li><div class="src-line"><a name="a61"></a><span class="src-comm">------------------------------------------------*/</span></div></li>
+<li><div class="src-line"><a name="a62"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a63"></a><span class="src-comm">//&nbsp;Explanation&nbsp;at&nbsp;http://apiwiki.twitter.com/Things-Every-Developer-Should-Know#6Therearepaginationlimits</span></div></li>
+<li><div class="src-line"><a name="a64"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'archive_limit'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-num">3200</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a65"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a66"></a><span class="src-comm">//&nbsp;To&nbsp;integrate&nbsp;with&nbsp;Twitter,&nbsp;get&nbsp;the&nbsp;following&nbsp;by&nbsp;registering&nbsp;at&nbsp;http://twitter.com/oauth_clients/.</span></div></li>
+<li><div class="src-line"><a name="a67"></a><span class="src-comm">//&nbsp;Otherwise,&nbsp;set&nbsp;both&nbsp;to&nbsp;''.</span></div></li>
+<li><div class="src-line"><a name="a68"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'oauth_consumer_key'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'gRSzYZbpuMNIZq8zyklBZw'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a69"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'oauth_consumer_secret'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'lfzr8w684ztMQz2J4JdpPOaRjaB97C5XgpjmDoVEZD0'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a70"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a71"></a><span class="src-comm">/*------------------------------------------------</span></div></li>
+<li><div class="src-line"><a name="a72"></a><span class="src-comm">&nbsp;&nbsp;FACEBOOK</span></div></li>
+<li><div class="src-line"><a name="a73"></a><span class="src-comm">&nbsp;&nbsp;@TODO&nbsp;Put&nbsp;the&nbsp;Facebook-specific&nbsp;settings&nbsp;into&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a74"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;Facebook&nbsp;plugin's&nbsp;configuration&nbsp;page.</span></div></li>
+<li><div class="src-line"><a name="a75"></a><span class="src-comm">-------------------------------------------------*/</span></div></li>
+<li><div class="src-line"><a name="a76"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a77"></a><span class="src-comm">//&nbsp;Base&nbsp;URL&nbsp;for&nbsp;Facebook&nbsp;Connect</span></div></li>
+<li><div class="src-line"><a name="a78"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'facebook_base_fb_url'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'connect.facebook.com'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a79"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a80"></a><span class="src-comm">//&nbsp;To&nbsp;integrate&nbsp;with&nbsp;Facebook,&nbsp;get&nbsp;a&nbsp;Facebook&nbsp;API&nbsp;key&nbsp;and&nbsp;fill&nbsp;in&nbsp;the&nbsp;values&nbsp;below.</span></div></li>
+<li><div class="src-line"><a name="a81"></a><span class="src-comm">//&nbsp;Otherwise,&nbsp;set&nbsp;all&nbsp;three&nbsp;to&nbsp;''.</span></div></li>
+<li><div class="src-line"><a name="a82"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'facebook_api_key'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'your_facebook_api_key'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a83"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'facebook_api_secret'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'your_facebook_api_secret'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a84"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'facebook_callback_url'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'http://yourdomain/path-to-webapp/account/'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a85"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a86"></a><span class="src-comm">/*------------------------------------------------</span></div></li>
+<li><div class="src-line"><a name="a87"></a><span class="src-comm">&nbsp;&nbsp;BIT.LY</span></div></li>
+<li><div class="src-line"><a name="a88"></a><span class="src-comm">&nbsp;&nbsp;@TODO&nbsp;Abstract&nbsp;into&nbsp;a&nbsp;plugin.</span></div></li>
+<li><div class="src-line"><a name="a89"></a><span class="src-comm">&nbsp;&nbsp;@TODO&nbsp;Put&nbsp;the&nbsp;bit.ly-specific&nbsp;settings&nbsp;into</span></div></li>
+<li><div class="src-line"><a name="a90"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;bit.ly&nbsp;plugin's&nbsp;configuration&nbsp;page.</span></div></li>
+<li><div class="src-line"><a name="a91"></a><span class="src-comm">------------------------------------------------*/</span></div></li>
+<li><div class="src-line"><a name="a92"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a93"></a><span class="src-comm">//&nbsp;To&nbsp;integrate&nbsp;with&nbsp;bit.ly,&nbsp;get&nbsp;a&nbsp;bit.ly&nbsp;API&nbsp;key&nbsp;at&nbsp;http://bit.ly&nbsp;and&nbsp;fill&nbsp;in&nbsp;the&nbsp;values&nbsp;below.</span></div></li>
+<li><div class="src-line"><a name="a94"></a><span class="src-comm">//&nbsp;Otherwise,&nbsp;set&nbsp;both&nbsp;to&nbsp;''.</span></div></li>
+<li><div class="src-line"><a name="a95"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'bitly_api_key'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'your_key'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a96"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'bitly_login'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'your_bitly_login'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a97"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a98"></a><span class="src-comm">/*------------------------------------------------</span></div></li>
+<li><div class="src-line"><a name="a99"></a><span class="src-comm">&nbsp;&nbsp;FLICKR</span></div></li>
+<li><div class="src-line"><a name="a100"></a><span class="src-comm">&nbsp;&nbsp;@TODO&nbsp;Put&nbsp;the&nbsp;Flickr-specific&nbsp;settings&nbsp;into&nbsp;the</span></div></li>
+<li><div class="src-line"><a name="a101"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Flickr&nbsp;plugin's&nbsp;configuration&nbsp;page.</span></div></li>
+<li><div class="src-line"><a name="a102"></a><span class="src-comm">------------------------------------------------*/</span></div></li>
+<li><div class="src-line"><a name="a103"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a104"></a><span class="src-comm">//&nbsp;To&nbsp;integrate&nbsp;with&nbsp;Flickr,&nbsp;get&nbsp;a&nbsp;Flickr&nbsp;API&nbsp;key&nbsp;at&nbsp;http://flickr.com&nbsp;and&nbsp;fill&nbsp;in&nbsp;the&nbsp;value&nbsp;below.</span></div></li>
+<li><div class="src-line"><a name="a105"></a><span class="src-comm">//&nbsp;Otherwise,&nbsp;set&nbsp;to&nbsp;''.</span></div></li>
+<li><div class="src-line"><a name="a106"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'flickr_api_key'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">'your_flickr_api_key'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a107"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a108"></a><span class="src-comm">/*------------------------------------------------</span></div></li>
+<li><div class="src-line"><a name="a109"></a><span class="src-comm">&nbsp;&nbsp;RECAPTCHA</span></div></li>
+<li><div class="src-line"><a name="a110"></a><span class="src-comm">&nbsp;&nbsp;@TODO&nbsp;Abstract&nbsp;into&nbsp;a&nbsp;plugin.</span></div></li>
+<li><div class="src-line"><a name="a111"></a><span class="src-comm">&nbsp;&nbsp;@TODO&nbsp;Put&nbsp;the&nbsp;reCAPTCHA-specific&nbsp;settings&nbsp;into</span></div></li>
+<li><div class="src-line"><a name="a112"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;reCAPTCHA&nbsp;plugin's&nbsp;configuration&nbsp;page.</span></div></li>
+<li><div class="src-line"><a name="a113"></a><span class="src-comm">------------------------------------------------*/</span></div></li>
+<li><div class="src-line"><a name="a114"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a115"></a><span class="src-comm">//&nbsp;To&nbsp;enable&nbsp;reCAPTCHA,&nbsp;set&nbsp;enable&nbsp;to&nbsp;true&nbsp;and&nbsp;fill&nbsp;in&nbsp;your&nbsp;keys&nbsp;and&nbsp;libpath;&nbsp;more&nbsp;info&nbsp;at&nbsp;http://recaptcha.net/plugins/php/</span></div></li>
+<li><div class="src-line"><a name="a116"></a><span class="src-comm">//&nbsp;Otherwise,&nbsp;leave&nbsp;these&nbsp;settings&nbsp;as-is.</span></div></li>
+<li><div class="src-line"><a name="a117"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'recaptcha_enable'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-id">false</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a118"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'recaptcha_public_key'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">''</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a119"></a><span class="src-var">$THINKTANK_CFG</span><span class="src-sym">[</span><span class="src-str">'recaptcha_private_key'</span><span class="src-sym">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>=&nbsp;<span class="src-str">''</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a120"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a121"></a><a href="http://www.php.net/date_default_timezone_set">date_default_timezone_set</a><span class="src-sym">(</span><span class="src-str">'America/Los_Angeles'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a122"></a><span class="src-php">?&gt;</span></div></li>
+</ol></div>
+</div>
+	<p class="notes" id="credit">
+		Documentation generated on Fri, 28 May 2010 09:08:09 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</body>
+</html>

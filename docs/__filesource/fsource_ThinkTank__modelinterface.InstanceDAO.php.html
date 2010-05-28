@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>File Source for interface.InstanceDAO.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+						<h1>Source for file interface.InstanceDAO.php</h1>
+<p>Documentation is available at <a href="../ThinkTank/_model---interface.InstanceDAO.php.html">interface.InstanceDAO.php</a></p>
+<div class="src-code">
+<div class="src-code"><ol><li><div class="src-line"><a name="a1"></a><span class="src-php">&lt;?php</span></div></li>
+<li><div class="src-line"><a name="a2"></a><span class="src-key">interface&nbsp;</span><a href="../ThinkTank/InstanceDAO.html">InstanceDAO</a>&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a3"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodinsert">insert</a><span class="src-sym">(</span><span class="src-var">$network_user_id</span><span class="src-sym">,&nbsp;</span><span class="src-var">$network_username</span><span class="src-sym">,&nbsp;</span><span class="src-var">$network&nbsp;</span>=&nbsp;<span class="src-str">&quot;twitter&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-var">$viewer_id&nbsp;</span>=&nbsp;<span class="src-id">false</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a4"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a5"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodgetFreshestByOwnerId">getFreshestByOwnerId</a><span class="src-sym">(</span><span class="src-var">$owner_id</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a6"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a7"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodgetInstanceOneByLastRun">getInstanceOneByLastRun</a><span class="src-sym">(</span><span class="src-var">$order</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a8"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a9"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodgetByUsername">getByUsername</a><span class="src-sym">(</span><span class="src-var">$username</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a10"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a11"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodgetByUserId">getByUserId</a><span class="src-sym">(</span><span class="src-var">$network_user_id</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a12"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a13"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodgetAllInstances">getAllInstances</a><span class="src-sym">(</span><span class="src-var">$order&nbsp;</span>=&nbsp;<span class="src-str">&quot;DESC&quot;</span><span class="src-sym">,&nbsp;</span><span class="src-var">$only_active&nbsp;</span>=&nbsp;<span class="src-id">false</span><span class="src-sym">,&nbsp;</span><span class="src-var">$network&nbsp;</span>=&nbsp;<span class="src-str">&quot;twitter&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a14"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a15"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodgetByOwner">getByOwner</a><span class="src-sym">(</span><span class="src-var">$owner</span><span class="src-sym">,&nbsp;</span><span class="src-var">$force_not_admin&nbsp;</span>=&nbsp;<span class="src-id">false</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a16"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a17"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodgetByOwnerAndNetwork">getByOwnerAndNetwork</a><span class="src-sym">(</span><span class="src-var">$o</span><span class="src-sym">,&nbsp;</span><span class="src-var">$network</span><span class="src-sym">,&nbsp;</span><span class="src-var">$force_not_admin&nbsp;</span>=&nbsp;<span class="src-id">false</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a18"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a19"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodsetPublic">setPublic</a><span class="src-sym">(</span><span class="src-var">$username</span><span class="src-sym">,&nbsp;</span><span class="src-var">$public</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a20"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a21"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodsetActive">setActive</a><span class="src-sym">(</span><span class="src-var">$username</span><span class="src-sym">,&nbsp;</span><span class="src-var">$active</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a22"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a23"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodsave">save</a><span class="src-sym">(</span><span class="src-var">$instance_object</span><span class="src-sym">,&nbsp;</span><span class="src-var">$user_xml_total_posts_by_owner</span><span class="src-sym">,&nbsp;</span><span class="src-var">$logger&nbsp;</span>=&nbsp;<span class="src-id">false</span><span class="src-sym">,&nbsp;</span><span class="src-var">$api&nbsp;</span>=&nbsp;<span class="src-id">false</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a24"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a25"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodupdateLastRun">updateLastRun</a><span class="src-sym">(</span><span class="src-var">$id</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a26"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a27"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../ThinkTank/InstanceDAO.html#methodisUserConfigured">isUserConfigured</a><span class="src-sym">(</span><span class="src-var">$username</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a28"></a><span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a29"></a><span class="src-php">?&gt;</span></div></li>
+</ol></div>
+</div>
+	<p class="notes" id="credit">
+		Documentation generated on Fri, 28 May 2010 09:08:17 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</body>
+</html>

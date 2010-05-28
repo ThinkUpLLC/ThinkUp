@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class FacebookPlugin</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> FacebookPlugin</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+                <p class="implements">
+            Implements interfaces:
+            <ul>
+                <li><a href="../phpDocumentor/iCrawlerPlugin.html">iCrawlerPlugin</a></li><li><a href="../phpDocumentor/iWebappPlugin.html">iWebappPlugin</a></li>            </ul>
+        </p>
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_plugins---facebook---model---class.FacebookPlugin.php.html">/plugins/facebook/model/class.FacebookPlugin.php</a> (line <span class="field"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a2">2</a></span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																								<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#crawl" title="details" class="method-name">crawl</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#facebook_insert_page" title="details" class="method-name">facebook_insert_page</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$fb_page_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$viewer_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$owner_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$existing_instance_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$fb_page_name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$db</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$messages</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#facebook_process_page_actions" title="details" class="method-name">facebook_process_page_actions</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getChildTabsUnderFollowers" title="details" class="method-name">getChildTabsUnderFollowers</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getChildTabsUnderFriends" title="details" class="method-name">getChildTabsUnderFriends</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getChildTabsUnderLinks" title="details" class="method-name">getChildTabsUnderLinks</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getChildTabsUnderPosts" title="details" class="method-name">getChildTabsUnderPosts</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getChildTabsUnderReplies" title="details" class="method-name">getChildTabsUnderReplies</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#renderConfiguration" title="details" class="method-name">renderConfiguration</a>
+										()
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+													<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodcrawl" id="crawl"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">crawl</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a3">3</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			crawl
+		</span>
+				()
+			</div>
+	
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../phpDocumentor/iCrawlerPlugin.html#methodcrawl">iCrawlerPlugin::crawl()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodfacebook_insert_page" id="facebook_insert_page"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">facebook_insert_page</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a119">119</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			facebook_insert_page
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$fb_page_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$viewer_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$owner_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$existing_instance_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$fb_page_name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$db</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$messages</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$fb_page_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$viewer_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$owner_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$existing_instance_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$fb_page_name</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$db</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$messages</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfacebook_process_page_actions" id="facebook_process_page_actions"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">facebook_process_page_actions</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a106">106</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			facebook_process_page_actions
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetChildTabsUnderFollowers" id="getChildTabsUnderFollowers"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getChildTabsUnderFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a187">187</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getChildTabsUnderFollowers
+		</span>
+				()
+			</div>
+	
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../phpDocumentor/iWebappPlugin.html#methodgetChildTabsUnderFollowers">iWebappPlugin::getChildTabsUnderFollowers()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodgetChildTabsUnderFriends" id="getChildTabsUnderFriends"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getChildTabsUnderFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a171">171</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getChildTabsUnderFriends
+		</span>
+				()
+			</div>
+	
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../phpDocumentor/iWebappPlugin.html#methodgetChildTabsUnderFriends">iWebappPlugin::getChildTabsUnderFriends()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodgetChildTabsUnderLinks" id="getChildTabsUnderLinks"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getChildTabsUnderLinks</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a203">203</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getChildTabsUnderLinks
+		</span>
+				()
+			</div>
+	
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../phpDocumentor/iWebappPlugin.html#methodgetChildTabsUnderLinks">iWebappPlugin::getChildTabsUnderLinks()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodgetChildTabsUnderPosts" id="getChildTabsUnderPosts"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getChildTabsUnderPosts</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a140">140</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getChildTabsUnderPosts
+		</span>
+				()
+			</div>
+	
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../phpDocumentor/iWebappPlugin.html#methodgetChildTabsUnderPosts">iWebappPlugin::getChildTabsUnderPosts()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodgetChildTabsUnderReplies" id="getChildTabsUnderReplies"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">getChildTabsUnderReplies</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a156">156</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getChildTabsUnderReplies
+		</span>
+				()
+			</div>
+	
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../phpDocumentor/iWebappPlugin.html#methodgetChildTabsUnderReplies">iWebappPlugin::getChildTabsUnderReplies()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodrenderConfiguration" id="renderConfiguration"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">renderConfiguration</span> (line <span class="line-number"><a href="../__filesource/fsource_phpDocumentor__pluginsfacebookmodelclass.FacebookPlugin.php.html#a53">53</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			renderConfiguration
+		</span>
+				()
+			</div>
+	
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../phpDocumentor/iPlugin.html#methodrenderConfiguration">iPlugin::renderConfiguration()</a></dt>
+					</dl>
+			
+	</div>
+						
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Wed, 26 May 2010 10:58:51 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>
