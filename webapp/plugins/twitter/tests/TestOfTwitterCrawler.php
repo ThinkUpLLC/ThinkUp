@@ -11,8 +11,10 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Follow.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.RetweetDetector.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
 //require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
@@ -31,19 +33,15 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();
-        global $THINKTANK_CFG;
-        $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
-        $this->instance = new Instance($r);
 
-        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $this->instance, $THINKTANK_CFG['archive_limit']);
-
-        //insert old friendship
+        //insert test users
         $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (36823, 'anildash', 'Anil Dash', 'avatar.jpg', '2007-01-01');";
         $this->db->exec($q);
 
         $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (930061, 'ginatrapani', 'Gina Trapani', 'avatar.jpg', '2007-01-01');";
         $this->db->exec($q);
 
+        //insert test follow
         $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (930061, 36823, '2006-01-08 23:54:41');";
         $this->db->exec($q);
     }
@@ -53,13 +51,39 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->logger->close();
     }
 
+    function setUpInstanceUserAnilDash() {
+        global $THINKTANK_CFG;
+        $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
+        $this->instance = new Instance($r);
+
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $this->instance, $THINKTANK_CFG['archive_limit']);
+
+        $this->api->available = true;
+        $this->api->available_api_calls_for_crawler = 20;
+        $this->instance->is_archive_loaded_follows = true;
+    }
+
+    function setUpInstanceUserGinaTrapani() {
+        global $THINKTANK_CFG;
+        $r = array('id'=>1, 'network_username'=>'ginatrapani', 'network_user_id'=>'930061', 'network_viewer_id'=>'930061', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
+        $this->instance = new Instance($r);
+
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $this->instance, $THINKTANK_CFG['archive_limit']);
+        $this->api->available = true;
+        $this->api->available_api_calls_for_crawler = 20;
+        $this->instance->is_archive_loaded_follows = true;
+    }
+
     function testConstructor() {
+        self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
 
         $this->assertTrue($tc != null);
     }
 
     function testFetchInstanceUserInfo() {
+        self::setUpInstanceUserAnilDash();
+
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
 
         $tc->fetchInstanceUserInfo();
@@ -73,8 +97,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     }
 
     function testFetchSearchResults() {
-        $this->api->available = true;
-        $this->api->available_api_calls_for_crawler = 1;
+        self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
 
         $tc->fetchInstanceUserInfo();
@@ -87,8 +110,8 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     }
 
     function testFetchInstanceUserFollowers() {
-        $this->api->available = true;
-        $this->api->available_api_calls_for_crawler = 1;
+        self::setUpInstanceUserAnilDash();
+        $this->instance->is_archive_loaded_follows = false;
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
 
         $tc->fetchInstanceUserFollowers();
@@ -102,8 +125,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     }
 
     function testFetchInstanceUserFriends() {
-        $this->api->available = true;
-        $this->api->available_api_calls_for_crawler = 10;
+        self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
         $tc->fetchInstanceUserInfo();
 
@@ -118,8 +140,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     }
 
     function testFetchInstanceUserFriendsByIds() {
-        $this->api->available = true;
-        $this->api->available_api_calls_for_crawler = 5;
+        self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
         $tc->fetchInstanceUserInfo();
 
@@ -135,9 +156,8 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     }
 
     function testFetchInstanceUserFollowersByIds() {
-        $this->api->available = true;
+        self::setUpInstanceUserAnilDash();
         $this->api->available_api_calls_for_crawler = 2;
-        $this->instance->is_archive_loaded_follows = true;
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
         $tc->fetchInstanceUserInfo();
 
@@ -145,6 +165,25 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $fdao = new FollowDAO($this->db);
         $this->assertTrue($fdao->followExists(36823, 114811186), 'new follow exists');
     }
+
+    function testFetchRetweetsOfInstanceuser() {
+        self::setUpInstanceUserGinaTrapani();
+        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc->fetchInstanceUserInfo();
+
+        //first, load retweeted tweet into db
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (14947487415, 930061, 'ginatrapani', 'Gina Trapani', 'avatar.jpg', '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'web', '2006-01-01 00:00:00', ".rand(0, 4).", 0);";
+        $this->db->exec($q);
+
+        $pdao = new PostDAO($this->db);
+        //then, grab list of retweeted tweets and for each, fetch the list of retweets and insert
+        $tc->fetchRetweetsOfInstanceUser();
+        $post = $pdao->getPost(14947487415);
+        $this->assertEqual($post->retweet_count_cache, 6, '6 retweets loaded');
+        $retweets = $pdao->getRetweetsOfPost(14947487415, true);
+        $this->assertEqual(sizeof($retweets), 6, '6 retweets loaded');
+    }
+
     //TODO: Test the rest of the TwitterCrawler methods
 }
 ?>

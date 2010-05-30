@@ -50,18 +50,13 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
                 if (!$noauth) {
                     // Auth req'd, for calling user only
                     $crawler->fetchInstanceUserMentions();
-
-                    // Auth req'd, for calling user only
+                    $crawler->fetchRetweetsOfInstanceUser();
                     $crawler->fetchInstanceUserFriends();
-
-                    // Auth req'd, for calling user only
                     $crawler->fetchInstanceUserFollowers();
                 }
 
                 $crawler->fetchStrayRepliedToTweets();
-
                 $crawler->fetchUnloadedFollowerDetails();
-
                 $crawler->fetchFriendTweetsAndFriends();
 
                 // TODO: Get direct messages

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Twitter API Accessor
+ * Accesses the Twitter API via OAuth authentication
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ */
 class TwitterAPIAccessorOAuth {
     var $available = true;
     var $next_api_reset = null;
@@ -43,8 +48,8 @@ class TwitterAPIAccessorOAuth {
         $search_format = 'json';
 
         # Define method paths ... [id] is a placeholder
-        $api_method = array("end_session"=>"/account/end_session", "rate_limit"=>"/account/rate_limit_status", "delivery_device"=>"/account/update_delivery_device", "location"=>"/account/update_location", "profile"=>"/account/update_profile", "profile_background"=>"/account/update_profile_background_image", "profile_colors"=>"/account/update_profile_colors", "profile_image"=>"/account/update_profile_image", "credentials"=>"/account/verify_credentials", "block"=>"/blocks/create/[id]", "remove_block"=>"/blocks/destroy/[id]", "messages_received"=>"/direct_messages", "delete_message"=>"/direct_messages/destroy/[id]", "post_message"=>"/direct_messages/new", "messages_sent"=>"/direct_messages/sent", "bookmarks"=>"/favorites/[id]", "create_bookmark"=>"/favorites/create/[id]", "remove_bookmark"=>"/favorites/destroy/[id]", "followers_ids"=>"/followers/ids", "following_ids"=>"/friends/ids", "follow"=>"/friendships/create/[id]", "unfollow"=>"/friendships/destroy/[id]", "confirm_follow"=>"/friendships/exists", "show_friendship"=>"/friendships/show", "test"=>"/help/test", "turn_on_notification"=>"/notifications/follow/[id]", "turn_off_notification"=>"/notifications/leave/[id]", "delete_tweet"=>"/statuses/destroy/[id]", "followers"=>"/statuses/followers", "following"=>"/statuses/friends", "friends_timeline"=>"/statuses/friends_timeline", "public_timeline"=>"/statuses/public_timeline", "mentions"=>"/statuses/mentions", "show_tweet"=>"/statuses/show/[id]", "post_tweet"=>"/statuses/update", "user_timeline"=>"/statuses/user_timeline/[id]", "show_user"=>"/users/show/[id]", "retweeted_by_me"=>"/statuses/retweeted_by_me");
-
+        $api_method = array("end_session"=>"/account/end_session", "rate_limit"=>"/account/rate_limit_status", "delivery_device"=>"/account/update_delivery_device", "location"=>"/account/update_location", "profile"=>"/account/update_profile", "profile_background"=>"/account/update_profile_background_image", "profile_colors"=>"/account/update_profile_colors", "profile_image"=>"/account/update_profile_image", "credentials"=>"/account/verify_credentials", "block"=>"/blocks/create/[id]", "remove_block"=>"/blocks/destroy/[id]", "messages_received"=>"/direct_messages", "delete_message"=>"/direct_messages/destroy/[id]", "post_message"=>"/direct_messages/new", "messages_sent"=>"/direct_messages/sent", "bookmarks"=>"/favorites/[id]", "create_bookmark"=>"/favorites/create/[id]", "remove_bookmark"=>"/favorites/destroy/[id]", "followers_ids"=>"/followers/ids", "following_ids"=>"/friends/ids", "follow"=>"/friendships/create/[id]", "unfollow"=>"/friendships/destroy/[id]", "confirm_follow"=>"/friendships/exists", "show_friendship"=>"/friendships/show", "test"=>"/help/test", "turn_on_notification"=>"/notifications/follow/[id]", "turn_off_notification"=>"/notifications/leave/[id]", "delete_tweet"=>"/statuses/destroy/[id]", "followers"=>"/statuses/followers", "following"=>"/statuses/friends", "friends_timeline"=>"/statuses/friends_timeline", "public_timeline"=>"/statuses/public_timeline", "mentions"=>"/statuses/mentions", "show_tweet"=>"/statuses/show/[id]", "post_tweet"=>"/statuses/update", "user_timeline"=>"/statuses/user_timeline/[id]", "show_user"=>"/users/show/[id]", "retweeted_by_me"=>"/statuses/retweeted_by_me", "retweets_of_me"=>"/statuses/retweets_of_me", "retweeted_by"=>"/statuses/[id]/retweeted_by");
+        //http://api.twitter.com/1/statuses/14947487415/retweeted_by.xml
         # Construct cURL sources
         foreach ($api_method as $key=>$value) {
             $urls[$key] = $api_domain.$value.".".$api_format;
@@ -157,7 +162,7 @@ class TwitterAPIAccessorOAuth {
                         break;
                     case 'users':
                         foreach ($xml->children() as $item) {
-                            $thisFeed[] = array('post_id'=>$item->status->id, 'user_id'=>$item->id, 'user_name'=>$item->screen_name, 'full_name'=>$item->name, 'avatar'=>$item->profile_image_url, 'location'=>$item->location, 'description'=>$item->description, 'url'=>$item->url, 'is_protected'=>$item->protected , 'friend_count'=>$item->friends_count, 'follower_count'=>$item->followers_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 'post_text'=>$item->status->text, 'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'favorites_count'=>$item->favourites_count, 'post_count'=>$item->statuses_count);
+                            $thisFeed[] = array('post_id'=>$item->status->id, 'user_id'=>$item->id, 'user_name'=>$item->screen_name, 'full_name'=>$item->name, 'avatar'=>$item->profile_image_url, 'location'=>$item->location, 'description'=>$item->description, 'url'=>$item->url, 'is_protected'=>$item->protected , 'friend_count'=>$item->friends_count, 'follower_count'=>$item->followers_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 'post_text'=>$item->status->text, 'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 'favorites_count'=>$item->favourites_count, 'post_count'=>$item->statuses_count, 'source'=>$item->status->source, 'in_reply_to_post_id'=>$item->status->in_reply_to_status_id);
                         }
                         break;
                     case 'statuses':
