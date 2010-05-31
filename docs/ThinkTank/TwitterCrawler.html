@@ -25,8 +25,13 @@
 					</div>
 	<div class="info-box-body">
         		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Twitter Crawler</p>
+<p class="description"><p>retrieves tweets, replies, users, and following relationships from Twitter.com</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Gina Trapani &lt;<a href="mailto:ginatrapani[at]gmail[dot]com">ginatrapani[at]gmail[dot]com</a>&gt;</li>
+			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_plugins---twitter---model---class.TwitterCrawler.php.html">/plugins/twitter/model/class.TwitterCrawler.php</a> (line <span class="field"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a2">2</a></span>)
+			Located in <a class="field" href="_plugins---twitter---model---class.TwitterCrawler.php.html">/plugins/twitter/model/class.TwitterCrawler.php</a> (line <span class="field"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a10">10</a></span>)
 		</p>
 		
 				
@@ -140,13 +145,13 @@
 																<div class="method-definition">
 					<img src="../media/images/Method.png" alt=" "/>
 											<span class="method-result">void</span>
-										<a href="#fetchInstanceUserRetweetsByMe" title="details" class="method-name">fetchInstanceUserRetweetsByMe</a>
+										<a href="#fetchInstanceUserTweets" title="details" class="method-name">fetchInstanceUserTweets</a>
 										()
 									</div>
 																<div class="method-definition">
 					<img src="../media/images/Method.png" alt=" "/>
 											<span class="method-result">void</span>
-										<a href="#fetchInstanceUserTweets" title="details" class="method-name">fetchInstanceUserTweets</a>
+										<a href="#fetchRetweetsOfInstanceUser" title="details" class="method-name">fetchRetweetsOfInstanceUser</a>
 										()
 									</div>
 																<div class="method-definition">
@@ -193,7 +198,7 @@
 		<span class="var-title">
 			<span class="var-type">mixed</span>
 			<span class="var-name">$api</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a5">5</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a13">13</a></span>)
 		</span>
 	</div>
 
@@ -212,7 +217,7 @@
 		<span class="var-title">
 			<span class="var-type">mixed</span>
 			<span class="var-name">$db</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a8">8</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a16">16</a></span>)
 		</span>
 	</div>
 
@@ -231,7 +236,7 @@
 		<span class="var-title">
 			<span class="var-type">mixed</span>
 			<span class="var-name">$instance</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a3">3</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a11">11</a></span>)
 		</span>
 	</div>
 
@@ -250,7 +255,7 @@
 		<span class="var-title">
 			<span class="var-type">mixed</span>
 			<span class="var-name">$logger</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a4">4</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a12">12</a></span>)
 		</span>
 	</div>
 
@@ -269,7 +274,7 @@
 		<span class="var-title">
 			<span class="var-type">mixed</span>
 			<span class="var-name">$owner_object</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a6">6</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a14">14</a></span>)
 		</span>
 	</div>
 
@@ -288,7 +293,7 @@
 		<span class="var-title">
 			<span class="var-type">mixed</span>
 			<span class="var-name">$ud</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a7">7</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a15">15</a></span>)
 		</span>
 	</div>
 
@@ -319,7 +324,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Constructor.png" />
-		<span class="method-title">Constructor TwitterCrawler</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a10">10</a></span>)
+		<span class="method-title">Constructor TwitterCrawler</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a18">18</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -351,7 +356,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">cleanUpFollows</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a868">868</a></span>)
+		<span class="method-title">cleanUpFollows</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a924">924</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -372,7 +377,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchFriendTweetsAndFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a662">662</a></span>)
+		<span class="method-title">fetchFriendTweetsAndFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a716">716</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -393,7 +398,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchInstanceUserFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a500">500</a></span>)
+		<span class="method-title">fetchInstanceUserFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a553">553</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -414,7 +419,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchInstanceUserFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a584">584</a></span>)
+		<span class="method-title">fetchInstanceUserFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a637">637</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -435,7 +440,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchInstanceUserInfo</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a18">18</a></span>)
+		<span class="method-title">fetchInstanceUserInfo</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a27">27</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -456,7 +461,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchInstanceUserMentions</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a336">336</a></span>)
+		<span class="method-title">fetchInstanceUserMentions</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a251">251</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -472,33 +477,12 @@
 		
 			
 	</div>
-<a name="methodfetchInstanceUserRetweetsByMe" id="fetchInstanceUserRetweetsByMe"><!-- --></a>
+<a name="methodfetchInstanceUserTweets" id="fetchInstanceUserTweets"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchInstanceUserRetweetsByMe</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a175">175</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			fetchInstanceUserRetweetsByMe
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="methodfetchInstanceUserTweets" id="fetchInstanceUserTweets"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchInstanceUserTweets</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a81">81</a></span>)
+		<span class="method-title">fetchInstanceUserTweets</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a90">90</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -514,12 +498,37 @@
 		
 			
 	</div>
+<a name="methodfetchRetweetsOfInstanceUser" id="fetchRetweetsOfInstanceUser"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">fetchRetweetsOfInstanceUser</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a352">352</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Retrieve recent retweets and add them to the database</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			fetchRetweetsOfInstanceUser
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
 <a name="methodfetchSearchResults" id="fetchSearchResults"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchSearchResults</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a46">46</a></span>)
+		<span class="method-title">fetchSearchResults</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a55">55</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -545,7 +554,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchStrayRepliedToTweets</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a744">744</a></span>)
+		<span class="method-title">fetchStrayRepliedToTweets</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a798">798</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -566,7 +575,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">fetchUnloadedFollowerDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a756">756</a></span>)
+		<span class="method-title">fetchUnloadedFollowerDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__pluginstwittermodelclass.TwitterCrawler.php.html#a810">810</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -588,7 +597,7 @@
 
 	
 	<p class="notes" id="credit">
-		Documentation generated on Fri, 28 May 2010 09:08:07 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+		Documentation generated on Mon, 31 May 2010 14:32:01 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
 	</p>
 	</div></body>
 </html>

@@ -25,8 +25,12 @@
 					</div>
 	<div class="info-box-body">
         		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Follow Data Access Object  retrieves following relationships between users from database</p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Gina Trapani &lt;<a href="mailto:ginatrapani[at]gmail[dot]com">ginatrapani[at]gmail[dot]com</a>&gt;</li>
+			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_model---class.Follow.php.html">/model/class.Follow.php</a> (line <span class="field"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a2">2</a></span>)
+			Located in <a class="field" href="_model---class.Follow.php.html">/model/class.Follow.php</a> (line <span class="field"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a9">9</a></span>)
 		</p>
 		
 				
@@ -56,7 +60,7 @@
 					<img src="../media/images/Method.png" alt=" "/>
 											<span class="method-result">void</span>
 										<a href="#deactivate" title="details" class="method-name">deactivate</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
 									</div>
 																<div class="method-definition">
 					<img src="../media/images/Method.png" alt=" "/>
@@ -182,13 +186,13 @@
 					<img src="../media/images/Method.png" alt=" "/>
 											<span class="method-result">void</span>
 										<a href="#insert" title="details" class="method-name">insert</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
 									</div>
 																<div class="method-definition">
 					<img src="../media/images/Method.png" alt=" "/>
 											<span class="method-result">void</span>
 										<a href="#update" title="details" class="method-name">update</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
 									</div>
 											</div>
 		</div>
@@ -241,7 +245,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">deactivate</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a35">35</a></span>)
+		<span class="method-title">deactivate</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a42">42</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -251,7 +255,7 @@
 		<span class="method-name">
 			deactivate
 		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -261,6 +265,9 @@
 					<li>
 				<span class="var-type"></span>
 				<span class="var-name">$follower_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$debug_api_call</span>			</li>
 				</ul>
 		
 			
@@ -270,7 +277,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">followExists</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a4">4</a></span>)
+		<span class="method-title">followExists</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a11">11</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -299,7 +306,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getEarliestJoinerFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a265">265</a></span>)
+		<span class="method-title">getEarliestJoinerFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a272">272</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -328,7 +335,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getFormerFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a302">302</a></span>)
+		<span class="method-title">getFormerFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a309">309</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -357,7 +364,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getFormerFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a319">319</a></span>)
+		<span class="method-title">getFormerFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a326">326</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -386,7 +393,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getFriendsNotFollowingBack</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a394">394</a></span>)
+		<span class="method-title">getFriendsNotFollowingBack</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a401">401</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -412,7 +419,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getLeastActiveFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a337">337</a></span>)
+		<span class="method-title">getLeastActiveFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a344">344</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -441,7 +448,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getLeastLikelyFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a245">245</a></span>)
+		<span class="method-title">getLeastLikelyFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a252">252</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -470,7 +477,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getMostActiveFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a283">283</a></span>)
+		<span class="method-title">getMostActiveFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a290">290</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -499,7 +506,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getMostFollowedFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a357">357</a></span>)
+		<span class="method-title">getMostFollowedFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a364">364</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -528,7 +535,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getMostFollowedFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a224">224</a></span>)
+		<span class="method-title">getMostFollowedFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a231">231</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -557,7 +564,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getMutualFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a375">375</a></span>)
+		<span class="method-title">getMutualFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a382">382</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -586,7 +593,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getOldestFollow</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a204">204</a></span>)
+		<span class="method-title">getOldestFollow</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a211">211</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -607,7 +614,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getStalestFriend</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a181">181</a></span>)
+		<span class="method-title">getStalestFriend</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a188">188</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -633,7 +640,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFollowsProtected</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a133">133</a></span>)
+		<span class="method-title">getTotalFollowsProtected</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a140">140</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -659,7 +666,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFollowsWithErrors</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a83">83</a></span>)
+		<span class="method-title">getTotalFollowsWithErrors</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a90">90</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -685,7 +692,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFollowsWithFullDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a117">117</a></span>)
+		<span class="method-title">getTotalFollowsWithFullDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a124">124</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -711,7 +718,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a149">149</a></span>)
+		<span class="method-title">getTotalFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a156">156</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -737,7 +744,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFriendsProtected</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a165">165</a></span>)
+		<span class="method-title">getTotalFriendsProtected</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a172">172</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -763,7 +770,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFriendsWithErrors</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a100">100</a></span>)
+		<span class="method-title">getTotalFriendsWithErrors</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a107">107</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -789,7 +796,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">getUnloadedFollowerDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a65">65</a></span>)
+		<span class="method-title">getUnloadedFollowerDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a72">72</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -815,7 +822,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">insert</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a50">50</a></span>)
+		<span class="method-title">insert</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a57">57</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -825,7 +832,7 @@
 		<span class="method-name">
 			insert
 		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -835,6 +842,9 @@
 					<li>
 				<span class="var-type"></span>
 				<span class="var-name">$follower_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$debug_api_call</span>			</li>
 				</ul>
 		
 			
@@ -844,7 +854,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">update</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a19">19</a></span>)
+		<span class="method-title">update</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a26">26</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -854,7 +864,7 @@
 		<span class="method-name">
 			update
 		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -864,6 +874,9 @@
 					<li>
 				<span class="var-type"></span>
 				<span class="var-name">$follower_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$debug_api_call</span>			</li>
 				</ul>
 		
 			
@@ -884,7 +897,7 @@
 
 	
 	<p class="notes" id="credit">
-		Documentation generated on Fri, 28 May 2010 09:08:01 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+		Documentation generated on Mon, 31 May 2010 14:31:53 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
 	</p>
 	</div></body>
 </html>
