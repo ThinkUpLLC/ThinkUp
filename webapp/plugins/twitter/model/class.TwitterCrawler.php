@@ -395,19 +395,19 @@ class TwitterCrawler {
                     $tweets = $this->api->parseXML($twitter_data);
                     $pd = new PostDAO($this->db, $this->logger);
                     foreach ($tweets as $tweet) {
-                        $tweet['in_retweet_of_post_id'] = $status_id;
                         if (isset($tweet["post_id"]) ) {
+                            $tweet['in_retweet_of_post_id'] = $status_id;
                             if ( $pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
                                 $this->logger->logStatus("Inserted new-style retweet from retweeted_by", get_class($this));
                                 //expand and insert links contained in tweet
                                 $this->processTweetURLs($tweet);
-                                if ($tweet['user_id'] != $this->owner_object->user_id) { //don't update owner info from reply
-                                    $u = new User($tweet, 'mentions');
+                                if ($tweet['user_id'] != $this->owner_object->user_id) { //don't update owner info from retweet
+                                    $u = new User($tweet, 'retweets');
                                     $this->ud->updateUser($u);
                                 }
                             }
                         } else { //tweet didn't come in payload, only user did, so fetch user timeline to get retweets
-                            $user_with_retweet = new User($tweet, 'Retweets');
+                            $user_with_retweet = new User($tweet, 'retweets');
                             $this->fetchUserTimelineForRetweet($status, $user_with_retweet);
                         }
                     }
@@ -433,48 +433,53 @@ class TwitterCrawler {
      */
     private function fetchUserTimelineForRetweet($retweeted_status, $user_with_retweet) {
         $retweeted_status_id = $retweeted_status["post_id"];
-        $stream_with_retweet = str_replace("[id]", $user_with_retweet->username, $this->api->cURL_source['user_timeline']);
-        $args = array();
-        $args["count"] = 200;
-        $args["include_rts"]="true";
+        $status_message = "";
 
-        list($cURL_status, $twitter_data) = $this->api->apiRequest($stream_with_retweet, $args);
+        if ($this->api->available && $this->api->available_api_calls_for_crawler > 0) {
+            $stream_with_retweet = str_replace("[id]", $user_with_retweet->username, $this->api->cURL_source['user_timeline']);
+            $args = array();
+            $args["count"] = 200;
+            $args["include_rts"]="true";
 
-        if ($cURL_status == 200) {
-            try {
-                $count = 0;
-                $tweets = $this->api->parseXML($twitter_data);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($stream_with_retweet, $args);
 
-                if (count($tweets) > 0) {
-                    $pd = new PostDAO($this->db, $this->logger);
-                    foreach ($tweets as $tweet) {
-                        if (RetweetDetector::isRetweet($tweet['post_text'], $this->owner_object->username)) {
-                            $this->logger->logStatus("Retweet found, ".substr($tweet['post_text'], 0, 50)."... ", get_class($this));
-                            if ( RetweetDetector::isRetweetOfTweet($tweet["post_text"], $retweeted_status["post_text"]) ){
-                                $tweet['in_retweet_of_post_id'] = $retweeted_status_id;
-                                $this->logger->logStatus("Retweet original status ID found: ".$retweeted_status_id, get_class($this));
-                            } else {
-                                $this->logger->logStatus("Retweet original status ID NOT found: ".$retweeted_status["post_text"]." NOT a RT of: ". $tweet["post_text"], get_class($this));
+            if ($cURL_status == 200) {
+                try {
+                    $count = 0;
+                    $tweets = $this->api->parseXML($twitter_data);
+
+                    if (count($tweets) > 0) {
+                        $pd = new PostDAO($this->db, $this->logger);
+                        foreach ($tweets as $tweet) {
+                            if (RetweetDetector::isRetweet($tweet['post_text'], $this->owner_object->username)) {
+                                $this->logger->logStatus("Retweet found, ".substr($tweet['post_text'], 0, 50)."... ", get_class($this));
+                                if ( RetweetDetector::isRetweetOfTweet($tweet["post_text"], $retweeted_status["post_text"]) ){
+                                    $tweet['in_retweet_of_post_id'] = $retweeted_status_id;
+                                    $this->logger->logStatus("Retweet original status ID found: ".$retweeted_status_id, get_class($this));
+                                } else {
+                                    $this->logger->logStatus("Retweet original status ID NOT found: ".$retweeted_status["post_text"]." NOT a RT of: ". $tweet["post_text"], get_class($this));
+                                }
+                            }
+                            if ($pd->addPost($tweet, $user_with_retweet, $this->logger) > 0) {
+                                $count++;
+                                //expand and insert links contained in tweet
+                                $this->processTweetURLs($tweet);
+                                $this->ud->updateUser($user_with_retweet);
                             }
                         }
-                        if ($pd->addPost($tweet, $user_with_retweet, $this->logger) ) {
-                            $count++;
-                        }
-                        //expand and insert links contained in tweet
-                        $this->processTweetURLs($tweet);
-                        if ($tweet['user_id'] != $this->owner_object->user_id) { //don't update owner info from reply
-                            $u = new User($tweet, 'retweets');
-                            $this->ud->updateUser($u);
-                        }
+                        $this->logger->logStatus(count($tweets)." tweet(s) found in usertimeline via retweet for ".$user_with_retweet->username." and $count saved", get_class($this));
                     }
-                    $this->logger->logStatus(count($tweets)." tweet(s) found for ".$user_with_retweet->username." and $count saved", get_class($this));
+                } catch(Exception $e) {
+                    $this->logger->logStatus('Could not parse friends XML for $username', get_class($this));
                 }
-            } catch(Exception $e) {
-                $this->logger->logStatus('Could not parse friends XML for $username', get_class($this));
+            } else {
+                $status_message .= 'API returned error code '. $cURL_status;
             }
         } else {
-            $status_message = 'API returned error code '. $cURL_status;
+            $status_message .= 'Crawler API error: either call limit exceeded or API returned an error.';
         }
+        $this->logger->logStatus($status_message, get_class($this));
+        $status_message = "";
     }
 
     private function fetchInstanceUserFollowersByIDs() {
