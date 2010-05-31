@@ -1,14 +1,16 @@
 <?php
-require_once dirname(__FILE__).'/config.tests.inc.php';
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+    require_once '../../../../tests/config.tests.inc.php';
+}
+
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.RetweetDetector.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
+require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
-class TestOfRetweetDetector extends ThinkTankUnitTestCase {
+class TestOfRetweetDetector extends UnitTestCase {
     var $logger;
 
     function TestOfRetweetDetector() {
@@ -16,12 +18,10 @@ class TestOfRetweetDetector extends ThinkTankUnitTestCase {
     }
 
     function setUp() {
-        parent::setUp();
         $this->logger = Logger::getInstance();
     }
 
     function tearDown() {
-        parent::tearDown();
         $this->logger->close();
     }
 

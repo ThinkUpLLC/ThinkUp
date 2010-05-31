@@ -22,7 +22,6 @@ require_once 'model/class.Crawler.php';
 require_once 'model/class.Utils.php';
 require_once 'model/class.Captcha.php';
 require_once 'model/class.Session.php';
-require_once 'model/class.RetweetDetector.php';
 require_once 'model/class.Plugin.php';
 require_once 'model/class.LoggerSlowSQL.php';
 require_once 'model/interface.ThinkTankPlugin.php';
