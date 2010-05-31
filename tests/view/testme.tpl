@@ -1,0 +1,1 @@
+{$test} | Site root path: {$site_root_path} | {if $logged_in_user}Logged in as {$logged_in_user}{else}Not logged in{/if}

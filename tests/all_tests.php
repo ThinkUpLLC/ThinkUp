@@ -11,4 +11,7 @@ require_once $SOURCE_ROOT_PATH.'tests/all_model_tests.php';
 require_once $SOURCE_ROOT_PATH.'tests/all_plugin_tests.php';
 
 require_once $SOURCE_ROOT_PATH.'tests/all_frontend_tests.php';
+
+require_once $SOURCE_ROOT_PATH.'tests/all_controller_tests.php';
+
 ?>

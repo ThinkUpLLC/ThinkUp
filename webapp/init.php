@@ -1,4 +1,4 @@
-<?php 
+<?php
 //Before we do anything, make sure we've got PHP 5
 $version = explode('.', PHP_VERSION);
 if ($version[0] < 5) {
@@ -29,13 +29,11 @@ require_once 'model/interface.CrawlerPlugin.php';
 require_once 'model/interface.WebappPlugin.php';
 require_once 'model/class.WebappTab.php';
 require_once 'model/class.WebappTabDataset.php';
-
-# crawler only
 require_once 'model/class.Logger.php';
-
-# webapp only
 require_once 'model/class.Follow.php';
 require_once 'model/class.Webapp.php';
+require_once 'controller/interface.Controller.php';
+require_once 'controller/class.ThinkTankController.php';
 
 require_once 'config.inc.php';
 
@@ -44,7 +42,6 @@ $config = Config::getInstance();
 require_once $config->getValue('smarty_path').'Smarty.class.php';
 require_once 'model/class.SmartyThinkTank.php';
 require_once $config->getValue('source_root_path').'extlib/twitteroauth/twitteroauth.php';
-
 
 if ($config->getValue('time_zone')) {
     putenv($config->getValue('time_zone'));
@@ -61,8 +58,7 @@ $crawler = new Crawler();
 try {
     $db = new Database($THINKTANK_CFG);
     $conn = $db->getConnection();
-}
-catch(Exception $e) {
+} catch(Exception $e) {
     echo $e->getMessage();
 }
 
@@ -77,4 +73,3 @@ foreach ($active_plugins as $ap) {
         require_once $includefile;
     }
 }
-?>
