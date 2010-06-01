@@ -35,8 +35,16 @@ abstract class ThinkTankController {
      * Constructs ThinkTankController
      *
      * Sets default values all views have access to:
-     *  $site_root_path - path of the ThinkTank installation site root
-     *  $logged_in_user - email address of currently logged in ThinkTank user
+     *
+     *  <code>
+     *  //path of the ThinkTank installation site root as defined in config.inc.php
+     *  {$site_root_path}
+     *  //email address of currently logged in ThinkTank user, '' if not logged in
+     *  {$logged_in_user}
+     *  //file the ThinkTank logo links to, 'index.php' by default
+     *  {$logo_link}
+     *  </code>
+     *
      */
     public function __construct($session_started=false) {
         if (!$session_started) {
@@ -47,8 +55,9 @@ abstract class ThinkTankController {
         $this->view_mgr = new SmartyThinkTank();
 
         //set default values all views have access to
-        $this->view_mgr->assign('site_root_path', $config->getValue('site_root_path'));
-        $this->view_mgr->assign('logged_in_user', $this->getLoggedInUser());
+        $this->addToView('site_root_path', $config->getValue('site_root_path'));
+        $this->addToView('logged_in_user', $this->getLoggedInUser());
+        $this->addToView('logo_link', 'index.php');
 
         //add currently logged in user to cache key if logged in
         if ($this->isLoggedIn()) {

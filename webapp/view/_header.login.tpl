@@ -39,7 +39,7 @@
         </span>
       {else}
         <!-- the user has not selected an instance -->
-        Last update: {$crawler_last_run|relative_datetime}
+        Last update: {$crawler_last_run|relative_datetime} ago
       {/if}
     </div> <!-- end .status-bar-left -->
     
@@ -58,7 +58,7 @@
 
 <div class="container clearfix">
   
-  <div id="app-title"><a href="{$site_root_path}?u={$smarty.session.network_username}">
+  <div id="app-title"><a href="{$site_root_path}{$logo_link}">
     <h1><span class="bold">Think</span><span class="gray">Tank</span></h1>
     <h2>Ask your friends</h2>
   </a></div> <!-- end #app-title -->

@@ -3,6 +3,7 @@
  * Public Timeline Controller
  * 
  * Renders the public timeline and public post and reply list for all users
+ * 
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class PublicTimelineController extends ThinkTankController implements Controller {
@@ -40,6 +41,7 @@ class PublicTimelineController extends ThinkTankController implements Controller
      */
     public function control() {
         $this->setViewTemplate('public.tpl');
+        $this->addToView('logo_link', 'public.php');
 
         if (isset($_REQUEST['page']) && is_numeric($_REQUEST['page'])) {
             $this->current_page = $_REQUEST['page'];
