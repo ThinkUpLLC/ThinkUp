@@ -1,9 +1,14 @@
 <?php
+/**
+ * Instance MySQL Data Access Object Implementation
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ */
 require_once 'model/class.PDODAO.php';
 require_once 'model/interface.InstanceDAO.php';
 
 class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
-    //Construct is located in parent
+
     public function getInstanceStalestOne() {
         return $this->getInstanceOneByLastRun("ASC");
     }
@@ -256,5 +261,27 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
 
         return $this->getDataIsReturned($ps);
     }
+
+    public function getByUserAndViewerId($network_user_id, $viewer_id) {
+        $q = "SELECT * , ".$this->getAverageReplyCount()." ";
+        $q .= "FROM #prefix#instances ";
+        $q .= "WHERE network_user_id = :network_user_id AND network_viewer_id = :viewer_id";
+        $vars = array(
+            ':network_user_id'=>$network_user_id,
+            ':viewer_id'=>$viewer_id,
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowAsObject($ps, "Instance");
+    }
+
+    public function getByViewerId($viewer_id) {
+        $q = "SELECT * , ".$this->getAverageReplyCount()." ";
+        $q .= "FROM #prefix#instances ";
+        $q .= "WHERE network_viewer_id = :viewer_id";
+        $vars = array(
+            ':viewer_id'=>$viewer_id,
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsObjects($ps, "Instance");
+    }
 }
-?>

@@ -29,6 +29,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $q .= "(13 , 'stuart', 'twitter', 13, '2010-01-01 12:00:00', 0), ";
         $q .= "(15 , 'Jillian Dickerson', 'facebook', 15, '2010-01-01 12:00:01', 1), ";
         $q .= "(16 , 'Paul Clark', 'facebook', 16, '2010-01-01 12:00:02', 0) ";
+        // $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
         PDODAO::$PDO->exec($q);
 
         $q  = "INSERT INTO  `tt_owner_instances` (`owner_id` , `instance_id`) ";
@@ -425,11 +426,11 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
 
         //Lastly generate some users
         $users = array(
-            array('id'=>10, 'name'=>'jack'),
-            array('id'=>12, 'name'=>'jill'),
-            array('id'=>13, 'name'=>'stuart'),
-            array('id'=>15, 'name'=>'Jillian Dickerson'),
-            array('id'=>16, 'name'=>'Paul Clark')
+        array('id'=>10, 'name'=>'jack'),
+        array('id'=>12, 'name'=>'jill'),
+        array('id'=>13, 'name'=>'stuart'),
+        array('id'=>15, 'name'=>'Jillian Dickerson'),
+        array('id'=>16, 'name'=>'Paul Clark')
         );
         foreach($users as $user){
             $q  = "INSERT INTO `tt_users` (`user_id`, `user_name`) ";
@@ -453,7 +454,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($result->network_username, 'jill');
         $this->assertEqual($result->network_user_id, 12);
         $this->assertEqual($result->network_viewer_id, 12);
-        
+
 
         //Save it
         $count = $this->DAO->save($i, 1024);
@@ -514,5 +515,32 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $result = $this->DAO->isUserConfigured("no one");
         $this->assertFalse($result);
     }
+
+    function testGetByUserAndViewerId() {
+        $this->DAO = new InstanceMySQLDAO();
+        $q  = "INSERT INTO tt_instances ";
+        $q .= "(`network_user_id`, `network_username`, `network`, ";
+        $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
+        $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
+        PDODAO::$PDO->exec($q);
+
+        $result = $this->DAO->getByUserAndViewerId(10, 10);
+        $this->assertEqual($result->network_username, 'jack');
+
+        $result = $this->DAO->getByUserAndViewerId(17, 15);
+        $this->assertEqual($result->network_username, 'Jillian Micheals');
+    }
+
+    function testGetByViewerId() {
+        $this->DAO = new InstanceMySQLDAO();
+        $q  = "INSERT INTO tt_instances ";
+        $q .= "(`network_user_id`, `network_username`, `network`, ";
+        $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
+        $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
+        PDODAO::$PDO->exec($q);
+
+        $result = $this->DAO->getByViewerId(15);
+        $this->assertEqual($result[0]->network_username, 'Jillian Dickerson');
+        $this->assertEqual($result[1]->network_username, 'Jillian Micheals');
+    }
 }
-?>
