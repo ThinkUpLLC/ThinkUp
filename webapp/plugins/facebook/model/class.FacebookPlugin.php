@@ -11,7 +11,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
         //crawl Facebook user profiles
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook');
-        foreach ($instances as $i) {
+        foreach ($instances as $instance) {
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
             $session_key = $tokens['oauth_access_token'];
@@ -19,7 +19,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $fb = new Facebook($config->getValue('facebook_api_key'), $config->getValue('facebook_api_secret'));
 
             $id->updateLastRun($instance->id);
-            $crawler = new FacebookCrawler($i, $fb, $db);
+            $crawler = new FacebookCrawler($instance, $fb, $db);
             $crawler->fetchInstanceUserInfo($instance->network_user_id, $session_key);
             $crawler->fetchUserPostsAndReplies($instance->network_user_id, $session_key);
 
@@ -28,7 +28,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
         //crawl Facebook pages
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook page');
-        foreach ($instances as $i) {
+        foreach ($instances as $instance) {
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
             $session_key = $tokens['oauth_access_token'];
@@ -36,7 +36,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $fb = new Facebook($config->getValue('facebook_api_key'), $config->getValue('facebook_api_secret'));
 
             $id->updateLastRun($instance->id);
-            $crawler = new FacebookCrawler($i, $fb, $db);
+            $crawler = new FacebookCrawler($instance, $fb, $db);
 
             $crawler->fetchPagePostsAndReplies($instance->network_user_id, $instance->network_viewer_id, $session_key);
             $id->save($crawler->instance, 0, $logger, $fb);
@@ -70,8 +70,8 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
         if (isset($api_key) && isset($api_secret)) {
             $facebook = new Facebook($api_key, $api_secret);
-            foreach ($owner_instances as $i) {
-                $crawler = new FacebookCrawler($i, $facebook, $db);
+            foreach ($owner_instances as $instance) {
+                $crawler = new FacebookCrawler($instance, $facebook, $db);
                 $tokens = $oid->getOAuthTokens($instance->id);
                 $session_key = $tokens['oauth_access_token'];
                 if ($instance->network_user_id == $instance->network_viewer_id) {
