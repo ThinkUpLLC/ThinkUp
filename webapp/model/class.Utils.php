@@ -1,7 +1,7 @@
 <?php
 class Utils {
 
-    function GetDeltaTime($dtTime1, $dtTime2) {
+    public static function getDeltaTime($dtTime1, $dtTime2) {
         $nUXDate1 = strtotime($dtTime1->format("Y-m-d H:i:s"));
         $nUXDate2 = strtotime($dtTime2->format("Y-m-d H:i:s"));
 
@@ -15,7 +15,7 @@ class Utils {
         return $strDeltaTime;
     }
 
-    function getPercentage($num, $denom) {
+    public static function getPercentage($num, $denom) {
         if ((isset($num)) && (isset($denom))) {
             if ($num > 0) {
                 return ($denom * 100) / ($num);

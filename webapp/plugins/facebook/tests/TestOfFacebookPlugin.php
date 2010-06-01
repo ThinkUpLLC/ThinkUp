@@ -1,6 +1,6 @@
 <?php
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
-	require_once '../../../../tests/config.tests.inc.php';
+    require_once '../../../../tests/config.tests.inc.php';
 }
 
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
@@ -33,48 +33,49 @@ $i = new Instance(array("network_user_id"=>10, "id"=>1, "network_username"=>'tes
 
 // Instantiate global database variable
 try {
-	$db = new Database($THINKTANK_CFG);
-	$conn = $db->getConnection();
+    $db = new Database($THINKTANK_CFG);
+    $conn = $db->getConnection();
 }
 catch(Exception $e) {
-	echo $e->getMessage();
+    echo $e->getMessage();
 }
 
 class TestOfFacebookPlugin extends ThinkTankUnitTestCase {
-	function TestOfFacebookPlugin() {
-		$this->UnitTestCase('FacebookPlugin class test');
-	}
+    function TestOfFacebookPlugin() {
+        $this->UnitTestCase('FacebookPlugin class test');
+    }
 
-	function setUp() {
-		global $webapp;
-		parent::setUp();
-		$webapp->registerPlugin('facebook', 'FacebookPlugin');
-		$webapp->setActivePlugin('facebook');
-	}
+    function setUp() {
+        global $webapp;
+        parent::setUp();
+        $webapp->registerPlugin('facebook', 'FacebookPlugin');
+        $webapp->setActivePlugin('facebook');
+    }
 
-	function tearDown() {
-		parent::tearDown();
-	}
+    function tearDown() {
+        parent::tearDown();
+    }
 
-	function testWebappTabRegistration() {
-		global $webapp;
-		$logger = Logger::getInstance();
-		$pd = new PostDAO($this->db, $logger);
+    function testWebappTabRegistration() {
+        global $webapp;
+        $logger = Logger::getInstance();
+        $pd = new PostDAO($this->db, $logger);
+        $instance = new Instance();
+        $instance->network_user_id = 1;
 
-		$post_tabs = $webapp->getChildTabsUnderPosts();
+        $post_tabs = $webapp->getChildTabsUnderPosts($instance);
 
-		$this->assertEqual(sizeof($post_tabs), 1, "Test number of post tabs");
-		$first_post_tab = $post_tabs[0];
-		$this->assertEqual($first_post_tab->short_name, "all_facebook_posts", "Test short name of first post tab");
-		$this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
-		$this->assertEqual($first_post_tab->description, "", "Test description of first post tab");
+        $this->assertEqual(sizeof($post_tabs), 1, "Test number of post tabs");
+        $first_post_tab = $post_tabs[0];
+        $this->assertEqual($first_post_tab->short_name, "all_facebook_posts", "Test short name of first post tab");
+        $this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
+        $this->assertEqual($first_post_tab->description, "", "Test description of first post tab");
 
-		$first_post_tab_datasets = $first_post_tab->getDatasets();
-		$first_post_tab_dataset = $first_post_tab_datasets[0];
-		$this->assertEqual($first_post_tab_dataset->name, "all_facebook_posts", "Test first post tab's first dataset name");
-		$this->assertEqual($first_post_tab_dataset->fetching_method, "getAllPosts", "Test first post tab's first dataset fetching method");
-		$logger->close();
-	}
+        $first_post_tab_datasets = $first_post_tab->getDatasets();
+        $first_post_tab_dataset = $first_post_tab_datasets[0];
+        $this->assertEqual($first_post_tab_dataset->name, "all_facebook_posts", "Test first post tab's first dataset name");
+        $this->assertEqual($first_post_tab_dataset->fetching_method, "getAllPosts", "Test first post tab's first dataset fetching method");
+        $logger->close();
+    }
 
 }
-?>

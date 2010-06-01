@@ -20,9 +20,7 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
     $user = $ud->getUserByName($_REQUEST['u']);
     $owner = $od->getByEmail($_SESSION['user']);
 
-    // let's use the session variable to guarantee a value rather than the $i POST value, which can be blank
-    $i = $id->getByUsername($_SESSION['network_username']);
-    //$i = $id->getByUsername($_SESSION['i']);
+    $i = $id->getByUsername($_REQUEST['i']);
 
     if ( isset($i)) {
         if(!$s->is_cached('user.index.tpl', $i->network_username."-".$user->username)) {
@@ -34,11 +32,11 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
             $s->assign('sources', $pd->getStatusSources($user->user_id));
             $s->assign('site_root_path', $config->getValue('site_root_path'));
             $s->assign('instance', $i);
-                
+
             $exchanges =  $pd->getExchangesBetweenUsers($i->network_user_id, $user->user_id);
             $s->assign('exchanges', $exchanges);
             $s->assign('total_exchanges', count($exchanges));
-                
+
             $mutual_friends = $fd->getMutualFriends($user->user_id, $i->network_user_id);
             $s->assign('mutual_friends', $mutual_friends);
             $s->assign('total_mutual_friends', count($mutual_friends) );

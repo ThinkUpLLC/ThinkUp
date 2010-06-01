@@ -19,7 +19,7 @@ if (isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u'])) {
 		$db->closeConnection($conn);
 		die;
 	} else {
-		$i = $id->getByUsername($username);
+		$i = $id->getByUsernameOnNetwork($username, $_REQUEST['n']);
 	}
 } else {
 	$db->closeConnection($conn);
@@ -40,7 +40,7 @@ $fd = new FollowDAO($db);
 $ld = new LinkDAO($db);
 
 // pass data to smarty
-$view_template = $webapp->loadRequestedTabData($_GET["d"]);
+$view_template = $webapp->loadRequestedTabData($_GET["d"], $i);
 
 if (!$s->is_cached($view_template, $i->network_username."-".$_SESSION['user']."-".$_REQUEST['d'])) {
 	$s->assign('site_root_path', $config->getValue('site_root_path'));

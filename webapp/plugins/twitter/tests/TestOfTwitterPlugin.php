@@ -65,8 +65,10 @@ class TestOfTwitterPlugin extends ThinkTankUnitTestCase {
     function testWebappTabRegistration() {
         global $webapp;
         $pd = new PostDAO($this->db, $this->logger);
+        $instance = new Instance();
+        $instance->network_user_id = 1;
 
-        $post_tabs = $webapp->getChildTabsUnderPosts();
+        $post_tabs = $webapp->getChildTabsUnderPosts($instance);
 
         $this->assertEqual(sizeof($post_tabs), 4, "Test number of post tabs");
         $first_post_tab = $post_tabs[0];
@@ -79,6 +81,4 @@ class TestOfTwitterPlugin extends ThinkTankUnitTestCase {
         $this->assertEqual($first_post_tab_dataset->name, "all_tweets", "Test first post tab's first dataset name");
         $this->assertEqual($first_post_tab_dataset->fetching_method, "getAllPosts", "Test first post tab's first dataset fetching method");
     }
-
 }
-?>

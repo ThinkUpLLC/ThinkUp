@@ -6,11 +6,13 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/interface.Controller.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PrivateDashboardController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PublicTimelineController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 try {
@@ -20,10 +22,10 @@ try {
     echo $e->getMessage();
 }
 
-class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
+class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
 
     function __construct() {
-        $this->UnitTestCase('PublicTimelineController class test');
+        $this->UnitTestCase('PrivateDashboardController class test');
     }
 
     function setUp(){
@@ -49,42 +51,31 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
             $this->db->exec($q);
             $counter++;
         }
-
     }
 
     function tearDown(){
         parent::tearDown();
-        $_REQUEST["page"] =  null;
-        $_REQUEST["v"] = null;
+        $_SESSION['user'] = null;
     }
 
     function testConstructor() {
-        $controller = new PublicTimelineController(true);
+        $controller = new PrivateDashboardController(true);
         $this->assertTrue(isset($controller), 'constructor test');
     }
 
-    function testControlNoParams() {
-        $controller = new PublicTimelineController(true);
+    function testControlNotLoggedIn() {
+        $controller = new PrivateDashboardController(true);
         $results = $controller->control();
-        $this->assertTrue(strpos( $results, "Latest public posts and public replies") > 0, "default timeline");
+
+        $this->assertTrue(strpos( $results, "Latest public posts and public replies") > 0, "not logged in public timeline");
     }
 
-    function testControlPage2DefaultList() {
-        $_REQUEST["page"] = '2';
+    function testControlLoggedIn() {
+        $controller = new PrivateDashboardController(true);
+        $_SESSION['user'] = 'me@example.com';
 
-        $controller = new PublicTimelineController(true);
         $results = $controller->control();
-        $this->assertTrue(strpos( $results, "Latest public posts and public replies") > 0, "default timeline, page 2");
-        $this->assertTrue(strpos( $results, "Page 2") > 0, "default timeline, page 2");
+        $this->assertTrue(strpos( $results, "It is nice to be nice") > 0, "logged in dashboard");
     }
-
-    function testControlMostReplies() {
-        $_REQUEST["v"] = 'mostreplies';
-
-        $controller = new PublicTimelineController(true);
-        $results = $controller->control();
-        $this->assertTrue(strpos( $results, "Posts that have been replied to most often") > 0, "most replies list");
-    }
-
 
 }

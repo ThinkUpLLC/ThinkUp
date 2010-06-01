@@ -1,13 +1,13 @@
 <?php
 interface WebappPlugin extends ThinkTankPlugin {
-    public function getChildTabsUnderPosts();
+    public function getChildTabsUnderPosts($instance);
 
-    public function getChildTabsUnderReplies();
+    public function getChildTabsUnderReplies($instance);
 
-    public function getChildTabsUnderFriends();
+    public function getChildTabsUnderFriends($instance);
 
-    public function getChildTabsUnderFollowers();
+    public function getChildTabsUnderFollowers($instance);
 
-    public function getChildTabsUnderLinks();
+    public function getChildTabsUnderLinks($instance);
 }
 ?>
