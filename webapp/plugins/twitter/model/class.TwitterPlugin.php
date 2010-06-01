@@ -28,7 +28,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $oid = new OwnerInstanceDAO($db, $logger);
 
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('twitter');
-        foreach ($instances as $i) {
+        foreach ($instances as $instance) {
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
             $noauth = true;
@@ -38,12 +38,12 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
             }
 
             if ($noauth) {
-                $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $config->getValue('oauth_consumer_key'), $config->getValue('oauth_consumer_secret'), $i, $config->getValue('archive_limit'));
+                $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $config->getValue('oauth_consumer_key'), $config->getValue('oauth_consumer_secret'), $instance, $config->getValue('archive_limit'));
             } else {
-                $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'], $tokens['oauth_access_token_secret'], $config->getValue('oauth_consumer_key'), $config->getValue('oauth_consumer_secret'), $i, $config->getValue('archive_limit'));
+                $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'], $tokens['oauth_access_token_secret'], $config->getValue('oauth_consumer_key'), $config->getValue('oauth_consumer_secret'), $instance, $config->getValue('archive_limit'));
             }
 
-            $crawler = new TwitterCrawler($i, $api, $db);
+            $crawler = new TwitterCrawler($instance, $api, $db);
 
             $api->init();
 
