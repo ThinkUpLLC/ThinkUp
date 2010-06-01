@@ -543,4 +543,24 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($result[0]->network_username, 'Jillian Dickerson');
         $this->assertEqual($result[1]->network_username, 'Jillian Micheals');
     }
+
+    function testGetByUsernameOnNetwork() {
+        $this->DAO = new InstanceMySQLDAO();
+        $q  = "INSERT INTO tt_instances ";
+        $q .= "(`network_user_id`, `network_username`, `network`, ";
+        $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
+        $q .= "(17 , 'salma', 'facebook', 15, '2010-01-01 12:00:01', 1), ";
+        $q .= "(18 , 'salma', 'facebook page', 15, '2010-01-01 12:00:01', 1) ";
+        PDODAO::$PDO->exec($q);
+
+        $result = $this->DAO->getByUsernameOnNetwork('salma', 'facebook');
+        $this->assertEqual($result->network_username, 'salma');
+        $this->assertEqual($result->network, 'facebook');
+        $this->assertEqual($result->network_user_id, 17);
+
+        $result = $this->DAO->getByUsernameOnNetwork('salma', 'facebook page');
+        $this->assertEqual($result->network_username, 'salma');
+        $this->assertEqual($result->network, 'facebook page');
+        $this->assertEqual($result->network_user_id, 18);
+    }
 }

@@ -14,6 +14,8 @@ interface InstanceDAO {
 
     public function getByUsername($username);
 
+    public function getByUsernameOnNetwork($username, $network);
+
     public function getByUserId($network_user_id);
 
     public function getAllInstances($order = "DESC", $only_active = false, $network = "twitter");

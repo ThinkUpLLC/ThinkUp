@@ -83,6 +83,20 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getDataRowAsObject($ps, "Instance");
     }
 
+    public function getByUsernameOnNetwork($username, $network) {
+        $q  = " SELECT * , ".$this->getAverageReplyCount();
+        $q .= " FROM #prefix#instances ";
+        $q .= " WHERE network_username = :username AND network = :network";
+        $q .= " LIMIT 1 ";
+        $vars = array(
+            ':username'=>$username,
+            ':network'=>$network
+        );
+        $ps = $this->execute($q, $vars);
+
+        return $this->getDataRowAsObject($ps, "Instance");
+    }
+
     public function getByUserId($network_user_id) {
         $q  = " SELECT * , ".$this->getAverageReplyCount();
         $q .= " FROM #prefix#instances ";
