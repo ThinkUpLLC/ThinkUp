@@ -36,7 +36,7 @@ In future versions, this will get easier.
 
 *Note for upgraders:* If you're upgrading a previous installation, you should delete your cookies (in Firefox under `Preferences / Privacy / delete individual cookies`.  In Chrome, you can delete individual cookies under `Preferences / Under the Hood / Content Settings / Cookies / Show Cookies and other site data`).
 
-1. Download source code. Save the `thinktank` directory one level above your web site's DocumentRoot. For example, if your site's DocumentRoot is  `var/www/vhosts/example.com/httpdocs/` Put the `thinktank` directory here:  `/var/www/vhosts/example.com/thinktank/`
+1. Download source code. Save the `thinktank` directory one level above your web site's DocumentRoot. For example, if your site's DocumentRoot is  `/var/www/vhosts/example.com/httpdocs/` Put the `thinktank` directory here:  `/var/www/vhosts/example.com/thinktank/`
 2. Create a symbolic link to the `thinktank/webapp` directory in your site's DocumentRoot folder. To do so, `cd` to the DocumentRoot, and use the command: `ln -s ../thinktank/webapp/ thinktank`
 3. Make the following directories writable by the web server:
 
@@ -120,6 +120,8 @@ except for the  external libraries listed below.
 - [SimpleTest](http://www.simpletest.org/) (Included)
 - [Smarty](http://smarty.net) (Included)
 - [Twitter OAuth by Abraham Williams](http://github.com/abraham/twitteroauth) (Included)
+- [ReCAPTCHA PHP library](http://recaptcha.net/plugins/php/) (Included)
+- [PHP Lorem Ipsum Generator](http://tinsology.net/scripts/php-lorem-ipsum-generator/) (Included)
 
 ## CREDITS
 
