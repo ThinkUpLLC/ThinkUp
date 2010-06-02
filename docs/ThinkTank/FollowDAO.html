@@ -1,903 +1,1253 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <html xmlns="http://www.w3.org/1999/xhtml">
-		<head>
-			<!-- template designed by Marco Von Ballmoos -->
-			<title>Docs For Class FollowDAO</title>
-			<link rel="stylesheet" href="../media/stylesheet.css" />
-			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
-		</head>
-		<body>
-			<div class="page-body">			
-<h2 class="class-name"><img src="../media/images/Class_logo.png"
-														alt=" Class"
-														title=" Class"
-														style="vertical-align: middle"> FollowDAO</h2>
+<html>
+<head>
+<title>Docs For Class FollowDAO</title>
+<link rel="stylesheet" type="text/css" href="../media/style.css">
+</head>
+<body>
 
-<a name="sec-description"></a>
-<div class="info-box">
-	<div class="info-box-title">Description</div>
-	<div class="nav-bar">
-					<span class="disabled">Description</span> |
-													<a href="#sec-vars">Vars</a>
-						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
-						
-					</div>
-	<div class="info-box-body">
-        		<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Follow Data Access Object  retrieves following relationships between users from database</p>
-	<ul class="tags">
-				<li><span class="field">author:</span> Gina Trapani &lt;<a href="mailto:ginatrapani[at]gmail[dot]com">ginatrapani[at]gmail[dot]com</a>&gt;</li>
-			</ul>
-		<p class="notes">
-			Located in <a class="field" href="_model---class.Follow.php.html">/model/class.Follow.php</a> (line <span class="field"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a9">9</a></span>)
-		</p>
-		
-				
-		<pre><a href="../ThinkTank/MySQLDAO.html">MySQLDAO</a>
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+    <td class="header_top">ThinkTank</td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td class="header_menu">
+                                                                                              		  [ <a href="../classtrees_ThinkTank.html" class="menu">class tree: ThinkTank</a> ]
+		  [ <a href="../elementindex_ThinkTank.html" class="menu">index: ThinkTank</a> ]
+		  	    [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="200" class="menu">
+	<div id="todolist">
+			<p><a href="../todolist.html">Todo List</a></p>
+	</div>
+      <b>Packages:</b><br />
+              <a href="../li_ThinkTank.html">ThinkTank</a><br />
+              <a href="../li_Services_JSON.html">Services_JSON</a><br />
+            <br /><br />
+                        <b>Files:</b><br />
+      	  <div class="package">
+			<a href="../ThinkTank/_webapp---session---activate.php.html">		activate.php
+		</a><br>
+			<a href="../ThinkTank/_tests---all_controller_tests.php.html">		all_controller_tests.php
+		</a><br>
+			<a href="../ThinkTank/_tests---all_frontend_tests.php.html">		all_frontend_tests.php
+		</a><br>
+			<a href="../ThinkTank/_tests---all_model_tests.php.html">		all_model_tests.php
+		</a><br>
+			<a href="../ThinkTank/_tests---all_plugin_tests.php.html">		all_plugin_tests.php
+		</a><br>
+			<a href="../ThinkTank/_tests---all_tests.php.html">		all_tests.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---auth.php.html">		auth.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---auth.php.html">		auth.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---session---captcha-img.php.html">		captcha-img.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Captcha.php.html">		class.Captcha.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Config.php.html">		class.Config.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Crawler.php.html">		class.Crawler.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.DAOFactory.php.html">		class.DAOFactory.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Database.php.html">		class.Database.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---expandurls---model---class.ExpandURLsPlugin.php.html">		class.ExpandURLsPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---model---class.FacebookCrawler.php.html">		class.FacebookCrawler.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---model---class.FacebookPlugin.php.html">		class.FacebookPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---flickrthumbnails---model---class.FlickrAPIAccessor.php.html">		class.FlickrAPIAccessor.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---flickrthumbnails---model---class.FlickrThumbnailsPlugin.php.html">		class.FlickrThumbnailsPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Follow.php.html">		class.Follow.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---hellothinktank---model---class.HelloThinkTankPlugin.php.html">		class.HelloThinkTankPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Instance.php.html">		class.Instance.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.InstanceMySQLDAO.php.html">		class.InstanceMySQLDAO.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Link.php.html">		class.Link.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Logger.php.html">		class.Logger.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.LoggerSlowSQL.php.html">		class.LoggerSlowSQL.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Mailer.php.html">		class.Mailer.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.MySQLDAO.php.html">		class.MySQLDAO.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Owner.php.html">		class.Owner.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.OwnerInstance.php.html">		class.OwnerInstance.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.PDODAO.php.html">		class.PDODAO.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Plugin.php.html">		class.Plugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.PluginHook.php.html">		class.PluginHook.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Post.php.html">		class.Post.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---controller---class.PrivateDashboardController.php.html">		class.PrivateDashboardController.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---controller---class.PublicTimelineController.php.html">		class.PublicTimelineController.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---model---class.RetweetDetector.php.html">		class.RetweetDetector.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Session.php.html">		class.Session.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.SmartyThinkTank.php.html">		class.SmartyThinkTank.php
+		</a><br>
+			<a href="../ThinkTank/_tests---classes---class.TestController.php.html">		class.TestController.php
+		</a><br>
+			<a href="../ThinkTank/_tests---classes---class.TestFauxDAO.php.html">		class.TestFauxDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---classes---class.TestMysqlDAO.php.html">		class.TestMysqlDAO.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---controller---class.ThinkTankController.php.html">		class.ThinkTankController.php
+		</a><br>
+			<a href="../ThinkTank/_tests---classes---class.ThinkTankTestDatabaseHelper.php.html">		class.ThinkTankTestDatabaseHelper.php
+		</a><br>
+			<a href="../ThinkTank/_tests---classes---class.ThinkTankUnitTestCase.php.html">		class.ThinkTankUnitTestCase.php
+		</a><br>
+			<a href="../ThinkTank/_tests---classes---class.ThinkTankWebTestCase.php.html">		class.ThinkTankWebTestCase.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---model---class.TwitterAPIAccessorOAuth.php.html">		class.TwitterAPIAccessorOAuth.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---model---class.TwitterCrawler.php.html">		class.TwitterCrawler.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---model---class.TwitterOAuthThinkTank.php.html">		class.TwitterOAuthThinkTank.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---model---class.TwitterPlugin.php.html">		class.TwitterPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.User.php.html">		class.User.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Utils.php.html">		class.Utils.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.Webapp.php.html">		class.Webapp.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.WebappTab.php.html">		class.WebappTab.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---class.WebappTabDataset.php.html">		class.WebappTabDataset.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---config.inc.php.html">		config.inc.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---config.sample.inc.php.html">		config.sample.inc.php
+		</a><br>
+			<a href="../ThinkTank/_tests---config.tests.inc.php.html">		config.tests.inc.php
+		</a><br>
+			<a href="../ThinkTank/_tests---config.tests.sample.inc.php.html">		config.tests.sample.inc.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---crawler---crawl.php.html">		crawl.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---expandurls---controller---expandurls.php.html">		expandurls.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---post---export.php.html">		export.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---model---facebook.php.html">		facebook.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---controller---facebook.php.html">		facebook.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---model---facebookapi_php5_restlib.php.html">		facebookapi_php5_restlib.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---flickrthumbnails---controller---flickrthumbnails.php.html">		flickrthumbnails.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---session---forgot.php.html">		forgot.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---hellothinktank---controller---hellothinktank.php.html">		hellothinktank.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---account---index.php.html">		index.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---session---index.php.html">		index.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---post---index.php.html">		index.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---index.php.html">		index.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---user---index.php.html">		index.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---init.php.html">		init.php
+		</a><br>
+			<a href="../ThinkTank/_tests---init.tests.php.html">		init.tests.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---inline.view.php.html">		inline.view.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---controller---interface.Controller.php.html">		interface.Controller.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---interface.CrawlerPlugin.php.html">		interface.CrawlerPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---interface.InstanceDAO.php.html">		interface.InstanceDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---classes---interface.TestDAO.php.html">		interface.TestDAO.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---interface.ThinkTankPlugin.php.html">		interface.ThinkTankPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---model---interface.WebappPlugin.php.html">		interface.WebappPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---model---jsonwrapper---jsonwrapper.php.html">		jsonwrapper.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---model---jsonwrapper---jsonwrapper_inner.php.html">		jsonwrapper_inner.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---session---login.php.html">		login.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---session---logout.php.html">		logout.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---post---mark-parent.php.html">		mark-parent.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---tests---classes---mock.facebook.php.html">		mock.facebook.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---flickrthumbnails---tests---classes---mock.FlickrAPIAccessor.php.html">		mock.FlickrAPIAccessor.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---tests---classes---mock.TwitterOAuth.php.html">		mock.TwitterOAuth.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---public.php.html">		public.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---session---register.php.html">		register.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfChangePassword.php.html">		TestOfChangePassword.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfConfig.php.html">		TestOfConfig.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfDAOFactory.php.html">		TestOfDAOFactory.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfDatabase.php.html">		TestOfDatabase.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---expandurls---tests---TestOfExpandURLsPlugin.php.html">		TestOfExpandURLsPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---tests---TestOfFacebookCrawler.php.html">		TestOfFacebookCrawler.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---tests---TestOfFacebookPlugin.php.html">		TestOfFacebookPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---flickrthumbnails---tests---TestOfFlickrAPIAccessor.php.html">		TestOfFlickrAPIAccessor.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---flickrthumbnails---tests---TestOfFlickrThumbnailsPlugin.php.html">		TestOfFlickrThumbnailsPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfFollowDAO.php.html">		TestOfFollowDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfInstanceMySQLDAO.php.html">		TestOfInstanceMySQLDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfLinkDAO.php.html">		TestOfLinkDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfLogger.php.html">		TestOfLogger.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfMySQLDAO.php.html">		TestOfMySQLDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfOwnerInstanceDAO.php.html">		TestOfOwnerInstanceDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfPDODAO.php.html">		TestOfPDODAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfPluginDAO.php.html">		TestOfPluginDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfPluginHook.php.html">		TestOfPluginHook.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfPostDAO.php.html">		TestOfPostDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfPrivateDashboard.php.html">		TestOfPrivateDashboard.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfPrivateDashboardController.php.html">		TestOfPrivateDashboardController.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfPublicTimeline.php.html">		TestOfPublicTimeline.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfPublicTimelineController.php.html">		TestOfPublicTimelineController.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---tests---TestOfRetweetDetector.php.html">		TestOfRetweetDetector.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfSignIn.php.html">		TestOfSignIn.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfTestController.php.html">		TestOfTestController.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---tests---TestOfTwitterAPIAccessorOAuth.php.html">		TestOfTwitterAPIAccessorOAuth.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---tests---TestOfTwitterCrawler.php.html">		TestOfTwitterCrawler.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---tests---TestOfTwitterOAuth.php.html">		TestOfTwitterOAuth.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---tests---TestOfTwitterPlugin.php.html">		TestOfTwitterPlugin.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfUserDAO.php.html">		TestOfUserDAO.php
+		</a><br>
+			<a href="../ThinkTank/_tests---TestOfUtils.php.html">		TestOfUtils.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---account---toggle-active.php.html">		toggle-active.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---account---toggle-pluginactive.php.html">		toggle-pluginactive.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---account---toggle-public.php.html">		toggle-public.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---twitter---controller---twitter.php.html">		twitter.php
+		</a><br>
+			<a href="../ThinkTank/_webapp---plugins---facebook---xd_receiver.php.html">		xd_receiver.php
+		</a><br>
+	  </div><br />
+      
+            <b>Interfaces:</b><br />
+        <div class="package">
+		    		<a href="../ThinkTank/Controller.html">Controller</a><br />
+	    		<a href="../ThinkTank/CrawlerPlugin.html">CrawlerPlugin</a><br />
+	    		<a href="../ThinkTank/InstanceDAO.html">InstanceDAO</a><br />
+	    		<a href="../ThinkTank/TestDAO.html">TestDAO</a><br />
+	    		<a href="../ThinkTank/ThinkTankPlugin.html">ThinkTankPlugin</a><br />
+	    		<a href="../ThinkTank/WebappPlugin.html">WebappPlugin</a><br />
+	  </div>
+      
+            <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../ThinkTank/Captcha.html">Captcha</a><br />
+	    		<a href="../ThinkTank/Config.html">Config</a><br />
+	    		<a href="../ThinkTank/Crawler.html">Crawler</a><br />
+	    		<a href="../ThinkTank/CrawlerTwitterAPIAccessorOAuth.html">CrawlerTwitterAPIAccessorOAuth</a><br />
+	    		<a href="../ThinkTank/DAOFactory.html">DAOFactory</a><br />
+	    		<a href="../ThinkTank/Database.html">Database</a><br />
+	    		<a href="../ThinkTank/ExpandURLsPlugin.html">ExpandURLsPlugin</a><br />
+	    		<a href="../ThinkTank/Facebook.html">Facebook</a><br />
+	    		<a href="../ThinkTank/FacebookAPIErrorCodes.html">FacebookAPIErrorCodes</a><br />
+	    		<a href="../ThinkTank/FacebookCrawler.html">FacebookCrawler</a><br />
+	    		<a href="../ThinkTank/FacebookPlugin.html">FacebookPlugin</a><br />
+	    		<a href="../ThinkTank/FacebookRestClient.html">FacebookRestClient</a><br />
+	    		<a href="../ThinkTank/FacebookRestClientException.html">FacebookRestClientException</a><br />
+	    		<a href="../ThinkTank/FlickrAPIAccessor.html">FlickrAPIAccessor</a><br />
+	    		<a href="../ThinkTank/FlickrThumbnailsPlugin.html">FlickrThumbnailsPlugin</a><br />
+	    		<a href="../ThinkTank/FollowDAO.html">FollowDAO</a><br />
+	    		<a href="../ThinkTank/HelloThinkTankPlugin.html">HelloThinkTankPlugin</a><br />
+	    		<a href="../ThinkTank/Instance.html">Instance</a><br />
+	    		<a href="../ThinkTank/InstanceMySQLDAO.html">InstanceMySQLDAO</a><br />
+	    		<a href="../ThinkTank/Link.html">Link</a><br />
+	    		<a href="../ThinkTank/LinkDAO.html">LinkDAO</a><br />
+	    		<a href="../ThinkTank/Logger.html">Logger</a><br />
+	    		<a href="../ThinkTank/LoggerSlowSQL.html">LoggerSlowSQL</a><br />
+	    		<a href="../ThinkTank/Mailer.html">Mailer</a><br />
+	    		<a href="../ThinkTank/MySQLDAO.html">MySQLDAO</a><br />
+	    		<a href="../ThinkTank/Owner.html">Owner</a><br />
+	    		<a href="../ThinkTank/OwnerDAO.html">OwnerDAO</a><br />
+	    		<a href="../ThinkTank/OwnerInstance.html">OwnerInstance</a><br />
+	    		<a href="../ThinkTank/OwnerInstanceDAO.html">OwnerInstanceDAO</a><br />
+	    		<a href="../ThinkTank/PDODAO.html">PDODAO</a><br />
+	    		<a href="../ThinkTank/Plugin.html">Plugin</a><br />
+	    		<a href="../ThinkTank/PluginDAO.html">PluginDAO</a><br />
+	    		<a href="../ThinkTank/PluginHook.html">PluginHook</a><br />
+	    		<a href="../ThinkTank/Post.html">Post</a><br />
+	    		<a href="../ThinkTank/PostDAO.html">PostDAO</a><br />
+	    		<a href="../ThinkTank/PostErrorDAO.html">PostErrorDAO</a><br />
+	    		<a href="../ThinkTank/PrivateDashboardController.html">PrivateDashboardController</a><br />
+	    		<a href="../ThinkTank/PublicTimelineController.html">PublicTimelineController</a><br />
+	    		<a href="../ThinkTank/RetweetDetector.html">RetweetDetector</a><br />
+	    		<a href="../ThinkTank/Session.html">Session</a><br />
+	    		<a href="../ThinkTank/SmartyThinkTank.html">SmartyThinkTank</a><br />
+	    		<a href="../ThinkTank/TestController.html">TestController</a><br />
+	    		<a href="../ThinkTank/TestData.html">TestData</a><br />
+	    		<a href="../ThinkTank/TestFauxDAO.html">TestFauxDAO</a><br />
+	    		<a href="../ThinkTank/TestMysqlDAO.html">TestMysqlDAO</a><br />
+	    		<a href="../ThinkTank/TestOfChangePassword.html">TestOfChangePassword</a><br />
+	    		<a href="../ThinkTank/TestOfConfig.html">TestOfConfig</a><br />
+	    		<a href="../ThinkTank/TestOfDAOFactory.html">TestOfDAOFactory</a><br />
+	    		<a href="../ThinkTank/TestOfDatabase.html">TestOfDatabase</a><br />
+	    		<a href="../ThinkTank/TestOfExpandURLsPlugin.html">TestOfExpandURLsPlugin</a><br />
+	    		<a href="../ThinkTank/TestOfFacebookCrawler.html">TestOfFacebookCrawler</a><br />
+	    		<a href="../ThinkTank/TestOfFacebookPlugin.html">TestOfFacebookPlugin</a><br />
+	    		<a href="../ThinkTank/TestOfFlickrAPIAccessor.html">TestOfFlickrAPIAccessor</a><br />
+	    		<a href="../ThinkTank/TestOfFlickrThumbnailsPlugin.html">TestOfFlickrThumbnailsPlugin</a><br />
+	    		<a href="../ThinkTank/TestOfFollowDAO.html">TestOfFollowDAO</a><br />
+	    		<a href="../ThinkTank/TestOfInstanceMySQLDAO.html">TestOfInstanceMySQLDAO</a><br />
+	    		<a href="../ThinkTank/TestOfLinkDAO.html">TestOfLinkDAO</a><br />
+	    		<a href="../ThinkTank/TestOfLogging.html">TestOfLogging</a><br />
+	    		<a href="../ThinkTank/TestOfMySQLDAO.html">TestOfMySQLDAO</a><br />
+	    		<a href="../ThinkTank/TestOfOwnerInstanceDAO.html">TestOfOwnerInstanceDAO</a><br />
+	    		<a href="../ThinkTank/TestOfPDODAO.html">TestOfPDODAO</a><br />
+	    		<a href="../ThinkTank/TestOfPluginDAO.html">TestOfPluginDAO</a><br />
+	    		<a href="../ThinkTank/TestOfPluginHook.html">TestOfPluginHook</a><br />
+	    		<a href="../ThinkTank/TestOfPostDAO.html">TestOfPostDAO</a><br />
+	    		<a href="../ThinkTank/TestOfPrivateDashboard.html">TestOfPrivateDashboard</a><br />
+	    		<a href="../ThinkTank/TestOfPrivateDashboardController.html">TestOfPrivateDashboardController</a><br />
+	    		<a href="../ThinkTank/TestOfPublicTimeline.html">TestOfPublicTimeline</a><br />
+	    		<a href="../ThinkTank/TestOfPublicTimelineController.html">TestOfPublicTimelineController</a><br />
+	    		<a href="../ThinkTank/TestOfRetweetDetector.html">TestOfRetweetDetector</a><br />
+	    		<a href="../ThinkTank/TestOfSignIn.html">TestOfSignIn</a><br />
+	    		<a href="../ThinkTank/TestOfTestController.html">TestOfTestController</a><br />
+	    		<a href="../ThinkTank/TestOfTwitterAPIAccessorOAuth.html">TestOfTwitterAPIAccessorOAuth</a><br />
+	    		<a href="../ThinkTank/TestOfTwitterCrawler.html">TestOfTwitterCrawler</a><br />
+	    		<a href="../ThinkTank/TestOfTwitterOAuth.html">TestOfTwitterOAuth</a><br />
+	    		<a href="../ThinkTank/TestOfTwitterPlugin.html">TestOfTwitterPlugin</a><br />
+	    		<a href="../ThinkTank/TestOfUserDAO.html">TestOfUserDAO</a><br />
+	    		<a href="../ThinkTank/TestOfUtils.html">TestOfUtils</a><br />
+	    		<a href="../ThinkTank/ThinkTankController.html">ThinkTankController</a><br />
+	    		<a href="../ThinkTank/ThinkTankTestDatabaseHelper.html">ThinkTankTestDatabaseHelper</a><br />
+	    		<a href="../ThinkTank/ThinkTankUnitTestCase.html">ThinkTankUnitTestCase</a><br />
+	    		<a href="../ThinkTank/ThinkTankWebTestCase.html">ThinkTankWebTestCase</a><br />
+	    		<a href="../ThinkTank/TwitterAPIAccessorOAuth.html">TwitterAPIAccessorOAuth</a><br />
+	    		<a href="../ThinkTank/TwitterCrawler.html">TwitterCrawler</a><br />
+	    		<a href="../ThinkTank/TwitterOAuth.html">TwitterOAuth</a><br />
+	    		<a href="../ThinkTank/TwitterOAuthThinkTank.html">TwitterOAuthThinkTank</a><br />
+	    		<a href="../ThinkTank/TwitterPlugin.html">TwitterPlugin</a><br />
+	    		<a href="../ThinkTank/User.html">User</a><br />
+	    		<a href="../ThinkTank/UserDAO.html">UserDAO</a><br />
+	    		<a href="../ThinkTank/UserErrorDAO.html">UserErrorDAO</a><br />
+	    		<a href="../ThinkTank/Utils.html">Utils</a><br />
+	    		<a href="../ThinkTank/Webapp.html">Webapp</a><br />
+	    		<a href="../ThinkTank/WebappTab.html">WebappTab</a><br />
+	    		<a href="../ThinkTank/WebappTabDataset.html">WebappTabDataset</a><br />
+	  </div>
+                </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: FollowDAO</h1>
+Source Location: /webapp/model/class.Follow.php<br /><br />
+
+
+<table width="100%" border="0">
+<tr><td valign="top">
+
+<h3><a href="#class_details">Class Overview</a></h3>
+<pre><a href="../ThinkTank/MySQLDAO.html">MySQLDAO</a>
    |
-   --FollowDAO</pre>
-	
-			</div>
+   --FollowDAO</pre><br />
+<div class="description">Follow Data Access Object  retrieves following relationships between users from database</div><br /><br />
+<h4>Author(s):</h4>
+<ul>
+          <li>Gina Trapani &lt;<a href="mailto:ginatrapani[at]gmail[dot]com">ginatrapani[at]gmail[dot]com</a>&gt;</li>
+      </ul>
+
+
+    
+
+        
+</td>
+
+
+
+<td valign="top">
+<h3><a href="#class_methods">Methods</a></h3>
+<ul>
+    <li><a href="../ThinkTank/FollowDAO.html#methoddeactivate">deactivate</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodfollowExists">followExists</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetEarliestJoinerFollowers">getEarliestJoinerFollowers</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetFormerFollowees">getFormerFollowees</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetFormerFollowers">getFormerFollowers</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetFriendsNotFollowingBack">getFriendsNotFollowingBack</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetLeastActiveFollowees">getLeastActiveFollowees</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetLeastLikelyFollowers">getLeastLikelyFollowers</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetMostActiveFollowees">getMostActiveFollowees</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetMostFollowedFollowees">getMostFollowedFollowees</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetMostFollowedFollowers">getMostFollowedFollowers</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetMutualFriends">getMutualFriends</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetOldestFollow">getOldestFollow</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetStalestFriend">getStalestFriend</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetTotalFollowsProtected">getTotalFollowsProtected</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetTotalFollowsWithErrors">getTotalFollowsWithErrors</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetTotalFollowsWithFullDetails">getTotalFollowsWithFullDetails</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetTotalFriends">getTotalFriends</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetTotalFriendsProtected">getTotalFriendsProtected</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetTotalFriendsWithErrors">getTotalFriendsWithErrors</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodgetUnloadedFollowerDetails">getUnloadedFollowerDetails</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodinsert">insert</a></li>
+    <li><a href="../ThinkTank/FollowDAO.html#methodupdate">update</a></li>
+  </ul>
+</td>
+
+</tr></table>
+<hr />
+
+<table width="100%" border="0"><tr>
+
+
+
+
+<td valign="top">
+<h3>Inherited Variables</h3>
+<div class="tags">
+<h4>Class: <a href="../ThinkTank/MySQLDAO.html">MySQLDAO</a></h4>
+<dl>
+<dt>
+  <a href="../ThinkTank/MySQLDAO.html#var$db">MySQLDAO::$db</a>
+  </dt>
+<dd>
+   
+</dd>
+<dt>
+  <a href="../ThinkTank/MySQLDAO.html#var$logger">MySQLDAO::$logger</a>
+  </dt>
+<dd>
+   
+</dd>
+</dl>
 </div>
+</td>
+
+<td valign="top">
+<h3>Inherited Methods</h3>
+<div class="tags">
+<h4>Class: <a href="../ThinkTank/MySQLDAO.html">MySQLDAO</a></h4>
+<dl>
+    <dt>
+    <a href="../ThinkTank/MySQLDAO.html#method__construct">MySQLDAO::__construct()</a>
+  </dt>
+  <dd>
+    
+  </dd>
+    <dt>
+    <a href="../ThinkTank/MySQLDAO.html#methodexecuteSQL">MySQLDAO::executeSQL()</a>
+  </dt>
+  <dd>
+    
+  </dd>
+  </dl>
+</div>
+</td>
+
+</tr></table>
+<hr />
+
+<a name="class_details"></a>
+<h3>Class Details</h3>
+<div class="tags">
+[line 9]<br />
+Follow Data Access Object  retrieves following relationships between users from database<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Gina Trapani &lt;<a href="mailto:ginatrapani[at]gmail[dot]com">ginatrapani[at]gmail[dot]com</a>&gt;</td>
+  </tr>
+</table>
+</div>
+</div><br /><br />
+<div class="top">[ <a href="#top">Top</a> ]</div><br />
 
 
+<hr />
+<a name="class_methods"></a>
+<h3>Class Methods</h3>
+<div class="tags">
 
+  <hr />
+	<a name="methoddeactivate"></a>
+	<h3>method deactivate <span class="smalllinenumber">[line 42]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void deactivate(
 
-	<a name="sec-method-summary"></a>
-	<div class="info-box">
-		<div class="info-box-title">Method Summary</span></div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-																		<a href="#sec-vars">Vars</a>
-				 
-				|
-						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
-		</div>
-		<div class="info-box-body">			
-			<div class="method-summary">
-																																																																																																																																																																																																								<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#deactivate" title="details" class="method-name">deactivate</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#followExists" title="details" class="method-name">followExists</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getEarliestJoinerFollowers" title="details" class="method-name">getEarliestJoinerFollowers</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getFormerFollowees" title="details" class="method-name">getFormerFollowees</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getFormerFollowers" title="details" class="method-name">getFormerFollowers</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getFriendsNotFollowingBack" title="details" class="method-name">getFriendsNotFollowingBack</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getLeastActiveFollowees" title="details" class="method-name">getLeastActiveFollowees</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getLeastLikelyFollowers" title="details" class="method-name">getLeastLikelyFollowers</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getMostActiveFollowees" title="details" class="method-name">getMostActiveFollowees</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getMostFollowedFollowees" title="details" class="method-name">getMostFollowedFollowees</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getMostFollowedFollowers" title="details" class="method-name">getMostFollowedFollowers</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getMutualFriends" title="details" class="method-name">getMutualFriends</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$instance_uid</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getOldestFollow" title="details" class="method-name">getOldestFollow</a>
-										()
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getStalestFriend" title="details" class="method-name">getStalestFriend</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getTotalFollowsProtected" title="details" class="method-name">getTotalFollowsProtected</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getTotalFollowsWithErrors" title="details" class="method-name">getTotalFollowsWithErrors</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getTotalFollowsWithFullDetails" title="details" class="method-name">getTotalFollowsWithFullDetails</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getTotalFriends" title="details" class="method-name">getTotalFriends</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getTotalFriendsProtected" title="details" class="method-name">getTotalFriendsProtected</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getTotalFriendsWithErrors" title="details" class="method-name">getTotalFriendsWithErrors</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#getUnloadedFollowerDetails" title="details" class="method-name">getUnloadedFollowerDetails</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#insert" title="details" class="method-name">insert</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result">void</span>
-										<a href="#update" title="details" class="method-name">update</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
-									</div>
-											</div>
-		</div>
-	</div>		
-
-	<a name="sec-vars"></a>
-	<div class="info-box">
-		<div class="info-box-title">Variables</div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
-						
-			
-										| 
-									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
-							
-					</div>
-		<div class="info-box-body">
-			
-							<h4>Inherited Variables</h4>
-				<A NAME='inherited_vars'><!-- --></A>
-									<p>Inherited from <span class="classname"><a href="../ThinkTank/MySQLDAO.html">MySQLDAO</a></span></p>
-					<blockquote>
-													<img src="../media/images/Variable.png" />
-							<span class="var-title">
-								<span class="var-name"><a href="../ThinkTank/MySQLDAO.html#var$db">MySQLDAO::$db</a></span><br>
-							</span>
-													<img src="../media/images/Variable.png" />
-							<span class="var-title">
-								<span class="var-name"><a href="../ThinkTank/MySQLDAO.html#var$logger">MySQLDAO::$logger</a></span><br>
-							</span>
-											</blockquote> 
-										
-		</div>
-	</div>
-	
-	<a name="sec-methods"></a>
-	<div class="info-box">
-		<div class="info-box-title">Methods</div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-															<a href="#sec-vars">Vars</a>
-														<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
-						
-		</div>
-		<div class="info-box-body">
-			<A NAME='method_detail'></A>
-<a name="methoddeactivate" id="deactivate"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">deactivate</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a42">42</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			deactivate
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$follower_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$debug_api_call</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodfollowExists" id="followExists"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">followExists</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a11">11</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			followExists
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$follower_id</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetEarliestJoinerFollowers" id="getEarliestJoinerFollowers"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getEarliestJoinerFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a272">272</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getEarliestJoinerFollowers
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$count</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetFormerFollowees" id="getFormerFollowees"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getFormerFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a309">309</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getFormerFollowees
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$count</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetFormerFollowers" id="getFormerFollowers"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getFormerFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a326">326</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getFormerFollowers
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$count</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetFriendsNotFollowingBack" id="getFriendsNotFollowingBack"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getFriendsNotFollowingBack</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a401">401</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getFriendsNotFollowingBack
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$uid</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetLeastActiveFollowees" id="getLeastActiveFollowees"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getLeastActiveFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a344">344</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getLeastActiveFollowees
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$count</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetLeastLikelyFollowers" id="getLeastLikelyFollowers"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getLeastLikelyFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a252">252</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getLeastLikelyFollowers
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$count</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetMostActiveFollowees" id="getMostActiveFollowees"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getMostActiveFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a290">290</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getMostActiveFollowees
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$count</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetMostFollowedFollowees" id="getMostFollowedFollowees"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getMostFollowedFollowees</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a364">364</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getMostFollowedFollowees
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$count</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetMostFollowedFollowers" id="getMostFollowedFollowers"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getMostFollowedFollowers</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a231">231</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getMostFollowedFollowers
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$count</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$count</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetMutualFriends" id="getMutualFriends"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getMutualFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a382">382</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getMutualFriends
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$uid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$instance_uid</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$uid</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$instance_uid</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetOldestFollow" id="getOldestFollow"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getOldestFollow</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a211">211</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getOldestFollow
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="methodgetStalestFriend" id="getStalestFriend"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getStalestFriend</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a188">188</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getStalestFriend
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetTotalFollowsProtected" id="getTotalFollowsProtected"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFollowsProtected</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a140">140</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getTotalFollowsProtected
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetTotalFollowsWithErrors" id="getTotalFollowsWithErrors"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFollowsWithErrors</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a90">90</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getTotalFollowsWithErrors
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetTotalFollowsWithFullDetails" id="getTotalFollowsWithFullDetails"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFollowsWithFullDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a124">124</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getTotalFollowsWithFullDetails
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetTotalFriends" id="getTotalFriends"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFriends</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a156">156</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getTotalFriends
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetTotalFriendsProtected" id="getTotalFriendsProtected"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFriendsProtected</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a172">172</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getTotalFriendsProtected
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetTotalFriendsWithErrors" id="getTotalFriendsWithErrors"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getTotalFriendsWithErrors</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a107">107</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getTotalFriendsWithErrors
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetUnloadedFollowerDetails" id="getUnloadedFollowerDetails"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">getUnloadedFollowerDetails</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a72">72</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getUnloadedFollowerDetails
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodinsert" id="insert"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">insert</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a57">57</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			insert
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$follower_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$debug_api_call</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodupdate" id="update"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">update</span> (line <span class="line-number"><a href="../__filesource/fsource_ThinkTank__modelclass.Follow.php.html#a26">26</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			update
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$follower_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$debug_api_call</span> = <span class="var-default">''</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$follower_id</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$debug_api_call</span>			</li>
-				</ul>
-		
-			
-	</div>
-							<h4>Inherited Methods</h4>
-				<a name='inherited_methods'><!-- --></a>	
-									<!-- =========== Summary =========== -->
-					<p>Inherited From <span class="classname"><a href="../ThinkTank/MySQLDAO.html">MySQLDAO</a></span></p>
-					<blockquote>
-													<img src="../media/images/Constructor.png" alt=" "/>
-							<span class="method-name"><a href="../ThinkTank/MySQLDAO.html#method__construct">MySQLDAO::__construct()</a></span><br>
-													<img src="../media/images/Method.png" alt=" "/>
-							<span class="method-name"><a href="../ThinkTank/MySQLDAO.html#methodexecuteSQL">MySQLDAO::executeSQL()</a></span><br>
-											</blockquote>
-										
-		</div>
-	</div>
+$user_id, 
+$follower_id, [
+$debug_api_call = ''])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
 
 	
-	<p class="notes" id="credit">
-		Documentation generated on Mon, 31 May 2010 14:31:53 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
-	</p>
-	</div></body>
-</html>
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$follower_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$debug_api_call</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodfollowExists"></a>
+	<h3>method followExists <span class="smalllinenumber">[line 11]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void followExists(
+
+$user_id, 
+$follower_id)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$follower_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetEarliestJoinerFollowers"></a>
+	<h3>method getEarliestJoinerFollowers <span class="smalllinenumber">[line 272]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getEarliestJoinerFollowers(
+
+$user_id, 
+$count)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$count</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetFormerFollowees"></a>
+	<h3>method getFormerFollowees <span class="smalllinenumber">[line 309]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getFormerFollowees(
+
+$user_id, 
+$count)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$count</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetFormerFollowers"></a>
+	<h3>method getFormerFollowers <span class="smalllinenumber">[line 326]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getFormerFollowers(
+
+$user_id, 
+$count)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$count</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetFriendsNotFollowingBack"></a>
+	<h3>method getFriendsNotFollowingBack <span class="smalllinenumber">[line 401]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getFriendsNotFollowingBack(
+
+$uid)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$uid</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetLeastActiveFollowees"></a>
+	<h3>method getLeastActiveFollowees <span class="smalllinenumber">[line 344]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getLeastActiveFollowees(
+
+$user_id, 
+$count)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$count</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetLeastLikelyFollowers"></a>
+	<h3>method getLeastLikelyFollowers <span class="smalllinenumber">[line 252]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getLeastLikelyFollowers(
+
+$user_id, 
+$count)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$count</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetMostActiveFollowees"></a>
+	<h3>method getMostActiveFollowees <span class="smalllinenumber">[line 290]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getMostActiveFollowees(
+
+$user_id, 
+$count)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$count</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetMostFollowedFollowees"></a>
+	<h3>method getMostFollowedFollowees <span class="smalllinenumber">[line 364]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getMostFollowedFollowees(
+
+$user_id, 
+$count)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$count</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetMostFollowedFollowers"></a>
+	<h3>method getMostFollowedFollowers <span class="smalllinenumber">[line 231]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getMostFollowedFollowers(
+
+$user_id, 
+$count)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$count</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetMutualFriends"></a>
+	<h3>method getMutualFriends <span class="smalllinenumber">[line 382]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getMutualFriends(
+
+$uid, 
+$instance_uid)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$uid</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$instance_uid</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetOldestFollow"></a>
+	<h3>method getOldestFollow <span class="smalllinenumber">[line 211]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getOldestFollow(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetStalestFriend"></a>
+	<h3>method getStalestFriend <span class="smalllinenumber">[line 188]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getStalestFriend(
+
+$user_id)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetTotalFollowsProtected"></a>
+	<h3>method getTotalFollowsProtected <span class="smalllinenumber">[line 140]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getTotalFollowsProtected(
+
+$user_id)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetTotalFollowsWithErrors"></a>
+	<h3>method getTotalFollowsWithErrors <span class="smalllinenumber">[line 90]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getTotalFollowsWithErrors(
+
+$user_id)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetTotalFollowsWithFullDetails"></a>
+	<h3>method getTotalFollowsWithFullDetails <span class="smalllinenumber">[line 124]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getTotalFollowsWithFullDetails(
+
+$user_id)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetTotalFriends"></a>
+	<h3>method getTotalFriends <span class="smalllinenumber">[line 156]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getTotalFriends(
+
+$user_id)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetTotalFriendsProtected"></a>
+	<h3>method getTotalFriendsProtected <span class="smalllinenumber">[line 172]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getTotalFriendsProtected(
+
+$user_id)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetTotalFriendsWithErrors"></a>
+	<h3>method getTotalFriendsWithErrors <span class="smalllinenumber">[line 107]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getTotalFriendsWithErrors(
+
+$user_id)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetUnloadedFollowerDetails"></a>
+	<h3>method getUnloadedFollowerDetails <span class="smalllinenumber">[line 72]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void getUnloadedFollowerDetails(
+
+$user_id)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodinsert"></a>
+	<h3>method insert <span class="smalllinenumber">[line 57]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void insert(
+
+$user_id, 
+$follower_id, [
+$debug_api_call = ''])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$follower_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$debug_api_call</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodupdate"></a>
+	<h3>method update <span class="smalllinenumber">[line 26]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void update(
+
+$user_id, 
+$follower_id, [
+$debug_api_call = ''])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$user_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$follower_id</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+          <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$debug_api_call</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+</div><br />
+
+
+        <div class="credit">
+		    <hr />
+		    Documentation generated on Wed, 02 Jun 2010 10:30:54 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

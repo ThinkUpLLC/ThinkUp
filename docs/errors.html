@@ -1,14 +1,45 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <html xmlns="http://www.w3.org/1999/xhtml">
-		<head>
-			<!-- template designed by Marco Von Ballmoos -->
-			<title>phpDocumentor Parser Errors and Warnings</title>
-			<link rel="stylesheet" href="media/stylesheet.css" />
-			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
-		</head>
-		<body>
-						<a href="#Post-parsing">Post-parsing</a><br>
+<html>
+<head>
+<title>phpDocumentor Parser Errors and Warnings</title>
+<link rel="stylesheet" type="text/css" href="media/style.css">
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+    <td class="header_top">ThinkTank</td>
+  </tr>
+  <tr><td class="header_line"><img src="media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td class="header_menu">
+                                                                                              		  [ <a href="classtrees_ThinkTank.html" class="menu">class tree: ThinkTank</a> ]
+		  [ <a href="elementindex_ThinkTank.html" class="menu">index: ThinkTank</a> ]
+		  	    [ <a href="elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td class="header_line"><img src="media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="200" class="menu">
+	<div id="todolist">
+			<p><a href="todolist.html">Todo List</a></p>
+	</div>
+      <b>Packages:</b><br />
+              <a href="li_ThinkTank.html">ThinkTank</a><br />
+              <a href="li_Services_JSON.html">Services_JSON</a><br />
+            <br /><br />
+                </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<a href="#Post-parsing">Post-parsing</a><br>
+<a href="#all_controller_tests.php">all_controller_tests.php</a><br>
+<a href="#all_frontend_tests.php">all_frontend_tests.php</a><br>
+<a href="#all_model_tests.php">all_model_tests.php</a><br>
+<a href="#all_plugin_tests.php">all_plugin_tests.php</a><br>
+<a href="#all_tests.php">all_tests.php</a><br>
 <a href="#auth.php">auth.php</a><br>
 <a href="#captcha-img.php">captcha-img.php</a><br>
 <a href="#class.Captcha.php">class.Captcha.php</a><br>
@@ -35,11 +66,18 @@
 <a href="#class.Plugin.php">class.Plugin.php</a><br>
 <a href="#class.PluginHook.php">class.PluginHook.php</a><br>
 <a href="#class.Post.php">class.Post.php</a><br>
+<a href="#class.PrivateDashboardController.php">class.PrivateDashboardController.php</a><br>
 <a href="#class.PublicTimelineController.php">class.PublicTimelineController.php</a><br>
 <a href="#class.RetweetDetector.php">class.RetweetDetector.php</a><br>
 <a href="#class.Session.php">class.Session.php</a><br>
 <a href="#class.SmartyThinkTank.php">class.SmartyThinkTank.php</a><br>
+<a href="#class.TestController.php">class.TestController.php</a><br>
+<a href="#class.TestFauxDAO.php">class.TestFauxDAO.php</a><br>
+<a href="#class.TestMysqlDAO.php">class.TestMysqlDAO.php</a><br>
 <a href="#class.ThinkTankController.php">class.ThinkTankController.php</a><br>
+<a href="#class.ThinkTankTestDatabaseHelper.php">class.ThinkTankTestDatabaseHelper.php</a><br>
+<a href="#class.ThinkTankUnitTestCase.php">class.ThinkTankUnitTestCase.php</a><br>
+<a href="#class.ThinkTankWebTestCase.php">class.ThinkTankWebTestCase.php</a><br>
 <a href="#class.TwitterAPIAccessorOAuth.php">class.TwitterAPIAccessorOAuth.php</a><br>
 <a href="#class.TwitterCrawler.php">class.TwitterCrawler.php</a><br>
 <a href="#class.TwitterOAuthThinkTank.php">class.TwitterOAuthThinkTank.php</a><br>
@@ -51,6 +89,8 @@
 <a href="#class.WebappTabDataset.php">class.WebappTabDataset.php</a><br>
 <a href="#config.inc.php">config.inc.php</a><br>
 <a href="#config.sample.inc.php">config.sample.inc.php</a><br>
+<a href="#config.tests.inc.php">config.tests.inc.php</a><br>
+<a href="#config.tests.sample.inc.php">config.tests.sample.inc.php</a><br>
 <a href="#crawl.php">crawl.php</a><br>
 <a href="#expandurls.php">expandurls.php</a><br>
 <a href="#export.php">export.php</a><br>
@@ -61,10 +101,12 @@
 <a href="#hellothinktank.php">hellothinktank.php</a><br>
 <a href="#index.php">index.php</a><br>
 <a href="#init.php">init.php</a><br>
+<a href="#init.tests.php">init.tests.php</a><br>
 <a href="#inline.view.php">inline.view.php</a><br>
 <a href="#interface.Controller.php">interface.Controller.php</a><br>
 <a href="#interface.CrawlerPlugin.php">interface.CrawlerPlugin.php</a><br>
 <a href="#interface.InstanceDAO.php">interface.InstanceDAO.php</a><br>
+<a href="#interface.TestDAO.php">interface.TestDAO.php</a><br>
 <a href="#interface.ThinkTankPlugin.php">interface.ThinkTankPlugin.php</a><br>
 <a href="#interface.WebappPlugin.php">interface.WebappPlugin.php</a><br>
 <a href="#JSON.php">JSON.php</a><br>
@@ -78,16 +120,38 @@
 <a href="#mock.TwitterOAuth.php">mock.TwitterOAuth.php</a><br>
 <a href="#public.php">public.php</a><br>
 <a href="#register.php">register.php</a><br>
+<a href="#TestOfChangePassword.php">TestOfChangePassword.php</a><br>
+<a href="#TestOfConfig.php">TestOfConfig.php</a><br>
+<a href="#TestOfDAOFactory.php">TestOfDAOFactory.php</a><br>
+<a href="#TestOfDatabase.php">TestOfDatabase.php</a><br>
 <a href="#TestOfExpandURLsPlugin.php">TestOfExpandURLsPlugin.php</a><br>
 <a href="#TestOfFacebookCrawler.php">TestOfFacebookCrawler.php</a><br>
 <a href="#TestOfFacebookPlugin.php">TestOfFacebookPlugin.php</a><br>
 <a href="#TestOfFlickrAPIAccessor.php">TestOfFlickrAPIAccessor.php</a><br>
 <a href="#TestOfFlickrThumbnailsPlugin.php">TestOfFlickrThumbnailsPlugin.php</a><br>
+<a href="#TestOfFollowDAO.php">TestOfFollowDAO.php</a><br>
+<a href="#TestOfInstanceMySQLDAO.php">TestOfInstanceMySQLDAO.php</a><br>
+<a href="#TestOfLinkDAO.php">TestOfLinkDAO.php</a><br>
+<a href="#TestOfLogger.php">TestOfLogger.php</a><br>
+<a href="#TestOfMySQLDAO.php">TestOfMySQLDAO.php</a><br>
+<a href="#TestOfOwnerInstanceDAO.php">TestOfOwnerInstanceDAO.php</a><br>
+<a href="#TestOfPDODAO.php">TestOfPDODAO.php</a><br>
+<a href="#TestOfPluginDAO.php">TestOfPluginDAO.php</a><br>
+<a href="#TestOfPluginHook.php">TestOfPluginHook.php</a><br>
+<a href="#TestOfPostDAO.php">TestOfPostDAO.php</a><br>
+<a href="#TestOfPrivateDashboard.php">TestOfPrivateDashboard.php</a><br>
+<a href="#TestOfPrivateDashboardController.php">TestOfPrivateDashboardController.php</a><br>
+<a href="#TestOfPublicTimeline.php">TestOfPublicTimeline.php</a><br>
+<a href="#TestOfPublicTimelineController.php">TestOfPublicTimelineController.php</a><br>
 <a href="#TestOfRetweetDetector.php">TestOfRetweetDetector.php</a><br>
+<a href="#TestOfSignIn.php">TestOfSignIn.php</a><br>
+<a href="#TestOfTestController.php">TestOfTestController.php</a><br>
 <a href="#TestOfTwitterAPIAccessorOAuth.php">TestOfTwitterAPIAccessorOAuth.php</a><br>
 <a href="#TestOfTwitterCrawler.php">TestOfTwitterCrawler.php</a><br>
 <a href="#TestOfTwitterOAuth.php">TestOfTwitterOAuth.php</a><br>
 <a href="#TestOfTwitterPlugin.php">TestOfTwitterPlugin.php</a><br>
+<a href="#TestOfUserDAO.php">TestOfUserDAO.php</a><br>
+<a href="#TestOfUtils.php">TestOfUtils.php</a><br>
 <a href="#toggle-active.php">toggle-active.php</a><br>
 <a href="#toggle-pluginactive.php">toggle-pluginactive.php</a><br>
 <a href="#toggle-public.php">toggle-public.php</a><br>
@@ -97,56 +161,50 @@
 <h1>Post-parsing</h1>
 <h2>Warnings:</h2><br>
 <b>Warning</b> - Class TestOfFlickrAPIAccessor parent UnitTestCase not found<br>
-<b>Warning</b> - Class TestOfFlickrThumbnailsPlugin parent ThinkTankUnitTestCase not found<br>
-<b>Warning</b> - Class TestOfFacebookPlugin parent ThinkTankUnitTestCase not found<br>
-<b>Warning</b> - Class TestOfFacebookCrawler parent ThinkTankUnitTestCase not found<br>
 <b>Warning</b> - Class Services_JSON_Error parent PEAR_Error not found<br>
+<b>Warning</b> - Class TestOfRetweetDetector parent UnitTestCase not found<br>
 <b>Warning</b> - Class TestOfTwitterOAuth parent UnitTestCase not found<br>
-<b>Warning</b> - Class TestOfExpandURLsPlugin parent ThinkTankUnitTestCase not found<br>
-<b>Warning</b> - class TestOfFacebookPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class TestOfFacebookPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
-<b>Warning</b> - class TestOfFacebookCrawler in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class TestOfFacebookCrawler in package ThinkTank parent not found in @see parent::tearDown()<br>
 <b>Warning</b> - 
 duplicate class element "FacebookRestClient" in file /Users/gina/Sites/thinktank/webapp/plugins/facebook/tests/classes/mock.facebook.php will be ignored.
 Use an @ignore tag on the original if you want this case to be documented.<br>
-<b>Warning</b> - class TestOfExpandURLsPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class TestOfFlickrThumbnailsPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
-<b>Warning</b> - Class TestOfTwitterPlugin parent ThinkTankUnitTestCase not found<br>
-<b>Warning</b> - class TestOfFlickrThumbnailsPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class TestOfFlickrThumbnailsPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
-<b>Warning</b> - class TestOfFlickrThumbnailsPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
 <b>Warning</b> - 
 duplicate class element "Facebook" in file /Users/gina/Sites/thinktank/webapp/plugins/facebook/tests/classes/mock.facebook.php will be ignored.
 Use an @ignore tag on the original if you want this case to be documented.<br>
-<b>Warning</b> - class TestOfFacebookCrawler in package ThinkTank parent not found in @see parent::tearDown()<br>
-<b>Warning</b> - class TestOfExpandURLsPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
-<b>Warning</b> - class TestOfExpandURLsPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class TestOfExpandURLsPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
-<b>Warning</b> - class TestOfFacebookCrawler in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class TestOfFacebookPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
-<b>Warning</b> - class TestOfFacebookPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class TestOfTwitterCrawler in package ThinkTank parent not found in @see parent::tearDown()<br>
-<b>Warning</b> - class TestOfTwitterPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - Class TestOfTwitterAPIAccessorOAuth parent UnitTestCase not found<br>
-<b>Warning</b> - class Services_JSON_Error in package Services_JSON parent not found in @see parent::PEAR_Error()<br>
-<b>Warning</b> - class TestOfTwitterCrawler in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class TestOfTwitterCrawler in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class TestOfTwitterCrawler in package ThinkTank parent not found in @see parent::tearDown()<br>
-<b>Warning</b> - Class TestOfTwitterCrawler parent ThinkTankUnitTestCase not found<br>
-<b>Warning</b> - Class TestOfRetweetDetector parent UnitTestCase not found<br>
-<b>Warning</b> - class TestOfTwitterPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
 <b>Warning</b> - Class SmartyThinkTank parent Smarty not found<br>
-<b>Warning</b> - class TestOfTwitterPlugin in package ThinkTank parent not found in @see parent::tearDown()<br>
+<b>Warning</b> - Class TestOfMySQLDAO parent UnitTestCase not found<br>
+<b>Warning</b> - Class ThinkTankWebTestCase parent WebTestCase not found<br>
+<b>Warning</b> - Class ThinkTankUnitTestCase parent UnitTestCase not found<br>
+<b>Warning</b> - Class TestOfConfig parent UnitTestCase not found<br>
+<b>Warning</b> - Class TestOfDatabase parent UnitTestCase not found<br>
+<b>Warning</b> - Class TestOfLogging parent UnitTestCase not found<br>
 <b>Warning</b> - 
 duplicate class element "FlickrAPIAccessor" in file /Users/gina/Sites/thinktank/webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php will be ignored.
 Use an @ignore tag on the original if you want this case to be documented.<br>
-<b>Warning</b> - class TestOfTwitterPlugin in package ThinkTank parent not found in @see parent::setUp()<br>
-<b>Warning</b> - class Services_JSON_Error in package Services_JSON parent not found in @see parent::PEAR_Error()<br>
+<b>Warning</b> - Class TestOfTwitterAPIAccessorOAuth parent UnitTestCase not found<br>
 <a name="activate.php"></a>
 <h1>activate.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 32</b> - File "/Users/gina/Sites/thinktank/webapp/session/activate.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="all_controller_tests.php"></a>
+<h1>all_controller_tests.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 15</b> - File "/Users/gina/Sites/thinktank/tests/all_controller_tests.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="all_frontend_tests.php"></a>
+<h1>all_frontend_tests.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 19</b> - File "/Users/gina/Sites/thinktank/tests/all_frontend_tests.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="all_model_tests.php"></a>
+<h1>all_model_tests.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 40</b> - File "/Users/gina/Sites/thinktank/tests/all_model_tests.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="all_plugin_tests.php"></a>
+<h1>all_plugin_tests.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 33</b> - File "/Users/gina/Sites/thinktank/tests/all_plugin_tests.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="all_tests.php"></a>
+<h1>all_tests.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 16</b> - File "/Users/gina/Sites/thinktank/tests/all_tests.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="auth.php"></a>
 <h1>auth.php</h1>
 <h2>Warnings:</h2><br>
@@ -190,7 +248,7 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h1>class.FacebookPlugin.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class FacebookPlugin<br>
-<b>Warning on line 218</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/model/class.FacebookPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 213</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/model/class.FacebookPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.FlickrAPIAccessor.php"></a>
 <h1>class.FlickrAPIAccessor.php</h1>
 <h2>Warnings:</h2><br>
@@ -219,8 +277,8 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <a name="class.InstanceMySQLDAO.php"></a>
 <h1>class.InstanceMySQLDAO.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 4</b> - no @package tag was used in a DocBlock for class InstanceMySQLDAO<br>
-<b>Warning on line 259</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.InstanceMySQLDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 9</b> - no @package tag was used in a DocBlock for class InstanceMySQLDAO<br>
+<b>Warning on line 300</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.InstanceMySQLDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.Link.php"></a>
 <h1>class.Link.php</h1>
 <h2>Warnings:</h2><br>
@@ -282,11 +340,16 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <b>Warning on line 58</b> - no @package tag was used in a DocBlock for class PostDAO<br>
 <b>Warning on line 846</b> - no @package tag was used in a DocBlock for class PostErrorDAO<br>
 <b>Warning on line 863</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Post.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.PrivateDashboardController.php"></a>
+<h1>class.PrivateDashboardController.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 7</b> - no @package tag was used in a DocBlock for class PrivateDashboardController<br>
+<b>Warning on line 131</b> - File "/Users/gina/Sites/thinktank/webapp/controller/class.PrivateDashboardController.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.PublicTimelineController.php"></a>
 <h1>class.PublicTimelineController.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 7</b> - no @package tag was used in a DocBlock for class PublicTimelineController<br>
-<b>Warning on line 134</b> - File "/Users/gina/Sites/thinktank/webapp/controller/class.PublicTimelineController.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 8</b> - no @package tag was used in a DocBlock for class PublicTimelineController<br>
+<b>Warning on line 136</b> - File "/Users/gina/Sites/thinktank/webapp/controller/class.PublicTimelineController.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.RetweetDetector.php"></a>
 <h1>class.RetweetDetector.php</h1>
 <h2>Warnings:</h2><br>
@@ -302,12 +365,42 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h2>Warnings:</h2><br>
 <b>Warning on line 1</b> - no @package tag was used in a DocBlock for class SmartyThinkTank<br>
 <b>Warning on line 16</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.SmartyThinkTank.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.TestController.php"></a>
+<h1>class.TestController.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 6</b> - no @package tag was used in a DocBlock for class TestController<br>
+<b>Warning on line 12</b> - File "/Users/gina/Sites/thinktank/tests/classes/class.TestController.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.TestFauxDAO.php"></a>
+<h1>class.TestFauxDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 6</b> - no @package tag was used in a DocBlock for class TestFauxDAO<br>
+<b>Warning on line 72</b> - File "/Users/gina/Sites/thinktank/tests/classes/class.TestFauxDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.TestMysqlDAO.php"></a>
+<h1>class.TestMysqlDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 7</b> - no @package tag was used in a DocBlock for class TestMysqlDAO<br>
+<b>Warning on line 120</b> - File "/Users/gina/Sites/thinktank/tests/classes/class.TestMysqlDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.ThinkTankController.php"></a>
 <h1>class.ThinkTankController.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 9</b> - no @package tag was used in a DocBlock for class ThinkTankController<br>
-<b>Warning on line 65</b> - Unknown tag "@TODO:" used<br>
-<b>Warning on line 142</b> - File "/Users/gina/Sites/thinktank/webapp/controller/class.ThinkTankController.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 74</b> - Unknown tag "@TODO:" used<br>
+<b>Warning on line 151</b> - File "/Users/gina/Sites/thinktank/webapp/controller/class.ThinkTankController.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.ThinkTankTestDatabaseHelper.php"></a>
+<h1>class.ThinkTankTestDatabaseHelper.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class ThinkTankTestDatabaseHelper<br>
+<b>Warning on line 28</b> - File "/Users/gina/Sites/thinktank/tests/classes/class.ThinkTankTestDatabaseHelper.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.ThinkTankUnitTestCase.php"></a>
+<h1>class.ThinkTankUnitTestCase.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - no @package tag was used in a DocBlock for class ThinkTankUnitTestCase<br>
+<b>Warning on line 34</b> - File "/Users/gina/Sites/thinktank/tests/classes/class.ThinkTankUnitTestCase.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="class.ThinkTankWebTestCase.php"></a>
+<h1>class.ThinkTankWebTestCase.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 8</b> - no @package tag was used in a DocBlock for class ThinkTankWebTestCase<br>
+<b>Warning on line 36</b> - File "/Users/gina/Sites/thinktank/tests/classes/class.ThinkTankWebTestCase.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.TwitterAPIAccessorOAuth.php"></a>
 <h1>class.TwitterAPIAccessorOAuth.php</h1>
 <h2>Warnings:</h2><br>
@@ -328,7 +421,7 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h1>class.TwitterPlugin.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 9</b> - no @package tag was used in a DocBlock for class TwitterPlugin<br>
-<b>Warning on line 348</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/model/class.TwitterPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 349</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/model/class.TwitterPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.User.php"></a>
 <h1>class.User.php</h1>
 <h2>Warnings:</h2><br>
@@ -344,8 +437,8 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <a name="class.Webapp.php"></a>
 <h1>class.Webapp.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 1</b> - no @package tag was used in a DocBlock for class Webapp<br>
-<b>Warning on line 76</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Webapp.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 9</b> - no @package tag was used in a DocBlock for class Webapp<br>
+<b>Warning on line 117</b> - File "/Users/gina/Sites/thinktank/webapp/model/class.Webapp.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="class.WebappTab.php"></a>
 <h1>class.WebappTab.php</h1>
 <h2>Warnings:</h2><br>
@@ -364,6 +457,14 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h1>config.sample.inc.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 4</b> - no @package tag was used in a DocBlock for file /Users/gina/Sites/thinktank/webapp/config.sample.inc.php<br>
+<a name="config.tests.inc.php"></a>
+<h1>config.tests.inc.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - File "/Users/gina/Sites/thinktank/tests/config.tests.inc.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="config.tests.sample.inc.php"></a>
+<h1>config.tests.sample.inc.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - File "/Users/gina/Sites/thinktank/tests/config.tests.sample.inc.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="crawl.php"></a>
 <h1>crawl.php</h1>
 <h2>Warnings:</h2><br>
@@ -450,14 +551,18 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h1>index.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 6</b> - File "/Users/gina/Sites/thinktank/webapp/session/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<b>Warning on line 52</b> - File "/Users/gina/Sites/thinktank/webapp/user/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 6</b> - File "/Users/gina/Sites/thinktank/webapp/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 50</b> - File "/Users/gina/Sites/thinktank/webapp/user/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <b>Warning on line 64</b> - File "/Users/gina/Sites/thinktank/webapp/post/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <b>Warning on line 95</b> - File "/Users/gina/Sites/thinktank/webapp/account/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-<b>Warning on line 103</b> - File "/Users/gina/Sites/thinktank/webapp/index.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="init.php"></a>
 <h1>init.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 74</b> - File "/Users/gina/Sites/thinktank/webapp/init.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="init.tests.php"></a>
+<h1>init.tests.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 24</b> - File "/Users/gina/Sites/thinktank/tests/init.tests.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="inline.view.php"></a>
 <h1>inline.view.php</h1>
 <h2>Warnings:</h2><br>
@@ -466,7 +571,7 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h1>interface.Controller.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 7</b> - no @package tag was used in a DocBlock for interface Controller<br>
-<b>Warning on line 12</b> - File "/Users/gina/Sites/thinktank/webapp/controller/interface.Controller.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 14</b> - File "/Users/gina/Sites/thinktank/webapp/controller/interface.Controller.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="interface.CrawlerPlugin.php"></a>
 <h1>interface.CrawlerPlugin.php</h1>
 <h2>Warnings:</h2><br>
@@ -475,8 +580,14 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <a name="interface.InstanceDAO.php"></a>
 <h1>interface.InstanceDAO.php</h1>
 <h2>Warnings:</h2><br>
-<b>Warning on line 1</b> - no @package tag was used in a DocBlock for interface InstanceDAO<br>
-<b>Warning on line 28</b> - File "/Users/gina/Sites/thinktank/webapp/model/interface.InstanceDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 7</b> - no @package tag was used in a DocBlock for interface InstanceDAO<br>
+<b>Warning on line 39</b> - File "/Users/gina/Sites/thinktank/webapp/model/interface.InstanceDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="interface.TestDAO.php"></a>
+<h1>interface.TestDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 2</b> - no @package tag was used in a DocBlock for class TestData<br>
+<b>Warning on line 8</b> - no @package tag was used in a DocBlock for interface TestDAO<br>
+<b>Warning on line 56</b> - File "/Users/gina/Sites/thinktank/tests/classes/interface.TestDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="interface.ThinkTankPlugin.php"></a>
 <h1>interface.ThinkTankPlugin.php</h1>
 <h2>Warnings:</h2><br>
@@ -541,6 +652,26 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h1>register.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 86</b> - File "/Users/gina/Sites/thinktank/webapp/session/register.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfChangePassword.php"></a>
+<h1>TestOfChangePassword.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 12</b> - no @package tag was used in a DocBlock for class TestOfChangePassword<br>
+<b>Warning on line 127</b> - File "/Users/gina/Sites/thinktank/tests/TestOfChangePassword.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfConfig.php"></a>
+<h1>TestOfConfig.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 7</b> - no @package tag was used in a DocBlock for class TestOfConfig<br>
+<b>Warning on line 26</b> - File "/Users/gina/Sites/thinktank/tests/TestOfConfig.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfDAOFactory.php"></a>
+<h1>TestOfDAOFactory.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - no @package tag was used in a DocBlock for class TestOfDAOFactory<br>
+<b>Warning on line 94</b> - File "/Users/gina/Sites/thinktank/tests/TestOfDAOFactory.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfDatabase.php"></a>
+<h1>TestOfDatabase.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 11</b> - no @package tag was used in a DocBlock for class TestOfDatabase<br>
+<b>Warning on line 124</b> - File "/Users/gina/Sites/thinktank/tests/TestOfDatabase.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="TestOfExpandURLsPlugin.php"></a>
 <h1>TestOfExpandURLsPlugin.php</h1>
 <h2>Warnings:</h2><br>
@@ -555,7 +686,7 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h1>TestOfFacebookPlugin.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 42</b> - no @package tag was used in a DocBlock for class TestOfFacebookPlugin<br>
-<b>Warning on line 79</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/tests/TestOfFacebookPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<b>Warning on line 80</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/tests/TestOfFacebookPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="TestOfFlickrAPIAccessor.php"></a>
 <h1>TestOfFlickrAPIAccessor.php</h1>
 <h2>Warnings:</h2><br>
@@ -566,11 +697,91 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h2>Warnings:</h2><br>
 <b>Warning on line 39</b> - no @package tag was used in a DocBlock for class TestOfFlickrThumbnailsPlugin<br>
 <b>Warning on line 125</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfFollowDAO.php"></a>
+<h1>TestOfFollowDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - no @package tag was used in a DocBlock for class TestOfFollowDAO<br>
+<b>Warning on line 162</b> - File "/Users/gina/Sites/thinktank/tests/TestOfFollowDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfInstanceMySQLDAO.php"></a>
+<h1>TestOfInstanceMySQLDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 14</b> - no @package tag was used in a DocBlock for class TestOfInstanceMySQLDAO<br>
+<b>Warning on line 565</b> - File "/Users/gina/Sites/thinktank/tests/TestOfInstanceMySQLDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfLinkDAO.php"></a>
+<h1>TestOfLinkDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - no @package tag was used in a DocBlock for class TestOfLinkDAO<br>
+<b>Warning on line 134</b> - File "/Users/gina/Sites/thinktank/tests/TestOfLinkDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfLogger.php"></a>
+<h1>TestOfLogger.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 11</b> - no @package tag was used in a DocBlock for class TestOfLogging<br>
+<b>Warning on line 46</b> - File "/Users/gina/Sites/thinktank/tests/TestOfLogger.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfMySQLDAO.php"></a>
+<h1>TestOfMySQLDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 13</b> - no @package tag was used in a DocBlock for class TestOfMySQLDAO<br>
+<b>Warning on line 38</b> - File "/Users/gina/Sites/thinktank/tests/TestOfMySQLDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfOwnerInstanceDAO.php"></a>
+<h1>TestOfOwnerInstanceDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - no @package tag was used in a DocBlock for class TestOfOwnerInstanceDAO<br>
+<b>Warning on line 65</b> - File "/Users/gina/Sites/thinktank/tests/TestOfOwnerInstanceDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfPDODAO.php"></a>
+<h1>TestOfPDODAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - no @package tag was used in a DocBlock for class TestOfPDODAO<br>
+<b>Warning on line 233</b> - File "/Users/gina/Sites/thinktank/tests/TestOfPDODAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfPluginDAO.php"></a>
+<h1>TestOfPluginDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - no @package tag was used in a DocBlock for class TestOfPluginDAO<br>
+<b>Warning on line 103</b> - File "/Users/gina/Sites/thinktank/tests/TestOfPluginDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfPluginHook.php"></a>
+<h1>TestOfPluginHook.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 9</b> - no @package tag was used in a DocBlock for class TestOfPluginHook<br>
+<b>Warning on line 30</b> - File "/Users/gina/Sites/thinktank/tests/TestOfPluginHook.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfPostDAO.php"></a>
+<h1>TestOfPostDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 10</b> - no @package tag was used in a DocBlock for class TestOfPostDAO<br>
+<b>Warning on line 277</b> - File "/Users/gina/Sites/thinktank/tests/TestOfPostDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfPrivateDashboard.php"></a>
+<h1>TestOfPrivateDashboard.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 12</b> - no @package tag was used in a DocBlock for class TestOfPrivateDashboard<br>
+<b>Warning on line 188</b> - File "/Users/gina/Sites/thinktank/tests/TestOfPrivateDashboard.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfPrivateDashboardController.php"></a>
+<h1>TestOfPrivateDashboardController.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 24</b> - no @package tag was used in a DocBlock for class TestOfPrivateDashboardController<br>
+<b>Warning on line 80</b> - File "/Users/gina/Sites/thinktank/tests/TestOfPrivateDashboardController.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfPublicTimeline.php"></a>
+<h1>TestOfPublicTimeline.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 12</b> - no @package tag was used in a DocBlock for class TestOfPublicTimeline<br>
+<b>Warning on line 227</b> - File "/Users/gina/Sites/thinktank/tests/TestOfPublicTimeline.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfPublicTimelineController.php"></a>
+<h1>TestOfPublicTimelineController.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 22</b> - no @package tag was used in a DocBlock for class TestOfPublicTimelineController<br>
+<b>Warning on line 89</b> - File "/Users/gina/Sites/thinktank/tests/TestOfPublicTimelineController.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="TestOfRetweetDetector.php"></a>
 <h1>TestOfRetweetDetector.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 12</b> - no @package tag was used in a DocBlock for class TestOfRetweetDetector<br>
 <b>Warning on line 58</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/tests/TestOfRetweetDetector.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfSignIn.php"></a>
+<h1>TestOfSignIn.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 12</b> - no @package tag was used in a DocBlock for class TestOfSignIn<br>
+<b>Warning on line 62</b> - File "/Users/gina/Sites/thinktank/tests/TestOfSignIn.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfTestController.php"></a>
+<h1>TestOfTestController.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 21</b> - no @package tag was used in a DocBlock for class TestOfTestController<br>
+<b>Warning on line 56</b> - File "/Users/gina/Sites/thinktank/tests/TestOfTestController.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="TestOfTwitterAPIAccessorOAuth.php"></a>
 <h1>TestOfTwitterAPIAccessorOAuth.php</h1>
 <h2>Warnings:</h2><br>
@@ -591,6 +802,16 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h2>Warnings:</h2><br>
 <b>Warning on line 42</b> - no @package tag was used in a DocBlock for class TestOfTwitterPlugin<br>
 <b>Warning on line 83</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/twitter/tests/TestOfTwitterPlugin.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfUserDAO.php"></a>
+<h1>TestOfUserDAO.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 9</b> - no @package tag was used in a DocBlock for class TestOfUserDAO<br>
+<b>Warning on line 106</b> - File "/Users/gina/Sites/thinktank/tests/TestOfUserDAO.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
+<a name="TestOfUtils.php"></a>
+<h1>TestOfUtils.php</h1>
+<h2>Warnings:</h2><br>
+<b>Warning on line 9</b> - no @package tag was used in a DocBlock for class TestOfUtils<br>
+<b>Warning on line 31</b> - File "/Users/gina/Sites/thinktank/tests/TestOfUtils.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
 <a name="toggle-active.php"></a>
 <h1>toggle-active.php</h1>
 <h2>Warnings:</h2><br>
@@ -611,8 +832,14 @@ Use an @ignore tag on the original if you want this case to be documented.<br>
 <h1>xd_receiver.php</h1>
 <h2>Warnings:</h2><br>
 <b>Warning on line 22</b> - File "/Users/gina/Sites/thinktank/webapp/plugins/facebook/xd_receiver.php" has no page-level DocBlock, use @package in the first DocBlock to create one<br>
-	<p class="notes" id="credit">
-		Documentation generated on Mon, 31 May 2010 14:32:16 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
-	</p>
-	</body>
-</html>
+        <div class="credit">
+		    <hr />
+		    Documentation generated on Wed, 02 Jun 2010 10:31:05 -0700 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.3</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
