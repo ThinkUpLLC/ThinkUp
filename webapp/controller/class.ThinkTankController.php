@@ -42,15 +42,8 @@ abstract class ThinkTankController {
             session_start();
         }
         $config = Config::getInstance();
-        $this->is_view_cached = ($config->getValue('cache_pages')==0 ? false:true);
+        $this->is_view_cached = $config->getValue('cache_pages');
         $this->view_mgr = new SmartyThinkTank();
-
-        //@TODO Add this logic to the ThinkTankAuthController
-        $this->addToView('logged_in_user', $this->getLoggedInUser());
-        //add currently logged in user to cache key if logged in
-        if ($this->isLoggedIn()) {
-            $this->addToViewCacheKey($this->getLoggedInUser());
-        }
     }
 
     /**

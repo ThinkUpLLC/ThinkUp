@@ -9,6 +9,10 @@
 abstract class ThinkTankAuthController extends ThinkTankController implements Controller {
     public function control() {
         if ($this->isLoggedIn()) {
+            $this->addToView('logged_in_user', $this->getLoggedInUser());
+            if ($this->isLoggedIn()) {
+                $this->addToViewCacheKey($this->getLoggedInUser());
+            }
             return $this->auth_control();
         } else {
             //@TODO bounce to sign in page and bounce back to original action once signed in

@@ -45,10 +45,10 @@ class TestOfTestController extends ThinkTankBasicUnitTestCase {
     }
 
     /**
-     * Test controller for non-logged in user
+     * Test controller
      * @TODO Possibly load the resulting markup as a DOM object and test various children in it; this would enforce valid markup
      */
-    function testControlNotLoggedIn() {
+    function testControl() {
         $config = Config::getInstance();
         $controller = new TestController(true);
         $results = $controller->go();
@@ -63,49 +63,16 @@ class TestOfTestController extends ThinkTankBasicUnitTestCase {
     }
 
     /**
-     * Test controller for logged-in user
+     * Test cache key, no params
      * @TODO Possibly load the resulting markup as a DOM object and test various children in it; this would enforce valid markup
      */
-    function testIsLoggedIn() {
-        $_SESSION['user'] = 'me@example.com';
-        $config = Config::getInstance();
-        $config->setValue('site_root_path', '/my/path/to/thinktank/');
-
-        $controller = new TestController(true);
-        $results = $controller->go();
-
-        //test if view variables were set correctly
-        $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('test'), 'Testing, testing, 123');
-        $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'ThinkTank');
-
-        $this->assertEqual($results, '<a href="/my/path/to/thinktank/index.php">ThinkTank</a>: Testing, testing, 123 | Logged in as me@example.com', "controller output when logged in");
-    }
-
-    /**
-     * Test cache key not logged in, no params
-     */
-    function testCacheKeyNotLoggedIn() {
+    function testCacheKeyNoRequestParams() {
         $config = Config::getInstance();
         $config->setValue('cache_pages', true);
         $controller = new TestController(true);
         $results = $controller->go();
 
         $this->assertEqual($controller->getCacheKeyString(), '');
-    }
-
-    /**
-     * Test cache key logged in, no params
-     */
-    function testCacheKeyLoggedIn() {
-        $_SESSION['user'] = 'me@example.com';
-
-        $config = Config::getInstance();
-        $config->setValue('cache_pages', true);
-        $controller = new TestController(true);
-        $results = $controller->go();
-
-        $this->assertEqual($controller->getCacheKeyString(), 'me@example.com');
     }
 
 }
