@@ -15,6 +15,27 @@
       <div class="thinktank-canvas clearfix">
         <!--<a {if $instance}href="{$site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a>-->
         <div class="clearfix prepend_20">
+            {if $error}
+    <p class="error">
+        {$error}
+    </p>    
+    {/if}
+    {if $info}
+    <p class="info">
+        {$info}
+    </p>    
+    {/if}
+    {if $msg}
+    <p class="info">
+        {$msg}
+    </p>    
+    {/if}
+    {if $success}
+    <p class="success">
+        {$success}
+    </p>    
+    {/if}
+        
           <div class="grid_2 prefix_1 alpha">
             <img src="{$post->author_avatar}" class="avatar2">
           </div>

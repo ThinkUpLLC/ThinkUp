@@ -26,6 +26,7 @@ class PrivateDashboardController extends ThinkTankAuthController {
         if (isset($last_updated_instance)) {
             $this->addToView('crawler_last_run', $last_updated_instance->crawler_last_run);
         }
+        $this->addToView('controller_title', 'Private Dashboard');
     }
 
     /**
@@ -75,7 +76,6 @@ class PrivateDashboardController extends ThinkTankAuthController {
 
             $this->addToView('instance', $instance);
             $this->addToView('instances', $instancenstance_dao->getByOwner($owner));
-            $this->addToView('site_root_path', $config->getValue('site_root_path'));
 
             $total_follows_with_errors = $follow_dao->getTotalFollowsWithErrors($instance->network_user_id);
             $this->addToView('total_follows_with_errors', $total_follows_with_errors);
@@ -100,21 +100,21 @@ class PrivateDashboardController extends ThinkTankAuthController {
             if (isset($owner_stats)) {
                 $percent_followers_loaded = Utils::getPercentage($owner_stats->follower_count, ($total_follows_with_full_details + $total_follows_with_errors));
                 $percent_followers_loaded = ($percent_followers_loaded  > 100) ? 100 : $percent_followers_loaded;
+                $this->addToView('percent_followers_loaded', $percent_followers_loaded);
+
                 $percent_tweets_loaded = Utils::getPercentage($owner_stats->post_count,$instance->total_posts_in_system );
                 $percent_tweets_loaded = ($percent_tweets_loaded  > 100) ? 100 : $percent_tweets_loaded;
+                $this->addToView('percent_tweets_loaded', $percent_tweets_loaded);
 
                 $percent_friends_loaded = Utils::getPercentage($owner_stats->friend_count, ($total_friends_loaded));
                 $percent_friends_loaded = ($percent_friends_loaded  > 100) ? 100 : $percent_friends_loaded;
+                $this->addToView('percent_friends_loaded', $percent_friends_loaded);
 
                 $percent_followers_suspended = round(Utils::getPercentage($total_follows_with_full_details, $total_follows_with_errors), 2);
-                $percent_followers_protected = round(Utils::getPercentage($total_follows_with_full_details, $total_follows_protected), 2);
-
-                $this->addToView('percent_followers_loaded', $percent_followers_loaded);
-                $this->addToView('percent_tweets_loaded', $percent_tweets_loaded);
-                $this->addToView('percent_friends_loaded', $percent_friends_loaded);
                 $this->addToView('percent_followers_suspended', $percent_followers_suspended);
-                $this->addToView('percent_followers_protected', $percent_followers_protected);
 
+                $percent_followers_protected = round(Utils::getPercentage($total_follows_with_full_details, $total_follows_protected), 2);
+                $this->addToView('percent_followers_protected', $percent_followers_protected);
             }
             $webapp->setActivePlugin($instance->network);
             $this->addToView('post_tabs', $webapp->getChildTabsUnderPosts($instance));

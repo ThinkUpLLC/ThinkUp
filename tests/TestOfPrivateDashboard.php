@@ -132,9 +132,7 @@ class TestOfPrivateDashboard extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('ThinkTank');
-
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
         $this->assertText('Logged in as: me@example.com');
         $this->assertText('thinktankapp');
     }
@@ -145,10 +143,10 @@ class TestOfPrivateDashboard extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
 
         $this->get($this->url.'/user/index.php?i=thinktankapp&u=ev');
-        $this->assertTitle('ThinkTank ev');
+        $this->assertTitle('ThinkTank');
         $this->assertText('Logged in as: me@example.com');
         $this->assertText('ev');
 
@@ -162,7 +160,7 @@ class TestOfPrivateDashboard extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
 
         $this->click("Configuration");
         $this->assertTitle('ThinkTank');
@@ -179,11 +177,10 @@ class TestOfPrivateDashboard extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
         $this->assertText('Export');
 
         $this->click("Export");
         $this->assertText('This is test post');
     }
 }
-?>

@@ -76,7 +76,7 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
         $_SESSION['user'] = 'me@example.com';
 
         $results = $controller->go();
+
         $this->assertTrue(strpos( $results, "It is nice to be nice") > 0, "logged in dashboard");
     }
-
 }

@@ -41,7 +41,7 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
@@ -52,6 +52,14 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->click('Change password');
         $this->assertText('Your password has been updated.');
 
+        $this->click("Log Out");
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword1');
+
+        $this->click("Log In");
+        $this->assertTitle('Private Dashboard | ThinkTank');
+        $this->assertText('Logged in as: me@example.com');
     }
 
     function testChangePasswordWrongExistingPassword() {
@@ -60,7 +68,7 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
@@ -78,7 +86,7 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
@@ -95,7 +103,7 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
@@ -113,7 +121,7 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
@@ -125,4 +133,3 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->assertText('New password must be at least 5 characters. Your password has not been changed.');
     }
 }
-?>

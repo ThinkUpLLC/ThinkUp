@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>ThinkTank Public Timeline</title>
+  <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
   <link rel="shortcut icon" href="{$site_root_path}assets/img/favicon.ico">
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/positioning.css">

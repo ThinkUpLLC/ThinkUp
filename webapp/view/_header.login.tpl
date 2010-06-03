@@ -39,7 +39,9 @@
         </span>
       {else}
         <!-- the user has not selected an instance -->
+        {if $crawler_last_run}
         Last update: {$crawler_last_run|relative_datetime} ago
+        {/if}
       {/if}
     </div> <!-- end .status-bar-left -->
     

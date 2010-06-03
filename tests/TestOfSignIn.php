@@ -40,7 +40,7 @@ class TestOfSignIn extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
 
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
         $this->assertText('Logged in as: me@example.com');
     }
 
@@ -56,7 +56,7 @@ class TestOfSignIn extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
 
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkTank');
         $this->assertText('Logged in as: me@example.com');
     }
 }

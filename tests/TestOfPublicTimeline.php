@@ -118,16 +118,16 @@ class TestOfPublicTimeline extends ThinkTankWebTestCase {
 
     function testPublicTimelineAndPages() {
         $this->get($this->url.'/public.php');
-        $this->assertTitle('ThinkTank Public Timeline');
+        $this->assertTitle('Public Timeline | ThinkTank');
         $this->assertText('Log In');
         $this->click('Log In');
-        $this->assertTitle('ThinkTank Log In');
+        $this->assertTitle('ThinkTank');
         $this->assertText('Register');
         $this->click('Register');
-        $this->assertTitle('ThinkTank Registration');
+        $this->assertTitle('ThinkTank');
         $this->assertText('Forgot password');
         $this->click('Forgot password');
-        $this->assertTitle('ThinkTank Forgot password');
+        $this->assertTitle('ThinkTank');
     }
 
     function testNextAndPreviousControls() {
@@ -138,7 +138,7 @@ class TestOfPublicTimeline extends ThinkTankWebTestCase {
         foreach ($categories as $category) {
 
             $this->get($this->url.'/public.php'.$category);
-            $this->assertTitle('ThinkTank Public Timeline');
+            $this->assertTitle('Public Timeline | ThinkTank');
 
             $this->assertText('ev');
             $this->assertText('This is post 39');
@@ -168,7 +168,7 @@ class TestOfPublicTimeline extends ThinkTankWebTestCase {
 
     function testNextAndPreviousPhotosControls() {
         $this->get($this->url.'/public.php?v=photos');
-        $this->assertTitle('ThinkTank Public Timeline');
+        $this->assertTitle('Public Timeline | ThinkTank');
 
         $this->assertText('shutterbug');
         $this->assertText('This is image post 39');
@@ -198,7 +198,7 @@ class TestOfPublicTimeline extends ThinkTankWebTestCase {
 
     function testNextAndPreviousLinksControls() {
         $this->get($this->url.'/public.php?v=links');
-        $this->assertTitle('ThinkTank Public Timeline');
+        $this->assertTitle('Public Timeline | ThinkTank');
 
         $this->assertText('linkbaiter');
         $this->assertText('This is link post 39');
