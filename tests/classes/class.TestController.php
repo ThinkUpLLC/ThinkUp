@@ -8,6 +8,6 @@ class TestController extends ThinkTankController implements Controller {
     public function control() {
         $this->setViewTemplate('testme.tpl');
         $this->addToView('test', 'Testing, testing, 123');
-        return $this->renderView();
+        return $this->generateView();
     }
 }

@@ -1,5 +1,7 @@
-<?php 
+<?php
 /**
+ * Configuration singleton
+ *
  * Singleton acess object for ThinkTank configuration values set in config.inc.php.
  * Never reference $THINKTANK_CFG directly; always do it through this object.
  *
@@ -17,14 +19,27 @@
  * @author      Mark Wilkie
  */
 class Config {
-
+    /**
+     *
+     * @var Config
+     */
     private static $instance;
-    
+    /**
+     *
+     * @var array
+     */
     var $config;
-    
+    /**
+     * Constructor
+     */
+    function __construct() {
+        global $THINKTANK_CFG;
+        $this->config = $THINKTANK_CFG;
+    }
+
     /**
      * get the singleton instance of Config
-     * @return object Config
+     * @return Config
      */
     public static function getInstance() {
         if (!isset(self::$instance)) {
@@ -32,7 +47,7 @@ class Config {
         }
         return self::$instance;
     }
-    
+
     /**
      * get the configuration value
      * @param    string   $key   key of the configuration key/value pair
@@ -42,18 +57,24 @@ class Config {
         $value = isset($this->config[$key]) ? $this->config[$key] : null;
         return $value;
     }
-    
-    /** 
+
+    /**
      * provided only for use when overriding config.inc.php values in tests
-     */ 
+     * @param string $key
+     * @param string $value
+     * @return string $value
+     */
     public function setValue($key, $value) {
         $value = $this->config[$key] = $value;
         return $value;
     }
-    
-    function Config() {
-        global $THINKTANK_CFG;
-        $this->config = $THINKTANK_CFG;
+
+    /**
+     * provided only for tests that want to kill Config object in tearDown()
+     */
+    public static function destroyInstance() {
+        if (isset(self::$instance)) {
+            self::$instance = null;
+        }
     }
 }
-?>

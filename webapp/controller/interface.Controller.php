@@ -7,9 +7,9 @@
 
 interface Controller {
     /**
-     * Handle request parameters for a particular resource and display HTML markup results
+     * Handle request parameters for a particular resource and return HTML markup view
      *
-     * @return string HTML markup
+     * @return string HTML markup for web page
      */
     public function control();
 }

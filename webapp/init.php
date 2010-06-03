@@ -34,6 +34,7 @@ require_once 'model/class.Follow.php';
 require_once 'model/class.Webapp.php';
 require_once 'controller/interface.Controller.php';
 require_once 'controller/class.ThinkTankController.php';
+require_once 'controller/class.ThinkTankAuthController.php';
 
 require_once 'config.inc.php';
 

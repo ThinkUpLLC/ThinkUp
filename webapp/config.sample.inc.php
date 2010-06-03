@@ -17,8 +17,8 @@ $THINKTANK_CFG['GMT_offset']                = 7;
 // Your timezone
 $THINKTANK_CFG['timezone']                  = 'America/Los_Angeles';
 
-// Toggle Smarty caching. 1: Smarty caching on, 0: Smarty caching off
-$THINKTANK_CFG['cache_pages']               = 1;
+// Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
+$THINKTANK_CFG['cache_pages']               = true;
 
 // Application title
 $THINKTANK_CFG['app_title']                 = 'ThinkTank';

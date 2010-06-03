@@ -67,7 +67,7 @@ class PublicTimelineController extends ThinkTankController implements Controller
             $this->addToViewCacheKey('timeline');
             $this->loadPublicPostList('timeline');
         }
-        return $this->renderView();
+        return $this->generateView();
     }
 
     /**

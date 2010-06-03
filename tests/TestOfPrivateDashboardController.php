@@ -6,6 +6,7 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/interface.Controller.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankAuthController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PrivateDashboardController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PublicTimelineController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
@@ -65,7 +66,7 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
 
     function testControlNotLoggedIn() {
         $controller = new PrivateDashboardController(true);
-        $results = $controller->control();
+        $results = $controller->go();
 
         $this->assertTrue(strpos( $results, "Latest public posts and public replies") > 0, "not logged in public timeline");
     }
@@ -74,7 +75,7 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
         $controller = new PrivateDashboardController(true);
         $_SESSION['user'] = 'me@example.com';
 
-        $results = $controller->control();
+        $results = $controller->go();
         $this->assertTrue(strpos( $results, "It is nice to be nice") > 0, "logged in dashboard");
     }
 

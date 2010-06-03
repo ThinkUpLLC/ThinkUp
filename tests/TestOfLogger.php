@@ -1,19 +1,20 @@
-<?php 
+<?php
 require_once dirname(__FILE__).'/config.tests.inc.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.LoggerSlowSQL.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
 
-class TestOfLogging extends UnitTestCase {
+class TestOfLogging extends ThinkTankBasicUnitTestCase {
     function TestOfLogging() {
         $this->UnitTestCase('Log class test');
     }
-    
+
     function setUp() {
         global $THINKTANK_CFG;
         // delete our log file if it exists
@@ -21,7 +22,7 @@ class TestOfLogging extends UnitTestCase {
             unlink($THINKTANK_CFG['log_location']);
         }
     }
-    
+
     function tearDown() {
         global $THINKTANK_CFG;
         // delete our log file if it exists
@@ -29,7 +30,7 @@ class TestOfLogging extends UnitTestCase {
             unlink($THINKTANK_CFG['log_location']);
         }
     }
-    
+
     function testNewLoggerSingleton() {
         global $THINKTANK_CFG;
 

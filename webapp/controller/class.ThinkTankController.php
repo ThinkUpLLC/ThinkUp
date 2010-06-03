@@ -2,7 +2,7 @@
 /**
  * ThinkTank Controller
  *
- * The parent class for all ThinkTank webapp controllers.
+ * The parent class of all ThinkTank webapp controllers.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
@@ -22,7 +22,7 @@ abstract class ThinkTankController {
     protected $is_view_cached = false;
     /**
      *
-     * @var string Smarty template cache key
+     * @var array contains the cache key key/value pairs
      */
     private $view_cache_key = array();
     /**
@@ -34,17 +34,8 @@ abstract class ThinkTankController {
     /**
      * Constructs ThinkTankController
      *
-     * Sets default values all views have access to:
-     *
-     *  <code>
-     *  //path of the ThinkTank installation site root as defined in config.inc.php
-     *  {$site_root_path}
-     *  //email address of currently logged in ThinkTank user, '' if not logged in
+     *  Adds email address of currently logged in ThinkTank user, '' if not logged in, to view
      *  {$logged_in_user}
-     *  //file the ThinkTank logo links to, 'index.php' by default
-     *  {$logo_link}
-     *  </code>
-     *
      */
     public function __construct($session_started=false) {
         if (!$session_started) {
@@ -54,11 +45,8 @@ abstract class ThinkTankController {
         $this->is_view_cached = ($config->getValue('cache_pages')==0 ? false:true);
         $this->view_mgr = new SmartyThinkTank();
 
-        //set default values all views have access to
-        $this->addToView('site_root_path', $config->getValue('site_root_path'));
+        //@TODO Add this logic to the ThinkTankAuthController
         $this->addToView('logged_in_user', $this->getLoggedInUser());
-        $this->addToView('logo_link', 'index.php');
-
         //add currently logged in user to cache key if logged in
         if ($this->isLoggedIn()) {
             $this->addToViewCacheKey($this->getLoggedInUser());
@@ -66,22 +54,8 @@ abstract class ThinkTankController {
     }
 
     /**
-     * Clean up
+     * Adds $addition to cache key array
      *
-     * Close open database connection
-     *
-     * @TODO: Remove this once global db and conn variables are no longer created in init.php (after PDO port is complete)
-     */
-    public function __destruct() {
-        //        global $db;
-        //        global $conn;
-        //        if (isset($db) && isset($conn)) {
-        //            $db->closeConnection($conn);
-        //        }
-    }
-
-    /**
-     * Adds $addition to cache key
      * @param string $addition
      */
     protected function addToViewCacheKey($addition) {
@@ -90,14 +64,16 @@ abstract class ThinkTankController {
 
     /**
      * Returns whether or not ThinkTank user is logged in
+     *
      * @return boolean whether or not user is logged in
      */
     protected function isLoggedIn() {
-        return isset($_SESSION['user']);
+        return (isset($_SESSION['user']) && $_SESSION['user']!= '') ? true : false;
     }
 
     /**
      * Return email address of logged-in user
+     *
      * @return string email
      */
     protected function getLoggedInUser() {
@@ -110,20 +86,24 @@ abstract class ThinkTankController {
 
     /**
      * Returns cache key as a string
+     *
+     * Set to public for the sake of tests.
      * @return string cache key
      */
-    private function getCacheKeyString() {
+    public function getCacheKeyString() {
         return implode($this->view_cache_key, self::KEY_SEPARATOR);
     }
+
     /**
-     * Displays web page
-     * @return string results
+     * Generates web page markup
+     *
+     * @return string view markup
      */
-    public function renderView() {
+    protected function generateView() {
         if (isset($this->view_template)) {
             if ($this->is_view_cached) {
-                $cacheKey = $this->view_template . self::KEY_SEPARATOR .$this->getCacheKeyString();
-                return $this->view_mgr->fetch($this->view_template, $cacheKey);
+                $cache_key = $this->view_template . self::KEY_SEPARATOR .$this->getCacheKeyString();
+                return $this->view_mgr->fetch($this->view_template, $cache_key);
             } else {
                 return $this->view_mgr->fetch($this->view_template);
             }
@@ -134,6 +114,7 @@ abstract class ThinkTankController {
 
     /**
      * Sets the view template filename
+     *
      * @param string $tpl_filename
      */
     protected function setViewTemplate($tpl_filename) {
@@ -148,5 +129,26 @@ abstract class ThinkTankController {
      */
     protected function addToView($key, $value) {
         $this->view_mgr->assign($key, $value);
+    }
+
+    /**
+     * Invoke the controller
+     *
+     * Always use this method, not control(), to invoke the controller.
+     * @TODO show get 500 error template on Exception (if debugging is true, pass the exception details to the 500 template)
+     */
+    public function go() {
+        try {
+            return $this->control();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * Provided for tests only, to assert that proper view values have been set. (Debug must be equal to true.)
+     */
+    public function getViewManager() {
+        return $this->view_mgr;
     }
 }

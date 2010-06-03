@@ -4,28 +4,28 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
 
-class TestOfPluginHook extends ThinkTankUnitTestCase {
+class TestOfPluginHook extends ThinkTankBasicUnitTestCase {
 
-	function TestOfPluginHook() {
-		$this->UnitTestCase('PluginHook class test');
-	}
+    function TestOfPluginHook() {
+        $this->UnitTestCase('PluginHook class test');
+    }
 
-	function setUp() {
-	}
+    function setUp() {
+    }
 
-	function tearDown() {
-	}
+    function tearDown() {
+    }
 
-	function testRegisterPlugin() {
-		$ph = new PluginHook();
-		$ph->registerPlugin('facebook', "FacebookPlugin");
-		$plugin_obj = $ph->getPluginObject("facebook");
-		$this->assertEqual($plugin_obj, "FacebookPlugin");
+    function testRegisterPlugin() {
+        $ph = new PluginHook();
+        $ph->registerPlugin('facebook', "FacebookPlugin");
+        $plugin_obj = $ph->getPluginObject("facebook");
+        $this->assertEqual($plugin_obj, "FacebookPlugin");
 
-		$this->expectException( new Exception("No plugin object defined for: notregistered") );
-		$plugin_obj = $ph->getPluginObject("notregistered");
-	}
+        $this->expectException( new Exception("No plugin object defined for: notregistered") );
+        $plugin_obj = $ph->getPluginObject("notregistered");
+    }
 }
