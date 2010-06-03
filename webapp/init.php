@@ -42,7 +42,6 @@ $config = Config::getInstance();
 
 require_once $config->getValue('smarty_path').'Smarty.class.php';
 require_once 'model/class.SmartyThinkTank.php';
-require_once $config->getValue('source_root_path').'extlib/twitteroauth/twitteroauth.php';
 
 if ($config->getValue('time_zone')) {
     putenv($config->getValue('time_zone'));
@@ -56,6 +55,7 @@ $webapp = new Webapp();
 $crawler = new Crawler();
 
 // Instantiate global database variable
+//@TODO remove this when the PDO port is complete
 try {
     $db = new Database($THINKTANK_CFG);
     $conn = $db->getConnection();

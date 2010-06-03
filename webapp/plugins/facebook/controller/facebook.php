@@ -7,6 +7,8 @@
  Version: 0.01
  Author: Gina Trapani
  */
+$config = Config::getInstance();
+require_once $config->getValue('source_root_path').'extlib/facebook/facebook.php';
 
 $webapp->registerPlugin('facebook', 'FacebookPlugin');
 $webapp->registerPlugin('facebook page', 'FacebookPlugin');

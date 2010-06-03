@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  Plugin Name: Twitter
  Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/webapp/plugins/twitter/
@@ -7,6 +7,8 @@
  Version: 0.01
  Author: Gina Trapani
  */
+$config = Config::getInstance();
+require_once $config->getValue('source_root_path').'extlib/twitteroauth/twitteroauth.php';
 
 $webapp->registerPlugin('twitter', 'TwitterPlugin');
 
