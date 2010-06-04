@@ -74,97 +74,97 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->instance->is_archive_loaded_follows = true;
     }
 
-//    function testConstructor() {
-//        self::setUpInstanceUserAnilDash();
-//        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
-//
-//        $this->assertTrue($tc != null);
-//    }
-//
-//    function testFetchInstanceUserInfo() {
-//        self::setUpInstanceUserAnilDash();
-//
-//        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
-//
-//        $tc->fetchInstanceUserInfo();
-//
-//        $udao = new UserDAO($this->db, $this->logger);
-//        $user = $udao->getDetails(36823);
-//        $this->assertTrue($user->id == 1);
-//        $this->assertTrue($user->user_id == 36823);
-//        $this->assertTrue($user->username == 'anildash');
-//        $this->assertTrue($user->found_in == 'Owner Status');
-//    }
-//
-//    function testFetchSearchResults() {
-//        self::setUpInstanceUserAnilDash();
-//        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
-//
-//        $tc->fetchInstanceUserInfo();
-//        $tc->fetchSearchResults('@whitehouse');
-//        $pdao = new PostDAO($this->db, $this->logger);
-//        $this->assertTrue($pdao->isPostInDB(11837263794));
-//
-//        $post = $pdao->getPost(11837263794);
-//        $this->assertEqual($post->post_text, "RT @whitehouse: The New Start Treaty: Read the text and remarks by President Obama &amp; President Medvedev http://bit.ly/cAm9hF");
-//    }
-//
-//    function testFetchInstanceUserFollowers() {
-//        self::setUpInstanceUserAnilDash();
-//        $this->instance->is_archive_loaded_follows = false;
-//        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
-//
-//        $tc->fetchInstanceUserFollowers();
-//        $fdao = new FollowDAO($this->db);
-//        $this->assertTrue($fdao->followExists(36823, 119950880), 'new follow exists');
-//
-//        $udao = new UserDAO($this->db);
-//        $updated_user = $udao->getUserByName('meatballhat');
-//        $this->assertEqual($updated_user->full_name, 'Dan Buch', 'follower full name set');
-//        $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower locaiton set');
-//    }
-//
-//    function testFetchInstanceUserFriends() {
-//        self::setUpInstanceUserAnilDash();
-//        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
-//        $tc->fetchInstanceUserInfo();
-//
-//        $tc->fetchInstanceUserFriends();
-//        $fdao = new FollowDAO($this->db);
-//        $this->assertTrue($fdao->followExists(14834340, 36823), 'new friend exists');
-//
-//        $udao = new UserDAO($this->db);
-//        $updated_user = $udao->getUserByName('jayrosen_nyu');
-//        $this->assertEqual($updated_user->full_name, 'Jay Rosen', 'friend full name set');
-//        $this->assertEqual($updated_user->location, 'New York City', 'friend locaiton set');
-//    }
-//
-//    function testFetchInstanceUserFriendsByIds() {
-//        self::setUpInstanceUserAnilDash();
-//        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
-//        $tc->fetchInstanceUserInfo();
-//
-//        $fd = new FollowDAO($this->db);
-//        $stale_friend = $fd->getStalestFriend($this->instance->network_user_id);
-//        $this->assertTrue(isset($stale_friend), 'there is a stale friend');
-//        $this->assertEqual($stale_friend->user_id, 930061, 'stale friend is ginatrapani');
-//        $this->assertEqual($stale_friend->username, 'ginatrapani', 'stale friend is ginatrapani');
-//
-//        $tc->fetchFriendTweetsAndFriends();
-//        $fdao = new FollowDAO($this->db);
-//        $this->assertTrue($fdao->followExists(14834340, 930061), 'ginatrapani friend loaded');
-//    }
-//
-//    function testFetchInstanceUserFollowersByIds() {
-//        self::setUpInstanceUserAnilDash();
-//        $this->api->available_api_calls_for_crawler = 2;
-//        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
-//        $tc->fetchInstanceUserInfo();
-//
-//        $tc->fetchInstanceUserFollowers();
-//        $fdao = new FollowDAO($this->db);
-//        $this->assertTrue($fdao->followExists(36823, 114811186), 'new follow exists');
-//    }
+    function testConstructor() {
+        self::setUpInstanceUserAnilDash();
+        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+
+        $this->assertTrue($tc != null);
+    }
+
+    function testFetchInstanceUserInfo() {
+        self::setUpInstanceUserAnilDash();
+
+        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+
+        $tc->fetchInstanceUserInfo();
+
+        $udao = new UserDAO($this->db, $this->logger);
+        $user = $udao->getDetails(36823);
+        $this->assertTrue($user->id == 1);
+        $this->assertTrue($user->user_id == 36823);
+        $this->assertTrue($user->username == 'anildash');
+        $this->assertTrue($user->found_in == 'Owner Status');
+    }
+
+    function testFetchSearchResults() {
+        self::setUpInstanceUserAnilDash();
+        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchSearchResults('@whitehouse');
+        $pdao = new PostDAO($this->db, $this->logger);
+        $this->assertTrue($pdao->isPostInDB(11837263794));
+
+        $post = $pdao->getPost(11837263794);
+        $this->assertEqual($post->post_text, "RT @whitehouse: The New Start Treaty: Read the text and remarks by President Obama &amp; President Medvedev http://bit.ly/cAm9hF");
+    }
+
+    function testFetchInstanceUserFollowers() {
+        self::setUpInstanceUserAnilDash();
+        $this->instance->is_archive_loaded_follows = false;
+        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+
+        $tc->fetchInstanceUserFollowers();
+        $fdao = new FollowDAO($this->db);
+        $this->assertTrue($fdao->followExists(36823, 119950880), 'new follow exists');
+
+        $udao = new UserDAO($this->db);
+        $updated_user = $udao->getUserByName('meatballhat');
+        $this->assertEqual($updated_user->full_name, 'Dan Buch', 'follower full name set');
+        $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower locaiton set');
+    }
+
+    function testFetchInstanceUserFriends() {
+        self::setUpInstanceUserAnilDash();
+        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc->fetchInstanceUserInfo();
+
+        $tc->fetchInstanceUserFriends();
+        $fdao = new FollowDAO($this->db);
+        $this->assertTrue($fdao->followExists(14834340, 36823), 'new friend exists');
+
+        $udao = new UserDAO($this->db);
+        $updated_user = $udao->getUserByName('jayrosen_nyu');
+        $this->assertEqual($updated_user->full_name, 'Jay Rosen', 'friend full name set');
+        $this->assertEqual($updated_user->location, 'New York City', 'friend locaiton set');
+    }
+
+    function testFetchInstanceUserFriendsByIds() {
+        self::setUpInstanceUserAnilDash();
+        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc->fetchInstanceUserInfo();
+
+        $fd = new FollowDAO($this->db);
+        $stale_friend = $fd->getStalestFriend($this->instance->network_user_id);
+        $this->assertTrue(isset($stale_friend), 'there is a stale friend');
+        $this->assertEqual($stale_friend->user_id, 930061, 'stale friend is ginatrapani');
+        $this->assertEqual($stale_friend->username, 'ginatrapani', 'stale friend is ginatrapani');
+
+        $tc->fetchFriendTweetsAndFriends();
+        $fdao = new FollowDAO($this->db);
+        $this->assertTrue($fdao->followExists(14834340, 930061), 'ginatrapani friend loaded');
+    }
+
+    function testFetchInstanceUserFollowersByIds() {
+        self::setUpInstanceUserAnilDash();
+        $this->api->available_api_calls_for_crawler = 2;
+        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc->fetchInstanceUserInfo();
+
+        $tc->fetchInstanceUserFollowers();
+        $fdao = new FollowDAO($this->db);
+        $this->assertTrue($fdao->followExists(36823, 114811186), 'new follow exists');
+    }
 
     function testFetchRetweetsOfInstanceuser() {
         self::setUpInstanceUserGinaTrapani();
@@ -178,9 +178,9 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $pdao = new PostDAO($this->db);
         $tc->fetchRetweetsOfInstanceUser();
         $post = $pdao->getPost(14947487415);
-        $this->assertEqual($post->retweet_count_cache, 6, '6 retweets loaded');
+        $this->assertEqual($post->retweet_count_cache, 3, '3 retweets loaded');
         $retweets = $pdao->getRetweetsOfPost(14947487415, true);
-        $this->assertEqual(sizeof($retweets), 6, '6 retweets loaded');
+        $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
 
         //make sure duplicate posts aren't going into the db on next crawler run
         self::setUpInstanceUserGinaTrapani();
@@ -189,9 +189,9 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
         $tc->fetchRetweetsOfInstanceUser();
         $post = $pdao->getPost(14947487415);
-        $this->assertEqual($post->retweet_count_cache, 6, '6 retweets loaded');
+        $this->assertEqual($post->retweet_count_cache, 3, '3 retweets loaded');
         $retweets = $pdao->getRetweetsOfPost(14947487415, true);
-        $this->assertEqual(sizeof($retweets), 6, '6 retweets loaded');
+        $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
     }
 
     //TODO: Test the rest of the TwitterCrawler methods

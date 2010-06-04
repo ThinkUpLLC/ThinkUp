@@ -309,7 +309,7 @@ class PostDAO extends MySQLDAO {
 
                 if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '' && $this->isPostInDB($vals['in_retweet_of_post_id'])) {
                     $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
-                    $status_message = "Repost of ".$vals['in_retweet_of_post_id'].", ID: ".$vals["post_id"]."; updating retweet cache count";
+                    $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["user_name"]." ID: ".$vals["post_id"]."; updating retweet cache count";
                     $this->logger->logStatus($status_message, get_class($this));
                     $status_message = "";
                 }

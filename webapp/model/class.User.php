@@ -167,11 +167,11 @@ class UserDAO extends MySQLDAO {
             }
             return 1;
         } else {
-            if (isset($this->logger) && $this->logger != null) {
-                $status_message = "User ".$user->username." was NOT updated in system.";
-                $this->logger->logStatus($status_message, get_class($this));
-                $status_message = "";
-            }
+//            if (isset($this->logger) && $this->logger != null) {
+//                $status_message = "User ".$user->username." was NOT updated in system.";
+//                $this->logger->logStatus($status_message, get_class($this));
+//                $status_message = "";
+//            }
             return 0;
         }
     }
