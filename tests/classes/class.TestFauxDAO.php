@@ -53,7 +53,10 @@ class TestFauxDAO implements TestDAO {
     // test select many records
     public function selectRecords($id) {
     }
-    
+
+    public function selectRecordsWithLimit($limit) {
+    }
+
     // test select many records as array
     public function selectRecordsAsArrays($id) {
     }

@@ -13,7 +13,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Follow.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
 //require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
@@ -115,7 +115,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
 
         $tc->fetchInstanceUserFollowers();
-        $fdao = new FollowDAO($this->db);
+        $fdao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue($fdao->followExists(36823, 119950880), 'new follow exists');
 
         $udao = new UserDAO($this->db);
@@ -130,7 +130,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $tc->fetchInstanceUserInfo();
 
         $tc->fetchInstanceUserFriends();
-        $fdao = new FollowDAO($this->db);
+        $fdao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue($fdao->followExists(14834340, 36823), 'new friend exists');
 
         $udao = new UserDAO($this->db);
@@ -144,14 +144,14 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
         $tc->fetchInstanceUserInfo();
 
-        $fd = new FollowDAO($this->db);
+        $fd = DAOFactory::getDAO('FollowDAO');
         $stale_friend = $fd->getStalestFriend($this->instance->network_user_id);
         $this->assertTrue(isset($stale_friend), 'there is a stale friend');
         $this->assertEqual($stale_friend->user_id, 930061, 'stale friend is ginatrapani');
         $this->assertEqual($stale_friend->username, 'ginatrapani', 'stale friend is ginatrapani');
 
         $tc->fetchFriendTweetsAndFriends();
-        $fdao = new FollowDAO($this->db);
+        $fdao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue($fdao->followExists(14834340, 930061), 'ginatrapani friend loaded');
     }
 
@@ -162,7 +162,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $tc->fetchInstanceUserInfo();
 
         $tc->fetchInstanceUserFollowers();
-        $fdao = new FollowDAO($this->db);
+        $fdao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue($fdao->followExists(36823, 114811186), 'new follow exists');
     }
 

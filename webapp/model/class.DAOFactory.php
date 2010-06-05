@@ -1,31 +1,34 @@
 <?php
 /**
-* DAOFactory
-* 
-* inits a dao based on the think tank config db_type and $dao_mapping definitions.
+ * DAOFactory
+ *
+ * inits a dao based on the think tank config db_type and $dao_mapping definitions.
 
-* db_type is defined in webapp/config.inc.php as:
-* 
-*     $THINKTANK_CFG['db_type'] = 'somedb';
-* 
-* Example: DAOFactory::getDAO('SomeDAO');
-* 
-* @author Mark Wilkie
-*/
+ * db_type is defined in webapp/config.inc.php as:
+ *
+ *     $THINKTANK_CFG['db_type'] = 'somedb';
+ *
+ * Example: DAOFactory::getDAO('SomeDAO');
+ *
+ * @author Mark Wilkie
+ */
 class DAOFactory {
 
     /**
      * maps DAO from db_type and defines class names and path for initialization
      */
     static $dao_mapping = array (
-        // our test dao
+    // our test dao
         'TestDAO' => array( 
             'mysql' => array( 'class' => 'TestMysqlDAO', 'path' =>  'tests/classes/class.TestMysqlDAO.php'),
             'faux' => array( 'class' => 'TestFauxDAO', 'path' =>  'tests/classes/class.TestFauxDAO.php'),
         ),
-        //Instance MySQL DAO
+    //Instance MySQL DAO
         'InstanceDAO' => array(
             'mysql' => array( 'class' => 'InstanceMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
+        ),
+        'FollowDAO' => array(
+            'mysql' => array( 'class' => 'FollowMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
         )
     );
 
@@ -52,9 +55,9 @@ class DAOFactory {
     /**
      * gets the db_type for our configured ThinkTank instance, defaults to mysql,
      * db_type can optionally be defined in webapp/config.inc.php as:
-     * 
+     *
      *     $THINKTANK_CFG['db_type'] = 'somedb';
-     * 
+     *
      * @return string db_type, will default to 'mysql' if not defined
      */
     public static function getDBType() {

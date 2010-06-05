@@ -17,7 +17,6 @@ require_once 'model/class.Crawler.php';
 require_once 'model/class.Utils.php';
 
 require_once 'model/class.Logger.php';
-require_once 'model/class.Follow.php';
 
 require_once 'config.inc.php';
 require_once $THINKTANK_CFG['smarty_path'].'Smarty.class.php';

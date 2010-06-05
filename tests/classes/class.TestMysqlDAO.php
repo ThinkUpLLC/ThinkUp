@@ -31,14 +31,18 @@ class TestMysqlDAO extends PDODAO implements TestDAO {
 
     // test multi insert and parent getInsertCount()
     public function insertMultiDataGetCount($insert_data) {
-        $sql = "insert into #prefix#test_table (test_name, test_id) values ".$values = null;
+        $sql = "insert into #prefix#test_table (test_name, test_id) values ";
+        $values = null;
+        $i = 0;
         $binds = array();
         foreach ($insert_data as $data) {
             if (!is_null($values)) {
                 $values .= ',';
             }
-            $values .= '(?,?)';
-            array_push($binds, $data[0], $data[1]);
+            $values .= '(:name'.$i.', :id'.$i.')';
+            $binds[':name'.$i] = $data[0];
+            $binds[':id'.$i] = $data[1];
+            $i++;
         }
         $sql .= $values;
         $stmt = $this->execute($sql, $binds);
@@ -91,6 +95,14 @@ class TestMysqlDAO extends PDODAO implements TestDAO {
         $stmt = $this->execute($sql, array(':test_id'=>$id));
         return $this->getDataRowsAsObjects($stmt, 'TestData');
     }
+
+    // test select many records with limit
+    public function selectRecordsWithLimit($limit) {
+        $sql = "select id, test_name, test_id from #prefix#test_table order by test_id LIMIT :limit";
+        $stmt = $this->execute($sql, array(':limit' => $limit));
+        return $this->getDataRowsAsObjects($stmt, 'TestData');
+    }
+
 
     // test select many records as array
     public function selectRecordsAsArrays($id) {

@@ -11,7 +11,7 @@ require_once 'init.php';
 
 $od = new OwnerDAO($db);
 $ud = new UserDAO($db);
-$fd = new FollowDAO($db);
+$fd = DAOFactory::getDAO('FollowDAO');
 $id = DAOFactory::getDAO('InstanceDAO');
 $pd = new PostDAO($db);
 $s = new SmartyThinkTank();

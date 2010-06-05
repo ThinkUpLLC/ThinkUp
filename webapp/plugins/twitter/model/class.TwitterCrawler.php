@@ -483,7 +483,7 @@ class TwitterCrawler {
             if ($cURL_status > 200) {
                 $continue_fetching = false;
             } else {
-                $fd = new FollowDAO($this->db, $this->logger);
+                $fd = DAOFactory::getDAO('FollowDAO');
 
                 try {
                     $status_message = "Parsing XML. ";
@@ -568,7 +568,7 @@ class TwitterCrawler {
             if ($cURL_status > 200) {
                 $continue_fetching = false;
             } else {
-                $fd = new FollowDAO($this->db, $this->logger);
+                $fd = DAOFactory::getDAO('FollowDAO');;
 
                 try {
                     $status_message = "Parsing XML. ";
@@ -618,8 +618,8 @@ class TwitterCrawler {
     }
 
     function fetchInstanceUserFriends() {
-        $fd = new FollowDAO($this->db, $this->logger);
-        $this->instance->total_friends_in_system = $fd->getTotalFriends($this->instance->network_user_id);
+        $fd = DAOFactory::getDAO('FollowDAO');
+        $this->instance->total_friends_in_system = $fd->countTotalFriends($this->instance->network_user_id);
 
         if ($this->instance->total_friends_in_system
         < $this->owner_object->friend_count) {
@@ -697,7 +697,7 @@ class TwitterCrawler {
     }
 
     function fetchFriendTweetsAndFriends() {
-        $fd = new FollowDAO($this->db, $this->logger);
+        $fd = DAOFactory::getDAO('FollowDAO');
         $pd = new PostDAO($this->db, $this->logger);
 
         $continue_fetching = true;
@@ -791,7 +791,7 @@ class TwitterCrawler {
     }
 
     function fetchUnloadedFollowerDetails() {
-        $fd = new FollowDAO($this->db, $this->logger);
+        $fd = DAOFactory::getDAO('FollowDAO');
         $strays = $fd->getUnloadedFollowerDetails($this->owner_object->user_id);
         $status_message = count($strays).' unloaded follower details to load.';
         $this->logger->logStatus($status_message, get_class($this));
@@ -905,7 +905,7 @@ class TwitterCrawler {
 
     // For each API call left, grab oldest follow relationship, check if it exists, and update table
     function cleanUpFollows() {
-        $fd = new FollowDAO($this->db, $this->logger);
+        $fd = DAOFactory::getDAO('FollowDAO');
         $continue_fetching = true;
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
 

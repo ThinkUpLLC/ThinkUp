@@ -165,7 +165,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
     }
 
     public function getChildTabsUnderFriends($instance) {
-        global $fd;
+        $fd = DAOFactory::getDAO('FollowDAO');
 
         $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
         $child_tabs = array();
@@ -180,7 +180,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
     }
 
     public function getChildTabsUnderFollowers($instance) {
-        global $fd;
+        $fd = DAOFactory::getDAO('FollowDAO');
 
         $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
         $child_tabs = array();

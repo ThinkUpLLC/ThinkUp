@@ -41,6 +41,9 @@ interface TestDAO {
     // test select many records
     public function selectRecords($id);
 
+    // test select many records wth limit
+    public function selectRecordsWithLimit($limit);
+
     // test select many records as array
     public function selectRecordsAsArrays($id);
 

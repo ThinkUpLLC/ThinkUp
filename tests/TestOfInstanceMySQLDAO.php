@@ -5,9 +5,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Loremipsum/LoremIpsum.class.php';
 
-
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.PDODAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.InstanceMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';

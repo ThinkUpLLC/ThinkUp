@@ -36,7 +36,7 @@ $s = new SmartyThinkTank();
 // instantiate data access objects
 $ud = new UserDAO($db);
 $pd = new PostDAO($db);
-$fd = new FollowDAO($db);
+$fd = DAOFactory::getDAO('FollowDAO');
 $ld = new LinkDAO($db);
 
 // pass data to smarty

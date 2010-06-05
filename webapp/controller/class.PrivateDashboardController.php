@@ -68,7 +68,7 @@ class PrivateDashboardController extends ThinkTankAuthController {
 
             // instantiate data access objects
             $user_dao = new UserDAO($db);
-            $follow_dao = new FollowDAO($db);
+            $follow_dao = DAOFactory::getDAO('FollowDAO');
 
             // pass data to smarty
             $owner_stats = $user_dao->getDetails($instance->network_user_id);
@@ -77,23 +77,23 @@ class PrivateDashboardController extends ThinkTankAuthController {
             $this->addToView('instance', $instance);
             $this->addToView('instances', $instancenstance_dao->getByOwner($owner));
 
-            $total_follows_with_errors = $follow_dao->getTotalFollowsWithErrors($instance->network_user_id);
+            $total_follows_with_errors = $follow_dao->countTotalFollowsWithErrors($instance->network_user_id);
             $this->addToView('total_follows_with_errors', $total_follows_with_errors);
 
-            $total_follows_with_full_details = $follow_dao->getTotalFollowsWithFullDetails($instance->network_user_id);
+            $total_follows_with_full_details = $follow_dao->countTotalFollowsWithFullDetails($instance->network_user_id);
             $this->addToView('total_follows_with_full_details', $total_follows_with_full_details);
 
-            $total_follows_protected = $follow_dao-> getTotalFollowsProtected($instance->network_user_id);
+            $total_follows_protected = $follow_dao-> countTotalFollowsProtected($instance->network_user_id);
             $this->addToView('total_follows_protected', $total_follows_protected);
 
             //TODO: Get friends with full details and also friends with errors, same as with followers
-            $total_friends_loaded = $follow_dao->getTotalFriends($instance->network_user_id);
+            $total_friends_loaded = $follow_dao->countTotalFriends($instance->network_user_id);
             $this->addToView('total_friends', $total_friends_loaded);
 
-            $total_friends_with_errors = $follow_dao->getTotalFriendsWithErrors($instance->network_user_id);
+            $total_friends_with_errors = $follow_dao->countTotalFriendsWithErrors($instance->network_user_id);
             $this->addToView('total_friends_with_errors', $total_friends_with_errors);
 
-            $total_friends_protected = $follow_dao->getTotalFriendsProtected($instance->network_user_id);
+            $total_friends_protected = $follow_dao->countTotalFriendsProtected($instance->network_user_id);
             $this->addToView('total_friends_protected', $total_friends_protected);
 
             //Percentages

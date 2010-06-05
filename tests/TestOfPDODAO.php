@@ -111,10 +111,10 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
         $this->assertEqual(22, $cnt, "should get an insert id of 22");
 
         // add multiple records and get count
-        $cnt = $testdao->insertMultiDataGetCount(array( array( 'test_user23', '23'), array( 'test_user24', '24') )) ;
+        $cnt = $testdao->insertMultiDataGetCount(array( array( 'test_user23', '23'), array( 'test_user24', '24') ));
         $this->assertEqual(2, $cnt, "should get an insert count of 2");
 
-        // test duplicate key err, check for message?
+       // test duplicate key err, check for message?
         try {
             $cnt = $testdao->insertDataGetCount('test_user', '1000');
             $this->fail('should throw a PDOException');
@@ -163,6 +163,12 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
         $this->assertEqual($data_obj['test_id'], '3');
     }
 
+    function testSelectRecordsAsArrayWithLimit() {
+        $testdao = DAOFactory::getDAO('TestDAO');
+        $data_obj = $testdao->selectRecordsWithLimit(2);
+        $this->assertEqual(count($data_obj), 2, 'should have limited to two records');
+    }
+    
     function testSelectRecords() {
         $testdao = DAOFactory::getDAO('TestDAO');
 

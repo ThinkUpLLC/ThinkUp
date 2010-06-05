@@ -247,7 +247,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
     }
 
     public function getChildTabsUnderFriends($instance) {
-        global $fd;
+        $fd = DAOFactory::getDAO('FollowDAO');
 
         $twitter_data_tpl = Utils::getPluginViewDirectory('twitter').'twitter.inline.view.tpl';
 
@@ -287,7 +287,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
     }
 
     public function getChildTabsUnderFollowers($instance) {
-        global $fd;
+        $fd = DAOFactory::getDAO('FollowDAO');
 
         $twitter_data_tpl = Utils::getPluginViewDirectory('twitter').'twitter.inline.view.tpl';
 

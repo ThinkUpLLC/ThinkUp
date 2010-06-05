@@ -7,7 +7,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/mock_objects.php';
 /* MODEL TESTS */
 require_once $SOURCE_ROOT_PATH.'tests/TestOfConfig.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfDatabase.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfFollowDAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfFollowMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfInstanceMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfLinkDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfLogger.php';
@@ -28,7 +28,7 @@ $modeltest->addTestCase(new TestOfPDODAO());
 $modeltest->addTestCase(new TestOfDAOFactory());
 $modeltest->addTestCase(new TestOfConfig());
 $modeltest->addTestCase(new TestOfDatabase());
-$modeltest->addTestCase(new TestOfFollowDAO());
+$modeltest->addTestCase(new TestOfFollowMySQLDAO());
 $modeltest->addTestCase(new TestOfInstanceMySQLDAO());
 $modeltest->addTestCase(new TestOfLinkDAO());
 $modeltest->addTestCase(new TestOfMySQLDAO());
