@@ -23,7 +23,7 @@ chdir("..");
 
 require_once 'init.php';
 
-$pd = new PostDAO($db);
+$pd = DAOFactory::getDAO('PostDAO');
 
 
 foreach ($oid as $o) {

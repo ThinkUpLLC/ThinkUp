@@ -13,7 +13,7 @@ $od = new OwnerDAO($db);
 $ud = new UserDAO($db);
 $fd = DAOFactory::getDAO('FollowDAO');
 $id = DAOFactory::getDAO('InstanceDAO');
-$pd = new PostDAO($db);
+$pd = DAOFactory::getDAO('PostDAO');
 $s = new SmartyThinkTank();
 
 if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_REQUEST['i']) ){

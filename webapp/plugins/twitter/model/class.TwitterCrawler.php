@@ -60,7 +60,7 @@ class TwitterCrawler {
             list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, null, false);
             if ($cURL_status == 200) {
                 $tweets = $this->api->parseJSON($twitter_data);
-                $pd = new PostDAO($this->db, $this->logger);
+                $pd = DAOFactory::getDAO('PostDAO');
                 $count = 0;
                 foreach ($tweets as $tweet) {
                     $tweet['network'] = 'twitter';
@@ -123,7 +123,7 @@ class TwitterCrawler {
                     $count = 0;
                     $tweets = $this->api->parseXML($twitter_data);
 
-                    $pd = new PostDAO($this->db, $this->logger);
+                    $pd = DAOFactory::getDAO('PostDAO');
                     foreach ($tweets as $tweet) {
                         $tweet['network'] = 'twitter';
 
@@ -232,7 +232,7 @@ class TwitterCrawler {
         } elseif ($cURL_status == 404 || $cURL_status == 403) {
             try {
                 $e = $this->api->parseError($twitter_data);
-                $ped = new PostErrorDAO($this->db, $this->logger);
+                $ped = DAOFactory::getDAO('PostErrorDAO');
                 $ped->insertError($tid, $cURL_status, $e['error'], $this->owner_object->user_id);
                 $status_message = 'Error saved to tweets.';
             }
@@ -280,7 +280,7 @@ class TwitterCrawler {
                         }
 
 
-                        $pd = new PostDAO($this->db, $this->logger);
+                        $pd = DAOFactory::getDAO('PostDAO');
                         if (!isset($recentTweets)) {
                             $recentTweets = $pd->getAllPosts($this->owner_object->user_id, 100);
                         }
@@ -389,7 +389,7 @@ class TwitterCrawler {
             if ($cURL_status == 200) {
                 try {
                     $tweets = $this->api->parseXML($twitter_data);
-                    $pd = new PostDAO($this->db, $this->logger);
+                    $pd = DAOFactory::getDAO('PostDAO');
                     foreach ($tweets as $tweet) {
                         $user_with_retweet = new User($tweet, 'retweets');
                         $this->fetchUserTimelineForRetweet($status, $user_with_retweet);
@@ -432,7 +432,7 @@ class TwitterCrawler {
                     $tweets = $this->api->parseXML($twitter_data);
 
                     if (count($tweets) > 0) {
-                        $pd = new PostDAO($this->db, $this->logger);
+                        $pd = DAOFactory::getDAO('PostDAO');
                         foreach ($tweets as $tweet) {
                             if (RetweetDetector::isRetweet($tweet['post_text'], $this->owner_object->username)) {
                                 $this->logger->logStatus("Retweet by ".$tweet['user_name']. " found, ".substr($tweet['post_text'], 0, 50)."... ", get_class($this));
@@ -698,7 +698,7 @@ class TwitterCrawler {
 
     function fetchFriendTweetsAndFriends() {
         $fd = DAOFactory::getDAO('FollowDAO');
-        $pd = new PostDAO($this->db, $this->logger);
+        $pd = DAOFactory::getDAO('PostDAO');
 
         $continue_fetching = true;
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
@@ -779,7 +779,7 @@ class TwitterCrawler {
     }
 
     function fetchStrayRepliedToTweets() {
-        $pd = new PostDAO($this->db, $this->logger);
+        $pd = DAOFactory::getDAO('PostDAO');
         $strays = $pd->getStrayRepliedToPosts($this->owner_object->user_id);
         $status_message = count($strays).' stray replied-to tweets to load.';
         $this->logger->logStatus($status_message, get_class($this));

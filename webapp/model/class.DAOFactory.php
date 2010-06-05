@@ -1,14 +1,18 @@
 <?php
 /**
- * DAOFactory
+ * Data Access Object Factory
  *
- * inits a dao based on the think tank config db_type and $dao_mapping definitions.
+ * Inits a DAO based on the ThinkTank config db_type and $dao_mapping definitions.
 
  * db_type is defined in webapp/config.inc.php as:
  *
  *     $THINKTANK_CFG['db_type'] = 'somedb';
  *
- * Example: DAOFactory::getDAO('SomeDAO');
+ * Example of use:
+ *
+ * <code>
+ *  DAOFactory::getDAO('SomeDAO');
+ * </code> *
  *
  * @author Mark Wilkie
  */
@@ -22,20 +26,28 @@ class DAOFactory {
         'TestDAO' => array( 
             'mysql' => array( 'class' => 'TestMysqlDAO', 'path' =>  'tests/classes/class.TestMysqlDAO.php'),
             'faux' => array( 'class' => 'TestFauxDAO', 'path' =>  'tests/classes/class.TestFauxDAO.php'),
-        ),
+    ),
     //Instance MySQL DAO
         'InstanceDAO' => array(
             'mysql' => array( 'class' => 'InstanceMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
-        ),
+    ),
         'FollowDAO' => array(
             'mysql' => array( 'class' => 'FollowMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
-        )
+    ),
+    //Post Error MySQL DAO
+        'PostErrorDAO' => array(
+            'mysql' => array( 'class' => 'PostErrorMySQLDAO', 'path' => 'model/class.PostErrorMySQLDAO.php')
+    ),
+    //Post MySQL DAO
+        'PostDAO' => array(
+            'mysql' => array( 'class' => 'PostMySQLDAO', 'path' => 'model/class.PostMySQLDAO.php')
+    )
     );
 
     /*
      *  Creates a DAO instance and returns it
      *
-     * @param string - the name of the dao you wish to init
+     * @param string $dao_key the name of the dao you wish to init
      * @returns object - a concrete dao instance
      */
     public static function getDAO($dao_key) {
@@ -56,7 +68,9 @@ class DAOFactory {
      * gets the db_type for our configured ThinkTank instance, defaults to mysql,
      * db_type can optionally be defined in webapp/config.inc.php as:
      *
+     *<code>
      *     $THINKTANK_CFG['db_type'] = 'somedb';
+     *</code>
      *
      * @return string db_type, will default to 'mysql' if not defined
      */
@@ -66,4 +80,3 @@ class DAOFactory {
         return $type;
     }
 }
-?>

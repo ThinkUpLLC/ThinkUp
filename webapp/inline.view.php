@@ -35,7 +35,7 @@ $webapp->setActivePlugin($i->network);
 $s = new SmartyThinkTank();
 // instantiate data access objects
 $ud = new UserDAO($db);
-$pd = new PostDAO($db);
+$pd = DAOFactory::getDAO('PostDAO');
 $fd = DAOFactory::getDAO('FollowDAO');
 $ld = new LinkDAO($db);
 

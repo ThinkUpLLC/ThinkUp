@@ -15,7 +15,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
     public function __construct() {
         global $db; //@TODO remove this when PDO port is complete
-        $this->post_dao = new PostDAO($db);
+        $this->post_dao = DAOFactory::getDAO('PostDAO');
     }
 
     public function crawl() {

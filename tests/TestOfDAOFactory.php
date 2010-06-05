@@ -8,9 +8,17 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 // require_once $SOURCE_ROOT_PATH.'tests/classes/class.TestDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
+
+/**
+ * Test of DAOFactory
+ *
+ * @author Mark Wilkie
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class TestOfDAOFactory extends ThinkTankUnitTestCase {
 
-    function TestOfDAOFactory() {
+    function __construct() {
         $this->UnitTestCase('DAOFactory test');
     }
 
@@ -91,5 +99,26 @@ class TestOfDAOFactory extends ThinkTankUnitTestCase {
         $this->assertEqual($data_obj->test_id, 2001);
 
     }
+    /**
+     * Test get InstanceDAO
+     */
+    function getInstanceDAO(){
+        $dao = DAOFactory::getDAO('InstanceDAO');
+        $this->assertTrue(isset($dao));
+    }
 
-}
+    /**
+     * Test get PostErrorDAO
+     */
+    function getPostErrorDAO(){
+        $dao = DAOFactory::getDAO('PostErrorDAO');
+        $this->assertTrue(isset($dao));
+    }
+    /**
+     * Test get PostDAO
+     */
+    function getPostDAO(){
+        $dao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue(isset($dao));
+    }
+    }

@@ -21,12 +21,19 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterCrawle
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
 
+/**
+ * Test of TwitterCrawler
+ *
+ * @TODO Test the rest of the TwitterCrawler methods
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     var $api;
     var $instance;
     var $logger;
 
-    function TestOfTwitterCrawler() {
+    function __construct() {
         $this->UnitTestCase('TwitterCrawler test');
     }
 
@@ -51,7 +58,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->logger->close();
     }
 
-    function setUpInstanceUserAnilDash() {
+    private function setUpInstanceUserAnilDash() {
         global $THINKTANK_CFG;
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
         $this->instance = new Instance($r);
@@ -63,7 +70,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->instance->is_archive_loaded_follows = true;
     }
 
-    function setUpInstanceUserGinaTrapani() {
+    private function setUpInstanceUserGinaTrapani() {
         global $THINKTANK_CFG;
         $r = array('id'=>1, 'network_username'=>'ginatrapani', 'network_user_id'=>'930061', 'network_viewer_id'=>'930061', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
         $this->instance = new Instance($r);
@@ -102,7 +109,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
         $tc->fetchInstanceUserInfo();
         $tc->fetchSearchResults('@whitehouse');
-        $pdao = new PostDAO($this->db, $this->logger);
+        $pdao = DAOFactory::getDAO('PostDAO');
         $this->assertTrue($pdao->isPostInDB(11837263794));
 
         $post = $pdao->getPost(11837263794);
@@ -175,7 +182,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (14947487415, 930061, 'ginatrapani', 'Gina Trapani', 'avatar.jpg', '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'web', '2006-01-01 00:00:00', ".rand(0, 4).", 0);";
         $this->db->exec($q);
 
-        $pdao = new PostDAO($this->db);
+        $pdao = DAOFactory::getDAO('PostDAO');($this->db);
         $tc->fetchRetweetsOfInstanceUser();
         $post = $pdao->getPost(14947487415);
         $this->assertEqual($post->retweet_count_cache, 3, '3 retweets loaded');
@@ -193,7 +200,5 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $retweets = $pdao->getRetweetsOfPost(14947487415, true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
     }
-
-    //TODO: Test the rest of the TwitterCrawler methods
 }
-?>
+

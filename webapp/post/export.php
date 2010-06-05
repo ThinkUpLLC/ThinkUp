@@ -11,7 +11,7 @@ require_once 'init.php';
 $od = new OwnerDAO($db);
 $owner = $od->getByEmail($_SESSION['user']);
 
-$pd = new PostDAO($db);
+$pd = DAOFactory::getDAO('PostDAO');
 $id = DAOFactory::getDAO('InstanceDAO');
 
 if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){

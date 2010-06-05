@@ -25,8 +25,7 @@ class PublicTimelineController extends ThinkTankController implements Controller
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
-        global $db; //TODO: remove this when PDO port is done
-        $this->post_dao = new PostDAO($db);
+        $this->post_dao = DAOFactory::getDAO('PostDAO');
 
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $last_updated_instance = $instance_dao->getInstanceFreshestOne();

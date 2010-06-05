@@ -59,7 +59,7 @@ class TestOfFacebookPlugin extends ThinkTankUnitTestCase {
     function testWebappTabRegistration() {
         global $webapp;
         $logger = Logger::getInstance();
-        $pd = new PostDAO($this->db, $logger);
+        $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();
         $instance->network_user_id = 1;
 

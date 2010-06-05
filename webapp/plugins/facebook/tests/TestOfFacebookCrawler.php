@@ -61,7 +61,7 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         $session_key = 'asdfasdfasdfafsd';
         $fbc->fetchUserPostsAndReplies($this->instance->network_user_id, $session_key);
         
-        $pd = new PostDAO($this->db, $this->logger);
+        $pd = DAOFactory::getDAO('PostDAO');
         $this->assertTrue($pd->isPostInDB('108956622464235'));
         $this->assertTrue($pd->isPostInDB('107266209295210'));
     }
@@ -74,7 +74,7 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         $session_key = 'adfasdfasdfasdf';
         $fbc->fetchUserPostsAndReplies($this->instance->network_user_id, $session_key);
         
-        $pd = new PostDAO($this->db, $this->logger);
+        $pd = DAOFactory::getDAO('PostDAO');
         $p = $pd->getPost('108956622464235');
         $this->assertTrue($p->mention_count_cache == 1);
         
@@ -112,7 +112,7 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         $page_id = '63811549237';
         $fbc->fetchPagePostsAndReplies($page_id, $this->instance->network_user_id, $session_key);
         
-        $pd = new PostDAO($this->db, $this->logger);
+        $pd = DAOFactory::getDAO('PostDAO');
         $p = $pd->getPost('125634574117714');
         $this->assertEqual($p->post_text, "Thanks for checking out the West Wing Week, your guide to everything that's happening at 1600 Pennsylvania Ave.");
         

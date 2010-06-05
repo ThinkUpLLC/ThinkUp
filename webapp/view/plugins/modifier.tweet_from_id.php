@@ -4,7 +4,7 @@
  * @package Smarty
  * @subpackage plugins
  */
- 
+
 /**
  * Smarty Tweet from ID plugin
  *
@@ -20,11 +20,9 @@
  * @return object
  */
 function smarty_modifier_tweet_from_id($status_id) {
-    global $db, $i; // Necessary evil.
-    $conn = $db->getConnection();
-    $td = new PostDAO( $db );
+    $post_dao = DAOFactory::getDAO('PostDAO');
     if( $status_id > 0 ){
-        $tweet = $td->getPost( $status_id );
+        $tweet = $post_dao->getPost( $status_id );
     } else {
         $tweet = new Post( array( 'id' => 0, 'status_id' => 0 ) );
     }
