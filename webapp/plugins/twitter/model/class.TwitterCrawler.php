@@ -181,7 +181,7 @@ class TwitterCrawler {
     }
 
     private function processTweetURLs($tweet) {
-        $ld = new LinkDAO($this->db, $this->logger);
+        $ld = DAOFactory::getDAO('LinkDAO');
 
         $urls = Post::extractURLs($tweet['post_text']);
         foreach ($urls as $u) {

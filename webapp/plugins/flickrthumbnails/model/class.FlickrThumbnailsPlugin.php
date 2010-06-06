@@ -11,7 +11,7 @@ class FlickrThumbnailsPlugin implements CrawlerPlugin {
         if (isset($api_key) && $api_key != '') {
             $logger = Logger::getInstance();
             $fa = new FlickrAPIAccessor($api_key);
-            $ldao = new LinkDAO($db, $logger);
+            $ldao = DAOFactory::getDAO('LinkDAO');
 
             $flickrlinkstoexpand = $ldao->getLinksToExpandByURL('http://flic.kr/');
             if (count($flickrlinkstoexpand > 0)) {

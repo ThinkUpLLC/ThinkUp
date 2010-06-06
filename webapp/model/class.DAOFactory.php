@@ -24,32 +24,46 @@ class DAOFactory {
     static $dao_mapping = array (
     // our test dao
         'TestDAO' => array( 
+    //MySQL Version
             'mysql' => array( 'class' => 'TestMysqlDAO', 'path' =>  'tests/classes/class.TestMysqlDAO.php'),
+    //faux Version
             'faux' => array( 'class' => 'TestFauxDAO', 'path' =>  'tests/classes/class.TestFauxDAO.php'),
     ),
-    //Instance MySQL DAO
+    //Instance DAO
         'InstanceDAO' => array(
+    //MySQL Version
             'mysql' => array( 'class' => 'InstanceMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
+
     ),
-    //Follow MySQL DAO
+    //Follow DAO
         'FollowDAO' => array(
+    //MySQL Version
             'mysql' => array( 'class' => 'FollowMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
     ),
-    //Post Error MySQL DAO
+    //Post Error DAO
         'PostErrorDAO' => array(
+    //MySQL Version
             'mysql' => array( 'class' => 'PostErrorMySQLDAO', 'path' => 'model/class.PostErrorMySQLDAO.php')
     ),
-    //Post MySQL DAO
+    //Post DAO
         'PostDAO' => array(
+    //MySQL Version
             'mysql' => array( 'class' => 'PostMySQLDAO', 'path' => 'model/class.PostMySQLDAO.php')
     ),
-    //User MySQL DAO
+    //User DAO
         'UserDAO' => array(
+    //MySQL Version
             'mysql' => array( 'class' => 'UserMySQLDAO', 'path' => 'model/class.UserMySQLDAO.php')
     ),
-    //UserError MySQL DAO
+    //UserError DAO
         'UserErrorDAO' => array(
+    //MySQL Version
             'mysql' => array( 'class' => 'UserErrorMySQLDAO', 'path' => 'model/class.UserErrorMySQLDAO.php')
+    ),
+    //Link DAO
+        'LinkDAO' => array(
+    //MySQL Version
+            'mysql' => array( 'class' => 'LinkMySQLDAO', 'path' => 'model/class.LinkMySQLDAO.php')
     )
     );
 

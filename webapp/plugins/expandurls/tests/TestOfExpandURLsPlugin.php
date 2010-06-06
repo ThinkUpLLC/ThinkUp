@@ -59,7 +59,7 @@ class TestOfExpandURLsPlugin extends ThinkTankUnitTestCase {
         
         //the crawler closes the log so we have to re-open it
         $logger = Logger::getInstance();
-        $ldao = new LinkDAO($this->db, $logger);
+        $ldao = DAOFactory::getDAO('LinkDAO');
         
         $link = $ldao->getLinkById(1);
         $this->assertEqual($link->expanded_url, 'http://www.thewashingtonnote.com/archives/2010/04/communications/');

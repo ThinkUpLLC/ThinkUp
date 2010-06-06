@@ -37,7 +37,7 @@ $s = new SmartyThinkTank();
 $ud = DAOFactory::getDAO('UserDAO');
 $pd = DAOFactory::getDAO('PostDAO');
 $fd = DAOFactory::getDAO('FollowDAO');
-$ld = new LinkDAO($db);
+$ld = DAOFactory::getDAO('LinkDAO');
 
 // pass data to smarty
 $view_template = $webapp->loadRequestedTabData($_GET["d"], $i);

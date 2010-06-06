@@ -1,11 +1,40 @@
 <?php
+/**
+ * PDODAO - Parent class for PDO DAOs
+ * @author Christoffer Viken <christoffer@viken.me>
+ * @author Mark Wilkie
+ */
+
 abstract class PDODAO {
+    /**
+     * Logger
+     * @var Logger Object
+     */
     var $logger;
+    /**
+     * Configuration
+     * @var Config Object
+     */
     var $config;
+    /**
+     * PDO instance
+     * @var PDO Object
+     */
     static $PDO = null;
+    /**
+     * Table Prefix
+     * @var str
+     */
     static $prefix;
+    /**
+     * GMT offset
+     * @var int
+     */
     static $gmt_offset;
 
+    /**
+     * Object Constructor
+     */
     public function __construct(){
         $this->logger = Logger::getInstance();
         $this->config = Config::getInstance();
@@ -15,7 +44,10 @@ abstract class PDODAO {
         $this->prefix = $this->config->getValue('table_prefix');
         $this->gmt_offset = $this->config->getValue('GMT_offset');
     }
-
+    
+    /**
+     * Connection initiator
+     */
     public final function connect(){
         if(is_null(self::$PDO)) {
             //set default db type to mysql if not set
@@ -43,23 +75,20 @@ abstract class PDODAO {
         }
     }
 
-    // Not really currently needed, and somebody might call it
-    // to close off one DAO, and thereby kill all of them.
+    /**
+     * Disconnector
+     * Caution! This will disconnect for ALL DAOs
+     */
     protected final function disconnect(){
         self::$PDO = null;
     }
-
-    protected final function getInsertId($ps){
-        $rc = $ps->rowCount();
-        $id = self::$PDO->lastInsertId();
-        $ps->closeCursor();
-        if ($rc > 0 and $id > 0) {
-            return $id;
-        } else {
-            return false;
-        }
-    }
-
+    
+    /**
+     * Executes the query, with the bound values
+     * @param str $sql
+     * @param array $binds
+     * @return PDOStatement
+     */
     protected final function execute($sql, $binds = array()) {
         $sql = preg_replace("/#prefix#/", $this->prefix, $sql);
         $sql = preg_replace("/#gmt_offset#/", $this->gmt_offset, $sql);
@@ -76,27 +105,23 @@ abstract class PDODAO {
         $stmt->execute();
         return $stmt;
     }
-
-    protected final function getInsertCount($ps){
-        $rc = $ps->rowCount();
-        $id = self::$PDO->lastInsertId();
-        $ps->closeCursor();
-        if ($rc > 0) {
-            return $rc;
-        } else {
-            return false;
-        }
-    }
-
-    protected final function getUpdateCount($ps){
-        return (int) $ps->rowCount();
-    }
-
+    
+    /**
+     * Proxy for getUpdateCount
+     * @param PDOStatement $ps
+     * @return int Update Count
+     */
     protected final function getDeleteCount($ps){
         //Alias for getUpdateCount
         return $this->getUpdateCount($ps);
     }
 
+    /**
+     * Gets the rows returned by a statement as array of objects.
+     * @param PDOStatement $ps
+     * @param str $obj
+     * @return array numbered keys, with objects
+     */
     protected final function getDataRowAsObject($ps, $obj){
         $row = $ps->fetchObject($obj);
         $ps->closeCursor();
@@ -105,7 +130,12 @@ abstract class PDODAO {
         }
         return $row;
     }
-
+    
+    /**
+     * Gets the first returned row as array
+     * @param PDOStatement $ps
+     * @return array named keys
+     */
     protected final function getDataRowAsArray($ps){
         $row = $ps->fetch(PDO::FETCH_ASSOC);
         $ps->closeCursor();
@@ -115,6 +145,12 @@ abstract class PDODAO {
         return $row;
     }
 
+    /**
+     * Returns the first row as an object
+     * @param PDOStatement $ps
+     * @param str $obj
+     * @return array numbered keys, with Objects
+     */
     protected final function getDataRowsAsObjects($ps, $obj){
         $data = array();
         while($row = $ps->fetchObject($obj)){
@@ -123,13 +159,24 @@ abstract class PDODAO {
         $ps->closeCursor();
         return $data;
     }
-
+    
+    /**
+     * Gets the rows returned by a statement as array with arrays
+     * @param PDOStatement $ps
+     * @return array numbered keys, with array named keys 
+     */
     protected final function getDataRowsAsArrays($ps){
         $data = $ps->fetchAll(PDO::FETCH_ASSOC);
         $ps->closeCursor();
         return $data;
     }
 
+    /**
+     * Gets the result returned by a count query 
+     * (value of col count on first row)
+     * @param PDOStatement $ps
+     * @param int Count
+     */
     protected final function getDataCountResult($ps){
         $row = $ps->fetch(PDO::FETCH_ASSOC);
         $ps->closeCursor();
@@ -141,6 +188,11 @@ abstract class PDODAO {
         return $count;
     }
 
+    /**
+     * Gets whether a statement returned anything
+     * @param PDOStatement $ps
+     * @return bool True if row(s) are returned
+     */
     protected final function getDataIsReturned($ps){
         $count = $ps->rowCount();
         $ps->closeCursor();
@@ -151,12 +203,61 @@ abstract class PDODAO {
         }
         return $ret;
     }
-
+    
+    /**
+     * Gets data "insert ID" from a statement
+     * @param PDOStatement $ps
+     * @return int|bool Inserted ID or false if there is none.
+     */
+    protected final function getInsertId($ps){
+        $rc = $ps->rowCount();
+        $id = self::$PDO->lastInsertId();
+        $ps->closeCursor();
+        if ($rc > 0 and $id > 0) {
+            return $id;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Gets the number of inserted rows by a statement
+     * @param PDOStatement $ps
+     * @return int Insert count
+     */
+    protected final function getInsertCount($ps){
+        $rc = $ps->rowCount();
+        $ps->closeCursor();
+        return $rc;
+    }
+    
+    /**
+     * Get the number of updated rows
+     * @param PDOStatement $ps
+     * @return int Update Count
+     */
+    protected final function getUpdateCount($ps){
+        $num = $ps->rowCount();
+        $ps->closeCursor();
+        return $num;
+    }
+    
+    /**
+     * Converts any form of "boolean" value to a Database usable one
+     * @internal
+     * @param mixed $val
+     * @return int 0 or 1 (false or true)
+     */
     protected final function convertBoolToDB($val){
         return $val ? 1 : 0;
     }
-
-    public final function convertDBToBool($val){
+    
+    /**
+     * Converts a Database boolean to a PHP boolean
+     * @param int $val
+     * @return bool
+     */
+    public final static function convertDBToBool($val){
         return $val == 0 ? false : true;
     }
 

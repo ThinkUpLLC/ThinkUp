@@ -107,7 +107,7 @@ class TestOfFlickrThumbnailsPlugin extends ThinkTankUnitTestCase {
 		global $crawler;
 		$crawler->crawl();
 
-		$ldao = new LinkDAO($this->db, $this->logger);
+		$ldao = DAOFactory::getDAO('LinkDAO');
 
 		$link = $ldao->getLinkById(43);
 		$this->assertEqual($link->expanded_url, 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');

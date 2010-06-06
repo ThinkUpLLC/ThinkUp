@@ -187,5 +187,3 @@ interface FollowDAO {
     public function getFriendsNotFollowingBack($uid);
 
 }
-
-?>
