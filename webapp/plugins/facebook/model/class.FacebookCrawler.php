@@ -38,12 +38,15 @@ class FacebookCrawler {
          echo "SERIALIZED USER DETAILS FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
          print_r($user_details);*/
 
-
         $user = $this->parseUserDetails($user_details);
-        $user["post_count"] = $this->pd->getTotalPostsByUser($uid);
-        $user_object = new User($user, $found_in);
-        $this->ud->updateUser($user_object);
-        return $user_object;
+        if (isset($user)) {
+            $user["post_count"] = $this->pd->getTotalPostsByUser($uid);
+            $user_object = new User($user, $found_in);
+            $this->ud->updateUser($user_object);
+            return $user_object;
+        } else {
+            return null;
+        }
     }
 
     function fetchPagesUserIsFanOf($uid, $session_key) {
@@ -63,33 +66,38 @@ class FacebookCrawler {
     }
 
     private function parseUserDetails($details) {
-        $ua = array();
-        $ua["user_name"] = $details[0]["username"];
-        $ua["full_name"] = $details[0]["first_name"]." ".$details[0]["last_name"];
-        $ua["user_id"] = $details[0]["uid"];
-        $ua["avatar"] = $details[0]["pic_square"];
-        $ua["follower_count"] = 0;
-        $current_location = '';
-        $larr = $details[0]["current_location"];
-        if (count($larr) > 0) {
-            if (isset($larr["city"])) {
-                $current_location .= $larr["city"];
+        if (isset($details[0])) {
+            $ua = array();
+
+            $ua["user_name"] = $details[0]["username"];
+            $ua["full_name"] = $details[0]["first_name"]." ".$details[0]["last_name"];
+            $ua["user_id"] = $details[0]["uid"];
+            $ua["avatar"] = $details[0]["pic_square"];
+            $ua["follower_count"] = 0;
+            $current_location = '';
+            $larr = $details[0]["current_location"];
+            if (count($larr) > 0) {
+                if (isset($larr["city"])) {
+                    $current_location .= $larr["city"];
+                }
+                if (isset($larr["state"])) {
+                    $current_location .= $larr["state"];
+                }
+                if (isset($larr["country"])) {
+                    $current_location .= $larr["country"];
+                }
             }
-            if (isset($larr["state"])) {
-                $current_location .= $larr["state"];
-            }
-            if (isset($larr["country"])) {
-                $current_location .= $larr["country"];
-            }
+            $ua["location"] = $current_location;
+            $ua["url"] = $details[0]["website"];
+            $ua["description"] = $details[0]["about_me"];
+            $ua["is_protected"] = '';
+            $ua["post_count"] = 0;
+            $ua["joined"] = null;
+            $ua["network"] = "facebook";
+            return $ua;
+        } else {
+            return null;
         }
-        $ua["location"] = $current_location;
-        $ua["url"] = $details[0]["website"];
-        $ua["description"] = $details[0]["about_me"];
-        $ua["is_protected"] = '';
-        $ua["post_count"] = 0;
-        $ua["joined"] = null;
-        $ua["network"] = "facebook";
-        return $ua;
     }
 
 
@@ -158,7 +166,7 @@ class FacebookCrawler {
         $thinktank_posts = array();
         $thinktank_users = array();
         foreach ($stream["posts"] as $p) {
-            $post_id = split("_", $p["post_id"]);
+            $post_id = explode("_", $p["post_id"]);
             $post_id = $post_id[1];
             $profile = $this->getProfile($p['actor_id'], $stream["profiles"]);
             $ttp = array("post_id"=>$post_id, "user_name"=>$profile["name"], "full_name"=>$profile["name"], "avatar"=>$profile["pic_square"], "user_id"=>$profile['id'], "post_text"=>$p['message'], "pub_date"=>date('Y-m-d H:i:s', $p['created_time']), "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>'facebook');
@@ -166,7 +174,7 @@ class FacebookCrawler {
             $post_comments = $p["comments"]["comment_list"];
             if (is_array($post_comments) && sizeof($post_comments) > 0) {
                 foreach ($post_comments as $c) {
-                    $comment_id = split("_", $c["id"]);
+                    $comment_id = explode("_", $c["id"]);
                     $comment_id = $comment_id[2];
                     $commenter = $this->getProfile($c['fromid'], $stream["profiles"]);
                     //Get posts
