@@ -6,6 +6,14 @@
  *
  */
 interface InstanceDAO {
+    /**
+     * Insert instance
+     * @param int $network_user_id
+     * @param string $network_username
+     * @param string $network - "twitter", "facebook"
+     * @param int $viewer_id
+     * @return int inserted Instance ID
+     */
     public function insert($network_user_id, $network_username, $network = "twitter", $viewer_id = false);
 
     public function getFreshestByOwnerId($owner_id);
@@ -22,11 +30,30 @@ interface InstanceDAO {
 
     public function getByOwner($owner, $force_not_admin = false);
 
-    public function getByOwnerAndNetwork($o, $network, $force_not_admin = false);
+    /**
+     * Get instances by owner and network
+     * @param Owner $owner
+     * @param string $network
+     * @param boolean $disregard_admin_status
+     * @return array Instances for the owner (all if admin and !$disregard_admin_status)
+     */
+    public function getByOwnerAndNetwork($owner, $network, $disregard_admin_status = false);
 
-    public function setPublic($username, $public);
+    /**
+     * Set whether or not an instance is public, i.e., should be included on the public timeline
+     * @param int $instance_id
+     * @param bool $public
+     * @return int number of updated rows (1 if change was successful, 0 if not)
+     */
+    public function setPublic($instance_id, $public);
 
-    public function setActive($username, $active);
+    /**
+     * Set whether or not an instance is active, i.e., should be crawled
+     * @param int $instance_id
+     * @param bool $active
+     * @return int number of updated rows (1 if change was successful, 0 if not)
+     */
+    public function setActive($instance_id, $active);
 
     public function save($instance_object, $user_xml_total_posts_by_owner, $logger = false, $api = false);
 

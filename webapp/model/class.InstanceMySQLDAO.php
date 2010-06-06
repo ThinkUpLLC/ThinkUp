@@ -143,9 +143,9 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getDataRowsAsObjects($ps, "Instance");
     }
 
-    public function getByOwnerAndNetwork($owner, $network, $force_not_admin = false) {
-        $adminstatus = (!$force_not_admin && $owner->is_admin ? true : false);
-        $q  = "SELECT *, ".$this->getAverageReplyCount();
+    public function getByOwnerAndNetwork($owner, $network, $disregard_admin_status = false) {
+        $adminstatus = (!$disregard_admin_status && $owner->is_admin ? true : false);
+        $q  = "SELECT i.*, ".$this->getAverageReplyCount();
         $q .= " FROM #prefix#instances AS i ";
         if(!$adminstatus){
             $q .= " INNER JOIN #prefix#owner_instances AS oi ";
@@ -171,30 +171,29 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getDataRowsAsObjects($ps, "Instance");
     }
 
-    public function setPublic($username, $public) {
+    public function setPublic($instance_id, $public) {
         $public = $this->convertBoolToDB($public);
         $q  = " UPDATE #prefix#instances ";
         $q .= " SET is_public = :public";
-        $q .= " WHERE network_username = :username ;";
+        $q .= " WHERE id = :instance_id ;";
         $vars = array(
-            ':username'=>$username,
+            ':instance_id'=>$instance_id,
             ':public'=>$public
         );
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
 
-    public function setActive($username, $active) {
+    public function setActive($instance_id, $active) {
         $active = $this->convertBoolToDB($active);
         $q  = " UPDATE #prefix#instances ";
         $q .= " SET is_active = :active ";
-        $q .= " WHERE network_username = :username ;";
+        $q .= " WHERE id = :instance_id ;";
         $vars = array(
-            ':username'=>$username,
+            ':instance_id'=>$instance_id,
             ':active'=>$active
         );
         $ps = $this->execute($q, $vars);
-
         return $this->getUpdateCount($ps);
     }
 

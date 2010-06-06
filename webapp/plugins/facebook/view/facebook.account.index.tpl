@@ -29,14 +29,13 @@
     {foreach from=$owner_instances key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
-            <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a> 
+            <a href="{$site_root_path}index.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
         </div>
         <div class="grid_8">
-            <span id="div{$i->network_user_id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
-{if $i->is_public}btnPriv{else}btnPub{/if}"   id="{$i->network_user_id}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
+            <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_public}btnPriv{else}btnPub{/if}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
         </div>
         <div class="grid_7">
-            <span id="divactivate{$i->network_user_id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->network_user_id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
     </div>{/foreach}
     <br />
@@ -52,14 +51,13 @@
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
-            <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a> 
+            <a href="{$site_root_path}index.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
         </div>
         <div class="grid_8">
-            <span id="div{$i->network_user_id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
-{if $i->is_public}btnPriv{else}btnPub{/if}"   id="{$i->network_user_id}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
+            <span id="div{$i->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
         </div>
         <div class="grid_7">
-            <span id="divactivate{$i->network_user_id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->network_user_id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
     </div>{/foreach}
     <br />

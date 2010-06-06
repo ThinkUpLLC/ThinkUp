@@ -338,7 +338,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
     }
 
     function testSetPublic(){
-        $result = $this->DAO->setPublic("jack", true);
+        $result = $this->DAO->setPublic(1, true);
         $this->assertEqual($result, 1, "Count UpdateToTrue (%s)");
         //Testing if it really works
         $result = $this->DAO->getByUsername('jack');
@@ -346,7 +346,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($result->network_user_id, 10);
         $this->assertTrue($result->is_public);
 
-        $result = $this->DAO->setPublic("jack", false);
+        $result = $this->DAO->setPublic(1, false);
         $this->assertEqual($result, 1, "Count UpdateToFalse (%s)");
         //Testing if it really works
         $result = $this->DAO->getByUsername('jack');
@@ -356,7 +356,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
     }
 
     function testSetActive(){
-        $result = $this->DAO->setActive("jack", false);
+        $result = $this->DAO->setActive(1, false);
         $this->assertEqual($result, 1, "Count UpdateToFalse (%s)");
         //Testing if it really works
         $result = $this->DAO->getByUsername('jack');
@@ -364,7 +364,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($result->network_user_id, 10);
         $this->assertFalse($result->is_active);
 
-        $result = $this->DAO->setActive("jack", true);
+        $result = $this->DAO->setActive(1, true);
         $this->assertEqual($result, 1, "Count UpdateToTrue (%s)");
         //Testing if it really works
         $result = $this->DAO->getByUsername('jack');

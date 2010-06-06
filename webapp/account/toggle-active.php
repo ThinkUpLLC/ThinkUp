@@ -13,12 +13,14 @@ if (!$session->isLoggedIn()) {
 $uid = $_GET["u"];
 $p = $_GET["p"];
 if ($p != 1) {
-    $p = 0;
+    $p = false;
+} else  {
+    $p = true;
 }
 
 $id = DAOFactory::getDAO('InstanceDAO');
 
-$id->setActive($uid, $p);
+echo $id->setActive($uid, $p);
 
 $db->closeConnection($conn);
 ?>
