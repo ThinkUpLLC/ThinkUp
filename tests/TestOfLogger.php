@@ -6,29 +6,22 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.LoggerSlowSQL.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
 
 class TestOfLogging extends ThinkTankBasicUnitTestCase {
-    function TestOfLogging() {
+    function __construct() {
         $this->UnitTestCase('Log class test');
     }
 
     function setUp() {
-        global $THINKTANK_CFG;
-        // delete our log file if it exists
-        if (file_exists($THINKTANK_CFG['log_location'])) {
-            unlink($THINKTANK_CFG['log_location']);
-        }
+        parent::setUp();
     }
 
     function tearDown() {
-        global $THINKTANK_CFG;
-        // delete our log file if it exists
-        if (file_exists($THINKTANK_CFG['log_location'])) {
-            unlink($THINKTANK_CFG['log_location']);
-        }
+        parent::tearDown();
     }
 
     function testNewLoggerSingleton() {
