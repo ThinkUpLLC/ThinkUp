@@ -584,13 +584,16 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @param string $order_by field name
      * @return array Posts with link set
      */
-    private function getPostsByPublicInstancesOrderedBy($page, $count, $order_by) {
+    private function getPostsByPublicInstancesOrderedBy($page, $count, $order_by, $in_last_x_days = 0) {
         $start_on_record = ($page - 1) * $count;
         $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id ";
-        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL)";
+        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
+        if ($in_last_x_days > 0) {
+            $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL ".$in_last_x_days." DAY) ";
+        }
         $q .= "ORDER BY p.".$order_by." DESC ";
         $q .= "LIMIT ".$start_on_record.", :limit";
 
@@ -610,13 +613,15 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     /**
      * @TODO Bind $count var as int
      */
-    public function getTotalPagesAndPostsByPublicInstances($count) {
+    public function getTotalPagesAndPostsByPublicInstances($count, $in_last_x_days=0) {
         $q = "SELECT count(*) as total_posts, ceil(count(*) / $count) as total_pages ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id ";
-        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL)";
-
+        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
+        if ($in_last_x_days > 0) {
+            $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL ".$in_last_x_days." DAY) ";
+        }
         $ps = $this->execute($q);
         return $this->getDataRowAsArray($ps);
     }
@@ -699,6 +704,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getMostRetweetedPostsByPublicInstances($page, $count) {
         return $this->getPostsByPublicInstancesOrderedBy($page, $count, "retweet_count_cache");
+    }
+
+    public function getMostRepliedToPostsByPublicInstancesInLastWeek($page, $count) {
+        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "mention_count_cache", 7);
+    }
+
+    public function getMostRetweetedPostsByPublicInstancesInLastWeek($page, $count) {
+        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "retweet_count_cache", 7);
     }
 
     public function isPostByPublicInstance($post_id) {

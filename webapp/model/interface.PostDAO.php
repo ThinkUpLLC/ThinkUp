@@ -192,11 +192,12 @@ interface PostDAO {
     public function getMostRetweetedPostsByPublicInstances($page, $count);
 
     /**
-     * Get total posts and pages by public instances
+     * Get total posts and pages by public instances for a specified number of past days
      * @param int $count Number of posts per page
+     * @param int $last_x_days 0 for all time (default)
      * @return array $row['total_posts'], $row['total_pages']
      */
-    public function getTotalPagesAndPostsByPublicInstances($count);
+    public function getTotalPagesAndPostsByPublicInstances($count, $last_x_days=0);
 
     /**
      * Get photo posts by public instances
@@ -269,4 +270,20 @@ interface PostDAO {
      * @return bool True if post is by a public instance
      */
     public function isPostByPublicInstance($post_id);
+
+    /**
+     * Get a page of posts in the last week by public instances ordered by mention_count_cache desc
+     * @param int $page
+     * @param int $count
+     * @return array Posts with link set
+     */
+    public function getMostRetweetedPostsByPublicInstancesInLastWeek($page, $count);
+
+    /**
+     * Get a page of posts in the last week by public instances ordered by retweet_count_cache desc
+     * @param int $page
+     * @param int $count
+     * @return array Posts with link set
+     */
+    public function getMostRepliedToPostsByPublicInstancesInLastWeek($page, $count);
 }
