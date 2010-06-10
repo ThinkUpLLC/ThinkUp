@@ -141,4 +141,21 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         //Update wner who does exist
         $this->assertEqual($this->DAO->updateLastLogin('ttuser@example.com'), 1);
     }
+
+    /**
+     * Test updatePasswordToken
+     */
+    public function testUpdatePasswordToken() {
+        $this->assertEqual($this->DAO->updatePasswordToken('ttuser@example.com', 'sample_token'), 1);
+        $this->assertEqual($this->DAO->updatePasswordToken('dontexist@example.com', 'sample_token'), 0);
+    }
+
+    /**
+     * Test getByPasswordToken
+     */
+    public function testGetByPasswordToken() {
+        $this->DAO->updatePasswordToken('ttuser@example.com', 'sample_token');
+        $owner = $this->DAO->getByPasswordToken('sample'); // searches for first half of token
+        $this->assertEqual($owner->email, 'ttuser@example.com');
+    }
 }

@@ -80,9 +80,22 @@ class Owner {
      */
     public function setPasswordRecoveryToken() {
         $token = md5(uniqid(rand()));
-        $this->password_token = time() . '_' . $token;
-        /** @TODO: save this record */
+        $dao = DAOFactory::getDAO('OwnerDAO');
+        $dao->updatePasswordToken($this->email, $token . '_' . time());
         return $token;
     }
-}
 
+    /**
+     * Returns whether a given password recovery token is valid or not.
+     *
+     * This requires that the token not be stale (older than a day), and that
+     * token itself matches what's in the database.
+     *
+     * @param string $token The token to validate against the database.
+     * @return bool Whether the token is valid or not.
+     */
+    public function validateRecoveryToken($token) {
+        $data = explode('_', $this->password_token);
+        return ((time() - $data[1] <= 86400) && ($token == $data[0]));
+    }
+}

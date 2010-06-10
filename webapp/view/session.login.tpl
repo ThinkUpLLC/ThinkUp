@@ -9,7 +9,7 @@
     {include file="_usermessage.tpl"}
     </div>
   </div>
-  <form name="form1" method="post" action="" class="login">
+  <form name="form1" method="post" action="{$site_root_path}session/login.php" class="login">
     <div class="clearfix">
       <div class="grid_4 prefix_5 right">
         <label for="email">

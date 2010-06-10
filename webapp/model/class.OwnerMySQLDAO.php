@@ -10,8 +10,19 @@ require_once 'model/interface.OwnerDAO.php';
 class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
 
     public function getByEmail($email) {
-        $q = "SELECT id, full_name, email, is_admin, last_login, is_activated, pwd FROM #prefix#owners ";
-        $q .= "WHERE email = :email;";
+        $q = <<<SQL
+SELECT
+    id,
+    full_name,
+    email,
+    is_admin,
+    last_login,
+    is_activated,
+    password_token
+FROM #prefix#owners AS o
+WHERE email = :email;
+SQL;
+
         $vars = array(
             ':email'=>$email
         );
@@ -101,5 +112,24 @@ class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
         );
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
+    }
+
+    public function updatePasswordToken($email, $token) {
+        $q = "UPDATE #prefix#owners
+              SET password_token=:token
+              WHERE email=:email";
+        $vars = array(
+            ":token" => $token, 
+            ":email" => $email
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+
+    public function getByPasswordToken($token) {
+        $q = "SELECT * FROM #prefix#owners WHERE password_token LIKE :token";
+        $vars = array(':token' => $token . '_%');
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowAsObject($ps, 'Owner');
     }
 }

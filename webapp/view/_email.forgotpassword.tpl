@@ -1,11 +1,7 @@
 Hi there!
 
-Looks like you forgot your {$apptitle} password. Here's your information:
+Looks like you forgot your {$apptitle} password. Go to this URL to reset it:
+http://{$server}{$site_root_path}{$recovery_url}
 
-Login email: {$email}
-Password: {$newpwd}
-
-You may log in here:
+Or, if you remembered it, you can log in here and disregard this email:
 http://{$server}{$site_root_path}session/login.php
-
-For security reasons, as soon as you log in, change your password. Thanks!

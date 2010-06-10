@@ -70,4 +70,19 @@ interface OwnerDAO {
      * @return int Affected rows
      */
     public function updateLastLogin($email);
+
+    /**
+     * Update an owner's token for recovering their password
+     * @param str $email The email address of the owner to set it for
+     * @param str $token The MD5 token and timestamp, separated by an underscore
+     * @return int Affected rows
+     */
+    public function updatePasswordToken($email, $token);
+
+    /**
+     * Load an owner by their recovery token
+     * @param str $token The token to load, minus the timestamp
+     * @return int The full Owner object
+     */
+    public function getByPasswordToken($token);
 }
