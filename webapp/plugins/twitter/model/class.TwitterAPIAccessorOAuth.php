@@ -4,6 +4,7 @@
  * Accesses the Twitter API via OAuth authentication
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
+
 class TwitterAPIAccessorOAuth {
     var $available = true;
     var $next_api_reset = null;
@@ -152,7 +153,14 @@ class TwitterAPIAccessorOAuth {
                         }
                         break;
                     case 'status':
-                        $thisFeed[] = array('post_id'=>$xml->id, 'user_id'=>$xml->user->id, 'user_name'=>$xml->user->screen_name, 'full_name'=>$xml->user->name, 'avatar'=>$xml->user->profile_image_url, 'location'=>$xml->user->location, 'description'=>$xml->user->description, 'url'=>$xml->user->url, 'is_protected'=>$xml->user->protected , 'followers'=>$xml->user->followers_count, 'following'=>$xml->user->friends_count, 'tweets'=>$xml->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)), 'post_text'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 'in_reply_to_post_id'=>$xml->in_reply_to_status_id, 'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 'source'=>$xml->source);
+                        $namespaces = $xml->getNameSpaces(true);
+                        if (isset($namespaces['georss'])) {
+                            $georss = $xml->geo->children($namespaces['georss']);
+                            $thisFeed[] = array('post_id'=>$xml->id, 'user_id'=>$xml->user->id, 'user_name'=>$xml->user->screen_name, 'full_name'=>$xml->user->name, 'avatar'=>$xml->user->profile_image_url, 'location'=>$xml->user->location, 'description'=>$xml->user->description, 'url'=>$xml->user->url, 'is_protected'=>$xml->user->protected , 'followers'=>$xml->user->followers_count, 'following'=>$xml->user->friends_count, 'tweets'=>$xml->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)), 'post_text'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 'in_reply_to_post_id'=>$xml->in_reply_to_status_id, 'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 'source'=>$xml->source, 'geo'=>$georss->point, 'place'=>$xml->place->full_name);
+                        }
+                        else {
+                            $thisFeed[] = array('post_id'=>$xml->id, 'user_id'=>$xml->user->id, 'user_name'=>$xml->user->screen_name, 'full_name'=>$xml->user->name, 'avatar'=>$xml->user->profile_image_url, 'location'=>$xml->user->location, 'description'=>$xml->user->description, 'url'=>$xml->user->url, 'is_protected'=>$xml->user->protected , 'followers'=>$xml->user->followers_count, 'following'=>$xml->user->friends_count, 'tweets'=>$xml->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)), 'post_text'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 'in_reply_to_post_id'=>$xml->in_reply_to_status_id, 'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 'geo'=>'', 'source'=>$xml->source, 'place'=>$xml->place->full_name);
+                        }
                         break;
                     case 'users_list':
                         $this->next_cursor = $xml->next_cursor;
@@ -167,7 +175,14 @@ class TwitterAPIAccessorOAuth {
                         break;
                     case 'statuses':
                         foreach ($xml->children() as $item) {
-                            $thisFeed[] = array('post_id'=>$item->id, 'user_id'=>$item->user->id, 'user_name'=>$item->user->screen_name, 'full_name'=>$item->user->name, 'avatar'=>$item->user->profile_image_url, 'location'=>$item->user->location, 'description'=>$item->user->description, 'url'=>$item->user->url, 'is_protected'=>$item->user->protected , 'follower_count'=>$item->user->followers_count, 'friend_count'=>$item->user->friends_count, 'post_count'=>$item->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->user->created_at)), 'post_text'=>$item->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 'favorites_count'=>$item->user->favourites_count, 'in_reply_to_post_id'=>$item->in_reply_to_status_id, 'in_reply_to_user_id'=>$item->in_reply_to_user_id, 'source'=>$item->source);
+                            $namespaces = $item->getNameSpaces(true);
+                            if(isset($namespaces['georss'])) {
+                                $georss = $item->geo->children($namespaces['georss']);
+                                $thisFeed[] = array('post_id'=>$item->id, 'user_id'=>$item->user->id, 'user_name'=>$item->user->screen_name, 'full_name'=>$item->user->name, 'avatar'=>$item->user->profile_image_url, 'location'=>$item->user->location, 'description'=>$item->user->description, 'url'=>$item->user->url, 'is_protected'=>$item->user->protected , 'follower_count'=>$item->user->followers_count, 'friend_count'=>$item->user->friends_count, 'post_count'=>$item->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->user->created_at)), 'post_text'=>$item->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 'favorites_count'=>$item->user->favourites_count, 'in_reply_to_post_id'=>$item->in_reply_to_status_id, 'in_reply_to_user_id'=>$item->in_reply_to_user_id, 'source'=>$item->source, 'geo'=>$georss->point, 'place'=>$item->place->full_name);
+                            }
+                            else {
+                                $thisFeed[] = array('post_id'=>$item->id, 'user_id'=>$item->user->id, 'user_name'=>$item->user->screen_name, 'full_name'=>$item->user->name, 'avatar'=>$item->user->profile_image_url, 'location'=>$item->user->location, 'description'=>$item->user->description, 'url'=>$item->user->url, 'is_protected'=>$item->user->protected , 'follower_count'=>$item->user->followers_count, 'friend_count'=>$item->user->friends_count, 'post_count'=>$item->user->statuses_count, 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->user->created_at)), 'post_text'=>$item->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 'favorites_count'=>$item->user->favourites_count, 'in_reply_to_post_id'=>$item->in_reply_to_status_id, 'in_reply_to_user_id'=>$item->in_reply_to_user_id, 'source'=>$item->source, 'geo'=>'', 'place'=>$item->place->full_name);
+                            }
                         }
                         break;
                     case 'hash':
@@ -320,4 +335,3 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 
     }
 }
-?>

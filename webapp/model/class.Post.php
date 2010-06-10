@@ -13,6 +13,9 @@ class Post {
     var $author_avatar;
     var $post_text;
     var $source;
+    var $location;
+    var $place;
+    var $geo;
     var $pub_date;
     var $adj_pub_date;
     var $in_reply_to_user_id;
@@ -34,6 +37,9 @@ class Post {
         $this->author_avatar = $val["author_avatar"];
         $this->post_text = $val["post_text"];
         $this->source = $val["source"];
+        $this->location = $val["location"];
+        $this->place = $val["place"];
+        $this->geo = $val["geo"];
         $this->pub_date = $val["pub_date"];
         $this->adj_pub_date = $val["adj_pub_date"];
         $this->in_reply_to_user_id = $val["in_reply_to_user_id"];

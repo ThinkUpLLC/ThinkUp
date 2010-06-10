@@ -8,6 +8,7 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
@@ -60,7 +61,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
     private function setUpInstanceUserAnilDash() {
         global $THINKTANK_CFG;
-        $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
+        $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
         $this->instance = new Instance($r);
 
         $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $this->instance, $THINKTANK_CFG['archive_limit']);
@@ -103,6 +104,29 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->assertTrue($user->found_in == 'Owner Status');
     }
 
+    function testFetchInstanceUserTweets() {
+        self::setUpInstanceUserAnilDash();
+
+        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceUserTweets();
+
+        //Test post with location has location set
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($pdao->isPostInDB(15680112737));
+
+        $post = $pdao->getPost(15680112737);
+        $this->assertEqual($post->location, "NYC: 40.739069,-73.987082");
+        $this->assertEqual($post->place, "Stuyvesant Town, New York");
+        $this->assertEqual($post->geo, "40.73410845 -73.97885982");
+
+        //Test post without location doesn't have it set
+        $post = $pdao->getPost(15660552927);
+        $this->assertEqual($post->location, "NYC: 40.739069,-73.987082");
+        $this->assertEqual($post->place, "");
+        $this->assertEqual($post->geo, "");
+    }
+
     function testFetchSearchResults() {
         self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
@@ -128,7 +152,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $udao = new UserDAO($this->db);
         $updated_user = $udao->getUserByName('meatballhat');
         $this->assertEqual($updated_user->full_name, 'Dan Buch', 'follower full name set');
-        $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower locaiton set');
+        $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower location set');
     }
 
     function testFetchInstanceUserFriends() {
@@ -143,7 +167,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $udao = new UserDAO($this->db);
         $updated_user = $udao->getUserByName('jayrosen_nyu');
         $this->assertEqual($updated_user->full_name, 'Jay Rosen', 'friend full name set');
-        $this->assertEqual($updated_user->location, 'New York City', 'friend locaiton set');
+        $this->assertEqual($updated_user->location, 'New York City', 'friend location set');
     }
 
     function testFetchInstanceUserFriendsByIds() {
@@ -201,4 +225,3 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
     }
 }
-

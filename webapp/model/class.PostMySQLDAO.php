@@ -286,13 +286,22 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             if (!isset($vals["network"])) {
                 $vals["network"] = 'twitter';
             }
-
+            if(!isset($vals["location"])) {
+                $vals["location"] = '';
+            }
+            if(!isset($vals["place"])) {
+                $vals["place"] = '';
+            }
+            if(!isset($vals["geo"])) {
+                $vals["geo"] = '';
+            }
             $q = "INSERT INTO #prefix#posts
                         (post_id,
                         author_username,author_fullname,author_avatar,author_user_id,
-                        post_text,pub_date,in_reply_to_user_id,in_reply_to_post_id,in_retweet_of_post_id,source,network)
+                        post_text,location,place,geo,pub_date,in_reply_to_user_id,in_reply_to_post_id,in_retweet_of_post_id,source,network)
                     VALUES ( ";
-            $q .= " :post_id, :user_name, :full_name, :avatar, :user_id, :post_text, :pub_date, ";
+
+            $q .= " :post_id, :user_name, :full_name, :avatar, :user_id, :post_text, :location, :place, :geo, :pub_date, ";
             $q .= " :post_in_reply_to_user_id, :post_in_reply_to_post_id, :post_in_retweet_of_post_id, ";
             $q .= " :source, :network)";
 
@@ -303,6 +312,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 ':avatar'=>$vals['avatar'],
                 ':user_id'=>$vals['user_id'],
                 ':post_text'=>$vals['post_text'],
+                ':location'=>$vals['location'],
+                ':place'=>$vals['place'],
+                ':geo'=>$vals['geo'],
                 ':pub_date'=>$vals['pub_date'],
                 ':post_in_reply_to_user_id'=>$post_in_reply_to_user_id,
                 ':post_in_reply_to_post_id'=>$post_in_reply_to_post_id,
@@ -310,6 +322,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 ':source'=>$vals['source'],
                 ':network'=>$vals['network']
             );
+             
             $ps = $this->execute($q, $vars);
 
             $logger = Logger::getInstance();
