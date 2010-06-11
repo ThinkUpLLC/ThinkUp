@@ -7,6 +7,12 @@ class Owner {
     var $is_admin = false;
     var $last_login;
     var $instances = null;
+    /**
+     * Token to email to user for resetting password
+     * @var str
+     */
+    var $password_token;
+
 
     function Owner($val) {
         $this->id = $val["id"];
@@ -23,6 +29,21 @@ class Owner {
         $this->instances = $instances;
     }
 
+    /**
+     * Generates a new password recovery token and returns it.
+     *
+     * The internal format of the token is a Unix timestamp of when it was
+     * set (for checking if it's stale), an underscore, and then the token
+     * itself.
+     *
+     * @return string A new password token for embedding in a link and emailing a user.
+     */
+    function setPasswordRecoveryToken() {
+        $token = md5(uniqid(rand()));
+        $this->password_token = time() . '_' . $token;
+        /** @TODO: save this record */
+        return $token;
+    }
 }
 
 class OwnerDAO extends MySQLDAO {

@@ -31,6 +31,7 @@ class DAOFactory {
         'InstanceDAO' => array(
             'mysql' => array( 'class' => 'InstanceMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
     ),
+    //Follow MySQL DAO
         'FollowDAO' => array(
             'mysql' => array( 'class' => 'FollowMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
     ),
@@ -41,6 +42,14 @@ class DAOFactory {
     //Post MySQL DAO
         'PostDAO' => array(
             'mysql' => array( 'class' => 'PostMySQLDAO', 'path' => 'model/class.PostMySQLDAO.php')
+    ),
+    //User MySQL DAO
+        'UserDAO' => array(
+            'mysql' => array( 'class' => 'UserMySQLDAO', 'path' => 'model/class.UserMySQLDAO.php')
+    ),
+    //UserError MySQL DAO
+        'UserErrorDAO' => array(
+            'mysql' => array( 'class' => 'UserErrorMySQLDAO', 'path' => 'model/class.UserErrorMySQLDAO.php')
     )
     );
 

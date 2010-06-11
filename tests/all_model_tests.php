@@ -18,7 +18,7 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfPluginHook.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfPostMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfPostErrorMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfSmartyThinkTank.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfUserDAO.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfUserMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfUtils.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfPDODAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfDAOFactory.php';
@@ -39,7 +39,7 @@ $modeltest->addTestCase(new TestOfPluginHook());
 $modeltest->addTestCase(new TestOfPostMySQLDAO());
 $modeltest->addTestCase(new TestOfPostErrorMySQLDAO());
 $modeltest->addTestCase(new TestOfSmartyThinkTank());
-$modeltest->addTestCase(new TestOfUserDAO());
+$modeltest->addTestCase(new TestOfUserMySQLDAO());
 $modeltest->addTestCase(new TestOfUtils());
 $modeltest->run( new TextReporter());
 ?>

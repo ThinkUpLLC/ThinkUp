@@ -7,13 +7,13 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
 //require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
@@ -96,7 +96,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
         $tc->fetchInstanceUserInfo();
 
-        $udao = new UserDAO($this->db, $this->logger);
+        $udao = DAOFactory::getDAO('UserDAO');
         $user = $udao->getDetails(36823);
         $this->assertTrue($user->id == 1);
         $this->assertTrue($user->user_id == 36823);
@@ -149,10 +149,10 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $fdao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue($fdao->followExists(36823, 119950880), 'new follow exists');
 
-        $udao = new UserDAO($this->db);
+        $udao = DAOFactory::getDAO('UserDAO');
         $updated_user = $udao->getUserByName('meatballhat');
-        $this->assertEqual($updated_user->full_name, 'Dan Buch', 'follower full name set');
-        $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower location set');
+        $this->assertEqual($updated_user->full_name, 'Dan Buch', 'follower full name set to '.$updated_user->full_name);
+        $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower location set to '.$updated_user->location);
     }
 
     function testFetchInstanceUserFriends() {
@@ -164,7 +164,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $fdao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue($fdao->followExists(14834340, 36823), 'new friend exists');
 
-        $udao = new UserDAO($this->db);
+        $udao = DAOFactory::getDAO('UserDAO');
         $updated_user = $udao->getUserByName('jayrosen_nyu');
         $this->assertEqual($updated_user->full_name, 'Jay Rosen', 'friend full name set');
         $this->assertEqual($updated_user->location, 'New York City', 'friend location set');

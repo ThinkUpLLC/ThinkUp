@@ -1,25 +1,112 @@
 <?php
+/**
+ * User class
+ *
+ * This class represents social network users like @ginatrapani on Twitter, or Joe Smith on Facebook.
+ * It does not represent not ThinkTank users, see the Owner class for ThinkTank users.
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class User {
+    /**
+     *
+     * @var int
+     */
     var $id;
+    /**
+     *
+     * @var str
+     */
     var $username;
+    /**
+     *
+     * @var str
+     */
     var $full_name;
+    /**
+     *
+     * @var str
+     */
     var $avatar;
+    /**
+     *
+     * @var location
+     */
     var $location;
+    /**
+     *
+     * @var description
+     */
     var $description;
+    /**
+     *
+     * @var url
+     */
     var $url;
+    /**
+     *
+     * @var bool
+     */
     var $is_protected;
+    /**
+     *
+     * @var int
+     */
     var $follower_count;
+    /**
+     *
+     * @var int
+     */
     var $friend_count;
+    /**
+     *
+     * @var int
+     */
     var $post_count;
+    /**
+     *
+     * @var str
+     */
     var $found_in;
+    /**
+     *
+     * @var int
+     */
     var $last_post;
+    /**
+     *
+     * @var date
+     */
     var $joined;
+    /**
+     *
+     * @var int
+     */
     var $last_post_id;
+    /**
+     *
+     * @var str Default 'twitter'
+     */
     var $network;
+    /**
+     *
+     * @var int
+     */
     var $user_id;
+    /**
+     *
+     * @var array
+     */
     var $other = array();
 
-    function User($val = false, $found_in = false) {
+    /**
+     * Constructor
+     * @param array $val User key/value pairs
+     * @param str $found_in Where user was found
+     * @return User New user
+     */
+    public function __construct($val = false, $found_in = false) {
         if($val){
             if (isset($val['id'])) {
                 $this->id = $val['id'];
@@ -66,181 +153,19 @@ class User {
             }
         }
     }
-    
-    function __set($key, $val){
+
+    /**
+     * Overload the set method for mismatched member variable names
+     * @param str $key
+     * @param mixed $val
+     */
+    public function __set($key, $val){
         switch($key){
             case "user_name":
                 $this->username = $val;
-            break;
+                break;
             default:
                 $this->other[$key] = $val;
         }
     }
-
 }
-
-class UserDAO extends MySQLDAO {
-
-    private function getAverageTweetCount() {
-        return "round(post_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
-    }
-
-
-    function isUserInDB($user_id) {
-        $q = "SELECT user_id ";
-        $q .= "FROM #prefix#users ";
-        $q .= "WHERE user_id = %s;";
-        $q = sprintf($q, mysql_real_escape_string($user_id));
-        $sql_result = $this->executeSQL($q);
-        if (mysql_num_rows($sql_result) > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function isUserInDBByName($username) {
-        $q = "SELECT user_id ";
-        $q .= "FROM #prefix#users ";
-        $q .= "WHERE user_name = '%s'";
-        $q = sprintf($q, mysql_real_escape_string($username));
-        $sql_result = $this->executeSQL($q);
-        if (mysql_num_rows($sql_result) > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    function updateUsers($users_to_update) {
-        $status_message = "";
-        $count = 0;
-
-        if (count($users_to_update) > 0) {
-            $status_message .= count($users_to_update)." users queued for insert or update; ";
-            foreach ($users_to_update as $user) {
-                $count += $this->updateUser($user);
-            }
-            $status_message .= "$count users affected.";
-        }
-
-        if (isset($this->logger) && $this->logger != null) {
-            $this->logger->logStatus($status_message, get_class($this));
-            $status_message = "";
-        }
-        return $count;
-
-    }
-
-    function updateUser($user) {
-        $status_message = "";
-        $has_friend_count = $user->friend_count != '' ? true : false;
-        $has_last_post = $user->last_post != '' ? true : false;
-        $has_last_post_id = $user->last_post_id != '' ? true : false;
-        $network = $user->network != '' ? $user->network : 'twitter';
-        $user->follower_count = $user->follower_count != '' ? $user->follower_count : 0;
-        $user->post_count = $user->post_count != '' ? $user->post_count : 0;
-
-        $q = "
-            INSERT INTO
-                #prefix#users (user_id,
-                    user_name,full_name,avatar,location,
-                    description, url, is_protected,
-                    follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")."
-                    ".($has_last_post ? "last_post, " : "")."
-                    found_in, joined, network  ".($has_last_post_id ? ", last_post_id" : "").")
-                VALUES (
-                    ".mysql_real_escape_string($user->user_id).", 
-                    '".mysql_real_escape_string($user->username)."','".mysql_real_escape_string($user->full_name)."','".mysql_real_escape_string($user->avatar)."','".mysql_real_escape_string($user->location)."',  
-                    '".mysql_real_escape_string($user->description)."', '".mysql_real_escape_string($user->url)."',".$user->is_protected.",                              
-                    ".$user->follower_count.",".$user->post_count.",
-                    ".($has_friend_count ? $user->friend_count.", " : "")."
-                    ".($has_last_post ? "'".mysql_real_escape_string($user->last_post)."', " : "")."                    
-                    '".mysql_real_escape_string($user->found_in)."', '".mysql_real_escape_string($user->joined)."', '$network'
-                     ".($has_last_post_id ? ",".$user->last_post_id : "")."
-                    )
-                ON DUPLICATE KEY UPDATE 
-                    full_name = '".mysql_real_escape_string($user->full_name)."',
-                    avatar =  '".mysql_real_escape_string($user->avatar)."',
-                    location = '".mysql_real_escape_string($user->location)."',
-                    description = '".mysql_real_escape_string($user->description)."',
-                    url = '".mysql_real_escape_string($user->url)."',
-                    is_protected = ".$user->is_protected.",
-                    follower_count = ".$user->follower_count.",
-                    post_count = ".$user->post_count.",
-                    ".($has_friend_count ? "friend_count= ".$user->friend_count.", " : "")."
-                    ".($has_last_post ? "last_post= '".mysql_real_escape_string($user->last_post)."', " : "")."
-                    last_updated = NOW(),
-                    found_in = '".mysql_real_escape_string($user->found_in)."', 
-                    joined = '".mysql_real_escape_string($user->joined)."',
-                    network = '".$network."'
-                    ".($has_last_post_id ? ", last_post_id = ".$user->last_post_id : "").";";
-        $foo = $this->executeSQL($q);
-        if (mysql_affected_rows() > 0) {
-            if (isset($this->logger) && $this->logger != null) {
-                $status_message = "User ".$user->username." updated in system.";
-                $this->logger->logStatus($status_message, get_class($this));
-                $status_message = "";
-            }
-            return 1;
-        } else {
-//            if (isset($this->logger) && $this->logger != null) {
-//                $status_message = "User ".$user->username." was NOT updated in system.";
-//                $this->logger->logStatus($status_message, get_class($this));
-//                $status_message = "";
-//            }
-            return 0;
-        }
-    }
-
-    function getDetails($user_id) {
-        $q = "SELECT * , ".$this->getAverageTweetCount()." ";
-        $q .= "FROM #prefix#users u ";
-        $q .= "WHERE u.user_id = %s;";
-        $q = sprintf($q, mysql_real_escape_string($user_id));
-        $sql_result = $this->executeSQL($q);
-        if (mysql_num_rows($sql_result) > 0) {
-            $row = mysql_fetch_assoc($sql_result);
-            mysql_free_result($sql_result);
-            return new User($row, $row['found_in']);
-        } else {
-            return null;
-        }
-    }
-
-    function getUserByName($user_name) {
-        $q = "SELECT * , ".$this->getAverageTweetCount()." ";
-        $q .= "FROM #prefix#users u ";
-        $q .= "WHERE u.user_name = '%s';";
-        $q = sprintf($q, mysql_real_escape_string($user_name));
-        $sql_result = $this->executeSQL($q);
-        if (mysql_num_rows($sql_result) > 0) {
-            $row = mysql_fetch_assoc($sql_result);
-            mysql_free_result($sql_result);
-            return new User($row, $row['found_in']);
-        } else {
-            return null;
-        }
-
-    }
-
-
-}
-
-class UserErrorDAO extends MySQLDAO {
-
-    function insertError($id, $error_code, $error_text, $issued_to) {
-        $q = "INSERT INTO #prefix#user_errors (user_id, error_code, error_text, error_issued_to_user_id) ";
-        $q .= "VALUES (%s, %s, '%s', %s) ";
-        $q = sprintf($q, mysql_real_escape_string($id), mysql_real_escape_string($error_code), mysql_real_escape_string($error_text), mysql_real_escape_string($issued_to));
-        $sql_result = $this->executeSQL($q);
-        if (mysql_affected_rows() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-
-?>

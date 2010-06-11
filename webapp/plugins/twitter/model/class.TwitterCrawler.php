@@ -9,7 +9,6 @@
  */
 class TwitterCrawler {
     var $instance;
-    var $logger;
     var $api;
     var $owner_object;
     var $ud;
@@ -21,7 +20,7 @@ class TwitterCrawler {
         $this->db = $db;
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
-        $this->ud = new UserDAO($this->db, $this->logger);
+        $this->ud = DAOFactory::getDAO('UserDAO');
     }
 
     function fetchInstanceUserInfo() {
@@ -453,7 +452,8 @@ class TwitterCrawler {
                         $this->logger->logStatus(count($tweets)." tweet(s) found in usertimeline via retweet for ".$user_with_retweet->username." and $count saved", get_class($this));
                     }
                 } catch(Exception $e) {
-                    $this->logger->logStatus('Could not parse friends XML for $username', get_class($this));
+                    $this->logger->logStatus($e->getMessage(), get_class($this));
+                    $this->logger->logStatus('Could not parse timeline for retweets XML for '.$user_with_retweet->username, get_class($this));
                 }
             } else {
                 $status_message .= 'API returned error code '. $cURL_status;

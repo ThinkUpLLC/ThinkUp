@@ -67,7 +67,7 @@ class PrivateDashboardController extends ThinkTankAuthController {
             $this->addToViewCacheKey($instance->network);
 
             // instantiate data access objects
-            $user_dao = new UserDAO($db);
+            $user_dao = DAOFactory::getDAO('UserDAO');
             $follow_dao = DAOFactory::getDAO('FollowDAO');
 
             // pass data to smarty

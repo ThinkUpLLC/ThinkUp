@@ -121,4 +121,19 @@ class TestOfDAOFactory extends ThinkTankUnitTestCase {
         $dao = DAOFactory::getDAO('PostDAO');
         $this->assertTrue(isset($dao));
     }
+    /**
+     * Test get UserDAO
+     */
+    function getUserDAO(){
+        $dao = DAOFactory::getDAO('UserDAO');
+        $this->assertTrue(isset($dao));
     }
+    /**
+     * Test get UserErrorDAO
+     */
+    function getUserErrorDAO(){
+        $dao = DAOFactory::getDAO('UserErrorDAO');
+        $this->assertTrue(isset($dao));
+    }
+
+}
