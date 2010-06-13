@@ -15,6 +15,25 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      */
     const FULLTEXT_CHAR_MINIMUM = 4;
 
+    /**
+     * Fields required for a post.
+     * @var array
+     */
+    var $REQUIRED_FIELDS =  array('post_id','author_username','author_fullname','author_avatar','author_user_id','post_text','pub_date','source','network');
+
+    /**
+     * Optional fields in a post
+     * @var array
+     */
+    var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id', 'location', 'place', 'geo');
+
+    /**
+     * Mapping for field names to alternate field names
+     * @var array
+     */
+    var $ALT_FIELD_NAMES = array ('author_username'=>'user_name', 'author_fullname'=>'full_name', 'author_avatar'=>'avatar', 'author_user_id'=>'user_id');
+
+
     public function getPost($post_id) {
         $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON l.post_id = p.post_id ";
@@ -262,90 +281,75 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getUpdateCount($ps);
     }
 
+    /**
+     * Checks to see if the $vals array contains all the required fields to insert a post
+     * @param array $vals
+     * @return bool
+     */
+    private function hasAllRequiredFields($vals) {
+        $result = true;
+        foreach ($this->REQUIRED_FIELDS as $field) {
+            if ( !isset($vals[$field]) ) {
+                if ( isset($this->ALT_FIELD_NAMES[$field]) && !isset($vals[$this->ALT_FIELD_NAMES[$field]] )) {
+                    $result = false;
+                }
+            }
+        }
+        return $result;
+    }
+    
     public function addPost($vals) {
         if (!$this->isPostInDB($vals['post_id'])) {
-            if (!isset($vals['in_reply_to_user_id']) || $vals['in_reply_to_user_id'] == '') {
-                $post_in_reply_to_user_id = 'NULL';
-            } else {
-                $post_in_reply_to_user_id = $vals['in_reply_to_user_id'];
-            }
-            if (!isset($vals['in_reply_to_post_id']) || $vals['in_reply_to_post_id'] == '') {
-                $post_in_reply_to_post_id = 'NULL';
-            } else {
-                $post_in_reply_to_post_id = $vals['in_reply_to_post_id'];
-            }
-            if (isset($vals['in_retweet_of_post_id'])) {
-                if ($vals['in_retweet_of_post_id'] == '') {
-                    $post_in_retweet_of_post_id = 'NULL';
-                } else {
-                    $post_in_retweet_of_post_id = $vals['in_retweet_of_post_id'];
+            if ($this->hasAllRequiredFields($vals)) {
+                //SQL variables to bind
+                $vars = array();
+                //SQL query
+                $q = "INSERT INTO #prefix#posts SET ";
+                //Set up required fields
+                foreach ($this->REQUIRED_FIELDS as $field) {
+                    $q .= $field."=:".$field.", ";
+                    if (!isset($vals[$field]) && isset($vals[$this->ALT_FIELD_NAMES[$field]])) {
+                        $vars[':'.$field] = $vals[$this->ALT_FIELD_NAMES[$field]];
+                    } else {
+                        $vars[':'.$field] = $vals[$field];
+                    }
                 }
+                //Set up any optional fields
+                foreach ($this->OPTIONAL_FIELDS as $field) {
+                    if (isset($vals[$field]) && $vals[$field] != '') {
+                        $q .= " ".$field."=:".$field.", ";
+                        $vars[':'.$field] = $vals[$field];
+                    }
+                }
+                //Trim off that last comma and space
+                $q = substr($q, 0, (strlen($q)-2));
+                $ps = $this->execute($q, $vars);
+
+                if (isset($vals['in_reply_to_post_id']) && $vals['in_reply_to_post_id'] != '' && $this->isPostInDB($vals['in_reply_to_post_id'])) {
+                    $this->incrementReplyCountCache($vals['in_reply_to_post_id']);
+                    $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"]."; updating reply cache count";
+                    $this->logger->logStatus($status_message, get_class($this));
+                }
+
+                if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '' && $this->isPostInDB($vals['in_retweet_of_post_id'])) {
+                    $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
+                    $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["user_name"]." ID: ".$vals["post_id"]."; updating retweet cache count";
+                    $this->logger->logStatus($status_message, get_class($this));
+                }
+
+                return $this->getUpdateCount($ps);
             } else {
-                $post_in_retweet_of_post_id = 'NULL';
+                //doesn't have all req'd values
+                return 0;
             }
-            if (!isset($vals["network"])) {
-                $vals["network"] = 'twitter';
-            }
-            if(!isset($vals["location"])) {
-                $vals["location"] = '';
-            }
-            if(!isset($vals["place"])) {
-                $vals["place"] = '';
-            }
-            if(!isset($vals["geo"])) {
-                $vals["geo"] = '';
-            }
-            $q = "INSERT INTO #prefix#posts
-                        (post_id,
-                        author_username,author_fullname,author_avatar,author_user_id,
-                        post_text,location,place,geo,pub_date,in_reply_to_user_id,in_reply_to_post_id,in_retweet_of_post_id,source,network)
-                    VALUES ( ";
-
-            $q .= " :post_id, :user_name, :full_name, :avatar, :user_id, :post_text, :location, :place, :geo, :pub_date, ";
-            $q .= " :post_in_reply_to_user_id, :post_in_reply_to_post_id, :post_in_retweet_of_post_id, ";
-            $q .= " :source, :network)";
-
-            $vars = array(
-                ':post_id'=>$vals['post_id'],
-                ':user_name'=>$vals['user_name'],
-                ':full_name'=>$vals['full_name'],
-                ':avatar'=>$vals['avatar'],
-                ':user_id'=>$vals['user_id'],
-                ':post_text'=>$vals['post_text'],
-                ':location'=>$vals['location'],
-                ':place'=>$vals['place'],
-                ':geo'=>$vals['geo'],
-                ':pub_date'=>$vals['pub_date'],
-                ':post_in_reply_to_user_id'=>$post_in_reply_to_user_id,
-                ':post_in_reply_to_post_id'=>$post_in_reply_to_post_id,
-                ':post_in_retweet_of_post_id'=>$post_in_retweet_of_post_id,
-                ':source'=>$vals['source'],
-                ':network'=>$vals['network']
-            );
-             
-            $ps = $this->execute($q, $vars);
-
-            $logger = Logger::getInstance();
-            if ($vals['in_reply_to_post_id'] != '' && $this->isPostInDB($vals['in_reply_to_post_id'])) {
-                $this->incrementReplyCountCache($vals['in_reply_to_post_id']);
-                $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"]."; updating reply cache count";
-                $logger->logStatus($status_message, get_class($this));
-            }
-
-            if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '' && $this->isPostInDB($vals['in_retweet_of_post_id'])) {
-                $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
-                $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["user_name"]." ID: ".$vals["post_id"]."; updating retweet cache count";
-                $logger->logStatus($status_message, get_class($this));
-            }
-
-            return $this->getUpdateCount($ps);
         } else {
+            //already in DB
             return 0;
         }
     }
 
-    public function getAllPosts($author_id, $count) {
-        return $this->getAllPostsByUserID($author_id, $count, "pub_date", "DESC");
+    public function getAllPosts($author_id, $count, $include_replies=true) {
+        return $this->getAllPostsByUserID($author_id, $count, "pub_date", "DESC", $include_replies);
     }
 
     /**
@@ -355,14 +359,18 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @param int $count
      * @param string $order_by field name
      * @param string $direction either "DESC" or "ASC
+     * @param bool $include_replies If true, return posts with in_reply_to_post_id set, if not don't
      * @return array Posts with link object set
      */
-    private function getAllPostsByUserID($author_id, $count, $order_by="pub_date", $direction="DESC") {
+    private function getAllPostsByUserID($author_id, $count, $order_by="pub_date", $direction="DESC", $include_replies=true) {
         $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p";
         $q .= " LEFT JOIN #prefix#links l ";
         $q .= " ON p.post_id = l.post_id ";
         $q .= " WHERE author_user_id = :author_id ";
+        if (!$include_replies) {
+            $q .= " AND (in_reply_to_post_id IS NULL OR in_reply_to_post_id = 0) ";
+        }
         $q .= " ORDER BY ".$order_by." ".$direction." ";
         $q .= " LIMIT :limit";
 
@@ -591,7 +599,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     /**
      * Get posts by public instances with custom sort order
-     * @TODO bind $order_by and $start_on_record as int
+     * @TODO bind $order_by without single quotes
      * @param int $page
      * @param int $count
      * @param string $order_by field name
@@ -599,20 +607,22 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      */
     private function getPostsByPublicInstancesOrderedBy($page, $count, $order_by, $in_last_x_days = 0) {
         $start_on_record = ($page - 1) * $count;
+        $vars = array(
+            ':limit'=>$count,
+            ':start_on_record'=>(int)$start_on_record
+        );
+
         $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id ";
         $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
         if ($in_last_x_days > 0) {
-            $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL ".$in_last_x_days." DAY) ";
+            $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
+            $vars[':in_last_x_days'] = (int)$in_last_x_days;
         }
         $q .= "ORDER BY p.".$order_by." DESC ";
-        $q .= "LIMIT ".$start_on_record.", :limit";
-
-        $vars = array(
-            ':limit'=>$count
-        );
+        $q .= "LIMIT :start_on_record, :limit";
 
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -623,19 +633,21 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_posts;
     }
 
-    /**
-     * @TODO Bind $count var as int
-     */
     public function getTotalPagesAndPostsByPublicInstances($count, $in_last_x_days=0) {
-        $q = "SELECT count(*) as total_posts, ceil(count(*) / $count) as total_pages ";
+        $vars = array(
+            ':count'=>(int)$count
+        );
+
+        $q = "SELECT count(*) as total_posts, ceil(count(*) / :count) as total_pages ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id ";
         $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
         if ($in_last_x_days > 0) {
-            $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL ".$in_last_x_days." DAY) ";
+            $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
+            $vars[':in_last_x_days'] = (int)$in_last_x_days;
         }
-        $ps = $this->execute($q);
+        $ps = $this->execute($q, $vars);
         return $this->getDataRowAsArray($ps);
     }
 
@@ -643,18 +655,16 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getPostsByPublicInstancesOrderedBy($page, $count, "pub_date");
     }
 
-    /**
-     * @TODO Bind $start_on_record var as int
-     */
     public function getPhotoPostsByPublicInstances($page, $count) {
         $start_on_record = ($page - 1) * $count;
         $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ON p.author_user_id = i.network_user_id ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id WHERE i.is_public = 1 and l.is_image = 1 ";
         $q .= "ORDER BY p.pub_date DESC ";
-        $q .= "LIMIT ".$start_on_record.", :limit";
+        $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
-            ':limit'=>$count
+            ':limit'=>$count,
+            ':start_on_record'=>(int)$start_on_record
         );
 
         $ps = $this->execute($q, $vars);
@@ -666,30 +676,28 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_posts;
     }
 
-    /**
-     * @TODO Bind $count var as int
-     */
     public function getTotalPhotoPagesAndPostsByPublicInstances($count) {
-        $q = "SELECT count(*) as total_posts, ceil(count(*) / $count) as total_pages ";
+        $q = "SELECT count(*) as total_posts, ceil(count(*) / :count) as total_pages ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ON p.author_user_id = i.network_user_id ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id WHERE i.is_public = 1 and l.is_image = 1 ";
+        $vars = array(
+            ':count'=>(int)$count
+        );
 
-        $ps = $this->execute($q);
+        $ps = $this->execute($q, $vars);
         return $this->getDataRowAsArray($ps);
     }
 
-    /**
-     * @TODO Bind $start_on_record var as int
-     */
     public function getLinkPostsByPublicInstances($page, $count) {
         $start_on_record = ($page - 1) * $count;
         $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id LEFT JOIN #prefix#links l ON p.post_id = l.post_id ";
         $q .= "WHERE i.is_public = 1 and l.expanded_url != '' and l.is_image = 0 ORDER BY p.pub_date DESC ";
-        $q .= "LIMIT ".$start_on_record.", :limit ";
+        $q .= "LIMIT :start_on_record, :limit ";
         $vars = array(
-            ':limit'=>$count
+            ':limit'=>$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -700,14 +708,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_posts;
     }
 
-    /**
-     * @TODO Bind $count var as int
-     */
     public function getTotalLinkPagesAndPostsByPublicInstances($count) {
-        $q = "SELECT count(*) as total_posts, ceil(count(*) / $count) as total_pages ";
+        $q = "SELECT count(*) as total_posts, ceil(count(*) / :count) as total_pages ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ON p.author_user_id = i.network_user_id ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id WHERE i.is_public = 1 and l.expanded_url != '' and l.is_image = 0 ";
-        $ps = $this->execute($q);
+        $vars = array(
+            ':count'=>(int)$count
+        );
+        $ps = $this->execute($q, $vars);
         return $this->getDataRowAsArray($ps);
     }
 

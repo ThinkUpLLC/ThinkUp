@@ -28,7 +28,11 @@ class Post {
     var $author; //optional user object
     var $link; //optional link object
 
-    function Post($val) {
+    /**
+     * Constructor
+     * @param array $val Array of key/value pairs
+     */
+    public function __construct($val) {
         $this->id = $val["id"];
         $this->post_id = $val["post_id"];
         $this->author_user_id = $val["author_user_id"];
@@ -50,6 +54,11 @@ class Post {
         $this->network = $val["network"];
     }
 
+    /**
+     * Extract URLs from post text
+     * @param string $post_text
+     * @return array $matches
+     */
     public static function extractURLs($post_text) {
         preg_match_all('!https?://[\S]+!', $post_text, $matches);
         return $matches[0];

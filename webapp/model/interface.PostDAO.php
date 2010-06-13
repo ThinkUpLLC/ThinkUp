@@ -96,7 +96,6 @@ interface PostDAO {
      *  $vals['pub_date']
      *  $vals['source']
      *  $vals['network']
-     *  $vals['in_reply_to_post_id']
      * </code>
      *
      * @param array $vals see above
@@ -109,9 +108,10 @@ interface PostDAO {
      * @param int $author_id
      * @param string  $network
      * @param int $count
+     * @param bool $include_replies If true, return posts with in_reply_to_post_id set
      * @return array Posts by author with link set
      */
-    public function getAllPosts($author_id, $count);
+    public function getAllPosts($author_id, $count, $include_replies=true);
 
     /**
      * Get all posts by author given the author's username
