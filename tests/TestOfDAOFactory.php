@@ -102,45 +102,71 @@ class TestOfDAOFactory extends ThinkTankUnitTestCase {
     /**
      * Test get InstanceDAO
      */
-    function getInstanceDAO(){
+    function testGetInstanceDAO(){
         $dao = DAOFactory::getDAO('InstanceDAO');
         $this->assertTrue(isset($dao));
+        $this->assertEqual(get_class($dao), 'InstanceMySQLDAO');
+    }
+
+    /**
+     * Test get FollowDAO
+     */
+    function testGetFollowDAO(){
+        $dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertTrue(isset($dao));
+        $this->assertEqual(get_class($dao), 'FollowMySQLDAO');
     }
 
     /**
      * Test get PostErrorDAO
      */
-    function getPostErrorDAO(){
+    function testGetPostErrorDAO(){
         $dao = DAOFactory::getDAO('PostErrorDAO');
         $this->assertTrue(isset($dao));
+        $this->assertEqual(get_class($dao), 'PostErrorMySQLDAO');
     }
     /**
      * Test get PostDAO
      */
-    function getPostDAO(){
+    function testGetPostDAO(){
         $dao = DAOFactory::getDAO('PostDAO');
         $this->assertTrue(isset($dao));
+        $this->assertEqual(get_class($dao), 'PostMySQLDAO');
     }
+
     /**
      * Test get UserDAO
      */
-    function getUserDAO(){
+    function testGetUserDAO(){
         $dao = DAOFactory::getDAO('UserDAO');
         $this->assertTrue(isset($dao));
+        $this->assertEqual(get_class($dao), 'UserMySQLDAO');
     }
+
     /**
      * Test get UserErrorDAO
      */
-    function getUserErrorDAO(){
+    function testGetUserErrorDAO(){
         $dao = DAOFactory::getDAO('UserErrorDAO');
         $this->assertTrue(isset($dao));
+        $this->assertEqual(get_class($dao), 'UserErrorMySQLDAO');
+    }
+
+    /**
+     * Test get OwnerDAO
+     */
+    function testGetOwnerDAO(){
+        $dao = DAOFactory::getDAO('OwnerDAO');
+        $this->assertTrue(isset($dao));
+        $this->assertEqual(get_class($dao), 'OwnerMySQLDAO');
     }
     
     /**
      * Test get LinkDAO
      */
-    function getLinkDAO(){
+    function testGetLinkDAO(){
         $dao = DAOFactory::getDAO('LinkDAO');
         $this->assertTrue(isset($dao));
+        $this->assertEqual(get_class($dao), 'LinkMySQLDAO');
     }
 }

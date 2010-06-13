@@ -10,7 +10,7 @@ if (!$session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
-$od = new OwnerDAO($db);
+$od = DAOFactory::getDAO('OwnerDAO');
 
 if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password') {
     $originalpass = $od->getPass($_SESSION['user']);
@@ -32,7 +32,7 @@ $s = new SmartyThinkTank();
 $s->caching = 0;
 
 $id = DAOFactory::getDAO('InstanceDAO');
-$od = new OwnerDAO($db);
+$od = DAOFactory::getDAO('OwnerDAO');
 $oid = new OwnerInstanceDAO($db);
 
 $owner = $od->getByEmail($_SESSION['user']);

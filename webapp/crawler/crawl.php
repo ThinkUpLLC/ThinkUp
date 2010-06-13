@@ -9,7 +9,7 @@ if (isset($argc) && $argc > 1) { // check for CLI credentials
     $username = $argv[1];
     $pw = $argv[2];
 
-    $od = new OwnerDAO($db);
+    $od = DAOFactory::getDAO('OwnerDAO');
     $result = $od->getForLogin($username);
     if ($session->pwdCheck($pw, $result['pwd'])) {
         $authorized = true;

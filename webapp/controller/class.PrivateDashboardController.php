@@ -18,9 +18,7 @@ class PrivateDashboardController extends ThinkTankAuthController {
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
-        global $db; //@TODO: remove this when PDO port is done
         $this->post_dao = DAOFactory::getDAO('PostDAO');
-
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $last_updated_instance = $instance_dao->getInstanceFreshestOne();
         if (isset($last_updated_instance)) {
@@ -40,7 +38,7 @@ class PrivateDashboardController extends ThinkTankAuthController {
         $this->setViewTemplate('index.tpl');
 
         $continue = true;
-        $owner_dao = new OwnerDAO($db);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
         $instancenstance_dao = DAOFactory::getDAO('InstanceDAO');
         $config = Config::getInstance();

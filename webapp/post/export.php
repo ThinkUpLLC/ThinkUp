@@ -8,7 +8,7 @@ chdir("..");
 
 require_once 'init.php';
 
-$od = new OwnerDAO($db);
+$od = DAOFactory::getDAO('OwnerDAO');
 $owner = $od->getByEmail($_SESSION['user']);
 
 $pd = DAOFactory::getDAO('PostDAO');

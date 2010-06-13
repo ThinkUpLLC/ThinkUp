@@ -33,7 +33,7 @@ if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
     $twitter_id = $u['user_id'];
     $tu = $u['user_name'];
     
-    $od = new OwnerDAO($db);
+    $od = DAOFactory::getDAO('OwnerDAO');
     $owner = $od->getByEmail($_SESSION['user']);
     
     if ($twitter_id > 0) {

@@ -12,7 +12,7 @@ if (!isset($_GET['usr']) || !isset($_GET['code']) ) {
     exit();
 }
 
-$od = new OwnerDAO($db);
+$od = DAOFactory::getDAO('OwnerDAO');
 
 $acode = $od->getActivationCode($_GET['usr']);
 

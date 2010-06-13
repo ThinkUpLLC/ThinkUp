@@ -13,7 +13,7 @@ if ($session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
-$od = new OwnerDAO($db);
+$od = DAOFactory::getDAO('OwnerDAO');
 $s = new SmartyThinkTank();
 $s->caching=false;
 
@@ -22,7 +22,7 @@ if (!$config->getValue('is_registration_open')) {
     $errormsg = '<p>Sorry, registration is closed on this ThinkTank installation.</p><p><a href="http://github.com/ginatrapani/thinktank/tree/master">Install ThinkTank on your own server.</a></p>';
 }
 else {
-    $od = new OwnerDAO($db);
+    $od = DAOFactory::getDAO('OwnerDAO');
 
     $s->assign('closed', false);
     $captcha = new Captcha();

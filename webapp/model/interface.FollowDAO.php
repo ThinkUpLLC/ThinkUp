@@ -1,6 +1,6 @@
 <?php
 /**
- * Follow MySQL Data Access Object Interface
+ * Follow Data Access Object Interface
  * 
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  */
@@ -185,5 +185,4 @@ interface FollowDAO {
      * @return array - numbered keys, with arrays - named keys
      */
     public function getFriendsNotFollowingBack($uid);
-
 }

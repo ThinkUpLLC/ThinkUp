@@ -12,7 +12,7 @@ if ($session->isLoggedIn()) {
     header("Location: ../index.php");
 }
 
-$od = new OwnerDAO($db);
+$od = DAOFactory::getDAO('OwnerDAO');
 $s = new SmartyThinkTank();
 $s->caching = false;
 

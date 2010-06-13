@@ -7,7 +7,7 @@ if (!isset($_SESSION['user'])) {
 
 require_once 'init.php';
 
-$od = new OwnerDAO($db);
+$od = DAOFactory::getDAO('OwnerDAO');
 $owner = $od->getByEmail($_SESSION['user']);
 $id = DAOFactory::getDAO('InstanceDAO');
 

@@ -13,7 +13,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
 class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
     protected $DAO;
     function TestOfInstanceMySQLDAO() {
-        $this->UnitTestCase('InstanceDAO class test');
+        $this->UnitTestCase('InstanceMySQLDAO class test');
     }
 
     function setUp() {
@@ -207,7 +207,8 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
             'full_name'=>'Steven Warren',
             'user_email'=>'me@example.com',
             'last_login'=>'Yesterday',
-            'is_admin'=>1
+            'is_admin'=>1,
+            'is_activated'=>1
         );
         $owner = new Owner($data);
 
@@ -268,7 +269,8 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
             'full_name'=>'Steven Warren',
             'user_email'=>'me@example.com',
             'last_login'=>'Yesterday',
-            'is_admin'=>1
+            'is_admin'=>1,
+            'is_activated'=>1
         );
         $owner = new Owner($data);
 

@@ -9,7 +9,7 @@ chdir("..");
 
 require_once 'init.php';
 
-$od = new OwnerDAO($db);
+$od = DAOFactory::getDAO('OwnerDAO');
 $ud = DAOFactory::getDAO('UserDAO');
 $fd = DAOFactory::getDAO('FollowDAO');
 $id = DAOFactory::getDAO('InstanceDAO');

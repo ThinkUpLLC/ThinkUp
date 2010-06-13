@@ -16,12 +16,31 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
+
+if (!$RUNNING_ALL_TESTS) {
+    require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
+}
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
+
+
 try {
     $db = new Database($THINKTANK_CFG);
     $conn = $db->getConnection();
 } catch(Exception $e) {
     echo $e->getMessage();
 }
+$webapp = new Webapp(); //TODO Make this a singleton so we don't have to instantiate/globalize it
+$webapp->registerPlugin('twitter', 'TwitterPlugin');
 
 class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
 
@@ -31,6 +50,10 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
 
     function setUp(){
         parent::setUp();
+
+        //Add owner
+        $q = "INSERT INTO tt_owners SET id=1, user_name='ThinkTankUser', full_name='ThinkTank J. User', user_email='me@example.com', user_activated=1, user_pwd='XXX', activation_code='8888'";
+        $this->db->exec($q);
 
         //Add instance_owner
         $q = "INSERT INTO tt_owner_instances (owner_id, instance_id) VALUES (1, 1)";
