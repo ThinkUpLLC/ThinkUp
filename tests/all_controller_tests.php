@@ -11,10 +11,10 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfPostController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfTestController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfTestAuthController.php';
 
-$controllertest = & new GroupTest('Controller tests');
-$controllertest->addTestCase(new TestOfPublicTimelineController());
-$controllertest->addTestCase(new TestOfPrivateDashboardController());
-$controllertest->addTestCase(new TestOfPostController());
-$controllertest->addTestCase(new TestOfTestController());
-$controllertest->addTestCase(new TestOfTestAuthController());
-$controllertest->run( new TextReporter());
+$controller_test = & new GroupTest('Controller tests');
+$controller_test->addTestCase(new TestOfPublicTimelineController());
+$controller_test->addTestCase(new TestOfPrivateDashboardController());
+$controller_test->addTestCase(new TestOfPostController());
+$controller_test->addTestCase(new TestOfTestController());
+$controller_test->addTestCase(new TestOfTestAuthController());
+$controller_test->run( new TextReporter());

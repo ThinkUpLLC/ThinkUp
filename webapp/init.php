@@ -50,9 +50,6 @@ if ($config->getValue('debug')) {
     ini_set("error_reporting", E_ALL);
 }
 
-$webapp = new Webapp();
-$crawler = new Crawler();
-
 // Instantiate global database variable
 //@TODO remove this when the PDO port is complete
 try {

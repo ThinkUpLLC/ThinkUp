@@ -10,7 +10,8 @@
 $config = Config::getInstance();
 require_once $config->getValue('source_root_path').'extlib/twitteroauth/twitteroauth.php';
 
+$webapp = Webapp::getInstance();
 $webapp->registerPlugin('twitter', 'TwitterPlugin');
 
+$crawler = Crawler::getInstance();
 $crawler->registerCrawlerPlugin('TwitterPlugin');
-?>

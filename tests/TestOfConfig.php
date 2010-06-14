@@ -6,16 +6,21 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 
+/**
+ * Test of Config object
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class TestOfConfig extends ThinkTankBasicUnitTestCase {
-    function TestOfConfig() {
+    /**
+     * Constructor
+     */
+    function __construct() {
         $this->UnitTestCase('Config class test');
     }
-
-    function setUp() {
-    }
-    function tearDown() {
-    }
-
+    /**
+     * Test config singleton instantiation
+     */
     function testConfigSingleton() {
         // this here just to test values, not needed in normal use.
         global $THINKTANK_CFG;
@@ -25,4 +30,3 @@ class TestOfConfig extends ThinkTankBasicUnitTestCase {
         $this->assertTrue($config->getValue('log_location') == $THINKTANK_CFG['log_location'], 'Log location set');
     }
 }
-?>

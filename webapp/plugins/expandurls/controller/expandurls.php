@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  Plugin Name: Expand URLs
  Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/webapp/plugins/expandurls/
@@ -8,7 +8,8 @@
  Author: Gina Trapani
  */
 
+$webapp = Webapp::getInstance();
 $webapp->registerPlugin('expandurls', 'ExpandURLsPlugin');
 
+$crawler = Crawler::getInstance();
 $crawler->registerCrawlerPlugin('ExpandURLsPlugin');
-?>

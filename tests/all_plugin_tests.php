@@ -4,6 +4,8 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/mock_objects.php';
 
+$RUNNING_ALL_TESTS = true;
+
 /* PLUGIN TESTS */
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookCrawler.php';
@@ -16,19 +18,16 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPlugin
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrAPIAccessor.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php';
 
-$plugintest = & new GroupTest('Plugin tests');
+$plugin_tests = & new GroupTest('Plugin tests');
+$plugin_tests->addTestCase(new TestOfExpandURLsPlugin());
+$plugin_tests->addTestCase(new TestOfFacebookPlugin());
+$plugin_tests->addTestCase(new TestOfFacebookCrawler());
+$plugin_tests->addTestCase(new TestOfRetweetDetector());
+$plugin_tests->addTestCase(new TestOfTwitterAPIAccessorOAuth());
+$plugin_tests->addTestCase(new TestOfTwitterCrawler());
+$plugin_tests->addTestCase(new TestOfTwitterOAuth());
+$plugin_tests->addTestCase(new TestOfTwitterPlugin());
+$plugin_tests->addTestCase(new TestOfFlickrAPIAccessor());
+$plugin_tests->addTestCase(new TestOfFlickrThumbnailsPlugin());
 
-$plugintest->addTestCase(new TestOfExpandURLsPlugin());
-$plugintest->addTestCase(new TestOfFacebookPlugin());
-$plugintest->addTestCase(new TestOfFacebookCrawler());
-$plugintest->addTestCase(new TestOfRetweetDetector());
-$plugintest->addTestCase(new TestOfTwitterAPIAccessorOAuth());
-$plugintest->addTestCase(new TestOfTwitterCrawler());
-$plugintest->addTestCase(new TestOfTwitterOAuth());
-$plugintest->addTestCase(new TestOfTwitterPlugin());
-$plugintest->addTestCase(new TestOfFlickrAPIAccessor());
-//TODO: Figure out why this test passes individually but not in a group
-//$plugintest->addTestCase(new TestOfFlickrThumbnailsPlugin());
-
-$plugintest->run( new TextReporter());
-?>
+$plugin_tests->run( new TextReporter());

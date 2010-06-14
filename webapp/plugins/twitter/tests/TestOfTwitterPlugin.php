@@ -17,6 +17,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
@@ -25,35 +26,28 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
-/* Replicate all the global objects a plugin depends on; normally this is done in init.php */
-// TODO Figure out a better way to do all this than global objects in init.php
-$crawler = new Crawler();
-$webapp = new Webapp();
-$i = new Instance(array("network_user_id"=>10, "id"=>1, "network_username"=>'test', "last_status_id"=>0, "last_page_fetched_replies"=>1, "last_page_fetched_tweets"=>0, "total_posts_in_system"=>20, "total_replies_in_system"=>10, "total_follows_in_system"=>10, "total_users_in_system"=>12, "is_archive_loaded_replies"=>0, "is_archive_loaded_follows"=>1, "crawler_last_run"=>"1/1/2010", "earliest_reply_in_system"=>"1/2/2009", "api_calls_to_leave_unmade_per_minute"=>2, "avg_replies_per_day"=>5, "network"=>"twitter", "is_public"=>0, "is_active"=>0, "network_viewer_id"=>101));
-
-// Instantiate global database variable
-try {
-    $db = new Database($THINKTANK_CFG);
-    $conn = $db->getConnection();
-}
-catch(Exception $e) {
-    echo $e->getMessage();
-}
-
+/**
+ * Test of TwitterPlugin class
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class TestOfTwitterPlugin extends ThinkTankUnitTestCase {
     var $logger;
+    var $webapp;
+    var $crawler;
 
-    function TestOfTwitterPlugin() {
+    function __construct() {
         $this->UnitTestCase('TwitterPlugin class test');
     }
 
     function setUp() {
-        global $webapp;
-        global $crawler;
-        $webapp->registerPlugin('twitter', 'TwitterPlugin');
-        $crawler->registerCrawlerPlugin('TwitterPlugin');
-        $webapp->setActivePlugin('twitter');
         parent::setUp();
+        $this->webapp = Webapp::getInstance();
+        $this->crawler = Crawler::getInstance();
+        $this->webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $this->crawler->registerCrawlerPlugin('TwitterPlugin');
+        $this->webapp->setActivePlugin('twitter');
         $this->logger = Logger::getInstance();
     }
 
@@ -63,12 +57,11 @@ class TestOfTwitterPlugin extends ThinkTankUnitTestCase {
     }
 
     function testWebappTabRegistration() {
-        global $webapp;
         $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();
         $instance->network_user_id = 1;
 
-        $post_tabs = $webapp->getChildTabsUnderPosts($instance);
+        $post_tabs = $this->webapp->getChildTabsUnderPosts($instance);
 
         $this->assertEqual(sizeof($post_tabs), 4, "Test number of post tabs");
         $first_post_tab = $post_tabs[0];

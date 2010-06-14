@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  Plugin Name: Flickr Thumbnails
  Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/webapp/plugins/flickr/
@@ -7,7 +7,9 @@
  Version: 0.01
  Author: Gina Trapani
  */
+
+$webapp = Webapp::getInstance();
 $webapp->registerPlugin('flickrthumbnails', 'FlickrThumbnailsPlugin');
 
+$crawler = Crawler::getInstance();
 $crawler->registerCrawlerPlugin('FlickrThumbnailsPlugin');
-?>

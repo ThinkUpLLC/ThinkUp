@@ -10,11 +10,10 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfPrivateDashboard.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfPublicTimeline.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfSignIn.php';
 
-$webtest = & new GroupTest('Frontend tests');
+$web_tests = & new GroupTest('Frontend tests');
 
-$webtest->addTestCase(new TestOfChangePassword());
-$webtest->addTestCase(new TestOfPrivateDashboard());
-$webtest->addTestCase(new TestOfPublicTimeline());
-$webtest->addTestCase(new TestOfSignIn());
-$webtest->run( new TextReporter());
-?>
+$web_tests->addTestCase(new TestOfChangePassword());
+$web_tests->addTestCase(new TestOfPrivateDashboard());
+$web_tests->addTestCase(new TestOfPublicTimeline());
+$web_tests->addTestCase(new TestOfSignIn());
+$web_tests->run( new TextReporter());

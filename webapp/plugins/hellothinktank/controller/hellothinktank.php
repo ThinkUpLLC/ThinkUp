@@ -8,7 +8,8 @@
  Author: Gina Trapani
  */
 
+$webapp = Webapp::getInstance();
 $webapp->registerPlugin('hellothinktank', 'HelloThinkTankPlugin');
 
+$crawler = Crawler::getInstance();
 $crawler->registerCrawlerPlugin('HelloThinkTankPlugin');
-?>

@@ -2,101 +2,147 @@
 /**
  * Webapp
  *
- * Provides hooks for webapp plugins.
+ * Singleton provides hooks for webapp plugins.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
 class Webapp extends PluginHook {
     /**
-     * @var array WebappTab
+     *
+     * @var Webapp
+     */
+    private static $instance;
+
+    /**
+     * @var array WebappTabs
      */
     private $webappTabs = array();
+
     /**
      *
-     * @var string
+     * @var string Name of the active plugin, defaults to "twitter"
      */
-    private $activePlugin = "twitter"; //default to twitter
+    private $activePlugin = "twitter";
+
     /**
-    * Returns active plugin
-    */
-    function getActivePlugin() {
-        return $activePlugin;
+     * Get the singleton instance of Webapp
+     * @return Webapp
+     */
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
+            self::$instance = new Webapp();
+        }
+        return self::$instance;
     }
+
+    /**
+     * Provided only for tests that want to kill object in tearDown()
+     */
+    public static function destroyInstance() {
+        if (isset(self::$instance)) {
+            self::$instance = null;
+        }
+    }
+
+    /**
+     * Returns active plugin
+     * @return str Name of active plugin (like "twitter" or "facebook")
+     */
+    public function getActivePlugin() {
+        return $this->activePlugin;
+    }
+
     /**
      * Sets active plugin
      * @param string $ap
      */
-    function setActivePlugin($ap) {
+    public function setActivePlugin($ap) {
         $this->activePlugin = $ap;
     }
-    /**
-     *
-     * @param Instance $instance
-     */
-    function getChildTabsUnderPosts($instance) {
-        $pobj = $this->getPluginObject($this->activePlugin);
-        $p = new $pobj;
-        return $p->getChildTabsUnderPosts($instance);
-    }
-    /**
-     *
-     * @param Instance $instance
-     */
-    function getChildTabsUnderReplies($instance) {
-        $pobj = $this->getPluginObject($this->activePlugin);
-        $p = new $pobj;
-        return $p->getChildTabsUnderReplies($instance);
-    }
-    /**
-     *
-     * @param Instance $instance
-     */
-    function getChildTabsUnderFriends($instance) {
-        $pobj = $this->getPluginObject($this->activePlugin);
-        $p = new $pobj;
-        return $p->getChildTabsUnderFriends($instance);
-    }
-    /**
-     *
-     * @param Instance $instance
-     */
-    function getChildTabsUnderFollowers($instance) {
-        $pobj = $this->getPluginObject($this->activePlugin);
-        $p = new $pobj;
-        return $p->getChildTabsUnderFollowers($instance);
-    }
-    /**
-     *
-     * @param Instance $instance
-     */
-    function getChildTabsUnderLinks($instance) {
-        $pobj = $this->getPluginObject($this->activePlugin);
-        $p = new $pobj;
-        return $p->getChildTabsUnderLinks($instance);
-    }
-    /**
-     *
-     * @param Instance $instance
-     */
-    function getAllTabs($instance)  {
-        $pobj = $this->getPluginObject($this->activePlugin);
-        $p = new $pobj;
 
-        $post_tabs = $p->getChildTabsUnderPosts($instance);
-        $reply_tabs = $p->getChildTabsUnderReplies($instance);
-        $friend_tabs = $p->getChildTabsUnderFriends($instance);
-        $follower_tabs = $p->getChildTabsUnderFollowers($instance);
-        $links_tabs = $p->getChildTabsUnderLinks($instance);
+    /**
+     *
+     * @param Instance $instance
+     * @return array WebappTabs
+     */
+    public function getChildTabsUnderPosts($instance) {
+        return $this->callGetTabsMethod('getChildTabsUnderPosts', $instance );
+    }
+
+    /**
+     *
+     * @param Instance $instance
+     * @return array WebappTabs
+     */
+    public function getChildTabsUnderReplies($instance) {
+        return $this->callGetTabsMethod('getChildTabsUnderReplies', $instance );
+    }
+
+    /**
+     *
+     * @param Instance $instance
+     * @return array WebappTabs
+     *      */
+    public function getChildTabsUnderFriends($instance) {
+        return $this->callGetTabsMethod('getChildTabsUnderFriends', $instance );
+    }
+
+    /**
+     *
+     * @param Instance $instance
+     * @return array WebappTabs
+     */
+    public function getChildTabsUnderFollowers($instance) {
+        return $this->callGetTabsMethod('getChildTabsUnderFollowers', $instance );
+    }
+
+    /**
+     *
+     * @param Instance $instance
+     * @return array WebappTabs
+     */
+    public function getChildTabsUnderLinks($instance) {
+        return $this->callGetTabsMethod('getChildTabsUnderLinks', $instance );
+    }
+
+    /**
+     * Call the specified getTabs method
+     * @param str $method_name
+     * @param Instance $instance
+     * @return array WebappTabs
+     */
+    private function callGetTabsMethod($method_name, $instance) {
+        $pobj = $this->getPluginObject($this->activePlugin);
+        $p = new $pobj;
+        if (method_exists($p, $method_name)) {
+            return call_user_func(array($p, $method_name), $instance);
+        } else {
+            throw new Exception("The ".get_class($p)." object does not have a ".$method_name." method.");
+        }
+    }
+    /**
+     *
+     * @param Instance $instance
+     * @return array WebappTabs
+     */
+    public function getAllTabs($instance)  {
+        $post_tabs = $this->getChildTabsUnderPosts($instance);
+        $reply_tabs = $this->getChildTabsUnderReplies($instance);
+        $friend_tabs = $this->getChildTabsUnderFriends($instance);
+        $follower_tabs = $this->getChildTabsUnderFollowers($instance);
+        $links_tabs = $this->getChildTabsUnderLinks($instance);
 
         return array_merge($post_tabs, $reply_tabs, $friend_tabs, $follower_tabs, $links_tabs);
     }
+
     /**
      *
      * @param string $tabShortName
      * @param Instance $instance
+     * @TODO refigure this mess, shouldn't global $s, should use Controller architecture (but how--as a controller inside a controller?)
      */
-    function loadRequestedTabData($tabShortName, $instance) {
+    public function loadRequestedTabData($tabShortName, $instance) {
         global $s; //TODO: don't global this
 
         $all_tabs = $this->getAllTabs($instance);

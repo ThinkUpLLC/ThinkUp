@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  Plugin Name: Facebook
  Plugin URI: http://github.com/ginatrapani/thinktank/tree/master/webapp/plugins/facebook/
@@ -10,8 +10,9 @@
 $config = Config::getInstance();
 require_once $config->getValue('source_root_path').'extlib/facebook/facebook.php';
 
+$webapp = Webapp::getInstance();
 $webapp->registerPlugin('facebook', 'FacebookPlugin');
 $webapp->registerPlugin('facebook page', 'FacebookPlugin');
 
+$crawler = Crawler::getInstance();
 $crawler->registerCrawlerPlugin('FacebookPlugin');
-?>
