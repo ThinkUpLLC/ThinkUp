@@ -7,6 +7,38 @@
  */
 interface InstanceDAO {
     /**
+     * Get all active instances, by last run oldest first limited to a network
+     * 
+     * @param str $network name of network to limit to
+     * 
+     * @return array with Instance
+     */
+    public function getAllActiveInstancesStalestFirstByNetwork(
+        $network = "twitter"
+    );
+    
+    /**
+     * Get all active instances, by last run oldest first
+     * 
+     * @return array with Instance
+     */
+    public function getAllInstancesStalestFirst();
+    
+    /**
+     * Gets the instance that ran last.
+     * 
+     * @return Instance Freshest instance
+     */
+    public function getInstanceFreshestOne();
+
+    /**
+     * Gets the instance that ran the longest time ago
+     * 
+     * @return Instance Stalest Instance
+     */
+    public function getInstanceStalestOne();
+    
+    /**
      * Insert instance
      * @param int $network_user_id
      * @param string $network_username

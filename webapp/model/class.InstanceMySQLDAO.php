@@ -17,6 +17,11 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getInstanceOneByLastRun("DESC");
     }
 
+    /**
+     * Alias for a average reply-count calculating portion of a query
+     * 
+     * @return str query
+     */
     protected function getAverageReplyCount() {
         return "round(total_replies_in_system/(datediff(curdate(), earliest_reply_in_system)), 2) as avg_replies_per_day";
     }
