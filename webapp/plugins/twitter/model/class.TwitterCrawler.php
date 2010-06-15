@@ -2,8 +2,9 @@
 /**
  * Twitter Crawler
  *
- * retrieves tweets, replies, users, and following relationships from Twitter.com
+ * Retrieves tweets, replies, users, and following relationships from Twitter.com
  *
+ * @TODO Complete docblocks
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -13,8 +14,9 @@ class TwitterCrawler {
     var $owner_object;
     var $ud;
     var $db;
+    var $logger;
 
-    function TwitterCrawler($instance, $api, $db) {
+    function __construct($instance, $api, $db) {
         $this->instance = $instance;
         $this->api = $api;
         $this->db = $db;
@@ -203,9 +205,12 @@ class TwitterCrawler {
             } elseif (substr($u, 0, strlen('http://flic.kr/')) == 'http://flic.kr/') {
                 $is_image = 1;
             }
-
+            if ($ld->insert($u, $eurl, $title, $tweet['post_id'], $is_image)) {
+                $this->logger->logStatus("Inserted ".$u." (".$eurl.", ".$is_image."), into links table", get_class($this));
+            } else {
+                $this->logger->logStatus("Did NOT insert ".$u." (".$eurl.") into links table", get_class($this));
+            }
         }
-
     }
 
     private function fetchAndAddTweetRepliedTo($tid, $pd) {

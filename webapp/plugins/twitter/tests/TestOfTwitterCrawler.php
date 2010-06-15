@@ -26,6 +26,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetect
  * Test of TwitterCrawler
  *
  * @TODO Test the rest of the TwitterCrawler methods
+ * @TODO Add testFetchTweetsWithLinks, assert Links and images get inserted
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -224,4 +225,6 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $retweets = $pdao->getRetweetsOfPost(14947487415, true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
     }
+    
+
 }

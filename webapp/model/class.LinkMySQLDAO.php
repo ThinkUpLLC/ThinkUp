@@ -26,7 +26,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':url'=>$url,
             ':expanded'=>$expanded,
             ':title'=>$title,
-            ':postid'=>(int)$post_id,
+            ':postid'=>$post_id,
             ':isimage'=>(int)$is_image
         );
         $ps = $this->execute($q, $vars);

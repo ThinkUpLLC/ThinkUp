@@ -128,7 +128,7 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
             'http://example.com/test',
             'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php',
             'Very Long URL',
-        15000
+        12345678901
         );
         //Is insert ID returned?
         $this->assertEqual($result, 56);
@@ -139,7 +139,7 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($result->url, 'http://example.com/test');
         $this->assertEqual($result->expanded_url, 'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php');
         $this->assertEqual($result->title, 'Very Long URL');
-        $this->assertEqual($result->post_id, 15000);
+        $this->assertEqual($result->post_id, 12345678901);
     }
     
     /**
