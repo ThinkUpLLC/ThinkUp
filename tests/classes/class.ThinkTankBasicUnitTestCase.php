@@ -26,6 +26,7 @@ class ThinkTankBasicUnitTestCase extends UnitTestCase {
      * Tear down
      * Destroys Config, Webapp, and Session objects
      * @TODO Destroy all SESSION variables
+     * @TODO Destroy all REQUEST/GET/POST variables
      */
     function tearDown() {
         Config::destroyInstance();

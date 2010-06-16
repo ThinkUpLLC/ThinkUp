@@ -1,13 +1,21 @@
 <?php
 /**
- * Twitter OAuth class mock
+ * Mock Twitter OAuth class for tests
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TwitterOAuth {
-    function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
+    /**
+     * Constructor
+     * @param str $consumer_key
+     * @param str $consumer_secret
+     * @param str $oauth_token
+     * @param str $oauth_token_secret
+     * @return TwitterOAuth
+     */
+    public function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
     }
 
-    function oAuthRequest($url, $method = NULL, $args = array()) {
+    public function oAuthRequest($url, $method = NULL, $args = array()) {
         global $SOURCE_ROOT_PATH;
         $url = Utils::getURLWithParams($url, $args);
         $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
@@ -22,7 +30,7 @@ class TwitterOAuth {
         return file_get_contents($FAUX_DATA_PATH.$url);
     }
 
-    function http($url) {
+    public function http($url) {
         global $SOURCE_ROOT_PATH;
         $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
         $url = str_replace('https://twitter.com/', '', $url);
@@ -35,8 +43,15 @@ class TwitterOAuth {
         return file_get_contents($FAUX_DATA_PATH.$url);
     }
 
-    function lastStatusCode() {
+    public function lastStatusCode() {
         return 200;
     }
+
+    public function getRequestToken() {
+        return array('oauth_token'=>'dummytoken', 'oauth_token_secret'=>'dummytoken');
+    }
+
+    public function getAuthorizeURL($token) {
+        return "test_auth_URL_".$token;
+    }
 }
-?>

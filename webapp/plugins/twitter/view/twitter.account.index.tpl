@@ -44,5 +44,5 @@
 <br /><br /><br />
 
 <p>Alternately, add a public Twitter username for ThinkTank capture data about:</p>
-<form method="get" action="index.php?p=twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to ThinkTank"></form>
+<form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to ThinkTank"></form>
 

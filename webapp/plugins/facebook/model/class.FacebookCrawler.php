@@ -6,12 +6,10 @@ class FacebookCrawler {
     var $owner_object;
     var $ud;
     var $pd;
-    var $db;
 
-    function FacebookCrawler($instance, $facebook, $db) {
+    function FacebookCrawler($instance, $facebook) {
         $this->instance = $instance;
         $this->facebook = $facebook;
-        $this->db = $db;
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
         $this->ud = DAOFactory::getDAO('UserDAO');

@@ -6,7 +6,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestAuthController extends ThinkTankAuthController implements Controller {
-    public function auth_control() {
+    public function authControl() {
         $this->setViewTemplate('testme.tpl');
         $this->addToView('test', 'Testing, testing, 123');
         return $this->generateView();

@@ -1,7 +1,7 @@
 <?php
 class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
     public function crawl() {
-        global $db;
+        global $db; //TODO Remove when PDO port is complete
         global $conn;
 
         $logger = Logger::getInstance();
@@ -19,7 +19,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $fb = new Facebook($config->getValue('facebook_api_key'), $config->getValue('facebook_api_secret'));
 
             $id->updateLastRun($instance->id);
-            $crawler = new FacebookCrawler($instance, $fb, $db);
+            $crawler = new FacebookCrawler($instance, $fb);
             $crawler->fetchInstanceUserInfo($instance->network_user_id, $session_key);
             $crawler->fetchUserPostsAndReplies($instance->network_user_id, $session_key);
 
@@ -36,7 +36,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $fb = new Facebook($config->getValue('facebook_api_key'), $config->getValue('facebook_api_secret'));
 
             $id->updateLastRun($instance->id);
-            $crawler = new FacebookCrawler($instance, $fb, $db);
+            $crawler = new FacebookCrawler($instance, $fb);
 
             $crawler->fetchPagePostsAndReplies($instance->network_user_id, $instance->network_viewer_id, $session_key);
             $id->save($crawler->instance, 0, $logger, $fb);
@@ -46,93 +46,9 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
     }
 
-    public function renderConfiguration() {
-        global $db;
-        global $s;
-        global $od;
-        global $id;
-        global $owner;
-        global $oid;
-
-        $config = Config::getInstance();
-        $status = self::facebook_process_page_actions();
-        $s->assign("info", $status["info"]);
-        $s->assign("error", $status["error"]);
-        $s->assign("success", $status["success"]);
-
-        $logger = Logger::getInstance();
-        $oid = new OwnerInstanceDAO($db);
-        $user_pages = array();
-        $owner_instances = $id->getByOwnerAndNetwork($owner, 'facebook');
-
-        $api_key = $config->getValue('facebook_api_key');
-        $api_secret = $config->getValue('facebook_api_secret');
-
-        if (isset($api_key) && isset($api_secret)) {
-            $facebook = new Facebook($api_key, $api_secret);
-            foreach ($owner_instances as $instance) {
-                $crawler = new FacebookCrawler($instance, $facebook, $db);
-                $tokens = $oid->getOAuthTokens($instance->id);
-                $session_key = $tokens['oauth_access_token'];
-                if ($instance->network_user_id == $instance->network_viewer_id) {
-                    $pages = $crawler->fetchPagesUserIsFanOf($instance->network_user_id, $session_key);
-                    $keys = array_keys($pages);
-                    foreach ($keys as $key) {
-                        $pages[$key]["json"] = json_encode($pages[$key]);
-                    }
-                    $user_pages[$instance->network_user_id] = $pages;
-                }
-            }
-        } else {
-            $s->assign("error", "Please set your Facebook API key and secret in config.inc.php");
-        }
-        $s->assign('user_pages', $user_pages);
-
-
-        $owner_instance_pages = $id->getByOwnerAndNetwork($owner, 'facebook page');
-        $s->assign('owner_instance_pages', $owner_instance_pages);
-
-
-        $fbconnect_link = '<a href="#" onclick="FB.Connect.requireSession(); return false;" ><img id="fb_login_image" src="http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_long.gif" alt="Connect"/>    </a>';
-        $s->assign('fbconnect_link', $fbconnect_link);
-        $s->assign('owner_instances', $owner_instances);
-        if (isset($api_key)) {
-            $s->assign('fb_api_key', $api_key);
-        }
-    }
-
-    function facebook_process_page_actions() {
-        global $db;
-        $messages = array("error"=>'', "success"=>'', "info"=>'');
-
-        //insert pages
-        if (isset($_GET["action"]) && $_GET["action"] == "add page" && isset($_GET["facebook_page_id"]) && isset($_GET["viewer_id"]) && isset($_GET["owner_id"]) && isset($_GET["instance_id"])) {
-            $page_data = json_decode(str_replace("\\", "", $_GET["facebook_page_id"]));
-            $messages = self::facebook_insert_page($page_data->page_id, $_GET["viewer_id"], $_GET["owner_id"], $_GET["instance_id"], $page_data->name, $db, $messages);
-        }
-
-        return $messages;
-    }
-
-    function facebook_insert_page($fb_page_id, $viewer_id, $owner_id, $existing_instance_id, $fb_page_name, $db, $messages) {
-        global $id;
-        global $oid;
-
-        //check if instance exists
-        $i = $id->getByUserAndViewerId($fb_page_id, $viewer_id);
-        if ($i == null) {
-            $instance_id = $id->insert($fb_page_id, $fb_page_name, "facebook page", $viewer_id);
-            if ($instance_id) {
-                $messages["success"] .= "Instance ID ".$instance_id." created successfully for Facebook page ID $fb_page_id.";
-            }
-            $tokens = $oid->getOAuthTokens($existing_instance_id);
-            $session_key = $tokens['oauth_access_token'];
-            $oid->insert($owner_id, $instance_id, $session_key);
-        } else {
-            $messages["info"] .= "Instance ".$fb_page_id.", facebook exists.";
-            $instance_id = $instance->id;
-        }
-        return $messages;
+    public function renderConfiguration($owner) {
+        $controller = new FacebookPluginConfigurationController($owner);
+        return $controller->go();
     }
 
     public function getChildTabsUnderPosts($instance) {
@@ -208,7 +124,4 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
         return $child_tabs;
     }
-
-
 }
-?>

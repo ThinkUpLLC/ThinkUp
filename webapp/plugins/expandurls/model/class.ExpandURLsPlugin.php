@@ -20,7 +20,8 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $logger->close(); # Close logging
     }
 
-    public function renderConfiguration() {
+    public function renderConfiguration($owner) {
+        //TODO: Write controller class, echo its results
 
     }
 

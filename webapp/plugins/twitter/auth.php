@@ -84,7 +84,7 @@ if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
     $db->closeConnection($conn);
     
 }
-$msg .= '<a href="'.$config->getValue('site_root_path').'account/" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Back to your account</a>';
+$msg .= '<a href="'.$config->getValue('site_root_path').'account/index.php?p=twitter" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Back to your account</a>';
 
 $s->assign('msg', $msg);
 $s->display($config->getValue('source_root_path').'webapp/plugins/twitter/view/auth.tpl');

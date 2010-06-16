@@ -39,7 +39,7 @@
           {/if}
         </div>
         {if $body}
-          {include file=$body}
+          {$body}
         {/if}
       </div>
     </div> <!-- end #plugins -->

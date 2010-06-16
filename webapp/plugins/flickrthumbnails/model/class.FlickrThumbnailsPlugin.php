@@ -32,8 +32,7 @@ class FlickrThumbnailsPlugin implements CrawlerPlugin {
         }
     }
 
-    function renderConfiguration() {
+    function renderConfiguration($owner) {
         // TODO Add setting for the Flickr API key here
     }
 }
-?>

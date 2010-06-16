@@ -15,7 +15,7 @@ class TestFauxPlugin implements TestAppPlugin {
     /**
      * For testing purposes
      */
-    public function renderConfiguration() {
+    public function renderConfiguration($owner) {
         return "this is my configuration screen HTML";
     }
 

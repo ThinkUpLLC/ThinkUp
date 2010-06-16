@@ -13,12 +13,6 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
-try {
-    $db = new Database($THINKTANK_CFG);
-    $conn = $db->getConnection();
-} catch(Exception $e) {
-    echo $e->getMessage();
-}
 
 class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
 

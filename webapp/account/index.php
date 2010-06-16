@@ -75,9 +75,7 @@ if (!isset($_GET['m']) && isset($_GET['p'])) {
 if (isset($active_plugin)) {
     $pobj = $webapp->getPluginObject($active_plugin);
     $p = new $pobj;
-    $p->renderConfiguration($s);
-    array_push($s->template_dir, 'plugins/'.$active_plugin);
-    $s->assign('body', $config->getValue('source_root_path').'webapp/plugins/'.$active_plugin.'/view/'.$active_plugin.'.account.index.tpl');
+    $s->assign('body', $p->renderConfiguration($owner));
 }
 /* End plugin-specific configuration handling */
 

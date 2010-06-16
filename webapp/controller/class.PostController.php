@@ -27,7 +27,7 @@ class PostController extends ThinkTankAuthController {
     /**
      * Main control method
      */
-    public function auth_control() {
+    public function authControl() {
         $this->setViewTemplate('post.index.tpl');
         if ( isset($_REQUEST['t']) && is_numeric($_REQUEST['t']) && $this->post_dao->isPostInDB($_REQUEST['t']) ){
             $post_id = $_REQUEST['t'];

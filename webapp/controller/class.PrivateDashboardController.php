@@ -31,9 +31,9 @@ class PrivateDashboardController extends ThinkTankAuthController {
      * Handle requests for private dashboard data
      * @TODO Throw an Insufficient privileges Exception when owner doesn't have access to an instance
      */
-    public function auth_control() {
+    public function authControl() {
         global $db; //@TODO: remove this when PDO port is done
-        global $webapp; //@TODO: stop globalizing this; convert Webapp object to singleton?
+        $webapp = Webapp::getInstance();
 
         $this->setViewTemplate('index.tpl');
 

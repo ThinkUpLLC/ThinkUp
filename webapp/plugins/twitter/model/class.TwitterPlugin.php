@@ -13,8 +13,11 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
      */
     protected $post_dao;
 
+    /**
+     * Constructor
+     * @TODO remove this when PDO port is complete
+     */
     public function __construct() {
-        global $db; //@TODO remove this when PDO port is complete
         $this->post_dao = DAOFactory::getDAO('PostDAO');
     }
 
@@ -87,93 +90,9 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $logger->close(); # Close logging
     }
 
-
-    public function renderConfiguration() {
-        global $s;
-        global $od;
-        global $id;
-        global $db;
-        global $config;
-        global $owner;
-
-        $oauth_consumer_key = $config->getValue('oauth_consumer_key');
-        $oauth_consumer_secret = $config->getValue('oauth_consumer_secret');
-
-        //Add public user instance
-        if (isset($_GET['twitter_username'])) { // if form was submitted
-            $logger = Logger::getInstance();
-
-            //Check user exists and is public
-            $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret, $config->getValue('archive_limit'));
-            $api_call = str_replace("[id]", $_GET['twitter_username'], $api->cURL_source['show_user']);
-            list($cURL_status, $data) = $api->apiRequestFromWebapp($api_call);
-            if ($cURL_status == 200) {
-                $thisFeed = array();
-                try {
-                    $xml = $api->createParserFromString(utf8_encode($data));
-                    $user = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name, 'is_protected'=>$xml->protected );
-                }
-                catch(Exception $e) {
-                    $s->assign('errormsg', $e->getMessage());
-                }
-                if (isset($user) && $user["is_protected"] == 'false') {
-                    // if so, add to instances table and owners table
-
-                    $i = $id->getByUsername($_GET['twitter_username']);
-                    $oid = new OwnerInstanceDAO($db);
-
-                    $msg = '';
-                    if (isset($i)) {
-                        //$msg .= "Instance already exists.<br />";
-
-                        $oi = $oid->get($owner->id, $instance->id);
-                        if ($oi != null) {
-                            //$msg .= "Owner already has this instance, no insert or update required.<br />";
-                        } else {
-                            $oid->insert($owner->id, $instance->id, '', '');
-                            //$msg .= "Added owner instance.<br />";
-                        }
-
-                    } else {
-                        //$msg .= "Instance does not exist.<br />";
-
-                        $id->insert($user["user_id"], $user["user_name"]);
-                        //$msg .= "Created instance.<br />";
-
-                        $i = $id->getByUsername($user["user_name"]);
-                        $oid->insert($owner->id, $instance->id, '', '');
-                        //$msg .= "Created an owner instance.<br />";
-                    }
-                    $s->assign('successmsg', $_GET['twitter_username']." has been added to ThinkTank.");
-
-                    $s->assign('successmsg', "Added ".$_GET['twitter_username']." to ThinkTank.");
-                } else { // if not, return error
-                    $s->assign('errormsg', $_GET['twitter_username']." is a private Twitter account; ThinkTank cannot track it without authorization.");
-                }
-            } else {
-                $s->assign('errormsg', $_GET['twitter_username']." is not a valid Twitter username.");
-            }
-        }
-
-        $to = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret);
-        /* Request tokens from twitter */
-        $tok = $to->getRequestToken();
-        if (isset($tok['oauth_token'])) {
-            $token = $tok['oauth_token'];
-            $_SESSION['oauth_request_token_secret'] = $tok['oauth_token_secret'];
-
-            /* Build the authorization URL */
-            $oauthorize_link = $to->getAuthorizeURL($token);
-        } else {
-            //set error message here
-            $s->assign('errormsg', "Unable to obtain OAuth token. Check your Twitter consumer key and secret configuration.");
-            $oauthorize_link = '';
-        }
-
-        $owner_instances = $id->getByOwnerAndNetwork($owner, 'twitter');
-
-        $s->assign('owner_instances', $owner_instances);
-        $s->assign('oauthorize_link', $oauthorize_link);
+    public function renderConfiguration($owner) {
+        $controller = new TwitterPluginConfigurationController($owner);
+        return $controller->go();
     }
 
     public function getChildTabsUnderPosts($instance) {
@@ -321,7 +240,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
     }
 
     public function getChildTabsUnderLinks($instance) {
-        global $ld;
+        $ld = DAOFactory::getDAO('LinkDAO');
 
         $twitter_data_tpl = Utils::getPluginViewDirectory('twitter').'twitter.inline.view.tpl';
 
@@ -335,10 +254,10 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         //Links from favorites
         /* $lftab = new WebappTab("links-favorites", 'Links From Favorites', 'Links in posts you favorited');
-        $lftabds = new WebappTabDataset("links", $ld, "getLinksByFriends", array($instance->network_user_id));
-        $lftab->addDataset($lftabds);
-        array_push($child_tabs, $lftab);
-        */
+         $lftabds = new WebappTabDataset("links", $ld, "getLinksByFriends", array($instance->network_user_id));
+         $lftab->addDataset($lftabds);
+         array_push($child_tabs, $lftab);
+         */
         //Photos
         $ptab = new WebappTab("links-photos", "Photos", 'Photos your friends have posted', $twitter_data_tpl);
         $ptabds = new WebappTabDataset("links", $ld, "getPhotosByFriends", array($instance->network_user_id));
@@ -347,4 +266,3 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         return $child_tabs;
     }
 }
-?>

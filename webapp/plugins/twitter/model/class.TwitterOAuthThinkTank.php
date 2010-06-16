@@ -10,6 +10,4 @@ class TwitterOAuthThinkTank extends TwitterOAuth {
     function noAuthRequest($url) {
         return $this->http($url, 'GET');
     }
-
-
 }
