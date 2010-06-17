@@ -1,7 +1,7 @@
 <?php
 /**
  * Follow MySQL Data Access Object Implementation
- * 
+ *  
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Jason McPheron <jason[at]onebigword[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
@@ -10,6 +10,14 @@
 require_once 'model/class.PDODAO.php';
 require_once 'model/interface.FollowDAO.php';
 
+/**
+ * Follow MySQL Data Access Object Implementation
+ * 
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Jason McPheron <jason[at]onebigword[dot]com>
+ * @author Christoffer Viken <christoffer[at]viken[dot]me>
+ * 
+ */
 class FollowMySQLDAO extends PDODAO implements FollowDAO {
     /**
      * @return str to add to field list to get average tweet count.
@@ -206,7 +214,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= " LIMIT :count ;";
         $vars = array(
             ':userid'=>$user_id, 
-            ':count'=>$count
+            ':count'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
 
@@ -221,14 +229,13 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= " ON u.user_id = f.follower_id ";
         $q .= " WHERE f.user_id = :userid AND active=1 ";
         $q .= " AND follower_count > 10000 AND friend_count > 0 ";
-        $q .= " ORDER BY LikelihoodOfFollow ASC u.follower_count DESC ";
+        $q .= " ORDER BY LikelihoodOfFollow ASC, u.follower_count DESC ";
         $q .= " LIMIT :count ;";
         $vars = array(
             ':userid'=>$user_id, 
-            ':count'=>$count
+            ':count'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
-
         return $this->getDataRowsAsArrays($ps);
     }
 
@@ -240,7 +247,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= " ORDER BY u.user_id ASC LIMIT :count ;";
         $vars = array(
             ':userid'=>$user_id, 
-            ':count'=>$count
+            ':count'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
 
@@ -255,7 +262,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= " ORDER BY avg_tweets_per_day DESC LIMIT :count ";
         $vars = array(
             ':userid'=>$user_id, 
-            ':count'=>$count
+            ':count'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
 
@@ -269,7 +276,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= " ORDER BY u.follower_count DESC LIMIT :count";
         $vars = array(
             ':userid'=>$user_id, 
-            ':count'=>$count
+            ':count'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
 
@@ -282,7 +289,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "order by u.follower_count DESC LIMIT :count ";
         $vars = array(
             ':userid'=>$user_id, 
-            ':count'=>$count
+            ':count'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
 
@@ -298,7 +305,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= " LIMIT :count ";
         $vars = array(
             ':userid'=>$user_id, 
-            ':count'=>$count
+            ':count'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
 
@@ -313,7 +320,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= " ORDER BY follower_count DESC LIMIT :count ";
         $vars = array(
             ':userid'=>$user_id, 
-            ':count'=>$count
+            ':count'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
 

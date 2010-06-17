@@ -21,41 +21,41 @@ class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
         $this->DAO = new FollowMySQLDAO();
 
         //Insert test data into test table
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg');";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, follower_count, friend_count) VALUES (1234567890, 'jack', 'Jack Dorsey', 'avatar.jpg', 150210, 124);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (1324567890, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected) VALUES (16, 'private', 'Private Poster', 'avatar.jpg', 1);";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count) VALUES (1623457890, 'private', 'Private Poster', 'avatar.jpg', 1, 35342, 1345);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_user_errors (user_id, error_code, error_text, error_issued_to_user_id) VALUES (15, 404, 'User not found', 13);";
+        $q = "INSERT INTO tt_user_errors (user_id, error_code, error_text, error_issued_to_user_id) VALUES (15, 404, 'User not found', 1324567890);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 12, '2006-01-08 23:54:41');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (1324567890, 1234567890, '2006-01-08 23:54:41');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 14, '2006-01-08 23:54:41');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (1324567890, 14, '2006-01-08 23:54:41');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 15, '2006-01-08 23:54:41');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (1324567890, 15, '2006-01-08 23:54:41');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (13, 16, '2006-01-08 23:54:41');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (1324567890, 1623457890, '2006-01-08 23:54:41');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 13, '2006-01-08 23:54:41');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (1623457890, 1324567890, '2006-01-08 23:54:41');";
         PDODAO::$PDO->exec($q);
 
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (16, 12, '2006-01-08 23:54:41');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen) VALUES (1623457890, 1234567890, '2006-01-08 23:54:41');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, active, last_seen) VALUES (14, 12, 0, '2006-01-08 23:54:41');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, active, last_seen) VALUES (14, 1234567890, 0, '2006-01-08 23:54:41');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, active, last_seen) VALUES (13, 17, 0, '2006-01-08 23:54:41');";
+        $q = "INSERT INTO tt_follows (user_id, follower_id, active, last_seen) VALUES (1324567890, 17, 0, '2006-01-08 23:54:41');";
         PDODAO::$PDO->exec($q);
     }
 
@@ -66,27 +66,27 @@ class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
     }
 
     public function testFollowExists() {
-        $this->assertTrue($this->DAO->followExists(13, 12));
-        $this->assertFalse($this->DAO->followExists(12, 13));
+        $this->assertTrue($this->DAO->followExists(1324567890, 1234567890));
+        $this->assertFalse($this->DAO->followExists(1234567890, 1324567890));
     }
 
     public function testUpdate() {
-        $this->assertEqual($this->DAO->update(12, 13), 0);
-        $this->assertEqual($this->DAO->update(13, 12), 1);
+        $this->assertEqual($this->DAO->update(1234567890, 1324567890), 0);
+        $this->assertEqual($this->DAO->update(1324567890, 1234567890), 1);
     }
 
     public function testDeactivate() {
-        $this->assertEqual($this->DAO->deactivate(12, 13), 0);
-        $this->assertEqual($this->DAO->deactivate(13, 12), 1);
+        $this->assertEqual($this->DAO->deactivate(1234567890, 1324567890), 0);
+        $this->assertEqual($this->DAO->deactivate(1324567890, 1234567890), 1);
     }
 
     public function testInsert() {
-        $this->assertEqual($this->DAO->insert(12, 14), 1);
-        $this->assertTrue($this->DAO->followExists(12, 14));
+        $this->assertEqual($this->DAO->insert(1234567890, 14), 1);
+        $this->assertTrue($this->DAO->followExists(1234567890, 14));
     }
 
     public function testGetUnloadedFollowerDetails() {
-        $unloaded_followers = $this->DAO->getUnloadedFollowerDetails(13);
+        $unloaded_followers = $this->DAO->getUnloadedFollowerDetails(1324567890);
 
         $this->assertIsA($unloaded_followers, "array");
         $this->assertEqual(count($unloaded_followers), 2);
@@ -95,52 +95,52 @@ class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
     }
 
     public function testCountTotalFollowsWithErrors() {
-        $total_follower_errors = $this->DAO->countTotalFollowsWithErrors(13);
+        $total_follower_errors = $this->DAO->countTotalFollowsWithErrors(1324567890);
 
         $this->assertIsA($total_follower_errors, "int");
         $this->assertEqual($total_follower_errors, 1);
     }
 
     public function testCountTotalFriendsWithErrors() {
-        $total_friend_errors = $this->DAO->countTotalFriendsWithErrors(13);
+        $total_friend_errors = $this->DAO->countTotalFriendsWithErrors(1324567890);
 
         $this->assertIsA($total_friend_errors, "int");
         $this->assertEqual($total_friend_errors, 0);
     }
 
     public function testCountTotalFollowsWithFullDetails() {
-        $total_follows_with_details = $this->DAO->countTotalFollowsWithFullDetails(13);
+        $total_follows_with_details = $this->DAO->countTotalFollowsWithFullDetails(1324567890);
 
         $this->assertIsA($total_follows_with_details, "int");
         $this->assertEqual($total_follows_with_details, 2);
     }
 
     public function testCountTotalFollowsProtected() {
-        $total_follows_protected = $this->DAO->countTotalFollowsProtected(13);
+        $total_follows_protected = $this->DAO->countTotalFollowsProtected(1324567890);
 
         $this->assertIsA($total_follows_protected, "int");
         $this->assertEqual($total_follows_protected, 1);
     }
 
     public function testCountTotalFriends() {
-        $total_friends = $this->DAO->countTotalFriends(12);
+        $total_friends = $this->DAO->countTotalFriends(1234567890);
 
         $this->assertIsA($total_friends, "int");
         $this->assertEqual($total_friends, 3);
     }
 
     public function testCountTotalFriendsProtected() {
-        $total_friends_protected = $this->DAO->countTotalFriendsProtected(12);
+        $total_friends_protected = $this->DAO->countTotalFriendsProtected(1234567890);
 
         $this->assertIsA($total_friends_protected, "int");
         $this->assertEqual($total_friends_protected, 1);
     }
 
     public function testGetStalestFriend() {
-        $stalest_friend = $this->DAO->getStalestFriend(12);
+        $stalest_friend = $this->DAO->getStalestFriend(1234567890);
 
         $this->assertNotNull($stalest_friend);
-        $this->assertEqual($stalest_friend->user_id, 13);
+        $this->assertEqual($stalest_friend->user_id, 1324567890);
         $this->assertEqual($stalest_friend->username, 'ev');
     }
 
@@ -156,32 +156,37 @@ class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
     }
 
     public function testGetMostFollowedFollowers(){
-        $result = $this->DAO->getMostFollowedFollowers(13, 20);
+        $result = $this->DAO->getMostFollowedFollowers(1324567890, 20);
 
-        $this->assertEqual($result[0]["user_id"], 16);
-        $this->assertEqual($result[1]["user_id"], 12);
+        $this->assertEqual($result[0]["user_id"], 1234567890);
+        $this->assertEqual($result[1]["user_id"], 1623457890);
     }
 
     public function testGetLeastLikelyFollowers(){
-        //Method limited by hard coded limit, not able to test at this time.
+        $result = $this->DAO->getLeastLikelyFollowers(1324567890, 15);
+        
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 2);
+        $this->assertEqual($result[0]["user_id"], 1234567890);
+        $this->assertEqual($result[1]["user_id"], 1623457890);
     }
 
     public function testGetEarliestJoinerFollowers(){
-        $result = $this->DAO->getEarliestJoinerFollowers(13);
+        $result = $this->DAO->getEarliestJoinerFollowers(1324567890);
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 2);
-        $this->assertEqual($result[0]['user_id'], 12);
-        $this->assertEqual($result[1]['user_id'], 16);
+        $this->assertEqual($result[0]['user_id'], 1234567890);
+        $this->assertEqual($result[1]['user_id'], 1623457890);
     }
 
     public function testGetMostActiveFollowees(){
-        $result = $this->DAO->getMostActiveFollowees(12);
+        $result = $this->DAO->getMostActiveFollowees(1234567890);
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 2);
-        $this->assertEqual($result[0]['user_id'], 13);
-        $this->assertEqual($result[1]['user_id'], 16);
+        $this->assertEqual($result[0]['user_id'], 1324567890);
+        $this->assertEqual($result[1]['user_id'], 1623457890);
     }
 
     public function testGetFormerFollowees(){
@@ -189,7 +194,7 @@ class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 1);
-        $this->assertEqual($result[0]['user_id'], 13);
+        $this->assertEqual($result[0]['user_id'], 1324567890);
     }
 
     public function testGetFormerFollowers(){
@@ -197,42 +202,42 @@ class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 1);
-        $this->assertEqual($result[0]['user_id'], 12);
+        $this->assertEqual($result[0]['user_id'], 1234567890);
     }
 
     public function testGetLeastActiveFollowees(){
-        $result = $this->DAO->getLeastActiveFollowees(12);
+        $result = $this->DAO->getLeastActiveFollowees(1234567890);
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 2);
-        $this->assertEqual($result[0]['user_id'], 13);
-        $this->assertEqual($result[1]['user_id'], 16);
+        $this->assertEqual($result[0]['user_id'], 1324567890);
+        $this->assertEqual($result[1]['user_id'], 1623457890);
     }
 
     public function testGetMostFollowedFollowees(){
-        $result = $this->DAO->getMostFollowedFollowees(12);
+        $result = $this->DAO->getMostFollowedFollowees(1234567890);
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 2);
-        $this->assertEqual($result[0]['user_id'], 13);
-        $this->assertEqual($result[1]['user_id'], 16);
+        $this->assertEqual($result[0]['user_id'], 1623457890);
+        $this->assertEqual($result[1]['user_id'], 1324567890);
     }
 
     public function testGetMutualFriends(){
-        $result = $this->DAO->getMutualFriends(13, 12);
+        $result = $this->DAO->getMutualFriends(1324567890, 1234567890);
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 1);
-        $this->assertEqual($result[0]['user_id'], 16);
+        $this->assertEqual($result[0]['user_id'], 1623457890);
     }
 
     public function testGetFriendsNotFollowingBack(){
-        $result = $this->DAO->getFriendsNotFollowingBack(12);
+        $result = $this->DAO->getFriendsNotFollowingBack(1234567890);
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 2);
-        $this->assertEqual($result[0]['user_id'], 13);
-        $this->assertEqual($result[1]['user_id'], 16);
+        $this->assertEqual($result[0]['user_id'], 1324567890);
+        $this->assertEqual($result[1]['user_id'], 1623457890);
     }
 
 }
