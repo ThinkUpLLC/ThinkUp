@@ -38,8 +38,8 @@
     {/if}
   </div>
   <div class="grid_2 center omega"> 
-    {if $l->container_post->mention_count_cache > 0}
-      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}">{$l->container_post->mention_count_cache}</a></span>
+    {if $l->container_post->reply_count_cache > 0}
+      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}">{$l->container_post->reply_count_cache}</a></span>
     {/if}
   </div>
 </div>

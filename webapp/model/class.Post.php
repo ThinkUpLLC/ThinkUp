@@ -20,7 +20,7 @@ class Post {
     var $adj_pub_date;
     var $in_reply_to_user_id;
     var $in_reply_to_post_id;
-    var $mention_count_cache;
+    var $reply_count_cache;
     var $in_retweet_of_post_id;
     var $retweet_count_cache;
     var $network;
@@ -48,7 +48,7 @@ class Post {
         $this->adj_pub_date = $val["adj_pub_date"];
         $this->in_reply_to_user_id = $val["in_reply_to_user_id"];
         $this->in_reply_to_post_id = $val["in_reply_to_post_id"];
-        $this->mention_count_cache = $val["mention_count_cache"];
+        $this->reply_count_cache = $val["reply_count_cache"];
         $this->in_retweet_of_post_id = $val["in_retweet_of_post_id"];
         $this->retweet_count_cache = $val["retweet_count_cache"];
         $this->network = $val["network"];

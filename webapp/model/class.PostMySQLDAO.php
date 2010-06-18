@@ -27,7 +27,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @var array
      */
     var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id', 'location',
-    'place', 'geo', 'retweet_count_cache', 'mention_count_cache');
+    'place', 'geo', 'retweet_count_cache', 'reply_count_cache');
 
     public function getPost($post_id) {
         $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, ";
@@ -260,7 +260,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @return int number of updated rows (1 if successful, 0 if not)
      */
     private function incrementReplyCountCache($post_id) {
-        return $this->incrementCacheCount($post_id, "mention");
+        return $this->incrementCacheCount($post_id, "reply");
     }
 
     /**
@@ -273,13 +273,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     /**
-     * Increment either mention_cache_count or retweet_cache_count
+     * Increment either reply_cache_count or retweet_cache_count
      * @param int $post_id
-     * @param string $fieldname either "mention" or "retweet"
+     * @param string $fieldname either "reply" or "retweet"
      * @return int number of updated rows
      */
     private function incrementCacheCount($post_id, $fieldname) {
-        $fieldname = $fieldname=="mention"?"mention":"retweet";
+        $fieldname = $fieldname=="reply"?"reply":"retweet";
         $q = " UPDATE  #prefix#posts SET ".$fieldname."_count_cache = ".$fieldname."_count_cache + 1 ";
         $q .= "WHERE post_id = :post_id";
         $vars = array(
@@ -489,7 +489,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getMostRepliedToPosts($user_id, $count) {
-        return $this->getAllPostsByUserID($user_id, $count, "mention_count_cache", "DESC");
+        return $this->getAllPostsByUserID($user_id, $count, "reply_count_cache", "DESC");
     }
 
     public function getMostRetweetedPosts($user_id, $count) {
@@ -586,12 +586,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getUpdateCount($ps);
     }
     /**
-     * Decrement a post's mention_count_cache
+     * Decrement a post's reply_count_cache
      * @param int $post_id
      * @return in count of affected rows
      */
     private function decrementReplyCountCache($post_id) {
-        $q = "UPDATE #prefix#posts SET mention_count_cache = mention_count_cache - 1 ";
+        $q = "UPDATE #prefix#posts SET reply_count_cache = reply_count_cache - 1 ";
         $q .= "WHERE post_id = :post_id";
         $vars = array(
             ':post_id'=>$post_id
@@ -635,7 +635,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id ";
-        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND ";
+        $q .= "WHERE i.is_public = 1 and (p.reply_count_cache > 0 or p.retweet_count_cache > 0) AND ";
         $q .= " (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
         if ($in_last_x_days > 0) {
             $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
@@ -662,7 +662,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id ";
-        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND ";
+        $q .= "WHERE i.is_public = 1 and (p.reply_count_cache > 0 or p.retweet_count_cache > 0) AND ";
         $q .= " (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
         if ($in_last_x_days > 0) {
             $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
@@ -742,7 +742,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getMostRepliedToPostsByPublicInstances($page, $count) {
-        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "mention_count_cache");
+        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "reply_count_cache");
     }
 
     public function getMostRetweetedPostsByPublicInstances($page, $count) {
@@ -750,7 +750,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getMostRepliedToPostsByPublicInstancesInLastWeek($page, $count) {
-        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "mention_count_cache", 7);
+        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "reply_count_cache", 7);
     }
 
     public function getMostRetweetedPostsByPublicInstancesInLastWeek($page, $count) {

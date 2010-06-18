@@ -162,7 +162,7 @@ CREATE TABLE tt_posts (
   pub_date timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   in_reply_to_user_id int(11) DEFAULT NULL,
   in_reply_to_post_id bigint(11) DEFAULT NULL,
-  mention_count_cache int(11) NOT NULL DEFAULT '0',
+  reply_count_cache int(11) NOT NULL DEFAULT '0',
   in_retweet_of_post_id bigint(11) DEFAULT NULL,
   retweet_count_cache int(11) NOT NULL DEFAULT '0',
   network varchar(10) NOT NULL DEFAULT 'twitter',
@@ -220,7 +220,7 @@ CREATE TABLE tt_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2010-06-17 20:56:22
+-- Dump completed on 2010-06-17 21:01:20
 
 --
 -- Insert default plugin(s)

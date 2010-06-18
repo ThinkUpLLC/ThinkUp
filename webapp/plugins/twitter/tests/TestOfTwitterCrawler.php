@@ -204,7 +204,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $tc->fetchInstanceUserInfo();
 
         //first, load retweeted tweet into db
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (14947487415, 930061, 'ginatrapani', 'Gina Trapani', 'avatar.jpg', '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'web', '2006-01-01 00:00:00', ".rand(0, 4).", 0);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (14947487415, 930061, 'ginatrapani', 'Gina Trapani', 'avatar.jpg', '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'web', '2006-01-01 00:00:00', ".rand(0, 4).", 0);";
         $this->db->exec($q);
 
         $pdao = DAOFactory::getDAO('PostDAO');($this->db);

@@ -176,7 +176,7 @@ interface PostDAO {
     public function getPostsByPublicInstances($page, $count);
 
     /**
-     * Get a page of posts by public instances ordered by mention_count_cache desc
+     * Get a page of posts by public instances ordered by reply_count_cache desc
      * @param int $page
      * @param int $count
      * @return array Posts with link set
@@ -272,7 +272,7 @@ interface PostDAO {
     public function isPostByPublicInstance($post_id);
 
     /**
-     * Get a page of posts in the last week by public instances ordered by mention_count_cache desc
+     * Get a page of posts in the last week by public instances ordered by reply_count_cache desc
      * @param int $page
      * @param int $count
      * @return array Posts with link set

@@ -37,7 +37,7 @@
               <div class="bl">
                 <div class="key-stat">
                   {if $replies}
-                    <h1>{$post->mention_count_cache|number_format}</h1>
+                    <h1>{$post->reply_count_cache|number_format}</h1>
                     <h3>replies in {$post->adj_pub_date|relative_datetime}</h3>
                   {else}
                     <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a> fwds to<br><a href="#fwds">{$rtreach|number_format}</a></h1>

@@ -1,0 +1,1 @@
+ALTER TABLE `tt_posts` CHANGE `mention_count_cache` `reply_count_cache` INT( 11 ) NOT NULL DEFAULT '0'

@@ -82,10 +82,10 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
 
         $pd = DAOFactory::getDAO('PostDAO');
         $p = $pd->getPost('108956622464235');
-        $this->assertTrue($p->mention_count_cache == 1);
+        $this->assertTrue($p->reply_count_cache == 1);
 
         $p = $pd->getPost('107266209295210');
-        $this->assertTrue($p->mention_count_cache == 0);
+        $this->assertTrue($p->reply_count_cache == 0);
     }
 
 
