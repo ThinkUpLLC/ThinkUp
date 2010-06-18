@@ -1,0 +1,24 @@
+--
+-- 2010-05-27
+--
+ALTER TABLE `tt_follows` ADD `debug_api_call` VARCHAR( 255 ) NOT NULL;
+
+--
+-- 2010-06-09
+--
+ALTER TABLE `tt_posts` ADD `location` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `source` ;
+ALTER TABLE `tt_posts` ADD `place` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `location` ;
+ALTER TABLE `tt_posts` ADD `geo` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `place` ;
+ALTER TABLE `tt_posts` ADD `is_geo_encoded` INT( 1 ) NOT NULL DEFAULT '0' AFTER `network` ;
+
+--
+-- 2010-06-17
+--
+ALTER TABLE tt_owner_instances CHANGE oauth_access_token oauth_access_token VARCHAR( 255 ) 
+CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+--
+-- 2010-06-17
+--
+ALTER TABLE `tt_posts` CHANGE `mention_count_cache` `reply_count_cache` INT( 11 ) NOT NULL DEFAULT '0'; 
+
