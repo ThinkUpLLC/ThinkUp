@@ -1,22 +1,14 @@
 <?php
-/**
- * Follow MySQL Data Access Object Implementation
- *  
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- * @author Jason McPheron <jason[at]onebigword[dot]com>
- * @author Christoffer Viken <christoffer[at]viken[dot]me>
- * 
- */
 require_once 'model/class.PDODAO.php';
 require_once 'model/interface.FollowDAO.php';
 
 /**
  * Follow MySQL Data Access Object Implementation
- * 
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Jason McPheron <jason[at]onebigword[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
- * 
+ *
  */
 class FollowMySQLDAO extends PDODAO implements FollowDAO {
     /**
@@ -363,5 +355,3 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
     }
 
 }
-
-?>

@@ -62,7 +62,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkTankUnitTestCase 
      */
     public function setUp(){
         parent::setUp();
-        $webapp = Webapp::getInstance(); //TODO Make this a singleton so we don't have to instantiate/globalize it
+        $webapp = Webapp::getInstance();
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
 
         //Add owner

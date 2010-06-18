@@ -1,4 +1,10 @@
 <?php
+/**
+ * Webapp plugin interface
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 interface WebappPlugin extends ThinkTankPlugin {
     public function getChildTabsUnderPosts($instance);
 
@@ -10,4 +16,4 @@ interface WebappPlugin extends ThinkTankPlugin {
 
     public function getChildTabsUnderLinks($instance);
 }
-?>
+

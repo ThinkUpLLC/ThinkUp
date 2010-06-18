@@ -46,7 +46,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
                 $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'], $tokens['oauth_access_token_secret'], $config->getValue('oauth_consumer_key'), $config->getValue('oauth_consumer_secret'), $instance, $config->getValue('archive_limit'));
             }
 
-            $crawler = new TwitterCrawler($instance, $api, $db);
+            $crawler = new TwitterCrawler($instance, $api);
 
             $api->init();
 

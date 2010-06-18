@@ -19,23 +19,19 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * Fields required for a post.
      * @var array
      */
-    var $REQUIRED_FIELDS =  array('post_id','author_username','author_fullname','author_avatar','author_user_id','post_text','pub_date','source','network');
+    var $REQUIRED_FIELDS =  array('post_id','author_username','author_fullname','author_avatar','author_user_id',
+    'post_text','pub_date','source','network');
 
     /**
      * Optional fields in a post
      * @var array
      */
-    var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id', 'location', 'place', 'geo');
-
-    /**
-     * Mapping for field names to alternate field names
-     * @var array
-     */
-    var $ALT_FIELD_NAMES = array ('author_username'=>'user_name', 'author_fullname'=>'full_name', 'author_avatar'=>'avatar', 'author_user_id'=>'user_id');
-
+    var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id', 'location',
+    'place', 'geo', 'retweet_count_cache', 'mention_count_cache');
 
     public function getPost($post_id) {
-        $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, ";
+        $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON l.post_id = p.post_id ";
         $q .= "WHERE p.post_id=:post_id;";
         $vars = array(
@@ -94,7 +90,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " FROM #prefix#posts AS p ";
         $q .= " INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id WHERE ";
 
-        if ( strlen($username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) { //fulltext search only works for words longer than 4 chars
+        //fulltext search only works for words longer than 4 chars
+        if ( strlen($username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
             $q .= " MATCH (`post_text`) AGAINST(:username IN BOOLEAN MODE) ";
         } else {
             $username = '%'.$username .'%';
@@ -119,7 +116,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     function getRepliesToPost($post_id, $is_public = false, $count = 350) {
-        $q = " SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = " SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, u.*, ";
+        $q .= " pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
         $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id ";
         $q .= " INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
@@ -145,8 +143,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     function getRetweetsOfPost($post_id, $is_public = false) {
-        $q = "SELECT
-                    p.*, u.*,  l.url, l.expanded_url, l.is_image, l.error, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT p.*, u.*,  l.url, l.expanded_url, l.is_image, l.error, ";
+        $q .= " pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
         $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id ";
         $q .= " INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
@@ -186,7 +184,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @TODO: Figure out a better way to do this, only returns 1-1 exchanges, not back-and-forth threads
      */
     function getPostsAuthorHasRepliedTo($author_id, $count) {
-        $q = "SELECT p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, p2.follower_count as answerer_follower_count, p1.post_id as question_post_id, p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, p.post_id as answer_post_id, p.author_username as answerer_username, p.author_avatar as answerer_avatar, p3.follower_count as questioner_follower_count, p.post_text as answer, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
+        $q = "SELECT p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, ";
+        $q .= " p2.follower_count as answerer_follower_count, p1.post_id as question_post_id, ";
+        $q .= " p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, ";
+        $q .= " p.post_id as answer_post_id, p.author_username as answerer_username, ";
+        $q .= " p.author_avatar as answerer_avatar, p3.follower_count as questioner_follower_count, ";
+        $q .= " p.post_text as answer, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
         $q .= " FROM #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= " JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= " JOIN #prefix#users p3 on p3.user_id = p.in_reply_to_user_id ";
@@ -206,7 +209,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getExchangesBetweenUsers($author_id, $other_user_id) {
-        $q = "SELECT   p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, p2.follower_count as questioner_follower_count, p1.post_id as question_post_id, p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, p.post_id as answer_post_id,  p.author_username as answerer_username, p.author_avatar as answerer_avatar, p3.follower_count as answerer_follower_count, p.post_text as answer, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
+        $q = "SELECT   p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, ";
+        $q .= " p2.follower_count as questioner_follower_count, p1.post_id as question_post_id, ";
+        $q .= " p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, ";
+        $q .= " p.post_id as answer_post_id,  p.author_username as answerer_username, ";
+        $q .= " p.author_avatar as answerer_avatar, p3.follower_count as answerer_follower_count, ";
+        $q .= " p.post_text as answer, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
         $q .= " FROM  #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= " JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= " JOIN #prefix#users p3 on p3.user_id = :other_user_id ";
@@ -290,14 +298,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $result = true;
         foreach ($this->REQUIRED_FIELDS as $field) {
             if ( !isset($vals[$field]) ) {
-                if ( isset($this->ALT_FIELD_NAMES[$field]) && !isset($vals[$this->ALT_FIELD_NAMES[$field]] )) {
-                    $result = false;
-                }
+                $result = false;
             }
         }
         return $result;
     }
-    
+
     public function addPost($vals) {
         if (!$this->isPostInDB($vals['post_id'])) {
             if ($this->hasAllRequiredFields($vals)) {
@@ -308,11 +314,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 //Set up required fields
                 foreach ($this->REQUIRED_FIELDS as $field) {
                     $q .= $field."=:".$field.", ";
-                    if (!isset($vals[$field]) && isset($vals[$this->ALT_FIELD_NAMES[$field]])) {
-                        $vars[':'.$field] = $vals[$this->ALT_FIELD_NAMES[$field]];
-                    } else {
-                        $vars[':'.$field] = $vals[$field];
-                    }
+                    $vars[':'.$field] = $vals[$field];
                 }
                 //Set up any optional fields
                 foreach ($this->OPTIONAL_FIELDS as $field) {
@@ -325,15 +327,19 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 $q = substr($q, 0, (strlen($q)-2));
                 $ps = $this->execute($q, $vars);
 
-                if (isset($vals['in_reply_to_post_id']) && $vals['in_reply_to_post_id'] != '' && $this->isPostInDB($vals['in_reply_to_post_id'])) {
+                if (isset($vals['in_reply_to_post_id']) && $vals['in_reply_to_post_id'] != ''
+                && $this->isPostInDB($vals['in_reply_to_post_id'])) {
                     $this->incrementReplyCountCache($vals['in_reply_to_post_id']);
-                    $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"]."; updating reply cache count";
+                    $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"].
+                    "; updating reply cache count";
                     $this->logger->logStatus($status_message, get_class($this));
                 }
 
-                if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '' && $this->isPostInDB($vals['in_retweet_of_post_id'])) {
+                if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != ''
+                && $this->isPostInDB($vals['in_retweet_of_post_id'])) {
                     $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
-                    $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["user_name"]." ID: ".$vals["post_id"]."; updating retweet cache count";
+                    $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
+                    " ID: ".$vals["post_id"]."; updating retweet cache count";
                     $this->logger->logStatus($status_message, get_class($this));
                 }
 
@@ -362,7 +368,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @param bool $include_replies If true, return posts with in_reply_to_post_id set, if not don't
      * @return array Posts with link object set
      */
-    private function getAllPostsByUserID($author_id, $count, $order_by="pub_date", $direction="DESC", $include_replies=true) {
+    private function getAllPostsByUserID($author_id, $count, $order_by="pub_date", $direction="DESC",
+    $include_replies=true) {
+        $direction = $direction=="DESC" ? "DESC": "ASC";
+        if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
+            $order_by="pub_date";
+        }
         $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p";
         $q .= " LEFT JOIN #prefix#links l ";
@@ -436,7 +447,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
         $q .= " LEFT JOIN #prefix#links AS l ON p.post_id = l.post_id ";
         $q .= " WHERE p.network = :network AND";
-        if ( strlen($author_username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) { //fulltext search only works for words longer than 4 chars
+        //fulltext search only works for words longer than 4 chars
+        if ( strlen($author_username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
             $q .= " MATCH (`post_text`) AGAINST(:author_username IN BOOLEAN MODE) ";
         } else {
             $author_username = '%'.$author_username .'%';
@@ -489,7 +501,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q = " SELECT p.* , u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
         $q .= " INNER JOIN #prefix#users u ON u.user_id = p.author_user_id WHERE ";
-        if ( strlen($username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) { //fulltext search only works for words longer than 4 chars
+        //fulltext search only works for words longer than 4 chars
+        if ( strlen($username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
             $q .= " MATCH (`post_text`) AGAINST(:username IN BOOLEAN MODE) ";
         } else {
             $username = '%'.$username .'%';
@@ -518,7 +531,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q = " SELECT p.* , u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
         $q .= " INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id WHERE ";
-        if ( strlen($username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) { //fulltext search only works for words longer than 4 chars
+        //fulltext search only works for words longer than 4 chars
+        if ( strlen($username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
             $q .= " MATCH (`post_text`) AGAINST(:username IN BOOLEAN MODE) ";
         } else {
             $username = '%'.$username .'%';
@@ -550,7 +564,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         // Check for former_parent_id. The current webfront doesn't send this to us
         // We may even want to remove $former_parent_id as a parameter and just look it up here always -FL
-        if ($former_parent_id < 0 && isset($post->in_reply_to_post_id) && $this->isPostInDB($post->in_reply_to_post_id)) {
+        if ($former_parent_id < 0 && isset($post->in_reply_to_post_id)
+        && $this->isPostInDB($post->in_reply_to_post_id)) {
             $former_parent_id = $post->in_reply_to_post_id;
         }
 
@@ -607,6 +622,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      */
     private function getPostsByPublicInstancesOrderedBy($page, $count, $order_by, $in_last_x_days = 0) {
         $start_on_record = ($page - 1) * $count;
+        //make sure order_by var is set to a valid column name, else default to pub_date
+        if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
+            $order_by="pub_date";
+        }
         $vars = array(
             ':limit'=>$count,
             ':start_on_record'=>(int)$start_on_record
@@ -616,7 +635,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id ";
-        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
+        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND ";
+        $q .= " (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
         if ($in_last_x_days > 0) {
             $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
             $vars[':in_last_x_days'] = (int)$in_last_x_days;
@@ -642,7 +662,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id ";
-        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
+        $q .= "WHERE i.is_public = 1 and (p.mention_count_cache > 0 or p.retweet_count_cache > 0) AND ";
+        $q .= " (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
         if ($in_last_x_days > 0) {
             $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
             $vars[':in_last_x_days'] = (int)$in_last_x_days;
@@ -711,7 +732,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getTotalLinkPagesAndPostsByPublicInstances($count) {
         $q = "SELECT count(*) as total_posts, ceil(count(*) / :count) as total_pages ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ON p.author_user_id = i.network_user_id ";
-        $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id WHERE i.is_public = 1 and l.expanded_url != '' and l.is_image = 0 ";
+        $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id ";
+        $q .= " WHERE i.is_public = 1 and l.expanded_url != '' and l.is_image = 0 ";
         $vars = array(
             ':count'=>(int)$count
         );

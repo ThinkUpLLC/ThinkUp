@@ -48,3 +48,4 @@ interface UserDAO {
      */
     public function getUserByName($user_name);
 }
+

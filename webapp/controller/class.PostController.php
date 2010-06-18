@@ -19,7 +19,6 @@ class PostController extends ThinkTankAuthController {
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
-        global $db; //@TODO remove this when PDO port is done
         $this->post_dao = DAOFactory::getDAO('PostDAO');
         $this->addToView('controller_title', 'Post details');
     }

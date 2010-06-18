@@ -36,29 +36,37 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $q = "INSERT INTO tt_owner_instances (owner_id, instance_id) VALUES (1, 1)";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) 
+        VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 0, 10);";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) 
+        VALUES (18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 0, 10);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 0, 70);";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) 
+        VALUES (19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 0, 70);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (20, 'user1', 'User 1', 'avatar.jpg', 0, 90);";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) 
+        VALUES (20, 'user1', 'User 1', 'avatar.jpg', 0, 90);";
         PDODAO::$PDO->exec($q);
 
         //protected user
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (21, 'user2', 'User 2', 'avatar.jpg', 1, 80);";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) 
+        VALUES (21, 'user2', 'User 2', 'avatar.jpg', 1, 80);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (22, 'quoter', 'Quotables', 'avatar.jpg', 0, 80);";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) 
+        VALUES (22, 'quoter', 'Quotables', 'avatar.jpg', 0, 80);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (23, 'user3', 'User 3', 'avatar.jpg', 0, 100);";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) 
+        VALUES (23, 'user3', 'User 3', 'avatar.jpg', 0, 100);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (24, 'notonpublictimeline', 'Not on Public Timeline', 'avatar.jpg', 1, 100);";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count) 
+        VALUES (24, 'notonpublictimeline', 'Not on Public Timeline', 'avatar.jpg', 1, 100);";
         PDODAO::$PDO->exec($q);
 
         //Make public
@@ -74,14 +82,18 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) VALUES (23, 'user3', 1);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) VALUES (24, 'notonpublictimeline', 0);";
+        $q = "INSERT INTO tt_instances (network_user_id, network_username, is_public) 
+        VALUES (24, 'notonpublictimeline', 0);";
         PDODAO::$PDO->exec($q);
 
         //Add straight text posts
         $counter = 0;
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+            post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES 
+            ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
+            'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
             PDODAO::$PDO->exec($q);
             $counter++;
         }
@@ -91,10 +103,14 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         while ($counter < 40) {
             $post_id = $counter + 40;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($post_id, 18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 'This is image post $counter', 'Flickr', '2006-01-02 00:$pseudo_minute:00', 0, 0);";
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+            post_text, source, pub_date, mention_count_cache, retweet_count_cache) 
+            VALUES ($post_id, 18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 'This is image post $counter', 'Flickr', 
+            '2006-01-02 00:$pseudo_minute:00', 0, 0);";
             PDODAO::$PDO->exec($q);
 
-            $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".jpg', '', 0, $post_id, 1);";
+            $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) 
+            VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".jpg', '', 0, $post_id, 1);";
             PDODAO::$PDO->exec($q);
 
             $counter++;
@@ -105,10 +121,15 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         while ($counter < 40) {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($post_id, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is link post $counter', 'web', '2006-03-01 00:$pseudo_minute:00', 0, 0);";
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+            post_text, source, pub_date, mention_count_cache, retweet_count_cache) 
+            VALUES ($post_id, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
+            'This is link post $counter', 'web', '2006-03-01 00:$pseudo_minute:00', 0, 0);";
             PDODAO::$PDO->exec($q);
 
-            $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".html', 'Link $counter', 0, $post_id, 0);";
+            $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) 
+            VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".html', 
+            'Link $counter', 0, $post_id, 0);";
             PDODAO::$PDO->exec($q);
 
             $counter++;
@@ -120,9 +141,17 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
             $post_id = $counter + 120;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             if ( ($counter/2) == 0 ) {
-                $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($post_id, 20, 'user1', 'User 1', 'avatar.jpg', 'Hey @ev and @jack thanks for founding Twitter  post $counter', 'web', '2006-03-01 00:$pseudo_minute:00', 0, 0);";
+                $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+                post_text, source, pub_date, mention_count_cache, retweet_count_cache) 
+                VALUES ($post_id, 20, 'user1', 'User 1', 'avatar.jpg', 
+                'Hey @ev and @jack thanks for founding Twitter  post $counter', 'web', 
+                '2006-03-01 00:$pseudo_minute:00', 0, 0);";
             } else {
-                $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($post_id, 21, 'user2', 'User 2', 'avatar.jpg', 'Hey @ev and @jack should fix Twitter - post $counter', 'web', '2006-03-01 00:$pseudo_minute:00', 0, 0);";
+                $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, 
+                author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) 
+                VALUES ($post_id, 21, 'user2', 'User 2', 'avatar.jpg', 
+                'Hey @ev and @jack should fix Twitter - post $counter', 'web', 
+                '2006-03-01 00:$pseudo_minute:00', 0, 0);";
             }
             PDODAO::$PDO->exec($q);
 
@@ -131,52 +160,93 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
 
 
         //Add replies to specific post
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_post_id) VALUES (131, 20, 'user1', 'User 1', 'avatar.jpg', '@shutterbug Nice shot!', 'web', '2006-03-01 00:00:00', 0, 0, 41);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_post_id) 
+        VALUES (131, 20, 'user1', 'User 1', 'avatar.jpg', '@shutterbug Nice shot!', 'web', 
+        '2006-03-01 00:00:00', 0, 0, 41);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_post_id) VALUES (132, 21, 'user2', 'User 2', 'avatar.jpg', '@shutterbug Nice shot!', 'web', '2006-03-01 00:00:00', 0, 0, 41);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_post_id) 
+        VALUES (132, 21, 'user2', 'User 2', 'avatar.jpg', '@shutterbug Nice shot!', 'web', 
+        '2006-03-01 00:00:00', 0, 0, 41);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_post_id) VALUES (133, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', '@shutterbug This is a link post reply http://example.com/', 'web', '2006-03-01 00:00:00', 0, 0, 41);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_post_id) 
+        VALUES (133, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
+        '@shutterbug This is a link post reply http://example.com/', 'web', '2006-03-01 00:00:00', 0, 0, 41);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) VALUES ('http://example.com/', 'http://example.com/expanded-link.html', 'Link 1', 0, 133, 0);";
+        $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image) 
+        VALUES ('http://example.com/', 'http://example.com/expanded-link.html', 'Link 1', 0, 133, 0);";
         PDODAO::$PDO->exec($q);
 
         //Add retweets of a specific post
         //original post
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (134, 22, 'quoter', 'Quoter of Quotables', 'avatar.jpg', 'Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache) 
+        VALUES (134, 22, 'quoter', 'Quoter of Quotables', 'avatar.jpg', 
+        'Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0);";
         PDODAO::$PDO->exec($q);
         //retweet 1
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_retweet_of_post_id) VALUES (135, 20, 'user1', 'User 1', 'avatar.jpg', 'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0, 134);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_retweet_of_post_id) 
+        VALUES (135, 20, 'user1', 'User 1', 'avatar.jpg', 
+        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0, 134);";
         PDODAO::$PDO->exec($q);
         //retweet 2
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_retweet_of_post_id) VALUES (136, 21, 'user2', 'User 2', 'avatar.jpg', 'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0, 134);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_retweet_of_post_id) 
+        VALUES (136, 21, 'user2', 'User 2', 'avatar.jpg', 
+        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', 
+        '2006-03-01 00:00:00', 0, 0, 134);";
         PDODAO::$PDO->exec($q);
         //retweet 3
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_retweet_of_post_id) VALUES (137, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0, 134);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_retweet_of_post_id) 
+        VALUES (137, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
+        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', 
+        '2006-03-01 00:00:00', 0, 0, 134);";
         PDODAO::$PDO->exec($q);
 
         //Add reply back
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_user_id, in_reply_to_post_id) VALUES (138, 18, 'shutterbug', 'Shutterbug', 'avatar.jpg', '@user2 Thanks!', 'web', '2006-03-01 00:00:00', 0, 0, 21, 132);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_user_id, 
+        in_reply_to_post_id) VALUES (138, 18, 'shutterbug', 'Shutterbug', 'avatar.jpg', 
+        '@user2 Thanks!', 'web', '2006-03-01 00:00:00', 0, 0, 21, 132);";
         PDODAO::$PDO->exec($q);
 
         //Add user exchange
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_user_id) VALUES (139, 20, 'user1', 'User 1', 'avatar.jpg', '@ev When will Twitter have a business model?', 'web', '2006-03-01 00:00:00', 0, 0, 13);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_user_id) 
+        VALUES (139, 20, 'user1', 'User 1', 'avatar.jpg', '@ev When will Twitter have a business model?', 
+        'web', '2006-03-01 00:00:00', 0, 0, 13);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_user_id, in_reply_to_post_id) VALUES (140, 13, 'ev', 'Ev Williams', 'avatar.jpg', '@user1 Soon....', 'web', '2006-03-01 00:00:00', 0, 0, 20, 139);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, 
+        in_reply_to_user_id, in_reply_to_post_id) VALUES (140, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
+        '@user1 Soon....', 'web', '2006-03-01 00:00:00', 0, 0, 20, 139);";
         PDODAO::$PDO->exec($q);
 
         //Add posts replying to post not in the system
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_user_id, in_reply_to_post_id) VALUES (141, 23, 'user3', 'User 3', 'avatar.jpg', '@user4 I\'m replying to a post not in the TT db', 'web', '2006-03-01 00:00:00', 0, 0, 20, 150);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_user_id, 
+        in_reply_to_post_id) VALUES (141, 23, 'user3', 'User 3', 'avatar.jpg', 
+        '@user4 I\'m replying to a post not in the TT db', 'web', '2006-03-01 00:00:00', 0, 0, 20, 150);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_user_id, in_reply_to_post_id) VALUES (142, 23, 'user3', 'User 3', 'avatar.jpg', '@user4 I\'m replying to another post not in the TT db', 'web', '2006-03-01 00:00:00', 0, 0, 20, 151);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_user_id, in_reply_to_post_id) 
+        VALUES (142, 23, 'user3', 'User 3', 'avatar.jpg', 
+        '@user4 I\'m replying to another post not in the TT db', 'web', '2006-03-01 00:00:00', 0, 0, 20, 151);";
         PDODAO::$PDO->exec($q);
 
         //Add post by instance not on public timeline
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date) VALUES (143, 24, 'notonpublictimeline', 'Not on public timeline', 'avatar.jpg', 'This post should not be on the public timeline', 'web', '2006-03-01 00:00:00');";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date) VALUES (143, 24, 'notonpublictimeline', 'Not on public timeline', 'avatar.jpg', 
+        'This post should not be on the public timeline', 'web', '2006-03-01 00:00:00');";
         PDODAO::$PDO->exec($q);
 
     }
@@ -247,7 +317,8 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $posts = $dao->getMostRepliedToPosts(13, 10);
         $prev_count = $posts[0]->mention_count_cache;
         foreach ($posts as $post) {
-            $this->assertTrue($post->mention_count_cache <= $prev_count, "previous count ".$prev_count." should be less than or equal to this post's count of ".$post->mention_count_cache);
+            $this->assertTrue($post->mention_count_cache <= $prev_count, "previous count ".$prev_count.
+            " should be less than or equal to this post's count of ".$post->mention_count_cache);
             $prev_count = $post->mention_count_cache;
         }
     }
@@ -260,7 +331,8 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $posts = $dao->getMostRetweetedPosts(13, 10);
         $prev_count = $posts[0]->retweet_count_cache;
         foreach ($posts as $post) {
-            $this->assertTrue($post->retweet_count_cache >= $prev_count, "previous count ".$prev_count." should be less than or equal to this post's count of ".$post->retweet_count_cache);
+            $this->assertTrue($post->retweet_count_cache >= $prev_count, "previous count ".$prev_count.
+            " should be less than or equal to this post's count of ".$post->retweet_count_cache);
             $prev_count = $post->mention_count_cache;
         }
     }
@@ -389,13 +461,15 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $posts = $dao->getStandaloneReplies('jack', 15);
 
         $this->assertEqual(sizeof($posts), 10);
-        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9', "Standalone mention");
+        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9', 
+        "Standalone mention");
         $this->assertEqual($posts[0]->author->username, 'user2', "Post author");
 
         $posts = $dao->getStandaloneReplies('ev', 15);
 
         $this->assertEqual(sizeof($posts), 11);
-        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9', "Standalone mention");
+        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9', 
+        "Standalone mention");
         $this->assertEqual($posts[0]->author->username, 'user2', "Post author");
     }
 
@@ -409,7 +483,8 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
 
-        $this->assertEqual($posts[2]->post_text, '@shutterbug This is a link post reply http://example.com/', "post reply");
+        $this->assertEqual($posts[2]->post_text, '@shutterbug This is a link post reply http://example.com/', 
+        "post reply");
         $this->assertEqual($posts[2]->post_id, 133, "post ID");
         $this->assertEqual($posts[2]->author->username, 'linkbaiter', "Post author");
         $this->assertEqual($posts[2]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
@@ -425,7 +500,8 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
 
-        $this->assertEqual($posts[1]->post_text, '@shutterbug This is a link post reply http://example.com/', "post reply");
+        $this->assertEqual($posts[1]->post_text, '@shutterbug This is a link post reply http://example.com/', 
+        "post reply");
         $this->assertEqual($posts[1]->post_id, 133, "post ID");
         $this->assertEqual($posts[1]->author->username, 'linkbaiter', "Post author");
         $this->assertEqual($posts[1]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
@@ -438,7 +514,8 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $dao = new PostMySQLDAO();
         $posts = $dao->getRetweetsOfPost(134);
         $this->assertEqual(sizeof($posts), 3);
-        $this->assertEqual($posts[0]->post_text, 'RT @quoter Be liberal in what you accept and conservative in what you send', "post reply");
+        $this->assertEqual($posts[0]->post_text, 
+        'RT @quoter Be liberal in what you accept and conservative in what you send', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
     }
 
@@ -525,14 +602,14 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $vals = array();
 
         $vals['post_id']=250;
-        $vals['user_name']='quoter';
-        $vals['full_name']="Quoter of Quotables";
-        $vals['avatar']='avatar.jpg';
+        $vals['author_username']='quoter';
+        $vals['author_fullname']="Quoter of Quotables";
+        $vals['author_avatar']='avatar.jpg';
 
         //test add post without all the req'd fields set
         $this->assertEqual($dao->addPost($vals), 0, "Post not inserted, not all values set");
 
-        $vals['user_id']= 22;
+        $vals['author_user_id']= 22;
         $vals['post_text']="Go confidently in the direction of your dreams! Live the life you've imagined.";
         $vals['location']="New Delhi";
         $vals['place']="Dwarka, New Delhi";
@@ -550,7 +627,8 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($post->author_username, 'quoter');
         $this->assertEqual($post->author_fullname, 'Quoter of Quotables');
         $this->assertEqual($post->author_avatar, 'avatar.jpg');
-        $this->assertEqual($post->post_text, "Go confidently in the direction of your dreams! Live the life you've imagined.");
+        $this->assertEqual($post->post_text, 
+        "Go confidently in the direction of your dreams! Live the life you've imagined.");
         $this->assertEqual($post->location, "New Delhi");
         $this->assertEqual($post->place, "Dwarka, New Delhi");
         $this->assertEqual($post->geo, "10.0000 20.0000");
@@ -718,7 +796,8 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $page_of_posts = $pdao->getLinkPostsByPublicInstances(3, 15);
 
         $this->assertEqual(sizeof($page_of_posts), 11, "Should be ".sizeof($page_of_posts));
-        $this->assertEqual($page_of_posts[0]->post_text, "This is link post 9", $page_of_posts[0]->post_text . " == This is link post 9");
+        $this->assertEqual($page_of_posts[0]->post_text, "This is link post 9", $page_of_posts[0]->post_text . 
+        " == This is link post 9");
         //$this->assertEqual($page_of_posts[9]->post_text, "This is link post 0", $page_of_posts[9]->post_text . " == This is link post 0");
     }
 
@@ -748,13 +827,20 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     function testAssignParent() {
         //Add two "parent" posts
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (550, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is parent post 1', 'web', '2006-03-01 00:01:00', 1, 0);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (550, 19, 'linkbaiter', 
+        'Link Baiter', 'avatar.jpg', 'This is parent post 1', 'web', '2006-03-01 00:01:00', 1, 0);";
         PDODAO::$PDO->exec($q);
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (551, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is parent post 2', 'web', '2006-03-01 00:01:00', 0, 0);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES (551, 19, 'linkbaiter', 
+        'Link Baiter', 'avatar.jpg', 'This is parent post 2', 'web', '2006-03-01 00:01:00', 0, 0);";
         PDODAO::$PDO->exec($q);
 
         //Add a post with the parent post 550
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_post_id) VALUES (552, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is a reply with the wrong parent', 'web', '2006-03-01 00:01:00', 0, 0, 550);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, mention_count_cache, retweet_count_cache, in_reply_to_post_id) 
+        VALUES (552, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is a reply with the wrong parent', 
+        'web', '2006-03-01 00:01:00', 0, 0, 550);";
         PDODAO::$PDO->exec($q);
 
         $pdao = new PostMySQLDAO();
@@ -787,7 +873,10 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $id = 200;
         while ($counter < 40) {
             $id += $counter;
-            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($id, 23, 'user3', 'User 3', 'avatar.jpg', 'This is post with $counter retweets', 'web', DATE_SUB(NOW(), INTERVAL ".$counter." DAY), 0, ".$counter.");";
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+            post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($id, 23, 'user3', 
+            'User 3', 'avatar.jpg', 'This is post with $counter retweets', 'web', DATE_SUB(NOW(), 
+            INTERVAL ".$counter." DAY), 0, ".$counter.");";
             //echo $q;
             PDODAO::$PDO->exec($q);
             $counter++;
@@ -816,7 +905,10 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $id = 200;
         while ($counter < 40) {
             $id += $counter;
-            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($id, 23, 'user3', 'User 3', 'avatar.jpg', 'This is post with $counter replies', 'web', DATE_SUB(NOW(), INTERVAL ".$counter." DAY), ".$counter.", 0 );";
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+            post_text, source, pub_date, mention_count_cache, retweet_count_cache) VALUES ($id, 23, 'user3', 'User 3', 
+            'avatar.jpg', 'This is post with $counter replies', 'web', DATE_SUB(NOW(), INTERVAL ".$counter." DAY), 
+            ".$counter.", 0 );";
             //echo $q;
             PDODAO::$PDO->exec($q);
             $counter++;

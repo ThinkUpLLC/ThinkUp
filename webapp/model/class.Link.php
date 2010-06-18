@@ -55,9 +55,9 @@ class Link {
      * Container tweet
      * @var Post object
      */
-    var $container_tweet;
+    var $container_post;
     /**
-     * Other values, 
+     * Other values,
      * i.e. like properties for objects contained within a property of this object
      * @var array
      */
@@ -85,7 +85,7 @@ class Link {
         }
 
         $this->url = $val["url"];
-        
+
         if (isset($val["expanded_url"])) {
             $this->expanded_url = $val["expanded_url"];
         }
@@ -108,7 +108,7 @@ class Link {
             $this->error = $val["error"];
         }
     }
-    
+
     /**
      * Construct for when no value is passed, i.e. during slipstreaming
      */
@@ -116,13 +116,13 @@ class Link {
         if (isset($this->other['author_user_id'])){
             $this->other['id'] = $this->id;
             $this->other['post_id'] = $this->post_id;
-            $this->container_tweet = new Post($this->other);
+            $this->container_post = new Post($this->other);
         }
         $this->is_image = PDODAO::convertDBToBool($this->is_image);
     }
-    
+
     /**
-     * For overloading when attempting to set undeclared properties  
+     * For overloading when attempting to set undeclared properties
      * @param str $key
      * @param mixed $val
      */
@@ -132,6 +132,4 @@ class Link {
                 $this->other[$key] = $val;
         }
     }
-    
-
 }

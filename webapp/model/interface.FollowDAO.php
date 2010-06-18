@@ -1,7 +1,8 @@
 <?php
 /**
  * Follow Data Access Object Interface
- * 
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  */
 
@@ -72,8 +73,8 @@ interface FollowDAO {
 
     /**
      * Count the total number of friends in storage related to a user.
-     * Originally counts all the friends, also the inactive ones, 
-     * this may be a subject to change. 
+     * Originally counts all the friends, also the inactive ones,
+     * this may be a subject to change.
      * @param int $user_id
      * @return int with the number
      */
@@ -148,7 +149,7 @@ interface FollowDAO {
     public function getFormerFollowees($user_id, $count = 20);
 
     /**
-     * Gets a list of inactive followers. 
+     * Gets a list of inactive followers.
      * @param int $user_id
      * @param int $count
      * @return array - numbered keys, with arrays - named keys

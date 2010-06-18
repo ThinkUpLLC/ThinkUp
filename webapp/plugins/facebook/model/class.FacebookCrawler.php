@@ -7,7 +7,7 @@ class FacebookCrawler {
     var $ud;
     var $pd;
 
-    function FacebookCrawler($instance, $facebook) {
+    function __construct($instance, $facebook) {
         $this->instance = $instance;
         $this->facebook = $facebook;
         $this->logger = Logger::getInstance();
@@ -29,7 +29,8 @@ class FacebookCrawler {
 
     function fetchUserInfo($uid, $session_key, $found_in) {
         // Get owner user details and save them to DB
-        $user_details = $this->facebook->api_client->users_getInfo($uid, 'first_name,last_name,current_location,username,website,pic_square,about_me');
+        $user_details = $this->facebook->api_client->users_getInfo($uid,
+        'first_name,last_name,current_location,username,website,pic_square,about_me');
 
         /*
          $serialized = serialize($user_details);
@@ -48,16 +49,17 @@ class FacebookCrawler {
     }
 
     function fetchPagesUserIsFanOf($uid, $session_key) {
-        $query = "SELECT page_id, name, page_url FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid = ".$uid.")";
+        $q = "SELECT page_id, name, page_url FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid=".$uid.")";
         try{
-            $pages = $this->facebook->api_client->fql_query($query);
+            $pages = $this->facebook->api_client->fql_query($q);
              
             //         $serialized = serialize($pages);
             //         echo "SERIALIZED PAGES FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
             //         print_r($pages);
              
         } catch (Exception $e){
-            $this->logger->logStatus("Exception '".$e->getMessage()."' thrown when trying to retrieve pages for $uid", get_class($this));
+            $this->logger->logStatus("Exception '".$e->getMessage()."' thrown when trying to retrieve pages for $uid",
+            get_class($this));
             $pages = false;
         }
         return $pages;
@@ -107,14 +109,16 @@ class FacebookCrawler {
          print_r($stream);*/
 
         if (is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
-            $this->logger->logStatus(sizeof($stream["posts"])." Facebook posts found for user ID $uid with session key $session_key", get_class($this));
+            $this->logger->logStatus(sizeof($stream["posts"]).
+            " Facebook posts found for user ID $uid with session key $session_key", get_class($this));
 
             $thinktank_data = $this->parseStream($stream);
             $posts = $thinktank_data["posts"];
 
             foreach ($posts as $post) {
                 $added_posts = $this->pd->addPost($post);
-                $this->logger->logStatus("Added $added_posts post for ".$post["user_name"].":".$post["post_text"], get_class($this));
+                $this->logger->logStatus("Added $added_posts post for ".$post["author_username"].":".$post["post_text"],
+                get_class($this));
             }
 
             $users = $thinktank_data["users"];
@@ -137,14 +141,16 @@ class FacebookCrawler {
         //        print_r($stream);
 
         if (is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
-            $this->logger->logStatus(sizeof($stream["posts"])." Facebook posts found for page ID $pid with session key $session_key", get_class($this));
+            $this->logger->logStatus(sizeof($stream["posts"]).
+            " Facebook posts found for page ID $pid with session key $session_key", get_class($this));
 
             $thinktank_data = $this->parseStream($stream);
             $posts = $thinktank_data["posts"];
 
             foreach ($posts as $post) {
                 $added_posts = $this->pd->addPost($post);
-                $this->logger->logStatus("Added $added_posts post for ".$post["user_name"].":".$post["post_text"], get_class($this));
+                $this->logger->logStatus("Added $added_posts post for ".$post["author_username"].":".$post["post_text"],
+                get_class($this));
             }
 
             $users = $thinktank_data["users"];
@@ -167,7 +173,10 @@ class FacebookCrawler {
             $post_id = explode("_", $p["post_id"]);
             $post_id = $post_id[1];
             $profile = $this->getProfile($p['actor_id'], $stream["profiles"]);
-            $ttp = array("post_id"=>$post_id, "user_name"=>$profile["name"], "full_name"=>$profile["name"], "avatar"=>$profile["pic_square"], "user_id"=>$profile['id'], "post_text"=>$p['message'], "pub_date"=>date('Y-m-d H:i:s', $p['created_time']), "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>'facebook');
+            $ttp = array("post_id"=>$post_id, "author_username"=>$profile["name"], "author_fullname"=>$profile["name"],
+            "author_avatar"=>$profile["pic_square"], "author_user_id"=>$profile['id'], "post_text"=>$p['message'], 
+            "pub_date"=>date('Y-m-d H:i:s', $p['created_time']), "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', 
+            "source"=>'', 'network'=>'facebook');
             array_push($thinktank_posts, $ttp);
             $post_comments = $p["comments"]["comment_list"];
             if (is_array($post_comments) && sizeof($post_comments) > 0) {
@@ -176,10 +185,19 @@ class FacebookCrawler {
                     $comment_id = $comment_id[2];
                     $commenter = $this->getProfile($c['fromid'], $stream["profiles"]);
                     //Get posts
-                    $ttp = array("post_id"=>$comment_id, "user_name"=>$commenter["name"], "full_name"=>$commenter["name"], "avatar"=>$commenter["pic_square"], "user_id"=>$commenter["id"], "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>'facebook');
+                    $ttp = array("post_id"=>$comment_id, "author_username"=>$commenter["name"],
+                    "author_fullname"=>$commenter["name"], "author_avatar"=>$commenter["pic_square"], 
+                    "author_user_id"=>$commenter["id"], 
+                    "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), 
+                    "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 
+                    'network'=>'facebook');
                     array_push($thinktank_posts, $ttp);
                     //Get users
-                    $ttu = array("user_name"=>$commenter["name"], "full_name"=>$commenter["name"], "user_id"=>$c['fromid'], "avatar"=>$commenter["pic_square"], "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true', "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments", "network"=>"facebook");
+                    $ttu = array("user_name"=>$commenter["name"], "full_name"=>$commenter["name"],
+                    "user_id"=>$c['fromid'], "avatar"=>$commenter["pic_square"], "location"=>'', 
+                    "description"=>'', 
+                    "url"=>'', "is_protected"=>'true', "follower_count"=>0, "post_count"=>0, "joined"=>'', 
+                    "found_in"=>"Comments", "network"=>"facebook");
                     array_push($thinktank_users, $ttu);
                 }
             }
@@ -196,5 +214,3 @@ class FacebookCrawler {
         return null;
     }
 }
-
-?>

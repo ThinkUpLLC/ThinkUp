@@ -85,7 +85,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
     function testConstructor() {
         self::setUpInstanceUserAnilDash();
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
 
         $this->assertTrue($tc != null);
     }
@@ -93,7 +93,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     function testFetchInstanceUserInfo() {
         self::setUpInstanceUserAnilDash();
 
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
 
         $tc->fetchInstanceUserInfo();
 
@@ -108,7 +108,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     function testFetchInstanceUserTweets() {
         self::setUpInstanceUserAnilDash();
 
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
         $tc->fetchInstanceUserTweets();
 
@@ -130,7 +130,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
     function testFetchSearchResults() {
         self::setUpInstanceUserAnilDash();
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
 
         $tc->fetchInstanceUserInfo();
         $tc->fetchSearchResults('@whitehouse');
@@ -144,7 +144,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     function testFetchInstanceUserFollowers() {
         self::setUpInstanceUserAnilDash();
         $this->instance->is_archive_loaded_follows = false;
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
 
         $tc->fetchInstanceUserFollowers();
         $fdao = DAOFactory::getDAO('FollowDAO');
@@ -158,7 +158,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
     function testFetchInstanceUserFriends() {
         self::setUpInstanceUserAnilDash();
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
 
         $tc->fetchInstanceUserFriends();
@@ -173,7 +173,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
     function testFetchInstanceUserFriendsByIds() {
         self::setUpInstanceUserAnilDash();
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
 
         $fd = DAOFactory::getDAO('FollowDAO');
@@ -190,7 +190,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     function testFetchInstanceUserFollowersByIds() {
         self::setUpInstanceUserAnilDash();
         $this->api->available_api_calls_for_crawler = 2;
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
 
         $tc->fetchInstanceUserFollowers();
@@ -200,7 +200,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
     function testFetchRetweetsOfInstanceuser() {
         self::setUpInstanceUserGinaTrapani();
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
 
         //first, load retweeted tweet into db
@@ -216,7 +216,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
         //make sure duplicate posts aren't going into the db on next crawler run
         self::setUpInstanceUserGinaTrapani();
-        $tc = new TwitterCrawler($this->instance, $this->api, $this->db);
+        $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
 
         $tc->fetchRetweetsOfInstanceUser();
@@ -225,6 +225,6 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $retweets = $pdao->getRetweetsOfPost(14947487415, true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
     }
-    
+
 
 }

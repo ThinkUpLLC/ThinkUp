@@ -21,3 +21,4 @@ class PostErrorMySQLDAO extends PDODAO implements PostErrorDAO {
         return $this->getInsertId($ps);
     }
 }
+

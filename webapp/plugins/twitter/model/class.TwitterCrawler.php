@@ -13,13 +13,11 @@ class TwitterCrawler {
     var $api;
     var $owner_object;
     var $ud;
-    var $db;
     var $logger;
 
-    function __construct($instance, $api, $db) {
+    function __construct($instance, $api) {
         $this->instance = $instance;
         $this->api = $api;
-        $this->db = $db;
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
         $this->ud = DAOFactory::getDAO('UserDAO');
@@ -767,7 +765,7 @@ class TwitterCrawler {
                 } elseif ($cURL_status == 401 || $cURL_status == 404) {
                     try {
                         $e = $this->api->parseError($twitter_data);
-                        $ued = new UserErrorDAO($this->db, $this->logger);
+                        $ued = DAOFactory::getDAO('UserErrorDAO');
                         $ued->insertError($stale_friend->user_id, $cURL_status, $e['error'], $this->owner_object->user_id);
                         $this->logger->logStatus('User error saved', get_class($this));
                     }
@@ -869,9 +867,7 @@ class TwitterCrawler {
 
             $this->logger->logStatus($status_message, get_class($this));
             $status_message = "";
-
         }
-
     }
 
     private function fetchAndAddUser($fid, $source) {
@@ -893,7 +889,7 @@ class TwitterCrawler {
         } elseif ($cURL_status == 404) {
             try {
                 $e = $this->api->parseError($twitter_data);
-                $ued = new UserErrorDAO($this->db, $this->logger);
+                $ued = DAOFactory::getDAO('UserErrorDAO');
                 $ued->insertError($fid, $cURL_status, $e['error'], $this->owner_object->user_id);
                 $status_message = 'User error saved.';
 
@@ -953,4 +949,3 @@ class TwitterCrawler {
     }
 }
 
-?>

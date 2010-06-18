@@ -10,13 +10,13 @@
 
 <div class="individual-tweet post clearfix">
   <div class="grid_1 alpha">
-    <a href="http://twitter.com/{$l->container_tweet->author_username}"><img src="{$l->container_tweet->author_avatar}" class="avatar"></a>
+    <a href="http://twitter.com/{$l->container_post->author_username}"><img src="{$l->container_post->author_avatar}" class="avatar"></a>
   </div>
   <div class="grid_3 right small">
-    <a href="http://twitter.com/{$l->container_tweet->author_username}">{$l->container_tweet->author_username}</a>
+    <a href="http://twitter.com/{$l->container_post->author_username}">{$l->container_post->author_username}</a>
   </div>
   <div class="grid_3 right small">
-    <a href="http://twitter.com/{$l->container_tweet->author_username}/post/{$l->container_tweet->post_id}">{$l->container_tweet->adj_pub_date|relative_datetime}</a>
+    <a href="http://twitter.com/{$l->container_post->author_username}/post/{$l->container_post->post_id}">{$l->container_post->adj_pub_date|relative_datetime}</a>
   </div>
   <div class="grid_13">
     {if $l->is_image}
@@ -27,19 +27,19 @@
       {/if}
     {/if}
     <p>
-      {$l->container_tweet->post_text|link_usernames}
-      {if $l->container_tweet->in_reply_to_post_id}
+      {$l->container_post->post_text|link_usernames}
+      {if $l->container_post->in_reply_to_post_id}
         [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}">in reply to</a>]
       {/if}
     </p>
     <h3></h3>
-    {if $l->container_tweet->location}
-      <h4 class="tweetstamp">{$l->container_tweet->location}</h4>
+    {if $l->container_post->location}
+      <h4 class="tweetstamp">{$l->container_post->location}</h4>
     {/if}
   </div>
   <div class="grid_2 center omega"> 
-    {if $l->container_tweet->mention_count_cache > 0}
-      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}">{$l->container_tweet->mention_count_cache}</a></span>
+    {if $l->container_post->mention_count_cache > 0}
+      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}">{$l->container_post->mention_count_cache}</a></span>
     {/if}
   </div>
 </div>

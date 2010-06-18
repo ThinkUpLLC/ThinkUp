@@ -68,3 +68,4 @@ abstract class PluginHook {
         return $this->plugins[$shortname];
     }
 }
+

@@ -9,13 +9,7 @@ require_once 'model/class.PDODAO.php';
 require_once 'model/interface.LinkDAO.php';
 
 class LinkMySQLDAO extends PDODAO implements LinkDAO {
-    public function insert(
-    $url,
-    $expanded,
-    $title,
-    $post_id,
-    $is_image = false
-    ){
+    public function insert($url, $expanded, $title, $post_id, $is_image = false ){
         $is_image = $this->convertBoolToDB($is_image);
 
         $q  = " INSERT INTO #prefix#links ";
@@ -34,12 +28,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getInsertId($ps);
     }
 
-    public function saveExpandedURL(
-    $url,
-    $expanded,
-    $title = '',
-    $is_image = false
-    ){
+    public function saveExpandedURL($url, $expanded, $title = '', $is_image = false  ){
         $is_image = $this->convertBoolToDB($is_image);
 
         $q  = " UPDATE #prefix#links ";
@@ -81,13 +70,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $ret;
     }
 
-    public function update(
-    $url,
-    $expanded,
-    $title,
-    $post_id,
-    $is_image = false
-    ){
+    public function update( $url, $expanded, $title, $post_id, $is_image = false ){
         $q  = " UPDATE #prefix#links ";
         $q .= " SET expanded_url=:expanded, title=:title, ";
         $q .= " post_id=:postid, is_image=:isimage ";
@@ -100,7 +83,6 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':isimage'=>$is_image
         );
         $ps = $this->execute($q, $vars);
-
         return $this->getUpdateCount($ps);
     }
 
@@ -119,7 +101,6 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':user'=>$user_id
         );
         $ps = $this->execute($q, $vars);
-
         return $this->getDataRowsAsObjects($ps, "Link");
     }
 
@@ -206,5 +187,4 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
         return $this->getDataRowAsObject($ps, "Link");
     }
-
 }

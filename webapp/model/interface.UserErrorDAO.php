@@ -21,3 +21,4 @@ interface UserErrorDAO {
      */
     public function insertError($id, $error_code, $error_text, $issued_to);
 }
+

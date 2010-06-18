@@ -1,11 +1,12 @@
 <?php
 /**
  * Link Data Access Object Interface
- * 
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  */
 
-Interface LinkDAO {
+interface LinkDAO {
     /**
      * Inserts a link into the database.
      * @param str $url
@@ -15,13 +16,7 @@ Interface LinkDAO {
      * @param bool $is_image
      * @return int insert ID
      */
-    public function insert(
-        $url,
-        $expanded,
-        $title,
-        $post_id,
-        $is_image = false
-    );
+    public function insert($url, $expanded, $title, $post_id, $is_image = false );
 
     /**
      * Sets a expanded URL in storage.
@@ -31,12 +26,7 @@ Interface LinkDAO {
      * @param bool $is_image
      * @return int Update count
      */
-    public function saveExpandedURL(
-        $url,
-        $expanded,
-        $title = '',
-        $is_image = false
-    );
+    public function saveExpandedURL($url, $expanded, $title = '', $is_image = false );
 
     /**
      * Stores a error message.
@@ -54,14 +44,8 @@ Interface LinkDAO {
      * @param int $post_id
      * @param bool $is_image
      * @return int Update count
-     */    
-    public function update(
-        $url, 
-        $expanded, 
-        $title, 
-        $post_id, 
-        $is_image = false
-    );
+     */
+    public function update($url, $expanded, $title, $post_id, $is_image = false );
 
     /**
      * Get the links posted by a users friends
@@ -84,7 +68,7 @@ Interface LinkDAO {
      * @return array with numbered keys, with strings
      */
     public function getLinksToExpand($limit = 1500);
-    
+
     /**
      * Gets all links with short URL statring with a prefix.
      * Non standard output - Sceduled for deprecation.
@@ -96,7 +80,7 @@ Interface LinkDAO {
     /**
      * Gets a link with a given ID
      * @param int $id
-     * @return Link Object 
+     * @return Link Object
      */
     public function getLinkById($id);
 
@@ -108,3 +92,4 @@ Interface LinkDAO {
     public function getLinkByUrl($url);
 
 }
+

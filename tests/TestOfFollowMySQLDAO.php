@@ -11,7 +11,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
 class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
     protected $DAO;
     protected $logger;
-    public function TestOfFollowMySQLDAO() {
+    public function __construct() {
         $this->UnitTestCase('FollowMySQLDAO class test');
     }
 

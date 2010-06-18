@@ -227,12 +227,12 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
         );
         foreach($result as $key=>$val){
             $this->assertIsA($val, "link");
-            $this->assertIsA($val->container_tweet, "Post");
+            $this->assertIsA($val->container_post, "Post");
             $num = $val->post_id;
             $pid = $posts[$num]['pid'];
             $uid = $posts[$num]['uid'];
-            $this->assertEqual($val->container_tweet->post_id, $pid);
-            $this->assertEqual($val->container_tweet->author_user_id, $uid);
+            $this->assertEqual($val->container_post->post_id, $pid);
+            $this->assertEqual($val->container_post->author_user_id, $uid);
             $this->assertTrue($posts[$num]['fr']);
         }
     }
@@ -254,13 +254,13 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
         );
         foreach($result as $key=>$val){
             $this->assertIsA($val, "link");
-            $this->assertIsA($val->container_tweet, "Post");
+            $this->assertIsA($val->container_post, "Post");
             $this->assertTrue($val->is_image);
             $num = $val->post_id;
             $pid = $posts[$num]['pid'];
             $uid = $posts[$num]['uid'];
-            $this->assertEqual($val->container_tweet->post_id, $pid);
-            $this->assertEqual($val->container_tweet->author_user_id, $uid);
+            $this->assertEqual($val->container_post->post_id, $pid);
+            $this->assertEqual($val->container_post->author_user_id, $uid);
             $this->assertTrue($posts[$num]['fr']);
         }
     }
