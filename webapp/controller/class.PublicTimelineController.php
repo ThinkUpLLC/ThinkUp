@@ -97,45 +97,53 @@ class PublicTimelineController extends ThinkTankController implements Controller
 
         switch ($list) {
             case 'timeline':
-                $this->addToView('posts', $this->post_dao->getPostsByPublicInstances($this->current_page, $this->total_posts_per_page));
+                $this->addToView('posts', $this->post_dao->getPostsByPublicInstances($this->current_page, 
+                $this->total_posts_per_page));
                 $this->addToView('header', 'Latest');
                 $this->addToView('description', 'Latest public posts and public replies');
                 break;
             case 'mostretweets':
-                $this->addToView('posts', $this->post_dao->getMostRetweetedPostsByPublicInstances($this->current_page, $this->total_posts_per_page));
+                $this->addToView('posts', $this->post_dao->getMostRetweetedPostsByPublicInstances($this->current_page, 
+                $this->total_posts_per_page));
                 $this->addToView('header', 'Most forwarded');
                 $this->addToView('description', 'Posts that have been forwarded most often');
                 break;
             case 'mostretweets1wk':
-                $this->addToView('posts', $this->post_dao->getMostRetweetedPostsByPublicInstancesInLastWeek($this->current_page, $this->total_posts_per_page));
+                $this->addToView('posts', $this->post_dao->getMostRetweetedPostsByPublicInstancesInLastWeek(
+                $this->current_page, $this->total_posts_per_page));
                 $this->addToView('header', 'Most forwarded this week');
                 $this->addToView('description', 'Posts that have been forwarded most often this week');
                 $totals = $this->post_dao->getTotalPagesAndPostsByPublicInstances($this->total_posts_per_page, 7);
                 break;
             case 'mostreplies':
-                $this->addToView('posts', $this->post_dao->getMostRepliedToPostsByPublicInstances($this->current_page, $this->total_posts_per_page));
+                $this->addToView('posts', $this->post_dao->getMostRepliedToPostsByPublicInstances($this->current_page, 
+                $this->total_posts_per_page));
                 $this->addToView('header', 'Most replied to');
                 $this->addToView('description', 'Posts that have been replied to most often');
                 break;
             case 'mostreplies1wk':
-                $this->addToView('posts', $this->post_dao->getMostRepliedToPostsByPublicInstancesInLastWeek($this->current_page, $this->total_posts_per_page));
+                $this->addToView('posts', $this->post_dao->getMostRepliedToPostsByPublicInstancesInLastWeek(
+                $this->current_page, $this->total_posts_per_page));
                 $this->addToView('header', 'Most replied to this week');
                 $this->addToView('description', 'Posts that have been replied to most often this week');
                 $totals = $this->post_dao->getTotalPagesAndPostsByPublicInstances($this->total_posts_per_page, 7);
                 break;
             case 'photos':
-                $this->addToView('posts', $this->post_dao->getPhotoPostsByPublicInstances($this->current_page, $this->total_posts_per_page));
+                $this->addToView('posts', $this->post_dao->getPhotoPostsByPublicInstances($this->current_page, 
+                $this->total_posts_per_page));
                 $this->addToView('header', 'Photos');
                 $this->addToView('description', 'Posted photos');
                 break;
             case 'links':
                 $totals = $this->post_dao->getTotalLinkPagesAndPostsByPublicInstances($this->total_posts_per_page);
-                $this->addToView('posts', $this->post_dao->getLinkPostsByPublicInstances($this->current_page, $this->total_posts_per_page));
+                $this->addToView('posts', $this->post_dao->getLinkPostsByPublicInstances($this->current_page, 
+                $this->total_posts_per_page));
                 $this->addToView('header', 'Links');
                 $this->addToView('description', 'Posted links');
                 break;
             default:
-                $this->addToView('posts', $this->post_dao->getPostsByPublicInstances($this->current_page, $this->total_posts_per_page));
+                $this->addToView('posts', $this->post_dao->getPostsByPublicInstances($this->current_page, 
+                $this->total_posts_per_page));
                 $this->addToView('header', 'Latest');
                 $this->addToView('description', 'Latest public posts and public replies');
                 break;

@@ -46,7 +46,8 @@ class TestOfTestController extends ThinkTankBasicUnitTestCase {
 
     /**
      * Test controller
-     * @TODO Possibly load the resulting markup as a DOM object and test various children in it; this would enforce valid markup
+     * @TODO Possibly load the resulting markup as a DOM object and test various children in it;
+     * this would enforce valid markup
      */
     function testControl() {
         $config = Config::getInstance();
@@ -58,13 +59,14 @@ class TestOfTestController extends ThinkTankBasicUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('test'), 'Testing, testing, 123');
         $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'ThinkTank');
 
-        $this->assertEqual($results, '<a href="'.$config->getValue('site_root_path').'index.php">ThinkTank</a>: Testing, testing, 123 | Not logged in', "controller output");
-
+        $this->assertEqual($results, '<a href="'.$config->getValue('site_root_path').
+        'index.php">ThinkTank</a>: Testing, testing, 123 | Not logged in', "controller output");
     }
 
     /**
      * Test cache key, no params
-     * @TODO Possibly load the resulting markup as a DOM object and test various children in it; this would enforce valid markup
+     * @TODO Possibly load the resulting markup as a DOM object and test various children in it;
+     * this would enforce valid markup
      */
     function testCacheKeyNoRequestParams() {
         $config = Config::getInstance();
@@ -74,5 +76,4 @@ class TestOfTestController extends ThinkTankBasicUnitTestCase {
 
         $this->assertEqual($controller->getCacheKeyString(), '');
     }
-
 }

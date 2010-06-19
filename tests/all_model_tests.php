@@ -25,6 +25,8 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfUtils.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfPDODAO.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfDAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfWebapp.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfWebappTab.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfWebappTabDataset.php';
 
 $model_tests = & new GroupTest('Model tests');
 $model_tests->addTestCase(new TestOfLogger());
@@ -47,4 +49,6 @@ $model_tests->addTestCase(new TestOfSmartyThinkTank());
 $model_tests->addTestCase(new TestOfUserMySQLDAO());
 $model_tests->addTestCase(new TestOfUtils());
 $model_tests->addTestCase(new TestOfWebapp());
+$model_tests->addTestCase(new TestOfWebappTab());
+$model_tests->addTestCase(new TestOfWebappTabDataset());
 $model_tests->run( new TextReporter());

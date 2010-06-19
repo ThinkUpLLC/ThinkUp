@@ -43,7 +43,8 @@ class PrivateDashboardController extends ThinkTankAuthController {
         $instancenstance_dao = DAOFactory::getDAO('InstanceDAO');
         $config = Config::getInstance();
 
-        if ( (isset($_REQUEST['u']) && isset($_REQUEST['n'])) && $instancenstance_dao->isUserConfigured($_REQUEST['u']) ){
+        if ( (isset($_REQUEST['u']) && isset($_REQUEST['n'])) 
+        && $instancenstance_dao->isUserConfigured($_REQUEST['u']) ){
             $username = $_REQUEST['u'];
             $owner_instance_dao = new OwnerInstanceDAO($db);
             if ( !$owner_instance_dao->doesOwnerHaveAccess($owner, $username) ) {
@@ -55,7 +56,8 @@ class PrivateDashboardController extends ThinkTankAuthController {
         } else {
             $instance = $instancenstance_dao->getFreshestByOwnerId($owner->id);
             if ( !isset($instance) && $instance == null ) {
-                $this->addToView('msg', 'You have no Twitter accounts configured. <a href="'.$config->getValue('site_root_path').'account/?p=twitter">Set up an account&rarr;</a>');
+                $this->addToView('msg', 'You have no Twitter accounts configured. <a href="'.
+                $config->getValue('site_root_path').'account/?p=twitter">Set up an account&rarr;</a>');
                 $continue = false;
             }
         }
@@ -78,7 +80,8 @@ class PrivateDashboardController extends ThinkTankAuthController {
             $total_follows_with_errors = $follow_dao->countTotalFollowsWithErrors($instance->network_user_id);
             $this->addToView('total_follows_with_errors', $total_follows_with_errors);
 
-            $total_follows_with_full_details = $follow_dao->countTotalFollowsWithFullDetails($instance->network_user_id);
+            $total_follows_with_full_details = 
+            $follow_dao->countTotalFollowsWithFullDetails($instance->network_user_id);
             $this->addToView('total_follows_with_full_details', $total_follows_with_full_details);
 
             $total_follows_protected = $follow_dao-> countTotalFollowsProtected($instance->network_user_id);
@@ -96,11 +99,13 @@ class PrivateDashboardController extends ThinkTankAuthController {
 
             //Percentages
             if (isset($owner_stats)) {
-                $percent_followers_loaded = Utils::getPercentage($owner_stats->follower_count, ($total_follows_with_full_details + $total_follows_with_errors));
+                $percent_followers_loaded = Utils::getPercentage($owner_stats->follower_count, 
+                ($total_follows_with_full_details + $total_follows_with_errors));
                 $percent_followers_loaded = ($percent_followers_loaded  > 100) ? 100 : $percent_followers_loaded;
                 $this->addToView('percent_followers_loaded', $percent_followers_loaded);
 
-                $percent_tweets_loaded = Utils::getPercentage($owner_stats->post_count,$instance->total_posts_in_system );
+                $percent_tweets_loaded = Utils::getPercentage($owner_stats->post_count,
+                $instance->total_posts_in_system );
                 $percent_tweets_loaded = ($percent_tweets_loaded  > 100) ? 100 : $percent_tweets_loaded;
                 $this->addToView('percent_tweets_loaded', $percent_tweets_loaded);
 
@@ -108,10 +113,12 @@ class PrivateDashboardController extends ThinkTankAuthController {
                 $percent_friends_loaded = ($percent_friends_loaded  > 100) ? 100 : $percent_friends_loaded;
                 $this->addToView('percent_friends_loaded', $percent_friends_loaded);
 
-                $percent_followers_suspended = round(Utils::getPercentage($total_follows_with_full_details, $total_follows_with_errors), 2);
+                $percent_followers_suspended = round(Utils::getPercentage($total_follows_with_full_details,
+                $total_follows_with_errors), 2);
                 $this->addToView('percent_followers_suspended', $percent_followers_suspended);
 
-                $percent_followers_protected = round(Utils::getPercentage($total_follows_with_full_details, $total_follows_protected), 2);
+                $percent_followers_protected = round(Utils::getPercentage($total_follows_with_full_details, 
+                $total_follows_protected), 2);
                 $this->addToView('percent_followers_protected', $percent_followers_protected);
             }
             $webapp->setActivePlugin($instance->network);

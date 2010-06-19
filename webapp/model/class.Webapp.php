@@ -138,27 +138,17 @@ class Webapp extends PluginHook {
 
     /**
      *
-     * @param string $tabShortName
+     * @param string $tab_short_name
      * @param Instance $instance
-     * @TODO refigure this mess, shouldn't global $s, should use Controller architecture (but how--as a controller inside a controller?)
+     * @return WebappTab Tab for instance, null if none available for given short name
      */
-    public function loadRequestedTabData($tabShortName, $instance) {
-        global $s; //TODO: don't global this
-
+    public function getTab($tab_short_name, $instance) {
         $all_tabs = $this->getAllTabs($instance);
-        $requested_tab = '';
-        $keep_looking = true;
-        foreach ($all_tabs as $pt) {
-            if ($keep_looking && $pt->short_name == $tabShortName) {
-                $requested_tab = $pt;
-                $keep_looking = false;
+        foreach ($all_tabs as $tab) {
+            if ($tab->short_name == $tab_short_name) {
+                return $tab;
             }
         }
-        $s->assign('header', $requested_tab->name);
-        $s->assign('description', $requested_tab->description);
-        foreach ($requested_tab->datasets as $dataset) {
-            $s->assign($dataset->name, call_user_func_array(array($dataset->fetching_object, $dataset->fetching_method), $dataset->params));
-        }
-        return $requested_tab->view_template;
+        return null;
     }
 }

@@ -360,7 +360,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     /**
      * Get all posts by a given user with configurable order by field and direction
-     * @TODO Bind order_by and direction params as strings without single quotes
      * @param int $author_id
      * @param int $count
      * @param string $order_by field name

@@ -7,13 +7,14 @@ require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/interface.Controller.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankAuthController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PrivateDashboardController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.InlineViewController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PublicTimelineController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
@@ -31,17 +32,27 @@ if (!$RUNNING_ALL_TESTS) {
 }
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
+
+// Instantiate global database variable
+//@TODO remove this when the PDO port is complete
+try {
+    $db = new Database($THINKTANK_CFG);
+    $conn = $db->getConnection();
+} catch(Exception $e) {
+    echo $e->getMessage();
+}
 
 /**
- * Test of PrivateDashboardController
+ * Test of InlineViewController
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
+class TestOfInlineViewController extends ThinkTankUnitTestCase {
 
     public function __construct() {
-        $this->UnitTestCase('PrivateDashboardController class test');
+        $this->UnitTestCase('InlineViewController class test');
     }
 
     public function setUp(){
@@ -85,32 +96,47 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
     }
 
     public function testConstructor() {
-        $controller = new PrivateDashboardController(true);
+        $controller = new InlineViewController(true);
         $this->assertTrue(isset($controller), 'constructor test');
-
+        $this->assertIsA($controller, 'InlineViewController');
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Private Dashboard');
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Inline View');
     }
 
     public function testControlNotLoggedIn() {
-        $controller = new PrivateDashboardController(true);
+        $controller = new InlineViewController(true);
         $results = $controller->go();
 
-        $this->assertTrue(strpos( $results, "Latest public posts and public replies") > 0,
-        "not logged in; render public timeline instead");
+        $this->assertEqual($results, "You must be logged in to do this");
     }
 
-    public function testControlLoggedIn() {
+    public function testControlLoggedInWithOutReqdParams() {
         $_SESSION['user'] = 'me@example.com';
-        $controller = new PrivateDashboardController(true);
+        $controller = new InlineViewController(true);
         $results = $controller->go();
-
-        $this->assertTrue(strpos( $results, "It is nice to be nice") > 0, "logged in dashboard");
 
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Private Dashboard');
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), '', 'Header not set');
+        $this->assertEqual($v_mgr->getTemplateDataItem('description'), '', 'Description not set');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error'), 'Required query string parameter n missing.',
+        'Error re: missing param set');
+    }
 
-        $this->assertEqual($controller->getCacheKeyString(), 'me@example.com-ev-twitter', 'Cache key');
+    public function testControlLoggedInWithReqdParams() {
+        $_SESSION['user'] = 'me@example.com';
+        $_GET['u'] = 'ev';
+        $_GET['n'] = 'twitter';
+        $controller = new InlineViewController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All', 'Header');
+        $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'All tweets', 'Description');
+        $this->assertIsA($v_mgr->getTemplateDataItem('all_tweets'), 'array', 'Array of tweets');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('all_tweets')), 15, '15 posts in listing');
+
+        $this->assertEqual($controller->getCacheKeyString(), 'me@example.com-ev-tweets-all', 'Cache key');
     }
 }

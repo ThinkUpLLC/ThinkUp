@@ -44,6 +44,10 @@ abstract class ThinkTankController {
         $config = Config::getInstance();
         $this->is_view_cached = $config->getValue('cache_pages');
         $this->view_mgr = new SmartyThinkTank();
+        if ($this->isLoggedIn()) {
+            $this->addToView('logged_in_user', $this->getLoggedInUser());
+            $this->addToViewCacheKey($this->getLoggedInUser());
+        }
     }
 
     /**

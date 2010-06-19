@@ -75,6 +75,8 @@ class TestOfTwitterPlugin extends ThinkTankUnitTestCase {
         $first_post_tab_datasets = $first_post_tab->getDatasets();
         $first_post_tab_dataset = $first_post_tab_datasets[0];
         $this->assertEqual($first_post_tab_dataset->name, "all_tweets", "Test first post tab's first dataset name");
-        $this->assertEqual($first_post_tab_dataset->fetching_method, "getAllPosts", "Test first post tab's first dataset fetching method");
+        $this->assertEqual($first_post_tab_dataset->dao_name, 'PostDAO');
+        $this->assertEqual($first_post_tab_dataset->dao_method_name, "getAllPosts", 
+        "Test first post tab's first dataset fetching method");
     }
 }

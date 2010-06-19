@@ -2,7 +2,11 @@
   <!--{if $header}<h1>{$header}</h1>{/if}-->
   <!--{if $description}<h4>{$description}</h4>{/if}-->
 </div>
-
+    {if $error}
+    <p class="error">
+        {$error}
+    </p>    
+    {/if}
 {if ($display eq 'tweets-all' and not $all_tweets) or 
     ($display eq 'tweets-mostreplies' and not $most_replied_to_tweets) or
     ($display eq 'tweets-mostretweeted' and not $most_retweeted) or

@@ -52,43 +52,38 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
     }
 
     public function getChildTabsUnderPosts($instance) {
-        $pd = DAOFactory::getDAO('PostDAO');
-
         $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
 
         $child_tabs = array();
 
         //All tab
         $alltab = new WebappTab("all_facebook_posts", "All", '', $fb_data_tpl);
-        $alltabds = new WebappTabDataset("all_facebook_posts", $pd, "getAllPosts", array($instance->network_user_id, 15, false));
+        $alltabds = new WebappTabDataset("all_facebook_posts", 'PostDAO', "getAllPosts", array($instance->network_user_id, 15, false));
         $alltab->addDataset($alltabds);
         array_push($child_tabs, $alltab);
         return $child_tabs;
     }
 
     public function getChildTabsUnderReplies($instance) {
-        $pd = DAOFactory::getDAO('PostDAO');
-
         $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
         $child_tabs = array();
 
         //All Replies
         $artab = new WebappTab("all_facebook_replies", "Replies", "Replies to your Facebook posts", $fb_data_tpl);
-        $artabds = new WebappTabDataset("all_facebook_replies", $pd, "getAllReplies", array($instance->network_user_id, 15));
+        $artabds = new WebappTabDataset("all_facebook_replies", 'PostDAO', "getAllReplies", array($instance->network_user_id, 15));
         $artab->addDataset($artabds);
         array_push($child_tabs, $artab);
         return $child_tabs;
     }
 
     public function getChildTabsUnderFriends($instance) {
-        $fd = DAOFactory::getDAO('FollowDAO');
-
         $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
         $child_tabs = array();
 
         //Popular friends
         $poptab = new WebappTab("friends_mostactive", 'Popular', '', $fb_data_tpl);
-        $poptabds = new WebappTabDataset("facebook_users", $fd, "getMostFollowedFollowees", array($instance->network_user_id, 15));
+        $poptabds = new WebappTabDataset("facebook_users", 'FollowDAO', "getMostFollowedFollowees",
+        array($instance->network_user_id, 15));
         $poptab->addDataset($poptabds);
         array_push($child_tabs, $poptab);
 
@@ -96,14 +91,14 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
     }
 
     public function getChildTabsUnderFollowers($instance) {
-        $fd = DAOFactory::getDAO('FollowDAO');
-
         $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
         $child_tabs = array();
 
         //Most followed
-        $mftab = new WebappTab("followers_mostfollowed", 'Most-followed', 'Followers with most followers', $fb_data_tpl);
-        $mftabds = new WebappTabDataset("facebook_users", $fd, "getMostFollowedFollowers", array($instance->network_user_id, 15));
+        $mftab = new WebappTab("followers_mostfollowed", 'Most-followed', 'Followers with most followers',
+        $fb_data_tpl);
+        $mftabds = new WebappTabDataset("facebook_users", 'FollowDAO', "getMostFollowedFollowers",
+        array($instance->network_user_id, 15));
         $mftab->addDataset($mftabds);
         array_push($child_tabs, $mftab);
 
@@ -111,14 +106,13 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
     }
 
     public function getChildTabsUnderLinks($instance) {
-        global $ld;
-
         $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
         $child_tabs = array();
 
         //Links from friends
         $fltab = new WebappTab("links_from_friends", 'Links', 'Links posted on your wall', $fb_data_tpl);
-        $fltabds = new WebappTabDataset("links_from_friends", $ld, "getLinksByFriends", array($instance->network_user_id));
+        $fltabds = new WebappTabDataset("links_from_friends", 'LinkDAO', "getLinksByFriends",
+        array($instance->network_user_id));
         $fltab->addDataset($fltabds);
         array_push($child_tabs, $fltab);
 
