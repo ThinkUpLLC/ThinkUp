@@ -3,6 +3,7 @@
  * PDODAO - Parent class for PDO DAOs
  * @author Christoffer Viken <christoffer@viken.me>
  * @author Mark Wilkie
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 
 abstract class PDODAO {
@@ -31,6 +32,11 @@ abstract class PDODAO {
      * @var int
      */
     static $gmt_offset;
+    /**
+     *
+     * @var bool
+     */
+    private $profiler_enabled = false;
 
     /**
      * Object Constructor
@@ -43,8 +49,9 @@ abstract class PDODAO {
         }
         $this->prefix = $this->config->getValue('table_prefix');
         $this->gmt_offset = $this->config->getValue('GMT_offset');
+        $this->profiler_enabled = $this->config->getValue('enable_profiler');
     }
-    
+
     /**
      * Connection initiator
      */
@@ -82,7 +89,7 @@ abstract class PDODAO {
     protected final function disconnect(){
         self::$PDO = null;
     }
-    
+
     /**
      * Executes the query, with the bound values
      * @param str $sql
@@ -90,6 +97,9 @@ abstract class PDODAO {
      * @return PDOStatement
      */
     protected final function execute($sql, $binds = array()) {
+        if ($this->profiler_enabled) {
+            $start_time = microtime(true);;
+        }
         $sql = preg_replace("/#prefix#/", $this->prefix, $sql);
         $sql = preg_replace("/#gmt_offset#/", $this->gmt_offset, $sql);
         $stmt = self::$PDO->prepare($sql);
@@ -103,9 +113,15 @@ abstract class PDODAO {
             }
         }
         $stmt->execute();
+        if ($this->profiler_enabled) {
+            $end_time = microtime(true);
+            $total_time = $end_time - $start_time;
+            $profiler = Profiler::getInstance();
+            $profiler->add($total_time, $sql, true, $stmt->rowCount());
+        }
         return $stmt;
     }
-    
+
     /**
      * Proxy for getUpdateCount
      * @param PDOStatement $ps
@@ -130,7 +146,7 @@ abstract class PDODAO {
         }
         return $row;
     }
-    
+
     /**
      * Gets the first returned row as array
      * @param PDOStatement $ps
@@ -159,11 +175,11 @@ abstract class PDODAO {
         $ps->closeCursor();
         return $data;
     }
-    
+
     /**
      * Gets the rows returned by a statement as array with arrays
      * @param PDOStatement $ps
-     * @return array numbered keys, with array named keys 
+     * @return array numbered keys, with array named keys
      */
     protected final function getDataRowsAsArrays($ps){
         $data = $ps->fetchAll(PDO::FETCH_ASSOC);
@@ -172,7 +188,7 @@ abstract class PDODAO {
     }
 
     /**
-     * Gets the result returned by a count query 
+     * Gets the result returned by a count query
      * (value of col count on first row)
      * @param PDOStatement $ps
      * @param int Count
@@ -203,7 +219,7 @@ abstract class PDODAO {
         }
         return $ret;
     }
-    
+
     /**
      * Gets data "insert ID" from a statement
      * @param PDOStatement $ps
@@ -219,7 +235,7 @@ abstract class PDODAO {
             return false;
         }
     }
-    
+
     /**
      * Gets the number of inserted rows by a statement
      * @param PDOStatement $ps
@@ -230,7 +246,7 @@ abstract class PDODAO {
         $ps->closeCursor();
         return $rc;
     }
-    
+
     /**
      * Get the number of updated rows
      * @param PDOStatement $ps
@@ -241,7 +257,7 @@ abstract class PDODAO {
         $ps->closeCursor();
         return $num;
     }
-    
+
     /**
      * Converts any form of "boolean" value to a Database usable one
      * @internal
@@ -251,7 +267,7 @@ abstract class PDODAO {
     protected final function convertBoolToDB($val){
         return $val ? 1 : 0;
     }
-    
+
     /**
      * Converts a Database boolean to a PHP boolean
      * @param int $val

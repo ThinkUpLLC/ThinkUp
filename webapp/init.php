@@ -7,6 +7,7 @@ if ($version[0] < 5) {
 }
 
 require_once 'model/class.Config.php';
+require_once 'model/class.Profiler.php';
 require_once 'model/class.Database.php';
 require_once 'model/class.MySQLDAO.php';
 require_once 'model/class.PDODAO.php';

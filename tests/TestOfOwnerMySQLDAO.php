@@ -23,11 +23,11 @@ class TestOfOwnerMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Constructor
      */
-    function __construct() {
-        $this->UnitTestCase('PostMySQLDAO class test');
+    public function __construct() {
+        $this->UnitTestCase('OwnerMySQLDAO class test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->DAO = new OwnerMySQLDAO();
         $q = "INSERT INTO tt_owners SET user_name='ThinkTankUser', full_name='ThinkTank J. User', user_email='ttuser@example.com', user_activated=0, user_pwd='XXX', activation_code='8888'";
@@ -38,7 +38,7 @@ class TestOfOwnerMySQLDAO extends ThinkTankUnitTestCase {
 
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 

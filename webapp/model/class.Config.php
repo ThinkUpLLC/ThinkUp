@@ -31,8 +31,9 @@ class Config {
     var $config;
     /**
      * Constructor
+     * @return Config
      */
-    function __construct() {
+    public function __construct() {
         global $THINKTANK_CFG;
         $this->config = $THINKTANK_CFG;
     }

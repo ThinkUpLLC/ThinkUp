@@ -53,6 +53,7 @@ class Owner {
     /**
      * Constructor
      * @param array $val Key/value pairs to construct Owner
+     * @return Owner
      */
     public function __construct($val=false) {
         if ($val) {

@@ -6,7 +6,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
 /**
  * ThinkTank Basic Unit Test Case
  *
- * Test case for tests without the need for database availability.
+ * Base test case for tests without the need for database availability.
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -17,6 +17,8 @@ class ThinkTankBasicUnitTestCase extends UnitTestCase {
      */
     function setUp() {
         $config = Config::getInstance();
+        //tests assume profiling is off
+        $config->setValue('enable_profiler', false);
         $webapp = Webapp::getInstance();
         $crawler = Crawler::getInstance();
         parent::setUp();

@@ -41,6 +41,8 @@ $THINKTANK_CFG['is_registration_open']      = true;
 
 $THINKTANK_CFG['debug']                     = true;
 
+$THINKTANK_CFG['enable_profiler']           = false;
+
 /************************************************/
 /***  DATABASE CONFIG                         ***/
 /************************************************/
