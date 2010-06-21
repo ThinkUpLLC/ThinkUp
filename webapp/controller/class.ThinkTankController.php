@@ -41,6 +41,11 @@ abstract class ThinkTankController {
      */
     private $start_time = 0;
     /**
+     *
+     * @var Session
+     */
+    protected $app_session;
+    /**
      * Constructs ThinkTankController
      *
      *  Adds email address of currently logged in ThinkTank user, '' if not logged in, to view
@@ -58,6 +63,7 @@ abstract class ThinkTankController {
             $this->start_time = microtime(true);
         }
         $this->view_mgr = new SmartyThinkTank();
+        $this->app_session = new Session();
         if ($this->isLoggedIn()) {
             $this->addToView('logged_in_user', $this->getLoggedInUser());
             $this->addToViewCacheKey($this->getLoggedInUser());
@@ -79,7 +85,8 @@ abstract class ThinkTankController {
      * @return bool whether or not user is logged in
      */
     protected function isLoggedIn() {
-        return (isset($_SESSION['user']) && $_SESSION['user']!= '') ? true : false;
+        //return (isset($_SESSION['user']) && $_SESSION['user']!= '') ? true : false;
+        return $this->app_session->isLoggedIn();
     }
 
     /**
@@ -175,5 +182,18 @@ abstract class ThinkTankController {
      */
     public function getViewManager() {
         return $this->view_mgr;
+    }
+
+    /**
+     * Set whether or not to cache view
+     * Provided in case an individual controller wants to override the application-wide setting.
+     * @param bool $val
+     */
+    protected function setCaching($val) {
+        if (!$val) {
+            $this->is_view_cached = false;
+        } else {
+            $this->is_view_cached = true;
+        }
     }
 }

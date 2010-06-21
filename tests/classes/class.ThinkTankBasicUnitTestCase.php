@@ -13,30 +13,42 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
 class ThinkTankBasicUnitTestCase extends UnitTestCase {
     /**
      * Set up
-     * Initializes Config and Webapp objects
+     * Initializes Config and Webapp objects, clears $_SESSION, $_POST, $_REQUEST
      */
-    function setUp() {
+    public function setUp() {
+        parent::setUp();
         $config = Config::getInstance();
         //tests assume profiling is off
         $config->setValue('enable_profiler', false);
         $webapp = Webapp::getInstance();
         $crawler = Crawler::getInstance();
-        parent::setUp();
     }
 
     /**
      * Tear down
-     * Destroys Config, Webapp, and Session objects
-     * @TODO Destroy all SESSION variables
-     * @TODO Destroy all REQUEST/GET/POST variables
+     * Destroys Config, Webapp, $_SESSION, $_POST, $_GET, $_REQUEST
      */
-    function tearDown() {
+    public function tearDown() {
         Config::destroyInstance();
         Webapp::destroyInstance();
         Crawler::destroyInstance();
-        if (isset($_SESSION['user'])) {
-            $_SESSION['user']=null;
+        if (isset($_SESSION)) {
+            $this->unsetArray($_SESSION);
         }
+        $this->unsetArray($_POST);
+        $this->unsetArray($_GET);
+        $this->unsetArray($_REQUEST);
         parent::tearDown();
+    }
+
+    /**
+     * Unset all the values for every key in an array
+     * @param array $array
+     */
+    private function unsetArray(&$array) {
+        $keys = array_keys($array);
+        foreach ($keys as $key) {
+            unset($array[$key]);
+        }
     }
 }

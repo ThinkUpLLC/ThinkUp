@@ -25,7 +25,8 @@ class ThinkTankUnitTestCase extends ThinkTankBasicUnitTestCase {
     /**
      * Create a clean copy of the ThinkTank database structure
      */
-    function setUp() {
+    public function setUp() {
+        parent::setUp();
         global $THINKTANK_CFG;
         global $TEST_DATABASE;
 
@@ -37,13 +38,12 @@ class ThinkTankUnitTestCase extends ThinkTankBasicUnitTestCase {
 
         $this->testdb_helper = new ThinkTankTestDatabaseHelper();
         $this->testdb_helper->create($this->db);
-        parent::setUp();
     }
 
     /**
      * Drop the database and kill the connection
      */
-    function tearDown() {
+    public function tearDown() {
         $this->testdb_helper->drop($this->db);
         $this->db->closeConnection($this->conn);
         parent::tearDown();

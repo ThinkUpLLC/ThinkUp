@@ -163,7 +163,7 @@ class TestOfPrivateDashboard extends ThinkTankWebTestCase {
         $this->assertTitle('Private Dashboard | ThinkTank');
 
         $this->click("Configuration");
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Configure Your Account | ThinkTank');
         $this->assertText('configure');
         $this->assertText('Expand URLs');
 
