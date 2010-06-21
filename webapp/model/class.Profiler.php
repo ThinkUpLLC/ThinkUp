@@ -40,7 +40,7 @@ class Profiler {
         }
         $rounded_time = round($time, 3);
         $this->logged_actions[] =  array('time'=>number_format($rounded_time,3), 'action'=> trim($action),
-        'num_rows'=>$num_rows);
+        'num_rows'=>$num_rows, 'is_query'=>$is_query);
     }
 
     /**

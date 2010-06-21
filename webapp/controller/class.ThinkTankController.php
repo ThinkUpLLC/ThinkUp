@@ -121,9 +121,29 @@ abstract class ThinkTankController {
         if (isset($this->view_template)) {
             if ($this->is_view_cached) {
                 $cache_key = $this->view_template . self::KEY_SEPARATOR .$this->getCacheKeyString();
-                return $this->view_mgr->fetch($this->view_template, $cache_key);
+                if ($this->profiler_enabled) {
+                    $view_start_time = microtime(true);
+                    $results = $this->view_mgr->fetch($this->view_template, $cache_key);
+                    $view_end_time = microtime(true);
+                    $total_time = $view_end_time - $view_start_time;
+                    $profiler = Profiler::getInstance();
+                    $profiler->add($total_time, "Render view (cached)", false);
+                    return $results;
+                } else {
+                    return $this->view_mgr->fetch($this->view_template, $cache_key);
+                }
             } else {
-                return $this->view_mgr->fetch($this->view_template);
+                if ($this->profiler_enabled) {
+                    $view_start_time = microtime(true);
+                    $results = $this->view_mgr->fetch($this->view_template);
+                    $view_end_time = microtime(true);
+                    $total_time = $view_end_time - $view_start_time;
+                    $profiler = Profiler::getInstance();
+                    $profiler->add($total_time, "Render view (not cached)", false);
+                    return $results;
+                } else  {
+                    return $this->view_mgr->fetch($this->view_template);
+                }
             }
         } else {
             throw new Exception('No view template specified');

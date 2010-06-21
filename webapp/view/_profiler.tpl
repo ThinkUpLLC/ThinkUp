@@ -8,16 +8,14 @@ Profiling enabled:<br />
 <center>
 <table style="border-spacing: 5px;">
 <tr>
-    <th>Num</th>
-    <th>Took</th>
+    <th>Time</th>
     <th>Rows</th>
-    <th>Query</th>
+    <th>Action</th>
 </tr>
 {else}
 <tr>
-    <td style="vertical-align: top;text-align:center;">{$smarty.foreach.foo.index}</td>
     <td style="vertical-align: top;">{if $t.time > 0.5}<span style="color:red">{/if}{$t.time}s{if $t.time > 0.5}</span>{/if}</td>
-    <td style="vertical-align: top;text-align:center;">{$t.num_rows}</td>
+    <td style="vertical-align: top;text-align:center;">{if $t.is_query}{$t.num_rows}{/if}</td>
     <td>{$t.action}</td>
 </tr>
 {/if}
