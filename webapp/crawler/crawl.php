@@ -33,7 +33,3 @@ if ($authorized) {
         $db->closeConnection($conn); // Clean up
     }
 }
-
-
-
-?>

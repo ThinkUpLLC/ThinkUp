@@ -51,4 +51,17 @@ class Profiler {
         sort($this->logged_actions);
         return array_reverse($this->logged_actions);
     }
+
+    /**
+     * Check if Profiler is enabled; that is, if enabled in config file and running a web page.
+     * @return bool Whether the profiler is enabled
+     */
+    public static function isEnabled() {
+        if (isset($_SERVER['HTTP_HOST'])) {
+            $config = Config::getInstance();
+            return $config->getValue('enable_profiler');
+        } else {
+            return false;
+        }
+    }
 }

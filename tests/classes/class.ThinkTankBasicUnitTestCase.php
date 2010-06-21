@@ -38,6 +38,7 @@ class ThinkTankBasicUnitTestCase extends UnitTestCase {
         $this->unsetArray($_POST);
         $this->unsetArray($_GET);
         $this->unsetArray($_REQUEST);
+        $this->unsetArray($_SERVER);
         parent::tearDown();
     }
 

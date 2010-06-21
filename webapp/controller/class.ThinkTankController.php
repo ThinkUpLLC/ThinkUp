@@ -58,7 +58,7 @@ abstract class ThinkTankController {
         }
         $config = Config::getInstance();
         $this->is_view_cached = $config->getValue('cache_pages');
-        $this->profiler_enabled = $config->getValue('enable_profiler');
+        $this->profiler_enabled = Profiler::isEnabled();
         if ( $this->profiler_enabled) {
             $this->start_time = microtime(true);
         }

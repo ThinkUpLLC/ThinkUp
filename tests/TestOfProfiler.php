@@ -27,6 +27,19 @@ class TestOfProfiler extends ThinkTankBasicUnitTestCase {
         $this->assertIsA($profiler, 'Profiler', 'object type');
     }
 
+    public function testIsEnabledServerSet() {
+        $config = Config::getInstance();
+        $config->setValue('enable_profiler', true);
+        $_SERVER['HTTP_HOST'] = 'myserver';
+        $this->assertTrue(Profiler::isEnabled());
+    }
+
+    public function testIsEnabledServerNotSet() {
+        $config = Config::getInstance();
+        $config->setValue('enable_profiler', true);
+        $this->assertTrue(!Profiler::isEnabled());
+    }
+
     public function testAdd() {
         $profiler = Profiler::getInstance();
         $profiler->add(0.02503434, 'My 1st action');
