@@ -18,7 +18,9 @@ interface UserErrorDAO {
      * @param int $error_code The HTTP error code (such as 404 not found or 403 not authorized)
      * @param string $error_text Description of the error
      * @param int $issued_to ID of the authorized user who got the error.
+     * @param str $network
+     * @return int Update row count
      */
-    public function insertError($id, $error_code, $error_text, $issued_to);
+    public function insertError($id, $error_code, $error_text, $issued_to, $network);
 }
 

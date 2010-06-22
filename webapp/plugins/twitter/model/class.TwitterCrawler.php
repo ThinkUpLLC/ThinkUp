@@ -508,13 +508,13 @@ class TwitterCrawler {
                     foreach ($ids as $id) {
 
                         # add/update follow relationship
-                        if ($fd->followExists($this->instance->network_user_id, $id['id'])) {
+                        if ($fd->followExists($this->instance->network_user_id, $id['id'], 'twitter')) {
                             //update it
-                            if ($fd->update($this->instance->network_user_id, $id['id'], Utils::getURLWithParams($follower_ids, $args)))
+                            if ($fd->update($this->instance->network_user_id, $id['id'], 'twitter', Utils::getURLWithParams($follower_ids, $args)))
                             $updated_follow_count = $updated_follow_count + 1;
                         } else {
                             //insert it
-                            if ($fd->insert($this->instance->network_user_id, $id['id'], Utils::getURLWithParams($follower_ids, $args)))
+                            if ($fd->insert($this->instance->network_user_id, $id['id'], 'twitter', Utils::getURLWithParams($follower_ids, $args)))
                             $inserted_follow_count = $inserted_follow_count + 1;
                         }
                     }
@@ -592,13 +592,13 @@ class TwitterCrawler {
                         $this->ud->updateUser($utu);
 
                         # add/update follow relationship
-                        if ($fd->followExists($this->instance->network_user_id, $utu->user_id)) {
+                        if ($fd->followExists($this->instance->network_user_id, $utu->user_id, 'twitter')) {
                             //update it
-                            if ($fd->update($this->instance->network_user_id, $utu->user_id, Utils::getURLWithParams($follower_ids, $args)))
+                            if ($fd->update($this->instance->network_user_id, $utu->user_id, 'twitter', Utils::getURLWithParams($follower_ids, $args)))
                             $updated_follow_count++;
                         } else {
                             //insert it
-                            if ($fd->insert($this->instance->network_user_id, $utu->user_id, Utils::getURLWithParams($follower_ids, $args)))
+                            if ($fd->insert($this->instance->network_user_id, $utu->user_id, 'twitter', Utils::getURLWithParams($follower_ids, $args)))
                             $inserted_follow_count++;
                         }
                     }
@@ -622,7 +622,7 @@ class TwitterCrawler {
 
     function fetchInstanceUserFriends() {
         $fd = DAOFactory::getDAO('FollowDAO');
-        $this->instance->total_friends_in_system = $fd->countTotalFriends($this->instance->network_user_id);
+        $this->instance->total_friends_in_system = $fd->countTotalFriends($this->instance->network_user_id, 'twitter');
 
         if ($this->instance->total_friends_in_system
         < $this->owner_object->friend_count) {
@@ -670,13 +670,13 @@ class TwitterCrawler {
                         $this->ud->updateUser($utu);
 
                         # add/update follow relationship
-                        if ($fd->followExists($utu->user_id, $this->instance->network_user_id)) {
+                        if ($fd->followExists($utu->user_id, $this->instance->network_user_id, 'twitter')) {
                             //update it
-                            if ($fd->update($utu->user_id, $this->instance->network_user_id, Utils::getURLWithParams($friend_ids, $args)))
+                            if ($fd->update($utu->user_id, $this->instance->network_user_id, 'twitter', Utils::getURLWithParams($friend_ids, $args)))
                             $updated_follow_count++;
                         } else {
                             //insert it
-                            if ($fd->insert($utu->user_id, $this->instance->network_user_id, Utils::getURLWithParams($friend_ids, $args)))
+                            if ($fd->insert($utu->user_id, $this->instance->network_user_id, 'twitter', Utils::getURLWithParams($friend_ids, $args)))
                             $inserted_follow_count++;
                         }
 
@@ -705,7 +705,7 @@ class TwitterCrawler {
 
         $continue_fetching = true;
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
-            $stale_friend = $fd->getStalestFriend($this->owner_object->user_id);
+            $stale_friend = $fd->getStalestFriend($this->owner_object->user_id, 'twitter');
             if ($stale_friend != null) {
                 $this->logger->logStatus($stale_friend->username." is friend most need of update", get_class($this));
                 $stale_friend_tweets = str_replace("[id]", $stale_friend->username, $this->api->cURL_source['user_timeline']);
@@ -795,7 +795,7 @@ class TwitterCrawler {
 
     function fetchUnloadedFollowerDetails() {
         $fd = DAOFactory::getDAO('FollowDAO');
-        $strays = $fd->getUnloadedFollowerDetails($this->owner_object->user_id);
+        $strays = $fd->getUnloadedFollowerDetails($this->owner_object->user_id, 'twitter');
         $status_message = count($strays).' unloaded follower details to load.';
         $this->logger->logStatus($status_message, get_class($this));
 
@@ -844,13 +844,13 @@ class TwitterCrawler {
                     foreach ($ids as $id) {
 
                         # add/update follow relationship
-                        if ($fd->followExists($id['id'], $uid)) {
+                        if ($fd->followExists($id['id'], $uid, 'twitter')) {
                             //update it
-                            if ($fd->update($id['id'], $uid, Utils::getURLWithParams($friend_ids, $args)))
+                            if ($fd->update($id['id'], $uid, 'twitter', Utils::getURLWithParams($friend_ids, $args)))
                             $updated_follow_count++;
                         } else {
                             //insert it
-                            if ($fd->insert($id['id'], $uid, Utils::getURLWithParams($friend_ids, $args)))
+                            if ($fd->insert($id['id'], $uid, 'twitter', Utils::getURLWithParams($friend_ids, $args)))
                             $inserted_follow_count++;
                         }
                     }
@@ -910,7 +910,7 @@ class TwitterCrawler {
         $continue_fetching = true;
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
 
-            $oldfollow = $fd->getOldestFollow();
+            $oldfollow = $fd->getOldestFollow('twitter');
 
             if ($oldfollow != null) {
 
@@ -925,14 +925,14 @@ class TwitterCrawler {
                     try {
                         $friendship = $this->api->parseXML($twitter_data);
                         if ($friendship['source_follows_target'] == 'true')
-                        $fd->update($oldfollow["followee_id"], $oldfollow["follower_id"], Utils::getURLWithParams($friendship_call, $args));
+                        $fd->update($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter', Utils::getURLWithParams($friendship_call, $args));
                         else
-                        $fd->deactivate($oldfollow["followee_id"], $oldfollow["follower_id"], Utils::getURLWithParams($friendship_call, $args));
+                        $fd->deactivate($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter', Utils::getURLWithParams($friendship_call, $args));
 
                         if ($friendship['target_follows_source'] == 'true')
-                        $fd->update($oldfollow["follower_id"], $oldfollow["followee_id"], Utils::getURLWithParams($friendship_call, $args));
+                        $fd->update($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter', Utils::getURLWithParams($friendship_call, $args));
                         else
-                        $fd->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], Utils::getURLWithParams($friendship_call, $args));
+                        $fd->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter', Utils::getURLWithParams($friendship_call, $args));
 
 
                     }

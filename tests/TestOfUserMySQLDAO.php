@@ -7,6 +7,8 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.UserDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.UserMySQLDAO.php';
 
@@ -33,7 +35,8 @@ class TestOfUserMySQLDAO extends ThinkTankUnitTestCase {
         parent::setUp();
 
         //Insert test data into test table
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, location) VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg', 'San Francisco');";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, location)
+        VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg', 'San Francisco');";
         $this->db->exec($q);
         $this->logger = Logger::getInstance();
     }
@@ -100,7 +103,9 @@ class TestOfUserMySQLDAO extends ThinkTankUnitTestCase {
     public function testUpdateUser() {
         $udao = DAOFactory::getDAO('UserDAO');
 
-        $uarr = array('user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani', 'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
+        $uarr = array('user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani',
+        'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 
+        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
         $user = new User($uarr, 'Test Insert');
         $this->assertEqual($udao->updateUser($user), 1, "1 user inserted");
         $user_from_db = $udao->getDetails(13);
@@ -109,7 +114,9 @@ class TestOfUserMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($user_from_db->avatar, 'avatar.jpg');
         $this->assertEqual($user_from_db->location, 'NYC');
 
-        $uarr = array('user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani ', 'avatar'=>'avatara.jpg', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
+        $uarr = array('user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani ',
+        'avatar'=>'avatara.jpg', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 
+        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
         $user1 = new User($uarr, 'Test Update');
         $this->assertEqual($udao->updateUser($user1), 2, "2 rows updated because of ON DUPLICATE KEY INSERT");
         $user_from_db = $udao->getDetails(13);
@@ -126,9 +133,13 @@ class TestOfUserMySQLDAO extends ThinkTankUnitTestCase {
     public function testUpdateUsers() {
         $udao = DAOFactory::getDAO('UserDAO');
 
-        $user_array1 = array('id'=>2, 'user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani', 'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
+        $user_array1 = array('id'=>2, 'user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani',
+        'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 
+        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
         $user1 = new User($user_array1, 'Test');
-        $user_array2 = array('id'=>3, 'user_id'=>14, 'user_name'=>'anildash', 'full_name'=>'Anil Dash', 'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
+        $user_array2 = array('id'=>3, 'user_id'=>14, 'user_name'=>'anildash', 'full_name'=>'Anil Dash',
+        'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 
+        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
         $user2 = new User($user_array2, 'Test');
 
         $users_to_update = array($user1, $user2);
@@ -159,5 +170,4 @@ class TestOfUserMySQLDAO extends ThinkTankUnitTestCase {
         $user = $udao->getUserByName('gina');
         $this->assertEqual($user, null);
     }
-
 }

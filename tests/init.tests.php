@@ -15,6 +15,8 @@ require_once 'model/class.OwnerInstance.php';
 require_once 'model/class.PluginHook.php';
 require_once 'model/class.Crawler.php';
 require_once 'model/class.Utils.php';
+require_once 'model/class.Profiler.php';
+require_once 'model/class.Session.php';
 
 require_once 'model/class.Logger.php';
 
