@@ -41,8 +41,8 @@ class SmartyThinkTank extends Smarty {
         $this->compile_dir = $src_root_path.'webapp/view/compiled_view/';
         $this->plugins_dir = array('plugins', 'view/plugins/');
         $this->cache_dir = $src_root_path.'webapp/view/compiled_view/cache';
+        $this->caching = ($config->getValue('cache_pages'))?1:0;
         $this->cache_lifetime = 300;
-        $this->caching = $config->getValue('cache_pages');
         $this->debug = $config->getValue('debug');
 
         $this->assign('app_title', $config->getValue('app_title'));
@@ -69,5 +69,20 @@ class SmartyThinkTank extends Smarty {
      */
     public function getTemplateDataItem($key) {
         return isset($this->template_data[$key]) ? $this->template_data[$key]:null;
+    }
+
+    /**
+     * Check if caching is enabled
+     * @return bool
+     */
+    public function isViewCached() {
+        return ($this->caching==1)?true:false;
+    }
+
+    /**
+     * Turn off caching
+     */
+    public function disableCaching() {
+        $this->caching=0;
     }
 }

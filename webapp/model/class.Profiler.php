@@ -14,7 +14,7 @@ class Profiler {
      *
      * @var array
      */
-    private static $logged_actions = array();
+    private $logged_actions = array();
     /**
      * @var int
      */
@@ -63,5 +63,16 @@ class Profiler {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Clear out all logged items, reset query count to 0
+     */
+    public function clearLog() {
+        $keys = array_keys($this->logged_actions);
+        foreach ($keys as $key) {
+            unset($this->logged_actions[$key]);
+        }
+        $this->total_queries = 0;
     }
 }

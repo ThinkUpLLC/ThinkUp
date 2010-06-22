@@ -1,9 +1,9 @@
 <?php
 /**
  * Public Timeline Controller
- * 
+ *
  * Renders the public timeline and public post and reply list for all users
- * 
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class PublicTimelineController extends ThinkTankController implements Controller {
@@ -43,8 +43,8 @@ class PublicTimelineController extends ThinkTankController implements Controller
         $this->setViewTemplate('public.tpl');
         $this->addToView('logo_link', 'public.php');
 
-        if (isset($_REQUEST['page']) && is_numeric($_REQUEST['page'])) {
-            $this->current_page = $_REQUEST['page'];
+        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+            $this->current_page = $_GET['page'];
         } else {
             $this->current_page = 1;
         }
@@ -55,17 +55,23 @@ class PublicTimelineController extends ThinkTankController implements Controller
         $this->addToView('current_page', $this->current_page);
         $this->addToViewCacheKey($this->current_page);
 
-        //if $_REQUEST["t"], load individual post + replies + retweets
+        //if $_GET["t"], load individual post + replies + retweets
         //TODO: change the t (for tweet) to p (for post)
-        if (isset($_REQUEST['t']) && $this->post_dao->isPostByPublicInstance($_REQUEST['t'])) {
-            $this->addToViewCacheKey($_REQUEST['t']);
-            $this->loadSinglePostThread($_REQUEST['t']);
-        } elseif (isset($_REQUEST["v"])) { //else if $_REQUEST["v"], display correct listing
-            $this->addToViewCacheKey($_REQUEST['v']);
-            $this->loadPublicPostList($_REQUEST["v"]);
+        if (isset($_GET['t']) && $this->post_dao->isPostByPublicInstance($_GET['t'])) {
+            $this->addToViewCacheKey($_GET['t']);
+            if ($this->shouldRefreshCache()) {
+                $this->loadSinglePostThread($_GET['t']);
+            }
+        } elseif (isset($_GET["v"])) { //else if $_GET["v"], display correct listing
+            $this->addToViewCacheKey($_GET['v']);
+            if ($this->shouldRefreshCache()) {
+                $this->loadPublicPostList($_GET["v"]);
+            }
         } else { //else default to public timeline list
             $this->addToViewCacheKey('timeline');
-            $this->loadPublicPostList('timeline');
+            if ($this->shouldRefreshCache()) {
+                $this->loadPublicPostList('timeline');
+            }
         }
         return $this->generateView();
     }
@@ -97,13 +103,13 @@ class PublicTimelineController extends ThinkTankController implements Controller
 
         switch ($list) {
             case 'timeline':
-                $this->addToView('posts', $this->post_dao->getPostsByPublicInstances($this->current_page, 
+                $this->addToView('posts', $this->post_dao->getPostsByPublicInstances($this->current_page,
                 $this->total_posts_per_page));
                 $this->addToView('header', 'Latest');
                 $this->addToView('description', 'Latest public posts and public replies');
                 break;
             case 'mostretweets':
-                $this->addToView('posts', $this->post_dao->getMostRetweetedPostsByPublicInstances($this->current_page, 
+                $this->addToView('posts', $this->post_dao->getMostRetweetedPostsByPublicInstances($this->current_page,
                 $this->total_posts_per_page));
                 $this->addToView('header', 'Most forwarded');
                 $this->addToView('description', 'Posts that have been forwarded most often');
@@ -116,7 +122,7 @@ class PublicTimelineController extends ThinkTankController implements Controller
                 $totals = $this->post_dao->getTotalPagesAndPostsByPublicInstances($this->total_posts_per_page, 7);
                 break;
             case 'mostreplies':
-                $this->addToView('posts', $this->post_dao->getMostRepliedToPostsByPublicInstances($this->current_page, 
+                $this->addToView('posts', $this->post_dao->getMostRepliedToPostsByPublicInstances($this->current_page,
                 $this->total_posts_per_page));
                 $this->addToView('header', 'Most replied to');
                 $this->addToView('description', 'Posts that have been replied to most often');
@@ -129,20 +135,20 @@ class PublicTimelineController extends ThinkTankController implements Controller
                 $totals = $this->post_dao->getTotalPagesAndPostsByPublicInstances($this->total_posts_per_page, 7);
                 break;
             case 'photos':
-                $this->addToView('posts', $this->post_dao->getPhotoPostsByPublicInstances($this->current_page, 
+                $this->addToView('posts', $this->post_dao->getPhotoPostsByPublicInstances($this->current_page,
                 $this->total_posts_per_page));
                 $this->addToView('header', 'Photos');
                 $this->addToView('description', 'Posted photos');
                 break;
             case 'links':
                 $totals = $this->post_dao->getTotalLinkPagesAndPostsByPublicInstances($this->total_posts_per_page);
-                $this->addToView('posts', $this->post_dao->getLinkPostsByPublicInstances($this->current_page, 
+                $this->addToView('posts', $this->post_dao->getLinkPostsByPublicInstances($this->current_page,
                 $this->total_posts_per_page));
                 $this->addToView('header', 'Links');
                 $this->addToView('description', 'Posted links');
                 break;
             default:
-                $this->addToView('posts', $this->post_dao->getPostsByPublicInstances($this->current_page, 
+                $this->addToView('posts', $this->post_dao->getPostsByPublicInstances($this->current_page,
                 $this->total_posts_per_page));
                 $this->addToView('header', 'Latest');
                 $this->addToView('description', 'Latest public posts and public replies');

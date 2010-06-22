@@ -17,10 +17,6 @@ abstract class ThinkTankController {
      */
     protected $view_template = null;
     /**
-     * @var boolean whether or not view is cached
-     */
-    protected $is_view_cached = false;
-    /**
      *
      * @var array contains the cache key key/value pairs
      */
@@ -57,7 +53,6 @@ abstract class ThinkTankController {
             session_start();
         }
         $config = Config::getInstance();
-        $this->is_view_cached = $config->getValue('cache_pages');
         $this->profiler_enabled = Profiler::isEnabled();
         if ( $this->profiler_enabled) {
             $this->start_time = microtime(true);
@@ -109,7 +104,7 @@ abstract class ThinkTankController {
      * @return str cache key
      */
     public function getCacheKeyString() {
-        return implode($this->view_cache_key, self::KEY_SEPARATOR);
+        return $this->view_template.self::KEY_SEPARATOR.(implode($this->view_cache_key, self::KEY_SEPARATOR));
     }
 
     /**
@@ -119,15 +114,17 @@ abstract class ThinkTankController {
      */
     protected function generateView() {
         if (isset($this->view_template)) {
-            if ($this->is_view_cached) {
-                $cache_key = $this->view_template . self::KEY_SEPARATOR .$this->getCacheKeyString();
+            if ($this->view_mgr->isViewCached()) {
+                $cache_key = $this->getCacheKeyString();
                 if ($this->profiler_enabled) {
                     $view_start_time = microtime(true);
+                    $cache_source = $this->shouldRefreshCache()?"LIVE DATABASE":"FILE CACHE";
                     $results = $this->view_mgr->fetch($this->view_template, $cache_key);
                     $view_end_time = microtime(true);
                     $total_time = $view_end_time - $view_start_time;
                     $profiler = Profiler::getInstance();
-                    $profiler->add($total_time, "Render view (cached)", false);
+                    $profiler->add($total_time, "Rendered view, data loaded from ". $cache_source . ", key: <i>".
+                    $this->getCacheKeyString(), false).'</i>';
                     return $results;
                 } else {
                     return $this->view_mgr->fetch($this->view_template, $cache_key);
@@ -139,7 +136,7 @@ abstract class ThinkTankController {
                     $view_end_time = microtime(true);
                     $total_time = $view_end_time - $view_start_time;
                     $profiler = Profiler::getInstance();
-                    $profiler->add($total_time, "Render view (not cached)", false);
+                    $profiler->add($total_time, "Rendered view (not cached)", false);
                     return $results;
                 } else  {
                     return $this->view_mgr->fetch($this->view_template);
@@ -183,6 +180,7 @@ abstract class ThinkTankController {
                 $end_time = microtime(true);
                 $total_time = $end_time - $this->start_time;
                 $profiler = Profiler::getInstance();
+                $this->disableCaching();
                 $profiler->add($total_time, "total page execution time, running ".$profiler->total_queries." queries.");
                 $this->setViewTemplate('_profiler.tpl');
                 $this->addToView('profile_items',$profiler->getProfile());
@@ -205,15 +203,22 @@ abstract class ThinkTankController {
     }
 
     /**
-     * Set whether or not to cache view
+     * Turn off caching
      * Provided in case an individual controller wants to override the application-wide setting.
-     * @param bool $val
      */
-    protected function setCaching($val) {
-        if (!$val) {
-            $this->is_view_cached = false;
+    protected function disableCaching() {
+        $this->view_mgr->disableCaching();
+    }
+
+    /**
+     * Check if cache needs refreshing
+     * @return bool
+     */
+    protected function shouldRefreshCache() {
+        if ($this->view_mgr->isViewCached()) {
+            return !$this->view_mgr->is_cached($this->view_template, $this->getCacheKeyString());
         } else {
-            $this->is_view_cached = true;
+            return true;
         }
     }
 }

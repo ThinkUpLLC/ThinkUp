@@ -14,7 +14,7 @@ class AccountConfigurationController extends ThinkTankAuthController {
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
-        $this->setCaching(false);
+        $this->disableCaching();
         $this->setViewTemplate('account.index.tpl');
         $this->addToView('controller_title', 'Configure Your Account');
     }
@@ -22,6 +22,26 @@ class AccountConfigurationController extends ThinkTankAuthController {
     public function authControl() {
         $webapp = Webapp::getInstance();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+        $this->addToView('owner', $owner);
+
+        /* Begin plugin-specific configuration handling */
+        if (isset($_GET['p'])) {
+            $this->addToViewCacheKey($_GET['p']);
+            $active_plugin = $_GET['p'];
+            $pobj = $webapp->getPluginObject($active_plugin);
+            $p = new $pobj;
+            $this->addToView('body', $p->renderConfiguration($owner));
+            $profiler = Profiler::getInstance();
+            $profiler->clearLog();
+        } else {
+            global $db; //@TODO remove this when PDO port is complete
+            $pld = new PluginDAO($db);
+            $config = Config::getInstance();
+            $installed_plugins = $pld->getInstalledPlugins($config->getValue("source_root_path"));
+            $this->addToView('installed_plugins', $installed_plugins);
+        }
+        /* End plugin-specific configuration handling */
 
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
         && isset($_POST['pass1']) && isset($_POST['pass2'])) {
@@ -41,9 +61,6 @@ class AccountConfigurationController extends ThinkTankAuthController {
             }
         }
 
-        $owner = $owner_dao->getByEmail($this->getLoggedInUser());
-        $this->addToView('owner', $owner);
-
         if ($owner->is_admin) {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             $owners = $owner_dao->getAllOwners();
@@ -54,20 +71,6 @@ class AccountConfigurationController extends ThinkTankAuthController {
             $this->addToView('owners', $owners);
         }
 
-        /* Begin plugin-specific configuration handling */
-        if (isset($_GET['p'])) {
-            $active_plugin = $_GET['p'];
-            $pobj = $webapp->getPluginObject($active_plugin);
-            $p = new $pobj;
-            $this->addToView('body', $p->renderConfiguration($owner));
-        } else {
-            global $db; //@TODO remove this when PDO port is complete
-            $pld = new PluginDAO($db);
-            $config = Config::getInstance();
-            $installed_plugins = $pld->getInstalledPlugins($config->getValue("source_root_path"));
-            $this->addToView('installed_plugins', $installed_plugins);
-        }
-        /* End plugin-specific configuration handling */
         return $this->generateView();
     }
 }

@@ -14,6 +14,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
@@ -25,12 +26,24 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
+
 
 if (!$RUNNING_ALL_TESTS) {
     require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
 }
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
+
+// Instantiate global database variable
+//@TODO remove this when the PDO port is complete
+try {
+    $db = new Database($THINKTANK_CFG);
+    $conn = $db->getConnection();
+} catch(Exception $e) {
+    echo $e->getMessage();
+}
 
 /**
  * Test of PrivateDashboardController
@@ -111,6 +124,6 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Private Dashboard');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'me@example.com-ev-twitter', 'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), 'index.tpl-me@example.com-ev-twitter', 'Cache key');
     }
 }

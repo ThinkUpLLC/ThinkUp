@@ -13,6 +13,9 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
+
 
 /**
  * Test of PublicTimelineController
@@ -30,7 +33,7 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         parent::setUp();
 
         $config = Config::getInstance();
-        $config->setValue('cache_pages', true);
+        $config->setValue('cache_pages', false);
 
 
         //Add instance_owner
@@ -62,8 +65,8 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
 
     public function tearDown(){
         parent::tearDown();
-        $_REQUEST["page"] =  null;
-        $_REQUEST["v"] = null;
+        $_GET["page"] =  null;
+        $_GET["v"] = null;
     }
 
     public function testConstructor() {
@@ -81,7 +84,7 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Public Timeline');
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), 'public.php');
 
-        $this->assertEqual($controller->getCacheKeyString(), '1-timeline', $controller->getCacheKeyString());
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-1-timeline', $controller->getCacheKeyString());
     }
 
     public function testControlNoParamsLoggedIn() {
@@ -96,12 +99,12 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Public Timeline');
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), 'public.php');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'me@example.com-1-timeline', 'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-me@example.com-1-timeline', 'Cache key');
     }
 
 
     public function testControlPage2DefaultList() {
-        $_REQUEST["page"] = '2';
+        $_GET["page"] = '2';
 
         $controller = new PublicTimelineController(true);
         $results = $controller->control();
@@ -113,11 +116,11 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('current_page'), '2');
         $this->assertEqual($v_mgr->getTemplateDataItem('prev_page'), '1');
 
-        $this->assertEqual($controller->getCacheKeyString(), '2-timeline', 'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-2-timeline', 'Cache key');
     }
 
     public function testControlMostReplies() {
-        $_REQUEST["v"] = 'mostreplies';
+        $_GET["v"] = 'mostreplies';
 
         $controller = new PublicTimelineController(true);
         $results = $controller->control();
@@ -128,6 +131,6 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'Most replied to');
         $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'Posts that have been replied to most often');
 
-        $this->assertEqual($controller->getCacheKeyString(), '1-mostreplies', 'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-1-mostreplies', 'Cache key');
     }
 }

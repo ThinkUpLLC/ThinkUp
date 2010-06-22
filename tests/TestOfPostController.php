@@ -79,7 +79,7 @@ class TestOfPostController extends ThinkTankUnitTestCase {
      */
     function testControlLoggedInWithPostID() {
         $_SESSION['user'] = 'me@example.com';
-        $_REQUEST["t"] = '1001';
+        $_GET["t"] = '1001';
 
         $controller = new PostController(true);
         $results = $controller->go();
@@ -92,7 +92,7 @@ class TestOfPostController extends ThinkTankUnitTestCase {
      */
     function testControlLoggedInWithNumericButNonExistentPostID(){
         $_SESSION['user'] = 'me@example.com';
-        $_REQUEST["t"] = '11';
+        $_GET["t"] = '11';
 
         $controller = new PostController(true);
         $results = $controller->go();
@@ -105,7 +105,7 @@ class TestOfPostController extends ThinkTankUnitTestCase {
      */
     function testControlLoggedInWithNonNumericPostID(){
         $_SESSION['user'] = 'me@example.com';
-        $_REQUEST["t"] = 'notapostID45';
+        $_GET["t"] = 'notapostID45';
 
         $controller = new PostController(true);
         $results = $controller->go();

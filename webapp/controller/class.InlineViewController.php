@@ -28,13 +28,18 @@ class InlineViewController extends ThinkTankAuthController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $this->addToView('controller_title', 'Inline View');
-        $this->setViewTemplate('inline.view.tpl'); //default;requested tab may override
         foreach ($this->REQUIRED_PARAMS as $param) {
-            if (! isset($_GET[$param] ) ) {
+            if (!isset($_GET[$param] ) ) {
                 $this->addToView('error', 'Required query string parameter '.$param. ' missing.');
                 $this->is_missing_param = true;
+            } else {
+                $this->addToViewCacheKey($_GET[$param]);
             }
         }
+        if (!isset($_GET['d'])) {
+            $_GET['d'] = "tweets-all";
+        }
+        $this->addToViewCacheKey($_GET['d']);
     }
 
     /**
@@ -42,48 +47,49 @@ class InlineViewController extends ThinkTankAuthController {
      * @TODO Throw an Insufficient privileges Exception when owner doesn't have access to an instance
      */
     public function authControl() {
-        $webapp = Webapp::getInstance();
-        $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($this->getLoggedInUser());
-        $instance_dao = DAOFactory::getDAO('InstanceDAO');
-
-        $continue = true;
         if (!$this->is_missing_param) {
-            if ( $instance_dao->isUserConfigured($_GET['u'])) {
-                $username = $_GET['u'];
-                global $db; //@TODO: Remove once PDO port is complete
-                $ownerinstance_dao = new OwnerInstanceDAO($db);
-                if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $username)) {
-                    $this->addToView('error','Insufficient privileges. <a href="/">Back</a>.');
-                    $continue = false;
-                } else {
-                    $instance = $instance_dao->getByUsernameOnNetwork($username, $_GET['n']);
-                    $this->addToViewCacheKey($instance->network_username);
-                    $this->addToView('i', $instance);
-                }
-            } else {
-                $this->addToView('error', $_GET['u'] . " is not configured.");
-                $continue = false;
-            }
+            $instance_dao = DAOFactory::getDAO('InstanceDAO');
+            $instance = $instance_dao->getByUsernameOnNetwork($_GET['u'], $_GET['n']);
+            $webapp = Webapp::getInstance();
+            $webapp->setActivePlugin($instance->network);
+            $tab = $webapp->getTab($_GET['d'], $instance);
+            $this->setViewTemplate($tab->view_template);
         } else {
             $continue = false;
         }
 
-        if ($continue) {
-            if (!isset($_GET['d'])) {
-                $_GET['d'] = "tweets-all";
+        if ($this->shouldRefreshCache()) {
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+
+            $continue = true;
+            if (!$this->is_missing_param) {
+                if ( $instance_dao->isUserConfigured($_GET['u'])) {
+                    $username = $_GET['u'];
+                    global $db; //@TODO: Remove once PDO port is complete
+                    $ownerinstance_dao = new OwnerInstanceDAO($db);
+                    if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $username)) {
+                        $this->addToView('error','Insufficient privileges. <a href="/">Back</a>.');
+                        $continue = false;
+                    } else {
+                        $this->addToView('i', $instance);
+                    }
+                } else {
+                    $this->addToView('error', $_GET['u'] . " is not configured.");
+                    $continue = false;
+                }
+            } else {
+                $continue = false;
             }
-            $this->addToViewCacheKey($_GET['d']);
 
-            $webapp->setActivePlugin($instance->network);
-            $tab = $webapp->getTab($_GET['d'], $instance);
-            $this->setViewTemplate($tab->view_template);
-            $this->addToView('display', $tab->short_name);
-            $this->addToView('header', $tab->name);
-            $this->addToView('description', $tab->description);
+            if ($continue) {
+                $this->addToView('display', $tab->short_name);
+                $this->addToView('header', $tab->name);
+                $this->addToView('description', $tab->description);
 
-            foreach ($tab->datasets as $dataset) {
-                $this->addToView($dataset->name, $dataset->retrieveDataset());
+                foreach ($tab->datasets as $dataset) {
+                    $this->addToView($dataset->name, $dataset->retrieveDataset());
+                }
             }
         }
         return $this->generateView();

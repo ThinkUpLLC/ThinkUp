@@ -24,6 +24,8 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
 
@@ -137,6 +139,9 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
         $this->assertIsA($v_mgr->getTemplateDataItem('all_tweets'), 'array', 'Array of tweets');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('all_tweets')), 15, '15 posts in listing');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'me@example.com-ev-tweets-all', 'Cache key');
+        $config = Config::getInstance();
+        $this->assertEqual($controller->getCacheKeyString(),
+        $config->getValue('source_root_path').
+       'webapp/plugins/twitter/view/twitter.inline.view.tpl-me@example.com-ev-twitter-tweets-all', 'Cache key');
     }
 }

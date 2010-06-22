@@ -89,7 +89,7 @@ class TestOfTestAuthController extends ThinkTankBasicUnitTestCase {
         $controller = new TestAuthController(true);
         $results = $controller->go();
 
-        $this->assertEqual($controller->getCacheKeyString(), 'me@example.com');
+        $this->assertEqual($controller->getCacheKeyString(), 'testme.tpl-me@example.com');
     }
 
 }

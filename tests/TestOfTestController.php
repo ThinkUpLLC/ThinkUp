@@ -74,6 +74,6 @@ class TestOfTestController extends ThinkTankBasicUnitTestCase {
         $controller = new TestController(true);
         $results = $controller->go();
 
-        $this->assertEqual($controller->getCacheKeyString(), '');
+        $this->assertEqual($controller->getCacheKeyString(), 'testme.tpl-');
     }
 }
