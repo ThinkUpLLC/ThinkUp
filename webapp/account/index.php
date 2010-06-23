@@ -5,4 +5,3 @@ require_once 'controller/class.AccountConfigurationController.php';
 
 $controller = new AccountConfigurationController();
 echo $controller->go();
-

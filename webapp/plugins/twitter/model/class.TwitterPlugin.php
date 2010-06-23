@@ -10,13 +10,10 @@
 class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
     public function crawl() {
-        global $db;//@TODO Remove this when PDO port is complete
-        global $conn;
-
         $config = Config::getInstance();
         $logger = Logger::getInstance();
         $id = DAOFactory::getDAO('InstanceDAO');
-        $oid = new OwnerInstanceDAO($db, $logger);
+        $oid = DAOFactory::getDAO('OwnerInstanceDAO');
 
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('twitter');
         foreach ($instances as $instance) {
@@ -261,10 +258,10 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         //Links from favorites
         /* $lftab = new WebappTab("links-favorites", 'Links From Favorites', 'Links in posts you favorited');
-        $lftabds = new WebappTabDataset("links", 'LinkDAO', "getLinksByFriends", array($instance->network_user_id));
-        $lftab->addDataset($lftabds);
-        array_push($child_tabs, $lftab);
-        */
+         $lftabds = new WebappTabDataset("links", 'LinkDAO', "getLinksByFriends", array($instance->network_user_id));
+         $lftab->addDataset($lftabds);
+         array_push($child_tabs, $lftab);
+         */
         //Photos
         $ptab = new WebappTab("links-photos", "Photos", 'Photos your friends have posted', $twitter_data_tpl);
         $ptabds = new WebappTabDataset("links", 'LinkDAO', "getPhotosByFriends", array($instance->network_user_id));

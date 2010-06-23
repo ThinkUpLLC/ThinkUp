@@ -23,8 +23,6 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
     }
 
     public function authControl() {
-        global $db; //@TODO remove once PDO port is done
-
         $config = Config::getInstance();
         $this->setViewTemplate($config->getValue('source_root_path').'webapp/plugins/twitter/view/twitter.account.index.tpl');
 
@@ -54,7 +52,7 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
                     // if so, add to instances table and owners table
 
                     $i = $id->getByUsername($_GET['twitter_username']);
-                    $oid = new OwnerInstanceDAO($db);
+                    $oid = DAOFactory::getDAO('OwnerInstanceDAO');;
 
                     $msg = '';
                     if (isset($i)) { //Instance exists

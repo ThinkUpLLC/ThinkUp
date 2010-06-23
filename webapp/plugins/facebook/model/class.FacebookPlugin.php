@@ -1,13 +1,10 @@
 <?php
 class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
     public function crawl() {
-        global $db; //TODO Remove when PDO port is complete
-        global $conn;
-
         $logger = Logger::getInstance();
         $config = Config::getInstance();
         $id = DAOFactory::getDAO('InstanceDAO');
-        $oid = new OwnerInstanceDAO($db, $logger);
+        $oid = DAOFactory::getDAO('OwnerInstanceDAO');
 
         //crawl Facebook user profiles
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook');

@@ -1,8 +1,6 @@
 <?php
 class ExpandURLsPlugin implements CrawlerPlugin {
     public function crawl() {
-        global $db;
-
         $logger = Logger::getInstance();
         $ldao = DAOFactory::getDAO('LinkDAO');
         //TODO Set limit on total number of links to expand per crawler run in the plugin settings, now set here to 1500

@@ -32,7 +32,6 @@ class PrivateDashboardController extends ThinkTankAuthController {
      * @TODO Throw an Insufficient privileges Exception when owner doesn't have access to an instance
      */
     public function authControl() {
-        global $db; //@TODO: remove this when PDO port is done
         $webapp = Webapp::getInstance();
 
         $this->setViewTemplate('index.tpl');
@@ -70,7 +69,7 @@ class PrivateDashboardController extends ThinkTankAuthController {
             }
 
             if ($instance_dao->isUserConfigured($instance_user) ){
-                $owner_instance_dao = new OwnerInstanceDAO($db);
+                $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                 if ( !$owner_instance_dao->doesOwnerHaveAccess($owner, $instance_user) ) {
                     $this->addToView('error','Insufficient privileges. <a href="/">Back</a>.');
                     $continue = false;

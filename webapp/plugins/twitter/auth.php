@@ -41,7 +41,7 @@ if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
         
         $id = DAOFactory::getDAO('InstanceDAO');
         $i = $id->getByUsername($tu);
-        $oid = new OwnerInstanceDAO($db);
+        $oid = DAOFactory::getDAO('OwnerInstanceDAO');
         
         if (isset($i)) {
             $msg .= "Instance already exists.<br />";

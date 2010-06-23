@@ -2,9 +2,6 @@
 class FlickrThumbnailsPlugin implements CrawlerPlugin {
 
     function crawl() {
-        global $db;
-        global $conn;
-
         $config = Config::getInstance();
         $api_key = $config->getValue('flickr_api_key');
 

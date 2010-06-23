@@ -66,8 +66,7 @@ class InlineViewController extends ThinkTankAuthController {
             if (!$this->is_missing_param) {
                 if ( $instance_dao->isUserConfigured($_GET['u'])) {
                     $username = $_GET['u'];
-                    global $db; //@TODO: Remove once PDO port is complete
-                    $ownerinstance_dao = new OwnerInstanceDAO($db);
+                    $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                     if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $username)) {
                         $this->addToView('error','Insufficient privileges. <a href="/">Back</a>.');
                         $continue = false;

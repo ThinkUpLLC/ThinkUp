@@ -40,7 +40,7 @@ if (isset($_GET['sessionKey']) && isset($fb_user) && $fb_user > 0) {
 
     $od = DAOFactory::getDAO('OwnerDAO');
     $id = DAOFactory::getDAO('InstanceDAO');
-    $oid = new OwnerInstanceDAO($db);
+    $oid = DAOFactory::getDAO('OwnerInstanceDAO');
     $ud = DAOFactory::getDAO('UserDAO');
 
 

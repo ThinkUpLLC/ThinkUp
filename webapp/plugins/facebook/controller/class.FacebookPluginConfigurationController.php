@@ -15,17 +15,15 @@ class FacebookPluginConfigurationController extends ThinkTankAuthController {
     var $oid;
     /**
      * Constructor
-     * @TODO remove global $db when PDO port is done
      * @param Owner $owner
      * @return FacebookPluginConfigurationController
      */
     public function __construct($owner) {
         parent::__construct(true);
-        global $db;
         $this->owner = $owner;
         $this->id = DAOFactory::getDAO('InstanceDAO');
         $this->od = DAOFactory::getDAO('OwnerDAO');
-        $this->oid = new OwnerInstanceDAO($db);
+        $this->oid = DAOFactory::getDAO('OwnerInstanceDAO');
     }
 
     public function authControl() {

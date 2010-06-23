@@ -3,7 +3,6 @@
  * Data Access Object Factory
  *
  * Inits a DAO based on the ThinkTank config db_type and $dao_mapping definitions.
-
  * db_type is defined in webapp/config.inc.php as:
  *
  *     $THINKTANK_CFG['db_type'] = 'somedb';
@@ -12,7 +11,7 @@
  *
  * <code>
  *  DAOFactory::getDAO('SomeDAO');
- * </code> *
+ * </code>
  *
  * @author Mark Wilkie
  */
@@ -68,6 +67,11 @@ class DAOFactory {
         'OwnerDAO' => array(
             //MySQL Version
             'mysql' => array( 'class' => 'OwnerMySQLDAO', 'path' => 'model/class.OwnerMySQLDAO.php')
+        ),
+        //OwnerInstance MySQL DAO
+        'OwnerInstanceDAO' => array(
+            //MySQL Version
+            'mysql' => array( 'class' => 'OwnerInstanceMySQLDAO', 'path' => 'model/class.OwnerInstanceMySQLDAO.php')
         )
     );
 
