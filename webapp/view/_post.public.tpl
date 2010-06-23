@@ -14,6 +14,9 @@
 <div class="individual-tweet post clearfix">
   <div class="grid_1 alpha">
     <img src="{$t->author_avatar}" class="avatar">
+    {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
+       <div class="small gray">Friend</div>
+    {/if}
   </div>
   <div class="grid_3 right small">
     {if $t->network == 'twitter'}

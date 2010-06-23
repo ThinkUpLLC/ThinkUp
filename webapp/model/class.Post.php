@@ -19,10 +19,20 @@ class Post {
     var $pub_date;
     var $adj_pub_date;
     var $in_reply_to_user_id;
+    /**
+     *
+     * @var bool
+     */
+    var $is_reply_by_friend;
     var $in_reply_to_post_id;
     var $reply_count_cache;
     var $in_retweet_of_post_id;
     var $retweet_count_cache;
+    /**
+     *
+     * @var bool
+     */
+    var $is_retweet_by_friend;
     var $network;
 
     var $author; //optional user object
@@ -52,6 +62,8 @@ class Post {
         $this->in_retweet_of_post_id = $val["in_retweet_of_post_id"];
         $this->retweet_count_cache = $val["retweet_count_cache"];
         $this->network = $val["network"];
+        $this->is_reply_by_friend = PDODAO::convertDBToBool($val["is_reply_by_friend"]);
+        $this->is_retweet_by_friend = PDODAO::convertDBToBool($val["is_retweet_by_friend"]);
     }
 
     /**

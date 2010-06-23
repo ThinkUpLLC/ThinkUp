@@ -27,7 +27,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @var array
      */
     var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id', 'location',
-    'place', 'geo', 'retweet_count_cache', 'reply_count_cache');
+    'place', 'geo', 'retweet_count_cache', 'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend');
 
     public function getPost($post_id) {
         $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, ";
@@ -125,7 +125,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
-        $q .= " ORDER BY follower_count desc ";
+        $q .= " ORDER BY is_reply_by_friend DESC, follower_count desc ";
         $q .= " LIMIT :limit;";
 
         $vars = array(
@@ -152,7 +152,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
-        $q .= "  ORDER BY follower_count DESC;";
+        $q .= "  ORDER BY is_retweet_by_friend DESC, follower_count DESC;";
 
         $vars = array(
             ':post_id'=>$post_id
@@ -307,6 +307,39 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function addPost($vals) {
         if (!$this->isPostInDB($vals['post_id'])) {
             if ($this->hasAllRequiredFields($vals)) {
+                //process reply
+                if (isset($vals['in_reply_to_post_id']) && $vals['in_reply_to_post_id'] != '') {
+                    $replied_to_post = $this->getPost($vals['in_reply_to_post_id']);
+                    if (isset($replied_to_post)) {
+                        //check if reply author is followed by the original post author
+                        $follow_dao = DAOFactory::getDAO('FollowDAO');
+                        if ($follow_dao->followExists($vals['author_user_id'], $replied_to_post->author_user_id,
+                        $replied_to_post->network)) {
+                            $vals['is_reply_by_friend'] = 1;
+                            $this->logger->logStatus("Found reply by a friend!", get_class($this));
+                        }
+                        $this->incrementReplyCountCache($vals['in_reply_to_post_id']);
+                        $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"].
+                    "; updating reply cache count";
+                        $this->logger->logStatus($status_message, get_class($this));
+                    }
+                }
+                //process retweet
+                if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '') {
+                    $retweeted_post = $this->getPost($vals['in_retweet_of_post_id']);
+                    if (isset($retweeted_post)) {
+                        $follow_dao = DAOFactory::getDAO('FollowDAO');
+                        if ($follow_dao->followExists($vals['author_user_id'], $retweeted_post->author_user_id,
+                        $retweeted_post->network)) {
+                            $vals['is_retweet_by_friend'] = 1;
+                            $this->logger->logStatus("Found retweet by a friend!", get_class($this));
+                        }
+                        $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
+                        $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
+                    " ID: ".$vals["post_id"]."; updating retweet cache count";
+                        $this->logger->logStatus($status_message, get_class($this));
+                    }
+                }
                 //SQL variables to bind
                 $vars = array();
                 //SQL query
@@ -326,22 +359,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 //Trim off that last comma and space
                 $q = substr($q, 0, (strlen($q)-2));
                 $ps = $this->execute($q, $vars);
-
-                if (isset($vals['in_reply_to_post_id']) && $vals['in_reply_to_post_id'] != ''
-                && $this->isPostInDB($vals['in_reply_to_post_id'])) {
-                    $this->incrementReplyCountCache($vals['in_reply_to_post_id']);
-                    $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"].
-                    "; updating reply cache count";
-                    $this->logger->logStatus($status_message, get_class($this));
-                }
-
-                if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != ''
-                && $this->isPostInDB($vals['in_retweet_of_post_id'])) {
-                    $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
-                    $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
-                    " ID: ".$vals["post_id"]."; updating retweet cache count";
-                    $this->logger->logStatus($status_message, get_class($this));
-                }
 
                 return $this->getUpdateCount($ps);
             } else {
