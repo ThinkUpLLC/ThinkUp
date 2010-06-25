@@ -18,11 +18,6 @@ abstract class ThinkTankController {
     protected $view_template = null;
     /**
      *
-     * @var array contains the cache key key/value pairs
-     */
-    private $view_cache_key = array();
-    /**
-     *
      * @var string cache key separator
      */
     const KEY_SEPARATOR='-';
@@ -61,17 +56,7 @@ abstract class ThinkTankController {
         $this->app_session = new Session();
         if ($this->isLoggedIn()) {
             $this->addToView('logged_in_user', $this->getLoggedInUser());
-            $this->addToViewCacheKey($this->getLoggedInUser());
         }
-    }
-
-    /**
-     * Adds $addition to cache key array
-     *
-     * @param str $addition
-     */
-    protected function addToViewCacheKey($addition) {
-        array_push($this->view_cache_key, $addition);
     }
 
     /**
@@ -104,7 +89,15 @@ abstract class ThinkTankController {
      * @return str cache key
      */
     public function getCacheKeyString() {
-        return $this->view_template.self::KEY_SEPARATOR.(implode($this->view_cache_key, self::KEY_SEPARATOR));
+        $view_cache_key = array();
+        if ($this->getLoggedInUser()) {
+            array_push($view_cache_key, $this->getLoggedInuser());
+        }
+        $keys = array_keys($_GET);
+        foreach ($keys as $key) {
+            array_push($view_cache_key, $_GET[$key]);
+        }
+        return $this->view_template.self::KEY_SEPARATOR.(implode($view_cache_key, self::KEY_SEPARATOR));
     }
 
     /**
@@ -118,12 +111,12 @@ abstract class ThinkTankController {
                 $cache_key = $this->getCacheKeyString();
                 if ($this->profiler_enabled) {
                     $view_start_time = microtime(true);
-                    $cache_source = $this->shouldRefreshCache()?"LIVE DATABASE":"FILE CACHE";
+                    $cache_source = $this->shouldRefreshCache()?"DATABASE":"FILE";
                     $results = $this->view_mgr->fetch($this->view_template, $cache_key);
                     $view_end_time = microtime(true);
                     $total_time = $view_end_time - $view_start_time;
                     $profiler = Profiler::getInstance();
-                    $profiler->add($total_time, "Rendered view, data loaded from ". $cache_source . ", key: <i>".
+                    $profiler->add($total_time, "Rendered view from ". $cache_source . ", cache key: <i>".
                     $this->getCacheKeyString(), false).'</i>';
                     return $results;
                 } else {

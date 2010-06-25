@@ -47,10 +47,10 @@ class PrivateDashboardController extends ThinkTankAuthController {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             $instance = $instance_dao->getFreshestByOwnerId($owner->id);
             $instance_user = $instance->network_username;
+            $_GET['u'] = $instance_user;
             $instance_user_network = $instance->network;
+            $_GET['n'] = $instance_user_network;
         }
-        $this->addToViewCacheKey($instance_user);
-        $this->addToViewCacheKey($instance_user_network);
 
         if ($this->shouldRefreshCache()) {
             $config = Config::getInstance();

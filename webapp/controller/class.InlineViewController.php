@@ -32,14 +32,11 @@ class InlineViewController extends ThinkTankAuthController {
             if (!isset($_GET[$param] ) ) {
                 $this->addToView('error', 'Required query string parameter '.$param. ' missing.');
                 $this->is_missing_param = true;
-            } else {
-                $this->addToViewCacheKey($_GET[$param]);
             }
         }
         if (!isset($_GET['d'])) {
             $_GET['d'] = "tweets-all";
         }
-        $this->addToViewCacheKey($_GET['d']);
     }
 
     /**

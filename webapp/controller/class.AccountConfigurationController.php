@@ -27,7 +27,6 @@ class AccountConfigurationController extends ThinkTankAuthController {
 
         /* Begin plugin-specific configuration handling */
         if (isset($_GET['p'])) {
-            $this->addToViewCacheKey($_GET['p']);
             $active_plugin = $_GET['p'];
             $pobj = $webapp->getPluginObject($active_plugin);
             $p = new $pobj;

@@ -28,9 +28,6 @@ class PostController extends ThinkTankAuthController {
      */
     public function authControl() {
         $this->setViewTemplate('post.index.tpl');
-        if ( isset($_GET['t'])) {
-            $this->addToViewCacheKey($_GET['t']);
-        }
         if ($this->shouldRefreshCache()) {
             if ( isset($_GET['t']) && is_numeric($_GET['t']) && $this->post_dao->isPostInDB($_GET['t']) ){
                 $post_id = $_GET['t'];
@@ -38,7 +35,7 @@ class PostController extends ThinkTankAuthController {
                 $this->addToView('post', $post);
 
                 // costly query
-                //$this->addToView('likely_orphans', $this->post_dao->getLikelyOrphansForParent($post->pub_date, 
+                //$this->addToView('likely_orphans', $this->post_dao->getLikelyOrphansForParent($post->pub_date,
                 //$post->author_user_id,$post->author_username, 15) );
                 //$this->addToView('all_tweets', $this->post_dao->getAllPosts($post->author_user_id, 15) );
 

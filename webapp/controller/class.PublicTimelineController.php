@@ -46,6 +46,7 @@ class PublicTimelineController extends ThinkTankController implements Controller
         if (isset($_GET['page']) && is_numeric($_GET['page'])) {
             $this->current_page = $_GET['page'];
         } else {
+            $_GET['page'] = 1;
             $this->current_page = 1;
         }
         if ($this->current_page > 1) {
@@ -53,23 +54,20 @@ class PublicTimelineController extends ThinkTankController implements Controller
         }
 
         $this->addToView('current_page', $this->current_page);
-        $this->addToViewCacheKey($this->current_page);
 
         //if $_GET["t"], load individual post + replies + retweets
         //TODO: change the t (for tweet) to p (for post)
         if (isset($_GET['t']) && $this->post_dao->isPostByPublicInstance($_GET['t'])) {
-            $this->addToViewCacheKey($_GET['t']);
             if ($this->shouldRefreshCache()) {
                 $this->loadSinglePostThread($_GET['t']);
             }
         } elseif (isset($_GET["v"])) { //else if $_GET["v"], display correct listing
-            $this->addToViewCacheKey($_GET['v']);
             if ($this->shouldRefreshCache()) {
                 $this->loadPublicPostList($_GET["v"]);
             }
         } else { //else default to public timeline list
-            $this->addToViewCacheKey('timeline');
             if ($this->shouldRefreshCache()) {
+                $_GET["v"] = 'timeline';
                 $this->loadPublicPostList('timeline');
             }
         }

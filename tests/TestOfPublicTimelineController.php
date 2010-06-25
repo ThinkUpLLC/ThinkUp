@@ -35,7 +35,6 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $config = Config::getInstance();
         $config->setValue('cache_pages', false);
 
-
         //Add instance_owner
         $q = "INSERT INTO tt_owner_instances (owner_id, instance_id) VALUES (1, 1)";
         $this->db->exec($q);
@@ -65,8 +64,6 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
 
     public function tearDown(){
         parent::tearDown();
-        $_GET["page"] =  null;
-        $_GET["v"] = null;
     }
 
     public function testConstructor() {
@@ -84,7 +81,7 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Public Timeline');
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), 'public.php');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-1-timeline', $controller->getCacheKeyString());
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-1-timeline', 'Cache key');
     }
 
     public function testControlNoParamsLoggedIn() {
@@ -101,7 +98,6 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
 
         $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-me@example.com-1-timeline', 'Cache key');
     }
-
 
     public function testControlPage2DefaultList() {
         $_GET["page"] = '2';
@@ -131,6 +127,22 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'Most replied to');
         $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'Posts that have been replied to most often');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-1-mostreplies', 'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-mostreplies-1', 'Cache key');
+    }
+
+    public function testControlMostRetweets() {
+        $_GET["v"] = 'mostretweets';
+        $_GET["page"] = 2;
+
+        $controller = new PublicTimelineController(true);
+        $results = $controller->control();
+        $this->assertTrue(strpos( $results, "Posts that have been forwarded most often") > 0, "most replies list");
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'Most forwarded');
+        $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'Posts that have been forwarded most often');
+
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-mostretweets-2', 'Cache key');
     }
 }
