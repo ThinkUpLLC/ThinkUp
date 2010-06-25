@@ -49,7 +49,8 @@ class FacebookCrawler {
     }
 
     function fetchPagesUserIsFanOf($uid, $session_key) {
-        $q = "SELECT page_id, name, page_url FROM page WHERE page_id IN (SELECT page_id FROM page_fan WHERE uid=".$uid.")";
+        $q = "SELECT page_id, name, page_url FROM page WHERE page_id IN ";
+        $q .= "(SELECT page_id FROM page_fan WHERE uid=".$uid.")";
         try{
             $pages = $this->facebook->api_client->fql_query($q);
              

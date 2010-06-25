@@ -37,8 +37,10 @@ class PostController extends ThinkTankAuthController {
                 $post = $this->post_dao->getPost($post_id);
                 $this->addToView('post', $post);
 
-                $this->addToView('likely_orphans', $this->post_dao->getLikelyOrphansForParent($post->pub_date, $post->author_user_id,$post->author_username, 15) );
-                $this->addToView('all_tweets', $this->post_dao->getAllPosts($post->author_user_id, 15) );
+                // costly query
+                //$this->addToView('likely_orphans', $this->post_dao->getLikelyOrphansForParent($post->pub_date, 
+                //$post->author_user_id,$post->author_username, 15) );
+                //$this->addToView('all_tweets', $this->post_dao->getAllPosts($post->author_user_id, 15) );
 
                 $all_replies = $this->post_dao->getRepliesToPost($post_id);
                 $this->addToView('replies', $all_replies );

@@ -20,6 +20,7 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
     public function __construct($owner) {
         parent::__construct(true);
         $this->owner = $owner;
+        $this->disableCaching();
     }
 
     public function authControl() {
