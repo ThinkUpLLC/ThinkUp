@@ -32,7 +32,7 @@
  *   // 600 seconds behind
  *   $builder = FixtureBuilder::build('table_name', array( 'date_added' => '-300s' ));
  *
- *   // to truncate the data in a table, just set the builder to null 
+ *   // to truncate the data in a table, just set the builder to null
  *   // and __destruct will call 'truncate table $tablename', ie:
  *   $builder = FixtureBuilder::build('table_name', array( 'date_added' => '-300s' ));
  *   $builder = null;
@@ -71,10 +71,6 @@ class FixtureBuilder {
      */
     static $pdo;
 
-    /*
-     * @var Config our config object
-     */
-    var $config;
 
     /*
      * our Constructor
@@ -106,8 +102,13 @@ class FixtureBuilder {
      * @return PDO
      */
     private function connect() {
-        $db_string = sprintf("mysql:dbname=%s;host=%s", $this->config->getValue('db_name'), $this->config->getValue('db_host'));
+        $db_string = sprintf("mysql:dbname=%s;host=%s", $this->config->getValue('db_name'),
+        $this->config->getValue('db_host'));
         if($this->DEBUG) { echo "DEBUG: Connecting to $db_string\n"; }
+        $db_socket = $this->config->getValue('db_socket');
+        if ( $db_socket) {
+            $db_string.=";unix_socket=".$db_socket;
+        }
         $pdo = new PDO($db_string, $this->config->getValue('db_user'), $this->config->getValue('db_password'));
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo;
@@ -158,7 +159,8 @@ class FixtureBuilder {
         foreach( $columns as $column) {
             $field_value = (! is_null($args)) && isset( $args[ $column['Field'] ]) ? $args[ $column['Field'] ] : null;
             if( isset($column['Key']) && $column['Key'] == 'UNI' && ! $field_value) {
-                throw new FixtureBuilderException($column['Field'] . ' has a unique key constraint, a value must be defined for this column');
+                throw new FixtureBuilderException($column['Field'] .
+                ' has a unique key constraint, a value must be defined for this column');
             }
             if( isset($column['Extra']) && $column['Extra'] == 'auto_increment' && ! $field_value ) {
                 continue;
@@ -169,7 +171,8 @@ class FixtureBuilder {
                 } else {
                     $column['value'] = $field_value;
                 }
-            } else if (isset($column['Default']) && $column['Default'] != '' && $column['Default'] != 'CURRENT_TIMESTAMP') {
+            } else if (isset($column['Default']) && $column['Default'] != ''
+            && $column['Default'] != 'CURRENT_TIMESTAMP') {
                 $column['value'] = $column['Default'];
             } else {
                 if(preg_match('/^enum/', $column['Type'])) {
@@ -340,5 +343,4 @@ class FixtureBuilder {
         }
 
     }
-
 }

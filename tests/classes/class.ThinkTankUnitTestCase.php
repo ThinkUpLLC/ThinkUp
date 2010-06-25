@@ -9,6 +9,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.LoggerSlowSQL.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
+require_once $SOURCE_ROOT_PATH.'tests/config.tests.inc.php';
 
 /**
  * ThinkTank Unit Test Case
@@ -32,6 +33,8 @@ class ThinkTankUnitTestCase extends ThinkTankBasicUnitTestCase {
 
         //Override default CFG values
         $THINKTANK_CFG['db_name'] = $TEST_DATABASE;
+        $config = Config::getInstance();
+        $config->setValue('db_name', $TEST_DATABASE);
 
         $this->db = new Database($THINKTANK_CFG);
         $this->conn = $this->db->getConnection();
