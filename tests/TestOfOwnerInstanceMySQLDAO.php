@@ -14,7 +14,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/interface.OwnerInstanceDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstanceMySQLDAO.php';
 
 
-class TestOfOwnerInstanceMysqlDAO extends ThinkTankUnitTestCase {
+class TestOfOwnerInstanceMySQLDAO extends ThinkTankUnitTestCase {
 
     const TEST_TABLE_OI = 'owner_instances';
     const TEST_TABLE_I = 'instances';
@@ -59,8 +59,10 @@ class TestOfOwnerInstanceMysqlDAO extends ThinkTankUnitTestCase {
 
         // valid record
         $tokens = $dao->getOAuthTokens(20);
-        $this->assertEqual($tokens['oauth_access_token'], $builder->columns['oauth_access_token'], 'we queried a valid oauth_access_token');
-        $this->assertEqual($tokens['oauth_access_token_secret'], $builder->columns['oauth_access_token_secret'], 'we queried a valid oauth_access_token_secret');
+        $this->assertEqual($tokens['oauth_access_token'], $builder->columns['oauth_access_token'],
+        'we queried a valid oauth_access_token');
+        $this->assertEqual($tokens['oauth_access_token_secret'], $builder->columns['oauth_access_token_secret'],
+        'we queried a valid oauth_access_token_secret');
     }
 
     function testGetOwnerInstance() {
@@ -80,8 +82,10 @@ class TestOfOwnerInstanceMysqlDAO extends ThinkTankUnitTestCase {
         $columns = $builder->columns;
         $this->assertEqual($owner_instance->owner_id, $columns['owner_id'], 'valid owner id');
         $this->assertEqual($owner_instance->instance_id, $columns['instance_id'], 'valid instance id');
-        $this->assertEqual($owner_instance->oauth_access_token, $columns['oauth_access_token'], 'valid oauth_access_token');
-        $this->assertEqual($owner_instance->oauth_access_token_secret, $columns['oauth_access_token_secret'], 'valid oauth_access_token_secret');
+        $this->assertEqual($owner_instance->oauth_access_token, $columns['oauth_access_token'],
+        'valid oauth_access_token');
+        $this->assertEqual($owner_instance->oauth_access_token_secret, $columns['oauth_access_token_secret'],
+        'valid oauth_access_token_secret');
     }
 
      
@@ -141,5 +145,4 @@ class TestOfOwnerInstanceMysqlDAO extends ThinkTankUnitTestCase {
         $this->assertTrue($dao->doesOwnerHaveAccess($owner, 'mojojojo'), 'has access');
 
     }
-
 }

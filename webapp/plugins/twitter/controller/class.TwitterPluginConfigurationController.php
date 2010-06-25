@@ -25,7 +25,8 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
 
     public function authControl() {
         $config = Config::getInstance();
-        $this->setViewTemplate($config->getValue('source_root_path').'webapp/plugins/twitter/view/twitter.account.index.tpl');
+        $this->setViewTemplate($config->getValue('source_root_path').
+        'webapp/plugins/twitter/view/twitter.account.index.tpl');
 
         $id = DAOFactory::getDAO('InstanceDAO');
         $od = DAOFactory::getDAO('OwnerDAO');
@@ -38,14 +39,15 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
             $logger = Logger::getInstance();
 
             //Check user exists and is public
-            $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret, $config->getValue('archive_limit'));
+            $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret, 
+            $config->getValue('archive_limit'));
             $api_call = str_replace("[id]", $_GET['twitter_username'], $api->cURL_source['show_user']);
             list($cURL_status, $data) = $api->apiRequestFromWebapp($api_call);
             if ($cURL_status == 200) {
                 $thisFeed = array();
                 try {
                     $xml = $api->createParserFromString(utf8_encode($data));
-                    $user = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name, 'is_protected'=>$xml->protected );
+                    $user = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name, 'is_protected'=>$xml->protected);
                 } catch(Exception $e) {
                     $this->addToView('errormsg', $e->getMessage());
                 }
@@ -71,7 +73,8 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
 
                     $this->addToView('successmsg', "Added ".$_GET['twitter_username']." to ThinkTank.");
                 } else { // if not, return error
-                    $this->addToView('errormsg', $_GET['twitter_username']." is a private Twitter account; ThinkTank cannot track it without authorization.");
+                    $this->addToView('errormsg', $_GET['twitter_username'].
+                    " is a private Twitter account; ThinkTank cannot track it without authorization.");
                 }
             } else {
                 $this->addToView('errormsg', $_GET['twitter_username']." is not a valid Twitter username.");
@@ -89,7 +92,8 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
             $oauthorize_link = $to->getAuthorizeURL($token);
         } else {
             //set error message here
-            $this->addToView('errormsg', "Unable to obtain OAuth token. Check your Twitter consumer key and secret configuration.");
+            $this->addToView('errormsg', 
+            "Unable to obtain OAuth token. Check your Twitter consumer key and secret configuration.");
             $oauthorize_link = '';
         }
 

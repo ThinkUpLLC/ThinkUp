@@ -40,7 +40,9 @@ class TestOfPostController extends ThinkTankUnitTestCase {
      */
     function setUp(){
         parent::setUp();
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (1001, 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This is a test post', 'web', '2006-01-01 00:05:00', ".rand(0, 4).", 5);";
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (1001, 13, 'ev', 'Ev Williams', 
+        'avatar.jpg', 'This is a test post', 'web', '2006-01-01 00:05:00', ".rand(0, 4).", 5);";
         $this->db->exec($q);
     }
 
