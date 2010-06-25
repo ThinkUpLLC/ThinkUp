@@ -40,6 +40,7 @@ class ThinkTankUnitTestCase extends ThinkTankBasicUnitTestCase {
         $this->conn = $this->db->getConnection();
 
         $this->testdb_helper = new ThinkTankTestDatabaseHelper();
+        $this->testdb_helper->drop($this->db);
         $this->testdb_helper->create($this->db);
     }
 
