@@ -7,7 +7,7 @@ class FacebookCrawler {
     var $ud;
     var $pd;
 
-    function __construct($instance, $facebook) {
+    public function __construct($instance, $facebook) {
         $this->instance = $instance;
         $this->facebook = $facebook;
         $this->logger = Logger::getInstance();
@@ -16,7 +16,7 @@ class FacebookCrawler {
         $this->pd = DAOFactory::getDAO('PostDAO');
     }
 
-    function fetchInstanceUserInfo($uid, $session_key) {
+    public function fetchInstanceUserInfo($uid, $session_key) {
         $user = $this->fetchUserInfo($uid, $session_key, "Owner Status");
         $this->owner_object = $user;
         if (isset($this->owner_object)) {
@@ -27,7 +27,7 @@ class FacebookCrawler {
         $this->logger->logStatus($status_message, get_class($this));
     }
 
-    function fetchUserInfo($uid, $session_key, $found_in) {
+    public function fetchUserInfo($uid, $session_key, $found_in) {
         // Get owner user details and save them to DB
         $user_details = $this->facebook->api_client->users_getInfo($uid,
         'first_name,last_name,current_location,username,website,pic_square,about_me');
@@ -35,7 +35,8 @@ class FacebookCrawler {
         /*
          $serialized = serialize($user_details);
          echo "SERIALIZED USER DETAILS FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-         print_r($user_details);*/
+         print_r($user_details);
+         */
 
         $user = $this->parseUserDetails($user_details);
         if (isset($user)) {
@@ -48,15 +49,17 @@ class FacebookCrawler {
         }
     }
 
-    function fetchPagesUserIsFanOf($uid, $session_key) {
+    public function fetchPagesUserIsFanOf($uid, $session_key) {
         $q = "SELECT page_id, name, page_url FROM page WHERE page_id IN ";
         $q .= "(SELECT page_id FROM page_fan WHERE uid=".$uid.")";
         try{
             $pages = $this->facebook->api_client->fql_query($q);
-             
-            //         $serialized = serialize($pages);
-            //         echo "SERIALIZED PAGES FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-            //         print_r($pages);
+
+            /*
+             $serialized = serialize($pages);
+             echo "SERIALIZED PAGES FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
+             print_r($pages);
+             */
              
         } catch (Exception $e){
             $this->logger->logStatus("Exception '".$e->getMessage()."' thrown when trying to retrieve pages for $uid",
@@ -102,12 +105,14 @@ class FacebookCrawler {
     }
 
 
-    function fetchUserPostsAndReplies($uid, $session_key) {
+    public function fetchUserPostsAndReplies($uid, $session_key) {
         $stream = $this->facebook->api_client->stream_get($uid, $uid, '', '', 10, $session_key, '');
 
-        /*$serialized = serialize($stream);
+        /*
+         $serialized = serialize($stream);
          echo "SERIALIZED STREAM FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-         print_r($stream);*/
+         print_r($stream);
+         */
 
         if (is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
             $this->logger->logStatus(sizeof($stream["posts"]).
@@ -134,12 +139,14 @@ class FacebookCrawler {
 
     }
 
-    function fetchPagePostsAndReplies($pid, $uid, $session_key) {
+    public function fetchPagePostsAndReplies($pid, $uid, $session_key) {
         $stream = $this->facebook->api_client->stream_get($uid, $pid, '', '', 2, $session_key, '');
 
-        //        $serialized = serialize($stream);
-        //        echo "SERIALIZED STREAM FOR PAGE $pid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-        //        print_r($stream);
+        /*
+         $serialized = serialize($stream);
+         echo "SERIALIZED STREAM FOR PAGE $pid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
+         print_r($stream);
+         */
 
         if (is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
             $this->logger->logStatus(sizeof($stream["posts"]).
@@ -149,6 +156,15 @@ class FacebookCrawler {
             $posts = $thinktank_data["posts"];
 
             foreach ($posts as $post) {
+                if ($post['author_username']== "" && isset($post['author_user_id'])) {
+                    $commenter_object = $this->fetchUserInfo($post['author_user_id'], $session_key, 'Comments');
+                    if (isset($commenter_object)) {
+                        $post["author_username"] = $commenter_object->full_name;
+                        $post["author_fullname"] = $commenter_object->full_name;
+                        $post["author_avatar"] = $commenter_object->avatar;
+                    }
+                }
+
                 $added_posts = $this->pd->addPost($post);
                 $this->logger->logStatus("Added $added_posts post for ".$post["author_username"].":".$post["post_text"],
                 get_class($this));
@@ -180,6 +196,7 @@ class FacebookCrawler {
             "source"=>'', 'network'=>'facebook');
             array_push($thinktank_posts, $ttp);
             $post_comments = $p["comments"]["comment_list"];
+            $post_comments_count = isset($p["comments"]["count"])?$p["comments"]["count"]:0;
             if (is_array($post_comments) && sizeof($post_comments) > 0) {
                 foreach ($post_comments as $c) {
                     $comment_id = explode("_", $c["id"]);
@@ -200,6 +217,30 @@ class FacebookCrawler {
                     "url"=>'', "is_protected"=>'true', "follower_count"=>0, "post_count"=>0, "joined"=>'', 
                     "found_in"=>"Comments", "network"=>"facebook");
                     array_push($thinktank_users, $ttu);
+                }
+            }
+            // collapsed comment thread
+            if ($p["comments"]["count"] > 0 && $p["comments"]["count"] > sizeof($post_comments)) {
+                $comments_stream = $this->facebook->api_client->fql_query(
+                'SELECT xid, fromid, time, text, id FROM comment WHERE object_id='.$post_id);
+                /*
+                 $serialized = serialize($comments_stream);
+                 echo "SERIALIZED STREAM FOR POST $post_id STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW\n";
+                 print_r($comments_stream);
+                 */
+                if (isset($comments_stream) && is_array($comments_stream)) {
+                    foreach ($comments_stream as $c) {
+                        $comment_id = explode("_", $c["id"]);
+                        $comment_id = $comment_id[1];
+                        //Get posts
+                        $ttp = array("post_id"=>$comment_id, "author_username"=>'',
+                        "author_fullname"=>'', "author_avatar"=>'', 
+                        "author_user_id"=>$c["fromid"], 
+                        "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), 
+                        "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 
+                        'network'=>'facebook');
+                        array_push($thinktank_posts, $ttp);
+                    }
                 }
             }
         }

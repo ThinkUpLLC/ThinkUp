@@ -12,20 +12,22 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookCrawler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.facebook.php';
-//require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/model/facebook.php';
+require_once $SOURCE_ROOT_PATH.'extlib/facebook/facebook.php';
+
 
 class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
     var $fb;
     var $instance;
     var $logger;
 
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('FacebookCrawler test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();
         global $THINKTANK_CFG;
@@ -39,29 +41,31 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         $this->instance = new Instance($r);
 
         $this->fb = new Facebook($THINKTANK_CFG['facebook_api_key'], $THINKTANK_CFG['facebook_api_secret']);
+        $this->fb->api_client = new MockFacebookRestClient();
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
         $this->logger->close();
     }
 
-    function testConstructor() {
+    public function testConstructor() {
         $fbc = new FacebookCrawler($this->instance, $this->fb);
 
         $this->assertTrue($fbc != null);
     }
 
-    function testFetchInstanceUserInfo() {
+    public function testFetchInstanceUserInfo() {
         $fbc = new FacebookCrawler($this->instance, $this->fb);
 
         $session_key = 'adsfasdfasdfasdf';
         $fbc->fetchInstanceUserInfo($this->instance->network_user_id, $session_key);
+        $this->assertTrue(isset($fbc->owner_object));
+        $this->assertEqual($fbc->owner_object->user_id, 606837591);
 
     }
 
-    function testFetchUserStreamWithTwoPostsNoComments() {
-
+    public function testFetchUserStreamWithTwoPostsNoComments() {
         $fbc = new FacebookCrawler($this->instance, $this->fb);
 
         $session_key = 'asdfasdfasdfafsd';
@@ -72,7 +76,7 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         $this->assertTrue($pd->isPostInDB('107266209295210'));
     }
 
-    function testFetchUserStreamWithTwoPostsAndOneComment() {
+    public function testFetchUserStreamWithTwoPostsAndOneComment() {
 
         $this->instance->network_user_id = '6068375911';
         $fbc = new FacebookCrawler($this->instance, $this->fb);
@@ -89,7 +93,7 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
     }
 
 
-    function testFetchUserPagesThatUserIsaFanOf() {
+    public function testFetchUserPagesThatUserIsaFanOf() {
 
         $this->instance->network_user_id = '606837591';
         $fbc = new FacebookCrawler($this->instance, $this->fb);
@@ -106,10 +110,9 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         $this->assertEqual($pages[15]['page_id'], '110253595679921');
         $this->assertEqual($pages[15]['name'], 'The Shawshank Redemption (1994)');
         $this->assertEqual($pages[15]['page_url'], 'http://www.imdb.com/title/tt0111161/');
-
     }
 
-    function testFetchPageStream() {
+    public function testFetchPageStream() {
 
         $this->instance->network_user_id = '606837591';
         $fbc = new FacebookCrawler($this->instance, $this->fb);
