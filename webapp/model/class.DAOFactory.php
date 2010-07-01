@@ -72,6 +72,11 @@ class DAOFactory {
         'OwnerInstanceDAO' => array(
             //MySQL Version
             'mysql' => array( 'class' => 'OwnerInstanceMySQLDAO', 'path' => 'model/class.OwnerInstanceMySQLDAO.php')
+        ),
+        //Plugin MySQL DAO
+        'PluginDAO' => array(
+            //MySQL Version
+            'mysql' => array( 'class' => 'PluginMySQLDAO', 'path' => 'model/class.PluginMySQLDAO.php')
         )
     );
 

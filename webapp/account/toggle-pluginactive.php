@@ -1,7 +1,7 @@
 <?php
 chdir("..");
 
-
+require_once 'model/class.DAOFactory.php';
 require_once 'init.php';
 
 session_start();
@@ -16,7 +16,7 @@ if ($a != 1) {
     $a = 0;
 }
 
-$pd = new PluginDAO($db);
+$pd = DAOFactory::getDAO('PluginDAO');
 
 $pd->setActive($pid, $a);
 

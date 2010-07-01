@@ -34,8 +34,7 @@ class AccountConfigurationController extends ThinkTankAuthController {
             $profiler = Profiler::getInstance();
             $profiler->clearLog();
         } else {
-            global $db; //@TODO remove this when PDO port is complete
-            $pld = new PluginDAO($db);
+            $pld = DAOFactory::getDAO('PluginDAO');
             $config = Config::getInstance();
             $installed_plugins = $pld->getInstalledPlugins($config->getValue("source_root_path"));
             $this->addToView('installed_plugins', $installed_plugins);

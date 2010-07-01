@@ -165,7 +165,7 @@ class FixtureBuilder {
             if( isset($column['Extra']) && $column['Extra'] == 'auto_increment' && ! $field_value ) {
                 continue;
             }
-            if($field_value) {
+            if(isset($field_value)) {
                 if(preg_match('/^(times|date)/', $column['Type'])) {
                     $column['value'] = $this->genDate($field_value);
                 } else {
@@ -179,7 +179,7 @@ class FixtureBuilder {
                     $column['value'] = $this->genEnum( $column['Type'] );
                 } else if(preg_match('/^decimal/', $column['Type'])) {
                     $column['value'] = $this->genDecimal($column['Type']);
-                } else if(preg_match('/^int/', $column['Type'])) {
+                } else if(preg_match('/^(int|tinyint)/', $column['Type'])) {
                     $column['value'] = $this->genInt();
                 } else if(preg_match('/^bigint/', $column['Type'])) {
                     $column['value'] = $this->genBigint();

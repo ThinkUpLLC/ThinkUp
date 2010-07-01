@@ -61,7 +61,7 @@ try {
 }
 
 /* Start plugin-specific configuration handling */
-$pdao = new PluginDAO($db);
+$pdao = DAOFactory::getDAO('PluginDAO');
 $active_plugins = $pdao->getActivePlugins();
 foreach ($active_plugins as $ap) {
     foreach (glob($config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name."/model/*.php") as $includefile) {
