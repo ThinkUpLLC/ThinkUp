@@ -41,11 +41,8 @@ if ( isset($_REQUEST['u']) && $ud->isUserInDBByName($_REQUEST['u']) && isset($_R
             $s->assign('mutual_friends', $mutual_friends);
             $s->assign('total_mutual_friends', count($mutual_friends) );
         }
-        $db->closeConnection($conn);
-
         $s->display('user.index.tpl', $i->network_username."-".$user->username);
     }
 } else {
     echo 'This user is not in the system.<br /><a href="'. $config->getValue('site_root_path') .'">back home</a>';
 }
-?>

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Deprecated Database class--DO NOT USE
+ *
+ * Do not use this class in any new code. Instead, use the PDODAO system in place. This deprecated class is still here
+ * only for existing unit tests that use it. The production webapp no longer utilizes this class.
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class Database {
     var $db_host;
     var $db_name;

@@ -25,15 +25,9 @@ if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
     }
 } else {
     echo 'No access';
-    $db->closeConnection($conn);
     die;
 }
-
-$db->closeConnection($conn);
 
 $s = new SmartyThinkTank();
 $s->assign('tweets', $tweets);
 $s->display('post.export.tpl', $username);
-
-
-?>

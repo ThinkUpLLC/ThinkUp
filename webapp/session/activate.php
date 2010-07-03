@@ -22,12 +22,8 @@ if ($_GET['code'] == $acode['activation_code']) {
     $success = true;
 }
 
-$db->closeConnection($conn);
-
 if ( $success ) {
     header("Location: login.php?smsg=Success!+Your+account+has+been+activated.+You+may+sign+into+ThinkTank.");
 } else {
     header("Location: login.php?emsg=Houston,+we+have+a+problem:+account+activation+failed.");
 }
-
-?>

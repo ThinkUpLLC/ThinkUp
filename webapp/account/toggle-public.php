@@ -21,6 +21,3 @@ if ($p != 1) {
 $id = DAOFactory::getDAO('InstanceDAO');
 
 echo $id->setPublic($uid, $p);
-
-$db->closeConnection($conn);
-?>

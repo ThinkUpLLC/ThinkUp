@@ -12,17 +12,19 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 
 class TestOfSignIn extends ThinkTankWebTestCase {
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
 
         //Add owner
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
-        $q = "INSERT INTO tt_owners (id, user_email, user_pwd, user_activated) VALUES (1, 'me@example.com', '".$cryptpass."', 1)";
+        $q = "INSERT INTO tt_owners (id, user_email, user_pwd, user_activated) VALUES (1, 'me@example.com', '".
+        $cryptpass."', 1)";
         $this->db->exec($q);
 
         //Add instance
-        $q = "INSERT INTO tt_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234, 'thinktankapp', 1)";
+        $q = "INSERT INTO tt_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234,
+        'thinktankapp', 1)";
         $this->db->exec($q);
 
         //Add instance_owner
@@ -30,11 +32,11 @@ class TestOfSignIn extends ThinkTankWebTestCase {
         $this->db->exec($q);
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 
-    function testSignInSuccessAndPrivateDashboard() {
+    public function testSignInSuccessAndPrivateDashboard() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
@@ -44,13 +46,19 @@ class TestOfSignIn extends ThinkTankWebTestCase {
         $this->assertText('Logged in as: me@example.com');
     }
 
-    function testSignInFailureAttemptThenSuccess() {
+    public function testSignInFailureAttemptThenSuccess() {
         $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me2@example.com');
+        $this->setField('pwd', 'wrongemail');
+        $this->click("Log In");
+
+        $this->assertText('Incorrect email');
+
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'wrongpassword');
         $this->click("Log In");
 
-        $this->assertText('Incorrect email or password');
+        $this->assertText('Incorrect password');
         $this->assertField('email', 'me@example.com');
 
         $this->setField('pwd', 'secretpassword');
@@ -60,4 +68,3 @@ class TestOfSignIn extends ThinkTankWebTestCase {
         $this->assertText('Logged in as: me@example.com');
     }
 }
-?>

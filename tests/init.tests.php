@@ -3,8 +3,8 @@ require_once 'config.tests.inc.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once 'model/class.Config.php';
-require_once 'model/class.Database.php';
-require_once 'model/class.MySQLDAO.php';
+require_once 'model/class.Database.deprecated.php';
+require_once 'model/class.MySQLDAO.deprecated.php';
 require_once 'model/class.PDODAO.php';
 require_once 'model/class.User.php';
 require_once 'model/class.Owner.php';

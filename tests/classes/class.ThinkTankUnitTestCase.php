@@ -2,9 +2,9 @@
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankTestDatabaseHelper.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.MySQLDAO.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.MySQLDAO.deprecated.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.PDODAO.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Database.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Database.deprecated.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.LoggerSlowSQL.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';

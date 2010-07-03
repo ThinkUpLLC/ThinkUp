@@ -28,8 +28,4 @@ if (isset($argc) && $argc > 1) { // check for CLI credentials
 
 if ($authorized) {
     $crawler->crawl();
-
-    if (isset($conn)) {
-        $db->closeConnection($conn); // Clean up
-    }
 }

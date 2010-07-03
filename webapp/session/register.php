@@ -79,9 +79,6 @@ elseif (isset($successmsg)) {
     $s->assign('successmsg', $successmsg);
 }
 
-$db->closeConnection($conn);
 $config = Config::getInstance();
 $s->assign('site_root_path', $config->getValue('site_root_path'));
 $s->display('session.register.tpl');
-
-?>

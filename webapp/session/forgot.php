@@ -47,8 +47,5 @@ if (isset($errormsg)) {
     $s->assign('successmsg', $successmsg);
 }
 
-$db->closeConnection($conn);
-
 $s->assign('site_root_path', $config->getValue('site_root_path'));
 $s->display('session.forgot.tpl');
-?>

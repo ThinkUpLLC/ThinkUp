@@ -8,8 +8,6 @@ if ($version[0] < 5) {
 
 require_once 'model/class.Config.php';
 require_once 'model/class.Profiler.php';
-require_once 'model/class.Database.php';
-require_once 'model/class.MySQLDAO.php';
 require_once 'model/class.PDODAO.php';
 require_once 'model/class.DAOFactory.php';
 require_once 'model/class.User.php';
@@ -49,15 +47,6 @@ if ($config->getValue('time_zone')) {
 if ($config->getValue('debug')) {
     ini_set("display_errors", 1);
     ini_set("error_reporting", E_ALL);
-}
-
-// Instantiate global database variable
-//@TODO remove this when the PDO port is complete
-try {
-    $db = new Database($THINKTANK_CFG);
-    $conn = $db->getConnection();
-} catch(Exception $e) {
-    echo $e->getMessage();
 }
 
 /* Start plugin-specific configuration handling */

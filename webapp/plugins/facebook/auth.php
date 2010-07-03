@@ -76,7 +76,5 @@ if (isset($_GET['sessionKey']) && isset($fb_user) && $fb_user > 0) {
 
 # clean up
 
-$db->closeConnection($conn);
 echo '<br /> <a href="'.$config->getValue('site_root_path').'account/">Back to your account</a>.';
-
 ?>

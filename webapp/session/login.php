@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 // set up
@@ -16,13 +16,13 @@ $od = DAOFactory::getDAO('OwnerDAO');
 $s = new SmartyThinkTank();
 $s->caching = false;
 
-if (isset($_POST['Submit']) && $_POST['Submit'] == 'Log In') {
-    $user_email = mysql_real_escape_string($_POST['email']);
+if (isset($_POST['Submit']) && $_POST['Submit'] == 'Log In' && isset($_POST['email'])  && $_POST['email']!='') {
+    $user_email = $_POST['email'];
     $result = $od->getForLogin($user_email);
     if (!$result) {
-        $emsg = "Incorrect email or password";
+        $emsg = "Incorrect email";
     } elseif (!$session->pwdCheck($_POST['pwd'], $result['pwd'])) {
-        $emsg = "Incorrect email or password";
+        $emsg = "Incorrect password";
     } else {
         // this sets variables in the session
         $session->completeLogin($result);
@@ -47,8 +47,5 @@ if (isset($_POST["email"])) {
     $s->assign('email', $_POST["email"]);
 }
 
-$db->closeConnection($conn);
 $s->assign('site_root_path', $config->getValue('site_root_path'));
 $s->display('session.login.tpl');
-
-?>

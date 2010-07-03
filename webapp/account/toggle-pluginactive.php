@@ -20,5 +20,3 @@ $pd = DAOFactory::getDAO('PluginDAO');
 
 $pd->setActive($pid, $a);
 
-$db->closeConnection($conn);
-?>

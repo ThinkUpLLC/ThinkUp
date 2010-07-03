@@ -80,7 +80,7 @@ class Session {
      * @return bool Whether or submitted password matches check
      */
     public function pwdCheck($pwd, $result) {
-        if ($this->saltedsha1($pwd) == $result or $this->sha1pwd($pwd) == $result or $this->md5pwd($pwd) == $result) {
+        if ($this->saltedsha1($pwd) == $result || $this->sha1pwd($pwd) == $result || $this->md5pwd($pwd) == $result) {
             return true;
         } else {
             return false;

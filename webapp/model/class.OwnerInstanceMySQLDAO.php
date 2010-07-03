@@ -54,15 +54,15 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
     }
 
     public function insert($owner_id, $instance_id, $oauth_token = '', $oauth_token_secret = '') {
-        $q = "INSERT INTO #prefix#owner_instances 
+        $q = "INSERT INTO #prefix#owner_instances
                 (owner_id, instance_id, oauth_access_token, oauth_access_token_secret)
                     VALUES (:owner_id,:instance_id,:oauth_access_token,:oauth_access_token_secret)";
-        
-        $vars = array(':owner_id' => $owner_id, 
+
+        $vars = array(':owner_id' => $owner_id,
                       ':instance_id' => $instance_id,
                       ':oauth_access_token' => $oauth_token,
                       ':oauth_access_token_secret' => $oauth_token_secret
-                      );
+        );
         $stmt = $this->execute($q, $vars);
         if ( $this->getInsertCount($stmt) > 0) {
             return true;
@@ -72,9 +72,6 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
     }
 
     public function updateTokens($owner_id, $instance_id, $oauth_token, $oauth_token_secret) {
-        $oauth_token = mysql_real_escape_string($oauth_token);
-        $oauth_token_secret = mysql_real_escape_string($oauth_token_secret);
-
         $q = 'UPDATE
                 #prefix#owner_instances 
             SET 
@@ -92,7 +89,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
     }
 
     public function getOAuthTokens($id) {
-        $q = "SELECT 
+        $q = "SELECT
                 oauth_access_token, oauth_access_token_secret 
             FROM 
                 #prefix#owner_instances 

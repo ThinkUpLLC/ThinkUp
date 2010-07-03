@@ -22,5 +22,3 @@ $id = DAOFactory::getDAO('InstanceDAO');
 
 echo $id->setActive($uid, $p);
 
-$db->closeConnection($conn);
-?>
