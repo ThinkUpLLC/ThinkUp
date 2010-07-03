@@ -66,8 +66,8 @@ class PublicTimelineController extends ThinkTankController implements Controller
                 $this->loadPublicPostList($_GET["v"]);
             }
         } else { //else default to public timeline list
+            $_GET["v"] = 'timeline';
             if ($this->shouldRefreshCache()) {
-                $_GET["v"] = 'timeline';
                 $this->loadPublicPostList('timeline');
             }
         }
