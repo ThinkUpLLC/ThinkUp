@@ -71,11 +71,11 @@
           var links_content =  $("#links_content");
       {/literal}
       showLoading();
-      posts_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}", hideLoading);
-      replies_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$replies_tabs[0]->short_name}", hideLoading);
-      followers_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$followers_tabs[0]->short_name}", hideLoading);
-      friends_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$friends_tabs[0]->short_name}", hideLoading);
-      links_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$links_tabs[0]->short_name}", hideLoading);
+      posts_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}", hideLoading);
+      replies_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$replies_tabs[0]->short_name}", hideLoading);
+      followers_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$followers_tabs[0]->short_name}", hideLoading);
+      friends_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$friends_tabs[0]->short_name}", hideLoading);
+      links_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$links_tabs[0]->short_name}", hideLoading);
       {literal}
           // Manage click events.
           sections.click(function() {

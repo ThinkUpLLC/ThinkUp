@@ -29,7 +29,6 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 
-
 if (!$RUNNING_ALL_TESTS) {
     require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
 }
