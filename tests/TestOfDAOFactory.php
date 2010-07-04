@@ -160,7 +160,7 @@ class TestOfDAOFactory extends ThinkTankUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'OwnerMySQLDAO');
     }
-    
+
     /**
      * Test get LinkDAO
      */
@@ -186,5 +186,14 @@ class TestOfDAOFactory extends ThinkTankUnitTestCase {
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $this->assertNotNull($plugin_dao);
         $this->assertIsA($plugin_dao, 'PluginMySQLDAO');
+    }
+
+    /**
+     * Test get FollowerCountDAO
+     */
+    function testGetFollowerCountDAO() {
+        $plugin_dao = DAOFactory::getDAO('FollowerCountDAO');
+        $this->assertNotNull($plugin_dao);
+        $this->assertIsA($plugin_dao, 'FollowerCountMySQLDAO');
     }
 }

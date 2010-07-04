@@ -38,6 +38,13 @@ class TwitterCrawler {
                 if (isset($this->owner_object)) {
                     $status_message = 'Owner info set.';
                     $this->ud->updateUser($this->owner_object);
+
+                    if (isset($this->owner_object->follower_count) && $this->owner_object->follower_count>0) {
+                        $fcount_dao = DAOFactory::getDAO('FollowerCountDAO');
+                        $fcount_dao->insert($this->owner_object->user_id, 'twitter',
+                        $this->owner_object->follower_count);
+                    }
+
                 } else {
                     $status_message = 'Owner was not set.';
                 }
