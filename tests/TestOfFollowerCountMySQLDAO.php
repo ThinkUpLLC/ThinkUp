@@ -5,6 +5,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowerCountMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
@@ -46,6 +47,8 @@ class TestOfFollowerCountMySQLDAO extends ThinkTankUnitTestCase {
 
         $dao = new FollowerCountMySQLDAO();
         $result = $dao->getHistory(930061, 'twitter', '01/01/2010', 'DAY');
-        $this->assertEqual(sizeof($result), 3, '10 counts returned'.sizeof($result));
+        $this->assertEqual(sizeof($result), 2, '2 sets of data returned--history and percentages');
+        $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
+        $this->assertEqual(sizeof($result['percentages']), 3, '3 percentages returned');
     }
 }

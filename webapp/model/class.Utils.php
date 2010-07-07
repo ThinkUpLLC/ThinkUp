@@ -1,24 +1,23 @@
 <?php
+/**
+ * Utils
+ *
+ * Generic, reusable, common utility methods
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class Utils {
 
-    public static function getDeltaTime($dtTime1, $dtTime2) {
-        $nUXDate1 = strtotime($dtTime1->format("Y-m-d H:i:s"));
-        $nUXDate2 = strtotime($dtTime2->format("Y-m-d H:i:s"));
-
-        $nUXDelta = $nUXDate1 - $nUXDate2;
-        $strDeltaTime = "".$nUXDelta / 60 / 60; // sec -> hour
-
-        $nPos = strpos($strDeltaTime, ".");
-        if ($nPos !== false)
-        $strDeltaTime = substr($strDeltaTime, 0, $nPos + 3);
-
-        return $strDeltaTime;
-    }
-
-    public static function getPercentage($num, $denom) {
-        if ((isset($num)) && (isset($denom))) {
-            if ($num > 0) {
-                return ($denom * 100) / ($num);
+    /**
+     * Get percentage
+     * @param int $numerator
+     * @param int $denominator
+     * @return int Percentage
+     */
+    public static function getPercentage($numerator, $denominator) {
+        if ((isset($numerator)) && (isset($denominator))) {
+            if ($numerator > 0) {
+                return ($numerator * 100) / ($denominator);
             } else {
                 return 0;
             }
@@ -27,7 +26,12 @@ class Utils {
         }
     }
 
-    public static function curl_get_file_contents($URL) {
+    /**
+     * Get the contents of a URL
+     * @param str $URL
+     * @return str contents
+     */
+    public static function getURLContents($URL) {
         $c = curl_init();
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($c, CURLOPT_URL, $URL);
@@ -45,7 +49,12 @@ class Utils {
         }
     }
 
-    static public function getPlugins($dir) {
+    /**
+     * Get plugins that exist in the ThinkTank plugins directory
+     * @param str $dir
+     * @return array Plugins
+     */
+    public static function getPlugins($dir) {
         $dh = @opendir($dir);
         $plugins = array();
         if (!$dh) {
@@ -66,14 +75,26 @@ class Utils {
         return $plugins;
     }
 
-    static public function getPluginViewDirectory($shortname) {
+    /**
+     * Get plugin view directory
+     * @param str $shortname Plugin short name
+     * @return str view path
+     */
+    public static function getPluginViewDirectory($shortname) {
         $config = Config::getInstance();
         $view_path = $config->getValue('source_root_path');
         $view_path .= 'webapp/plugins/'.$shortname.'/view/';
         return $view_path;
     }
 
-    static public function getURLWithParams($url, $params){
+    /**
+     * Get URL with params
+     * Build URL with params given an array
+     * @param str $url
+     * @param array $params
+     * @return str URL
+     */
+    public static function getURLWithParams($url, $params){
         $param_str = '';
         foreach ($params as $key=>$value) {
             $param_str .= $key .'=' . $value.'&';
@@ -84,4 +105,3 @@ class Utils {
         return $url;
     }
 }
-?>

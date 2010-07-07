@@ -9,24 +9,29 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 
 class TestOfUtils extends ThinkTankBasicUnitTestCase {
 
-    function TestOfUtils() {
+    public function __construct() {
         $this->UnitTestCase('Utils class test');
     }
 
-    function setUp() {
+    public function setUp() {
     }
 
-    function tearDown() {
+    public function tearDown() {
     }
 
-    function testgetPluginViewDirectory() {
+    public function testgetPluginViewDirectory() {
         global $THINKTANK_CFG;
         $path = Utils::getPluginViewDirectory('twitter');
         $this->assertEqual($path, $THINKTANK_CFG['source_root_path'].'webapp/plugins/twitter/view/');
 
         $path = Utils::getPluginViewDirectory('sweetmaryjane');
         $this->assertEqual($path, $THINKTANK_CFG['source_root_path'].'webapp/plugins/sweetmaryjane/view/');
+    }
 
-
+    public function testGetPercentage(){
+        $this->assertEqual(Utils::getPercentage(50, 100), 50);
+        $this->assertEqual(Utils::getPercentage(250, 1000), 25);
+        $this->assertEqual(Utils::getPercentage('not', 'anumber'), 0);
+        $this->assertEqual(Utils::getPercentage(150, 50), 300);
     }
 }

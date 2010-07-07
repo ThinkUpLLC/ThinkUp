@@ -31,7 +31,7 @@ class FlickrAPIAccessor {
 
             $this->logger->logStatus("Flickr API call: $api_call", get_class($this));
 
-            //$resp = Utils::curl_get_file_contents($api_call);
+            //$resp = Utils::getURLContents($api_call);
 
             $api_call = str_replace('http://', '', $api_call);
             $api_call = str_replace('/', '_', $api_call);

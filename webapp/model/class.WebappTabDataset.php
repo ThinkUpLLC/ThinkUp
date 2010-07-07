@@ -28,7 +28,7 @@ class WebappTabDataset {
      *
      * @var array String of allowed DAO names
      */
-    var $FETCHING_DAOS = array('FollowDAO', 'PostDAO', 'LinkDAO');
+    var $FETCHING_DAOS = array('FollowDAO', 'PostDAO', 'LinkDAO', 'FollowerCountDAO');
 
     /**
      * Constructor

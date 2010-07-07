@@ -64,7 +64,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
 
             $response = '';
             $start = null;
-            $timeout = 5000; //seconds
+            $timeout = 5000; //milliseconds
             while(!self::safe_feof($sock, $start) && (microtime(true) - $start) < $timeout) {
                 $response .= fgets($sock, 128);
             }
