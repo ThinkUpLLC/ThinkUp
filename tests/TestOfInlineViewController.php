@@ -4,6 +4,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/interface.Controller.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankAuthController.php';
@@ -126,9 +127,12 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
     }
 
     public function testControlLoggedInWithReqdParams() {
+        //must be logged in
         $_SESSION['user'] = 'me@example.com';
+        //required params
         $_GET['u'] = 'ev';
         $_GET['n'] = 'twitter';
+        //no d param specified
         $controller = new InlineViewController(true);
         $results = $controller->go();
 
@@ -143,5 +147,63 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
         $this->assertEqual($controller->getCacheKeyString(),
         $config->getValue('source_root_path').
        'webapp/plugins/twitter/view/twitter.inline.view.tpl-me@example.com-ev-twitter-tweets-all', 'Cache key');
+    }
+
+    public function testControlLoggedInPosts() {
+        //must be logged in
+        $_SESSION['user'] = 'me@example.com';
+        //required params
+        $_GET['u'] = 'ev';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = 'tweets-all';
+        $controller = new InlineViewController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All', 'Header');
+        $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'All tweets', 'Description');
+        $this->assertIsA($v_mgr->getTemplateDataItem('all_tweets'), 'array', 'Array of tweets');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('all_tweets')), 15, '15 posts in listing');
+
+        $config = Config::getInstance();
+        $this->assertEqual($controller->getCacheKeyString(),
+        $config->getValue('source_root_path').
+       'webapp/plugins/twitter/view/twitter.inline.view.tpl-me@example.com-ev-twitter-tweets-all', 'Cache key');
+    }
+
+    public function testControlLoggedInPeople() {
+        //first, add some people
+        //@TODO convert this to use the FixtureBuilder
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (930061, 'ginatrapani',
+        'Gina Trapani', 'avatar.jpg', '1/1/2005');";
+        $this->db->exec($q);
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (123456, 'anildash',
+        'Anil Dash', 'avatar.jpg', '1/1/2005');";
+        $this->db->exec($q);
+        $follower_builders = array();
+        $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'13'));
+        $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'123456', 'follower_id'=>'13'));
+
+        //must be logged in
+        $_SESSION['user'] = 'me@example.com';
+        //required params
+        $_GET['u'] = 'ev';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = 'friends-mostactive';
+        $controller = new InlineViewController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'Chatterboxes', 'Header');
+        $this->assertEqual($v_mgr->getTemplateDataItem('description'), '', 'Description');
+        $this->assertIsA($v_mgr->getTemplateDataItem('people'), 'array', 'Array of users');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('people')), 2, '2 users in listing');
+
+        $config = Config::getInstance();
+        $this->assertEqual($controller->getCacheKeyString(),
+        $config->getValue('source_root_path').
+       'webapp/plugins/twitter/view/twitter.inline.view.tpl-me@example.com-ev-twitter-friends-mostactive', 'Cache key');
     }
 }

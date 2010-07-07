@@ -176,35 +176,35 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         //Most Active Friends
         $motab = new WebappTab("friends-mostactive", 'Chatterboxes', '', $twitter_data_tpl);
         $motabds = new WebappTabDataset('people', 'FollowDAO', "getMostActiveFollowees", array(
-        $instance->network_user_id, 15));
+        $instance->network_user_id, 'twitter', 15));
         $motab->addDataset($motabds);
         array_push($child_tabs, $motab);
 
         //Least Active Friends
         $latab = new WebappTab("friends-leastactive", 'Deadbeats', '', $twitter_data_tpl);
         $latabds = new WebappTabDataset("people", 'FollowDAO', "getLeastActiveFollowees", array(
-        $instance->network_user_id, 15));
+        $instance->network_user_id, 'twitter', 15));
         $latab->addDataset($latabds);
         array_push($child_tabs, $latab);
 
         //Popular friends
         $poptab = new WebappTab("friends-mostfollowed", 'Popular', '', $twitter_data_tpl);
         $poptabds = new WebappTabDataset("people", 'FollowDAO', "getMostFollowedFollowees", array(
-        $instance->network_user_id, 15));
+        $instance->network_user_id, 'twitter', 15));
         $poptab->addDataset($poptabds);
         array_push($child_tabs, $poptab);
 
         //Former Friends
         $fftab = new WebappTab("friends-former", "Former", '', $twitter_data_tpl);
         $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowees", array($instance->network_user_id,
-        15));
+        'twitter', 15));
         $fftab->addDataset($fftabds);
         array_push($child_tabs, $fftab);
 
         //Not Mutual Friends
         $nmtab = new WebappTab("friends-notmutual", "Not Mutual", '', $twitter_data_tpl);
         $nmtabds = new WebappTabDataset("people", 'FollowDAO', "getFriendsNotFollowingBack", array(
-        $instance->network_user_id));
+        'twitter', $instance->network_user_id));
         $nmtab->addDataset($nmtabds);
         array_push($child_tabs, $nmtab);
 
@@ -236,7 +236,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $mftab = new WebappTab("followers-mostfollowed", 'Most-followed', 'Followers with most followers',
         $twitter_data_tpl);
         $mftabds = new WebappTabDataset("people", 'FollowDAO', "getMostFollowedFollowers", array(
-        $instance->network_user_id, 15));
+        $instance->network_user_id, 'twitter', 15));
         $mftab->addDataset($mftabds);
         array_push($child_tabs, $mftab);
 
@@ -244,21 +244,21 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $lltab = new WebappTab("followers-leastlikely", "Least Likely",
         'Followers with the greatest follower-to-friend ratio', $twitter_data_tpl);
         $lltabds = new WebappTabDataset("people", 'FollowDAO', "getLeastLikelyFollowers", array(
-        $instance->network_user_id, 15));
+        $instance->network_user_id, 'twitter', 15));
         $lltab->addDataset($lltabds);
         array_push($child_tabs, $lltab);
 
         //Former followers
         $fftab = new WebappTab("followers-former", "Former", '', $twitter_data_tpl);
         $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowers", array($instance->network_user_id,
-        15));
+        'twitter', 15));
         $fftab->addDataset($fftabds);
         array_push($child_tabs, $fftab);
 
         //Earliest
         $eftab = new WebappTab("followers-earliest", "Earliest Joiners", '', $twitter_data_tpl);
         $eftabds = new WebappTabDataset("people", 'FollowDAO', "getEarliestJoinerFollowers", array(
-        $instance->network_user_id, 15));
+        $instance->network_user_id, 'twitter', 15));
         $eftab->addDataset($eftabds);
         array_push($child_tabs, $eftab);
 
