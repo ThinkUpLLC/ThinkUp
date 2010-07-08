@@ -23,7 +23,7 @@ class Instance {
     var $is_active = true;
     var $network;
 
-    function Instance($r = false) {
+    public function __construct($r = false) {
         if ($r){
             $this->id = $r['id'];
             $this->network_username = $r['network_username'];
@@ -65,4 +65,3 @@ class Instance {
         }
     }
 }
-?>

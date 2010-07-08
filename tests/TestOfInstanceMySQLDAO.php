@@ -1,22 +1,24 @@
 <?php
 require_once dirname(__FILE__).'/config.tests.inc.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-require_once $SOURCE_ROOT_PATH.'extlib/Loremipsum/LoremIpsum.class.php';
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.InstanceMySQLDAO.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'extlib/Loremipsum/LoremIpsum.class.php';
 
 class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
     protected $DAO;
-    function TestOfInstanceMySQLDAO() {
+
+    public function __construct() {
         $this->UnitTestCase('InstanceMySQLDAO class test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->DAO = new InstanceMySQLDAO();
         $q  = "INSERT INTO tt_instances ";
@@ -35,14 +37,14 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         PDODAO::$PDO->exec($q);
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 
-    function testInsert() {
+    public function testInsert() {
         $result = $this->DAO->insert(11, 'ev');
         $this->assertEqual($result, 6);
-        $i = $this->DAO->getByUserId(11);
+        $i = $this->DAO->getByUserIdOnNetwork(11, 'twitter');
         $this->assertEqual($i->network_user_id, 11);
         $this->assertEqual($i->network_viewer_id, 11);
         $this->assertEqual($i->network_username, 'ev');
@@ -50,14 +52,14 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
 
         $result = $this->DAO->insert(14, 'The White House Facebook Page', 'facebook', 10);
         $this->assertEqual($result, 7);
-        $i = $this->DAO->getByUserId(14);
+        $i = $this->DAO->getByUserIdOnNetwork(14, 'facebook');
         $this->assertEqual($i->network_user_id, 14);
         $this->assertEqual($i->network_viewer_id, 10);
         $this->assertEqual($i->network_username, 'The White House Facebook Page');
         $this->assertEqual($i->network, 'facebook');
     }
 
-    function testGetFreshestByOwnerId(){
+    public function testGetFreshestByOwnerId(){
         //try one
         $result = $this->DAO->getFreshestByOwnerId(2);
         $this->assertIsA($result, "Instance");
@@ -70,16 +72,16 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertNull($result);
     }
 
-    function testGetInstanceOneByLastRun(){
+    public function testGetInstanceOneByLastRun(){
         //Try Newest
-        $result = $this->DAO->getInstanceOneByLastRun('DESC');
+        $result = $this->DAO->getInstanceFreshestOne();
         $this->assertIsA($result, "Instance");
         $this->assertEqual($result->network_username, 'jill');
         $this->assertEqual($result->network_user_id, 12);
         $this->assertEqual($result->network_viewer_id, 12);
 
         //Try Oldest
-        $result = $this->DAO->getInstanceOneByLastRun('ASC');
+        $result = $this->DAO->getInstanceStalestOne();
         $this->assertIsA($result, "Instance");
         $this->assertEqual($result->network_username, 'jack');
         $this->assertEqual($result->network_user_id, 10);
@@ -89,11 +91,11 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         PDODAO::$PDO->exec($q);
 
         //Try empty
-        $result = $this->DAO->getInstanceOneByLastRun('ASC');
+        $result = $this->DAO->getInstanceStalestOne();
         $this->assertNull($result);
     }
 
-    function testGetByUsername() {
+    public function testGetByUsername() {
         //try one user
         $result = $this->DAO->getByUsername('jill');
         $this->assertIsA($result, "Instance");
@@ -113,20 +115,20 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertNull($result);
     }
 
-    function testGetByUserId() {
+    public function testGetByUserId() {
         // data do exist
-        $result = $this->DAO->getByUserId(10);
+        $result = $this->DAO->getByUserIdOnNetwork(10, 'twitter');
         $this->assertIsA($result, "Instance");
         $this->assertEqual($result->network_username, 'jack');
         $this->assertEqual($result->network_user_id, 10);
         $this->assertEqual($result->network_viewer_id, 10);
 
         // data do not exist
-        $result = $this->DAO->getByUserId(11);
+        $result = $this->DAO->getByUserIdOnNetwork(11, 'twitter');
         $this->assertNull($result);
     }
 
-    function testGetAllInstances(){
+    public function testGetAllInstances(){
         //getAllInstances($order = "DESC", $only_active = false, $network = "twitter")
         // Test, default settings
         $result = $this->DAO->getAllInstances();
@@ -200,7 +202,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
 
     }
 
-    function testGetByOwner(){
+    public function testGetByOwner(){
         $data = array(
             'id'=>2,
             'user_name'=>'steven',
@@ -262,7 +264,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual(count($result), 0);
     }
 
-    function testGetByOwnerAndNetwork(){
+    public function testGetByOwnerAndNetwork(){
         $data = array(
             'id'=>2,
             'user_name'=>'steven',
@@ -339,7 +341,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
 
     }
 
-    function testSetPublic(){
+    public function testSetPublic(){
         $result = $this->DAO->setPublic(1, true);
         $this->assertEqual($result, 1, "Count UpdateToTrue (%s)");
         //Testing if it really works
@@ -357,7 +359,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertFalse($result->is_public);
     }
 
-    function testSetActive(){
+    public function testSetActive(){
         $result = $this->DAO->setActive(1, false);
         $this->assertEqual($result, 1, "Count UpdateToFalse (%s)");
         //Testing if it really works
@@ -375,7 +377,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertTrue($result->is_active);
     }
 
-    function testSave(){
+    public function testSave(){
         //First we need to generate some more TestData(tm)
         $loremIpsum = new LoremIpsumGenerator();
         //First in line is some posts 250 Randomly generated ones, some with mentions.
@@ -449,7 +451,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $i->is_archive_loaded_replies = 1;
 
         //First make sure that last run data is correct before we start.
-        $result = $this->DAO->getInstanceOneByLastRun('DESC');
+        $result = $this->DAO->getInstanceFreshestOne();
         $this->assertIsA($result, "Instance");
         $this->assertEqual($result->network_username, 'jill');
         $this->assertEqual($result->network_user_id, 12);
@@ -475,7 +477,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertTrue($result->is_archive_loaded_replies);
 
         //Check if it is the update updated last Run.
-        $result = $this->DAO->getInstanceOneByLastRun('DESC');
+        $result = $this->DAO->getInstanceFreshestOne();
         $this->assertIsA($result, "Instance");
         $this->assertEqual($result->network_username, 'jack');
         $this->assertEqual($result->network_user_id, 10);
@@ -486,9 +488,9 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         //earliest_post_in_system
     }
 
-    function testUpdateLastRun(){
+    public function testUpdateLastRun(){
         //First make sure that the data is correct before we start.
-        $result = $this->DAO->getInstanceOneByLastRun('DESC');
+        $result = $this->DAO->getInstanceFreshestOne();
         $this->assertIsA($result, "Instance");
         $this->assertEqual($result->network_username, 'jill');
         $this->assertEqual($result->network_user_id, 12);
@@ -499,24 +501,24 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($result, 1);
 
         //Check if it is the update.
-        $result = $this->DAO->getInstanceOneByLastRun('DESC');
+        $result = $this->DAO->getInstanceFreshestOne();
         $this->assertIsA($result, "Instance");
         $this->assertEqual($result->network_username, 'jack');
         $this->assertEqual($result->network_user_id, 10);
         $this->assertEqual($result->network_viewer_id, 10);
     }
 
-    function testIsUserConfigured(){
+    public function testIsUserConfigured(){
         // Test user that is Configured
-        $result = $this->DAO->isUserConfigured("jack");
+        $result = $this->DAO->isUserConfigured("jack", "twitter");
         $this->assertTrue($result);
 
         // Test non-existing user
-        $result = $this->DAO->isUserConfigured("no one");
+        $result = $this->DAO->isUserConfigured("no one", "facebook");
         $this->assertFalse($result);
     }
 
-    function testGetByUserAndViewerId() {
+    public function testGetByUserAndViewerId() {
         $this->DAO = new InstanceMySQLDAO();
         $q  = "INSERT INTO tt_instances ";
         $q .= "(`network_user_id`, `network_username`, `network`, ";
@@ -524,14 +526,14 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
         PDODAO::$PDO->exec($q);
 
-        $result = $this->DAO->getByUserAndViewerId(10, 10);
+        $result = $this->DAO->getByUserAndViewerId(10, 10, 'twitter');
         $this->assertEqual($result->network_username, 'jack');
 
-        $result = $this->DAO->getByUserAndViewerId(17, 15);
+        $result = $this->DAO->getByUserAndViewerId(17, 15, 'facebook');
         $this->assertEqual($result->network_username, 'Jillian Micheals');
     }
 
-    function testGetByViewerId() {
+    public function testGetByViewerId() {
         $this->DAO = new InstanceMySQLDAO();
         $q  = "INSERT INTO tt_instances ";
         $q .= "(`network_user_id`, `network_username`, `network`, ";
@@ -544,7 +546,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($result[1]->network_username, 'Jillian Micheals');
     }
 
-    function testGetByUsernameOnNetwork() {
+    public function testGetByUsernameOnNetwork() {
         $this->DAO = new InstanceMySQLDAO();
         $q  = "INSERT INTO tt_instances ";
         $q .= "(`network_user_id`, `network_username`, `network`, ";

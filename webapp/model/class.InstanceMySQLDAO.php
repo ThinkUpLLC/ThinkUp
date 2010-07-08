@@ -19,11 +19,12 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
 
     /**
      * Alias for a average reply-count calculating portion of a query
-     * 
+     *
      * @return str query
      */
     protected function getAverageReplyCount() {
-        return "round(total_replies_in_system/(datediff(curdate(), earliest_reply_in_system)), 2) as avg_replies_per_day";
+        return "round(total_replies_in_system/(datediff(curdate(), earliest_reply_in_system)), 2) AS
+        avg_replies_per_day";
     }
 
     public function getAllInstancesStalestFirst() {
@@ -65,7 +66,12 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getDataRowAsObject($ps, "Instance");
     }
 
-    public function getInstanceOneByLastRun($order) {
+    /**
+     * Get instance based on sort order
+     * @param str $order "ASC" or "DESC"
+     * @return array Instance objects
+     */
+    private function getInstanceOneByLastRun($order) {
         $q  = " SELECT *, ".$this->getAverageReplyCount();
         $q .= " FROM #prefix#instances ";
         $q .= " ORDER BY crawler_last_run ";
@@ -75,13 +81,14 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getDataRowAsObject($ps, "Instance");
     }
 
-    public function getByUsername($username) {
+    public function getByUsername($username, $network = "twitter") {
         $q  = " SELECT * , ".$this->getAverageReplyCount();
         $q .= " FROM #prefix#instances ";
-        $q .= " WHERE network_username = :username ";
+        $q .= " WHERE network_username = :username AND network = :network";
         $q .= " LIMIT 1 ";
         $vars = array(
-            ':username'=>$username
+            ':username'=>$username,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
 
@@ -102,12 +109,13 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getDataRowAsObject($ps, "Instance");
     }
 
-    public function getByUserId($network_user_id) {
+    public function getByUserIdOnNetwork($network_user_id, $network) {
         $q  = " SELECT * , ".$this->getAverageReplyCount();
         $q .= " FROM #prefix#instances ";
-        $q .= " WHERE network_user_id = :uid ";
+        $q .= " WHERE network_user_id = :uid AND network = :network";
         $vars = array(
-            ':uid'=>$network_user_id
+            ':uid'=>$network_user_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
 
@@ -202,7 +210,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getUpdateCount($ps);
     }
 
-    public function save($instance_object, $user_xml_total_posts_by_owner, $logger = false, $api = false) {
+    public function save($instance_object, $user_xml_total_posts_by_owner, $logger = false) {
         $i = $instance_object;
         $ot = ($user_xml_total_posts_by_owner != '' ? true : false);
         $lsi = ($i->last_status_id != "" ? true : false);
@@ -267,37 +275,41 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getUpdateCount($ps);
     }
 
-    public function isUserConfigured($username) {
+    public function isUserConfigured($username, $network) {
         $q  = " SELECT network_username ";
         $q .= " FROM #prefix#instances ";
-        $q .= " WHERE network_username = :username ";
+        $q .= " WHERE network_username = :username AND network = :network ";
         $q .= " LIMIT 1 ";
         $vars = array(
             ':username'=>$username,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
 
         return $this->getDataIsReturned($ps);
     }
 
-    public function getByUserAndViewerId($network_user_id, $viewer_id) {
+    public function getByUserAndViewerId($network_user_id, $viewer_id, $network = 'facebook') {
         $q = "SELECT * , ".$this->getAverageReplyCount()." ";
         $q .= "FROM #prefix#instances ";
-        $q .= "WHERE network_user_id = :network_user_id AND network_viewer_id = :viewer_id";
+        $q .= "WHERE network_user_id = :network_user_id AND network_viewer_id = :viewer_id ";
+        $q .= "AND network = :network";
         $vars = array(
             ':network_user_id'=>$network_user_id,
             ':viewer_id'=>$viewer_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, "Instance");
     }
 
-    public function getByViewerId($viewer_id) {
+    public function getByViewerId($viewer_id, $network = 'facebook') {
         $q = "SELECT * , ".$this->getAverageReplyCount()." ";
         $q .= "FROM #prefix#instances ";
-        $q .= "WHERE network_viewer_id = :viewer_id";
+        $q .= "WHERE network_viewer_id = :viewer_id AND network = :network ";
         $vars = array(
             ':viewer_id'=>$viewer_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, "Instance");

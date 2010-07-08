@@ -68,7 +68,7 @@ class PrivateDashboardController extends ThinkTankAuthController {
                 $instance = $instance_dao->getFreshestByOwnerId($owner->id);
             }
 
-            if ($instance_dao->isUserConfigured($instance_user) ){
+            if ($instance_dao->isUserConfigured($instance_user, $instance_user_network) ){
                 $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                 if ( !$owner_instance_dao->doesOwnerHaveAccess($owner, $instance_user) ) {
                     $this->addToView('error','Insufficient privileges. <a href="/">Back</a>.');

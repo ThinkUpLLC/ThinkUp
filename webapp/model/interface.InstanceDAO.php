@@ -8,30 +8,25 @@
 interface InstanceDAO {
     /**
      * Get all active instances, by last run oldest first limited to a network
-     *
      * @param str $network name of network to limit to
-     *
      * @return array with Instance
      */
     public function getAllActiveInstancesStalestFirstByNetwork( $network = "twitter" );
 
     /**
      * Get all active instances, by last run oldest first
-     *
      * @return array with Instance
      */
     public function getAllInstancesStalestFirst();
 
     /**
      * Gets the instance that ran last.
-     *
      * @return Instance Freshest instance
      */
     public function getInstanceFreshestOne();
 
     /**
      * Gets the instance that ran the longest time ago
-     *
      * @return Instance Stalest Instance
      */
     public function getInstanceStalestOne();
@@ -46,18 +41,54 @@ interface InstanceDAO {
      */
     public function insert($network_user_id, $network_username, $network = "twitter", $viewer_id = false);
 
+    /**
+     * Get freshest (most recently updated) instance by owner
+     * @param int $owner_id
+     * @return Instance
+     */
     public function getFreshestByOwnerId($owner_id);
 
-    public function getInstanceOneByLastRun($order);
+    /**
+     * Get by username -- DEPRECATED
+     * Use getByUsernameOnNetwork instead
+     * This method assumes the network is Twitter
+     * @param str $username
+     * @param str $network defaults to 'twitter'
+     * @return Instance
+     */
+    public function getByUsername($username, $network = "twitter");
 
-    public function getByUsername($username);
-
+    /**
+     * Get by username and network
+     * @param str $username
+     * @param str $network
+     * @return Instance
+     */
     public function getByUsernameOnNetwork($username, $network);
 
-    public function getByUserId($network_user_id);
+    /**
+     * Get by user ID and network
+     * @param str $network_user_id
+     * @param str $network
+     * @return Instance
+     */
+    public function getByUserIdOnNetwork($network_user_id, $network);
 
+    /**
+     * Get all instances
+     * @param str $order 'DESC' or 'ASC'
+     * @param bool $only_active Only active instances
+     * @param str $network
+     * @return array Instances
+     */
     public function getAllInstances($order = "DESC", $only_active = false, $network = "twitter");
 
+    /**
+     * Get instance by owner
+     * @param Owner $owner
+     * @param bool $force_not_admin Override owner's admin status
+     * @return array Instance objects
+     */
     public function getByOwner($owner, $force_not_admin = false);
 
     /**
@@ -85,13 +116,41 @@ interface InstanceDAO {
      */
     public function setActive($instance_id, $active);
 
-    public function save($instance_object, $user_xml_total_posts_by_owner, $logger = false, $api = false);
+    /**
+     * Save instance
+     * @param Instance $instance_object
+     * @param int $user_xml_total_posts_by_owner
+     * @param Logger $logger
+     */
+    public function save($instance_object, $user_xml_total_posts_by_owner, $logger = false);
 
+    /**
+     * Update instance last crawler run to NOW()
+     * @param int $id
+     */
     public function updateLastRun($id);
 
-    public function isUserConfigured($username);
+    /**
+     * Check if a user on a network is configured
+     * @param str $username
+     * @param str $network
+     * @return bool
+     */
+    public function isUserConfigured($username, $network);
 
-    public function getByUserAndViewerId($network_user_id, $viewer_id);
+    /**
+     * Get instance by user and viewer ID
+     * @param int $network_user_id
+     * @param int $viewer_id
+     * @param str $network Defaults to 'facebook'
+     */
+    public function getByUserAndViewerId($network_user_id, $viewer_id, $network = "facebook");
 
-    public function getByViewerId($viewer_id);
+    /**
+     * Get instance by viewer ID on a network
+     * @param int $viewer_id
+     * @param str $network
+     * @return Instance
+     */
+    public function getByViewerId($viewer_id, $network = "facebook");
 }

@@ -46,7 +46,7 @@ if (isset($_GET['sessionKey']) && isset($fb_user) && $fb_user > 0) {
 
     $owner = $od->getByEmail($_SESSION['user']);
 
-    $i = $id->getByUserId($fb_user);
+    $i = $id->getByUserIdOnNetwork($fb_user, 'facebook');
     if (isset($i)) {
         echo "Instance exists<br />";
         $oi = $oid->get($owner->id, $i->id);
@@ -60,7 +60,7 @@ if (isset($_GET['sessionKey']) && isset($fb_user) && $fb_user > 0) {
         $id->insert($fb_user, $fb_username, 'facebook');
         echo "Created instance";
 
-        $i = $id->getByUserId($fb_user);
+        $i = $id->getByUserIdOnNetwork($fb_user, 'facebook');
         $oid->insert($owner->id, $i->id, $session_key);
         echo "Created owner instance.<br />";
     }

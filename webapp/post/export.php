@@ -14,7 +14,7 @@ $owner = $od->getByEmail($_SESSION['user']);
 $pd = DAOFactory::getDAO('PostDAO');
 $id = DAOFactory::getDAO('InstanceDAO');
 
-if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u']) ){
+if ( isset($_REQUEST['u']) && $id->isUserConfigured($_REQUEST['u'], 'twitter') ){
     $username = $_REQUEST['u'];
     $oid = DAOFactory::getDAO('OwnerInstanceDAO');
     if ( !$oid->doesOwnerHaveAccess($owner, $username) ) {

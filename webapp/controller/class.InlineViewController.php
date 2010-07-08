@@ -61,7 +61,7 @@ class InlineViewController extends ThinkTankAuthController {
 
             $continue = true;
             if (!$this->is_missing_param) {
-                if ( $instance_dao->isUserConfigured($_GET['u'])) {
+                if ( $instance_dao->isUserConfigured($_GET['u'], $_GET['n'])) {
                     $username = $_GET['u'];
                     $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                     if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $username)) {

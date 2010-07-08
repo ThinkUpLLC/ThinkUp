@@ -72,7 +72,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
                 $crawler->cleanUpFollows();
 
                 // Save instance
-                $id->save($crawler->instance, $crawler->owner_object->post_count, $logger, $api);
+                $id->save($crawler->instance, $crawler->owner_object->post_count, $logger);
             }
         }
 

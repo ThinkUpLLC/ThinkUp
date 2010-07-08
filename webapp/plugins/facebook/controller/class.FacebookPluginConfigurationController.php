@@ -102,7 +102,7 @@ class FacebookPluginConfigurationController extends ThinkTankAuthController {
 
     protected function insertPage($fb_page_id, $viewer_id, $owner_id, $existing_instance_id, $fb_page_name, $messages) {
         //check if instance exists
-        $i = $this->id->getByUserAndViewerId($fb_page_id, $viewer_id);
+        $i = $this->id->getByUserAndViewerId($fb_page_id, $viewer_id, 'facebook');
         if ($i == null) {
             $instance_id = $this->id->insert($fb_page_id, $fb_page_name, "facebook page", $viewer_id);
             if ($instance_id) {

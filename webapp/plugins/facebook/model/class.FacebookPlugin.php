@@ -20,7 +20,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $crawler->fetchInstanceUserInfo($instance->network_user_id, $session_key);
             $crawler->fetchUserPostsAndReplies($instance->network_user_id, $session_key);
 
-            $id->save($crawler->instance, $crawler->owner_object->post_count, $logger, $fb);
+            $id->save($crawler->instance, $crawler->owner_object->post_count, $logger);
         }
 
         //crawl Facebook pages
@@ -36,7 +36,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $crawler = new FacebookCrawler($instance, $fb);
 
             $crawler->fetchPagePostsAndReplies($instance->network_user_id, $instance->network_viewer_id, $session_key);
-            $id->save($crawler->instance, 0, $logger, $fb);
+            $id->save($crawler->instance, 0, $logger);
 
         }
         $logger->close(); # Close logging

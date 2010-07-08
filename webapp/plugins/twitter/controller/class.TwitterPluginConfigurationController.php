@@ -39,7 +39,7 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
             $logger = Logger::getInstance();
 
             //Check user exists and is public
-            $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret, 
+            $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret,
             $config->getValue('archive_limit'));
             $api_call = str_replace("[id]", $_GET['twitter_username'], $api->cURL_source['show_user']);
             list($cURL_status, $data) = $api->apiRequestFromWebapp($api_call);
@@ -54,7 +54,7 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
                 if (isset($user) && $user["is_protected"] == 'false') {
                     // if so, add to instances table and owners table
 
-                    $i = $id->getByUsername($_GET['twitter_username']);
+                    $i = $id->getByUsernameOnNetwork($_GET['twitter_username'], 'twitter');
                     $oid = DAOFactory::getDAO('OwnerInstanceDAO');;
 
                     $msg = '';
@@ -66,7 +66,7 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
                     } else { //Instance does not exist
                         $id->insert($user["user_id"], $user["user_name"]);
 
-                        $i = $id->getByUsername($user["user_name"]);
+                        $i = $id->getByUsernameOnNetwork($user["user_name"], 'twitter');
                         $oid->insert($this->owner->id, $i->id, '', '');
                     }
                     $this->addToView('successmsg', $_GET['twitter_username']." has been added to ThinkTank.");
@@ -92,7 +92,7 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
             $oauthorize_link = $to->getAuthorizeURL($token);
         } else {
             //set error message here
-            $this->addToView('errormsg', 
+            $this->addToView('errormsg',
             "Unable to obtain OAuth token. Check your Twitter consumer key and secret configuration.");
             $oauthorize_link = '';
         }
