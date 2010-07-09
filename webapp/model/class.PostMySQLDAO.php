@@ -398,6 +398,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if (!$include_replies) {
             $q .= " AND (in_reply_to_post_id IS NULL OR in_reply_to_post_id = 0) ";
         }
+        if ($order_by == 'reply_count_cache') {
+            $q .= "AND reply_count_cache > 0 ";
+        }
+        if ($order_by == 'retweet_count_cache') {
+            $q .= "AND retweet_count_cache > 0 ";
+        }
         $q .= " ORDER BY ".$order_by." ".$direction." ";
         $q .= " LIMIT :limit";
 
@@ -414,21 +420,63 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
-    public function getAllPostsByUsername($username) {
-        $q = "SELECT p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
-        $q .= "FROM #prefix#posts p ";
-        $q .= "WHERE author_username = :username ";
-        $q .= "ORDER BY pub_date ASC";
+    /**
+     * Get all posts by a given user with configurable order by field and direction
+     * @param str $author_username
+     * @param str $network Default "twitter"
+     * @param int|bool $count False if no limit (ie, return all rows)
+     * @param str $order_by field name Default "pub_date"
+     * @return array Posts with link object set
+     */
+    private function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=false,
+    $order_by="pub_date", $in_last_x_days = 0) {
+        if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
+            $order_by="pub_date";
+        }
         $vars = array(
-            ':username'=>$username
+            ':author_username'=>$author_username,
+            ':network'=>$network
         );
+        $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "LEFT JOIN #prefix#links l ";
+        $q .= "ON p.post_id = l.post_id ";
+        $q .= "WHERE author_username = :author_username AND network = :network ";
+
+        if ($in_last_x_days > 0) {
+            $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
+            $vars[':in_last_x_days'] = (int)$in_last_x_days;
+        }
+        if ($order_by == 'reply_count_cache') {
+            $q .= "AND reply_count_cache > 0 ";
+        }
+        if ($order_by == 'retweet_count_cache') {
+            $q .= "AND retweet_count_cache > 0 ";
+        }
+        $q .= " ORDER BY ".$order_by." DESC ";
+        if ($count) {
+            $q .= " LIMIT :limit";
+            $vars[':limit'] = (int)$count;
+        }
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
         foreach ($all_rows as $row) {
-            $posts[] = new Post($row);
+            $posts[] = $this->setPostWithLink($row);
         }
         return $posts;
+    }
+
+    public function getAllPostsByUsername($username) {
+        return $this->getAllPostsByUsernameOrderedBy($username);
+    }
+
+    public function getMostRepliedToPostsInLastWeek($username, $network, $count) {
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'reply_count_cache', 7);
+    }
+
+    public function getMostRetweetedPostsInLastWeek($username, $network, $count) {
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'retweet_count_cache', 7);
     }
 
     public function getTotalPostsByUser($user_id) {

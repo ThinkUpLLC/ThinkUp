@@ -43,20 +43,8 @@ class PublicTimelineController extends ThinkTankController implements Controller
         $this->setViewTemplate('public.tpl');
         $this->addToView('logo_link', 'public.php');
 
-        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
-            $this->current_page = $_GET['page'];
-        } else {
-            $_GET['page'] = 1;
-            $this->current_page = 1;
-        }
-        if ($this->current_page > 1) {
-            $this->addToView('prev_page', $this->current_page - 1);
-        }
-
-        $this->addToView('current_page', $this->current_page);
-
         //if $_GET["t"], load individual post + replies + retweets
-        //TODO: change the t (for tweet) to p (for post)
+        //TODO: deprecate the t (for tweet) to p (for post) -- may affect existing permalinks
         if (isset($_GET['t']) && $this->post_dao->isPostByPublicInstance($_GET['t'])) {
             if ($this->shouldRefreshCache()) {
                 $this->loadSinglePostThread($_GET['t']);
@@ -64,6 +52,10 @@ class PublicTimelineController extends ThinkTankController implements Controller
         } elseif (isset($_GET["v"])) { //else if $_GET["v"], display correct listing
             if ($this->shouldRefreshCache()) {
                 $this->loadPublicPostList($_GET["v"]);
+            }
+        } elseif (isset($_GET["u"]) && isset($_GET['n'])) { //else if $_GET["i"], display instance dashboard
+            if ($this->shouldRefreshCache()) {
+                $this->loadPublicInstanceDashboard($_GET["u"], $_GET['n']);
             }
         } else { //else default to public timeline list
             $_GET["v"] = 'timeline';
@@ -93,10 +85,71 @@ class PublicTimelineController extends ThinkTankController implements Controller
     }
 
     /**
+     * Load instance dashboard
+     * @param str $username
+     * @param str $network
+     */
+    private function loadPublicInstanceDashboard($username, $network) {
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $instance = $instance_dao->getByUsernameOnNetwork($username, $network);
+
+        if (isset($instance) && $instance->is_public) {
+            $this->addToView('controller_title', $instance->network_username . "'s Public Profile");
+
+            $this->addToView('instance', $instance);
+            //user
+            $user_dao = DAOFactory::getDAO('UserDAO');
+            $user = $user_dao->getDetails($instance->network_user_id);
+            $this->addToView('user_details', $user);
+
+            //posts
+            $most_replied_to_alltime = $this->post_dao->getMostRepliedToPosts($instance->network_user_id, 5);
+            $this->addToView('most_replied_to_alltime', $most_replied_to_alltime);
+            $most_retweeted_alltime = $this->post_dao->getMostRetweetedPosts($instance->network_user_id, 5);
+            $this->addToView('most_retweeted_alltime', $most_retweeted_alltime);
+            $most_replied_to_1wk = $this->post_dao->getMostRepliedToPostsInLastWeek($instance->network_username,
+            $instance->network, 5);
+            $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
+            $most_retweeted_1wk = $this->post_dao->getMostRetweetedPostsInLastWeek($instance->network_username,
+            $instance->network, 5);
+            $this->addToView('most_retweeted_1wk', $most_retweeted_1wk);
+
+            //follows
+            $follow_dao = DAOFactory::getDAO('FollowDAO');
+            $least_likely_followers = $follow_dao->getLeastLikelyFollowers($instance->network_user_id, 'twitter', 16);
+            $this->addToView('least_likely_followers', $least_likely_followers);
+
+            //follower count history
+            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+            $follower_count_history_by_day = $follower_count_dao->getHistory($instance->network_user_id, 'twitter',
+            'DAY');
+            $this->addToView('follower_count_history_by_day', $follower_count_history_by_day);
+            $follower_count_history_by_week = $follower_count_dao->getHistory($instance->network_user_id, 'twitter',
+            'WEEK');
+            $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
+        } else {
+            $this->addToView('errormsg', $username." on ".ucwords($network)." isn't set up 
+            on this ThinkTank installation.");
+        }
+    }
+
+    /**
      * Load view with appropriate public post list. Default to reverse chronological order.
      * @param string $list
      */
     private function loadPublicPostList($list) {
+        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+            $this->current_page = $_GET['page'];
+        } else {
+            $_GET['page'] = 1;
+            $this->current_page = 1;
+        }
+        if ($this->current_page > 1) {
+            $this->addToView('prev_page', $this->current_page - 1);
+        }
+
+        $this->addToView('current_page', $this->current_page);
+
         $totals = $this->post_dao->getTotalPagesAndPostsByPublicInstances($this->total_posts_per_page);
 
         switch ($list) {

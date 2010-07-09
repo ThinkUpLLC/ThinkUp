@@ -286,4 +286,22 @@ interface PostDAO {
      * @return array Posts with link set
      */
     public function getMostRepliedToPostsByPublicInstancesInLastWeek($page, $count);
+
+    /**
+     * Get specified number of most-replied-to posts by a username on a network
+     * @param str $username
+     * @param str $network
+     * @param int $count
+     * @return array Posts
+     */
+    public function getMostRepliedToPostsInLastWeek($username, $network, $count);
+
+    /**
+     * Get specified number of most-retweeted posts by a username on a network
+     * @param str $username
+     * @param str $network
+     * @param int $count
+     * @return array Posts
+     */
+    public function getMostRetweetedPostsInLastWeek($username, $network, $count);
 }

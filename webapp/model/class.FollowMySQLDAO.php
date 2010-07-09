@@ -226,14 +226,14 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
 
     //TODO: Remove hardcoded 10k follower threshold in query below
     public function getLeastLikelyFollowers($user_id, $network, $count = 20) {
-        $q  = " SELECT u.*, ROUND(100*friend_count/follower_count,4) ";
-        $q .= " AS LikelihoodOfFollow, ".$this->getAverageTweetCount()." ";
-        $q .= " FROM #prefix#users AS u INNER JOIN #prefix#follows AS f ";
-        $q .= " ON u.user_id = f.follower_id ";
-        $q .= " WHERE f.user_id = :userid AND f.network=:network AND f.network=u.network AND active=1 ";
-        $q .= " AND follower_count > 10000 AND friend_count > 0 ";
-        $q .= " ORDER BY LikelihoodOfFollow ASC, u.follower_count DESC ";
-        $q .= " LIMIT :count ;";
+        $q  = "SELECT u.*, ROUND(100*friend_count/follower_count,4) ";
+        $q .= "AS LikelihoodOfFollow, ".$this->getAverageTweetCount()." ";
+        $q .= "FROM #prefix#users AS u INNER JOIN #prefix#follows AS f ";
+        $q .= "ON u.user_id = f.follower_id ";
+        $q .= "WHERE f.user_id = :userid AND f.network=:network AND f.network=u.network AND active=1 ";
+        $q .= "AND follower_count > 10000 AND friend_count > 0 ";
+        $q .= "ORDER BY LikelihoodOfFollow ASC, u.follower_count DESC ";
+        $q .= "LIMIT :count ;";
         $vars = array(
             ':userid'=>$user_id, 
             ':network'=>$network,

@@ -18,6 +18,21 @@
   <div class="thinktank-canvas round-all container_24">
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
+      
+      {if isset($errormsg)}
+            <div class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+              <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
+                {$errormsg}
+              </p>
+            </div>
+          {/if}
+          {if isset($successmsg)}
+            <div class="success">
+                {$successmsg}
+            </div>
+          {/if}
+          
         {if $post and ($replies OR $retweets)}
           <div class="clearfix">
             <div class="grid_2 alpha">
@@ -77,6 +92,12 @@
               {/foreach}
             </div>
           {/if}
+        <div class="append prepend clearfix">
+          <a href="{$site_root}public.php" class="tt-button ui-state-default tt-button-icon-left ui-corner-all">
+            <span class="ui-icon ui-icon-circle-arrow-w"></span>
+            Back to the public timeline
+          </a>
+        </div>
         {else}
           &nbsp;
         {/if}
@@ -89,12 +110,81 @@
           {/foreach}
           {include file="_pagination.tpl"}
         {/if}
+
+
+        {if $instance}
+        <!--begin public user dashboard-->
+          {if $user_details}
+          <div class="clearfix">
+            <div class="grid_2 alpha">
+              <img src="{$user_details->avatar}" class="avatar2">
+            </div>
+            <div class="grid_19">
+              <img src="{$site_root_path}assets/img/social_icons/{$user_details->network}.png">
+              <span class="tweet">{$user_details->username}</span>
+            </div>
+         </div>
+         {/if}
+
+        {if $follower_count_history_by_day.history and $follower_count_history_by_week.history}
+<br /><br />
+<h2>Follower Count History</h2>
+        <table width="100%"><tr><td>
+        <img src="http://chart.apis.google.com/chart?chs=425x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$t.date} ({$t.count|number_format})|{/foreach}1:||&cht=ls&chco=0077CC&chd=t:{foreach from=$follower_count_history_by_day.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,76A4FB,0,0,0">
+        </td><td>
+        <img src="http://chart.apis.google.com/chart?chs=425x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$t.date} ({$t.count|number_format})|{/foreach}1:||&cht=ls&chco=0077CC&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,76A4FB,0,0,0">
+        </td></tr>
+        </table>
+        {/if}
+
+        {if $most_replied_to_1wk}
+<hr />
+<h2>This week's Most Replied-To</h2>
+          {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
+            {include file="_post.public.tpl" t=$t}
+          {/foreach}
+        {/if}
+
+        {if $least_likely_followers}
+<hr />
+<h2>Least Likely Followers</h2>
+            {foreach from=$least_likely_followers key=uid item=u name=foo}
+                <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}"><img src="{$u.avatar}"  height="48" width="48" /></a> 
+            {/foreach}
+        {/if}
+
+        {if $most_replied_to_1wk}
+<hr />
+<h2>This week's Most Retweeted</h2>
+          {foreach from=$most_retweeted_1wk key=tid item=t name=foo}
+            {include file="_post.public.tpl" t=$t}
+          {/foreach}
+        {/if}
+
+        {if $most_replied_to_alltime}
+<hr />
+<h2>All-Time Most Replied-To</h2>
+          {foreach from=$most_replied_to_alltime key=tid item=t name=foo}
+            {include file="_post.public.tpl" t=$t}
+          {/foreach}
+        {/if}
+
+        {if $most_retweeted_alltime}
+<hr />
+<h2>All-Time Most Retweeted</h2>
+          {foreach from=$most_retweeted_alltime key=tid item=t name=foo}
+            {include file="_post.public.tpl" t=$t}
+          {/foreach}
+        {/if}
+        
         <div class="append prepend clearfix">
           <a href="{$site_root}public.php" class="tt-button ui-state-default tt-button-icon-left ui-corner-all">
             <span class="ui-icon ui-icon-circle-arrow-w"></span>
             Back to the public timeline
           </a>
         </div>
+
+        {/if}
       </div>
     </div>
   </div> <!-- end .thinktank-canvas -->

@@ -28,11 +28,11 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Constructor
      */
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('PostMySQLDAO class test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $config = Config::getInstance();
         $this->prefix = $config->getValue('table_prefix');
@@ -109,9 +109,9 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
             $post_id = $counter + 40;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache) 
+            post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
             VALUES ($post_id, 18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 'This is image post $counter', 'Flickr', 
-            '2006-01-02 00:$pseudo_minute:00', 0, 0);";
+            '2006-01-02 00:$pseudo_minute:00', 0, 0, 'twitter');";
             PDODAO::$PDO->exec($q);
 
             $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image)
@@ -198,7 +198,8 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
         post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id) 
         VALUES (135, 20, 'user1', 'User 1', 'avatar.jpg', 
-        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0, 134);";
+        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 
+        0, 134);";
         PDODAO::$PDO->exec($q);
         //retweet 2
         $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
@@ -256,14 +257,14 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
 
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 
     /**
      * Test constructor
      */
-    function testConstructor() {
+    public function testConstructor() {
         $dao = new PostMySQLDAO();
         $this->assertTrue(isset($dao));
     }
@@ -271,7 +272,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getOrphanReplies
      */
-    function testGetOrphanReplies() {
+    public function testGetOrphanReplies() {
         $dao = new PostMySQLDAO();
         $replies = $dao ->getOrphanReplies('ev', 10, 'twitter');
         $this->assertEqual(sizeof($replies), 10);
@@ -285,7 +286,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getLikelyOrphansForParent
      */
-    function testGetLikelyOrphansForParent() {
+    public function testGetLikelyOrphansForParent() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getLikelyOrphansForParent('2006-03-01', 13, 'ev', 10);
         $this->assertEqual(sizeof($posts), 9);
@@ -295,7 +296,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getStrayRepliedToPosts
      */
-    function testGetStrayRepliedToPosts() {
+    public function testGetStrayRepliedToPosts() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getStrayRepliedToPosts(23);
         $this->assertEqual(sizeof($posts), 2);
@@ -306,7 +307,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test isPostByPublicInstance
      */
-    function testIsPostByPublicInstance() {
+    public function testIsPostByPublicInstance() {
         $dao = new PostMySQLDAO();
         //post by ev (public instance)
         $this->assertTrue($dao->isPostByPublicInstance(140));
@@ -317,7 +318,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getMostRepliedToPosts
      */
-    function testGetMostRepliedToPosts() {
+    public function testGetMostRepliedToPosts() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getMostRepliedToPosts(13, 10);
         $prev_count = $posts[0]->reply_count_cache;
@@ -331,7 +332,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getMostRetweetedPosts
      */
-    function testGetMostRetweetedPosts() {
+    public function testGetMostRetweetedPosts() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getMostRetweetedPosts(13, 10);
         $prev_count = $posts[0]->retweet_count_cache;
@@ -345,7 +346,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getAllReplies
      */
-    function testGetAllReplies() {
+    public function testGetAllReplies() {
         $dao = new PostMySQLDAO();
         $replies = $dao->getAllReplies(13, 10);
         $this->assertTrue(sizeof($replies), 10);
@@ -359,7 +360,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getAllMentions
      */
-    function testGetAllMentions() {
+    public function testGetAllMentions() {
         $dao = new PostMySQLDAO();
         $mentions = $dao->getAllMentions("ev", 10);
         $this->assertTrue(sizeof($mentions), 10);
@@ -373,7 +374,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getStatusSources
      */
-    function testGetStatusSources() {
+    public function testGetStatusSources() {
         $dao = new PostMySQLDAO();
         $sources = $dao->getStatusSources(18);
         $this->assertEqual(sizeof($sources), 2);
@@ -390,7 +391,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getAllPostsByUser
      */
-    function testGetAllPostsByUser() {
+    public function testGetAllPostsByUser() {
         $dao = new PostMySQLDAO();
         $total = $dao->getTotalPostsByUser(18);
         $this->assertEqual($total, 41);
@@ -403,7 +404,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getAllPosts
      */
-    function testGetAllPostsByUsername() {
+    public function testGetAllPostsByUsername() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getAllPostsByUsername('shutterbug');
         $this->assertEqual(sizeof($posts), 41);
@@ -416,7 +417,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getAllPosts
      */
-    function testGetAllPosts() {
+    public function testGetAllPosts() {
         $dao = new PostMySQLDAO();
         //more than count
         $posts = $dao->getAllPosts(18, 10);
@@ -438,7 +439,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getPost on a post that exists
      */
-    function testGetPostExists() {
+    public function testGetPostExists() {
         $dao = new PostMySQLDAO();
         $post = $dao->getPost(10);
         $this->assertTrue(isset($post));
@@ -452,7 +453,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getPost on a post that does not exist
      */
-    function testGetPostDoesNotExist(){
+    public function testGetPostDoesNotExist(){
         $dao = new PostMySQLDAO();
         $post = $dao->getPost(100000001);
         $this->assertTrue(!isset($post));
@@ -461,7 +462,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getStandaloneReplies
      */
-    function testGetStandaloneReplies() {
+    public function testGetStandaloneReplies() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getStandaloneReplies('jack', 15);
 
@@ -481,7 +482,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getRepliesToPost
      */
-    function testGetRepliesToPost() {
+    public function testGetRepliesToPost() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getRepliesToPost(41);
         $this->assertEqual(sizeof($posts), 3);
@@ -498,7 +499,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getPublicRepliesToPost
      */
-    function testGetPublicRepliesToPost() {
+    public function testGetPublicRepliesToPost() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getPublicRepliesToPost(41);
         $this->assertEqual(sizeof($posts), 2);
@@ -515,7 +516,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getRetweetsOfPost
      */
-    function testGetRetweetsOfPost() {
+    public function testGetRetweetsOfPost() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getRetweetsOfPost(134);
         $this->assertEqual(sizeof($posts), 3);
@@ -527,7 +528,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getPostReachViaRetweets
      */
-    function testGetPostReachViaRetweets() {
+    public function testGetPostReachViaRetweets() {
         $dao = new PostMySQLDAO();
         $total = $dao->getPostReachViaRetweets(134);
         $this->assertEqual($total, (90+80+70));
@@ -539,7 +540,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test function getPostsAuthorHasRepliedTo
      */
-    function testGetPostsAuthorHasRepliedTo(){
+    public function testGetPostsAuthorHasRepliedTo(){
         $dao = new PostMySQLDAO();
         $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(18, 10);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user2");
@@ -557,7 +558,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getExchangesBetweenUsers
      */
-    function testGetExchangesBetweenUsers() {
+    public function testGetExchangesBetweenUsers() {
         $dao = new PostMySQLDAO();
         $posts_replied_to = $dao->getExchangesBetweenUsers(18, 21);
         $this->assertEqual(sizeof($posts_replied_to), 2);
@@ -582,7 +583,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test isPostInDB
      */
-    function testIsPostInDB() {
+    public function testIsPostInDB() {
         $dao = new PostMySQLDAO();
         $this->assertTrue($dao->isPostInDB(129));
 
@@ -592,7 +593,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test isReplyInDB
      */
-    function testIsReplyInDB() {
+    public function testIsReplyInDB() {
         $dao = new PostMySQLDAO();
         $this->assertTrue($dao->isReplyInDB(138));
 
@@ -602,7 +603,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test addPost
      */
-    function testAddPost() {
+    public function testAddPost() {
         $dao = new PostMySQLDAO();
         $vals = array();
 
@@ -715,7 +716,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test get pages 1 of posts by public instances
      */
-    function testGetPageOneOfPublicPosts() {
+    public function testGetPageOneOfPublicPosts() {
         //Instantiate DAO
         $pdao = new PostMySQLDAO();
 
@@ -735,7 +736,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test get page 2 of posts by public instances
      */
-    function testGetPageTwoOfPublicPosts() {
+    public function testGetPageTwoOfPublicPosts() {
         $pdao = new PostMySQLDAO();
 
         $page_of_posts = $pdao->getPostsByPublicInstances(2, 15);
@@ -748,7 +749,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test get pages 3 of posts by public instances
      */
-    function testGetPageThreeOfPublicPosts() {
+    public function testGetPageThreeOfPublicPosts() {
         $pdao = new PostMySQLDAO();
 
         $page_of_posts = $pdao->getPostsByPublicInstances(3, 15);
@@ -763,7 +764,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test get the total number of posts and pages by public instance
      */
-    function testGetTotalPagesAndPostsByPublicInstances() {
+    public function testGetTotalPagesAndPostsByPublicInstances() {
         $pdao = new PostMySQLDAO();
 
         $totals = $pdao->getTotalPagesAndPostsByPublicInstances(15);
@@ -775,7 +776,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test get a page of photos posts by public instances
      */
-    function testGetPageOneOfPhotoPublicPosts() {
+    public function testGetPageOneOfPhotoPublicPosts() {
         $pdao = new PostMySQLDAO();
 
         $page_of_posts = $pdao->getPhotoPostsByPublicInstances(1, 15);
@@ -786,7 +787,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test get a page of photos posts by public instances
      */
-    function testGetPageTwoOfPhotoPublicPosts() {
+    public function testGetPageTwoOfPhotoPublicPosts() {
         $pdao = new PostMySQLDAO();
 
         $page_of_posts = $pdao->getPhotoPostsByPublicInstances(2, 15);
@@ -798,7 +799,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test get a page of photo posts by public instances
      */
-    function testGetPageThreeOfPhotoPublicPosts() {
+    public function testGetPageThreeOfPhotoPublicPosts() {
         $pdao = new PostMySQLDAO();
 
         $page_of_posts = $pdao->getPhotoPostsByPublicInstances(3, 15);
@@ -810,7 +811,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getTotalPhotoPagesAndPostsByPublicInstances
      */
-    function testGetTotalPhotoPagesAndPostsByPublicInstances() {
+    public function testGetTotalPhotoPagesAndPostsByPublicInstances() {
         $pdao = new PostMySQLDAO();
         $totals = $pdao->getTotalPhotoPagesAndPostsByPublicInstances(15);
 
@@ -821,7 +822,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getLinkPostsByPublicInstances, page 1
      */
-    function testGetPageOneOfLinkPublicPosts() {
+    public function testGetPageOneOfLinkPublicPosts() {
         $pdao = new PostMySQLDAO();
 
         $page_of_posts = $pdao->getLinkPostsByPublicInstances(1, 15);
@@ -832,7 +833,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getLinkPostsByPublicInstances, page 2
      */
-    function testGetPageTwoOfLinkPublicPosts() {
+    public function testGetPageTwoOfLinkPublicPosts() {
         $pdao = new PostMySQLDAO();
 
         $page_of_posts = $pdao->getLinkPostsByPublicInstances(2, 15);
@@ -845,7 +846,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      * Test getLinkPostsByPublicInstances, page 3
      */
 
-    function testGetPageThreeOfLinkPublicPosts() {
+    public function testGetPageThreeOfLinkPublicPosts() {
         $pdao = new PostMySQLDAO();
         $page_of_posts = $pdao->getLinkPostsByPublicInstances(3, 15);
 
@@ -859,7 +860,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      * Test getTotalLinkPagesAndPostsByPublicInstances
      */
 
-    function testGetTotalLinkPagesAndPostsByPublicInstances() {
+    public function testGetTotalLinkPagesAndPostsByPublicInstances() {
         $pdao = new PostMySQLDAO();
         $totals = $pdao->getTotalLinkPagesAndPostsByPublicInstances(15);
 
@@ -869,7 +870,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getTotalPostsByUser
      */
-    function testGetTotalPostsByUser() {
+    public function testGetTotalPostsByUser() {
         $pdao = new PostMySQLDAO();
         $total_posts = $pdao->getTotalPostsByUser(13);
 
@@ -879,7 +880,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test assignParent
      */
-    function testAssignParent() {
+    public function testAssignParent() {
         //Add two "parent" posts
         $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
         post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (550, 19, 'linkbaiter', 
@@ -921,7 +922,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getMostRetweetedPostsByPublicInstancesInLastWeek
      */
-    function testGetMostRetweetedPostsByPublicInstancesInLastWeek() {
+    public function testGetMostRetweetedPostsByPublicInstancesInLastWeek() {
         //Add posts with retweets by user3, who is on the public timeline with retweet counts in the last 9 days
         $counter = 0;
         $id = 200;
@@ -953,7 +954,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     /**
      * Test getMostRepliedToPostsByPublicInstancesInLastWeek
      */
-    function testGetMostRepliedToPostsByPublicInstancesInLastWeek() {
+    public function testGetMostRepliedToPostsByPublicInstancesInLastWeek() {
         //Add posts with retweets by user3, who is on the public timeline with retweet counts in the last 9 days
         $counter = 0;
         $id = 200;
@@ -982,4 +983,57 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($totals["total_posts"], 7);
         $this->assertEqual($totals["total_pages"], 2);
     }
+
+    public function testGetMostRepliedToPostsInLastWeek() {
+        //Add posts with replies by user3, who is on the public timeline with retweet counts in the last 9 days
+        $counter = 0;
+        $id = 200;
+        $builders = array();
+        while ($counter < 40) {
+            $id += $counter;
+            $builders[] = FixtureBuilder::build('posts', array(
+                'id'=>$id, 
+                'post_id'=>(144+$counter),
+                'author_user_id'=>23,
+                'author_username'=>'user3',
+                'pub_date'=>'-'.$counter.'d',
+                'reply_count_cache'=>$counter));
+            $counter++;
+        }
+        $pdao = new PostMySQLDAO();
+        $posts = $pdao->getMostRepliedToPostsInLastWeek('user3', 'twitter', 5);
+        $this->assertEqual(sizeof($posts), 5);
+        $this->assertEqual($posts[0]->reply_count_cache, 7);
+        $this->assertEqual($posts[1]->reply_count_cache, 6);
+
+        $posts = $pdao->getMostRepliedToPostsInLastWeek('user2', 'twitter', 5);
+        $this->assertEqual(sizeof($posts), 0);
+    }
+
+    public function testGetMostRetweetedPostsInLastWeek() {
+        //Add posts with replies by user3, who is on the public timeline with retweet counts in the last 9 days
+        $counter = 0;
+        $id = 200;
+        $builders = array();
+        while ($counter < 40) {
+            $id += $counter;
+            $builders[] = FixtureBuilder::build('posts', array(
+                'id'=>$id, 
+                'post_id'=>(144+$counter),
+                'author_user_id'=>23,
+                'author_username'=>'user3',
+                'pub_date'=>'-'.$counter.'d',
+                'retweet_count_cache'=>$counter));
+            $counter++;
+        }
+        $pdao = new PostMySQLDAO();
+        $posts = $pdao->getMostRetweetedPostsInLastWeek('user3', 'twitter', 5);
+        $this->assertEqual(sizeof($posts), 5);
+        $this->assertEqual($posts[0]->retweet_count_cache, 7);
+        $this->assertEqual($posts[1]->retweet_count_cache, 6);
+
+        $posts = $pdao->getMostRetweetedPostsInLastWeek('user2', 'twitter', 5);
+        $this->assertEqual(sizeof($posts), 0);
+    }
+
 }

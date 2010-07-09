@@ -4,6 +4,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/interface.Controller.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PublicTimelineController.php';
@@ -11,6 +12,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
@@ -81,7 +83,7 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Public Timeline');
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), 'public.php');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-1-timeline', 'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-timeline-1', 'Cache key');
     }
 
     public function testControlNoParamsLoggedIn() {
@@ -96,7 +98,7 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Public Timeline');
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), 'public.php');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-me@example.com-1-timeline', 'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-me@example.com-timeline-1', 'Cache key');
     }
 
     public function testControlPage2DefaultList() {
@@ -144,5 +146,170 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'Posts that have been forwarded most often');
 
         $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-mostretweets-2', 'Cache key');
+    }
+
+    public function testControlUserDashboardPrivateInstance() {
+        $_GET["u"] = 'ginatrapani';
+        $_GET["n"] = 'twitter';
+
+        $instance_builder = FixtureBuilder::build('instances', array(
+            'network_username'=>'ginatrapani',
+            'network_user_id'=>'930061',
+            'network'=>'twitter',
+            'is_public'=>0)
+        );
+
+        //@TODO Troubleshoot this
+        //        $user_builder = FixtureBuilder::build('users', array(
+        //            'user_name'=>'ginatrapani',
+        //            'user_id'=>'930061',
+        //            'network'=>'twitter')
+        //        );
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, network) VALUES (930061,
+        'ginatrapani', 'Gina Trapani', 'avatar.jpg', '1/1/2005', 'twitter');";
+        $this->db->exec($q);
+
+        $id = 100;
+        $counter = 0;
+        $builders = array();
+        while ($counter < 10) {
+            $id += $counter;
+            if ($counter <= 5) {
+                $builders[] = FixtureBuilder::build('posts', array(
+                   'id'=>$id, 
+                   'post_id'=>(144+$counter),
+                   'author_user_id'=>930061,
+                   'author_username'=>'ginatrapani',
+                   'pub_date'=>'-'.$counter.'d',
+                   'reply_count_cache'=>$counter));
+            } else {
+                $builders[] = FixtureBuilder::build('posts', array(
+                   'id'=>$id, 
+                    'post_id'=>(144+$counter),
+                    'author_user_id'=>930061,
+                    'author_username'=>'ginatrapani',
+                    'pub_date'=>'-'.$counter.'d',
+                    'retweet_count_cache'=>$counter));
+            }
+            $counter++;
+        }
+
+        //first, add some people
+        //@TODO convert this to use the FixtureBuilder
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, follower_count, friend_count,
+        network) VALUES (2001,'jack', 'Jack McUser', 'avatar.jpg', '1/1/2005', 10050, 10, 'twitter');";
+        $this->db->exec($q);
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, follower_count, friend_count,
+        network) VALUES (123456, 'anildash', 'Anil Dash', 'avatar.jpg', '1/1/2005', 11111, 12, 'twitter');";
+        $this->db->exec($q);
+
+        $follower_builders = array();
+        $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'2001',
+        'active'=>1, 'network'=>'twitter'));
+        $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'123456',
+        'active'=>1, 'network'=>'twitter'));
+
+
+        $controller = new PublicTimelineController(true);
+        $results = $controller->control();
+        $this->assertTrue(strpos( $results, "ginatrapani") > 0);
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), "ginatrapani on Twitter isn't set up 
+            on this ThinkTank installation.");
+    }
+
+    public function testControlUserDashboardUserDoesntExist() {
+        $_GET["u"] = 'idontexist';
+        $_GET["n"] = 'somenetwork';
+
+        $controller = new PublicTimelineController(true);
+        $results = $controller->control();
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), "idontexist on Somenetwork isn't set up 
+            on this ThinkTank installation.");
+    }
+
+    public function testControlUserDashboard() {
+        $_GET["u"] = 'ginatrapani';
+        $_GET["n"] = 'twitter';
+
+        $instance_builder = FixtureBuilder::build('instances', array(
+            'network_username'=>'ginatrapani',
+            'network_user_id'=>'930061',
+            'network'=>'twitter',
+            'is_public'=>1)
+        );
+
+        //@TODO Troubleshoot this
+        //        $user_builder = FixtureBuilder::build('users', array(
+        //            'user_name'=>'ginatrapani',
+        //            'user_id'=>'930061',
+        //            'network'=>'twitter')
+        //        );
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, network) VALUES (930061,
+        'ginatrapani', 'Gina Trapani', 'avatar.jpg', '1/1/2005', 'twitter');";
+        $this->db->exec($q);
+
+        $id = 100;
+        $counter = 0;
+        $builders = array();
+        while ($counter < 10) {
+            $id += $counter;
+            if ($counter <= 5) {
+                $builders[] = FixtureBuilder::build('posts', array(
+                   'id'=>$id, 
+                   'post_id'=>(144+$counter),
+                   'author_user_id'=>930061,
+                   'author_username'=>'ginatrapani',
+                   'pub_date'=>'-'.$counter.'d',
+                   'reply_count_cache'=>$counter));
+            } else {
+                $builders[] = FixtureBuilder::build('posts', array(
+                   'id'=>$id, 
+                    'post_id'=>(144+$counter),
+                    'author_user_id'=>930061,
+                    'author_username'=>'ginatrapani',
+                    'pub_date'=>'-'.$counter.'d',
+                    'retweet_count_cache'=>$counter));
+            }
+            $counter++;
+        }
+
+        //first, add some people
+        //@TODO convert this to use the FixtureBuilder
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, follower_count, friend_count,
+        network) VALUES (2001,'jack', 'Jack McUser', 'avatar.jpg', '1/1/2005', 10050, 10, 'twitter');";
+        $this->db->exec($q);
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, follower_count, friend_count,
+        network) VALUES (123456, 'anildash', 'Anil Dash', 'avatar.jpg', '1/1/2005', 11111, 12, 'twitter');";
+        $this->db->exec($q);
+
+        $follower_builders = array();
+        $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'2001',
+        'active'=>1, 'network'=>'twitter'));
+        $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'123456',
+        'active'=>1, 'network'=>'twitter'));
+
+
+        $controller = new PublicTimelineController(true);
+        $results = $controller->control();
+        $this->assertTrue(strpos( $results, "ginatrapani") > 0);
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertIsA($v_mgr->getTemplateDataItem('user_details'), 'User');
+        $this->assertIsA($v_mgr->getTemplateDataItem('most_replied_to_alltime'), 'array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('most_replied_to_alltime')), 5);
+        $this->assertIsA($v_mgr->getTemplateDataItem('most_replied_to_1wk'), 'array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('most_replied_to_1wk')), 5);
+        $this->assertIsA($v_mgr->getTemplateDataItem('most_retweeted_alltime'), 'array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('most_retweeted_1wk')), 2);
+        $this->assertIsA($v_mgr->getTemplateDataItem('least_likely_followers'), 'array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('least_likely_followers')), 2);
+
+        $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-ginatrapani-twitter', 'Cache key');
     }
 }
