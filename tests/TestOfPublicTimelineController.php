@@ -159,15 +159,11 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
             'is_public'=>0)
         );
 
-        //@TODO Troubleshoot this
-        //        $user_builder = FixtureBuilder::build('users', array(
-        //            'user_name'=>'ginatrapani',
-        //            'user_id'=>'930061',
-        //            'network'=>'twitter')
-        //        );
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, network) VALUES (930061,
-        'ginatrapani', 'Gina Trapani', 'avatar.jpg', '1/1/2005', 'twitter');";
-        $this->db->exec($q);
+        $user_builder = FixtureBuilder::build('users', array(
+            'user_name'=>'ginatrapani',
+            'user_id'=>'930061',
+            'network'=>'twitter')
+        );
 
         $id = 100;
         $counter = 0;
@@ -195,13 +191,20 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         }
 
         //first, add some people
-        //@TODO convert this to use the FixtureBuilder
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, follower_count, friend_count,
-        network) VALUES (2001,'jack', 'Jack McUser', 'avatar.jpg', '1/1/2005', 10050, 10, 'twitter');";
-        $this->db->exec($q);
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, follower_count, friend_count,
-        network) VALUES (123456, 'anildash', 'Anil Dash', 'avatar.jpg', '1/1/2005', 11111, 12, 'twitter');";
-        $this->db->exec($q);
+        $user1_builder = FixtureBuilder::build('users', array(
+            'user_name'=>'jack',
+            'user_id'=>'2001',
+            'network'=>'twitter',
+            'follower_count'=>'10050',
+            'friend_count'=>'10')
+        );
+        $user2_builder = FixtureBuilder::build('users', array(
+            'user_name'=>'anildash',
+            'user_id'=>'123456',
+            'network'=>'twitter',
+            'follower_count'=>'11111',
+            'friend_count'=>'12')
+        );
 
         $follower_builders = array();
         $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'2001',
@@ -216,8 +219,8 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
 
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), "ginatrapani on Twitter isn't set up 
-            on this ThinkTank installation.");
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        "ginatrapani on Twitter isn't set up on this ThinkTank installation.");
     }
 
     public function testControlUserDashboardUserDoesntExist() {
@@ -228,8 +231,8 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $results = $controller->control();
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), "idontexist on Somenetwork isn't set up 
-            on this ThinkTank installation.");
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        "idontexist on Somenetwork isn't set up on this ThinkTank installation.");
     }
 
     public function testControlUserDashboard() {
@@ -243,15 +246,11 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
             'is_public'=>1)
         );
 
-        //@TODO Troubleshoot this
-        //        $user_builder = FixtureBuilder::build('users', array(
-        //            'user_name'=>'ginatrapani',
-        //            'user_id'=>'930061',
-        //            'network'=>'twitter')
-        //        );
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, network) VALUES (930061,
-        'ginatrapani', 'Gina Trapani', 'avatar.jpg', '1/1/2005', 'twitter');";
-        $this->db->exec($q);
+        $user_builder = FixtureBuilder::build('users', array(
+            'user_name'=>'ginatrapani',
+            'user_id'=>'930061',
+            'network'=>'twitter')
+        );
 
         $id = 100;
         $counter = 0;
@@ -279,13 +278,20 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         }
 
         //first, add some people
-        //@TODO convert this to use the FixtureBuilder
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, follower_count, friend_count,
-        network) VALUES (2001,'jack', 'Jack McUser', 'avatar.jpg', '1/1/2005', 10050, 10, 'twitter');";
-        $this->db->exec($q);
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, follower_count, friend_count,
-        network) VALUES (123456, 'anildash', 'Anil Dash', 'avatar.jpg', '1/1/2005', 11111, 12, 'twitter');";
-        $this->db->exec($q);
+        $user1_builder = FixtureBuilder::build('users', array(
+            'user_name'=>'jack',
+            'user_id'=>'2001',
+            'network'=>'twitter',
+            'follower_count'=>'10050',
+            'friend_count'=>'10')
+        );
+        $user2_builder = FixtureBuilder::build('users', array(
+            'user_name'=>'anildash',
+            'user_id'=>'123456',
+            'network'=>'twitter',
+            'follower_count'=>'11111',
+            'friend_count'=>'12')
+        );
 
         $follower_builders = array();
         $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'2001',

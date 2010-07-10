@@ -185,7 +185,7 @@ class FixtureBuilder {
                     $column['value'] = $this->genBigint();
                 } else if(preg_match('/^(times|date)/', $column['Type'])) {
                     $column['value'] = $this->genDate();
-                } else if(preg_match('/^varchar/', $column['Type'])) {
+                } else if(preg_match('/^(varchar|text|tinytext|mediumtext|longtext|blob)/', $column['Type'])) {
                     $column['value'] = $this->genVarchar();
                 }
             }

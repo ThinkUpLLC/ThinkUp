@@ -174,13 +174,17 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
 
     public function testControlLoggedInPeople() {
         //first, add some people
-        //@TODO convert this to use the FixtureBuilder
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (930061, 'ginatrapani',
-        'Gina Trapani', 'avatar.jpg', '1/1/2005');";
-        $this->db->exec($q);
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (123456, 'anildash',
-        'Anil Dash', 'avatar.jpg', '1/1/2005');";
-        $this->db->exec($q);
+        $user1_builder = FixtureBuilder::build('users', array(
+            'user_name'=>'ginatrapani',
+            'user_id'=>'930061',
+            'network'=>'twitter')
+        );
+        $user2_builder = FixtureBuilder::build('users', array(
+            'user_name'=>'anildash',
+            'user_id'=>'123456',
+            'network'=>'twitter')
+        );
+
         $follower_builders = array();
         $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'13'));
         $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'123456', 'follower_id'=>'13'));
