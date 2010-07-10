@@ -78,12 +78,17 @@ class DAOFactory {
             //MySQL Version
             'mysql' => array( 'class' => 'PluginMySQLDAO', 'path' => 'model/class.PluginMySQLDAO.php')
         ),
+        //Plugin Option MySQL DAO
+        'PluginOptionDAO' => array(
+            //MySQL Version
+            'mysql' => array( 'class' => 'PluginOptionMySQLDAO', 'path' => 'model/class.PluginOptionMySQLDAO.php')
+        ),        
         //Follower Count MySQL DAO
         'FollowerCountDAO' => array(
             //MySQL Version
             'mysql' => array( 'class' => 'FollowerCountMySQLDAO', 'path' => 'model/class.FollowerCountMySQLDAO.php')
         )
-        );
+    );
 
     /*
      * Creates a DAO instance and returns it

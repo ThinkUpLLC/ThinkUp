@@ -189,6 +189,15 @@ class TestOfDAOFactory extends ThinkTankUnitTestCase {
     }
 
     /**
+     * Test get PluginOptionDAO
+     */
+    function testGetPluginOptionDAO() {
+        $plugin_dao = DAOFactory::getDAO('PluginOptionDAO');
+        $this->assertNotNull($plugin_dao);
+        $this->assertIsA($plugin_dao, 'PluginOptionMySQLDAO');
+    }
+    
+    /**
      * Test get FollowerCountDAO
      */
     function testGetFollowerCountDAO() {
