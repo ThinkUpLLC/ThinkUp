@@ -20,6 +20,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPlug
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrAPIAccessor.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/hellothinkup/tests/TestOfHelloThinkUpPluginConfigurationController.php';
 
 $plugin_tests = & new GroupTest('Plugin tests');
 $plugin_tests->addTestCase(new TestOfExpandURLsPlugin());
@@ -35,5 +36,6 @@ $plugin_tests->addTestCase(new TestOfTwitterOAuth());
 $plugin_tests->addTestCase(new TestOfTwitterPlugin());
 $plugin_tests->addTestCase(new TestOfTwitterPluginConfigurationController());
 $plugin_tests->addTestCase(new TestOfRetweetDetector());
+$plugin_tests->addTestCase(new TestOfHelloThinkUpPluginConfigurationController());
 
 $plugin_tests->run( new TextReporter());

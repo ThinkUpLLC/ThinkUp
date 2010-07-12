@@ -12,6 +12,8 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 
 /**
  * Test TestController class
@@ -77,5 +79,49 @@ class TestOfTestController extends ThinkUpBasicUnitTestCase {
         $results = $controller->go();
 
         $this->assertEqual($controller->getCacheKeyString(), 'testme.tpl-');
+    }
+
+    /**
+     * Test json output
+     */
+    public function testJsonOutput() {
+        $config = Config::getInstance();
+        $controller = new TestController(true);
+        $_GET['json'] = true;
+        $results = $controller->go();
+        unset($_GET['json']);
+        $obj = json_decode($results);
+        $this->assertIsA($obj, 'stdClass');
+        $this->assertEqual($obj->aname, 'a value');
+        $this->assertIsA($obj->alist, 'Array');
+        $this->assertEqual( $controller->getContentType(),'application/json');
+    }
+
+    /**
+     * Test adding script to header
+     */
+    public function testAddJsScript() {
+        $config = Config::getInstance();
+        $controller = new TestController(true);
+        $controller->addHeaderJavaScript('plugins/hellothinkup/assets/js/test.js');
+        $results = $controller->go();
+
+        //test if view javascript variable is set correctly
+        $v_mgr = $controller->getViewManager();
+        $scripts = $v_mgr->getTemplateDataItem('header_scripts');
+        $this->assertEqual($scripts[0], 'plugins/hellothinkup/assets/js/test.js');
+    }
+
+    /**
+     * Test setting content type header
+     */
+    public function testAddHeader() {
+        $config = Config::getInstance();
+        $controller = new TestController(true);
+        $_GET['text'] = true;
+
+        $results = $controller->go();
+
+        $this->assertEqual( $controller->getContentType(),'text/plain');
     }
 }

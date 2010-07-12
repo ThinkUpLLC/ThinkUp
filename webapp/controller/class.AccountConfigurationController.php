@@ -27,6 +27,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
 
         /* Begin plugin-specific configuration handling */
         if (isset($_GET['p'])) {
+            // add config js to header
+            $this->addHeaderJavaScript('assets/js/plugin_options.js');
             $active_plugin = $_GET['p'];
             $pobj = $webapp->getPluginObject($active_plugin);
             $p = new $pobj;

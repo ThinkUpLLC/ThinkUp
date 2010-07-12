@@ -58,7 +58,7 @@ class TestOfTestAdminController extends ThinkUpBasicUnitTestCase {
         $controller = new TestAdminController(true);
         $results = $controller->go();
 
-        $this->assertEqual($results, 'You must be logged in to do this',
+        $this->assertEqual($results, 'You must be a ThinkUp admin to do this',
         "not logged in, not admin, auth controller output");
     }
 
@@ -91,6 +91,7 @@ class TestOfTestAdminController extends ThinkUpBasicUnitTestCase {
         $results = $controller->go();
 
         $this->assertEqual($results, 'You must be a ThinkUp admin to do this',
-        "not logged in, not admin, auth controller output".$results);
+
+        "not logged in, not admin, auth controller output");
     }
 }

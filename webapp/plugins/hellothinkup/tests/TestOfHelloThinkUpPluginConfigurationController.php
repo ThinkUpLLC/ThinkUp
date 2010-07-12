@@ -1,0 +1,299 @@
+<?php
+
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+    require_once '../../../../tests/config.tests.inc.php';
+}
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH.PATH_SEPARATOR.$SOURCE_ROOT_PATH);
+
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
+require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PluginConfigurationController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/hellothinkup/controller/class.HelloThinkUpPluginConfigurationController.php';
+require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
+
+/**
+ * Test of TestOfHelloThinkUpPluginConfigurationController
+ *
+ * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ *
+ */
+
+
+
+
+class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCase {
+
+    public function __construct() {
+        $this->UnitTestCase('TestOfHelloThinkUpPluginConfigurationController class test');
+    }
+
+    public function setUp(){
+        parent::setUp();
+        $webapp = Webapp::getInstance();
+        $webapp->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
+    }
+
+    public function tearDown(){
+    }
+
+    public function testConstructor() {
+        $controller = new HelloThinkUpPluginConfigurationController(null, 'hellothinkup');
+        $this->assertTrue(isset($controller), 'constructor test');
+    }
+
+    public function testOutput() {
+        //not logged in, no owner set
+        $controller = new HelloThinkUpPluginConfigurationController(null, 'hellothinkup');
+        $output = $controller->go();
+        $this->assertEqual('You must be logged in to do this', $output);
+
+        // logged in
+        // build a user
+        $builder = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+
+        $_SESSION['user'] = 'me@example.com';
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $controller = new HelloThinkUpPluginConfigurationController($owner, 'hellothinkup');
+        $output = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $message = $v_mgr->getTemplateDataItem('message');
+        $this->assertEqual($message,
+        'Hello, world! This is the example plugin configuration page for  me@example.com.', 'message set ' . $message);
+
+    }
+    
+    public function testOptionList2HashByOptionName() {
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $plugin_option1 = new PluginOption();
+        $plugin_option1->id = 1;
+        $plugin_option1->option_name = 'name1';
+        $plugin_option1->option_value = 'value1';
+        $plugin_option2 = new PluginOption();
+        $plugin_option2->id = 2;
+        $plugin_option2->option_name = 'name2';
+        $plugin_option2->option_value = 'value2';
+    
+        $options_hash = $controller->optionList2HashByOptionName( array($plugin_option1, $plugin_option2) );
+        $this->assertEqual($options_hash['name1']->id, 1);
+        $this->assertEqual($options_hash['name1']->option_name, 'name1');
+        $this->assertEqual($options_hash['name1']->option_value, 'value1');
+    
+        $this->assertEqual($options_hash['name2']->id, 2);
+        $this->assertEqual($options_hash['name2']->option_name, 'name2');
+        $this->assertEqual($options_hash['name2']->option_value, 'value2');
+    
+    }
+    
+    public function testAddTextOptionNotAdmin() {
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+    
+        // just name, not an admin, so view onluy
+        // $controller->addPluginOption(PluginConfigurationController::FORM_TEXT_ELEMENT, array('name' => 'testname'));
+        $output = $controller->go();
+        $this->assertNotNull( $controller->option_elements);
+        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertNotNull( $controller->option_elements['testname']);
+        $this->assertEqual( 
+            PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['testname']['type'] );
+        $this->assertTrue( isset($controller->option_elements['testname']['default_value']) );
+        $this->assertEqual( count($controller->option_headers), 2);
+        $this->assertTrue( isset($controller->option_headers['testname']));
+        $this->assertEqual( count($controller->option_not_required), 1);
+        $this->assertFalse( isset($controller->option_not_required['testname']));
+        $this->assertEqual( count($controller->option_required_message), 1);
+        $this->assertTrue( isset($controller->option_required_message['testname']));
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+    
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        
+        // we have a text form element with proper data
+        $input_field = $this->getElementById($doc, 'plugin_options_testname');
+        $this->assertTrue($input_field->getAttribute('value'), $plugin_option->columns['option_value']);        
+        
+        // submit and elemnts should be disbaled
+        //var_dump( $input_field->getAttribute('disabled') );
+        $this->assertTrue($input_field->getAttribute('disabled'));
+        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
+        $this->assertPattern('/Note: Editing disabled for non admin users/', $submit_p->nodeValue);
+    
+    }
+    
+    public function testAddTextOptionIsAdmin() {
+        $is_admin = 1;
+        $_SESSION['user_is_admin'] = true;
+        $build_data = $this->buildController();
+        // var_dump($build_data[1]);
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+    
+        // just name, is admin, so form should be enabled
+        $output = $controller->go();
+        $this->assertNotNull( $controller->option_elements);
+        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertNotNull( $controller->option_elements['testname']);
+        $this->assertEqual( 
+            PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['testname']['type'] );
+        $this->assertTrue( isset($controller->option_elements['testname']['default_value']) );
+        $this->assertEqual( count($controller->option_headers), 2);
+        $this->assertTrue( isset($controller->option_headers['testname']));
+        $this->assertEqual( count($controller->option_not_required), 1);
+        $this->assertFalse( isset($controller->option_not_required['testname']));
+        $this->assertEqual( count($controller->option_required_message), 1);
+        $this->assertTrue( isset($controller->option_required_message['testname']));
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+    
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        
+        // we have a text form element with proper data
+        $input_field = $this->getElementById($doc, 'plugin_options_testname');
+        $this->assertEqual($input_field->getAttribute('value'), $plugin_option->columns['option_value']);        
+        
+        // var_dump("<html><body>" . $options_markup . "</body></html>");
+        
+        // submit and elemnts should be disbaled
+        $this->assertFalse($input_field->getAttribute('disabled'));
+        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
+        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+        unset( $_SESSION['user_is_admin'] );
+    
+    }
+    
+    public function testAddRadioOptions() {
+        $_SESSION['user_is_admin'] = true;
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+    
+        // radio options name, is admin, so form should be enabled
+        $output = $controller->go();
+        $this->assertNotNull( $controller->option_elements);
+        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertNotNull( $controller->option_elements['testname']);
+        $this->assertEqual( 
+            PluginConfigurationController::FORM_RADIO_ELEMENT, $controller->option_elements['testgender']['type'] );
+        $this->assertTrue( isset($controller->option_elements['testgender']['default_value']) );
+        $this->assertEqual( count($controller->option_headers), 2);
+        $this->assertFalse( isset($controller->option_required_message['testgender']));
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+    
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        
+        // we have a text form element with proper data
+        $radio_div = $this->getElementById($doc, 'plugin_options_testgender');
+        $radios = $radio_div->getElementsByTagName('input');
+        $this->assertEqual(3, $radios->length);
+        $this->assertEqual( $radios->item(0)->getAttribute('value'), '1');
+        $this->assertEqual( $radios->item(1)->getAttribute('value'), '2');
+        $this->assertEqual( $radios->item(2)->getAttribute('value'), '3');
+        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
+        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+        unset( $_SESSION['user_is_admin'] );
+    
+    }
+    
+    public function testAddSelectOptions() {
+        $_SESSION['user_is_admin'] = true;
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+    
+        // radio options name, is admin, so form should be enabled
+        $output = $controller->go();
+        $this->assertNotNull( $controller->option_elements);
+        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertNotNull( $controller->option_elements['testbirthyear']);
+        $this->assertEqual( 
+            PluginConfigurationController::FORM_SELECT_ELEMENT, $controller->option_elements['testbirthyear']['type'] );
+        $this->assertTrue( isset($controller->option_elements['testbirthyear']['default_value']) );
+        $this->assertFalse( isset($controller->option_required_message['testbirthyear']));
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+    
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+        
+        // we have a text form element with proper data
+        $select = $this->getElementById($doc, 'plugin_options_testbirthyear');
+        $options = $select->getElementsByTagName('option');
+        $this->assertEqual(111, $options->length);
+        $this->assertEqual( $options->item(0)->getAttribute('value'), '1900');
+        $this->assertEqual( $options->item(50)->getAttribute('value'), '1950');
+        $this->assertEqual( $options->item(110)->getAttribute('value'), '2010');
+    
+        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
+        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+        unset( $_SESSION['user_is_admin'] );
+    
+    }
+
+
+    private function buildController() {
+        $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+        $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'hellothinkup', 'is_active' => 1) );
+        $plugin_id = $builder_plugin->columns['last_insert_id'];
+        $builder_plugin_options = 
+            FixtureBuilder::build('plugin_options', 
+            array('plugin_id' => $plugin_id, 'option_name' => 'testname', 'option_value' => "Hal") );
+        $_SESSION['user'] = 'me@example.com';
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $controller = new HelloThinkUpPluginConfigurationController($owner, 'hellothinkup');
+        return array($controller, $builder_owner, $builder_plugin, $builder_plugin_options);
+    }
+
+    function getElementById($doc, $id) {
+        $xpath = new DOMXPath($doc);
+        return $xpath->query("//*[@id='$id']")->item(0);
+    }
+}

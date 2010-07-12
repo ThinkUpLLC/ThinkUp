@@ -23,6 +23,7 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfToggleActiveInstanceController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfToggleActivePluginController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfTogglePublicInstanceController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfUserController.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfPluginOptionController.php';
 
 $controller_test = & new GroupTest('Controller tests');
 $controller_test->addTestCase(new TestOfAccountConfigurationController());
@@ -43,4 +44,5 @@ $controller_test->addTestCase(new TestOfToggleActiveInstanceController());
 $controller_test->addTestCase(new TestOfToggleActivePluginController());
 $controller_test->addTestCase(new TestOfTogglePublicInstanceController());
 $controller_test->addTestCase(new TestOfUserController());
+//$controller_test->addTestCase(new TestOfPluginOptionController());
 $controller_test->run( new TextReporter());

@@ -29,11 +29,7 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
                 (:plugin_id, :option_name, :option_value)';
         $stmt = $this->execute($q, 
             array(':plugin_id' => $plugin_id, ':option_name' => $name, ':option_value' => $value) );
-        if ( $this->getUpdateCount($stmt) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->getInsertId($stmt);
     }
     
     public function updateOption($id, $name, $value) {
@@ -68,5 +64,14 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
         $stmt = $this->execute($q, $data);
         $options = $this->getDataRowsAsObjects($stmt, 'PluginOption'); 
         return isset($options[0]) ? $options : null;
+    }
+
+    public function validatePluginId($plugin_id) {
+        $q = 'SELECT id FROM  #prefix#plugins where id = :id';
+        $data = array(':id' => $plugin_id);
+        $stmt = $this->execute($q, $data);
+        $stmt = $this->execute($q, $data);
+        $plugin = $this->getDataRowAsObject($stmt, 'Plugin'); 
+        return (isset($plugin) && $plugin->id == $plugin_id) ? true : false;
     }
 }

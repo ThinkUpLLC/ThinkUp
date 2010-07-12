@@ -32,6 +32,7 @@ require_once 'model/class.Logger.php';
 require_once 'model/class.Webapp.php';
 require_once 'controller/class.ThinkUpController.php';
 require_once 'controller/class.ThinkUpAuthController.php';
+require_once 'controller/class.PluginConfigurationController.php';
 
 require_once 'config.inc.php';
 

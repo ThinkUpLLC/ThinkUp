@@ -25,7 +25,7 @@ abstract class ThinkUpController {
      *
      * @var bool
      */
-    private $profiler_enabled = false;
+    protected $profiler_enabled = false;
     /**
      *
      * @var float
@@ -40,6 +40,24 @@ abstract class ThinkUpController {
      * var str
      */
     protected $content_type = 'text/html';
+    /**
+     *
+     * @var araray
+     */
+    protected $header_scripts = array ();
+
+    /**
+     *
+     * @var array
+     */
+    protected $json_data = null;
+
+    /**
+     *
+     * @var str
+     */
+    protected $content_type;
+
     /**
      * Constructs ThinkUpController
      *
@@ -92,6 +110,7 @@ abstract class ThinkUpController {
         return $this->app_session->isAdmin();
     }
 
+
     /**
      * Return email address of logged-in user
      *
@@ -129,6 +148,10 @@ abstract class ThinkUpController {
      * @return str view markup
      */
     protected function generateView() {
+        // add header javascript if defined
+        if( count($this->header_scripts) > 0) {
+            $this->addToView('header_scripts', $this->header_scripts);
+        }
         if (isset($this->view_template)) {
             if ($this->view_mgr->isViewCached()) {
                 $cache_key = $this->getCacheKeyString();
@@ -158,6 +181,9 @@ abstract class ThinkUpController {
                     return $this->view_mgr->fetch($this->view_template);
                 }
             }
+        } else if(isset($this->json_data) ) {
+            $this->setContentType('application/json');
+            return json_encode($this->json_data);
         } else {
             throw new Exception(get_class($this).': No view template specified');
         }
@@ -170,6 +196,46 @@ abstract class ThinkUpController {
      */
     protected function setViewTemplate($tpl_filename) {
         $this->view_template = $tpl_filename;
+    }
+
+    /**
+     * Sets json data structure to output a json string, and sets Content-Type to appplication/json
+     *
+     * @param array json data
+     */
+    protected function setJsonData($data) {
+        $this->json_data = $data;
+    }
+
+    /**
+     * Sets Content Type header
+     *
+     * @param string Content Type
+     */
+    protected function setContentType($content_type) {
+        $this->content_type = $content_type;
+        // if is to suppress 'headers already sent' error while testing, etc.
+        if( ! headers_sent() ) {
+            header('Content-Type: ' . $this->content_type, true);
+        }
+    }
+
+    /**
+     * Gets Content Type header
+     *
+     * @return string Content Type
+     */
+    public function getContentType() {
+        return $this->content_type;
+    }
+
+    /**
+     * Add javascript to header
+     *
+     * @param str javascript path
+     */
+    public function addHeaderJavaScript($script) {
+        array_push($this->header_scripts, $script);
     }
 
     /**
