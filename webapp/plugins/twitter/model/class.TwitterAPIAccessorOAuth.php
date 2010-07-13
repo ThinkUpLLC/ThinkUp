@@ -1,8 +1,8 @@
 <?php
 /**
  * Twitter API Accessor
- * Accesses the Twitter API via OAuth authentication
- * @TODO Tolerate 3 failures before API accessor becomes unavailable; now it becomes unavailable on 1st failure.
+ * Accesses the Twitter.com API via OAuth authentication.
+ * 
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 
@@ -14,6 +14,18 @@ class TwitterAPIAccessorOAuth {
     var $oauth_access_token;
     var $oauth_access_token_secret;
     var $next_cursor;
+    /**
+     * Total API errors the crawler should tolerate during a given crawler run
+     * @TODO Set this in the Twitter plugin options area
+     * @var int
+     */
+    var $total_errors_to_tolerate = 3;
+    /**
+     * Tally of the API errors returned during a given run
+     * When this number equals or exceeds the $total_errors_to_tolerate, the crawling stops
+     * @var ints
+     */
+    var $total_errors_so_far = 0;
 
     public function __construct($oauth_access_token, $oauth_access_token_secret, $oauth_consumer_key,
     $oauth_consumer_secret) {
@@ -37,13 +49,13 @@ class TwitterAPIAccessorOAuth {
         }
     }
 
-    function apiRequestFromWebapp($url) {
+    public function apiRequestFromWebapp($url) {
         $content = $this->to->OAuthRequest($url, 'GET', array());
         $status = $this->to->lastStatusCode();
         return array($status, $content);
     }
 
-    function prepAPI() {
+    public function prepAPI() {
         # Define how to access Twitter API
         $api_domain = 'https://api.twitter.com/1';
         $api_format = 'xml';
@@ -84,7 +96,7 @@ class TwitterAPIAccessorOAuth {
         return $urls;
     }
 
-    function parseFeed($url, $date = 0) {
+    public function parseFeed($url, $date = 0) {
         $parsed_payload = array();
         $feed_title = '';
         if (preg_match("/^http/", $url)) {
@@ -128,12 +140,12 @@ class TwitterAPIAccessorOAuth {
         return array($parsed_payload, $feed_title);
     }
 
-    function parseJSON($data) {
+    public function parseJSON($data) {
         $pj = json_decode($data);
         //print_r($pj);
         $parsed_payload = array();
         foreach ($pj->results as $p) {
-            $parsed_payload[] = array('post_id'=>$p->id, 
+            $parsed_payload[] = array('post_id'=>$p->id,
             'author_user_id'=>$p->from_user_id, 'user_id'=>$p->from_user_id,
             'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($p->created_at)), 'post_text'=>$p->text, 
             'author_username'=>$p->from_user, 'user_name'=>$p->from_user,
@@ -146,7 +158,7 @@ class TwitterAPIAccessorOAuth {
         return $parsed_payload;
     }
 
-    function parseError($data) {
+    public function parseError($data) {
         $parsed_payload = array();
         try {
             $xml = $this->createParserFromString(utf8_encode($data));
@@ -200,7 +212,7 @@ class TwitterAPIAccessorOAuth {
                         if (isset($namespaces['georss'])) {
                             $georss = $xml->geo->children($namespaces['georss']);
                         }
-                        $parsed_payload[] = array('post_id'=>$xml->id, 
+                        $parsed_payload[] = array('post_id'=>$xml->id,
                             'author_user_id'=>$xml->user->id, 'user_id'=>$xml->user->id,
                             'author_username'=>$xml->user->screen_name, 'user_name'=>$xml->user->screen_name,
                             'author_fullname'=>$xml->user->name, 'full_name'=>$xml->user->name,
@@ -254,7 +266,7 @@ class TwitterAPIAccessorOAuth {
                             if(isset($namespaces['georss'])) {
                                 $georss = $item->geo->children($namespaces['georss']);
                             }
-                            $parsed_payload[] = array('post_id'=>$item->id, 
+                            $parsed_payload[] = array('post_id'=>$item->id,
                                 'author_user_id'=>$item->user->id, 'user_id'=>$item->user->id,
                                 'author_username'=>$item->user->screen_name, 'user_name'=>$item->user->screen_name,
                                 'author_fullname'=>$item->user->name, 'full_name'=>$item->user->name,
@@ -293,17 +305,17 @@ class TwitterAPIAccessorOAuth {
         return $parsed_payload;
     }
 
-    function getNextCursor() {
+    public function getNextCursor() {
         return $this->next_cursor;
     }
 
-    function createDOMfromURL($url) {
+    public function createDOMfromURL($url) {
         $doc = new DOMDocument();
         $doc->load($url);
         return $doc;
     }
 
-    function createParserFromString($data) {
+    public function createParserFromString($data) {
         $xml = simplexml_load_string($data);
         return $xml;
     }
@@ -388,7 +400,15 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                 $status_message .= " | API ERROR: $status";
                 $status_message .= "\n\n$content\n\n";
                 if ($status != 404 && $status != 403) {
-                    $this->available = false;
+                    //$this->available = false;
+                    if ($this->total_errors_so_far >= $this->total_errors_to_tolerate) {
+                        $this->available = false;
+                    } else {
+                        $this->total_errors_so_far = $this->total_errors_so_far + 1;
+                        $logger->logStatus('Total API errors so far: ' . $this->total_errors_so_far .
+                ' | Total errors to tolerate '. $this->total_errors_to_tolerate, get_class($this));
+                    }
+
                 }
                 $logger->logStatus($status_message, get_class($this));
                 $status_message = "";
