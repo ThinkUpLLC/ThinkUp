@@ -26,7 +26,8 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         if ($group_by != "DAY" && $group_by != 'WEEK' && $group_by != 'MONTH') {
             $group_by = 'DAY';
         }
-        $q  = "SELECT network_user_id, network, count, DATE_FORMAT(date, '%c/%e') as date FROM #prefix#follower_count AS fc ";
+        $q  = "SELECT network_user_id, network, count, DATE_FORMAT(date, '%c/%e') as date ";
+        $q .= "FROM #prefix#follower_count AS fc ";
         $q .= "WHERE fc.network_user_id = :network_user_id AND fc.network=:network ";
         $q .= "GROUP BY ".$group_by."(fc.date) LIMIT 10";
         $vars = array(
@@ -48,9 +49,20 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
                 $amount_above_min = $row['count'] - $min_count;
                 $percentages[] = round(Utils::getPercentage($amount_above_min, $difference));
             }
+
+            $y_axis = array();
+            $num_y_axis_points = 4;
+            $y_axis_interval_size = $difference/$num_y_axis_points;
+            $i = 0;
+            while ($i < $num_y_axis_points) {
+                $y_axis[$i] = $min_count + ($y_axis_interval_size * $i);
+                $i = $i+1;
+            }
+            $y_axis[$num_y_axis_points-1] = $max_count;
         } else  {
-            $bounds = array(0, 0);
+            $history = false;
+            $y_axis = false;
         }
-        return array('history'=>$history, 'percentages'=>$percentages);
+        return array('history'=>$history, 'percentages'=>$percentages, 'y_axis'=>$y_axis);
     }
 }

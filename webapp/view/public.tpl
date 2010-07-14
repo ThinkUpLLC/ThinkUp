@@ -106,7 +106,7 @@
         {if $description}<h4>{$description}</h4>{/if}
         {if $posts}
           {foreach from=$posts key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t}
+            {include file="_post.public.tpl" t=$t username_link='internal'}
           {/foreach}
           {include file="_pagination.tpl"}
         {/if}
@@ -128,26 +128,27 @@
 
         {if $follower_count_history_by_day.history and $follower_count_history_by_week.history}
 <br /><br />
-<h2>Follower Count History</h2>
         <table width="100%"><tr><td>
-        <img src="http://chart.apis.google.com/chart?chs=425x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$t.date} ({$t.count|number_format})|{/foreach}1:||&cht=ls&chco=0077CC&chd=t:{foreach from=$follower_count_history_by_day.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,76A4FB,0,0,0">
+        Follower Count By Day<br /><br />
+        <img src="http://chart.apis.google.com/chart?chs=425x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=0077CC&chd=t:{foreach from=$follower_count_history_by_day.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,76A4FB,0,0,0&chg=33">
         </td><td>
-        <img src="http://chart.apis.google.com/chart?chs=425x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$t.date} ({$t.count|number_format})|{/foreach}1:||&cht=ls&chco=0077CC&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,76A4FB,0,0,0">
+        Follower Count By Week<br /><br />
+        <img src="http://chart.apis.google.com/chart?chs=425x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=0077CC&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,76A4FB,0,0,0&chg=33">
         </td></tr>
         </table>
         {/if}
 
         {if $most_replied_to_1wk}
 <hr />
-<h2>This week's Most Replied-To</h2>
+<h2 style="font-size:200%;margin-top:10px">This Week's Most Replied-To Posts</h2>
           {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t}
+            {include file="_post.public.tpl" t=$t headings="NONE"}
           {/foreach}
         {/if}
 
         {if $least_likely_followers}
 <hr />
-<h2>Least Likely Followers</h2>
+<h2 style="font-size:200%;margin-top:10px">Least Likely Followers</h2>
             {foreach from=$least_likely_followers key=uid item=u name=foo}
                 <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}"><img src="{$u.avatar}"  height="48" width="48" /></a> 
             {/foreach}
@@ -155,25 +156,32 @@
 
         {if $most_replied_to_1wk}
 <hr />
-<h2>This week's Most Retweeted</h2>
+<h2 style="font-size:200%;margin-top:10px">This Week's Most Retweeted</h2>
           {foreach from=$most_retweeted_1wk key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t}
+            {include file="_post.public.tpl" t=$t headings="NONE"}
           {/foreach}
         {/if}
 
+        {if $conversations}
+<hr />
+<h2 style="font-size:200%;margin-top:10px">Conversations</h2>
+          {foreach from=$conversations key=tid item=r name=foo}
+            {include file="_post.qa.tpl" t=$t headings="NONE"}
+          {/foreach}
+        {/if}
         {if $most_replied_to_alltime}
 <hr />
-<h2>All-Time Most Replied-To</h2>
+<h2 style="font-size:200%;margin-top:10px">All-Time Most Replied-To</h2>
           {foreach from=$most_replied_to_alltime key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t}
+            {include file="_post.public.tpl" t=$t headings="NONE"}
           {/foreach}
         {/if}
 
         {if $most_retweeted_alltime}
 <hr />
-<h2>All-Time Most Retweeted</h2>
+<h2 style="font-size:200%;margin-top:10px">All-Time Most Retweeted</h2>
           {foreach from=$most_retweeted_alltime key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t}
+            {include file="_post.public.tpl" t=$t headings="NONE"}
           {/foreach}
         {/if}
         

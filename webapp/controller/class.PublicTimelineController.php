@@ -22,6 +22,7 @@ class PublicTimelineController extends ThinkTankController implements Controller
 
     /**
      * Constructor
+     * @param bool $session_started
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
@@ -113,6 +114,8 @@ class PublicTimelineController extends ThinkTankController implements Controller
             $most_retweeted_1wk = $this->post_dao->getMostRetweetedPostsInLastWeek($instance->network_username,
             $instance->network, 5);
             $this->addToView('most_retweeted_1wk', $most_retweeted_1wk);
+            $conversations = $this->post_dao->getPostsAuthorHasRepliedTo($instance->network_user_id, 5);
+            $this->addToView('conversations', $conversations);
 
             //follows
             $follow_dao = DAOFactory::getDAO('FollowDAO');

@@ -1,4 +1,4 @@
-{if $smarty.foreach.foo.first}
+{if $smarty.foreach.foo.first && $headings != "NONE"}
   <div class="header clearfix">
     <div class="grid_1 alpha">&#160;</div>
     <div class="grid_3 right">name</div>
@@ -19,10 +19,10 @@
     {/if}
   </div>
   <div class="grid_3 right small">
-    {if $t->network == 'twitter'}
+    {if $t->network == 'twitter' && $username_link != 'internal'}
     <a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
     {else}
-    {$t->author_username}
+    <a href="{$site_root_path}public.php?u={$t->author_username|urlencode}&n={$t->network|urlencode}">{$t->author_username}</a>
     {/if}
     {if $t->author->follower_count > 0}
       <br>{$t->author->follower_count|number_format} followers
@@ -44,7 +44,7 @@
       <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
     {/if}
     <p>
-      {$t->post_text|link_usernames_to_twitter}
+      {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
       {if !$post && $t->in_reply_to_post_id }
         <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}">&larr;</a>
       {/if}
