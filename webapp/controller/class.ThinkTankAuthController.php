@@ -16,7 +16,7 @@ abstract class ThinkTankAuthController extends ThinkTankController implements Co
             return $this->authControl();
         } else {
             //@TODO bounce to sign in page and bounce back to original action once signed in
-            if (get_class($this)=='PrivateDashboardController') {
+            if (get_class($this)=='PrivateDashboardController' || get_class($this)=='PostController') {
                 $controller = new PublicTimelineController(true);
                 return $controller->go();
             } else {
