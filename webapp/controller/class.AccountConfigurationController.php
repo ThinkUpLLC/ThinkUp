@@ -43,8 +43,7 @@ class AccountConfigurationController extends ThinkTankAuthController {
 
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
         && isset($_POST['pass1']) && isset($_POST['pass2'])) {
-            $originalpass = $owner_dao->getPass($this->getLoggedInUser());
-            $origpass = $originalpass['pwd'];
+            $origpass = $owner_dao->getPass($this->getLoggedInUser());
             if (!$this->app_session->pwdCheck($_POST['oldpass'], $origpass)) {
                 $this->addToView('errormsg', "Old password does not match or empty.");
             } elseif ($_POST['pass1'] != $_POST['pass2']) {

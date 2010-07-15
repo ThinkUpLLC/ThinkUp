@@ -1,17 +1,17 @@
 <?php
+require_once 'model/class.PDODAO.php';
+require_once 'model/interface.OwnerDAO.php';
+
 /**
  * Owner Data Access Object
  * The data access object for retrieving and saving owners in the ThinkTank database
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.OwnerDAO.php';
-
 class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
 
     public function getByEmail($email) {
-        $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, is_admin, last_login, user_activated as is_activated ";
+        $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, ";
+        $q .= "is_admin, last_login, user_activated as is_activated, user_pwd as pwd ";
         $q .= " FROM #prefix#owners AS o ";
         $q .= " WHERE o.user_email = :email;";
         $vars = array(
@@ -22,9 +22,10 @@ class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
     }
 
     public function getAllOwners() {
-        $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, is_admin, last_login";
-        $q .= " FROM #prefix#owners AS o ";
-        $q .= " ORDER BY last_login DESC;";
+        $q = " SELECT o.id AS id, o.user_name AS user_name, o.full_name AS full_name, o.user_email AS user_email, ";
+        $q .= "is_admin, last_login ";
+        $q .= "FROM #prefix#owners AS o ";
+        $q .= "ORDER BY last_login DESC;";
         $ps = $this->execute($q);
         return $this->getDataRowsAsObjects($ps, 'Owner');
     }
@@ -40,18 +41,6 @@ class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
         return $this->getDataIsReturned($ps, $vars);
     }
 
-    public function getForLogin($email) {
-        $q = " SELECT o.id AS id, o.user_email AS mail, o.user_name AS name, o.user_pwd AS pwd ";
-        $q .= " FROM #prefix#owners AS o ";
-        $q .= " WHERE o.user_email = :email AND user_activated='1'";
-        $q .= " LIMIT 1;";
-        $vars = array(
-            ':email'=>$email
-        );
-        $ps = $this->execute($q, $vars);
-        return $this->getDataRowAsArray($ps);
-    }
-
     public function getPass($email) {
         $q = " SELECT o.user_pwd AS pwd ";
         $q .= " FROM #prefix#owners AS o ";
@@ -61,7 +50,12 @@ class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
             ':email'=>$email
         );
         $ps = $this->execute($q, $vars);
-        return $this->getDataRowAsArray($ps);
+        $result = $this->getDataRowAsArray($ps);
+        if (isset($result['pwd'])) {
+            return $result['pwd'];
+        } else {
+            return false;
+        }
     }
 
     public function getActivationCode($email) {
@@ -101,7 +95,8 @@ class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
     public function create($email, $pass, $country, $acode, $full_name) {
         if (!$this->doesOwnerExist($email)) {
             $q = "INSERT INTO #prefix#owners SET ";
-            $q .= "user_email=:email, user_pwd=:pass, country=:country, joined=NOW(),activation_code=:acode, full_name=:full_name";
+            $q .= "user_email=:email, user_pwd=:pass, country=:country, joined=NOW(),activation_code=:acode, ";
+            $q .= "full_name=:full_name ";
             $vars = array(
                 ':email'=>$email,
                 ':pass'=>$pass,

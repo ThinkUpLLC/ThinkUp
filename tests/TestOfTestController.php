@@ -22,24 +22,24 @@ class TestOfTestController extends ThinkTankBasicUnitTestCase {
     /**
      * Constructor
      */
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('TestController class test');
     }
 
-    function setUp(){
+    public function setUp(){
         parent::setUp();
         $config = Config::getInstance();
         $config->setValue('debug', true);
     }
 
-    function tearDown(){
+    public function tearDown(){
         parent::tearDown();
     }
 
     /**
      * Test constructor
      */
-    function testConstructor() {
+    public function testConstructor() {
         $controller = new TestController(true);
         $this->assertTrue(isset($controller), 'constructor test');
     }
@@ -49,7 +49,7 @@ class TestOfTestController extends ThinkTankBasicUnitTestCase {
      * @TODO Possibly load the resulting markup as a DOM object and test various children in it;
      * this would enforce valid markup
      */
-    function testControl() {
+    public function testControl() {
         $config = Config::getInstance();
         $controller = new TestController(true);
         $results = $controller->go();
@@ -68,7 +68,7 @@ class TestOfTestController extends ThinkTankBasicUnitTestCase {
      * @TODO Possibly load the resulting markup as a DOM object and test various children in it;
      * this would enforce valid markup
      */
-    function testCacheKeyNoRequestParams() {
+    public function testCacheKeyNoRequestParams() {
         $config = Config::getInstance();
         $config->setValue('cache_pages', true);
         $controller = new TestController(true);

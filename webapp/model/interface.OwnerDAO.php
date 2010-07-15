@@ -25,18 +25,10 @@ interface OwnerDAO {
      */
     public function doesOwnerExist($email);
 
-
-    /**
-     * Get activated owner by email (for login purposes)
-     * @param str $email
-     * @return array Array of owner values
-     */
-    public function getForLogin($email);
-
     /**
      * Get password for activated owner by email
      * @param str $email
-     * @return array|bool $row['pwd'] or false if none
+     * @return str|bool Password string or false if none
      */
     public function getPass($email);
 

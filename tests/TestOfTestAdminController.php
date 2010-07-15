@@ -7,24 +7,28 @@ require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.p
 require_once $SOURCE_ROOT_PATH.'webapp/controller/interface.Controller.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankAuthController.php';
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.TestAuthController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankAdminController.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.TestAdminController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
 /**
- * Test TestAuthController class
+ * Test TestAdminController class
  *
  * TestController isn't a real ThinkTank controller, this is just a template for all Controller tests.
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-class TestOfTestAuthController extends ThinkTankBasicUnitTestCase {
+class TestOfTestAdminController extends ThinkTankBasicUnitTestCase {
     /**
      * Constructor
      */
     public function __construct() {
-        $this->UnitTestCase('TestController class test');
+        $this->UnitTestCase('TestAdminController class test');
     }
 
     public function setUp(){
@@ -41,7 +45,7 @@ class TestOfTestAuthController extends ThinkTankBasicUnitTestCase {
      * Test constructor
      */
     public function testConstructor() {
-        $controller = new TestAuthController(true);
+        $controller = new TestAdminController(true);
         $this->assertTrue(isset($controller), 'constructor test');
     }
 
@@ -52,23 +56,20 @@ class TestOfTestAuthController extends ThinkTankBasicUnitTestCase {
      */
     public function testControlNotLoggedIn() {
         $config = Config::getInstance();
-        $controller = new TestAuthController(true);
+        $controller = new TestAdminController(true);
         $results = $controller->go();
 
-        $this->assertEqual($results, 'You must be logged in to do this', "not logged in, auth controller output");
+        $this->assertEqual($results, 'You must be a ThinkTank admin in to do this',
+        "not logged in, not admin, auth controller output");
     }
 
-    /**
-     * Test controller for logged-in user
-     * @TODO Possibly load the resulting markup as a DOM object and test various children in it;
-     * this would enforce valid markup
-     */
-    public function testIsLoggedIn() {
+    public function testLoggedInAsAdmin() {
         $_SESSION['user'] = 'me@example.com';
+        $_SESSION['user_is_admin'] = true;
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinktank/');
 
-        $controller = new TestAuthController(true);
+        $controller = new TestAdminController(true);
         $results = $controller->go();
 
         //test if view variables were set correctly
@@ -81,17 +82,16 @@ class TestOfTestAuthController extends ThinkTankBasicUnitTestCase {
         "auth controller output when logged in");
     }
 
-    /**
-     * Test cache key logged in, no params
-     */
-    public function testCacheKeyLoggedIn() {
+    public function testLoggedInNotAsAdmin() {
         $_SESSION['user'] = 'me@example.com';
-
+        $_SESSION['user_is_admin'] = false;
         $config = Config::getInstance();
-        $config->setValue('cache_pages', true);
-        $controller = new TestAuthController(true);
+        $config->setValue('site_root_path', '/my/path/to/thinktank/');
+
+        $controller = new TestAdminController(true);
         $results = $controller->go();
 
-        $this->assertEqual($controller->getCacheKeyString(), 'testme.tpl-me@example.com');
+        $this->assertEqual($results, 'You must be a ThinkTank admin in to do this',
+        "not logged in, not admin, auth controller output");
     }
 }

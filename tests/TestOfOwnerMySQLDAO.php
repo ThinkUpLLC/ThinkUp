@@ -8,6 +8,7 @@ require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.OwnerDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerMySQLDAO.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 
 /**
  * Test of OwnerMySQL DAO implementation
@@ -30,10 +31,12 @@ class TestOfOwnerMySQLDAO extends ThinkTankUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->DAO = new OwnerMySQLDAO();
-        $q = "INSERT INTO tt_owners SET user_name='ThinkTankUser', full_name='ThinkTank J. User', user_email='ttuser@example.com', user_activated=0, user_pwd='XXX', activation_code='8888'";
+        $q = "INSERT INTO tt_owners SET user_name='ThinkTankUser', full_name='ThinkTank J. User',
+        user_email='ttuser@example.com', user_activated=0, user_pwd='XXX', activation_code='8888'";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_owners SET user_name='ThinkTankUser1', full_name='ThinkTank J. User1', user_email='ttuser1@example.com', user_activated=1, user_pwd='YYY'";
+        $q = "INSERT INTO tt_owners SET user_name='ThinkTankUser1', full_name='ThinkTank J. User1',
+        user_email='ttuser1@example.com', user_activated=1, user_pwd='YYY'";
         PDODAO::$PDO->exec($q);
 
     }
@@ -78,29 +81,18 @@ class TestOfOwnerMySQLDAO extends ThinkTankUnitTestCase {
     }
 
     /**
-     * Test getForLogin
-     */
-    public function testGetForLogin() {
-        $owner_for_login = $this->DAO->getForLogin('ttuser@example.com');
-        $this->assertTrue(!isset($owner_for_login));
-        $owner_for_login = $this->DAO->getForLogin('ttuser1@example.com');
-        $this->assertTrue(isset($owner_for_login));
-    }
-
-
-    /**
      * Test getPassword
      */
     public function testGetPassword() {
         //owner who doesn't exist
         $result = $this->DAO->getPass('idontexist@example.com');
-        $this->assertTrue(!isset($result));
+        $this->assertFalse($result);
         //owner who is not activated
         $result = $this->DAO->getPass('ttuser@example.com');
-        $this->assertTrue(!isset($result));
+        $this->assertFalse($result);
         //activated owner
         $result = $this->DAO->getPass('ttuser1@example.com');
-        $this->assertEqual($result['pwd'], 'YYY');
+        $this->assertEqual($result, 'YYY');
     }
 
     /**

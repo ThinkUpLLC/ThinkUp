@@ -70,6 +70,15 @@ abstract class ThinkTankController {
     }
 
     /**
+     * Returns whether or not a logged-in ThinkTank user is an admin
+     *
+     * @return bool whether or not logged-in user is an admin
+     */
+    protected function isAdmin() {
+        return $this->app_session->isAdmin();
+    }
+
+    /**
      * Return email address of logged-in user
      *
      * @return str email

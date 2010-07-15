@@ -37,16 +37,16 @@ class LoginController extends ThinkTankController {
                     $session = new Session();
                     $user_email = $_POST['email'];
                     $this->addToView('email', $user_email);
-                    $result = $od->getForLogin($user_email);
-                    if (!$result) {
+                    $owner = $od->getByEmail($user_email);
+                    if (!$owner) {
                         $this->addToView('errormsg', "Incorrect email");
                         return $this->generateView();
-                    } elseif (!$session->pwdCheck($_POST['pwd'], $result['pwd'])) {
+                    } elseif (!$session->pwdCheck($_POST['pwd'], $od->getPass($user_email))) {
                         $this->addToView('errormsg', "Incorrect password");
                         return $this->generateView();
                     } else {
                         // this sets variables in the session
-                        $session->completeLogin($result);
+                        $session->completeLogin($owner);
                         $od->updateLastLogin($user_email);
                         $controller = new PrivateDashboardController(true);
                         return $controller->go();

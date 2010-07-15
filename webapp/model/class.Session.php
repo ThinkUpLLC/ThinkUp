@@ -39,6 +39,17 @@ class Session {
     }
 
     /**
+     * @return bool Is user logged into ThinkTank an admin
+     */
+    public function isAdmin() {
+        if (isset($_SESSION['user_is_admin'])) {
+            return $_SESSION['user_is_admin'];
+        } else {
+            return false;
+        }
+    }
+
+    /**
      *
      * @param str $pwd Password
      * @return str MD5-hashed password
@@ -89,10 +100,11 @@ class Session {
 
     /**
      * Complete login action
-     * @param str $data
+     * @param Owner $owner
      */
-    public function completeLogin($data) {
-        $_SESSION['user'] = $data['mail'];
+    public function completeLogin($owner) {
+        $_SESSION['user'] = $owner->user_email;
+        $_SESSION['user_is_admin'] = $owner->is_admin;
     }
 
     /**
@@ -100,5 +112,6 @@ class Session {
      */
     public function logout() {
         unset($_SESSION['user']);
+        unset($_SESSION['user_is_admin']);
     }
 }
