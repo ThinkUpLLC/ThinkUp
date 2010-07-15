@@ -1,29 +1,8 @@
 <?php
-session_start();
-
-// set up
-chdir("..");
-
-
+chdir('..');
 require_once 'init.php';
+require_once 'controller/class.ActivateAccountController.php';
+require_once 'controller/class.LoginController.php';
 
-if (!isset($_GET['usr']) || !isset($_GET['code']) ) {
-    echo "ERROR: Invalid code given...";
-    exit();
-}
-
-$od = DAOFactory::getDAO('OwnerDAO');
-
-$acode = $od->getActivationCode($_GET['usr']);
-
-$success = false;
-if ($_GET['code'] == $acode['activation_code']) {
-    $od->updateActivate($_GET['usr']);
-    $success = true;
-}
-
-if ( $success ) {
-    header("Location: login.php?smsg=Success!+Your+account+has+been+activated.+You+may+sign+into+ThinkTank.");
-} else {
-    header("Location: login.php?emsg=Houston,+we+have+a+problem:+account+activation+failed.");
-}
+$controller = new ActivateAccountController();
+echo $controller->go();
