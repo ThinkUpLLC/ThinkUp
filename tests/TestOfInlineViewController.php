@@ -122,7 +122,7 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('header'), '', 'Header not set');
         $this->assertEqual($v_mgr->getTemplateDataItem('description'), '', 'Description not set');
-        $this->assertEqual($v_mgr->getTemplateDataItem('error'), 'Required query string parameter n missing.',
+        $this->assertEqual($v_mgr->getTemplateDataItem('info'), 'No user to retrieve.',
         'Error re: missing param set');
     }
 

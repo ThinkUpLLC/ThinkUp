@@ -65,7 +65,13 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
         $q = "INSERT INTO tt_owners SET id=1, user_name='ThinkTankUser', full_name='ThinkTank J. User',
         user_email='me@example.com', user_activated=1, user_pwd='XXX', activation_code='8888'";
         $this->db->exec($q);
+    }
 
+    public function tearDown(){
+        parent::tearDown();
+    }
+
+    private function setUpValidOwnerInstanceWithPosts() {
         //Add instance_owner
         $q = "INSERT INTO tt_owner_instances (owner_id, instance_id) VALUES (1, 1)";
         $this->db->exec($q);
@@ -91,11 +97,6 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
             $counter++;
         }
     }
-
-    public function tearDown(){
-        parent::tearDown();
-    }
-
     public function testConstructor() {
         $controller = new PrivateDashboardController(true);
         $this->assertTrue(isset($controller), 'constructor test');
@@ -105,6 +106,7 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
     }
 
     public function testControlNotLoggedIn() {
+        $this->setUpValidOwnerInstanceWithPosts();
         $controller = new PrivateDashboardController(true);
         $results = $controller->go();
 
@@ -112,8 +114,9 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
         "not logged in; render public timeline instead");
     }
 
-    public function testControlLoggedIn() {
+    public function testControlLoggedInWithData() {
         $_SESSION['user'] = 'me@example.com';
+        $this->setUpValidOwnerInstanceWithPosts();
         $controller = new PrivateDashboardController(true);
         $results = $controller->go();
 
@@ -125,4 +128,19 @@ class TestOfPrivateDashboardController extends ThinkTankUnitTestCase {
 
         $this->assertEqual($controller->getCacheKeyString(), 'index.tpl-me@example.com-ev-twitter', 'Cache key');
     }
+
+    public function testControlLoggedInWithOutInstance() {
+        $_SESSION['user'] = 'me@example.com';
+        $controller = new PrivateDashboardController(true);
+        $results = $controller->go();
+
+        $this->assertTrue(strpos( $results, "It is nice to be nice") > 0, "logged in dashboard");
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Private Dashboard');
+
+        $this->assertEqual($controller->getCacheKeyString(), 'index.tpl-me@example.com', 'Cache key');
+    }
+
 }

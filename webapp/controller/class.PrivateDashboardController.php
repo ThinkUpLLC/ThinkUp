@@ -46,10 +46,12 @@ class PrivateDashboardController extends ThinkTankAuthController {
             $owner = $owner_dao->getByEmail($this->getLoggedInUser());
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             $instance = $instance_dao->getFreshestByOwnerId($owner->id);
-            $instance_user = $instance->network_username;
-            $_GET['u'] = $instance_user;
-            $instance_user_network = $instance->network;
-            $_GET['n'] = $instance_user_network;
+            if (isset($instance)) {
+                $instance_user = $instance->network_username;
+                $_GET['u'] = $instance_user;
+                $instance_user_network = $instance->network;
+                $_GET['n'] = $instance_user_network;
+            }
         }
 
         if ($this->shouldRefreshCache()) {
@@ -68,7 +70,8 @@ class PrivateDashboardController extends ThinkTankAuthController {
                 $instance = $instance_dao->getFreshestByOwnerId($owner->id);
             }
 
-            if ($instance_dao->isUserConfigured($instance_user, $instance_user_network) ){
+            if (isset($instance_user) && isset($instance_user_network)
+            && $instance_dao->isUserConfigured($instance_user, $instance_user_network) ){
                 $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                 if ( !$owner_instance_dao->doesOwnerHaveAccess($owner, $instance_user) ) {
                     $this->addToView('error','Insufficient privileges. <a href="/">Back</a>.');

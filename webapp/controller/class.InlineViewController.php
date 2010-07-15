@@ -29,9 +29,10 @@ class InlineViewController extends ThinkTankAuthController {
         parent::__construct($session_started);
         $this->addToView('controller_title', 'Inline View');
         foreach ($this->REQUIRED_PARAMS as $param) {
-            if (!isset($_GET[$param] ) ) {
-                $this->addToView('error', 'Required query string parameter '.$param. ' missing.');
+            if (!isset($_GET[$param]) || $_GET[$param] == '' ) {
+                $this->addToView('info', 'No user to retrieve.');
                 $this->is_missing_param = true;
+                $this->setViewTemplate('inline.view.tpl');
             }
         }
         if (!isset($_GET['d'])) {
@@ -47,10 +48,14 @@ class InlineViewController extends ThinkTankAuthController {
         if (!$this->is_missing_param) {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             $instance = $instance_dao->getByUsernameOnNetwork($_GET['u'], $_GET['n']);
-            $webapp = Webapp::getInstance();
-            $webapp->setActivePlugin($instance->network);
-            $tab = $webapp->getTab($_GET['d'], $instance);
-            $this->setViewTemplate($tab->view_template);
+            if (isset($instance)) {
+                $webapp = Webapp::getInstance();
+                $webapp->setActivePlugin($instance->network);
+                $tab = $webapp->getTab($_GET['d'], $instance);
+                $this->setViewTemplate($tab->view_template);
+            } else {
+                $continue = false;
+            }
         } else {
             $continue = false;
         }
