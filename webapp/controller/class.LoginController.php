@@ -27,10 +27,10 @@ class LoginController extends ThinkTankController {
             && isset($_POST['email']) && isset($_POST['pwd']) ) {
                 if ( $_POST['email']=='' || $_POST['pwd']=='') {
                     if ( $_POST['email']=='') {
-                        $this->addToView('errormsg', "Email must not be empty");
+                        $this->addErrorMessage("Email must not be empty");
                         return $this->generateView();
                     } else {
-                        $this->addToView('errormsg', "Password must not be empty");
+                        $this->addErrorMessage("Password must not be empty");
                         return $this->generateView();
                     }
                 } else {
@@ -39,10 +39,10 @@ class LoginController extends ThinkTankController {
                     $this->addToView('email', $user_email);
                     $owner = $od->getByEmail($user_email);
                     if (!$owner) {
-                        $this->addToView('errormsg', "Incorrect email");
+                        $this->addErrorMessage("Incorrect email");
                         return $this->generateView();
                     } elseif (!$session->pwdCheck($_POST['pwd'], $od->getPass($user_email))) {
-                        $this->addToView('errormsg', "Incorrect password");
+                        $this->addErrorMessage("Incorrect password");
                         return $this->generateView();
                     } else {
                         // this sets variables in the session

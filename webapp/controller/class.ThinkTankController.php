@@ -223,4 +223,28 @@ abstract class ThinkTankController {
             return true;
         }
     }
+
+    /**
+     * Add error message to view
+     * @param str $msg
+     */
+    public function addErrorMessage($msg) {
+        $this->addToView('errormsg', $msg );
+    }
+
+    /**
+     * Add success message to view
+     * @param str $msg
+     */
+    public function addSuccessMessage($msg) {
+        $this->addToView('successmsg', $msg );
+    }
+
+    /**
+     * Add informational message to view
+     * @param str $msg
+     */
+    public function addInfoMessage($msg) {
+        $this->addToView('infomsg', $msg );
+    }
 }

@@ -81,7 +81,7 @@ class PrivateDashboardController extends ThinkTankAuthController {
                 }
             } else {
                 if ( !isset($instance) && $instance == null ) {
-                    $this->addToView('msg', 'You have no Twitter accounts configured. <a href="'.
+                    $this->addInfoMessage('You have no Twitter accounts configured. <a href="'.
                     $config->getValue('site_root_path').'account/?p=twitter">Set up an account&rarr;</a>');
                     $continue = false;
                 }

@@ -30,7 +30,7 @@ class InlineViewController extends ThinkTankAuthController {
         $this->addToView('controller_title', 'Inline View');
         foreach ($this->REQUIRED_PARAMS as $param) {
             if (!isset($_GET[$param]) || $_GET[$param] == '' ) {
-                $this->addToView('info', 'No user to retrieve.');
+                $this->addInfoMessage('No user to retrieve.');
                 $this->is_missing_param = true;
                 $this->setViewTemplate('inline.view.tpl');
             }
@@ -70,13 +70,13 @@ class InlineViewController extends ThinkTankAuthController {
                     $username = $_GET['u'];
                     $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                     if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $username)) {
-                        $this->addToView('error','Insufficient privileges. <a href="/">Back</a>.');
+                        $this->addErrorMessage('Insufficient privileges. <a href="/">Back</a>.');
                         $continue = false;
                     } else {
                         $this->addToView('i', $instance);
                     }
                 } else {
-                    $this->addToView('error', $_GET['u'] . " is not configured.");
+                    $this->addErrorMessage($_GET['u'] . " is not configured.");
                     $continue = false;
                 }
             } else {
@@ -91,6 +91,8 @@ class InlineViewController extends ThinkTankAuthController {
                 foreach ($tab->datasets as $dataset) {
                     $this->addToView($dataset->name, $dataset->retrieveDataset());
                 }
+            } else {
+                $this->setViewTemplate('inline.view.tpl');
             }
         }
         return $this->generateView();

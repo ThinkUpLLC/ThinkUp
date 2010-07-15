@@ -49,7 +49,7 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
                     $xml = $api->createParserFromString(utf8_encode($data));
                     $user = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name, 'is_protected'=>$xml->protected);
                 } catch(Exception $e) {
-                    $this->addToView('errormsg', $e->getMessage());
+                    $this->addErrorMessage($e->getMessage());
                 }
                 if (isset($user) && $user["is_protected"] == 'false') {
                     // if so, add to instances table and owners table
@@ -69,15 +69,15 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
                         $i = $id->getByUsernameOnNetwork($user["user_name"], 'twitter');
                         $oid->insert($this->owner->id, $i->id, '', '');
                     }
-                    $this->addToView('successmsg', $_GET['twitter_username']." has been added to ThinkTank.");
+                    $this->addSuccessMessage($_GET['twitter_username']." has been added to ThinkTank.");
 
-                    $this->addToView('successmsg', "Added ".$_GET['twitter_username']." to ThinkTank.");
+                    $this->addSuccessMessage("Added ".$_GET['twitter_username']." to ThinkTank.");
                 } else { // if not, return error
-                    $this->addToView('errormsg', $_GET['twitter_username'].
+                    $this->addErrorMessage($_GET['twitter_username'].
                     " is a private Twitter account; ThinkTank cannot track it without authorization.");
                 }
             } else {
-                $this->addToView('errormsg', $_GET['twitter_username']." is not a valid Twitter username.");
+                $this->addErrorMessage($_GET['twitter_username']." is not a valid Twitter username.");
             }
         }
 
@@ -92,7 +92,7 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
             $oauthorize_link = $to->getAuthorizeURL($token);
         } else {
             //set error message here
-            $this->addToView('errormsg',
+            $this->addErrorMessage(
             "Unable to obtain OAuth token. Check your Twitter consumer key and secret configuration.");
             $oauthorize_link = '';
         }

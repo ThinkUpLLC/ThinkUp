@@ -131,7 +131,7 @@ class PublicTimelineController extends ThinkTankController implements Controller
             'WEEK');
             $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
         } else {
-            $this->addToView('errormsg', $username." on ".ucwords($network).
+            $this->addErrorMessage($username." on ".ucwords($network).
             " isn't set up on this ThinkTank installation.");
         }
     }

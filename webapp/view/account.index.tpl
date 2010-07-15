@@ -47,19 +47,7 @@
     <div class="section" id="instances">
       <div class="thinktank-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
-          {if isset($errormsg)}
-            <div class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
-              <p>
-                <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                {$errormsg}
-              </p>
-            </div>
-          {/if}
-          {if isset($successmsg)}
-          	<div class="success">
-          		{$successmsg}
-			</div>
-          {/if}
+{include file="_usermessage.tpl"}
           <form name="changepass" method="post" action="index.php?m=manage#instances" class="login prepend_20 append_20">
             <div class="clearfix">
               <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>

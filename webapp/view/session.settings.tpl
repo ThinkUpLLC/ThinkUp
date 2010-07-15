@@ -1,11 +1,7 @@
 <h1>Settings</h1>
 
 <p>
-  {if isset($msg)}
-    <div class="msg">
-      {$msg}
-    </div>
-  {/if}
+{include file="_usermessage.tpl"}
 </p>
 
 <h2>Change Password</h2>

@@ -58,7 +58,7 @@ class PostController extends ThinkTankAuthController {
                 $private_replies_count = $all_replies_count - $public_replies_count;
                 $this->addToView('private_reply_count', $private_replies_count );
             } else {
-                $this->addToView('error', 'Post not found');
+                $this->addErrorMessage('Post not found');
             }
         }
         return $this->generateView();

@@ -6,16 +6,7 @@
   </div>
   <div class="clearfix prepend_20">
     <div class="grid_17 prefix_3 left">
-      {if isset($errormsg)}
-        <div class="error">
-          {$errormsg}
-        </div>
-      {/if} 
-      {if isset($successmsg)}
-        <div class="success">
-          {$successmsg}
-        </div>
-      {/if}
+{include file="_usermessage.tpl"}
     </div>
   </div>
   {if !$closed and !$successmsg}

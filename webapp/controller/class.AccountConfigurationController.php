@@ -45,16 +45,16 @@ class AccountConfigurationController extends ThinkTankAuthController {
         && isset($_POST['pass1']) && isset($_POST['pass2'])) {
             $origpass = $owner_dao->getPass($this->getLoggedInUser());
             if (!$this->app_session->pwdCheck($_POST['oldpass'], $origpass)) {
-                $this->addToView('errormsg', "Old password does not match or empty.");
+                $this->addErrorMessage("Old password does not match or empty.");
             } elseif ($_POST['pass1'] != $_POST['pass2']) {
-                $this->addToView('errormsg',"New passwords did not match. Your password has not been changed.");
+                $this->addErrorMessage("New passwords did not match. Your password has not been changed.");
             } elseif (strlen($_POST['pass1']) < 5) {
-                $this->addToView('errormsg',"New password must be at least 5 characters. ".
+                $this->addErrorMessage("New password must be at least 5 characters. ".
                 "Your password has not been changed." );
             } else {
                 $cryptpass = $this->app_session->pwdcrypt($_POST['pass1']);
                 $owner_dao->updatePassword($this->getLoggedInUser(), $cryptpass);
-                $this->addToView('successmsg', "Your password has been updated.");
+                $this->addSuccessMessage("Your password has been updated.");
             }
         }
 

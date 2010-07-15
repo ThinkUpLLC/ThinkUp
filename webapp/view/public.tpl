@@ -19,20 +19,7 @@
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
       
-      {if isset($errormsg)}
-            <div class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
-              <p>
-                <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                {$errormsg}
-              </p>
-            </div>
-          {/if}
-          {if isset($successmsg)}
-            <div class="success">
-                {$successmsg}
-            </div>
-          {/if}
-          
+        {include file="_usermessage.tpl"}
         {if $post and ($replies OR $retweets)}
           <div class="clearfix">
             <div class="grid_2 alpha">
