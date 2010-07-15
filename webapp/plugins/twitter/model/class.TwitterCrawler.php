@@ -817,7 +817,7 @@ class TwitterCrawler {
                         $e = $this->api->parseError($twitter_data);
                         $ued = DAOFactory::getDAO('UserErrorDAO');
                         $ued->insertError($stale_friend->user_id, $cURL_status, $e['error'],
-                        $this->owner_object->user_id);
+                        $this->owner_object->user_id, 'twitter');
                         $this->logger->logStatus('User error saved', get_class($this));
                     }
                     catch(Exception $e) {
@@ -943,7 +943,7 @@ class TwitterCrawler {
             try {
                 $e = $this->api->parseError($twitter_data);
                 $ued = DAOFactory::getDAO('UserErrorDAO');
-                $ued->insertError($fid, $cURL_status, $e['error'], $this->owner_object->user_id);
+                $ued->insertError($fid, $cURL_status, $e['error'], $this->owner_object->user_id, 'twitter');
                 $status_message = 'User error saved.';
 
             }
