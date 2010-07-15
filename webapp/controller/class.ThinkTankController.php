@@ -145,7 +145,7 @@ abstract class ThinkTankController {
                 }
             }
         } else {
-            throw new Exception('No view template specified');
+            throw new Exception(get_class($this).': No view template specified');
         }
     }
 
