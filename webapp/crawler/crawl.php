@@ -10,8 +10,8 @@ if (isset($argc) && $argc > 1) { // check for CLI credentials
     $pw = $argv[2];
 
     $od = DAOFactory::getDAO('OwnerDAO');
-    $result = $od->getForLogin($username);
-    if ($session->pwdCheck($pw, $result['pwd'])) {
+    $passcheck = $od->getPass($username);
+    if ($session->pwdCheck($pw, $passcheck)) {
         $authorized = true;
     } else {
         echo "ERROR: Incorrect username and password.";
