@@ -22,7 +22,7 @@ class HelloThinkTankPluginConfigurationController extends ThinkTankAuthControlle
     public function authControl() {
         $config = Config::getInstance();
         $this->setViewTemplate($config->getValue('source_root_path').'webapp/plugins/hellothinktank/view/hellothinktank.account.index.tpl');
-        $this->addToView('message', 'Hello, world! This is the example plugin configuration page for  '.$this->owner->user_email .'.');
+        $this->addToView('message', 'Hello, world! This is the example plugin configuration page for  '.$this->owner->email .'.');
         return $this->generateView();
     }
 }

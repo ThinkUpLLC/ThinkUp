@@ -34,7 +34,7 @@ class TestOfActivateAccountController extends ThinkTankUnitTestCase {
     }
 
     public function testInvalidActivation() {
-        $owner = array('id'=>1, 'user_email'=>'me@example.com', 'activation_code'=>'1001', 'user_activated'=>0);
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'activation_code'=>'1001', 'is_activated'=>0);
         $builder1 = FixtureBuilder::build('owners', $owner);
         $_GET['usr'] = 'me@example.com';
         $_GET['code'] = 'invalidcode';
@@ -59,7 +59,7 @@ class TestOfActivateAccountController extends ThinkTankUnitTestCase {
     }
 
     public function testValidActivation() {
-        $owner = array('id'=>1, 'user_email'=>'me@example.com', 'activation_code'=>'1001', 'user_activated'=>0);
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'activation_code'=>'1001', 'is_activated'=>0);
         $builder1 = FixtureBuilder::build('owners', $owner);
         $_GET['usr'] = 'me@example.com';
         $_GET['code'] = '1001';

@@ -18,7 +18,7 @@ class TestOfPublicTimeline extends ThinkTankWebTestCase {
         //Add owner
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
-        $q = "INSERT INTO tt_owners (id, user_email, user_pwd, user_activated) VALUES (1, 'me@example.com', '"
+        $q = "INSERT INTO tt_owners (id, email, pwd, is_activated) VALUES (1, 'me@example.com', '"
         .$cryptpass."', 1)";
         $this->db->exec($q);
 

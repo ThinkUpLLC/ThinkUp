@@ -64,8 +64,8 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
 
         //Add owner
-        $q = "INSERT INTO tt_owners SET id=1, user_name='ThinkTankUser', full_name='ThinkTank J. User',
-        user_email='me@example.com', user_activated=1, user_pwd='XXX', activation_code='8888'";
+        $q = "INSERT INTO tt_owners SET id=1, full_name='ThinkTank J. User', email='me@example.com', is_activated=1, 
+        pwd='XXX', activation_code='8888'";
         $this->db->exec($q);
 
         //Add instance_owner

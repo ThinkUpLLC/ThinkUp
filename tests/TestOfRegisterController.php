@@ -63,7 +63,7 @@ class TestOfRegisterController extends ThinkTankUnitTestCase {
     public function testAlreadyLoggedIn() {
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
-        $owner = array('id'=>1, 'user_email'=>'me@example.com', 'user_pwd'=>$cryptpass, 'user_activated'=>1);
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
         $builder1 = FixtureBuilder::build('owners', $owner);
         $instance = array('id'=>1);
         $builder2 = FixtureBuilder::build('instances', $instance);
@@ -90,7 +90,6 @@ class TestOfRegisterController extends ThinkTankUnitTestCase {
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
-        $_POST['country'] = "USA";
         $controller = new RegisterController(true);
         $results = $controller->go();
 
@@ -105,7 +104,6 @@ class TestOfRegisterController extends ThinkTankUnitTestCase {
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
-        $_POST['country'] = "USA";
         $_POST['user_code'] = '123456';
         $_POST['pass1'] = 'mypass';
         $_POST['pass2'] = 'mmypass';
@@ -123,7 +121,6 @@ class TestOfRegisterController extends ThinkTankUnitTestCase {
         $_SERVER['HTTP_HOST'] = "http://mytestthinktank/";
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
-        $_POST['country'] = "USA";
         $_POST['email'] = 'angie@example.com';
         $_POST['user_code'] = '123456';
         $_POST['pass1'] = 'mypass';

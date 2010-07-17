@@ -10,7 +10,7 @@ class RegisterController extends ThinkTankController implements Controller {
      * Required form submission values
      * @var array
      */
-    var $REQUIRED_PARAMS = array('email', 'pass1', 'pass2', 'full_name', 'user_code', 'country');
+    var $REQUIRED_PARAMS = array('email', 'pass1', 'pass2', 'full_name', 'user_code');
     /**
      *
      * @var boolean
@@ -64,8 +64,7 @@ class RegisterController extends ThinkTankController implements Controller {
                                 $activ_code = rand(1000, 9999);
                                 $cryptpass = $session->pwdcrypt($_POST['pass2']);
                                 $server = $_SERVER['HTTP_HOST'];
-                                $owner_dao->create($_POST['email'], $cryptpass, $_POST['country'], $activ_code,
-                                $_POST['full_name']);
+                                $owner_dao->create($_POST['email'], $cryptpass, $activ_code, $_POST['full_name']);
 
                                 $es->assign('apptitle', $config->getValue('app_title') );
                                 $es->assign('server', $server );

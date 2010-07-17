@@ -69,7 +69,8 @@ class TestOfTwitterPluginConfigurationController extends ThinkTankUnitTestCase {
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
 
         //Add owner
-        $q = "INSERT INTO tt_owners SET id=1, user_name='ThinkTankUser', full_name='ThinkTank J. User', user_email='me@example.com', user_activated=1, user_pwd='XXX', activation_code='8888'";
+        $q = "INSERT INTO tt_owners SET id=1, full_name='ThinkTank J. User', email='me@example.com', 
+        is_activated=1, pwd='XXX', activation_code='8888'";
         $this->db->exec($q);
 
         //Add instance_owner
@@ -77,7 +78,8 @@ class TestOfTwitterPluginConfigurationController extends ThinkTankUnitTestCase {
         $this->db->exec($q);
 
         //Insert test data into test table
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 
+        'Ev Williams', 'avatar.jpg', '1/1/2005');";
         $this->db->exec($q);
 
         //Make public
@@ -88,7 +90,10 @@ class TestOfTwitterPluginConfigurationController extends ThinkTankUnitTestCase {
         $counter = 0;
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
+            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+            post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 
+            'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".
+            rand(0, 4).", 5);";
             $this->db->exec($q);
             $counter++;
         }

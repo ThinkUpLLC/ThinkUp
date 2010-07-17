@@ -31,12 +31,12 @@ class TestOfOwnerMySQLDAO extends ThinkTankUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->DAO = new OwnerMySQLDAO();
-        $q = "INSERT INTO tt_owners SET user_name='ThinkTankUser', full_name='ThinkTank J. User',
-        user_email='ttuser@example.com', user_activated=0, user_pwd='XXX', activation_code='8888'";
+        $q = "INSERT INTO tt_owners SET full_name='ThinkTank J. User', email='ttuser@example.com', is_activated=0,
+        pwd='XXX', activation_code='8888'";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_owners SET user_name='ThinkTankUser1', full_name='ThinkTank J. User1',
-        user_email='ttuser1@example.com', user_activated=1, user_pwd='YYY'";
+        $q = "INSERT INTO tt_owners SET full_name='ThinkTank J. User1', email='ttuser1@example.com', is_activated=1,
+        pwd='YYY'";
         PDODAO::$PDO->exec($q);
 
     }
@@ -52,9 +52,8 @@ class TestOfOwnerMySQLDAO extends ThinkTankUnitTestCase {
         //owner exists
         $existing_owner = $this->DAO->getByEmail('ttuser@example.com');
         $this->assertTrue(isset($existing_owner));
-        $this->assertEqual($existing_owner->user_name, 'ThinkTankUser');
         $this->assertEqual($existing_owner->full_name, 'ThinkTank J. User');
-        $this->assertEqual($existing_owner->user_email, 'ttuser@example.com');
+        $this->assertEqual($existing_owner->email, 'ttuser@example.com');
 
         //owner does not exist
         $non_existing_owner = $this->DAO->getByEmail('idontexist@example.com');
@@ -67,8 +66,8 @@ class TestOfOwnerMySQLDAO extends ThinkTankUnitTestCase {
     public function testGetAllOwners() {
         $all_owners = $this->DAO->getAllOwners();
         $this->assertEqual(sizeof($all_owners), 2);
-        $this->assertEqual($all_owners[0]->user_email, 'ttuser@example.com');
-        $this->assertEqual($all_owners[1]->user_email, 'ttuser1@example.com');
+        $this->assertEqual($all_owners[0]->email, 'ttuser@example.com');
+        $this->assertEqual($all_owners[1]->email, 'ttuser1@example.com');
     }
 
     /**
@@ -129,9 +128,9 @@ class TestOfOwnerMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testCreate() {
         //Create new owner who does not exist
-        $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'USA', 'XXX', 'ThinkTank J. User2'), 1);
+        $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'XXX', 'ThinkTank J. User2'), 1);
         //Create new owner who does exist
-        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'USA', 'XXX', 'ThinkTank J. User2'), 0);
+        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'XXX', 'ThinkTank J. User2'), 0);
     }
     /**
      * Test updateLastLogin

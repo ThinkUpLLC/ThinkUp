@@ -207,7 +207,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
             'id'=>2,
             'user_name'=>'steven',
             'full_name'=>'Steven Warren',
-            'user_email'=>'me@example.com',
+            'email'=>'me@example.com',
             'last_login'=>'Yesterday',
             'is_admin'=>1,
             'is_activated'=>1
@@ -269,7 +269,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
             'id'=>2,
             'user_name'=>'steven',
             'full_name'=>'Steven Warren',
-            'user_email'=>'me@example.com',
+            'email'=>'me@example.com',
             'last_login'=>'Yesterday',
             'is_admin'=>1,
             'is_activated'=>1

@@ -90,7 +90,7 @@ class TestOfSession extends ThinkTankUnitTestCase {
         $val["id"] = 10;
         $val["user_name"] = 'testuser';
         $val["full_name"] = 'Test User';
-        $val['user_email'] = 'me@example.com';
+        $val['email'] = 'me@example.com';
         $val['last_login'] = '1/1/2006';
         $val["is_admin"] = 0;
         $val["is_activated"] = 1;
@@ -105,7 +105,7 @@ class TestOfSession extends ThinkTankUnitTestCase {
         $this->assertFalse($_SESSION['user_is_admin']);
         //        $cryptpass = $session->pwdcrypt("secretpassword");
         //
-        //        $owner = array('id'=>1, 'user_email'=>'me@example.com', 'user_pwd'=>$cryptpass, 'user_activated'=>1);
+        //        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
         //        $this->builder1 = FixtureBuilder::build('owners', $owner);
     }
 
@@ -114,7 +114,7 @@ class TestOfSession extends ThinkTankUnitTestCase {
         $val["id"] = 10;
         $val["user_name"] = 'testuser';
         $val["full_name"] = 'Test User';
-        $val['user_email'] = 'me@example.com';
+        $val['email'] = 'me@example.com';
         $val['last_login'] = '1/1/2006';
         $val["is_admin"] = 0;
         $val["is_activated"] = 1;
@@ -130,7 +130,7 @@ class TestOfSession extends ThinkTankUnitTestCase {
         $val["id"] = 11;
         $val["user_name"] = 'testuser';
         $val["full_name"] = 'Test User2';
-        $val['user_email'] = 'me2@example.com';
+        $val['email'] = 'me2@example.com';
         $val['last_login'] = '1/1/2006';
         $val["is_admin"] = 1;
         $val["is_activated"] = 1;

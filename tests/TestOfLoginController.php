@@ -59,7 +59,7 @@ class TestOfLoginController extends ThinkTankUnitTestCase {
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
 
-        $owner = array('id'=>1, 'user_email'=>'me@example.com', 'user_pwd'=>$cryptpass, 'user_activated'=>1);
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
         $this->builder1 = FixtureBuilder::build('owners', $owner);
 
         $instance = array('id'=>1);

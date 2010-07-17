@@ -13,17 +13,12 @@ class Owner {
      *
      * @var str
      */
-    var $user_name;
-    /**
-     *
-     * @var str
-     */
     var $full_name;
     /**
      *
      * @var str
      */
-    var $user_email;
+    var $email;
     /**
      *
      * @var bool Default false
@@ -58,9 +53,8 @@ class Owner {
     public function __construct($val=false) {
         if ($val) {
             $this->id = $val["id"];
-            $this->user_name = $val["user_name"];
             $this->full_name = $val["full_name"];
-            $this->user_email = $val['user_email'];
+            $this->email = $val['email'];
             $this->last_login = $val['last_login'];
             $this->is_admin = PDODAO::convertDBToBool($val["is_admin"]);
             $this->is_activated = PDODAO::convertDBToBool($val["is_activated"]);

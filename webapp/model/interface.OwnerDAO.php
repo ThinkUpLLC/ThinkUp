@@ -58,12 +58,11 @@ interface OwnerDAO {
      * Insert owner
      * @param str $email
      * @param str $pass
-     * @param str $country
      * @param str $acode
      * @param str $full_name
      * @return int Affected rows
      */
-    public function create($email, $pass, $country, $acode, $full_name);
+    public function create($email, $pass, $acode, $full_name);
 
     /**
      * Update last_login field for given owner

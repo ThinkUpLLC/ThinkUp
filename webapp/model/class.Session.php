@@ -103,7 +103,7 @@ class Session {
      * @param Owner $owner
      */
     public function completeLogin($owner) {
-        $_SESSION['user'] = $owner->user_email;
+        $_SESSION['user'] = $owner->email;
         $_SESSION['user_is_admin'] = $owner->is_admin;
     }
 
