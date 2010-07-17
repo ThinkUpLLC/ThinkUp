@@ -28,10 +28,12 @@ class PostController extends ThinkTankAuthController {
      */
     public function authControl() {
         $this->setViewTemplate('post.index.tpl');
+        $network = (isset($_GET['n']) )?$_GET['n']:'twitter';
+        $_GET['n'] = $network;
         if ($this->shouldRefreshCache()) {
-            if ( isset($_GET['t']) && is_numeric($_GET['t']) && $this->post_dao->isPostInDB($_GET['t']) ){
+            if ( isset($_GET['t']) && is_numeric($_GET['t']) && $this->post_dao->isPostInDB($_GET['t'], $network) ){
                 $post_id = $_GET['t'];
-                $post = $this->post_dao->getPost($post_id);
+                $post = $this->post_dao->getPost($post_id, $network);
                 $this->addToView('post', $post);
 
                 // costly query
@@ -39,19 +41,19 @@ class PostController extends ThinkTankAuthController {
                 //$post->author_user_id,$post->author_username, 15) );
                 //$this->addToView('all_tweets', $this->post_dao->getAllPosts($post->author_user_id, 15) );
 
-                $all_replies = $this->post_dao->getRepliesToPost($post_id);
+                $all_replies = $this->post_dao->getRepliesToPost($post_id, $network);
                 $this->addToView('replies', $all_replies );
 
                 $all_replies_count = count($all_replies);
                 $this->addToView('reply_count', $all_replies_count );
 
-                $all_retweets = $this->post_dao->getRetweetsOfPost($post_id);
+                $all_retweets = $this->post_dao->getRetweetsOfPost($post_id, $network);
                 $this->addToView('retweets', $all_retweets );
 
-                $retweet_reach = $this->post_dao->getPostReachViaRetweets($post_id);
+                $retweet_reach = $this->post_dao->getPostReachViaRetweets($post_id, $network);
                 $this->addToView('retweet_reach', $retweet_reach);
 
-                $public_replies = $this->post_dao->getPublicRepliesToPost($post_id);
+                $public_replies = $this->post_dao->getPublicRepliesToPost($post_id, $network);
                 $public_replies_count = count($public_replies);
                 $this->addToView('public_reply_count', $public_replies_count );
 

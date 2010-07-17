@@ -65,7 +65,7 @@ class TestOfWebappTabDataset extends ThinkTankUnitTestCase {
      * Test retrieveData with an existing method
      */
     public function testRetrieveDataMethodExists() {
-        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 15));
+        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15));
         $data = $dataset->retrieveDataset();
         $this->assertTrue(isset($data));
         $this->assertIsA($data, 'array');
@@ -75,7 +75,7 @@ class TestOfWebappTabDataset extends ThinkTankUnitTestCase {
      * Test retrieveData with an existing method
      */
     public function testRetrieveDataMethodDoesNotExist() {
-        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPostsIDontExist', array(930061, 15));
+        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPostsIDontExist', array(930061, 'twitter', 15));
         $this->expectException(new Exception('PostDAO does not have a getAllPostsIDontExist method.'));
         $data = $dataset->retrieveDataset();
     }

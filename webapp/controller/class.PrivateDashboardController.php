@@ -7,18 +7,12 @@
  */
 class PrivateDashboardController extends ThinkTankAuthController {
     /**
-     * @var PostDAO
-     */
-    protected $post_dao;
-
-    /**
      * Constructor
      *
      * @param boolean $session_started
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
-        $this->post_dao = DAOFactory::getDAO('PostDAO');
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $last_updated_instance = $instance_dao->getInstanceFreshestOne();
         if (isset($last_updated_instance)) {

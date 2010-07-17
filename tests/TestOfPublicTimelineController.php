@@ -148,6 +148,30 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-mostretweets-2', 'Cache key');
     }
 
+    public function testControlSinglePostExists() {
+        $_GET['t'] = 39;
+        $_GET['n'] = 'twitter';
+
+        $controller = new PublicTimelineController(true);
+        $results = $controller->control();
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Public Post Replies');
+        $this->assertEqual($v_mgr->getTemplateDataItem('post')->post_text, 'This is post 39');
+    }
+
+    public function testControlSinglePostDoesNotExist() {
+        $_GET['t'] = 51;
+        $_GET['n'] = 'twitter';
+
+        $controller = new PublicTimelineController(true);
+        $results = $controller->control();
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Public Post Replies');
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Post 51 on Twitter is not in ThinkTank.');
+    }
+
     public function testControlUserDashboardPrivateInstance() {
         $_GET["u"] = 'ginatrapani';
         $_GET["n"] = 'twitter';

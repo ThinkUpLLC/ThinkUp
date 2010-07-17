@@ -36,8 +36,8 @@ class TestOfPrivateDashboard extends ThinkTankWebTestCase {
         'avatar.jpg');";
         $this->db->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 
-        'Ev Williams', 'avatar.jpg', '1/1/2005');";
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated, network) VALUES (13, 'ev', 
+        'Ev Williams', 'avatar.jpg', '1/1/2005', 'twitter');";
         $this->db->exec($q);
 
         $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected) VALUES (16, 'private', 

@@ -40,7 +40,7 @@ class FacebookCrawler {
 
         $user = $this->parseUserDetails($user_details);
         if (isset($user)) {
-            $user["post_count"] = $this->pd->getTotalPostsByUser($uid);
+            $user["post_count"] = $this->pd->getTotalPostsByUser($uid, 'facebook');
             $user_object = new User($user, $found_in);
             $this->ud->updateUser($user_object);
             return $user_object;

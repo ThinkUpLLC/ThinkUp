@@ -1,13 +1,12 @@
 <?php
+require_once 'model/class.PDODAO.php';
+require_once 'model/interface.PostDAO.php';
+
 /**
  * Post Data Access Object
  * The data access object for retrieving and saving posts in the ThinkTank database
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.PostDAO.php';
-
 class PostMySQLDAO extends PDODAO implements PostDAO  {
     /**
      * The minimum number of characters required for fulltext queries.
@@ -29,13 +28,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id', 'location',
     'place', 'geo', 'retweet_count_cache', 'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend');
 
-    public function getPost($post_id) {
+    public function getPost($post_id, $network) {
         $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, ";
         $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON l.post_id = p.post_id ";
-        $q .= "WHERE p.post_id=:post_id;";
+        $q .= "WHERE p.post_id=:post_id AND p.network=:network;";
         $vars = array(
-            ':post_id'=>$post_id
+            ':post_id'=>$post_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         $row = $this->getDataRowAsArray($ps);
@@ -84,7 +84,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $post;
     }
 
-    function getStandaloneReplies($username, $limit) {
+    public function getStandaloneReplies($username, $network, $limit) {
         $username = '@'.$username;
         $q = " SELECT p.*, u.*, pub_date - INTERVAL #gmt_offset# hour AS adj_pub_date ";
         $q .= " FROM #prefix#posts AS p ";
@@ -98,11 +98,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $q .= " post_text LIKE :username ";
         }
 
-        $q .= " AND in_reply_to_post_id is null ";
+        $q .= " AND p.network=:network AND in_reply_to_post_id is null ";
         $q .= " ORDER BY adj_pub_date DESC ";
         $q .= " LIMIT :limit";
         $vars = array(
             ':username'=>$username,
+            ':network'=>$network,
             ':limit'=>$limit
         );
 
@@ -115,13 +116,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $replies;
     }
 
-    function getRepliesToPost($post_id, $is_public = false, $count = 350) {
+    public function getRepliesToPost($post_id, $network, $is_public = false, $count = 350) {
         $q = " SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, u.*, ";
         $q .= " pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
         $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id ";
         $q .= " INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
-        $q .= " WHERE in_reply_to_post_id=:post_id ";
+        $q .= " WHERE p.network=:network AND in_reply_to_post_id=:post_id ";
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
@@ -130,6 +131,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         $vars = array(
             ':post_id'=>$post_id,
+            ':network'=>$network,
             ':limit'=>$count
         );
 
@@ -142,20 +144,21 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $replies;
     }
 
-    function getRetweetsOfPost($post_id, $is_public = false) {
+    public function getRetweetsOfPost($post_id, $network='twitter', $is_public = false) {
         $q = "SELECT p.*, u.*,  l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= " pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
         $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id ";
         $q .= " INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
-        $q .= " WHERE  in_retweet_of_post_id=:post_id ";
+        $q .= " WHERE  in_retweet_of_post_id=:post_id AND p.network=:network ";
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
         $q .= "  ORDER BY is_retweet_by_friend DESC, follower_count DESC;";
 
         $vars = array(
-            ':post_id'=>$post_id
+            ':post_id'=>$post_id,
+            ':network'=>$network
         );
 
         $ps = $this->execute($q, $vars);
@@ -167,13 +170,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $retweets;
     }
 
-    function getPostReachViaRetweets($post_id) {
+    public function getPostReachViaRetweets($post_id, $network = 'twitter') {
         $q = "SELECT  SUM(u.follower_count) AS total ";
         $q .= "FROM  #prefix#posts p INNER JOIN #prefix#users u ";
-        $q .= "ON p.author_user_id = u.user_id WHERE in_retweet_of_post_id=:post_id ";
+        $q .= "ON p.author_user_id = u.user_id WHERE in_retweet_of_post_id=:post_id AND p.network=:network ";
         $q .= "ORDER BY follower_count desc;";
         $vars = array(
-            ':post_id'=>$post_id
+            ':post_id'=>$post_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         $row = $this->getDataRowAsArray($ps);
@@ -183,7 +187,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     /**
      * @TODO: Figure out a better way to do this, only returns 1-1 exchanges, not back-and-forth threads
      */
-    function getPostsAuthorHasRepliedTo($author_id, $count) {
+    public function getPostsAuthorHasRepliedTo($author_id, $count, $network = 'twitter') {
         $q = "SELECT p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, ";
         $q .= " p2.follower_count as answerer_follower_count, p1.post_id as question_post_id, ";
         $q .= " p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, ";
@@ -193,10 +197,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " FROM #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= " JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= " JOIN #prefix#users p3 on p3.user_id = p.in_reply_to_user_id ";
-        $q .= " WHERE p.author_user_id = :author_id AND p.in_reply_to_post_id IS NOT NULL ";
+        $q .= " WHERE p.author_user_id = :author_id AND p.network=:network AND p.in_reply_to_post_id IS NOT NULL ";
         $q .= " ORDER BY p.pub_date desc LIMIT :limit;";
         $vars = array(
             ':author_id'=>$author_id,
+            ':network'=>$network,
             ':limit'=>$count
         );
         $ps = $this->execute($q, $vars);
@@ -208,7 +213,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts_replied_to;
     }
 
-    public function getExchangesBetweenUsers($author_id, $other_user_id) {
+    public function getExchangesBetweenUsers($author_id, $other_user_id, $network='twitter') {
         $q = "SELECT   p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, ";
         $q .= " p2.follower_count as questioner_follower_count, p1.post_id as question_post_id, ";
         $q .= " p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, ";
@@ -218,13 +223,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " FROM  #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= " JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= " JOIN #prefix#users p3 on p3.user_id = :other_user_id ";
-        $q .= " WHERE p.in_reply_to_post_id is not null AND ";
+        $q .= " WHERE p.in_reply_to_post_id is not null AND p.network=:network AND ";
         $q .= " (p.author_user_id = :author_id AND p1.author_user_id = :other_user_id) ";
         $q .= " OR (p1.author_user_id = :author_id AND p.author_user_id = :other_user_id) ";
         $q .= " ORDER BY p.pub_date DESC ";
         $vars = array(
             ':author_id'=>$author_id,
-            ':other_user_id'=>$other_user_id
+            ':other_user_id'=>$other_user_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
 
@@ -236,54 +242,59 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts_replied_to;
     }
 
-    public function getPublicRepliesToPost($post_id) {
-        return $this->getRepliesToPost($post_id, true);
+    public function getPublicRepliesToPost($post_id, $network) {
+        return $this->getRepliesToPost($post_id, $network, true);
     }
 
-    public function isPostInDB($post_id) {
+    public function isPostInDB($post_id, $network) {
         $q = "SELECT post_id FROM  #prefix#posts ";
-        $q .= " WHERE post_id = :post_id;";
+        $q .= " WHERE post_id = :post_id AND network=:network;";
         $vars = array(
-            ':post_id'=>$post_id
+            ':post_id'=>$post_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
     }
 
-    public function isReplyInDB($post_id) {
-        return $this->isPostInDB($post_id);
+    public function isReplyInDB($post_id, $network) {
+        return $this->isPostInDB($post_id, $network);
     }
 
     /**
      * Increment reply cache count
      * @param int $post_id
-     * @return int number of updated rows (1 if successful, 0 if not)
+     * @param str $network
+     * @return int Number of updated rows (1 if successful, 0 if not)
      */
-    private function incrementReplyCountCache($post_id) {
-        return $this->incrementCacheCount($post_id, "reply");
+    private function incrementReplyCountCache($post_id, $network) {
+        return $this->incrementCacheCount($post_id, $network, "reply");
     }
 
     /**
      * Increment retweet cache count
      * @param int $post_id
+     * @param str $network
      * @return int number of updated rows (1 if successful, 0 if not)
      */
-    private function incrementRepostCountCache($post_id) {
-        return $this->incrementCacheCount($post_id, "retweet");
+    private function incrementRepostCountCache($post_id, $network) {
+        return $this->incrementCacheCount($post_id, $network, "retweet");
     }
 
     /**
      * Increment either reply_cache_count or retweet_cache_count
      * @param int $post_id
-     * @param string $fieldname either "reply" or "retweet"
-     * @return int number of updated rows
+     * @param str $network
+     * @param str $fieldname either "reply" or "retweet"
+     * @return int Number of updated rows
      */
-    private function incrementCacheCount($post_id, $fieldname) {
+    private function incrementCacheCount($post_id, $network, $fieldname) {
         $fieldname = $fieldname=="reply"?"reply":"retweet";
         $q = " UPDATE  #prefix#posts SET ".$fieldname."_count_cache = ".$fieldname."_count_cache + 1 ";
-        $q .= "WHERE post_id = :post_id";
+        $q .= "WHERE post_id = :post_id AND network=:network";
         $vars = array(
-            ':post_id'=>$post_id
+            ':post_id'=>$post_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
@@ -305,11 +316,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function addPost($vals) {
-        if (!$this->isPostInDB($vals['post_id'])) {
-            if ($this->hasAllRequiredFields($vals)) {
+        if ($this->hasAllRequiredFields($vals)) {
+            if (!$this->isPostInDB($vals['post_id'], $vals['network'])) {
                 //process reply
                 if (isset($vals['in_reply_to_post_id']) && $vals['in_reply_to_post_id'] != '') {
-                    $replied_to_post = $this->getPost($vals['in_reply_to_post_id']);
+                    $replied_to_post = $this->getPost($vals['in_reply_to_post_id'], $vals['network']);
                     if (isset($replied_to_post)) {
                         //check if reply author is followed by the original post author
                         $follow_dao = DAOFactory::getDAO('FollowDAO');
@@ -318,7 +329,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                             $vals['is_reply_by_friend'] = 1;
                             $this->logger->logStatus("Found reply by a friend!", get_class($this));
                         }
-                        $this->incrementReplyCountCache($vals['in_reply_to_post_id']);
+                        $this->incrementReplyCountCache($vals['in_reply_to_post_id'], $vals['network']);
                         $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"].
                     "; updating reply cache count";
                         $this->logger->logStatus($status_message, get_class($this));
@@ -326,7 +337,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 }
                 //process retweet
                 if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '') {
-                    $retweeted_post = $this->getPost($vals['in_retweet_of_post_id']);
+                    $retweeted_post = $this->getPost($vals['in_retweet_of_post_id'], $vals['network']);
                     if (isset($retweeted_post)) {
                         $follow_dao = DAOFactory::getDAO('FollowDAO');
                         if ($follow_dao->followExists($vals['author_user_id'], $retweeted_post->author_user_id,
@@ -334,7 +345,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                             $vals['is_retweet_by_friend'] = 1;
                             $this->logger->logStatus("Found retweet by a friend!", get_class($this));
                         }
-                        $this->incrementRepostCountCache($vals['in_retweet_of_post_id']);
+                        $this->incrementRepostCountCache($vals['in_retweet_of_post_id'], $vals['network']);
                         $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
                     " ID: ".$vals["post_id"]."; updating retweet cache count";
                         $this->logger->logStatus($status_message, get_class($this));
@@ -362,29 +373,30 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
                 return $this->getUpdateCount($ps);
             } else {
-                //doesn't have all req'd values
+                //already in DB
                 return 0;
             }
         } else {
-            //already in DB
+            //doesn't have all req'd values
             return 0;
         }
     }
 
-    public function getAllPosts($author_id, $count, $include_replies=true) {
-        return $this->getAllPostsByUserID($author_id, $count, "pub_date", "DESC", $include_replies);
+    public function getAllPosts($author_id, $network, $count, $include_replies=true) {
+        return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies);
     }
 
     /**
      * Get all posts by a given user with configurable order by field and direction
      * @param int $author_id
+     * @param str $network
      * @param int $count
-     * @param string $order_by field name
-     * @param string $direction either "DESC" or "ASC
+     * @param str $order_by field name
+     * @param str $direction either "DESC" or "ASC
      * @param bool $include_replies If true, return posts with in_reply_to_post_id set, if not don't
      * @return array Posts with link object set
      */
-    private function getAllPostsByUserID($author_id, $count, $order_by="pub_date", $direction="DESC",
+    private function getAllPostsByUserID($author_id, $network, $count, $order_by="pub_date", $direction="DESC",
     $include_replies=true) {
         $direction = $direction=="DESC" ? "DESC": "ASC";
         if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
@@ -394,7 +406,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " FROM #prefix#posts p";
         $q .= " LEFT JOIN #prefix#links l ";
         $q .= " ON p.post_id = l.post_id ";
-        $q .= " WHERE author_user_id = :author_id ";
+        $q .= " WHERE author_user_id = :author_id AND p.network=:network ";
         if (!$include_replies) {
             $q .= " AND (in_reply_to_post_id IS NULL OR in_reply_to_post_id = 0) ";
         }
@@ -409,6 +421,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         $vars = array(
             ':author_id'=>$author_id,
+            ':network'=>$network,
             ':limit'=>$count 
         );
         $ps = $this->execute($q, $vars);
@@ -467,8 +480,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
-    public function getAllPostsByUsername($username) {
-        return $this->getAllPostsByUsernameOrderedBy($username);
+    public function getAllPostsByUsername($username, $network) {
+        return $this->getAllPostsByUsernameOrderedBy($username, $network);
     }
 
     public function getMostRepliedToPostsInLastWeek($username, $network, $count) {
@@ -479,26 +492,28 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'retweet_count_cache', 7);
     }
 
-    public function getTotalPostsByUser($user_id) {
+    public function getTotalPostsByUser($user_id, $network) {
         $q = "SELECT  COUNT(*) as total ";
         $q .= "FROM #prefix#posts p ";
-        $q .= "WHERE author_user_id = :user_id ";
+        $q .= "WHERE author_user_id = :user_id AND network=:network ";
         $q .= "ORDER BY pub_date ASC";
         $vars = array(
-            ':user_id'=>$user_id
+            ':user_id'=>$user_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         $result = $this->getDataRowAsArray($ps);
         return $result["total"];
     }
 
-    public function getStatusSources($author_id) {
+    public function getStatusSources($author_id, $network) {
         $q = "SELECT source, count(source) as total ";
         $q .= "FROM #prefix#posts WHERE ";
-        $q .= "author_user_id = :author_id ";
+        $q .= "author_user_id = :author_id AND network=:network ";
         $q .= "GROUP BY source  ORDER BY total DESC;";
         $vars = array(
-            ':author_id'=>$author_id
+            ':author_id'=>$author_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
@@ -534,13 +549,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_posts;
     }
 
-    public function getAllReplies($user_id, $count) {
+    public function getAllReplies($user_id, $network, $count) {
         $q = "SELECT l.*, p.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON p.post_id = l.post_id ";
         $q .= "INNER JOIN #prefix#users u ON p.author_user_id = u.user_id ";
-        $q .= "WHERE in_reply_to_user_id = :user_id ORDER BY pub_date DESC LIMIT :limit;";
+        $q .= "WHERE in_reply_to_user_id = :user_id AND p.network=:network ORDER BY pub_date DESC LIMIT :limit;";
         $vars = array(
             ':user_id'=>$user_id,
+            ':network'=>$network,
             ':limit'=>$count
         );
         $ps = $this->execute($q, $vars);
@@ -552,12 +568,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_posts;
     }
 
-    public function getMostRepliedToPosts($user_id, $count) {
-        return $this->getAllPostsByUserID($user_id, $count, "reply_count_cache", "DESC");
+    public function getMostRepliedToPosts($user_id, $network, $count) {
+        return $this->getAllPostsByUserID($user_id, $network, $count, "reply_count_cache", "DESC");
     }
 
-    public function getMostRetweetedPosts($user_id, $count) {
-        return $this->getAllPostsByUserID($user_id, $count, "retweet_count_cache", "DESC");
+    public function getMostRetweetedPosts($user_id, $network, $count) {
+        return $this->getAllPostsByUserID($user_id, $network, $count, "retweet_count_cache", "DESC");
     }
 
     public function getOrphanReplies($username, $count, $network = "twitter") {
@@ -590,7 +606,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_posts;
     }
 
-    public function getLikelyOrphansForParent($parent_pub_date, $author_user_id, $author_username, $count) {
+    public function getLikelyOrphansForParent($parent_pub_date, $author_user_id, $author_username, $network, $count) {
         $username = "@".$author_username;
         $q = " SELECT p.* , u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
@@ -605,6 +621,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " AND pub_date > :parent_pub_date ";
         $q .= " AND in_reply_to_post_id IS NULL ";
         $q .= " AND in_retweet_of_post_id IS NULL ";
+        $q .= " AND p.network=:network ";
         $q .= " AND p.author_user_id != :author_user_id ";
         $q .= " ORDER BY pub_date ASC ";
         $q .= " LIMIT :limit";
@@ -612,6 +629,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':username'=>$username,
             ':parent_pub_date'=>$parent_pub_date,
             ':author_user_id'=>$author_user_id,
+            ':network'=>$network,
             ':limit'=>$count
         );
         $ps = $this->execute($q, $vars);
@@ -623,54 +641,58 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_posts;
     }
 
-    public function assignParent($parent_id, $orphan_id, $former_parent_id = -1) {
-        $post = $this->getPost($orphan_id);
+    public function assignParent($parent_id, $orphan_id, $network, $former_parent_id = -1) {
+        $post = $this->getPost($orphan_id, $network);
 
         // Check for former_parent_id. The current webfront doesn't send this to us
         // We may even want to remove $former_parent_id as a parameter and just look it up here always -FL
         if ($former_parent_id < 0 && isset($post->in_reply_to_post_id)
-        && $this->isPostInDB($post->in_reply_to_post_id)) {
+        && $this->isPostInDB($post->in_reply_to_post_id, $network)) {
             $former_parent_id = $post->in_reply_to_post_id;
         }
 
         $q = " UPDATE #prefix#posts SET in_reply_to_post_id = :parent_id ";
-        $q .= "WHERE post_id = :orphan_id ";
+        $q .= "WHERE post_id = :orphan_id AND network=:network ";
         $vars = array(
             ':parent_id'=>$parent_id,
-            ':orphan_id'=>$orphan_id
+            ':orphan_id'=>$orphan_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
 
         if ($parent_id > 0) {
-            $this->incrementReplyCountCache($parent_id);
+            $this->incrementReplyCountCache($parent_id, $network);
         }
         if ($former_parent_id > 0) {
-            $this->decrementReplyCountCache($former_parent_id);
+            $this->decrementReplyCountCache($former_parent_id, $network);
         }
         return $this->getUpdateCount($ps);
     }
     /**
      * Decrement a post's reply_count_cache
      * @param int $post_id
+     * @param str $network
      * @return in count of affected rows
      */
-    private function decrementReplyCountCache($post_id) {
+    private function decrementReplyCountCache($post_id, $network) {
         $q = "UPDATE #prefix#posts SET reply_count_cache = reply_count_cache - 1 ";
-        $q .= "WHERE post_id = :post_id";
+        $q .= "WHERE post_id = :post_id AND network=:network ";
         $vars = array(
-            ':post_id'=>$post_id
+            ':post_id'=>$post_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
 
-    public function getStrayRepliedToPosts($author_id) {
+    public function getStrayRepliedToPosts($author_id, $network) {
         $q = "SELECT in_reply_to_post_id FROM #prefix#posts p ";
-        $q .= "WHERE p.author_user_id=:author_id ";
+        $q .= "WHERE p.author_user_id=:author_id AND p.network=:network ";
         $q .= "AND p.in_reply_to_post_id NOT IN (select post_id from #prefix#posts) ";
         $q .= "AND p.in_reply_to_post_id NOT IN (select post_id from #prefix#post_errors);";
         $vars = array(
-            ':author_id'=>$author_id
+            ':author_id'=>$author_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
@@ -678,7 +700,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     /**
      * Get posts by public instances with custom sort order
-     * @TODO bind $order_by without single quotes
      * @param int $page
      * @param int $count
      * @param string $order_by field name
@@ -821,12 +842,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getPostsByPublicInstancesOrderedBy($page, $count, "retweet_count_cache", 7);
     }
 
-    public function isPostByPublicInstance($post_id) {
+    public function isPostByPublicInstance($post_id, $network) {
         $q = "SELECT *, pub_date - interval #gmt_offset# hour as adj_pub_date FROM #prefix#posts p ";
         $q .= "INNER JOIN #prefix#instances i ON p.author_user_id = i.network_user_id ";
-        $q .= "WHERE i.is_public = 1 and p.post_id = :post_id;";
+        $q .= "WHERE i.is_public = 1 and p.post_id = :post_id AND p.network=:network;";
         $vars = array(
-            ':post_id'=>$post_id
+            ':post_id'=>$post_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);

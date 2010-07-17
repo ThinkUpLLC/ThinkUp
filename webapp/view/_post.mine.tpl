@@ -17,7 +17,7 @@
     <a href="{$site_root_path}user/?u={$t->author_username}&i={$smarty.session.network_username}">{$t->author_username}</a>
   </div>
   <div class="grid_3 right small">
-    <a href="{$site_root_path}post/?t={$t->post_id}">{$t->adj_pub_date|relative_datetime} ago</a>
+    <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
   </div>
   <div class="grid_11">
     {if $t->link->is_image}
@@ -26,7 +26,7 @@
     <p>
       {$t->post_text|link_usernames}
       {if $t->in_reply_to_post_id}
-        [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}">in reply to</a>]
+        [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>]
       {/if}
     </p>
     {if $t->link->expanded_url}
@@ -40,14 +40,14 @@
   </div>
   <div class="grid_2 center">
     {if $t->reply_count_cache > 0}
-      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}">{$t->reply_count_cache}</a></span>
+      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}</a></span>
     {else}
       &#160;
     {/if}
   </div>
   <div class="grid_2 center omega">
     {if $t->retweet_count_cache > 0}
-      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}">{$t->retweet_count_cache}</a></span>
+      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->retweet_count_cache}</a></span>
     {else}
       &#160;
     {/if}

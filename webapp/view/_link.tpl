@@ -29,7 +29,7 @@
     <p>
       {$l->container_post->post_text|link_usernames}
       {if $l->container_post->in_reply_to_post_id}
-        [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}">in reply to</a>]
+        [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>]
       {/if}
     </p>
     <h3></h3>
@@ -39,7 +39,7 @@
   </div>
   <div class="grid_2 center omega"> 
     {if $l->container_post->reply_count_cache > 0}
-      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}">{$l->container_post->reply_count_cache}</a></span>
+      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$l->container_post->reply_count_cache}</a></span>
     {/if}
   </div>
 </div>

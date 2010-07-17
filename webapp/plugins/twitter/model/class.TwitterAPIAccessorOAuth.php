@@ -193,7 +193,7 @@ class TwitterAPIAccessorOAuth {
                             'description'=>$xml->description, 'url'=>$xml->url, 'is_protected'=>$xml->protected , 
                             'follower_count'=>$xml->followers_count, 'friend_count'=>$xml->friends_count, 
                             'post_count'=>$xml->statuses_count, 'favorites_count'=>$xml->favourites_count, 
-                            'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), );
+                            'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 'network'=>'twitter');
                         break;
                     case 'ids':
                         foreach ($xml->children() as $item) {
@@ -240,7 +240,8 @@ class TwitterAPIAccessorOAuth {
                                 'post_text'=>$item->status->text, 
                                 'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
                                 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
-                                'favorites_count'=>$item->favourites_count, 'post_count'=>$item->statuses_count);
+                                'favorites_count'=>$item->favourites_count, 'post_count'=>$item->statuses_count,
+                                'network'=>'twitter');
                         }
                         break;
                     case 'users':
@@ -256,7 +257,7 @@ class TwitterAPIAccessorOAuth {
                                 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
                                 'favorites_count'=>$item->favourites_count, 'post_count'=>$item->statuses_count, 
                                 'source'=>$item->status->source, 
-                                'in_reply_to_post_id'=>$item->status->in_reply_to_status_id);
+                                'in_reply_to_post_id'=>$item->status->in_reply_to_status_id, 'network'=>'twitter');
                         }
                         break;
                     case 'statuses':

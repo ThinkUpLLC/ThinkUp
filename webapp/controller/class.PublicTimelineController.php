@@ -45,10 +45,13 @@ class PublicTimelineController extends ThinkTankController implements Controller
         $this->addToView('logo_link', 'public.php');
 
         //if $_GET["t"], load individual post + replies + retweets
-        //TODO: deprecate the t (for tweet) to p (for post) -- may affect existing permalinks
-        if (isset($_GET['t']) && $this->post_dao->isPostByPublicInstance($_GET['t'])) {
+        //TODO: deprecate the t (for tweet) to p (for post), but don't break existing URLs
+        if (isset($_GET['t'])) {
+            //default network to twitter if not specified (don't break existing URLS)
+            $network = (isset($_GET['n']) )?$_GET['n']:'twitter';
+            $_GET['n'] = $network;
             if ($this->shouldRefreshCache()) {
-                $this->loadSinglePostThread($_GET['t']);
+                $this->loadSinglePostThread($_GET['t'], $network);
             }
         } elseif (isset($_GET["v"])) { //else if $_GET["v"], display correct listing
             if ($this->shouldRefreshCache()) {
@@ -70,19 +73,26 @@ class PublicTimelineController extends ThinkTankController implements Controller
     /**
      * Load view with individual post and replies and retweets
      * @param int $post_id
+     * @param str $network
      */
-    private function loadSinglePostThread($post_id) {
-        $post = $this->post_dao->getPost($post_id);
-        $public_tweet_replies = $this->post_dao->getPublicRepliesToPost($post->post_id);
-        $public_retweets = $this->post_dao->getRetweetsOfPost($post->post_id, true);
-        $this->addToView('post', $post);
-        $this->addToView('replies', $public_tweet_replies);
-        $this->addToView('retweets', $public_retweets);
-        $rtreach = 0;
-        foreach ($public_retweets as $t) {
-            $rtreach += $t->author->follower_count;
+    private function loadSinglePostThread($post_id, $network) {
+        $this->setPageTitle('Public Post Replies');
+        $this->post_dao->isPostByPublicInstance($_GET['t'], $network);
+        $post = $this->post_dao->getPost($post_id, $network);
+        if (!isset($post)) {
+            $this->addErrorMessage("Post ".$post_id." on ".ucwords($network)." is not in ThinkTank.");
+        } else {
+            $public_tweet_replies = $this->post_dao->getPublicRepliesToPost($post->post_id, $network);
+            $public_retweets = $this->post_dao->getRetweetsOfPost($post->post_id, $network, true);
+            $this->addToView('post', $post);
+            $this->addToView('replies', $public_tweet_replies);
+            $this->addToView('retweets', $public_retweets);
+            $rtreach = 0;
+            foreach ($public_retweets as $t) {
+                $rtreach += $t->author->follower_count;
+            }
+            $this->addToView('rtreach', $rtreach);
         }
-        $this->addToView('rtreach', $rtreach);
     }
 
     /**
@@ -104,9 +114,9 @@ class PublicTimelineController extends ThinkTankController implements Controller
             $this->addToView('user_details', $user);
 
             //posts
-            $most_replied_to_alltime = $this->post_dao->getMostRepliedToPosts($instance->network_user_id, 5);
+            $most_replied_to_alltime = $this->post_dao->getMostRepliedToPosts($instance->network_user_id, $network, 5);
             $this->addToView('most_replied_to_alltime', $most_replied_to_alltime);
-            $most_retweeted_alltime = $this->post_dao->getMostRetweetedPosts($instance->network_user_id, 5);
+            $most_retweeted_alltime = $this->post_dao->getMostRetweetedPosts($instance->network_user_id, $network, 5);
             $this->addToView('most_retweeted_alltime', $most_retweeted_alltime);
             $most_replied_to_1wk = $this->post_dao->getMostRepliedToPostsInLastWeek($instance->network_username,
             $instance->network, 5);

@@ -64,7 +64,7 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
 
         //Add owner
-        $q = "INSERT INTO tt_owners SET id=1, full_name='ThinkTank J. User', email='me@example.com', is_activated=1, 
+        $q = "INSERT INTO tt_owners SET id=1, full_name='ThinkTank J. User', email='me@example.com', is_activated=1,
         pwd='XXX', activation_code='8888'";
         $this->db->exec($q);
 
@@ -74,6 +74,10 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
 
         //Insert test data into test table
         $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
+        'Ev Williams', 'avatar.jpg', '1/1/2005');";
+        $this->db->exec($q);
+
+        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (12, 'jack',
         'Ev Williams', 'avatar.jpg', '1/1/2005');";
         $this->db->exec($q);
 
@@ -92,6 +96,20 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
             $this->db->exec($q);
             $counter++;
         }
+
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, 
+        in_reply_to_user_id, network) 
+        VALUES (41, 13, 'ev', 'Ev Williams', 'avatar.jpg', 'This post is in reply to jacks post 50', 'web', 
+        '2006-01-01 00:00:00', ".rand(0, 4).", 5, 50, 12, 'twitter');";
+        $this->db->exec($q);
+
+        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
+        VALUES (50, 12, 'jack', 'Jack', 'avatar.jpg', 'Ev replied to this post', 'web', 
+        '2006-01-01 00:00:00', ".rand(0, 4).", 5, 'twitter');";
+        $this->db->exec($q);
+
     }
 
     public function tearDown(){
@@ -170,6 +188,29 @@ class TestOfInlineViewController extends ThinkTankUnitTestCase {
         $this->assertEqual($controller->getCacheKeyString(),
         $config->getValue('source_root_path').
        'webapp/plugins/twitter/view/twitter.inline.view.tpl-me@example.com-ev-twitter-tweets-all', 'Cache key');
+    }
+
+    public function testControlLoggedInConversations() {
+        //must be logged in
+        $_SESSION['user'] = 'me@example.com';
+        //required params
+        $_GET['u'] = 'ev';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = 'tweets-convo';
+        $controller = new InlineViewController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'Conversations', 'Header');
+        $this->assertEqual($v_mgr->getTemplateDataItem('description'), '', 'Description');
+        $this->assertIsA($v_mgr->getTemplateDataItem('author_replies'), 'array', 'Array of tweets');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('author_replies')), 1, '1 posts in listing');
+
+        $config = Config::getInstance();
+        $this->assertEqual($controller->getCacheKeyString(),
+        $config->getValue('source_root_path').
+       'webapp/plugins/twitter/view/twitter.inline.view.tpl-me@example.com-ev-twitter-tweets-convo', 'Cache key');
     }
 
     public function testControlLoggedInPeople() {

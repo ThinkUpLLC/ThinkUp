@@ -32,8 +32,9 @@ class TwitterCrawler {
         if ($cURL_status == 200) {
             try {
                 $users = $this->api->parseXML($twitter_data);
-                foreach ($users as $user)
-                $this->owner_object = new User($user, 'Owner Status');
+                foreach ($users as $user) {
+                    $this->owner_object = new User($user, 'Owner Status');
+                }
 
                 if (isset($this->owner_object)) {
                     $status_message = 'Owner info set.';
@@ -301,7 +302,7 @@ class TwitterCrawler {
 
                         $pd = DAOFactory::getDAO('PostDAO');
                         if (!isset($recentTweets)) {
-                            $recentTweets = $pd->getAllPosts($this->owner_object->user_id, 100);
+                            $recentTweets = $pd->getAllPosts($this->owner_object->user_id, 'twitter', 100);
                         }
                         $count = 0;
                         foreach ($tweets as $tweet) {
@@ -412,7 +413,6 @@ class TwitterCrawler {
             if ($cURL_status == 200) {
                 try {
                     $tweets = $this->api->parseXML($twitter_data);
-                    $pd = DAOFactory::getDAO('PostDAO');
                     foreach ($tweets as $tweet) {
                         $user_with_retweet = new User($tweet, 'retweets');
                         $this->fetchUserTimelineForRetweet($status, $user_with_retweet);
@@ -835,8 +835,9 @@ class TwitterCrawler {
 
     public function fetchStrayRepliedToTweets() {
         $pd = DAOFactory::getDAO('PostDAO');
-        $strays = $pd->getStrayRepliedToPosts($this->owner_object->user_id);
-        $status_message = count($strays).' stray replied-to tweets to load.';
+        $strays = $pd->getStrayRepliedToPosts($this->owner_object->user_id, $this->owner_object->network);
+        $status_message = count($strays).' stray replied-to tweets to load for user ID '.$this->owner_object->user_id .
+        ' on '.$this->owner_object->network;
         $this->logger->logStatus($status_message, get_class($this));
 
         foreach ($strays as $s) {

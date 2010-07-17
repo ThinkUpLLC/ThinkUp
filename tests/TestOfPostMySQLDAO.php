@@ -96,9 +96,9 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES 
+            post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
             ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
-            'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
+            'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
             PDODAO::$PDO->exec($q);
             $counter++;
         }
@@ -127,9 +127,9 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache) 
+            post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
             VALUES ($post_id, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
-            'This is link post $counter', 'web', '2006-03-01 00:$pseudo_minute:00', 0, 0);";
+            'This is link post $counter', 'web', '2006-03-01 00:$pseudo_minute:00', 0, 0, 'twitter');";
             PDODAO::$PDO->exec($q);
 
             $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image)
@@ -147,16 +147,16 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             if ( ($counter/2) == 0 ) {
                 $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-                post_text, source, pub_date, reply_count_cache, retweet_count_cache) 
+                post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
                 VALUES ($post_id, 20, 'user1', 'User 1', 'avatar.jpg', 
                 'Hey @ev and @jack thanks for founding Twitter  post $counter', 'web', 
-                '2006-03-01 00:$pseudo_minute:00', 0, 0);";
+                '2006-03-01 00:$pseudo_minute:00', 0, 0, 'twitter');";
             } else {
                 $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname,
-                author_avatar, post_text, source, pub_date, reply_count_cache, retweet_count_cache) 
+                author_avatar, post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
                 VALUES ($post_id, 21, 'user2', 'User 2', 'avatar.jpg', 
                 'Hey @ev and @jack should fix Twitter - post $counter', 'web', 
-                '2006-03-01 00:$pseudo_minute:00', 0, 0);";
+                '2006-03-01 00:$pseudo_minute:00', 0, 0, 'twitter');";
             }
             PDODAO::$PDO->exec($q);
 
@@ -166,21 +166,22 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
 
         //Add replies to specific post
         $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, network) 
         VALUES (131, 20, 'user1', 'User 1', 'avatar.jpg', '@shutterbug Nice shot!', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 41);";
+        '2006-03-01 00:00:00', 0, 0, 41, 'twitter');";
         PDODAO::$PDO->exec($q);
 
         $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, network) 
         VALUES (132, 21, 'user2', 'User 2', 'avatar.jpg', '@shutterbug Nice shot!', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 41);";
+        '2006-03-01 00:00:00', 0, 0, 41, 'twitter');";
         PDODAO::$PDO->exec($q);
 
         $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, network) 
         VALUES (133, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
-        '@shutterbug This is a link post reply http://example.com/', 'web', '2006-03-01 00:00:00', 0, 0, 41);";
+        '@shutterbug This is a link post reply http://example.com/', 'web', '2006-03-01 00:00:00', 0, 0, 41, 
+        'twitter');";
         PDODAO::$PDO->exec($q);
 
         $q = "INSERT INTO tt_links (url, expanded_url, title, clicks, post_id, is_image)
@@ -288,7 +289,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetLikelyOrphansForParent() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getLikelyOrphansForParent('2006-03-01', 13, 'ev', 10);
+        $posts = $dao->getLikelyOrphansForParent('2006-03-01', 13, 'ev', 'twitter', 10);
         $this->assertEqual(sizeof($posts), 9);
         $this->assertEqual($posts[0]->post_text, "Hey @ev and @jack should fix Twitter - post 1");
     }
@@ -298,7 +299,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetStrayRepliedToPosts() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getStrayRepliedToPosts(23);
+        $posts = $dao->getStrayRepliedToPosts(23, 'twitter');
         $this->assertEqual(sizeof($posts), 2);
         $this->assertEqual($posts[0]["in_reply_to_post_id"], 150);
         $this->assertEqual($posts[1]["in_reply_to_post_id"], 151);
@@ -310,9 +311,9 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     public function testIsPostByPublicInstance() {
         $dao = new PostMySQLDAO();
         //post by ev (public instance)
-        $this->assertTrue($dao->isPostByPublicInstance(140));
+        $this->assertTrue($dao->isPostByPublicInstance(140, 'twitter'));
         //post by notapublicinstance
-        $this->assertTrue(!$dao->isPostByPublicInstance(143));
+        $this->assertTrue(!$dao->isPostByPublicInstance(143, 'twitter'));
     }
      
     /**
@@ -320,7 +321,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetMostRepliedToPosts() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getMostRepliedToPosts(13, 10);
+        $posts = $dao->getMostRepliedToPosts(13, 'twitter', 10);
         $prev_count = $posts[0]->reply_count_cache;
         foreach ($posts as $post) {
             $this->assertTrue($post->reply_count_cache <= $prev_count, "previous count ".$prev_count.
@@ -334,7 +335,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetMostRetweetedPosts() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getMostRetweetedPosts(13, 10);
+        $posts = $dao->getMostRetweetedPosts(13, 'twitter', 10);
         $prev_count = $posts[0]->retweet_count_cache;
         foreach ($posts as $post) {
             $this->assertTrue($post->retweet_count_cache >= $prev_count, "previous count ".$prev_count.
@@ -348,12 +349,12 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetAllReplies() {
         $dao = new PostMySQLDAO();
-        $replies = $dao->getAllReplies(13, 10);
+        $replies = $dao->getAllReplies(13, 'twitter', 10);
         $this->assertTrue(sizeof($replies), 10);
         $this->assertEqual(sizeof($replies), 1);
         $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
 
-        $replies = $dao->getAllReplies(18, 10);
+        $replies = $dao->getAllReplies(18, 'twitter', 10);
         $this->assertEqual(sizeof($replies), 0);
     }
 
@@ -362,11 +363,11 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetAllMentions() {
         $dao = new PostMySQLDAO();
-        $mentions = $dao->getAllMentions("ev", 10);
+        $mentions = $dao->getAllMentions("ev", 10, 'twitter');
         $this->assertTrue(sizeof($mentions), 10);
         $this->assertEqual($mentions[0]->post_text, "Hey @ev and @jack should fix Twitter - post 9");
 
-        $mentions = $dao->getAllMentions("jack", 10);
+        $mentions = $dao->getAllMentions("jack", 10, 'twitter');
         $this->assertTrue(sizeof($mentions), 10);
         $this->assertEqual($mentions[0]->post_text, "Hey @ev and @jack should fix Twitter - post 9");
     }
@@ -376,7 +377,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetStatusSources() {
         $dao = new PostMySQLDAO();
-        $sources = $dao->getStatusSources(18);
+        $sources = $dao->getStatusSources(18, 'twitter');
         $this->assertEqual(sizeof($sources), 2);
         $this->assertEqual($sources[0]["source"], "Flickr");
         $this->assertEqual($sources[0]["total"], 40);
@@ -384,7 +385,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($sources[1]["total"], 1);
 
         //non-existent author
-        $sources = $dao->getStatusSources(51);
+        $sources = $dao->getStatusSources(51, 'twitter');
         $this->assertEqual(sizeof($sources), 0);
     }
 
@@ -393,11 +394,11 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetAllPostsByUser() {
         $dao = new PostMySQLDAO();
-        $total = $dao->getTotalPostsByUser(18);
+        $total = $dao->getTotalPostsByUser(18, 'twitter');
         $this->assertEqual($total, 41);
 
         //non-existent author
-        $total = $dao->getTotalPostsByUser(51);
+        $total = $dao->getTotalPostsByUser(51, 'twitter');
         $this->assertEqual($total, 0);
     }
 
@@ -406,11 +407,11 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetAllPostsByUsername() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getAllPostsByUsername('shutterbug');
+        $posts = $dao->getAllPostsByUsername('shutterbug', 'twitter');
         $this->assertEqual(sizeof($posts), 41);
 
         //non-existent author
-        $posts = $dao->getAllPostsByUsername('idontexist');
+        $posts = $dao->getAllPostsByUsername('idontexist', 'twitter');
         $this->assertEqual(sizeof($posts), 0);
     }
 
@@ -420,19 +421,19 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
     public function testGetAllPosts() {
         $dao = new PostMySQLDAO();
         //more than count
-        $posts = $dao->getAllPosts(18, 10);
+        $posts = $dao->getAllPosts(18, 'twitter', 10);
         $this->assertEqual(sizeof($posts), 10);
 
         //less than count
-        $posts = $dao->getAllPosts(18, 50);
+        $posts = $dao->getAllPosts(18, 'twitter', 50);
         $this->assertEqual(sizeof($posts), 41);
 
         //less than count, no replies --there is 1 reply, so 41-1=40
-        $posts = $dao->getAllPosts(18, 50, false);
+        $posts = $dao->getAllPosts(18, 'twitter', 50, false);
         $this->assertEqual(sizeof($posts), 40);
 
         //non-existent author
-        $posts = $dao->getAllPosts(30, 10);
+        $posts = $dao->getAllPosts(30, 'twitter', 10);
         $this->assertEqual(sizeof($posts), 0);
     }
 
@@ -441,7 +442,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetPostExists() {
         $dao = new PostMySQLDAO();
-        $post = $dao->getPost(10);
+        $post = $dao->getPost(10, 'twitter');
         $this->assertTrue(isset($post));
         $this->assertEqual($post->post_text, 'This is post 10');
         //link gets set
@@ -455,7 +456,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetPostDoesNotExist(){
         $dao = new PostMySQLDAO();
-        $post = $dao->getPost(100000001);
+        $post = $dao->getPost(100000001, 'twitter');
         $this->assertTrue(!isset($post));
     }
 
@@ -464,14 +465,14 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetStandaloneReplies() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getStandaloneReplies('jack', 15);
+        $posts = $dao->getStandaloneReplies('jack', 'twitter', 15);
 
         $this->assertEqual(sizeof($posts), 10);
         $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9',
         "Standalone mention");
         $this->assertEqual($posts[0]->author->username, 'user2', "Post author");
 
-        $posts = $dao->getStandaloneReplies('ev', 15);
+        $posts = $dao->getStandaloneReplies('ev', 'twitter', 15);
 
         $this->assertEqual(sizeof($posts), 11);
         $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9',
@@ -484,7 +485,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetRepliesToPost() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getRepliesToPost(41);
+        $posts = $dao->getRepliesToPost(41, 'twitter');
         $this->assertEqual(sizeof($posts), 3);
         $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
@@ -501,7 +502,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetPublicRepliesToPost() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getPublicRepliesToPost(41);
+        $posts = $dao->getPublicRepliesToPost(41, 'twitter');
         $this->assertEqual(sizeof($posts), 2);
         $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
@@ -518,7 +519,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetRetweetsOfPost() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getRetweetsOfPost(134);
+        $posts = $dao->getRetweetsOfPost(134, 'twitter');
         $this->assertEqual(sizeof($posts), 3);
         $this->assertEqual($posts[0]->post_text,
         'RT @quoter Be liberal in what you accept and conservative in what you send', "post reply");
@@ -530,10 +531,10 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetPostReachViaRetweets() {
         $dao = new PostMySQLDAO();
-        $total = $dao->getPostReachViaRetweets(134);
+        $total = $dao->getPostReachViaRetweets(134, 'twitter');
         $this->assertEqual($total, (90+80+70));
 
-        $total = $dao->getPostReachViaRetweets(130);
+        $total = $dao->getPostReachViaRetweets(130, 'twitter');
         $this->assertEqual($total, 0);
     }
 
@@ -542,13 +543,13 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetPostsAuthorHasRepliedTo(){
         $dao = new PostMySQLDAO();
-        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(18, 10);
+        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(18, 10, 'twitter');
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user2");
         $this->assertEqual($posts_replied_to[0]["question"], "@shutterbug Nice shot!");
         $this->assertEqual($posts_replied_to[0]["answerer_username"], "shutterbug");
         $this->assertEqual($posts_replied_to[0]["answer"], "@user2 Thanks!");
 
-        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10);
+        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10, 'twitter');
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user1");
         $this->assertEqual($posts_replied_to[0]["question"], "@ev When will Twitter have a business model?");
         $this->assertEqual($posts_replied_to[0]["answerer_username"], "ev");
@@ -560,7 +561,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetExchangesBetweenUsers() {
         $dao = new PostMySQLDAO();
-        $posts_replied_to = $dao->getExchangesBetweenUsers(18, 21);
+        $posts_replied_to = $dao->getExchangesBetweenUsers(18, 21, 'twitter');
         $this->assertEqual(sizeof($posts_replied_to), 2);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "shutterbug");
         $this->assertEqual($posts_replied_to[0]["question"], "This is image post 1");
@@ -572,7 +573,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($posts_replied_to[1]["answerer_username"], "shutterbug");
         $this->assertEqual($posts_replied_to[1]["answer"], "@user2 Thanks!");
 
-        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 20);
+        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 20, 'twitter');
         $this->assertEqual(sizeof($posts_replied_to), 1);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user1");
         $this->assertEqual($posts_replied_to[0]["question"], "@ev When will Twitter have a business model?");
@@ -585,9 +586,9 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testIsPostInDB() {
         $dao = new PostMySQLDAO();
-        $this->assertTrue($dao->isPostInDB(129));
+        $this->assertTrue($dao->isPostInDB(129, 'twitter'));
 
-        $this->assertTrue(!$dao->isPostInDB(250));
+        $this->assertTrue(!$dao->isPostInDB(250, 'twitter'));
     }
 
     /**
@@ -595,9 +596,9 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testIsReplyInDB() {
         $dao = new PostMySQLDAO();
-        $this->assertTrue($dao->isReplyInDB(138));
+        $this->assertTrue($dao->isReplyInDB(138, 'twitter'));
 
-        $this->assertTrue(!$dao->isReplyInDB(250));
+        $this->assertTrue(!$dao->isReplyInDB(250, 'twitter'));
     }
 
     /**
@@ -627,7 +628,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
 
         //test add straight post that doesn't exist
         $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
-        $post = $dao->getPost(250);
+        $post = $dao->getPost(250, 'twitter');
         $this->assertEqual($post->post_id, 250);
         $this->assertEqual($post->author_user_id, 22);
         $this->assertEqual($post->author_username, 'quoter');
@@ -653,7 +654,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $vals['post_id']=251;
         $vals['in_reply_to_post_id']= 129;
         $this->assertEqual($dao->addPost($vals), 1, "Reply inserted");
-        $post = $dao->getPost(129);
+        $post = $dao->getPost(129, 'twitter');
         $this->assertEqual($post->reply_count_cache, 1, "reply count got updated");
 
         //test add retweet, check cache count
@@ -661,7 +662,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
         $vals['in_reply_to_post_id']= '';
         $vals['in_retweet_of_post_id']= 128;
         $this->assertEqual($dao->addPost($vals), 1, "Retweet inserted");
-        $post = $dao->getPost(128);
+        $post = $dao->getPost(128, 'twitter');
         $this->assertEqual($post->retweet_count_cache, 1, "retweet count got updated");
     }
 
@@ -872,7 +873,7 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
      */
     public function testGetTotalPostsByUser() {
         $pdao = new PostMySQLDAO();
-        $total_posts = $pdao->getTotalPostsByUser(13);
+        $total_posts = $pdao->getTotalPostsByUser(13, 'twitter');
 
         $this->assertTrue($total_posts == 41);
     }
@@ -900,22 +901,22 @@ class TestOfPostMySQLDAO extends ThinkTankUnitTestCase {
 
         $pdao = new PostMySQLDAO();
 
-        $post = $pdao->getPost(552);
+        $post = $pdao->getPost(552, 'twitter');
         //Assert parent post is 550
         $this->assertEqual($post->in_reply_to_post_id, 550);
 
         //Change parent post to 551
-        $pdao->assignParent(551, 552);
-        $child_post = $pdao->getPost(552);
+        $pdao->assignParent(551, 552, 'twitter');
+        $child_post = $pdao->getPost(552, 'twitter');
         //Assert parent post is now 551
         $this->assertEqual($child_post->in_reply_to_post_id, 551);
 
         //Assert old parent post has one fewer reply total
-        $old_parent = $pdao->getPost(550);
+        $old_parent = $pdao->getPost(550, 'twitter');
         $this->assertEqual($old_parent->reply_count_cache, 0);
 
         //Assert new parent post has one more reply total
-        $new_parent = $pdao->getPost(551);
+        $new_parent = $pdao->getPost(551, 'twitter');
         $this->assertEqual($new_parent->reply_count_cache, 1);
     }
 

@@ -21,8 +21,8 @@ CREATE TABLE tt_follower_count (
 --
 
 CREATE TABLE tt_follows (
-  user_id int(11) NOT NULL,
-  follower_id int(11) NOT NULL,
+  user_id bigint(20) NOT NULL,
+  follower_id bigint(20) NOT NULL,
   last_seen timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   active int(11) NOT NULL DEFAULT '1',
   network varchar(10) NOT NULL DEFAULT 'twitter',
@@ -163,6 +163,7 @@ CREATE TABLE tt_posts (
   author_username varchar(50) NOT NULL,
   author_fullname varchar(50) NOT NULL,
   author_avatar varchar(255) NOT NULL,
+  author_follower_count int(11) NOT NULL,
   post_text varchar(255) NOT NULL,
   source varchar(255) DEFAULT NULL,
   location varchar(255) DEFAULT NULL,
@@ -179,13 +180,14 @@ CREATE TABLE tt_posts (
   network varchar(10) NOT NULL DEFAULT 'twitter',
   is_geo_encoded int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
-  UNIQUE KEY status_id (post_id),
   KEY author_username (author_username),
   KEY pub_date (pub_date),
   KEY author_user_id (author_user_id),
   KEY in_retweet_of_status_id (in_retweet_of_post_id),
   KEY in_reply_to_user_id (in_reply_to_user_id),
-  FULLTEXT KEY tweets_fulltext (post_text)
+  KEY post_id (post_id),
+  KEY network (network),
+  FULLTEXT KEY post_fulltext (post_text)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -231,7 +233,7 @@ CREATE TABLE tt_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2010-07-17  1:02:14
+-- Dump completed on 2010-07-17 11:34:49
 
 --
 -- Insert default plugin(s)

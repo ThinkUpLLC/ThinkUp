@@ -72,8 +72,8 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         $fbc->fetchUserPostsAndReplies($this->instance->network_user_id, $session_key);
 
         $pd = DAOFactory::getDAO('PostDAO');
-        $this->assertTrue($pd->isPostInDB('108956622464235'));
-        $this->assertTrue($pd->isPostInDB('107266209295210'));
+        $this->assertTrue($pd->isPostInDB('108956622464235', 'facebook'));
+        $this->assertTrue($pd->isPostInDB('107266209295210', 'facebook'));
     }
 
     public function testFetchUserStreamWithTwoPostsAndOneComment() {
@@ -85,10 +85,10 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         $fbc->fetchUserPostsAndReplies($this->instance->network_user_id, $session_key);
 
         $pd = DAOFactory::getDAO('PostDAO');
-        $p = $pd->getPost('108956622464235');
+        $p = $pd->getPost('108956622464235', 'facebook');
         $this->assertTrue($p->reply_count_cache == 1);
 
-        $p = $pd->getPost('107266209295210');
+        $p = $pd->getPost('107266209295210', 'facebook');
         $this->assertTrue($p->reply_count_cache == 0);
     }
 
@@ -122,7 +122,7 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         $fbc->fetchPagePostsAndReplies($page_id, $this->instance->network_user_id, $session_key);
 
         $pd = DAOFactory::getDAO('PostDAO');
-        $p = $pd->getPost('125634574117714');
+        $p = $pd->getPost('125634574117714', 'facebook');
         $this->assertEqual($p->post_text,
         "Thanks for checking out the West Wing Week, your guide to everything that's happening at 1600 Pennsylvania Ave.");
     }

@@ -56,7 +56,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         //All tab
         $alltab = new WebappTab("all_facebook_posts", "All", '', $fb_data_tpl);
         $alltabds = new WebappTabDataset("all_facebook_posts", 'PostDAO', "getAllPosts", 
-        array($instance->network_user_id, 15, false));
+        array($instance->network_user_id, 'facebook', 15, false));
         $alltab->addDataset($alltabds);
         array_push($child_tabs, $alltab);
         return $child_tabs;
@@ -69,7 +69,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         //All Replies
         $artab = new WebappTab("all_facebook_replies", "Replies", "Replies to your Facebook posts", $fb_data_tpl);
         $artabds = new WebappTabDataset("all_facebook_replies", 'PostDAO', "getAllReplies", 
-        array($instance->network_user_id, 15));
+        array($instance->network_user_id, 'facebook', 15));
         $artab->addDataset($artabds);
         array_push($child_tabs, $artab);
         return $child_tabs;

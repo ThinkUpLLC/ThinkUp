@@ -1,12 +1,12 @@
 <?php
+require_once 'model/class.PDODAO.php';
+require_once 'model/interface.InstanceDAO.php';
+
 /**
  * Instance MySQL Data Access Object Implementation
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.InstanceDAO.php';
-
 class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
 
     public function getInstanceStalestOne() {

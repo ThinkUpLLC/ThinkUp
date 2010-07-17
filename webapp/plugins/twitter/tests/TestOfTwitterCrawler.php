@@ -13,6 +13,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
@@ -35,11 +36,11 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     var $instance;
     var $logger;
 
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('TwitterCrawler test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();
 
@@ -58,7 +59,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->db->exec($q);
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
         $this->logger->close();
     }
@@ -99,14 +100,14 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->instance->is_archive_loaded_follows = true;
     }
 
-    function testConstructor() {
+    public function testConstructor() {
         self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api);
 
         $this->assertTrue($tc != null);
     }
 
-    function testFetchInstanceUserInfo() {
+    public function testFetchInstanceUserInfo() {
         self::setUpInstanceUserAnilDash();
 
         $tc = new TwitterCrawler($this->instance, $this->api);
@@ -121,7 +122,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->assertTrue($user->found_in == 'Owner Status');
     }
 
-    function testFetchInstanceUserTweets() {
+    public function testFetchInstanceUserTweets() {
         self::setUpInstanceUserAnilDash();
 
         $tc = new TwitterCrawler($this->instance, $this->api);
@@ -130,35 +131,36 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
 
         //Test post with location has location set
         $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertTrue($pdao->isPostInDB(15680112737));
+        $this->assertTrue($pdao->isPostInDB(15680112737, 'twitter'));
 
-        $post = $pdao->getPost(15680112737);
+        $post = $pdao->getPost(15680112737, 'twitter');
         $this->assertEqual($post->location, "NYC: 40.739069,-73.987082");
         $this->assertEqual($post->place, "Stuyvesant Town, New York");
         $this->assertEqual($post->geo, "40.73410845 -73.97885982");
 
         //Test post without location doesn't have it set
-        $post = $pdao->getPost(15660552927);
+        $post = $pdao->getPost(15660552927, 'twitter');
         $this->assertEqual($post->location, "NYC: 40.739069,-73.987082");
         $this->assertEqual($post->place, "");
         $this->assertEqual($post->geo, "");
     }
 
-    function testFetchSearchResults() {
+    public function testFetchSearchResults() {
         self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api);
 
         $tc->fetchInstanceUserInfo();
         $tc->fetchSearchResults('@whitehouse');
         $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertTrue($pdao->isPostInDB(11837263794));
+        $this->assertTrue($pdao->isPostInDB(11837263794, 'twitter'));
 
-        $post = $pdao->getPost(11837263794);
+        $post = $pdao->getPost(11837263794, 'twitter');
         $this->assertEqual($post->post_text,
-        "RT @whitehouse: The New Start Treaty: Read the text and remarks by President Obama &amp; President Medvedev http://bit.ly/cAm9hF");
+        "RT @whitehouse: The New Start Treaty: Read the text and remarks by President Obama &amp; ".
+        'President Medvedev http://bit.ly/cAm9hF');
     }
 
-    function testFetchInstanceUserFollowers() {
+    public function testFetchInstanceUserFollowers() {
         self::setUpInstanceUserAnilDash();
         $this->instance->is_archive_loaded_follows = false;
         $tc = new TwitterCrawler($this->instance, $this->api);
@@ -173,7 +175,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower location set to '.$updated_user->location);
     }
 
-    function testFetchInstanceUserFriends() {
+    public function testFetchInstanceUserFriends() {
         self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
@@ -188,7 +190,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->assertEqual($updated_user->location, 'New York City', 'friend location set');
     }
 
-    function testFetchInstanceUserFriendsByIds() {
+    public function testFetchInstanceUserFriendsByIds() {
         self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
@@ -204,7 +206,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->assertTrue($fdao->followExists(14834340, 930061, 'twitter'), 'ginatrapani friend loaded');
     }
 
-    function testFetchInstanceUserFollowersByIds() {
+    public function testFetchInstanceUserFollowersByIds() {
         self::setUpInstanceUserAnilDash();
         $this->api->available_api_calls_for_crawler = 2;
         $tc = new TwitterCrawler($this->instance, $this->api);
@@ -215,7 +217,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->assertTrue($fdao->followExists(36823, 114811186, 'twitter'), 'new follow exists');
     }
 
-    function testFetchRetweetsOfInstanceuser() {
+    public function testFetchRetweetsOfInstanceuser() {
         self::setUpInstanceUserGinaTrapani();
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
@@ -228,11 +230,11 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         '2006-01-01 00:00:00', ".rand(0, 4).", 0);";
         $this->db->exec($q);
 
-        $pdao = DAOFactory::getDAO('PostDAO');($this->db);
+        $pdao = DAOFactory::getDAO('PostDAO');
         $tc->fetchRetweetsOfInstanceUser();
-        $post = $pdao->getPost(14947487415);
+        $post = $pdao->getPost(14947487415, 'twitter');
         $this->assertEqual($post->retweet_count_cache, 3, '3 retweets loaded');
-        $retweets = $pdao->getRetweetsOfPost(14947487415, true);
+        $retweets = $pdao->getRetweetsOfPost(14947487415, 'twitter', true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
 
         //make sure duplicate posts aren't going into the db on next crawler run
@@ -241,9 +243,25 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $tc->fetchInstanceUserInfo();
 
         $tc->fetchRetweetsOfInstanceUser();
-        $post = $pdao->getPost(14947487415);
+        $post = $pdao->getPost(14947487415, 'twitter');
         $this->assertEqual($post->retweet_count_cache, 3, '3 retweets loaded');
-        $retweets = $pdao->getRetweetsOfPost(14947487415, true);
+        $retweets = $pdao->getRetweetsOfPost(14947487415, 'twitter', true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
+    }
+
+    public function testFetchStrayRepliedToTweets() {
+        self::setUpInstanceUserAnilDash();
+        $this->api->available_api_calls_for_crawler = 4;
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceUserTweets();
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $tweets = $pdao->getAllPostsByUsername('anildash', 'twitter');
+
+        $tc->fetchStrayRepliedToTweets();
+        $post = $pdao->getPost(15752814831, 'twitter');
+        $this->assertTrue(isset($post));
+        $this->assertEqual($post->reply_count_cache, 1);
+
     }
 }
