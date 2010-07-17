@@ -10,7 +10,7 @@ class LoginController extends ThinkTankController {
 
     public function __construct($session_started=false) {
         parent::__construct($session_started);
-        $this->addToView('controller_title', 'Log in');
+        $this->setPageTitle('Log in');
         $this->setViewTemplate('session.login.tpl');
         $this->disableCaching();
     }

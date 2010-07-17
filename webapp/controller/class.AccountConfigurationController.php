@@ -16,7 +16,7 @@ class AccountConfigurationController extends ThinkTankAuthController {
         parent::__construct($session_started);
         $this->disableCaching();
         $this->setViewTemplate('account.index.tpl');
-        $this->addToView('controller_title', 'Configure Your Account');
+        $this->setPageTitle('Configure Your Account');
     }
 
     public function authControl() {

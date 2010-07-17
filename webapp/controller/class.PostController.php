@@ -20,7 +20,7 @@ class PostController extends ThinkTankAuthController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $this->post_dao = DAOFactory::getDAO('PostDAO');
-        $this->addToView('controller_title', 'Post details');
+        $this->setPageTitle('Post details');
     }
 
     /**

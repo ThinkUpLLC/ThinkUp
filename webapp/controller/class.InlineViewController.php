@@ -27,7 +27,7 @@ class InlineViewController extends ThinkTankAuthController {
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
-        $this->addToView('controller_title', 'Inline View');
+        $this->setPageTitle('Inline View');
         foreach ($this->REQUIRED_PARAMS as $param) {
             if (!isset($_GET[$param]) || $_GET[$param] == '' ) {
                 $this->addInfoMessage('No user to retrieve.');

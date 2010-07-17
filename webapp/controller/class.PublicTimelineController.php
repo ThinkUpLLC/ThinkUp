@@ -33,7 +33,7 @@ class PublicTimelineController extends ThinkTankController implements Controller
         if (isset($last_updated_instance)) {
             $this->addToView('crawler_last_run', $last_updated_instance->crawler_last_run);
         }
-        $this->addToView('controller_title', 'Public Timeline');
+        $this->setPageTitle('Public Timeline');
     }
 
     /**
@@ -95,7 +95,7 @@ class PublicTimelineController extends ThinkTankController implements Controller
         $instance = $instance_dao->getByUsernameOnNetwork($username, $network);
 
         if (isset($instance) && $instance->is_public) {
-            $this->addToView('controller_title', $instance->network_username . "'s Public Profile");
+            $this->setPageTitle($instance->network_username . "'s Public Profile");
 
             $this->addToView('instance', $instance);
             //user

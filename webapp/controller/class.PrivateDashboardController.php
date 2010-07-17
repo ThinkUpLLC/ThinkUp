@@ -24,7 +24,7 @@ class PrivateDashboardController extends ThinkTankAuthController {
         if (isset($last_updated_instance)) {
             $this->addToView('crawler_last_run', $last_updated_instance->crawler_last_run);
         }
-        $this->addToView('controller_title', 'Private Dashboard');
+        $this->setPageTitle('Private Dashboard');
     }
 
     /**

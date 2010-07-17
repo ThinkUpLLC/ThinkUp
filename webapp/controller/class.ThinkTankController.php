@@ -225,6 +225,15 @@ abstract class ThinkTankController {
     }
 
     /**
+     * Set web page title
+     * This method only works for views that reference _header.tpl.
+     * @param str $title
+     */
+    public function setPageTitle($title) {
+        $this->addToView('controller_title', $title);
+    }
+
+    /**
      * Add error message to view
      * @param str $msg
      */
