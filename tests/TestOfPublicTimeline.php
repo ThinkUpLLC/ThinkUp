@@ -145,7 +145,7 @@ class TestOfPublicTimeline extends ThinkTankWebTestCase {
         $this->assertTitle('Log in | ThinkTank');
         $this->assertText('Register');
         $this->click('Register');
-        $this->assertTitle('ThinkTank');
+        $this->assertTitle('Register | ThinkTank');
         $this->assertText('Forgot password');
         $this->click('Forgot password');
         $this->assertTitle('ThinkTank');
