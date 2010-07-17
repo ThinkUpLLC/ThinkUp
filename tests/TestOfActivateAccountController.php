@@ -35,7 +35,7 @@ class TestOfActivateAccountController extends ThinkTankUnitTestCase {
 
     public function testInvalidActivation() {
         $owner = array('id'=>1, 'user_email'=>'me@example.com', 'activation_code'=>'1001', 'user_activated'=>0);
-        $this->builder1 = FixtureBuilder::build('owners', $owner);
+        $builder1 = FixtureBuilder::build('owners', $owner);
         $_GET['usr'] = 'me@example.com';
         $_GET['code'] = 'invalidcode';
 
