@@ -36,6 +36,7 @@ abstract class ThinkTankController {
      * @var Session
      */
     protected $app_session;
+
     /**
      * Constructs ThinkTankController
      *
@@ -58,6 +59,13 @@ abstract class ThinkTankController {
             $this->addToView('logged_in_user', $this->getLoggedInUser());
         }
     }
+
+    /**
+     * Handle request parameters for a particular resource and return view markup.
+     *
+     * @return str Markup which renders controller results.
+     */
+    abstract public function control();
 
     /**
      * Returns whether or not ThinkTank user is logged in

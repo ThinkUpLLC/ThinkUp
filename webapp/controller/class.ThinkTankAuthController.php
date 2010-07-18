@@ -6,7 +6,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-abstract class ThinkTankAuthController extends ThinkTankController implements Controller {
+abstract class ThinkTankAuthController extends ThinkTankController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
     }

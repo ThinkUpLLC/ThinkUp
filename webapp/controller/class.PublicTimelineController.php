@@ -6,7 +6,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-class PublicTimelineController extends ThinkTankController implements Controller {
+class PublicTimelineController extends ThinkTankController {
     /**
      * @var int
      */

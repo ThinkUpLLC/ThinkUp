@@ -4,7 +4,7 @@
  * Test controller to try the ThinkTankController abstract class and Controller interface
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-class TestController extends ThinkTankController implements Controller {
+class TestController extends ThinkTankController {
     public function control() {
         $this->setViewTemplate('testme.tpl');
         $this->addToView('test', 'Testing, testing, 123');

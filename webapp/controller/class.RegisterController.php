@@ -5,7 +5,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class RegisterController extends ThinkTankController implements Controller {
+class RegisterController extends ThinkTankController {
     /**
      * Required form submission values
      * @var array
@@ -73,8 +73,8 @@ class RegisterController extends ThinkTankController implements Controller {
                                 $es->assign('activ_code', $activ_code );
                                 $message = $es->fetch('_email.registration.tpl');
 
-                                Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title') ." Account",
-                                $message);
+                                Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
+                                ." Account", $message);
 
                                 unset($_SESSION['ckey']);
                                 $this->addSuccessMessage("Success! Check your email for an activation link.");
