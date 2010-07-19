@@ -2,146 +2,112 @@
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
-
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.MySQLDAO.deprecated.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
+require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 
-class TestOfTwitterAPIAccessorOAuth extends UnitTestCase {
-    function TestOfTwitterAPIAccessorOAuth() {
+class TestOfTwitterAPIAccessorOAuth extends ThinkTankBasicUnitTestCase {
+    public function __construct() {
         $this->UnitTestCase('Test of TwitterAPIAccessorOAuth');
     }
 
-    function setUp() {
+    private function getTestInstance() {
+        $r = array();
+        $r["id"] = 0;
+        $r['network_username'] = 'user';
+        $r['network_user_id'] = 0;
+        $r['network_viewer_id'] = 0;
+        $r['last_status_id'] = 0;
+        $r['last_page_fetched_replies'] = 0;
+        $r['last_page_fetched_tweets'] = 0;
+        $r['total_posts_in_system'] = 0;
+        $r['total_replies_in_system'] = 0;
+        $r['total_follows_in_system'] = 0;
+        $r['total_users_in_system'] = 0;
+        $r['is_archive_loaded_replies'] = 0;
+        $r['is_archive_loaded_follows'] = 0;
+        $r['crawler_last_run'] = '1/1/2007';
+        $r['earliest_reply_in_system'] = 0;
+        $r['api_calls_to_leave_unmade_per_minute'] = 5;
+        $r['avg_replies_per_day'] = 0;
+        $r['is_public'] = 1;
+        $r['is_active'] = 1;
+        $r['network'] = 'twitter';
+
+        return new Instance($r);
     }
 
-    function tearDown() {
-
-    }
-
-    function testFriendsList() {
+    public function testFriendsList() {
         global $THINKTANK_CFG;
 
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', 'GET', array());
         $this->assertWantedPattern('/A or B/', $result);
 
-        $r = array();
-        $r["id"] = 0;
-        $r['network_username'] = 'user';
-        $r['network_user_id'] = 0;
-        $r['network_viewer_id'] = 0;
-        $r['last_status_id'] = 0;
-        $r['last_page_fetched_replies'] = 0;
-        $r['last_page_fetched_tweets'] = 0;
-        $r['total_posts_in_system'] = 0;
-        $r['total_replies_in_system'] = 0;
-        $r['total_follows_in_system'] = 0;
-        $r['total_users_in_system'] = 0;
-        $r['is_archive_loaded_replies'] = 0;
-        $r['is_archive_loaded_follows'] = 0;
-        $r['crawler_last_run'] = '1/1/2007';
-        $r['earliest_reply_in_system'] = 0;
-        $r['api_calls_to_leave_unmade_per_minute'] = 5;
-        $r['avg_replies_per_day'] = 0;
-        $r['is_public'] = 1;
-        $r['is_active'] = 1;
-        $r['network'] = 'twitter';
-
-        $i = new Instance($r);
-
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $i, $THINKTANK_CFG['archive_limit']);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'],
+        $THINKTANK_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
         //echo 'Next cursor is ' . $next_cursor;
         $this->assertTrue($next_cursor == '1305768756249357127');
     }
 
-    function testIDsList() {
+    public function testIDsList() {
         global $THINKTANK_CFG;
 
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/followers/ids.xml', 'GET', array());
 
-        $r = array();
-        $r["id"] = 0;
-        $r['network_username'] = 'user';
-        $r['network_user_id'] = 0;
-        $r['network_viewer_id'] = 0;
-        $r['last_status_id'] = 0;
-        $r['last_page_fetched_replies'] = 0;
-        $r['last_page_fetched_tweets'] = 0;
-        $r['total_posts_in_system'] = 0;
-        $r['total_replies_in_system'] = 0;
-        $r['total_follows_in_system'] = 0;
-        $r['total_users_in_system'] = 0;
-        $r['is_archive_loaded_replies'] = 0;
-        $r['is_archive_loaded_follows'] = 0;
-        $r['crawler_last_run'] = '1/1/2007';
-        $r['earliest_reply_in_system'] = 0;
-        $r['api_calls_to_leave_unmade_per_minute'] = 5;
-        $r['avg_replies_per_day'] = 0;
-        $r['is_public'] = 1;
-        $r['is_active'] = 1;
-        $r['network'] = 'twitter';
-
-
-        $i = new Instance($r);
-
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $i, $THINKTANK_CFG['archive_limit']);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'],
+        $THINKTANK_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
         //echo 'Next cursor is ' . $next_cursor;
         $this->assertTrue($next_cursor == '1326272872342936860');
     }
 
-    function testSearchResults() {
+    public function testSearchResults() {
         global $THINKTANK_CFG;
-
-        $r = array();
-        $r["id"] = 0;
-        $r['network_username'] = 'user';
-        $r['network_user_id'] = 0;
-        $r['network_viewer_id'] = 0;
-        $r['last_status_id'] = 0;
-        $r['last_page_fetched_replies'] = 0;
-        $r['last_page_fetched_tweets'] = 0;
-        $r['total_posts_in_system'] = 0;
-        $r['total_replies_in_system'] = 0;
-        $r['total_follows_in_system'] = 0;
-        $r['total_users_in_system'] = 0;
-        $r['is_archive_loaded_replies'] = 0;
-        $r['is_archive_loaded_follows'] = 0;
-        $r['crawler_last_run'] = '1/1/2007';
-        $r['earliest_reply_in_system'] = 0;
-        $r['api_calls_to_leave_unmade_per_minute'] = 5;
-        $r['avg_replies_per_day'] = 0;
-        $r['is_public'] = 1;
-        $r['is_active'] = 1;
-        $r['network'] = 'twitter';
-
-
-
-        $i = new Instance($r);
 
         $to = new TwitterOAuth('', '', '', '');
         $twitter_data = $to->http('http://search.twitter.com/search.json?q=%40whitehouse&result_type=recent');
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'], $THINKTANK_CFG['oauth_consumer_secret'], $i, $THINKTANK_CFG['archive_limit']);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'],
+        $THINKTANK_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
 
         $results = $api->parseJSON($twitter_data);
 
         //print_r($results);
 
         $this->assertEqual($results[0]['post_id'], 11837318124);
-
     }
 
+    public function testCreateParserFromStringMalformedMarkup() {
+        $data = <<<XML
+        <?xml version='1.0'?> 
+<document>
+ <title>Forty What?</title>
+ <from>Joe</from>
+ <to>Jane</to>
+ <body>
+  I know that's the answer -- <but what's the question?
+ </body>
+</document>
+XML;
+        $api = new TwitterAPIAccessorOAuth('111', '222', 'test-oauth_consumer_key', 'test-oauth_consumer_secret');
+
+        $this->assertFalse($api->createParserFromString(utf8_encode($data)));
+    }
 }
-?>

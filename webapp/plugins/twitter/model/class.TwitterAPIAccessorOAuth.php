@@ -2,7 +2,7 @@
 /**
  * Twitter API Accessor
  * Accesses the Twitter.com API via OAuth authentication.
- * 
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 
@@ -132,7 +132,8 @@ class TwitterAPIAccessorOAuth {
                     }
                 }
             } catch(Exception $e) {
-                $form_error = 15;
+                $logger = Logger::getInstance();
+                $logger->logStatus('parseFeed Exception caught: ' . $e->getMessage(), get_class($this));
             }
         }
 
@@ -172,9 +173,9 @@ class TwitterAPIAccessorOAuth {
                         break;
                 }
             }
-        }
-        catch(Exception $e) {
-            $form_error = 15;
+        } catch(Exception $e) {
+            $logger = Logger::getInstance();
+            $logger->logStatus('parseError Exception caught: ' . $e->getMessage(), get_class($this));
         }
 
         return $parsed_payload;
@@ -298,10 +299,10 @@ class TwitterAPIAccessorOAuth {
                     default:
                         break;
                 }
-
             }
         } catch(Exception $e) {
-            $form_error = 15;
+            $logger = Logger::getInstance();
+            $logger->logStatus('parseXML Exception caught: ' . $e->getMessage(), get_class($this));
         }
         return $parsed_payload;
     }
@@ -317,10 +318,37 @@ class TwitterAPIAccessorOAuth {
     }
 
     public function createParserFromString($data) {
+        libxml_use_internal_errors(true);
         $xml = simplexml_load_string($data);
+        if (!$xml) {
+            foreach (libxml_get_errors() as $error) {
+                $this->logXMLError($error, $data);
+            }
+            libxml_clear_errors();
+        }
         return $xml;
     }
 
+    private function logXMLError($error, $data) {
+        $xml = explode("\n", $data);
+        $logger = Logger::getInstance();
+        $logger->logStatus('LIBXML '.$xml[$error->line - 1], get_class($this));
+        $logger->logStatus('LIBXML '.str_repeat('-', $error->column) . "^", get_class($this));
+
+        switch ($error->level) {
+            case LIBXML_ERR_WARNING:
+                $logger->logStatus("LIBXML Warning $error->code: ", get_class($this));
+                break;
+            case LIBXML_ERR_ERROR:
+                $logger->logStatus("LIBXML Error $error->code: ", get_class($this));
+                break;
+            case LIBXML_ERR_FATAL:
+                $logger->logStatus("LIBXML Fatal Error $error->code: ", get_class($this));
+                break;
+        }
+        $logger->logStatus('LIBXML '.trim($error->message). " Line: $error->line, Column $error->column",
+        get_class($this));
+    }
 }
 
 class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
