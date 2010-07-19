@@ -46,7 +46,7 @@ class TestOfFollowerCountMySQLDAO extends ThinkTankUnitTestCase {
         $builder3 = FixtureBuilder::build('follower_count', $follower_count);
 
         $dao = new FollowerCountMySQLDAO();
-        $result = $dao->getHistory(930061, 'twitter', '01/01/2010', 'DAY');
+        $result = $dao->getHistory(930061, 'twitter', 'DAY');
         $this->assertEqual(sizeof($result), 3, '3 sets of data returned--history, percentages, Y axis');
         $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
         $this->assertEqual(sizeof($result['percentages']), 3, '3 percentages returned');

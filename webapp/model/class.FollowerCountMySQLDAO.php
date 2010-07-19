@@ -22,7 +22,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         return $this->getInsertCount($ps);
     }
 
-    public function getHistory($network_user_id, $network, $group_by) {
+    public function getHistory($network_user_id, $network, $group_by, $limit=10) {
         if ($group_by != "DAY" && $group_by != 'WEEK' && $group_by != 'MONTH') {
             $group_by = 'DAY';
         }
@@ -30,11 +30,12 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         $q .= "(SELECT network_user_id, network, count, DATE_FORMAT(date, '%c/%e') as date, date as full_date ";
         $q .= "FROM #prefix#follower_count AS fc ";
         $q .= "WHERE fc.network_user_id = :network_user_id AND fc.network=:network ";
-        $q .= "GROUP BY ".$group_by."(fc.date) ORDER BY full_date DESC LIMIT 10 ) as history_counts ";
+        $q .= "GROUP BY ".$group_by."(fc.date) ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
         $q .= "ORDER BY history_counts.full_date ASC";
         $vars = array(
             ':network_user_id'=>$network_user_id,
-            ':network'=>$network
+            ':network'=>$network,
+            ':limit'=>(int)$limit
         );
         $ps = $this->execute($q, $vars);
         $history = $this->getDataRowsAsArrays($ps);

@@ -116,11 +116,13 @@
         {if $follower_count_history_by_day.history and $follower_count_history_by_week.history}
 <br /><br />
         <table width="100%"><tr><td>
-        Follower Count By Day<br /><br />
+        Follower Count By Day<br />{if $follower_count_history_by_day.history|@count < 2}<i>Not enough data yet</i>{else}<br />
         <img src="http://chart.apis.google.com/chart?chs=425x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=0077CC&chd=t:{foreach from=$follower_count_history_by_day.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,76A4FB,0,0,0&chg=33">
+        {/if}
         </td><td>
-        Follower Count By Week<br /><br />
+        Follower Count By Week<br />{if $follower_count_history_by_week.history|@count < 2}<i>Not enough data yet</i>{else}<br />
         <img src="http://chart.apis.google.com/chart?chs=425x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=0077CC&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,76A4FB,0,0,0&chg=33">
+        {/if}
         </td></tr>
         </table>
         {/if}

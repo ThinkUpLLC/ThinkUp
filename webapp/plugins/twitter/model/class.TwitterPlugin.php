@@ -220,13 +220,13 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $trendtab = new WebappTab('followers-history', 'Follower Count', 'Your follower count over time',
         $follower_history_tpl);
         $trendtabds = new WebappTabDataset("historybyday", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'DAY'));
+        array($instance->network_user_id, 'twitter', 'DAY', 20));
         $trendtab->addDataset($trendtabds);
         $trendtabweekds = new WebappTabDataset("historybyweek", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'WEEK'));
+        array($instance->network_user_id, 'twitter', 'WEEK', 20));
         $trendtab->addDataset($trendtabweekds);
         $trendtabmonthds = new WebappTabDataset("historybymonth", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'MONTH'));
+        array($instance->network_user_id, 'twitter', 'MONTH', 20));
         $trendtab->addDataset($trendtabmonthds);
 
         array_push($child_tabs, $trendtab);
