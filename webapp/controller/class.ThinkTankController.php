@@ -246,6 +246,7 @@ abstract class ThinkTankController {
      * @param str $msg
      */
     public function addErrorMessage($msg) {
+        $this->disableCaching();
         $this->addToView('errormsg', $msg );
     }
 
@@ -254,6 +255,7 @@ abstract class ThinkTankController {
      * @param str $msg
      */
     public function addSuccessMessage($msg) {
+        $this->disableCaching();
         $this->addToView('successmsg', $msg );
     }
 
@@ -262,6 +264,7 @@ abstract class ThinkTankController {
      * @param str $msg
      */
     public function addInfoMessage($msg) {
+        $this->disableCaching();
         $this->addToView('infomsg', $msg );
     }
 }
