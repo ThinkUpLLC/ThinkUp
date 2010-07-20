@@ -1,24 +1,9 @@
-<!DOCTYPE html>
+{include file="_public.header.tpl"}
 
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
-  <link rel="shortcut icon" href="{$site_root_path}assets/img/favicon.ico">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/base.css">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/positioning.css">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.7.1.custom.css">
-</head>
-
-<body>
-  {include file="_header.login.tpl" mode="public"}
-  
+{include file="_public.header.statusbar.tpl" mode="public"}
   <div class="thinktank-canvas round-all container_24">
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
-      
         {include file="_usermessage.tpl"}
         {if $post and ($replies OR $retweets)}
           <div class="clearfix">

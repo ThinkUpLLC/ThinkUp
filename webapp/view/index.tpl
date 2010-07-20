@@ -22,7 +22,6 @@
 
 <div class="container">
 {include file="_usermessage.tpl"}
-  <!-- session instance info: {$smarty.session.instance->network_username} -->
   <div id="thinktank-tabs">
     <div role="application" id="tabs">
       <ul>
