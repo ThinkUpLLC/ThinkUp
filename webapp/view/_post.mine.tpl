@@ -11,10 +11,10 @@
 
 <div class="individual-tweet post clearfix">
   <div class="grid_1 alpha">
-    <a href="{$site_root_path}user/?u={$t->author_username}&i={$smarty.session.network_username}"><img src="{$t->author_avatar}" class="avatar"></a>
+    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$i->network_username}"><img src="{$t->author_avatar}" class="avatar"></a>
   </div>
   <div class="grid_3 right small">
-    <a href="{$site_root_path}user/?u={$t->author_username}&i={$smarty.session.network_username}">{$t->author_username}</a>
+    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$i->network_username}">{$t->author_username}</a>
   </div>
   <div class="grid_3 right small">
     <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
@@ -24,7 +24,7 @@
       <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
     {/if}
     <p>
-      {$t->post_text|link_usernames}
+      {$t->post_text|link_usernames:$i->network_username:$t->network}
       {if $t->in_reply_to_post_id}
         [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>]
       {/if}

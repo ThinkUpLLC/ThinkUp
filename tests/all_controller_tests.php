@@ -18,6 +18,7 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfRegisterController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfTestController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfTestAuthController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfTestAdminController.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfUserController.php';
 
 $controller_test = & new GroupTest('Controller tests');
 $controller_test->addTestCase(new TestOfAccountConfigurationController());
@@ -33,4 +34,5 @@ $controller_test->addTestCase(new TestOfRegisterController());
 $controller_test->addTestCase(new TestOfTestController());
 $controller_test->addTestCase(new TestOfTestAuthController());
 $controller_test->addTestCase(new TestOfTestAdminController());
+$controller_test->addTestCase(new TestOfUserController());
 $controller_test->run( new TextReporter());

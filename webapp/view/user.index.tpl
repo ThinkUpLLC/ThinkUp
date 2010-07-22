@@ -21,6 +21,7 @@
 </script>
 
 <div id="bd" role="main">
+{include file="_usermessage.tpl"}
   <div id="yui-main">
     <div class="yui-b">
       <div id="thinktank-tabs">

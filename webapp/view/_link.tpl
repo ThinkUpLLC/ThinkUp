@@ -27,7 +27,7 @@
       {/if}
     {/if}
     <p>
-      {$l->container_post->post_text|link_usernames}
+      {$l->container_post->post_text|link_usernames:$i->network_username:$t->network}
       {if $l->container_post->in_reply_to_post_id}
         [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>]
       {/if}

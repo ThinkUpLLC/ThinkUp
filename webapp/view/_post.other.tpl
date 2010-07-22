@@ -10,10 +10,10 @@
 
 <div class="individual-tweet clearfix{if $t->is_protected} private{/if}{if $t->in_reply_to_post_id} reply{/if}">
   <div class="grid_1 alpha">
-    <a href="{$site_root_path}user/?u={$t->author_username}&i={$smarty.session.network_username}"><img src="{$t->author_avatar}" class="avatar"></a>
+    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$smarty.session.network_username}"><img src="{$t->author_avatar}" class="avatar"></a>
   </div>
   <div class="grid_3 right small">
-    <a href="{$site_root_path}user/?u={$t->author_username}&i={$smarty.session.network_username}">{$t->author_username}</a>
+    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$smarty.session.network_username}">{$t->author_username}</a>
   </div>
   <div class="grid_3 right small">
     {$t->author->follower_count|number_format}
@@ -27,7 +27,7 @@
         <a href="{$t->link->url}"><img src="{$t->link->expanded_url}" style="float:right;background:#eee;padding:5px" /></a>
       {/if}
       <p>
-        {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames}
+        {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$t->network}
         {if $t->in_reply_to_post_id}
           <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>
         {/if}
