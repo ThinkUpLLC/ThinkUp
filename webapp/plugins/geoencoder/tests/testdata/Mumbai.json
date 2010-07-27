@@ -1,0 +1,51 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Mumbai, Maharashtra, India",
+    "address_components": [ {
+      "long_name": "Mumbai",
+      "short_name": "Mumbai",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Mumbai suburban",
+      "short_name": "Mumbai suburban",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Maharashtra",
+      "short_name": "Maharashtra",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "India",
+      "short_name": "IN",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 19.0176560,
+        "lng": 72.8561780
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 18.8487871,
+          "lng": 72.6000592
+        },
+        "northeast": {
+          "lat": 19.1863536,
+          "lng": 73.1122968
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 18.8879150,
+          "lng": 72.7749812
+        },
+        "northeast": {
+          "lat": 19.2695223,
+          "lng": 72.9806562
+        }
+      }
+    }
+  } ]
+}

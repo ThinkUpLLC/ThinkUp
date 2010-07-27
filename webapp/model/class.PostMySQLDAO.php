@@ -26,7 +26,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @var array
      */
     var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id', 'location',
-    'place', 'geo', 'retweet_count_cache', 'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend');
+    'place', 'geo', 'retweet_count_cache', 'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend',
+    'reply_retweet_distance', 'is_geo_encoded');
 
     public function getPost($post_id, $network) {
         $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, ";
@@ -318,6 +319,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function addPost($vals) {
         if ($this->hasAllRequiredFields($vals)) {
             if (!$this->isPostInDB($vals['post_id'], $vals['network'])) {
+                //process location information
+                if (!isset($vals['location']) && !isset($vals['geo']) && !isset($vals['place'])) {
+                    $vals['is_geo_encoded'] = 6;
+                }
                 //process reply
                 if (isset($vals['in_reply_to_post_id']) && $vals['in_reply_to_post_id'] != '') {
                     $replied_to_post = $this->getPost($vals['in_reply_to_post_id'], $vals['network']);
@@ -842,6 +847,49 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getPostsByPublicInstancesOrderedBy($page, $count, "retweet_count_cache", 7);
     }
 
+    public function getPostsToGeoencode($limit = 500) {
+        $q = "SELECT p.post_id, p.location, p.geo, p.place, p.in_reply_to_post_id, p.in_retweet_of_post_id ";
+        $q .= " FROM #prefix#posts AS p WHERE (p.geo IS NOT NULL OR p.place IS NOT NULL OR p.location IS NOT NULL)";
+        $q .= " AND (p.is_geo_encoded='0' OR p.is_geo_encoded='3') ";
+        $q .= " ORDER BY id LIMIT :limit";
+        $vars = array(
+            ':limit'=>$limit    
+        );
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        return $all_rows;
+    }
+
+    public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = NULL, $geodata = NULL, $distance = 0) {
+        if ($location && $geodata && ($is_geo_encoded>=1 && $is_geo_encoded<=5)) {
+            $q = "UPDATE #prefix#posts p SET p.location = :location, p.geo = :geo, p.reply_retweet_distance = :distance, ";
+            $q .= "p.is_geo_encoded = :is_geo_encoded WHERE p.post_id = :post_id";
+            $vars = array(
+                ':location'=>$location,
+                ':geo'=>$geodata,
+                ':distance'=>$distance,
+                ':is_geo_encoded'=>$is_geo_encoded,
+                ':post_id'=>$post_id
+            );
+        } else {
+            $q = "UPDATE #prefix#posts p SET p.is_geo_encoded = :is_geo_encoded WHERE p.post_id = :post_id";
+            $vars = array(
+                ':is_geo_encoded'=>$is_geo_encoded,
+                ':post_id'=>$post_id
+            );
+        }
+        $ps = $this->execute($q, $vars);
+        if ($this->getDataIsReturned($ps)) {
+            $logstatus = "Geolocation for post $post_id IS_GEO_ENCODED: $is_geo_encoded";
+            $this->logger->logStatus($logstatus, get_class($this));
+            return true;
+        } else {
+            $logstatus = "Geolocation for post_id=$post_id IS_GEO_ENCODED: $is_geo_encoded not saved";
+            $this->logger->logStatus($logstatus, get_class($this));
+            return false;
+        }
+    }
+    
     public function isPostByPublicInstance($post_id, $network) {
         $q = "SELECT *, pub_date - interval #gmt_offset# hour as adj_pub_date FROM #prefix#posts p ";
         $q .= "INNER JOIN #prefix#instances i ON p.author_user_id = i.network_user_id ";

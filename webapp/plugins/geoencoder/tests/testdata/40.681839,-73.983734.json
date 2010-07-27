@@ -1,0 +1,384 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "street_address" ],
+    "formatted_address": "499-549 Baltic St, Brooklyn, NY 11217, USA",
+    "address_components": [ {
+      "long_name": "499-549",
+      "short_name": "499-549",
+      "types": [ "street_number" ]
+    }, {
+      "long_name": "Baltic St",
+      "short_name": "Baltic St",
+      "types": [ "route" ]
+    }, {
+      "long_name": "Brooklyn",
+      "short_name": "Brooklyn",
+      "types": [ "sublocality", "political" ]
+    }, {
+      "long_name": "New York",
+      "short_name": "New York",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Kings",
+      "short_name": "Kings",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "New York",
+      "short_name": "NY",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "11217",
+      "short_name": "11217",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 40.6817422,
+        "lng": -73.9837992
+      },
+      "location_type": "RANGE_INTERPOLATED",
+      "viewport": {
+        "southwest": {
+          "lat": 40.6787539,
+          "lng": -73.9874011
+        },
+        "northeast": {
+          "lat": 40.6850491,
+          "lng": -73.9811059
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 40.6815230,
+          "lng": -73.9852310
+        },
+        "northeast": {
+          "lat": 40.6822800,
+          "lng": -73.9832760
+        }
+      }
+    }
+  }, {
+    "types": [ "neighborhood", "political" ],
+    "formatted_address": "Boerum Hill, Brooklyn, NY, USA",
+    "address_components": [ {
+      "long_name": "Boerum Hill",
+      "short_name": "Boerum Hill",
+      "types": [ "neighborhood", "political" ]
+    }, {
+      "long_name": "Brooklyn",
+      "short_name": "Brooklyn",
+      "types": [ "sublocality", "political" ]
+    }, {
+      "long_name": "New York",
+      "short_name": "New York",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Kings",
+      "short_name": "Kings",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "New York",
+      "short_name": "NY",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 40.6848689,
+        "lng": -73.9844722
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 40.6784810,
+          "lng": -73.9949310
+        },
+        "northeast": {
+          "lat": 40.6902980,
+          "lng": -73.9777691
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 40.6784810,
+          "lng": -73.9949310
+        },
+        "northeast": {
+          "lat": 40.6902980,
+          "lng": -73.9777691
+        }
+      }
+    }
+  }, {
+    "types": [ "postal_code" ],
+    "formatted_address": "Brooklyn, NY 11217, USA",
+    "address_components": [ {
+      "long_name": "11217",
+      "short_name": "11217",
+      "types": [ "postal_code" ]
+    }, {
+      "long_name": "Brooklyn",
+      "short_name": "Brooklyn",
+      "types": [ "sublocality", "political" ]
+    }, {
+      "long_name": "Kings",
+      "short_name": "Kings",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "New York",
+      "short_name": "NY",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 40.6815619,
+        "lng": -73.9785952
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 40.6725110,
+          "lng": -73.9908670
+        },
+        "northeast": {
+          "lat": 40.6898629,
+          "lng": -73.9693470
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 40.6725110,
+          "lng": -73.9908670
+        },
+        "northeast": {
+          "lat": 40.6898629,
+          "lng": -73.9693470
+        }
+      }
+    }
+  }, {
+    "types": [ "sublocality", "political" ],
+    "formatted_address": "Brooklyn, NY, USA",
+    "address_components": [ {
+      "long_name": "Brooklyn",
+      "short_name": "Brooklyn",
+      "types": [ "sublocality", "political" ]
+    }, {
+      "long_name": "Kings",
+      "short_name": "Kings",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "New York",
+      "short_name": "NY",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 40.6500000,
+        "lng": -73.9500000
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 40.5510419,
+          "lng": -74.0566300
+        },
+        "northeast": {
+          "lat": 40.7394460,
+          "lng": -73.8333650
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 40.5510419,
+          "lng": -74.0566300
+        },
+        "northeast": {
+          "lat": 40.7394460,
+          "lng": -73.8333650
+        }
+      }
+    }
+  }, {
+    "types": [ "administrative_area_level_2", "political" ],
+    "formatted_address": "Kings, New York, USA",
+    "address_components": [ {
+      "long_name": "Kings",
+      "short_name": "Kings",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "New York",
+      "short_name": "NY",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 40.6528762,
+        "lng": -73.9594940
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 40.5510419,
+          "lng": -74.0566300
+        },
+        "northeast": {
+          "lat": 40.7394460,
+          "lng": -73.8333650
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 40.5510419,
+          "lng": -74.0566300
+        },
+        "northeast": {
+          "lat": 40.7394460,
+          "lng": -73.8333650
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "New York, NY, USA",
+    "address_components": [ {
+      "long_name": "New York",
+      "short_name": "New York",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "New York",
+      "short_name": "New York",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "New York",
+      "short_name": "NY",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 40.7142691,
+        "lng": -74.0059729
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 40.4773990,
+          "lng": -74.2590900
+        },
+        "northeast": {
+          "lat": 40.9175770,
+          "lng": -73.7002720
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 40.4773990,
+          "lng": -74.2590900
+        },
+        "northeast": {
+          "lat": 40.9175770,
+          "lng": -73.7002720
+        }
+      }
+    }
+  }, {
+    "types": [ "administrative_area_level_1", "political" ],
+    "formatted_address": "New York, USA",
+    "address_components": [ {
+      "long_name": "New York",
+      "short_name": "NY",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 43.2994285,
+        "lng": -74.2179326
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 40.4773990,
+          "lng": -79.7625900
+        },
+        "northeast": {
+          "lat": 45.0158650,
+          "lng": -71.7774910
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 40.4773990,
+          "lng": -79.7625900
+        },
+        "northeast": {
+          "lat": 45.0158650,
+          "lng": -71.7774910
+        }
+      }
+    }
+  }, {
+    "types": [ "country", "political" ],
+    "formatted_address": "United States",
+    "address_components": [ {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 37.0902400,
+        "lng": -95.7128910
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 18.7763000,
+          "lng": 170.5957000
+        },
+        "northeast": {
+          "lat": 71.5388000,
+          "lng": -66.8850749
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 18.7763000,
+          "lng": 170.5957000
+        },
+        "northeast": {
+          "lat": 71.5388000,
+          "lng": -66.8850749
+        }
+      }
+    }
+  } ]
+}

@@ -1,0 +1,51 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "locality", "political" ],
+    "formatted_address": "New Delhi, Delhi, India",
+    "address_components": [ {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Delhi",
+      "short_name": "Delhi",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "India",
+      "short_name": "IN",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 28.6353080,
+        "lng": 77.2249600
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 28.4784994,
+          "lng": 76.9688412
+        },
+        "northeast": {
+          "lat": 28.7918826,
+          "lng": 77.4810788
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 28.4221650,
+          "lng": 76.8538284
+        },
+        "northeast": {
+          "lat": 28.8822578,
+          "lng": 77.3417330
+        }
+      }
+    }
+  } ]
+}

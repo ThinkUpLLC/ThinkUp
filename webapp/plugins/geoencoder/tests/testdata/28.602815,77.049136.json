@@ -1,0 +1,274 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "neighborhood", "political" ],
+    "formatted_address": "Sector 4, New Delhi, Haryana, India",
+    "address_components": [ {
+      "long_name": "Sector 4",
+      "short_name": "Sector 4",
+      "types": [ "neighborhood", "political" ]
+    }, {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Haryana",
+      "short_name": "Haryana",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "Delhi",
+      "short_name": "Delhi",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "India",
+      "short_name": "IN",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 28.6029202,
+        "lng": 77.0492504
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 28.5931235,
+          "lng": 77.0332430
+        },
+        "northeast": {
+          "lat": 28.6127160,
+          "lng": 77.0652578
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 28.5966329,
+          "lng": 77.0419680
+        },
+        "northeast": {
+          "lat": 28.6053498,
+          "lng": 77.0558600
+        }
+      }
+    }
+  }, {
+    "types": [ "sublocality", "political" ],
+    "formatted_address": "Dwarka, New Delhi, Delhi, India",
+    "address_components": [ {
+      "long_name": "Dwarka",
+      "short_name": "Dwarka",
+      "types": [ "sublocality", "political" ]
+    }, {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Delhi",
+      "short_name": "Delhi",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "India",
+      "short_name": "IN",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 28.5901605,
+        "lng": 77.0506896
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 28.5507424,
+          "lng": 77.0111448
+        },
+        "northeast": {
+          "lat": 28.6159068,
+          "lng": 77.0910927
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 28.5507424,
+          "lng": 77.0111448
+        },
+        "northeast": {
+          "lat": 28.6159068,
+          "lng": 77.0910927
+        }
+      }
+    }
+  }, {
+    "types": [ "administrative_area_level_2", "political" ],
+    "formatted_address": "New Delhi, Delhi, India",
+    "address_components": [ {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Delhi",
+      "short_name": "Delhi",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "India",
+      "short_name": "IN",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 28.6353080,
+        "lng": 77.2249600
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 28.4258260,
+          "lng": 76.8424988
+        },
+        "northeast": {
+          "lat": 28.8761598,
+          "lng": 77.3307882
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 28.4258260,
+          "lng": 76.8424988
+        },
+        "northeast": {
+          "lat": 28.8761598,
+          "lng": 77.3307882
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "New Delhi, Delhi, India",
+    "address_components": [ {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Delhi",
+      "short_name": "Delhi",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "India",
+      "short_name": "IN",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 28.6353080,
+        "lng": 77.2249600
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 28.4221650,
+          "lng": 76.8538284
+        },
+        "northeast": {
+          "lat": 28.8822578,
+          "lng": 77.3417330
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 28.4221650,
+          "lng": 76.8538284
+        },
+        "northeast": {
+          "lat": 28.8822578,
+          "lng": 77.3417330
+        }
+      }
+    }
+  }, {
+    "types": [ "administrative_area_level_1", "political" ],
+    "formatted_address": "Delhi, India",
+    "address_components": [ {
+      "long_name": "Delhi",
+      "short_name": "Delhi",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "India",
+      "short_name": "IN",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 28.5709026,
+        "lng": 77.1485163
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 28.3316640,
+          "lng": 76.9302240
+        },
+        "northeast": {
+          "lat": 28.8047840,
+          "lng": 77.4120940
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 28.3316640,
+          "lng": 76.9302240
+        },
+        "northeast": {
+          "lat": 28.8047840,
+          "lng": 77.4120940
+        }
+      }
+    }
+  }, {
+    "types": [ "country", "political" ],
+    "formatted_address": "India",
+    "address_components": [ {
+      "long_name": "India",
+      "short_name": "IN",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 20.5936840,
+        "lng": 78.9628800
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 6.4627000,
+          "lng": 68.1097000
+        },
+        "northeast": {
+          "lat": 35.5071581,
+          "lng": 97.3955550
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 6.4627000,
+          "lng": 68.1097000
+        },
+        "northeast": {
+          "lat": 35.5071581,
+          "lng": 97.3955550
+        }
+      }
+    }
+  } ]
+}

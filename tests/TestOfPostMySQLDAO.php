@@ -147,16 +147,16 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             if ( ($counter/2) == 0 ) {
                 $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-                post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
+                post_text, source, pub_date, reply_count_cache, retweet_count_cache, location, network) 
                 VALUES ($post_id, 20, 'user1', 'User 1', 'avatar.jpg', 
                 'Hey @ev and @jack thanks for founding Twitter  post $counter', 'web', 
-                '2006-03-01 00:$pseudo_minute:00', 0, 0, 'twitter');";
+                '2006-03-01 00:$pseudo_minute:00', 0, 0, 'New Delhi', 'twitter');";
             } else {
                 $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname,
-                author_avatar, post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
+                author_avatar, post_text, source, pub_date, reply_count_cache, retweet_count_cache, place, network) 
                 VALUES ($post_id, 21, 'user2', 'User 2', 'avatar.jpg', 
                 'Hey @ev and @jack should fix Twitter - post $counter', 'web', 
-                '2006-03-01 00:$pseudo_minute:00', 0, 0, 'twitter');";
+                '2006-03-01 00:$pseudo_minute:00', 0, 0, 'New Delhi', 'twitter');";
             }
             PDODAO::$PDO->exec($q);
 
@@ -450,7 +450,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         //no link, so link member variables do not get set
         $this->assertTrue(!isset($post->link->id));
     }
-
+    
     /**
      * Test getPost on a post that does not exist
      */
@@ -608,7 +608,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PostMySQLDAO();
         $vals = array();
 
-        $vals['post_id']=250;
+        $vals['post_id']=2904;
         $vals['author_username']='quoter';
         $vals['author_fullname']="Quoter of Quotables";
         $vals['author_avatar']='avatar.jpg';
@@ -618,12 +618,23 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $vals['author_user_id']= 22;
         $vals['post_text']="Go confidently in the direction of your dreams! Live the life you've imagined.";
-        $vals['location']="New Delhi";
-        $vals['place']="Dwarka, New Delhi";
-        $vals['geo']="10.0000 20.0000";
         $vals['pub_date']='3/1/2010';
         $vals['source']='web';
         $vals['network']= 'twitter';
+        
+        //add post with insufficient location data
+        $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
+        $post = $dao->getPost(2904, 'twitter');
+        $this->assertEqual($post->post_id, 2904);
+        $this->assertEqual($post->location, NULL);
+        $this->assertEqual($post->place, NULL);
+        $this->assertEqual($post->geo, NULL);
+        $this->assertEqual($post->is_geo_encoded, 6);
+        
+        $vals['post_id'] = 250;
+        $vals['location']="New Delhi";
+        $vals['place']="Dwarka, New Delhi";
+        $vals['geo']="10.0000 20.0000";
         $vals['in_reply_to_post_id']= '';
 
         //test add straight post that doesn't exist
@@ -645,7 +656,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->retweet_count_cache, 0);
         $this->assertEqual($post->in_reply_to_post_id, null);
         $this->assertFalse($post->is_reply_by_friend);
-
+        $this->assertEqual($post->is_geo_encoded, 0);
+        
         //test add post that does exist
         $vals['post_id']=129;
         $this->assertEqual($dao->addPost($vals), 0, "Post exists, nothing inserted");
@@ -1035,6 +1047,47 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $posts = $pdao->getMostRetweetedPostsInLastWeek('user2', 'twitter', 5);
         $this->assertEqual(sizeof($posts), 0);
+    }
+    
+    /**
+     * Test getPostsToGeoencode
+     */
+    public function testGetPoststoGeoencode() {
+        $dao = new PostMySQLDAO();
+        $posts = $dao->getPoststoGeoencode();
+        $this->assertEqual(count($posts), 10);
+        $this->assertIsA($posts, "array");
+    }
+    
+    /**
+     * Test setGeoencodedPost
+     */
+    public function testSetGeoencodedPost() {
+        $dao = new PostMySQLDAO();
+        $setData = $dao->setGeoencodedPost(131, 1);
+        $post = $dao->getPost(131, 'twitter');
+        $this->assertEqual($post->is_geo_encoded, 1);
+        $this->assertEqual($post->reply_retweet_distance, 0);
+        
+        $setData = $dao->setGeoencodedPost(131, 1, 'New Delhi', '78', 100);
+        $post = $dao->getPost(131, 'twitter');
+        $this->assertEqual($post->is_geo_encoded, 1);
+        $this->assertEqual($post->geo, 78);
+        $this->assertEqual($post->location, 'New Delhi');
+        $this->assertEqual($post->reply_retweet_distance, 100);
+
+        //Since both of $location and $geodata are not defined, only is_geo_encoded field is updated
+        $setData = $dao->setGeoencodedPost(131, 2, '', 29);
+        $post = $dao->getPost(131, 'twitter');
+        $this->assertEqual($post->is_geo_encoded, 2);
+        $this->assertEqual($post->geo, '78');
+        $this->assertEqual($post->location, 'New Delhi');
+        
+        //Since both of $location and $geodata are not defined, only is_geo_encoded field is updated
+        $setData = $dao->setGeoencodedPost(131, 1, 'Dwarka');
+        $post = $dao->getPost(131, 'twitter');
+        $this->assertEqual($post->geo, '78');
+        $this->assertEqual($post->location, 'New Delhi');
     }
 
 }

@@ -1,0 +1,60 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "transit_station" ],
+    "formatted_address": "Keshav Puram Metro Station, Maharaja Nahar Singh Marg, New Delhi, Delhi, India",
+    "address_components": [ {
+      "long_name": "Keshav Puram Metro Station",
+      "short_name": "Keshav Puram Metro Station",
+      "types": [ "transit_station" ]
+    }, {
+      "long_name": "Maharaja Nahar Singh Marg",
+      "short_name": "Maharaja Nahar Singh Marg",
+      "types": [ "route" ]
+    }, {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "New Delhi",
+      "short_name": "New Delhi",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Delhi",
+      "short_name": "Delhi",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "India",
+      "short_name": "IN",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 28.6889398,
+        "lng": 77.1618859
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 28.6857922,
+          "lng": 77.1587383
+        },
+        "northeast": {
+          "lat": 28.6920874,
+          "lng": 77.1650335
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 28.6881093,
+          "lng": 77.1613839
+        },
+        "northeast": {
+          "lat": 28.6897703,
+          "lng": 77.1623879
+        }
+      }
+    },
+    "partial_match": true
+  } ]
+}

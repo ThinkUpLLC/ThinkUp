@@ -40,7 +40,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
 
         $plugins = $dao->getInstalledPlugins($this->config->getValue("source_root_path"));
-        $this->assertEqual(count($plugins),5);
+        $this->assertEqual(count($plugins),6);
 
         $this->assertEqual($plugins[0]->name,"Expand URLs", "Ex-url 'name' Test");
         $this->assertEqual($plugins[0]->folder_name,"expandurls", "Ex-url 'folder_name' test");
@@ -51,9 +51,11 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($plugins[2]->name,"Flickr Thumbnails", "Flickr 'name' Test");
         $this->assertEqual($plugins[2]->folder_name,"flickrthumbnails", "Flickr 'folder_name' test");
 
-        $this->assertEqual($plugins[3]->name,"Hello ThinkUp", "Hello 'name' Test");
-        $this->assertEqual($plugins[3]->folder_name,"hellothinkup", "Hello 'folder_name' test");
-
+        $this->assertTrue($plugins[3]->name == "GeoEncoder", "GeoEncoder 'name' Test");
+        $this->assertTrue($plugins[3]->folder_name == "geoencoder", "GeoEncoder 'folder_name' test");
+        
+        $this->assertEqual($plugins[4]->name,"Hello ThinkUp", "Hello 'name' Test");
+        $this->assertEqual($plugins[4]->folder_name,"hellothinkup", "Hello 'folder_name' test");
     }
 
     public function testInsertPugin() {

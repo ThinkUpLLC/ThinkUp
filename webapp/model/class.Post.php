@@ -30,11 +30,21 @@ class Post {
     var $retweet_count_cache;
     /**
      *
+     * @var int
+     */
+    var $reply_retweet_distance;
+    /**
+     *
      * @var bool
      */
     var $is_retweet_by_friend;
     var $network;
-
+    /**
+     *
+     * @var int 0 if Not Geoencoded, 1 if Successful, 2 if ZERO_RESULTS,
+     * 3 if OVER_QUERY_LIMIT, 4 if REQUEST_DENIED, 5 if INVALID_REQUEST, 6 if INSUFFICIENT_DATA 
+     */
+    var $is_geo_encoded;
     var $author; //optional user object
     var $link; //optional link object
 
@@ -61,6 +71,8 @@ class Post {
         $this->reply_count_cache = $val["reply_count_cache"];
         $this->in_retweet_of_post_id = $val["in_retweet_of_post_id"];
         $this->retweet_count_cache = $val["retweet_count_cache"];
+        $this->reply_retweet_distance = $val["reply_retweet_distance"];
+        $this->is_geo_encoded = $val["is_geo_encoded"];
         $this->network = $val["network"];
         $this->is_reply_by_friend = PDODAO::convertDBToBool($val["is_reply_by_friend"]);
         $this->is_retweet_by_friend = PDODAO::convertDBToBool($val["is_retweet_by_friend"]);

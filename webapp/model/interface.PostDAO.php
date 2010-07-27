@@ -284,6 +284,26 @@ interface PostDAO {
     public function getStrayRepliedToPosts($author_id, $network);
 
     /**
+     * Get posts that have not been geocoded--posts that have their is_geo_encoded field set to 0
+     * @param int $limit
+     * @return array $row['id'],$row['location'],$row['geo'],$row['post']
+     * @return array $row['in_reply_to_post_id'],$row['in_retweet_of_post_id']
+     */
+    public function getPostsToGeoencode($limit = 500);
+    
+    /**
+     * Set geo-location data for post
+     * @param int $post_id
+     * @param int $is_geo_encoded 0 if Not Geoencoded, 1 if Successful,
+     * 2 if ZERO_RESULTS, 3 if OVER_QUERY_LIMIT, 4 if REQUEST_DENIED, 5 if INVALID_REQUEST 
+     * @param string $location
+     * @param string $geodata
+     * @param int $distance
+     * @return bool True if geo-location data for post added successfully
+     */
+    public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = NULL, $geodata = NULL, $distance = 0);
+
+    /**
      * Check if post is by a public instance
      * @param int $post_id
      * @param str $network

@@ -177,6 +177,7 @@ CREATE TABLE tu_posts (
   in_retweet_of_post_id bigint(11) DEFAULT NULL,
   retweet_count_cache int(11) NOT NULL DEFAULT '0',
   is_retweet_by_friend tinyint(4) NOT NULL DEFAULT '0',
+  reply_retweet_distance int(11) NOT NULL DEFAULT '0',
   network varchar(10) NOT NULL DEFAULT 'twitter',
   is_geo_encoded int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
