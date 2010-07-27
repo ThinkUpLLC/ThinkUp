@@ -1,0 +1,33 @@
+--
+-- 2010-06-22
+--
+ALTER TABLE tt_posts ADD is_reply_by_friend TINYINT NOT NULL DEFAULT '0' AFTER reply_count_cache;
+ALTER TABLE tt_posts ADD is_retweet_by_friend TINYINT NOT NULL DEFAULT '0' AFTER retweet_count_cache; 
+
+--
+-- 2010-07-03
+--
+CREATE TABLE tt_follower_count (
+network_user_id BIGINT NOT NULL ,
+network VARCHAR( 20 ) NOT NULL ,
+date DATE NOT NULL ,
+count INT NOT NULL
+) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+--
+-- 2010-07-17
+--
+ALTER TABLE tt_owners DROP user_name,  DROP country;
+ALTER TABLE  tt_owners CHANGE  user_activated  is_activated INT( 1 ) NOT NULL DEFAULT  '0';
+ALTER TABLE  tt_owners CHANGE  user_pwd  pwd VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE  tt_owners CHANGE  user_email  email VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+--
+-- 2010-07-18
+--
+ALTER TABLE  tt_posts DROP INDEX  status_id;
+ALTER TABLE  tt_posts ADD INDEX (  post_id ) ;
+ALTER TABLE  tt_posts DROP INDEX  tweets_fulltext , ADD FULLTEXT  post_fulltext ( post_text );
+ALTER TABLE  tt_posts ADD INDEX  network (  network );
+ALTER TABLE  tt_posts ADD  author_follower_count INT NOT NULL AFTER  author_avatar;
+ALTER TABLE  tt_follows CHANGE  user_id  user_id BIGINT NOT NULL, CHANGE  follower_id follower_id BIGINT NOT NULL;
