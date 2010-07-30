@@ -4,13 +4,13 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
 /**
- * ThinkTank Basic Unit Test Case
+ * ThinkUp Basic Unit Test Case
  *
  * Base test case for tests without the need for database availability.
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class ThinkTankBasicUnitTestCase extends UnitTestCase {
+class ThinkUpBasicUnitTestCase extends UnitTestCase {
     /**
      * Set up
      * Initializes Config and Webapp objects, clears $_SESSION, $_POST, $_REQUEST

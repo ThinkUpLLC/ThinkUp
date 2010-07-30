@@ -1,11 +1,11 @@
 <?php
 
-$SOURCE_ROOT_PATH = "/your-path-to/thinktank/";
+$SOURCE_ROOT_PATH = "/your-path-to/thinkup/";
 
 $TEST_SERVER_DOMAIN = 'http://localhost';
 
-$TEST_DATABASE = 'thinktank_tests';
+$TEST_DATABASE = 'thinkup_tests';
 
-$INCLUDE_PATH = "/your-path-to/thinktank/webapp/";
+$INCLUDE_PATH = "/your-path-to/thinkup/webapp/";
 
 ?>

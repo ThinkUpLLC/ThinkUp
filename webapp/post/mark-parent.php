@@ -35,7 +35,7 @@ foreach ($oid as $o) {
     $pd->assignParent($pid, $o);
 }
 
-$s = new SmartyThinkTank();
+$s = new SmartyThinkUp();
 $s->clear_cache($template, $cache_key);
 
 echo 'Assignment complete.<br /><a href="'.$config->getValue('site_root_path').'?u='.$_GET['u'].'#replies">Back home</a>.';

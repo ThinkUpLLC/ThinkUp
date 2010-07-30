@@ -5,7 +5,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-interface WebappPlugin extends ThinkTankPlugin {
+interface WebappPlugin extends ThinkUpPlugin {
     public function getChildTabsUnderPosts($instance);
 
     public function getChildTabsUnderReplies($instance);

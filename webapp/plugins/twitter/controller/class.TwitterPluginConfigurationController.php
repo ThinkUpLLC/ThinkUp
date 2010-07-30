@@ -7,7 +7,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TwitterPluginConfigurationController extends ThinkTankAuthController {
+class TwitterPluginConfigurationController extends ThinkUpAuthController {
     /**
      *
      * @var Owner
@@ -69,12 +69,12 @@ class TwitterPluginConfigurationController extends ThinkTankAuthController {
                         $i = $id->getByUsernameOnNetwork($user["user_name"], 'twitter');
                         $oid->insert($this->owner->id, $i->id, '', '');
                     }
-                    $this->addSuccessMessage($_GET['twitter_username']." has been added to ThinkTank.");
+                    $this->addSuccessMessage($_GET['twitter_username']." has been added to ThinkUp.");
 
-                    $this->addSuccessMessage("Added ".$_GET['twitter_username']." to ThinkTank.");
+                    $this->addSuccessMessage("Added ".$_GET['twitter_username']." to ThinkUp.");
                 } else { // if not, return error
                     $this->addErrorMessage($_GET['twitter_username'].
-                    " is a private Twitter account; ThinkTank cannot track it without authorization.");
+                    " is a private Twitter account; ThinkUp cannot track it without authorization.");
                 }
             } else {
                 $this->addErrorMessage($_GET['twitter_username']." is not a valid Twitter username.");

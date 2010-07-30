@@ -1,14 +1,14 @@
-Flickr Thumbnails ThinkTank Plugin
+Flickr Thumbnails ThinkUp Plugin
 ==================================
 
-The Flickr Thumbnails ThinkTank plugin retrieves expands shortened flic.kr links to full image thumbnails.
+The Flickr Thumbnails ThinkUp plugin retrieves expands shortened flic.kr links to full image thumbnails.
 
 Installation
 ------------
 
-Get a [Flickr API key](http://www.flickr.com/services/api/misc.api_keys.html) for use with ThinkTank.
+Get a [Flickr API key](http://www.flickr.com/services/api/misc.api_keys.html) for use with ThinkUp.
 
-Add your Flickr API key to ThinkTank's config.inc.php file.
+Add your Flickr API key to ThinkUp's config.inc.php file.
 
 Crawler Plugin
 --------------

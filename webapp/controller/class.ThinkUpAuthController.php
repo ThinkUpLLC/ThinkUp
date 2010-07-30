@@ -1,12 +1,12 @@
 <?php
 /**
- * ThinkTank Authorized Controller
+ * ThinkUp Authorized Controller
  *
  * Parent controller for all logged-in user-only actions
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-abstract class ThinkTankAuthController extends ThinkTankController {
+abstract class ThinkUpAuthController extends ThinkUpController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
     }

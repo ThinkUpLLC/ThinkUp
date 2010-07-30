@@ -4,12 +4,12 @@ ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 
-class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
+class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
     protected $DAO;
     protected $logger;
     public function __construct() {
@@ -22,63 +22,63 @@ class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
         $this->DAO = new FollowMySQLDAO();
 
         //Insert test data into test table
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, follower_count, friend_count)
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, follower_count, friend_count)
         VALUES (1234567890, 'jack', 'Jack Dorsey', 'avatar.jpg', 150210, 124);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated)
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated)
         VALUES (1324567890, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count)
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count)
         VALUES (1623457890, 'private', 'Private Poster', 'avatar.jpg', 1, 35342, 1345);";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count,
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count,
         network) VALUES (1723457890, 'facebookuser1', 'Facebook User 1', 'avatar.jpg', 1, 35342, 1345, 'facebook');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count,
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count,
         network) VALUES (1823457890, 'facebookuser2', 'Facebook User 2', 'avatar.jpg', 1, 35342, 1345, 'facebook');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_user_errors (user_id, error_code, error_text, error_issued_to_user_id, network)
+        $q = "INSERT INTO tu_user_errors (user_id, error_code, error_text, error_issued_to_user_id, network)
         VALUES (15, 404, 'User not found', 1324567890, 'twitter');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
         VALUES (1324567890, 1234567890, '2006-01-08 23:54:41', 'twitter');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
         VALUES (1324567890, 14, '2006-01-08 23:54:41', 'twitter');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
         VALUES (1324567890, 15, '2006-01-08 23:54:41', 'twitter');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
         VALUES (1324567890, 1623457890, '2006-01-08 23:54:41', 'twitter');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
         VALUES (1623457890, 1324567890, '2006-01-08 23:54:41', 'twitter');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
         VALUES (1623457890, 1234567890, '2006-01-08 23:54:41', 'twitter');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, active, last_seen, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, active, last_seen, network)
         VALUES (14, 1234567890, 0, '2006-01-08 23:54:41', 'twitter');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, active, last_seen, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, active, last_seen, network)
         VALUES (1324567890, 17, 0, '2006-01-08 23:54:41', 'twitter');";
         PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tt_follows (user_id, follower_id, active, last_seen, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, active, last_seen, network)
         VALUES (1723457890, 1823457890, 1, '2006-01-08 23:54:41', 'facebook');";
         PDODAO::$PDO->exec($q);
     }
@@ -172,7 +172,7 @@ class TestOfFollowMySQLDAO extends ThinkTankUnitTestCase {
     }
 
     public function testGetOldestFollow() {
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen, active, network)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, active, network)
         VALUES (930061, 20, '2001-04-08 23:54:41', 1, 'twitter');";
         PDODAO::$PDO->exec($q);
 

@@ -3,14 +3,14 @@ require_once dirname(__FILE__).'/config.tests.inc.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowerCountMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 
-class TestOfFollowerCountMySQLDAO extends ThinkTankUnitTestCase {
+class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('FollowerCountMySQLDAO class test');
     }

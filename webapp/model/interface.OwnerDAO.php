@@ -14,7 +14,7 @@ interface OwnerDAO {
     public function getByEmail($email);
 
     /**
-     * Gets all ThinkTank owners
+     * Gets all ThinkUp owners
      * @return array Of Owner objects
      */
     public function getAllOwners();

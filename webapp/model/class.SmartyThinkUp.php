@@ -1,13 +1,13 @@
 <?php
 /**
- * ThinkTank's Smarty object
+ * ThinkUp's Smarty object
  *
- * Configures and initalizes Smarty per ThinkTank's configuration.
+ * Configures and initalizes Smarty per ThinkUp's configuration.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class SmartyThinkTank extends Smarty {
+class SmartyThinkUp extends Smarty {
 
     /**
      * @var boolean
@@ -24,12 +24,12 @@ class SmartyThinkTank extends Smarty {
      * Sets default values all view templates have access to:
      *
      *  <code>
-     *  //path of the ThinkTank installation site root as defined in config.inc.php
+     *  //path of the ThinkUp installation site root as defined in config.inc.php
      *  {$site_root_path}
-     *  //file the ThinkTank logo links to, 'index.php' by default
+     *  //file the ThinkUp logo links to, 'index.php' by default
      *  {$logo_link}
      *  //application name
-     *  {$app_name}
+     *  {$app_title}
      *  </code>
      *
      */

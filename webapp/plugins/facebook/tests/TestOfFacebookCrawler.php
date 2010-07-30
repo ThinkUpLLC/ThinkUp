@@ -6,7 +6,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
@@ -18,7 +18,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.faceb
 require_once $SOURCE_ROOT_PATH.'extlib/facebook/facebook.php';
 
 
-class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
+class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     var $fb;
     var $instance;
     var $logger;
@@ -30,7 +30,7 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();
-        global $THINKTANK_CFG;
+        global $THINKUP_CFG;
         $r = array('id'=>1, 'network_username'=>'Penelope Caridad', 'network_user_id'=>'606837591',
         'network_viewer_id'=>'606837591', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
@@ -40,7 +40,7 @@ class TestOfFacebookCrawler extends ThinkTankUnitTestCase {
         'network'=>'facebook');
         $this->instance = new Instance($r);
 
-        $this->fb = new Facebook($THINKTANK_CFG['facebook_api_key'], $THINKTANK_CFG['facebook_api_secret']);
+        $this->fb = new Facebook($THINKUP_CFG['facebook_api_key'], $THINKUP_CFG['facebook_api_secret']);
         $this->fb->api_client = new MockFacebookRestClient();
     }
 

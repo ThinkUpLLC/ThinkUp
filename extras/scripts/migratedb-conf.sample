@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #Database credentials
-db_name="thinktank_migration"
-db_user="thinktank_user"
+db_name="thinkup_migration"
+db_user="thinkup_user"
 db_password="password"
 
 #MySQL bin location

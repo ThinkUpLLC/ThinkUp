@@ -2,10 +2,10 @@
 /**
  * Data Access Object Factory
  *
- * Inits a DAO based on the ThinkTank config db_type and $dao_mapping definitions.
+ * Inits a DAO based on the ThinkUp config db_type and $dao_mapping definitions.
  * db_type is defined in webapp/config.inc.php as:
  *
- *     $THINKTANK_CFG['db_type'] = 'somedb';
+ *     $THINKUP_CFG['db_type'] = 'somedb';
  *
  * Example of use:
  *
@@ -111,11 +111,11 @@ class DAOFactory {
     }
 
     /**
-     * Gets the db_type for our configured ThinkTank instance, defaults to mysql,
+     * Gets the db_type for our configured ThinkUp instance, defaults to mysql,
      * db_type can optionally be defined in webapp/config.inc.php as:
      *
      *<code>
-     *     $THINKTANK_CFG['db_type'] = 'somedb';
+     *     $THINKUP_CFG['db_type'] = 'somedb';
      *</code>
      *
      * @return string db_type, will default to 'mysql' if not defined

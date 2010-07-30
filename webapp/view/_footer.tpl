@@ -9,7 +9,7 @@
           <cite title="{$total_friends|number_format} of {$owner_stats->friend_count|number_format}">{$percent_friends_loaded|number_format}%</cite> of your friends' profiles loaded |
         {else}
           <a href="{$site_root_path}">Go to the public timeline.</a><br>
-          Set up your own <a href="http://thinktankapp.com">ThinkTank</a>.<br>
+          Set up your own <a href="http://thinkupapp.com">ThinkUp</a>.<br>
         {/if}
         It is nice to be nice.
       </p>

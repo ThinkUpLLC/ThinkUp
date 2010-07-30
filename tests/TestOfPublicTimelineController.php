@@ -3,12 +3,12 @@ require_once dirname(__FILE__).'/config.tests.inc.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PublicTimelineController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
@@ -24,7 +24,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
+class TestOfPublicTimelineController extends ThinkUpUnitTestCase {
 
     public function __construct() {
         $this->UnitTestCase('PublicTimelineController class test');
@@ -37,23 +37,23 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         $config->setValue('cache_pages', false);
 
         //Add instance_owner
-        $q = "INSERT INTO tt_owner_instances (owner_id, instance_id) VALUES (1, 1)";
+        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id) VALUES (1, 1)";
         $this->db->exec($q);
 
         //Insert test data into test table
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
         'Ev Williams', 'avatar.jpg', '1/1/2005');";
         $this->db->exec($q);
 
         //Make public
-        $q = "INSERT INTO tt_instances (id, network_user_id, network_username, is_public) VALUES (1, 13, 'ev', 1);";
+        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public) VALUES (1, 13, 'ev', 1);";
         $this->db->exec($q);
 
         //Add a bunch of posts
         $counter = 0;
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
             post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 
             'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', 
             '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5);";
@@ -168,7 +168,7 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Public Post Replies');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Post 51 on Twitter is not in ThinkTank.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Post 51 on Twitter is not in ThinkUp.');
     }
 
     public function testControlUserDashboardPrivateInstance() {
@@ -243,7 +243,7 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
-        "ginatrapani on Twitter isn't set up on this ThinkTank installation.");
+        "ginatrapani on Twitter isn't set up on this ThinkUp installation.");
     }
 
     public function testControlUserDashboardUserDoesntExist() {
@@ -255,7 +255,7 @@ class TestOfPublicTimelineController extends ThinkTankUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
-        "idontexist on Somenetwork isn't set up on this ThinkTank installation.");
+        "idontexist on Somenetwork isn't set up on this ThinkUp installation.");
     }
 
     public function testControlUserDashboard() {

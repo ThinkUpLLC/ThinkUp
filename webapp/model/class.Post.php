@@ -1,7 +1,7 @@
 <?php
 /**
  * Post
- * A post, tweet, or status update on a ThinkTank source network or service (like Twitter or Facebook)
+ * A post, tweet, or status update on a ThinkUp source network or service (like Twitter or Facebook)
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class Post {

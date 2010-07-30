@@ -5,7 +5,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class UserController extends ThinkTankAuthController {
+class UserController extends ThinkUpAuthController {
     /**
      * Required query string parameters
      * @var array u = instance username, n = network

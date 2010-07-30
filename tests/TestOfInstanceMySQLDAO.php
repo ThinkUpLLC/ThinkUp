@@ -4,14 +4,14 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.InstanceMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Loremipsum/LoremIpsum.class.php';
 
-class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
+class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
     protected $DAO;
 
     public function __construct() {
@@ -21,7 +21,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->DAO = new InstanceMySQLDAO();
-        $q  = "INSERT INTO tt_instances ";
+        $q  = "INSERT INTO tu_instances ";
         $q .= "(`network_user_id`, `network_username`, `network`, ";
         $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
         $q .= "(10 , 'jack', 'twitter', 10, '1988-01-20 12:00:00', 1), ";
@@ -32,7 +32,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         // $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
         PDODAO::$PDO->exec($q);
 
-        $q  = "INSERT INTO  `tt_owner_instances` (`owner_id` , `instance_id`) ";
+        $q  = "INSERT INTO  `tu_owner_instances` (`owner_id` , `instance_id`) ";
         $q .= "VALUES ('2',  '1'), ('2', '2');";
         PDODAO::$PDO->exec($q);
     }
@@ -87,7 +87,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($result->network_user_id, 10);
         $this->assertEqual($result->network_viewer_id, 10);
 
-        $q = "TRUNCATE TABLE tt_instances ";
+        $q = "TRUNCATE TABLE tu_instances ";
         PDODAO::$PDO->exec($q);
 
         //Try empty
@@ -400,7 +400,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
             elseif ($number == 3){
                 $data = "@jill ".$data;
             }
-            $q  = "INSERT INTO `tt_posts` (`post_id`, `author_user_id`, `post_text`) ";
+            $q  = "INSERT INTO `tu_posts` (`post_id`, `author_user_id`, `post_text`) ";
             $q .= " VALUES ('".$postid."', '".$sender."', '".$data."');\n";
             PDODAO::$PDO->exec($q);
             if($sender == 10){
@@ -414,7 +414,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
             $follow = array("follower"=>rand(5,25), "following"=>rand(5,25));
             if(!isset($fd[$follow['following']."-".$follow['follower']])){
                 $fd[$follow['following']."-".$follow['follower']] = true;
-                $q  = "INSERT INTO `tt_follows` (`user_id`, `follower_id`) ";
+                $q  = "INSERT INTO `tu_follows` (`user_id`, `follower_id`) ";
                 $q .= "VALUES ( '".$follow['following']."', '".$follow['follower']."');\n";
                 PDODAO::$PDO->exec($q);
                 if($follow['following'] == 10){
@@ -435,7 +435,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
         array('id'=>16, 'name'=>'Paul Clark')
         );
         foreach($users as $user){
-            $q  = "INSERT INTO `tt_users` (`user_id`, `user_name`) ";
+            $q  = "INSERT INTO `tu_users` (`user_id`, `user_name`) ";
             $q .= " VALUES ('".$user['id']."', '".$user['name']."') ";
             PDODAO::$PDO->exec($q);
         }
@@ -520,7 +520,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
 
     public function testGetByUserAndViewerId() {
         $this->DAO = new InstanceMySQLDAO();
-        $q  = "INSERT INTO tt_instances ";
+        $q  = "INSERT INTO tu_instances ";
         $q .= "(`network_user_id`, `network_username`, `network`, ";
         $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
         $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
@@ -535,7 +535,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
 
     public function testGetByViewerId() {
         $this->DAO = new InstanceMySQLDAO();
-        $q  = "INSERT INTO tt_instances ";
+        $q  = "INSERT INTO tu_instances ";
         $q .= "(`network_user_id`, `network_username`, `network`, ";
         $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
         $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
@@ -548,7 +548,7 @@ class TestOfInstanceMySQLDAO extends ThinkTankUnitTestCase {
 
     public function testGetByUsernameOnNetwork() {
         $this->DAO = new InstanceMySQLDAO();
-        $q  = "INSERT INTO tt_instances ";
+        $q  = "INSERT INTO tu_instances ";
         $q .= "(`network_user_id`, `network_username`, `network`, ";
         $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
         $q .= "(17 , 'salma', 'facebook', 15, '2010-01-01 12:00:01', 1), ";

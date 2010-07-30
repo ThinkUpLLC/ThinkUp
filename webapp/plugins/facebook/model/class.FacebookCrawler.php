@@ -118,8 +118,8 @@ class FacebookCrawler {
             $this->logger->logStatus(sizeof($stream["posts"]).
             " Facebook posts found for user ID $uid with session key $session_key", get_class($this));
 
-            $thinktank_data = $this->parseStream($stream);
-            $posts = $thinktank_data["posts"];
+            $thinkup_data = $this->parseStream($stream);
+            $posts = $thinkup_data["posts"];
 
             foreach ($posts as $post) {
                 $added_posts = $this->pd->addPost($post);
@@ -127,7 +127,7 @@ class FacebookCrawler {
                 get_class($this));
             }
 
-            $users = $thinktank_data["users"];
+            $users = $thinkup_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
                     $this->fetchUserInfo($user["user_id"], $session_key, "Comments");
@@ -152,8 +152,8 @@ class FacebookCrawler {
             $this->logger->logStatus(sizeof($stream["posts"]).
             " Facebook posts found for page ID $pid with session key $session_key", get_class($this));
 
-            $thinktank_data = $this->parseStream($stream);
-            $posts = $thinktank_data["posts"];
+            $thinkup_data = $this->parseStream($stream);
+            $posts = $thinkup_data["posts"];
 
             foreach ($posts as $post) {
                 if ($post['author_username']== "" && isset($post['author_user_id'])) {
@@ -170,7 +170,7 @@ class FacebookCrawler {
                 get_class($this));
             }
 
-            $users = $thinktank_data["users"];
+            $users = $thinkup_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
                     $this->fetchUserInfo($user["user_id"], $session_key, "Comments");
@@ -184,8 +184,8 @@ class FacebookCrawler {
 
 
     private function parseStream($stream) {
-        $thinktank_posts = array();
-        $thinktank_users = array();
+        $thinkup_posts = array();
+        $thinkup_users = array();
         foreach ($stream["posts"] as $p) {
             $post_id = explode("_", $p["post_id"]);
             $post_id = $post_id[1];
@@ -194,7 +194,7 @@ class FacebookCrawler {
             "author_avatar"=>$profile["pic_square"], "author_user_id"=>$profile['id'], "post_text"=>$p['message'], 
             "pub_date"=>date('Y-m-d H:i:s', $p['created_time']), "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', 
             "source"=>'', 'network'=>'facebook');
-            array_push($thinktank_posts, $ttp);
+            array_push($thinkup_posts, $ttp);
             $post_comments = $p["comments"]["comment_list"];
             $post_comments_count = isset($p["comments"]["count"])?$p["comments"]["count"]:0;
             if (is_array($post_comments) && sizeof($post_comments) > 0) {
@@ -209,14 +209,14 @@ class FacebookCrawler {
                     "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), 
                     "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 
                     'network'=>'facebook');
-                    array_push($thinktank_posts, $ttp);
+                    array_push($thinkup_posts, $ttp);
                     //Get users
                     $ttu = array("user_name"=>$commenter["name"], "full_name"=>$commenter["name"],
                     "user_id"=>$c['fromid'], "avatar"=>$commenter["pic_square"], "location"=>'', 
                     "description"=>'', 
                     "url"=>'', "is_protected"=>'true', "follower_count"=>0, "post_count"=>0, "joined"=>'', 
                     "found_in"=>"Comments", "network"=>"facebook");
-                    array_push($thinktank_users, $ttu);
+                    array_push($thinkup_users, $ttu);
                 }
             }
             // collapsed comment thread
@@ -239,12 +239,12 @@ class FacebookCrawler {
                         "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), 
                         "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 
                         'network'=>'facebook');
-                        array_push($thinktank_posts, $ttp);
+                        array_push($thinkup_posts, $ttp);
                     }
                 }
             }
         }
-        return array("posts"=>$thinktank_posts, "users"=>$thinktank_users);
+        return array("posts"=>$thinkup_posts, "users"=>$thinkup_users);
     }
 
     private function getProfile($userid, $profiles) {

@@ -2,8 +2,8 @@
 /**
  * Configuration singleton
  *
- * Singleton acess object for ThinkTank configuration values set in config.inc.php.
- * Never reference $THINKTANK_CFG directly; always do it through this object.
+ * Singleton acess object for ThinkUp configuration values set in config.inc.php.
+ * Never reference $THINKUP_CFG directly; always do it through this object.
  *
  * Example of use:
  *
@@ -14,7 +14,7 @@
  * $config->getValue('log_location');
  * </code>
  *
- * @package     ThinkTank
+ * @package     ThinkUp
  * @author      Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author      Mark Wilkie
  */
@@ -34,8 +34,8 @@ class Config {
      * @return Config
      */
     public function __construct() {
-        global $THINKTANK_CFG;
-        $this->config = $THINKTANK_CFG;
+        global $THINKUP_CFG;
+        $this->config = $THINKUP_CFG;
     }
 
     /**

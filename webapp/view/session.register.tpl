@@ -1,6 +1,6 @@
 {include file="_header.tpl" title="Registration" statusbar="no"}
 
-<div class="container_24 thinktank-canvas round-all">
+<div class="container_24 thinkup-canvas round-all">
   <div class="prepend_20">
     <h1>Register</h1>
   </div>

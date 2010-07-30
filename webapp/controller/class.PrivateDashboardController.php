@@ -5,7 +5,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class PrivateDashboardController extends ThinkTankAuthController {
+class PrivateDashboardController extends ThinkUpAuthController {
     /**
      * Constructor
      *

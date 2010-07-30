@@ -22,7 +22,7 @@
 
 <div class="container">
 {include file="_usermessage.tpl"}
-  <div id="thinktank-tabs">
+  <div id="thinkup-tabs">
     <div role="application" id="tabs">
       <ul>
         <li><a href="#updates"><div class="key-stat">
@@ -48,7 +48,7 @@
       </ul>
       <div class="section" id="updates">
         <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart1">
-        <div class="thinktank-canvas clearfix">
+        <div class="thinkup-canvas clearfix">
           <div class="container_24">
             <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
             <div class="footnote toggle_container clearfix">
@@ -82,18 +82,18 @@
               <div id="posts_content"></div>
             </div>
           </div>
-        </div> <!-- end .thinktank-canvas -->
+        </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #updates -->
       
       <div class="section" id="replies">
         <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart2">
-        <div class="thinktank-canvas clearfix">
+        <div class="thinkup-canvas clearfix">
           <div class="container_24">
             <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
             <div class="grid_24 footnote toggle_container clearfix">
               <div class="grid_13 push_10 append_20">
                 <div class="clearfix bt">
-                  <div class="grid_9 bold alpha">Mentions loaded into ThinkTank</div>
+                  <div class="grid_9 bold alpha">Mentions loaded into ThinkUp</div>
                   <div class="grid_4 right omega">{$instance->total_replies_in_system|number_format}</div>
                 </div>
                 {if $instance->total_replies_in_system > 0}
@@ -102,7 +102,7 @@
                     <div class="grid_4 right omega">{$instance->avg_replies_per_day}</div>
                   </div>
                   <div class="clearfix bt">
-                    <div class="grid_9 bold alpha">Earliest reply loaded into ThinkTank</div>
+                    <div class="grid_9 bold alpha">Earliest reply loaded into ThinkUp</div>
                     <div class="grid_4 right omega">{$instance->earliest_reply_in_system|date_format:"%D"}</div>
                   </div>
                 {/if}
@@ -125,18 +125,18 @@
               <div id="replies_content"></div>
             </div>
           </div> <!-- end .container_24 -->
-        </div> <!-- end .thinktank-canvas -->
+        </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #replies -->
       
       <div class="section" id="followers">
         <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart3">
-        <div class="thinktank-canvas clearfix">
+        <div class="thinkup-canvas clearfix">
           <div class="container_24">
             <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
             <div class="grid_24 footnote toggle_container">
               <div class="grid_13 push_10 append_20">
                 <div class="clearfix bt">
-                  <div class="grid_9 bold alpha">Followers loaded into ThinkTank</div>
+                  <div class="grid_9 bold alpha">Followers loaded into ThinkUp</div>
                   <div class="grid_4 right omega">{$total_follows_with_full_details}</div>
                 </div>
                 {if $total_follows_protected>0}
@@ -170,12 +170,12 @@
               <div id="followers_content"></div>
             </div>
           </div>
-        </div> <!-- end .thinktank-canvas -->
+        </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #followers -->
       
       <div class="section" id="friends">
         <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart4">
-        <div class="thinktank-canvas clearfix">
+        <div class="thinkup-canvas clearfix">
           <div class="container_24">
             <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
             <div class="grid_24 footnote toggle_container">
@@ -220,12 +220,12 @@
               <div id="friends_content"></div>
             </div>
           </div>
-        </div> <!-- end .thinktank-canvas -->
+        </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #friends -->
       
       <div class="section" id="links">
         <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart5">
-        <div class="thinktank-canvas clearfix">
+        <div class="thinkup-canvas clearfix">
           <div class="container_24">
             <!--<h4 class="trigger clearfix"><a href="#">Statistics</a></h4>-->
             <div class="grid_24 footnote toggle_container">&nbsp;</div>
@@ -243,16 +243,16 @@
               <div id="links_content"></div>
             </div>
           </div>
-        </div> <!-- end .thinktank-canvas -->
+        </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #links -->
     
     </div> <!-- end #tabs -->
-  </div> <!-- end #thinktank-tabs -->
+  </div> <!-- end #thinkup-tabs -->
   
   <div role="contentinfo" id="keystats">
     <h2>Key Stats</h2>
     <ul>
-      <li>Followers: <cite title="Total followers according to Twitter.com (not necessarily loaded into ThinkTank)">{$owner_stats->follower_count|number_format}</cite><br /> <small>{if $total_follows_protected>0} (<cite title="{$total_follows_protected|number_format} of {$total_follows_with_full_details|number_format} total follower profiles loaded into ThinkTank">{$percent_followers_protected}% protected</cite>)<br />{/if}{if $total_follows_with_errors>0} (<cite title="{$total_follows_with_errors|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkTank">{$percent_followers_suspended}% suspended</cite>){/if}</small></li>
+      <li>Followers: <cite title="Total followers according to Twitter.com (not necessarily loaded into ThinkUp)">{$owner_stats->follower_count|number_format}</cite><br /> <small>{if $total_follows_protected>0} (<cite title="{$total_follows_protected|number_format} of {$total_follows_with_full_details|number_format} total follower profiles loaded into ThinkUp">{$percent_followers_protected}% protected</cite>)<br />{/if}{if $total_follows_with_errors>0} (<cite title="{$total_follows_with_errors|number_format} of {$total_follows_with_full_details|number_format} follower profiles loaded into ThinkUp">{$percent_followers_suspended}% suspended</cite>){/if}</small></li>
       <li>Friends: {$owner_stats->friend_count|number_format} <br /> <small>{if $total_friends_protected}({$total_friends_protected|number_format} protected)<br />{/if}{if $total_friends_with_errors>0} ({$total_friends_with_errors|number_format} suspended){/if}</small></li>
       <li>{$owner_stats->tweet_count|number_format} Tweets <small></small><br /><small>{$owner_stats->avg_tweets_per_day} per day since {$owner_stats->joined|date_format:"%D"}</small></li>
       <li>{$instance->total_replies_in_system|number_format} Mentions in System<br />{if $instance->total_replies_in_system > 0}<small>{$instance->avg_replies_per_day} per day since {$instance->earliest_reply_in_system|date_format:"%D"}</small>{/if}</li>

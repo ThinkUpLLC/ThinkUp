@@ -50,7 +50,7 @@ class Utils {
     }
 
     /**
-     * Get plugins that exist in the ThinkTank plugins directory
+     * Get plugins that exist in the ThinkUp plugins directory
      * @param str $dir
      * @return array Plugins
      */

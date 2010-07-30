@@ -1,10 +1,10 @@
 <?php
 /**
- * ThinkTank Plugin interface
+ * ThinkUp Plugin interface
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-interface ThinkTankPlugin {
+interface ThinkUpPlugin {
     /**
      * Render the configuration screen in the webapp
      * @param Owner $owner

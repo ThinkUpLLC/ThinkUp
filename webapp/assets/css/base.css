@@ -248,11 +248,11 @@ a img {
 
 /* --- HEADLINES ------------------------------ */
 
-.thinktank-canvas h1 {color: #848884;font-size:1.6em;font-weight:700;margin:0;padding:0 0 0 15px;}
-.thinktank-canvas h4 {color: #000;line-height:1em;font-size:1em;font-weight:700;margin:0;padding:0 0 10px 35px;}
-.thinktank-canvas h1.user {margin:0;padding:0;}
-.thinktank-canvas h1.post {color:#000;font-size:1em;font-weight:500;margin:0;padding:0;border:0px;}
-.thinktank-canvas h2.subhead {color:#848884;font-size:1.2em;font-weight:500;margin:0;padding:0;border-top:0px;}
+.thinkup-canvas h1 {color: #848884;font-size:1.6em;font-weight:700;margin:0;padding:0 0 0 15px;}
+.thinkup-canvas h4 {color: #000;line-height:1em;font-size:1em;font-weight:700;margin:0;padding:0 0 10px 35px;}
+.thinkup-canvas h1.user {margin:0;padding:0;}
+.thinkup-canvas h1.post {color:#000;font-size:1em;font-weight:500;margin:0;padding:0;border:0px;}
+.thinkup-canvas h2.subhead {color:#848884;font-size:1.2em;font-weight:500;margin:0;padding:0;border-top:0px;}
 
 /* --- CONTENT -------------------------------- */
 

@@ -4,7 +4,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.LinkMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
@@ -15,7 +15,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author christoffer Viken <christoffer[at]viken[dot]me>
  */
-class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
+class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Constructor
      */
@@ -36,7 +36,7 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tt_links (url, title, clicks, post_id, is_image) ";
+            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) ";
             $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $post_id, 0);";
             PDODAO::$PDO->exec($q);
             $counter++;
@@ -48,7 +48,7 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tt_links (url, title, clicks, post_id, is_image) ";
+            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) ";
             $q .= "VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1);";
             PDODAO::$PDO->exec($q);
             $counter++;
@@ -60,7 +60,7 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tt_links (url, title, clicks, post_id, is_image, error) ";
+            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, is_image, error) ";
             $q .= "VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1, ";
             $q .= "'Generic test error message, Photo not found');";
             PDODAO::$PDO->exec($q);
@@ -74,7 +74,7 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tt_links (url, title, clicks, post_id, is_image, error) ";
+            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, is_image, error) ";
             $q .= "VALUES ('http://bit.ly/beEEfs', 'Link $counter', 0, $post_id, 1, '');";
             $this->db->exec($q);
             $counter++;
@@ -87,7 +87,7 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
             $user_id = ($counter * 5) + 2;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tt_posts ( ";
+            $q  = "INSERT INTO tu_posts ( ";
             $q .= " post_id, author_user_id, author_username, author_fullname ";
             $q .= " ) ";
             $q .= "VALUES ('$post_id', $user_id, 'user$counter', 'User$counter Name$counter' ";
@@ -96,7 +96,7 @@ class TestOfLinkMySQLDAO extends ThinkTankUnitTestCase {
             $counter++;
         }
 
-        $q  = "INSERT INTO tt_follows (";
+        $q  = "INSERT INTO tu_follows (";
         $q .= " follower_id, user_id, active ";
         $q .= " ) ";
         $q .= " VALUES ";

@@ -4,7 +4,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
@@ -18,7 +18,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.UserMySQLDAO.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfUserErrorMySQLDAO extends ThinkTankUnitTestCase {
+class TestOfUserErrorMySQLDAO extends ThinkUpUnitTestCase {
 
     /**
      * Constructor
@@ -35,7 +35,7 @@ class TestOfUserErrorMySQLDAO extends ThinkTankUnitTestCase {
         parent::setUp();
 
         //Insert test data into test table
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, location)
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, location)
         VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg', 'San Francisco');";
         $this->db->exec($q);
         $this->logger = Logger::getInstance();

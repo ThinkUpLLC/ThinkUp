@@ -11,7 +11,7 @@ chdir("..");
 
 require_once 'init.php';
 
-$s = new SmartyThinkTank();
+$s = new SmartyThinkUp();
 
 $request_token = $_GET['oauth_token'];
 $request_token_secret = $_SESSION['oauth_request_token_secret'];

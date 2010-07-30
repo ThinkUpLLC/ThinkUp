@@ -2,7 +2,7 @@
 /**
  * Plugin Option
  *
- * A ThinkTank plugin option
+ * A ThinkUp plugin option
  *
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *

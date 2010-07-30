@@ -1,11 +1,11 @@
 <?php
 /**
  * Activate Account Controller
- * When a user registers for a ThinkTank account s/he receives an email with an activation link that lands here.
+ * When a user registers for a ThinkUp account s/he receives an email with an activation link that lands here.
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class ActivateAccountController extends ThinkTankController {
+class ActivateAccountController extends ThinkUpController {
     /**
      * Required query string parameters
      * @var array usr = instance email address, code = activation code

@@ -1,7 +1,7 @@
-Expand URLs ThinkTank Plugin
+Expand URLs ThinkUp Plugin
 ============================
 
-The Expand URLs ThinkTank plugin expands shortened URLs in the body of ThinkTank posts to their original long form. 
+The Expand URLs ThinkUp plugin expands shortened URLs in the body of ThinkUp posts to their original long form. 
 
 Crawler Plugin
 --------------

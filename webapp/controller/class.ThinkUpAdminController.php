@@ -1,13 +1,13 @@
 <?php
 /**
- * ThinkTank Admin Controller
+ * ThinkUp Admin Controller
  *
  * Parent controller for all logged-in admin user-only actions.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-abstract class ThinkTankAdminController extends ThinkTankAuthController {
+abstract class ThinkUpAdminController extends ThinkUpAuthController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
     }
@@ -16,7 +16,7 @@ abstract class ThinkTankAdminController extends ThinkTankAuthController {
         if ($this->isAdmin()) {
             return $this->authControl();
         } else {
-            return "You must be a ThinkTank admin in to do this";
+            return "You must be a ThinkUp admin in to do this";
         }
     }
 }

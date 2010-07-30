@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Option Data Access Object
- * The data access object for retrieving and saving plugin option data for thinktank
+ * The data access object for retrieving and saving plugin option data for thinkup
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 

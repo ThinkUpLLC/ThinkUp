@@ -1,6 +1,6 @@
 <?php
 /**
- * ThinkTank User, i.e., owner of social network user accounts
+ * ThinkUp User, i.e., owner of social network user accounts
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

@@ -2,7 +2,7 @@
 /**
  * UserError Data Access Object
  *
- * Inserts user errors into the tt_user_error table.
+ * Inserts user errors into the tu_user_error table.
  * Example user error text includes:
  * "Not found"
  * "Not authorized"

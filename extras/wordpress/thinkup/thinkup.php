@@ -1,8 +1,8 @@
 <?php 
 /*
- Plugin Name: ThinkTank Integration
- Plugin URI: http://thinktankapp.com
- Description: Displays ThinkTank data on your WordPress blog.
+ Plugin Name: ThinkUp Integration
+ Plugin URI: http://thinkupapp.com
+ Description: Displays ThinkUp data on your WordPress blog.
  Version: 0.5
  Author: Gina Trapani
  Author URI: http://ginatrapani.org
@@ -23,21 +23,21 @@
  */
 
 
-// [thinktank_chronological_archive]
-function thinktank_chron_archive_handler($atts) {
+// [thinkup_chronological_archive]
+function thinkup_chron_archive_handler($atts) {
 
-    extract(shortcode_atts(array('twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order (sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>get_option('gmt_offset'), ), $atts));
+    extract(shortcode_atts(array('twitter_username'=>get_option('thinkup_twitter_username'), 'title'=>'<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order (sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>get_option('gmt_offset'), ), $atts));
     
-    $options_array = thinktank_get_options_array();
+    $options_array = thinkup_get_options_array();
     
-    if ($options_array['thinktank_server']['value'] != '')
-        $wpdb2 = new wpdb($options_array['thinktank_dbusername']['value'], $options_array['thinktank_dbpw']['value'], $options_array['thinktank_db']['value'], $options_array['thinktank_server']['value']);
+    if ($options_array['thinkup_server']['value'] != '')
+        $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'], $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
     else {
         global $wpdb;
         $wpdb2 = $wpdb;
     }
     
-    $sql = $wpdb2->prepare("select pub_date, post_text, post_id from ".$options_array['thinktank_table_prefix']['value']."posts where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc", $twitter_username);
+    $sql = $wpdb2->prepare("select pub_date, post_text, post_id from ".$options_array['thinkup_table_prefix']['value']."posts where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc", $twitter_username);
     
     $tweets = $wpdb2->get_results($sql);
     
@@ -51,19 +51,19 @@ function thinktank_chron_archive_handler($atts) {
         }
         echo "{$after}";
     } else {
-        echo "No tweets found in ThinkTank for {$twitter_username}.";
+        echo "No tweets found in ThinkUp for {$twitter_username}.";
     }
 }
 
-// [thinktank_status_replies post_id="12345"]
-function thinktank_replies_handler($atts) {
+// [thinkup_status_replies post_id="12345"]
+function thinkup_replies_handler($atts) {
 
-    extract(shortcode_atts(array('post_id'=>0, 'twitter_username'=>get_option('thinktank_twitter_username'), 'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#post_id#/">@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
+    extract(shortcode_atts(array('post_id'=>0, 'twitter_username'=>get_option('thinkup_twitter_username'), 'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#post_id#/">@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
     
-    $options_array = thinktank_get_options_array();
+    $options_array = thinkup_get_options_array();
     
-    if ($options_array['thinktank_server']['value'] != '')
-        $wpdb2 = new wpdb($options_array['thinktank_dbusername']['value'], $options_array['thinktank_dbpw']['value'], $options_array['thinktank_db']['value'], $options_array['thinktank_server']['value']);
+    if ($options_array['thinkup_server']['value'] != '')
+        $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'], $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
     else {
         global $wpdb;
         $wpdb2 = $wpdb;
@@ -72,9 +72,9 @@ function thinktank_replies_handler($atts) {
     $sql = $wpdb2->prepare("select 
 				t.*, u.*
 			from 
-				".$options_array['thinktank_table_prefix']['value']."posts t
+				".$options_array['thinkup_table_prefix']['value']."posts t
 			inner join 
-				".$options_array['thinktank_table_prefix']['value']."users u 
+				".$options_array['thinkup_table_prefix']['value']."users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
@@ -104,14 +104,14 @@ function thinktank_replies_handler($atts) {
     return $output;
 }
 
-// [thinktank_status_reply_count post_id="12345"]
-function thinktank_reply_count_handler($atts) {
+// [thinkup_status_reply_count post_id="12345"]
+function thinkup_reply_count_handler($atts) {
     extract(shortcode_atts(array('post_id'=>0, 'before'=>'<a href="#permalink#">', 'after'=>' Twitter replies</a>', ), $atts));
     
-    $options_array = thinktank_get_options_array();
+    $options_array = thinkup_get_options_array();
     
-    if ($options_array['thinktank_server']['value'] != '')
-        $wpdb2 = new wpdb($options_array['thinktank_dbusername']['value'], $options_array['thinktank_dbpw']['value'], $options_array['thinktank_db']['value'], $options_array['thinktank_server']['value']);
+    if ($options_array['thinkup_server']['value'] != '')
+        $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'], $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
     else {
         global $wpdb;
         $wpdb2 = $wpdb;
@@ -121,9 +121,9 @@ function thinktank_reply_count_handler($atts) {
     $sql = $wpdb2->prepare("select 
 				count(*)
 			from 
-				".$options_array['thinktank_table_prefix']['value']."posts t
+				".$options_array['thinkup_table_prefix']['value']."posts t
 			inner join 
-				".$options_array['thinktank_table_prefix']['value']."users u 
+				".$options_array['thinkup_table_prefix']['value']."users u 
 			on 
 				t.author_user_id = u.user_id 
 			where 
@@ -180,27 +180,27 @@ function strip_starter_username($text) {
 }
 
 
-function thinktank_menu() {
-    add_options_page('ThinkTank Plug-in Options', 'ThinkTank', 6, __FILE__, 'thinktank_options');
+function thinkup_menu() {
+    add_options_page('ThinkUp Plug-in Options', 'ThinkUp', 6, __FILE__, 'thinkup_options');
 }
 
-function thinktank_get_options_array() {
+function thinkup_get_options_array() {
 
-    $arr = array('thinktank_twitter_username'=>array('key'=>'thinktank_twitter_username', 'label'=>'Default Twitter username:', 'description'=>'(Required) Override this by using the twitter_username parameter in the shortcode', 'type'=>'text', 'value'=>get_option('thinktank_twitter_username')), 'thinktank_table_prefix'=>array('key'=>'thinktank_table_prefix', 'label'=>'ThinkTank table prefix:', 'description'=>'(Optional) For example <i>tt_</i>', 'type'=>'text', 'value'=>get_option('thinktank_table_prefix')), 'thinktank_server'=>array('key'=>'thinktank_server', 'label'=>'ThinkTank database server:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress', 'type'=>'text', 'value'=>get_option('thinktank_server')), 'thinktank_db'=>array('key'=>'thinktank_db', 'label'=>'ThinkTank database name:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress', 'type'=>'text', 'value'=>get_option('thinktank_db')), 'thinktank_dbusername'=>array('key'=>'thinktank_dbusername', 'label'=>'ThinkTank database username:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress', 'type'=>'text', 'value'=>get_option('thinktank_dbusername')), 'thinktank_dbpw'=>array('key'=>'thinktank_dbpw', 'label'=>'ThinkTank database password:', 'description'=>'(Optional) If ThinkTank is located in a different database than WordPress', 'type'=>'password', 'value'=>thinktank_unscramble_password(get_option('thinktank_dbpw'))));
+    $arr = array('thinkup_twitter_username'=>array('key'=>'thinkup_twitter_username', 'label'=>'Default Twitter username:', 'description'=>'(Required) Override this by using the twitter_username parameter in the shortcode', 'type'=>'text', 'value'=>get_option('thinkup_twitter_username')), 'thinkup_table_prefix'=>array('key'=>'thinkup_table_prefix', 'label'=>'ThinkUp table prefix:', 'description'=>'(Optional) For example <i>tu_</i>', 'type'=>'text', 'value'=>get_option('thinkup_table_prefix')), 'thinkup_server'=>array('key'=>'thinkup_server', 'label'=>'ThinkUp database server:', 'description'=>'(Optional) If ThinkUp is located in a different database than WordPress', 'type'=>'text', 'value'=>get_option('thinkup_server')), 'thinkup_db'=>array('key'=>'thinkup_db', 'label'=>'ThinkUp database name:', 'description'=>'(Optional) If ThinkUp is located in a different database than WordPress', 'type'=>'text', 'value'=>get_option('thinkup_db')), 'thinkup_dbusername'=>array('key'=>'thinkup_dbusername', 'label'=>'ThinkUp database username:', 'description'=>'(Optional) If ThinkUp is located in a different database than WordPress', 'type'=>'text', 'value'=>get_option('thinkup_dbusername')), 'thinkup_dbpw'=>array('key'=>'thinkup_dbpw', 'label'=>'ThinkUp database password:', 'description'=>'(Optional) If ThinkUp is located in a different database than WordPress', 'type'=>'password', 'value'=>thinkup_unscramble_password(get_option('thinkup_dbpw'))));
     return $arr;
     
 }
 
 //Don't want to store passwords in plaintext in the database
 //This isn't perfect but it's better than clear text
-function thinktank_scramble_password($password) {
+function thinkup_scramble_password($password) {
     $salt = substr(str_pad(dechex(mt_rand()), 8, '0', STR_PAD_LEFT), -8);
     $modified = $password.$salt;
     $secured = $salt.base64_encode(bin2hex(strrev(str_rot13($modified))));
     return $secured;
 }
 
-function thinktank_unscramble_password($stored_password) {
+function thinkup_unscramble_password($stored_password) {
     $salt = substr($stored_password, 0, 8);
     $modified = substr($stored_password, 8, strlen($stored_password) - 8);
     $modified = str_rot13(strrev(pack("H*", base64_decode($modified))));
@@ -208,11 +208,11 @@ function thinktank_unscramble_password($stored_password) {
     return $password;
 }
 
-function thinktank_options() {
+function thinkup_options() {
     // variables for the field and option names
-    $options_hidden_field_name = 'thinktank_submit_hidden';
+    $options_hidden_field_name = 'thinkup_submit_hidden';
     
-    $options_array = thinktank_get_options_array();
+    $options_array = thinkup_get_options_array();
     
     // See if the user has posted us some information
     // If they did, this hidden field will be set to 'Y'
@@ -223,8 +223,8 @@ function thinktank_options() {
             $opt['value'] = $_POST[$opt['key']];
             // Save the posted value in the database
             
-            if ($opt['key'] == 'thinktank_dbpw')
-                update_option($opt['key'], thinktank_scramble_password($opt['value']));
+            if ($opt['key'] == 'thinkup_dbpw')
+                update_option($opt['key'], thinkup_scramble_password($opt['value']));
             else
                 update_option($opt['key'], $opt['value']);
         }
@@ -241,7 +241,7 @@ function thinktank_options() {
 // Now display the options editing screen
 echo '<div class="wrap">';
 // header
-echo "<h2>".__('ThinkTank Plugin Options', 'mt_trans_domain')."</h2>";
+echo "<h2>".__('ThinkUp Plugin Options', 'mt_trans_domain')."</h2>";
 // options form
 ?>
 <form name="form1" method="post" action="">
@@ -249,8 +249,8 @@ echo "<h2>".__('ThinkTank Plugin Options', 'mt_trans_domain')."</h2>";
     <table>
         <?php 
         foreach ($options_array as $opt) {
-            if ($opt['key'] == 'thinktank_dbpw')
-                $field_value = thinktank_unscramble_password(get_option($opt['key']));
+            if ($opt['key'] == 'thinkup_dbpw')
+                $field_value = thinkup_unscramble_password(get_option($opt['key']));
             else
                 $field_value = get_option($opt['key']);
             
@@ -277,11 +277,11 @@ echo "<h2>".__('ThinkTank Plugin Options', 'mt_trans_domain')."</h2>";
 <?php 
 }
 
-add_action('admin_menu', 'thinktank_menu');
+add_action('admin_menu', 'thinkup_menu');
 
-add_shortcode('thinktank_chronological_archive', 'thinktank_chron_archive_handler');
-add_shortcode('thinktank_status_replies', 'thinktank_replies_handler');
-add_shortcode('thinktank_reply_count', 'thinktank_reply_count_handler');
+add_shortcode('thinkup_chronological_archive', 'thinkup_chron_archive_handler');
+add_shortcode('thinkup_status_replies', 'thinkup_replies_handler');
+add_shortcode('thinkup_reply_count', 'thinkup_reply_count_handler');
 
 
 ?>

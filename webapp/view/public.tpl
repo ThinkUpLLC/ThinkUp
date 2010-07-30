@@ -1,7 +1,7 @@
 {include file="_public.header.tpl"}
 
 {include file="_public.header.statusbar.tpl" mode="public"}
-  <div class="thinktank-canvas round-all container_24">
+  <div class="thinkup-canvas round-all container_24">
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
         {include file="_usermessage.tpl"}
@@ -169,7 +169,7 @@
         {/if}
       </div>
     </div>
-  </div> <!-- end .thinktank-canvas -->
+  </div> <!-- end .thinkup-canvas -->
 
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
 

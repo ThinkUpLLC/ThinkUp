@@ -1,10 +1,10 @@
-#  ThinkTank Scripts
+#  ThinkUp Scripts
 
-Bash scripts that automate common use and development tasks in ThinkTank.
+Bash scripts that automate common use and development tasks in ThinkUp.
 
 ## autodeploy (for developers testing file changes)
 
-Automates the process of uploading ThinkTank changes to your webserver when you're editing them locally.
+Automates the process of uploading ThinkUp changes to your webserver when you're editing them locally.
 
 * `autodeploy-scp` - autodeploy via SCP
 * `autodeploy-conf` - configuration
@@ -13,7 +13,7 @@ Automates the process of uploading ThinkTank changes to your webserver when you'
 
 * Copy `autodeploy-conf.sample` to `autodeploy-conf`
 * Edit `autodeploy-conf` to match your settings
-* Run `autodeploy` script from thinktank root directory
+* Run `autodeploy` script from thinkup root directory
 
 Example: `./extras/scripts/autdeploy-scp`
   
@@ -28,6 +28,6 @@ Iterates through all database migration files (including any new ones you're tes
 
 * Copy `migratedb-conf.sample` to `migratedb-conf`
 * Edit `migratedb-conf` to match your settings
-* Run `migratedb` script from thinktank root directory
+* Run `migratedb` script from thinkup root directory
 
 Example: `./extras/scripts/migratedb`

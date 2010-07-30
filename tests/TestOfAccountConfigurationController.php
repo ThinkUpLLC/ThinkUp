@@ -3,12 +3,12 @@ require_once dirname(__FILE__).'/config.tests.inc.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankAuthController.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.AccountConfigurationController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Plugin.php';
@@ -21,7 +21,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
@@ -31,14 +31,14 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 if (!$RUNNING_ALL_TESTS) {
     require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
 }
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/controller/class.TwitterPluginConfigurationController.php';
 
 // Instantiate global database variable
 //@TODO remove this when the PDO port is complete
 try {
-    $db = new Database($THINKTANK_CFG);
+    $db = new Database($THINKUP_CFG);
     $conn = $db->getConnection();
 } catch(Exception $e) {
     echo $e->getMessage();
@@ -50,7 +50,7 @@ try {
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
+class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
     public function __construct() {
         $this->UnitTestCase('AccountConfigurationController class test');
@@ -64,29 +64,29 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         //Add owner
         $session = new Session();
         $cryptpass = $session->pwdcrypt("oldpassword");
-        $q = "INSERT INTO tt_owners SET id=1, full_name='ThinkTank J. User', email='me@example.com', is_activated=1,
+        $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com', is_activated=1,
         pwd='".$cryptpass."', activation_code='8888'";
         $this->db->exec($q);
 
-        $q = "INSERT INTO tt_owners SET id=2, full_name='ThinkTank J. Admin', email='admin@example.com',
+        $q = "INSERT INTO tu_owners SET id=2, full_name='ThinkUp J. Admin', email='admin@example.com',
         is_activated=1, is_admin=1, pwd='XXX', activation_code='8888'";
         $this->db->exec($q);
 
         //Add instance_owner
-        $q = "INSERT INTO tt_owner_instances (owner_id, instance_id, oauth_access_token, oauth_access_token_secret) 
+        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id, oauth_access_token, oauth_access_token_secret) 
         VALUES (1, 1, 'xxx', 'yyy')";
         $this->db->exec($q);
-        $q = "INSERT INTO tt_owner_instances (owner_id, instance_id, oauth_access_token, oauth_access_token_secret)
+        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id, oauth_access_token, oauth_access_token_secret)
         VALUES (2, 1, 'xxx', 'yyy')";
         $this->db->exec($q);
 
         //Insert test data into test table
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
         'Ev Williams', 'avatar.jpg', '1/1/2005');";
         $this->db->exec($q);
 
         //Make public
-        $q = "INSERT INTO tt_instances (id, network_user_id, network_username, is_public, network) 
+        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public, network) 
         VALUES (1, 13, 'ev', 1, 'twitter');";
         $this->db->exec($q);
     }
@@ -122,7 +122,7 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
-        $this->assertEqual($owner->full_name, 'ThinkTank J. User');
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
 
         //not set: owners, body, successmsg, errormsg
@@ -145,7 +145,7 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue($owner->is_admin);
-        $this->assertEqual($owner->full_name, 'ThinkTank J. Admin');
+        $this->assertEqual($owner->full_name, 'ThinkUp J. Admin');
         $this->assertEqual($owner->email, 'admin@example.com');
         $this->assertIsA($v_mgr->getTemplateDataItem('owners'), 'array');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owners')), 2);
@@ -168,7 +168,7 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
-        $this->assertEqual($owner->full_name, 'ThinkTank J. User');
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $this->assertTrue($v_mgr->getTemplateDataItem('body'));
 
@@ -192,7 +192,7 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
-        $this->assertEqual($owner->full_name, 'ThinkTank J. User');
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
 
         //not set: owners, body, successmsg, errormsg
@@ -220,7 +220,7 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
-        $this->assertEqual($owner->full_name, 'ThinkTank J. User');
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Your password has been updated.');
 
@@ -248,7 +248,7 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
-        $this->assertEqual($owner->full_name, 'ThinkTank J. User');
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Old password does not match or empty.');
 
@@ -276,7 +276,7 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
-        $this->assertEqual($owner->full_name, 'ThinkTank J. User');
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Old password does not match or empty.');
 
@@ -304,7 +304,7 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
-        $this->assertEqual($owner->full_name, 'ThinkTank J. User');
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
         'New passwords did not match. Your password has not been changed.');
@@ -333,7 +333,7 @@ class TestOfAccountConfigurationController extends ThinkTankUnitTestCase {
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
-        $this->assertEqual($owner->full_name, 'ThinkTank J. User');
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
         'New password must be at least 5 characters. Your password has not been changed.');

@@ -124,7 +124,7 @@ class TestOfixtureBuilder extends UnitTestCase {
             FixtureBuilder::truncateTable('notable');
             $this->fail("should throw FixtureBuilderException");
         } catch(FixtureBuilderException $e) {
-            $this->assertPattern('/Unable to truncate table "tt_notable"/', $e->getMessage());
+            $this->assertPattern('/Unable to truncate table "tu_notable"/', $e->getMessage());
         }
         //add a row, query it, and count should be one
         $this->pdo->query( sprintf("insert into %s (test_name, test_id) values ('mary', 1)", $this->test_table) );
@@ -144,7 +144,7 @@ class TestOfixtureBuilder extends UnitTestCase {
         try {
             $this->builder->describeTable('notable');
         } catch(FixtureBuilderException $e) {
-            $this->assertPattern('/Unable to describe table "tt_notable"/', $e->getMessage());
+            $this->assertPattern('/Unable to describe table "tu_notable"/', $e->getMessage());
         }
         $columns = $this->builder->describeTable(self::TEST_TABLE);
         $this->assertEqual(count($columns), 10, 'column count valid');

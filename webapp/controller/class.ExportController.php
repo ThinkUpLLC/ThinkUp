@@ -1,12 +1,12 @@
 <?php
 /**
  * Export Controller
- * Exports posts from an instance user on ThinkTank.
+ * Exports posts from an instance user on ThinkUp.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class ExportController extends ThinkTankAuthController {
+class ExportController extends ThinkUpAuthController {
     /**
      * Required query string parameters
      * @var array u = instance username, n = network
@@ -48,7 +48,7 @@ class ExportController extends ThinkTankAuthController {
                     $this->addToView('posts', $posts);
                 }
             } else {
-                $this->addErrorMessage('User '.$_GET['u'] . ' on '. $_GET['n']. ' is not in ThinkTank.');
+                $this->addErrorMessage('User '.$_GET['u'] . ' on '. $_GET['n']. ' is not in ThinkUp.');
             }
         }
         return $this->generateView();

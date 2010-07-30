@@ -4,8 +4,8 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.TestFauxHookableApp.php';
 require_once $SOURCE_ROOT_PATH.'tests/classes/interface.TestAppPlugin.php';
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.TestFauxPlugin.php';
@@ -15,7 +15,7 @@ require_once $SOURCE_ROOT_PATH.'tests/classes/class.TestFauxPlugin.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfPluginHook extends ThinkTankBasicUnitTestCase {
+class TestOfPluginHook extends ThinkUpBasicUnitTestCase {
 
     /**
      * Constructor

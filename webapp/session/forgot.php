@@ -14,7 +14,7 @@ if ($session->isLoggedIn()) {
 
 $od = DAOFactory::getDAO('OwnerDAO');
 
-$s = new SmartyThinkTank();
+$s = new SmartyThinkUp();
 $s->caching=false;
 
 if (isset($_POST['Submit']) && $_POST['Submit'] == 'Send') {
@@ -24,7 +24,7 @@ if (isset($_POST['Submit']) && $_POST['Submit'] == 'Send') {
         $cryptpass = $session->pwdcrypt($newpwd);
         $od->updatePassword($_POST['email'], $cryptpass);
 
-        $es = new SmartyThinkTank();
+        $es = new SmartyThinkUp();
         $es->caching=false;
 
         $es->assign('apptitle', $config->getValue('app_title') );

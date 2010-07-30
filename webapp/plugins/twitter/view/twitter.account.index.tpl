@@ -39,10 +39,10 @@
 
 <h2 class="subhead">Add a Twitter account</h2>
 
-<p>Click on this button to authorize ThinkTank to access your Twitter account.</p>
-<a href="{$oauthorize_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkTank on Twitter</a>
+<p>Click on this button to authorize ThinkUp to access your Twitter account.</p>
+<a href="{$oauthorize_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkUp on Twitter</a>
 <br /><br /><br />
 
-<p>Alternately, add a public Twitter username for ThinkTank capture data about:</p>
-<form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to ThinkTank"></form>
+<p>Alternately, add a public Twitter username for ThinkUp capture data about:</p>
+<form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to ThinkUp"></form>
 

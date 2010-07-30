@@ -4,7 +4,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Plugin.php';
 require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
@@ -13,7 +13,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/interface.PluginDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 
-class TestOfPluginMySQLDAO extends ThinkTankUnitTestCase {
+class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
 
     const TEST_TABLE = 'plugins';
 
@@ -51,8 +51,8 @@ class TestOfPluginMySQLDAO extends ThinkTankUnitTestCase {
         $this->assertEqual($plugins[2]->name,"Flickr Thumbnails", "Flickr 'name' Test");
         $this->assertEqual($plugins[2]->folder_name,"flickrthumbnails", "Flickr 'folder_name' test");
 
-        $this->assertEqual($plugins[3]->name,"Hello ThinkTank", "Hello 'name' Test");
-        $this->assertEqual($plugins[3]->folder_name,"hellothinktank", "Hello 'folder_name' test");
+        $this->assertEqual($plugins[3]->name,"Hello ThinkUp", "Hello 'name' Test");
+        $this->assertEqual($plugins[3]->folder_name,"hellothinkup", "Hello 'folder_name' test");
 
     }
 
@@ -347,7 +347,7 @@ class TestOfPluginMySQLDAO extends ThinkTankUnitTestCase {
         $plugin1 = array(
             'name' => 'My Test Plugin', 'folder_name' => 'testplugin',
             'description' => 'Proof of concept plugin',
-            'author' => 'Gina Trapani', 'homepage' => 'http://thinktankapp.com',
+            'author' => 'Gina Trapani', 'homepage' => 'http://thinkupapp.com',
             'version' => '0.01', 'is_active' => '0' 
             );
             $builder1 = FixtureBuilder::build(self::TEST_TABLE,  $plugin1);
@@ -355,7 +355,7 @@ class TestOfPluginMySQLDAO extends ThinkTankUnitTestCase {
             $plugin2 = array(
             'name' => 'My Test Plugin Activated', 'folder_name' => 'testpluginact',
             'description' => 'Proof of concept plugin',
-            'author' => 'Gina Trapani', 'homepage' => 'http://thinktankapp.com',
+            'author' => 'Gina Trapani', 'homepage' => 'http://thinkupapp.com',
             'version' => '0.01', 'is_active' => '1' 
             );
             $builder2 = FixtureBuilder::build(self::TEST_TABLE,  $plugin2);

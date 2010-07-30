@@ -4,7 +4,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class FacebookPluginConfigurationController extends ThinkTankAuthController {
+class FacebookPluginConfigurationController extends ThinkUpAuthController {
     /**
      *
      * @var Owner

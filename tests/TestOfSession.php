@@ -3,13 +3,13 @@ require_once dirname(__FILE__).'/config.tests.inc.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankAuthController.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PrivateDashboardController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.LoginController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
@@ -20,7 +20,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
@@ -36,7 +36,7 @@ require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfSession extends ThinkTankUnitTestCase {
+class TestOfSession extends ThinkUpUnitTestCase {
     var $builder1;
     var $builder2;
     var $builder3;

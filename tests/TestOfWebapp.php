@@ -4,8 +4,8 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
@@ -18,7 +18,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/hellothinktank/model/class.HelloThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/hellothinkup/model/class.HelloThinkUpPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
 /**
@@ -26,7 +26,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfWebapp extends ThinkTankBasicUnitTestCase {
+class TestOfWebapp extends ThinkUpBasicUnitTestCase {
 
     /**
      * Constructor
@@ -77,11 +77,11 @@ class TestOfWebapp extends ThinkTankBasicUnitTestCase {
      */
     public function testWebappRegisterPluginWithoutWebappInterfaceImplemented() {
         $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('hellothinktank', "HelloThinkTankPlugin");
-        $webapp->setActivePlugin('hellothinktank');
+        $webapp->registerPlugin('hellothinkup', "HelloThinkUpPlugin");
+        $webapp->setActivePlugin('hellothinkup');
 
         $this->expectException( new Exception(
-        "The HelloThinkTankPlugin object does not have a getChildTabsUnderPosts method.") );
+        "The HelloThinkUpPlugin object does not have a getChildTabsUnderPosts method.") );
         $webapp->getChildTabsUnderPosts(null);
     }
 

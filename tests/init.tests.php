@@ -21,6 +21,6 @@ require_once 'model/class.Session.php';
 require_once 'model/class.Logger.php';
 
 require_once 'config.inc.php';
-require_once $THINKTANK_CFG['smarty_path'].'Smarty.class.php';
-require_once 'model/class.SmartyThinkTank.php';
+require_once $THINKUP_CFG['smarty_path'].'Smarty.class.php';
+require_once 'model/class.SmartyThinkUp.php';
 ?>

@@ -32,7 +32,7 @@ class TwitterAPIAccessorOAuth {
         $this->$oauth_access_token = $oauth_access_token;
         $this->$oauth_access_token_secret = $oauth_access_token_secret;
 
-        $this->to = new TwitterOAuthThinkTank($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token,
+        $this->to = new TwitterOAuthThinkUp($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token,
         $this->$oauth_access_token_secret);
         $this->cURL_source = $this->prepAPI();
     }

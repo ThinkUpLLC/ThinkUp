@@ -24,7 +24,7 @@
 {include file="_usermessage.tpl"}
   <div id="yui-main">
     <div class="yui-b">
-      <div id="thinktank-tabs">
+      <div id="thinkup-tabs">
         <div role="application" id="tabs">
           
           <ul>
@@ -53,7 +53,7 @@
           <div class="section" id="updates">
             <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart1">
             <div id="top" class="clearfix">
-              <div class="thinktank-canvas container_24">
+              <div class="thinkup-canvas container_24">
                 <h4 class="trigger clearfix"><a href="#">Statistics</a></h4>
                 <div class="footnote toggle_container clearfix">
                   <div class="grid_11 push_1 alpha">
@@ -87,7 +87,7 @@
                       </div>
                     {/if}
                     <div class="clearfix bt">
-                      <div class="grid_9 bold alpha">ThankTank last updated {$profile->user_name}</div>
+                      <div class="grid_9 bold alpha">{$app_title} last updated {$profile->user_name}</div>
                       <div class="grid_2 right omega">{$profile->last_updated|relative_datetime}</div>
                     </div>
                     <div class="clearfix bt">
@@ -125,14 +125,14 @@
           <div class="section" id="conversations">
             <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart2"> 
             <div id="top" class="clearfix append">
-              <div class="thinktank-canvas container_24">
+              <div class="thinkup-canvas container_24">
                 <div class="grid_22 push_1 append_20">
                   {if $exchanges}
                     {foreach from=$exchanges key=tahrt item=r name=foo}
                       {include file="_post.qa.tpl" t=$t}
                     {/foreach}
                   {else}
-                    ThinkTank has not captured any conversations between {$instance->network_username} and {$profile->user_name}.
+                    ThinkUp has not captured any conversations between {$instance->network_username} and {$profile->user_name}.
                   {/if}
                 </div>
               </div>
@@ -142,9 +142,9 @@
           <div class="section" id="followers">
             <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart3">
             <div id="top" class="clearfix">
-              <div class="thinktank-canvas container_24">
+              <div class="thinkup-canvas container_24">
                 <div class="grid_22 push_1 append_20">
-                  Detailed data about this user's {$profile->follower_count|number_format} followers not yet available in ThinkTank.
+                  Detailed data about this user's {$profile->follower_count|number_format} followers not yet available in ThinkUp.
                 </div>
               </div>
             </div> <!-- end #top -->
@@ -153,9 +153,9 @@
           <div class="section" id="friends">
             <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart4">
             <div id="top" class="clearfix">
-              <div class="thinktank-canvas container_24">
+              <div class="thinkup-canvas container_24">
                 <div class="grid_22 push_1 append_20">
-                  Detailed data about this user's {$profile->friend_count|number_format} friends not yet available in ThinkTank.
+                  Detailed data about this user's {$profile->friend_count|number_format} friends not yet available in ThinkUp.
                 </div>
               </div>
             </div> <!-- end #top -->
@@ -164,7 +164,7 @@
           <div class="section" id="mutual">
             <img src="{$site_root_path}assets/img/dart_wht.png" alt="" class="dart" id="dart5">
             <div id="top" class="clearfix">
-              <div class="thinktank-canvas container_24">
+              <div class="thinkup-canvas container_24">
                 <div class="grid_22 push_1 append_20">
                   {if count($mutual_friends > 0)}
                     {foreach from=$mutual_friends key=tid item=f name=foo}
@@ -179,7 +179,7 @@
           </div> <!-- end #mutual -->
           
         </div> <!-- end #tabs -->
-      </div> <!-- end #thinktank-tabs -->  
+      </div> <!-- end #thinkup-tabs -->  
     </div> <!-- end .yui-b -->
   </div> <!-- end .yui-main -->
 </div> <!-- end .bd -->

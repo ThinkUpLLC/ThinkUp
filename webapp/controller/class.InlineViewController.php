@@ -2,12 +2,12 @@
 /**
  * Inline View Controller
  *
- * The AJAX-loaded HTML which fills in subtab content in ThinkTank's private dashboard.
+ * The AJAX-loaded HTML which fills in subtab content in ThinkUp's private dashboard.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class InlineViewController extends ThinkTankAuthController {
+class InlineViewController extends ThinkUpAuthController {
 
     /**
      * Required query string parameters

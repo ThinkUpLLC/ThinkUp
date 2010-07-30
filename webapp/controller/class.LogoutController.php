@@ -2,12 +2,12 @@
 /**
  * Logout Controller
  *
- * Log out of ThinkTank.
+ * Log out of ThinkUp.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class LogoutController extends ThinkTankAuthController {
+class LogoutController extends ThinkUpAuthController {
     public function authControl() {
         $this->app_session->logout();
         $controller = new PublicTimelineController(true);

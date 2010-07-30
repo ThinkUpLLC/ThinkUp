@@ -1,27 +1,27 @@
 <?php
 /**
- * ThinkTank Database Helper
+ * ThinkUp Database Helper
  *
- * Constructs and destructs the ThinkTank data structure for testing purposes.
+ * Constructs and destructs the ThinkUp data structure for testing purposes.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class ThinkTankTestDatabaseHelper {
+class ThinkUpTestDatabaseHelper {
 
     /**
-     * Create ThinkTank tables
+     * Create ThinkUp tables
      *
      * @TODO: Use PDO instead of deprecated Database class.
      * @param Database $db
      */
     public function create($db) {
-        global $THINKTANK_CFG;
+        global $THINKUP_CFG;
 
         error_reporting(22527); //Don't show E_DEPRECATED PHP messages, split() is deprecated
 
         //Create all the tables based on the build script
-        $create_db_script = file_get_contents($THINKTANK_CFG['source_root_path']."sql/build-db_mysql.sql");
+        $create_db_script = file_get_contents($THINKUP_CFG['source_root_path']."sql/build-db_mysql.sql");
         $create_statements = split(";", $create_db_script);
         foreach ($create_statements as $q) {
             if (trim($q) != '') {
@@ -31,7 +31,7 @@ class ThinkTankTestDatabaseHelper {
     }
 
     /**
-     * Drop ThinkTank tables
+     * Drop ThinkUp tables
      * 
      * @TODO: Use PDO instead of deprecated Database class.
      * @param Database $db

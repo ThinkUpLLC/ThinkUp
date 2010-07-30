@@ -6,7 +6,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
@@ -15,7 +15,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php';
 
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
@@ -24,7 +24,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/model/class.FlickrThumbnailsPlugin.php';
 //require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/model/class.FlickrAPIAccessor.php';
 
-class TestOfFlickrThumbnailsPlugin extends ThinkTankUnitTestCase {
+class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
 
     function __construct() {
         $this->UnitTestCase('FlickrThumbnailsPlugin class test');
@@ -43,7 +43,7 @@ class TestOfFlickrThumbnailsPlugin extends ThinkTankUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q = "INSERT INTO tt_links (url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $post_id, 0);";
+            $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $post_id, 0);";
             $this->db->exec($q);
 
             $counter++;
@@ -55,14 +55,14 @@ class TestOfFlickrThumbnailsPlugin extends ThinkTankUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q = "INSERT INTO tt_links (url, title, clicks, post_id, is_image) VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1);";
+            $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1);";
             $this->db->exec($q);
 
             $counter++;
         }
 
         // Insert legit Flickr shortened link, not expanded
-        $q = "INSERT INTO tt_links (url, title, clicks, post_id, is_image) VALUES ('http://flic.kr/p/7QQBy7', 'Link', 0, 200, 1);";
+        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://flic.kr/p/7QQBy7', 'Link', 0, 200, 1);";
         $this->db->exec($q);
 
 
@@ -72,7 +72,7 @@ class TestOfFlickrThumbnailsPlugin extends ThinkTankUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q = "INSERT INTO tt_links (url, title, clicks, post_id, is_image, error) VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1, 'Generic test error message, Photo not found');";
+            $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image, error) VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1, 'Generic test error message, Photo not found');";
             $this->db->exec($q);
 
             $counter++;

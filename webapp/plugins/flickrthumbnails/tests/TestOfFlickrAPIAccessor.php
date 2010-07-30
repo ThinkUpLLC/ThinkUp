@@ -25,8 +25,8 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
     }
 
     function testGetFlickrPhotoSourceFlickrAPINonResponsive() {
-        global $THINKTANK_CFG;
-        $logger = new Logger($THINKTANK_CFG['log_location']);
+        global $THINKUP_CFG;
+        $logger = new Logger($THINKUP_CFG['log_location']);
         $fa = new FlickrAPIAccessor('dummykey', $logger);
 
         $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AEasdfasdfasdfasdfasdf');
@@ -37,8 +37,8 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
     }
 
     function testGetFlickrPhotoSourceNoFlickrAPIKey() {
-        global $THINKTANK_CFG;
-        $logger = new Logger($THINKTANK_CFG['log_location']);
+        global $THINKUP_CFG;
+        $logger = new Logger($THINKUP_CFG['log_location']);
         $fa = new FlickrAPIAccessor('', $logger);
 
         $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AE');
@@ -50,8 +50,8 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
     }
 
     function testGetFlickrPhotoSourceFlickrAPIReturnsError() {
-        global $THINKTANK_CFG;
-        $logger = new Logger($THINKTANK_CFG['log_location']);
+        global $THINKUP_CFG;
+        $logger = new Logger($THINKUP_CFG['log_location']);
         $fa = new FlickrAPIAccessor('dummykey', $logger);
 
         $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AE');
@@ -62,8 +62,8 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
     }
 
     function testGetFlickrPhotoSourceSuccess() {
-        global $THINKTANK_CFG;
-        $logger = new Logger($THINKTANK_CFG['log_location']);
+        global $THINKUP_CFG;
+        $logger = new Logger($THINKUP_CFG['log_location']);
         $fa = new FlickrAPIAccessor('dummykey', $logger);
 
         $this->assertTrue(isset($fa));

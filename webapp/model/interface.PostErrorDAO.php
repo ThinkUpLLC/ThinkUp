@@ -2,7 +2,7 @@
 /**
  * PostError Data Access Object
  *
- * Inserts post errors into the tt_post_error table.
+ * Inserts post errors into the tu_post_error table.
  * Example post error text includes:
  * "No status found with that ID."
  * "Sorry, you are not authorized to see this status."

@@ -2,7 +2,7 @@
 /**
  * Plugin
  *
- * A ThinkTank plugin
+ * A ThinkUp plugin
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>

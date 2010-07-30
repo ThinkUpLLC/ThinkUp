@@ -1,7 +1,7 @@
 Cron handler script
 
 This scripts handles crawler execution and log rotation (once a week)
-As long as it is up to date it will be the only cron script you'll need for ThinkTank.
+As long as it is up to date it will be the only cron script you'll need for ThinkUp.
 
 Last Update: 2010-04-22
 

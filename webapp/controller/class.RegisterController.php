@@ -1,11 +1,11 @@
 <?php
 /**
  * Register Controller
- * Registers new ThinkTank users.
+ * Registers new ThinkUp users.
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class RegisterController extends ThinkTankController {
+class RegisterController extends ThinkUpController {
     /**
      * Required form submission values
      * @var array
@@ -33,8 +33,8 @@ class RegisterController extends ThinkTankController {
 
             if (!$config->getValue('is_registration_open')) {
                 $this->addToView('closed', true);
-                $this->addErrorMessage('<p>Sorry, registration is closed on this ThinkTank installation.</p>'.
-                '<p><a href="http://github.com/ginatrapani/thinktank/tree/master">Install ThinkTank on your own '.
+                $this->addErrorMessage('<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
+                '<p><a href="http://github.com/ginatrapani/thinkup/tree/master">Install ThinkUp on your own '.
                 'server.</a></p>');
             } else {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
@@ -58,7 +58,7 @@ class RegisterController extends ThinkTankController {
                             if ($owner_dao->doesOwnerExist($_POST['email'])) {
                                 $this->addErrorMessage("User account already exists.");
                             } else {
-                                $es = new SmartyThinkTank();
+                                $es = new SmartyThinkUp();
                                 $es->caching=false;
                                 $session = new Session();
                                 $activ_code = rand(1000, 9999);

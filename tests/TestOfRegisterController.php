@@ -3,16 +3,16 @@ require_once dirname(__FILE__).'/config.tests.inc.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankAuthController.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PublicTimelineController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PrivateDashboardController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.RegisterController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
@@ -31,7 +31,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 if (!$RUNNING_ALL_TESTS) {
     require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
 }
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
 /**
@@ -40,7 +40,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfRegisterController extends ThinkTankUnitTestCase {
+class TestOfRegisterController extends ThinkUpUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('RegisterController class test');
     }
@@ -56,7 +56,7 @@ class TestOfRegisterController extends ThinkTankUnitTestCase {
         $this->assertTrue(isset($controller));
 
         $results = $controller->go();
-        $this->assertTrue(strpos( $results, "Register | ThinkTank") > 0);
+        $this->assertTrue(strpos( $results, "Register | ThinkUp") > 0);
     }
 
     public function testAlreadyLoggedIn() {
@@ -72,7 +72,7 @@ class TestOfRegisterController extends ThinkTankUnitTestCase {
 
         $controller = new RegisterController(true);
         $results = $controller->go();
-        $this->assertTrue(strpos( $results, "Private Dashboard | ThinkTank") > 0);
+        $this->assertTrue(strpos( $results, "Private Dashboard | ThinkUp") > 0);
     }
 
     public function testAllMissingFields() {
@@ -117,7 +117,7 @@ class TestOfRegisterController extends ThinkTankUnitTestCase {
     }
 
     public function testSuccessfulRegistration() {
-        $_SERVER['HTTP_HOST'] = "http://mytestthinktank/";
+        $_SERVER['HTTP_HOST'] = "http://mytestthinkup/";
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';

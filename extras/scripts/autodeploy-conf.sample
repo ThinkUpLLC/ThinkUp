@@ -1,14 +1,14 @@
 #!/bin/bash
 
-#path to ThinkTank on remote server
-remote_base="~/path-to/thinktank"
+#path to ThinkUp on remote server
+remote_base="~/path-to/thinkup"
 
 #Logon info
 username="username"
 server="server.example.com"
 
 
-#paths to ThinkTank components
+#paths to ThinkUp components
 remote_common="$remote_base/common"
 remote_crawler="$remote_base/crawler"
 remote_webapp="$remote_base/webapp"

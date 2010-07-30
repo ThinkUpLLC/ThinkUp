@@ -4,7 +4,7 @@ require_once 'model/interface.PostDAO.php';
 
 /**
  * Post Data Access Object
- * The data access object for retrieving and saving posts in the ThinkTank database
+ * The data access object for retrieving and saving posts in the ThinkUp database
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class PostMySQLDAO extends PDODAO implements PostDAO  {

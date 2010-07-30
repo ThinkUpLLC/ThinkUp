@@ -4,7 +4,7 @@ require_once 'model/interface.OwnerDAO.php';
 
 /**
  * Owner Data Access Object
- * The data access object for retrieving and saving owners in the ThinkTank database.
+ * The data access object for retrieving and saving owners in the ThinkUp database.
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class OwnerMySQLDAO extends PDODAO implements OwnerDAO {

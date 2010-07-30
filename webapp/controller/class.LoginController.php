@@ -6,7 +6,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class LoginController extends ThinkTankController {
+class LoginController extends ThinkUpController {
 
     public function __construct($session_started=false) {
         parent::__construct($session_started);

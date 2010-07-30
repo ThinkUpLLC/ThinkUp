@@ -5,11 +5,11 @@
     
     <ul>
       <li><a href="#plugins">Plug-ins</a></li>
-      <li><a href="#instances">Your ThinkTank Password</a></li>
-      {if $owner->is_admin}<li><a href="#ttusers">All ThinkTank Accounts</a></li>{/if}
+      <li><a href="#instances">Your ThinkUp Password</a></li>
+      {if $owner->is_admin}<li><a href="#ttusers">All ThinkUp Accounts</a></li>{/if}
     </ul>
     
-    <div class="section thinktank-canvas clearfix" id="plugins">
+    <div class="section thinkup-canvas clearfix" id="plugins">
       <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
         <div class="append_20 clearfix">
           {if $installed_plugins}
@@ -45,7 +45,7 @@
     </div> <!-- end #plugins -->
     
     <div class="section" id="instances">
-      <div class="thinktank-canvas clearfix">
+      <div class="thinkup-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
 {include file="_usermessage.tpl"}
           <form name="changepass" method="post" action="index.php?m=manage#instances" class="login prepend_20 append_20">
@@ -84,9 +84,9 @@
     
     {if $owner->is_admin}
       <div class="section" id="ttusers">
-        <div class="thinktank-canvas clearfix">
+        <div class="thinkup-canvas clearfix">
           <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-            <h2 class="subhead">User accounts in this ThinkTank installation</h2>
+            <h2 class="subhead">User accounts in this ThinkUp installation</h2>
             <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
               <p>
                 <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
@@ -112,7 +112,7 @@
               {/foreach}
             </ul>
           </div>
-        </div> <!-- end .thinktank-canvas -->
+        </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #ttusers -->
     {/if} <!-- end is_admin -->
     

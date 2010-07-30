@@ -5,7 +5,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class AccountConfigurationController extends ThinkTankAuthController {
+class AccountConfigurationController extends ThinkUpAuthController {
 
     /**
      * Constructor

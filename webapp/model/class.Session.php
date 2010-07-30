@@ -28,7 +28,7 @@ class Session {
     }
 
     /**
-     * @return bool Is user logged into ThinkTank
+     * @return bool Is user logged into ThinkUp
      */
     public function isLoggedIn() {
         if (!isset($_SESSION['user'])) {
@@ -39,7 +39,7 @@ class Session {
     }
 
     /**
-     * @return bool Is user logged into ThinkTank an admin
+     * @return bool Is user logged into ThinkUp an admin
      */
     public function isAdmin() {
         if (isset($_SESSION['user_is_admin'])) {

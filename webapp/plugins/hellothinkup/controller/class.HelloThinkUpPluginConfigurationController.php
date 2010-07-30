@@ -1,10 +1,10 @@
 <?php
 /**
- * HelloThinkTank Plugin configuration controller
+ * HelloThinkUp Plugin configuration controller
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class HelloThinkTankPluginConfigurationController extends ThinkTankAuthController {
+class HelloThinkUpPluginConfigurationController extends ThinkUpAuthController {
     /**
      *
      * @var Owner
@@ -21,7 +21,7 @@ class HelloThinkTankPluginConfigurationController extends ThinkTankAuthControlle
 
     public function authControl() {
         $config = Config::getInstance();
-        $this->setViewTemplate($config->getValue('source_root_path').'webapp/plugins/hellothinktank/view/hellothinktank.account.index.tpl');
+        $this->setViewTemplate($config->getValue('source_root_path').'webapp/plugins/hellothinkup/view/hellothinkup.account.index.tpl');
         $this->addToView('message', 'Hello, world! This is the example plugin configuration page for  '.$this->owner->email .'.');
         return $this->generateView();
     }

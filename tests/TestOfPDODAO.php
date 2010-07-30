@@ -4,11 +4,11 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
-class TestOfPDODAO extends ThinkTankUnitTestCase {
+class TestOfPDODAO extends ThinkUpUnitTestCase {
 
     function TestOfPDODAO() {
         $this->UnitTestCase('TestDAO class test');
@@ -17,7 +17,7 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
     function setUp() {
         parent::setUp();
 
-        $test_table_sql = 'CREATE TABLE tt_test_table(' .
+        $test_table_sql = 'CREATE TABLE tu_test_table(' .
             'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
             'test_name varchar(20),' .
             'test_id int(11),' .
@@ -25,16 +25,16 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
             ')';
         $this->db->exec($test_table_sql);
 
-        $q = sprintf("INSERT INTO tt_test_table (test_name, test_id) VALUES ('name%s', %d)", 1, 1);
+        $q = sprintf("INSERT INTO tu_test_table (test_name, test_id) VALUES ('name%s', %d)", 1, 1);
         for($i = 2; $i <= 20; $i++) {
             $q .= sprintf(",('name%s', %d)", $i, $i);
         }
         $this->db->exec($q);
 
         // Insert test data into test user table
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (12, 'mary', 'Mary Jane', 'avatar.jpg');";
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (12, 'mary', 'Mary Jane', 'avatar.jpg');";
         $this->db->exec($q);
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar) VALUES (13, 'sweetmary', 'Sweet Mary Jane', 'avatar.jpg');";
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (13, 'sweetmary', 'Sweet Mary Jane', 'avatar.jpg');";
         $this->db->exec($q);
     }
 
@@ -67,9 +67,9 @@ class TestOfPDODAO extends ThinkTankUnitTestCase {
     function testTwoObjectsOneConnection() {
         DAOFactory::getDAO('TestDAO');
         $this->assertNotNull(TestMysqlDAO::$PDO);
-        TestMysqlDAO::$PDO->tt_testing = "testing";
+        TestMysqlDAO::$PDO->tu_testing = "testing";
         $testdao2 = DAOFactory::getDAO('TestDAO');
-        $this->assertEqual(TestMysqlDAO::$PDO->tt_testing, "testing");
+        $this->assertEqual(TestMysqlDAO::$PDO->tu_testing, "testing");
     }
 
     function testBasicSelectUsingStatementHandleDirectly() {

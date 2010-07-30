@@ -12,7 +12,7 @@
     </ul>
     
     <div class="section" id="posts">
-      <div class="thinktank-canvas clearfix">
+      <div class="thinkup-canvas clearfix">
         <!--<a {if $instance}href="{$site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a>-->
         <div class="clearfix prepend_20">
 {include file="_usermessage.tpl"}
@@ -60,12 +60,12 @@
             </div>
           {/foreach}
         </div>
-      </div> <!-- end .thinktank-canvas -->
+      </div> <!-- end .thinkup-canvas -->
     </div> <!-- end #posts -->
     
     {if $retweets}
       <div class="section" id="forwards">
-        <div class="thinktank-canvas clearfix">
+        <div class="thinkup-canvas clearfix">
           <div class="clearfix prepend_20 append_20">
             <div class="grid_2 prefix_1 alpha">
               <img src="{$post->author_avatar}" class="avatar2">
@@ -116,7 +116,7 @@
     
     {if $likely_orphans}
       <div class="section" id="replies">
-        <div class="thinktank-canvas clearfix">
+        <div class="thinkup-canvas clearfix">
           <div class="clearfix prepend_20 append_20">
             <div class="grid_2 prefix_1 alpha">
               <img src="{$post->author_avatar}" class="avatar2">
@@ -165,7 +165,7 @@
     
     {if $replies}
       <div class="section" id="followers">
-        <div class="thinktank-canvas clearfix">
+        <div class="thinkup-canvas clearfix">
           <div class="clearfix prepend_20 append_20">
             <div class="grid_2 prefix_1 alpha">
               <img src="{$post->author_avatar}" class="avatar2">

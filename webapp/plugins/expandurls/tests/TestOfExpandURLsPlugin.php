@@ -6,11 +6,11 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkTankPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/model/class.ExpandURLsPlugin.php';
 
@@ -20,7 +20,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/model/class.ExpandURLs
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfExpandURLsPlugin extends ThinkTankUnitTestCase {
+class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
     function __construct() {
         $this->UnitTestCase('ExpandURLs plugin class test');
@@ -30,7 +30,7 @@ class TestOfExpandURLsPlugin extends ThinkTankUnitTestCase {
         parent::setUp();
 
         //Insert test links (not images, not expanded)
-        $q = "INSERT INTO tt_links (url, title, clicks, post_id, is_image) VALUES ('http://bit.ly/a5VmbO', '', 0, 1, 0);";
+        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://bit.ly/a5VmbO', '', 0, 1, 0);";
         $this->db->exec($q);
 
         $crawler = Crawler::getInstance();

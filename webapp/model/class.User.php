@@ -3,7 +3,7 @@
  * User class
  *
  * This class represents social network users like @ginatrapani on Twitter, or Joe Smith on Facebook.
- * It does not represent not ThinkTank users, see the Owner class for ThinkTank users.
+ * It does not represent not ThinkUp users, see the Owner class for ThinkUp users.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *

@@ -6,7 +6,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-class PublicTimelineController extends ThinkTankController {
+class PublicTimelineController extends ThinkUpController {
     /**
      * @var int
      */
@@ -80,7 +80,7 @@ class PublicTimelineController extends ThinkTankController {
         $this->post_dao->isPostByPublicInstance($_GET['t'], $network);
         $post = $this->post_dao->getPost($post_id, $network);
         if (!isset($post)) {
-            $this->addErrorMessage("Post ".$post_id." on ".ucwords($network)." is not in ThinkTank.");
+            $this->addErrorMessage("Post ".$post_id." on ".ucwords($network)." is not in ThinkUp.");
         } else {
             $public_tweet_replies = $this->post_dao->getPublicRepliesToPost($post->post_id, $network);
             $public_retweets = $this->post_dao->getRetweetsOfPost($post->post_id, $network, true);
@@ -142,7 +142,7 @@ class PublicTimelineController extends ThinkTankController {
             $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
         } else {
             $this->addErrorMessage($username." on ".ucwords($network).
-            " isn't set up on this ThinkTank installation.");
+            " isn't set up on this ThinkUp installation.");
         }
     }
 

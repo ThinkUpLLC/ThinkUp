@@ -18,22 +18,22 @@ class Database {
     var $slow_query_log_threshold = 2.0; //seconds
     var $GMT_offset=8;
 
-    function __construct($THINKTANK_CFG) {
-        $this->db_host = $THINKTANK_CFG['db_host'];
-        $this->db_name = $THINKTANK_CFG['db_name'];
-        $this->db_user = $THINKTANK_CFG['db_user'];
-        $this->db_password = $THINKTANK_CFG['db_password'];
-        if (isset($THINKTANK_CFG['table_prefix'])) {
-            $this->table_prefix = $THINKTANK_CFG['table_prefix'];
+    function __construct($THINKUP_CFG) {
+        $this->db_host = $THINKUP_CFG['db_host'];
+        $this->db_name = $THINKUP_CFG['db_name'];
+        $this->db_user = $THINKUP_CFG['db_user'];
+        $this->db_password = $THINKUP_CFG['db_password'];
+        if (isset($THINKUP_CFG['table_prefix'])) {
+            $this->table_prefix = $THINKUP_CFG['table_prefix'];
         }
-        if (isset($THINKTANK_CFG['GMT_offset'])) {
-            $this->GMT_offset = $THINKTANK_CFG['GMT_offset'];
+        if (isset($THINKUP_CFG['GMT_offset'])) {
+            $this->GMT_offset = $THINKUP_CFG['GMT_offset'];
         }
 
-        if (isset($THINKTANK_CFG['sql_log_location'])) {
-            $this->logger = new LoggerSlowSQL($THINKTANK_CFG['sql_log_location']);
-            if (isset($THINKTANK_CFG['slow_query_log_threshold'])) {
-                $this->slow_query_log_threshold = $THINKTANK_CFG['slow_query_log_threshold'];
+        if (isset($THINKUP_CFG['sql_log_location'])) {
+            $this->logger = new LoggerSlowSQL($THINKUP_CFG['sql_log_location']);
+            if (isset($THINKUP_CFG['slow_query_log_threshold'])) {
+                $this->slow_query_log_threshold = $THINKUP_CFG['slow_query_log_threshold'];
             }
 
         }

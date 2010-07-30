@@ -4,7 +4,7 @@ if (!class_exists('twitterOAuth')) {
     require_once $config->getValue('source_root_path').'extlib/twitteroauth/twitteroauth.php';
 }
 
-class TwitterOAuthThinkTank extends TwitterOAuth {
+class TwitterOAuthThinkUp extends TwitterOAuth {
 
     //Adding a no OAuth required call to this class, for calls to the Search API
     function noAuthRequest($url) {

@@ -2,7 +2,7 @@
 /**
  * Plugin Hook
  *
- * Provides hooks to register plugin objects in ThinkTank.
+ * Provides hooks to register plugin objects in ThinkUp.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *

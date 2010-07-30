@@ -82,8 +82,8 @@
 <div class="container clearfix">
   
   <div id="app-title"><a href="{$site_root_path}{$logo_link}">
-    <h1><span class="bold">Think</span><span class="gray">Tank</span></h1>
-    <h2>Ask your friends</h2>
+    <h1><span class="bold">Think</span><span class="gray">Up</span></h1>
+    <h2>New ideas</h2>
   </a></div> <!-- end #app-title -->
   
   <div id="menu-bar">
@@ -97,7 +97,7 @@
         {/if}
         <li class="round-tr round-br"><a href="{$site_root_path}account/?m=manage">Configuration</a></li>
       {else}
-        <li class="round-tr round-br round-tl round-bl"><a href="http://thinktankapp.com/">Get ThinkTank</a></li>
+        <li class="round-tr round-br round-tl round-bl"><a href="http://thinkupapp.com/">Get ThinkUp</a></li>
       {/if}
     </ul>
   </div> <!-- end #menu-bar -->  

@@ -5,7 +5,7 @@
 .container {padding:0px;width:960px;margin: 0 auto;}
 
 .top {position:relative;top-20px;}
-.thinktank-canvas {background-color: #FFF;}
+.thinkup-canvas {background-color: #FFF;}
 #tweets_content, #mentions_content, #followers_content, #friends_content, #links_content {position:relative;top:-40px;}
 
 #hd, #ft {padding : 20px 20px 20px 0px;}

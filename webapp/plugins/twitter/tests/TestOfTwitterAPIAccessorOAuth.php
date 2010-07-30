@@ -5,20 +5,20 @@ if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.MySQLDAO.deprecated.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 
-class TestOfTwitterAPIAccessorOAuth extends ThinkTankBasicUnitTestCase {
+class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('Test of TwitterAPIAccessorOAuth');
     }
@@ -50,14 +50,14 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkTankBasicUnitTestCase {
     }
 
     public function testFriendsList() {
-        global $THINKTANK_CFG;
+        global $THINKUP_CFG;
 
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', 'GET', array());
         $this->assertWantedPattern('/A or B/', $result);
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'],
-        $THINKTANK_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
+        $THINKUP_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
         //echo 'Next cursor is ' . $next_cursor;
@@ -65,13 +65,13 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkTankBasicUnitTestCase {
     }
 
     public function testIDsList() {
-        global $THINKTANK_CFG;
+        global $THINKUP_CFG;
 
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/followers/ids.xml', 'GET', array());
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'],
-        $THINKTANK_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
+        $THINKUP_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
         //echo 'Next cursor is ' . $next_cursor;
@@ -79,13 +79,13 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkTankBasicUnitTestCase {
     }
 
     public function testSearchResults() {
-        global $THINKTANK_CFG;
+        global $THINKUP_CFG;
 
         $to = new TwitterOAuth('', '', '', '');
         $twitter_data = $to->http('http://search.twitter.com/search.json?q=%40whitehouse&result_type=recent');
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'],
-        $THINKTANK_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
+        $THINKUP_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
 
         $results = $api->parseJSON($twitter_data);
 

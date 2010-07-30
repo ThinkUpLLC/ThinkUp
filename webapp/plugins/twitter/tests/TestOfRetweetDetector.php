@@ -6,14 +6,14 @@ if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
-class TestOfRetweetDetector extends ThinkTankBasicUnitTestCase {
+class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
     var $logger;
 
     function __construct() {

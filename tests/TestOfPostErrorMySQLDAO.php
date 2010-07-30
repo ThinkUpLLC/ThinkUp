@@ -6,7 +6,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Loremipsum/LoremIpsum.class.php';
 
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.PDODAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.PostErrorMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
@@ -17,7 +17,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfPostErrorMySQLDAO extends ThinkTankUnitTestCase {
+class TestOfPostErrorMySQLDAO extends ThinkUpUnitTestCase {
 
     function _construct() {
         $this->UnitTestCase('PostErrorMySQLDAO class test');

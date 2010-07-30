@@ -7,7 +7,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class PostController extends ThinkTankAuthController {
+class PostController extends ThinkUpAuthController {
     /**
      *
      * @var PostDAO

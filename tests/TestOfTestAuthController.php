@@ -3,22 +3,22 @@ require_once dirname(__FILE__).'/config.tests.inc.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankBasicUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkTankAuthController.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.TestAuthController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
 /**
  * Test TestAuthController class
  *
- * TestController isn't a real ThinkTank controller, this is just a template for all Controller tests.
+ * TestController isn't a real ThinkUp controller, this is just a template for all Controller tests.
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-class TestOfTestAuthController extends ThinkTankBasicUnitTestCase {
+class TestOfTestAuthController extends ThinkUpBasicUnitTestCase {
     /**
      * Constructor
      */
@@ -65,7 +65,7 @@ class TestOfTestAuthController extends ThinkTankBasicUnitTestCase {
     public function testIsLoggedIn() {
         $_SESSION['user'] = 'me@example.com';
         $config = Config::getInstance();
-        $config->setValue('site_root_path', '/my/path/to/thinktank/');
+        $config->setValue('site_root_path', '/my/path/to/thinkup/');
 
         $controller = new TestAuthController(true);
         $results = $controller->go();
@@ -73,10 +73,10 @@ class TestOfTestAuthController extends ThinkTankBasicUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('test'), 'Testing, testing, 123');
-        $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'ThinkTank');
+        $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'ThinkUp');
 
         $this->assertEqual($results,
-        '<a href="/my/path/to/thinktank/index.php">ThinkTank</a>: Testing, testing, 123 | Logged in as me@example.com', 
+        '<a href="/my/path/to/thinkup/index.php">ThinkUp</a>: Testing, testing, 123 | Logged in as me@example.com', 
         "auth controller output when logged in");
     }
 

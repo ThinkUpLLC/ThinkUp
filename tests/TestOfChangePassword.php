@@ -4,13 +4,13 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankWebTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpWebTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 
 
-class TestOfChangePassword extends ThinkTankWebTestCase {
+class TestOfChangePassword extends ThinkUpWebTestCase {
 
     function setUp() {
         parent::setUp();
@@ -18,15 +18,15 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         //Add owner
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
-        $q = "INSERT INTO tt_owners (id, email, pwd, is_activated) VALUES (1, 'me@example.com', '".$cryptpass."', 1)";
+        $q = "INSERT INTO tu_owners (id, email, pwd, is_activated) VALUES (1, 'me@example.com', '".$cryptpass."', 1)";
         $this->db->exec($q);
 
         //Add instance
-        $q = "INSERT INTO tt_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234, 'thinktankapp', 1)";
+        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234, 'thinkupapp', 1)";
         $this->db->exec($q);
 
         //Add instance_owner
-        $q = "INSERT INTO tt_owner_instances (owner_id, instance_id) VALUES (1, 1)";
+        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id) VALUES (1, 1)";
         $this->db->exec($q);
     }
 
@@ -41,11 +41,11 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkUp');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
+        $this->assertText('Your ThinkUp Password');
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
@@ -58,7 +58,7 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword1');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkUp');
         $this->assertText('Logged in as: me@example.com');
     }
 
@@ -68,11 +68,11 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkUp');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
+        $this->assertText('Your ThinkUp Password');
         $this->setField('oldpass', 'secretpassworddd');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
@@ -86,11 +86,11 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkUp');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
+        $this->assertText('Your ThinkUp Password');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
         $this->click('Change password');
@@ -103,11 +103,11 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkUp');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
+        $this->assertText('Your ThinkUp Password');
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword2');
@@ -121,11 +121,11 @@ class TestOfChangePassword extends ThinkTankWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkTank');
+        $this->assertTitle('Private Dashboard | ThinkUp');
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
-        $this->assertText('Your ThinkTank Password');
+        $this->assertText('Your ThinkUp Password');
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'dd');
         $this->setField('pass2', 'dd');

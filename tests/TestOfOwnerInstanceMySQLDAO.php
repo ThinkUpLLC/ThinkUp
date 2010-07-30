@@ -5,7 +5,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
@@ -14,7 +14,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/interface.OwnerInstanceDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstanceMySQLDAO.php';
 
 
-class TestOfOwnerInstanceMySQLDAO extends ThinkTankUnitTestCase {
+class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
     const TEST_TABLE_OI = 'owner_instances';
     const TEST_TABLE_I = 'instances';

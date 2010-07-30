@@ -6,7 +6,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
@@ -20,7 +20,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.Twitte
 //require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterCrawler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkTank.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
 
 /**
@@ -31,7 +31,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetect
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
+class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     var $api;
     var $instance;
     var $logger;
@@ -45,16 +45,16 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $this->logger = Logger::getInstance();
 
         //insert test users
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated)
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated)
         VALUES (36823, 'anildash', 'Anil Dash', 'avatar.jpg', '2007-01-01');";
         $this->db->exec($q);
 
-        $q = "INSERT INTO tt_users (user_id, user_name, full_name, avatar, last_updated)
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated)
         VALUES (930061, 'ginatrapani', 'Gina Trapani', 'avatar.jpg', '2007-01-01');";
         $this->db->exec($q);
 
         //insert test follow
-        $q = "INSERT INTO tt_follows (user_id, follower_id, last_seen)
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen)
         VALUES (930061, 36823, '2006-01-08 23:54:41');";
         $this->db->exec($q);
     }
@@ -65,7 +65,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     }
 
     private function setUpInstanceUserAnilDash() {
-        global $THINKTANK_CFG;
+        global $THINKUP_CFG;
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823',
         'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
         'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
@@ -74,8 +74,8 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
         $this->instance = new Instance($r);
 
-        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'],
-        $THINKTANK_CFG['oauth_consumer_secret'], $this->instance, $THINKTANK_CFG['archive_limit']);
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
+        $THINKUP_CFG['oauth_consumer_secret'], $this->instance, $THINKUP_CFG['archive_limit']);
 
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
@@ -83,7 +83,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
     }
 
     private function setUpInstanceUserGinaTrapani() {
-        global $THINKTANK_CFG;
+        global $THINKUP_CFG;
         $r = array('id'=>1, 'network_username'=>'ginatrapani', 'network_user_id'=>'930061',
         'network_viewer_id'=>'930061', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
@@ -93,8 +93,8 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         'network'=>'twitter');
         $this->instance = new Instance($r);
 
-        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKTANK_CFG['oauth_consumer_key'],
-        $THINKTANK_CFG['oauth_consumer_secret'], $this->instance, $THINKTANK_CFG['archive_limit']);
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
+        $THINKUP_CFG['oauth_consumer_secret'], $this->instance, $THINKUP_CFG['archive_limit']);
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
         $this->instance->is_archive_loaded_follows = true;
@@ -223,7 +223,7 @@ class TestOfTwitterCrawler extends ThinkTankUnitTestCase {
         $tc->fetchInstanceUserInfo();
 
         //first, load retweeted tweet into db
-        $q = "INSERT INTO tt_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
         post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (14947487415, 930061, 
         'ginatrapani', 'Gina Trapani', 'avatar.jpg', 
         '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'web', 

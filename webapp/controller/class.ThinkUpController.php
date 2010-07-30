@@ -1,15 +1,15 @@
 <?php
 /**
- * ThinkTank Controller
+ * ThinkUp Controller
  *
- * The parent class of all ThinkTank webapp controllers.
+ * The parent class of all ThinkUp webapp controllers.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 
-abstract class ThinkTankController {
+abstract class ThinkUpController {
     /**
-     * @var SmartyThinkTank
+     * @var SmartyThinkUp
      */
     protected $view_mgr;
     /**
@@ -38,11 +38,11 @@ abstract class ThinkTankController {
     protected $app_session;
 
     /**
-     * Constructs ThinkTankController
+     * Constructs ThinkUpController
      *
-     *  Adds email address of currently logged in ThinkTank user, '' if not logged in, to view
+     *  Adds email address of currently logged in ThinkUp user, '' if not logged in, to view
      *  {$logged_in_user}
-     *  @return ThinkTankController
+     *  @return ThinkUpController
      */
     public function __construct($session_started=false) {
         if (!$session_started) {
@@ -53,7 +53,7 @@ abstract class ThinkTankController {
         if ( $this->profiler_enabled) {
             $this->start_time = microtime(true);
         }
-        $this->view_mgr = new SmartyThinkTank();
+        $this->view_mgr = new SmartyThinkUp();
         $this->app_session = new Session();
         if ($this->isLoggedIn()) {
             $this->addToView('logged_in_user', $this->getLoggedInUser());
@@ -68,7 +68,7 @@ abstract class ThinkTankController {
     abstract public function control();
 
     /**
-     * Returns whether or not ThinkTank user is logged in
+     * Returns whether or not ThinkUp user is logged in
      *
      * @return bool whether or not user is logged in
      */
@@ -78,7 +78,7 @@ abstract class ThinkTankController {
     }
 
     /**
-     * Returns whether or not a logged-in ThinkTank user is an admin
+     * Returns whether or not a logged-in ThinkUp user is an admin
      *
      * @return bool whether or not logged-in user is an admin
      */
@@ -206,7 +206,7 @@ abstract class ThinkTankController {
 
     /**
      * Provided for tests only, to assert that proper view values have been set. (Debug must be equal to true.)
-     * @return SmartyThinkTank
+     * @return SmartyThinkUp
      */
     public function getViewManager() {
         return $this->view_mgr;

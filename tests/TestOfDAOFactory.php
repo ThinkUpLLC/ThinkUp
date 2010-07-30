@@ -5,7 +5,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkTankUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 
@@ -16,7 +16,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfDAOFactory extends ThinkTankUnitTestCase {
+class TestOfDAOFactory extends ThinkUpUnitTestCase {
 
     function __construct() {
         $this->UnitTestCase('DAOFactory test');
@@ -25,7 +25,7 @@ class TestOfDAOFactory extends ThinkTankUnitTestCase {
     function setUp() {
         parent::setUp();
         // test table for our test dao
-        $test_table_sql = 'CREATE TABLE tt_test_table(' .
+        $test_table_sql = 'CREATE TABLE tu_test_table(' .
             'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
             'test_name varchar(20),' .
             'test_id int(11),' .
@@ -33,7 +33,7 @@ class TestOfDAOFactory extends ThinkTankUnitTestCase {
             ')';
         $this->db->exec($test_table_sql);
         //some test data as well
-        $q = sprintf("INSERT INTO tt_test_table (test_name, test_id) VALUES ('name%s', %d)", 1, 1);
+        $q = sprintf("INSERT INTO tu_test_table (test_name, test_id) VALUES ('name%s', %d)", 1, 1);
         for($i = 2; $i <= 20; $i++) {
             $q .= sprintf(",('name%s', %d)", $i, $i);
         }

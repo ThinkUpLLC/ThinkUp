@@ -5,7 +5,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-interface TestAppPlugin extends ThinkTankPlugin {
+interface TestAppPlugin extends ThinkUpPlugin {
 
     /**
      * Test method for TestOfPluginHook
