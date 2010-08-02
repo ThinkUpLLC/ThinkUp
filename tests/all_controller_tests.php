@@ -7,6 +7,7 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/mock_objects.php';
 /* CONTROLLER TESTS */
 require_once $SOURCE_ROOT_PATH.'tests/TestOfAccountConfigurationController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfActivateAccountController.php';
+require_once $SOURCE_ROOT_PATH.'tests/TestOfCheckCrawlerController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfExportController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfInlineViewController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfLoginController.php';
@@ -23,6 +24,7 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfUserController.php';
 $controller_test = & new GroupTest('Controller tests');
 $controller_test->addTestCase(new TestOfAccountConfigurationController());
 $controller_test->addTestCase(new TestOfActivateAccountController());
+$controller_test->addTestCase(new TestOfCheckCrawlerController());
 $controller_test->addTestCase(new TestOfExportController());
 $controller_test->addTestCase(new TestOfInlineViewController());
 $controller_test->addTestCase(new TestOfLoginController());

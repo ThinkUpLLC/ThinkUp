@@ -314,4 +314,16 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, "Instance");
     }
+
+    public function getHoursSinceLastCrawlerRun() {
+        $q = "SELECT (unix_timestamp( NOW() ) - unix_timestamp(crawler_last_run )) / 3600 as hours_since_last_run ";
+        $q .= "FROM #prefix#instances ORDER BY crawler_last_run DESC LIMIT 1";
+        $ps = $this->execute($q);
+        $result = $this->getDataRowsAsArrays($ps);
+        if ($this->getDataIsReturned($ps)) {
+            return $result[0]['hours_since_last_run'];
+        } else  {
+            return null;
+        }
+    }
 }

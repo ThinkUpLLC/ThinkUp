@@ -5,6 +5,8 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
+require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilderException.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.InstanceMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
@@ -39,6 +41,17 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
     public function tearDown() {
         parent::tearDown();
+    }
+
+    public function testGetHoursSinceLastCrawlerRun() {
+        $dao = new InstanceMySQLDAO();
+        $instance_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-3h'));
+        $hours = $dao->getHoursSinceLastCrawlerRun();
+        $this->assertEqual($hours, 3);
+
+        $instance1_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-2h'));
+        $hours = $dao->getHoursSinceLastCrawlerRun();
+        $this->assertEqual($hours, 2);
     }
 
     public function testInsert() {

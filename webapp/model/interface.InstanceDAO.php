@@ -153,4 +153,10 @@ interface InstanceDAO {
      * @return Instance
      */
     public function getByViewerId($viewer_id, $network = "facebook");
+
+    /**
+     * Get the number of hours since the freshest instance was updated
+     * @return int hours
+     */
+    public function getHoursSinceLastCrawlerRun();
 }
