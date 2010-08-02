@@ -1,1 +1,1 @@
-UPDATE tu_posts SET is_geo_encoded = 6 WHERE place IS NULL AND location IS NULL AND geo IS NULL;
+UPDATE tt_posts SET is_geo_encoded = 6 WHERE place IS NULL AND location IS NULL AND geo IS NULL;
