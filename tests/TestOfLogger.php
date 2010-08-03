@@ -11,19 +11,19 @@ require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
 
 class TestOfLogger extends ThinkUpBasicUnitTestCase {
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('Logger class test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 
-    function testNewLoggerSingleton() {
+    public function testNewLoggerSingleton() {
         global $THINKUP_CFG;
 
         $logger = Logger::getInstance();
@@ -33,7 +33,8 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $this->assertWantedPattern('/Singleton logger should write this to the log/', $messages[sizeof($messages) - 1]);
         $logger->setUsername('single-ton');
         $logger->logStatus('Should write this to the log with a username', get_class($this));
-        $this->assertWantedPattern('/single-ton | TestOfLogger:Singleton logger should write this to the log/', $messages[sizeof($messages) - 1]);
+        $this->assertWantedPattern('/single-ton | TestOfLogger:Singleton logger should write this to the log/',
+        $messages[sizeof($messages) - 1]);
         $logger->close();
     }
 }

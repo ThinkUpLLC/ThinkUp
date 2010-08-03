@@ -12,7 +12,7 @@ class TwitterCrawler {
     var $instance;
     var $api;
     var $owner_object;
-    var $ud;
+    var $user_dao;
     var $logger;
 
     public function __construct($instance, $api) {
@@ -20,7 +20,7 @@ class TwitterCrawler {
         $this->api = $api;
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
-        $this->ud = DAOFactory::getDAO('UserDAO');
+        $this->user_dao = DAOFactory::getDAO('UserDAO');
     }
 
     public function fetchInstanceUserInfo() {
@@ -38,7 +38,7 @@ class TwitterCrawler {
 
                 if (isset($this->owner_object)) {
                     $status_message = 'Owner info set.';
-                    $this->ud->updateUser($this->owner_object);
+                    $this->user_dao->updateUser($this->owner_object);
 
                     if (isset($this->owner_object->follower_count) && $this->owner_object->follower_count>0) {
                         $fcount_dao = DAOFactory::getDAO('FollowerCountDAO');
@@ -79,7 +79,7 @@ class TwitterCrawler {
 
                         if ($tweet['user_id'] != $this->owner_object->user_id) { //don't update owner info from reply
                             $u = new User($tweet, 'mentions');
-                            $this->ud->updateUser($u);
+                            $this->user_dao->updateUser($u);
                         }
                     }
                 }
@@ -220,7 +220,7 @@ class TwitterCrawler {
             } elseif (substr($u, 0, strlen('http://flic.kr/')) == 'http://flic.kr/') {
                 $is_image = 1;
             }
-            if ($ld->insert($u, $eurl, $title, $tweet['post_id'], $is_image)) {
+            if ($ld->insert($u, $eurl, $title, $tweet['post_id'], 'twitter', $is_image)) {
                 $this->logger->logStatus("Inserted ".$u." (".$eurl.", ".$is_image."), into links table",
                 get_class($this));
             } else {
@@ -253,7 +253,7 @@ class TwitterCrawler {
             try {
                 $e = $this->api->parseError($twitter_data);
                 $ped = DAOFactory::getDAO('PostErrorDAO');
-                $ped->insertError($tid, $cURL_status, $e['error'], $this->owner_object->user_id);
+                $ped->insertError($tid, 'twitter', $cURL_status, $e['error'], $this->owner_object->user_id);
                 $status_message = 'Error saved to tweets.';
             }
             catch(Exception $e) {
@@ -326,7 +326,7 @@ class TwitterCrawler {
                                 if ($tweet['user_id'] != $this->owner_object->user_id) {
                                     //don't update owner info from reply
                                     $u = new User($tweet, 'mentions');
-                                    $this->ud->updateUser($u);
+                                    $this->user_dao->updateUser($u);
                                 }
 
                             }
@@ -477,7 +477,7 @@ class TwitterCrawler {
                                 $count++;
                                 //expand and insert links contained in tweet
                                 $this->processTweetURLs($tweet);
-                                $this->ud->updateUser($user_with_retweet);
+                                $this->user_dao->updateUser($user_with_retweet);
                             }
                         }
                         $this->logger->logStatus(count($tweets)." tweet(s) found in usertimeline via retweet for ".
@@ -627,7 +627,7 @@ class TwitterCrawler {
                     $inserted_follow_count = 0;
                     foreach ($users as $u) {
                         $utu = new User($u, 'Follows');
-                        $this->ud->updateUser($utu);
+                        $this->user_dao->updateUser($utu);
 
                         # add/update follow relationship
                         if ($fd->followExists($this->instance->network_user_id, $utu->user_id, 'twitter')) {
@@ -711,7 +711,7 @@ class TwitterCrawler {
 
                     foreach ($users as $u) {
                         $utu = new User($u, 'Friends');
-                        $this->ud->updateUser($utu);
+                        $this->user_dao->updateUser($utu);
 
                         # add/update follow relationship
                         if ($fd->followExists($utu->user_id, $this->instance->network_user_id, 'twitter')) {
@@ -796,7 +796,7 @@ class TwitterCrawler {
                                     if ($tweet['post_id'] > $stale_friend->last_post_id) {
                                         $stale_friend->last_post_id = $tweet['post_id'];
                                     }
-                                    $this->ud->updateUser($stale_friend);
+                                    $this->user_dao->updateUser($stale_friend);
                                     $stale_friend_updated_from_tweets = true;
                                 }
                             }
@@ -934,7 +934,7 @@ class TwitterCrawler {
             try {
                 $user_arr = $this->api->parseXML($twitter_data);
                 $user = new User($user_arr[0], $source);
-                $this->ud->updateUser($user);
+                $this->user_dao->updateUser($user);
                 $status_message = 'Added/updated user '.$user->username." in database";
             }
             catch(Exception $e) {

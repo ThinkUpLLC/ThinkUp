@@ -41,7 +41,7 @@ if (isset($_GET['sessionKey']) && isset($fb_user) && $fb_user > 0) {
     $od = DAOFactory::getDAO('OwnerDAO');
     $id = DAOFactory::getDAO('InstanceDAO');
     $oid = DAOFactory::getDAO('OwnerInstanceDAO');
-    $ud = DAOFactory::getDAO('UserDAO');
+    $user_dao = DAOFactory::getDAO('UserDAO');
 
 
     $owner = $od->getByEmail($_SESSION['user']);
@@ -65,10 +65,12 @@ if (isset($_GET['sessionKey']) && isset($fb_user) && $fb_user > 0) {
         echo "Created owner instance.<br />";
     }
 
-    if (!$ud->isUserInDB($fb_user)) {
-        $r = array('user_id'=>$fb_user, 'user_name'=>$fb_username,'full_name'=>$fb_username, 'avatar'=>'', 'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0, 'friend_count'=>0, 'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'', 'last_post_id'=>'', 'network'=>'facebook' );
+    if (!$user_dao->isUserInDB($fb_user, 'facebook')) {
+        $r = array('user_id'=>$fb_user, 'user_name'=>$fb_username,'full_name'=>$fb_username, 'avatar'=>'', 
+        'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0, 'friend_count'=>0, 
+        'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'', 'last_post_id'=>'', 'network'=>'facebook' );
         $u = new User($r, 'Owner info');
-        $ud->updateUser($u);
+        $user_dao->updateUser($u);
     }
 } else {
     echo "No session key or logged in Facebook user.";

@@ -32,10 +32,15 @@ class Link {
      */
     var $clicks;
     /**
-     * ID of the post witch this link was found
+     * ID of the post which this link was found
      * @var int
      */
     var $post_id;
+    /**
+     * Network of the post this link is in
+     * @var str
+     */
+    var $network;
     /**
      * Link to an image?
      * @var bool
@@ -102,6 +107,10 @@ class Link {
             $this->post_id = $val["post_id"];
         }
 
+        if (isset($val["network"])) {
+            $this->network = $val["network"];
+        }
+
         $this->is_image = PDODAO::convertDBToBool($val["is_image"]);
 
         if (isset($val["error"])) {
@@ -116,6 +125,7 @@ class Link {
         if (isset($this->other['author_user_id'])){
             $this->other['id'] = $this->id;
             $this->other['post_id'] = $this->post_id;
+            $this->other['network'] = $this->network;
             $this->container_post = new Post($this->other);
         }
         $this->is_image = PDODAO::convertDBToBool($this->is_image);

@@ -87,7 +87,7 @@ class PrivateDashboardController extends ThinkUpAuthController {
                 $follow_dao = DAOFactory::getDAO('FollowDAO');
 
                 // pass data to view
-                $owner_stats = $user_dao->getDetails($instance->network_user_id);
+                $owner_stats = $user_dao->getDetails($instance->network_user_id, $instance->network);
                 $this->addToView('owner_stats', $owner_stats);
 
                 $this->addToView('instance', $instance);

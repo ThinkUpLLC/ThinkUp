@@ -35,9 +35,9 @@ class UserController extends ThinkUpAuthController {
             $network = $_GET['n'];
             $user_dao = DAOFactory::getDAO('UserDAO');
 
-            if ( $user_dao->isUserInDBByName($username) ){
+            if ( $user_dao->isUserInDBByName($username, $network) ){
                 $this->setPageTitle('User Details: '.$username);
-                $user = $user_dao->getUserByName($username);
+                $user = $user_dao->getUserByName($username, $network);
 
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $owner = $owner_dao->getByEmail($this->getLoggedInUser());

@@ -5,7 +5,6 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  */
-
 interface LinkDAO {
     /**
      * Inserts a link into the database.
@@ -13,10 +12,11 @@ interface LinkDAO {
      * @param str $expanded
      * @param str $title
      * @param int $post_id
+     * @param str $network
      * @param bool $is_image
      * @return int insert ID
      */
-    public function insert($url, $expanded, $title, $post_id, $is_image = false );
+    public function insert($url, $expanded, $title, $post_id, $network, $is_image = false );
 
     /**
      * Sets a expanded URL in storage.
@@ -42,24 +42,27 @@ interface LinkDAO {
      * @param str $expanded
      * @param str $title
      * @param int $post_id
+     * @param str $network
      * @param bool $is_image
      * @return int Update count
      */
-    public function update($url, $expanded, $title, $post_id, $is_image = false );
+    public function update($url, $expanded, $title, $post_id, $network, $is_image = false );
 
     /**
      * Get the links posted by a users friends
      * @param int $user_id
+     * @param str $network
      * @return array with Link objects
      */
-    public function getLinksByFriends($user_id);
+    public function getLinksByFriends($user_id, $network);
 
     /**
      * Get the images posted by a users friends
      * @param int $user_id
+     * @param str $network
      * @return array numbered keys, with Link objects
      */
-    public function getPhotosByFriends($user_id);
+    public function getPhotosByFriends($user_id, $network);
 
     /**
      * Gets a number of links that has not been expanded.
@@ -71,7 +74,7 @@ interface LinkDAO {
 
     /**
      * Gets all links with short URL statring with a prefix.
-     * Non standard output - Sceduled for deprecation.
+     * Non standard output - Scheduled for deprecation.
      * @param str $url
      * @return array with numbered keys, with strings
      */
@@ -90,6 +93,4 @@ interface LinkDAO {
      * @return Link Object
      */
     public function getLinkByUrl($url);
-
 }
-

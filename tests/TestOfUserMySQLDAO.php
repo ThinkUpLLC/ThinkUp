@@ -35,9 +35,15 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
 
         //Insert test data into test table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, location)
-        VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg', 'San Francisco');";
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, location, network)
+        VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg', 'San Francisco', 'twitter');";
         $this->db->exec($q);
+
+        //Insert test data into test table
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, location, network)
+        VALUES (13, 'zuck', 'Mark Zuckerberg', 'avatar.jpg', 'San Francisco', 'facebook');";
+        $this->db->exec($q);
+
         $this->logger = Logger::getInstance();
     }
 
@@ -62,8 +68,9 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testIsUserInDB() {
         $udao = DAOFactory::getDAO('UserDAO');
-        $this->assertTrue($udao->isUserInDB(12));
-        $this->assertTrue(!$udao->isUserInDB(13));
+        $this->assertTrue($udao->isUserInDB(12, 'twitter'));
+        $this->assertFalse($udao->isUserInDB(13, 'twitter'));
+        $this->assertTrue($udao->isUserInDB(13, 'facebook'));
     }
 
     /**
@@ -71,8 +78,10 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testIsUserInDBByName() {
         $udao = DAOFactory::getDAO('UserDAO');
-        $this->assertTrue($udao->isUserInDBByName('jack'));
-        $this->assertTrue(!$udao->isUserInDBByName('gina'));
+        $this->assertTrue($udao->isUserInDBByName('jack', 'twitter'));
+        $this->assertFalse($udao->isUserInDBByName('gina', 'twitter'));
+        $this->assertTrue($udao->isUserInDBByName('zuck', 'facebook'));
+        $this->assertFalse($udao->isUserInDBByName('zuck', 'twitter'));
 
     }
 
@@ -81,10 +90,19 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetDetailsUserExists() {
         $udao = DAOFactory::getDAO('UserDAO');
-        $user = $udao->getDetails(12);
+        $user = $udao->getDetails(12, 'twitter');
         $this->assertEqual($user->id, 1);
         $this->assertEqual($user->user_id, 12);
         $this->assertEqual($user->username, 'jack');
+        $this->assertEqual($user->network, 'twitter');
+        $user = $udao->getDetails(13, 'facebook');
+        $this->assertEqual($user->id, 2);
+        $this->assertEqual($user->user_id, 13);
+        $this->assertEqual($user->username, 'zuck');
+        $this->assertEqual($user->network, 'facebook');
+
+        $user = $udao->getDetails(13, 'twitter');
+        $this->assertTrue(!isset($user));
     }
 
     /**
@@ -92,10 +110,9 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetDetailsUserDoesNotExist() {
         $udao = DAOFactory::getDAO('UserDAO');
-        $user = $udao->getDetails(13);
+        $user = $udao->getDetails(13, 'twitter');
         $this->assertTrue(!isset($user));
     }
-
 
     /**
      * Test update individual user
@@ -105,10 +122,10 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
 
         $uarr = array('user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani',
         'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 
-        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
+        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007', 'network'=>'twitter');
         $user = new User($uarr, 'Test Insert');
         $this->assertEqual($udao->updateUser($user), 1, "1 user inserted");
-        $user_from_db = $udao->getDetails(13);
+        $user_from_db = $udao->getDetails(13, 'twitter');
         $this->assertEqual($user_from_db->user_id, 13);
         $this->assertEqual($user_from_db->username, 'ginatrapani');
         $this->assertEqual($user_from_db->avatar, 'avatar.jpg');
@@ -116,15 +133,14 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
 
         $uarr = array('user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani ',
         'avatar'=>'avatara.jpg', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 
-        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
+        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007', 'network'=>'twitter');
         $user1 = new User($uarr, 'Test Update');
-        $this->assertEqual($udao->updateUser($user1), 2, "2 rows updated because of ON DUPLICATE KEY INSERT");
-        $user_from_db = $udao->getDetails(13);
+        $this->assertEqual($udao->updateUser($user1), 1, "1 row updated");
+        $user_from_db = $udao->getDetails(13, 'twitter');
         $this->assertEqual($user_from_db->user_id, 13);
         $this->assertEqual($user_from_db->username, 'ginatrapani');
         $this->assertEqual($user_from_db->avatar, 'avatara.jpg');
         $this->assertEqual($user_from_db->location, 'San Diego');
-
     }
 
     /**
@@ -135,11 +151,11 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
 
         $user_array1 = array('id'=>2, 'user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani',
         'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 
-        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
+        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007', 'network'=>'twitter');
         $user1 = new User($user_array1, 'Test');
         $user_array2 = array('id'=>3, 'user_id'=>14, 'user_name'=>'anildash', 'full_name'=>'Anil Dash',
         'avatar'=>'avatar.jpg', 'location'=>'NYC', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 
-        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007');
+        'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007', 'network'=>'twitter');
         $user2 = new User($user_array2, 'Test');
 
         $users_to_update = array($user1, $user2);
@@ -153,7 +169,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetUserByNameUserExists() {
         $udao = DAOFactory::getDAO('UserDAO');
 
-        $user = $udao->getUserByName('jack');
+        $user = $udao->getUserByName('jack', 'twitter');
         $this->assertEqual($user->id, 1);
         $this->assertEqual($user->user_id, 12);
         $this->assertEqual($user->username, 'jack');
@@ -167,7 +183,7 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetUserByNameUserDoesNotExist() {
         $udao = DAOFactory::getDAO('UserDAO');
 
-        $user = $udao->getUserByName('gina');
+        $user = $udao->getUserByName('gina', 'twitter');
         $this->assertEqual($user, null);
     }
 }

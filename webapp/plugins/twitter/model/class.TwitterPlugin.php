@@ -271,7 +271,8 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         //Links from friends
         $fltab = new WebappTab("links-friends", 'Links From Friends', 'Links your friends posted', $twitter_data_tpl);
-        $fltabds = new WebappTabDataset("links", 'LinkDAO', "getLinksByFriends", array($instance->network_user_id));
+        $fltabds = new WebappTabDataset("links", 'LinkDAO', "getLinksByFriends", array($instance->network_user_id, 
+        'twitter'));
         $fltab->addDataset($fltabds);
         array_push($child_tabs, $fltab);
 

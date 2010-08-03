@@ -4,7 +4,7 @@ class FacebookCrawler {
     var $logger;
     var $facebook;
     var $owner_object;
-    var $ud;
+    var $user_dao;
     var $pd;
 
     public function __construct($instance, $facebook) {
@@ -12,7 +12,7 @@ class FacebookCrawler {
         $this->facebook = $facebook;
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
-        $this->ud = DAOFactory::getDAO('UserDAO');
+        $this->user_dao = DAOFactory::getDAO('UserDAO');
         $this->pd = DAOFactory::getDAO('PostDAO');
     }
 
@@ -42,7 +42,7 @@ class FacebookCrawler {
         if (isset($user)) {
             $user["post_count"] = $this->pd->getTotalPostsByUser($uid, 'facebook');
             $user_object = new User($user, $found_in);
-            $this->ud->updateUser($user_object);
+            $this->user_dao->updateUser($user_object);
             return $user_object;
         } else {
             return null;

@@ -115,7 +115,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
 
         $udao = DAOFactory::getDAO('UserDAO');
-        $user = $udao->getDetails(36823);
+        $user = $udao->getDetails(36823, 'twitter');
         $this->assertTrue($user->id == 1);
         $this->assertTrue($user->user_id == 36823);
         $this->assertTrue($user->username == 'anildash');
@@ -170,7 +170,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertTrue($fdao->followExists(36823, 119950880, 'twitter'), 'new follow exists');
 
         $udao = DAOFactory::getDAO('UserDAO');
-        $updated_user = $udao->getUserByName('meatballhat');
+        $updated_user = $udao->getUserByName('meatballhat', 'twitter');
         $this->assertEqual($updated_user->full_name, 'Dan Buch', 'follower full name set to '.$updated_user->full_name);
         $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower location set to '.$updated_user->location);
     }
@@ -185,7 +185,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertTrue($fdao->followExists(14834340, 36823, 'twitter'), 'new friend exists');
 
         $udao = DAOFactory::getDAO('UserDAO');
-        $updated_user = $udao->getUserByName('jayrosen_nyu');
+        $updated_user = $udao->getUserByName('jayrosen_nyu', 'twitter');
         $this->assertEqual($updated_user->full_name, 'Jay Rosen', 'friend full name set');
         $this->assertEqual($updated_user->location, 'New York City', 'friend location set');
     }

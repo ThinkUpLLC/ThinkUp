@@ -19,23 +19,25 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         return "round(post_count/(datediff(curdate(), joined)), 2) as avg_tweets_per_day";
     }
 
-    public function isUserInDB($user_id) {
+    public function isUserInDB($user_id, $network) {
         $q = "SELECT user_id ";
         $q .= "FROM #prefix#users ";
-        $q .= "WHERE user_id = :user_id;";
+        $q .= "WHERE user_id = :user_id AND network = :network;";
         $vars = array(
-            ':user_id'=>$user_id
+            ':user_id'=>$user_id, 
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
     }
 
-    public function isUserInDBByName($username) {
+    public function isUserInDBByName($username, $network) {
         $q = "SELECT user_id ";
         $q .= "FROM #prefix#users ";
-        $q .= "WHERE user_name = :username";
+        $q .= "WHERE user_name = :username AND network = :network";
         $vars = array(
-            ':username'=>$username
+            ':username'=>$username,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
@@ -65,37 +67,6 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $user->follower_count = $user->follower_count != '' ? $user->follower_count : 0;
         $user->post_count = $user->post_count != '' ? $user->post_count : 0;
 
-        $q = "INSERT INTO #prefix#users (
-                user_id, user_name, full_name, avatar, location,
-                description, url, is_protected, follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")."
-                ".($has_last_post ? "last_post, " : "")." found_in, joined, network  ".($has_last_post_id ? ", last_post_id" : "").")
-            VALUES (
-                :user_id, 
-                :username, :full_name,
-                :avatar, :location,  
-                :description, :url, :is_protected, 
-                :follower_count, :post_count, 
-                ".($has_friend_count ? ":friend_count, " : "")."
-                ".($has_last_post ? ":last_post, " : "")." 
-                :found_in, :joined, :network
-                 ".($has_last_post_id ? ", :last_post_id " : "")."
-                )
-            ON DUPLICATE KEY UPDATE 
-                full_name = :full_name,
-                avatar =  :avatar,
-                location = :location,
-                description = :description,
-                url = :url,
-                is_protected = :is_protected,
-                follower_count = :follower_count,
-                post_count = :post_count,
-                ".($has_friend_count ? "friend_count= :friend_count, " : "")."
-                ".($has_last_post ? "last_post= :last_post, " : "")."
-                last_updated = NOW(),
-                found_in = :found_in, 
-                joined = :joined,
-                network = :network
-                ".($has_last_post_id ? ", last_post_id = :last_post_id" : "").";";
         $vars = array(
             ':user_id'=>$user->user_id,
             ':username'=>$user->username,
@@ -109,8 +80,29 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':post_count'=>$user->post_count,
             ':found_in'=>$user->found_in,
             ':joined'=>$user->joined,
-            ':network'=>$network
+            ':network'=>$user->network
         );
+
+        if (!$this->isUserInDB($user->user_id, $user->network)) {
+            $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, location, description, url, ";
+            $q .= "is_protected, follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")." ".
+            ($has_last_post ? "last_post, " : "")." found_in, joined, network  ".
+            ($has_last_post_id ? ", last_post_id" : "").") ";
+            $q .= "VALUES ( :user_id, :username, :full_name, :avatar, :location, :description, :url, :is_protected, ";
+            $q .= ":follower_count, :post_count, ".($has_friend_count ? ":friend_count, " : "")." ".
+            ($has_last_post ? ":last_post, " : "")." :found_in, :joined, :network ".
+            ($has_last_post_id ? ", :last_post_id " : "")." )";
+        } else {
+            $q = "UPDATE #prefix#users SET full_name = :full_name, avatar = :avatar,  location = :location, ";
+            $q .= "description = :description, url = :url, is_protected = :is_protected, ";
+            $q .= "follower_count = :follower_count, post_count = :post_count,  ".
+            ($has_friend_count ? "friend_count= :friend_count, " : "")." ".
+            ($has_last_post ? "last_post= :last_post, " : "")." last_updated = NOW(), found_in = :found_in, ";
+            $q .= "joined = :joined,  network = :network ".
+            ($has_last_post_id ? ", last_post_id = :last_post_id" : "")." ";
+            $q .= "WHERE user_id = :user_id AND network = :network;";
+        }
+
         if ($has_friend_count) {
             $vars[':friend_count'] = $user->friend_count;
         }
@@ -128,23 +120,25 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         return $results;
     }
 
-    public function getDetails($user_id) {
+    public function getDetails($user_id, $network) {
         $q = "SELECT * , ".$this->getAverageTweetCount()." ";
         $q .= "FROM #prefix#users u ";
-        $q .= "WHERE u.user_id = :user_id;";
+        $q .= "WHERE u.user_id = :user_id AND u.network = :network;";
         $vars = array(
-            ':user_id'=>$user_id
+            ':user_id'=>$user_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, "User");
     }
 
-    public function getUserByName($user_name) {
+    public function getUserByName($user_name, $network) {
         $q = "SELECT * , ".$this->getAverageTweetCount()." ";
         $q .= "FROM #prefix#users u ";
-        $q .= "WHERE u.user_name = :user_name;";
+        $q .= "WHERE u.user_name = :user_name AND u.network = :network";
         $vars = array(
-            ':user_name'=>$user_name
+            ':user_name'=>$user_name,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, "User");

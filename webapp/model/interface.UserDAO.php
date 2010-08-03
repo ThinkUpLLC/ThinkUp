@@ -10,15 +10,17 @@ interface UserDAO {
     /**
      * Check if a user is in the database given a user ID
      * @param int $user_id
+     * @param str $network
      * @return bool True if yes, false if not
      */
-    public function isUserInDB($user_id);
+    public function isUserInDB($user_id, $network);
     /**
      * Check if a user is in the database given a username
      * @param str $username
+     * @param str $network
      * @return bool True if yes, false if not
      */
-    public function isUserInDBByName($username);
+    public function isUserInDBByName($username, $network);
 
     /**
      * Update existing or insert new user
@@ -30,9 +32,10 @@ interface UserDAO {
     /**
      * Get user given an ID
      * @param int $user_id
+     * @param str $network
      * @return User User
      */
-    public function getDetails($user_id);
+    public function getDetails($user_id, $network);
 
     /**
      * Update an array of users
@@ -44,8 +47,9 @@ interface UserDAO {
     /**
      * Get user given a username
      * @param str $user_name
+     * @param str $network
      * @return User User object
      */
-    public function getUserByName($user_name);
+    public function getUserByName($user_name, $network);
 }
 

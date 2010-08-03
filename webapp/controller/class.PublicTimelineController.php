@@ -110,7 +110,7 @@ class PublicTimelineController extends ThinkUpController {
             $this->addToView('instance', $instance);
             //user
             $user_dao = DAOFactory::getDAO('UserDAO');
-            $user = $user_dao->getDetails($instance->network_user_id);
+            $user = $user_dao->getDetails($instance->network_user_id, $instance->network);
             $this->addToView('user_details', $user);
 
             //posts

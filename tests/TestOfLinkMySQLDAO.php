@@ -19,14 +19,14 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Constructor
      */
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('LinkMySQLDAO class test');
     }
-    
+
     /**
      * Constructs a database and populates it.
      */
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->DAO = new LinkMySQLDAO();
 
@@ -36,8 +36,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) ";
-            $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $post_id, 0);";
+            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
+            $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $post_id, 'twitter', 0);";
             PDODAO::$PDO->exec($q);
             $counter++;
         }
@@ -48,8 +48,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) ";
-            $q .= "VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1);";
+            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
+            $q .= "VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 'twitter', 1);";
             PDODAO::$PDO->exec($q);
             $counter++;
         }
@@ -60,8 +60,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, is_image, error) ";
-            $q .= "VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1, ";
+            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image, error) ";
+            $q .= "VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 'twitter', 1, ";
             $q .= "'Generic test error message, Photo not found');";
             PDODAO::$PDO->exec($q);
 
@@ -74,8 +74,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, is_image, error) ";
-            $q .= "VALUES ('http://bit.ly/beEEfs', 'Link $counter', 0, $post_id, 1, '');";
+            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image, error) ";
+            $q .= "VALUES ('http://bit.ly/beEEfs', 'Link $counter', 0, $post_id, 'twitter', 1, '');";
             $this->db->exec($q);
             $counter++;
         }
@@ -113,7 +113,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Destructs the database, so it can be reconstructed for next test
      */
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
         $this->DAO = null;
     }
@@ -121,13 +121,11 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Test Of Insert Method
      */
-    function testInsert(){
+    public function testInsert(){
         $result = $this->DAO->insert(
             'http://example.com/test',
-            'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php',
-            'Very Long URL',
-        12345678901
-        );
+            'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 'Very Long URL', '12345678901',
+            'twitter', false);
         //Is insert ID returned?
         $this->assertEqual($result, 56);
 
@@ -135,15 +133,18 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getLinkByUrl('http://example.com/test');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://example.com/test');
-        $this->assertEqual($result->expanded_url, 'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php');
+        $this->assertEqual($result->expanded_url, 
+        'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php');
         $this->assertEqual($result->title, 'Very Long URL');
         $this->assertEqual($result->post_id, 12345678901);
+        $this->assertEqual($result->network, 'twitter');
+        $this->assertFalse($result->is_image);
     }
-    
+
     /**
      * Test Of saveExpandedUrl method
      */
-    function testSaveExpandedUrl() {
+    public function testSaveExpandedUrl() {
         $linkstoexpand = $this->DAO->getLinksToExpand();
 
         $link = $linkstoexpand[0];
@@ -167,7 +168,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Test Of saveExpansionError Method
      */
-    function testSaveExpansionError() {
+    public function testSaveExpansionError() {
         $linktogeterror = $this->DAO->getLinkById(10);
 
         $this->assertEqual($linktogeterror->error, '');
@@ -180,12 +181,12 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Test Of update Method
      */
-    function testUpdate(){
+    public function testUpdate(){
         $result = $this->DAO->insert(
             'http://example.com/test',
             'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php',
             'Very Long URL',
-        15000
+        15000, 'twitter'
         );
         $this->assertEqual($result, 56);
 
@@ -193,7 +194,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             'http://example.com/test', 
             'http://very.long.domain.that.nobody.would.bother.to.type.com/image.png', 
             'Even Longer URL', 
-        15001,
+        15001, 'twitter',
         true
         );
         $this->assertEqual($result, 1);
@@ -202,7 +203,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getLinkByUrl('http://example.com/test');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://example.com/test');
-        $this->assertEqual($result->expanded_url, 'http://very.long.domain.that.nobody.would.bother.to.type.com/image.png');
+        $this->assertEqual($result->expanded_url, 
+        'http://very.long.domain.that.nobody.would.bother.to.type.com/image.png');
         $this->assertEqual($result->title, 'Even Longer URL');
         $this->assertEqual($result->post_id, 15001);
         $this->assertEqual($result->id, 56);
@@ -211,17 +213,17 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Test Of getLinksByFriends Method
      */
-    function testGetLinksByFriends(){
-        $result = $this->DAO->getLinksByFriends(2);
+    public function testGetLinksByFriends(){
+        $result = $this->DAO->getLinksByFriends(2, 'twitter');
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 12);
         $posts = array(
-            80=>array('pid'=>80, 'uid'=>2, 'fr'=>true),
-            81=>array('pid'=>81, 'uid'=>7, 'fr'=>true),
-            82=>array('pid'=>82, 'uid'=>12, 'fr'=>false),
-            83=>array('pid'=>83, 'uid'=>17, 'fr'=>true),
-            84=>array('pid'=>84, 'uid'=>22, 'fr'=>true)
+        80=>array('pid'=>80, 'uid'=>2, 'fr'=>true),
+        81=>array('pid'=>81, 'uid'=>7, 'fr'=>true),
+        82=>array('pid'=>82, 'uid'=>12, 'fr'=>false),
+        83=>array('pid'=>83, 'uid'=>17, 'fr'=>true),
+        84=>array('pid'=>84, 'uid'=>22, 'fr'=>true)
         );
         foreach($result as $key=>$val){
             $this->assertIsA($val, "link");
@@ -234,21 +236,21 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $this->assertTrue($posts[$num]['fr']);
         }
     }
-    
+
     /**
      * Test Of getPhotosByFriends Method
      */
-    function testGetPhotosByFriends(){
-        $result = $this->DAO->getPhotosByFriends(2);
+    public function testGetPhotosByFriends(){
+        $result = $this->DAO->getPhotosByFriends(2, 'twitter');
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 9);
         $posts = array(
-            80=>array('pid'=>80, 'uid'=>2, 'fr'=>true),
-            81=>array('pid'=>81, 'uid'=>7, 'fr'=>true),
-            82=>array('pid'=>82, 'uid'=>12, 'fr'=>false),
-            83=>array('pid'=>83, 'uid'=>17, 'fr'=>true),
-            84=>array('pid'=>84, 'uid'=>22, 'fr'=>true)
+        80=>array('pid'=>80, 'uid'=>2, 'fr'=>true),
+        81=>array('pid'=>81, 'uid'=>7, 'fr'=>true),
+        82=>array('pid'=>82, 'uid'=>12, 'fr'=>false),
+        83=>array('pid'=>83, 'uid'=>17, 'fr'=>true),
+        84=>array('pid'=>84, 'uid'=>22, 'fr'=>true)
         );
         foreach($result as $key=>$val){
             $this->assertIsA($val, "link");
@@ -266,7 +268,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Test Of getLinksToExpand Method
      */
-    function testGetLinksToExpand() {
+    public function testGetLinksToExpand() {
         $linkstoexpand = $this->DAO->getLinksToExpand();
         $this->assertEqual(count($linkstoexpand), 46);
         $this->assertIsA($linkstoexpand, "array");
@@ -275,7 +277,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Test Of getLinkByID
      */
-    function testGetLinkById() {
+    public function testGetLinkById() {
         $link = $this->DAO->getLinkById(1);
 
         $this->assertEqual($link->id, 1);
@@ -285,7 +287,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Test Of getLinksToExpandByURL Method
      */
-    function testGetLinksToExpandByURL() {
+    public function testGetLinksToExpandByURL() {
         $flickrlinkstoexpand = $this->DAO->getLinksToExpandByUrl('http://flic.kr/');
 
         $this->assertEqual(count($flickrlinkstoexpand), 5);

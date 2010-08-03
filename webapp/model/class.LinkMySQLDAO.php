@@ -1,27 +1,28 @@
 <?php
+require_once 'model/class.PDODAO.php';
+require_once 'model/interface.LinkDAO.php';
+
 /**
  * Link MySQL Data Access Object
  *
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.LinkDAO.php';
-
 class LinkMySQLDAO extends PDODAO implements LinkDAO {
-    public function insert($url, $expanded, $title, $post_id, $is_image = false ){
+    public function insert($url, $expanded, $title, $post_id, $network, $is_image = false ){
         $is_image = $this->convertBoolToDB($is_image);
 
         $q  = " INSERT INTO #prefix#links ";
-        $q .= " (url, expanded_url, title, post_id, is_image) ";
-        $q .= " VALUES ( :url, :expanded, :title, :postid, :isimage ) ";
+        $q .= " (url, expanded_url, title, post_id, network, is_image) ";
+        $q .= " VALUES ( :url, :expanded, :title, :post_id, :network, :is_image ) ";
 
         $vars = array(
             ':url'=>$url,
             ':expanded'=>$expanded,
             ':title'=>$title,
-            ':postid'=>$post_id,
-            ':isimage'=>(int)$is_image
+            ':post_id'=>$post_id,
+            ':network'=>$network,
+            ':is_image'=>(int)$is_image
         );
         $ps = $this->execute($q, $vars);
 
@@ -70,53 +71,56 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $ret;
     }
 
-    public function update( $url, $expanded, $title, $post_id, $is_image = false ){
+    public function update( $url, $expanded, $title, $post_id, $network, $is_image = false ){
         $q  = " UPDATE #prefix#links ";
         $q .= " SET expanded_url=:expanded, title=:title, ";
-        $q .= " post_id=:postid, is_image=:isimage ";
+        $q .= " post_id=:post_id, is_image=:is_image, network=:network ";
         $q .= " WHERE url=:url; ";
         $vars = array(
             ':url'=>$url,
             ':expanded'=>$expanded,
             ':title'=>$title,
-            ':postid'=>$post_id,
-            ':isimage'=>$is_image
+            ':post_id'=>$post_id,
+            ':is_image'=>$is_image,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
 
-    public function getLinksByFriends($user_id) {
+    public function getLinksByFriends($user_id, $network) {
         $q  = "SELECT l.*, p.*, pub_date - interval 8 hour AS adj_pub_date ";
-        $q .= " FROM #prefix#posts AS p ";
-        $q .= " INNER JOIN #prefix#links AS l ";
-        $q .= " ON p.post_id = l.post_id ";
-        $q .= " WHERE p.author_user_id IN ( ";
+        $q .= "FROM #prefix#posts AS p ";
+        $q .= "INNER JOIN #prefix#links AS l ";
+        $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
+        $q .= "WHERE l.network = :network AND  p.author_user_id IN ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
-        $q .= "   WHERE f.follower_id=:user AND f.active=1 ";
-        $q .= " )";
-        $q .= " ORDER BY l.post_id DESC ";
-        $q .= " LIMIT 15 ";
+        $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network=:network ";
+        $q .= ")";
+        $q .= "ORDER BY l.post_id DESC ";
+        $q .= "LIMIT 15 ";
         $vars = array(
-            ':user'=>$user_id
+            ':user_id'=>$user_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, "Link");
     }
 
-    public function getPhotosByFriends($user_id) {
+    public function getPhotosByFriends($user_id, $network) {
         $q  = " SELECT l.*, p.*, pub_date - interval 8 hour as adj_pub_date ";
         $q .= " FROM #prefix#links AS l ";
         $q .= " INNER JOIN #prefix#posts p ";
-        $q .= " ON p.post_id = l.post_id ";
-        $q .= " WHERE is_image = 1 and p.author_user_id in ( ";
+        $q .= " ON p.post_id = l.post_id AND p.network = l.network ";
+        $q .= " WHERE is_image = 1 AND l.network=:network AND p.author_user_id in ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
-        $q .= "   WHERE f.follower_id=:user AND f.active=1 ";
+        $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network = :network ";
         $q .= " ) ";
         $q .= " ORDER BY l.post_id DESC  ";
         $q .= " LIMIT 15 ";
         $vars = array(
-            ':user'=>$user_id
+            ':user_id'=>$user_id,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
 
