@@ -58,6 +58,11 @@ class DAOFactory {
             //MySQL Version
             'mysql' => array( 'class' => 'UserErrorMySQLDAO', 'path' => 'model/class.UserErrorMySQLDAO.php')
         ),
+        //Location DAO
+        'LocationDAO' => array(
+            //MySQL Version
+            'mysql' => array( 'class' => 'LocationMySQLDAO', 'path' => 'model/class.LocationMySQLDAO.php')
+        ),
         //Link DAO
         'LinkDAO' => array(
             //MySQL Version

@@ -13,11 +13,21 @@
             <div class="{if $replies or $retweets}grid_13{else}grid_19{/if}">
               <span class="tweet">{$post->post_text|link_usernames_to_twitter}</span>
               {if $post->link->expanded_url and !$post->link->is_image and $post->link->expanded_url != $post->link->url}
-                <br><a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">{$post->link->expanded_url}</a>
+                <br><a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">
+                  {$post->link->expanded_url}
+                </a>
               {/if}
               <div class="grid_10 omega small gray {if $replies or $retweets}prefix_3 prepend{else}prefix_10{/if}">
                 <img src="{$site_root_path}assets/img/social_icons/{$post->network}.png" class="float-l">
-                Posted at {$post->adj_pub_date} via {$post->source}
+                Posted at {$post->adj_pub_date} via {$post->source}<br>
+                From: {$post->location}
+                {if $post->is_geo_encoded eq 1}
+                <div>
+                <a href="{$site_root_path}map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
+                  <img src="{$site_root_path}assets/img/map_icon.png" class="map-icon map-icon-public">
+                </a>
+                </div>
+                {/if}
               </div>
             </div>
             <div class="grid_7 center big-number omega">
@@ -27,7 +37,8 @@
                     <h1>{$post->reply_count_cache|number_format}</h1>
                     <h3>replies in {$post->adj_pub_date|relative_datetime}</h3>
                   {else}
-                    <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a> fwds to<br><a href="#fwds">{$rtreach|number_format}</a></h1>
+                    <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a>
+                    fwds to<br><a href="#fwds">{$rtreach|number_format}</a></h1>
                     <h3>total reach</h3>
                   {/if}
                 </div>
@@ -41,16 +52,25 @@
               {/foreach}
             </div>
           {/if}
+          <div class="append prepend clearfix">
+            <a href="#" class="show_replies tt-button ui-state-default tt-button-icon-left ui-corner-all "
+               style="display:none;">
+              <span class="ui-icon ui-icon-circle-arrow-w"></span>
+              Show All Replies
+            </a>
+          </div>
           <div class="clearfix">
             <div class="{if $retweets}grid_13{else}grid_19{/if}">
               <span class="tweet"></span>
               <div class="grid_10 omega small gray {if $retweets}prefix_3 prepend{else}prefix_10{/if}"></div>
             </div>
+            
             {if $retweets and $replies|@count > 0}
               <div class="grid_7 center big-number omega">
                 <div class="bl">
                   <div class="key-stat">
-                    <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a> fwds to<br /> <a href="#fwds">{$rtreach|number_format}</a></h1>
+                    <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a>
+                    fwds to<br /> <a href="#fwds">{$rtreach|number_format}</a></h1>
                     <h3>total reach</h3>
                   </div>
                 </div>
@@ -64,6 +84,13 @@
               {/foreach}
             </div>
           {/if}
+          <div class="append prepend clearfix">
+            <a href="#" class="show_forwards tt-button ui-state-default tt-button-icon-left ui-corner-all "
+               style="display:none;">
+              <span class="ui-icon ui-icon-circle-arrow-w"></span>
+              Show All Forwards
+            </a>
+          </div>
         <div class="append prepend clearfix">
           <a href="{$site_root_path}public.php" class="tt-button ui-state-default tt-button-icon-left ui-corner-all">
             <span class="ui-icon ui-icon-circle-arrow-w"></span>
@@ -124,7 +151,9 @@
 <hr />
 <h2 style="font-size:200%;margin-top:10px">Least Likely Followers</h2>
             {foreach from=$least_likely_followers key=uid item=u name=foo}
-                <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}"><img src="{$u.avatar}"  height="48" width="48" /></a> 
+                <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}">
+                  <img src="{$u.avatar}"  height="48" width="48" />
+                </a> 
             {/foreach}
         {/if}
 
@@ -172,5 +201,8 @@
   </div> <!-- end .thinkup-canvas -->
 
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
-
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  <script type="text/javascript" src="{$site_root_path}assets/js/easytooltip.js"></script>
+  <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/locationfilter.js"></script>
+  
 {include file="_footer.tpl" stats="no"}

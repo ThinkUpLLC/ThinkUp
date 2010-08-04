@@ -34,9 +34,11 @@ class FlickrAPIAccessor {
                 $fphoto = unserialize($resp);
 
                 if ($fphoto['stat'] == 'ok') {
+                    $src = '';
                     foreach ($fphoto['sizes']['size'] as $s) {
-                        if ($s['label'] == 'Small')
-                        $src = $s['source'];
+                        if ($s['label'] == 'Small') {
+                            $src = $s['source'];
+                        }
                     }
                     return array("expanded_url"=>$src, "error"=>'');
                 } else {
@@ -53,7 +55,6 @@ class FlickrAPIAccessor {
             return array("expanded_url"=>'', "error"=>'');
         }
     }
-
 
     public function base_decode($num, $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ") {
         $decoded = 0;

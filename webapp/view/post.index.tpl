@@ -15,8 +15,8 @@
       <div class="thinkup-canvas clearfix">
         <!--<a {if $instance}href="{$site_root_path}?u={$instance->twitter_username}">{else}href="#" onClick="history.go(-1)">{/if}&larr; back</a>-->
         <div class="clearfix prepend_20">
-{include file="_usermessage.tpl"}
-        <div class="grid_2 prefix_1 alpha">
+          {include file="_usermessage.tpl"}
+          <div class="grid_2 prefix_1 alpha">
             <img src="{$post->author_avatar}" class="avatar2">
           </div>
           <div class="grid_20 omega">
@@ -26,39 +26,99 @@
         <div class="clearfix append_20">
           <div class="grid_11 prefix_11 alpha omega small gray">
             <img src="{$site_root_path}assets/img/social_icons/{$post->network}.png" class="float-l">
-            Posted {$post->adj_pub_date|relative_datetime} at {$post->adj_pub_date} via {$post->source}
+            Posted {$post->adj_pub_date|relative_datetime} at {$post->adj_pub_date} via {$post->source}<br>
+            From: {$post->location}
+            {if $post->is_geo_encoded eq 1}
+              <div>
+              <a href="{$site_root_path}map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
+                <img src="{$site_root_path}assets/img/map_icon.png" class="map-icon">
+              </a>
+              </div>
+            {/if}
           </div>
         </div>
         <div class="grid_1 alpha">&nbsp;</div>
         <div class="grid_23 omega append_20">
           {if $replies}
-            <h2 class="subhead">
+            <div>
+              <h2 class="subhead">
               {if $post->reply_count_cache eq 1}Reply{else}{$post->reply_count_cache} Replies{/if}
               ({$private_reply_count} private)
-            </h2>
+              </h2>
+              <div class="sort_links right">
+                <a href="#" id="sortOutreachReplies" class="bold">Sort by Reach</a> | 
+                <a href="#" id="sortProximityReplies">Sort by Proximity</a>
+                </div>
+            </div>
+            <br>
           {/if}
           {foreach from=$replies key=tid item=t name=foo}
-            <div class="clearfix">
+            <div class="clearfix default_replies">
               {include file="_post.other.tpl" t=$t}
-              <div id="div{$t->post_id}" class="grid_22 prefix_10">
-                <form action="" class="post-setparent">
+                <div id="locationReplies">
+                <div id="div{$t->post_id}" class="grid_22 prefix_10
+                {if $t->short_location}{$t->short_location|escape:'url'|replace:'%':''|replace:'.':''}
+                {else}__NULL__{/if}">
+                  <form action="" class="post-setparent">
                   <select name="pid{$t->post_id}" id="pid{$t->post_id}">
                     <option value="0">No Post in Particular (Mark as standalone)</option>
                     {assign var='current_post_selected' value='false'}
                     <option disabled>Set as a reply to:</option>
                     {foreach from=$all_tweets key=aid item=a}
-                      <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
+                      <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>
+                        &nbsp;&nbsp;{$a->post_text|truncate_for_select}
+                      </option>
                       {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
                     {/foreach}
                     {if $current_post_selected != 'true'}
-                      <option value="{$post->post_id}" selected="selected">&nbsp;&nbsp;{$post->post_text|truncate_for_select}</option>
+                      <option value="{$post->post_id}" selected="selected">
+                        &nbsp;&nbsp;{$post->post_text|truncate_for_select}
+                      </option>
                     {/if}
                   </select>  
                   <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
                 </form>
               </div>
             </div>
+            </div>
           {/foreach}
+          {foreach from=$replies_by_location key=tid item=t name=foo}
+            <div class="clearfix sort_replies" style="display:none">
+              {include file="_post.other.tpl" t=$t}
+                <div id="locationReplies">
+                <div id="div{$t->post_id}" class="grid_22 prefix_10
+                {if $t->short_location}{$t->short_location|escape:'url'|replace:'%':''|replace:'.':''}
+                {else}__NULL__{/if}">
+                  <form action="" class="post-setparent">
+                  <select name="pid{$t->post_id}" id="pid{$t->post_id}">
+                    <option value="0">No Post in Particular (Mark as standalone)</option>
+                    {assign var='current_post_selected' value='false'}
+                    <option disabled>Set as a reply to:</option>
+                    {foreach from=$all_tweets key=aid item=a}
+                      <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>
+                        &nbsp;&nbsp;{$a->post_text|truncate_for_select}
+                      </option>
+                      {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
+                    {/foreach}
+                    {if $current_post_selected != 'true'}
+                      <option value="{$post->post_id}" selected="selected">
+                        &nbsp;&nbsp;{$post->post_text|truncate_for_select}
+                      </option>
+                    {/if}
+                  </select>  
+                  <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
+                </form>
+              </div>
+            </div>
+            </div>
+          {/foreach}
+        </div>
+        <div class="append prepend clearfix" style="margin-left:30px">
+          <a href="#" class="show_replies tt-button ui-state-default tt-button-icon-left ui-corner-all "
+             style="display:none;">
+            <span class="ui-icon ui-icon-circle-arrow-w"></span>
+            Show All Replies
+          </a>
         </div>
       </div> <!-- end .thinkup-canvas -->
     </div> <!-- end #posts -->
@@ -72,9 +132,21 @@
             </div>
             <div class="grid_13">
               <h1 class="post">{$post->post_text}</h1>
+              {if $post->is_geo_encoded eq 1}
+              <div class="small gray right" style="margin-right:55px">
+              {else}
               <div class="small gray right">
-                Posted {$post->adj_pub_date|relative_datetime} at {$post->pub_date} via {$post->source}
+              {/if}
+                Posted {$post->adj_pub_date|relative_datetime} at {$post->pub_date} via {$post->source} <br>
+            From: {$post->location}
               </div>
+              {if $post->is_geo_encoded eq 1}
+              <div>
+              <a href="{$site_root_path}map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
+                <img src="{$site_root_path}assets/img/map_icon.png" class="map-icon" style="margin-right:0px">
+              </a>
+              </div>
+            {/if}
             </div>
             <div class="grid_7 center big-number omega">
               <div class="bl">
@@ -87,28 +159,78 @@
           </div>
           <div class="grid_22 prefix_1 alpha omega">
             <h2 class="subhead">Forwards</h2>
+            <div class="sort_links right">
+                <a href="#" id="sortOutreachRetweets" class="bold">Sort by Reach</a> | 
+                <a href="#" id="sortProximityRetweets">Sort by Proximity</a>
+                </div>
+            <br>
             {foreach from=$retweets key=tid item=t name=foo}
-              <div class="clearfix">
+              <div class="clearfix default_retweets">
                 {include file="_post.other.tpl" t=$t}
-                <div id="div{$t->post_id}" class="grid_22 prefix_10">
+                <div id="locationRetweets">
+                  <div id="div{$t->post_id}" class="grid_22 prefix_10
+                  {if $t->short_location}{$t->short_location|escape:'url'|replace:'%':''|replace:'.':''}
+                  {else}__NULL__{/if}">
                   <form action="" class="post-setparent">
                     <select name="pid{$t->post_id}" id="pid{$t->post_id}">
                       <option value="0">No Post in Particular (Mark as standalone)</option>
                       {assign var='current_post_selected' value='false'}
                       <option disabled>Set as a reply to:</option>
                       {foreach from=$all_tweets key=aid item=a}
-                        <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
+                        <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>
+                          &nbsp;&nbsp;{$a->post_text|truncate_for_select}
+                        </option>
                         {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
                       {/foreach}
                       {if $current_post_selected != 'true'}
-                        <option value="{$post->post_id}" selected="selected">&nbsp;&nbsp;{$post->post_text|truncate_for_select}</option>
+                        <option value="{$post->post_id}" selected="selected">
+                          &nbsp;&nbsp;{$post->post_text|truncate_for_select}
+                        </option>
                       {/if}
                     </select>  
                     <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
                   </form>
                 </div>
               </div>
+              </div>
             {/foreach}
+            {foreach from=$retweets_by_location key=tid item=t name=foo}
+              <div class="clearfix sort_retweets" style="display:none">
+                {include file="_post.other.tpl" t=$t}
+                <div id="locationRetweets">
+                  <div id="div{$t->post_id}" class="grid_22 prefix_10
+                  {if $t->short_location}{$t->short_location|escape:'url'|replace:'%':''|replace:'.':''}
+                  {else}__NULL__{/if}">
+                  <form action="" class="post-setparent">
+                    <select name="pid{$t->post_id}" id="pid{$t->post_id}">
+                      <option value="0">No Post in Particular (Mark as standalone)</option>
+                      {assign var='current_post_selected' value='false'}
+                      <option disabled>Set as a reply to:</option>
+                      {foreach from=$all_tweets key=aid item=a}
+                        <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>
+                          &nbsp;&nbsp;{$a->post_text|truncate_for_select}
+                        </option>
+                        {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
+                      {/foreach}
+                      {if $current_post_selected != 'true'}
+                        <option value="{$post->post_id}" selected="selected">
+                          &nbsp;&nbsp;{$post->post_text|truncate_for_select}
+                        </option>
+                      {/if}
+                    </select>  
+                    <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
+                  </form>
+                </div>
+              </div>
+              </div>
+            {/foreach}
+          </div>
+          <div class="append prepend clearfix" style="margin-left:30px">
+            <a href="#" class="show_forwards tt-button ui-state-default tt-button-icon-left ui-corner-all "
+                style="display:none;">
+              <span class="ui-icon ui-icon-circle-arrow-w"></span>
+              Show All Forwards
+            </a>
           </div>
         </div>
       </div>
@@ -146,11 +268,15 @@
                       {assign var='current_post_selected' value='false'}
                       <option disabled>Set as a reply to:</option>
                       {foreach from=$all_tweets key=aid item=a}
-                        <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>&nbsp;&nbsp;{$a->post_text|truncate_for_select}</option>
+                        <option value="{$a->post_id}" {if $a->post_id == $post->post_id} selected="true"{/if}>
+                          &nbsp;&nbsp;{$a->post_text|truncate_for_select}
+                        </option>
                         {if $a->post_id == $post->post_id}{assign var='current_post_selected' value='true'}{/if}
                       {/foreach}
                       {if $current_post_selected != 'true'}
-                        <option value="{$post->post_id}" selected="selected">&nbsp;&nbsp;{$post->post_text|truncate_for_select}</option>
+                        <option value="{$post->post_id}" selected="selected">
+                          &nbsp;&nbsp;{$post->post_text|truncate_for_select}
+                        </option>
                       {/if}
                     </select>  
                     <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save" />
@@ -190,6 +316,8 @@
   </div>
 </div> <!-- end .container_24 -->
 
+<script type="text/javascript" src="{$site_root_path}assets/js/easytooltip.js"></script>
+<script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/locationfilter.js"></script>
 <script type="text/javascript">
   {literal}
   $(function() {

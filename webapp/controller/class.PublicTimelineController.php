@@ -82,11 +82,21 @@ class PublicTimelineController extends ThinkUpController {
         if (!isset($post)) {
             $this->addErrorMessage("Post ".$post_id." on ".ucwords($network)." is not in ThinkUp.");
         } else {
-            $public_tweet_replies = $this->post_dao->getPublicRepliesToPost($post->post_id, $network);
-            $public_retweets = $this->post_dao->getRetweetsOfPost($post->post_id, $network, true);
+            $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+            $options = $plugin_option_dao->getOptionsHash('geoencoder', true);
+            if (isset($options['distance_unit']->option_value)) {
+                $distance_unit = $options['distance_unit']->option_value;
+            } else {
+                $distance_unit = 'km';
+            }
+            $public_tweet_replies = $this->post_dao->getPublicRepliesToPost($post->post_id, $network, 'default', 
+                                    $distance_unit);
+            $public_retweets = $this->post_dao->getRetweetsOfPost($post->post_id, $network,
+                               'default', $distance_unit, true);
             $this->addToView('post', $post);
             $this->addToView('replies', $public_tweet_replies);
             $this->addToView('retweets', $public_retweets);
+            $this->addToView('unit', $distance_unit);
             $rtreach = 0;
             foreach ($public_retweets as $t) {
                 $rtreach += $t->author->follower_count;

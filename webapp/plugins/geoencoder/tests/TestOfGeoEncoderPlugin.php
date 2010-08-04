@@ -52,8 +52,9 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->db->exec($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, in_retweet_of_post_id, is_geo_encoded) VALUES (3, 15344199472, ";
-        $q .= "127567137, 'ekanshpreet', 'lets try again ...', 'New Delhi', NULL, NULL, 15645300636, 0)";
+        $q .= "post_text, location, place, geo, is_retweet_by_friend, in_retweet_of_post_id, is_geo_encoded) ";
+        $q .= "VALUES (3, 15344199472, 127567137, 'ekanshpreet', 'lets try again ...', 'New Delhi', NULL, NULL, ";
+        $q .= "1, 15645300636, 0)";
         $this->db->exec($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
@@ -83,15 +84,15 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->db->exec($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, in_reply_to_post_id, is_geo_encoded) VALUES (12, 15052338902, ";
-        $q .= "127567137, 'ekanshpreet', '@imnishantg thats the problem.... :P', 'New Delhi', ";
-        $q .= "'Sector 8, R.K. Puram, New Delhi', NULL, '15338041815', 0)";
+        $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
+        $q .= "(12, 15052338902, 127567137, 'ekanshpreet', '@imnishantg thats the problem.... :P', 'New Delhi', ";
+        $q .= "'Sector 8, R.K. Puram, New Delhi', NULL, 1, '15338041815', 0)";
         $this->db->exec($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, in_reply_to_post_id, is_geo_encoded) VALUES (13, 14914043658, ";
-        $q .= "127567137, 'ekanshpreet', 'is done with exams !!!', 'New Delhi', 'Sector 8, R.K. Puram, New Delhi', ";
-        $q .= "NULL, 999999, 0)";
+        $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
+        $q .= "(13, 14914043658, 127567137, 'ekanshpreet', 'is done with exams !!!', 'New Delhi', ";
+        $q .= "'Sector 8, R.K. Puram, New Delhi', NULL, 1, 999999, 0)";
         $this->db->exec($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
@@ -100,9 +101,9 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->db->exec($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, in_reply_to_post_id, is_geo_encoded) VALUES (15, 11259110570, ";
-        $q .= "127567137, 'ekanshpreet', 'im here finally ;)....', 'New Delhi', 'Sector 8, R.K. Puram, New Delhi', ";
-        $q .= "'28.56213 77.165297', 14914043658, 0)";
+        $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
+        $q .= "(15, 11259110570, 127567137, 'ekanshpreet', 'im here finally ;)....', 'New Delhi', ";
+        $q .= "'Sector 8, R.K. Puram, New Delhi', '28.56213 77.165297', 1, 14914043658, 0)";
         $this->db->exec($q);
         
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
@@ -111,23 +112,29 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->db->exec($q);
         
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, in_retweet_of_post_id, is_geo_encoded) VALUES (18, 13212618909, ";
-        $q .= "772673, 'mwilkie', 'Just watched chris corn cob a sheep.', 'iPhone: 40.681839,-73.983734', NULL, NULL, ";
-        $q .= "'11259110570', 0)";
+        $q .= "post_text, location, place, geo, is_retweet_by_friend, in_retweet_of_post_id, is_geo_encoded) ";
+        $q .= "VALUES (18, 13212618909, 772673, 'mwilkie', 'Just watched chris corn cob a sheep.', 'iPhone: 40.681839,-73.983734', ";
+        $q .= "NULL, NULL, 1, '11259110570', 0)";
         $this->db->exec($q);
         
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (19, 13259110570, 127567137, 'ekanshpreet', ";
+        $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
+        $q .= "(19, 1231210570, 127567137, 'ekanshpreet', 'im here finally ;)....', 'New Delhi', ";
+        $q .= "'Sector 8, R.K. Puram, New Delhi', '28.56213 77.165297', 1, 14914043658, 0)";
+        $this->db->exec($q);
+        
+        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
+        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (20, 13259110570, 127567137, 'ekanshpreet', ";
         $q .= "'im here finally ;)....', 'New Delhi', 'over_query_limit', NULL, 0)";
         $this->db->exec($q);
         
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (20, 15645301636, 127567137, 'ekanshpreet', ";
+        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (21, 15645301636, 127567137, 'ekanshpreet', ";
         $q .= "'thinking....', 'New Delhi', NULL, '28.602815 77.049136', 0)";
         $this->db->exec($q);
         
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (21, 11331235880, 127567137, 'ekanshpreet', ";
+        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (22, 11331235880, 127567137, 'ekanshpreet', ";
         $q .= "':)', 'New Delhi', NULL, '28.60abc2815 77.049136', 0)";
         $this->db->exec($q);
         
@@ -146,6 +153,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         //the crawler closes the log so we have to re-open it
         $logger = Logger::getInstance();
         $pdao = DAOFactory::getDAO('PostDAO');
+        $ldao = DAOFactory::getDAO('LocationDAO');
         
         // Test 1: Checking Post for Successful Reverse Geoencoding        
         $this->assertTrue($pdao->isPostInDB(15645300636, 'twitter'));
@@ -180,12 +188,13 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($post->reply_retweet_distance, 1161);
         
         // Test 2: Checking Post for successful Geoencoding using "place" field
+        // This post is retrieved from tu_encoded_locations
         $post = $pdao->getPost(14914043658, 'twitter');
         $this->assertEqual($post->is_geo_encoded, 1);
         $this->assertEqual($post->place, 'Sector 8, R.K. Puram, New Delhi');
         $this->assertEqual($post->location,
         'Keshav Puram Metro Station, Maharaja Nahar Singh Marg, New Delhi, Delhi, India');
-        // When reply is Not in DB, reply_retweet_distance is 0
+        // When reply is Not in DB, reply_retweet_distance is -1
         $this->assertFalse($pdao->isPostInDB(999999, 'twitter'));
         $this->assertEqual($post->reply_retweet_distance, -1);
         
@@ -272,5 +281,12 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($post->is_geo_encoded, 0);
         $post = $pdao->getPost(11331235880, 'twitter');
         $this->assertEqual($post->is_geo_encoded, 0);
+        
+        // Check up filling of tu_encoded_locations table
+        $locations = $ldao->getAllLocations();
+        $this->assertEqual(count($locations), 6);
+        $this->assertEqual($locations[0]['short_name'], "28.602815 77.049136");
+        $this->assertEqual($locations[2]['short_name'], "Mumbai");
+        $this->assertEqual($locations[5]['short_name'], "40.681839 -73.983734");
     }
 }

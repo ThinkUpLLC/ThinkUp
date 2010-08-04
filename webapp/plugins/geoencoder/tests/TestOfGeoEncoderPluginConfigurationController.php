@@ -1,0 +1,222 @@
+<?php
+
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+    require_once '../../../../tests/config.tests.inc.php';
+}
+require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
+ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH.PATH_SEPARATOR.$SOURCE_ROOT_PATH);
+
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
+require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PluginConfigurationController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.GeoEncoderPluginConfigurationController.php';
+require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
+
+/**
+ * Test of TestOfGeoEncoderPluginConfigurationController
+ *
+ * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ *
+ */
+
+
+
+
+class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase {
+
+    public function __construct() {
+        $this->UnitTestCase('TestOfGeoEncoderPluginConfigurationController class test');
+    }
+
+    public function setUp(){
+        parent::setUp();
+        $webapp = Webapp::getInstance();
+        $webapp->registerPlugin('geoencoder', 'GeoEncoderPlugin');
+    }
+
+    public function tearDown(){
+        parent::tearDown();
+    }
+
+    /**
+     * Test Constructor
+     */
+    public function testConstructor() {
+        $controller = new GeoEncoderPluginConfigurationController(null, 'geoencoder');
+        $this->assertTrue(isset($controller), 'constructor test');
+    }
+
+    /**
+     * Test output
+     */
+    public function testOutput() {
+        //not logged in, no owner set
+        $controller = new GeoEncoderPluginConfigurationController(null, 'geoencoder');
+        $output = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
+
+        // logged in
+        // build a user
+        $builder = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+
+        $_SESSION['user'] = 'me@example.com';
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
+        $output = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $message = $v_mgr->getTemplateDataItem('message');
+        $this->assertEqual($message,
+        'This is the GeoEncoder plugin configuration page for me@example.com.', 'message set ' . $message);
+    }
+    
+    public function testAddGmapsAPIKey() {
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+
+        // just name, not an admin, so view only
+        $output = $controller->go();
+        $this->assertNotNull($controller->option_elements);
+        $this->assertEqual(count($controller->option_elements), 2);
+        $this->assertEqual(
+        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['gmaps_api_key']['type']);
+        $this->assertTrue(!isset($controller->option_elements['gmaps_api_key']['default_value']));
+        $this->assertEqual($controller->option_headers['gmaps_api_key'], 'GeoEncoder Plugin Options');
+        $this->assertEqual($controller->option_required_message['gmaps_api_key'],
+        'Please enter your Google Maps API Key');
+    
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+
+        // we have a text form element with proper data
+        $input_field = $this->getElementById($doc, 'plugin_options_gmaps_api_key');
+        $this->assertTrue($input_field->getAttribute('disabled'));
+        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
+        $this->assertPattern('/Note: Editing disabled for non admin users/', $submit_p->nodeValue);
+        
+        $is_admin = 1;
+        $_SESSION['user_is_admin'] = true;
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+
+        // just name, not an admin, so view only
+        $output = $controller->go();
+      
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+
+        // we have a text form element with proper data
+        $input_field = $this->getElementById($doc, 'plugin_options_gmaps_api_key');
+
+        // submit and elemnts should be disbaled
+        $this->assertFalse($input_field->getAttribute('disabled'));
+        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
+        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+    }
+
+    public function testSelectDistanceUnit() {
+        $_SESSION['user_is_admin'] = true;
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+
+        // radio options name, is admin, so form should be enabled
+        $output = $controller->go();
+        $this->assertNotNull($controller->option_elements);
+        $this->assertEqual(
+        PluginConfigurationController::FORM_RADIO_ELEMENT, $controller->option_elements['distance_unit']['type'] );
+        $this->assertTrue(isset($controller->option_elements['distance_unit']['default_value']) );
+        $this->assertFalse(isset($controller->option_required_message['distance_unit']));
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+
+        // we have a text form element with proper data
+        $radio_div = $this->getElementById($doc, 'plugin_options_distance_unit');
+        $radios = $radio_div->getElementsByTagName('input');
+        $this->assertEqual(2, $radios->length);
+        $this->assertEqual($radios->item(0)->getAttribute('value'), 'km');
+        $this->assertEqual($radios->item(1)->getAttribute('value'), 'mi');
+        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
+        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+    }
+
+    public function testGetPluginOptions() {
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $options_hash = $controller->getPluginOptions();
+        $this->assertEqual($options_hash['gmaps_api_key']->id, 1);
+        $this->assertEqual($options_hash['gmaps_api_key']->option_name, 'gmaps_api_key');
+        $this->assertEqual($options_hash['gmaps_api_key']->option_value, '1234');
+
+        // get a single undefined option
+        $this->assertFalse($controller->getPluginOption('not defined'));
+
+        // get a single defined option
+        $this->assertEqual($controller->getPluginOption('gmaps_api_key'), '1234');
+
+
+    }
+    
+    private function buildController() {
+        $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+        $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'geoencoder', 'is_active' => 1) );
+        $plugin_id = $builder_plugin->columns['last_insert_id'];
+        $builder_plugin_options = FixtureBuilder::build('plugin_options',
+        array('plugin_id' => $plugin_id, 'option_name' => 'gmaps_api_key', 'option_value' => "1234"));
+        $_SESSION['user'] = 'me@example.com';
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
+        return array($controller, $builder_owner, $builder_plugin, $builder_plugin_options);
+    }
+
+    function getElementById($doc, $id) {
+        $xpath = new DOMXPath($doc);
+        return $xpath->query("//*[@id='$id']")->item(0);
+    }
+}

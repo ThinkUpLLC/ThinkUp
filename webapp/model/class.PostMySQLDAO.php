@@ -4,7 +4,9 @@ require_once 'model/interface.PostDAO.php';
 
 /**
  * Post Data Access Object
+ *
  * The data access object for retrieving and saving posts in the ThinkUp database
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class PostMySQLDAO extends PDODAO implements PostDAO  {
@@ -71,6 +73,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $post = new Post($row);
         $post->author = $user;
         $post->link = $link;
+        if (isset($row['short_location'])) {
+            $post->short_location = $row['short_location'];
+        }
         return $post;
     }
 
@@ -117,8 +122,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $replies;
     }
 
-    public function getRepliesToPost($post_id, $network, $is_public = false, $count = 350) {
-        $q = " SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, u.*, ";
+    public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
+    $count= 350) {
+        $q = " SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
+        $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= " pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
         $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND l.network = p.network ";
@@ -127,9 +134,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
-        $q .= " ORDER BY is_reply_by_friend DESC, follower_count desc ";
+        if ($order_by == 'location') {
+            $q .= " ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
+        } else {
+            $q .= " ORDER BY is_reply_by_friend DESC, follower_count desc ";
+        }
         $q .= " LIMIT :limit;";
-
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network,
@@ -139,24 +149,36 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $replies = array();
+        $location = array();
         foreach ($all_rows as $row) {
+            if ($row['is_geo_encoded'] == 1) {
+                $row['short_location'] = $this->processLocationRows($row['location']);
+                if ($unit == 'mi') {
+                    $row['reply_retweet_distance'] = $this->calculateDistanceInMiles($row['reply_retweet_distance']);
+                }
+            }
             $replies[] = $this->setPostWithAuthorAndLink($row);
         }
         return $replies;
     }
 
-    public function getRetweetsOfPost($post_id, $network='twitter', $is_public = false) {
-        $q = "SELECT p.*, u.*,  l.url, l.expanded_url, l.is_image, l.error, ";
+    public function getRetweetsOfPost($post_id, $network='twitter', $order_by = 'default', $unit = 'km',
+    $is_public = false) {
+        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
+        $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= " pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
         $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND p.network = l.network ";
         $q .= " INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
-        $q .= " WHERE  in_retweet_of_post_id=:post_id AND p.network=:network ";
+        $q .= " WHERE p.network=:network AND in_retweet_of_post_id=:post_id ";
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
-        $q .= "  ORDER BY is_retweet_by_friend DESC, follower_count DESC;";
-
+        if ($order_by == 'location') {
+            $q .= " ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
+        } else {
+            $q .= " ORDER BY is_reply_by_friend DESC, follower_count desc ";
+        }
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network
@@ -165,10 +187,64 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $retweets = array();
+        $location = array();
         foreach ($all_rows as $row) {
+            if ($row['is_geo_encoded'] == 1) {
+                $row['short_location'] = $this->processLocationRows($row['location']);
+                if ($unit == 'mi') {
+                    $row['reply_retweet_distance'] = $this->calculateDistanceInMiles($row['reply_retweet_distance']);
+                }
+            }
             $retweets[] = $this->setPostWithAuthorAndLink($row);
         }
         return $retweets;
+    }
+
+    public function getRelatedPosts($post_id, $network='twitter', $is_public = false, $count = 350) {
+        $q = "(SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date - interval 7 hour as adj_pub_date
+        FROM #prefix#posts p
+        LEFT JOIN #prefix#links AS l
+        ON l.post_id = p.post_id
+        WHERE
+        in_retweet_of_post_id=:post_id
+        AND p.network = :network AND is_geo_encoded='1' ";
+        if ($is_public) {
+            $q .= "AND u.is_protected = 0 ";
+        }
+        $q .= ") ";
+        $q .= " UNION
+        (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date - interval 7 hour as adj_pub_date
+        FROM #prefix#posts p
+        LEFT JOIN #prefix#links AS l
+        ON l.post_id = p.post_id
+        WHERE in_reply_to_post_id=:post_id
+        AND p.network = :network AND is_geo_encoded='1' ";
+        if ($is_public) {
+            $q .= "AND u.is_protected = 0 ";
+        }
+        $q .= ") ";
+        $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error,
+        pub_date - interval 7 hour as adj_pub_date
+        FROM #prefix#posts p
+        LEFT JOIN #prefix#links AS l
+        ON l.post_id = p.post_id
+        WHERE p.post_id=:post_id
+        AND p.network = :network AND is_geo_encoded='1' ";
+        if ($is_public) {
+            $q .= "AND u.is_protected = 0 ";
+        }
+        $q .= ") ";
+        $q .= "ORDER BY location LIMIT :limit";
+
+        $vars = array(
+            ':post_id'=>$post_id,
+            ':network'=>$network,
+            ':limit'=>$count
+        );
+
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        return $all_rows;
     }
 
     public function getPostReachViaRetweets($post_id, $network = 'twitter') {
@@ -198,7 +274,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " FROM #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= " JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= " JOIN #prefix#users p3 on p3.user_id = p.in_reply_to_user_id ";
-        $q .= " WHERE p.author_user_id = :author_id AND p.network=:network AND p.in_reply_to_post_id IS NOT NULL ";
+        $q .= " WHERE p.author_user_id = :author_id AND p.network=:network AND p.in_reply_to_post_id IS NOT null ";
         $q .= " ORDER BY p.pub_date desc LIMIT :limit;";
         $vars = array(
             ':author_id'=>$author_id,
@@ -243,8 +319,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts_replied_to;
     }
 
-    public function getPublicRepliesToPost($post_id, $network) {
-        return $this->getRepliesToPost($post_id, $network, true);
+    public function getPublicRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km') {
+        return $this->getRepliesToPost($post_id, $network, $order_by, $unit, true);
     }
 
     public function isPostInDB($post_id, $network) {
@@ -413,7 +489,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " ON p.post_id = l.post_id AND p.network = l.network ";
         $q .= " WHERE author_user_id = :author_id AND p.network=:network ";
         if (!$include_replies) {
-            $q .= " AND (in_reply_to_post_id IS NULL OR in_reply_to_post_id = 0) ";
+            $q .= " AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) ";
         }
         if ($order_by == 'reply_count_cache') {
             $q .= "AND reply_count_cache > 0 ";
@@ -624,8 +700,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $q .= " post_text LIKE :username ";
         }
         $q .= " AND pub_date > :parent_pub_date ";
-        $q .= " AND in_reply_to_post_id IS NULL ";
-        $q .= " AND in_retweet_of_post_id IS NULL ";
+        $q .= " AND in_reply_to_post_id IS null ";
+        $q .= " AND in_retweet_of_post_id IS null ";
         $q .= " AND p.network=:network ";
         $q .= " AND p.author_user_id != :author_user_id ";
         $q .= " ORDER BY pub_date ASC ";
@@ -726,7 +802,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "ON p.author_user_id = i.network_user_id ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id AND l.network = p.network ";
         $q .= "WHERE i.is_public = 1 and (p.reply_count_cache > 0 or p.retweet_count_cache > 0) AND ";
-        $q .= " (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
+        $q .= " (in_reply_to_post_id = 0 OR in_reply_to_post_id IS null) ";
         if ($in_last_x_days > 0) {
             $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
             $vars[':in_last_x_days'] = (int)$in_last_x_days;
@@ -753,7 +829,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "ON p.author_user_id = i.network_user_id LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id AND l.network = p.network ";
         $q .= "WHERE i.is_public = 1 and (p.reply_count_cache > 0 or p.retweet_count_cache > 0) AND ";
-        $q .= " (in_reply_to_post_id = 0 OR in_reply_to_post_id IS NULL) ";
+        $q .= " (in_reply_to_post_id = 0 OR in_reply_to_post_id IS null) ";
         if ($in_last_x_days > 0) {
             $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
             $vars[':in_last_x_days'] = (int)$in_last_x_days;
@@ -850,11 +926,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getPostsByPublicInstancesOrderedBy($page, $count, "retweet_count_cache", 7);
     }
 
-    public function getPostsToGeoencode($limit = 500) {
-        $q = "SELECT p.post_id, p.location, p.geo, p.place, p.in_reply_to_post_id, p.in_retweet_of_post_id ";
-        $q .= " FROM #prefix#posts AS p WHERE (p.geo IS NOT NULL OR p.place IS NOT NULL OR p.location IS NOT NULL)";
+    public function getPostsToGeoencode($limit = 5000) {
+        $q = "SELECT q.post_id, q.location, q.geo, q.place, q.in_reply_to_post_id, q.in_retweet_of_post_id, ";
+        $q.= "q.is_reply_by_friend, q.is_retweet_by_friend FROM ";
+        $q .= "(SELECT * FROM #prefix#posts AS p WHERE ";
+        $q .= " (p.geo IS NOT null OR p.place IS NOT null OR p.location IS NOT null)";
         $q .= " AND (p.is_geo_encoded='0' OR p.is_geo_encoded='3') ";
-        $q .= " ORDER BY id LIMIT :limit";
+        $q .= " ORDER BY id DESC LIMIT :limit) AS q ORDER BY q.id";
         $vars = array(
             ':limit'=>$limit    
         );
@@ -863,10 +941,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_rows;
     }
 
-    public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = NULL, $geodata = NULL, $distance = 0) {
+    public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = null, $geodata = null, $distance = 0) {
         if ($location && $geodata && ($is_geo_encoded>=1 && $is_geo_encoded<=5)) {
-            $q = "UPDATE #prefix#posts p SET p.location = :location, p.geo = :geo, p.reply_retweet_distance = :distance, ";
-            $q .= "p.is_geo_encoded = :is_geo_encoded WHERE p.post_id = :post_id";
+            $q = "UPDATE #prefix#posts p SET p.location = :location, p.geo = :geo, ";
+            $q .= "p.reply_retweet_distance = :distance, p.is_geo_encoded = :is_geo_encoded ";
+            $q .= "WHERE p.post_id = :post_id";
             $vars = array(
                 ':location'=>$location,
                 ':geo'=>$geodata,
@@ -903,5 +982,30 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
+    }
+
+    /**
+     * Extract location specific to city for each post
+     * @param int $location Location as stored in the database
+     * @return str short_location
+     */
+    private function processLocationRows($full_location) {
+        $location = explode (', ', $full_location);
+        $length = count($location);
+        if ($length > 3) {
+            return $location[$length-3].', '.$location[$length-2].', '.$location[$length-1];
+        } else {
+            return $full_location;
+        }
+    }
+
+    /**
+     * Convert Distance in kilometers to miles
+     * @param int $distance_in_km Distance in KM
+     * @return int $distance_in_miles
+     */
+    private function calculateDistanceInMiles($distance_in_km) {
+        $distance_in_miles = round($distance_in_km/1.609);
+        return $distance_in_miles;
     }
 }

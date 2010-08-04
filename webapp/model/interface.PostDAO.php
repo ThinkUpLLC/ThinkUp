@@ -27,20 +27,35 @@ interface PostDAO {
      * Get replies to a post
      * @param int $post_id
      * @param str $network
+     * @param str $order_by Order of sorting posts
+     * @param int $unit Defaults to km
      * @param bool $public Defaults to false
      * @param int $count Defaults to 350
      * @return array Posts with author and link objects set
      */
-    public function getRepliesToPost($post_id, $network, $is_public = false, $count = 350);
+    public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
+                                     $count = 350);
 
     /**
      * Get retweets of post
      * @param int $post_id
      * @param str $network Defaults to 'twitter'
-     * @param bool $is_public Defaults to false
+     * @param str $order_by Order of sorting posts
+     * @param int $unit Defaults to km
+     * @param bool $public Defaults to false
      * @return array Retweets of post
      */
-    public function getRetweetsOfPost($post_id, $network = 'twitter', $is_public = false);
+    public function getRetweetsOfPost($post_id, $network = 'twitter', $order_by = 'default', $unit = 'km', 
+                                      $is_public = false);
+
+    /**
+     * Get all related posts (retweets and replies)
+     * @param int $post_id
+     * @param str $network Defaults to 'twitter'
+     * @param bool $is_public Defaults to false
+     * @return str json with data of all related posts along with data about the main post
+     */
+    public function getRelatedPosts($post_id, $network = 'twitter', $is_public = false, $count = 350);
 
     /**
      * Get total number of followers by retweeters
@@ -72,9 +87,11 @@ interface PostDAO {
      * Get public replies to post
      * @param int $post_id
      * @param str $network
+     * @param str $order_by Order of sorting posts
+     * @param int $unit
      * @return array Public posts with author and link objects set
      */
-    public function getPublicRepliesToPost($post_id, $network);
+    public function getPublicRepliesToPost($post_id, $network, $order_by = 'default', $unit = 0);
 
     /**
      * Check to see if Post is in database

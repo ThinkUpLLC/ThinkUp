@@ -166,55 +166,70 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         //Add replies to specific post
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, network) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, location,
+        reply_retweet_distance, is_geo_encoded) 
         VALUES (131, 20, 'user1', 'User 1', 'avatar.jpg', '@shutterbug Nice shot!', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 41, 'twitter');";
+        '2006-03-01 00:00:00', 0, 0, 41, 'New Delhi, Delhi, India', 0, 1);";
         PDODAO::$PDO->exec($q);
 
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, network) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, location,
+        reply_retweet_distance, is_geo_encoded) 
         VALUES (132, 21, 'user2', 'User 2', 'avatar.jpg', '@shutterbug Nice shot!', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 41, 'twitter');";
+        '2006-03-01 00:00:00', 0, 0, 41, 'Chennai, Tamil Nadu, India', 2000, 1);";
         PDODAO::$PDO->exec($q);
 
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, network) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, location,
+        reply_retweet_distance, is_geo_encoded) 
         VALUES (133, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
-        '@shutterbug This is a link post reply http://example.com/', 'web', '2006-03-01 00:00:00', 0, 0, 41, 
-        'twitter');";
+        '@shutterbug This is a link post reply http://example.com/', 'web', '2006-03-01 00:00:00', 0, 0, 41,
+        'Mumbai, Maharashtra, India', 1500, 1);";
         PDODAO::$PDO->exec($q);
 
         $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image)
         VALUES ('http://example.com/', 'http://example.com/expanded-link.html', 'Link 1', 0, 133, 0);";
         PDODAO::$PDO->exec($q);
 
+        //Add replies to specific post
+        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, is_reply_by_friend, in_reply_to_post_id,
+        network, location, geo, is_geo_encoded) VALUES (144, 20, 'user1', 'User 1', 'avatar.jpg',
+        '@shutterbug Nice shot!', 'web', '2006-03-01 00:00:00', 0, 0, 1, 134, 'twitter', 'New Delhi, Delhi, India',
+        '28.635308,77.22496', 1);";
+        PDODAO::$PDO->exec($q);
+
         //Add retweets of a specific post
         //original post
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, location, geo, is_geo_encoded) 
         VALUES (134, 22, 'quoter', 'Quoter of Quotables', 'avatar.jpg', 
-        'Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0);";
+        'Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0,
+        'New Delhi, Delhi, India' , '28.635308,77.22496', 1);";
         PDODAO::$PDO->exec($q);
         //retweet 1
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id,
+        location, geo, reply_retweet_distance, is_geo_encoded) 
         VALUES (135, 20, 'user1', 'User 1', 'avatar.jpg', 
-        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 
-        0, 134);";
+        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web',
+        '2006-03-01 00:00:00', 0, 0, 134, 'Chennai, Tamil Nadu, India', '13.060416,80.249634', 2000, 1);";
         PDODAO::$PDO->exec($q);
         //retweet 2
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id,
+        location, geo, reply_retweet_distance, is_geo_encoded) 
         VALUES (136, 21, 'user2', 'User 2', 'avatar.jpg', 
         'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 134);";
+        '2006-03-01 00:00:00', 0, 0, 134, 'Dwarka, New Delhi, Delhi, India', '28.635308,77.22496', 0, 1);";
         PDODAO::$PDO->exec($q);
         //retweet 3
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id) 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id,
+        location, geo, reply_retweet_distance, is_geo_encoded) 
         VALUES (137, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
         'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 134);";
+        '2006-03-01 00:00:00', 0, 0, 134, 'Mumbai, Maharashtra, India', '19.017656,72.856178', 1500, 1);";
         PDODAO::$PDO->exec($q);
 
         //Add reply back
@@ -450,7 +465,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         //no link, so link member variables do not get set
         $this->assertTrue(!isset($post->link->id));
     }
-    
+
     /**
      * Test getPost on a post that does not exist
      */
@@ -485,16 +500,37 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetRepliesToPost() {
         $dao = new PostMySQLDAO();
+        // Default Sorting
         $posts = $dao->getRepliesToPost(41, 'twitter');
         $this->assertEqual(sizeof($posts), 3);
         $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
+        $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
 
+        $this->assertEqual($posts[1]->location,'Chennai, Tamil Nadu, India');
         $this->assertEqual($posts[2]->post_text, '@shutterbug This is a link post reply http://example.com/',
         "post reply");
         $this->assertEqual($posts[2]->post_id, 133, "post ID");
         $this->assertEqual($posts[2]->author->username, 'linkbaiter', "Post author");
         $this->assertEqual($posts[2]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
+
+        $this->assertEqual($posts[2]->location,'Mumbai, Maharashtra, India');
+
+        // Sorting By Proximity
+        $posts = $dao->getRepliesToPost(41, 'twitter', 'location');
+        $this->assertEqual(sizeof($posts), 3);
+        $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
+        $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
+        $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
+
+        $this->assertEqual($posts[1]->location,'Mumbai, Maharashtra, India');
+        $this->assertEqual($posts[1]->post_text, '@shutterbug This is a link post reply http://example.com/',
+        "post reply");
+        $this->assertEqual($posts[1]->post_id, 133, "post ID");
+        $this->assertEqual($posts[1]->author->username, 'linkbaiter', "Post author");
+        $this->assertEqual($posts[1]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
+
+        $this->assertEqual($posts[2]->location,'Chennai, Tamil Nadu, India');
     }
 
     /**
@@ -519,11 +555,37 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetRetweetsOfPost() {
         $dao = new PostMySQLDAO();
+
+        // Default Sorting
         $posts = $dao->getRetweetsOfPost(134, 'twitter');
         $this->assertEqual(sizeof($posts), 3);
+        $this->assertEqual($posts[0]->location,'Chennai, Tamil Nadu, India');
+        $this->assertEqual($posts[1]->location,'Dwarka, New Delhi, Delhi, India');
+        $this->assertEqual($posts[2]->location,'Mumbai, Maharashtra, India');
         $this->assertEqual($posts[0]->post_text,
         'RT @quoter Be liberal in what you accept and conservative in what you send', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
+
+        // Sorting By Proximity
+        $posts = $dao->getRetweetsOfPost(134, 'twitter', 'location');
+        $this->assertEqual(sizeof($posts), 3);
+        $this->assertEqual($posts[0]->location,'Dwarka, New Delhi, Delhi, India');
+        $this->assertEqual($posts[1]->location,'Mumbai, Maharashtra, India');
+        $this->assertEqual($posts[1]->post_text,
+        'RT @quoter Be liberal in what you accept and conservative in what you send', "post reply");
+        $this->assertEqual($posts[2]->location,'Chennai, Tamil Nadu, India');
+        $this->assertEqual($posts[2]->author->username, 'user1', "Post author");
+    }
+
+    /**
+     * Test getRelatedPosts
+     */
+    public function testGetRelatedPosts() {
+        $dao = new PostMySQLDAO();
+        $posts = $dao->getRelatedPosts(134, 'twitter');
+        $this->assertEqual(count($posts), 5);
+        $posts = $dao->getRelatedPosts(1344545, 'twitter');
+        $this->assertEqual(count($posts), 0);
     }
 
     /**
@@ -621,7 +683,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['pub_date']='3/1/2010';
         $vals['source']='web';
         $vals['network']= 'twitter';
-        
+
         //add post with insufficient location data
         $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
         $post = $dao->getPost(2904, 'twitter');
@@ -630,7 +692,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->place, NULL);
         $this->assertEqual($post->geo, NULL);
         $this->assertEqual($post->is_geo_encoded, 6);
-        
+
         $vals['post_id'] = 250;
         $vals['location']="New Delhi";
         $vals['place']="Dwarka, New Delhi";
@@ -657,7 +719,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->in_reply_to_post_id, null);
         $this->assertFalse($post->is_reply_by_friend);
         $this->assertEqual($post->is_geo_encoded, 0);
-        
+
         //test add post that does exist
         $vals['post_id']=129;
         $this->assertEqual($dao->addPost($vals), 0, "Post exists, nothing inserted");
@@ -1048,7 +1110,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $posts = $pdao->getMostRetweetedPostsInLastWeek('user2', 'twitter', 5);
         $this->assertEqual(sizeof($posts), 0);
     }
-    
+
     /**
      * Test getPostsToGeoencode
      */
@@ -1058,7 +1120,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($posts), 10);
         $this->assertIsA($posts, "array");
     }
-    
+
     /**
      * Test setGeoencodedPost
      */
@@ -1068,7 +1130,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $post = $dao->getPost(131, 'twitter');
         $this->assertEqual($post->is_geo_encoded, 1);
         $this->assertEqual($post->reply_retweet_distance, 0);
-        
+
         $setData = $dao->setGeoencodedPost(131, 1, 'New Delhi', '78', 100);
         $post = $dao->getPost(131, 'twitter');
         $this->assertEqual($post->is_geo_encoded, 1);
@@ -1082,12 +1144,11 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->is_geo_encoded, 2);
         $this->assertEqual($post->geo, '78');
         $this->assertEqual($post->location, 'New Delhi');
-        
+
         //Since both of $location and $geodata are not defined, only is_geo_encoded field is updated
         $setData = $dao->setGeoencodedPost(131, 1, 'Dwarka');
         $post = $dao->getPost(131, 'twitter');
         $this->assertEqual($post->geo, '78');
         $this->assertEqual($post->location, 'New Delhi');
     }
-
 }

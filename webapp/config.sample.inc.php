@@ -62,4 +62,3 @@ $THINKUP_CFG['db_name']                   = 'your_thinkup_database_name';
 $THINKUP_CFG['db_socket']                 = '';
 $THINKUP_CFG['db_port']                   = '';
 $THINKUP_CFG['table_prefix']              = 'tu_';
-

@@ -24,6 +24,7 @@ require_once $SOURCE_ROOT_PATH.
 'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPluginConfigurationController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/hellothinkup/tests/TestOfHelloThinkUpPluginConfigurationController.php';
 
 $plugin_tests = & new GroupTest('Plugin tests');
@@ -36,6 +37,7 @@ $plugin_tests->addTestCase(new TestOfFlickrAPIAccessor());
 $plugin_tests->addTestCase(new TestOfFlickrThumbnailsPluginConfigurationController());
 $plugin_tests->addTestCase(new TestOfFlickrThumbnailsPlugin());
 $plugin_tests->addTestCase(new TestOfGeoEncoderPlugin());
+$plugin_tests->addTestCase(new TestOfGeoEncoderPluginConfigurationController());
 $plugin_tests->addTestCase(new TestOfTwitterAPIAccessorOAuth());
 $plugin_tests->addTestCase(new TestOfTwitterAuthController());
 $plugin_tests->addTestCase(new TestOfTwitterCrawler());
