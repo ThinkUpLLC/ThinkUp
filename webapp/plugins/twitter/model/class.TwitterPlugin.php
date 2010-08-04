@@ -44,7 +44,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
                 $id->updateLastRun($instance->id);
 
                 // No auth req'd
-                $crawler->fetchInstanceUserInfo();
+                //$crawler->fetchInstanceUserInfo();
 
                 // No auth for public Twitter users
                 $crawler->fetchInstanceUserTweets();
@@ -71,7 +71,9 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
                 $crawler->cleanUpFollows();
 
                 // Save instance
-                $id->save($crawler->instance, $crawler->owner_object->post_count, $logger);
+                if (isset($crawler->owner_object)) {
+                    $id->save($instance, $crawler->owner_object->post_count, $logger);
+                }
             }
         }
 
@@ -271,7 +273,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         //Links from friends
         $fltab = new WebappTab("links-friends", 'Links From Friends', 'Links your friends posted', $twitter_data_tpl);
-        $fltabds = new WebappTabDataset("links", 'LinkDAO', "getLinksByFriends", array($instance->network_user_id, 
+        $fltabds = new WebappTabDataset("links", 'LinkDAO', "getLinksByFriends", array($instance->network_user_id,
         'twitter'));
         $fltab->addDataset($fltabds);
         array_push($child_tabs, $fltab);

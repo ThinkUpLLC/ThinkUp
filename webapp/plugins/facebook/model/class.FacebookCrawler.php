@@ -114,7 +114,7 @@ class FacebookCrawler {
          print_r($stream);
          */
 
-        if (is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
+        if (isset($stream['posts']) && is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
             $this->logger->logStatus(sizeof($stream["posts"]).
             " Facebook posts found for user ID $uid with session key $session_key", get_class($this));
 
@@ -148,7 +148,7 @@ class FacebookCrawler {
          print_r($stream);
          */
 
-        if (is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
+        if (isset($stream['posts']) && is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
             $this->logger->logStatus(sizeof($stream["posts"]).
             " Facebook posts found for page ID $pid with session key $session_key", get_class($this));
 

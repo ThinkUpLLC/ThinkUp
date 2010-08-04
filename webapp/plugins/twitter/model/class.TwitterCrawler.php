@@ -25,174 +25,193 @@ class TwitterCrawler {
 
     public function fetchInstanceUserInfo() {
         // Get owner user details and save them to DB
-        $status_message = "";
-        $owner_profile = str_replace("[id]", $this->instance->network_username, $this->api->cURL_source['show_user']);
-        list($cURL_status, $twitter_data) = $this->api->apiRequest($owner_profile);
+        if ($this->api->available && $this->api->available_api_calls_for_crawler > 0) {
+            $status_message = "";
+            $owner_profile = str_replace("[id]", $this->instance->network_username,
+            $this->api->cURL_source['show_user']);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($owner_profile);
 
-        if ($cURL_status == 200) {
-            try {
-                $users = $this->api->parseXML($twitter_data);
-                foreach ($users as $user) {
-                    $this->owner_object = new User($user, 'Owner Status');
-                }
-
-                if (isset($this->owner_object)) {
-                    $status_message = 'Owner info set.';
-                    $this->user_dao->updateUser($this->owner_object);
-
-                    if (isset($this->owner_object->follower_count) && $this->owner_object->follower_count>0) {
-                        $fcount_dao = DAOFactory::getDAO('FollowerCountDAO');
-                        $fcount_dao->insert($this->owner_object->user_id, 'twitter',
-                        $this->owner_object->follower_count);
+            if ($cURL_status == 200) {
+                try {
+                    $users = $this->api->parseXML($twitter_data);
+                    foreach ($users as $user) {
+                        $this->owner_object = new User($user, 'Owner Status');
                     }
 
-                } else {
-                    $status_message = 'Owner was not set.';
+                    if (isset($this->owner_object)) {
+                        $status_message = 'Owner info set.';
+                        $this->user_dao->updateUser($this->owner_object);
+
+                        if (isset($this->owner_object->follower_count) && $this->owner_object->follower_count>0) {
+                            $fcount_dao = DAOFactory::getDAO('FollowerCountDAO');
+                            $fcount_dao->insert($this->owner_object->user_id, 'twitter',
+                            $this->owner_object->follower_count);
+                        }
+
+                    } else {
+                        $status_message = 'Owner was not set.';
+                    }
                 }
+                catch(Exception $e) {
+                    $status_message = 'Could not parse profile XML for $this->owner_object->username';
+                }
+            } else {
+                $status_message = 'cURL status is not 200';
             }
-            catch(Exception $e) {
-                $status_message = 'Could not parse profile XML for $this->owner_object->username';
-            }
-        } else {
-            $status_message = 'cURL status is not 200';
+            $this->logger->logStatus($status_message, get_class($this));
         }
-        $this->logger->logStatus($status_message, get_class($this));
     }
 
     public function fetchSearchResults($term) {
-        $continue_fetching = true;
-        $page = 1;
-        while ($continue_fetching) {
-            $search_results = $this->api->cURL_source['search']."?q=".urlencode($term).
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
+        }
+        if (isset($this->owner_object)) {
+            $continue_fetching = true;
+            $page = 1;
+            while ($continue_fetching) {
+                $search_results = $this->api->cURL_source['search']."?q=".urlencode($term).
             "&result_type=recent&rpp=100&page=".$page;
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, null, false);
-            if ($cURL_status == 200) {
-                $tweets = $this->api->parseJSON($twitter_data);
-                $pd = DAOFactory::getDAO('PostDAO');
-                $count = 0;
-                foreach ($tweets as $tweet) {
-                    $tweet['network'] = 'twitter';
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, null, false);
+                if ($cURL_status == 200) {
+                    $tweets = $this->api->parseJSON($twitter_data);
+                    $pd = DAOFactory::getDAO('PostDAO');
+                    $count = 0;
+                    foreach ($tweets as $tweet) {
+                        $tweet['network'] = 'twitter';
 
-                    if ($pd->addPost($tweet) > 0) {
-                        $count = $count + 1;
-                        $this->processTweetURLs($tweet);
+                        if ($pd->addPost($tweet) > 0) {
+                            $count = $count + 1;
+                            $this->processTweetURLs($tweet);
 
-                        if ($tweet['user_id'] != $this->owner_object->user_id) { //don't update owner info from reply
-                            $u = new User($tweet, 'mentions');
-                            $this->user_dao->updateUser($u);
+                            //don't update owner info from reply
+                            if ($tweet['user_id'] != $this->owner_object->user_id) {
+                                $u = new User($tweet, 'mentions');
+                                $this->user_dao->updateUser($u);
+                            }
                         }
                     }
-                }
-                $this->logger->logStatus(count($tweets)." tweet(s) found and $count saved", get_class($this));
-                if ( $count == 0 ) { // all tweets on the page were already saved
-                    //Stop fetching when more tweets have been retrieved than were saved b/c they already existed
+                    $this->logger->logStatus(count($tweets)." tweet(s) found and $count saved", get_class($this));
+                    if ( $count == 0 ) { // all tweets on the page were already saved
+                        //Stop fetching when more tweets have been retrieved than were saved b/c they already existed
+                        $continue_fetching = false;
+                    }
+                    $page = $page+1;
+                } else {
+                    $this->logger->logStatus("cURL status $cURL_status", get_class($this));
                     $continue_fetching = false;
                 }
-                $page = $page+1;
-            } else {
-                $this->logger->logStatus("cURL status $cURL_status", get_class($this));
-                $continue_fetching = false;
             }
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
         }
     }
 
     public function fetchInstanceUserTweets() {
-        // Get owner's tweets
-        $status_message = "";
-        $got_latest_page_of_tweets = false;
-        $continue_fetching = true;
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
+        }
+        if (isset($this->owner_object)) {
+            // Get owner's tweets
+            $status_message = "";
+            $got_latest_page_of_tweets = false;
+            $continue_fetching = true;
 
-        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0
-        && $this->owner_object->post_count > $this->instance->total_posts_in_system && $continue_fetching) {
+            while ($this->api->available && $this->api->available_api_calls_for_crawler > 0
+            && $this->owner_object->post_count > $this->instance->total_posts_in_system && $continue_fetching) {
 
-            $recent_tweets = str_replace("[id]", $this->owner_object->username,
-            $this->api->cURL_source['user_timeline']);
-            $args = array();
-            $args["count"] = 200;
-            $args["include_rts"] = "true";
-            $last_page_of_tweets = round($this->api->archive_limit / 200) + 1;
+                $recent_tweets = str_replace("[id]", $this->owner_object->username,
+                $this->api->cURL_source['user_timeline']);
+                $args = array();
+                $args["count"] = 200;
+                $args["include_rts"] = "true";
+                $last_page_of_tweets = round($this->api->archive_limit / 200) + 1;
 
-            //set page and since_id params for API call
-            if ($got_latest_page_of_tweets && $this->owner_object->post_count != $this->instance->total_posts_in_system
-            && $this->instance->total_posts_in_system < $this->api->archive_limit) {
-                if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets)
-                $this->instance->last_page_fetched_tweets = $this->instance->last_page_fetched_tweets + 1;
-                else {
-                    $continue_fetching = false;
-                    $this->instance->last_page_fetched_tweets = 0;
+                //set page and since_id params for API call
+                if ($got_latest_page_of_tweets
+                && $this->owner_object->post_count != $this->instance->total_posts_in_system
+                && $this->instance->total_posts_in_system < $this->api->archive_limit) {
+                    if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets)
+                    $this->instance->last_page_fetched_tweets = $this->instance->last_page_fetched_tweets + 1;
+                    else {
+                        $continue_fetching = false;
+                        $this->instance->last_page_fetched_tweets = 0;
+                    }
+                    $args["page"] = $this->instance->last_page_fetched_tweets;
+
+                } else {
+                    if (!$got_latest_page_of_tweets && $this->instance->last_status_id > 0)
+                    $args["since_id"] = $this->instance->last_status_id;
                 }
-                $args["page"] = $this->instance->last_page_fetched_tweets;
 
-            } else {
-                if (!$got_latest_page_of_tweets && $this->instance->last_status_id > 0)
-                $args["since_id"] = $this->instance->last_status_id;
-            }
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $args);
+                if ($cURL_status == 200) {
+                    # Parse the XML file
+                    try {
+                        $count = 0;
+                        $tweets = $this->api->parseXML($twitter_data);
 
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $args);
-            if ($cURL_status == 200) {
-                # Parse the XML file
-                try {
-                    $count = 0;
-                    $tweets = $this->api->parseXML($twitter_data);
+                        $pd = DAOFactory::getDAO('PostDAO');
+                        foreach ($tweets as $tweet) {
+                            $tweet['network'] = 'twitter';
 
-                    $pd = DAOFactory::getDAO('PostDAO');
-                    foreach ($tweets as $tweet) {
-                        $tweet['network'] = 'twitter';
+                            if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
+                                $count = $count + 1;
+                                $this->instance->total_posts_in_system = $this->instance->total_posts_in_system + 1;
 
-                        if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
-                            $count = $count + 1;
-                            $this->instance->total_posts_in_system = $this->instance->total_posts_in_system + 1;
+                                //expand and insert links contained in tweet
+                                $this->processTweetURLs($tweet);
 
-                            //expand and insert links contained in tweet
-                            $this->processTweetURLs($tweet);
+                            }
+                            if ($tweet['post_id'] > $this->instance->last_status_id)
+                            $this->instance->last_status_id = $tweet['post_id'];
 
                         }
-                        if ($tweet['post_id'] > $this->instance->last_status_id)
-                        $this->instance->last_status_id = $tweet['post_id'];
-
-                    }
-                    $status_message .= count($tweets)." tweet(s) found and $count saved";
-                    $this->logger->logStatus($status_message, get_class($this));
-                    $status_message = "";
-
-                    //if you've got more than the Twitter API archive limit, stop looking for more tweets
-                    if ($this->instance->total_posts_in_system >= $this->api->archive_limit) {
-                        $this->instance->last_page_fetched_tweets = 1;
-                        $continue_fetching = false;
-                        $status_message = "More than Twitter cap of ".$this->api->archive_limit.
-                        " already in system, moving on.";
+                        $status_message .= count($tweets)." tweet(s) found and $count saved";
                         $this->logger->logStatus($status_message, get_class($this));
                         $status_message = "";
+
+                        //if you've got more than the Twitter API archive limit, stop looking for more tweets
+                        if ($this->instance->total_posts_in_system >= $this->api->archive_limit) {
+                            $this->instance->last_page_fetched_tweets = 1;
+                            $continue_fetching = false;
+                            $status_message = "More than Twitter cap of ".$this->api->archive_limit.
+                        " already in system, moving on.";
+                            $this->logger->logStatus($status_message, get_class($this));
+                            $status_message = "";
+                        }
+
+
+                        if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
+                        $this->instance->is_archive_loaded_tweets = true;
+
+                        $status_message .= $this->instance->total_posts_in_system." in system; ".
+                        $this->owner_object->post_count." by owner";
+                        $this->logger->logStatus($status_message, get_class($this));
+                        $status_message = "";
+
+                    }
+                    catch(Exception $e) {
+                        $status_message = 'Could not parse tweet XML for $this->network_username';
+                        $this->logger->logStatus($status_message, get_class($this));
+                        $status_message = "";
+
                     }
 
-
-                    if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
-                    $this->instance->is_archive_loaded_tweets = true;
-
-                    $status_message .= $this->instance->total_posts_in_system." in system; ".
-                    $this->owner_object->post_count." by owner";
-                    $this->logger->logStatus($status_message, get_class($this));
-                    $status_message = "";
-
+                    $got_latest_page_of_tweets = true;
                 }
-                catch(Exception $e) {
-                    $status_message = 'Could not parse tweet XML for $this->network_username';
-                    $this->logger->logStatus($status_message, get_class($this));
-                    $status_message = "";
-
-                }
-
-                $got_latest_page_of_tweets = true;
             }
+
+            if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
+            $status_message .= "All of ".$this->owner_object->username.
+            "'s tweets are in the system; Stopping tweet fetch.";
+
+
+            $this->logger->logStatus($status_message, get_class($this));
+            $status_message = "";
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
         }
-
-        if ($this->owner_object->post_count == $this->instance->total_posts_in_system)
-        $status_message .= "All of ".$this->owner_object->username."'s tweets are in the system; Stopping tweet fetch.";
-
-
-        $this->logger->logStatus($status_message, get_class($this));
-        $status_message = "";
-
     }
 
     private function processTweetURLs($tweet) {
@@ -230,139 +249,155 @@ class TwitterCrawler {
     }
 
     private function fetchAndAddTweetRepliedTo($tid, $pd) {
-        //fetch tweet from Twitter and add to DB
-        $status_message = "";
-        $tweet_deets = str_replace("[id]", $tid, $this->api->cURL_source['show_tweet']);
-        list($cURL_status, $twitter_data) = $this->api->apiRequest($tweet_deets);
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
+        }
 
-        if ($cURL_status == 200) {
-            try {
-                $tweets = $this->api->parseXML($twitter_data);
-                foreach ($tweets as $tweet) {
-                    if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
-                        $status_message = 'Added replied to tweet ID '.$tid." to database.";
-                        //expand and insert links contained in tweet
-                        $this->processTweetURLs($tweet);
+        if (isset($this->owner_object)) {
+            //fetch tweet from Twitter and add to DB
+            $status_message = "";
+            $tweet_deets = str_replace("[id]", $tid, $this->api->cURL_source['show_tweet']);
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($tweet_deets);
+
+            if ($cURL_status == 200) {
+                try {
+                    $tweets = $this->api->parseXML($twitter_data);
+                    foreach ($tweets as $tweet) {
+                        if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
+                            $status_message = 'Added replied to tweet ID '.$tid." to database.";
+                            //expand and insert links contained in tweet
+                            $this->processTweetURLs($tweet);
+                        }
                     }
                 }
+                catch(Exception $e) {
+                    $status_message = 'Could not parse tweet XML for $id';
+                }
+            } elseif ($cURL_status == 404 || $cURL_status == 403) {
+                try {
+                    $e = $this->api->parseError($twitter_data);
+                    $ped = DAOFactory::getDAO('PostErrorDAO');
+                    $ped->insertError($tid, 'twitter', $cURL_status, $e['error'], $this->owner_object->user_id);
+                    $status_message = 'Error saved to tweets.';
+                }
+                catch(Exception $e) {
+                    $status_message = 'Could not parse tweet XML for $tid';
+                }
             }
-            catch(Exception $e) {
-                $status_message = 'Could not parse tweet XML for $id';
-            }
-        } elseif ($cURL_status == 404 || $cURL_status == 403) {
-            try {
-                $e = $this->api->parseError($twitter_data);
-                $ped = DAOFactory::getDAO('PostErrorDAO');
-                $ped->insertError($tid, 'twitter', $cURL_status, $e['error'], $this->owner_object->user_id);
-                $status_message = 'Error saved to tweets.';
-            }
-            catch(Exception $e) {
-                $status_message = 'Could not parse tweet XML for $tid';
-            }
+            $this->logger->logStatus($status_message, get_class($this));
+            $status_message = "";
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
         }
-        $this->logger->logStatus($status_message, get_class($this));
-        $status_message = "";
     }
 
     public function fetchInstanceUserMentions() {
-        $status_message = "";
-        // Get owner's mentions
-        if ($this->api->available_api_calls_for_crawler > 0) {
-            $got_newest_mentions = false;
-            $continue_fetching = true;
-
-            while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
-                # Get the most recent mentions
-                $mentions = $this->api->cURL_source['mentions'];
-                $args = array();
-                $args['count'] = 200;
-                $args['include_rts']='true';
-
-                if ($got_newest_mentions) {
-                    $this->last_page_fetched_mentions++;
-                    $args['page'] = $this->last_page_fetched_mentions;
-                }
-
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($mentions, $args);
-                if ($cURL_status > 200) {
-                    $continue_fetching = false;
-                } else {
-                    try {
-                        $count = 0;
-                        $tweets = $this->api->parseXML($twitter_data);
-                        if (count($tweets) == 0 && $got_newest_mentions) {# you're paged back and no new tweets
-                            $this->last_page_fetched_mentions = 1;
-                            $continue_fetching = false;
-                            $this->instance->is_archive_loaded_mentions = true;
-                            $status_message = 'Paged back but not finding new mentions; moving on.';
-                            $this->logger->logStatus($status_message, get_class($this));
-                            $status_message = "";
-                        }
-
-
-                        $pd = DAOFactory::getDAO('PostDAO');
-                        if (!isset($recentTweets)) {
-                            $recentTweets = $pd->getAllPosts($this->owner_object->user_id, 'twitter', 100);
-                        }
-                        $count = 0;
-                        foreach ($tweets as $tweet) {
-                            // Figure out if the mention is a retweet
-                            if (RetweetDetector::isRetweet($tweet['post_text'], $this->owner_object->username)) {
-                                $this->logger->logStatus("Retweet found, ".substr($tweet['post_text'], 0, 50)."... ",
-                                get_class($this));
-                                $originalTweetId = RetweetDetector::detectOriginalTweet($tweet['post_text'],
-                                $recentTweets);
-                                if ($originalTweetId != false) {
-                                    $tweet['in_retweet_of_post_id'] = $originalTweetId;
-                                    $this->logger->logStatus("Retweet original status ID found: ".$originalTweetId,
-                                    get_class($this));
-                                }
-                            }
-
-                            if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
-                                $count++;
-                                //expand and insert links contained in tweet
-                                $this->processTweetURLs($tweet);
-                                if ($tweet['user_id'] != $this->owner_object->user_id) {
-                                    //don't update owner info from reply
-                                    $u = new User($tweet, 'mentions');
-                                    $this->user_dao->updateUser($u);
-                                }
-
-                            }
-
-                        }
-                        $status_message .= count($tweets)." mentions found and $count saved";
-                        $this->logger->logStatus($status_message, get_class($this));
-                        $status_message = "";
-
-                        $got_newest_mentions = true;
-
-                        $this->logger->logStatus($status_message, get_class($this));
-                        $status_message = "";
-
-                        if ($got_newest_mentions && $this->instance->is_archive_loaded_replies) {
-                            $continue_fetching = false;
-                            $status_message .= 'Retrieved newest mentions; Reply archive loaded; Stopping reply fetch.';
-                            $this->logger->logStatus($status_message, get_class($this));
-                            $status_message = "";
-                        }
-
-                    }
-                    catch(Exception $e) {
-                        $status_message = 'Could not parse mentions XML for $this->owner_object->username';
-                        $this->logger->logStatus($status_message, get_class($this));
-                        $status_message = "";
-                    }
-                }
-
-            }
-        } else {
-            $status_message = 'Crawler API error: either call limit exceeded or API returned an error.';
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
         }
 
-        $this->logger->logStatus($status_message, get_class($this));
-        $status_message = "";
+        if (isset($this->owner_object)) {
+            $status_message = "";
+            // Get owner's mentions
+            if ($this->api->available_api_calls_for_crawler > 0) {
+                $got_newest_mentions = false;
+                $continue_fetching = true;
+
+                while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
+                    # Get the most recent mentions
+                    $mentions = $this->api->cURL_source['mentions'];
+                    $args = array();
+                    $args['count'] = 200;
+                    $args['include_rts']='true';
+
+                    if ($got_newest_mentions) {
+                        $this->last_page_fetched_mentions++;
+                        $args['page'] = $this->last_page_fetched_mentions;
+                    }
+
+                    list($cURL_status, $twitter_data) = $this->api->apiRequest($mentions, $args);
+                    if ($cURL_status > 200) {
+                        $continue_fetching = false;
+                    } else {
+                        try {
+                            $count = 0;
+                            $tweets = $this->api->parseXML($twitter_data);
+                            if (count($tweets) == 0 && $got_newest_mentions) {# you're paged back and no new tweets
+                                $this->last_page_fetched_mentions = 1;
+                                $continue_fetching = false;
+                                $this->instance->is_archive_loaded_mentions = true;
+                                $status_message = 'Paged back but not finding new mentions; moving on.';
+                                $this->logger->logStatus($status_message, get_class($this));
+                                $status_message = "";
+                            }
+
+
+                            $pd = DAOFactory::getDAO('PostDAO');
+                            if (!isset($recentTweets)) {
+                                $recentTweets = $pd->getAllPosts($this->owner_object->user_id, 'twitter', 100);
+                            }
+                            $count = 0;
+                            foreach ($tweets as $tweet) {
+                                // Figure out if the mention is a retweet
+                                if (RetweetDetector::isRetweet($tweet['post_text'], $this->owner_object->username)) {
+                                    $this->logger->logStatus("Retweet found, ".substr($tweet['post_text'], 0, 50).
+                                    "... ", get_class($this));
+                                    $originalTweetId = RetweetDetector::detectOriginalTweet($tweet['post_text'],
+                                    $recentTweets);
+                                    if ($originalTweetId != false) {
+                                        $tweet['in_retweet_of_post_id'] = $originalTweetId;
+                                        $this->logger->logStatus("Retweet original status ID found: ".$originalTweetId,
+                                        get_class($this));
+                                    }
+                                }
+
+                                if ($pd->addPost($tweet, $this->owner_object, $this->logger) > 0) {
+                                    $count++;
+                                    //expand and insert links contained in tweet
+                                    $this->processTweetURLs($tweet);
+                                    if ($tweet['user_id'] != $this->owner_object->user_id) {
+                                        //don't update owner info from reply
+                                        $u = new User($tweet, 'mentions');
+                                        $this->user_dao->updateUser($u);
+                                    }
+
+                                }
+
+                            }
+                            $status_message .= count($tweets)." mentions found and $count saved";
+                            $this->logger->logStatus($status_message, get_class($this));
+                            $status_message = "";
+
+                            $got_newest_mentions = true;
+
+                            $this->logger->logStatus($status_message, get_class($this));
+                            $status_message = "";
+
+                            if ($got_newest_mentions && $this->instance->is_archive_loaded_replies) {
+                                $continue_fetching = false;
+                                $status_message .= 'Retrieved newest mentions; Archive loaded; Stopping reply fetch.';
+                                $this->logger->logStatus($status_message, get_class($this));
+                                $status_message = "";
+                            }
+
+                        }
+                        catch(Exception $e) {
+                            $status_message = 'Could not parse mentions XML for $this->owner_object->username';
+                            $this->logger->logStatus($status_message, get_class($this));
+                            $status_message = "";
+                        }
+                    }
+
+                }
+            } else {
+                $status_message = 'Crawler API error: either call limit exceeded or API returned an error.';
+            }
+
+            $this->logger->logStatus($status_message, get_class($this));
+            $status_message = "";
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
+        }
     }
 
 
@@ -370,32 +405,40 @@ class TwitterCrawler {
      * Retrieve recent retweets and add them to the database
      */
     public function fetchRetweetsOfInstanceUser() {
-        $status_message = "";
-        // Get owner's mentions
-        if ($this->api->available && $this->api->available_api_calls_for_crawler > 0) {
-            # Get the most recent retweets
-            $rtsofme = $this->api->cURL_source['retweets_of_me'];
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($rtsofme);
-            if ($cURL_status == 200) {
-                try {
-                    $tweets = $this->api->parseXML($twitter_data);
-                    foreach ($tweets as $tweet) {
-                        $this->fetchStatusRetweets($tweet);
-                    }
-                } catch(Exception $e) {
-                    $status_message = 'Could not parse retweets_of_me XML for $this->owner_object->username';
-                    $this->logger->logStatus($status_message, get_class($this));
-                    $status_message = "";
-                }
-            } else {
-                $status_message .= 'API returned error code '. $cURL_status;
-            }
-        } else {
-            $status_message .= 'Crawler API error: either call limit exceeded or API returned an error.';
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
         }
 
-        $this->logger->logStatus($status_message, get_class($this));
-        $status_message = "";
+        if (isset($this->owner_object)) {
+            $status_message = "";
+            // Get owner's mentions
+            if ($this->api->available && $this->api->available_api_calls_for_crawler > 0) {
+                # Get the most recent retweets
+                $rtsofme = $this->api->cURL_source['retweets_of_me'];
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($rtsofme);
+                if ($cURL_status == 200) {
+                    try {
+                        $tweets = $this->api->parseXML($twitter_data);
+                        foreach ($tweets as $tweet) {
+                            $this->fetchStatusRetweets($tweet);
+                        }
+                    } catch(Exception $e) {
+                        $status_message = 'Could not parse retweets_of_me XML for $this->owner_object->username';
+                        $this->logger->logStatus($status_message, get_class($this));
+                        $status_message = "";
+                    }
+                } else {
+                    $status_message .= 'API returned error code '. $cURL_status;
+                }
+            } else {
+                $status_message .= 'Crawler API error: either call limit exceeded or API returned an error.';
+            }
+
+            $this->logger->logStatus($status_message, get_class($this));
+            $status_message = "";
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
+        }
     }
 
     /**
@@ -573,288 +616,326 @@ class TwitterCrawler {
     }
 
     public function fetchInstanceUserFollowers() {
-        $status_message = "";
-        // Get owner's followers: Page back only if more than 2% of follows are missing from database
-        // See how many are missing from last run
-        if ($this->instance->is_archive_loaded_follows) { //all pages have been loaded
-            $this->logger->logStatus("Follower archive marked as loaded", get_class($this));
-
-            //find out how many new follows owner has compared to what's in db
-            $new_follower_count = $this->owner_object->follower_count - $this->instance->total_follows_in_system;
-            $status_message = "New follower count is ".$this->owner_object->follower_count." and system has ".
-            $this->instance->total_follows_in_system."; ".$new_follower_count." new follows to load";
-            $this->logger->logStatus($status_message, get_class($this));
-
-            if ($new_follower_count > 0) {
-                $this->logger->logStatus("Fetching follows via IDs", get_class($this));
-                $this->fetchInstanceUserFollowersByIDs();
-            }
-        } else {
-            $this->logger->logStatus("Follower archive is not loaded; fetch should begin.", get_class($this));
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
         }
 
-        # Fetch follower pages
-        $continue_fetching = true;
-        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching
-        && !$this->instance->is_archive_loaded_follows) {
+        if (isset($this->owner_object)) {
+            $status_message = "";
+            // Get owner's followers: Page back only if more than 2% of follows are missing from database
+            // See how many are missing from last run
+            if ($this->instance->is_archive_loaded_follows) { //all pages have been loaded
+                $this->logger->logStatus("Follower archive marked as loaded", get_class($this));
 
-            $follower_ids = $this->api->cURL_source['followers'];
-            $args = array();
-            if (!isset($next_cursor))
-            $next_cursor = -1;
-            $args['cursor'] = strval($next_cursor);
+                //find out how many new follows owner has compared to what's in db
+                $new_follower_count = $this->owner_object->follower_count - $this->instance->total_follows_in_system;
+                $status_message = "New follower count is ".$this->owner_object->follower_count." and system has ".
+                $this->instance->total_follows_in_system."; ".$new_follower_count." new follows to load";
+                $this->logger->logStatus($status_message, get_class($this));
 
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $args);
-
-            if ($cURL_status > 200) {
-                $continue_fetching = false;
+                if ($new_follower_count > 0) {
+                    $this->logger->logStatus("Fetching follows via IDs", get_class($this));
+                    $this->fetchInstanceUserFollowersByIDs();
+                }
             } else {
-                $fd = DAOFactory::getDAO('FollowDAO');;
+                $this->logger->logStatus("Follower archive is not loaded; fetch should begin.", get_class($this));
+            }
 
-                try {
-                    $status_message = "Parsing XML. ";
-                    $status_message .= "Cursor ".$next_cursor.":";
-                    $users = $this->api->parseXML($twitter_data);
-                    $next_cursor = $this->api->getNextCursor();
-                    $status_message .= count($users)." followers queued to update. ";
+            # Fetch follower pages
+            $continue_fetching = true;
+            while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching
+            && !$this->instance->is_archive_loaded_follows) {
+
+                $follower_ids = $this->api->cURL_source['followers'];
+                $args = array();
+                if (!isset($next_cursor))
+                $next_cursor = -1;
+                $args['cursor'] = strval($next_cursor);
+
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $args);
+
+                if ($cURL_status > 200) {
+                    $continue_fetching = false;
+                } else {
+                    $fd = DAOFactory::getDAO('FollowDAO');;
+
+                    try {
+                        $status_message = "Parsing XML. ";
+                        $status_message .= "Cursor ".$next_cursor.":";
+                        $users = $this->api->parseXML($twitter_data);
+                        $next_cursor = $this->api->getNextCursor();
+                        $status_message .= count($users)." followers queued to update. ";
+                        $this->logger->logStatus($status_message, get_class($this));
+                        $status_message = "";
+
+                        if (count($users) == 0)
+                        $this->instance->is_archive_loaded_follows = true;
+
+                        $updated_follow_count = 0;
+                        $inserted_follow_count = 0;
+                        foreach ($users as $u) {
+                            $utu = new User($u, 'Follows');
+                            $this->user_dao->updateUser($utu);
+
+                            # add/update follow relationship
+                            if ($fd->followExists($this->instance->network_user_id, $utu->user_id, 'twitter')) {
+                                //update it
+                                if ($fd->update($this->instance->network_user_id, $utu->user_id, 'twitter',
+                                Utils::getURLWithParams($follower_ids, $args)))
+                                $updated_follow_count++;
+                            } else {
+                                //insert it
+                                if ($fd->insert($this->instance->network_user_id, $utu->user_id, 'twitter',
+                                Utils::getURLWithParams($follower_ids, $args)))
+                                $inserted_follow_count++;
+                            }
+                        }
+
+                        $status_message .= "$updated_follow_count existing follows updated; ".$inserted_follow_count.
+                    " new follows inserted.";
+                    }
+                    catch(Exception $e) {
+                        $status_message = 'Could not parse followers XML for $crawler_twitter_username';
+                    }
                     $this->logger->logStatus($status_message, get_class($this));
                     $status_message = "";
 
-                    if (count($users) == 0)
-                    $this->instance->is_archive_loaded_follows = true;
-
-                    $updated_follow_count = 0;
-                    $inserted_follow_count = 0;
-                    foreach ($users as $u) {
-                        $utu = new User($u, 'Follows');
-                        $this->user_dao->updateUser($utu);
-
-                        # add/update follow relationship
-                        if ($fd->followExists($this->instance->network_user_id, $utu->user_id, 'twitter')) {
-                            //update it
-                            if ($fd->update($this->instance->network_user_id, $utu->user_id, 'twitter',
-                            Utils::getURLWithParams($follower_ids, $args)))
-                            $updated_follow_count++;
-                        } else {
-                            //insert it
-                            if ($fd->insert($this->instance->network_user_id, $utu->user_id, 'twitter',
-                            Utils::getURLWithParams($follower_ids, $args)))
-                            $inserted_follow_count++;
-                        }
-                    }
-
-                    $status_message .= "$updated_follow_count existing follows updated; ".$inserted_follow_count.
-                    " new follows inserted.";
                 }
-                catch(Exception $e) {
-                    $status_message = 'Could not parse followers XML for $crawler_twitter_username';
-                }
+
                 $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
-
             }
-
-            $this->logger->logStatus($status_message, get_class($this));
-            $status_message = "";
-
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
         }
 
     }
 
     public function fetchInstanceUserFriends() {
-        $fd = DAOFactory::getDAO('FollowDAO');
-        $this->instance->total_friends_in_system = $fd->countTotalFriends($this->instance->network_user_id, 'twitter');
-
-        if ($this->instance->total_friends_in_system
-        < $this->owner_object->friend_count) {
-            $this->instance->is_archive_loaded_friends = false;
-            $this->logger->logStatus($this->instance->total_friends_in_system." friends in system, ".
-            $this->owner_object->friend_count." friends according to Twitter; Friend archive is not loaded",
-            get_class($this));
-        } else {
-            $this->instance->is_archive_loaded_friends = true;
-            $this->logger->logStatus("Friend archive loaded", get_class($this));
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
         }
 
-        $status_message = "";
-        # Fetch friend pages
-        $continue_fetching = true;
-        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching
-        && !$this->instance->is_archive_loaded_friends) {
+        if (isset($this->owner_object)) {
+            $fd = DAOFactory::getDAO('FollowDAO');
+            $this->instance->total_friends_in_system = $fd->countTotalFriends($this->instance->network_user_id,
+            'twitter');
 
-            $friend_ids = $this->api->cURL_source['following'];
-            $args = array();
-            if (!isset($next_cursor))
-            $next_cursor = -1;
-            $args['cursor'] = strval($next_cursor);
-
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $args);
-
-            if ($cURL_status > 200) {
-                $continue_fetching = false;
+            if ($this->instance->total_friends_in_system
+            < $this->owner_object->friend_count) {
+                $this->instance->is_archive_loaded_friends = false;
+                $this->logger->logStatus($this->instance->total_friends_in_system." friends in system, ".
+                $this->owner_object->friend_count." friends according to Twitter; Friend archive is not loaded",
+                get_class($this));
             } else {
+                $this->instance->is_archive_loaded_friends = true;
+                $this->logger->logStatus("Friend archive loaded", get_class($this));
+            }
 
-                try {
-                    $status_message = "Parsing XML. ";
-                    $status_message .= "Cursor ".$next_cursor.":";
-                    $users = $this->api->parseXML($twitter_data);
-                    $next_cursor = $this->api->getNextCursor();
-                    $status_message .= count($users)." friends queued to update. ";
+            $status_message = "";
+            # Fetch friend pages
+            $continue_fetching = true;
+            while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching
+            && !$this->instance->is_archive_loaded_friends) {
+
+                $friend_ids = $this->api->cURL_source['following'];
+                $args = array();
+                if (!isset($next_cursor))
+                $next_cursor = -1;
+                $args['cursor'] = strval($next_cursor);
+
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $args);
+
+                if ($cURL_status > 200) {
+                    $continue_fetching = false;
+                } else {
+
+                    try {
+                        $status_message = "Parsing XML. ";
+                        $status_message .= "Cursor ".$next_cursor.":";
+                        $users = $this->api->parseXML($twitter_data);
+                        $next_cursor = $this->api->getNextCursor();
+                        $status_message .= count($users)." friends queued to update. ";
+                        $this->logger->logStatus($status_message, get_class($this));
+                        $status_message = "";
+
+                        $updated_follow_count = 0;
+                        $inserted_follow_count = 0;
+
+                        if (count($users) == 0)
+                        $this->instance->is_archive_loaded_friends = true;
+
+                        foreach ($users as $u) {
+                            $utu = new User($u, 'Friends');
+                            $this->user_dao->updateUser($utu);
+
+                            # add/update follow relationship
+                            if ($fd->followExists($utu->user_id, $this->instance->network_user_id, 'twitter')) {
+                                //update it
+                                if ($fd->update($utu->user_id, $this->instance->network_user_id, 'twitter',
+                                Utils::getURLWithParams($friend_ids, $args)))
+                                $updated_follow_count++;
+                            } else {
+                                //insert it
+                                if ($fd->insert($utu->user_id, $this->instance->network_user_id, 'twitter',
+                                Utils::getURLWithParams($friend_ids, $args)))
+                                $inserted_follow_count++;
+                            }
+
+                        }
+
+                        $status_message .= "$updated_follow_count existing friends updated; ".$inserted_follow_count.
+                    " new friends inserted.";
+                    }
+                    catch(Exception $e) {
+                        $status_message = 'Could not parse friends XML for $crawler_twitter_username';
+                    }
                     $this->logger->logStatus($status_message, get_class($this));
                     $status_message = "";
 
-                    $updated_follow_count = 0;
-                    $inserted_follow_count = 0;
-
-                    if (count($users) == 0)
-                    $this->instance->is_archive_loaded_friends = true;
-
-                    foreach ($users as $u) {
-                        $utu = new User($u, 'Friends');
-                        $this->user_dao->updateUser($utu);
-
-                        # add/update follow relationship
-                        if ($fd->followExists($utu->user_id, $this->instance->network_user_id, 'twitter')) {
-                            //update it
-                            if ($fd->update($utu->user_id, $this->instance->network_user_id, 'twitter',
-                            Utils::getURLWithParams($friend_ids, $args)))
-                            $updated_follow_count++;
-                        } else {
-                            //insert it
-                            if ($fd->insert($utu->user_id, $this->instance->network_user_id, 'twitter',
-                            Utils::getURLWithParams($friend_ids, $args)))
-                            $inserted_follow_count++;
-                        }
-
-                    }
-
-                    $status_message .= "$updated_follow_count existing friends updated; ".$inserted_follow_count.
-                    " new friends inserted.";
                 }
-                catch(Exception $e) {
-                    $status_message = 'Could not parse friends XML for $crawler_twitter_username';
-                }
+
                 $this->logger->logStatus($status_message, get_class($this));
                 $status_message = "";
-
             }
-
-            $this->logger->logStatus($status_message, get_class($this));
-            $status_message = "";
-
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
         }
-
     }
 
     public function fetchFriendTweetsAndFriends() {
-        $fd = DAOFactory::getDAO('FollowDAO');
-        $pd = DAOFactory::getDAO('PostDAO');
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
+        }
 
-        $continue_fetching = true;
-        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
-            $stale_friend = $fd->getStalestFriend($this->owner_object->user_id, 'twitter');
-            if ($stale_friend != null) {
-                $this->logger->logStatus($stale_friend->username." is friend most need of update", get_class($this));
-                $stale_friend_tweets = str_replace("[id]", $stale_friend->username,
-                $this->api->cURL_source['user_timeline']);
-                $args = array();
-                $args["count"] = 200;
+        if (isset($this->owner_object)) {
+            $fd = DAOFactory::getDAO('FollowDAO');
+            $pd = DAOFactory::getDAO('PostDAO');
 
-                if ($stale_friend->last_post_id > 0) {
-                    $args['since_id'] = $stale_friend->last_post_id;
-                }
+            $continue_fetching = true;
+            while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
+                $stale_friend = $fd->getStalestFriend($this->owner_object->user_id, 'twitter');
+                if ($stale_friend != null) {
+                    $this->logger->logStatus($stale_friend->username." is friend most need of update",
+                    get_class($this));
+                    $stale_friend_tweets = str_replace("[id]", $stale_friend->username,
+                    $this->api->cURL_source['user_timeline']);
+                    $args = array();
+                    $args["count"] = 200;
 
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($stale_friend_tweets, $args);
+                    if ($stale_friend->last_post_id > 0) {
+                        $args['since_id'] = $stale_friend->last_post_id;
+                    }
 
-                if ($cURL_status == 200) {
-                    try {
-                        $count = 0;
-                        $tweets = $this->api->parseXML($twitter_data);
+                    list($cURL_status, $twitter_data) = $this->api->apiRequest($stale_friend_tweets, $args);
 
-                        if (count($tweets) > 0) {
-                            $stale_friend_updated_from_tweets = false;
-                            foreach ($tweets as $tweet) {
+                    if ($cURL_status == 200) {
+                        try {
+                            $count = 0;
+                            $tweets = $this->api->parseXML($twitter_data);
 
-                                if ($pd->addPost($tweet, $stale_friend, $this->logger) > 0) {
-                                    $count++;
-                                    //expand and insert links contained in tweet
-                                    $this->processTweetURLs($tweet);
-                                }
-                                if (!$stale_friend_updated_from_tweets) {
-                                    //Update stale_friend values here
-                                    $stale_friend->full_name = $tweet['full_name'];
-                                    $stale_friend->avatar = $tweet['avatar'];
-                                    $stale_friend->location = $tweet['location'];
-                                    $stale_friend->description = $tweet['description'];
-                                    $stale_friend->url = $tweet['url'];
-                                    $stale_friend->is_protected = $tweet['is_protected'];
-                                    $stale_friend->follower_count = $tweet['follower_count'];
-                                    $stale_friend->friend_count = $tweet['friend_count'];
-                                    $stale_friend->post_count = $tweet['post_count'];
-                                    $stale_friend->joined = date_format(date_create($tweet['joined']), "Y-m-d H:i:s");
+                            if (count($tweets) > 0) {
+                                $stale_friend_updated_from_tweets = false;
+                                foreach ($tweets as $tweet) {
 
-                                    if ($tweet['post_id'] > $stale_friend->last_post_id) {
-                                        $stale_friend->last_post_id = $tweet['post_id'];
+                                    if ($pd->addPost($tweet, $stale_friend, $this->logger) > 0) {
+                                        $count++;
+                                        //expand and insert links contained in tweet
+                                        $this->processTweetURLs($tweet);
                                     }
-                                    $this->user_dao->updateUser($stale_friend);
-                                    $stale_friend_updated_from_tweets = true;
+                                    if (!$stale_friend_updated_from_tweets) {
+                                        //Update stale_friend values here
+                                        $stale_friend->full_name = $tweet['full_name'];
+                                        $stale_friend->avatar = $tweet['avatar'];
+                                        $stale_friend->location = $tweet['location'];
+                                        $stale_friend->description = $tweet['description'];
+                                        $stale_friend->url = $tweet['url'];
+                                        $stale_friend->is_protected = $tweet['is_protected'];
+                                        $stale_friend->follower_count = $tweet['follower_count'];
+                                        $stale_friend->friend_count = $tweet['friend_count'];
+                                        $stale_friend->post_count = $tweet['post_count'];
+                                        $stale_friend->joined = date_format(date_create($tweet['joined']), "Y-m-d H:i:s");
+
+                                        if ($tweet['post_id'] > $stale_friend->last_post_id) {
+                                            $stale_friend->last_post_id = $tweet['post_id'];
+                                        }
+                                        $this->user_dao->updateUser($stale_friend);
+                                        $stale_friend_updated_from_tweets = true;
+                                    }
                                 }
+                            } else {
+                                $this->fetchAndAddUser($stale_friend->user_id, "Friends");
                             }
-                        } else {
-                            $this->fetchAndAddUser($stale_friend->user_id, "Friends");
+
+                            $this->logger->logStatus(count($tweets)." tweet(s) found for ".$stale_friend->username.
+                            " and ". $count." saved", get_class($this));
                         }
-
-                        $this->logger->logStatus(count($tweets)." tweet(s) found for ".$stale_friend->username." and ".
-                        $count." saved", get_class($this));
+                        catch(Exception $e) {
+                            $this->logger->logStatus('Could not parse friends XML for $stale_friend->username',
+                            get_class($this));
+                        }
+                        $this->fetchUserFriendsByIDs($stale_friend->user_id, $fd);
+                    } elseif ($cURL_status == 401 || $cURL_status == 404) {
+                        try {
+                            $e = $this->api->parseError($twitter_data);
+                            $ued = DAOFactory::getDAO('UserErrorDAO');
+                            $ued->insertError($stale_friend->user_id, $cURL_status, $e['error'],
+                            $this->owner_object->user_id, 'twitter');
+                            $this->logger->logStatus('User error saved', get_class($this));
+                        }
+                        catch(Exception $e) {
+                            $this->logger->logStatus('Could not parse timeline error for $stale_friend->username',
+                            get_class($this));
+                        }
                     }
-                    catch(Exception $e) {
-                        $this->logger->logStatus('Could not parse friends XML for $stale_friend->username',
-                        get_class($this));
-                    }
-                    $this->fetchUserFriendsByIDs($stale_friend->user_id, $fd);
-                } elseif ($cURL_status == 401 || $cURL_status == 404) {
-                    try {
-                        $e = $this->api->parseError($twitter_data);
-                        $ued = DAOFactory::getDAO('UserErrorDAO');
-                        $ued->insertError($stale_friend->user_id, $cURL_status, $e['error'],
-                        $this->owner_object->user_id, 'twitter');
-                        $this->logger->logStatus('User error saved', get_class($this));
-                    }
-                    catch(Exception $e) {
-                        $this->logger->logStatus('Could not parse timeline error for $stale_friend->username',
-                        get_class($this));
-                    }
+                } else {
+                    $this->logger->logStatus('No friend staler than 1 day', get_class($this));
+                    $continue_fetching = false;
                 }
-            } else {
-                $this->logger->logStatus('No friend staler than 1 day', get_class($this));
-                $continue_fetching = false;
             }
-
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
         }
     }
 
     public function fetchStrayRepliedToTweets() {
-        $pd = DAOFactory::getDAO('PostDAO');
-        $strays = $pd->getStrayRepliedToPosts($this->owner_object->user_id, $this->owner_object->network);
-        $status_message = count($strays).' stray replied-to tweets to load for user ID '.$this->owner_object->user_id .
-        ' on '.$this->owner_object->network;
-        $this->logger->logStatus($status_message, get_class($this));
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
+        }
 
-        foreach ($strays as $s) {
-            if ($this->api->available && $this->api->available_api_calls_for_crawler > 0)
-            $this->fetchAndAddTweetRepliedTo($s['in_reply_to_post_id'], $pd);
+        if (isset($this->owner_object)) {
+            $pd = DAOFactory::getDAO('PostDAO');
+            $strays = $pd->getStrayRepliedToPosts($this->owner_object->user_id, $this->owner_object->network);
+            $status_message = count($strays).' stray replied-to tweets to load for user ID '.$this->owner_object->user_id .
+        ' on '.$this->owner_object->network;
+            $this->logger->logStatus($status_message, get_class($this));
+
+            foreach ($strays as $s) {
+                if ($this->api->available && $this->api->available_api_calls_for_crawler > 0)
+                $this->fetchAndAddTweetRepliedTo($s['in_reply_to_post_id'], $pd);
+            }
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
         }
     }
 
     public function fetchUnloadedFollowerDetails() {
-        $fd = DAOFactory::getDAO('FollowDAO');
-        $strays = $fd->getUnloadedFollowerDetails($this->owner_object->user_id, 'twitter');
-        $status_message = count($strays).' unloaded follower details to load.';
-        $this->logger->logStatus($status_message, get_class($this));
+        if (!isset($this->owner_object)) {
+            $this->fetchInstanceUserInfo();
+        }
 
-        foreach ($strays as $s) {
-            if ($this->api->available && $this->api->available_api_calls_for_crawler > 0)
-            $this->fetchAndAddUser($s['follower_id'], "Follower IDs");
+        if (isset($this->owner_object)) {
+            $fd = DAOFactory::getDAO('FollowDAO');
+            $strays = $fd->getUnloadedFollowerDetails($this->owner_object->user_id, 'twitter');
+            $status_message = count($strays).' unloaded follower details to load.';
+            $this->logger->logStatus($status_message, get_class($this));
+
+            foreach ($strays as $s) {
+                if ($this->api->available && $this->api->available_api_calls_for_crawler > 0)
+                $this->fetchAndAddUser($s['follower_id'], "Follower IDs");
+            }
+        } else {
+            $this->logger->logStatus("Cannot fetch search results; Owner object has not been set.", get_class($this));
         }
     }
 
@@ -1006,4 +1087,3 @@ class TwitterCrawler {
         }
     }
 }
-
