@@ -71,7 +71,12 @@
         {if $mode eq "public"} <!-- this is the public timeline -->
           <li class="round-tl round-bl"><a href="{$site_root_path}">Private Dashboard</a></li>
         {else}
-          {if $instance}<li class="round-tl round-bl"><a href="{$site_root_path}?u=$instance->network_username">{$instance->network_username}{else}Home{/if}</a></li>
+          <li class="round-tl round-bl">
+          {if $instance}
+          <a href="{$site_root_path}?u={$instance->network_username|urlencode}&n={$instance->network}">{$instance->network_username}
+          {else}
+          <a href="{$site_root_path}">Home{/if}</a>
+          </li>
           <li><a href="{$site_root_path}public.php">Public Timeline</a></li>
         {/if}
         <li class="round-tr round-br"><a href="{$site_root_path}account/?m=manage">Configuration</a></li>
