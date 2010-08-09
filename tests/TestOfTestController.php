@@ -9,6 +9,8 @@ require_once $SOURCE_ROOT_PATH.'tests/classes/class.TestController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
 
 /**
@@ -53,6 +55,7 @@ class TestOfTestController extends ThinkUpBasicUnitTestCase {
         $controller = new TestController(true);
         $results = $controller->go();
 
+        $this->assertEqual('text/html', $controller->getContentType());
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('test'), 'Testing, testing, 123');
