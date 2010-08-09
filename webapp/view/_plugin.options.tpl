@@ -10,7 +10,7 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
 <form id="plugin_option_form" onsubmit="return false;">
 
 <p class="success" id="plugin_options_success" style="display: none;">
-    Congratulations, your plugin options have been saved
+    Saved!
 </p>
 
 <div id="plugin_option_server_error" 

@@ -41,7 +41,7 @@
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 require_once 'class.FixtureBuilderException.php';
-require_once 'webapp/model/class.Config.php';
+//require_once 'webapp/model/class.Config.php';
 
 class FixtureBuilder {
 

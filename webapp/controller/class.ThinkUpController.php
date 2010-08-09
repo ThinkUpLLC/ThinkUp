@@ -37,10 +37,6 @@ abstract class ThinkUpController {
      */
     protected $app_session;
     /**
-     * var str
-     */
-    protected $content_type = 'text/html';
-    /**
      *
      * @var araray
      */
@@ -56,7 +52,7 @@ abstract class ThinkUpController {
      *
      * @var str
      */
-    protected $content_type;
+    protected $content_type = 'text/html';
 
     /**
      * Constructs ThinkUpController
@@ -340,25 +336,5 @@ abstract class ThinkUpController {
         $this->addToView('infomsg', $msg );
     }
 
-    /**
-     * Sets Content Type header
-     *
-     * @param str Content Type
-     */
-    protected function setContentType($content_type) {
-        $this->content_type = $content_type;
-        // if is to suppress 'headers already sent' error while testing, etc.
-        if( ! headers_sent() ) {
-            header('Content-Type: ' . $this->content_type, true);
-        }
-    }
 
-    /**
-     * Gets Content Type header
-     *
-     * @return string Content Type
-     */
-    public function getContentType() {
-        return $this->content_type;
-    }
 }

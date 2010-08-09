@@ -20,12 +20,22 @@ $request_token_secret = $_SESSION['oauth_request_token_secret'];
  echo "URL Request Token: ".$request_token."<br />";
  echo "Session Request Token: ".$request_token_secret."<br />";
  */
-$to = new TwitterOAuth($config->getValue('oauth_consumer_key'), $config->getValue('oauth_consumer_secret'), $request_token, $request_token_secret);
+
+// get oauth values
+$plugin_dao = DAOFactory::GetDAO('PluginDAO');
+$plugin_id = $plugin_dao->getPluginId('twitter');
+$plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+$options = $plugin_option_dao->getOptionsHash($plugin_id, true); //get cached
+
+
+$to = new TwitterOAuth($options['oauth_consumer_key']->option_value, $options['oauth_consumer_secret']->option_value, $request_token, $request_token_secret);
+
 $tok = $to->getAccessToken();
 
-if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
-    $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $config->getValue('oauth_consumer_key'), $config->getValue('oauth_consumer_secret'));
 
+$msg = '';
+if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
+    $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'], $options['oauth_consumer_key']->option_value, $options['oauth_consumer_secret']->option_value);
     $u = $api->verifyCredentials();
 
     //    echo "User ID: ". $u['user_id'];
@@ -33,11 +43,12 @@ if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
     $twitter_id = $u['user_id'];
     $tu = $u['user_name'];
 
+
     $od = DAOFactory::getDAO('OwnerDAO');
     $owner = $od->getByEmail($_SESSION['user']);
 
     if ($twitter_id > 0) {
-        $msg = "<h2 class=\"subhead\">Twitter authentication successful!</h2>";
+        $msg .= "<h2 class=\"subhead\">Twitter authentication successful!</h2>";
 
         $id = DAOFactory::getDAO('InstanceDAO');
         $i = $id->getByUsername($tu);

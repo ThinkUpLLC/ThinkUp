@@ -16,7 +16,7 @@ class Utils {
      */
     public static function getPercentage($numerator, $denominator) {
         if ((isset($numerator)) && (isset($denominator))) {
-            if ($numerator > 0) {
+            if ($numerator > 0 && $denominator > 0) {
                 return ($numerator * 100) / ($denominator);
             } else {
                 return 0;

@@ -48,3 +48,16 @@
 <p>Alternately, add a public Twitter username for ThinkUp capture data about:</p>
 <form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to ThinkUp"></form>
 
+
+{if $options_markup}
+<div style="border: solid gray 1px;padding:10px;margin:20px">
+<h2 class="subhead">Configure the Twitter Plugin</h2>
+<ol style="margin-left:40px"><li><a href="http://twitter.com/oauth_clients/">Register your ThinkUp application on Twitter</a>.</li>
+<li>Set the callback URL to <pre>http://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/twitter/auth.php</pre></li>
+<li>Enter the Twitter-provided consumer key and secret here.</li></ol>
+<p>
+{$options_markup}
+</p>
+</div>
+{/if}
+

@@ -47,10 +47,6 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
     }
 
     public function tearDown(){
-        if(isset($_SESSION)) { unset($_SESSION['user']); }
-        if(isset($_SESSION)) { unset($_SESSION['user_is_admin']); }
-        $sql = "truncate table " . $this->prefix . $this::TEST_TABLE;
-        $this->pdo->query($sql);
         parent::tearDown();
     }
 
@@ -126,8 +122,8 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $controller = $this->getController();
         $builder = $this->buildPlugin();
         // bad id
-        $this->assertFalse($controller->validatePluginId(-99));
-        $this->assertTrue($controller->validatePluginId( $builder->columns[ 'last_insert_id' ] ));
+        $this->assertFalse($controller->isValidPluginId(-99));
+        $this->assertTrue($controller->isValidPluginId( $builder->columns[ 'last_insert_id' ] ));
 
     }
 

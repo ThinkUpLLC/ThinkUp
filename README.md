@@ -34,7 +34,9 @@ In future versions, this will get easier.
 
 ### Install application files
 
-*Note for upgraders:* If you're upgrading a previous installation, you should delete your cookies (in Firefox under `Preferences / Privacy / delete individual cookies`.  In Chrome, you can delete individual cookies under `Preferences / Under the Hood / Content Settings / Cookies / Show Cookies and other site data`).
+*Note for upgraders:* If you're upgrading a previous installation, you should delete your cookies (in Firefox under 
+`Preferences / Privacy / delete individual cookies`.  In Chrome, you can delete individual cookies under
+`Preferences / Under the Hood / Content Settings / Cookies / Show Cookies and other site data`).
 
 1. Download source code. Save the `thinkup` directory one level above your web site's DocumentRoot. For example, if your site's DocumentRoot is  `/var/www/vhosts/example.com/httpdocs/` Put the `thinkup` directory here:  `/var/www/vhosts/example.com/thinkup/`
 2. Create a symbolic link to the `thinkup/webapp` directory in your site's DocumentRoot folder. To do so, `cd` to the DocumentRoot, and use the command: `ln -s ../thinkup/webapp/ thinkup`
@@ -63,7 +65,8 @@ your environment and  plugins.
 
 Log into Twitter and [register your ThinkUp instance](http://twitter.com/oauth_clients/). Set the callback URL to 
     http://yourserver.com/path-to-thinkup-webapp/plugins/twitter/auth.php
-Write down the items labeled "Consumer key" and "Consumer secret" and add them to the `config.inc.php` file.
+Write down the items labeled "Consumer key" and "Consumer secret" and enter them on the Twitter plugin's configuration 
+screen.
 
 #### Facebook Plugin Support: Create a new Facebook application
 
@@ -96,15 +99,18 @@ To view what's going on with the crawler, use this command:
 
     $ tail -f /your-path-to-thinkank/logs/crawler.log
 
-Cron the crawler's run command to go at least once an hour. Hint: you may configure and cron this pre-fab bash script, which will run the crawler and rotate its logs:
+Cron the crawler's run command to go at least once an hour. Hint: you may configure and cron this pre-fab bash script,
+which will run the crawler and rotate its logs:
 
     /thinkup/extras/cron/cron
 
-See the script's [README](http://github.com/ginatrapani/thinkup/blob/master/extras/cron/README) for more information on configuring it.
+See the script's [README](http://github.com/ginatrapani/thinkup/blob/master/extras/cron/README) for more information on
+configuring it.
 
 ## SUPPORT AND MORE INFORMATION
 
-To discuss ThinkUp, [post to the project mailing list](http://groups.google.com/group/thinkupapp). For deeper documentation, see [the ThinkUp wiki](http://wiki.github.com/ginatrapani/thinkup).
+To discuss ThinkUp, [post to the project mailing list](http://groups.google.com/group/thinkupapp). For deeper
+documentation, see [the ThinkUp wiki](http://wiki.github.com/ginatrapani/thinkup).
 
 
 ## LICENSE

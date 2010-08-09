@@ -42,7 +42,15 @@ var PluginOptions = function() {
             var err_div_selector = '#plugin_options_error_' + option_name;
             $(err_div_selector).hide();
             if(option.type == 'text_element') {
+                delete option.regex_fail;
                 value = this.processTextElement(option);
+                if(value && option.validation_regex) {
+                    var val_regex = new RegExp(option.validation_regex);
+                    if(! value.match(val_regex)) {
+                        value = '';
+                        option.regex_fail = true;
+                    }
+                }
                 if(value) {
                     form_data['option_' + option_name] = value;
                     if(option.id) {
@@ -128,11 +136,11 @@ var PluginOptions = function() {
      */
     this.setRequiredMessage = function(option) {
         // we don't require this option, so return true
-        if(option_not_required[option['name']]) {
-        	if(plugin_options.DEBUG) { console.debug('Value not required for %s', option.name ); }
+        if(option_not_required[option['name']] && ! option.regex_fail) {
+            if(plugin_options.DEBUG) { console.debug('Value not required for %s', option.name ); }
             return true;
         }
-        
+
         message = '';
         if( option_required_message[option['name']] ) {
             message = option_required_message[option['name']];
@@ -188,14 +196,7 @@ var PluginOptions = function() {
         value = text_element.val()
         if(plugin_options.DEBUG) { console.debug("%s form value = %s", option.name, value); }
         if(value && value != '') {
-            if(option.default_value && value == option.default_value) {
-                if(plugin_options.DEBUG) { 
-                    console.debug("Value equals default, %s=%s - %s", option.default_value, value, option.name); 
-                }
-                return false;
-            } else {
-                return value;
-            }
+            return value;
         } else {
             if(plugin_options.DEBUG) { console.debug('No value for %s', option.name ); }
             return false;

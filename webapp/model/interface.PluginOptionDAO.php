@@ -30,8 +30,8 @@ interface PluginOptionDAO {
      * @param int A plugin id (optional). If not defined returns all options for all plugins
      * @return array A list of PluginOption objects
      */
-    public function getOptions($plugin_id = null);
-        
+    public function getOptions($plugin_id = null, $cached = false);
+
     /**
      * Delete a plugin option by id
      * @param int A plugin option id
@@ -44,5 +44,13 @@ interface PluginOptionDAO {
      * @param int A plugin id
      * @return bool If =valid
      */
-    public function validatePluginId($option_id);
+    public function isValidPluginId($option_id);
+
+    /**
+     * @param int Plugin id
+     * @param boolean cached - defualkt to false
+     * @return array A hash table of Options with option_name as the key
+     */
+    public function getOptionsHash($plugin_id, $cached = false);
+
 }

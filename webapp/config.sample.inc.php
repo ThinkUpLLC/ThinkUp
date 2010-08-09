@@ -63,17 +63,9 @@ $THINKUP_CFG['table_prefix']              = 'tu_';
 
 /*------------------------------------------------
   TWITTER
-  @TODO Put the Twitter-specific settings into 
+  All of the Twitter-specific settings are on 
         the Twitter plugin's configuration page.
 ------------------------------------------------*/
-
-// Explanation at http://apiwiki.twitter.com/Things-Every-Developer-Should-Know#6Therearepaginationlimits
-$THINKUP_CFG['archive_limit']             = 3200;
-
-// To integrate with Twitter, get the following by registering at http://twitter.com/oauth_clients/.
-// Otherwise, set both to ''.
-$THINKUP_CFG['oauth_consumer_key']        = 'your_consumer_key';
-$THINKUP_CFG['oauth_consumer_secret']     = 'your_consumer_secret';
 
 /*------------------------------------------------
   FACEBOOK

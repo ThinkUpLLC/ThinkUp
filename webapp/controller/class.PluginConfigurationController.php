@@ -1,6 +1,7 @@
 <?php
 /**
- * Plugin Configuration Controller - Extends ThinkUpAuthController to add configuration option functionality
+ * Plugin Configuration Controller
+ * Extends ThinkUpAuthController to add plugin configuration option functionality
  *  <code>
  *
  *      $this->addPluginOption(FORM_TEXT_ELEMENT, array('name' => 'email') );
@@ -23,21 +24,20 @@
  *      // can set optional label for element
  *      $this->addPluginOption(FORM_TEXT_ELEMENT, array('name' => 'phone', 'label' => "Phone Number") );
  *
- *      $this->addPluginOption(FORM_RADIO_ELEMENT, 
+ *      $this->addPluginOption(FORM_RADIO_ELEMENT,
  *          array('name' => 'Gender', value => 'F', 'display_value' => 'Female') );
- *      $this->addPluginOption(FORM_RADIO_ELEMENT, 
+ *      $this->addPluginOption(FORM_RADIO_ELEMENT,
  *          array('name' => 'Gender', value => 'M', 'display_value' => 'Male') );
- *      $this->addPluginOption(FORM_RADIO_ELEMENT, 
+ *      $this->addPluginOption(FORM_RADIO_ELEMENT,
  *          array('name' => 'Gender', value => 'O', 'display_value' => 'Other', 'default_selection' => true) );
- * *
- *      // select elements hove a few other special attributes
- *      $this->setPluginSelectMultiple('City', true);
- *      $this->setPluginSelectMultiple('Visible', 3); //defaults to one
- *      $this->addPluginOption(FORM_SELECT_ELEMENT, 
+ *
+ *      //select element
+ *      $this->addPluginOption(FORM_SELECT_ELEMENT,
  *          array('name' => 'City', value => 'NYC', 'display_value' => 'New York', default_selection' => true ) );
- *      $this->addPluginOption(FORM_RADIO_ELEMENT, 
+ *
+ *      $this->addPluginOption(FORM_RADIO_ELEMENT,
  *          array('name' => 'Gender', value => 'MSP', 'display_value' => 'Minneapolis') );
- *      $this->addPluginOption(FORM_RADIO_ELEMENT, 
+ *      $this->addPluginOption(FORM_RADIO_ELEMENT,
  *          array('name' => 'Gender', value => 'LA') );
  *
  *  </code>
@@ -112,11 +112,26 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
      */
     var $plugin_id;
 
+    /**
+     * @var array plugin values
+     */
+    var $options_values = array();
+
+    /**
+     * @var array plugin values
+     */
+    var $options_hash = array();
+
     public function __construct($owner, $folder_name) {
         parent::__construct(true);
         $this->owner = $owner;
         $this->folder_name = $folder_name;
         $this->disableCaching();
+        //get option values
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
+        $this->plugin_id = $plugin_dao->getPluginId($this->folder_name);
+        $this->options_values  = $plugin_option_dao->getOptions($this->plugin_id);
     }
 
     /**
@@ -127,7 +142,7 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
     protected function generateView() {
         // if we have some p[lugin option elements defined
         // render them and add to the parent view...
-        if(count($this->option_elements) > 0) {            
+        if(count($this->option_elements) > 0) {
             $this->setValues();
             $view_mgr = new SmartyThinkUp();
             $view_mgr->disableCaching();
@@ -193,17 +208,21 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
     public function addPluginOption($option_type, $args) {
 
         if(isset($args['name'])) {
-            
+
             $element = array('name' => $args['name'], 'type' => $option_type);
             switch($option_type) {
                 case self::FORM_SELECT_ELEMENT:
                     $element['values'] = $args['values'];
-                    break;                
+                    break;
                 case self::FORM_RADIO_ELEMENT:
                     $element['values'] = $args['values'];
                     break;
                 default:
-                // text field, do nothing...
+                    // text field, do nothing...
+                    if(isset($args['validation_regex'])) {
+                        $element['validation_regex'] = $args['validation_regex'];
+                    }
+
             }
             if(isset($args['default_value'])) {
                 $element['default_value'] = $args['default_value'];
@@ -216,20 +235,16 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
             }
             if(isset($args['value'])) {
                 $element['value'] = $args['value'];
-            }            
+            }
             $this->option_elements[$args['name']] = $element;
         }
     }
 
     /**
-     * sets the values for options
+     * Sets the values for options in the data store for the view
      */
     public function setValues() {
-        $plugin_dao = DAOFactory::getDAO('PluginDAO');
-        $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
-        $this->plugin_id = $plugin_dao->getPluginId($this->folder_name);
-        $options_values  = $plugin_option_dao->getOptions($this->plugin_id);
-        $options_hash = $this->optionList2HashByOptionName($options_values);
+        $options_hash = $this->optionList2HashByOptionName();
         foreach( $this->option_elements as $key => $value) {
             if(isset($options_hash[$key])) {
                 $this->option_elements[$key]['id'] = $options_hash[$key]->id;
@@ -242,27 +257,43 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
         }
     }
 
+    /**
+     * Gets Hash of Option Name/Values
+     * @return array A hash of plugin options with option_name as the key
+     */
+    public function getPluginOptions() {
+        return $this->optionList2HashByOptionName();
+    }
+
+    /**
+     * Gets a plugin option value by key/name
+     * @return str a plugin value for passed key
+     */
+    public function getPluginOption($key) {
+        $options_hash = $this->optionList2HashByOptionName();
+        $value = isset( $options_hash[$key] ) ? $options_hash[$key]->option_value : null;
+        return $value;
+    }
 
     /**
      * Converts a list of plugin options to a hash with option_name as the key
      * @param array A list of Plugin Options
      * @return array A hash table op Options with option_name as the key
      */
-    public function optionList2HashByOptionName($option_list) {
-        $options_hash = array();
-        if($option_list) {
-            foreach ($option_list as $option) {
-                $options_hash[ $option->option_name ] = $option;
+    public function optionList2HashByOptionName() {
+        if(count($this->options_values) > 0 && count($this->options_hash) == 0) {
+            foreach ($this->options_values as $option) {
+                $this->options_hash[ $option->option_name ] = $option;
             }
         }
-        return $options_hash;
+        return $this->options_hash;
     }
 
     /**
      * set plugin id for view, ie: $this->plugin_id = $plugin_id;
      * @param int plugin id
      */
-     public function setPlugin($plugin) {
-         $this->plugin = $plugin;
-     }
+    public function setPlugin($plugin) {
+        $this->plugin = $plugin;
+    }
 }

@@ -7,21 +7,12 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TwitterPluginConfigurationController extends ThinkUpAuthController {
+class TwitterPluginConfigurationController extends PluginConfigurationController {
     /**
      *
      * @var Owner
      */
     var $owner;
-    /**
-     * Constructor
-     * @param Owner $owner
-     */
-    public function __construct($owner) {
-        parent::__construct(true);
-        $this->owner = $owner;
-        $this->disableCaching();
-    }
 
     public function authControl() {
         $config = Config::getInstance();
@@ -31,16 +22,18 @@ class TwitterPluginConfigurationController extends ThinkUpAuthController {
         $id = DAOFactory::getDAO('InstanceDAO');
         $od = DAOFactory::getDAO('OwnerDAO');
 
-        $oauth_consumer_key = $config->getValue('oauth_consumer_key');
-        $oauth_consumer_secret = $config->getValue('oauth_consumer_secret');
-
+        // get plugin option values if defined...
+        $plugin_options = $this->getPluginOptions();
+        $oauth_consumer_key = $this->getPluginOption('oauth_consumer_key');
+        $oauth_consumer_secret = $this->getPluginOption('oauth_consumer_secret');
+        $archive_limit = $this->getPluginOption('archive_limit');
         //Add public user instance
         if (isset($_GET['twitter_username'])) { // if form was submitted
             $logger = Logger::getInstance();
 
             //Check user exists and is public
             $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret,
-            $config->getValue('archive_limit'));
+            $archive_limit);
             $api_call = str_replace("[id]", $_GET['twitter_username'], $api->cURL_source['show_user']);
             list($cURL_status, $data) = $api->apiRequestFromWebapp($api_call);
             if ($cURL_status == 200) {
@@ -81,27 +74,54 @@ class TwitterPluginConfigurationController extends ThinkUpAuthController {
             }
         }
 
-        $to = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret);
-        /* Request tokens from twitter */
-        $tok = $to->getRequestToken();
-        if (isset($tok['oauth_token'])) {
-            $token = $tok['oauth_token'];
-            $_SESSION['oauth_request_token_secret'] = $tok['oauth_token_secret'];
+        if (isset($oauth_consumer_key) && isset($oauth_consumer_secret)) {
+            $to = new TwitterOAuth($oauth_consumer_key, $oauth_consumer_secret);
+            /* Request tokens from twitter */
+            $tok = $to->getRequestToken();
+            if (isset($tok['oauth_token'])) {
+                $token = $tok['oauth_token'];
+                $_SESSION['oauth_request_token_secret'] = $tok['oauth_token_secret'];
 
-            /* Build the authorization URL */
-            $oauthorize_link = $to->getAuthorizeURL($token);
+                /* Build the authorization URL */
+                $oauthorize_link = $to->getAuthorizeURL($token);
+            } else {
+                //set error message here
+                $this->addErrorMessage(
+                "Unable to obtain OAuth token. Check your Twitter consumer key and secret configuration.");
+                $oauthorize_link = '';
+            }
         } else {
-            //set error message here
             $this->addErrorMessage(
-            "Unable to obtain OAuth token. Check your Twitter consumer key and secret configuration.");
+                "Missing required settings! Please configure the Twitter plugin below.");
             $oauthorize_link = '';
         }
-
         $owner_instances = $id->getByOwnerAndNetwork($this->owner, 'twitter');
 
         $this->addToView('owner_instances', $owner_instances);
         $this->addToView('oauthorize_link', $oauthorize_link);
 
+        // add plugin options from
+        $this->addOptionForm();
+
         return $this->generateView();
+    }
+
+    /**
+     * Set plugin option fields for admin/plugin form
+     */
+    private function addOptionForm() {
+
+        $oauth_consumer_key = array('name' => 'oauth_consumer_key', 'label' => 'Consumer key');
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_key);
+
+        $oauth_consumer_secret = array('name' => 'oauth_consumer_secret', 'label' => 'Consumer secret');
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_secret);
+        $archive_limit_label = 'Archive Limit <span style="font-size: 10px;">' .
+            '[<a href="http://apiwiki.twitter.com/Things-Every-Developer-Should-Know#6Therearepaginationlimits">' .
+            '?</a>]</span>';
+        $archive_limit = array('name' => 'archive_limit',
+                               'label' => $archive_limit_label, 'default_value' => '3200');
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $archive_limit);
+
     }
 }

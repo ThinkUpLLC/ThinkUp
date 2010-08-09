@@ -20,19 +20,27 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
             $noauth = true;
-
             if (isset($tokens['oauth_access_token']) && $tokens['oauth_access_token'] != ''
             && isset($tokens['oauth_access_token_secret']) && $tokens['oauth_access_token_secret'] != '') {
                 $noauth = false;
             }
 
+            // get oauth values
+            $plugin_dao = DAOFactory::GetDAO('PluginDAO');
+            $plugin_id = $plugin_dao->getPluginId('twitter');
+            $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+            $options = $plugin_option_dao->getOptionsHash($plugin_id, true); //get cached 
+
             if ($noauth) {
-                $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $config->getValue('oauth_consumer_key'),
-                $config->getValue('oauth_consumer_secret'), $instance, $config->getValue('archive_limit'));
+                $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', 
+                $options['oauth_consumer_key']->option_value,
+                $options['oauth_consumer_secret']->option_value, 
+                $instance, $options['archive_limit']->option_value);
             } else {
                 $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
-                $tokens['oauth_access_token_secret'], $config->getValue('oauth_consumer_key'),
-                $config->getValue('oauth_consumer_secret'), $instance, $config->getValue('archive_limit'));
+                $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
+                $options['oauth_consumer_secret']->option_value, 
+                $instance, $options['archive_limit']->option_value);
             }
 
             $crawler = new TwitterCrawler($instance, $api);
@@ -81,7 +89,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
     }
 
     public function renderConfiguration($owner) {
-        $controller = new TwitterPluginConfigurationController($owner);
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         return $controller->go();
     }
 

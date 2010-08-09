@@ -19,8 +19,8 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
         /** set option fields **/
         // name text field
         $name_field = array('name' => 'testname', 'label' => 'Enter Your Name'); // set an element name and label
-        $name_field['default_value'] = 'Think Tank User'; // ste default value
-        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add elemrnt
+        $name_field['default_value'] = 'Think Tank User'; // set default value
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add element
         // set testname header
         $this->addPluginOptionHeader('testname', 'User Info'); // add a header for an element
         // set a special required message
@@ -52,9 +52,11 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
         $this->addPluginOption(self::FORM_RADIO_ELEMENT, $reg_field);
 
         // registration key
-        $reg_key = array('name' => 'RegKey');
+        $reg_key = array('name' => 'RegKey', 'validation_regex' => '^\d+$');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $reg_key);
         $this->setPluginOptionNotRequired('RegKey');
+        $this->addPluginOptionRequiredMessage('RegKey',
+            'Please enter interger value for RegKey');
         return $this->generateView();
 
     }

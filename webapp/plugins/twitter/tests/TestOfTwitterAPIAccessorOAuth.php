@@ -56,8 +56,8 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', 'GET', array());
         $this->assertWantedPattern('/A or B/', $result);
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
-        $THINKUP_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234,
+        1234, $this->getTestInstance(), 3200);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
         //echo 'Next cursor is ' . $next_cursor;
@@ -70,8 +70,8 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/followers/ids.xml', 'GET', array());
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
-        $THINKUP_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234,
+        1234, $this->getTestInstance(), 3200);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
         //echo 'Next cursor is ' . $next_cursor;
@@ -84,8 +84,8 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $to = new TwitterOAuth('', '', '', '');
         $twitter_data = $to->http('http://search.twitter.com/search.json?q=%40whitehouse&result_type=recent');
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
-        $THINKUP_CFG['oauth_consumer_secret'], $this->getTestInstance(), 3200);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234,
+        1234, $this->getTestInstance(), 3200);
 
         $results = $api->parseJSON($twitter_data);
 

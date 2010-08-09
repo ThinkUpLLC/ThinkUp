@@ -3,6 +3,9 @@ require_once 'init.tests.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
 require_once $SOURCE_ROOT_PATH.'extlib/simpletest/mock_objects.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PluginConfigurationController.php';
 
 /* CONTROLLER TESTS */
 require_once $SOURCE_ROOT_PATH.'tests/TestOfAccountConfigurationController.php';
@@ -25,6 +28,7 @@ require_once $SOURCE_ROOT_PATH.'tests/TestOfTogglePublicInstanceController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfUserController.php';
 require_once $SOURCE_ROOT_PATH.'tests/TestOfPluginOptionController.php';
 
+
 $controller_test = & new GroupTest('Controller tests');
 $controller_test->addTestCase(new TestOfAccountConfigurationController());
 $controller_test->addTestCase(new TestOfActivateAccountController());
@@ -44,5 +48,5 @@ $controller_test->addTestCase(new TestOfToggleActiveInstanceController());
 $controller_test->addTestCase(new TestOfToggleActivePluginController());
 $controller_test->addTestCase(new TestOfTogglePublicInstanceController());
 $controller_test->addTestCase(new TestOfUserController());
-//$controller_test->addTestCase(new TestOfPluginOptionController());
+$controller_test->addTestCase(new TestOfPluginOptionController());
 $controller_test->run( new TextReporter());

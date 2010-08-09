@@ -19,7 +19,7 @@ class PluginOptionController extends ThinkUpAdminController {
         if (isset($_GET['action']) && $_GET['action'] == 'set_options') {
             if(isset($_GET['plugin_id']) 
                 && is_numeric( $_GET['plugin_id'] ) 
-                && $this->validatePluginId( $_GET['plugin_id'] ) ) {
+                && $this->isValidPluginId( $_GET['plugin_id'] ) ) {
 
                 $this->setPluginOptions($_GET['plugin_id']);
 
@@ -88,9 +88,9 @@ class PluginOptionController extends ThinkUpAdminController {
      * @param int A plugin id
      * @return bool
      */
-    public function validatePluginId($plugin_id) {
+    public function isValidPluginId($plugin_id) {
         $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
-        return $plugin_option_dao->validatePluginId($plugin_id);
+        return $plugin_option_dao->isValidPluginId($plugin_id);
     }
     
 }

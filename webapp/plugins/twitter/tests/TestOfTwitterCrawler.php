@@ -74,8 +74,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
         $this->instance = new Instance($r);
 
-        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
-        $THINKUP_CFG['oauth_consumer_secret'], $this->instance, $THINKUP_CFG['archive_limit']);
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key',
+        'fake_secret', $this->instance, 1234);
 
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
@@ -93,8 +93,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'network'=>'twitter');
         $this->instance = new Instance($r);
 
-        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', $THINKUP_CFG['oauth_consumer_key'],
-        $THINKUP_CFG['oauth_consumer_secret'], $this->instance, $THINKUP_CFG['archive_limit']);
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key',
+        'fake_secret', $this->instance, 1234);
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
         $this->instance->is_archive_loaded_follows = true;
@@ -262,6 +262,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $post = $pdao->getPost(15752814831, 'twitter');
         $this->assertTrue(isset($post));
         $this->assertEqual($post->reply_count_cache, 1);
-
     }
+
 }
