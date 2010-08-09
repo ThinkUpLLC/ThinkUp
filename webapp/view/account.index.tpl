@@ -19,9 +19,12 @@
                   <div class="grid_4 alpha">configure</div>
                   <div class="grid_4">version/author</div>
                   <div class="grid_10">description</div>
+                  {if $is_user_admin}
                   <div class="grid_4 omega">activate/deactivate</div>
+                  {/if}
                 </div>
               {/if}
+              {if $user_is_admin || $ip->is_active}
               <div class="clearfix bt append prepend">
                 <div class="grid_4 small alpha"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l">{if $ip->is_active}<a href="?p={$ip->folder_name}">{/if}{$ip->name}{if $ip->is_active}</a>{/if}</div>
                 <div class="grid_4 small"><!--(Currently {if $ip->is_active}Active{else}Inactive{/if})<br />-->Version {$ip->version}<br />by {$ip->author}</div>
@@ -29,10 +32,13 @@
                   {$ip->description}
                   <a href="{$ip->homepage}">[Plug-in home]</a>
                 </div>
+                {if $user_is_admin}
                 <div class="grid_4 omega">
                   <span id="divpluginactivation{$ip->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $ip->is_active}btnDeactivate{else}btnActivate{/if}" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" /></span>
                 </div>
+                {/if}
               </div>
+              {/if}
             {/foreach}
           {else}
             <a href="?m=manage" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-w"></span>Back to plugins</a>
@@ -219,7 +225,7 @@
     $(".btnDeactivate").click(function() {
       var element = $(this);
       var u = element.attr("id");
-      var dataString = 'pid=' + u + "&p=0";
+      var dataString = 'pid=' + u + "&a=0";
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",

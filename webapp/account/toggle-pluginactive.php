@@ -1,22 +1,7 @@
 <?php
 chdir("..");
-
-require_once 'model/class.DAOFactory.php';
 require_once 'init.php';
+require_once 'controller/class.ToggleActivePluginController.php';
 
-session_start();
-$session = new Session();
-if (!$session->isLoggedIn()) {
-    header("Location: ../index.php");
-}
-
-$pid = $_GET["pid"];
-$a = $_GET["a"];
-if ($a != 1) {
-    $a = 0;
-}
-
-$pd = DAOFactory::getDAO('PluginDAO');
-
-$pd->setActive($pid, $a);
-
+$controller = new ToggleActivePluginController();
+echo $controller->go();

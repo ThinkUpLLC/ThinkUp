@@ -66,9 +66,7 @@ class RegisterController extends ThinkUpController {
                                 $server = $_SERVER['HTTP_HOST'];
                                 $owner_dao->create($_POST['email'], $cryptpass, $activ_code, $_POST['full_name']);
 
-                                $es->assign('apptitle', $config->getValue('app_title') );
                                 $es->assign('server', $server );
-                                $es->assign('site_root_path', $config->getValue('site_root_path') );
                                 $es->assign('email', urlencode($_POST['email']) );
                                 $es->assign('activ_code', $activ_code );
                                 $message = $es->fetch('_email.registration.tpl');

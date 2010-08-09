@@ -61,6 +61,9 @@ abstract class ThinkUpController {
         if ($this->isLoggedIn()) {
             $this->addToView('logged_in_user', $this->getLoggedInUser());
         }
+        if ($this->isAdmin()) {
+            $this->addToView('user_is_admin', true);
+        }
     }
 
     /**

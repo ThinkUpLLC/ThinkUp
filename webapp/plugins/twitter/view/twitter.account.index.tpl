@@ -27,9 +27,11 @@
             <span id="div{$i->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
             {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public}remove from public timeline{else}include on public timeline{/if}" /></span>
         </div>
+        {if $user_is_admin}
         <div class="grid_9">
     		<span id="divactivate{$i->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
+        {/if}
         </div>
     {/foreach}
 {else}

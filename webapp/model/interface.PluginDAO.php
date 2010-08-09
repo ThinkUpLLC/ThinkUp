@@ -51,10 +51,11 @@ interface PluginDAO {
 
     /**
      * Set a plugin's active flag
-     * @param int Plugin id
-     * @param bool Active flag
+     * @param int Plugin ID
+     * @param bool Active flag, 1 if activating, 0 if deactivating
+     * @return int number of updated rows
      */
-    public function setActive($pid, $bool);
+    public function setActive($plugin_id, $is_active);
 
     /**
      * Detect what plugins exist in the filesystem; parse their header comments for plugin metadata

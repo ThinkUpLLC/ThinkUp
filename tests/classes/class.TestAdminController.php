@@ -6,7 +6,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestAdminController extends ThinkUpAdminController {
-    public function authControl() {
+    public function adminControl() {
         $this->setViewTemplate('testme.tpl');
         $this->addToView('test', 'Testing, testing, 123');
         return $this->generateView();

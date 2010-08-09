@@ -1,16 +1,16 @@
 <?php
+require_once 'model/class.PDODAO.php';
+require_once 'model/interface.PluginDAO.php';
+require_once 'model/class.Plugin.php';
+require_once 'model/exceptions/class.BadArgumentException.php';
+
+
 /**
  * Plugin Data Access Object
  * The data access object for retrieving and saving plugin data for thinkup
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
-
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.PluginDAO.php';
-require_once 'model/class.Plugin.php';
-require_once 'model/exceptions/class.BadArgumentException.php';
-
 class PluginMySQLDAO extends PDODAO implements PluginDAO {
 
     public function getAllPlugins($is_active = false) {
@@ -110,7 +110,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
         return $id;
     }
 
-    function setActive($id, $active) {
+    public function setActive($id, $active) {
         $q = "
             UPDATE 
                 #prefix#plugins
@@ -119,11 +119,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
             WHERE
                 id = :id";
         $stmt = $this->execute($q, array(':active' => $active, ':id' => $id));
-        if ( $this->getUpdateCount($stmt) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->getUpdateCount($stmt);
     }
 
     public function getInstalledPlugins($plugin_path) {

@@ -12,11 +12,11 @@ abstract class ThinkUpAdminController extends ThinkUpAuthController {
         parent::__construct($session_started);
     }
 
-    public function control() {
+    public function authControl() {
         if ($this->isAdmin()) {
-            return $this->authControl();
+            return $this->adminControl();
         } else {
-            return "You must be a ThinkUp admin in to do this";
+            return "You must be a ThinkUp admin to do this";
         }
     }
 }

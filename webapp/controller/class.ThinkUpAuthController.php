@@ -15,13 +15,18 @@ abstract class ThinkUpAuthController extends ThinkUpController {
         if ($this->isLoggedIn()) {
             return $this->authControl();
         } else {
-            //@TODO bounce to sign in page and bounce back to original action once signed in
-            if (get_class($this)=='PrivateDashboardController' || get_class($this)=='PostController') {
-                $controller = new PublicTimelineController(true);
-                return $controller->go();
-            } else {
-                return "You must be logged in to do this";
-            }
+            return $this->bounce();
         }
+    }
+
+    protected function bounce() {
+        //@TODO bounce to sign in page and bounce back to original action once signed in
+        if (get_class($this)=='PrivateDashboardController' || get_class($this)=='PostController') {
+            $controller = new PublicTimelineController(true);
+            return $controller->go();
+        } else {
+            return "You must be logged in to do this";
+        }
+
     }
 }

@@ -18,8 +18,8 @@ class TestOfPrivateDashboard extends ThinkUpWebTestCase {
         //Add owner
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
-        $q = "INSERT INTO tu_owners (id, email, pwd, is_activated) VALUES (1, 'me@example.com', '".
-        $cryptpass."', 1)";
+        $q = "INSERT INTO tu_owners (id, email, pwd, is_activated, is_admin) VALUES (1, 'me@example.com', '".
+        $cryptpass."', 1, 1)";
         $this->db->exec($q);
 
         //Add instance
