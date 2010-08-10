@@ -32,6 +32,8 @@ class UpdateNowController extends ThinkUpAuthAPIController {
 
     public function authControl() {
         Utils::defineConstants();
+        // set content type, as not all installations will use this charset as default
+        $this->setContentType('text/html; charset=UTF-8');
         $this->setPageTitle("ThinkUp Crawler");
         $this->setViewTemplate('crawler.updatenow.tpl');
         $whichphp = @exec('which php');

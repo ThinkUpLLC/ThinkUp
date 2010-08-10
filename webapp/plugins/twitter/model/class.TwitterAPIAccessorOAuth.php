@@ -61,6 +61,7 @@ class TwitterAPIAccessorOAuth {
     /**
      * @var int defaults to 3
      */
+   // this is now the fallback default- should be set in plugin config
     var $total_errors_to_tolerate = 3;
     /**
      * Tally of the API errors returned during a given run

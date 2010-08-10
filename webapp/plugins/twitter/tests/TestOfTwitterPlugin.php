@@ -83,8 +83,18 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($first_post_tab_dataset->dao_method_name, "getAllPosts",
         "Test first post tab's first dataset fetching method");
 
-        $links_menu = $menus[4];
-        $this->assertEqual(sizeof($links_menu->items), 2);
+        // check favorites menu, which just has one tab currently
+        $favs_menu = $menus[4];
+        $this->assertEqual(sizeof($favs_menu->items), 1);
+        $favs_tab = $favs_menu->items[0];
+        $this->assertEqual($favs_tab->short_name, "ftweets-all");
+        $favs_tab_datasets = $favs_tab->getDatasets();
+        $favs_tab_dataset = $favs_tab_datasets[0];
+        $this->assertEqual($favs_tab_dataset->name, "all_tweets");
+        
+        // check links menu
+        $links_menu = $menus[5];
+        $this->assertEqual(sizeof($links_menu->items), 3);
 
         $links_tab = $links_menu->items[0];
         $this->assertEqual($links_tab->short_name, "links-friends");
@@ -93,6 +103,12 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($links_tab_dataset->name, "links");
 
         $links_tab = $links_menu->items[1];
+        $this->assertEqual($links_tab->short_name, "links-favorites");
+        $links_tab_datasets = $links_tab->getDatasets();
+        $links_tab_dataset = $links_tab_datasets[0];
+        $this->assertEqual($links_tab_dataset->name, "links");
+
+        $links_tab = $links_menu->items[2];
         $this->assertEqual($links_tab->short_name, "links-photos");
         $links_tab_datasets = $links_tab->getDatasets();
         $links_tab_dataset = $links_tab_datasets[0];

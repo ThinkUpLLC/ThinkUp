@@ -61,7 +61,7 @@ class Dataset {
      *
      * @var array String of allowed DAO names
      */
-    var $FETCHING_DAOS = array('FollowDAO', 'PostDAO', 'LinkDAO', 'FollowerCountDAO');
+    var $FETCHING_DAOS = array('FollowDAO', 'PostDAO', 'LinkDAO', 'FollowerCountDAO', 'FavoritePostDAO');
 
     /**
      * Constructor

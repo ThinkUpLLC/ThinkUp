@@ -63,7 +63,7 @@ class FlickrAPIAccessor {
             $api_call = str_replace('/', '_', $api_call);
             $api_call = str_replace('?', '-', $api_call);
             $api_call = str_replace('&', '-', $api_call);
-            //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$api_call;
+            // echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$api_call . "\n";
             $resp = file_get_contents($FAUX_DATA_PATH.$api_call);
 
             if ($resp === "NONRESPONSE") {

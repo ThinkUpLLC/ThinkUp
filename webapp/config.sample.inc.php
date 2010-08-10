@@ -63,3 +63,5 @@ $THINKUP_CFG['slow_query_log_threshold']  = 2.0;
 $THINKUP_CFG['debug']                     = true;
 
 $THINKUP_CFG['enable_profiler']           = false;
+
+

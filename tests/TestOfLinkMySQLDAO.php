@@ -246,6 +246,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         }
     }
 
+
     /**
      * Test Of getPhotosByFriends Method
      */
@@ -331,16 +332,63 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 2002;
         $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
         $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
-        $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
-        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
-        $res = PDODAO::$PDO->exec($q);
-
-        $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
-        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
+        $builder1 = $builder2 = null;
         try {
-            $res = PDODAO::$PDO->exec($q);
+            $builder1 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$counter, 'network'=>'twitter', 'is_image'=>0, 
+                'expanded_url'=>'', 'error'=>''));
+            $builder2 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$counter, 'network'=>'twitter', 'is_image'=>0, 
+                'expanded_url'=>'', 'error'=>''));
         } catch(PDOException $e) {
             $this->assertPattern('/Integrity constraint violation/', $e->getMessage());
         }
+        $builder1 = null; $builder2 = null;
     }
+
+    /**
+     * Test of getLinksByFavorites method
+     */
+    public function testGetFavoritedLinks() {
+
+        $lbuilders = array();
+
+        // test links for fav checking
+        $counter = 0;
+        while ($counter < 5) {
+            $post_id = $counter + 180;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+            $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>0, 
+            'expanded_url'=>'', 'error'=>''));
+            $counter++;
+        }
+        //Insert several posts for fav checking-- links will be associated with 5 of them
+        $counter = 0;
+        while ($counter < 10) {
+            $post_id = $counter + 180;
+            $user_id = ($counter * 5) + 2;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $lbuilders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>$user_id,
+            'author_username'=>"user$counter", 'author_fullname'=>"User$counter Name$counter", 'author_avatar'=>'avatar.jpg', 
+            'post_text'=>'This is post '.$post_id, 'pub_date'=>'2009-01-01 00:'.
+            $pseudo_minute.':00', 'network'=>'twitter',
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+            // user '20' favorites the first 7 of the test posts, only 5 of which will have links
+            if ($counter < 7) {
+                $lbuilders[] = FixtureBuilder::build('favorites', array('status_id'=>$post_id, 'author_user_id'=>$user_id, 
+                'fav_of_user_id'=>20, 'network'=>'twitter'));
+            }
+
+            $counter++;
+        }
+
+        $result = $this->DAO->getLinksByFavorites(20, 'twitter');
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 5);
+        $lbuilders = null;
+    }
+
 }
