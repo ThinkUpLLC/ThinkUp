@@ -261,7 +261,14 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertNotNull($dao);
         $this->assertIsA($dao, 'BackupMySQLDAO');
     }
-
+    /**
+     * Test get FavoritePostDAO
+     */
+    public function testGetFavoritePostDAO() {
+        $dao = DAOFactory::getDAO('FavoritePostDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'FavoritePostMySQLDAO');
+    }
     /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
@@ -274,7 +281,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 15);
+        $this->assertEqual(sizeof($result), 16);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
     }

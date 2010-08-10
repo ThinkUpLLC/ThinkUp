@@ -63,6 +63,11 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $r['is_public'] = 1;
         $r['is_active'] = 1;
         $r['network'] = 'twitter';
+        $r['last_favorite_id'] = 0;
+        $r['last_unfav_page_checked'] = 0;
+        $r['last_page_fetched_favorites'] = 0;
+        $r['favorites_profile'] = 0;
+        $r['owner_favs_in_system'] = 0;
 
         return new Instance($r);
     }

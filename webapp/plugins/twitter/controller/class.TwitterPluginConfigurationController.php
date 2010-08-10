@@ -134,7 +134,6 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
      * Set plugin option fields for admin/plugin form
      */
     private function addOptionForm() {
-
         $oauth_consumer_key = array('name' => 'oauth_consumer_key', 'label' => 'Consumer key');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_key);
 
@@ -147,10 +146,21 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $archive_limit = array('name' => 'archive_limit','label' => $archive_limit_label, 'default_value' => '3200',
         'advanced'=> true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $archive_limit);
+        
         $num_twitter_errors_label = 'Total API Errors to Tolerate';
         $num_twitter_errors = array('name' => 'num_twitter_errors', 'label' => $num_twitter_errors_label,
         'default_value' => '5', 'advanced'=>true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $num_twitter_errors);
+        
+        $favs_older_pages_label = 'Number of Pages to Check for Older Favorites';
+        $favs_older_pages = array('name' => 'favs_older_pages', 'label' => $favs_older_pages_label,
+        'default_value' => '2', 'advanced'=>true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $favs_older_pages);
+        
+        $favs_cleanup_pages_label = 'Number of Pages to Search each Crawl for Missed Favorites';
+        $favs_cleanup_pages = array('name' => 'favs_cleanup_pages', 'label' => $favs_cleanup_pages_label,
+        'default_value' => '1', 'advanced'=>true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $favs_cleanup_pages);
 
         $max_api_calls_per_crawl_label = 'Max API Calls Per Crawl';
         $max_api_calls_per_crawl = array('name' => 'max_api_calls_per_crawl', 'label' => $max_api_calls_per_crawl_label,

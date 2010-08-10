@@ -214,7 +214,10 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $plugin_options2 =
         FixtureBuilder::build('plugin_options',
         array('plugin_id' => 1, 'option_name' => 'oauth_consumer_secret', 'option_value' => "12345") );
-        return array($plugin_options1, $plugin_options2);
+        $plugin_options3 =
+        FixtureBuilder::build('plugin_options',
+        array('plugin_id' => 1, 'option_name' => 'num_twitter_errors', 'option_value' => "5") );
+        return array($plugin_options1, $plugin_options2, $plugin_options3);
 
     }
 }

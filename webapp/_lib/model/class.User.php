@@ -1,4 +1,6 @@
 <?php
+// require_once 'model/class.Utils.php';
+
 /**
  *
  * ThinkUp/webapp/_lib/model/class.User.php
@@ -86,6 +88,11 @@ class User {
      *
      * @var int
      */
+    var $favorites_count;
+    /**
+     *
+     * @var int
+     */
     var $post_count;
     /**
      *
@@ -154,6 +161,9 @@ class User {
             }
             if (isset($val['friend_count'])) {
                 $this->friend_count = $val['friend_count'];
+            }
+            if (isset($val['favorites_count'])) {
+                $this->favorites_count = $val['favorites_count'];
             }
             if (isset($val['last_post'])) {
                 $this->last_post = $val['last_post'];

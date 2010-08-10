@@ -6,7 +6,7 @@
 
 .top {position:relative;top-20px;}
 .thinkup-canvas {background-color: #FFF;}
-#tweets_content, #mentions_content, #followers_content, #friends_content, #links_content {position:relative;top:-40px;}
+#tweets_content, #mentions_content, #followers_content, #friends_content, #favorites_content, #links_content {position:relative;top:-40px;}
 
 #hd, #ft {padding : 20px 20px 20px 0px;}
 #yui-main .yui-g {/*margin-left : 50px;width : 600px;*/width:960px;margin:0 auto;}

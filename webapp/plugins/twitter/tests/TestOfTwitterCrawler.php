@@ -93,7 +93,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
         'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 
         'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 
-        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter', 
+        'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
+        'favorites_profile' => '0', 
+        'owner_favs_in_system' => '0',
+        );
         $this->instance = new Instance($r);
 
         $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', $this->instance,
@@ -112,7 +116,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
         'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 
-        'network'=>'twitter');
+        'network'=>'twitter',
+        'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
+        'favorites_profile' => '0', 
+        'owner_favs_in_system' => '0',
+        );
         $this->instance = new Instance($r);
 
         $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', $this->instance,
@@ -120,6 +128,18 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
         $this->instance->is_archive_loaded_follows = true;
+    }
+
+    private function setUpInstanceUserAmygdala() {
+        global $THINKUP_CFG;
+        $instd = DAOFactory::getDAO('InstanceDAO');
+        $iid = $instd->insert('2768241', 'amygdala', 'twitter');
+        $this->instance = $instd->getByUsernameOnNetwork("amygdala", "twitter");
+
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key',
+          'fake_secret', $this->instance, 1234, 5, 350);
+        $this->api->available = true;
+        $this->api->available_api_calls_for_crawler = 20;
     }
 
     public function testConstructor() {
@@ -286,4 +306,189 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->reply_count_cache, 1);
     }
 
+    public function testFetchFavoritesOfInstanceuser() {
+        self::setUpInstanceUserAmygdala();
+        $this->api->available_api_calls_for_crawler = 3;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage1/');
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceFavorites();
+        // Save instance
+        $id = DAOFactory::getDAO('InstanceDAO');
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 22);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 4);
+        $this->assertEqual($this->instance->favorites_profile, 82);
+
+
+        $this->logger->logInfo("second round of archiving", __METHOD__.','.__LINE__);
+        $this->api->available_api_calls_for_crawler = 10;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage2/');
+        $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_older_pages',
+        'option_value'=>10));
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceFavorites();
+        // Save instance
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 84);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
+
+        $this->logger->logInfo("now in maintenance mode", __METHOD__.','.__LINE__);
+        $this->api->available_api_calls_for_crawler = 4;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->fetchInstanceFavorites();
+        // Save instance
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 87);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
+        $this->assertEqual($retval, true);
+
+        // now test case where there are 'extra' favs being reported by twitter,
+        // not findable via the N pages searched back through, with existing pages < N
+        // override a cfg value
+        $this->logger->logInfo("now in maintenance mode, second pass", __METHOD__.','.__LINE__);
+        $this->api->available_api_calls_for_crawler = 10;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage5/');
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->fetchInstanceFavorites();
+        // Save instance
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 88);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
+        $this->assertEqual($retval, true);
+        $builder2 = null;
+    }
+
+    public function testFetchFavoritesOfInstanceuserBadResponse() {
+        $this->logger->logInfo("in testFetchFavoritesOfInstanceuserBadResponse", __METHOD__.','.__LINE__);
+        self::setUpInstanceUserAmygdala();
+        $this->api->available_api_calls_for_crawler = 10;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage4/');
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->fetchInstanceFavorites();
+        // Save instance
+        $id = DAOFactory::getDAO('InstanceDAO');
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 0);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
+    }
+
+    public function testFetchFavoritesOfInstanceuserNoAPICalls() {
+        $this->logger->logInfo("in testFetchFavoritesOfInstanceuserNoAPICalls", __METHOD__.','.__LINE__);
+        self::setUpInstanceUserAmygdala();
+        $this->api->available_api_calls_for_crawler = 0;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage1/');
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->fetchInstanceFavorites();
+        // Save instance
+        $id = DAOFactory::getDAO('InstanceDAO');
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 0);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 0);
+        $this->assertEqual($this->instance->favorites_profile, 0);
+    }
+
+    public function testCleanupMissedFavs() {
+        $this->logger->logInfo("in testCleanupMissedFavs", __METHOD__.','.__LINE__);
+        $id = DAOFactory::getDAO('InstanceDAO');
+
+        self::setUpInstanceUserAmygdala();
+        $this->instance->last_unfav_page_checked = 3;
+        $this->api->available_api_calls_for_crawler = 10;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
+        //set cfg value
+        $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_cleanup_pages',
+        'option_value'=>3));
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->cleanUpMissedFavsUnFavs();
+        $this->assertEqual($retval, true);
+        // check that the count 'rolled over'
+        $this->assertEqual($this->instance->last_unfav_page_checked, 0);
+        // Save instance
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 27);
+        $builder2 = null;
+    }
+
+    public function testAddRmOldFavMaintSearch() {
+
+        $this->logger->logInfo("in testAddRmOldFavMaintSearch", __METHOD__.','.__LINE__);
+        //set plugin cfg values
+        $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_older_pages',
+        'option_value'=>1));
+        $builder3 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_cleanup_pages',
+        'option_value'=>3));
+
+        $id = DAOFactory::getDAO('InstanceDAO');
+
+        self::setUpInstanceUserAmygdala();
+        $this->api->available_api_calls_for_crawler = 3;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->cleanUpMissedFavsUnFavs();
+        $this->assertEqual($retval, true);
+        $this->assertEqual($this->instance->last_unfav_page_checked, 3);
+        // Save instance
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        // check fav count
+        $this->assertEqual($this->instance->owner_favs_in_system, 40);
+
+        $this->logger->logInfo("in testAddRmOldFavMaintSearch, second traversal", __METHOD__.','.__LINE__ );
+        // now add an additional older fav , remove one, and traverse again
+        $this->api->available_api_calls_for_crawler = 3;
+        $this->instance->last_unfav_page_checked = 2;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage6/');
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+
+        $retval = $tc->cleanUpMissedFavsUnFavs();
+        $this->assertEqual($retval, true);
+        // Save instance
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        // check fav count- should have removed 2 and added 21...
+        // update: due to issue with TwitterAPI, not currently removing un-favs from database
+        // $this->assertEqual($this->instance->owner_favs_in_system, 59);
+        $this->assertEqual($this->instance->owner_favs_in_system, 61);
+        $builder2 = null; $builder3 = null;
+    }
 }
