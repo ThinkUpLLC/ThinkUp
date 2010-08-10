@@ -54,4 +54,8 @@ class TwitterOAuth {
     public function getAuthorizeURL($token) {
         return "test_auth_URL_".$token;
     }
+
+    public function getAccessToken(){
+        return 'fake access token';
+    }
 }
