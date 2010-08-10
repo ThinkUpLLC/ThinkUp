@@ -19,6 +19,21 @@ CREATE TABLE tu_encoded_locations (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table tu_favorites
+--
+
+CREATE TABLE tu_favorites (
+  status_id bigint(20) unsigned NOT NULL,
+  author_user_id int(11) NOT NULL,
+  fav_of_user_id int(11) NOT NULL,
+  network varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
+  UNIQUE KEY status_id (status_id),
+  KEY author_user_id (author_user_id),
+  KEY fav_of_user_id (fav_of_user_id),
+  KEY status_id_2 (status_id,fav_of_user_id,network)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
 -- Table structure for table tu_follower_count
 --
 
@@ -74,6 +89,11 @@ CREATE TABLE tu_instances (
   is_public int(1) NOT NULL DEFAULT '0',
   is_active int(1) NOT NULL DEFAULT '1',
   network varchar(20) NOT NULL DEFAULT 'twitter',
+  last_favorite_id bigint(20) unsigned DEFAULT NULL,
+  last_unfav_page_checked int(11) DEFAULT '0',
+  last_page_fetched_favorites int(11) DEFAULT NULL,
+  favorites_profile int(11) DEFAULT '0',
+  owner_favs_in_system int(11) DEFAULT '0',
   PRIMARY KEY (id),
   KEY network_user_id (network_user_id,network)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -271,6 +291,7 @@ CREATE TABLE tu_users (
   joined timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   last_post_id bigint(20) unsigned NOT NULL,
   network varchar(20) NOT NULL DEFAULT 'twitter',
+  favorites_count int(11) DEFAULT NULL,
   PRIMARY KEY (id),
   KEY user_id (user_id,network)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -283,6 +304,7 @@ CREATE TABLE tu_users (
 --
 INSERT INTO tu_options (namespace, option_name, option_value, last_updated, created)
 VALUES ('application_options', 'database_version', '0.4', NOW(), NOW()); 
+
 
 --
 -- Insert default plugin(s)

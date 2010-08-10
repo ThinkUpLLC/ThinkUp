@@ -57,7 +57,7 @@ ul.user-accounts li ul li {margin-left:2em;}
 #thinkup-tabs .ui-corner-all {-moz-border-radius: 10px;-webkit-border-radius: 10px;}
 
 /* added to li */
-#thinkup-tabs .ui-state-default {width:190px;line-height:1.6em;font-size: 1.2em;border: 0px;background-color: #FFF;margin-right: 0px;background:none;}
+#thinkup-tabs .ui-state-default {width:158px;line-height:1.6em;font-size: 1.2em;border: 0px;background-color: #FFF;margin-right: 0px;background:none;}
 
 #thinkup-tabs .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {color:#9D9C9C;}
 #thinkup-tabs .ui-state-default a:hover {color:#222222}
@@ -65,11 +65,11 @@ ul.user-accounts li ul li {margin-left:2em;}
 
 #thinkup-tabs .ui-corner-top {}
 
-#thinkup-tabs .ui-tabs-selected {width:190px;line-height:1.6em;font-size: 1.2em;margin-right: 0px;border:0px;background:none;}
-#thinkup-tabs .ui-state-active {width:190px;line-height:1.6em;font-size: 1.2em;margin-right: 0px;border:0px;background:none;}
+#thinkup-tabs .ui-tabs-selected {width:158px;line-height:1.6em;font-size: 1.2em;margin-right: 0px;border:0px;background:none;}
+#thinkup-tabs .ui-state-active {width:158px;line-height:1.6em;font-size: 1.2em;margin-right: 0px;border:0px;background:none;}
 
 #thinkup-tabs .ui-tabs .ui-tabs-nav li {text-align:center;}
-#thinkup-tabs .ui-tabs .ui-tabs-nav li a {margin:10px 0;border-right: 1px solid #CCC;width:190px;padding: 0;}
+#thinkup-tabs .ui-tabs .ui-tabs-nav li a {margin:10px 0;border-right: 1px solid #CCC;width:158px;padding: 0;}
 #thinkup-tabs .ui-tabs .ui-tabs-nav li.no-border a {border: 0px}
 
 /* added to tab content */

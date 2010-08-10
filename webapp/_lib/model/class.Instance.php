@@ -48,6 +48,11 @@ class Instance {
     var $is_public = false;
     var $is_active = true;
     var $network;
+    var $last_favorite_id;
+    var $last_unfav_page_checked;
+    var $last_page_fetched_favorites;
+    var $favorites_profile;
+    var $owner_favs_in_system;
 
     public function __construct($r = false) {
         if ($r){
@@ -77,6 +82,11 @@ class Instance {
             $this->api_calls_to_leave_unmade_per_minute = $r['api_calls_to_leave_unmade_per_minute'];
             $this->avg_replies_per_day = $r['avg_replies_per_day'];
             $this->network = $r['network'];
+            $this->last_favorite_id = $r['last_favorite_id'];
+            $this->last_unfav_page_checked = $r['last_unfav_page_checked'];
+            $this->last_page_fetched_favorites = $r['last_page_fetched_favorites'];
+            $this->favorites_profile = $r['favorites_profile'];
+            $this->owner_favs_in_system = $r['owner_favs_in_system'];
 
             if ($r['is_public'] == 1){
                 $this->is_public = true;

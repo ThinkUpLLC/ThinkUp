@@ -103,7 +103,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * Add link object to post
      * @param arrays $row
      */
-    private function setPostWithLink($row) {
+    protected function setPostWithLink($row) {
         $post = new Post($row);
         $link = new Link($row);
         $post->link = $link;

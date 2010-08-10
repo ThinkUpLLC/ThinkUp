@@ -137,6 +137,10 @@ class Post {
      * @var bool
      */
     var $is_retweet_by_friend;
+
+    // aju
+    var $favorited;
+
     /**
      *
      * @var str
@@ -189,8 +193,14 @@ class Post {
         $this->network = $val["network"];
         $this->is_reply_by_friend = PDODAO::convertDBToBool($val["is_reply_by_friend"]);
         $this->is_retweet_by_friend = PDODAO::convertDBToBool($val["is_retweet_by_friend"]);
+
         if (isset($val['is_protected'])) {
             $this->is_protected = PDODAO::convertDBToBool($val["is_protected"]);
+        }
+
+        // aju - favorited is non-persistent.  Will be set from xml, but not from database retrieval.
+        if (isset($val["favorited"])) {
+          $this->favorited = $val["favorited"];
         }
     }
 

@@ -63,3 +63,7 @@ $THINKUP_CFG['slow_query_log_threshold']  = 2.0;
 $THINKUP_CFG['debug']                     = true;
 
 $THINKUP_CFG['enable_profiler']           = false;
+
+// for twitter crawler -- favs config
+$THINKUP_CFG['tfavs_older_pages'] = 4;
+$THINKUP_CFG['tfavs_cleanup_pages'] = 1;

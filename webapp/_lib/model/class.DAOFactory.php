@@ -67,6 +67,11 @@ class DAOFactory {
         'PostDAO' => array(
     //MySQL Version
             'mysql' => 'PostMySQLDAO' ),
+    //FavoritePost DAO
+        'FavoritePostDAO' => array(
+     //MySQL Version
+            'mysql' => 'FavoritePostMySQLDAO' ),
+            // 'mysql' => array( 'class' => 'FavoritePostMySQLDAO', 'path' => 'model/class.FavoritePostMySQLDAO.php')
     //User DAO
         'UserDAO' => array(
     //MySQL Version

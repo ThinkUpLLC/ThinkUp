@@ -27,6 +27,9 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TwitterOAuth {
+  
+    var $data_path = 'webapp/plugins/twitter/tests/testdata/';
+    
     /**
      * Constructor
      * @param str $consumer_key
@@ -40,7 +43,8 @@ class TwitterOAuth {
 
     public function oAuthRequest($url, $method = NULL, $args = array()) {
         $url = Utils::getURLWithParams($url, $args);
-        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
+        // aju
+        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . $this->data_path;
         $url = str_replace('https://twitter.com/', '', $url);
         $url = str_replace('https://api.twitter.com/1/', '', $url);
         $url = str_replace('http://search.twitter.com/', '', $url);
@@ -51,6 +55,11 @@ class TwitterOAuth {
         //        ';
         return file_get_contents($FAUX_DATA_PATH.$url);
     }
+    
+    public function setDataPath($data_path) {
+      $this->data_path = $data_path;
+      print "data path is: " . $this->data_path . "\n";
+    }
 
     public function http($url) {
         $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
@@ -60,7 +69,7 @@ class TwitterOAuth {
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
-        //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url;
+        // echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url . "\n";
         return file_get_contents($FAUX_DATA_PATH.$url);
     }
 
