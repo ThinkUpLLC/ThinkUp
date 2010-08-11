@@ -6,12 +6,20 @@
     <ul>
       <li><a href="#plugins">Plug-ins</a></li>
       <li><a href="#instances">Your ThinkUp Password</a></li>
-      {if $owner->is_admin}<li><a href="#ttusers">All ThinkUp Accounts</a></li>{/if}
+      {if $user_is_admin}<li><a href="#ttusers">All ThinkUp Accounts</a></li>{/if}
     </ul>
     
     <div class="section thinkup-canvas clearfix" id="plugins">
       <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
         <div class="append_20 clearfix">
+        {if $user_is_admin}
+        <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
+              <p>
+                <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
+                As an administrator you can see all installed plugins and activate/deactivate them.
+              </p>
+            </div>
+        {/if}
           {if $installed_plugins}
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
               {if $smarty.foreach.foo.first}
@@ -88,7 +96,7 @@
       </div>
     </div> <!-- end #instances -->
     
-    {if $owner->is_admin}
+    {if $user_is_admin}
       <div class="section" id="ttusers">
         <div class="thinkup-canvas clearfix">
           <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
@@ -102,8 +110,8 @@
             <ul class="user-accounts">
               {foreach from=$owners key=oid item=o}
                 <li>
-                  <b>{$o->full_name} ({$o->user_email})</b>
-                  {if $o->last_login neq '0000-00-00'}, last logged in {$o->last_login}{/if}
+                  <b>{$o->full_name} ({$o->email})</b>{if $o->last_login neq '0000-00-00'}, last logged in {$o->last_login}{/if}
+                  <br />{if $o->is_activated}Activated{else}Not activated{/if}{if $o->is_admin}, Administrator{/if}
                   {if $o->instances neq null}
                     <ul>
                       {foreach from=$o->instances key=iid item=i}

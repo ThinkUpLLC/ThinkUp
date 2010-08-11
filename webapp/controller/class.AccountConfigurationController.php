@@ -23,7 +23,6 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $webapp = Webapp::getInstance();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
-        $this->addToView('owner', $owner);
 
         /* Begin plugin-specific configuration handling */
         if (isset($_GET['p'])) {

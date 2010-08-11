@@ -20,7 +20,8 @@ class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
     }
 
     public function getAllOwners() {
-        $q = " SELECT id, full_name, email, is_admin, last_login FROM #prefix#owners ORDER BY last_login DESC;";
+        $q = " SELECT id, full_name, email, is_admin, is_activated, last_login ";
+        $q .= "FROM #prefix#owners ORDER BY last_login DESC;";
         $ps = $this->execute($q);
         return $this->getDataRowsAsObjects($ps, 'Owner');
     }
