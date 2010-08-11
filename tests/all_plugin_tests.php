@@ -8,6 +8,7 @@ $RUNNING_ALL_TESTS = true;
 
 /* PLUGIN TESTS */
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php';
+require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookAuthController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookCrawler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfRetweetDetector.php';
@@ -25,6 +26,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/hellothinkup/tests/TestOfHelloThi
 
 $plugin_tests = & new GroupTest('Plugin tests');
 $plugin_tests->addTestCase(new TestOfExpandURLsPlugin());
+$plugin_tests->addTestCase(new TestOfFacebookAuthController());
 $plugin_tests->addTestCase(new TestOfFacebookCrawler());
 $plugin_tests->addTestCase(new TestOfFacebookPlugin());
 $plugin_tests->addTestCase(new TestOfFacebookPluginConfigurationController());

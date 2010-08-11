@@ -117,7 +117,6 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $_SESSION['oauth_request_token_secret'] = 'XXX';
 
         $owner_builder = FixtureBuilder::build('owners', array('id'=>'10', 'email'=>'me@example.com'));
-        //$instance_builder = FixtureBuilder::build('instances', array('network_username'=>'dougw'));
         $plugn_opt_builder1 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
         'option_name'=>'oauth_consumer_key', 'option_value'=>'XXX'));
         $plugn_opt_builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
