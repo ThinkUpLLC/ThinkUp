@@ -16,7 +16,7 @@ abstract class ThinkUpAdminController extends ThinkUpAuthController {
         if ($this->isAdmin()) {
             return $this->adminControl();
         } else {
-            return "You must be a ThinkUp admin to do this";
+            throw new Exception("You must be a ThinkUp admin to do this");
         }
     }
 }

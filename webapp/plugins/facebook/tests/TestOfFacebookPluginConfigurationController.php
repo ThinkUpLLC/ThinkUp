@@ -65,7 +65,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
 
         //Add owner
-        $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com', is_activated=1, 
+        $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com', is_activated=1,
         pwd='XXX', activation_code='8888'";
         $this->db->exec($q);
 
@@ -74,7 +74,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->db->exec($q);
 
         //Insert test data into test table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev', 
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
         'Ev Williams', 'avatar.jpg', '1/1/2005');";
         $this->db->exec($q);
 
@@ -86,7 +86,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $counter = 0;
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar, 
+            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
             post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 
             'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".
             rand(0, 4).", 5);";
@@ -117,7 +117,10 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         //not logged in, no owner set
         $controller = new FacebookPluginConfigurationController(null);
         $output = $controller->go();
-        $this->assertEqual('You must be logged in to do this', $output);
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
 
         //logged in
         $_SESSION['user'] = 'me@example.com';
@@ -145,7 +148,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new FacebookPluginConfigurationController($owner);
         $v_mgr = $controller->getViewManager();
         //@TODO Figure out why API keys are not set here in the test, but they are in the controller
-        //$this->assertEqual($v_mgr->getTemplateDataItem('error'), 
+        //$this->assertEqual($v_mgr->getTemplateDataItem('error'),
         //'Please set your Facebook API key and secret in config.inc.php');
     }
 }

@@ -38,8 +38,12 @@ class TestOfExportController extends ThinkUpUnitTestCase {
         $controller = new ExportController(true);
         $this->assertTrue(isset($controller));
 
-        $results = $controller->control();
-        $this->assertPattern("/You must be logged in to do this/", $results);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
     }
 
     public function testMissingParams() {

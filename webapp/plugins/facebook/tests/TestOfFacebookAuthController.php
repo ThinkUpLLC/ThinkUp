@@ -72,14 +72,22 @@ class TestOfFacebookAuthController extends ThinkUpUnitTestCase {
     public function testNotLoggedIn() {
         $controller = new FacebookAuthController(true);
         $results = $controller->go();
-        $this->assertEqual('You must be logged in to do this', $results);
+
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
     }
 
     public function testLoggedInMissingParam() {
         $_SESSION['user'] = 'me@example.com';
         $controller = new FacebookAuthController(true);
         $results = $controller->go();
-        $this->assertEqual('A session key is required for calling this method', $results);
+
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('A session key is required for calling this method',
+        $v_mgr->getTemplateDataItem('errormsg'));
     }
 
     public function testLoggedInWithAllParams() {
@@ -87,6 +95,9 @@ class TestOfFacebookAuthController extends ThinkUpUnitTestCase {
         $_GET["sessionKey"] = "1234";
         $controller = new FacebookAuthController(true);
         $results = $controller->go();
-        $this->assertEqual('A session key is required for calling this method', $results);
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('A session key is required for calling this method',
+        $v_mgr->getTemplateDataItem('errormsg'));
     }
 }

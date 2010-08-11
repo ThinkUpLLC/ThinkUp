@@ -266,9 +266,10 @@ abstract class ThinkUpController {
             } else  {
                 return $this->control();
             }
-
         } catch (Exception $e) {
-            return $e->getMessage();
+            $this->setViewTemplate('500.tpl');
+            $this->addErrorMessage($e->getMessage());
+            return $this->generateView();
         }
     }
 

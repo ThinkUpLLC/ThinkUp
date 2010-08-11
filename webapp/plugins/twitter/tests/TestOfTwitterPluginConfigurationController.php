@@ -129,7 +129,10 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         //not logged in, no owner set
         $controller = new TwitterPluginConfigurationController(null, 'twitter');
         $output = $controller->go();
-        $this->assertEqual('You must be logged in to do this', $output);
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
 
         //logged in
         $_SESSION['user'] = 'me@example.com';

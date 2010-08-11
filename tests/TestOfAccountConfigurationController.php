@@ -73,7 +73,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->db->exec($q);
 
         //Add instance_owner
-        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id, oauth_access_token, oauth_access_token_secret) 
+        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id, oauth_access_token, oauth_access_token_secret)
         VALUES (1, 1, 'xxx', 'yyy')";
         $this->db->exec($q);
         $q = "INSERT INTO tu_owner_instances (owner_id, instance_id, oauth_access_token, oauth_access_token_secret)
@@ -86,7 +86,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->db->exec($q);
 
         //Make public
-        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public, network) 
+        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public, network)
         VALUES (1, 13, 'ev', 1, 'twitter');";
         $this->db->exec($q);
     }
@@ -106,7 +106,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $controller = new AccountConfigurationController(true);
         $results = $controller->go();
 
-        $this->assertEqual($results, "You must be logged in to do this");
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
     }
 
     public function testAuthControlLoggedInNotAdmin() {
@@ -184,11 +187,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $_GET['p'] = 'idontexist';
         $controller = new AccountConfigurationController(true);
         $results = $controller->go();
-        $this->assertEqual($results, 'No plugin object defined for: idontexist');
 
-        //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
-
+        $config = Config::getInstance();
+        $this->assertEqual('No plugin object defined for: idontexist', $v_mgr->getTemplateDataItem('errormsg'));
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
@@ -198,7 +200,6 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         //not set: owners, body, successmsg, errormsg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('errormsg'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('installed_plugins'));
     }
 

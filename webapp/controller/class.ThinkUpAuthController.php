@@ -19,14 +19,18 @@ abstract class ThinkUpAuthController extends ThinkUpController {
         }
     }
 
+    /**
+     * Bounce user to public page or to error page.
+     * @TODO bounce back to original action once signed in
+     */
     protected function bounce() {
-        //@TODO bounce to sign in page and bounce back to original action once signed in
         if (get_class($this)=='PrivateDashboardController' || get_class($this)=='PostController') {
             $controller = new PublicTimelineController(true);
             return $controller->go();
         } else {
-            return "You must be logged in to do this";
+            $config = Config::getInstance();
+            throw new Exception('You must <a href="'.$config->getValue('site_root_path').
+            'session/login.php">log in</a> to do this.');
         }
-
     }
 }

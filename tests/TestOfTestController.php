@@ -121,7 +121,19 @@ class TestOfTestController extends ThinkUpBasicUnitTestCase {
         $_GET['text'] = true;
 
         $results = $controller->go();
-
         $this->assertEqual( $controller->getContentType(),'text/plain');
+    }
+
+    /**
+     * Test exception handling
+     */
+    public function testExceptionHandling() {
+        $_GET['throwexception'] = 'yesindeedy';
+        $controller = new TestController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('Testing exception handling!', $v_mgr->getTemplateDataItem('errormsg'));
     }
 }
