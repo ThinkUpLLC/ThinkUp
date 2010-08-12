@@ -3,6 +3,7 @@
  * Plugin Data Access Object interface
  *
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
 interface PluginDAO {
@@ -45,9 +46,16 @@ interface PluginDAO {
     /**
      * Gets a plugin record by folder name
      * @param str A folder name
-     * @return array A hash of plugin data
+     * @return int A plugin id
      */
     public function getPluginId($folder_name);
+
+    /**
+     * Gets a plugin folder name by id
+     * @param int A plugin id
+     * @return str A plugin folder name
+     */
+    public function getPluginFolder($plugin_id);
 
     /**
      * Set a plugin's active flag
@@ -63,5 +71,10 @@ interface PluginDAO {
      * @return array Installed plugins
      */
     public function getInstalledPlugins($plugin_path);
+    /**
+     * Validate a plugin id
+     * @param int A plugin id
+     * @return bool If valid
+     */
+    public function isValidPluginId($plugin_id);
 }
-

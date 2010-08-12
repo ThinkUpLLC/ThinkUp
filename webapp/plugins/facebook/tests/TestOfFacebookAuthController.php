@@ -81,23 +81,35 @@ class TestOfFacebookAuthController extends ThinkUpUnitTestCase {
 
     public function testLoggedInMissingParam() {
         $_SESSION['user'] = 'me@example.com';
+        $option_builders = $this->buildPluginOptions();
         $controller = new FacebookAuthController(true);
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $config = Config::getInstance();
-        $this->assertEqual('A session key is required for calling this method',
-        $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual('No session key specified.', $v_mgr->getTemplateDataItem('errormsg'));
     }
 
     public function testLoggedInWithAllParams() {
         $_SESSION['user'] = 'me@example.com';
         $_GET["sessionKey"] = "1234";
+        $option_builders = $this->buildPluginOptions();
         $controller = new FacebookAuthController(true);
         $results = $controller->go();
-        $v_mgr = $controller->getViewManager();
-        $config = Config::getInstance();
-        $this->assertEqual('A session key is required for calling this method',
-        $v_mgr->getTemplateDataItem('errormsg'));
+
+        //API keys set below are still invalid, so:
+        $this->assertPattern('/Invalid API key/', $results);
     }
+
+    /**
+     * build plugin option values
+     */
+    private function buildPluginOptions() {
+        $plugin1 = FixtureBuilder::build('plugins', array('id'=>2, 'folder_name'=>'facebook'));
+        $plugin_opt1 = FixtureBuilder::build('plugin_options',
+        array('plugin_id' => 2, 'option_name' => 'facebook_api_key', 'option_value' => "dummy_key") );
+        $plugin_opt2 = FixtureBuilder::build('plugin_options',
+        array('plugin_id' => 2, 'option_name' => 'facebook_api_secret', 'option_value' => "dummy_secret") );
+        return array($plugin_opt1, $plugin_opt2, $plugin1);
+    }
+
 }

@@ -114,7 +114,10 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($data['option_value'], 'test option2', 'value not updated');
     }
 
-    public function testOfgetOptions() {
+    public function testOfGetOptions() {
+        $plugin_builder1 = FixtureBuilder::build('plugins', array('id'=>'2', 'folder_name'=>'test_plugin'));
+        $plugin_builder2 = FixtureBuilder::build('plugins', array('id'=>'3', 'folder_name'=>'test_plugin1'));
+
         # init our dao
         $dao = new PluginOptionMySQLDAO();
         $builder1 = $this->buildOptions(1, 'test name', 'test option');
@@ -137,7 +140,7 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($options[2]->plugin_id, 2);
 
         // gets all options if plugin_id passed
-        $options = $dao->getOptions(1);
+        $options = $dao->getOptions('twitter');
         $this->assertNotNull( $options );
         $this->assertEqual(1, count($options));
         $this->assertIsA($options[0], 'PluginOption');
@@ -145,7 +148,7 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($options[0]->id, 1);
 
         // gets all options if plugin_id passed one more time
-        $options = $dao->getOptions(2);
+        $options = $dao->getOptions('test_plugin');
         $this->assertNotNull( $options );
         $this->assertEqual(2, count($options));
         $this->assertIsA($options[0], 'PluginOption');
@@ -154,7 +157,6 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($options[1], 'PluginOption');
         $this->assertEqual($options[1]->plugin_id, 2);
         $this->assertEqual($options[1]->id, 3);
-
     }
 
     public function testOfCachedOptions() {
@@ -194,9 +196,8 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($options[1]->plugin_id, 2);
         $this->assertEqual($options[2]->plugin_id, 2);
 
-
         // gets all options if plugin_id passed
-        $options = $dao->getOptions(1, true);
+        $options = $dao->getOptions('twitter', true);
         $this->assertNotNull( $options );
         $this->assertEqual(1, count($options));
         $this->assertIsA($options[0], 'PluginOption');
@@ -204,28 +205,19 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($options[0]->id, 1);
         //in the cache?
         $options = PluginOptionMySQLDAO::$cached_options;
-        $options = $options['1id'];
+        $options = $options['twitterid'];
         $this->assertNotNull( $options );
         $this->assertEqual(1, count($options));
         $this->assertIsA($options[0], 'PluginOption');
         $this->assertEqual($options[0]->plugin_id, 1);
         $this->assertEqual($options[0]->id, 1);
         //cached?
-        $options = $dao->getOptions(1, true);
+        $options = $dao->getOptions('twitter', true);
         $this->assertNotNull( $options );
         $this->assertEqual(1, count($options));
         $this->assertIsA($options[0], 'PluginOption');
         $this->assertEqual($options[0]->plugin_id, 1);
         $this->assertEqual($options[0]->id, 1);
-
-    }
-
-    public function testValidatePluginId() {
-        # init our dao
-        $dao = new PluginOptionMySQLDAO();
-        $builder = FixtureBuilder::build(self::TEST_TABLE_PLUGIN);
-        $this->assertFalse($dao->isValidPluginId(-99));
-        $this->assertTrue($dao->isValidPluginId( $builder->columns[ 'last_insert_id' ] ));
     }
 
     public function buildOptions($id, $name, $value) {

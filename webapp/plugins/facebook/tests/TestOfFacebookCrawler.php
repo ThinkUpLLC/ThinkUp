@@ -40,7 +40,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'network'=>'facebook');
         $this->instance = new Instance($r);
 
-        $this->fb = new Facebook($THINKUP_CFG['facebook_api_key'], $THINKUP_CFG['facebook_api_secret']);
+        $this->fb = new Facebook('dummykey', 'dummysecret');
         $this->fb->api_client = new MockFacebookRestClient();
     }
 

@@ -6,9 +6,9 @@ require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
 
 require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PluginConfigurationController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
@@ -19,23 +19,20 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
+require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PluginConfigurationController.php';
+require_once $SOURCE_ROOT_PATH.
+'webapp/plugins/flickrthumbnails/controller/class.FlickrThumbnailsPluginConfigurationController.php';
 require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 
-if (!$RUNNING_ALL_TESTS) {
-    require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.facebook.php';
-}
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/controller/class.FacebookPluginConfigurationController.php';
-require_once $SOURCE_ROOT_PATH.'extlib/facebook/facebook.php';
 
 // Instantiate global database variable
 //@TODO remove this when the PDO port is complete
@@ -47,31 +44,23 @@ try {
 }
 
 /**
- * Test of FacebookPluginConfigurationController
+ * Test of FlickrThumbnailsPluginConfigurationController
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
-
-    /**
-     * Constructor
-     */
+class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTestCase {
     public function __construct() {
-        $this->UnitTestCase('FacebookPluginConfigurationController class test');
+        $this->UnitTestCase('FlickrThumbnailsPluginConfigurationController class test');
     }
-
-    /**
-     * Setup
-     */
     public function setUp(){
         parent::setUp();
         $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $webapp->registerPlugin('flickr', 'FlickrThumbnailsPlugin');
 
         //Add owner
-        $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com', is_activated=1,
-        pwd='XXX', activation_code='8888'";
+        $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com',
+        is_activated=1, pwd='XXX', activation_code='8888'";
         $this->db->exec($q);
 
         //Add instance_owner
@@ -98,64 +87,41 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
             $this->db->exec($q);
             $counter++;
         }
-    }
 
-    /**
-     * Test constructor
-     */
+    }
     public function testConstructor() {
-        $controller = new FacebookPluginConfigurationController(null);
+        $controller = new FlickrThumbnailsPluginConfigurationController(null, 'flickrthumbnails');
         $this->assertTrue(isset($controller), 'constructor test');
     }
 
-    public function testConfigNotSet() {
-        $plugin_options_dao = DAOFactory::getDAO("PluginOptionDAO");
-        PluginOptionMySQLDAO::$cached_options = array();
-        $_SESSION['user'] = 'me@example.com';
-        $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
-        $controller = new FacebookPluginConfigurationController($owner);
-        $results = $controller->go();
-
-        $v_mgr = $controller->getViewManager();
-        //@TODO Figure out why API keys are not set here in the test, but they are in the controller
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
-        'Please set your Facebook API key and secret.');
-    }
-
-    /**
-     * Test output
-     */
     public function testOutputNoParams() {
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+
         //not logged in, no owner set
-        $builders = $this->buildPluginOptions();
-        $controller = new FacebookPluginConfigurationController(null);
+        $controller = new FlickrThumbnailsPluginConfigurationController(null, 'flickrthumbnails');
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
         $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-            'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
 
         //logged in
         $_SESSION['user'] = 'me@example.com';
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail($_SESSION['user']);
-        $controller = new FacebookPluginConfigurationController($owner);
+        $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
-        $v_mgr = $controller->getViewManager();
-        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'array', 'Owner instances set');
-        $this->assertTrue($v_mgr->getTemplateDataItem('fbconnect_link') != '', 'Authorization link set');
+        $this->assertPattern('/Flickr API key/', $output);
     }
 
     /**
      * build plugin option values
      */
     private function buildPluginOptions() {
-        $plugin1 = FixtureBuilder::build('plugins', array('id'=>2, 'folder_name'=>'facebook'));
-        $plugin_opt1 = FixtureBuilder::build('plugin_options',
-        array('plugin_id' => 2, 'option_name' => 'facebook_api_key', 'option_value' => "dummy_key") );
-        $plugin_opt2 = FixtureBuilder::build('plugin_options',
-        array('plugin_id' => 2, 'option_name' => 'facebook_api_secret', 'option_value' => "dummy_secret") );
-        return array($plugin_opt1, $plugin_opt2, $plugin1);
+        $plugin_options1 =
+        FixtureBuilder::build('plugin_options',
+        array('plugin_id' => 1, 'option_name' => 'flickr_api_key', 'option_value' => "dummykey") );
+        return array($plugin_options1);
     }
 }

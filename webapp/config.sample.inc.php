@@ -35,19 +35,26 @@ $THINKUP_CFG['slow_query_log_threshold']  = 2.0;
 // Full server path to bundled Smarty template library.
 $THINKUP_CFG['smarty_path']               = $THINKUP_CFG['source_root_path'].'extlib/Smarty-2.6.26/libs/';
 
+$THINKUP_CFG['debug']                     = true;
+
+$THINKUP_CFG['enable_profiler']           = false;
+
 // Set whether or not your site's registration page is available.
 // @TODO Build email invitation system so this isn't simply a binary choice.
 $THINKUP_CFG['is_registration_open']      = true;
 
-$THINKUP_CFG['debug']                     = true;
-
-$THINKUP_CFG['enable_profiler']           = false;
+// To enable reCAPTCHA on registration, set enable to true and fill in your keys and libpath;
+// Otherwise, leave these settings as-is.
+// More info at http://recaptcha.net/plugins/php/
+$THINKUP_CFG['recaptcha_enable']          = false;
+$THINKUP_CFG['recaptcha_public_key']      = '';
+$THINKUP_CFG['recaptcha_private_key']     = '';
 
 /************************************************/
 /***  DATABASE CONFIG                         ***/
 /************************************************/
 
-$THINKUP_CFG['db_host']                   = 'localhost';  // On a shared host? Try mysql.yourdomain.com, or see your web host's documentation.
+$THINKUP_CFG['db_host']                   = 'localhost'; //On a shared host? Try mysql.yourdomain.com, or see your web host's documentation.
 $THINKUP_CFG['db_type']                   = 'mysql';
 $THINKUP_CFG['db_user']                   = 'your_database_username';
 $THINKUP_CFG['db_password']               = 'your_database_password';
@@ -56,64 +63,3 @@ $THINKUP_CFG['db_socket']                 = '';
 $THINKUP_CFG['db_port']                   = '';
 $THINKUP_CFG['table_prefix']              = 'tu_';
 
-
-/************************************************/
-/***  PLUGIN CONFIG                           ***/
-/************************************************/
-
-/*------------------------------------------------
-  TWITTER
-  All of the Twitter-specific settings are on 
-        the Twitter plugin's configuration page.
-------------------------------------------------*/
-
-/*------------------------------------------------
-  FACEBOOK
-  @TODO Put the Facebook-specific settings into 
-        the Facebook plugin's configuration page.
--------------------------------------------------*/
-
-// Base URL for Facebook Connect
-$THINKUP_CFG['facebook_base_fb_url']      = 'connect.facebook.com';
-
-// To integrate with Facebook, get a Facebook API key and fill in the values below.
-// Otherwise, set all three to ''.
-$THINKUP_CFG['facebook_api_key']          = 'your_facebook_api_key';
-$THINKUP_CFG['facebook_api_secret']       = 'your_facebook_api_secret';
-$THINKUP_CFG['facebook_callback_url']     = 'http://yourdomain/path-to-webapp/account/';
-
-/*------------------------------------------------
-  BIT.LY
-  @TODO Abstract into a plugin.
-  @TODO Put the bit.ly-specific settings into
-        the bit.ly plugin's configuration page.
-------------------------------------------------*/
-
-// To integrate with bit.ly, get a bit.ly API key at http://bit.ly and fill in the values below.
-// Otherwise, set both to ''.
-$THINKUP_CFG['bitly_api_key']             = 'your_key';
-$THINKUP_CFG['bitly_login']               = 'your_bitly_login';
-
-/*------------------------------------------------
-  FLICKR
-  @TODO Put the Flickr-specific settings into the
-        Flickr plugin's configuration page.
-------------------------------------------------*/
-
-// To integrate with Flickr, get a Flickr API key at http://flickr.com and fill in the value below.
-// Otherwise, set to ''.
-$THINKUP_CFG['flickr_api_key']            = 'your_flickr_api_key';
-
-/*------------------------------------------------
-  RECAPTCHA
-  @TODO Abstract into a plugin.
-  @TODO Put the reCAPTCHA-specific settings into
-        the reCAPTCHA plugin's configuration page.
-------------------------------------------------*/
-
-// To enable reCAPTCHA, set enable to true and fill in your keys and libpath; more info at http://recaptcha.net/plugins/php/
-// Otherwise, leave these settings as-is.
-$THINKUP_CFG['recaptcha_enable']          = false;
-$THINKUP_CFG['recaptcha_public_key']      = '';
-$THINKUP_CFG['recaptcha_private_key']     = '';
-?>

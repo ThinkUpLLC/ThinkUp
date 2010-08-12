@@ -1,14 +1,12 @@
 <?php
 /**
- * HelloThinkUp Plugin configuration controller
+ * HelloThinkUp Plugin Configuration Controller
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
- *
  */
 
 class HelloThinkUpPluginConfigurationController extends PluginConfigurationController {
-
-
     public function authControl() {
         $config = Config::getInstance();
         $this->setViewTemplate( $config->getValue('source_root_path')
@@ -60,6 +58,4 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
         return $this->generateView();
 
     }
-
 }
-

@@ -141,3 +141,16 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     };
 </script>
 {/literal}
+{if $options_markup}
+<div style="border: solid gray 1px;padding:10px;margin:20px">
+<h2 class="subhead">Configure the Facebook Plugin</h2>
+<ol style="margin-left:40px">
+<li><a href="http://www.facebook.com/developers/#!/developers/apps.php">Register your ThinkUp application on Facebook</a>.</li>
+<li>Set the Facebook Connect URL to <pre>http://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/facebook/</pre></li>
+<li>Enter the Facebook-provided API key and secret here.</li></ol>
+<p>
+{$options_markup}
+</p>
+</div>
+{/if}
+

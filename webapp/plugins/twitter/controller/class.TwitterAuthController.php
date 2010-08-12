@@ -34,10 +34,8 @@ class TwitterAuthController extends ThinkUpAuthController {
             $request_token_secret = $_SESSION['oauth_request_token_secret'];
 
             // get oauth values
-            $plugin_dao = DAOFactory::GetDAO('PluginDAO');
-            $plugin_id = $plugin_dao->getPluginId('twitter');
             $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
-            $options = $plugin_option_dao->getOptionsHash($plugin_id, true); //get cached
+            $options = $plugin_option_dao->getOptionsHash('twitter', true); //get cached
 
             $to = new TwitterOAuth($options['oauth_consumer_key']->option_value,
             $options['oauth_consumer_secret']->option_value, $request_token, $request_token_secret);

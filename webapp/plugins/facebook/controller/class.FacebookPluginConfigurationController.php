@@ -4,7 +4,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class FacebookPluginConfigurationController extends ThinkUpAuthController {
+class FacebookPluginConfigurationController extends PluginConfigurationController {
     /**
      *
      * @var Owner
@@ -19,7 +19,7 @@ class FacebookPluginConfigurationController extends ThinkUpAuthController {
      * @return FacebookPluginConfigurationController
      */
     public function __construct($owner) {
-        parent::__construct(true);
+        parent::__construct($owner, 'facebook');
         $this->disableCaching();
         $this->owner = $owner;
         $this->id = DAOFactory::getDAO('InstanceDAO');
@@ -32,6 +32,23 @@ class FacebookPluginConfigurationController extends ThinkUpAuthController {
         $this->setViewTemplate($config->getValue('source_root_path').
         'webapp/plugins/facebook/view/facebook.account.index.tpl');
 
+        /** set option fields **/
+        // API key text field
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_key',
+        'label'=>'Your Facebook API key')); // add element
+        $this->addPluginOptionHeader('facebook_api_key',
+        'Facebook Configuration');
+        // set a special required message
+        $this->addPluginOptionRequiredMessage('facebook_api_key',
+        'The Facebook plugin requires a valid API key.');
+
+        // API key text field
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_secret',
+        'label'=>'Your Facebook API secret')); // add element
+        // set a special required message
+        $this->addPluginOptionRequiredMessage('facebook_api_secret',
+        'The Facebook plugin requires a valid secret key.');
+
         $status = self::processPageActions();
         $this->addToView("info", $status["info"]);
         $this->addToView("error", $status["error"]);
@@ -41,10 +58,12 @@ class FacebookPluginConfigurationController extends ThinkUpAuthController {
         $user_pages = array();
         $owner_instances = $this->id->getByOwnerAndNetwork($this->owner, 'facebook');
 
-        $api_key = $config->getValue('facebook_api_key');
-        $api_secret = $config->getValue('facebook_api_secret');
+        $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
 
-        if (isset($api_key) && isset($api_secret)) {
+        if (isset($options['facebook_api_key']) && isset($options['facebook_api_secret'])) {
+            $api_key = $options['facebook_api_key']->option_value;
+            $api_secret = $options['facebook_api_secret']->option_value;
             //echo "keys set: ".$api_key." ".$api_secret;
             $facebook = new Facebook($api_key, $api_secret);
             foreach ($owner_instances as $instance) {
@@ -64,14 +83,11 @@ class FacebookPluginConfigurationController extends ThinkUpAuthController {
                 }
             }
         } else {
-            echo "keys not set";
-            $this->addToView("error", "Please set your Facebook API key and secret in config.inc.php");
+            $this->addErrorMessage("Please set your Facebook API key and secret.");
         }
-
 
         $owner_instance_pages = $this->id->getByOwnerAndNetwork($this->owner, 'facebook page');
         $this->addToView('owner_instance_pages', $owner_instance_pages);
-
 
         $fbconnect_link = '<a href="#" onclick="FB.Connect.requireSession(); return false;" >
         <img id="fb_login_image" 
@@ -79,8 +95,8 @@ class FacebookPluginConfigurationController extends ThinkUpAuthController {
             </a>';
         $this->addToView('fbconnect_link', $fbconnect_link);
         $this->addToView('owner_instances', $owner_instances);
-        if (isset($api_key)) {
-            $this->addToView('fb_api_key', $api_key);
+        if (isset($options['facebook_api_key'])) {
+            $this->addToView('fb_api_key', $options['facebook_api_key']->option_value);
         }
 
         return $this->generateView();

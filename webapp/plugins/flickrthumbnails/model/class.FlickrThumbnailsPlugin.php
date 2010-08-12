@@ -1,9 +1,19 @@
 <?php
+/**
+ * Flickr Thumbnails Plugin
+ *
+ * Expands Flickr links to direct path to image thumbnail.
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class FlickrThumbnailsPlugin implements CrawlerPlugin {
 
-    function crawl() {
+    public function crawl() {
         $config = Config::getInstance();
-        $api_key = $config->getValue('flickr_api_key');
+
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash('flickrthumbnails', true);
+        $api_key =  $options['flickr_api_key']->option_value;
 
         if (isset($api_key) && $api_key != '') {
             $logger = Logger::getInstance();
@@ -29,7 +39,8 @@ class FlickrThumbnailsPlugin implements CrawlerPlugin {
         }
     }
 
-    function renderConfiguration($owner) {
-        // TODO Add setting for the Flickr API key here
+    public function renderConfiguration($owner) {
+        $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
+        return $controller->go();
     }
 }

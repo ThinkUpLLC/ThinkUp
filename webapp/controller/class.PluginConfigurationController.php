@@ -52,7 +52,6 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
      * @const Options markup smarty template
      */
     const OPTIONS_TEMPLATE = '_plugin.options.tpl';
-
     /**
      * @const Text Form element
      */
@@ -65,13 +64,10 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
      * @const checkbox element
      */
     const FORM_SELECT_ELEMENT = 'select_element';
-
-
     /**
      * @var Array list of option elements
      */
     var $option_elements = array();
-
     /**
      * @var Array list of option element headers
      */
@@ -128,10 +124,14 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
         $this->folder_name = $folder_name;
         $this->disableCaching();
         //get option values
-        $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
-        $this->plugin_id = $plugin_dao->getPluginId($this->folder_name);
-        $this->options_values  = $plugin_option_dao->getOptions($this->plugin_id);
+        $this->options_values  = $plugin_option_dao->getOptions($this->folder_name);
+        if (isset($this->options_values[0])) {
+            $this->plugin_id = $this->options_values[0]->plugin_id;
+        } else {
+            $plugin_dao = DAOFactory::getDAO('PluginDAO');
+            $this->plugin_id = $plugin_dao->getPluginId($folder_name);
+        }
     }
 
     /**
@@ -287,13 +287,5 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
             }
         }
         return $this->options_hash;
-    }
-
-    /**
-     * set plugin id for view, ie: $this->plugin_id = $plugin_id;
-     * @param int plugin id
-     */
-    public function setPlugin($plugin) {
-        $this->plugin = $plugin;
     }
 }

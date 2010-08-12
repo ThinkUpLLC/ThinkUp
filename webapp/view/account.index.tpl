@@ -16,7 +16,7 @@
         <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
               <p>
                 <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                As an administrator you can see all installed plugins and activate/deactivate them.
+                As an administrator you can configure all installed plugins.
               </p>
             </div>
         {/if}

@@ -11,11 +11,6 @@
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/style.css">
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.7.1.custom.css">
 
-  <!-- client-side bitly -->  
-  {if $bitly_api_key}
-  <script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login={$bitly_login}&apiKey={$bitly_api_key}"></script>
-  {/if}
-
   <!-- jquery -->
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>	
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>

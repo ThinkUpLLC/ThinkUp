@@ -6,12 +6,12 @@ class FlickrAPIAccessor {
     var $api_key;
     var $logger;
 
-    function FlickrAPIAccessor($flickr_api_key) {
+    public function FlickrAPIAccessor($flickr_api_key) {
         $this->api_key = $flickr_api_key;
         $this->logger = Logger::getInstance();
     }
 
-    function getFlickrPhotoSource($u) {
+    public function getFlickrPhotoSource($u) {
         global $SOURCE_ROOT_PATH;
         $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/flickrthumbnails/tests/testdata/';
 
@@ -19,7 +19,8 @@ class FlickrAPIAccessor {
             $this->logger->logStatus("Flickr API key set", get_class($this));
             $photo_short_id = substr($u, strlen('http://flic.kr/p/'));
             $photo_id = $this->base_decode($photo_short_id);
-            $params = array('method'=>$this->method, 'photo_id'=>$photo_id, 'api_key'=>$this->api_key, 'format'=>$this->format, );
+            $params = array('method'=>$this->method, 'photo_id'=>$photo_id, 'api_key'=>$this->api_key,
+            'format'=>$this->format, );
 
             $encoded_params = array();
 
@@ -69,7 +70,7 @@ class FlickrAPIAccessor {
     }
 
 
-    function base_decode($num, $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ") {
+    public function base_decode($num, $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ") {
         $decoded = 0;
         $multi = 1;
         while (strlen($num) > 0) {
@@ -81,7 +82,4 @@ class FlickrAPIAccessor {
 
         return $decoded;
     }
-
-
 }
-?>

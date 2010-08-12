@@ -20,6 +20,8 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPlugin
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPluginConfigurationController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPluginConfigurationController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrAPIAccessor.php';
+require_once $SOURCE_ROOT_PATH.
+'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPluginConfigurationController.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPlugin.php';
 require_once $SOURCE_ROOT_PATH.'webapp/plugins/hellothinkup/tests/TestOfHelloThinkUpPluginConfigurationController.php';
@@ -31,6 +33,7 @@ $plugin_tests->addTestCase(new TestOfFacebookCrawler());
 $plugin_tests->addTestCase(new TestOfFacebookPlugin());
 $plugin_tests->addTestCase(new TestOfFacebookPluginConfigurationController());
 $plugin_tests->addTestCase(new TestOfFlickrAPIAccessor());
+$plugin_tests->addTestCase(new TestOfFlickrThumbnailsPluginConfigurationController());
 $plugin_tests->addTestCase(new TestOfFlickrThumbnailsPlugin());
 $plugin_tests->addTestCase(new TestOfGeoEncoderPlugin());
 $plugin_tests->addTestCase(new TestOfTwitterAPIAccessorOAuth());

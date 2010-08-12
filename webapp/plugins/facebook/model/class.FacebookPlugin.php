@@ -6,6 +6,10 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         $id = DAOFactory::getDAO('InstanceDAO');
         $oid = DAOFactory::getDAO('OwnerInstanceDAO');
 
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
+
+
         //crawl Facebook user profiles
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook');
         foreach ($instances as $instance) {
@@ -13,7 +17,8 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $tokens = $oid->getOAuthTokens($instance->id);
             $session_key = $tokens['oauth_access_token'];
 
-            $fb = new Facebook($config->getValue('facebook_api_key'), $config->getValue('facebook_api_secret'));
+            $fb = new Facebook($options['facebook_api_key']->option_value, 
+            $options['facebook_api_secret']->option_value);
 
             $id->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $fb);
@@ -30,7 +35,8 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $tokens = $oid->getOAuthTokens($instance->id);
             $session_key = $tokens['oauth_access_token'];
 
-            $fb = new Facebook($config->getValue('facebook_api_key'), $config->getValue('facebook_api_secret'));
+            $fb = new Facebook($options['facebook_api_key']->option_value, 
+            $options['facebook_api_secret']->option_value);
 
             $id->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $fb);
@@ -55,7 +61,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
         //All tab
         $alltab = new WebappTab("all_facebook_posts", "All", '', $fb_data_tpl);
-        $alltabds = new WebappTabDataset("all_facebook_posts", 'PostDAO', "getAllPosts", 
+        $alltabds = new WebappTabDataset("all_facebook_posts", 'PostDAO', "getAllPosts",
         array($instance->network_user_id, 'facebook', 15, false));
         $alltab->addDataset($alltabds);
         array_push($child_tabs, $alltab);
@@ -68,7 +74,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
         //All Replies
         $artab = new WebappTab("all_facebook_replies", "Replies", "Replies to your Facebook posts", $fb_data_tpl);
-        $artabds = new WebappTabDataset("all_facebook_replies", 'PostDAO', "getAllReplies", 
+        $artabds = new WebappTabDataset("all_facebook_replies", 'PostDAO', "getAllReplies",
         array($instance->network_user_id, 'facebook', 15));
         $artab->addDataset($artabds);
         array_push($child_tabs, $artab);

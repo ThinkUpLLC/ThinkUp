@@ -5,6 +5,7 @@
  * Controller to add and update plugin options
  *
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
 
@@ -16,12 +17,10 @@ class PluginOptionController extends ThinkUpAdminController {
 
         // verify we have a proper action and plugin id
         if (isset($_GET['action']) && $_GET['action'] == 'set_options') {
-            if(isset($_GET['plugin_id'])
+            if (isset($_GET['plugin_id'])
             && is_numeric( $_GET['plugin_id'] )
             && $this->isValidPluginId( $_GET['plugin_id'] ) ) {
-
                 $this->setPluginOptions($_GET['plugin_id']);
-
             } else {
                 // or fail
                 $this->json['message'] = 'Bad plugin id defined for this request';
@@ -40,8 +39,10 @@ class PluginOptionController extends ThinkUpAdminController {
      * sets plugin options
      */
     public function setPluginOptions($plugin_id) {
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_folder_name = $plugin_dao->getPluginFolder($plugin_id);
         $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
-        $options = $plugin_option_dao->getOptions($plugin_id);
+        $options = $plugin_option_dao->getOptions($plugin_folder_name);
         $cnt = 0;
         $inserted = array();
         $deleted = 0;
@@ -87,7 +88,7 @@ class PluginOptionController extends ThinkUpAdminController {
      * @return bool
      */
     public function isValidPluginId($plugin_id) {
-        $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
+        $plugin_option_dao = DAOFactory::getDAO('PluginDAO');
         return $plugin_option_dao->isValidPluginId($plugin_id);
     }
 }

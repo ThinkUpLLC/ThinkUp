@@ -26,11 +26,11 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/model/class.Flic
 
 class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
 
-    function __construct() {
+    public function  __construct() {
         $this->UnitTestCase('FlickrThumbnailsPlugin class test');
     }
 
-    function setUp() {
+    public function  setUp() {
         parent::setUp();
         $webapp = Webapp::getInstance();
         $crawler = Crawler::getInstance();
@@ -43,7 +43,8 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $post_id, 0);";
+            $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://example.com/".$counter.
+            "', 'Link $counter', 0, $post_id, 0);";
             $this->db->exec($q);
 
             $counter++;
@@ -55,14 +56,16 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1);";
+            $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://flic.kr/p/".$counter.
+            "', 'Link $counter', 0, $post_id, 1);";
             $this->db->exec($q);
 
             $counter++;
         }
 
         // Insert legit Flickr shortened link, not expanded
-        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://flic.kr/p/7QQBy7', 'Link', 0, 200, 1);";
+        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://flic.kr/p/7QQBy7', 'Link',
+         0, 200, 1);";
         $this->db->exec($q);
 
 
@@ -72,7 +75,8 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image, error) VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 1, 'Generic test error message, Photo not found');";
+            $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image, error) VALUES ('http://flic.kr/p/".
+            $counter."', 'Link $counter', 0, $post_id, 1, 'Generic test error message, Photo not found');";
             $this->db->exec($q);
 
             $counter++;
@@ -80,16 +84,21 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
 
     }
 
-    function tearDown() {
+    public function  tearDown() {
         parent::tearDown();
     }
 
-    function testFlickrCrawl() {
+    public function  testFlickrCrawl() {
         $crawler = Crawler::getInstance();
         $config = Config::getInstance();
 
         //use fake Flickr API key
-        $config->setValue('flickr_api_key', 'dummykey');
+        $plugin_builder = FixtureBuilder::build('plugins', array('id'=>'2', 'folder_name'=>'flickrthumbnails'));
+        $option_builder = FixtureBuilder::build('plugin_options', array(
+            'plugin_id' => '2',
+            'option_name' => 'flickr_api_key',
+            'option_value' => 'dummykey') );
+        //$config->setValue('flickr_api_key', 'dummykey');
 
         $crawler->crawl();
 

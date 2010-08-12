@@ -15,6 +15,10 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $id = DAOFactory::getDAO('InstanceDAO');
         $oid = DAOFactory::getDAO('OwnerInstanceDAO');
 
+        // get oauth values
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash('twitter', true);
+
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('twitter');
         foreach ($instances as $instance) {
             $logger->setUsername($instance->network_username);
@@ -25,21 +29,15 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
                 $noauth = false;
             }
 
-            // get oauth values
-            $plugin_dao = DAOFactory::GetDAO('PluginDAO');
-            $plugin_id = $plugin_dao->getPluginId('twitter');
-            $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
-            $options = $plugin_option_dao->getOptionsHash($plugin_id, true); //get cached 
-
             if ($noauth) {
-                $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', 
+                $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH',
                 $options['oauth_consumer_key']->option_value,
-                $options['oauth_consumer_secret']->option_value, 
+                $options['oauth_consumer_secret']->option_value,
                 $instance, $options['archive_limit']->option_value);
             } else {
                 $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
                 $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
-                $options['oauth_consumer_secret']->option_value, 
+                $options['oauth_consumer_secret']->option_value,
                 $instance, $options['archive_limit']->option_value);
             }
 

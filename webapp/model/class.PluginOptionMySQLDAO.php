@@ -1,15 +1,17 @@
 <?php
-/**
- * Plugin Option Data Access Object
- * The data access object for retrieving and saving plugin option data for thinkup
- * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
- */
-
 require_once 'model/class.PDODAO.php';
 require_once 'model/interface.PluginOptionDAO.php';
 require_once 'model/class.PluginOption.php';
 require_once 'model/exceptions/class.BadArgumentException.php';
 
+/**
+ * Plugin Option Data Access Object
+ *
+ * The data access object for retrieving and saving plugin options.
+ *
+ * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ */
 class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
 
     public static $cached_options = array();
@@ -24,13 +26,13 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
         }
     }
 
-    public function insertOption($plugin_id, $name, $value) {
+    public function insertOption($plugin_folder, $name, $value) {
         $q = 'INSERT INTO #prefix#plugin_options
                 (plugin_id, option_name, option_value)
             VALUES
                 (:plugin_id, :option_name, :option_value)';
         $stmt = $this->execute($q,
-        array(':plugin_id' => $plugin_id, ':option_name' => $name, ':option_value' => $value) );
+        array(':plugin_id' => $plugin_folder, ':option_name' => $name, ':option_value' => $value) );
         return $this->getInsertId($stmt);
     }
 
@@ -50,29 +52,27 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
         }
     }
 
-    public function getOptions($plugin_id = null, $cached = false) {
+    public function getOptions($plugin_folder = null, $cached = false) {
         $options = null;
-        $cache_key = (! is_null($plugin_id) ) ? ($plugin_id . 'id'): 'all';
-        if($cached && isset(self::$cached_options[$cache_key])) {
+        $cache_key = (! is_null($plugin_folder) ) ? ($plugin_folder . 'id'): 'all';
+        if ($cached && isset(self::$cached_options[$cache_key])) {
             $options = self::$cached_options[$cache_key];
         }
-        if( is_null($options)) {
-            $q = 'SELECT id, plugin_id, option_name, option_value
+        if (is_null($options)) {
+            $q = 'SELECT po.id, po.plugin_id, po.option_name, po.option_value
                 FROM 
-                    #prefix#plugin_options
-                WHERE ';
-            $q .= $plugin_id ? 'plugin_id = :plugin_id' : 'TRUE';
-            $data = null;
-            if($plugin_id) {
-                $data = array(':plugin_id' => $plugin_id);
+                    #prefix#plugin_options po ';
+            $q .= $plugin_folder ? 'INNER JOIN #prefix#plugins p ON p.id = po.plugin_id
+                WHERE p.folder_name = :plugin_folder' : '';
+            if ($plugin_folder) {
+                $data = array(':plugin_folder' => $plugin_folder);
                 $stmt = $this->execute($q, $data);
             } else {
                 $stmt = $this->execute($q);
             }
-            $stmt = $this->execute($q, $data);
             $options = $this->getDataRowsAsObjects($stmt, 'PluginOption');
-            if(isset($options[0])) {
-                if($cached) {
+            if (isset($options[0])) {
+                if ($cached) {
                     self::$cached_options[$cache_key] = $options;
                 }
             } else {
@@ -82,21 +82,14 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
         return $options;
     }
 
-    public function getOptionsHash($plugin_id, $cached = false) {
-        $options = $this->getOptions($plugin_id, $cached);
+    public function getOptionsHash($plugin_folder, $cached = false) {
+        $options = $this->getOptions($plugin_folder, $cached);
         $options_hash = array();
-        if(count( $options) > 0 ) {
+        if (count( $options) > 0 ) {
             foreach ($options as $option) {
                 $options_hash[ $option->option_name ] = $option;
             }
         }
         return $options_hash;
-    }
-
-    public function isValidPluginId($plugin_id) {
-        $q = 'SELECT id FROM  #prefix#plugins where id = :id';
-        $data = array(':id' => $plugin_id);
-        $stmt = $this->execute($q, $data);
-        return $this->getDataIsReturned($stmt);
     }
 }

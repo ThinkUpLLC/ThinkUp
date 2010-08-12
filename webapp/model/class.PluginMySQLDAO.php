@@ -110,6 +110,16 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
         return $id;
     }
 
+    public function getPluginFolder($plugin_id) {
+        $q = "SELECT folder_name FROM #prefix#plugins WHERE id = :plugin_id";
+        $stmt = $this->execute($q, array(':plugin_id' => $plugin_id) );
+        $row = $this->getDataRowAsArray($stmt);
+        // get the id if there is one
+        $folder_name = $row && $row['folder_name'] ? $row['folder_name'] : null;
+        return $folder_name;
+    }
+
+
     public function setActive($id, $active) {
         $q = "
             UPDATE 
@@ -190,5 +200,11 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
             return null;
         }
     }
-}
 
+    public function isValidPluginId($plugin_id) {
+        $q = 'SELECT id FROM  #prefix#plugins where id = :id';
+        $data = array(':id' => $plugin_id);
+        $stmt = $this->execute($q, $data);
+        return $this->getDataIsReturned($stmt);
+    }
+}
