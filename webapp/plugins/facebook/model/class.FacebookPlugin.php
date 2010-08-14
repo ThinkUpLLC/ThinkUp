@@ -9,7 +9,6 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
 
-
         //crawl Facebook user profiles
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook');
         foreach ($instances as $instance) {
@@ -22,8 +21,12 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
 
             $id->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $fb);
-            $crawler->fetchInstanceUserInfo($instance->network_user_id, $session_key);
-            $crawler->fetchUserPostsAndReplies($instance->network_user_id, $session_key);
+            try {
+                $crawler->fetchInstanceUserInfo($instance->network_user_id, $session_key);
+                $crawler->fetchUserPostsAndReplies($instance->network_user_id, $session_key);
+            } catch (Exception $e) {
+                $logger->logStatus('PROFILE EXCEPTION: '.$e->getMessage(), get_class($this));
+            }
 
             $id->save($crawler->instance, $crawler->owner_object->post_count, $logger);
         }
@@ -41,7 +44,11 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $id->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $fb);
 
-            $crawler->fetchPagePostsAndReplies($instance->network_user_id, $instance->network_viewer_id, $session_key);
+            try {
+                $crawler->fetchPagePostsAndReplies($instance->network_user_id, $instance->network_viewer_id, $session_key);
+            } catch (Exception $e) {
+                $logger->logStatus('PAGE EXCEPTION: '.$e->getMessage(), get_class($this));
+            }
             $id->save($crawler->instance, 0, $logger);
 
         }
