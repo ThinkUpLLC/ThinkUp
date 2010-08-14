@@ -104,7 +104,6 @@ except for the  external libraries listed below.
 - [Smarty](http://smarty.net) (Included)
 - [Twitter OAuth by Abraham Williams](http://github.com/abraham/twitteroauth) (Included)
 - [ReCAPTCHA PHP library](http://recaptcha.net/plugins/php/) (Included)
-- [PHP Lorem Ipsum Generator](http://tinsology.net/scripts/php-lorem-ipsum-generator/) (Included)
 
 ## CREDITS
 

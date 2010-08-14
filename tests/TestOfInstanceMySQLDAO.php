@@ -11,7 +11,6 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.InstanceMySQLDAO.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
-require_once $SOURCE_ROOT_PATH.'extlib/Loremipsum/LoremIpsum.class.php';
 
 class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
     protected $DAO;
@@ -392,13 +391,12 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testSave(){
         //First we need to generate some more TestData(tm)
-        $loremIpsum = new LoremIpsumGenerator();
         //First in line is some posts 250 Randomly generated ones, some with mentions.
         $mentions = 0;
         $posts = 0;
         for($i=0; $i <= 250; $i++){
             $sender = rand(5,16);
-            $data = $loremIpsum->getContent(17, 'plain');
+            $data = 'asdf qwerty flakes meep';
             $postid = rand(1000, 1000000);
             while(isset($pic[$postid])){
                 $postid = rand(1000, 1000000);
