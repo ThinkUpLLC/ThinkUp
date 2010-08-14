@@ -65,7 +65,7 @@
             </div>
           {/if}
         <div class="append prepend clearfix">
-          <a href="{$site_root}public.php" class="tt-button ui-state-default tt-button-icon-left ui-corner-all">
+          <a href="{$site_root_path}public.php" class="tt-button ui-state-default tt-button-icon-left ui-corner-all">
             <span class="ui-icon ui-icon-circle-arrow-w"></span>
             Back to the public timeline
           </a>
@@ -160,7 +160,7 @@
         {/if}
         
         <div class="append prepend clearfix">
-          <a href="{$site_root}public.php" class="tt-button ui-state-default tt-button-icon-left ui-corner-all">
+          <a href="{$site_root_path}public.php" class="tt-button ui-state-default tt-button-icon-left ui-corner-all">
             <span class="ui-icon ui-icon-circle-arrow-w"></span>
             Back to the public timeline
           </a>
