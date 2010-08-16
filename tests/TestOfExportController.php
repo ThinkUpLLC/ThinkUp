@@ -11,6 +11,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ExportController.php';
 require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.PostIterator.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
@@ -87,7 +88,10 @@ class TestOfExportController extends ThinkUpUnitTestCase {
         $controller = new ExportController(true);
         $this->assertTrue(isset($controller));
 
-        $results = $controller->control();
+        ob_start();
+        $controller->control();
+        $results = ob_get_contents();
+        ob_end_clean();
         $this->assertPattern("/My first post/", $results);
     }
 

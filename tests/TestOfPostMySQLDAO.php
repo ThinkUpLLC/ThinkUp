@@ -13,6 +13,7 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
 require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
+require_once $SOURCE_ROOT_PATH.'webapp/model/class.PostIterator.php';
 
 /**
  * Test of PostMySQL DAO implementation
@@ -430,6 +431,29 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($posts), 0);
     }
 
+    /**
+     * Test getAllPosts via iterator
+     */
+    public function testGetAllPostsByUsernameIterator() {
+        $dao = new PostMySQLDAO();
+        $iterator = true;
+        $posts_it = $dao->getAllPostsByUsernameIterator('shutterbug', 'twitter');
+        $cnt = 0;
+        foreach($posts_it as $key => $value) {
+            $this->assertIsA($value, 'Post');
+            $cnt++;
+        }
+        $this->assertEqual($cnt, 41);
+
+        // non-existent author
+        $posts = $dao->getAllPostsByUsernameIterator('idontexist', 'twitter');
+        $cnt = 0;
+        foreach($posts_it as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual($cnt, 0);
+
+    }
     /**
      * Test getAllPosts
      */

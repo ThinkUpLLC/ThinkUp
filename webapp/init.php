@@ -13,6 +13,7 @@ require_once 'model/class.DAOFactory.php';
 require_once 'model/class.User.php';
 require_once 'model/class.Owner.php';
 require_once 'model/class.Post.php';
+require_once 'model/class.PostIterator.php';
 require_once 'model/class.Link.php';
 require_once 'model/class.Instance.php';
 require_once 'model/class.OwnerInstance.php';

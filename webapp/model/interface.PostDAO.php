@@ -149,6 +149,14 @@ interface PostDAO {
     public function getAllPostsByUsername($username, $network);
 
     /**
+     * Get post iterator by author given the author's username
+     * @param str $username
+     * @param str $network
+     * @return Iterator PostIterator by author (no link set)
+     */
+    public function getAllPostsByUsernameIterator($username, $network);
+
+    /**
      * Get count of posts by author user ID
      * @param int $user_id
      * @param str $network
@@ -307,12 +315,12 @@ interface PostDAO {
      * @return array $row['in_reply_to_post_id'],$row['in_retweet_of_post_id']
      */
     public function getPostsToGeoencode($limit = 500);
-    
+
     /**
      * Set geo-location data for post
      * @param int $post_id
      * @param int $is_geo_encoded 0 if Not Geoencoded, 1 if Successful,
-     * 2 if ZERO_RESULTS, 3 if OVER_QUERY_LIMIT, 4 if REQUEST_DENIED, 5 if INVALID_REQUEST 
+     * 2 if ZERO_RESULTS, 3 if OVER_QUERY_LIMIT, 4 if REQUEST_DENIED, 5 if INVALID_REQUEST
      * @param string $location
      * @param string $geodata
      * @param int $distance

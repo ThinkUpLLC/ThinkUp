@@ -42,15 +42,39 @@ class ExportController extends ThinkUpAuthController {
                 $oid = DAOFactory::getDAO('OwnerInstanceDAO');
                 if ( !$oid->doesOwnerHaveAccess($owner, $username) ) {
                     $this->addErrorMessage('Insufficient privileges');
+                    return $this->generateView();
                 } else {
                     $pd = DAOFactory::getDAO('PostDAO');
-                    $posts = $pd->getAllPostsByUsername($username, $network);
-                    $this->addToView('posts', $posts);
+                    $posts_it = $pd->getAllPostsByUsernameIterator($username, $network);
+                    if( ! headers_sent() ) { // this is so our test don't barf on us
+                        // set export headers...
+                        header('Content-Type: text/csv');
+                        header('Content-Disposition: attachment; filename="export.csv"');
+                        header('Pragma: no-cache');
+                        header('Expires: 0');
+                    }
+                    // get object var names
+                    $vars = array_keys(get_class_vars('Post'));
+                    // get output handle
+                    $fp = fopen('php://output', 'w');
+                    // output csv header
+                    fputcsv($fp, $vars);
+                    foreach($posts_it as $id => $post) {
+                        $post_array = array();
+                        // output post csv line
+                        fputcsv($fp, (array)$post);
+                        // flush output buffer
+                        flush();
+                    }
+                    // close output handle
+                    fclose($fp);
                 }
             } else {
                 $this->addErrorMessage('User '.$_GET['u'] . ' on '. $_GET['n']. ' is not in ThinkUp.');
+                return $this->generateView();
             }
+        } else {
+            return $this->generateView();
         }
-        return $this->generateView();
     }
 }

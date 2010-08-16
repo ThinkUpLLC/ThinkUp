@@ -522,8 +522,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @param str $order_by field name Default "pub_date"
      * @return array Posts with link object set
      */
-    private function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=false,
-    $order_by="pub_date", $in_last_x_days = 0) {
+    private function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
+    $order_by="pub_date", $in_last_x_days = 0, $iterator = false) {
         if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
             $order_by="pub_date";
         }
@@ -553,6 +553,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $vars[':limit'] = (int)$count;
         }
         $ps = $this->execute($q, $vars);
+        if($iterator) {
+            return (new PostIterator($ps));
+        }
         $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
         foreach ($all_rows as $row) {
@@ -561,8 +564,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
+    public function getAllPostsByUsernameIterator($username, $network) {
+        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", null, null, null, 
+        $iterator = true);
+    }
+    
     public function getAllPostsByUsername($username, $network) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network);
+        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", null, null, null, 
+        $iterator = false);
     }
 
     public function getMostRepliedToPostsInLastWeek($username, $network, $count) {
