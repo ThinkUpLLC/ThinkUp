@@ -1,16 +1,16 @@
 /**
- * Plugin Option object for processing the plugin option form
- */
+* Plugin Option object for processing the plugin option form
+*/
 var PluginOptions = function() {
 
     /**
-     * @var boolean Enable for console logging
-     */
+* @var boolean Enable for console logging
+*/
     this.DEBUG = false;
 
     /**
-     * Init our plugin options form
-     */
+* Init our plugin options form
+*/
     this.init = function() {
         // register on submit event on our form
         $(document).ready( function() {
@@ -22,8 +22,8 @@ var PluginOptions = function() {
     };
 
     /**
-     * form submit event handler
-     */
+* form submit event handler
+*/
     this.submitForm = function() {
         if( plugin_options.submitting ) { return; }
         if(plugin_options.DEBUG) { console.debug("submit_form function called..."); }
@@ -36,7 +36,7 @@ var PluginOptions = function() {
         for (var option_name in option_elements) {
             option = option_elements[option_name];
             status = true;
-            if(plugin_options.DEBUG) { 
+            if(plugin_options.DEBUG) {
                 console.debug('%s type %s id %s', option_name, option.type, option.id);
             }
             var err_div_selector = '#plugin_options_error_' + option_name;
@@ -96,7 +96,7 @@ var PluginOptions = function() {
             plugin_options.submitting = true;
             controller_uri = site_root_path + 'account/plugin-options.php';
             $.ajax({
-                url: controller_uri, 
+                url: controller_uri,
                 data: form_data,
                 dataType: 'json',
                 error: function(data) {
@@ -104,14 +104,14 @@ var PluginOptions = function() {
                     $('#plugin_option_server_error_message').html(
                         'Sorry, but we are unable to process your request at this time.'
                     );
-                    $('#plugin_option_server_error').show(); 
+                    $('#plugin_option_server_error').show();
                 },
                 success: function(data) {
                     if(plugin_options.DEBUG) { console.debug(data); }
                     if(data.status == 'failed') {
                         plugin_options.submitting = false;
                         $('#plugin_option_server_error_message').html(data.message);
-                        $('#plugin_option_server_error').show(); 
+                        $('#plugin_option_server_error').show();
                     } else {
                         $('#plugin_options_success').show();
                         
@@ -121,10 +121,10 @@ var PluginOptions = function() {
                         }
                         setTimeout(function() {
                             window.location.reload();
-                            $('#plugin_options_success').fadeOut(500, 
-                                function() { 
-                                    plugin_options.submitting = false; 
-                            }); 
+                            $('#plugin_options_success').fadeOut(500,
+                                function() {
+                                    plugin_options.submitting = false;
+                            });
                         }, 1000);
                     }
                 }
@@ -133,8 +133,8 @@ var PluginOptions = function() {
     }
 
     /**
-     * set missing element message
-     */
+* set missing element message
+*/
     this.setRequiredMessage = function(option) {
         // we don't require this option, so return true
         if(option_not_required[option['name']] && ! option.regex_fail) {
@@ -158,27 +158,27 @@ var PluginOptions = function() {
     }
 
     /**
-     * process select element input 
-     * 
-     * @return str option value, false if not defined
-     */
+* process select element input
+*
+* @return str option value, false if not defined
+*/
     this.processSelectElement = function(option) {
-        selector = '#plugin_options_'  + option.name;
+        selector = '#plugin_options_' + option.name;
         var select_element = $(selector);
         value = select_element.val();
-        if(plugin_options.DEBUG) {  console.debug("%s form value = %s", option.name, value); }
+        if(plugin_options.DEBUG) { console.debug("%s form value = %s", option.name, value); }
         value = (! value) ? false : value;
         return value;
     }
 
 
     /**
-     * process radio element input 
-     * 
-     * @return str option value, false if not defined
-     */
+* process radio element input
+*
+* @return str option value, false if not defined
+*/
     this.processRadioElement = function(option) {
-        selector = '#plugin_options_'  + option.name;
+        selector = '#plugin_options_' + option.name;
         var radio_element = $(selector + ' input:radio:checked');
         value = radio_element.val()
         if(plugin_options.DEBUG) { console.debug("%s form value = %s", option.name, value); }
@@ -187,12 +187,12 @@ var PluginOptions = function() {
     }
 
     /**
-     * process text element input 
-     * 
-     * @return str option value, false if not defined
-     */
+* process text element input
+*
+* @return str option value, false if not defined
+*/
     this.processTextElement = function(option) {
-        selector = '#plugin_options_'  + option.name;
+        selector = '#plugin_options_' + option.name;
         var text_element = $(selector);
         value = text_element.val()
         if(plugin_options.DEBUG) { console.debug("%s form value = %s", option.name, value); }

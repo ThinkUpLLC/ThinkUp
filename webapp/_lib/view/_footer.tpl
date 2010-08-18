@@ -15,6 +15,7 @@
   
   </div> <!-- .content -->
 
+<div id="screen" style="position: absolute; left: 0; top: 0; background: #000; z-index: 99; color: red; display: none;"></div>
 </body>
 
 </html>
