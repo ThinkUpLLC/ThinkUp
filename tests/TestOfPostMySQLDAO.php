@@ -384,6 +384,30 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test getAllMentionsIterator
+     */
+    public function testGetAllMentionsIterator() {
+        $dao = new PostMySQLDAO();
+        $mentions = $dao->getAllMentions("ev", 10, 'twitter');
+        $mentions_it = $dao->getAllMentionsIterator("ev", 10, 'twitter');
+        $cnt = 0;
+        foreach($mentions_it as $key => $value) {
+            $this->assertEqual($value->post_text,$mentions[$cnt]->post_text);
+            $cnt++;
+        }
+        $this->assertEqual($cnt, 10);
+        
+        $mentions = $dao->getAllMentions("jack", 10, 'twitter');
+        $mentions_it = $dao->getAllMentionsIterator("jack", 10, 'twitter');
+        $cnt = 0;
+        foreach($mentions_it as $key => $value) {
+            $this->assertEqual($value->post_text,$mentions[$cnt]->post_text);
+            $cnt++;
+        }
+        $this->assertEqual($cnt, 10);
+    }
+    
+    /**
      * Test getStatusSources
      */
     public function testGetStatusSources() {

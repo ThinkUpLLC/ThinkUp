@@ -606,7 +606,15 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getDataRowsAsArrays($ps);
     }
 
+    public function getAllMentionsIterator($author_username, $count, $network = "twitter") {
+        return $this->getMentions($author_username, $count, $network, true);
+    }
+    
     public function getAllMentions($author_username, $count, $network = "twitter") {
+        return $this->getMentions($author_username, $count, $network, false);
+    }
+    
+    private function getMentions($author_username, $count, $network, $iterator) {
         $author_username = '@'.$author_username;
         $q = " SELECT l.*, p.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts AS p ";
@@ -628,6 +636,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>$count
         );
         $ps = $this->execute($q, $vars);
+        if($iterator) {
+            return (new PostIterator($ps));
+        }
         $all_rows = $this->getDataRowsAsArrays($ps);
         $all_posts = array();
         foreach ($all_rows as $row) {

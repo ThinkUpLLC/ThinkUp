@@ -177,6 +177,15 @@ interface PostDAO {
      * @param str  $author_username
      * @param int $count
      * @param str $network defaults to "twitter"
+     * @return Iterator PostIterator object
+     */
+    public function getAllMentionsIterator($author_username, $count, $network = "twitter");
+
+    /**
+     * Get a certain number of mentions of a username on a given network
+     * @param str  $author_username
+     * @param int $count
+     * @param str $network defaults to "twitter"
      * @return array of Post objects with author and link set
      */
     public function getAllMentions($author_username, $count, $network = "twitter");
