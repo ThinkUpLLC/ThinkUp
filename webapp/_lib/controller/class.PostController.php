@@ -50,22 +50,22 @@ class PostController extends ThinkUpAuthController {
                 //$this->addToView('all_tweets', $this->post_dao->getAllPosts($post->author_user_id, 15) );
 
                 $all_replies = $this->post_dao->getRepliesToPost($post_id, $network, 'default',
-                               $distance_unit);
+                $distance_unit);
                 $this->addToView('replies', $all_replies );
-                
-                $all_replies_by_location = $this->post_dao->getRepliesToPost($post_id, $network,  'location', 
-                                           $distance_unit);
+
+                $all_replies_by_location = $this->post_dao->getRepliesToPost($post_id, $network,  'location',
+                $distance_unit);
                 $this->addToView('replies_by_location', $all_replies_by_location );
 
                 $all_replies_count = count($all_replies);
                 $this->addToView('reply_count', $all_replies_count );
 
-                $all_retweets = $this->post_dao->getRetweetsOfPost($post_id, $network, 'default', 
-                                $distance_unit);
+                $all_retweets = $this->post_dao->getRetweetsOfPost($post_id, $network, 'default',
+                $distance_unit);
                 $this->addToView('retweets', $all_retweets );
-                
-                $all_retweets_by_location = $this->post_dao->getRetweetsOfPost($post_id, $network, 'location', 
-                                $distance_unit);
+
+                $all_retweets_by_location = $this->post_dao->getRetweetsOfPost($post_id, $network, 'location',
+                $distance_unit);
                 $this->addToView('retweets_by_location', $all_retweets_by_location );
 
                 $retweet_reach = $this->post_dao->getPostReachViaRetweets($post_id, $network);

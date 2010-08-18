@@ -589,8 +589,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
-    public function getAllPostsByUsernameIterator($username, $network) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", null, null, null,
+    public function getAllPostsByUsernameIterator($username, $network, $count = 0) {
+        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", $count, null, null,
         $iterator = true);
     }
 
@@ -605,6 +605,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getMostRetweetedPostsInLastWeek($username, $network, $count) {
         return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'retweet_count_cache', 7);
+    }
+
+    public function getMostRetweetedPostsIterator($username, $network, $count, $days) {
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 
+        'retweet_count_cache', $days, $iterator = true);
     }
 
     public function getTotalPostsByUser($user_id, $network) {
@@ -634,7 +639,15 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getDataRowsAsArrays($ps);
     }
 
+    public function getAllMentionsIterator($author_username, $count, $network = "twitter") {
+        return $this->getMentions($author_username, $count, $network, true);
+    }
+    
     public function getAllMentions($author_username, $count, $network = "twitter") {
+        return $this->getMentions($author_username, $count, $network, false);
+    }
+    
+    private function getMentions($author_username, $count, $network, $iterator) {
         $author_username = '@'.$author_username;
         $q = " SELECT l.*, p.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts AS p ";
@@ -656,6 +669,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>$count
         );
         $ps = $this->execute($q, $vars);
+        if($iterator) {
+            return (new PostIterator($ps));
+        }
         $all_rows = $this->getDataRowsAsArrays($ps);
         $all_posts = array();
         foreach ($all_rows as $row) {

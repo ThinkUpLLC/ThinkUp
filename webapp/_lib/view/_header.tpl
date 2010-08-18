@@ -11,7 +11,7 @@
   <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-  
+
   {if $header_scripts.0}<!-- controller specific scripts -->
   <script type="text/javascript">
   var site_root_path = '{$site_root_path}';
@@ -65,6 +65,7 @@
       });
     {/literal}
     {if $load neq 'no'}
+      var current_query_string = "u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}";
       {literal}
         $(document).ready(function() {
           // References
@@ -83,7 +84,8 @@
           var links_content =  $("#links_content");
       {/literal}
       showLoading();
-      posts_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}", hideLoading);
+      posts_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}", 
+              hideLoading);
       replies_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$replies_tabs[0]->short_name}", hideLoading);
       followers_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$followers_tabs[0]->short_name}", hideLoading);
       friends_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$friends_tabs[0]->short_name}", hideLoading);
@@ -102,6 +104,7 @@
             //posts tabs
             {foreach from=$post_tabs key=ptkey item=pt name=tabloop}
                 case "{$pt->short_name}": 
+                    current_query_string = 'u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}';
                     posts_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}", hideLoading);
                     break;
             {/foreach}

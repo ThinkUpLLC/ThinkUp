@@ -12,6 +12,8 @@ $controller_test->addTestCase(new TestOfCheckCrawlerController());
 $controller_test->addTestCase(new TestOfCrawlerAuthController());
 $controller_test->addTestCase(new TestOfExportController());
 $controller_test->addTestCase(new TestOfForgotPasswordController());
+$controller_test->addTestCase(new TestOfGridController());
+$controller_test->addTestCase(new TestOfGridExportController());
 $controller_test->addTestCase(new TestOfInstallerController());
 $controller_test->addTestCase(new TestOfInlineViewController());
 $controller_test->addTestCase(new TestOfLoginController());

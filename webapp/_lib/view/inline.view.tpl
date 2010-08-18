@@ -43,7 +43,7 @@
     ($display eq 'mentions-allreplies' and not $all_replies) or
     ($display eq 'mentions-orphan' and not $orphan_replies) or 
     ($display eq 'mentions-standalone' and not $standalone_replies)}
-  <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+  <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
       No data to display. <a href="{$site_root_path}crawler/run.php">Update your data now.</a>
@@ -55,10 +55,10 @@
   {foreach from=$orphan_replies key=tid item=t name=foo}
     {include file="_post.otherorphan.tpl" t=$t}
   {/foreach}
-  </form>
 {/if} 
-
+  
 {if $all_mentions}
+
   {foreach from=$all_mentions key=tid item=t name=foo}
     {include file="_post.otherorphan.tpl" t=$t}
   {/foreach}
