@@ -1,7 +1,4 @@
 <?php
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.LocationDAO.php';
-
 /**
  * Location Data Access Object
  * The data access object for retrieving and saving locations in the ThinkUp database

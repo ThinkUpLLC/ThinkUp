@@ -1,7 +1,4 @@
 <?php
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.LinkDAO.php';
-
 /**
  * Link MySQL Data Access Object
  *

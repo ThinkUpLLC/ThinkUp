@@ -1,14 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/config.tests.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpWebTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
-
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfSignIn extends ThinkUpWebTestCase {
 

@@ -1,7 +1,4 @@
 <?php
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.FollowDAO.php';
-
 /**
  * Follow MySQL Data Access Object Implementation
  *

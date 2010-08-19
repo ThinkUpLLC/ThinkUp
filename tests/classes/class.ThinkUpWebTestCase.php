@@ -1,19 +1,12 @@
 <?php
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpTestDatabaseHelper.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.MySQLDAO.deprecated.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Database.deprecated.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.LoggerSlowSQL.php';
-require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
-
 class ThinkUpWebTestCase extends WebTestCase {
     var $db;
     var $conn;
     var $testdb_helper;
     var $url;
 
-    function setUp() {
-        global $THINKUP_CFG;
+    public function setUp() {
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
         global $TEST_DATABASE;
         global $TEST_SERVER_DOMAIN;
 
@@ -29,9 +22,8 @@ class ThinkUpWebTestCase extends WebTestCase {
         $this->testdb_helper->create($this->db);
     }
 
-    function tearDown() {
+    public function tearDown() {
         $this->testdb_helper->drop($this->db);
         $this->db->closeConnection($this->conn);
     }
 }
-?>

@@ -1,14 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/config.tests.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 /**
  * Test of SmartyThinkUp class
@@ -16,13 +9,13 @@ require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('SmartyThinkUp class test');
     }
     /**
      * Test constructor
      */
-    function testNewSmartyThinkUp() {
+    public function testNewSmartyThinkUp() {
         $smtt = new SmartyThinkUp();
         $this->assertTrue(isset($smtt));
     }
@@ -30,7 +23,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     /**
      * Test default values
      */
-    function testSmartyThinkUpDefaultValues() {
+    public function testSmartyThinkUpDefaultValues() {
         $cfg = Config::getInstance();
         $cfg->setValue('source_root_path', '/path/to/thinkup/');
         $cfg->setValue('cache_pages', true);
@@ -51,7 +44,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     /**
      * Test assigned variables get saved when debug is true
      */
-    function testSmartyThinkUpAssignedValuesDebugOn() {
+    public function testSmartyThinkUpAssignedValuesDebugOn() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', true);
         $cfg->setValue('app_title', 'Testy ThinkUp Custom Application Name');
@@ -69,7 +62,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     /**
      * Test assigned variables don't get saved when debug is false
      */
-    function testSmartyThinkUpAssignedValuesDebugOff() {
+    public function testSmartyThinkUpAssignedValuesDebugOff() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', false);
         $smtt = new SmartyThinkUp();

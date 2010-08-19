@@ -1,31 +1,38 @@
 <?php
 require_once 'init.tests.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/mock_objects.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/web_tester.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/mock_objects.php';
 
 $RUNNING_ALL_TESTS = true;
 
+Loader::register(array(
+THINKUP_ROOT_PATH . 'tests' . DS,
+THINKUP_ROOT_PATH . 'tests' . DS . 'classes' . DS,
+THINKUP_ROOT_PATH . 'tests' . DS . 'fixtures' .DS
+));
+
 /* PLUGIN TESTS */
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookAuthController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookCrawler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfRetweetDetector.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterAPIAccessorOAuth.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterAuthController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterCrawler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterOAuth.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPluginConfigurationController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPluginConfigurationController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrAPIAccessor.php';
-require_once $SOURCE_ROOT_PATH.
+require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookAuthController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookCrawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfRetweetDetector.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterAPIAccessorOAuth.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterAuthController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterCrawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterOAuth.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrAPIAccessor.php';
+require_once THINKUP_ROOT_PATH.
 'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPluginConfigurationController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/hellothinkup/tests/TestOfHelloThinkUpPluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/tests/TestOfHelloThinkUpPluginConfigurationController.php';
+
 
 $plugin_tests = & new GroupTest('Plugin tests');
 $plugin_tests->addTestCase(new TestOfExpandURLsPlugin());

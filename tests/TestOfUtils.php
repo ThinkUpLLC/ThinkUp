@@ -1,11 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/config.tests.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfUtils extends ThinkUpBasicUnitTestCase {
 
@@ -13,19 +9,13 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $this->UnitTestCase('Utils class test');
     }
 
-    public function setUp() {
-    }
-
-    public function tearDown() {
-    }
-
     public function testgetPluginViewDirectory() {
-        global $THINKUP_CFG;
+        $config = Config::getInstance();
         $path = Utils::getPluginViewDirectory('twitter');
-        $this->assertEqual($path, $THINKUP_CFG['source_root_path'].'webapp/plugins/twitter/view/');
+        $this->assertEqual($path, $config->getValue('source_root_path').'webapp/plugins/twitter/view/');
 
         $path = Utils::getPluginViewDirectory('sweetmaryjane');
-        $this->assertEqual($path, $THINKUP_CFG['source_root_path'].'webapp/plugins/sweetmaryjane/view/');
+        $this->assertEqual($path, $config->getValue('source_root_path').'webapp/plugins/sweetmaryjane/view/');
     }
 
     public function testGetPercentage(){

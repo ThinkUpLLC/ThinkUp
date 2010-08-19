@@ -1,36 +1,10 @@
 <?php
-
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH.PATH_SEPARATOR.$SOURCE_ROOT_PATH);
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
 
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
-require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Owner.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.OwnerInstance.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.PluginConfigurationController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.GeoEncoderPluginConfigurationController.php';
-require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.GeoEncoderPluginConfigurationController.php';
 
 /**
  * Test of TestOfGeoEncoderPluginConfigurationController
@@ -38,10 +12,6 @@ require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */
-
-
-
-
 class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase {
 
     public function __construct() {
@@ -92,7 +62,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertEqual($message,
         'This is the GeoEncoder plugin configuration page for me@example.com.', 'message set ' . $message);
     }
-    
+
     public function testAddGmapsAPIKey() {
         $build_data = $this->buildController();
         $controller = $build_data[0];
@@ -110,7 +80,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertEqual($controller->option_headers['gmaps_api_key'], 'GeoEncoder Plugin Options');
         $this->assertEqual($controller->option_required_message['gmaps_api_key'],
         'Please enter your Google Maps API Key');
-    
+
         $v_mgr = $controller->getViewManager();
         $options_markup = $v_mgr->getTemplateDataItem('options_markup');
         $this->assertNotNull($options_markup);
@@ -125,7 +95,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertTrue($input_field->getAttribute('disabled'));
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
         $this->assertPattern('/Note: Editing disabled for non admin users/', $submit_p->nodeValue);
-        
+
         $is_admin = 1;
         $_SESSION['user_is_admin'] = true;
         $build_data = $this->buildController();
@@ -136,7 +106,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
 
         // just name, not an admin, so view only
         $output = $controller->go();
-      
+
         $v_mgr = $controller->getViewManager();
         $options_markup = $v_mgr->getTemplateDataItem('options_markup');
         // parse our html
@@ -201,7 +171,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
 
 
     }
-    
+
     private function buildController() {
         $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
         $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'geoencoder', 'is_active' => 1) );

@@ -6,15 +6,15 @@
  */
 
 class GeoEncoderCrawler {
-    
+
     static $is_api_available = true;
-    
+
     const SUCCESS = 1;
     const ZERO_RESULTS = 2;
     const OVER_QUERY_LIMIT = 3;
     const REQUEST_DENIED = 4;
     const INVALID_REQUEST = 5;
-        
+
     /**
      * Perform Geoencoding using the data available in fields place or location
      * @var PostDAO $pdao
@@ -44,7 +44,7 @@ class GeoEncoderCrawler {
                         $is_reverse_geoencoded = 1;
                         self::performReverseGeoencoding($pdao, $post);
                     }
-                }  
+                }
             }
             if (!$is_reverse_geoencoded) {
                 $data = $ldao->getLocation($location);
@@ -56,7 +56,7 @@ class GeoEncoderCrawler {
                         }
                     }
                     $pdao->setGeoencodedPost($post_id, self::SUCCESS, $data['full_name'], $data['latlng'],
-                                             $reply_retweet_distance);
+                    $reply_retweet_distance);
                     $logger->logStatus('Lat/long coordinates found in DB', get_class($this));
                     return;
                 }
@@ -86,7 +86,7 @@ class GeoEncoderCrawler {
             }
         }
     }
-    
+
     /**
      * Perform Reverse Geoencoding using the data available in field geo
      * @var PostDAO $pdao
@@ -109,7 +109,7 @@ class GeoEncoderCrawler {
                     }
                 }
                 $pdao->setGeoencodedPost($post_id, self::SUCCESS, $data['full_name'], $data['latlng'],
-                                         $reply_retweet_distance);
+                $reply_retweet_distance);
                 $logger->logStatus('Lat/long coordinates found in DB', get_class($this));
                 return;
             }
@@ -119,7 +119,7 @@ class GeoEncoderCrawler {
             $obj=json_decode($string);
             if ($obj->status == 'OK') {
                 foreach ($obj->results as $p) {
-                        switch($p->types[0]) {
+                    switch($p->types[0]) {
                         case 'neighborhood':
                         case 'sublocality':
                         case 'locality':
@@ -134,7 +134,7 @@ class GeoEncoderCrawler {
                                 }
                             }
                             $pdao->setGeoencodedPost($post_id, self::SUCCESS, $location, $geodata,
-                                                     $reply_retweet_distance);
+                            $reply_retweet_distance);
                             $logger->logStatus('Lat/long coordinates retrieved via API', get_class($this));
                             $vals = array (
                                 'short_name'=>$post['geo'],
@@ -150,7 +150,7 @@ class GeoEncoderCrawler {
             }
         }
     }
-    
+
     /**
      * Method to Update post if validation of geo-location data of post results in failure
      * @var PostDAO $pdao
@@ -172,9 +172,9 @@ class GeoEncoderCrawler {
                 break;
             case 'INVALID_REQUEST':
                 $pdao->setGeoencodedPost($post_id, self::INVALID_REQUEST);
-        }        
+        }
     }
-    
+
     /**
      * Calculate distance between reply and initial post
      * @var string $location1
@@ -209,14 +209,14 @@ class GeoEncoderCrawler {
         $distance = $distance * 1.609344;
         return (round($distance));
     }
-    
+
     /**
      * Method to find distance between reply and initial post
      * @var PostDAO $pdao
      * @var array $post
      * @var str $geodata
      * @return int $reply_retweet_distance
-    */
+     */
     public function getDistance($pdao, $post, $geodata) {
         if ($post['in_reply_to_post_id']!=NULL) {
             if ($pdao->isPostInDB($post['in_reply_to_post_id'], 'twitter')) {
@@ -246,32 +246,30 @@ class GeoEncoderCrawler {
         }
         return $reply_retweet_distance;
     }
-    
-    
+
+
     /**
      * Mock function to retrieve data for Geoencoding
      * @var $location
-     * @return string $filecontents 
+     * @return string $filecontents
      */
     public function getDataForGeoencoding ($location) {
-        global $SOURCE_ROOT_PATH;
-        $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/geoencoder/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/geoencoder/tests/testdata/';
         $location = urlencode($location);
         $url = $FAUX_DATA_PATH.$location.".json";
         $filecontents=file_get_contents("$url");
         return $filecontents;
     }
-    
+
     /**
      * Mock function to retrieve data for Reverse Geoencoding
      * @var $latitude
      * @var $longitude
-     * @return string $filecontents 
-     */    
+     * @return string $filecontents
+     */
     public function getDataForReverseGeoencoding($latlng) {
         $latlng = explode(' ', $latlng, 2);
-        global $SOURCE_ROOT_PATH;
-        $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/geoencoder/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/geoencoder/tests/testdata/';
         $url = $FAUX_DATA_PATH.$latlng[0].",".$latlng[1].".json";
         $filecontents=file_get_contents("$url");
         return $filecontents;

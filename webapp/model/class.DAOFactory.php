@@ -21,78 +21,78 @@ class DAOFactory {
      * maps DAO from db_type and defines class names and path for initialization
      */
     static $dao_mapping = array (
-        //Test DAO
+    //Test DAO
         'TestDAO' => array( 
-            //MySQL Version
-            'mysql' => array( 'class' => 'TestMysqlDAO', 'path' =>  'tests/classes/class.TestMysqlDAO.php'),
-            //faux Version
-            'faux' => array( 'class' => 'TestFauxDAO', 'path' =>  'tests/classes/class.TestFauxDAO.php'),
-        ),
-        //Instance DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'TestMysqlDAO', 'path' =>  'TestMysqlDAO'),
+    //faux Version
+            'faux' => array( 'class' => 'TestFauxDAO', 'path' =>  'TestFauxDAO'),
+    ),
+    //Instance DAO
         'InstanceDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'InstanceMySQLDAO', 'path' => 'model/class.InstanceMySQLDAO.php')
-        ),
-        //Follow DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'InstanceMySQLDAO', 'path' => 'InstanceMySQLDAO')
+    ),
+    //Follow DAO
         'FollowDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'FollowMySQLDAO', 'path' => 'model/class.FollowMySQLDAO.php')
-        ),
-        //Post Error DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'FollowMySQLDAO', 'path' => 'FollowMySQLDAO')
+    ),
+    //Post Error DAO
         'PostErrorDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'PostErrorMySQLDAO', 'path' => 'model/class.PostErrorMySQLDAO.php')
-        ),
-        //Post DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'PostErrorMySQLDAO', 'path' => 'PostErrorMySQLDAO')
+    ),
+    //Post DAO
         'PostDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'PostMySQLDAO', 'path' => 'model/class.PostMySQLDAO.php')
-        ),
-        //User DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'PostMySQLDAO', 'path' => 'PostMySQLDAO')
+    ),
+    //User DAO
         'UserDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'UserMySQLDAO', 'path' => 'model/class.UserMySQLDAO.php')
-        ),
-        //UserError DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'UserMySQLDAO', 'path' => 'UserMySQLDAO')
+    ),
+    //UserError DAO
         'UserErrorDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'UserErrorMySQLDAO', 'path' => 'model/class.UserErrorMySQLDAO.php')
-        ),
-        //Location DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'UserErrorMySQLDAO', 'path' => 'UserErrorMySQLDAO')
+    ),
+    //Location DAO
         'LocationDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'LocationMySQLDAO', 'path' => 'model/class.LocationMySQLDAO.php')
-        ),
-        //Link DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'LocationMySQLDAO', 'path' => 'LocationMySQLDAO')
+    ),
+    //Link DAO
         'LinkDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'LinkMySQLDAO', 'path' => 'model/class.LinkMySQLDAO.php')
-        ),
-        //Owner MySQL DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'LinkMySQLDAO', 'path' => 'LinkMySQLDAO')
+    ),
+    //Owner MySQL DAO
         'OwnerDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'OwnerMySQLDAO', 'path' => 'model/class.OwnerMySQLDAO.php')
-        ),
-        //OwnerInstance MySQL DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'OwnerMySQLDAO', 'path' => 'OwnerMySQLDAO')
+    ),
+    //OwnerInstance MySQL DAO
         'OwnerInstanceDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'OwnerInstanceMySQLDAO', 'path' => 'model/class.OwnerInstanceMySQLDAO.php')
-        ),
-        //Plugin MySQL DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'OwnerInstanceMySQLDAO', 'path' => 'OwnerInstanceMySQLDAO')
+    ),
+    //Plugin MySQL DAO
         'PluginDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'PluginMySQLDAO', 'path' => 'model/class.PluginMySQLDAO.php')
-        ),
-        //Plugin Option MySQL DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'PluginMySQLDAO', 'path' => 'PluginMySQLDAO')
+    ),
+    //Plugin Option MySQL DAO
         'PluginOptionDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'PluginOptionMySQLDAO', 'path' => 'model/class.PluginOptionMySQLDAO.php')
-        ),        
-        //Follower Count MySQL DAO
+    //MySQL Version
+            'mysql' => array( 'class' => 'PluginOptionMySQLDAO', 'path' => 'PluginOptionMySQLDAO')
+    ),
+    //Follower Count MySQL DAO
         'FollowerCountDAO' => array(
-            //MySQL Version
-            'mysql' => array( 'class' => 'FollowerCountMySQLDAO', 'path' => 'model/class.FollowerCountMySQLDAO.php')
-        )
+    //MySQL Version
+            'mysql' => array( 'class' => 'FollowerCountMySQLDAO', 'path' => 'FollowerCountMySQLDAO')
+    )
     );
 
     /*
@@ -110,14 +110,14 @@ class DAOFactory {
             throw new Exception("No db mapping defined for '" . $dao_key . "' with db type: " . $db_type);
         }
         $class_info = self::$dao_mapping[$dao_key][$db_type];
-        require_once($class_info['path']);
-        $dao = new $class_info['class'];
+        //require_once(THINKUP_WEBAPP_PATH.$class_info['path']);
+        $dao = new $class_info['path'];
         return $dao;
     }
 
     /**
      * Gets the db_type for our configured ThinkUp instance, defaults to mysql,
-     * db_type can optionally be defined in webapp/config.inc.php as:
+     * db_type can optionally be defined in webapp/config.inc as:
      *
      *<code>
      *     $THINKUP_CFG['db_type'] = 'somedb';

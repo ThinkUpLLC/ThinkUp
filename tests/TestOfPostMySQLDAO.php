@@ -1,19 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/config.tests.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.PostDAO.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.PostMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.PostIterator.php';
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 /**
  * Test of PostMySQL DAO implementation

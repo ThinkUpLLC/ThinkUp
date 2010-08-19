@@ -1,18 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/config.tests.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.MapController.php';
-require_once $SOURCE_ROOT_PATH.'extlib/Smarty-2.6.26/libs/Smarty.class.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.SmartyThinkUp.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
-require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 /**
  * Test of Map Controller
@@ -29,7 +18,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('MapController class test');
     }
-    
+
     /**
      * Test constructor
      */
@@ -37,7 +26,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
         $controller = new MapController(true);
         $this->assertTrue(isset($controller), 'constructor test');
     }
-    
+
     /**
      * Test controller when all data is correctly provided
      */
@@ -51,7 +40,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
 
         $this->assertTrue(strpos($results, 'This is a test post') > 0);
     }
-    
+
     /**
      * Test controller when post ID is invalid/non-existant
      */
@@ -65,7 +54,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
 
         $this->assertTrue(strpos( $results, "No visualization data found for this post") > 0, "no post");
     }
-    
+
     /**
      * Test controller when post ID is invalid/non-existant
      */
@@ -78,7 +67,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
 
         $this->assertTrue(strpos( $results, "No visualization data found for this post") > 0, "no post");
     }
-    
+
     /**
      * Test controller when network is invalid
      */
@@ -102,13 +91,13 @@ class TestOfMapController extends ThinkUpUnitTestCase {
         $_SESSION['user'] = 'me@example.com';
         $_GET["pid"] = '1001';
         $_GET["t"] = 'notavalidtype';
-        
+
         $controller = new MapController(true);
         $results = $controller->go();
 
         $this->assertTrue(strpos( $results, "No visualization data found for this post") > 0, "no post");
     }
-    
+
     /**
      * Method to instantiate FixtureBuilder
      */

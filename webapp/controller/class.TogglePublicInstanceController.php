@@ -1,5 +1,4 @@
 <?php
-require_once 'controller/class.ThinkUpAuthController.php';
 /**
  * Toggle Public Instance Controller
  * Add/remove an instance from the public timeline.

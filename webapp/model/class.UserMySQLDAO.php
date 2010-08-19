@@ -5,10 +5,6 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.UserDAO.php';
-
 class UserMySQLDAO extends PDODAO implements UserDAO {
     /**
      * Get the SQL to generate average_tweets_per_day number

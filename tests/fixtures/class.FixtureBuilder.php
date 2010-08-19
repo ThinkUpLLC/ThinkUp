@@ -40,10 +40,6 @@
  *
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
-require_once 'class.FixtureBuilderException.php';
-require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilderException.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
-
 class FixtureBuilder {
 
     /*

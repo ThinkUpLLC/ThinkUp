@@ -2,26 +2,25 @@
 if (!isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS) {
     require_once '../../../../tests/config.tests.inc.php';
 }
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/web_tester.php';
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
-//require_once $SOURCE_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterCrawler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
+require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.DAOFactory.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.User.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.DAOFactory.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Post.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Link.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Instance.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
+//require_once THINKUP_ROOT_PATH.'extlib/twitteroauth/twitteroauth.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterCrawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
 
 /**
  * Test of TwitterCrawler

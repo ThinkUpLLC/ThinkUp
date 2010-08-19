@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configuration singleton
  *
@@ -34,7 +35,7 @@ class Config {
      * @return Config
      */
     public function __construct() {
-        global $THINKUP_CFG;
+        require THINKUP_WEBAPP_PATH . 'config.inc.php';
         $this->config = $THINKUP_CFG;
     }
 

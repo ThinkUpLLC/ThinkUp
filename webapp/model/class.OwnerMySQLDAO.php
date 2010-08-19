@@ -1,7 +1,4 @@
 <?php
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.OwnerDAO.php';
-
 /**
  * Owner Data Access Object
  * The data access object for retrieving and saving owners in the ThinkUp database.

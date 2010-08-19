@@ -1,15 +1,4 @@
 <?php
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpTestDatabaseHelper.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.MySQLDAO.deprecated.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.PDODAO.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Database.deprecated.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.LoggerSlowSQL.php';
-require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
-require_once $SOURCE_ROOT_PATH.'tests/config.tests.inc.php';
 
 /**
  * ThinkUp Unit Test Case
@@ -28,7 +17,8 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
      */
     public function setUp() {
         parent::setUp();
-        global $THINKUP_CFG;
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
+
         global $TEST_DATABASE;
 
         //Override default CFG values
@@ -39,6 +29,8 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         $this->db = new Database($THINKUP_CFG);
         $this->conn = $this->db->getConnection();
 
+//        $loader_paths = Loader::getLookupPath();
+//        var_dump($loader_paths);
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
         $this->testdb_helper->drop($this->db);
         $this->testdb_helper->create($this->db);

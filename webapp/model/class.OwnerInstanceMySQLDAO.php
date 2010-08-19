@@ -6,10 +6,6 @@
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.OwnerInstanceDAO.php';
-require_once 'model/exceptions/class.BadArgumentException.php';
-
 class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
     public function doesOwnerHaveAccess($owner, $username) {

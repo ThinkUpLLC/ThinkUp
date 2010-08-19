@@ -1,9 +1,4 @@
 <?php
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.PluginOptionDAO.php';
-require_once 'model/class.PluginOption.php';
-require_once 'model/exceptions/class.BadArgumentException.php';
-
 /**
  * Plugin Option Data Access Object
  *

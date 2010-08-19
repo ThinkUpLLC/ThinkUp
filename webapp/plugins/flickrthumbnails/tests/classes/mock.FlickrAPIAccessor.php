@@ -12,8 +12,7 @@ class FlickrAPIAccessor {
     }
 
     public function getFlickrPhotoSource($u) {
-        global $SOURCE_ROOT_PATH;
-        $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/flickrthumbnails/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/flickrthumbnails/tests/testdata/';
 
         if ($this->api_key != '') {
             $this->logger->logStatus("Flickr API key set", get_class($this));

@@ -1,7 +1,4 @@
 <?php
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.InstanceDAO.php';
-
 /**
  * Instance MySQL Data Access Object Implementation
  *

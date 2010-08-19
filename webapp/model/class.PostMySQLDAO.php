@@ -1,7 +1,4 @@
 <?php
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.PostDAO.php';
-
 /**
  * Post Data Access Object
  *
@@ -565,12 +562,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllPostsByUsernameIterator($username, $network) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", null, null, null, 
+        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", null, null, null,
         $iterator = true);
     }
-    
+
     public function getAllPostsByUsername($username, $network) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", null, null, null, 
+        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", null, null, null,
         $iterator = false);
     }
 

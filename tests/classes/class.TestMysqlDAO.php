@@ -1,6 +1,4 @@
 <?php
-require_once 'tests/classes/interface.TestDAO.php';
-require_once 'webapp/model/class.PDODAO.php';
 
 /**
  * mysql TestDAO implementation class for TestOfPDODAO and TestOfDAOFactory

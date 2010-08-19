@@ -1,7 +1,4 @@
 <?php
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.UserErrorDAO.php';
-
 /**
  * User Error MySQL DAO Implementation
  *

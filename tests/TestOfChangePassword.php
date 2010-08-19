@@ -1,18 +1,11 @@
 <?php
-require_once dirname(__FILE__).'/config.tests.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpWebTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.User.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.FollowMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Session.php';
-
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/web_tester.php';
 
 class TestOfChangePassword extends ThinkUpWebTestCase {
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
 
         //Add owner
@@ -22,7 +15,8 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->db->exec($q);
 
         //Add instance
-        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234, 'thinkupapp', 1)";
+        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234, 'thinkupapp',
+         1)";
         $this->db->exec($q);
 
         //Add instance_owner
@@ -30,12 +24,12 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->db->exec($q);
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 
 
-    function testChangePasswordSuccess() {
+    public function testChangePasswordSuccess() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
@@ -62,7 +56,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('Logged in as: me@example.com');
     }
 
-    function testChangePasswordWrongExistingPassword() {
+    public function testChangePasswordWrongExistingPassword() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
@@ -80,7 +74,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('Old password does not match or empty.');
     }
 
-    function testChangePasswordEmptyExistingPassword() {
+    public function testChangePasswordEmptyExistingPassword() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
@@ -97,7 +91,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('Old password does not match or empty.');
     }
 
-    function testChangePasswordNewPasswordsDontMatch() {
+    public function testChangePasswordNewPasswordsDontMatch() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
@@ -115,7 +109,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('New passwords did not match. Your password has not been changed.');
     }
 
-    function testChangePasswordNewPasswordsNotLongEnough() {
+    public function testChangePasswordNewPasswordsNotLongEnough() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');

@@ -3,30 +3,28 @@ if (!isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS) {
     require_once '../../../../tests/config.tests.inc.php';
 }
 
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/web_tester.php';
 
+require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+require_once THINKUP_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
+require_once THINKUP_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Link.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Post.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Instance.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Logger.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.PluginHook.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Crawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Webapp.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Utils.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.DAOFactory.php';
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Instance.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
-
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTab.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.WebappTab.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
 /**
  * Test of TwitterPlugin class

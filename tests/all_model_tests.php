@@ -1,38 +1,10 @@
 <?php
 require_once 'init.tests.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/mock_objects.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/web_tester.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/mock_objects.php';
 
 /* MODEL TESTS */
-require_once $SOURCE_ROOT_PATH.'tests/TestOfConfig.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfCrawler.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfFollowerCountMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfFollowMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfInstanceMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfLinkMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfLocationMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfLogger.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfOwnerMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfOwnerInstanceMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfPluginMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfPluginOptionMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfPluginHook.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfPostMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfPostErrorMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfProfiler.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfSession.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfSmartyThinkUp.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfUserMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfUserErrorMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfUtils.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfPDODAO.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfDAOFactory.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfWebapp.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfWebappTab.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfWebappTabDataset.php';
-require_once $SOURCE_ROOT_PATH.'tests/TestOfPostIterator.php';
-
 $model_tests = & new GroupTest('Model tests');
 $model_tests->addTestCase(new TestOfLogger());
 $model_tests->addTestCase(new TestOfPDODAO());
@@ -43,6 +15,7 @@ $model_tests->addTestCase(new TestOfFollowMySQLDAO());
 $model_tests->addTestCase(new TestOfFollowerCountMySQLDAO());
 $model_tests->addTestCase(new TestOfInstanceMySQLDAO());
 $model_tests->addTestCase(new TestOfLinkMySQLDAO());
+$model_tests->addTestCase(new TestOfLoader());
 $model_tests->addTestCase(new TestOfLocationMySQLDAO());
 $model_tests->addTestCase(new TestOfOwnerMySQLDAO());
 $model_tests->addTestCase(new TestOfOwnerInstanceMySQLDAO());

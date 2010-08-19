@@ -1,9 +1,9 @@
 <?php
-require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
-require_once $SOURCE_ROOT_PATH.'tests/config.tests.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'tests/config.tests.inc.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
 require_once 'webapp/model/class.Config.php';
-require_once $SOURCE_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
+require_once THINKUP_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 
 class TestOfixtureBuilder extends UnitTestCase {
 

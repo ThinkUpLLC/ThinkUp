@@ -1,18 +1,12 @@
 <?php
-if (!isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS) {
-    require_once '../../../../tests/config.tests.inc.php';
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+    require_once '../../../../tests/init.tests.php';
 }
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
 
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Logger.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Utils.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
-require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/model/class.ExpandURLsPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/model/class.ExpandURLsPlugin.php';
 
 /**
  * Test of ExpandURLs Crawler plugin
@@ -22,11 +16,11 @@ require_once $SOURCE_ROOT_PATH.'webapp/plugins/expandurls/model/class.ExpandURLs
  */
 class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('ExpandURLs plugin class test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
 
         //Insert test links (not images, not expanded)
@@ -38,11 +32,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $crawler->registerCrawlerPlugin('ExpandURLsPlugin');
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 
-    function testExpandURLsCrawl() {
+    public function testExpandURLsCrawl() {
         $crawler = Crawler::getInstance();
         $crawler->crawl();
 

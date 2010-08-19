@@ -16,9 +16,8 @@ class TwitterOAuth {
     }
 
     public function oAuthRequest($url, $method = NULL, $args = array()) {
-        global $SOURCE_ROOT_PATH;
         $url = Utils::getURLWithParams($url, $args);
-        $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
         $url = str_replace('https://twitter.com/', '', $url);
         $url = str_replace('https://api.twitter.com/1/', '', $url);
         $url = str_replace('http://search.twitter.com/', '', $url);
@@ -31,8 +30,7 @@ class TwitterOAuth {
     }
 
     public function http($url) {
-        global $SOURCE_ROOT_PATH;
-        $FAUX_DATA_PATH = $SOURCE_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/twitter/tests/testdata/';
         $url = str_replace('https://twitter.com/', '', $url);
         $url = str_replace('https://api.twitter.com/1/', '', $url);
         $url = str_replace('http://search.twitter.com/', '', $url);

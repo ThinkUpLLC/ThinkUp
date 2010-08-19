@@ -1,10 +1,4 @@
 <?php
-require_once 'model/class.PDODAO.php';
-require_once 'model/interface.PluginDAO.php';
-require_once 'model/class.Plugin.php';
-require_once 'model/exceptions/class.BadArgumentException.php';
-
-
 /**
  * Plugin Data Access Object
  * The data access object for retrieving and saving plugin data for thinkup

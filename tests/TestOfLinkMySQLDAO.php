@@ -1,14 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/config.tests.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.LinkMySQLDAO.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Link.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Post.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Profiler.php';
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 /**
  * Test Of Link DAO
@@ -133,7 +126,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getLinkByUrl('http://example.com/test');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://example.com/test');
-        $this->assertEqual($result->expanded_url, 
+        $this->assertEqual($result->expanded_url,
         'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php');
         $this->assertEqual($result->title, 'Very Long URL');
         $this->assertEqual($result->post_id, 12345678901);
@@ -203,7 +196,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getLinkByUrl('http://example.com/test');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://example.com/test');
-        $this->assertEqual($result->expanded_url, 
+        $this->assertEqual($result->expanded_url,
         'http://very.long.domain.that.nobody.would.bother.to.type.com/image.png');
         $this->assertEqual($result->title, 'Even Longer URL');
         $this->assertEqual($result->post_id, 15001);

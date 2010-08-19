@@ -39,7 +39,7 @@ class SmartyThinkUp extends Smarty {
         $this->Smarty();
         $this->template_dir = array( $src_root_path.'webapp/view', $src_root_path.'tests/view');
         $this->compile_dir = $src_root_path.'webapp/view/compiled_view/';
-        $this->plugins_dir = array('plugins', 'view/plugins/');
+        $this->plugins_dir = array('plugins', $src_root_path.'webapp/view/plugins/');
         $this->cache_dir = $src_root_path.'webapp/view/compiled_view/cache';
         $this->caching = ($config->getValue('cache_pages'))?1:0;
         $this->cache_lifetime = 300;

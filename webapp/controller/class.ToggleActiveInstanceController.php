@@ -1,5 +1,4 @@
 <?php
-require_once 'controller/class.ThinkUpAdminController.php';
 /**
  * Toggle Active Instance Controller
  * Set an instance active or inactive.

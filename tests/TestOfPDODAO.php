@@ -1,20 +1,15 @@
 <?php
-require_once dirname(__FILE__).'/config.tests.inc.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once $SOURCE_ROOT_PATH.'extlib/simpletest/web_tester.php';
-ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.$INCLUDE_PATH);
-
-require_once $SOURCE_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.DAOFactory.php';
-require_once $SOURCE_ROOT_PATH.'webapp/config.inc.php';
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfPDODAO extends ThinkUpUnitTestCase {
 
-    function TestOfPDODAO() {
+    public function TestOfPDODAO() {
         $this->UnitTestCase('TestDAO class test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
 
         $test_table_sql = 'CREATE TABLE tu_test_table(' .
@@ -32,24 +27,26 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->db->exec($q);
 
         // Insert test data into test user table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (12, 'mary', 'Mary Jane', 'avatar.jpg');";
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (12, 'mary', 'Mary Jane',
+        'avatar.jpg');";
         $this->db->exec($q);
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (13, 'sweetmary', 'Sweet Mary Jane', 'avatar.jpg');";
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (13, 'sweetmary', 'Sweet Mary Jane',
+        'avatar.jpg');";
         $this->db->exec($q);
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 
-    function testInitDAO() {
+    public function testInitDAO() {
         $testdao = DAOFactory::getDAO('TestDAO');
         $this->assertNotNull(TestMysqlDAO::$PDO);
         $this->assertNotNull($testdao->config);
         $this->assertNotNull($testdao->logger);
     }
 
-    function testConvertBetweenBoolAndDB() {
+    public function testConvertBetweenBoolAndDB() {
         $testdao = DAOFactory::getDAO('TestDAO');
         $this->assertEqual(0, $testdao->testBoolToDB(null), 'should be 0');
         $this->assertEqual(0, $testdao->testBoolToDB(''), 'should be 0');
@@ -64,7 +61,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual(true, $testdao->convertDBToBool(1), 'should be false');
     }
 
-    function testTwoObjectsOneConnection() {
+    public function testTwoObjectsOneConnection() {
         DAOFactory::getDAO('TestDAO');
         $this->assertNotNull(TestMysqlDAO::$PDO);
         TestMysqlDAO::$PDO->tu_testing = "testing";
@@ -72,7 +69,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual(TestMysqlDAO::$PDO->tu_testing, "testing");
     }
 
-    function testBasicSelectUsingStatementHandleDirectly() {
+    public function testBasicSelectUsingStatementHandleDirectly() {
         $testdao = DAOFactory::getDAO('TestDAO');
         $users = $testdao->getUserCount(0, 'mary');
         $this->assertIsA($users, "array");
@@ -81,7 +78,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual($users[1]['user_name'], 'sweetmary');
     }
 
-    function testBadSql() {
+    public function testBadSql() {
         $testdao = DAOFactory::getDAO('TestDAO');
         try {
             $testdao->badSql();
@@ -90,16 +87,17 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         }
     }
 
-    function testBadBinds() {
+    public function testBadBinds() {
         $testdao = DAOFactory::getDAO('TestDAO');
         try {
             $testdao->badBinds();
         } catch(PDOException $e) {
-            $this->assertPattern('/Invalid parameter number/', $e->getMessage(), 'should get an Invalid parameter number error message');
+            $this->assertPattern('/Invalid parameter number/', $e->getMessage(),
+            'should get an Invalid parameter number error message');
         }
     }
 
-    function testInsertData() {
+    public function testInsertData() {
         $testdao = DAOFactory::getDAO('TestDAO');
 
         // ad a test_user with a test_id get insert count
@@ -114,7 +112,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $cnt = $testdao->insertMultiDataGetCount(array( array( 'test_user23', '23'), array( 'test_user24', '24') ));
         $this->assertEqual(2, $cnt, "should get an insert count of 2");
 
-       // test duplicate key err, check for message?
+        // test duplicate key err, check for message?
         try {
             $cnt = $testdao->insertDataGetCount('test_user', '1000');
             $this->fail('should throw a PDOException');
@@ -123,7 +121,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         }
     }
 
-    function testUpdateData() {
+    public function testUpdateData() {
         $testdao = DAOFactory::getDAO('TestDAO');
 
         // update a with a bad test_id get 0 insert count
@@ -139,7 +137,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual(19, $cnt, "updated 19 records");
     }
 
-    function testSelectSingleRecord() {
+    public function testSelectSingleRecord() {
         $testdao = DAOFactory::getDAO('TestDAO');
 
         $data_obj = $testdao->selectRecord(999);
@@ -151,7 +149,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual($data_obj->test_id, '2');
     }
 
-    function testSelectSingleRecordAsArray() {
+    public function testSelectSingleRecordAsArray() {
         $testdao = DAOFactory::getDAO('TestDAO');
 
         $data_obj = $testdao->selectRecordAsArray(999);
@@ -163,13 +161,13 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual($data_obj['test_id'], '3');
     }
 
-    function testSelectRecordsAsArrayWithLimit() {
+    public function testSelectRecordsAsArrayWithLimit() {
         $testdao = DAOFactory::getDAO('TestDAO');
         $data_obj = $testdao->selectRecordsWithLimit(2);
         $this->assertEqual(count($data_obj), 2, 'should have limited to two records');
     }
-    
-    function testSelectRecords() {
+
+    public function testSelectRecords() {
         $testdao = DAOFactory::getDAO('TestDAO');
 
         //this should return no records
@@ -189,7 +187,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         }
     }
 
-    function testSelectRecodsAsArray() {
+    public function testSelectRecodsAsArray() {
         $testdao = DAOFactory::getDAO('TestDAO');
 
         //this should return no records
@@ -209,7 +207,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         }
     }
 
-    function testDeleteData() {
+    public function testDeleteData() {
         $testdao = DAOFactory::getDAO('TestDAO');
 
         // nothing deleted
@@ -225,7 +223,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual(14, $cnt, "deleted 14 records");
     }
 
-    function testIsPattern() {
+    public function testIsPattern() {
         $testdao = DAOFactory::getDAO('TestDAO');
 
         // nothing deleted

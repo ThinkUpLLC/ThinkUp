@@ -1,7 +1,4 @@
 <?php
-require_once 'class.LoginController.php';
-require_once 'class.PrivateDashboardController.php';
-
 /**
  * A controller for allowing a user to change their password if they have
  * the correct hash.

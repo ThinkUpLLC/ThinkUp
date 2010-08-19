@@ -1,5 +1,4 @@
 <?php
-require_once 'controller/class.ThinkUpAdminController.php';
 /**
  * Toggle Active Plugin Controller
  * Activate or deactivat a plugin.

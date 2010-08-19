@@ -1,9 +1,8 @@
 <?php
-require_once 'model/class.Post.php';
-require_once 'model/class.Link.php';
-
 /**
- * Post Iterator. Used to iterate through the cursor of sql results for Posts
+ * Post Iterator.
+ *
+ * Used to iterate through the cursor of SQL results for Posts.
  *
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
@@ -34,7 +33,7 @@ class PostIterator implements Iterator {
     /**
      * Empty method, for this case nothing
      */
-    function rewind() {
+    public function rewind() {
         // we can't rewind this stmt, so this won't do anything
     }
 
@@ -42,7 +41,7 @@ class PostIterator implements Iterator {
      * Returns the current row/Post
      * @return Post Current Post
      */
-    function current() {
+    public function current() {
         return $this->row;
     }
 
@@ -50,7 +49,7 @@ class PostIterator implements Iterator {
      * Returns the current Post key/id
      * @return int The current Post id
      */
-    function key() {
+    public function key() {
         return $this->row->id;
     }
 
@@ -58,7 +57,7 @@ class PostIterator implements Iterator {
      * Returns true if there is a row to fetch
      * @return boolean There is another value/row
      */
-    function valid() {
+    public function valid() {
         $this->valid = false;
         if(! is_null($this->stmt)) {
             $row = $this->stmt->fetch(PDO::FETCH_ASSOC);
@@ -76,7 +75,7 @@ class PostIterator implements Iterator {
     /**
      * Empty method, for this case does nothing
      */
-    function next() {
+    public function next() {
         // we handle the row call in vaide, so...
     }
 }

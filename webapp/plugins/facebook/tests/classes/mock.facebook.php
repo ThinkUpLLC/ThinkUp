@@ -3,8 +3,7 @@ class MockFacebookRestClient {
     var $data_file_path;
 
     public function __construct() {
-        global $SOURCE_ROOT_PATH;
-        $this->data_file_path = $SOURCE_ROOT_PATH . 'webapp/plugins/facebook/tests/testdata/';
+        $this->data_file_path = THINKUP_ROOT_PATH . 'webapp/plugins/facebook/tests/testdata/';
     }
 
     public function & stream_get($viewer_id = null, $source_ids = null, $start_time = 0, $end_time = 0, $limit = 30,

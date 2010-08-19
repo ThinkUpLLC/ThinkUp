@@ -1,8 +1,5 @@
 <?php
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.PluginHook.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Config.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Webapp.php';
-require_once $SOURCE_ROOT_PATH.'webapp/model/class.Crawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/model/class.Loader.php';
 /**
  * ThinkUp Basic Unit Test Case
  *
@@ -17,6 +14,12 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
      */
     public function setUp() {
         parent::setUp();
+        Loader::register(array(
+        THINKUP_ROOT_PATH . 'tests' . DS,
+        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'. DS,
+        THINKUP_ROOT_PATH . 'tests' . DS . 'fixtures'. DS
+        ));
+
         $config = Config::getInstance();
         //tests assume profiling is off
         $config->setValue('enable_profiler', false);
@@ -39,6 +42,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $this->unsetArray($_GET);
         $this->unsetArray($_REQUEST);
         $this->unsetArray($_SERVER);
+        Loader::unregister();
         parent::tearDown();
     }
 
