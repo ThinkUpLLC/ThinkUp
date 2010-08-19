@@ -91,7 +91,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
     public function testLoaderInstantiateClasses() {
         Loader::register();
 
-        $this->assertClassInstantiates('Captcha');
+        $this->assertClassInstantiates('Instance');
         $this->assertClassInstantiates('Config');
 
         $this->assertIsA(new Crawler, 'Crawler');
@@ -113,7 +113,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
             if ( !$this->config_file_exists ) {
                 $this->pass('Missing Configuration File');
             } else {
-                $this->fail('Configuration File Exists But Failed to Load Captcha');
+                $this->fail('Configuration File Exists But Failed to Load class');
             }
         }
     }

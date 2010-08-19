@@ -23,6 +23,12 @@ class PostIterator implements Iterator {
      */
     private $valid = false;
 
+    /*
+     * @var boolean defines if cursor has been closed
+     */
+    private $closed_cursor = false;
+
+
     /**
      * Contructor
      */
@@ -55,7 +61,7 @@ class PostIterator implements Iterator {
 
     /*
      * Returns true if there is a row to fetch
-     * @return boolean There is another value/row
+     * @return bool There is another value/row
      */
     public function valid() {
         $this->valid = false;
@@ -63,10 +69,12 @@ class PostIterator implements Iterator {
             $row = $this->stmt->fetch(PDO::FETCH_ASSOC);
             if($row) {
                 $post = new Post($row);
-                #$link = new Link($row);
-                #$post->link = $link;
                 $this->row = $post;
                 $this->valid = true;
+            } else {
+                // close our cursor...
+                $this->closed_cursor = true;
+                $this->stmt->closeCursor();
             }
         }
         return $this->valid;
@@ -76,6 +84,17 @@ class PostIterator implements Iterator {
      * Empty method, for this case does nothing
      */
     public function next() {
-        // we handle the row call in vaide, so...
+        // we handle the row call invalid, so...
+    }
+
+    /*
+     * Our destructor
+     * closes PDO stmt handle/cursor if not closed already
+     */
+    public function __destruct() {
+        // make sure our cursor is closed...
+        if(! $this->closed_cursor && isset($this->stmt)) {
+            $this->stmt->closeCursor();
+        }
     }
 }
