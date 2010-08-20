@@ -88,6 +88,9 @@ if test $crawl_interval; then
 fi
 
 #let's run our crawler...
+if [ ! -f $crawllog ]; then
+	touch $crawllog
+fi
 calog_lines1=`set $(wc -l $crawllog) && echo $1`
 cd $thinkup/webapp/crawler
 $php $crawler $thinkup_username $thinkup_password
