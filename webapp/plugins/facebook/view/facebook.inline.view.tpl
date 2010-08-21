@@ -56,7 +56,6 @@
 {/if}
 
 <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
-<script type="text/javascript" src="{$site_root_path}assets/js/bitly.js"></script>
 
 <script type="text/javascript">
   {literal}
