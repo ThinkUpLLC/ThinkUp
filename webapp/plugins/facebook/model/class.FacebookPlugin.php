@@ -5,13 +5,20 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         $config = Config::getInstance();
         $id = DAOFactory::getDAO('InstanceDAO');
         $oid = DAOFactory::getDAO('OwnerInstanceDAO');
+        $od = DAOFactory::getDAO('OwnerDAO');
 
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
 
+        $current_owner = $od->getByEmail($_SESSION['user']);
+
         //crawl Facebook user profiles
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook');
         foreach ($instances as $instance) {
+            if (!$oid->doesOwnerHaveAccess($current_owner, $instance->network_username)) {
+                // Owner doesn't have access to this instance; let's not crawl it.
+                continue;
+            }
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
             $session_key = $tokens['oauth_access_token'];

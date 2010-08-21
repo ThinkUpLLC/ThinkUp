@@ -13,6 +13,7 @@ if (isset($argc) && $argc > 1) { // check for CLI credentials
     $passcheck = $od->getPass($username);
     if ($session->pwdCheck($pw, $passcheck)) {
         $authorized = true;
+        $_SESSION['user'] = $username;
     } else {
         echo "ERROR: Incorrect username and password.";
     }

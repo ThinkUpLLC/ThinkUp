@@ -14,13 +14,20 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $logger = Logger::getInstance();
         $id = DAOFactory::getDAO('InstanceDAO');
         $oid = DAOFactory::getDAO('OwnerInstanceDAO');
+        $od = DAOFactory::getDAO('OwnerDAO');
 
         // get oauth values
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('twitter', true);
 
+        $current_owner = $od->getByEmail($_SESSION['user']);
+
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('twitter');
         foreach ($instances as $instance) {
+            if (!$oid->doesOwnerHaveAccess($current_owner, $instance->network_username)) {
+                // Owner doesn't have access to this instance; let's not crawl it.
+                continue;
+            }
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
             $noauth = true;
