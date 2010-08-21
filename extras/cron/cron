@@ -93,7 +93,8 @@ if [ ! -f $crawllog ]; then
 fi
 calog_lines1=`set $(wc -l $crawllog) && echo $1`
 cd $thinkup/webapp/crawler
-$php $crawler $thinkup_username $thinkup_password
+export THINKUP_PASSWORD=$thinkup_password
+$php $crawler $thinkup_username
 calog_lines2=`set $(wc -l $crawllog) && echo $1`
 calog_lines_diff=$((calog_lines2-calog_lines1))
 if test $DEBUG; then

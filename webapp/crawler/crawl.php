@@ -7,7 +7,11 @@ $authorized = false;
 if (isset($argc) && $argc > 1) { // check for CLI credentials
     $session = new Session();
     $username = $argv[1];
-    $pw = $argv[2];
+    if ($argc > 2) {
+        $pw = $argv[2];
+    } else {
+        $pw = getenv('THINKUP_PASSWORD');
+    }
 
     $od = DAOFactory::getDAO('OwnerDAO');
     $passcheck = $od->getPass($username);

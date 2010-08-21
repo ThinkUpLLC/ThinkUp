@@ -70,7 +70,7 @@ Facebook accounts in ThinkUp.
 
 Then, to run the crawler to load your social network data, `cd` to `/your-path-to-thinkup/webapp/crawler/`, and run:
 
-    $ php crawl.php you@example.com yourttpassword
+    $ export THINKUP_PASSWORD=yourttpassword; php crawl.php you@example.com
 
 Where `you@example.com` is your ThinkUp login email address, and `yourttpassword` is your ThinkUp password.
 
