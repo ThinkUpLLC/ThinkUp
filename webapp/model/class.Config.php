@@ -79,4 +79,11 @@ class Config {
             self::$instance = null;
         }
     }
+
+    /**
+     * Provided for tests which expect an array
+     */
+    public function getValuesArray() {
+        return $this->config;
+    }
 }

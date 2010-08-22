@@ -14,6 +14,7 @@ $model_tests->addTestCase(new TestOfCrawler());
 $model_tests->addTestCase(new TestOfFollowMySQLDAO());
 $model_tests->addTestCase(new TestOfFollowerCountMySQLDAO());
 $model_tests->addTestCase(new TestOfInstanceMySQLDAO());
+$model_tests->addTestCase(new TestOfInstallerMySQLDAO());
 $model_tests->addTestCase(new TestOfLinkMySQLDAO());
 $model_tests->addTestCase(new TestOfLoader());
 $model_tests->addTestCase(new TestOfLocationMySQLDAO());

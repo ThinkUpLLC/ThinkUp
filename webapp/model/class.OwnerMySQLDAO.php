@@ -129,4 +129,23 @@ SQL;
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, 'Owner');
     }
+
+    public function insertActivatedAdmin($email, $pwd, $full_name) {
+        $q = "INSERT INTO #prefix#owners ";
+        $q .= "(email, pwd, full_name, is_activated, is_admin) ";
+        $q .= "VALUES (:email, :pwd, :full_name, 1, 1)";
+        $vars = array(
+            ':email'=>$email,
+            ':pwd'=>$pwd,
+            ':full_name'=>$full_name
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+
+    public function doesAdminExist() {
+        $q = "SELECT id FROM #prefix#owners WHERE is_admin = 1";
+        $ps = $this->execute($q);
+        return $this->getDataIsReturned($ps);
+    }
 }

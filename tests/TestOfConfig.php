@@ -23,4 +23,12 @@ class TestOfConfig extends ThinkUpBasicUnitTestCase {
         $log_location = $config->getValue('log_location');
         $this->assertTrue(isset($log_location));
     }
+
+    public function testGetValuesArray() {
+        require THINKUP_ROOT_PATH.'webapp/config.inc.php';
+        $config = Config::getInstance();
+        $values_array = $config->getValuesArray();
+        $THINKUP_CFG['enable_profiler']=false;
+        $this->assertIdentical($THINKUP_CFG, $values_array);
+    }
 }

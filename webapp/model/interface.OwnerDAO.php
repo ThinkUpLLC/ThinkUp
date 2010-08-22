@@ -85,4 +85,21 @@ interface OwnerDAO {
      * @return int The full Owner object
      */
     public function getByPasswordToken($token);
+
+    /**
+     * Insert an activated admin owner
+     *
+     * @param str $email
+     * @param str $pwd
+     * @param str $full_name
+     * @return int Update count
+     */
+    public function insertActivatedAdmin($email, $pwd, $full_name);
+
+    /**
+     * Check if admin user exists
+     *
+     * @return bool Whether or not admin user exists
+     */
+    public function doesAdminExist();
 }

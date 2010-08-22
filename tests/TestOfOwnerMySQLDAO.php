@@ -151,4 +151,13 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $owner = $this->DAO->getByPasswordToken('sample'); // searches for first half of token
         $this->assertEqual($owner->email, 'ttuser@example.com');
     }
+
+    /**
+     * Test insertActivatedAdmin and doesAdminExist
+     */
+    public function testInsertActivatedAdminAndDoesAdminExist() {
+        $this->assertFalse($this->DAO->doesAdminExist());
+        $this->DAO->insertActivatedAdmin('test@example.com', 'password', 'My Full Name');
+        $this->assertTrue($this->DAO->doesAdminExist());
+    }
 }
