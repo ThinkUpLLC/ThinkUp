@@ -23,6 +23,9 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $config = Config::getInstance();
         //tests assume profiling is off
         $config->setValue('enable_profiler', false);
+        if ($config->getValue('timezone')) {
+            date_default_timezone_set($config->getValue('timezone'));
+        }
         $webapp = Webapp::getInstance();
         $crawler = Crawler::getInstance();
     }

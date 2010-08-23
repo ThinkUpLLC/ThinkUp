@@ -12,8 +12,8 @@ Loader::register();
 
 //Initialize config
 $config = Config::getInstance();
-if ($config->getValue('time_zone')) {
-    putenv($config->getValue('time_zone'));
+if ($config->getValue('timezone')) {
+    date_default_timezone_set($config->getValue('timezone'));
 }
 if ($config->getValue('debug')) {
     ini_set("display_errors", 1);
