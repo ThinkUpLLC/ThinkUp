@@ -86,9 +86,20 @@ SQL;
     }
 
     public function create($email, $pass, $acode, $full_name) {
+        return $this->createOwner($email, $pass, $acode, $full_name, false);
+    }
+
+    public function createAdmin($email, $pwd, $activation_code, $full_name) {
+        return $this->createOwner($email, $pwd, $activation_code, $full_name, true);
+    }
+
+    private function createOwner($email, $pass, $acode, $full_name, $is_admin) {
         if (!$this->doesOwnerExist($email)) {
-            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, joined=NOW(),activation_code=:acode, ";
-            $q .= "full_name=:full_name ";
+            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, joined=NOW(), activation_code=:acode, ";
+            $q .= "full_name=:full_name";
+            if ($is_admin) {
+                $q .= ", is_admin=1";
+            }
             $vars = array(
                 ':email'=>$email,
                 ':pass'=>$pass,
@@ -130,22 +141,20 @@ SQL;
         return $this->getDataRowAsObject($ps, 'Owner');
     }
 
-    public function insertActivatedAdmin($email, $pwd, $full_name) {
-        $q = "INSERT INTO #prefix#owners ";
-        $q .= "(email, pwd, full_name, is_activated, is_admin) ";
-        $q .= "VALUES (:email, :pwd, :full_name, 1, 1)";
-        $vars = array(
-            ':email'=>$email,
-            ':pwd'=>$pwd,
-            ':full_name'=>$full_name
-        );
-        $ps = $this->execute($q, $vars);
-        return $this->getUpdateCount($ps);
-    }
-
     public function doesAdminExist() {
         $q = "SELECT id FROM #prefix#owners WHERE is_admin = 1";
         $ps = $this->execute($q);
         return $this->getDataIsReturned($ps);
+    }
+
+    public function promoteToAdmin($email) {
+        $q = "UPDATE #prefix#owners
+              SET is_admin=1
+              WHERE email=:email";
+        $vars = array(
+            ":email" => $email
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
     }
 }

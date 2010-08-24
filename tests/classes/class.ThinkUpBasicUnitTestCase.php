@@ -21,6 +21,9 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         ));
 
         $config = Config::getInstance();
+        //disable caching for tests
+        $config->setValue('cache_pages', false);
+
         //tests assume profiling is off
         $config->setValue('enable_profiler', false);
         if ($config->getValue('timezone')) {
@@ -58,5 +61,35 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         foreach ($keys as $key) {
             unset($array[$key]);
         }
+    }
+
+    /**
+     * Move webapp/config.inc.php to webapp/config.inc.bak.php for tests with no config file
+     */
+    protected function removeConfigFile() {
+        if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php')) {
+            $cmd = 'mv '.THINKUP_WEBAPP_PATH . 'config.inc.php ' .THINKUP_WEBAPP_PATH . 'config.inc.bak.php';
+            exec($cmd, $output, $return_val);
+            if ($return_val != 0) {
+                echo "Could not ".$cmd;
+            }
+        }
+    }
+
+    /**
+     * Move webapp/config.inc.bak.php to webapp/config.inc.php
+     */
+    protected function restoreConfigFile() {
+        if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.bak.php')) {
+            $cmd = 'mv '.THINKUP_WEBAPP_PATH . 'config.inc.bak.php ' .THINKUP_WEBAPP_PATH . 'config.inc.php';
+            exec($cmd, $output, $return_val);
+            if ($return_val != 0) {
+                echo "Could not ".$cmd;
+            }
+        }
+    }
+
+    public function __destruct() {
+        $this->restoreConfigFile();
     }
 }

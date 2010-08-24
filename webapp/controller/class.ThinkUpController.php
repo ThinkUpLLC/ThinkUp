@@ -106,7 +106,6 @@ abstract class ThinkUpController {
         return $this->app_session->isAdmin();
     }
 
-
     /**
      * Return email address of logged-in user
      *

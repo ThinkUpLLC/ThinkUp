@@ -1,5 +1,5 @@
 <?php
-require 'config.tests.inc.php';
+require_once 'config.tests.inc.php';
 
 //set up 3 required constants
 if ( !defined('DS') ) {

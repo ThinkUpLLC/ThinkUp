@@ -31,22 +31,33 @@ class SmartyThinkUp extends Smarty {
      *  //application name
      *  {$app_title}
      *  </code>
+     *  @param array $config_array Defaults to null; Override source_root_path, site_root_path, app_title, cache_pages,
+     *  debug
      *
      */
-    public function __construct() {
-        $config = Config::getInstance();
-        $src_root_path = $config->getValue('source_root_path');
+    public function __construct($config_array=null) {
+        if ($config_array==null) {
+            $config = Config::getInstance();
+            $config_array = $config->getValuesArray();
+        }
+
+        $src_root_path = $config_array['source_root_path'];
+        $site_root_path = $config_array['site_root_path'];
+        $app_title = $config_array['app_title'];
+        $cache_pages = $config_array['cache_pages'];
+        $debug =  $config_array['debug'];
+
         $this->Smarty();
         $this->template_dir = array( $src_root_path.'webapp/view', $src_root_path.'tests/view');
         $this->compile_dir = $src_root_path.'webapp/view/compiled_view/';
         $this->plugins_dir = array('plugins', $src_root_path.'webapp/view/plugins/');
         $this->cache_dir = $src_root_path.'webapp/view/compiled_view/cache';
-        $this->caching = ($config->getValue('cache_pages'))?1:0;
+        $this->caching = ($cache_pages)?1:0;
         $this->cache_lifetime = 300;
-        $this->debug = $config->getValue('debug');
+        $this->debug = $debug;
 
-        $this->assign('app_title', $config->getValue('app_title'));
-        $this->assign('site_root_path', $config->getValue('site_root_path'));
+        $this->assign('app_title', $app_title);
+        $this->assign('site_root_path', $site_root_path);
         $this->assign('logo_link', 'index.php');
     }
 

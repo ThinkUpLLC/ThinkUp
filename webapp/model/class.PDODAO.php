@@ -1,6 +1,7 @@
 <?php
 /**
- * PDODAO - Parent class for PDO DAOs
+ * PDO DAO
+ * Parent class for PDO DAOs
  * @author Christoffer Viken <christoffer@viken.me>
  * @author Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
@@ -39,11 +40,14 @@ abstract class PDODAO {
     private $profiler_enabled = false;
 
     /**
-     * Object Constructor
+     * Constructor
+     * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'GMT_offset', 'db_type',
+     * 'db_socket', 'db_name', 'db_host', 'db_user', 'db_password'
+     * @return PDODAO
      */
-    public function __construct(){
+    public function __construct($cfg_vals=null){
         $this->logger = Logger::getInstance();
-        $this->config = Config::getInstance();
+        $this->config = Config::getInstance($cfg_vals);
         if(is_null(self::$PDO)) {
             $this->connect();
         }

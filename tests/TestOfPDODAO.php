@@ -66,7 +66,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertNotNull(TestMysqlDAO::$PDO);
         TestMysqlDAO::$PDO->tu_testing = "testing";
         $testdao2 = DAOFactory::getDAO('TestDAO');
-        $this->assertEqual(TestMysqlDAO::$PDO->tu_testing, "testing");
+        $this->assertEqual(TestMySQLDAO::$PDO->tu_testing, "testing");
     }
 
     public function testBasicSelectUsingStatementHandleDirectly() {
@@ -235,4 +235,17 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertTrue($cnt);
     }
 
+    public function testInstantiateDaoWithoutConfigFile() {
+        $this->removeConfigFile();
+        Config::destroyInstance();
+        $cfg_values = array("table_prefix"=>"tu_", "db_host"=>"localhost");
+        $config = Config::getInstance($cfg_values);
+        $test_dao = new TestMySQLDAO($cfg_values);
+        $users = $test_dao->getUserCount(0, 'mary');
+        $this->assertIsA($users, "array");
+        $this->assertEqual(count($users), 2);
+        $this->assertEqual($users[0]['user_name'], 'mary');
+        $this->assertEqual($users[1]['user_name'], 'sweetmary');
+        $this->restoreConfigFile();
+    }
 }

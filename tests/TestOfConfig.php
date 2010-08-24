@@ -28,7 +28,39 @@ class TestOfConfig extends ThinkUpBasicUnitTestCase {
         require THINKUP_ROOT_PATH.'webapp/config.inc.php';
         $config = Config::getInstance();
         $values_array = $config->getValuesArray();
+        //tests assume profiler and caching is off
         $THINKUP_CFG['enable_profiler']=false;
+        $THINKUP_CFG['cache_pages']=false;
         $this->assertIdentical($THINKUP_CFG, $values_array);
+    }
+
+    public function testPassInArray() {
+        Config::destroyInstance();
+        $cfg_values = array("table_prefix"=>"thinkupyo", "db_host"=>"myserver.com");
+        $config = Config::getInstance($cfg_values);
+        $this->assertEqual($config->getValue("table_prefix"), "thinkupyo");
+        $this->assertEqual($config->getValue("db_host"), "myserver.com");
+    }
+
+    public function testNoConfigFileArray() {
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        $cfg_values = array("table_prefix"=>"thinkupyo", "db_host"=>"myserver.com");
+        $config = Config::getInstance($cfg_values);
+        $this->assertEqual($config->getValue("table_prefix"), "thinkupyo");
+        $this->assertEqual($config->getValue("db_host"), "myserver.com");
+        $this->restoreConfigFile();
+    }
+
+    public function testNoConfigFileNoArray() {
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        try {
+            $config = Config::getInstance();
+            $this->assertNull($config->getValue('table_prefix'));
+        } catch(Exception $e) {
+            $this->assertPattern("/Configuration values missing/", $e->getMessage());
+        }
+        $this->restoreConfigFile();
     }
 }

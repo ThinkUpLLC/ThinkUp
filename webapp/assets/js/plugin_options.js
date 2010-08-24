@@ -19,7 +19,7 @@ var PluginOptions = function() {
                 plugin_options.submitForm();
             });
         });
-    }
+    };
 
     /**
      * form submit event handler

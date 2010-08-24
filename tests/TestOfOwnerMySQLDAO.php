@@ -153,11 +153,28 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Test insertActivatedAdmin and doesAdminExist
+     * Test createAdmin and doesAdminExist
      */
-    public function testInsertActivatedAdminAndDoesAdminExist() {
-        $this->assertFalse($this->DAO->doesAdminExist());
-        $this->DAO->insertActivatedAdmin('test@example.com', 'password', 'My Full Name');
-        $this->assertTrue($this->DAO->doesAdminExist());
+    public function testCreateAdminAndDoesAdminExist() {
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
+        $dao = new OwnerMySQLDAO($config_array);
+
+        $this->assertFalse($dao->doesAdminExist());
+        $dao->createAdmin('test@example.com', 'password', 'adfadfad', 'My Full Name');
+        $this->assertTrue($dao->doesAdminExist());
     }
+
+    public function testPromoteToAdmin() {
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
+        $dao = new OwnerMySQLDAO($config_array);
+
+        $this->assertFalse($dao->doesAdminExist());
+        $result = $dao->promoteToAdmin('ttuser1@example.com');
+        $this->assertEqual($result, 1); //one row updated
+
+        $this->assertTrue($dao->doesAdminExist());
+    }
+
 }

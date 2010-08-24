@@ -12,6 +12,28 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 class TestOfInstaller extends ThinkUpUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('Installer class test');
+        if ( !defined('DS') ) {
+            define('DS', DIRECTORY_SEPARATOR);
+        }
+        if ( !defined('THINKUP_ROOT_PATH') ) {
+            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) . DS);
+        }
+
+        if ( !defined('THINKUP_WEBAPP_PATH') ) {
+            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+        }
+
+        if ( !defined('THINKUP_BASE_URL') ) {
+            // Define base URL, the same as $THINKUP_CFG['site_root_path']
+            $current_script_path = explode('/', $_SERVER['PHP_SELF']);
+            array_pop($current_script_path);
+            if ( in_array($current_script_path[count($current_script_path)-1],
+            array('account', 'post', 'session', 'user', 'install')) ) {
+                array_pop($current_script_path);
+            }
+            $current_script_path = implode('/', $current_script_path) . '/';
+            define('THINKUP_BASE_URL', $current_script_path);
+        }
     }
 
     public function setUp() {
@@ -78,19 +100,11 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config_array = $config->getValuesArray();
         $installer = Installer::getInstance();
 
-        // Check db.
-        // Using this way when we handle a method that may
-        // throws an exception
-        try {
-            $cdb = $installer->checkDb($config_array);
-        } catch (Exception $e) {}
+        $cdb = $installer->checkDb($config_array);
         $this->assertTrue($cdb);
 
-        // try set db
-        try {
-            $db = $installer->setDb($config_array);
-        } catch (Exception $e) {}
-        $this->assertIsA($db, Installer::$dao_map[$config_array['db_type']]);
+        $db = $installer->setDb($config_array);
+        $this->assertIsA($db, 'InstallerMySQLDAO');
     }
 
     public function testInstallerShowTables() {
@@ -149,7 +163,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
             $this->assertTrue($installer->checkTable($config_array));
             $this->fail('should throw an InstallerException');
         } catch(InstallerException $e) {
-            $this->assertPattern('/ThinkUp tables exist./', $e->getMessage(), $e->getMessage());
+            $this->assertPattern('/database tables already exist./', $e->getMessage(), $e->getMessage());
         }
 
         // test with incomplete tables (also fail)
@@ -168,7 +182,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
             $this->assertTrue($installer->checkTable($config_array));
             $this->fail('should throw an InstallerException');
         } catch(InstallerException $e) {
-            $this->assertPattern('/ThinkUp tables exist./', $e->getMessage(), $e->getMessage());
+            $this->assertPattern('/database tables already exist./', $e->getMessage(), $e->getMessage());
         }
 
         // test with empty table
@@ -289,13 +303,12 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         // test on existent tables that's not recognized as a ThinkUp table
         $this->DAO = new InstallerMySQLDAO($config_array);
         $q = "DROP TABLE ".$config->getValue('table_prefix')."encoded_locations, ".
-        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix').
-                        "instances, ".$config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix').
-                        "owners, ".$config->getValue('table_prefix')."plugin_options,
-                        ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
-        $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users, ".$config->getValue('table_prefix')."follows, ".
-        $config->getValue('table_prefix')."links;";
+        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix')."owners, ".
+        $config->getValue('table_prefix')."plugin_options, ".$config->getValue('table_prefix')."plugins, ".
+        $config->getValue('table_prefix')."post_errors, ".$config->getValue('table_prefix')."posts, ".
+        $config->getValue('table_prefix')."user_errors, ".$config->getValue('table_prefix')."users, ".
+        $config->getValue('table_prefix')."follows, ".$config->getValue('table_prefix')."links;";
         PDODAO::$PDO->exec($q);
         $q = "CREATE TABLE weird_random_table(id INT);";
         PDODAO::$PDO->exec($q);
@@ -321,15 +334,14 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     public function testInstallerRepairTables() {
         $config = Config::getInstance();
         $config_array = $config->getValuesArray();
-
         $installer = Installer::getInstance();
 
-        // test repair on a healthy and complete tables
+        // test repair on healthy and complete tables
         Installer::$show_tables = array();
         $installer->populateTables($config_array);
-        $expected = '<p>Your ThinkUp tables are <strong class="okay">complete</strong>.</p>';
+        $expected = 'Your ThinkUp tables are <strong class="okay">complete</strong>.';
         $messages = $installer->repairTables($config_array);
-        $this->assertIdentical($messages['table_complete'], $expected);
+        $this->assertIdentical($messages['table_complete'], $expected, $messages['table_complete']);
 
         // test repair on missing tables
         $this->DAO = new InstallerMySQLDAO($config_array);
@@ -339,5 +351,13 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $expected = '/There are <strong class="not_okay">1 missing tables/i';
         $messages = $installer->repairTables($config_array);
         $this->assertPattern($expected, $messages['missing_tables']);
+    }
+
+    public function testGetTablesToInstall(){
+        $installer = Installer::getInstance();
+        $tables = $installer->getTablesToInstall();
+        $expected_tables = array('encoded_locations', 'follower_count', 'follows', 'instances', 'links',
+        'owner_instances', 'owners', 'plugin_options', 'plugins', 'post_errors', 'posts', 'user_errors', 'users');
+        $this->assertIdentical($tables, $expected_tables);
     }
 }

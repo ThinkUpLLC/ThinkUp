@@ -29,23 +29,33 @@ class Config {
      *
      * @var array
      */
-    var $config;
+    var $config = array();
     /**
      * Constructor
+     * @param array $vals Optional values to override file config
      * @return Config
      */
-    public function __construct() {
-        require THINKUP_WEBAPP_PATH . 'config.inc.php';
-        $this->config = $THINKUP_CFG;
+    public function __construct($vals = null) {
+        if ($vals != null ) {
+            $this->config = $vals;
+        } else {
+            if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php')) {
+                require THINKUP_WEBAPP_PATH . 'config.inc.php';
+                $this->config = $THINKUP_CFG;
+            } else {
+                throw new Exception("Configuration values missing!");
+            }
+        }
     }
 
     /**
      * Get the singleton instance of Config
+     * @param array $vals Optional values to override file config
      * @return Config
      */
-    public static function getInstance() {
+    public static function getInstance($vals = null) {
         if (!isset(self::$instance)) {
-            self::$instance = new Config();
+            self::$instance = new Config($vals);
         }
         return self::$instance;
     }

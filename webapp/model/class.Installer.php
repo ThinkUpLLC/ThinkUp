@@ -11,7 +11,7 @@ class Installer {
      * Singleton instance of Installer
      *
      * @var Installer
-     * @todo Make sure the instance records unique id (something like IP or mac address) which identifies executor
+     * @TODO Make sure the instance records unique id (something like IP or mac address) which identifies executor
      */
     private static $instance = null;
 
@@ -56,22 +56,12 @@ class Installer {
     private static $required_version;
 
     /**
-     * Maps DAO from db_type and defines class names.
-     * We don't use DAOFactory in Installer to avoid non-existence configuration file.
-     *
-     * @var array
-     */
-    public static $dao_map = array( 'mysql' => 'InstallerMySQLDAO' );
-
-    /**
      * List of ThinkUp tables.
      * If there are new tables added, make sure this property also updated
      *
      * @var array
-     * @TODO Remove this and determine tables programmatically from SQL file
      */
-    public static $tables = array('encoded_locations', 'follower_count', 'follows', 'instances', 'links',
-        'owner_instances', 'owners', 'plugin_options', 'plugins', 'post_errors', 'posts', 'user_errors', 'users');
+    public static $tables;
 
     /**
      * Result from SHOW TABLES
@@ -84,9 +74,14 @@ class Installer {
     /**
      * PDO Instance
      *
-     * @var PDO
+     * @var InstallerDAO
      */
     public static $installer_dao;
+
+
+    public function __construct() {
+        self::$tables = $this->getTablesToInstall();
+    }
 
     /**
      * Get Installer instance
@@ -105,7 +100,7 @@ class Installer {
 
             // get required version of php and mysql
             // and set current version
-            require_once (THINKUP_WEBAPP_PATH . 'install' . DS . 'version.php');
+            require (THINKUP_WEBAPP_PATH . 'install' . DS . 'version.php');
 
             self::$required_version = array(
                 'php' => $THINKUP_VERSION_REQUIRED['php'],
@@ -200,24 +195,23 @@ class Installer {
     }
 
     /**
-     * Check if path exists, throws FolderNotFoundException
+     * Check if Thinkup's paths exists.
      *
+     * @throws InstallerException
      * @param array $config
      * @return bool
      */
     public function checkPath($config) {
         // check if $THINKUP_CFG related to path exists
         if ( !is_dir($config['source_root_path']) ) {
-            throw new InstallerException("<p>ThinkUp's source root directory is not found</p>",
+            throw new InstallerException("ThinkUp's source root directory is not found.",
             self::ERROR_CONFIG_SOURCE_ROOT_PATH);
         }
         if ( !is_dir($config['smarty_path']) ) {
-            throw new InstallerException("<p>ThinkUp's smarty directory is not found</p>",
-            self::ERROR_CONFIG_SMARTY_PATH);
+            throw new InstallerException("ThinkUp's Smarty directory is not found.", self::ERROR_CONFIG_SMARTY_PATH);
         }
         if ( !is_dir(substr($config['log_location'], 0, -11)) ) {
-            throw new InstallerException("<p>ThinkUp log directory is not found</p>",
-            self::ERROR_CONFIG_LOG_LOCATION);
+            throw new InstallerException("ThinkUp's log directory is not found.", self::ERROR_CONFIG_LOG_LOCATION);
         }
         return true;
     }
@@ -253,21 +247,16 @@ class Installer {
     }
 
     /**
-     * Set member DAO
-     *
+     * Set Installer DAO
+     * @throws InstallerException
      * @param array $config Database config
      * @return InstallerMySQLDAO
      */
     public function setDb($config) {
-        // don't use DAOFactory on Installer since calling
-        // DAOFactory::getDBType also calls Config this will throw an error
-        // to non-existent config file
-        $dao = self::$dao_map[$config['db_type']];
-        self::$installer_dao = new $dao($config);
-
-        if ( !self::$installer_dao || self::$installer_dao->error_message ) {
-            throw new InstallerException('<p>Failed establishing database connection. ' .
-            self::$installer_dao->error_message .'</p>',
+        try {
+            self::$installer_dao = DAOFactory::getDAO('InstallerDAO', $config);
+        } catch (PDOException $e) {
+            throw new InstallerException('Failed establishing database connection. '. $e->getMessage() .'',
             self::ERROR_DB_CONNECT);
         }
         return self::$installer_dao;
@@ -295,12 +284,16 @@ class Installer {
     /**
      * Check database
      *
-     * @param array $config database credentials
+     * @param array $config Database credentials
      * @return bool
      */
     public function checkDb($config) {
-        $ret = self::setDb($config);
-        return ($ret)?true:false;
+        try {
+            self::setDb($config);
+            return true;
+        } catch (InstallerException $e) {
+            return false;
+        }
     }
 
     /**
@@ -316,17 +309,14 @@ class Installer {
         if ( !self::$show_tables ) {
             self::showTables($config);
         }
-
         if ( count(self::$show_tables) > 0 ) { // database contains tables
             foreach ( self::$tables as $table ) {
-                if ( in_array($config['table_prefix'] . $table, self::$show_tables) ) {
-                    // database contains ThinkUp table
-                    // TODO: when table already exists, ask for repairing
-                    throw new InstallerException("<p><strong>Ups!</strong> ThinkUp tables exist. If you're considering ".
-                        "to install ThinkUp from scratch please clear out ThinkUp tables in ".
-                        "<code>{$config['db_name']}</code> database. If you're planning to ".
-                        "repair your table click " .
-                        "<a href=\"" . $config['site_root_path'] . "install/repair.php?db=1\">here</a>.</p>",
+                if ( in_array( $config['table_prefix'] .$table, self::$show_tables) ) {
+                    // database contains at least 1 ThinkUp table
+                    throw new InstallerException("<strong>Oops!</strong><br /> Looks like at least some of ThinkUp's ".
+                    "database tables already exist. To install ThinkUp from scratch, drop its tables in the ".
+                    "<code>{$config['db_name']}</code> database.<br />To repair your existing tables, click " .
+                    "<a href=\"" . THINKUP_BASE_URL . "install/index.php?step=repair&m=db\">here</a>.",
                     self::ERROR_DB_TABLES_EXIST);
                 }
             }
@@ -356,12 +346,7 @@ class Installer {
                 }
             }
         }
-
-        if ( $total_tables_found == count(self::$tables) ) {
-            return true;
-        } else {
-            return false;
-        }
+        return ( $total_tables_found == count(self::$tables) ) ;
     }
 
     /**
@@ -380,7 +365,11 @@ class Installer {
     }
 
     /**
-     * Check if ThinkUp is already installed.
+     * Check if ThinkUp is already installed, that is, that:
+     *  all system requirements are met;
+     *  the ThinkUp config.inc.php file exists;
+     *  all ThinkUp tables exist
+     *  all tables report a status ok "Okay"
      *
      * @param array $config
      * @return bool true when ThinkUp is already installed
@@ -417,13 +406,11 @@ class Installer {
         // table present
         $table_present = true;
         if ( !self::doThinkUpTablesExist($config) ) {
-            self::$error_messages['table'] = 'ThinkUp table is not fully available. Make sure ' .
-                                            'the <code>$THINKUP_CFG[\'table_prefix\']</code> is set ' .
-                                            'correctly.';
+            self::$error_messages['table'] = 'ThinkUp\'s database tables are not fully installed.';
             $table_present = false;
         }
 
-        return ($version_met && $db_check && $table_present && $admin_exists);
+        return ($version_met && $db_check && $table_present);
     }
 
     /**
@@ -434,7 +421,7 @@ class Installer {
      */
     public function populateTables($config) {
         $install_queries = self::getInstallQueries($config['table_prefix']);
-        $expected_queries = self::$installer_dao->examineQueries($install_queries,
+        $expected_queries = self::$installer_dao->diffDataStructure($install_queries,
         self::$installer_dao->getTables($config) );
         foreach ($expected_queries['queries'] as $query) {
             PDODAO::$PDO->exec($query);
@@ -484,7 +471,7 @@ class Installer {
         $total_table_found = 0;
         if ( count(self::$show_tables) > 0 ) { // database contains tables
             foreach ( self::$tables as $table ) {
-                if ( in_array($config['table_prefix'] . $table, self::$show_tables) ) {
+                if ( in_array($config['table_prefix'] .$table, self::$show_tables) ) {
                     $total_table_found++;
                 }
             }
@@ -494,28 +481,26 @@ class Installer {
         // show missing table
         $total_table_not_found = count(self::$tables) - $total_table_found;
         if ( $total_table_not_found > 0 ) {
-            $messages['missing_tables']  = "<p>There are <strong class=\"not_okay\">" .
-            $total_table_not_found . " missing tables</strong>. ";
-            $messages['missing_tables'] .= "ThinkUp will attempt to create missing tables and ".
-                                           "alter existing tables if something is missing&hellip;";
-            $messages['missing_tables'] .= "<br />&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"repair_log\">" .
-                                           "Create and alter some tables&hellip;</span>";
+            $messages['missing_tables']  = "There are <strong class=\"not_okay\">" .
+            $total_table_not_found . " missing tables</strong>. ThinkUp will attempt to create missing tables and ".
+            "alter existing tables if something is missing&hellip;<br />&nbsp;&nbsp;&nbsp;&nbsp;".
+            "<span class=\"repair_log\">Create and alter some tables&hellip;</span>";
             $queries_logs = self::populateTables($config, true);
             if ( !empty($queries_logs) ) {
                 foreach ( $queries_logs as $log ) {
-                    $messages['missing_tables'] .= "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" .
-                                                   "<span class=\"repair_log\">$log</span>";
+                    $messages['missing_tables'] .= "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".
+                    "<span class=\"repair_log\">$log</span>";
                 }
             }
         } else {
-            $messages['table_complete'] = '<p>Your ThinkUp tables are <strong class="okay">complete</strong>.</p>';
+            $messages['table_complete'] = 'Your ThinkUp tables are <strong class="okay">complete</strong>.';
         }
 
         // does checking on tables that exist
         $okay = true;
         $table = '';
         foreach (self::$tables as $t) {
-            $table = $config['table_prefix'] . $t;
+            $table =  $t;
             $table_status = self::isTableOk($table, $config);
             if ( $table_status['Msg_text'] == "OK" ) {
                 $messages[$t] = "<p>The <code>$table</code> table is <strong class=\"okay\">okay</strong>.</p>";
@@ -544,21 +529,6 @@ class Installer {
     }
 
     /**
-     * Validate email
-     *
-     * @param string $email Email to be validated
-     * @return bool
-     */
-    public function checkValidEmail($email = '') {
-        $hostname = '(?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4}|museum|travel)';
-        $pattern = '/^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@' . $hostname . '$/i';
-        if ( !preg_match($pattern, $email) ) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Check if sample config (config.sample.inc.php) exists
      *
      * @param string $file absolute file path
@@ -566,10 +536,8 @@ class Installer {
     private function checkSampleConfig($file) {
         if ( !file_exists($file) ) {
             throw new InstallerException(
-                '<p>Sorry, ThinkUp Installer need a config.sample.inc.php file to work from. '.
-                'Please re-upload this file from your ThinkUp installation.</p>',
-            self::ERROR_CONFIG_SAMPLE_MISSING
-            );
+                'Sorry, ThinkUp requires the config.sample.inc.php file to work. Please re-upload this file from the '.
+            'ThinkUp installation package.', self::ERROR_CONFIG_SAMPLE_MISSING);
         }
     }
 
@@ -587,102 +555,86 @@ class Installer {
         // check sample configuration file
         // when config.inc.php is not exist
         if (!$config_file_exists) {
-            $sample_config_filename = THINKUP_WEBAPP_PATH . 'config.sample.inc.php';
-            self::checkSampleConfig($sample_config_filename);
-
-            // read sample configuration file and replace some lines
-            $sample_config = file($sample_config_filename);
-            foreach ($sample_config as $line_num => $line) {
-                switch ( substr($line, 12, 30) ) {
-                    case "['site_root_path']            ":
-                        $sample_config[$line_num] = str_replace(
-                          "'/'", "'" . THINKUP_BASE_URL . "'", $line
-                        );
-                        break;
-                    case "['source_root_path']          ":
-                        $sample_config[$line_num] = str_replace(
-                          "'/your-server-path-to/thinkup/'",
-                          "'" . THINKUP_ROOT_PATH . "'", $line
-                        );
-                        break;
-                    case "['db_host']                   ":
-                        $sample_config[$line_num] = str_replace(
-                          "'localhost'", "'" . $db_config['db_host'] . "'", $line
-                        );
-                        break;
-                    case "['db_user']                   ":
-                        $sample_config[$line_num] = str_replace(
-                          "'your_database_username'", "'" . $db_config['db_user'] . "'", $line
-                        );
-                        break;
-                    case "['db_password']               ":
-                        $sample_config[$line_num] = str_replace(
-                          "'your_database_password'", "'" . $db_config['db_password'] . "'", $line
-                        );
-                        break;
-                    case "['db_name']                   ":
-                        $sample_config[$line_num] = str_replace(
-                          "'your_thinkup_database_name'", "'" . $db_config['db_name'] . "'", $line
-                        );
-                        break;
-                    case "['db_socket']                 ":
-                        $sample_config[$line_num] = str_replace(
-                          "= '';", "= '" . $db_config['db_socket'] . "';", $line
-                        );
-                        break;
-                    case "['db_port']                   ":
-                        $sample_config[$line_num] = str_replace(
-                          "= '';", "= '" . $db_config['db_port'] . "';", $line
-                        );
-                        break;
-                    case "['table_prefix']              ":
-                        $sample_config[$line_num] = str_replace(
-                          "'tu_'", "'" . $db_config['table_prefix'] . "'", $line
-                        );
-                        break;
-                }
-            } // end foreach
-
+            $new_config_file_contents = self::generateConfigFile($db_config, $admin_user);
             if ( !is_writable(THINKUP_WEBAPP_PATH) ) {
-                /* if not writeable user should create config.sample.inc.php manually */
-                $message  = "<p>ThinkUp couldn't write <code>config.sample.inc.php</code> file. Either make ".
-                            "<code>" . THINKUP_WEBAPP_PATH . "</code> writeable ";
-                $message .= "or create the <code>config.sample.inc.php</code> ".
-                            "manually and paste the following text into it.</p><br>";
-                $message .= '<textarea cols="120" rows="15">';
-                foreach ($sample_config as $line) {
-                    $message .= htmlentities($line);
-                }
-                $message .= '</textarea><br>';
-                $message .= "<p>After you've done that, click the Next Step &raquo;</p>";
-
-                // hidden form
-                $message .= '<form name="form1" class="input" method="post" action="index.php?step=3">';
-                $message .= '<input type="hidden" name="site_email" value="' . $admin_user['email'] . '" />';
-                $message .= '<input type="hidden" name="password" value="' . $admin_user['password'] . '" />';
-                $message .= '<input type="hidden" name="confirm_password" value="' .
-                $admin_user['confirm_password'] . '" />';
-
-                // submit button
-                $message .= '<div class="clearfix append_20">' .
-                            '<div class="grid_10 prefix_9 left">' .
-                            '<input type="submit" name="Submit" class="tt-button '.
-                                'ui-state-default ui-priority-secondary ui-corner-all" value="Next Step &raquo">' .
-                            '</div></div></form>';
-
-                //self::$controller->diePage($message, 'File Configuration Error');
+                return false;
             } else {
                 /* write the config file */
                 $handle = fopen($config_file, 'w');
-                foreach( $sample_config as $line ) {
+                foreach( $new_config_file_contents as $line ) {
                     fwrite($handle, $line);
                 }
                 fclose($handle);
                 chmod($config_file, 0666);
+                return true;
             }
-        } // if !$config_file_exists
+        }
+    }
 
-        return true;
+    /**
+     * Create config file
+     *
+     * @param array $db_config
+     * @param array $admin_user
+     * @return array Strings of new config file contents
+     */
+    public function generateConfigFile($db_config, $admin_user) {
+        $sample_config_filename = THINKUP_WEBAPP_PATH . 'config.sample.inc.php';
+        self::checkSampleConfig($sample_config_filename);
+
+        // read sample configuration file and replace some lines
+        $sample_config = file($sample_config_filename);
+        foreach ($sample_config as $line_num => $line) {
+            switch ( substr($line, 12, 30) ) {
+                case "['site_root_path']            ":
+                    $sample_config[$line_num] = str_replace(
+                          "'/'", "'" . THINKUP_BASE_URL . "'", $line
+                    );
+                    break;
+                case "['source_root_path']          ":
+                    $sample_config[$line_num] = str_replace(
+                          "'/your-server-path-to/thinkup/'",
+                          "'" . THINKUP_ROOT_PATH . "'", $line
+                    );
+                    break;
+                case "['db_host']                   ":
+                    $sample_config[$line_num] = str_replace(
+                          "'localhost'", "'" . $db_config['db_host'] . "'", $line
+                    );
+                    break;
+                case "['db_user']                   ":
+                    $sample_config[$line_num] = str_replace(
+                          "'your_database_username'", "'" . $db_config['db_user'] . "'", $line
+                    );
+                    break;
+                case "['db_password']               ":
+                    $sample_config[$line_num] = str_replace(
+                          "'your_database_password'", "'" . $db_config['db_password'] . "'", $line
+                    );
+                    break;
+                case "['db_name']                   ":
+                    $sample_config[$line_num] = str_replace(
+                          "'your_thinkup_database_name'", "'" . $db_config['db_name'] . "'", $line
+                    );
+                    break;
+                case "['db_socket']                 ":
+                    $sample_config[$line_num] = str_replace(
+                          "= '';", "= '" . $db_config['db_socket'] . "';", $line
+                    );
+                    break;
+                case "['db_port']                   ":
+                    $sample_config[$line_num] = str_replace(
+                          "= '';", "= '" . $db_config['db_port'] . "';", $line
+                    );
+                    break;
+                case "['table_prefix']              ":
+                    $sample_config[$line_num] = str_replace(
+                          "'tu_'", "'" . $db_config['table_prefix'] . "'", $line
+                    );
+                    break;
+            }
+        } // end foreach
+        return $sample_config;
     }
 
     /**
@@ -711,13 +663,10 @@ class Installer {
     public function repairerCheckStep1() {
         if ( !self::checkStep1() ) {
             throw new InstallerException(
-                "Requirements are not met. " .
-                "Make sure your PHP version >= " . self::$required_version['php'] .
-                ", you have cURL and GD extension installed, and template and log directories are writeable.",
-            self::ERROR_REQUIREMENTS
-            );
+                "ThinkUp's requirements are not met. Make sure your PHP version >= " . self::$required_version['php'] .
+                ", you have the cURL and GD extension installed, and the template and log directories are writeable.",
+            self::ERROR_REQUIREMENTS);
         }
-
         return true;
     }
 
@@ -731,32 +680,47 @@ class Installer {
 
         if ( !file_exists($config_file) ) {
             throw new InstallerException(
-                '<p>Sorry, ThinkUp Repairer need a <code>config.inc.php</code> file to work from. ' .
+                'ThinkUp needs a <code>config.inc.php</code> file to work from. ' .
                 'Please upload this file to <code>' . THINKUP_WEBAPP_PATH . '</code> or ' .
                 'copy / rename from <code>' . THINKUP_WEBAPP_PATH . 'config.sample.inc.php</code> to ' .
                 '<code>' . THINKUP_WEBAPP_PATH . 'config.inc.php</code>. If you don\'t have permission to ' .
-                'do this, you can reinstall ThinkUp by ' .
-                'clearing out ThinkUp tables and then clicking '.
-                '<a href="' . THINKUP_BASE_URL . 'install/">here</a>',
-            self::ERROR_CONFIG_FILE_MISSING
-            );
+                'do this, you can reinstall ThinkUp by clearing out ThinkUp tables and then clicking '.
+                '<a href="' . THINKUP_BASE_URL . 'install/">here</a>', self::ERROR_CONFIG_FILE_MISSING);
         }
-
         return $config_file;
     }
 
     /**
      * Repairer does checking on files configuration if $THINKUP_CFG['repair'] has been defined or not
      *
-     * @param $config
+     * @param array $config ThinkUp configuration values
      * @return bool
      */
     public function repairerIsDefined($config) {
         if ( !isset($config['repair']) or !$config['repair'] ) {
-            throw new InstallerException('To do repairing you must define<br><code>$THINKUP_CFG[\'repair\'] = true;'.
-            '</code><br>in your configuration file at <code>' . THINKUP_WEBAPP_PATH . 'config.inc.php</code>',
-            self::ERROR_REPAIR_CONFIG);
+            throw new InstallerException('To repair ThinkUp\'s installation, please add '.
+            '<code>$THINKUP_CFG[\'repair\'] = true; </code><br>in your configuration file at <code>' . 
+            THINKUP_WEBAPP_PATH . 'config.inc.php</code>', self::ERROR_REPAIR_CONFIG);
         }
         return true;
+    }
+
+    /**
+     * Return array of tables that appear in ThinkUp's build-db_mysql.sql file
+     * @return array Table names
+     */
+    public function getTablesToInstall() {
+        $table_names = array();
+        $install_queries = file_get_contents(THINKUP_ROOT_PATH."sql/build-db_mysql.sql");
+        $queries = explode(';', $install_queries);
+        if ( $queries[count($queries)-1] == '' ) {
+            array_pop($queries);
+        }
+        foreach($queries as $query) {
+            if (preg_match("|CREATE TABLE ([^ ]*)|", $query, $matches)) {
+                $table_names[] = str_replace('tu_', '', $matches[1]);
+            }
+        }
+        return $table_names;
     }
 }

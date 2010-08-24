@@ -7,49 +7,59 @@
  */
 interface InstallerDAO {
     /**
-     * Get array of tables
+     * Get array of tables from current connected database
      *
-     * @return array Table names
+     * @return array Table name strings
      */
     public function getTables();
 
     /**
-     * Check table condition
+     * Check table
      *
-     * @param str $table_name with prefix
-     * @return array Table condition
+     * @param str $table_name
+     * @return array If table exists and okay result will be array('Msg_text' => 'OK')
      */
     public function checkTable($table_name);
 
     /**
      * Repair table
      *
-     * @param string $table_name with prefix
+     * @param str $table_name Name of table to repair
+     * @return array Row that consists of key Message_text.
+     * If table exists and okay it must be array('Msg_text' => 'OK')
      */
     public function repairTable($table_name);
 
     /**
      * Describe table
      *
-     * @param string $table_name with prefix
+     * @param str $table_name
+     * @return array table descriptions that consist of following case-sensitive properties:
+     *             - Field => name of field
+     *             - Type => type of field
+     *             - Null => is type allowed to be null
+     *             - Default => Default value for field
+     *             - Extra => such as auto_increment
      */
     public function describeTable($table_name);
 
     /**
-     * Get list of table indexes
+     * Get index from particular table
      *
-     * @param string $table_name with prefix
+     * @param str $table_name with prefix
+     * @return array Tables indices of $table_name
      */
+
     public function showIndex($table_name);
 
     /**
-     * Examines / groups queries based on modified wp's dbDelta function. Examine string of queries from
-     * specified array of tables
+     * Diff the current database table structure with desired table structure.
+     * This is a modified version of WordPress' dbDelta function
+     * More info: http://codex.wordpress.org/Creating_Tables_with_Plugins#Creating_or_Updating_the_Table
      *
-     * @param str $queries
-     * @param array $tables array of tables with prefix
-     * @return array Queries and update message. The array must contains key of queries and for_update.
-     *         return array('queries' => $all_queries, 'for_update' => $for_update);
+     * @param str $desired_structure_sql_string
+     * @param array $existing_tables
+     * @return array Array of 'queries', and 'for_update', what SQL will update the current structure to desired state
      */
-    public function examineQueries($queries = '', $tables = array());
+    public function diffDataStructure($queries = '', $tables = array());
 }

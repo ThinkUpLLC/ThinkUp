@@ -48,7 +48,7 @@ class RegisterController extends ThinkUpController {
                         }
                     }
                     if (!$this->is_missing_param) {
-                        if (strlen($_POST['email']) < 5) {
+                        if (!Utils::validateEmail($_POST['email'])) {
                             $this->addErrorMessage("Incorrect email. Please enter valid email address.");
                         } elseif (strcmp($_POST['pass1'], $_POST['pass2']) || empty($_POST['pass1'])) {
                             $this->addErrorMessage("Passwords do not match.");

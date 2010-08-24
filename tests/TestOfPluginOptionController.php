@@ -26,7 +26,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $config->setValue('debug', true);
         $this->prefix = $config->getValue('table_prefix');
         $dao = DAOFactory::getDAO('PluginOptionDAO');
-        $this->pdo = $dao::$PDO;
+        $this->pdo = PluginOptionMySQLDAO::$PDO;
     }
 
     public function tearDown(){

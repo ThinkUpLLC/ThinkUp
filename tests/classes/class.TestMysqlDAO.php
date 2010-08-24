@@ -1,7 +1,6 @@
 <?php
-
 /**
- * mysql TestDAO implementation class for TestOfPDODAO and TestOfDAOFactory
+ * MySQL TestDAO implementation class for TestOfPDODAO and TestOfDAOFactory
  */
 class TestMysqlDAO extends PDODAO implements TestDAO {
 
@@ -128,4 +127,3 @@ class TestMysqlDAO extends PDODAO implements TestDAO {
         return $this->convertBoolToDB($val);
     }
 }
-?>

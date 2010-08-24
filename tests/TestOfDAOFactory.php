@@ -12,11 +12,11 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  */
 class TestOfDAOFactory extends ThinkUpUnitTestCase {
 
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('DAOFactory test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         // test table for our test dao
         $test_table_sql = 'CREATE TABLE tu_test_table(' .
@@ -34,7 +34,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->db->exec($q);
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
         //make sure our db_type is set to the default...
         Config::getInstance()->setValue('db_type', 'mysql');
@@ -43,7 +43,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /*
      * test fetching the proper db_type
      */
-    function testDAODBType() {
+    public function testDAODBType() {
         Config::getInstance()->setValue('db_type', null);
         $type = DAOFactory::getDBType();
         $this->assertEqual($type, 'mysql', 'should default to mysql');
@@ -56,7 +56,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /*
      * test init DAOs, bad params and all...
      */
-    function testGetTestDAO() {
+    public function testGetTestDAO() {
         // no map for this DAO
         try {
             DAOFactory::getDAO('NoSuchDAO');
@@ -96,7 +96,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get InstanceDAO
      */
-    function testGetInstanceDAO(){
+    public function testGetInstanceDAO(){
         $dao = DAOFactory::getDAO('InstanceDAO');
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstanceMySQLDAO');
@@ -105,7 +105,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get FollowDAO
      */
-    function testGetFollowDAO(){
+    public function testGetFollowDAO(){
         $dao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'FollowMySQLDAO');
@@ -114,7 +114,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get PostErrorDAO
      */
-    function testGetPostErrorDAO(){
+    public function testGetPostErrorDAO(){
         $dao = DAOFactory::getDAO('PostErrorDAO');
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'PostErrorMySQLDAO');
@@ -122,7 +122,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get PostDAO
      */
-    function testGetPostDAO(){
+    public function testGetPostDAO(){
         $dao = DAOFactory::getDAO('PostDAO');
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'PostMySQLDAO');
@@ -131,7 +131,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get UserDAO
      */
-    function testGetUserDAO(){
+    public function testGetUserDAO(){
         $dao = DAOFactory::getDAO('UserDAO');
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'UserMySQLDAO');
@@ -140,7 +140,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get UserErrorDAO
      */
-    function testGetUserErrorDAO(){
+    public function testGetUserErrorDAO(){
         $dao = DAOFactory::getDAO('UserErrorDAO');
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'UserErrorMySQLDAO');
@@ -149,16 +149,30 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get OwnerDAO
      */
-    function testGetOwnerDAO(){
+    public function testGetOwnerDAO(){
         $dao = DAOFactory::getDAO('OwnerDAO');
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'OwnerMySQLDAO');
     }
 
     /**
+     * Test get OwnerDAO without a config file, override with array of config values
+     */
+    public function testGetOwnerDAONoConfigFile(){
+        $this->removeConfigFile();
+        Config::destroyInstance();
+        $cfg_values = array("table_prefix"=>"tu_", "db_host"=>"localhost");
+        $config = Config::getInstance($cfg_values);
+        $dao = DAOFactory::getDAO('OwnerDAO', $cfg_values);
+        $this->assertTrue(isset($dao));
+        $this->assertIsA($dao, 'OwnerMySQLDAO');
+        $this->restoreConfigFile();
+    }
+
+    /**
      * Test get LinkDAO
      */
-    function testGetLinkDAO(){
+    public function testGetLinkDAO(){
         $dao = DAOFactory::getDAO('LinkDAO');
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'LinkMySQLDAO');
@@ -167,7 +181,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get OwnerInstanceDAO
      */
-    function testGetOwnerInstanceDAO() {
+    public function testGetOwnerInstanceDAO() {
         $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
         $this->assertNotNull($owner_instance_dao);
         $this->assertIsA($owner_instance_dao, 'OwnerInstanceMySQLDAO');
@@ -176,7 +190,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get PluginDAO
      */
-    function testGetPluginDAO() {
+    public function testGetPluginDAO() {
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $this->assertNotNull($plugin_dao);
         $this->assertIsA($plugin_dao, 'PluginMySQLDAO');
@@ -185,7 +199,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get PluginOptionDAO
      */
-    function testGetPluginOptionDAO() {
+    public function testGetPluginOptionDAO() {
         $plugin_dao = DAOFactory::getDAO('PluginOptionDAO');
         $this->assertNotNull($plugin_dao);
         $this->assertIsA($plugin_dao, 'PluginOptionMySQLDAO');
@@ -194,9 +208,26 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     /**
      * Test get FollowerCountDAO
      */
-    function testGetFollowerCountDAO() {
+    public function testGetFollowerCountDAO() {
         $plugin_dao = DAOFactory::getDAO('FollowerCountDAO');
         $this->assertNotNull($plugin_dao);
         $this->assertIsA($plugin_dao, 'FollowerCountMySQLDAO');
+    }
+
+    /**
+     * Test get InstallerDAO without a config file, override with array of config values
+     */
+    public function testGetInstallerDAONoConfigFile(){
+        $this->removeConfigFile();
+        Config::destroyInstance();
+        $cfg_values = array("table_prefix"=>"tu_", "db_host"=>"localhost");
+        $config = Config::getInstance($cfg_values);
+        $dao = DAOFactory::getDAO('InstallerDAO', $cfg_values);
+        $this->assertTrue(isset($dao));
+        $this->assertIsA($dao, 'InstallerMySQLDAO');
+        $result = $dao->getTables();
+        $this->assertEqual(sizeof($result), 14);
+        $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
+        $this->restoreConfigFile();
     }
 }

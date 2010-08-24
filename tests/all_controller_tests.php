@@ -11,6 +11,7 @@ $controller_test->addTestCase(new TestOfActivateAccountController());
 $controller_test->addTestCase(new TestOfCheckCrawlerController());
 $controller_test->addTestCase(new TestOfExportController());
 $controller_test->addTestCase(new TestOfForgotPasswordController());
+$controller_test->addTestCase(new TestOfInstallerController());
 $controller_test->addTestCase(new TestOfInlineViewController());
 $controller_test->addTestCase(new TestOfLoginController());
 $controller_test->addTestCase(new TestOfLogoutController());

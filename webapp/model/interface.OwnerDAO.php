@@ -87,19 +87,28 @@ interface OwnerDAO {
     public function getByPasswordToken($token);
 
     /**
+     * Check if admin owner exists
+     *
+     * @return bool Whether or not admin user exists in the store.
+     */
+    public function doesAdminExist();
+
+    /**
      * Insert an activated admin owner
      *
      * @param str $email
      * @param str $pwd
+     * @param str $activation_code
      * @param str $full_name
      * @return int Update count
      */
-    public function insertActivatedAdmin($email, $pwd, $full_name);
+    public function createAdmin($email, $pwd, $activation_code, $full_name);
 
     /**
-     * Check if admin user exists
+     * Promote an owner to admin status.
      *
-     * @return bool Whether or not admin user exists
+     * @param str $email Owner email address.
+     * @return int Update count
      */
-    public function doesAdminExist();
+    public function promoteToAdmin($email);
 }

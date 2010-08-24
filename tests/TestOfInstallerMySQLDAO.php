@@ -81,13 +81,14 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         // test on fully installed tables
         $install_queries = file_get_contents(THINKUP_ROOT_PATH."sql/build-db_mysql.sql");
 
-        //clean SQL: examineQueries requires two spaces after PRIMARY KEY, and a space between key name and (field)
+        //clean SQL: diffDataStructure requires two spaces after PRIMARY KEY, and a space between key name and (field)
         $install_queries = str_replace('PRIMARY KEY ', 'PRIMARY KEY  ', $install_queries);
 
+        // test on complete table set; this should return just the INSERT query into plugins table
         $config = Config::getInstance();
         $config_array = $config->getValuesArray();
         $dao = new InstallerMySQLDAO($config_array);
-        $output = $dao->examineQueries($install_queries, $dao->getTables());
+        $output = $dao->diffDataStructure($install_queries, $dao->getTables());
         $this->assertEqual(sizeof($output['for_update']), 0 );
         //var_dump($output);
         $expected = "/INSERT INTO ".$config_array["table_prefix"]."plugins/i";
@@ -95,7 +96,7 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
 
         // test on missing tables
         InstallerMySQLDAO::$PDO->exec("DROP TABLE " . $config_array["table_prefix"] . "owners");
-        $output = $dao->examineQueries($install_queries, $dao->getTables());
+        $output = $dao->diffDataStructure($install_queries, $dao->getTables());
         $expected = "/Created table {$config_array["table_prefix"]}owners/i";
         $this->assertPattern($expected, $output['for_update'][$config_array["table_prefix"] . 'owners']);
         $expected = "/CREATE TABLE {$config_array["table_prefix"]}owners /i";
@@ -105,16 +106,21 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         InstallerMySQLDAO::$PDO->exec("ALTER TABLE " . $config_array["table_prefix"] . "follows DROP KEY user_id");
         $tables = $dao->getTables();
         //var_dump($tables);
-        $output = $dao->examineQueries($install_queries, $tables);
+        $output = $dao->diffDataStructure($install_queries, $tables);
         $add_pk = "ALTER TABLE " . $config_array["table_prefix"] .
         "follows ADD UNIQUE KEY user_id (user_id,follower_id,network)";
         $this->assertTrue(in_array($add_pk, $output['queries']));
 
         // test on missing index
         InstallerMySQLDAO::$PDO->exec("ALTER TABLE ".$config_array["table_prefix"]."follows DROP INDEX active");
-        $output = $dao->examineQueries($install_queries, $dao->getTables(false));
+        $output = $dao->diffDataStructure($install_queries, $dao->getTables(false));
         $add_idx = "ALTER TABLE ".$config_array["table_prefix"]."follows ADD KEY active (active)";
         $this->assertTrue(in_array($add_idx, $output['queries']));
-    }
 
+        // test on missing column
+        InstallerMySQLDAO::$PDO->exec("ALTER TABLE ".$config_array["table_prefix"]."posts DROP place");
+        $output = $dao->diffDataStructure($install_queries, $dao->getTables(false));
+        $add_idx = "ALTER TABLE ".$config_array["table_prefix"]."posts ADD COLUMN place varchar(255) DEFAULT NULL";
+        $this->assertTrue(in_array($add_idx, $output['queries']));
+    }
 }

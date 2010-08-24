@@ -7,98 +7,18 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
-    /**
-     * Error message when unable to instantiate the PDO
-     *
-     * @var string
-     */
-    public $error_message;
 
-    /**
-     * Override the PDODAO constructor so we can use installerConnect to connect the database
-     * without Config instantiation
-     */
-    public function __construct($config) {
-        if(is_null(self::$PDO)) {
-            $this->setPDO($config);
-        }
-
-        if (isset($config['table_prefix'])) {
-            $this->prefix = $config['table_prefix'];
-        }
-        if (isset($config['GMT_offset'])) {
-            $this->gmt_offset = $config['GMT_offset'];
-        }
-    }
-
-    /**
-     * Initalize connection and set PDO member object
-     *
-     * @param array $config Array of configuration
-     */
-    protected function setPDO($config){
-        if (is_null(self::$PDO)) {
-            //set default db type to mysql if not set
-            $db_type = $config['db_type'];
-            if(! $db_type) {
-                $db_type = 'mysql';
-            }
-            $db_socket = $config['db_socket'];
-            if ( !$db_socket) {
-                $db_socket = '';
-            } else {
-                $db_socket=";unix_socket=".$db_socket;
-            }
-            $db_string = sprintf("%s:dbname=%s;host=%s%s",
-            $db_type,
-            $config['db_name'],
-            $config['db_host'],
-            $db_socket );
-            try {
-                self::$PDO = new PDO(
-                $db_string,
-                $config['db_user'],
-                $config['db_password']);
-                self::$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
-                if (strstr($e->getMessage(), 'SQLSTATE[')) {
-                    preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
-                    $this->error_message = $matches[3];
-                }
-            }
-        }
-    }
-
-    /**
-     * Set PDO to null
-     */
-    public function close() {
-        return $this->disconnect();
-    }
-
-    /**
-     * Get array of tables from current connected database
-     *
-     * @return array Table name strings
-     */
     public function getTables() {
         $q = 'SHOW TABLES';
         $ps = $this->execute($q);
-        $results = $this->getDataRowsAsArrays($ps);
         $tables = array();
-        foreach ($results as $table) {
-            $tables[] = $table['Tables_in_thinkup_tests'];
+        while ( $row = $ps->fetch(PDO::FETCH_NUM) ) {
+            $tables[] = $row[0];
         }
+        $ps->closeCursor();
         return $tables;
     }
 
-    /**
-     * Check table query
-     *
-     * @param str $table_name
-     * @return array Row that consists of key Message_text.
-     * If table exists and okay it must be array('Msg_text' => 'OK')
-     */
     public function checkTable($table_name) {
         $q = "CHECK TABLE ".$table_name;
         $ps = $this->execute($q);
@@ -106,13 +26,6 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         return $result[0];
     }
 
-    /**
-     * Repair table
-     *
-     * @param str $table_name Name of table to repair
-     * @return array Row that consists of key Message_text.
-     * If table exists and okay it must be array('Msg_text' => 'OK')
-     */
     public function repairTable($table_name) {
         $q = "REPAIR TABLE ".$table_name;
         $ps = $this->execute($q);
@@ -120,44 +33,18 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         return $result[0];
     }
 
-    /**
-     * Describe table
-     *
-     * @param str $table_name
-     * @return array table descriptions that consist of following case-sensitive properties:
-     *             - Field => name of field
-     *             - Type => type of field
-     *             - Null => is type allowed to be null
-     *             - Default => Default value for field
-     *             - Extra => such as auto_increment
-     */
     public function describeTable($table_name) {
         $ps = $this->execute("DESCRIBE ".$table_name);
         return $this->getDataRowsAsArrays($ps);
     }
 
-    /**
-     * Get index from particular table
-     *
-     * @param str $table_name with prefix
-     * @return array Tables indices of $table_name
-     */
     public function showIndex($table_name) {
         $ps = $this->execute("SHOW INDEX FROM ".$table_name);
         return $this->getDataRowsAsArrays($ps);
     }
 
-    /**
-     * Modified wp's dbDelta function
-     * Examines / groups queries
-     * More info: http://codex.wordpress.org/Creating_Tables_with_Plugins#Creating_or_Updating_the_Table
-     *
-     * @param str $queries
-     * @param array $tables
-     * @return array
-     */
-    public function examineQueries($complete_query_string = '', $tables = array()) {
-        $queries = explode(';', $complete_query_string);
+    public function diffDataStructure($desired_structure_sql_string = '', $existing_tables = array()) {
+        $queries = explode(';', $desired_structure_sql_string);
         if ( $queries[count($queries)-1] == '' ) {
             array_pop($queries);
         }
@@ -184,12 +71,12 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         }
 
         // Check to see which tables and fields exist
-        if ( !empty($tables) ) {
+        if ( !empty($existing_tables) ) {
             $cfields = array();
             $indices = array();
 
             // For every table in the database
-            foreach ($tables as $table) {
+            foreach ($existing_tables as $table) {
                 // If a table query exists for the database table...
                 if ( array_key_exists(strtolower($table), $creation_queries) ) {
                     // Clear the field and index arrays

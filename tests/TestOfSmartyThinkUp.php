@@ -9,9 +9,11 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
+
     public function __construct() {
         $this->UnitTestCase('SmartyThinkUp class test');
     }
+
     /**
      * Test constructor
      */
@@ -71,5 +73,21 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($smtt->getTemplateDataItem('test_var_1'), null);
         $test_var_1 = $smtt->getTemplateDataItem('test_var_1');
         $this->assertTrue(!isset($test_var_1));
+    }
+
+    /**
+     * Test override config with passed-in array
+     */
+    public function testSmartyThinkUpPassedInArray() {
+        $cfg_array = array('debug'=>true, 
+        'site_root_path'=>'/my/thinkup/folder/test',
+        'source_root_path'=>'/Users/gina/Sites/thinkup', 
+        'app_title'=>"My ThinkUp", 
+        'cache_pages'=>true);
+        $smtt = new SmartyThinkUp($cfg_array);
+
+        $this->assertEqual($smtt->getTemplateDataItem('app_title'), 'My ThinkUp');
+        $this->assertEqual($smtt->getTemplateDataItem('logo_link'), 'index.php');
+        $this->assertEqual($smtt->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/test');
     }
 }

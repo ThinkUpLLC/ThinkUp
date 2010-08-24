@@ -3,7 +3,6 @@ if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
 require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
-
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.GeoEncoderPluginConfigurationController.php';
 
 /**
@@ -98,7 +97,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
 
         $is_admin = 1;
         $_SESSION['user_is_admin'] = true;
-        $build_data = $this->buildController();
+        $build_data = $this->buildController(false);
         $controller = $build_data[0];
         $owner  = $build_data[1];
         $plugin  = $build_data[2];
@@ -168,12 +167,13 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
 
         // get a single defined option
         $this->assertEqual($controller->getPluginOption('gmaps_api_key'), '1234');
-
-
     }
 
-    private function buildController() {
-        $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+    private function buildController($build_owner=true) {
+        $builder_owner = null;
+        if ($build_owner) {
+            $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1));
+        }
         $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'geoencoder', 'is_active' => 1) );
         $plugin_id = $builder_plugin->columns['last_insert_id'];
         $builder_plugin_options = FixtureBuilder::build('plugin_options',
@@ -185,7 +185,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         return array($controller, $builder_owner, $builder_plugin, $builder_plugin_options);
     }
 
-    function getElementById($doc, $id) {
+    protected function getElementById($doc, $id) {
         $xpath = new DOMXPath($doc);
         return $xpath->query("//*[@id='$id']")->item(0);
     }

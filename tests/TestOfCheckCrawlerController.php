@@ -45,7 +45,6 @@ class TestOfCheckCrawlerController extends ThinkUpUnitTestCase {
         $instance_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-4h'));
         $controller = new CheckCrawlerController(true);
         $results = $controller->go();
-        $this->assertEqual("Crawler hasn't run in 4 hours", $results);
+        $this->assertEqual("Crawler hasn't run in 4 hours", $results, $results);
     }
-
 }
