@@ -1,0 +1,130 @@
+--
+-- 2010-07-28
+--
+ALTER TABLE tt_posts ADD reply_retweet_distance INT NOT NULL DEFAULT '0' AFTER is_retweet_by_friend;
+
+--
+-- 2010-07-29
+--
+UPDATE tt_posts SET is_geo_encoded = 6 WHERE place IS NULL AND location IS NULL AND geo IS NULL;
+
+--
+-- 2010-07-30
+--
+RENAME TABLE tt_follower_count TO tu_follower_count;
+RENAME TABLE tt_follows TO tu_follows;
+RENAME TABLE tt_instances TO tu_instances;
+RENAME TABLE tt_links TO tu_links;
+RENAME TABLE tt_owner_instances TO tu_owner_instances;
+RENAME TABLE tt_owners TO tu_owners;
+RENAME TABLE tt_plugin_options TO tu_plugin_options;
+RENAME TABLE tt_plugins TO tu_plugins;
+RENAME TABLE tt_post_errors TO tu_post_errors;
+RENAME TABLE tt_posts TO tu_posts;
+RENAME TABLE tt_users TO tu_users;
+RENAME TABLE tt_user_errors TO tu_user_errors;
+
+--
+-- 2010-08-03
+--
+ALTER TABLE tu_post_errors DROP INDEX status_id;
+
+ALTER TABLE tu_post_errors ADD network VARCHAR( 10 ) COLLATE utf8_general_ci NOT NULL DEFAULT 'twitter' AFTER post_id;
+
+ALTER TABLE tu_post_errors ADD INDEX ( post_id , network ) ;
+
+ALTER TABLE tu_users DROP INDEX user_id;
+
+ALTER TABLE tu_users ADD INDEX ( user_id , network ) ;
+
+ALTER TABLE tu_links ADD network VARCHAR( 10 ) COLLATE utf8_general_ci NOT NULL DEFAULT 'twitter' AFTER post_id;
+
+ALTER TABLE tu_links DROP INDEX status_id;
+
+ALTER TABLE tu_links ADD INDEX ( post_id , network ) ;
+
+--
+-- 2010-08-05
+--
+ALTER TABLE tu_owners ADD COLUMN password_token VARCHAR(64);
+
+--
+-- 2010-08-13
+--
+CREATE TABLE tu_encoded_locations (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  short_name varchar(255) NOT NULL,
+  full_name varchar(255) NOT NULL,
+  latlng varchar(50) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+ALTER TABLE tu_encoded_locations ADD INDEX (short_name);
+
+
+--
+-- 2010-08-23
+--
+-- Change the user_id field into a bigint(11)
+ALTER TABLE tu_users CHANGE user_id user_id BIGINT(11) NOT NULL;
+
+-- Fix the incorrect user_id values in the users table
+UPDATE tu_posts p, tu_users u SET u.user_id = p.author_user_id WHERE p.author_fullname = u.full_name AND p.network = u.network AND u.user_id = 2147483647;
+
+-- Remove duplicates in users table
+-- Use this new table
+CREATE TABLE tu_users2 (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  user_id bigint(11) NOT NULL,
+  user_name varchar(255) NOT NULL,
+  full_name varchar(255) NOT NULL,
+  avatar varchar(255) NOT NULL,
+  location varchar(255) DEFAULT NULL,
+  description text,
+  url varchar(255) DEFAULT NULL,
+  is_protected tinyint(1) NOT NULL,
+  follower_count int(11) NOT NULL,
+  friend_count int(11) NOT NULL DEFAULT '0',
+  post_count int(11) NOT NULL,
+  last_updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  found_in varchar(100) DEFAULT NULL,
+  last_post timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  joined timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  last_post_id bigint(11) NOT NULL DEFAULT '0',
+  network varchar(10) NOT NULL DEFAULT 'twitter',
+  PRIMARY KEY (id),
+  KEY user_id (user_id,network)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO tu_users2 (SELECT * FROM tu_users WHERE 1 GROUP BY user_id);
+DROP TABLE tu_users;
+RENAME TABLE tu_users2 TO tu_users;
+
+--
+-- 2010-08-24
+--
+ALTER TABLE  tu_follows DROP PRIMARY KEY;
+
+ALTER TABLE  tu_follows ADD UNIQUE (user_id, follower_id, network);
+
+ALTER TABLE  tu_instances DROP INDEX  twitter_user_id;
+
+ALTER TABLE  tu_instances ADD INDEX (  network_user_id ,  network );
+
+ALTER TABLE  tu_post_errors CHANGE  error_issued_to_user_id  error_issued_to_user_id BIGINT( 11 ) NOT NULL;
+
+ALTER TABLE  tu_posts CHANGE  in_reply_to_user_id  in_reply_to_user_id  BIGINT( 11 ) NULL DEFAULT NULL;
+
+ALTER TABLE  tu_user_errors CHANGE  user_id  user_id BIGINT( 11 ) NOT NULL;
+
+ALTER TABLE  tu_user_errors CHANGE  error_issued_to_user_id  error_issued_to_user_id BIGINT( 11 ) NOT NULL;
+
+ALTER TABLE  tu_follower_count CHANGE  network_user_id  network_user_id BIGINT( 11 ) NOT NULL;
+
+ALTER TABLE  tu_follows CHANGE  user_id  user_id BIGINT( 11 ) NOT NULL;
+
+ALTER TABLE  tu_follows CHANGE  follower_id  follower_id BIGINT( 11 ) NOT NULL;
+
+ALTER TABLE  tu_instances CHANGE  network_viewer_id  network_viewer_id BIGINT( 11 ) NOT NULL DEFAULT  '1';
+
+ALTER TABLE  tu_post_errors CHANGE  post_id  post_id BIGINT( 11 ) NOT NULL;
