@@ -13,6 +13,10 @@ if ( !defined('THINKUP_WEBAPP_PATH') ) {
     define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
 }
 
+if ( !defined('TESTS_RUNNING') ) {
+    define('TESTS_RUNNING', true);
+}
+
 //Register our lazy class loader
 require_once THINKUP_ROOT_PATH.'webapp/model/class.Loader.php';
 

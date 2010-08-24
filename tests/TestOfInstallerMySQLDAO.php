@@ -83,8 +83,6 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
 
         //clean SQL: examineQueries requires two spaces after PRIMARY KEY, and a space between key name and (field)
         $install_queries = str_replace('PRIMARY KEY ', 'PRIMARY KEY  ', $install_queries);
-        //no idea that of all the keys, short_name is the only one that doesn't get a space where it should
-        $install_queries = str_replace('short_name(short_name)', 'short_name (short_name)', $install_queries);
 
         $config = Config::getInstance();
         $config_array = $config->getValuesArray();
