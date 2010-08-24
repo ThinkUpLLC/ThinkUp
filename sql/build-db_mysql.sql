@@ -228,7 +228,7 @@ CREATE TABLE tu_user_errors (
 
 CREATE TABLE tu_users (
   id int(11) NOT NULL AUTO_INCREMENT,
-  user_id int(11) NOT NULL,
+  user_id bigint(11) NOT NULL,
   user_name varchar(255) NOT NULL,
   full_name varchar(255) NOT NULL,
   avatar varchar(255) NOT NULL,
@@ -250,7 +250,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2010-08-23 17:48:00
+-- Dump completed on 2010-08-23 19:23:29
 
 --
 -- Insert default plugin(s)
