@@ -102,11 +102,12 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertPattern($expected, $output['queries'][$config_array["table_prefix"] . 'owners']);
 
         // test on missing PRIMARY KEY
-        InstallerMySQLDAO::$PDO->exec("ALTER TABLE " . $config_array["table_prefix"] . "follows DROP PRIMARY KEY");
+        InstallerMySQLDAO::$PDO->exec("ALTER TABLE " . $config_array["table_prefix"] . "follows DROP KEY user_id");
         $tables = $dao->getTables();
         //var_dump($tables);
         $output = $dao->examineQueries($install_queries, $tables);
-        $add_pk = "ALTER TABLE " . $config_array["table_prefix"] . "follows ADD PRIMARY KEY  (user_id,follower_id)";
+        $add_pk = "ALTER TABLE " . $config_array["table_prefix"] .
+        "follows ADD UNIQUE KEY user_id (user_id,follower_id,network)";
         $this->assertTrue(in_array($add_pk, $output['queries']));
 
         // test on missing index
