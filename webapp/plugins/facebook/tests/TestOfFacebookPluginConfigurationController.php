@@ -83,7 +83,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         //@TODO Figure out why API keys are not set here in the test, but they are in the controller
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
-        'Please set your Facebook API key and secret.');
+        'Please set your Facebook API Key and Application Secret.');
     }
 
     /**

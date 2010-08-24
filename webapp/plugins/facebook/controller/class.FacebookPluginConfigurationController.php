@@ -33,21 +33,21 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         'webapp/plugins/facebook/view/facebook.account.index.tpl');
 
         /** set option fields **/
-        // API key text field
+        // API Key text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_key',
-        'label'=>'Your Facebook API key')); // add element
+        'label'=>'Your Facebook API Key')); // add element
         $this->addPluginOptionHeader('facebook_api_key',
         'Facebook Configuration');
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_api_key',
-        'The Facebook plugin requires a valid API key.');
+        'The Facebook plugin requires a valid API Key.');
 
-        // API key text field
+        // Application Secret text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_secret',
-        'label'=>'Your Facebook API secret')); // add element
+        'label'=>'Your Facebook Application Secret')); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_api_secret',
-        'The Facebook plugin requires a valid secret key.');
+        'The Facebook plugin requires a valid Application Secret.');
 
         $status = self::processPageActions();
         $this->addToView("info", $status["info"]);
@@ -83,7 +83,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 }
             }
         } else {
-            $this->addErrorMessage("Please set your Facebook API key and secret.");
+            $this->addErrorMessage("Please set your Facebook API Key and Application Secret.");
         }
 
         $owner_instance_pages = $this->id->getByOwnerAndNetwork($this->owner, 'facebook page');
