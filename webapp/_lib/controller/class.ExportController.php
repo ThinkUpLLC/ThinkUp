@@ -44,30 +44,17 @@ class ExportController extends ThinkUpAuthController {
                     $this->addErrorMessage('Insufficient privileges');
                     return $this->generateView();
                 } else {
-                    $pd = DAOFactory::getDAO('PostDAO');
-                    $posts_it = $pd->getAllPostsByUsernameIterator($username, $network);
-                    if( ! headers_sent() ) { // this is so our test don't barf on us
-                        // set export headers...
-                        header('Content-Type: text/csv');
-                        header('Content-Disposition: attachment; filename="export.csv"');
-                        header('Pragma: no-cache');
-                        header('Expires: 0');
+                    switch ($_GET['type']) {
+                    case 'replies':
+                        $this->export_replies();
+                    break;
+
+                    case 'posts':
+                    default:
+                        $this->export_all_posts();
+                    break;
                     }
-                    // get object var names
-                    $vars = array_keys(get_class_vars('Post'));
-                    // get output handle
-                    $fp = fopen('php://output', 'w');
-                    // output csv header
-                    fputcsv($fp, $vars);
-                    foreach($posts_it as $id => $post) {
-                        $post_array = array();
-                        // output post csv line
-                        fputcsv($fp, (array)$post);
-                        // flush output buffer
-                        flush();
-                    }
-                    // close output handle
-                    fclose($fp);
+
                 }
             } else {
                 $this->addErrorMessage('User '.$_GET['u'] . ' on '. $_GET['n']. ' is not in ThinkUp.');
@@ -77,4 +64,48 @@ class ExportController extends ThinkUpAuthController {
             return $this->generateView();
         }
     }
+
+    protected function export_all_posts() {
+        $pd = DAOFactory::getDAO('PostDAO');
+        $posts_it = $pd->getAllPostsByUsernameIterator($_GET['u'], $_GET['n']);
+        // get object var names
+        $vars = array_keys(get_class_vars('Post'));
+
+        self::csv_out($posts_it, $vars);
+    }
+
+    protected function export_replies() {
+        $pd = DAOFactory::getDAO('PostDAO');
+        $replies = $pd->getRepliesToPost($_GET['post_id'], $_GET['n'], 'default', 'km', false, 350, true);
+        $heading = array_keys(get_class_vars('Post'));
+
+        $data = array();
+        foreach ($replies as $reply) {
+            $data[] = get_object_vars($reply);
+        }
+
+        self::csv_out($data, $heading);
+    }
+
+    public static function csv_out($data, $vars) {
+        ob_end_clean();
+        if( ! headers_sent() ) { // this is so our test don't barf on us
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="export.csv"');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+        }
+
+        $fp = fopen('php://output', 'w');
+        // output csv header
+        fputcsv($fp, $vars);
+        foreach($data as $id => $post) {
+            fputcsv($fp, (array)$post);
+
+            // flush after each fputcsv to avoid clogging the buffer on large datasets
+            flush();
+        }
+        fclose($fp);
+    }
+
 }

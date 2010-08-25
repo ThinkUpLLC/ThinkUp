@@ -120,7 +120,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
-    $count= 350) {
+    $count = 350, $iterator = false) {
         $q = " SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= " pub_date - interval #gmt_offset# hour as adj_pub_date ";
@@ -144,6 +144,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
 
         $ps = $this->execute($q, $vars);
+        if ($iterator) {
+            return new PostIterator($ps);
+        }
         $all_rows = $this->getDataRowsAsArrays($ps);
         $replies = array();
         $location = array();

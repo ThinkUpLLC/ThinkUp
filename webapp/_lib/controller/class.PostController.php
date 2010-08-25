@@ -77,6 +77,13 @@ class PostController extends ThinkUpAuthController {
 
                 $private_replies_count = $all_replies_count - $public_replies_count;
                 $this->addToView('private_reply_count', $private_replies_count );
+
+                $this->addToView('export_params', http_build_query(array(
+                    'post_id' => $post_id,
+                    'type' => 'replies',
+                    'n' => $_GET['n'],
+                    'u' => $post->author_username
+                )));
             } else {
                 $this->addErrorMessage('Post not found');
             }
