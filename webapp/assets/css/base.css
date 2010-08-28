@@ -267,6 +267,7 @@ a img {
 .reply {border-top:1px dashed #CCC;}
 .private {background-color:#eee;}
 .person-info {float:left;margin-right:10px;width:80px;text-align:center;font-size:1.2em;}
+.no-post-text {font-style: italic;color: #666;}
 
 /* --- LISTS ---------------------------------- */
 

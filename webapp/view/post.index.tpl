@@ -20,7 +20,13 @@
             <img src="{$post->author_avatar}" class="avatar2">
           </div>
           <div class="grid_20 omega">
-            <h1 class="post">{$post->post_text} {$post->post_id}</h1>
+            <h1 class="post">
+              {if $post->post_text}
+                {$post->post_text}
+              {else}
+                <span class="no-post-text">No post text</span>
+              {/if}
+            </h1>
           </div>
         </div>
         <div class="clearfix append_20">
@@ -131,7 +137,13 @@
               <img src="{$post->author_avatar}" class="avatar2">
             </div>
             <div class="grid_13">
-              <h1 class="post">{$post->post_text}</h1>
+              <h1 class="post">
+                {if $post->post_text}
+                  {$post->post_text}
+                {else}
+                  <span class="no-post-text">No post text</span>
+                {/if}
+              </h1>
               {if $post->is_geo_encoded eq 1}
               <div class="small gray right" style="margin-right:55px">
               {else}
@@ -244,7 +256,13 @@
               <img src="{$post->author_avatar}" class="avatar2">
             </div>
             <div class="grid_13">
-              <h1 class="post">{$post->post_text}</h1>
+              <h1 class="post">
+                {if $post->post_text}
+                  {$post->post_text}
+                {else}
+                  <span class="no-post-text">No post text</span>
+                {/if}
+              </h1>
             </div>
             <div class="grid_7 center big-number omega">
               <div class="bl">
@@ -297,7 +315,13 @@
               <img src="{$post->author_avatar}" class="avatar2">
             </div>
             <div class="grid_17 omega">
-              <h1 class="post">{$post->post_text}</h1>
+              <h1 class="post">
+                {if $post->post_text}
+                  {$post->post_text}
+                {else}
+                  <span class="no-post-text">No post text</span>
+                {/if}
+              </h1>
             </div>
           </div>
           <div class="grid_1 alpha">&nbsp;</div>

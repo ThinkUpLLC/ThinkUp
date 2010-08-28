@@ -27,7 +27,11 @@
         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" alt=""></a></div>
       {/if}
       <p>
-        {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$t->network}
+        {if $t->post_text}
+          {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$t->network}
+        {else}
+          <span class="no-post-text">No post text</span>
+        {/if}
         {if $t->in_reply_to_post_id}
           <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>
         {/if}

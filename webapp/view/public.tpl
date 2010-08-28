@@ -11,7 +11,13 @@
               <img src="{$post->author_avatar}" class="avatar2">
             </div>
             <div class="{if $replies or $retweets}grid_13{else}grid_19{/if}">
-              <span class="tweet">{$post->post_text|link_usernames_to_twitter}</span>
+              <span class="tweet">
+                {if $post->post_text}
+                  {$post->post_text|link_usernames_to_twitter}
+                {else}
+                  <span class="no-post-text">No post text</span>
+                {/if}
+              </span>
               {if $post->link->expanded_url and !$post->link->is_image and $post->link->expanded_url != $post->link->url}
                 <br><a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">
                   {$post->link->expanded_url}

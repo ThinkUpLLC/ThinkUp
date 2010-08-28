@@ -60,7 +60,11 @@
         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
       {/if}
       <p>
-        {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
+        {if $t->post_text}
+          {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
+        {else}
+          <span class="no-post-text">No post text</span>
+        {/if}
         {if !$post && $t->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}">&larr;</a>
         {/if}
