@@ -12,15 +12,19 @@ class ExpandURLsPlugin implements CrawlerPlugin {
     public function crawl() {
         $logger = Logger::getInstance();
         $ldao = DAOFactory::getDAO('LinkDAO');
-        //TODO Set limit on total number of links to expand per crawler run in the plugin settings, now set here to 1500
+        //@TODO Set limit on total number of links to expand per crawler run in the plugin settings, for now 1500
         $linkstoexpand = $ldao->getLinksToExpand(1500);
 
         $logger->logStatus(count($linkstoexpand)." links to expand", "Expand URLs Plugin");
 
         foreach ($linkstoexpand as $l) {
-            $eurl = self::untinyurl($l, $ldao);
-            if ($eurl != '') {
-                $ldao->saveExpandedUrl($l, $eurl);
+            if (Utils::validateURL($l)) {
+                $eurl = self::untinyurl($l, $ldao);
+                if ($eurl != '') {
+                    $ldao->saveExpandedUrl($l, $eurl);
+                }
+            } else {
+                $logger->logStatus($l." is not a valid URL; skipping expansion", "Expand URLs Plugin");
             }
         }
         $logger->logStatus("URL expansion complete for this run", "Expand URLs Plugin");
@@ -28,16 +32,16 @@ class ExpandURLsPlugin implements CrawlerPlugin {
     }
 
     public function renderConfiguration($owner) {
-        //TODO: Write controller class, echo its results
+        //@TODO: Write controller class, echo its results
         //Set the number of links to expand per run in the options panel
     }
 
     /**
      * Expand a given short URL
-     * Thanks to Probably Programming
-     * http://probablyprogramming.com/2009/04/11/untiny-that-url/
+     *
      * @param str $tinyurl Shortened URL
-     * @param LinkDao $ldao
+     * @param LinkDAO $ldao
+     * @return str Expanded URL
      */
     private function untinyurl($tinyurl, $ldao) {
         $logger = Logger::getInstance();
@@ -46,38 +50,43 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $port = isset($url['port']) ? $url['port'] : 80;
         $query = isset($url['query']) ? '?'.$url['query'] : '';
         $fragment = isset($url['fragment']) ? '#'.$url['fragment'] : '';
-
-        $sock = @fsockopen($host, $port);
-        if (!$sock) {
-            return $tinyurl;
-        }
-
-        if (!isset($url['path'])) {
+        if (empty($url['path'])) {
             $logger->logstatus("$tinyurl has no path", "Expand URLs Plugin");
             $ldao->saveExpansionError($tinyurl, "Error expanding URL");
             return '';
         } else {
-            $url = $url['path'].$query.$fragment;
-            $request = "HEAD {$url} HTTP/1.0\r\nHost: {$host}\r\nConnection: Close\r\n\r\n";
-
-            fwrite($sock, $request);
-
-            $response = '';
-            $start = null;
-            $timeout = 5000; //milliseconds
-            while(!self::safe_feof($sock, $start) && (microtime(true) - $start) < $timeout) {
-                $response .= fgets($sock, 128);
-            }
-
-            $lines = explode("\r\n", $response);
-            foreach ($lines as $line) {
-                if (strpos(strtolower($line), 'location:') === 0) {
-                    list(, $location) = explode(':', $line, 2);
-                    return ltrim($location);
-                }
-            }
-            return $tinyurl;
+            $path = $url['path'];
         }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, "http://$host:$port".$path.$query.$fragment);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // seconds
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        $response = curl_exec($ch);
+        if ($response === false) {
+            $logger->logstatus("cURL error: ".curl_error($ch), "Expand URLs Plugin");
+            $ldao->saveExpansionError($tinyurl, "Error expanding URL");
+            $tinyurl = '';
+        }
+        curl_close($ch);
+
+        $lines = explode("\r\n", $response);
+        foreach ($lines as $line) {
+            if (stripos($line, 'Location:') === 0) {
+                list(, $location) = explode(':', $line, 2);
+                return ltrim($location);
+            }
+        }
+
+        if (strpos($response, 'HTTP/1.1 404 Not Found') === 0) {
+            $logger->logstatus("Short URL returned '404 Not Found'", "Expand URLs Plugin");
+            $ldao->saveExpansionError($tinyurl, "Error expanding URL");
+            return '';
+        }
+        return $tinyurl;
     }
 
     /**

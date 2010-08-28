@@ -24,9 +24,20 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         parent::setUp();
 
         //Insert test links (not images, not expanded)
-        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ('http://bit.ly/a5VmbO', '', 0, 1, 0);";
+        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ".
+        "('http://bit.ly/a5VmbO', '', 0, 1, 0);";
         $this->db->exec($q);
 
+        // An invalid link (will return 404 Not Found)
+        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ".
+        "('http://bit.ly/01010010101', '', 0, 1, 0);";
+        $this->db->exec($q);
+
+        // A malformed URL
+        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ".
+        "('http:///asdf.com', '', 0, 1, 0);";
+        $this->db->exec($q);
+        
         $crawler = Crawler::getInstance();
 
         $crawler->registerCrawlerPlugin('ExpandURLsPlugin');
@@ -47,5 +58,9 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link = $ldao->getLinkById(1);
         $this->assertEqual($link->expanded_url, 'http://www.thewashingtonnote.com/archives/2010/04/communications/');
         $this->assertEqual($link->error, '');
+
+        $link = $ldao->getLinkById(2);
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->error, 'Error expanding URL');
     }
 }

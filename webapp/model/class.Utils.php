@@ -105,7 +105,6 @@ class Utils {
         return $url;
     }
 
-
     /**
      * Validate email
      *
@@ -116,5 +115,23 @@ class Utils {
         $hostname = '(?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4}|museum|travel)';
         $pattern = '/^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@' . $hostname . '$/i';
         return preg_match($pattern, $email);
+    }
+
+    /**
+     * Validate URL
+     * Thanks to John Gruber: http://daringfireball.net/2009/11/liberal_regex_for_matching_urls
+     * @param str $url
+     * @return bool Whether or not it's a "valid" URL
+     */
+    public function validateURL($url) {
+        //@TODO update regex to detect http:/// triple slashes, which trigger parse_url errors
+        if (strpos($url, ":///") > 0) {
+            return false;
+        }
+        if ( preg_match("#\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))#i", $url) == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
