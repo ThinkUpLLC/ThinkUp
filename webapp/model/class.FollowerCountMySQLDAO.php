@@ -23,11 +23,18 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         if ($group_by != "DAY" && $group_by != 'WEEK' && $group_by != 'MONTH') {
             $group_by = 'DAY';
         }
+        if ($group_by == 'DAY') {
+            $group_by = 'fc.date';
+        } else if ($group_by == 'WEEK') {
+            $group_by = 'YEAR(fc.date), WEEK(fc.date)';
+        } else if ($group_by == 'MONTH') {
+            $group_by = 'YEAR(fc.date), MONTH(fc.date)';
+        }
         $q = "SELECT network_user_id, network, count, date, full_date FROM ";
         $q .= "(SELECT network_user_id, network, count, DATE_FORMAT(date, '%c/%e') as date, date as full_date ";
         $q .= "FROM #prefix#follower_count AS fc ";
         $q .= "WHERE fc.network_user_id = :network_user_id AND fc.network=:network ";
-        $q .= "GROUP BY ".$group_by."(fc.date) ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
+        $q .= "GROUP BY ".$group_by." ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
         $q .= "ORDER BY history_counts.full_date ASC";
         $vars = array(
             ':network_user_id'=>$network_user_id,
