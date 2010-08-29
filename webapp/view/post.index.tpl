@@ -354,7 +354,7 @@
       var u = '{/literal}{$instance->network_username}{literal}';
       var t = 'post.index.tpl';
       var ck = '{/literal}{$post->post_id}{literal}';
-      var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
+      var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&n={/literal}{$t->network}{literal}&t=' + t + '&ck=' + ck;
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}post/mark-parent.php",

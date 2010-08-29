@@ -755,6 +755,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         return $this->getUpdateCount($ps);
     }
+
     /**
      * Decrement a post's reply_count_cache
      * @param int $post_id
