@@ -34,7 +34,10 @@
               {/if}
               {if $user_is_admin || $ip->is_active}
               <div class="clearfix bt append prepend">
-                <div class="grid_4 small alpha"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l">{if $ip->is_active}<a href="?p={$ip->folder_name}">{/if}{$ip->name}{if $ip->is_active}</a>{/if}</div>
+                <div class="grid_4 small alpha"><span  id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l"></span>
+                    <span {if !$ip->is_active}style="display: none;"{/if} id="spanpluginnamelink{$ip->id}"><a href="?p={$ip->folder_name}">{$ip->name}</a></span>
+                    <span {if $ip->is_active}style="display: none;"{/if} id="spanpluginnametext{$ip->id}">{$ip->name}</span>
+                </div>
                 <div class="grid_4 small"><!--(Currently {if $ip->is_active}Active{else}Inactive{/if})<br />-->Version {$ip->version}<br />by {$ip->author}</div>
                 <div class="grid_10">
                   {$ip->description}
@@ -42,8 +45,10 @@
                 </div>
                 {if $user_is_admin}
                 <div class="grid_4 omega">
-                  <span id="divpluginactivation{$ip->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $ip->is_active}btnDeactivate{else}btnActivate{/if}" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" /></span>
-                </div>
+                  <span id="spanpluginactivation{$ip->id}">
+                      <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
+                  </span>
+                  <span style="display: none;" class='success mt_10' id="message{$ip->id}"></span>                </div>
                 {/if}
               </div>
               {/if}
@@ -135,7 +140,7 @@
 
 <script type="text/javascript">
   {literal}
-  $(function() {
+$(function() {
     $(".btnPub").click(function() {
       var element = $(this);
       var u = element.attr("id");
@@ -153,7 +158,7 @@
       });
       return false;
     });
-    
+
     $(".btnPriv").click(function() {
       var element = $(this);
       var u = element.attr("id");
@@ -172,7 +177,7 @@
       return false;
     });
   });
-  
+
   $(function() {
     $(".btnPlay").click(function() {
       var element = $(this);
@@ -191,7 +196,7 @@
       });
       return false;
     });
-    
+
     $(".btnPause").click(function() {
       var element = $(this);
       var u = element.attr("id");
@@ -210,42 +215,68 @@
       return false;
     });
   });
-  
+
   $(function() {
-    $(".btnActivate").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
+    var activate = function(u) {
       var dataString = 'pid=' + u + "&a=1";
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
         data: dataString,
         success: function() {
-          $('#divpluginactivation' + u).html("<span class='success mt_10' id='message" + u + "'></span>");
+          $('#spanpluginactivation' + u).css('display', 'none');
           $('#message' + u).html("Activated!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
+          $('#spanpluginnamelink' + u).css('display', 'inline');
+          $('#' + u).val('Deactivate');
+          $('#spanpluginnametext' + u).css('display', 'none');
+          $('#' + u).removeClass('btnActivate');
+          $('#' + u).addClass('btnDectivate');
+          setTimeout(function() {
+              $('#message' + u).css('display', 'none');
+              $('#spanpluginactivation' + u).hide().fadeIn(1500);
+            },
+            2000
+          );
         }
       });
       return false;
-    });
-    
-    $(".btnDeactivate").click(function() {
-      var element = $(this);
-      var u = element.attr("id");
-      var dataString = 'pid=' + u + "&a=0";
+    };
+
+    var deactivate = function(u) {
+      var dataString = 'pid=' + u + "&p=0";
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
         data: dataString,
         success: function() {
-          $('#divpluginactivation' + u).html("<span class='success mt_10' id='message" + u + "'></span>");
+          $('#spanpluginactivation' + u).css('display', 'none');
           $('#message' + u).html("Deactivated!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
+          $('#spanpluginnamelink' + u).css('display', 'none');
+          $('#spanpluginnametext' + u).css('display', 'inline');
+          $('#' + u).val('Activate');
+          $('#' + u).removeClass('btnDeactivate');
+          $('#' + u).addClass('btnActivate');
+          setTimeout(function() {
+              $('#message' + u).css('display', 'none');
+              $('#spanpluginactivation' + u).hide().fadeIn(1500);
+            },
+            2000
+          );
         }
       });
       return false;
+    };
+
+    $(".btnToggle").click(function() {
+      if($(this).val() == 'Activate') {
+        activate($(this).attr("id"));
+      } else {
+        deactivate($(this).attr("id"));
+      }
     });
   });
   {/literal}
