@@ -17,7 +17,7 @@
         <div class="clearfix prepend_20">
           {include file="_usermessage.tpl"}
           <div class="grid_2 prefix_1 alpha">
-            <img src="{$post->author_avatar}" class="avatar2">
+            <img src="{$post->author_avatar}" class="avatar2"/>
           </div>
           <div class="grid_20 omega">
             <h1 class="post">
@@ -134,7 +134,7 @@
         <div class="thinkup-canvas clearfix">
           <div class="clearfix prepend_20 append_20">
             <div class="grid_2 prefix_1 alpha">
-              <img src="{$post->author_avatar}" class="avatar2">
+              <img src="{$post->author_avatar}" class="avatar2"/>
             </div>
             <div class="grid_13">
               <h1 class="post">
@@ -253,7 +253,7 @@
         <div class="thinkup-canvas clearfix">
           <div class="clearfix prepend_20 append_20">
             <div class="grid_2 prefix_1 alpha">
-              <img src="{$post->author_avatar}" class="avatar2">
+              <img src="{$post->author_avatar}" class="avatar2"/>
             </div>
             <div class="grid_13">
               <h1 class="post">
@@ -312,7 +312,7 @@
         <div class="thinkup-canvas clearfix">
           <div class="clearfix prepend_20 append_20">
             <div class="grid_2 prefix_1 alpha">
-              <img src="{$post->author_avatar}" class="avatar2">
+              <img src="{$post->author_avatar}" class="avatar2"/>
             </div>
             <div class="grid_17 omega">
               <h1 class="post">

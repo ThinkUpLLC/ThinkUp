@@ -17,7 +17,9 @@
         {include file="_usermessage.tpl"}
       {else}
         <div class="grid_2 alpha">
-          <img src="{$post->author_avatar}" class="avatar2">
+          <div class="avatar-container">
+          <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network}/assets/img/favicon.ico" class="service-icon2"/>
+          </div>
         </div>
         <div class="{if $replies or $retweets}grid_13{else}grid_19{/if}">
           <span class="tweet">

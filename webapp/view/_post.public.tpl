@@ -29,7 +29,7 @@
   <div class="individual-tweet post clearfix
   {if $t->short_location}{$t->short_location|escape:'url'|replace:'%':''|replace:'.':''}{else}__NULL__{/if}">
     <div class="grid_1 alpha">
-      <img src="{$t->author_avatar}" class="avatar">
+      <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network}/assets/img/favicon.ico" class="service-icon"/>
       {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
          <div class="small gray">Friend</div>
       {/if}

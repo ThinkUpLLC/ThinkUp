@@ -17,7 +17,7 @@
   {if $t->short_location}{$t->short_location|escape:'url'|replace:'%':''|replace:'.':''}{else}__NULL__{/if}">
     <div class="grid_1 alpha">
       <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$smarty.session.network_username}">
-        <img src="{$t->author_avatar}" class="avatar">
+        <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network}/assets/img/favicon.ico" class="service-icon"/>
       </a>
     </div>
     <div class="grid_3 right small">

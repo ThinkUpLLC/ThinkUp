@@ -8,7 +8,9 @@
         {if $post and ($replies OR $retweets)}
           <div class="clearfix">
             <div class="grid_2 alpha">
-              <img src="{$post->author_avatar}" class="avatar2">
+            <div class="avatar-container">
+              <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network}/assets/img/favicon.ico" class="service-icon2"/>
+             </div>
             </div>
             <div class="{if $replies or $retweets}grid_13{else}grid_19{/if}">
               <span class="tweet">
@@ -122,11 +124,12 @@
           {if $user_details}
           <div class="clearfix">
             <div class="grid_2 alpha">
-              <img src="{$user_details->avatar}" class="avatar2">
+              <div class="avatar-container">
+              <img src="{$user_details->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$user_details->network}/assets/img/favicon.ico" class="service-icon2"/>
+              </div>
             </div>
             <div class="grid_19">
-              <img src="{$site_root_path}assets/img/social_icons/{$user_details->network}.png">
-              <span class="tweet">{$user_details->username}</span>
+              <span class="tweet">{$user_details->username} on {$user_details->network|capitalize}</span>
             </div>
          </div>
          {/if}
@@ -154,13 +157,14 @@
         {/if}
 
         {if $least_likely_followers}
-<hr />
-<h2 style="font-size:200%;margin-top:10px">Least Likely Followers</h2>
+            <hr />
+            <h2 style="font-size:200%;margin-top:10px">Least Likely Followers</h2>
             {foreach from=$least_likely_followers key=uid item=u name=foo}
-                <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}">
-                  <img src="{$u.avatar}"  height="48" width="48" />
-                </a> 
+            <div class="avatar-container" style="float:left;margin:7px;">  
+               <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.ico" class="service-icon2"/></a> 
+            </div>
             {/foreach}
+            <div style="clear:all;"><br /><br /><br /></div>
         {/if}
 
         {if $most_replied_to_1wk}

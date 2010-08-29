@@ -267,7 +267,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, ";
         $q .= " p.post_id as answer_post_id, p.author_username as answerer_username, ";
         $q .= " p.author_avatar as answerer_avatar, p3.follower_count as questioner_follower_count, ";
-        $q .= " p.post_text as answer, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
+        $q .= " p.post_text as answer, p.network, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
         $q .= " FROM #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= " JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= " JOIN #prefix#users p3 on p3.user_id = p.in_reply_to_user_id ";
@@ -293,7 +293,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, ";
         $q .= " p.post_id as answer_post_id,  p.author_username as answerer_username, ";
         $q .= " p.author_avatar as answerer_avatar, p3.follower_count as answerer_follower_count, ";
-        $q .= " p.post_text as answer, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
+        $q .= " p.post_text as answer, p.network, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
         $q .= " FROM  #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= " JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= " JOIN #prefix#users p3 on p3.user_id = :other_user_id ";

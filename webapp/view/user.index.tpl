@@ -97,7 +97,9 @@
                 </div>
                 <div class="clearfix append_20">
                   <div class="grid_2 prefix_1 alpha">
-                    <img src="{$profile->avatar}" class="avatar2">
+                  <div class="avatar-container">
+                    <img src="{$profile->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$profile->network}/assets/img/favicon.ico" class="service-icon2"/>
+                  </div>
                   </div>
                   <div class="grid_19 omega">
                     <h1 class="user">{$profile->user_name}</h1>

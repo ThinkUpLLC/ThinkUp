@@ -287,11 +287,14 @@ form.login .captcha img {margin-top:0.6em;padding-right:90px;float:right;}
 
 /* --- IMAGES AND GRAPHICS -------------------- */
 
+.avatar-container { width: 40px; height: 40px; }
 img.avatar {float:left;margin:5px 0 5px 0;width:40px;height:40px;}
 img.avatar2 {float:left;margin:6px 0 0 0;width:48px;height:48px;}
 img.avatar_sm {margin:.3em 0 0 0;width:30px;height:30px;}
 img.avatar_xsm {margin:.5em 1px 0 0;width:20px;height:20px;}
 img.avatar_overlay {position: relative;left: 15px;top: -15px;width: 40px;height: 40px;}
+img.service-icon, img.service-icon2 {position: relative;width: 16px;height: 16px;top: -16px;left: 24px;}
+img.service-icon2 {left: 32px;}
 
 .pic {border: 1px solid #CCC;padding: 5px 0px 0px 5px;}
 /*.pic {float:right;margin:10px 0 10px 10px;border:1px solid #CCC;padding:5px 5px 0 5px;}*/
