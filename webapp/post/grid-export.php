@@ -2,5 +2,5 @@
 chdir("..");
 require_once 'init.php';
 
-$controller = new GridController();
+$controller = new GridExportController();
 echo $controller->go();

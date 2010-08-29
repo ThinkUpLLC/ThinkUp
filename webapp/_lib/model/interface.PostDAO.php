@@ -34,7 +34,7 @@ interface PostDAO {
      * @return array Posts with author and link objects set
      */
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
-                                     $count = 350);
+    $count = 350);
 
     /**
      * Get retweets of post
@@ -45,8 +45,8 @@ interface PostDAO {
      * @param bool $public Defaults to false
      * @return array Retweets of post
      */
-    public function getRetweetsOfPost($post_id, $network = 'twitter', $order_by = 'default', $unit = 'km', 
-                                      $is_public = false);
+    public function getRetweetsOfPost($post_id, $network = 'twitter', $order_by = 'default', $unit = 'km',
+    $is_public = false);
 
     /**
      * Get all related posts (retweets and replies)
@@ -380,10 +380,19 @@ interface PostDAO {
     public function getMostRetweetedPostsInLastWeek($username, $network, $count);
 
     /**
+     * Get specified number of most-retweeted posts by a username on a network
+     * @param str $username
+     * @param str $network
+     * @param int $count
+     * @return array PostIterator
+     */
+    public function getMostRetweetedPostsIterator($username, $network, $count, $days);
+
+    /**
      * Calculate how much each client is used by a user on a specific network
      * @param int $author_id
      * @param string $network
-     * @return array First element of the returned array is an array of all the clients the user used, ever. 
+     * @return array First element of the returned array is an array of all the clients the user used, ever.
      *               The second element is an array of the clients used for the last 25 posts.
      *               Both arrays are sorted by number of use, descending.
      */

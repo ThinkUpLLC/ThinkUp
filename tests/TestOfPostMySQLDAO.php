@@ -280,7 +280,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PostMySQLDAO();
         $this->assertTrue(isset($dao));
     }
-    
+
     /**
      * Test getOrphanReplies
      */
@@ -396,7 +396,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $cnt++;
         }
         $this->assertEqual($cnt, 10);
-        
+
         $mentions = $dao->getAllMentions("jack", 10, 'twitter');
         $mentions_it = $dao->getAllMentionsIterator("jack", 10, 'twitter');
         $cnt = 0;
@@ -405,6 +405,34 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $cnt++;
         }
         $this->assertEqual($cnt, 10);
+    }
+
+    /**
+     * Test getMostRetweetedPostsIterator
+     */
+    public function testGetMostRetweetedPostsIterator() {
+        $dao = new PostMySQLDAO();
+        //Add posts with replies by user3, who is on the public timeline with retweet counts in the last 9 days
+        $counter = 0;
+        $id = 200;
+        $builders = array();
+        while ($counter < 40) {
+            $id += $counter;
+            $builders[] = FixtureBuilder::build('posts', array(
+                'id'=>$id, 
+                'post_id'=>(144+$counter),
+                'author_user_id'=>23,
+                'author_username'=>'user3',
+                'pub_date'=>'-'.$counter.'d',
+                'retweet_count_cache'=>$counter));
+            $counter++;
+        }
+        $posts_it = $dao->getMostRetweetedPostsIterator('user3', 'twitter', 5, 7);
+        $cnt = 0;
+        foreach($posts_it as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual($cnt, 5);
     }
     
     /**
@@ -1210,7 +1238,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($keys[0], 'Tweetie for Mac');
         $this->assertEqual($keys[1], 'web');
         $this->assertEqual($keys[2], 'Tweet Button');
-        
+
         $this->assertIsA($latest_clients_usage, 'array');
         $this->assertEqual(sizeof($latest_clients_usage), 3);
         $this->assertEqual($latest_clients_usage['Tweetie for Mac'], 8);
