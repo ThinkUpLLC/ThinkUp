@@ -218,7 +218,7 @@ $(function() {
 
   $(function() {
     var activate = function(u) {
-      var dataString = 'pid=' + u + "&a=1";
+      var dataString = 'pid=' + u + "&p=1";
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
@@ -245,7 +245,7 @@ $(function() {
     };
 
     var deactivate = function(u) {
-      var dataString = 'pid=' + u + "&p=0";
+      var dataString = 'pid=' + u + "&a=0";
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
