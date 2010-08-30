@@ -1,7 +1,7 @@
 <?php
 if (!class_exists('twitterOAuth')) {
-    $config = Config::getInstance();
-    require_once $config->getValue('source_root_path').'extlib/twitteroauth/twitteroauth.php';
+    Utils::defineConstants();
+    require_once THINKUP_WEBAPP_PATH.'_lib/extlib/twitteroauth/twitteroauth.php';
 }
 
 class TwitterOAuthThinkUp extends TwitterOAuth {

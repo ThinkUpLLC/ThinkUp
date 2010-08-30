@@ -1,8 +1,8 @@
 <?php
 require_once 'init.tests.php';
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/web_tester.php';
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/mock_objects.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
 Loader::register(array(
 THINKUP_ROOT_PATH . 'tests' . DS,

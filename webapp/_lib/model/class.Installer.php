@@ -32,7 +32,6 @@ class Installer {
     const ERROR_CONFIG_FILE_MISSING = 8;
     const ERROR_CONFIG_SAMPLE_MISSING = 9;
     const ERROR_CONFIG_SOURCE_ROOT_PATH = 10;
-    const ERROR_CONFIG_SMARTY_PATH = 11;
     const ERROR_CONFIG_LOG_LOCATION = 12;
     const ERROR_TYPE_MISMATCH = 13;
     const ERROR_INSTALL_PATH_EXISTS = 14;
@@ -94,7 +93,7 @@ class Installer {
 
             // use lazy loading
             if ( !class_exists('Loader', FALSE) ) {
-                require_once THINKUP_WEBAPP_PATH . 'model' . DS . 'class.Loader.php';
+                require_once THINKUP_WEBAPP_PATH . '_lib'.DS.'model' . DS . 'class.Loader.php';
             }
             Loader::register();
 
@@ -175,7 +174,7 @@ class Installer {
      * @return array 'compiled_view'=>true/false, 'cache'=>true/false
      */
     public function checkPermission($perms = array()) {
-        $compile_dir = THINKUP_WEBAPP_PATH . 'view' . DS . 'compiled_view';
+        $compile_dir = THINKUP_WEBAPP_PATH . '_lib'.DS.'view' . DS . 'compiled_view';
         $cache_dir = $compile_dir . DS . 'cache';
         $ret = array('compiled_view' => false, 'cache' => false);
         if ( is_writable($compile_dir) ) {
@@ -203,9 +202,6 @@ class Installer {
         if ( !is_dir($config['source_root_path']) ) {
             throw new InstallerException("ThinkUp's source root directory is not found.",
             self::ERROR_CONFIG_SOURCE_ROOT_PATH);
-        }
-        if ( !is_dir($config['smarty_path']) ) {
-            throw new InstallerException("ThinkUp's Smarty directory is not found.", self::ERROR_CONFIG_SMARTY_PATH);
         }
         return true;
     }
@@ -424,14 +420,14 @@ class Installer {
     }
 
     /**
-     * Read the contents of the /sql/build-db_mysql.sql file.
+     * Read the contents of the webapp/install/sql/build-db_mysql.sql file.
      * Replace all instances of 'tu_' with the custom table prefix.
      *
      * @param string $table_prefix custom table prefix to replace the 'tu_' prefix
      * @return string
      */
     private function getInstallQueries($table_prefix) {
-        $query_file = THINKUP_ROOT_PATH . 'sql' . DS . 'build-db_mysql.sql';
+        $query_file = THINKUP_WEBAPP_PATH . 'install' . DS . 'sql' . DS . 'build-db_mysql.sql';
         if ( !file_exists($query_file) ) {
             throw new InstallerException("File <code>$query_file</code> is not found.", self::ERROR_FILE_NOT_FOUND);
         }
@@ -705,7 +701,7 @@ class Installer {
      */
     public function getTablesToInstall() {
         $table_names = array();
-        $install_queries = file_get_contents(THINKUP_ROOT_PATH."sql/build-db_mysql.sql");
+        $install_queries = file_get_contents(THINKUP_WEBAPP_PATH."install/sql/build-db_mysql.sql");
         $queries = explode(';', $install_queries);
         if ( $queries[count($queries)-1] == '' ) {
             array_pop($queries);

@@ -285,7 +285,7 @@ class InstallerController extends ThinkUpController {
             'cache_pages'=>false);
             $email_view = new SmartyThinkUp($cfg_array);
             $email_view->caching=false;
-            $email_view->assign('server', $_SERVER['HTTP_HOST'] . THINKUP_BASE_URL);
+            $email_view->assign('server', $_SERVER['HTTP_HOST'] );
             $email_view->assign('email', urlencode($email) );
             $email_view->assign('activ_code', $activation_code );
             $message = $email_view->fetch('_email.registration.tpl');

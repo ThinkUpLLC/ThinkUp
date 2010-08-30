@@ -2,8 +2,8 @@
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/web_tester.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 require_once THINKUP_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php';
 

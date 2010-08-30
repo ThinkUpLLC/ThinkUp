@@ -46,12 +46,13 @@ class SmartyThinkUp extends Smarty {
         $app_title = $config_array['app_title'];
         $cache_pages = $config_array['cache_pages'];
         $debug =  $config_array['debug'];
+        Utils::defineConstants();
 
         $this->Smarty();
-        $this->template_dir = array( $src_root_path.'webapp/view', $src_root_path.'tests/view');
-        $this->compile_dir = $src_root_path.'webapp/view/compiled_view/';
-        $this->plugins_dir = array('plugins', $src_root_path.'webapp/view/plugins/');
-        $this->cache_dir = $src_root_path.'webapp/view/compiled_view/cache';
+        $this->template_dir = array( THINKUP_WEBAPP_PATH.'_lib/view', $src_root_path.'tests/view');
+        $this->compile_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/';
+        $this->plugins_dir = array('plugins', THINKUP_WEBAPP_PATH.'_lib/view/plugins/');
+        $this->cache_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache';
         $this->caching = ($cache_pages)?1:0;
         $this->cache_lifetime = 300;
         $this->debug = $debug;
@@ -107,7 +108,7 @@ class SmartyThinkUp extends Smarty {
         if (! is_writable($this->compile_dir) ) {
             Utils::defineConstants();
             return str_replace('#THINKUP_BASE_URL#', THINKUP_BASE_URL,
-            file_get_contents(THINKUP_ROOT_PATH.'webapp/view/500-perm.html'));
+            file_get_contents(THINKUP_WEBAPP_PATH.'_lib/view/500-perm.html'));
         } else {
             if ($cache_key != null) {
                 return parent::fetch($template, $cache_key);

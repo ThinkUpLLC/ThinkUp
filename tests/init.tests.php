@@ -18,7 +18,7 @@ if ( !defined('TESTS_RUNNING') ) {
 }
 
 //Register our lazy class loader
-require_once THINKUP_ROOT_PATH.'webapp/model/class.Loader.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
 
 Loader::register(array(
 THINKUP_ROOT_PATH . 'tests' . DS,

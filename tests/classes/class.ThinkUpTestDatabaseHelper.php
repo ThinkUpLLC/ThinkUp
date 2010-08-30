@@ -21,7 +21,7 @@ class ThinkUpTestDatabaseHelper {
         error_reporting(22527); //Don't show E_DEPRECATED PHP messages, split() is deprecated
 
         //Create all the tables based on the build script
-        $create_db_script = file_get_contents($THINKUP_CFG['source_root_path']."sql/build-db_mysql.sql");
+        $create_db_script = file_get_contents($THINKUP_CFG['source_root_path']."webapp/install/sql/build-db_mysql.sql");
         $create_statements = split(";", $create_db_script);
         foreach ($create_statements as $q) {
             if (trim($q) != '') {

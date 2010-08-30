@@ -2,12 +2,12 @@
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.facebook.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/controller/class.FacebookPluginConfigurationController.php';
-require_once THINKUP_ROOT_PATH.'extlib/facebook/facebook.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/facebook/facebook.php';
 
 /**
  * Test of FacebookPluginConfigurationController

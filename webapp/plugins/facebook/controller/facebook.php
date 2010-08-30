@@ -7,8 +7,8 @@
  Version: 0.01
  Author: Gina Trapani
  */
-$config = Config::getInstance();
-require_once $config->getValue('source_root_path').'extlib/facebook/facebook.php';
+Utils::defineConstants();
+require_once THINKUP_WEBAPP_PATH.'_lib/extlib/facebook/facebook.php';
 
 $webapp = Webapp::getInstance();
 $webapp->registerPlugin('facebook', 'FacebookPlugin');

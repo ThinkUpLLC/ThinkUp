@@ -3,27 +3,10 @@ if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
 }
 
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/web_tester.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once THINKUP_ROOT_PATH.'webapp/controller/class.ThinkUpController.php';
-require_once THINKUP_ROOT_PATH.'webapp/controller/class.ThinkUpAuthController.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.Link.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.Post.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.Instance.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.Logger.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.PluginHook.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.Crawler.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.Webapp.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.Utils.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.DAOFactory.php';
-
-require_once THINKUP_ROOT_PATH.'webapp/model/interface.ThinkUpPlugin.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/interface.CrawlerPlugin.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/interface.WebappPlugin.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.WebappTab.php';
-require_once THINKUP_ROOT_PATH.'webapp/model/class.WebappTabDataset.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
 /**
@@ -37,11 +20,11 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
     var $webapp;
     var $crawler;
 
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('TwitterPlugin class test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->webapp = Webapp::getInstance();
         $this->crawler = Crawler::getInstance();
@@ -51,12 +34,12 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $this->logger = Logger::getInstance();
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
         $this->logger->close();
     }
 
-    function testWebappTabRegistration() {
+    public function testWebappTabRegistration() {
         $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();
         $instance->network_user_id = 1;
@@ -73,7 +56,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $first_post_tab_dataset = $first_post_tab_datasets[0];
         $this->assertEqual($first_post_tab_dataset->name, "all_tweets", "Test first post tab's first dataset name");
         $this->assertEqual($first_post_tab_dataset->dao_name, 'PostDAO');
-        $this->assertEqual($first_post_tab_dataset->dao_method_name, "getAllPosts", 
+        $this->assertEqual($first_post_tab_dataset->dao_method_name, "getAllPosts",
         "Test first post tab's first dataset fetching method");
     }
 }

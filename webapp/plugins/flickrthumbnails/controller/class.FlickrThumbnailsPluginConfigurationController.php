@@ -9,8 +9,8 @@ class FlickrThumbnailsPluginConfigurationController extends PluginConfigurationC
 
     public function authControl() {
         $config = Config::getInstance();
-        $this->setViewTemplate( $config->getValue('source_root_path')
-        . 'webapp/plugins/flickrthumbnails/view/flickrthumbnails.account.index.tpl');
+        Utils::defineConstants();
+        $this->setViewTemplate( THINKUP_WEBAPP_PATH.'plugins/flickrthumbnails/view/flickrthumbnails.account.index.tpl');
 
         /** set option fields **/
         // API key text field

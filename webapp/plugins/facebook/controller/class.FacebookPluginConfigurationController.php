@@ -29,8 +29,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
     public function authControl() {
         $config = Config::getInstance();
-        $this->setViewTemplate($config->getValue('source_root_path').
-        'webapp/plugins/facebook/view/facebook.account.index.tpl');
+        Utils::defineConstants();
+        $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/facebook/view/facebook.account.index.tpl');
 
         /** set option fields **/
         // API Key text field

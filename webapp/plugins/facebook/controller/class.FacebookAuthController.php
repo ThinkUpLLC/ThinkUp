@@ -15,7 +15,8 @@ class FacebookAuthController extends ThinkUpAuthController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $config = Config::getInstance();
-        $this->setViewTemplate($config->getValue('source_root_path').'webapp/plugins/facebook/view/auth.tpl');
+        Utils::defineConstants();
+        $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/facebook/view/auth.tpl');
         $this->setPageTitle('Authorizing Your Facebook Account');
         if (!isset($_GET['sessionKey']) || $_GET['sessionKey'] == '' ) {
             $this->addErrorMessage('No session key specified.');

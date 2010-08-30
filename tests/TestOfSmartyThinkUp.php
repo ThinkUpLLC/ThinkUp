@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 /**
@@ -31,14 +31,11 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $cfg->setValue('cache_pages', true);
         $smtt = new SmartyThinkUp();
 
-        $this->assertEqual($smtt->compile_dir, '/path/to/thinkup/webapp/view/compiled_view/');
         $this->assertTrue(sizeof($smtt->template_dir), 2);
-        $this->assertEqual($smtt->template_dir[0], '/path/to/thinkup/webapp/view');
         $this->assertEqual($smtt->template_dir[1], '/path/to/thinkup/tests/view');
-        $this->assertEqual($smtt->compile_dir, '/path/to/thinkup/webapp/view/compiled_view/');
         $this->assertTrue(sizeof($smtt->plugins_dir), 2);
         $this->assertEqual($smtt->plugins_dir[0], 'plugins');
-        $this->assertEqual($smtt->cache_dir, '/path/to/thinkup/webapp/view/compiled_view/cache');
+        $this->assertEqual($smtt->cache_dir, THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache');
         $this->assertEqual($smtt->cache_lifetime, 300);
         $this->assertTrue($smtt->caching);
     }
@@ -79,7 +76,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
      * Test override config with passed-in array
      */
     public function testSmartyThinkUpPassedInArray() {
-        $cfg_array = array('debug'=>true, 
+        $cfg_array = array('debug'=>true,
         'site_root_path'=>'/my/thinkup/folder/test',
         'source_root_path'=>'/Users/gina/Sites/thinkup', 
         'app_title'=>"My ThinkUp", 

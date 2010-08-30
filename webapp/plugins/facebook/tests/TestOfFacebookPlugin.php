@@ -3,28 +3,28 @@ if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
 
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/web_tester.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
 
 class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('FacebookPlugin class test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('facebook', 'FacebookPlugin');
         $webapp->setActivePlugin('facebook');
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 
-    function testWebappTabRegistration() {
+    public function testWebappTabRegistration() {
         $webapp = Webapp::getInstance();
         $logger = Logger::getInstance();
         $pd = DAOFactory::getDAO('PostDAO');

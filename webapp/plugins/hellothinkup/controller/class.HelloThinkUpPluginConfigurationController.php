@@ -9,8 +9,8 @@
 class HelloThinkUpPluginConfigurationController extends PluginConfigurationController {
     public function authControl() {
         $config = Config::getInstance();
-        $this->setViewTemplate( $config->getValue('source_root_path')
-        . 'webapp/plugins/hellothinkup/view/hellothinkup.account.index.tpl');
+        Utils::defineConstants();
+        $this->setViewTemplate( THINKUP_WEBAPP_PATH.'plugins/hellothinkup/view/hellothinkup.account.index.tpl');
         $this->addToView('message',
             'Hello, world! This is the example plugin configuration page for  '.$this->owner->email .'.');
 

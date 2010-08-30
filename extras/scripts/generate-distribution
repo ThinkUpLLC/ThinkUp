@@ -1,0 +1,12 @@
+#! /bin/bash
+
+cp -R thinkup/webapp build/.
+mv build/webapp build/thinkup
+rm -rf build/thinkup/_lib/view/compiled_view/*.tpl.php
+rm -rf build/thinkup/_lib/view/compiled_view/cache/*.tpl
+rm -rf build/thinkup/_lib/extlib/simpletest/
+rm -rf build/thinkup/plugins/*/tests/
+rm build/thinkup/config.inc.php
+cd build
+zip -r thinkup.zip thinkup
+rm -rf thinkup 

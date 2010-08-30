@@ -305,13 +305,13 @@ abstract class ThinkUpController {
             $pdao = DAOFactory::getDAO('PluginDAO');
             $active_plugins = $pdao->getActivePlugins();
             foreach ($active_plugins as $ap) {
+                Utils::defineConstants();
                 //add plugin's model and controller folders as Loader paths here
-                Loader::addPath($config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name."/model/");
-                Loader::addPath($config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name.
+                Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/model/");
+                Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name.
                 "/controller/");
                 //require the main plugin registration file here
-                require_once $config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name."/controller/"
-                .$ap->folder_name.".php";
+                require_once THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.".php";
             }
         }
     }

@@ -81,9 +81,8 @@ class Utils {
      * @return str view path
      */
     public static function getPluginViewDirectory($shortname) {
-        $config = Config::getInstance();
-        $view_path = $config->getValue('source_root_path');
-        $view_path .= 'webapp/plugins/'.$shortname.'/view/';
+        self::defineConstants();
+        $view_path = THINKUP_WEBAPP_PATH.'plugins/'.$shortname.'/view/';
         return $view_path;
     }
 
@@ -144,7 +143,11 @@ class Utils {
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+            if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+            } else {
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup' . DS);
+            }
         }
 
         if ( !defined('THINKUP_BASE_URL') ) {

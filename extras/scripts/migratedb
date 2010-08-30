@@ -2,7 +2,7 @@
 
 cd `dirname $0`/../..
 source ./extras/scripts/migratedb-conf
-cd sql/mysql_migrations/
+cd webapp/install/sql/mysql_migrations/
 
 echo "DROP DATABASE $db_name;" | $mysql -u $db_user -p$db_password
 echo "CREATE DATABASE $db_name COLLATE utf8_bin;" | $mysql -u $db_user -p$db_password
@@ -43,4 +43,4 @@ mv build-db_mysql.sql ../.
 echo "
 
 Check the output for errors.
-Complete build script generated and saved as thinkup/sql/build-db_mysql.sql"
+Complete build script generated and saved as thinkup/webapp/install/sql/build-db_mysql.sql"

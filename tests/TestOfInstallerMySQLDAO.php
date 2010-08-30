@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 /**
@@ -79,7 +79,7 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testExamineQueries() {
         // test on fully installed tables
-        $install_queries = file_get_contents(THINKUP_ROOT_PATH."sql/build-db_mysql.sql");
+        $install_queries = file_get_contents(THINKUP_ROOT_PATH."webapp/install/sql/build-db_mysql.sql");
 
         //clean SQL: diffDataStructure requires two spaces after PRIMARY KEY, and a space between key name and (field)
         $install_queries = str_replace('PRIMARY KEY ', 'PRIMARY KEY  ', $install_queries);

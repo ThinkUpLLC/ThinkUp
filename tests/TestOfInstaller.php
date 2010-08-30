@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 /**
@@ -85,7 +85,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
     public function testInstallerCheckPath() {
         $this->assertTrue(Installer::checkPath(array('source_root_path' => THINKUP_ROOT_PATH,
-                'smarty_path' => THINKUP_ROOT_PATH . 'extlib' . DS . 'Smarty-2.6.26' . DS . 'libs' . DS)));
+                'smarty_path' => THINKUP_WEBAPP_PATH . '_lib'.DS.'extlib' . DS . 'Smarty-2.6.26' . DS . 'libs' . DS)));
     }
 
     public function testInstallerCheckStep1() {

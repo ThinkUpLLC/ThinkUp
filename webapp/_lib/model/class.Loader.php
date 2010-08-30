@@ -52,23 +52,28 @@ class Loader {
         }
         // check two required named constants
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', dirname(dirname(dirname(__FILE__))) . DS);
+            define('THINKUP_ROOT_PATH', dirname(dirname(dirname(dirname(__FILE__)))) . DS);
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+            if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+            } else {
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup' . DS);
+            }
         }
 
         // set default lookup path for classes
         self::$lookup_path = array(
-        THINKUP_WEBAPP_PATH . 'model' . DS,
-        THINKUP_WEBAPP_PATH . 'controller' . DS,
-        THINKUP_WEBAPP_PATH . 'model'. DS . 'exceptions' . DS
+        THINKUP_WEBAPP_PATH . '_lib' . DS . 'model' . DS,
+        THINKUP_WEBAPP_PATH . '_lib' . DS . 'controller' . DS,
+        THINKUP_WEBAPP_PATH . '_lib' . DS . 'model'. DS . 'exceptions' . DS
         );
 
         // set default lookup path for special classes
         self::$special_classes = array(
-        'Smarty' => THINKUP_ROOT_PATH . 'extlib' . DS . 'Smarty-2.6.26' . DS .'libs' . DS . 'Smarty.class.php'
+        'Smarty' => THINKUP_WEBAPP_PATH . '_lib' . DS . 'extlib' . DS . 'Smarty-2.6.26' . DS .'libs' . DS . 
+        'Smarty.class.php'
         );
 
         if ( isset($additional_paths) && is_array($additional_paths)  ) {

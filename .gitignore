@@ -1,7 +1,7 @@
 webapp/config.inc.php
 webapp/config.inc.bak.php
-webapp/view/compiled_view/*.php
-webapp/view/compiled_view/cache/*.tpl
+webapp/_lib/view/compiled_view/*.php
+webapp/_lib/view/compiled_view/cache/*.tpl
 logs/archive/*.bz2
 logs/*log
 logs/crawl.pid

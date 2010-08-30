@@ -15,7 +15,8 @@ class TwitterAuthController extends ThinkUpAuthController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $config = Config::getInstance();
-        $this->setViewTemplate($config->getValue('source_root_path').'webapp/plugins/twitter/view/auth.tpl');
+        Utils::defineConstants();
+        $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/twitter/view/auth.tpl');
         $this->setPageTitle('Authorizing Your Twitter Account');
         if (!isset($_GET['oauth_token']) || $_GET['oauth_token'] == '' ) {
             $this->addInfoMessage('No OAuth token specified.');

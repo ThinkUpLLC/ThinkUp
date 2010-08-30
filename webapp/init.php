@@ -7,5 +7,5 @@ if ($version[0] < 5) {
 }
 
 //Register our lazy class loader
-require_once 'model/class.Loader.php';
+require_once '_lib/model/class.Loader.php';
 Loader::register();

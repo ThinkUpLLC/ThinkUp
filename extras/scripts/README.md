@@ -16,6 +16,12 @@ Automates the process of uploading ThinkUp changes to your webserver when you're
 * Run `autodeploy` script from thinkup root directory
 
 Example: `./extras/scripts/autdeploy-scp`
+
+## generate-distribution (creates user distribution of app)
+
+Generates a user distribution of the web application.
+
+Run this from ThinkUp's parent directory, and make sure a directory named build exists there.
   
 ## migratedb (for developers changing the database)
 

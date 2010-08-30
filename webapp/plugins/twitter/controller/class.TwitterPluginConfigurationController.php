@@ -16,8 +16,8 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
 
     public function authControl() {
         $config = Config::getInstance();
-        $this->setViewTemplate($config->getValue('source_root_path').
-        'webapp/plugins/twitter/view/twitter.account.index.tpl');
+        Utils::defineConstants();
+        $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/twitter/view/twitter.account.index.tpl');
 
         $id = DAOFactory::getDAO('InstanceDAO');
         $od = DAOFactory::getDAO('OwnerDAO');

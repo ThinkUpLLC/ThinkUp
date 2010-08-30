@@ -1,5 +1,5 @@
 <?php
-require_once THINKUP_ROOT_PATH.'webapp/model/class.Loader.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
 /**
  * ThinkUp Basic Unit Test Case
  *
