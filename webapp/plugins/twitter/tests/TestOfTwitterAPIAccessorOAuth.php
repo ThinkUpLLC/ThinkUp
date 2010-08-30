@@ -6,6 +6,7 @@ require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
 
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.CrawlerTwitterAPIAccessorOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 
 class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
