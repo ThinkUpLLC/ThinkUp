@@ -96,4 +96,24 @@ class SmartyThinkUp extends Smarty {
     public function disableCaching() {
         $this->caching=0;
     }
+
+    /**
+     * Override the parent's fetch method to handle an unwritable compilation directory.
+     * @param str $template Template name
+     * @param str $cache_key Cache key
+     * @param str Results
+     */
+    public function fetch($template, $cache_key=null) {
+        if (! is_writable($this->compile_dir) ) {
+            Utils::defineConstants();
+            return str_replace('#THINKUP_BASE_URL#', THINKUP_BASE_URL,
+            file_get_contents(THINKUP_ROOT_PATH.'webapp/view/500-perm.html'));
+        } else {
+            if ($cache_key != null) {
+                return parent::fetch($template, $cache_key);
+            } else {
+                return parent::fetch($template);
+            }
+        }
+    }
 }

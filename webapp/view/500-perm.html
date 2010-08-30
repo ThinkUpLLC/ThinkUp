@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<title>ThinkUp</title>
+<link rel="shortcut icon" type="image/x-icon"
+	href="/assets/img/favicon.ico">
+<!-- jquery -->
+<link type="text/css" rel="stylesheet"
+	href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<!-- custom css -->
+<link type="text/css" rel="stylesheet"
+	href="#THINKUP_BASE_URL#assets/css/base.css">
+<link type="text/css" rel="stylesheet"
+	href="#THINKUP_BASE_URL#assets/css/positioning.css">
+<link type="text/css" rel="stylesheet"
+	href="#THINKUP_BASE_URL#assets/css/style.css">
+
+</head>
+
+<body>
+
+<div id="status-bar" class="clearfix">
+
+<div class="status-bar-left"><!-- the user has not selected an instance -->
+</div>
+<!-- end .status-bar-left -->
+
+<div class="status-bar-right">
+<ul>
+	<li>&nbsp;</li>
+</ul>
+</div>
+<!-- end .status-bar-right --></div>
+<!-- end #status-bar -->
+
+<div class="container clearfix">
+
+<div id="app-title"><a href="#THINKUP_BASE_URL#index.php">
+<h1><span class="bold">Think</span><span class="gray">Up</span></h1>
+<h2>New ideas</h2>
+</a></div>
+<!-- end #app-title -->
+
+<div id="menu-bar">
+<ul>
+	<li class="round-tr round-br round-tl round-bl"><a
+		href="http://thinkupapp.com/">Get ThinkUp</a></li>
+</ul>
+</div>
+<!-- end #menu-bar --></div>
+<!-- end .container -->
+<div class="container_24 thinkup-canvas clearfix">
+<div class="grid_22 prefix_1 alpha omega prepend_20 append_20 clearfix">
+<div class="ui-state-error ui-corner-all"
+	style="margin: 20px 0px; padding: 0.5em 0.7em;">
+<p><span class="ui-icon ui-icon-alert"
+	style="float: left; margin: .3em 0.3em 0 0;"></span> ThinkUp is unable
+to run because of insufficient folder permissions. To fix this problem, run<br />
+<pre>chmod 777 view/compiled_view/ view/compiled_view/cache/</pre>
+in the ThinkUp directory on your server, and then reload this page to continue.
+</p>
+</div>
+</div>
+</div>
+
+<div class="container small center">
+
+<div id="ft" role="contentinfo">
+<p>It is nice to be nice.</p>
+</div>
+<!-- #ft --></div>
+<!-- .content -->
+
+</body>
+
+</html>
