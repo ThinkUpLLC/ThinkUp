@@ -172,15 +172,12 @@ class Installer {
      * Check if log and template directories are writeable
      *
      * @param array $perms can be used for testing for failing
-     * @return array 'logs'=>true/false, 'compiled_view'=>true/false, 'cache'=>true/false
+     * @return array 'compiled_view'=>true/false, 'cache'=>true/false
      */
     public function checkPermission($perms = array()) {
         $compile_dir = THINKUP_WEBAPP_PATH . 'view' . DS . 'compiled_view';
         $cache_dir = $compile_dir . DS . 'cache';
-        $ret = array('logs' => false, 'compiled_view' => false, 'cache' => false);
-        if ( is_writable(THINKUP_ROOT_PATH . 'logs') ) {
-            $ret['logs'] = true;
-        }
+        $ret = array('compiled_view' => false, 'cache' => false);
         if ( is_writable($compile_dir) ) {
             $ret['compiled_view'] = true;
         }
@@ -209,9 +206,6 @@ class Installer {
         }
         if ( !is_dir($config['smarty_path']) ) {
             throw new InstallerException("ThinkUp's Smarty directory is not found.", self::ERROR_CONFIG_SMARTY_PATH);
-        }
-        if ( !is_dir(substr($config['log_location'], 0, -11)) ) {
-            throw new InstallerException("ThinkUp's log directory is not found.", self::ERROR_CONFIG_LOG_LOCATION);
         }
         return true;
     }

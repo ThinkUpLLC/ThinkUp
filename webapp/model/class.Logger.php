@@ -1,15 +1,41 @@
 <?php
+/**
+ * Logger singleton
+ *
+ * Crawler logger outputs information about crawler to terminal or to file, depending on configuration.
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 class Logger {
-    // our singleton instance
+    /**
+     *
+     * @var Logger singleton instance
+     */
     private static $instance;
-    var $log;
-    var $network_username;
+    /**
+     *
+     * @var resource Open file pointer
+     */
+    var $log = null;
+    /**
+     *
+     * @var str $network_username The user we're logging about
+     */
+    var $network_username = null;
 
-    function __construct($location) {
-        $this->log = $this->openFile($location, 'a'); # Append to any prior file
+    /**
+     * Open the log file; Append to any prior file
+     * @param str $location
+     */
+    public function __construct($location) {
+        if ( $location != false ) {
+            $this->log = $this->openFile($location, 'a');
+        }
     }
 
-    // The singleton method
+    /**
+     * The singleton constructor
+     */
     public static function getInstance() {
         $config = Config::getInstance();
         if (!isset(self::$instance)) {
@@ -18,28 +44,53 @@ class Logger {
         return self::$instance;
     }
 
-    function setUsername($uname) {
-        $this->network_username = $uname;
+    /**
+     * Set username
+     * @param str $username
+     */
+    public function setUsername($username) {
+        $this->network_username = $username;
     }
 
-    function logStatus($status_message, $classname) {
-        $status_signature = date("Y-m-d H:i:s", time())." | ".(string) number_format(round(memory_get_usage() / 1024000, 2), 2)." MB | $this->network_username | $classname:";
+    /**
+     * Write to log
+     * @param str $status_message
+     * @param str $classname The name of the class logging the info
+     */
+    public function logStatus($status_message, $classname) {
+        $status_signature = date("Y-m-d H:i:s", time())." | ".
+        (string) number_format(round(memory_get_usage() / 1024000, 2), 2)." MB | ";
+        if (isset($this->network_username)) {
+            $status_signature .= $this->network_username .' | ';
+        }
+        $status_signature .= $classname.":";
         if (strlen($status_message) > 0) {
-            $this->writeFile($this->log, $status_signature.$status_message); # Write status to log
+            $this->output($status_signature.$status_message); # Write status to log
         }
     }
 
+    /**
+     * Add a little whitespace to log file
+     */
     private function addBreaks() {
-        $this->writeFile($this->log, ""); # Add a little whitespace
+        $this->output("");
     }
 
-    function close() {
+    /**
+     * Close the log file
+     */
+    public function close() {
         $this->addBreaks();
         $this->closeFile($this->log);
         self::$instance = null;
     }
 
-    function openFile($filename, $type) {
+    /**
+     * Open log file
+     * @param str $filename
+     * @param unknown_type $type
+     */
+    protected function openFile($filename, $type) {
         if (array_search($type, array('w', 'a')) < 0) {
             $type = 'w';
         }
@@ -50,20 +101,34 @@ class Logger {
         return $filehandle;
     }
 
-    function writeFile($filehandle, $message) {
-        if (isset($filehandle)) {
-            return fwrite($filehandle, $message."\n");
+    /**
+     * Output log message to file or terminal
+     * @param str $message
+     */
+    protected function output($message) {
+        if (isset($this->log)) {
+            return fwrite($this->log, $message."\n");
+        } else {
+            echo $message.'
+';
         }
     }
 
-    function closeFile($filehandle) {
+    /**
+     * Close file
+     * @param resource $filehandle
+     */
+    protected function closeFile($filehandle) {
         if (isset($filehandle)) {
             return fclose($filehandle);
         }
     }
 
-    function deleteFile($filename) {
+    /**
+     * Delete log file
+     * @param str $filename
+     */
+    protected function deleteFile($filename) {
         return unlink($filename);
     }
 }
-?>

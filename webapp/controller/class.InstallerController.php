@@ -97,7 +97,7 @@ class InstallerController extends ThinkUpController {
 
         // libs check
         $libs = $this->installer->checkDependency();
-        $libs_compat = TRUE;
+        $libs_compat = true;
         foreach ($libs as $lib) {
             if (!$lib) {
                 $libs_compat = false;
@@ -108,7 +108,7 @@ class InstallerController extends ThinkUpController {
         // path permissions check
         $permissions = $this->installer->checkPermission();
         $this->addToView('permission', $permissions);
-        $permissions_compat = TRUE;
+        $permissions_compat = true;
         foreach ($permissions as $perm) {
             if (!$perm) {
                 $permissions_compat = false;
@@ -116,7 +116,6 @@ class InstallerController extends ThinkUpController {
         }
         $this->addToView('permissions_compat', $permissions_compat);
         $writeable_directories = array(
-            'logs' => THINKUP_ROOT_PATH . 'logs',
             'compiled_view' => $this->view_mgr->compile_dir,
             'cache' => $this->view_mgr->compile_dir . 'cache');
         $this->addToView('writeable_directories', $writeable_directories);

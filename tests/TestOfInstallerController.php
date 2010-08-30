@@ -68,7 +68,6 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $result = $controller->go();
         $this->assertPattern('/Your system has everything it needs to run ThinkUp./', $result);
         $this->restoreConfigFile();
-
     }
 
     public function testFreshInstallStep2() {

@@ -77,7 +77,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
     public function testInstallerCheckPermission() {
         $perms = Installer::checkPermission();
-        $this->assertTrue($perms['logs'], THINKUP_ROOT_PATH . 'logs is writeable by the webserver');
         $this->assertTrue($perms['compiled_view'], THINKUP_ROOT_PATH .
                 'webapp' . DS . 'view' . DS . 'compiled_view is writeable by the webserver');
         $this->assertTrue($perms['cache'], THINKUP_ROOT_PATH .
@@ -86,8 +85,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
     public function testInstallerCheckPath() {
         $this->assertTrue(Installer::checkPath(array('source_root_path' => THINKUP_ROOT_PATH,
-                'smarty_path' => THINKUP_ROOT_PATH . 'extlib' . DS . 'Smarty-2.6.26' . DS . 'libs' . DS,
-                'log_location' => THINKUP_ROOT_PATH . 'logs' . DS . 'crawler.log')));
+                'smarty_path' => THINKUP_ROOT_PATH . 'extlib' . DS . 'Smarty-2.6.26' . DS . 'libs' . DS)));
     }
 
     public function testInstallerCheckStep1() {

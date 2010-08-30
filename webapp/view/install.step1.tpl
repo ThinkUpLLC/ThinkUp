@@ -31,7 +31,7 @@
     <div class="clearfix append_20">
       <div class="grid_22 push_1 clearfix">
         <h2 class="clearfix step_title">Requirements Check</h2>
-        {if $permission.logs && $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd}
+        {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd}
         <p class="success" style="margin-bottom: 30px">
              <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
              You may proceed to the next step.
@@ -101,9 +101,9 @@
         <div class="clearfix append_20">
           <div class="grid_6 prefix_5 right">
             {if $permissions_compat}
-            <span class="label">Template and Log directories are writeable?</span>
+            <span class="label">Template and cache directories are writeable?</span>
             {else}
-            <span class="label no">Template and Log directories are writeable?</span>
+            <span class="label no">Template and cache directories are writeable?</span>
             {/if}
           </div>
           <div class="grid_8 prefix_1 left">

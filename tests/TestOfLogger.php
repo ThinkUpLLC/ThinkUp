@@ -16,19 +16,33 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         parent::tearDown();
     }
 
-    public function testNewLoggerSingleton() {
+    public function testFileLogger() {
         $config = Config::getInstance();
         $logger_file = $config->getValue('log_location');
-
         $logger = Logger::getInstance();
+        $this->assertIsA($logger, 'Logger');
+
+        //no username
         $logger->logStatus('Singleton logger should write this to the log', get_class($this));
         $this->assertTrue(file_exists($logger_file), 'File created');
         $messages = file($config->getValue('log_location'));
-        $this->assertWantedPattern('/Singleton logger should write this to the log/', $messages[sizeof($messages) - 1]);
-        $logger->setUsername('single-ton');
+        $this->assertPattern('/Singleton logger should write this to the log/', $messages[sizeof($messages) - 1]);
+
+        //with username
+        $logger->setUsername('angelinajolie');
         $logger->logStatus('Should write this to the log with a username', get_class($this));
-        $this->assertWantedPattern('/single-ton | TestOfLogger:Singleton logger should write this to the log/',
-        $messages[sizeof($messages) - 1]);
+        $messages = null;
+        $messages = file($config->getValue('log_location'));
+        $this->assertPattern('/angelinajolie/', $messages[sizeof($messages) - 1]);
+        $this->assertPattern('/Should write this to the log with a username/', $messages[sizeof($messages) - 1]);
         $logger->close();
+    }
+
+    public function testTerminalLogger() {
+        $config = Config::getInstance();
+        $config->setValue('log_location', false);
+
+        $logger = Logger::getInstance();
+        //        $logger->logStatus('Singleton logger should echo this', get_class($this));
     }
 }

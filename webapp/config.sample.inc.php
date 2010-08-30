@@ -24,10 +24,10 @@ $THINKUP_CFG['cache_pages']               = true;
 $THINKUP_CFG['app_title']                 = 'ThinkUp';
 
 // Full server path to crawler.log.
-$THINKUP_CFG['log_location']              = $THINKUP_CFG['source_root_path'].'logs/crawler.log';
+$THINKUP_CFG['log_location']              = false;
 
 // Full server path to sql.log. To not log queries, set to null.
-$THINKUP_CFG['sql_log_location']          = $THINKUP_CFG['source_root_path'].'logs/sql.log';
+$THINKUP_CFG['sql_log_location']          = null;
 
 // How many seconds does a query take before it gets logged as a slow query?
 $THINKUP_CFG['slow_query_log_threshold']  = 2.0;
