@@ -10,7 +10,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-class TestOfTestAdminController extends ThinkUpBasicUnitTestCase {
+class TestOfTestAdminController extends ThinkUpUnitTestCase {
     /**
      * Constructor
      */

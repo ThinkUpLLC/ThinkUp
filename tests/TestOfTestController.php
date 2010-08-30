@@ -9,7 +9,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * TestController isn't a real ThinkUp controller, this is just a template for all Controller tests.
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-class TestOfTestController extends ThinkUpBasicUnitTestCase {
+class TestOfTestController extends ThinkUpUnitTestCase {
     /**
      * Constructor
      */
@@ -50,7 +50,6 @@ class TestOfTestController extends ThinkUpBasicUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('test'), 'Testing, testing, 123');
         $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'ThinkUp');
-
         $this->assertEqual($results, '<a href="'.$config->getValue('site_root_path').
         'index.php">ThinkUp</a>: Testing, testing, 123 | Not logged in', "controller output");
     }

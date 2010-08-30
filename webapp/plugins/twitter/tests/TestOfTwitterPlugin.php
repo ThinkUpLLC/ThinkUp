@@ -1,6 +1,6 @@
 <?php
-if (!isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS) {
-    require_once '../../../../tests/config.tests.inc.php';
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+    require_once '../../../../tests/init.tests.php';
 }
 
 require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';

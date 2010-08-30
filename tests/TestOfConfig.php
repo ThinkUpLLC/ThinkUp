@@ -59,7 +59,7 @@ class TestOfConfig extends ThinkUpBasicUnitTestCase {
             $config = Config::getInstance();
             $this->assertNull($config->getValue('table_prefix'));
         } catch(Exception $e) {
-            $this->assertPattern("/Configuration values missing/", $e->getMessage());
+            $this->assertPattern("/ThinkUp's configuration file does not exist!/", $e->getMessage());
         }
         $this->restoreConfigFile();
     }

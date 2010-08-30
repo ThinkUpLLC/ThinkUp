@@ -21,11 +21,10 @@ class PublicTimelineController extends ThinkUpController {
     protected $total_posts_per_page = 15;
 
     /**
-     * Constructor
-     * @param bool $session_started
+     * Show either timeline of public posts with counts, or an individual post thread with replies and retweets
+     * @return string rendered view markup
      */
-    public function __construct($session_started=false) {
-        parent::__construct($session_started);
+    public function control() {
         $this->post_dao = DAOFactory::getDAO('PostDAO');
 
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
@@ -34,13 +33,6 @@ class PublicTimelineController extends ThinkUpController {
             $this->addToView('crawler_last_run', $last_updated_instance->crawler_last_run);
         }
         $this->setPageTitle('Public Timeline');
-    }
-
-    /**
-     * Show either timeline of public posts with counts, or an individual post thread with replies and retweets
-     * @return string rendered view markup
-     */
-    public function control() {
         $this->setViewTemplate('public.tpl');
         $this->addToView('logo_link', 'public.php');
 
@@ -89,8 +81,8 @@ class PublicTimelineController extends ThinkUpController {
             } else {
                 $distance_unit = 'km';
             }
-            $public_tweet_replies = $this->post_dao->getPublicRepliesToPost($post->post_id, $network, 'default', 
-                                    $distance_unit);
+            $public_tweet_replies = $this->post_dao->getPublicRepliesToPost($post->post_id, $network, 'default',
+            $distance_unit);
             $public_retweets = $this->post_dao->getRetweetsOfPost($post->post_id, $network,
                                'default', $distance_unit, true);
             $this->addToView('post', $post);

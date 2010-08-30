@@ -101,6 +101,23 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         $this->assertIsA(Logger::getInstance('/tmp/test.log'), 'Logger');
     }
 
+    public function testAdditionalPathAfterInitialRegister() {
+        Loader::register();
+        $this->assertEqual( Loader::getLookupPath(), array(
+        THINKUP_WEBAPP_PATH . 'model' . DS,
+        THINKUP_WEBAPP_PATH . 'controller' . DS,
+        THINKUP_WEBAPP_PATH . 'model'. DS . 'exceptions' . DS,
+        ));
+
+        Loader::addPath(THINKUP_ROOT_PATH . 'tests' . DS . 'classes');
+        $this->assertEqual( Loader::getLookupPath(), array(
+        THINKUP_WEBAPP_PATH . 'model' . DS,
+        THINKUP_WEBAPP_PATH . 'controller' . DS,
+        THINKUP_WEBAPP_PATH . 'model'. DS . 'exceptions' . DS,
+        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'
+        ));
+    }
+
     public function assertClassInstantiates($class) {
         try {
             new $class;

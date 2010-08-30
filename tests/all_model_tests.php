@@ -24,6 +24,7 @@ $model_tests->addTestCase(new TestOfOwnerInstanceMySQLDAO());
 $model_tests->addTestCase(new TestOfPluginMySQLDAO());
 $model_tests->addTestCase(new TestOfPluginOptionMySQLDAO());
 $model_tests->addTestCase(new TestOfPluginHook());
+$model_tests->addTestCase(new TestOfPost());
 $model_tests->addTestCase(new TestOfPostMySQLDAO());
 $model_tests->addTestCase(new TestOfPostErrorMySQLDAO());
 $model_tests->addTestCase(new TestOfProfiler());

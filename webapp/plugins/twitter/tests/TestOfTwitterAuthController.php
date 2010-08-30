@@ -1,10 +1,13 @@
 <?php
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
-    require_once '../../../../tests/config.tests.inc.php';
+    require_once '../../../../tests/init.tests.php';
 }
 require_once THINKUP_ROOT_PATH.'extlib/simpletest/autorun.php';
 
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+if (!class_exists('twitterOAuth')) {
+    require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
+}
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';

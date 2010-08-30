@@ -9,7 +9,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * TestController isn't a real ThinkUp controller, this is just a template for all Controller tests.
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
-class TestOfTestAuthController extends ThinkUpBasicUnitTestCase {
+class TestOfTestAuthController extends ThinkUpUnitTestCase {
     /**
      * Constructor
      */

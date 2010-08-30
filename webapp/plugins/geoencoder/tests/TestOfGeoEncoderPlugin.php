@@ -21,7 +21,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->UnitTestCase('GeoEncoder plugin class test');
     }
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
 
         //Insert test posts

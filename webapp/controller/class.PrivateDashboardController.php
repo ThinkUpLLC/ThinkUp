@@ -13,11 +13,6 @@ class PrivateDashboardController extends ThinkUpAuthController {
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
-        $instance_dao = DAOFactory::getDAO('InstanceDAO');
-        $last_updated_instance = $instance_dao->getInstanceFreshestOne();
-        if (isset($last_updated_instance)) {
-            $this->addToView('crawler_last_run', $last_updated_instance->crawler_last_run);
-        }
         $this->setPageTitle('Private Dashboard');
     }
 
@@ -26,6 +21,11 @@ class PrivateDashboardController extends ThinkUpAuthController {
      * @TODO Throw an Insufficient privileges Exception when owner doesn't have access to an instance
      */
     public function authControl() {
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $last_updated_instance = $instance_dao->getInstanceFreshestOne();
+        if (isset($last_updated_instance)) {
+            $this->addToView('crawler_last_run', $last_updated_instance->crawler_last_run);
+        }
         $webapp = Webapp::getInstance();
 
         $this->setViewTemplate('index.tpl');

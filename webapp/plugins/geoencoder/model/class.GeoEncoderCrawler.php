@@ -78,9 +78,9 @@ class GeoEncoderCrawler {
                     $pdao->setGeoencodedPost($post_id, self::SUCCESS, $location, $geodata, $reply_retweet_distance);
                     $logger->logStatus('Lat/long coordinates retrieved via API', get_class($this));
                     $vals = array (
-                        'short_name'=>$short_location,
-                        'full_name'=>$location,
-                        'latlng'=>$geodata
+                    'short_name'=>$short_location,
+                    'full_name'=>$location,
+                    'latlng'=>$geodata
                     );
                     $ldao->addLocation($vals);
                 } else {
@@ -140,9 +140,9 @@ class GeoEncoderCrawler {
                             $reply_retweet_distance);
                             $logger->logStatus('Lat/long coordinates retrieved via API', get_class($this));
                             $vals = array (
-                                'short_name'=>$post['geo'],
-                                'full_name'=>$location,
-                                'latlng'=>$geodata
+                            'short_name'=>$post['geo'],
+                            'full_name'=>$location,
+                            'latlng'=>$geodata
                             );
                             $ldao->addLocation($vals);
                             return;
@@ -186,12 +186,12 @@ class GeoEncoderCrawler {
      */
     public function getDistanceBetweenPosts($location1, $location2) {
         $latitude = array(
-            '0' => 0,
-            '1' => 0
+        '0' => 0,
+        '1' => 0
         );
         $longitude = array(
-            '0' => 0,
-            '1' => 0
+        '0' => 0,
+        '1' => 0
         );
         $place1 = explode(',',$location1,2);
         $latitude[0] = $place1[0];

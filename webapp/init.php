@@ -9,27 +9,3 @@ if ($version[0] < 5) {
 //Register our lazy class loader
 require_once 'model/class.Loader.php';
 Loader::register();
-
-//Initialize config
-$config = Config::getInstance();
-if ($config->getValue('timezone')) {
-    date_default_timezone_set($config->getValue('timezone'));
-}
-if ($config->getValue('debug')) {
-    ini_set("display_errors", 1);
-    ini_set("error_reporting", E_ALL);
-}
-
-//Init plugins
-$pdao = DAOFactory::getDAO('PluginDAO');
-$active_plugins = $pdao->getActivePlugins();
-foreach ($active_plugins as $ap) {
-    foreach (glob($config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name."/model/*.php") as
-    $include_file) {
-        require_once $include_file;
-    }
-    foreach (glob($config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name."/controller/*.php") as
-    $include_file) {
-        require_once $include_file;
-    }
-}

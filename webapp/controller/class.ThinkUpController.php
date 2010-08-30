@@ -65,18 +65,29 @@ abstract class ThinkUpController {
         if (!$session_started) {
             session_start();
         }
-        $config = Config::getInstance();
-        $this->profiler_enabled = Profiler::isEnabled();
-        if ( $this->profiler_enabled) {
-            $this->start_time = microtime(true);
-        }
-        $this->view_mgr = new SmartyThinkUp();
-        $this->app_session = new Session();
-        if ($this->isLoggedIn()) {
-            $this->addToView('logged_in_user', $this->getLoggedInUser());
-        }
-        if ($this->isAdmin()) {
-            $this->addToView('user_is_admin', true);
+        try {
+            $config = Config::getInstance();
+            $this->profiler_enabled = Profiler::isEnabled();
+            if ( $this->profiler_enabled) {
+                $this->start_time = microtime(true);
+            }
+            $this->view_mgr = new SmartyThinkUp();
+            $this->app_session = new Session();
+            if ($this->isLoggedIn()) {
+                $this->addToView('logged_in_user', $this->getLoggedInUser());
+            }
+            if ($this->isAdmin()) {
+                $this->addToView('user_is_admin', true);
+            }
+        } catch (Exception $e) {
+            Utils::defineConstants();
+            $cfg_array =  array(
+            'site_root_path'=>THINKUP_BASE_URL,
+            'source_root_path'=>THINKUP_ROOT_PATH, 
+            'debug'=>false, 
+            'app_title'=>"ThinkUp", 
+            'cache_pages'=>false);
+            $this->view_mgr = new SmartyThinkUp($cfg_array);
         }
     }
 
@@ -252,6 +263,7 @@ abstract class ThinkUpController {
      */
     public function go() {
         try {
+            $this->initalizeApp();
             if ($this->profiler_enabled) {
                 $results = $this->control();
                 $end_time = microtime(true);
@@ -269,6 +281,38 @@ abstract class ThinkUpController {
             $this->setViewTemplate('500.tpl');
             $this->addErrorMessage($e->getMessage());
             return $this->generateView();
+        }
+    }
+
+    /**
+     * Initalize app
+     * Load config file and required plugins
+     * @throws Exception
+     */
+    private function initalizeApp() {
+        if (get_class($this) != "InstallerController" ) {
+            //Initialize config
+            $config = Config::getInstance();
+            if ($config->getValue('timezone')) {
+                date_default_timezone_set($config->getValue('timezone'));
+            }
+            if ($config->getValue('debug')) {
+                ini_set("display_errors", 1);
+                ini_set("error_reporting", E_ALL);
+            }
+
+            //Init plugins
+            $pdao = DAOFactory::getDAO('PluginDAO');
+            $active_plugins = $pdao->getActivePlugins();
+            foreach ($active_plugins as $ap) {
+                //add plugin's model and controller folders as Loader paths here
+                Loader::addPath($config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name."/model/");
+                Loader::addPath($config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name.
+                "/controller/");
+                //require the main plugin registration file here
+                require_once $config->getValue('source_root_path').'webapp/plugins/'.$ap->folder_name."/controller/"
+                .$ap->folder_name.".php";
+            }
         }
     }
 

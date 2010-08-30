@@ -28,8 +28,8 @@ class Loader {
      * @param array $additional_paths Array of strings; additional lookup path for classes
      * @return bool true
      */
-    public static function register($additional_paths = null) {
-        self::setLookupPath($additional_paths);
+    public static function register($paths = null) {
+        self::setLookupPath($paths);
         return spl_autoload_register(array(__CLASS__, 'load' ));
     }
 
@@ -43,7 +43,7 @@ class Loader {
     }
 
     /**
-     * Set additional lookup path classes
+     * Set lookup paths
      * @param array $additional_paths Array of strings, additional lookup path for classes
      */
     private static function setLookupPath($additional_paths = null ) {
@@ -76,6 +76,17 @@ class Loader {
                 self::$lookup_path[] = $path;
             }
         }
+    }
+
+    /**
+     * Add another lookup path
+     * @param str $path
+     */
+    public static function addPath($path) {
+        if (!isset(self::$lookup_path)) {
+            self::register();
+        }
+        self::$lookup_path[] = $path;
     }
 
     /**

@@ -15,6 +15,7 @@ class InstallerController extends ThinkUpController {
     private $installer;
 
     public function __construct($session_started=false) {
+        Utils::defineConstants();
         //Don't call parent constructor because config.inc.php doesn't exist yet
         //Instead, set up the view manager with manual array configuration
         $cfg_array =  array(

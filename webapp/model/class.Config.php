@@ -43,7 +43,8 @@ class Config {
                 require THINKUP_WEBAPP_PATH . 'config.inc.php';
                 $this->config = $THINKUP_CFG;
             } else {
-                throw new Exception("Configuration values missing!");
+                throw new Exception('ThinkUp\'s configuration file does not exist! Try <a href="'.THINKUP_BASE_URL.
+                'install/">installing ThinkUp.</a>');
             }
         }
     }
