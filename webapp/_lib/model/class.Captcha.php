@@ -1,7 +1,7 @@
 <?php
 /**
  * CAPTCHA generator
- * Registration "Prove you're human" CAPTCHA image.
+ * Registration "Prove you're human" CAPTCHA image, with reCAPTCHA support.
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -18,7 +18,8 @@ class Captcha {
 
         if ($config->getValue('recaptcha_enable')) {
             $this->type = 1;
-            require_once $config->getValue('source_root_path').'extlib/recaptcha-php-1.10/recaptchalib.php';
+            Utils::defineConstants();
+            require_once THINKUP_WEBAPP_PATH.'_lib/extlib/recaptcha-php-1.10/recaptchalib.php';
             $this->pubkey = $config->getValue('recaptcha_public_key');
             $this->prikey = $config->getValue('recaptcha_private_key');
         } else {
