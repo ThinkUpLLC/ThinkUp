@@ -574,56 +574,27 @@ class Installer {
         $sample_config_filename = THINKUP_WEBAPP_PATH . 'config.sample.inc.php';
         self::checkSampleConfig($sample_config_filename);
 
+        $new_config = array(
+            'site_root_path' => THINKUP_BASE_URL,
+            'source_root_path' => THINKUP_ROOT_PATH,
+            'db_host' => $db_config['db_host'],
+            'db_user' => $db_config['db_user'],
+            'db_password' => $db_config['db_password'],
+            'db_name' => $db_config['db_name'],
+            'db_socket' => $db_config['db_socket'],
+            'db_port' => $db_config['db_port'],
+            'table_prefix' => $db_config['table_prefix']
+        );
+
         // read sample configuration file and replace some lines
         $sample_config = file($sample_config_filename);
         foreach ($sample_config as $line_num => $line) {
-            switch ( substr($line, 12, 30) ) {
-                case "['site_root_path']            ":
-                    $sample_config[$line_num] = str_replace(
-                          "'/'", "'" . THINKUP_BASE_URL . "'", $line
-                    );
-                    break;
-                case "['source_root_path']          ":
-                    $sample_config[$line_num] = str_replace(
-                          "'/your-server-path-to/thinkup/'",
-                          "'" . THINKUP_ROOT_PATH . "'", $line
-                    );
-                    break;
-                case "['db_host']                   ":
-                    $sample_config[$line_num] = str_replace(
-                          "'localhost'", "'" . $db_config['db_host'] . "'", $line
-                    );
-                    break;
-                case "['db_user']                   ":
-                    $sample_config[$line_num] = str_replace(
-                          "'your_database_username'", "'" . $db_config['db_user'] . "'", $line
-                    );
-                    break;
-                case "['db_password']               ":
-                    $sample_config[$line_num] = str_replace(
-                          "'your_database_password'", "'" . $db_config['db_password'] . "'", $line
-                    );
-                    break;
-                case "['db_name']                   ":
-                    $sample_config[$line_num] = str_replace(
-                          "'your_thinkup_database_name'", "'" . $db_config['db_name'] . "'", $line
-                    );
-                    break;
-                case "['db_socket']                 ":
-                    $sample_config[$line_num] = str_replace(
-                          "= '';", "= '" . $db_config['db_socket'] . "';", $line
-                    );
-                    break;
-                case "['db_port']                   ":
-                    $sample_config[$line_num] = str_replace(
-                          "= '';", "= '" . $db_config['db_port'] . "';", $line
-                    );
-                    break;
-                case "['table_prefix']              ":
-                    $sample_config[$line_num] = str_replace(
-                          "'tu_'", "'" . $db_config['table_prefix'] . "'", $line
-                    );
-                    break;
+            if (preg_match('/\[\'([a-z0-9_]+)\'\]/', $line, $regs)) {
+                $what = $regs[1];
+                if (isset($new_config[$what])) {
+                    $sample_config[$line_num] = preg_replace('/=.*;(.*)/', "= '" . $new_config[$what] . "';\\1", 
+                    $sample_config[$line_num]);
+                }
             }
         } // end foreach
         return $sample_config;
