@@ -62,7 +62,7 @@ class Utils {
         } else {
             while (($file = readdir($dh)) !== false) {
                 if ($file != '.' && $file != '..') {
-                    $requiredFile = $dir.DIRECTORY_SEPARATOR.$file;
+                    $requiredFile = "$dir/$file";
                     if (is_dir($requiredFile)) {
                         array_push($plugins, $file);
                     }
@@ -136,17 +136,17 @@ class Utils {
 
     public static function defineConstants() {
         if ( !defined('DS') ) {
-            define('DS', DIRECTORY_SEPARATOR);
+            define('DS', '/');
         }
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) . DS);
+            define('THINKUP_ROOT_PATH', str_replace("\\", DS, dirname(dirname(__FILE__))) . DS);
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
             if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
-                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
             } else {
-                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup' . DS);
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup/');
             }
         }
 

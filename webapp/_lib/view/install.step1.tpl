@@ -76,7 +76,7 @@
         </div>
         {if !$libs.curl}
         <div class="clearfix append_20 info_message">
-          <p>ThinkUp needs cURL installed on your system.</p>
+          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.curl.php" target="_blank">cURL PHP library</a> installed on your system.</p>
         </div>
         {/if}
         
@@ -94,7 +94,7 @@
         </div>
         {if !$libs.gd}
         <div class="clearfix append_20 info_message">
-          <p>Thinkup needs GD lib installed on your system.</p>
+          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.image.php" target="_blank">GD PHP library</a> installed on your system.</p>
         </div>
         {/if}
         
@@ -120,8 +120,9 @@
           <p><code>{$writeable_directories.logs}</code></p>
           <p><code>{$writeable_directories.compiled_view}</code></p>
           <p><code>{$writeable_directories.cache}</code></p>
-          <p class="prepend_20">If you have command line (SSH) access to your web server then you can simply copy and paste the following command into your shell:</p>
-          <p><code>chmod -R 777 {$writeable_directories.logs} {$writeable_directories.compiled_view} {$writeable_directories.cache}</code></p>
+          <p class="prepend_20">If you have terminal (SSH) access to your web server then you can simply copy and paste the following command into your terminal:</p>
+          <p>As root: <code>chown -R apache {$writeable_directories.logs} {$writeable_directories.compiled_view} {$writeable_directories.cache}</code></p>
+          <p>Or if you don't have root access: <code>chmod -R 777 {$writeable_directories.logs} {$writeable_directories.compiled_view} {$writeable_directories.cache}</code></p>
         </div>
         {/if}
         

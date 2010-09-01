@@ -32,7 +32,9 @@ class InstallerController extends ThinkUpController {
     public function control() {
         $this->installer = Installer::getInstance();
 
-        $this->checkForExistingInstallation();
+        if (@$_GET['step'] != 'repair') {
+            $this->checkForExistingInstallation();
+        }
 
         //route user to the right step
         if (!isset($_GET['step']) || $_GET['step'] == '1') {
@@ -56,7 +58,8 @@ class InstallerController extends ThinkUpController {
      */
     private function checkForExistingInstallation() {
         //if config file exists, check if ThinkUp is installed
-        if ( file_exists( THINKUP_WEBAPP_PATH . 'config.inc.php' ) ) {
+        if ( file_exists( THINKUP_WEBAPP_PATH . 'config.inc.php' ) &&
+        filesize( THINKUP_WEBAPP_PATH . 'config.inc.php' ) > 0 ) {
             require THINKUP_WEBAPP_PATH . 'config.inc.php';
             if ( $this->installer->isThinkUpInstalled($THINKUP_CFG) && $this->installer->checkPath($THINKUP_CFG) ) {
                 // ThinkUp is installed, but check at least one admin owner exists, if not, let user know
@@ -164,7 +167,7 @@ class InstallerController extends ThinkUpController {
         }
 
         // check if we have made config.inc.php
-        if ( file_exists($config_file) ) {
+        if ( file_exists($config_file) && filesize($config_file) > 0 ) {
             // this is could be from step 2 is not able writing
             // to webapp dir
             $config_file_exists = true;
@@ -199,10 +202,6 @@ class InstallerController extends ThinkUpController {
             $db_config['table_prefix'] = trim($_POST['db_prefix']);
             $db_config['GMT_offset']   = 7;
             $email                     = trim($_POST['site_email']);
-
-            if ( empty($db_config['table_prefix']) ) {
-                $db_config['table_prefix'] = 'tu_';
-            }
         }
         $db_config['db_type'] = 'mysql'; //default for now
         $password = $_POST['password'];
@@ -251,9 +250,13 @@ class InstallerController extends ThinkUpController {
             foreach ($config_file_contents_arr as $line) {
                 $config_file_contents_str .= htmlentities($line);
             }
-            $this->addErrorMessage("ThinkUp couldn't write <code>config.inc.php</code> file. Either make the ".
-            "<code>" . THINKUP_WEBAPP_PATH . "</code> folder writeable or create the <code>config.inc.php</code> file ".
-            "there manually and paste the following text into it.");
+            $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
+            "Use root (or sudo) to create the file manually, and allow PHP to write to it, by executing the ".
+            "following commands:<br /><code>touch " . escapeshellcmd(THINKUP_WEBAPP_PATH . "config.inc.php") .
+            "</code><br /><code>chown " . exec('whoami') . " " . escapeshellcmd(THINKUP_WEBAPP_PATH . 
+            "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" . 
+            THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
+            "<br /><br />Click the <strong>Next Step</strong> button below once you did either.");
             $this->addToView('config_file_contents', $config_file_contents_str );
             $this->addToView('_POST', $_POST);
 

@@ -119,7 +119,7 @@
                 <div class="grid_10 prefix_1 left">
                   <input type="text" name="db_host" id="db_host"{if isset($db_host)} value="{$db_host}"{/if}>
                   <span class="input_information">This is usually <strong>localhost</strong> or a host name provided by 
-                  the hosting provide.</span>
+                  the hosting provider.</span>
                 </div>
               </div>
               

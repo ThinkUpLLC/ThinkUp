@@ -93,13 +93,13 @@ class Installer {
 
             // use lazy loading
             if ( !class_exists('Loader', FALSE) ) {
-                require_once THINKUP_WEBAPP_PATH . '_lib'.DS.'model' . DS . 'class.Loader.php';
+                require_once THINKUP_WEBAPP_PATH . '_lib/model/class.Loader.php';
             }
             Loader::register();
 
             // get required version of php and mysql
             // and set current version
-            require (THINKUP_WEBAPP_PATH . 'install' . DS . 'version.php');
+            require (THINKUP_WEBAPP_PATH . 'install/version.php');
 
             self::$required_version = array(
                 'php' => $THINKUP_VERSION_REQUIRED['php'],
@@ -174,8 +174,8 @@ class Installer {
      * @return array 'compiled_view'=>true/false, 'cache'=>true/false
      */
     public function checkPermission($perms = array()) {
-        $compile_dir = THINKUP_WEBAPP_PATH . '_lib'.DS.'view' . DS . 'compiled_view';
-        $cache_dir = $compile_dir . DS . 'cache';
+        $compile_dir = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view';
+        $cache_dir = "$compile_dir/cache";
         $ret = array('compiled_view' => false, 'cache' => false);
         if ( is_writable($compile_dir) ) {
             $ret['compiled_view'] = true;
@@ -305,8 +305,10 @@ class Installer {
                     // database contains at least 1 ThinkUp table
                     throw new InstallerException("<strong>Oops!</strong><br /> Looks like at least some of ThinkUp's ".
                     "database tables already exist. To install ThinkUp from scratch, drop its tables in the ".
-                    "<code>{$config['db_name']}</code> database.<br />To repair your existing tables, click " .
-                    "<a href=\"" . THINKUP_BASE_URL . "install/index.php?step=repair&m=db\">here</a>.",
+                    "<code style='font-family: Consolas,Monaco,Courier,monospace; border: 1px solid #999; ".
+                    "background-color: #ccc;'>{$config['db_name']}</code> database.<br />".
+                    "To repair your existing tables, click <a href=\"" . THINKUP_BASE_URL . 
+                    "install/index.php?step=repair&m=db\">here</a>.",
                     self::ERROR_DB_TABLES_EXIST);
                 }
             }
@@ -427,7 +429,7 @@ class Installer {
      * @return string
      */
     private function getInstallQueries($table_prefix) {
-        $query_file = THINKUP_WEBAPP_PATH . 'install' . DS . 'sql' . DS . 'build-db_mysql.sql';
+        $query_file = THINKUP_WEBAPP_PATH . 'install/sql/build-db_mysql.sql';
         if ( !file_exists($query_file) ) {
             throw new InstallerException("File <code>$query_file</code> is not found.", self::ERROR_FILE_NOT_FOUND);
         }
@@ -540,13 +542,14 @@ class Installer {
      */
     public function createConfigFile($db_config, $admin_user) {
         $config_file = THINKUP_WEBAPP_PATH . 'config.inc.php';
-        $config_file_exists = file_exists($config_file);
 
-        // check sample configuration file
-        // when config.inc.php is not exist
-        if (!$config_file_exists) {
+        if (!file_exists($config_file) || filesize($config_file) === 0) {
             $new_config_file_contents = self::generateConfigFile($db_config, $admin_user);
-            if ( !is_writable(THINKUP_WEBAPP_PATH) ) {
+            if ( !file_exists($config_file) && !is_writable(dirname($config_file)) ) {
+                // Config file doesn't exist, and I won't be able to create it.
+                return false;
+            } else if ( file_exists($config_file) && !is_writable($config_file) ) {
+                // Config file exist, but I can't write to it.
                 return false;
             } else {
                 /* write the config file */
@@ -555,7 +558,6 @@ class Installer {
                     fwrite($handle, $line);
                 }
                 fclose($handle);
-                chmod($config_file, 0666);
                 return true;
             }
         }

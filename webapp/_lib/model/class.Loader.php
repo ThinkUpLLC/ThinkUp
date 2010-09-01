@@ -48,32 +48,27 @@ class Loader {
      */
     private static function setLookupPath($additional_paths = null ) {
         if ( !defined('DS') ) {
-            define('DS', DIRECTORY_SEPARATOR);
+            define('DS', '/');
         }
         // check two required named constants
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', dirname(dirname(dirname(dirname(__FILE__)))) . DS);
+            define('THINKUP_ROOT_PATH', str_replace("\\", DS, dirname(dirname(dirname(dirname(__FILE__))))) . DS);
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
-                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
-            } else {
-                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup' . DS);
-            }
+            define('THINKUP_WEBAPP_PATH', str_replace("\\", DS, dirname(dirname(dirname(__FILE__)))) . DS);
         }
 
         // set default lookup path for classes
         self::$lookup_path = array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS . 'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS . 'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS . 'model'. DS . 'exceptions' . DS
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/'
         );
 
         // set default lookup path for special classes
         self::$special_classes = array(
-        'Smarty' => THINKUP_WEBAPP_PATH . '_lib' . DS . 'extlib' . DS . 'Smarty-2.6.26' . DS .'libs' . DS . 
-        'Smarty.class.php'
+        'Smarty' => THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php'
         );
 
         if ( isset($additional_paths) && is_array($additional_paths)  ) {
