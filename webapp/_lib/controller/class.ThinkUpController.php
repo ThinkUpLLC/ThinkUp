@@ -79,6 +79,8 @@ abstract class ThinkUpController {
             if ($this->isAdmin()) {
                 $this->addToView('user_is_admin', true);
             }
+            require (THINKUP_WEBAPP_PATH . 'install/version.php');
+            $this->addToView('thinkup_version', $THINKUP_VERSION);
         } catch (Exception $e) {
             Utils::defineConstants();
             $cfg_array =  array(
