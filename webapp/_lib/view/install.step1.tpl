@@ -6,13 +6,13 @@
           <li id="step-tab-1" class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
             <div class="key-stat install_step">
             <h1>1</h1>
-            <h3>Requirements Check</h3>
+            <h3>Check System Requirements</h3>
             </div>  
           </li>
           <li id="step-tab-2" class="ui-state-default ui-corner-top">
             <div class="key-stat install_step">
             <h1>2</h1>
-            <h3>Database Setup and Site Configuration</h3>
+            <h3>Configure ThinkUp</h3>
             </div>
           </li>
           <li id="step-tab-3" class="no-border ui-state-default ui-corner-top">
@@ -130,7 +130,7 @@
         <div class="clearfix">
           <div class="grid_10 prefix_8 left">
             <div class="next_step tt-button ui-state-default ui-priority-secondary ui-corner-all">
-              <a href="index.php?step=2">Next Step &raquo;</a>
+              <a href="index.php?step=2" style="color:black">Next Step &raquo;</a>
             </div>
           </div>
         </div>

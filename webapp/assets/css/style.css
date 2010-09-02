@@ -50,7 +50,7 @@ ul.user-accounts li ul li {margin-left:2em;}
 #thinkup-tabs .ui-corner-all {}
 
 /* added to ul */
-#thinkup-tabs .ui-tabs-nav {margin:0px;background-color: #EEEEEA;border:1px solid;}
+#thinkup-tabs .ui-tabs-nav {margin:0px;background-color: #E6E6E6;border:1px solid;}
 #thinkup-tabs .ui-helper-reset {}
 #thinkup-tabs .ui-helper-clearfix {}
 #thinkup-tabs .ui-widget-header {background-image:none;}

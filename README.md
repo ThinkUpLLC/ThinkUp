@@ -7,15 +7,15 @@ See screenshots and more at  [http://thinkupapp.com](http://thinkupapp.com)
 ThinkUp is sponsored by [Expert Labs](http://expertlabs.org), led by [Gina Trapani](http://ginatrapani.org), and used 
 to be named ThinkTank and Twitalytic. 
 
-*WARNING: Alpha code, PROCEED AT YOUR OWN RISK!*
+*WARNING: Beta code, PROCEED AT YOUR OWN RISK!*
 
-This is not production code. This is an alpha web application. The intended audience is server administrators with 
-experience installing and troubleshooting  PHP/MySQL hosted web applications. Right now  this code is for 
+This is not production code. This is an early beta web application. The intended audience is server administrators with 
+experience installing and troubleshooting PHP/MySQL hosted web applications. Right now this code is for 
 experimentation and tinkering only. Do not run on a production server. You have been warned. 
 
 ## INSTALL
 
-In future versions, this will get easier.
+Currently we're testing a new web-based installer. Give it a try, won't you?
 
 ### System Requirements
 
@@ -26,53 +26,28 @@ In future versions, this will get easier.
    internet for initial authorization; after that the server doesn't
    have to be publicly available.) 
 
-### Install application files
+### Download source code
 
-1. Download source code. Save the `thinkup` directory one level above your web site's DocumentRoot. For example, if your site's DocumentRoot is  `/var/www/vhosts/example.com/httpdocs/` Put the `thinkup` directory here:  `/var/www/vhosts/example.com/thinkup/`
-2. Create a symbolic link to the `thinkup/webapp` directory in your site's DocumentRoot folder. To do so, `cd` to the DocumentRoot, and use the command: `ln -s ../thinkup/webapp/ thinkup`
-3. Make the following directories writable by the web server:
-
-    `thinkup/webapp/view/compiled_view/`
-    
-    `thinkup/webapp/view/compiled_view/cache/`
-    
-    `thinkup/logs/`
-
-*Note for upgraders:* If you're upgrading a previous installation, you should delete your cookies (in Firefox under 
-`Preferences / Privacy / delete individual cookies`.  In Chrome, you can delete individual cookies under
-`Preferences / Under the Hood / Content Settings / Cookies / Show Cookies and other site data`).
-
-### Set up database
-
-1. Create a database and select it, i.e., 
-  `CREATE DATABASE thinkup`
-
-2. Build tables with `thinkup/sql/build-db_mysql.sql`
-
-### Configure the application
-
-Rename `thinkup/webapp/config.sample.inc.php` to `config.inc.php` and set the appropriate application and database 
-values for your environment.
-
-Visit your ThinkUp install in a web browser and register as a ThinkUp user. In your database, set yourself as an
-application administrator by setting the `tu_owners` table `is_admin` field to 1.
+1. Download the [latest distribution](http://github.com/ginatrapani/ThinkUp/downloads) of ThinkUp. 
+2. Extract the zip file into a web-accessible folder.
+3. Visit that URL in your browser and proceed through the installation process.
 
 ### Configure the application's plugins
 
-In ThinkUp, visit the Configuration page to activate the plugins of your choice.
+Once ThinkUp is installed, log in and visit the Configuration page to activate the plugins of your choice.
 Click on each one to visit its settings page and configure any necessary API keys or other settings.
 
-## RUN
+### Run the ThinkUp crawler
 
-Visit the web application on your server, register and log in. On the Plugins page, activate Twitter, Facebook, and 
-any other plugins you want. Once they're activated, click on the plugin link and authorize your Twitter and/or 
-Facebook accounts in ThinkUp. 
+Log into ThinkUp and visit http://yourserver.com/your/path/to/thinkup/crawler/run.php to run the ThinkUp crawler
+and begin capturing data.
 
-Then, to run the crawler to load your social network data, `cd` to `/your-path-to-thinkup/webapp/crawler/`, and run:
+Schedule the crawler to run on a regular basis on your server. To do so, at your server's command line,
+ `cd` to `/your-path-to-thinkup/webapp/crawler/`, and run:
 
-    $ export THINKUP_PASSWORD=yourttpassword; php crawl.php you@example.com
+    $ export THINKUP_PASSWORD=yourtupassword; php crawl.php you@example.com
 
-Where `you@example.com` is your ThinkUp login email address, and `yourttpassword` is your ThinkUp password.
+Where `you@example.com` is your ThinkUp login email address, and `yourtupassword` is your ThinkUp password.
 
 To view what's going on with the crawler, use this command:
 

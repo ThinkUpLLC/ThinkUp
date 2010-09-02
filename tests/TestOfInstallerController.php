@@ -82,7 +82,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->go();
-        $this->assertPattern('/Database Setup and Site Configuration/', $result);
+        $this->assertPattern('/Configure ThinkUp/', $result);
         $this->restoreConfigFile();
     }
 
@@ -254,7 +254,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->go();
 
-        $this->assertPattern('/Congratulations! ThinkUp has been installed./', $result);
+        $this->assertPattern('/ThinkUp has been installed successfully./', $result);
         $this->restoreConfigFile();
         //echo $result;
     }

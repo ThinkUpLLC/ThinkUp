@@ -31,6 +31,15 @@
         e.preventDefault();
         return false;
       });
+      
+      $('.toggle-help-msg').click(function(e) {
+        var helpMessage = $(this).next('#help-no-email-message');
+        helpMessage.slideToggle(500);
+        e.preventDefault();
+        return false;
+      });
+
+      
     });
   </script>
   {/literal}

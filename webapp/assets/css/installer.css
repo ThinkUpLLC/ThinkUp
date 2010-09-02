@@ -41,6 +41,8 @@ code {
   width: 250px;
   margin-top: 20px;
   font-size: 1.4em;
+  border:solid #999 1px;
+  color:black;
 }
 .next_step a {
   display: block;

@@ -6,13 +6,13 @@
           <li id="step-tab-1" class="ui-state-default ui-corner-top">
             <div class="key-stat install_step">
             <h1><span class="pass_step" id="pass-step-1">1</span></h1>
-            <h3>Requirements Check</h3>
+            <h3>Check System Requirements</h3>
             </div>  
           </li>
           <li id="step-tab-2" class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
             <div class="key-stat install_step">
             <h1>2</h1>
-            <h3>Database Setup and Site Configuration</h3>
+            <h3>Configure ThinkUp</h3>
             </div>
           </li>
           <li id="step-tab-3" class="no-border ui-state-default ui-corner-top">
@@ -35,7 +35,7 @@
           <h2 class="clearfix step_title">Create Your ThinkUp Account</h2>
           <div class="clearfix append_20">
             <div class="grid_5 prefix_3 right">
-              <label>Your&nbsp;Name</label>
+              <label>Name</label>
             </div>
             <div class="grid_10 prefix_1 left">
               <input type="text" name="full_name" id="full_name"{if isset($full_name)} value="{$full_name}"{/if}>
@@ -43,7 +43,7 @@
           </div>
           <div class="clearfix append_20">
             <div class="grid_5 prefix_3 right">
-              <label>Your&nbsp;Email&nbsp;Address</label>
+              <label>Email&nbsp;Address</label>
             </div>
             <div class="grid_10 prefix_1 left">
               <input type="text" name="site_email" id="site_email"{if isset($site_email)} value="{$site_email}"{/if}>
@@ -52,7 +52,7 @@
           
           <div class="clearfix append_20">
             <div class="grid_5 prefix_3 right">
-              <label>Password</label>
+              <label>Choose&nbsp;Password</label>
             </div>
             <div class="grid_10 prefix_1 left">
               <input type="password" name="password" id="password"{if isset($password)} value="{$password}"{/if}>
@@ -68,7 +68,7 @@
             </div>
           </div>
 
-          <h2 class="clearfix step_title">Tell Us About Your Database</h2>
+          <h2 class="clearfix step_title">Connect ThinkUp to Your Database</h2>
 
           <div class="clearfix append_20">
             <div class="grid_5 prefix_3 right">
@@ -76,7 +76,7 @@
             </div>
             <div class="grid_10 prefix_1 left">
               <input type="text" name="db_name" id="db_name"{if isset($db_name)} value="{$db_name}"{/if}>
-              <span class="input_information">The name of the MySQL database your ThinkUp data will be stored in.</span>
+              <span class="input_information">This MySQL database should already exist.</span>
             </div>
           </div>
           
@@ -118,8 +118,8 @@
                 </div>
                 <div class="grid_10 prefix_1 left">
                   <input type="text" name="db_host" id="db_host"{if isset($db_host)} value="{$db_host}"{/if}>
-                  <span class="input_information">This is usually <strong>localhost</strong> or a host name provided by 
-                  the hosting provider.</span>
+                  <span class="input_information">This is usually <strong>localhost</strong> or a host name specified by 
+                  your hosting provider.</span>
                 </div>
               </div>
               
@@ -129,7 +129,7 @@
                 </div>
                 <div class="grid_10 prefix_1 left">
                   <input type="text" name="db_socket" id="db_socket"{if isset($db_socket)} value="{$db_socket}"{/if}>
-                  <span class="input_information">Leave it blanks if you're not sure about this.</span>
+                  <span class="input_information">If you're not sure about this, leave it blank.</span>
                 </div>
               </div>
               
@@ -139,7 +139,7 @@
                 </div>
                 <div class="grid_10 prefix_1 left">
                   <input type="text" name="db_port" id="db_port"{if isset($db_port)} value="{$db_port}"{/if}>
-                  <span class="input_information">Leave it blanks if you're not sure about this.</span>
+                  <span class="input_information">If you're not sure about this, leave it blank.</span>
                 </div>
               </div>
               
@@ -149,7 +149,7 @@
                 </div>
                 <div class="grid_10 prefix_1 left">
                   <input type="text" name="db_prefix" id="db_prefix"{if isset($db_prefix)} value="{$db_prefix}"{/if}>
-                  <span class="input_information">Prefix of your table name</span>
+                  <span class="input_information">Optional prefix for your ThinkUp tables.</span>
                 </div>
               </div>
           </div>
@@ -157,7 +157,7 @@
           
           <div class="clearfix append_20">
             <div class="grid_10 prefix_9 left">
-              <input type="submit" name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Next Step &raquo">
+              <input type="submit" name="Submit" class="next_step tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Next Step &raquo">
             </div>
           </div>
 
