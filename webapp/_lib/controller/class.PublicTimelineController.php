@@ -116,6 +116,8 @@ class PublicTimelineController extends ThinkUpController {
             $this->addToView('user_details', $user);
 
             //posts
+            $recent_posts = $this->post_dao->getAllPosts($instance->network_user_id, $instance->network, 5, true);
+            $this->addToView('recent_posts', $recent_posts);
             $most_replied_to_alltime = $this->post_dao->getMostRepliedToPosts($instance->network_user_id, $network, 5);
             $this->addToView('most_replied_to_alltime', $most_replied_to_alltime);
             $most_retweeted_alltime = $this->post_dao->getMostRetweetedPosts($instance->network_user_id, $network, 5);
@@ -139,9 +141,34 @@ class PublicTimelineController extends ThinkUpController {
             $follower_count_history_by_day = $follower_count_dao->getHistory($instance->network_user_id, 'twitter',
             'DAY');
             $this->addToView('follower_count_history_by_day', $follower_count_history_by_day);
+            $first_follower_count = $follower_count_history_by_day['history'][0]['count'];
+            $last_follower_count = $follower_count_history_by_day['history']
+            [sizeof($follower_count_history_by_day['history'])-1]['count'];
+            $this->addToView('follower_count_by_day_trend',
+            ($last_follower_count - $first_follower_count)/sizeof($follower_count_history_by_day['history']));
             $follower_count_history_by_week = $follower_count_dao->getHistory($instance->network_user_id, 'twitter',
             'WEEK');
             $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
+            $first_follower_count = $follower_count_history_by_week['history'][0]['count'];
+            $last_follower_count = $follower_count_history_by_week['history']
+            [sizeof($follower_count_history_by_week['history'])-1]['count'];
+            $this->addToView('follower_count_by_week_trend',
+            ($last_follower_count - $first_follower_count)/sizeof($follower_count_history_by_week['history']));
+
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            list($all_time_clients_usage, $latest_clients_usage) =
+            $post_dao->getClientsUsedByUserOnNetwork($instance->network_user_id, $instance->network);
+
+            // Only show the top 10 most used clients, since forever
+            $all_time_clients_usage = array_merge(
+            array_slice($all_time_clients_usage, 0, 10),
+            array('Others'=>array_sum(array_slice($all_time_clients_usage, 10)))
+            );
+            $this->addToView('all_time_clients_usage', $all_time_clients_usage);
+
+            // Only show the two most used clients for the last 25 posts
+            $latest_clients_usage = array_slice($latest_clients_usage, 0, 2);
+            $this->addToView('latest_clients_usage', $latest_clients_usage);
         } else {
             $this->addErrorMessage($username." on ".ucwords($network).
             " isn't set up on this ThinkUp installation.");

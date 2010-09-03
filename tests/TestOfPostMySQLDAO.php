@@ -84,10 +84,17 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 0;
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+            if ($counter % 3 == 0) {
+                $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+            } else if ($counter % 3 == 1) {
+                $source = '<a href="http://twitter.com/tweetbutton" rel="nofollow">Tweet Button</a>';
+            } else {
+                $source = 'web';
+            }
             $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
             post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
             ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
-            'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
+            'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
             PDODAO::$PDO->exec($q);
             $counter++;
         }
@@ -273,7 +280,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PostMySQLDAO();
         $this->assertTrue(isset($dao));
     }
-
+    
     /**
      * Test getOrphanReplies
      */
@@ -1162,5 +1169,32 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $post = $dao->getPost(131, 'twitter');
         $this->assertEqual($post->geo, '78');
         $this->assertEqual($post->location, 'New Delhi');
+    }
+
+    /**
+     * Test getClientsUsedByUserOnNetwork
+     */
+    public function testGetClientsUsedByUserOnNetwork() {
+        $dao = new PostMySQLDAO();
+        list($all_time_clients_usage, $latest_clients_usage) = $dao->getClientsUsedByUserOnNetwork(13, 'twitter');
+        $this->assertIsA($all_time_clients_usage, 'array');
+        $this->assertEqual(sizeof($all_time_clients_usage), 3);
+        $this->assertEqual($all_time_clients_usage['Tweetie for Mac'], 14);
+        $this->assertEqual($all_time_clients_usage['web'], 14);
+        $this->assertEqual($all_time_clients_usage['Tweet Button'], 13);
+        $keys = array_keys($all_time_clients_usage);
+        $this->assertEqual($keys[0], 'Tweetie for Mac');
+        $this->assertEqual($keys[1], 'web');
+        $this->assertEqual($keys[2], 'Tweet Button');
+        
+        $this->assertIsA($latest_clients_usage, 'array');
+        $this->assertEqual(sizeof($latest_clients_usage), 3);
+        $this->assertEqual($latest_clients_usage['Tweetie for Mac'], 8);
+        $this->assertEqual($latest_clients_usage['web'], 9);
+        $this->assertEqual($latest_clients_usage['Tweet Button'], 8);
+        $keys = array_keys($latest_clients_usage);
+        $this->assertEqual($keys[0], 'web');
+        $this->assertEqual($keys[1], 'Tweet Button');
+        $this->assertEqual($keys[2], 'Tweetie for Mac');
     }
 }

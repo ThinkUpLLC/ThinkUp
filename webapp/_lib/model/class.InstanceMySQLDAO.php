@@ -206,9 +206,79 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
+    
+    private function getInstanceUserStats($network_user_id) {
+        $num_posts_max = 25;
+        
+        $q  = "SELECT pub_date, all_posts.total AS num_posts";
+        $q .= "  FROM (";
+        $q .= "        SELECT *";
+        $q .= "          FROM #prefix#posts";
+        $q .= "         WHERE author_user_id=:uid";
+        $q .= "         ORDER BY pub_date DESC";
+        $q .= "         LIMIT :num_posts) AS p,";
+        $q .= "       (";
+        $q .= "        SELECT COUNT(*) AS total";
+        $q .= "          FROM #prefix#posts";
+        $q .= "         WHERE author_user_id=:uid) AS all_posts";
+        $q .= " ORDER BY pub_date ASC";
+        $q .= " LIMIT 1;";
+        $vars = array(
+        	':uid' => $network_user_id,
+            ':num_posts' => $num_posts_max
+        );
+        $result = $this->getDataRowAsArray($this->execute($q, $vars));
+        
+        if ($result['num_posts'] > $num_posts_max) {
+            $result['num_posts'] = $num_posts_max;
+        }
+
+        $num_days = (time() - strtotime($result['pub_date'])) / (24*60*60);
+        if ($num_days < 1) {
+            $num_days = 1;
+        }
+        $posts_per_day = $result['num_posts'] / $num_days;
+        
+        $num_weeks = $num_days / 7;
+        if ($num_weeks < 1) {
+            $num_weeks = 1;
+        }
+        $posts_per_week = $result['num_posts'] / $num_weeks;
+        
+        $q  = "SELECT num_replies.total AS num_replies,";
+        $q .= "       num_links.total   AS num_links,";
+        $q .= "       all_posts.total   AS num_posts";
+        $q .= "  FROM (";
+        $q .= "        SELECT COUNT(*) AS total";
+        $q .= "          FROM #prefix#posts";
+        $q .= "         WHERE author_user_id=:uid";
+        $q .= "           AND in_reply_to_user_id IS NOT NULL) AS num_replies,";
+        $q .= "       (";
+        $q .= "        SELECT COUNT(*) AS total";
+        $q .= "          FROM #prefix#posts AS p";
+        $q .= "     LEFT JOIN #prefix#links AS l";
+        $q .= "               ON (p.post_id = l.post_id)";
+        $q .= "         WHERE author_user_id=:uid";
+        $q .= "           AND l.post_id IS NOT NULL) AS num_links,";
+        $q .= "       (";
+        $q .= "        SELECT COUNT(*) AS total";
+        $q .= "          FROM #prefix#posts";
+        $q .= "         WHERE author_user_id=:uid) AS all_posts;";
+        $vars = array(
+        	':uid' => $network_user_id
+        );
+        $result = $this->getDataRowAsArray($this->execute($q, $vars));
+
+        $percent_replies = $result['num_replies'] / $result['num_posts'] * 100.0;
+        $percent_links = $result['num_links'] / $result['num_posts'] * 100.0;
+        
+        return array($posts_per_day, $posts_per_week, $percent_replies, $percent_links);
+    }
 
     public function save($instance_object, $user_xml_total_posts_by_owner, $logger = false) {
         $i = $instance_object;
+        list($posts_per_day, $posts_per_week, $percent_replies, $percent_links) = 
+        $this->getInstanceUserStats($i->network_user_id);
         $ot = ($user_xml_total_posts_by_owner != '' ? true : false);
         $lsi = ($i->last_status_id != "" ? true : false);
         $is_archive_loaded_follows = $this->convertBoolToDB($i->is_archive_loaded_follows);
@@ -237,7 +307,11 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         $q .= " earliest_post_in_system = (SELECT pub_date ";
         $q .= "     FROM #prefix#posts ";
         $q .= "     WHERE author_user_id = :uid ";
-        $q .= "     ORDER BY pub_date ASC LIMIT 1) ";
+        $q .= "     ORDER BY pub_date ASC LIMIT 1), ";
+        $q .= " posts_per_day = :ppd, ";
+        $q .= " posts_per_week = :ppw, ";
+        $q .= " percentage_replies = :perc_r, ";
+        $q .= " percentage_links = :perc_l ";
         $q .= " WHERE network_user_id = :uid;";
 
         $vars = array(
@@ -248,7 +322,11 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
             ':tpbo'         => $user_xml_total_posts_by_owner,
             ':username'     => "%".$i->network_username."%",
             ':ialf'         => $is_archive_loaded_follows,
-            ':ialr'         => $is_archive_loaded_replies
+            ':ialr'         => $is_archive_loaded_replies,
+            ':ppd'          => $posts_per_day,
+            ':ppw'          => $posts_per_week,
+            ':perc_r'       => $percent_replies,
+            ':perc_l'       => $percent_links
         );
         $ps = $this->execute($q, $vars);
 

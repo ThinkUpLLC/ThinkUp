@@ -369,4 +369,14 @@ interface PostDAO {
      * @return array Posts
      */
     public function getMostRetweetedPostsInLastWeek($username, $network, $count);
+
+    /**
+     * Calculate how much each client is used by a user on a specific network
+     * @param int $author_id
+     * @param string $network
+     * @return array First element of the returned array is an array of all the clients the user used, ever. 
+     *               The second element is an array of the clients used for the last 25 posts.
+     *               Both arrays are sorted by number of use, descending.
+     */
+    public function getClientsUsedByUserOnNetwork($author_id, $network);
 }

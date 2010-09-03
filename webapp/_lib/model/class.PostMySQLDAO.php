@@ -1015,4 +1015,66 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $distance_in_miles = round($distance_in_km/1.609);
         return $distance_in_miles;
     }
+
+    /**
+     * Calculate how much each client is used by a user on a specific network
+     * @param int $author_id
+     * @param string $network
+     * @return array First element of the returned array is an array of all the clients the user used, ever. 
+     *               The second element is an array of the clients used for the last 25 posts.
+     *               Both arrays are sorted by number of use, descending.
+     */
+    public function getClientsUsedByUserOnNetwork($author_id, $network) {
+        $q  = "SELECT COUNT(*) AS num_posts, source";
+        $q .= "  FROM #prefix#posts ";
+        $q .= " WHERE author_user_id = :author_id AND network = :network";
+        $q .= " GROUP BY source";
+        $vars = array(
+            ':author_id'=>$author_id,
+            ':network'=>$network
+        );
+        $rows = $this->getDataRowsAsArrays($this->execute($q, $vars));
+        $all_time_clients_usage = self::cleanClientsNames($rows);
+
+        $q  = "SELECT COUNT(*) AS num_posts, source";
+        $q .= "  FROM (";
+        $q .= "       SELECT *";
+        $q .= "         FROM #prefix#posts ";
+        $q .= "        WHERE author_user_id = :author_id AND network = :network";
+        $q .= "        ORDER BY pub_date DESC";
+        $q .= "        LIMIT 25) p";
+        $q .= " GROUP BY source";
+        $vars = array(
+            ':author_id'=>$author_id,
+            ':network'=>$network
+        );
+        $rows = $this->getDataRowsAsArrays($this->execute($q, $vars));
+        $latest_clients_usage = self::cleanClientsNames($rows);
+        
+        return array($all_time_clients_usage, $latest_clients_usage);
+    }
+    
+    /**
+     * Clean up and sort (by number of use, descending) the source (client) information fetched in 
+     * getClientsUsedByUserOnNetwork. To clean up the clients names, we remove the HTML link tag.
+     * @param array $rows obtained from the database (as array); columns should be 'num_posts' and 'source'
+     * @return array Clients names as keys, number of uses as values.
+     */
+    protected static function cleanClientsNames($rows) {
+        $clients = array();
+        foreach ($rows as $row) {
+            $client_name = preg_replace('@<a href.*>(.+)</a>@i', '\1', $row['source']);
+            $clients_key = strtolower($client_name); // will merge together strings with different CaSeS
+            if (!isset($clients[$clients_key])) {
+                $clients[$clients_key] = array('name'=>$client_name, 'count'=>0);
+            }
+            $clients[$clients_key]['count'] += $row['num_posts'];
+        }
+        foreach ($clients as $key => $client) {
+            unset($clients[$key]);
+            $clients[$client['name']] = $client['count'];
+        }
+        arsort($clients);
+        return $clients;
+    }
 }

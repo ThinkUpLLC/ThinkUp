@@ -385,6 +385,8 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         //First in line is some posts 250 Randomly generated ones, some with mentions.
         $mentions = 0;
         $posts = 0;
+        $replies = 0;
+        $links = 0;
         for($i=0; $i <= 250; $i++){
             $sender = rand(5,16);
             $data = 'asdf qwerty flakes meep';
@@ -402,11 +404,28 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
             elseif ($number == 3){
                 $data = "@jill ".$data;
             }
-            $q  = "INSERT INTO `tu_posts` (`post_id`, `author_user_id`, `post_text`) ";
-            $q .= " VALUES ('".$postid."', '".$sender."', '".$data."');\n";
+            if ($number % 2 == 0) {
+                $reply_to = '11';
+                if($sender == 10){
+                    $replies++;
+                }
+            } else {
+                $reply_to = 'NULL';
+            }
+            $q  = "INSERT INTO `tu_posts` (`post_id`, `author_user_id`, `post_text`, `pub_date`, `in_reply_to_user_id`) ";
+            $q .= " VALUES ('".$postid."', '".$sender."', '".$data."', NOW(), ".$reply_to.");\n";
             PDODAO::$PDO->exec($q);
             if($sender == 10){
                 $posts++;
+            }
+
+            if ($number % 2 == 1) {
+                $q  = "INSERT INTO `tu_links` (`url`, `post_id`) ";
+                $q .= "VALUES ( '".$data."', '".$postid."');\n";
+                PDODAO::$PDO->exec($q);
+                if($sender == 10){
+                    $links++;
+                }
             }
         }
         unset($pic);
@@ -427,7 +446,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
                 $i = $i-1;
             }
         }
-
+        
         //Lastly generate some users
         $users = array(
         array('id'=>10, 'name'=>'jack'),
@@ -484,7 +503,13 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->network_username, 'jack');
         $this->assertEqual($result->network_user_id, 10);
         $this->assertEqual($result->network_viewer_id, 10);
-
+        
+        // Check if the stats were correctly calculated and saved
+        $this->assertEqual($result->posts_per_day, $posts);
+        $this->assertEqual($result->posts_per_week, $posts);
+        $this->assertEqual($result->percentage_replies, round($replies / $posts * 100, 2));
+        $this->assertEqual($result->percentage_links, round($links / $posts * 100, 2));
+        
         //Still needs tests for:
         //earliest_reply_in_system
         //earliest_post_in_system

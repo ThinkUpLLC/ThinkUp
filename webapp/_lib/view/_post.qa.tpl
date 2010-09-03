@@ -8,7 +8,7 @@
   </div>
 {/if}
 
-<div class="individual-tweet post clearfix">
+<div class="individual-tweet post clearfix"{if $smarty.foreach.foo.index % 2 == 1} style="background-color:#EEE"{/if}>
   <div class="grid_1 alpha">
     <a href="{$site_root_path}user/?u={$r.questioner_username}&n={$r.network}&i={$smarty.session.network_username}"><img src="{$r.questioner_avatar}" class="avatar" alt="{$smarty.session.network_username}"/><img src="{$site_root_path}plugins/{$r.network}/assets/img/favicon.ico" class="service-icon"/></a>
   </div>
@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<div class="individual-tweet reply clearfix">
+<div class="individual-tweet reply clearfix"{if $smarty.foreach.foo.index % 2 == 1} style="background-color:#EEE"{/if}>
   <div class="grid_1 alpha">
     <a href="{$site_root_path}user/?u={$r.answerer_username}&n={$r.network}&i={$smarty.session.network_username}"><img src="{$r.answerer_avatar}" class="avatar" alt="{$smarty.session.network_username}"/><img src="{$site_root_path}plugins/{$r.network}/assets/img/favicon.ico" class="service-icon"/></a>
   </div>

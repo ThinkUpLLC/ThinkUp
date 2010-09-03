@@ -325,5 +325,10 @@ class TestOfPublicTimelineController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('least_likely_followers')), 2);
 
         $this->assertEqual($controller->getCacheKeyString(), 'public.tpl-ginatrapani-twitter', 'Cache key');
+
+        $this->assertIsA($v_mgr->getTemplateDataItem('all_time_clients_usage'), 'array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('all_time_clients_usage')), 11);
+        $this->assertIsA($v_mgr->getTemplateDataItem('latest_clients_usage'), 'array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('latest_clients_usage')), 2);
     }
 }
