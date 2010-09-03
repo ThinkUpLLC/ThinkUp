@@ -35,12 +35,13 @@ class ExportController extends ThinkUpAuthController {
             $od = DAOFactory::getDAO('OwnerDAO');
             $owner = $od->getByEmail( $this->getLoggedInUser() );
 
-            $id = DAOFactory::getDAO('InstanceDAO');
-            if ( isset($_GET['u']) && $id->isUserConfigured($_GET['u'], $_GET['n']) ){
+            $instance_dao = DAOFactory::getDAO('InstanceDAO');
+            if ( isset($_GET['u']) && $instance_dao->isUserConfigured($_GET['u'], $_GET['n']) ){
                 $username = $_GET['u'];
                 $network = $_GET['n'];
-                $oid = DAOFactory::getDAO('OwnerInstanceDAO');
-                if ( !$oid->doesOwnerHaveAccess($owner, $username) ) {
+                $instance = $instance_dao->getByUsernameOnNetwork($username, $network);
+                $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                if ( !$owner_instance_dao->doesOwnerHaveAccess($owner, $instance) ) {
                     $this->addErrorMessage('Insufficient privileges');
                     return $this->generateView();
                 } else {
@@ -59,7 +60,7 @@ class ExportController extends ThinkUpAuthController {
                     $fp = fopen('php://output', 'w');
                     // output csv header
                     fputcsv($fp, $vars);
-                    foreach($posts_it as $id => $post) {
+                    foreach($posts_it as $instance_dao => $post) {
                         $post_array = array();
                         // output post csv line
                         fputcsv($fp, (array)$post);

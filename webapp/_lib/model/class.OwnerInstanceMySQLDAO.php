@@ -8,10 +8,14 @@
  */
 class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
-    public function doesOwnerHaveAccess($owner, $username) {
+    public function doesOwnerHaveAccess($owner, $instance) {
         // verify $owner is a proper object and has an owner_id
         if(! is_a($owner, 'Owner') || ! isset($owner->id)) {
             $message = 'doesOwnerHaveAccess() requires a valid "Owner" object with "id" defined';
+            throw new BadArgumentException($message);
+        }
+        if(! is_a($instance, 'Instance') || ! isset($instance->id)) {
+            $message = 'doesOwnerHaveAccess() requires a valid "Instance" object with "id" defined';
             throw new BadArgumentException($message);
         }
         if ($owner->is_admin) {
@@ -27,8 +31,8 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                 ON 
                     i.id = oi.instance_id
                 WHERE 
-                    i.network_username = :username AND oi.owner_id = :owner_id';
-            $vars = array(':owner_id' => $owner->id, 'username' => $username);
+                    i.id = :id AND oi.owner_id = :owner_id';
+            $vars = array(':owner_id' => $owner->id, ':id' => $instance->id);
             $stmt = $this->execute($q, $vars);
             return $this->getDataIsReturned($stmt);
         }

@@ -67,7 +67,7 @@ class PrivateDashboardController extends ThinkUpAuthController {
             if (isset($instance_user) && isset($instance_user_network)
             && $instance_dao->isUserConfigured($instance_user, $instance_user_network) ){
                 $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-                if ( !$owner_instance_dao->doesOwnerHaveAccess($owner, $instance_user) ) {
+                if ( !$owner_instance_dao->doesOwnerHaveAccess($owner, $instance) ) {
                     $this->addToView('error','Insufficient privileges. <a href="/">Back</a>.');
                     $continue = false;
                 } else {

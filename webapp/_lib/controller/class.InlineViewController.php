@@ -66,10 +66,10 @@ class InlineViewController extends ThinkUpAuthController {
 
             $continue = true;
             if (!$this->is_missing_param) {
-                if ( $instance_dao->isUserConfigured($_GET['u'], $_GET['n'])) {
-                    $username = $_GET['u'];
+                $instance = $instance_dao->getByUsernameOnNetwork($_GET['u'], $_GET['n']);
+                if ( isset($instance)) {
                     $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-                    if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $username)) {
+                    if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $instance)) {
                         $this->addErrorMessage('Insufficient privileges. <a href="/">Back</a>.');
                         $continue = false;
                     } else {

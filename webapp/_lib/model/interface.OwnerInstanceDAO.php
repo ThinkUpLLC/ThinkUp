@@ -11,10 +11,10 @@ interface OwnerInstanceDAO {
      * Check if an Owner has access to an instance 
      * @throws BadArgumentException If we do not pass a valid owner object
      * @param Owner
-     * @param str username
+     * @param Instance
      * @return bool true if yes, false if not
      */
-    public function doesOwnerHaveAccess($owner, $username);
+    public function doesOwnerHaveAccess($owner, $instance);
 
     /*
      * Get an instance by $owner_id and instance_id

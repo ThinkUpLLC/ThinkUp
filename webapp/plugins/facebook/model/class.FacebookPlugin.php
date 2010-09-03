@@ -15,7 +15,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         //crawl Facebook user profiles
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook');
         foreach ($instances as $instance) {
-            if (!$oid->doesOwnerHaveAccess($current_owner, $instance->network_username)) {
+            if (!$oid->doesOwnerHaveAccess($current_owner, $instance)) {
                 // Owner doesn't have access to this instance; let's not crawl it.
                 continue;
             }
