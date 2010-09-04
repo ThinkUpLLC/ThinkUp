@@ -46,12 +46,12 @@ class ExportController extends ThinkUpAuthController {
                 } else {
                     switch ($_GET['type']) {
                     case 'replies':
-                        $this->export_replies();
+                        $this->exportReplies();
                     break;
 
                     case 'posts':
                     default:
-                        $this->export_all_posts();
+                        $this->exportAllPosts();
                     break;
                     }
 
@@ -65,18 +65,18 @@ class ExportController extends ThinkUpAuthController {
         }
     }
 
-    protected function export_all_posts() {
+    protected function exportAllPosts() {
         $pd = DAOFactory::getDAO('PostDAO');
         $posts_it = $pd->getAllPostsByUsernameIterator($_GET['u'], $_GET['n']);
         // get object var names
         $vars = array_keys(get_class_vars('Post'));
 
-        self::csv_out($posts_it, $vars);
+        self::outputCSV($posts_it, $vars);
     }
 
-    protected function export_replies() {
+    protected function exportReplies() {
         $pd = DAOFactory::getDAO('PostDAO');
-        $replies = $pd->getRepliesToPost($_GET['post_id'], $_GET['n'], 'default', 'km', false, 350, true);
+        $replies = $pd->getRepliesToPostIterator($_GET['post_id'], $_GET['n']);
         $heading = array_keys(get_class_vars('Post'));
 
         $data = array();
@@ -84,10 +84,10 @@ class ExportController extends ThinkUpAuthController {
             $data[] = get_object_vars($reply);
         }
 
-        self::csv_out($data, $heading);
+        self::outputCSV($data, $heading);
     }
 
-    public static function csv_out($data, $vars) {
+    public static function outputCSV($data, $column_labels) {
         ob_end_clean();
         if( ! headers_sent() ) { // this is so our test don't barf on us
             header('Content-Type: text/csv');
@@ -98,7 +98,7 @@ class ExportController extends ThinkUpAuthController {
 
         $fp = fopen('php://output', 'w');
         // output csv header
-        fputcsv($fp, $vars);
+        fputcsv($fp, $column_labels);
         foreach($data as $id => $post) {
             fputcsv($fp, (array)$post);
 
