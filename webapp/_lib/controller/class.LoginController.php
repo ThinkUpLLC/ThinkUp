@@ -8,17 +8,13 @@
  */
 class LoginController extends ThinkUpController {
 
-    public function __construct($session_started=false) {
-        parent::__construct($session_started);
+    public function control() {
         $this->setPageTitle('Log in');
         $this->setViewTemplate('session.login.tpl');
         $this->disableCaching();
-    }
-
-    public function control() {
         //don't show login form if already logged in
         if ($this->isLoggedIn()) {
-            $controller = new PrivateDashboardController(true);
+            $controller = new DashboardController(true);
             return $controller->go();
         } else  {
             $od = DAOFactory::getDAO('OwnerDAO');
@@ -48,8 +44,8 @@ class LoginController extends ThinkUpController {
                         // this sets variables in the session
                         $session->completeLogin($owner);
                         $od->updateLastLogin($user_email);
-                        $controller = new PrivateDashboardController(true);
-                        return $controller->go();
+                        $controller = new DashboardController(true);
+                        return $controller->control();
                     }
                 }
             } else  {

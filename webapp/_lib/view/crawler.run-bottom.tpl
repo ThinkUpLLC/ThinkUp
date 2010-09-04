@@ -2,4 +2,4 @@
 </div>
 </div>
 
-{include file="_footer.tpl" stats="no"}
+{include file="_footer.tpl"}

@@ -2,17 +2,18 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
-class TestOfPublicTimeline extends ThinkUpWebTestCase {
+class TestOfDashboard extends ThinkUpWebTestCase {
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
 
         //Add owner
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
-        $q = "INSERT INTO tu_owners (id, email, pwd, is_activated) VALUES (1, 'me@example.com', '"
-        .$cryptpass."', 1)";
+        $q = "INSERT INTO tu_owners (id, email, pwd, is_activated, is_admin) VALUES (1, 'me@example.com', '".
+        $cryptpass."', 1, 1)";
         $this->db->exec($q);
 
         //Add instance
@@ -29,8 +30,8 @@ class TestOfPublicTimeline extends ThinkUpWebTestCase {
         'avatar.jpg');";
         $this->db->exec($q);
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
-        'Ev Williams', 'avatar.jpg', '1/1/2005');";
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated, network) VALUES (13, 'ev',
+        'Ev Williams', 'avatar.jpg', '1/1/2005', 'twitter');";
         $this->db->exec($q);
 
         $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected) VALUES (16, 'private',
@@ -100,8 +101,8 @@ class TestOfPublicTimeline extends ThinkUpWebTestCase {
             '2006-01-02 00:$pseudo_minute:00', 0, 0);";
             $this->db->exec($q);
 
-            $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image) VALUES
-            ('http://example.com/".$counter."', 'http://example.com/".$counter.".jpg', '', 0, $post_id, 1);";
+            $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image)
+            VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".jpg', '', 0, $post_id, 1);";
             $this->db->exec($q);
 
             $counter++;
@@ -117,125 +118,87 @@ class TestOfPublicTimeline extends ThinkUpWebTestCase {
             '2006-03-01 00:$pseudo_minute:00', 0, 0);";
             $this->db->exec($q);
 
-            $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image) VALUES (
-            'http://example.com/".$counter."', 'http://example.com/".$counter.".html', 'Link $counter', 
-            0, $post_id, 0);";
+            $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image) VALUES
+            ('http://example.com/".$counter."', 'http://example.com/".$counter.".html', 'Link $counter', 0, 
+            $post_id, 0);";
             $this->db->exec($q);
 
             $counter++;
         }
-    }
-
-    function tearDown() {
-        parent::tearDown();
-    }
-
-    function testPublicTimelineAndPages() {
-        $this->get($this->url.'/public.php');
-        $this->assertTitle('Public Timeline | ThinkUp');
-        $this->assertText('Log In');
-        $this->click('Log In');
-        $this->assertTitle('Log in | ThinkUp');
-        $this->assertText('Register');
-        $this->click('Register');
-        $this->assertTitle('Register | ThinkUp');
-        $this->assertText('Forgot password');
-        $this->click('Forgot password');
-        $this->assertTitle('ThinkUp');
-    }
-
-    function testNextAndPreviousControls() {
-        $categories[] = "";
-        $categories[] = "?v=mostreplies";
-        $categories[] = "?v=mostretweets";
-
-        foreach ($categories as $category) {
-
-            $this->get($this->url.'/public.php'.$category);
-            $this->assertTitle('Public Timeline | ThinkUp');
-
-            $this->assertText('ev');
-            $this->assertText('This is post 39');
-            $this->assertText('This is post 25');
-            $this->assertText('Page 1 of 3');
-
-            $this->assertLinkById("next_page");
-            $this->assertNoLinkById("prev_page");
-
-            $this->clickLinkById("next_page");
-
-            $this->assertText('Page 2 of 3');
-            $this->assertText('This is post 24');
-            $this->assertText('This is post 10');
-            $this->assertLinkById("next_page");
-            $this->assertLinkById("prev_page");
-
-            $this->clickLinkById("next_page");
-
-            $this->assertNoLinkById("next_page");
-            $this->assertLinkById("prev_page");
-            $this->assertText('This is post 9');
-            $this->assertText('This is post 0');
-            $this->assertText('Page 3 of 3');
+        $counter = 0;
+        while ($counter < 10) {
+            $post_id = $counter + 120;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+            post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($post_id, 1234, 
+            'thinkupapp', 'thinkupapp', 'avatar.jpg', 'This is test post $counter', 'web', 
+            '2006-03-01 00:$pseudo_minute:00', 0, 0);";
+            $this->db->exec($q);
+            $counter++;
         }
     }
 
-    function testNextAndPreviousPhotosControls() {
-        $this->get($this->url.'/public.php?v=photos');
-        $this->assertTitle('Public Timeline | ThinkUp');
-
-        $this->assertText('shutterbug');
-        $this->assertText('This is image post 39');
-        $this->assertText('This is image post 25');
-        $this->assertText('Page 1 of 3');
-
-        $this->assertLinkById("next_page");
-        $this->assertNoLinkById("prev_page");
-
-        $this->clickLinkById("next_page");
-
-        $this->assertText('Page 2 of 3');
-        $this->assertText('This is image post 24');
-        $this->assertText('This is image post 10');
-        $this->assertLinkById("next_page");
-        $this->assertLinkById("prev_page");
-
-        $this->clickLinkById("next_page");
-
-        $this->assertNoLinkById("next_page");
-        $this->assertLinkById("prev_page");
-        $this->assertText('This is image post 9');
-        $this->assertText('This is image post 0');
-        $this->assertText('Page 3 of 3');
-
+    public function tearDown() {
+        parent::tearDown();
     }
 
-    function testNextAndPreviousLinksControls() {
-        $this->get($this->url.'/public.php?v=links');
-        $this->assertTitle('Public Timeline | ThinkUp');
+    public function testDashboardWithPosts() {
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
 
-        $this->assertText('linkbaiter');
-        $this->assertText('This is link post 39');
-        $this->assertText('This is link post 25');
-        $this->assertText('Page 1 of 3');
+        $this->click("Log In");
+        //        $this->showSource();
 
-        $this->assertLinkById("next_page");
-        $this->assertNoLinkById("prev_page");
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('thinkupapp');
+    }
 
-        $this->clickLinkById("next_page");
+    public function testUserPage() {
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
 
-        $this->assertText('Page 2 of 3');
-        $this->assertText('This is link post 24');
-        $this->assertText('This is link post 10');
-        $this->assertLinkById("next_page");
-        $this->assertLinkById("prev_page");
+        $this->click("Log In");
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
 
-        $this->clickLinkById("next_page");
+        $this->get($this->url.'/user/index.php?i=thinkupapp&u=ev&n=twitter');
+        $this->assertTitle('User Details: ev | ThinkUp');
+        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('ev');
 
-        $this->assertNoLinkById("next_page");
-        $this->assertLinkById("prev_page");
-        $this->assertText('This is link post 9');
-        $this->assertText('This is link post 0');
-        $this->assertText('Page 3 of 3');
+        $this->get($this->url.'/user/index.php?i=thinkupapp&u=usernotinsystem');
+        $this->assertText('User and network not specified.');
+    }
+
+    public function testConfiguration() {
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+
+        $this->click("Log In");
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+
+        $this->click("Configuration");
+        $this->assertTitle('Configure Your Account | ThinkUp');
+        $this->assertText('configure');
+        $this->assertText('Expand URLs');
+
+        $this->click("Twitter");
+        $this->assertText('Configure the Twitter Plugin');
+    }
+
+    public function testExport() {
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+
+        $this->click("Log In");
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
+        $this->assertText('Export');
+
+        $this->click("Export");
+        $this->assertText('This is test post');
     }
 }

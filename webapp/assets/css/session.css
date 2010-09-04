@@ -117,34 +117,3 @@ li.individual-tweet h3 a.most-popular {
 .avatar {
   border: solid 1px #CCC;
 }
-
-.error {
-  background-color: #FF8080;
-  padding: 10px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  color: #FFF;
-  text-align: center;
-  font-weight: bold;
-}
-
-.success {
-  background-color: #BFDFBF;
-  padding: 10px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.info {
-  background-color: #FFFFAD;
-  padding: 10px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  color: #FFF;
-  text-align: center;
-  font-weight: bold;
-}
-
-/******* /Tweet Formatting ********/

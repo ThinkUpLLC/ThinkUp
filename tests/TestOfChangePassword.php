@@ -35,7 +35,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkUp');
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
@@ -52,7 +52,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword1');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkUp');
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
     }
 
@@ -62,7 +62,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkUp');
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
@@ -80,7 +80,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkUp');
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
@@ -97,7 +97,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkUp');
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");
@@ -115,7 +115,7 @@ class TestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
 
         $this->click("Log In");
-        $this->assertTitle('Private Dashboard | ThinkUp');
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Configuration");

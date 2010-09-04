@@ -308,12 +308,6 @@ img.service-icon2 {left: 32px;}
 #dart4 {position:relative;top:-45px;left:620px;height:45px;}
 #dart5 {position:relative;top:-45px;left:810px;height:45px;}
 
-/* --- SYSTEM MESSAGING ----------------------- */
-
-.success {position:relative;background-color:#BFDFBF;padding:0.5em;-moz-border-radius:5px;-webkit-border-radius:5px;top:10px;line-height:1.6em;}
-.info {background-color:#FFFFAD;padding:1em 2em;-moz-border-radius:5px;-webkit-border-radius:5px;margin:0.5em 0;}
-.error {background-color:#920000;padding:1em 2em;-moz-border-radius:5px;-webkit-border-radius:5px;color:#FFF;text-align:center;font-weight:700;margin-bottom:0.5em;}
-
 #loading_updates,
 #loading_mentions,
 #loading_followers,

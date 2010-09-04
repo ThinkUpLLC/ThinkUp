@@ -1,5 +1,3 @@
 <?php
-require_once 'init.php';
-
-$controller = new PublicTimelineController();
-echo $controller->go();
+//This file still exists to preserve permalinks
+require_once 'index.php';

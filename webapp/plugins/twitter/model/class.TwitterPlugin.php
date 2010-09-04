@@ -104,33 +104,26 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $child_tabs = array();
 
         //All tab
-        $alltab = new WebappTab("tweets-all", "All", "All tweets", $twitter_data_tpl);
-        $alltabds = new WebappTabDataset("all_tweets", 'PostDAO',
-        "getAllPosts", array($instance->network_user_id, 'twitter', 15),
+        $alltab = new WebappTab("tweets-all", "All Tweets", "All tweets", $twitter_data_tpl);
+        $alltabds = new WebappTabDataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
+        'twitter', 15, "#page_number#"),
         'getAllPostsIterator', array($instance->network_user_id, 'twitter', GridController::MAX_ROWS) );
         $alltab->addDataset($alltabds);
         array_push($child_tabs, $alltab);
 
         // Most replied-to tab
         $mrttab = new WebappTab("tweets-mostreplies", "Most replied-to", "Tweets with most replies", $twitter_data_tpl);
-        $mrttabds = new WebappTabDataset("most_replied_to_tweets", 'PostDAO',
-        "getMostRepliedToPosts", array($instance->network_user_id, 'twitter', 15) );
+        $mrttabds = new WebappTabDataset("most_replied_to_tweets", 'PostDAO', "getMostRepliedToPosts",
+        array($instance->network_user_id, 'twitter', 15, '#page_number#'));
         $mrttab->addDataset($mrttabds);
         array_push($child_tabs, $mrttab);
 
         // Most shared tab
         $mstab = new WebappTab("tweets-mostretweeted", "Most retweeted", "Most retweeted tweets", $twitter_data_tpl);
         $mstabds = new WebappTabDataset("most_retweeted", 'PostDAO', "getMostRetweetedPosts",
-        array($instance->network_user_id, 'twitter', 15));
+        array($instance->network_user_id, 'twitter', 15, '#page_number#'));
         $mstab->addDataset($mstabds);
         array_push($child_tabs, $mstab);
-
-        // Conversations
-        $convotab = new WebappTab("tweets-convo", "Conversations", "", $twitter_data_tpl);
-        $convotabds = new WebappTabDataset("author_replies", 'PostDAO', "getPostsAuthorHasRepliedTo",
-        array($instance->network_user_id, 15, 'twitter'));
-        $convotab->addDataset($convotabds);
-        array_push($child_tabs, $convotab);
 
         return $child_tabs;
     }
@@ -140,46 +133,63 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         $child_tabs = array();
 
-        //All Mentions
-        $amtab = new WebappTab("mentions-all", "All Mentions", "Any post that mentions you", $twitter_data_tpl);
-        $amtabds1 = new WebappTabDataset("all_tweets", 'PostDAO', 
-        "getAllPosts", array($instance->network_user_id, 'twitter', 15),
-        "getAllMentionsIterator", array($instance->network_username, GridController::MAX_ROWS, 'twitter'));
-        $amtabds2 = new WebappTabDataset("all_mentions", 'PostDAO', "getAllMentions",
-        array($instance->network_username, 15, $instance->network));
-        $amtab->addDataset($amtabds1);
-        $amtab->addDataset($amtabds2);
-        array_push($child_tabs, $amtab);
+        if (Session::isLoggedIn()) { //show protected tweets
+            //All Mentions
+            $amtab = new WebappTab("mentions-all", "All Mentions", "Any post that mentions you", $twitter_data_tpl);
+            $amtabds1 = new WebappTabDataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
+           'twitter', 15), "getAllMentionsIterator", array($instance->network_username, GridController::MAX_ROWS, 
+           'twitter'));
+            $amtabds2 = new WebappTabDataset("all_mentions", 'PostDAO', "getAllMentions",
+            array($instance->network_username, 15, $instance->network, '#page_number#'));
+            $amtab->addDataset($amtabds1);
+            $amtab->addDataset($amtabds2);
+            array_push($child_tabs, $amtab);
 
-        //All Replies
-        $artab = new WebappTab("mentions-allreplies", "Replies",
-        "Posts that directly reply to you (i.e., start with your name)", $twitter_data_tpl);
-        $artabds = new WebappTabDataset("all_replies", 'PostDAO', "getAllReplies",
-        array($instance->network_user_id, 'twitter', 15));
-        $artab->addDataset($artabds);
-        array_push($child_tabs, $artab);
+            //All Replies
+            $artab = new WebappTab("mentions-allreplies", "Replies",
+           "Posts that directly reply to you (i.e., start with your name)", $twitter_data_tpl);
+            $artabds = new WebappTabDataset("all_replies", 'PostDAO', "getAllReplies",
+            array($instance->network_user_id, 'twitter', 15));
+            $artab->addDataset($artabds);
+            array_push($child_tabs, $artab);
 
-        //All Orphan Mentions
-        $omtab = new WebappTab("mentions-orphan", "Not Replies or Forwards",
-        "Mentions that are not associated with a specific post", $twitter_data_tpl);
-        $omtabds1 = new WebappTabDataset("all_tweets", 'PostDAO',
-        "getAllPosts", array($instance->network_user_id, 'twitter', 15));
-        $omtabds2 = new WebappTabDataset("orphan_replies", 'PostDAO', "getOrphanReplies",
-        array($instance->network_username, 5, $instance->network));
-        $omtab->addDataset($omtabds1);
-        $omtab->addDataset($omtabds2);
-        array_push($child_tabs, $omtab);
+            //All Orphan Mentions
+            $omtab = new WebappTab("mentions-orphan", "Not Replies or Forwards",
+            "Mentions that are not associated with a specific post", $twitter_data_tpl);
+            $omtabds1 = new WebappTabDataset("all_tweets", 'PostDAO',
+            "getAllPosts", array($instance->network_user_id, 'twitter', 15));
+            $omtabds2 = new WebappTabDataset("orphan_replies", 'PostDAO', "getOrphanReplies",
+            array($instance->network_username, 5, $instance->network));
+            $omtab->addDataset($omtabds1);
+            $omtab->addDataset($omtabds2);
+            array_push($child_tabs, $omtab);
 
-        //All Mentions Standalone
-        $sttab = new WebappTab("mentions-standalone", "Standalone Mentions", "Mentions you have marked as standalone",
+            //All Mentions Standalone
+            $sttab = new WebappTab("mentions-standalone", "Standalone Mentions",
+            "Mentions you have marked as standalone", $twitter_data_tpl);
+            $sttabds1 = new WebappTabDataset("standalone_replies", 'PostDAO', "getStandaloneReplies",
+            array($instance->network_username, 'twitter', 15));
+            $sttabds2 = new WebappTabDataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
+            'twitter', 15));
+            $sttab->addDataset($sttabds1);
+            $sttab->addDataset($sttabds2);
+            array_push($child_tabs, $sttab);
+        } else {
+            //All public mentions
+            $amtab = new WebappTab("mentions-all", "All Mentions", "Any post that mentions you", $twitter_data_tpl);
+            $amtabds2 = new WebappTabDataset("all_mentions", 'PostDAO', "getAllMentions",
+            array($instance->network_username, 15, $instance->network, '#page_number#', true));
+            $amtab->addDataset($amtabds2);
+            array_push($child_tabs, $amtab);
+        }
+
+        // Conversations
+        $convotab = new WebappTab("tweets-convo", "Conversations", "Exchanges between you and other users",
         $twitter_data_tpl);
-        $sttabds1 = new WebappTabDataset("standalone_replies", 'PostDAO', "getStandaloneReplies",
-        array($instance->network_username, 'twitter', 15));
-        $sttabds2 = new WebappTabDataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
-        'twitter', 15));
-        $sttab->addDataset($sttabds1);
-        $sttab->addDataset($sttabds2);
-        array_push($child_tabs, $sttab);
+        $convotabds = new WebappTabDataset("author_replies", 'PostDAO', "getPostsAuthorHasRepliedTo",
+        array($instance->network_user_id, 15, 'twitter', '#page_number#'));
+        $convotab->addDataset($convotabds);
+        array_push($child_tabs, $convotab);
 
         return $child_tabs;
     }
@@ -210,19 +220,21 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $poptab->addDataset($poptabds);
         array_push($child_tabs, $poptab);
 
-        //Former Friends
-        $fftab = new WebappTab("friends-former", "Former", '', $twitter_data_tpl);
-        $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowees", array($instance->network_user_id,
+        if (Session::isLoggedIn()) {
+            //Former Friends
+            $fftab = new WebappTab("friends-former", "Former", '', $twitter_data_tpl);
+            $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowees", array($instance->network_user_id,
         'twitter', 15));
-        $fftab->addDataset($fftabds);
-        array_push($child_tabs, $fftab);
+            $fftab->addDataset($fftabds);
+            array_push($child_tabs, $fftab);
 
-        //Not Mutual Friends
-        $nmtab = new WebappTab("friends-notmutual", "Not Mutual", '', $twitter_data_tpl);
-        $nmtabds = new WebappTabDataset("people", 'FollowDAO', "getFriendsNotFollowingBack", array(
+            //Not Mutual Friends
+            $nmtab = new WebappTab("friends-notmutual", "Not Mutual", '', $twitter_data_tpl);
+            $nmtabds = new WebappTabDataset("people", 'FollowDAO', "getFriendsNotFollowingBack", array(
         'twitter', $instance->network_user_id));
-        $nmtab->addDataset($nmtabds);
-        array_push($child_tabs, $nmtab);
+            $nmtab->addDataset($nmtabds);
+            array_push($child_tabs, $nmtab);
+        }
 
         return $child_tabs;
     }
@@ -264,12 +276,14 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $lltab->addDataset($lltabds);
         array_push($child_tabs, $lltab);
 
-        //Former followers
-        $fftab = new WebappTab("followers-former", "Former", '', $twitter_data_tpl);
-        $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowers", array($instance->network_user_id,
+        if (Session::isLoggedIn()) {
+            //Former followers
+            $fftab = new WebappTab("followers-former", "Former", '', $twitter_data_tpl);
+            $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowers", array($instance->network_user_id,
         'twitter', 15));
-        $fftab->addDataset($fftabds);
-        array_push($child_tabs, $fftab);
+            $fftab->addDataset($fftabds);
+            array_push($child_tabs, $fftab);
+        }
 
         //Earliest
         $eftab = new WebappTab("followers-earliest", "Earliest Joiners", '', $twitter_data_tpl);

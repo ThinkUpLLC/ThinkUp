@@ -534,8 +534,12 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $posts = $dao->getAllPosts(18, 'twitter', 50);
         $this->assertEqual(sizeof($posts), 41);
 
+        //page 2
+        $posts = $dao->getAllPosts(18, 'twitter', 10, 2);
+        $this->assertEqual(sizeof($posts), 10);
+
         //less than count, no replies --there is 1 reply, so 41-1=40
-        $posts = $dao->getAllPosts(18, 'twitter', 50, false);
+        $posts = $dao->getAllPosts(18, 'twitter', 50, 1, false);
         $this->assertEqual(sizeof($posts), 40);
 
         //non-existent author

@@ -49,6 +49,7 @@
           Description: {$t->author->description}
         </div>
       {/if}
+      {if $logged_in_user}
       <div id="div{$t->post_id}">
         <form action="" class="post-setparent">
           <select name="pid{$t->post_id}" id="pid{$t->post_id}" onselect> <!-- what is this onselect? -->
@@ -61,6 +62,7 @@
           <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save">
         </form>
       </div>
+      {/if}
     </div>
   </div>
 </div>

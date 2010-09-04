@@ -70,9 +70,10 @@ interface PostDAO {
      * @param int $author_id
      * @param int $count
      * @param str $network Defaults to 'twitter'
+     * @param int $page Page number, defaults to 1
      * @return array Question and answer values
      */
-    public function getPostsAuthorHasRepliedTo($author_id, $count, $network = 'twitter');
+    public function getPostsAuthorHasRepliedTo($author_id, $count, $network = 'twitter', $page=1);
 
     /**
      * Get all the back-and-forth posts between two users.
@@ -135,10 +136,11 @@ interface PostDAO {
      * @param int $author_id
      * @param str  $network
      * @param int $count
+     * @param int $page
      * @param bool $include_replies If true, return posts with in_reply_to_post_id set
      * @return array Posts by author with link set
      */
-    public function getAllPosts($author_id, $network, $count, $include_replies=true);
+    public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true);
 
     /**
      * Get all posts by an author given an author ID
@@ -196,9 +198,11 @@ interface PostDAO {
      * @param str  $author_username
      * @param int $count
      * @param str $network defaults to "twitter"
+     * @param int $page Page number, defaults to 1
+     * @param bool $public Public mentions only, defaults to false
      * @return array of Post objects with author and link set
      */
-    public function getAllMentions($author_username, $count, $network = "twitter");
+    public function getAllMentions($author_username, $count, $network = "twitter", $page=1, $public=false);
 
     /**
      * Get all replies to a given user ID
@@ -214,9 +218,10 @@ interface PostDAO {
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page Page number, defaults to 1
      * @return array Posts with link object set
      */
-    public function getMostRepliedToPosts($user_id, $network, $count);
+    public function getMostRepliedToPosts($user_id, $network, $count, $page=1);
 
     /**
      * Get posts Iterator by a user ordered by reply count desc
@@ -233,9 +238,10 @@ interface PostDAO {
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page Page number, defaults to 1
      * @return array Posts with link object set
      */
-    public function getMostRetweetedPosts($user_id, $network, $count);
+    public function getMostRetweetedPosts($user_id, $network, $count, $page=1);
 
     /**
      * Get a page of posts by public instances ordered by pub_date desc

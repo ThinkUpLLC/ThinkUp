@@ -13,7 +13,6 @@ THINKUP_ROOT_PATH . 'tests' . DS . 'fixtures' .DS
 /* INTEGRATION TESTS */
 $web_tests = & new GroupTest('Integration tests');
 $web_tests->addTestCase(new TestOfChangePassword());
-$web_tests->addTestCase(new TestOfPrivateDashboard());
-$web_tests->addTestCase(new TestOfPublicTimeline());
+$web_tests->addTestCase(new TestOfDashboard());
 $web_tests->addTestCase(new TestOfSignIn());
 $web_tests->run( new TextReporter());

@@ -36,7 +36,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         $cryptpass = $session->pwdcrypt("secretpassword");
         $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
         $builder1 = FixtureBuilder::build('owners', $owner);
-        $instance = array('id'=>1);
+        $instance = array('id'=>1, 'network_username'=>'thinkupapp');
         $builder2 = FixtureBuilder::build('instances', $instance);
         $owner_instance = array('owner_id'=>1, 'instance_id'=>1);
         $builder3 = FixtureBuilder::build('owner_instances', $owner_instance);
@@ -44,7 +44,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 
         $controller = new RegisterController(true);
         $results = $controller->go();
-        $this->assertTrue(strpos( $results, "Private Dashboard | ThinkUp") > 0);
+        $this->assertPattern("/thinkupapp's Dashboard | ThinkUp/", $results);
     }
 
     public function testAllMissingFields() {

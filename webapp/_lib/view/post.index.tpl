@@ -1,5 +1,5 @@
-{include file="_public.header.tpl"}
-{include file="_public.header.statusbar.tpl" mode="public"}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
   <div class="thinkup-canvas round-all container_24">
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
@@ -30,7 +30,7 @@
                 {if $post->location}From: {$post->location}{/if}
                 {if $post->is_geo_encoded eq 1}
                 <div>
-                <a href="{$site_root_path}map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
+                <a href="{$site_root_path}post/map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
                   <img src="{$site_root_path}assets/img/map_icon.png" class="map-icon map-icon-public">
                 </a>
                 </div>
@@ -91,7 +91,7 @@
           {if $retweets}
             <div class="append_20 clearfix">
               {foreach from=$retweets key=tid item=t name=foo}
-                {include file="_post.public.tpl" t=$t sort='no' scrub_reply_username=false}
+                {include file="_post.tpl" t=$t sort='no' scrub_reply_username=false}
               {/foreach}
             </div>
           {/if}
@@ -118,4 +118,4 @@
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
   
-{include file="_footer.tpl" stats="no"}
+{include file="_footer.tpl"}

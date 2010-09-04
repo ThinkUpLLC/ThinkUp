@@ -1,4 +1,5 @@
-{include file="_header.tpl" load="no"}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
 <div class="container_24 thinkup-canvas clearfix">
   <div class="grid_22 prefix_1 alpha omega prepend_20 append_20 clearfix">
@@ -6,4 +7,4 @@
   </div>
 </div>
 
-{include file="_footer.tpl" stats="no"}
+{include file="_footer.tpl"}

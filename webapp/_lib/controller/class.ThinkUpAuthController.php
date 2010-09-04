@@ -24,8 +24,8 @@ abstract class ThinkUpAuthController extends ThinkUpController {
      * @TODO bounce back to original action once signed in
      */
     protected function bounce() {
-        if (get_class($this)=='PrivateDashboardController' || get_class($this)=='PostController') {
-            $controller = new PublicTimelineController(true);
+        if (get_class($this)=='DashboardController' || get_class($this)=='PostController') {
+            $controller = new DashboardController(true);
             return $controller->go();
         } else {
             $config = Config::getInstance();

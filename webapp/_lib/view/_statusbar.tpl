@@ -44,8 +44,9 @@
           }
         </script>
       {/literal}
-      Updated: {$instance->crawler_last_run|relative_datetime} ago | 
-      <span id="choose-instance"><span class="underline">{$instance->network_username}</span> ({$instance->network|capitalize})</span>
+      {$instance->network_username} ({$instance->network|capitalize}) updated {$instance->crawler_last_run|relative_datetime} ago {if $logged_in_user}| <a href="{$site_root_path}crawler/run.php">Update now</a>{/if}
+      {if $instances|@count > 1 }
+       | <span id="choose-instance"><span class="underline">Switch user</span></span>
       <span id="instance-selector" style="display:none;">
         <select id="instance-select" onchange="changeMe();">
           <option value="">-- Select an instance --</option>
@@ -57,6 +58,7 @@
         </select>
         <span id="cancel-instance">Cancel</span>
       </span>
+    {/if}
     {else}
       <!-- the user has not selected an instance -->
       {if $crawler_last_run}
@@ -89,13 +91,7 @@
   <div id="menu-bar">
     <ul>
       {if $logged_in_user}
-        {if $mode eq "public"} <!-- this is the public timeline -->
-          <li class="round-tl round-bl"><a href="{$site_root_path}">Private Dashboard</a></li>
-        {else}
-          {if $instance}<li class="round-tl round-bl"><a href="{$site_root_path}?u={$instance->network_username}">{$instance->network_username}{else}Home{/if}</a></li>
-          <li><a href="{$site_root_path}public.php">Public Timeline</a></li>
-        {/if}
-        <li class="round-tr round-br"><a href="{$site_root_path}account/?m=manage">Configuration</a></li>
+        <li class="round-tr round-br round-tl round-bl"><a href="{$site_root_path}account/?m=manage">Configuration</a></li>
       {else}
         <li class="round-tr round-br round-tl round-bl"><a href="http://thinkupapp.com/">Get ThinkUp</a></li>
       {/if}

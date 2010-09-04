@@ -2,21 +2,19 @@
   <div class="header clearfix">
     <div class="grid_1 alpha">&#160;</div>
     <div class="grid_3 right">name</div>
-    <div class="grid_3 right">{if $sort eq 'no'}date{else}<a href="{$site_root_path}public.php">date</a>{/if}</div>
+    <div class="grid_3 right">date</div>
     <div class="grid_7">post</div>
     <div class="grid_2">
-      {if $sort eq 'no'}&#160;{else}<a href="{$site_root_path}public.php?v=photos">w/ photos</a>{/if}
+      &#160;
     </div>
     <div class="grid_2">
-      {if $sort eq 'no'}&#160;{else}<a href="{$site_root_path}public.php?v=links">w/ links</a>{/if}
+      &#160;
     </div>
     <div class="grid_2 center">
-      {if $sort eq 'no'}replies{else}<a href="{$site_root_path}public.php?v=mostreplies">replies</a>{/if}
-      {if $sort neq 'no'}(<a href="{$site_root_path}public.php?v=mostreplies1wk">7d</a>){/if}
+      replies
     </div>
     <div class="grid_2 center omega">
-      {if $sort eq 'no'}forwards{else}<a href="{$site_root_path}public.php?v=mostretweets">fwds</a> {/if}
-      {if $sort neq 'no'}(<a href="{$site_root_path}public.php?v=mostretweets1wk">7d</a>){/if}
+      forwards
     </div>
   </div>
 {/if}
@@ -85,21 +83,21 @@
               {else}
               {$t->reply_retweet_distance|number_format} miles away in 
             {/if}
-        {$t->location|truncate:60:' ...'}
         {/if}
+        {$t->location|truncate:60:' ...'}
        {/if}
       </div>
     </div>
     <div class="grid_2 center">
       {if $t->reply_count_cache > 0}
-        <span class="reply-count"><a href="{$site_root_path}public.php?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
+        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
       {else}
         &#160;
       {/if}
     </div>
     <div class="grid_2 center omega">
       {if $t->retweet_count_cache > 0}
-        <span class="reply-count"><a href="{$site_root_path}public.php?t={$t->post_id}&n={$t->network}#fwds">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
+        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}#fwds">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
       {else}
         &#160;
       {/if}

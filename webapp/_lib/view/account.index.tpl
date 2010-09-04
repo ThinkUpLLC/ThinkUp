@@ -1,5 +1,5 @@
-{include file="_header.tpl" load="no"}
-
+{include file="_header.tpl" enable_tabs=true}
+{include file="_statusbar.tpl"}
 <div class="container_24">
   <div role="application" id="tabs">
     
@@ -282,4 +282,4 @@ $(function() {
   {/literal}
 </script>
 
-{include file="_footer.tpl" stats="no"}
+{include file="_footer.tpl"}

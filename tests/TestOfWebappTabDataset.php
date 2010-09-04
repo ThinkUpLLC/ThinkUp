@@ -132,7 +132,19 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Test retrieveData with an existing method
+     * Test retrieveData with an existing method AND page number
+     */
+    public function testRetrieveDataMethodExistsWithPage() {
+        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15,
+        '#page_number#'));
+        //        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15));
+        $data = $dataset->retrieveDataset();
+        $this->assertTrue(isset($data));
+        $this->assertIsA($data, 'array');
+    }
+
+    /**
+     * Test retrieveData with a non-existing method
      */
     public function testRetrieveDataMethodDoesNotExist() {
         $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPostsIDontExist', array(930061, 'twitter', 15));

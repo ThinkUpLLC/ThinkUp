@@ -1,4 +1,5 @@
 {include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
 
 <div class="container">

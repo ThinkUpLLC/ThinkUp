@@ -1,4 +1,5 @@
-{include file="_header.tpl" load="no" title=$profile->username}
+{include file="_header.tpl" enable_tabs=true}
+{include file="_statusbar.tpl"}
 
 <script type="text/javascript">
   {literal}
@@ -116,7 +117,7 @@
                 <div class="grid_22 push_1">
                   {foreach from=$user_statuses key=tid item=t name=foo}
                     <div>
-                      {include file="_post.mine.tpl" t=$t}
+                      {include file="_post.tpl" t=$t}
                     </div>
                   {/foreach}
                 </div>

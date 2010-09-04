@@ -29,8 +29,8 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         $this->db = new Database($THINKUP_CFG);
         $this->conn = $this->db->getConnection();
 
-//        $loader_paths = Loader::getLookupPath();
-//        var_dump($loader_paths);
+        //        $loader_paths = Loader::getLookupPath();
+        //        var_dump($loader_paths);
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
         $this->testdb_helper->drop($this->db);
         $this->testdb_helper->create($this->db);

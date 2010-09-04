@@ -1,4 +1,5 @@
-{include file="_header.tpl" load="no"}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
 <script type="text/javascript">{$posts_data}</script>
 <script type="text/javascript">

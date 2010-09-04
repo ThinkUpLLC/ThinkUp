@@ -35,7 +35,7 @@ class TestOfSignIn extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
 
-        $this->assertTitle('Private Dashboard | ThinkUp');
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
     }
 
@@ -57,7 +57,7 @@ class TestOfSignIn extends ThinkUpWebTestCase {
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
 
-        $this->assertTitle('Private Dashboard | ThinkUp');
+        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
     }
 }

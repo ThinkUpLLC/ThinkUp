@@ -1,9 +1,11 @@
 <div class="">
   {if $description}<i>{$description}</i>{/if}
     {if $is_searchable}
+<!-- Temporarily commented-out till it's fitted into new UI
         <a href="#" class="grid_search" title="Search" onclick="return false;">
         <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
         {include file="_grid.search.tpl"}
+-->
     {/if}
 </div>
 
@@ -19,7 +21,7 @@
 
 {if $all_facebook_posts and $display eq 'all_facebook_posts'}
   {foreach from=$all_facebook_posts key=tid item=t name=foo}
-    {include file="_post.mine.tpl" t=$t}
+    {include file="_post.tpl" t=$t}
   {/foreach}
 {/if}
 

@@ -88,6 +88,13 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->network_user_id, 12);
         $this->assertEqual($result->network_viewer_id, 12);
 
+        //Try Newest Public
+        $result = $this->DAO->getInstanceFreshestPublicOne();
+        $this->assertIsA($result, "Instance");
+        $this->assertEqual($result->network_username, 'Paul Clark');
+        $this->assertEqual($result->network_user_id, 16);
+        $this->assertEqual($result->network_viewer_id, 16);
+
         //Try Oldest
         $result = $this->DAO->getInstanceStalestOne();
         $this->assertIsA($result, "Instance");
@@ -505,8 +512,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         // Check if the stats were correctly calculated and saved
         $this->assertEqual($result->posts_per_day, $posts);
         $this->assertEqual($result->posts_per_week, $posts);
-        //@TODO Figure out why this next assertion fails
-        //$this->assertEqual($result->percentage_replies, round($replies / $posts * 100, 2));
+        $this->assertEqual($result->percentage_replies, round($replies / $posts * 100, 2));
         $this->assertEqual($result->percentage_links, round($links / $posts * 100, 2));
 
         //Still needs tests for:
@@ -602,4 +608,31 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->network, 'facebook page');
         $this->assertEqual($result->network_user_id, 18);
     }
+
+    public function testGetInstanceFreshestPublicOne() {
+        $instance_builder = FixtureBuilder::build('instances', array('network_user_id'=>'501',
+        'network_username'=>'mememe', 'is_public'=>'1', 'is_activated'=>'1', 'crawler_last_run'=>'-1h'));
+        //try one
+        $result = $this->DAO->getInstanceFreshestPublicOne();
+        $this->assertIsA($result, "Instance");
+        $this->assertEqual($result->network_username, 'mememe');
+        $this->assertEqual($result->network_user_id, 501);
+
+        $instance_builder1 = FixtureBuilder::build('instances', array('network_user_id'=>'502',
+        'network_username'=>'mememetoo', 'is_public'=>'1', 'is_activated'=>'1', 'crawler_last_run'=>'-30m'));
+        //try one
+        $result = $this->DAO->getInstanceFreshestPublicOne();
+        $this->assertIsA($result, "Instance");
+        $this->assertEqual($result->network_username, 'mememetoo');
+        $this->assertEqual($result->network_user_id, 502);
+    }
+
+    public function testGetPublicInstances() {
+        $result = $this->DAO->getPublicInstances();
+        $this->assertIsA($result, "Array");
+        $this->assertEqual(sizeof($result), 1);
+        $this->assertIsA($result[0], "Instance");
+        $this->assertEqual($result[0]->network_username, "Jillian Dickerson" );
+    }
+
 }

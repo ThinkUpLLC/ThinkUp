@@ -53,7 +53,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-        $this->assertTrue(strpos( $results, "Log In") > 0 );
+        $this->assertPattern("/Log In/", $results);
     }
 
     public function testNoEmail() {
@@ -66,7 +66,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Email must not be empty');
-        $this->assertTrue(strpos( $results, "Log In") > 0 );
+        $this->assertPattern("/Log In/", $results);
     }
 
     public function testNoPassword() {
@@ -79,7 +79,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Password must not be empty');
-        $this->assertTrue(strpos( $results, "Log In") > 0 );
+        $this->assertPattern("/Log In/", $results);
     }
 
     public function testUserNotFound() {
@@ -92,7 +92,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Incorrect email');
-        $this->assertTrue(strpos( $results, "Log In") > 0 );
+        $this->assertPattern("/Log In/", $results);
     }
 
     public function testIncorrectPassword() {
@@ -105,7 +105,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Incorrect password');
-        $this->assertTrue(strpos( $results, "Log In") > 0 );
+        $this->assertPattern("/Log In/", $results);
     }
 
     public function testCorrectUserPassword() {
@@ -116,7 +116,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $controller = new LoginController(true);
         $results = $controller->go();
 
-        $this->assertTrue(strpos( $results, "Logged in as: me@example.com") > 0 );
+        $this->assertPattern("/Logged in as: me@example.com/", $results);
     }
 
     public function testAlreadyLoggedIn() {
@@ -125,7 +125,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $controller = new LoginController(true);
         $results = $controller->go();
 
-        $this->assertTrue(strpos( $results, 'Logged in as: me@example.com') > 0 );
+        $this->assertPattern('/Logged in as: me@example.com/', $results);
     }
 }
 

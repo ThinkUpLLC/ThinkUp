@@ -137,11 +137,13 @@ text-align: center;
 #screen {position: absolute; left: 0; top: 0; background: #000; z-index: 99; color: red; display: none;}
 
 
+.success {
+  background-color: #BFDFBF;
+  margin: 10px 0px;
+  padding: 10px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
 
-/* EasyTooltip used for tooltips showing distance of post */
-#easyTooltip{display: none; position: absolute; padding: 5px; left: 5px; font-size: 0.8em; background-color: white;
-border: 3px solid #a6c9e2; -moz-border-radius: 5px; -webkit-border-radius: 5px; z-index: 9999}
-
-/* Sort By Proximity and Sory by Reach links */
-.sort_links {font-weight: 500;color: #6184B5;font-size: .8em; margin-right:20px; margin-top:-20px;}
-
+.ui-state-highlight p a {color:#416A93;}
+.ui-state-error p a {color:#416A93;}

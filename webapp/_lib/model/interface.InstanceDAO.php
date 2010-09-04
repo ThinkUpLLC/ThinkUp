@@ -26,6 +26,12 @@ interface InstanceDAO {
     public function getInstanceFreshestOne();
 
     /**
+     * Gets the public instance that got updated last
+     * @return Instance Freshest public instance
+     */
+    public function getInstanceFreshestPublicOne();
+
+    /**
      * Gets the instance that ran the longest time ago
      * @return Instance Stalest Instance
      */
@@ -90,6 +96,12 @@ interface InstanceDAO {
      * @return array Instance objects
      */
     public function getByOwner($owner, $force_not_admin = false);
+
+    /**
+     * Get public instances
+     * @return array Instance objects
+     */
+    public function getPublicInstances();
 
     /**
      * Get instances by owner and network

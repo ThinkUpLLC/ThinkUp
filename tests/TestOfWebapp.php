@@ -86,7 +86,7 @@ class TestOfWebapp extends ThinkUpBasicUnitTestCase {
         $this->assertIsA($tab, 'WebappTab');
         $this->assertEqual($tab->view_template, Utils::getPluginViewDirectory('twitter').'twitter.inline.view.tpl', "Template ");
         $this->assertEqual($tab->short_name, 'tweets-all', "Short name");
-        $this->assertEqual($tab->name, 'All', "Name");
+        $this->assertEqual($tab->name, 'All Tweets', "Name");
         $this->assertEqual($tab->description, 'All tweets', "Description");
         $this->assertIsA($tab->datasets, 'array');
         $this->assertEqual(sizeOf($tab->datasets), 1);

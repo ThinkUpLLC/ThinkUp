@@ -1,5 +1,5 @@
 <?php
 require_once 'init.php';
 
-$controller = new PrivateDashboardController();
+$controller = new DashboardController();
 echo $controller->go();

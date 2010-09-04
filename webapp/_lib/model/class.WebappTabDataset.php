@@ -66,11 +66,16 @@ class WebappTabDataset {
     /**
      * Retrieve dataset
      * Run the specified DAO method and return results
+     * @param int $page_number Page number of the list
      * @return array DAO method results
      */
-    public function retrieveDataset() {
+    public function retrieveDataset($page_number=1) {
         $dao = DAOFactory::getDAO($this->dao_name);
         if (method_exists($dao, $this->dao_method_name)) {
+            $page_pos = array_search('#page_number#', $this->method_params);
+            if ($page_pos !== false) {
+                $this->method_params[$page_pos] = $page_number;
+            }
             return call_user_func_array(array($dao, $this->dao_method_name), $this->method_params);
         } else {
             throw new Exception($this->dao_name . ' does not have a ' . $this->dao_method_name . ' method.');

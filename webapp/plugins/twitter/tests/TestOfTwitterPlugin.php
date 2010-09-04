@@ -46,10 +46,10 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $post_tabs = $this->webapp->getChildTabsUnderPosts($instance);
 
-        $this->assertEqual(sizeof($post_tabs), 4, "Test number of post tabs");
+        $this->assertEqual(sizeof($post_tabs), 3, "Test number of post tabs");
         $first_post_tab = $post_tabs[0];
         $this->assertEqual($first_post_tab->short_name, "tweets-all", "Test short name of first post tab");
-        $this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
+        $this->assertEqual($first_post_tab->name, "All Tweets", "Test name of first post tab");
         $this->assertEqual($first_post_tab->description, "All tweets", "Test description of first post tab");
 
         $first_post_tab_datasets = $first_post_tab->getDatasets();

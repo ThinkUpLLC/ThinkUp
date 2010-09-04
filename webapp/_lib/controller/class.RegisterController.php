@@ -25,7 +25,7 @@ class RegisterController extends ThinkUpController {
 
     public function control(){
         if ($this->isLoggedIn()) {
-            $controller = new PrivateDashboardController(true);
+            $controller = new DashboardController(true);
             return $controller->go();
         } else {
             $this->disableCaching();
