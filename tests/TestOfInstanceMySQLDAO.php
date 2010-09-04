@@ -14,17 +14,17 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->DAO = new InstanceMySQLDAO();
         $q  = "INSERT INTO tu_instances ";
-        $q .= "(`network_user_id`, `network_username`, `network`, ";
-        $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
-        $q .= "(10 , 'jack', 'twitter', 10, '1988-01-20 12:00:00', 1), ";
-        $q .= "(12, 'jill', 'twitter', 12, '2010-01-20 12:00:00', 1), ";
-        $q .= "(13 , 'stuart', 'twitter', 13, '2010-01-01 12:00:00', 0), ";
-        $q .= "(15 , 'Jillian Dickerson', 'facebook', 15, '2010-01-01 12:00:01', 1), ";
-        $q .= "(16 , 'Paul Clark', 'facebook', 16, '2010-01-01 12:00:02', 0) ";
+        $q .= "(network_user_id, network_username, network, ";
+        $q .= "network_viewer_id, crawler_last_run, is_active, is_public) VALUES ";
+        $q .= "(10 , 'jack', 'twitter', 10, '1988-01-20 12:00:00', 1, 0), ";
+        $q .= "(12, 'jill', 'twitter', 12, '2010-01-20 12:00:00', 1, 0), ";
+        $q .= "(13 , 'stuart', 'twitter', 13, '2010-01-01 12:00:00', 0, 1), ";
+        $q .= "(15 , 'Jillian Dickerson', 'facebook', 15, '2010-01-01 12:00:01', 1, 1), ";
+        $q .= "(16 , 'Paul Clark', 'facebook', 16, '2010-01-01 12:00:02', 0, 1) ";
         // $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
         PDODAO::$PDO->exec($q);
 
-        $q  = "INSERT INTO  `tu_owner_instances` (`owner_id` , `instance_id`) ";
+        $q  = "INSERT INTO  tu_owner_instances (owner_id , instance_id) ";
         $q .= "VALUES ('2',  '1'), ('2', '2');";
         PDODAO::$PDO->exec($q);
     }
@@ -82,6 +82,13 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->network_username, 'jill');
         $this->assertEqual($result->network_user_id, 12);
         $this->assertEqual($result->network_viewer_id, 12);
+
+        //Try Newest Public
+        $result = $this->DAO->getInstanceFreshestPublicOne();
+        $this->assertIsA($result, "Instance");
+        $this->assertEqual($result->network_username, 'Paul Clark');
+        $this->assertEqual($result->network_user_id, 16);
+        $this->assertEqual($result->network_viewer_id, 16);
 
         //Try Oldest
         $result = $this->DAO->getInstanceStalestOne();
@@ -202,7 +209,6 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
             $this->assertEqual($i->network_user_id, $uID[$id]);
             $this->assertEqual($i->network_viewer_id, $vID[$id]);
         }
-
     }
 
     public function testGetByOwner(){
@@ -435,7 +441,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
             $follow = array("follower"=>rand(5,25), "following"=>rand(5,25));
             if(!isset($fd[$follow['following']."-".$follow['follower']])){
                 $fd[$follow['following']."-".$follow['follower']] = true;
-                $q  = "INSERT INTO `tu_follows` (`user_id`, `follower_id`) ";
+                $q  = "INSERT INTO tu_follows (user_id, follower_id) ";
                 $q .= "VALUES ( '".$follow['following']."', '".$follow['follower']."');\n";
                 PDODAO::$PDO->exec($q);
                 if($follow['following'] == 10){
@@ -456,7 +462,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         array('id'=>16, 'name'=>'Paul Clark')
         );
         foreach($users as $user){
-            $q  = "INSERT INTO `tu_users` (`user_id`, `user_name`) ";
+            $q  = "INSERT INTO tu_users (user_id, user_name) ";
             $q .= " VALUES ('".$user['id']."', '".$user['name']."') ";
             PDODAO::$PDO->exec($q);
         }
@@ -548,8 +554,8 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetByUserAndViewerId() {
         $this->DAO = new InstanceMySQLDAO();
         $q  = "INSERT INTO tu_instances ";
-        $q .= "(`network_user_id`, `network_username`, `network`, ";
-        $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
+        $q .= "(network_user_id, network_username, network, ";
+        $q .= "network_viewer_id, crawler_last_run, is_active) VALUES ";
         $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
         PDODAO::$PDO->exec($q);
 
@@ -563,8 +569,8 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetByViewerId() {
         $this->DAO = new InstanceMySQLDAO();
         $q  = "INSERT INTO tu_instances ";
-        $q .= "(`network_user_id`, `network_username`, `network`, ";
-        $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
+        $q .= "(network_user_id, network_username, network, ";
+        $q .= "network_viewer_id, crawler_last_run, is_active) VALUES ";
         $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
         PDODAO::$PDO->exec($q);
 
@@ -576,8 +582,8 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetByUsernameOnNetwork() {
         $this->DAO = new InstanceMySQLDAO();
         $q  = "INSERT INTO tu_instances ";
-        $q .= "(`network_user_id`, `network_username`, `network`, ";
-        $q .= "`network_viewer_id`, `crawler_last_run`, `is_active`) VALUES ";
+        $q .= "(network_user_id, network_username, network, ";
+        $q .= "network_viewer_id, crawler_last_run, is_active) VALUES ";
         $q .= "(17 , 'salma', 'facebook', 15, '2010-01-01 12:00:01', 1), ";
         $q .= "(18 , 'salma', 'facebook page', 15, '2010-01-01 12:00:01', 1) ";
         PDODAO::$PDO->exec($q);

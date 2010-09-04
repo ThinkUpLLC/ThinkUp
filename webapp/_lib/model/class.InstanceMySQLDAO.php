@@ -14,6 +14,9 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getInstanceOneByLastRun("DESC");
     }
 
+    public function getInstanceFreshestPublicOne() {
+        return $this->getInstanceOneByLastRun("DESC", true);
+    }
     /**
      * Alias for a average reply-count calculating portion of a query
      *
@@ -66,13 +69,17 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
     /**
      * Get instance based on sort order
      * @param str $order "ASC" or "DESC"
+     * @param bool $only_public Only public instances, defaults to false
      * @return array Instance objects
      */
-    private function getInstanceOneByLastRun($order) {
-        $q  = " SELECT *, ".$this->getAverageReplyCount();
-        $q .= " FROM #prefix#instances ";
-        $q .= " ORDER BY crawler_last_run ";
-        $q .= " $order LIMIT 1";
+    private function getInstanceOneByLastRun($order, $only_public=false) {
+        $q  = "SELECT *, ".$this->getAverageReplyCount() . " ";
+        $q .= "FROM #prefix#instances ";
+        if ($only_public) {
+            $q .= "WHERE is_public = 1 ";
+        }
+        $q .= "ORDER BY crawler_last_run ";
+        $q .= "$order LIMIT 1";
         $ps = $this->execute($q);
 
         return $this->getDataRowAsObject($ps, "Instance");
@@ -150,6 +157,14 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         );
         $ps = $this->execute($q, $vars);
 
+        return $this->getDataRowsAsObjects($ps, "Instance");
+    }
+
+    public function getPublicInstances() {
+        $q  = "SELECT *, ".$this->getAverageReplyCount()." ";
+        $q .= "FROM #prefix#instances AS i ";
+        $q .= "WHERE is_public = 1 and is_active=1 ORDER BY crawler_last_run DESC;";
+        $ps = $this->execute($q);
         return $this->getDataRowsAsObjects($ps, "Instance");
     }
 
