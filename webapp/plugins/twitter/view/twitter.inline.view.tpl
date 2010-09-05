@@ -98,7 +98,7 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
   {/foreach}
 {/if}
 
-{if ($display eq 'links-friends' and not $links) or ($display eq 'links-favorites' and not $links)}
+{if ($display eq 'links-friends' and not $links) or ($display eq 'links-favorites' and not $links) or ($display eq 'links-photos' and not $links)}
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>

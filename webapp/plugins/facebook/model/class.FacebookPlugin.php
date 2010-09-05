@@ -131,7 +131,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         //Links from friends
         $fltab = new WebappTab("links_from_friends", 'Links', 'Links posted on your wall', $fb_data_tpl);
         $fltabds = new WebappTabDataset("links_from_friends", 'LinkDAO', "getLinksByFriends",
-        array($instance->network_user_id));
+        array($instance->network_user_id, 'facebook'));
         $fltab->addDataset($fltabds);
         array_push($child_tabs, $fltab);
 

@@ -293,13 +293,15 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         //Links from favorites
         /* $lftab = new WebappTab("links-favorites", 'Links From Favorites', 'Links in posts you favorited');
-        $lftabds = new WebappTabDataset("links", 'LinkDAO', "getLinksByFriends", array($instance->network_user_id));
+        $lftabds = new WebappTabDataset("links", 'LinkDAO', "getLinksByFriends", array($instance->network_user_id,
+        'twitter'));
         $lftab->addDataset($lftabds);
         array_push($child_tabs, $lftab);
         */
         //Photos
         $ptab = new WebappTab("links-photos", "Photos", 'Photos your friends have posted', $twitter_data_tpl);
-        $ptabds = new WebappTabDataset("links", 'LinkDAO', "getPhotosByFriends", array($instance->network_user_id));
+        $ptabds = new WebappTabDataset("links", 'LinkDAO', "getPhotosByFriends", array($instance->network_user_id,
+        'twitter'));
         array_push($child_tabs, $ptab);
 
         return $child_tabs;
