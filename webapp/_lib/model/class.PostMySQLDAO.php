@@ -1079,6 +1079,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $rows = $this->getDataRowsAsArrays($this->execute($q, $vars));
         $latest_clients_usage = self::cleanClientsNames($rows);
         
+        if (count($latest_clients_usage) == 1 && isset($latest_clients_usage[''])) {
+            // Plugin doesn't support 'source'
+            $latest_clients_usage = array();
+        }
+        
         return array($all_time_clients_usage, $latest_clients_usage);
     }
     

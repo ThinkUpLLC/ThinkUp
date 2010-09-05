@@ -128,7 +128,7 @@
             </div>
             <div class="grid_19">
               <span class="tweet">{$user_details->username} on {$user_details->network|capitalize}</span><br />
-              <small>Recently posting about {$instance->posts_per_day|round} times a day, mostly using {foreach from=$latest_clients_usage key=name item=num_posts name=foo}{$name}{if !$smarty.foreach.foo.last} and {/if}{/foreach}</small>
+              <small>Recently posting about {$instance->posts_per_day|round} times a day{if !empty($latest_clients_usage)}, mostly using {foreach from=$latest_clients_usage key=name item=num_posts name=foo}{$name}{if !$smarty.foreach.foo.last} and {/if}{/foreach}{/if}</small>
             </div>
          </div>
          {/if}
