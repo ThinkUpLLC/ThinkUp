@@ -10,7 +10,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/model/class.HelloThi
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfCrawler extends ThinkUpBasicUnitTestCase {
+class TestOfCrawler extends ThinkUpUnitTestCase {
 
     /**
      * Constructor
@@ -65,7 +65,46 @@ class TestOfCrawler extends ThinkUpBasicUnitTestCase {
         $crawler->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
         $crawler->registerCrawlerPlugin('HelloThinkUpPlugin');
         $this->assertEqual($crawler->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
-        $crawler->crawl();
 
+        $builders = $this->buildData();
+        $_SESSION['user'] = 'admin@example.com';
+        $crawler->crawl();
+        $this->assertNoErrors();
+
+        $_SESSION['user'] = 'me@example.com';
+        $crawler->crawl();
+        $this->assertNoErrors();
+
+        unset($_SESSION['user']);
+        $this->expectException(new UnauthorizedUserException('You need a valid session to launch the crawler.'));
+        $crawler->crawl();
+        $this->assertNoErrors();
+    }
+    
+    public function testCrawlUnauthorized() {
+        $builders = $this->buildData();
+        $crawler = Crawler::getInstance();
+        $crawler->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
+        $crawler->registerCrawlerPlugin('HelloThinkUpPlugin');
+        $this->expectException(new UnauthorizedUserException('You need a valid session to launch the crawler.'));
+        $crawler->crawl();
+        $this->assertNoErrors();
+    }
+
+    private function buildData() {
+        $admin_owner_builder = FixtureBuilder::build('owners', array(
+            'id' => 1, 
+            'email' => 'admin@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1, 
+            'is_admin' => 1
+        ));
+        $owner_builder = FixtureBuilder::build('owners', array(
+            'id' => 2, 
+            'email' => 'me@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1
+        ));
+        return array($admin_owner_builder, $owner_builder);
     }
 }

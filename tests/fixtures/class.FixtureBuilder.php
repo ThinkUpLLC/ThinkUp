@@ -168,6 +168,9 @@ class FixtureBuilder {
                 } else {
                     $column['value'] = $field_value;
                 }
+            } else if(isset($args) && array_search($column['Field'], array_keys($args)) !== false) {
+                // Column value was specified, but is null; we just don't want to specify a value for that column
+                continue;
             } else if (isset($column['Default']) && $column['Default'] != ''
             && $column['Default'] != 'CURRENT_TIMESTAMP') {
                 $column['value'] = $column['Default'];

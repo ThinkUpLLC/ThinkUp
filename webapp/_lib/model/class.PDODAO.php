@@ -61,34 +61,43 @@ abstract class PDODAO {
      */
     public final function connect(){
         if(is_null(self::$PDO)) {
-            //set default db type to mysql if not set
-            $db_type = $this->config->getValue('db_type');
-            if(! $db_type) { $db_type = 'mysql'; }
-            $db_socket = $this->config->getValue('db_socket');
-            if ( !$db_socket) {
-                $db_port = $this->config->getValue('db_port');
-                if (!$db_port) {
-                    $db_socket = '';
-                } else {
-                    $db_socket = ";port=".$this->config->getValue('db_port');
-                }
-            } else {
-                $db_socket=";unix_socket=".$db_socket;
-            }
-            $db_string = sprintf(
-                "%s:dbname=%s;host=%s%s", 
-            $db_type,
-            $this->config->getValue('db_name'),
-            $this->config->getValue('db_host'),
-            $db_socket
-            );
             self::$PDO = new PDO(
-            $db_string,
+            self::getConnectString($this->config),
             $this->config->getValue('db_user'),
             $this->config->getValue('db_password')
             );
             self::$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
+    }
+    
+    /**
+     * Generates a connect string to use when creating a PDO object.
+     * @param Config $config
+     * @return string PDO connect string
+     */
+    public static function getConnectString($config) {
+        //set default db type to mysql if not set
+        $db_type = $config->getValue('db_type');
+        if(! $db_type) { $db_type = 'mysql'; }
+        $db_socket = $config->getValue('db_socket');
+        if ( !$db_socket) {
+            $db_port = $config->getValue('db_port');
+            if (!$db_port) {
+                $db_socket = '';
+            } else {
+                $db_socket = ";port=".$config->getValue('db_port');
+            }
+        } else {
+            $db_socket=";unix_socket=".$db_socket;
+        }
+        $db_string = sprintf(
+            "%s:dbname=%s;host=%s%s", 
+        $db_type,
+        $config->getValue('db_name'),
+        $config->getValue('db_host'),
+        $db_socket
+        );
+        return $db_string;
     }
 
     /**

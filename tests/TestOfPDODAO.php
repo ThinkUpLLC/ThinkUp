@@ -248,4 +248,32 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual($users[1]['user_name'], 'sweetmary');
         $this->restoreConfigFile();
     }
+    
+    public function testGetConnectString() {
+        $this->removeConfigFile();
+        Config::destroyInstance();
+        $cfg_values = array("db_host"=>"localhost");
+        $config = Config::getInstance($cfg_values);
+        $this->assertEqual(PDODAO::getConnectString($config), "mysql:dbname=;host=localhost");
+
+        $this->removeConfigFile();
+        Config::destroyInstance();
+        $cfg_values = array("db_type" => "mysql", "db_host"=>"localhost", "db_name" => "thinkup");
+        $config = Config::getInstance($cfg_values);
+        $this->assertEqual(PDODAO::getConnectString($config), "mysql:dbname=thinkup;host=localhost");
+
+        $this->removeConfigFile();
+        Config::destroyInstance();
+        $cfg_values = array("db_host"=>"localhost", "db_name" => "thinkup", "db_port" => "3306");
+        $config = Config::getInstance($cfg_values);
+        $this->assertEqual(PDODAO::getConnectString($config), "mysql:dbname=thinkup;host=localhost;port=3306");
+
+        $this->removeConfigFile();
+        Config::destroyInstance();
+        $cfg_values = array("db_host"=>"localhost", "db_name" => "thinkup", "db_socket" => "/var/mysql");
+        $config = Config::getInstance($cfg_values);
+        $this->assertEqual(PDODAO::getConnectString($config), 
+        "mysql:dbname=thinkup;host=localhost;unix_socket=/var/mysql");
+        $this->restoreConfigFile();
+    }
 }

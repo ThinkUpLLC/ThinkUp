@@ -22,24 +22,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
-
-        //Insert test links (not images, not expanded)
-        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ".
-        "('http://bit.ly/a5VmbO', '', 0, 1, 0);";
-        $this->db->exec($q);
-
-        // An invalid link (will return 404 Not Found)
-        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ".
-        "('http://bit.ly/01010010101', '', 0, 1, 0);";
-        $this->db->exec($q);
-
-        // A malformed URL
-        $q = "INSERT INTO tu_links (url, title, clicks, post_id, is_image) VALUES ".
-        "('http:///asdf.com', '', 0, 1, 0);";
-        $this->db->exec($q);
-        
         $crawler = Crawler::getInstance();
-
         $crawler->registerCrawlerPlugin('ExpandURLsPlugin');
     }
 
@@ -48,6 +31,9 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
     }
 
     public function testExpandURLsCrawl() {
+        $builders = $this->buildData();
+        
+        $_SESSION['user'] = 'admin@example.com';
         $crawler = Crawler::getInstance();
         $crawler->crawl();
 
@@ -62,5 +48,53 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link = $ldao->getLinkById(2);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, 'Error expanding URL');
+    }
+
+    private function buildData() {
+        $owner_builder = FixtureBuilder::build('owners', array(
+            'id' => 1, 
+            'email' => 'admin@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1,
+            'is_admin' => 1 
+        ));
+
+        //Insert test links (not images, not expanded)
+        $link1_builder = FixtureBuilder::build('links', array(
+            'id' => 1,
+            'url' => 'http://bit.ly/a5VmbO',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'is_image' => 0,
+            'error' => null
+        ));
+
+        // An invalid link (will return 404 Not Found)
+        $link2_builder = FixtureBuilder::build('links', array(
+            'id' => 2,
+            'url' => 'http://bit.ly/0101001010',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'is_image' => 0,
+            'error' => null
+        ));
+        
+        // A malformed URL
+        $link3_builder = FixtureBuilder::build('links', array(
+            'id' => 3,
+            'url' => 'http:///asdf.com',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'is_image' => 0,
+            'error' => null
+        ));
+        
+        return array($owner_builder, $link1_builder, $link2_builder, $link3_builder);
     }
 }

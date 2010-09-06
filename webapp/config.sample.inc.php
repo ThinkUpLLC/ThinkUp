@@ -34,6 +34,10 @@ $THINKUP_CFG['recaptcha_enable']          = false;
 $THINKUP_CFG['recaptcha_public_key']      = '';
 $THINKUP_CFG['recaptcha_private_key']     = '';
 
+// The crawler, when triggered by requests to the RSS feed, will only launch if it's been  
+// 20 minutes or more since the last crawl.
+$THINKUP_CFG['rss_crawler_refresh_rate']  = 20;
+
 /************************************************/
 /***  DATABASE CONFIG                         ***/
 /************************************************/

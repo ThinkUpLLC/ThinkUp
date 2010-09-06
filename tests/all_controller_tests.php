@@ -31,4 +31,6 @@ $controller_test->addTestCase(new TestOfToggleActivePluginController());
 $controller_test->addTestCase(new TestOfTogglePublicInstanceController());
 $controller_test->addTestCase(new TestOfUserController());
 $controller_test->addTestCase(new TestOfPluginOptionController());
+$controller_test->addTestCase(new TestOfTestAuthAPIController());
+$controller_test->addTestCase(new TestOfRSSController());
 $controller_test->run( new TextReporter());

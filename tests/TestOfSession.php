@@ -124,4 +124,32 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $this->assertFalse($session->isLoggedIn());
         $this->assertFalse($session->isAdmin());
     }
+    
+    public function testIsAPICallAuthorized() {
+        $builders = $this->buildData();
+        $this->assertTrue(Session::isAPICallAuthorized('me@example.com', '1829cc1b13f920a05fb201e8d2a9e4dc58b669b1'));
+        $this->assertFalse(Session::isAPICallAuthorized('me@example.com', '1829cc1b13f920a05fb201e8d2a9e4dc58b669b2'));
+        $this->assertFalse(Session::isAPICallAuthorized('me@example.com', null));
+        $this->assertFalse(Session::isAPICallAuthorized(null, '1829cc1b13f920a05fb201e8d2a9e4dc58b669b1'));
+        $this->assertFalse(Session::isAPICallAuthorized(null, null));
+    }
+    
+    public function testGetAPISecretFromPassword() {
+        $this->assertEqual(Session::getAPISecretFromPassword('XXX'), 
+        '1829cc1b13f920a05fb201e8d2a9e4dc58b669b1');
+        $this->assertEqual(Session::getAPISecretFromPassword(
+        'abcdefghijklmnopqrstuvwxyz1234567890,.;ˆ^=-/\'ƒ":é‚¬+_)(*&?%$#@\\'), 
+        '450f86da4df70ba8957cb230c01c0f6c1347e19c');
+    }
+
+    private function buildData() {
+        $owner_builder = FixtureBuilder::build('owners', array(
+            'id' => 1, 
+            'email' => 'me@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1
+        ));
+       
+        return array($owner_builder);
+    }
 }

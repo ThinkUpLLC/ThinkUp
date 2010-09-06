@@ -281,7 +281,21 @@ abstract class ThinkUpController {
             }
         } catch (Exception $e) {
             date_default_timezone_set('America/Los_Angeles'); //Temporary fix to avoid Smarty warning
-            $this->setViewTemplate('500.tpl');
+            $content_type = $this->content_type;
+            if (strpos($content_type, ';') !== FALSE) {
+                $content_type = array_shift(explode(';', $content_type));
+            }
+            switch ($content_type) {
+                case 'application/json':
+                    $this->setViewTemplate('500.json.tpl');
+                    break;
+                case 'text/plain':
+                    $this->setViewTemplate('500.txt.tpl');
+                    break;
+                default:
+                    $this->setViewTemplate('500.tpl');
+            }
+            $this->addToView('error_type', get_class($e));
             $this->addErrorMessage($e->getMessage());
             return $this->generateView();
         }

@@ -37,4 +37,5 @@ $model_tests->addTestCase(new TestOfWebapp());
 $model_tests->addTestCase(new TestOfWebappTab());
 $model_tests->addTestCase(new TestOfWebappTabDataset());
 $model_tests->addTestCase(new TestOfPostIterator());
+$model_tests->addTestCase(new TestOfMutexMySQLDAO());
 $model_tests->run( new TextReporter());

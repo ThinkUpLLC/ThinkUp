@@ -215,6 +215,16 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test get MutexDAO
+     */
+    public function testGetMutexDAO() {
+        $mutex_dao = DAOFactory::getDAO('MutexDAO');
+        $this->assertNotNull($mutex_dao);
+        $this->assertIsA($mutex_dao, 'MutexMySQLDAO');
+
+    }
+
+    /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
     public function testGetInstallerDAONoConfigFile(){

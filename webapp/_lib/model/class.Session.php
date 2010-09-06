@@ -16,7 +16,12 @@ class Session {
      * @var str
      */
     private $salt = "ab194d42da0dff4a5c01ad33cb4f650a7069178b";
-
+    /**
+     * Salt used to create API secret tokens.
+     * @var str
+     */
+    private static $api_salt = "a3cb4f27bdda09a01adb19df892c3650a7001b6fb";
+    
     /**
      * Constructor
      * @return Session
@@ -113,5 +118,27 @@ class Session {
     public function logout() {
         unset($_SESSION['user']);
         unset($_SESSION['user_is_admin']);
+    }
+    
+    /**
+     * Checks the username and API secret from the request, and returns true if they match, and are both valid.
+     * @return boolean Are the provided username and API secret parameters valid?
+     */
+    public static function isAPICallAuthorized($username, $api_secret) {
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $pwd_from_db = $owner_dao->getPass($username);
+        if ($pwd_from_db !== false && $api_secret == self::getAPISecretFromPassword($pwd_from_db)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns a secret API token that should be used when doing API calls.
+     * @param str $pwd_from_db (hash)
+     * @return str Secret API token
+     */
+    public static function getAPISecretFromPassword($pwd_from_db) {
+        return sha1(sha1($pwd_from_db.self::$api_salt).self::$api_salt);
     }
 }
