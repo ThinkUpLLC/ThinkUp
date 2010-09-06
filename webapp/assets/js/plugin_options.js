@@ -119,12 +119,13 @@ var PluginOptions = function() {
                         for(key in data.results.inserted) {
                             option_elements[key]['id'] = data.results.inserted[key];
                         }
-                        setTimeout(function() {    
+                        setTimeout(function() {
+                            window.location.reload();
                             $('#plugin_options_success').fadeOut(500, 
                                 function() { 
                                     plugin_options.submitting = false; 
                             }); 
-                        }, 2000);
+                        }, 1000);
                     }
                 }
             });
