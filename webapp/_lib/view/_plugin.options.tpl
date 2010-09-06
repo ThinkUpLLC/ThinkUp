@@ -45,7 +45,7 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
     </p>
 </div>
 
-<div style="float: left; margin-top: 10px;">
+<div style="float: left; margin-top: 10px; width: 200px;">
     <label id="plugin_options_{$option_obj.name}_label">
     {if $option_not_required.$option_name}<i>*</i>{/if}
     {if $option_obj.label}
