@@ -159,6 +159,34 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $replies;
     }
 
+    public function getRepliesToPostIterator($post_id, $network, $order_by = 'default', $unit = 'km',
+    $is_public = false, $count = 350) {
+        $q = " SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
+        $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
+        $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND l.network = p.network ";
+        $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
+        $q .= "WHERE p.network=:network AND in_reply_to_post_id=:post_id ";
+        if ($is_public) {
+            $q .= "AND u.is_protected = 0 ";
+        }
+        if ($order_by == 'location') {
+            $q .= "ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
+        } else {
+            $q .= "ORDER BY is_reply_by_friend DESC, follower_count desc ";
+        }
+        $q .= " LIMIT :limit;";
+        $vars = array(
+            ':post_id'=>$post_id,
+            ':network'=>$network,
+            ':limit'=>$count
+        );
+
+        $ps = $this->execute($q, $vars);
+        return new PostIterator($ps);
+    }
+
     public function getRetweetsOfPost($post_id, $network='twitter', $order_by = 'default', $unit = 'km',
     $is_public = false) {
         $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";

@@ -48,8 +48,8 @@
           {if $replies}
             <div>
               <h2 class="subhead">
-              {if $post->reply_count_cache eq 1}Reply{else}{$post->reply_count_cache} Replies{/if}
-              ({$private_reply_count} private)
+              {if $post->reply_count_cache eq 1}Reply{else}{$post->reply_count_cache} Replies{/if},
+              {$private_reply_count} private (<a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">CSV</a>)
               </h2>
               <div class="sort_links right">
                 <a href="#" id="sortOutreachReplies" class="bold">Sort by Reach</a> | 

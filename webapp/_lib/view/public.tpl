@@ -42,7 +42,7 @@
                 <div class="key-stat">
                   {if $replies}
                     <h1>{$post->reply_count_cache|number_format}</h1>
-                    <h3>replies in {$post->adj_pub_date|relative_datetime}</h3>
+                    <h3>replies in {$post->adj_pub_date|relative_datetime} (<a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">CSV</a>)</h3>
                   {else}
                     <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a>
                     fwds to<br><a href="#fwds">{$rtreach|number_format}</a></h1>
