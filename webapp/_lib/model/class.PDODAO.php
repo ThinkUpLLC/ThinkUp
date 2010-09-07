@@ -66,7 +66,12 @@ abstract class PDODAO {
             if(! $db_type) { $db_type = 'mysql'; }
             $db_socket = $this->config->getValue('db_socket');
             if ( !$db_socket) {
-                $db_socket = '';
+                $db_port = $this->config->getValue('db_port');
+                if (!$db_port) {
+                    $db_socket = '';
+                } else {
+                    $db_socket = ";port=".$this->config->getValue('db_port');
+                }
             } else {
                 $db_socket=";unix_socket=".$db_socket;
             }

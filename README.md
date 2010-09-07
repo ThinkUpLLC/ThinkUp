@@ -39,27 +39,8 @@ Click on each one to visit its settings page and configure any necessary API key
 
 ### Run the ThinkUp crawler
 
-Log into ThinkUp and visit http://yourserver.com/your/path/to/thinkup/crawler/run.php to run the ThinkUp crawler
-and begin capturing data.
-
-Schedule the crawler to run on a regular basis on your server. To do so, at your server's command line,
- `cd` to `/your-path-to-thinkup/webapp/crawler/`, and run:
-
-    $ export THINKUP_PASSWORD=yourtupassword; php crawl.php you@example.com
-
-Where `you@example.com` is your ThinkUp login email address, and `yourtupassword` is your ThinkUp password.
-
-To view what's going on with the crawler, use this command:
-
-    $ tail -f /your-path-to-thinkank/logs/crawler.log
-
-Cron the crawler's run command to go at least once an hour. Hint: you may configure and cron this pre-fab bash script,
-which will run the crawler and rotate its logs:
-
-    /thinkup/extras/cron/cron
-
-See the script's [README](http://github.com/ginatrapani/thinkup/blob/master/extras/cron/README) for more information on
-configuring it.
+Log into ThinkUp, and click the *Update now* link in the top left corner to run the ThinkUp crawler and begin 
+capturing your posts and replies.
 
 ## SUPPORT AND MORE INFORMATION
 

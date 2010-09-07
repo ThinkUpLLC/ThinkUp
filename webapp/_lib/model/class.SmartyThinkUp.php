@@ -107,8 +107,12 @@ class SmartyThinkUp extends Smarty {
     public function fetch($template, $cache_key=null) {
         if (! is_writable($this->compile_dir) || ! is_writable($this->compile_dir.'/cache') ) {
             Utils::defineConstants();
+            $whoami = exec('whoami');
+            if (empty($whoami)) {
+                $whoami = 'nobody';
+            }
             return str_replace(array('#THINKUP_BASE_URL#', '#WHOAMI#', '#COMPILE_DIR#'),
-            array(THINKUP_BASE_URL, exec('whoami'), $this->compile_dir),
+            array(THINKUP_BASE_URL, $whoami, $this->compile_dir),
             file_get_contents(THINKUP_WEBAPP_PATH.'_lib/view/500-perm.html'));
         } else {
             if ($cache_key != null) {

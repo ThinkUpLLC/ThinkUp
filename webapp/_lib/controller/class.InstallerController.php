@@ -15,6 +15,7 @@ class InstallerController extends ThinkUpController {
     private $installer;
 
     public function __construct($session_started=false) {
+        date_default_timezone_set('America/Los_Angeles'); //Temporary fix to avoid Smarty warning
         Utils::defineConstants();
         //Don't call parent constructor because config.inc.php doesn't exist yet
         //Instead, set up the view manager with manual array configuration
@@ -126,7 +127,7 @@ class InstallerController extends ThinkUpController {
         // other vars set to view
         $requirements_met = ($php_compat && $libs_compat && $permissions_compat);
         $this->addToView('requirements_met', $requirements_met);
-        $this->addToView('subtitle', 'Requirements Check');
+        $this->addToView('subtitle', 'Check System Requirements');
     }
 
     /**
@@ -192,7 +193,7 @@ class InstallerController extends ThinkUpController {
             }
 
             // trim each posted value
-            $db_config['db_type']      = trim($_POST['db_type']);
+            $db_config['db_type']      = trim(@$_POST['db_type']);
             $db_config['db_name']      = trim($_POST['db_name']);
             $db_config['db_user']      = trim($_POST['db_user']);
             $db_config['db_password']  = trim($_POST['db_passwd']);
@@ -222,8 +223,17 @@ class InstallerController extends ThinkUpController {
             }
             $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
-        } elseif (!$this->installer->checkDb($db_config)) { //check db
-            $this->addErrorMessage("Couldn't connect to your database; please re-enter your database credentials.");
+        } elseif (($error = $this->installer->checkDb($db_config)) !== true) { //check db
+            if (($p = strpos($error->getMessage(), "Unknown MySQL server host")) !== false ||
+            ($p = strpos($error->getMessage(), "Can't connect to MySQL server")) !== false ||
+            ($p = strpos($error->getMessage(), "Can't connect to local MySQL server through socket")) !== false ||
+            ($p = strpos($error->getMessage(), "Access denied for user")) !== false) {
+                $db_error = substr($error->getMessage(), $p);
+            } else {
+                $db_error = $error->getMessage();
+            }
+            $this->addErrorMessage("ThinkUp couldn't connect to your database. The error message is:<br /> ".
+            " <strong>$db_error</strong><br />Please correct your database information and try again.");
             $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
         }
@@ -250,13 +260,21 @@ class InstallerController extends ThinkUpController {
             foreach ($config_file_contents_arr as $line) {
                 $config_file_contents_str .= htmlentities($line);
             }
-            $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
-            "Use root (or sudo) to create the file manually, and allow PHP to write to it, by executing the ".
-            "following commands:<br /><code>touch " . escapeshellcmd(THINKUP_WEBAPP_PATH . "config.inc.php") .
-            "</code><br /><code>chown " . exec('whoami') . " " . escapeshellcmd(THINKUP_WEBAPP_PATH . 
-            "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" . 
-            THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
-            "<br /><br />Click the <strong>Next Step</strong> button below once you did either.");
+            $whoami = exec('whoami');
+            if (!empty($whoami)) {
+                $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
+                "Use root (or sudo) to create the file manually, and allow PHP to write to it, by executing the ".
+                "following commands:<br /><code>touch " . escapeshellcmd(THINKUP_WEBAPP_PATH . "config.inc.php") .
+                "</code><br /><code>chown $whoami " . escapeshellcmd(THINKUP_WEBAPP_PATH . 
+                "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" . 
+                THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
+                "<br /><br />Click the <strong>Next Step</strong> button below once you did either.");
+            } else {
+                $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
+                "You will need to create the <code>" . 
+                THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
+                "<br /><br />Click the <strong>Next Step</strong> button once this is done.");
+            }
             $this->addToView('config_file_contents', $config_file_contents_str );
             $this->addToView('_POST', $_POST);
 

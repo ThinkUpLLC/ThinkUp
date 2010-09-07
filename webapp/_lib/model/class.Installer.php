@@ -282,7 +282,7 @@ class Installer {
             self::setDb($config);
             return true;
         } catch (InstallerException $e) {
-            return false;
+            return $e;
         }
     }
 
@@ -402,7 +402,7 @@ class Installer {
             $table_present = false;
         }
 
-        return ($version_met && $db_check && $table_present);
+        return ($version_met && $db_check === true && $table_present);
     }
 
     /**

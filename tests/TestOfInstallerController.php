@@ -204,8 +204,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->go();
 
-        $this->assertPattern('/Couldn\'t connect to your database; please re-enter your database credentials./',
-        $result);
+        $this->assertPattern('/ThinkUp couldn\'t connect to your database. The error message is:/', $result);
+        $this->assertPattern('/Access denied for user \'username\'/', $result);
         $this->restoreConfigFile();
     }
 

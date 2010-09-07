@@ -30,7 +30,7 @@
     <img id="dart1" class="dart" alt="" src="{$site_root_path}assets/img/dart_wht.png">
     <div class="clearfix append_20">
       <div class="grid_22 push_1 clearfix">
-        <h2 class="clearfix step_title">Requirements Check</h2>
+        <h2 class="clearfix step_title">Check System Requirements</h2>
         {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd}
         <p class="success" style="margin-bottom: 30px">
              <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
@@ -101,7 +101,7 @@
         <div class="clearfix append_20">
           <div class="grid_6 prefix_5 right">
             {if $permissions_compat}
-            <span class="label">Template and cache directories are writeable?</span>
+            <span class="label">Template and cache directories are writeable</span>
             {else}
             <span class="label no">Template and cache directories are writeable?</span>
             {/if}

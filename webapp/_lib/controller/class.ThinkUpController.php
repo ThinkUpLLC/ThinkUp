@@ -280,6 +280,7 @@ abstract class ThinkUpController {
                 return $this->control();
             }
         } catch (Exception $e) {
+            date_default_timezone_set('America/Los_Angeles'); //Temporary fix to avoid Smarty warning
             $this->setViewTemplate('500.tpl');
             $this->addErrorMessage($e->getMessage());
             return $this->generateView();
