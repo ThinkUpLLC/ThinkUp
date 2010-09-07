@@ -8,5 +8,6 @@ rm -rf build/thinkup/_lib/extlib/simpletest/
 rm -rf build/thinkup/plugins/*/tests/
 rm build/thinkup/config.inc.php
 cd build
-zip -r thinkup.zip thinkup
+zip -r thinkup.zip thinkup 
+zip -d thinkup.zip __MACOSX* *.DS_Store 
 rm -rf thinkup 
