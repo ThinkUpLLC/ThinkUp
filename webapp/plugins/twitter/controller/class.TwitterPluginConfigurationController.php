@@ -116,9 +116,9 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
 
         $oauth_consumer_secret = array('name' => 'oauth_consumer_secret', 'label' => 'Consumer secret');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_secret);
-        $archive_limit_label = 'Archive Limit <span style="font-size: 10px;">' .
-            '[<a href="http://apiwiki.twitter.com/Things-Every-Developer-Should-Know#6Therearepaginationlimits">' .
-            '?</a>]</span>';
+        $archive_limit_label = 'Pagination Limit <span style="font-size: 10px;">' .
+            '[<a href="http://dev.twitter.com/pages/every_developer" title="Twitter still maintains a database of all the tweets sent by a user. However, to ensure performance of the site, this artificial limit of 3,200 posts is temporarily in place." '.
+            'target="_blank">?</a>]</span>';
         $archive_limit = array('name' => 'archive_limit',
                                'label' => $archive_limit_label, 'default_value' => '3200');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $archive_limit);
