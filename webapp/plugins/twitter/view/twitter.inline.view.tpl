@@ -13,7 +13,7 @@
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-      No tweets to display.
+      No tweets to display. <a href="{$site_root_path}crawler/run.php">Update your data now.</a>
     </p>
   </div>
 {/if}
@@ -49,7 +49,7 @@
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-      No data to display.
+      No data to display. <a href="{$site_root_path}crawler/run.php">Update your data now.</a>
     </p>
   </div>
 {/if}
@@ -87,7 +87,7 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-      No users found.
+      No users found. <a href="{$site_root_path}crawler/run.php">Update your data now.</a>
     </p>
   </div>
 {/if}
@@ -102,7 +102,7 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-      No data to display.
+      No data to display. <a href="{$site_root_path}crawler/run.php">Update your data now.</a>
     </p>
   </div>
 {/if}

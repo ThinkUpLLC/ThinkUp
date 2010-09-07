@@ -24,7 +24,7 @@
             }
           </script>
         {/literal}
-        Updated: {$instance->crawler_last_run|relative_datetime} ago {if $logged_in_user}(<a href="{$site_root_path}crawler/run.php">Refresh</a>) {/if}| 
+        Updated {$instance->crawler_last_run|relative_datetime} ago {if $logged_in_user}(<a href="{$site_root_path}crawler/run.php">Update now</a>) {/if}| 
         <span id="choose-instance"><span class="underline">{$instance->network_username}</span> ({$instance->network|capitalize})</span>
         <span id="instance-selector" style="display:none;">
           <select id="instance-select" onchange="changeMe();">
