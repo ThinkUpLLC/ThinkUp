@@ -100,11 +100,14 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     {/if}
     
     
-</div> {if $fbconnect_link}<h2 class="subhead">Add a Facebook User</h2>{$fbconnect_link}{/if}
-<div id="offlineAccess">
-    <fb:prompt-permission perms="read_stream,publish_stream,offline_access" next_fbjs="save_session()">
-        Click here to grant offline access!
-    </fb:prompt-permission>
+</div> 
+<div id="add-account-div" style="display: none;">
+    {if $fbconnect_link}<h2 class="subhead">Add a Facebook User</h2>{$fbconnect_link}{/if}
+    <div>
+        <fb:prompt-permission perms="read_stream,publish_stream,offline_access" next_fbjs="save_session()">
+            Click here to grant offline access!
+        </fb:prompt-permission>
+    </div>
 </div>
 <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript">
 </script>
@@ -153,5 +156,13 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {$options_markup}
 </p>
 </div>
+
+{literal}
+<script type="text/javascript">
+if( option_elements['facebook_api_key']['value'] && option_elements['facebook_api_secret']['value']) {
+    $('#add-account-div').show();
+}
+{/literal}
+</script>
 {/if}
 
