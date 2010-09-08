@@ -185,7 +185,7 @@ class TestOfPrivateDashboard extends ThinkUpWebTestCase {
         $this->assertText('Expand URLs');
 
         $this->click("Twitter");
-        $this->assertText('Twitter Configuration');
+        $this->assertText('Configure the Twitter Plugin');
     }
 
     public function testExport() {
