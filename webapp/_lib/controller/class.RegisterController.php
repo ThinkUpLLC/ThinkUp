@@ -10,7 +10,7 @@ class RegisterController extends ThinkUpController {
      * Required form submission values
      * @var array
      */
-    var $REQUIRED_PARAMS = array('email', 'pass1', 'pass2', 'full_name', 'user_code');
+    var $REQUIRED_PARAMS = array('email', 'pass1', 'pass2', 'full_name');
     /**
      *
      * @var boolean
