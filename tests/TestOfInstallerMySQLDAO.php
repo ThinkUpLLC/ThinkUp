@@ -60,11 +60,11 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new InstallerMySQLDAO($config_array);
         $result = $dao->describeTable($config_array["table_prefix"].'owners');
         foreach ($result as $field) {
-            $this->assertTrue(isset($field->Field));
-            $this->assertTrue(isset($field->Type));
-            $this->assertTrue(isset($field->Null));
-            $this->assertTrue(isset($field->Key));
-            $this->assertTrue(isset($field->Extra));
+            $this->assertTrue(isset($field['Field']));
+            $this->assertTrue(isset($field['Type']));
+            $this->assertTrue(isset($field['Null']));
+            $this->assertTrue(isset($field['Key']));
+            $this->assertTrue(isset($field['Extra']));
         }
     }
 

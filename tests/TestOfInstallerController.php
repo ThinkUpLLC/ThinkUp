@@ -174,6 +174,11 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3InvalidDatabaseCredentials() {
+        //get valid connection information
+        $config = Config::getInstance();
+        $valid_db_host = $config->getValue('db_host');
+        $valid_db_socket = $config->getValue('db_socket');
+
         //drop DB
         $this->testdb_helper->drop($this->db);
         //remove config file
@@ -190,8 +195,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_passwd'] = "pass";
         $_POST['db_name'] = "mythinkupdb";
         $_POST['db_type'] = "mysql";
-        $_POST['db_host'] = "localhost";
-        $_POST['db_socket'] = "/tmp/mysql.sock";
+        $_POST['db_host'] = $valid_db_host;
+        $_POST['db_socket'] = $valid_db_socket;
         $_POST['db_port'] = "";
         $_POST['db_prefix'] = "tu_";
         $_POST['password'] = "asdfadsf";
