@@ -25,6 +25,8 @@ class CrawlerWebController extends ThinkUpAuthController {
         echo '<br /><br /><textarea rows="65" cols="110">';
         $config = Config::getInstance();
         $config->setValue('log_location', false); //this forces output to just echo to page
+        $logger = Logger::getInstance();
+        $logger->close();
         $crawler = Crawler::getInstance();
         $crawler->crawl();
         echo '</textarea>';
