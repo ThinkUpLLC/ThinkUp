@@ -253,7 +253,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts";
         $q .= "         WHERE author_user_id=:uid AND network=:network";
-        $q .= "           AND in_reply_to_user_id IS NOT NULL) AS num_replies,";
+        $q .= "           AND in_reply_to_user_id > 0) AS num_replies,";
         $q .= "       (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts AS p";
@@ -271,8 +271,12 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         );
         $result = $this->getDataRowAsArray($this->execute($q, $vars));
 
-        $percent_replies = $result['num_replies'] / $result['num_posts'] * 100.0;
-        $percent_links = $result['num_links'] / $result['num_posts'] * 100.0;
+        $percent_replies = 0;
+        $percent_links = 0;
+        if ($result['num_posts'] > 0) {
+            $percent_replies = $result['num_replies'] / $result['num_posts'] * 100.0;
+            $percent_links = $result['num_links'] / $result['num_posts'] * 100.0;
+        }
         
         return array($posts_per_day, $posts_per_week, $percent_replies, $percent_links);
     }

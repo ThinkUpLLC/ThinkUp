@@ -508,6 +508,17 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         //earliest_post_in_system
     }
 
+    public function testSaveNoPosts(){
+        $builders = array();
+        $builders[] = FixtureBuilder::build('users', array('id'=>10, 'user_name'=>'jack'));
+
+        //Load the instance
+        $instance = $this->DAO->getByUsername('jack');
+        
+        // This will make the test fail if PHP warnings are generated when an instance has no posts
+        $this->DAO->save($instance, 1024);
+    }
+
     public function testUpdateLastRun(){
         //First make sure that the data is correct before we start.
         $result = $this->DAO->getInstanceFreshestOne();
