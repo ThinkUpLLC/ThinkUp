@@ -63,6 +63,22 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
 
     }
 
+    public function testNoProfilerOutput() {
+        // Enable profiler
+        $config = Config::getInstance();
+        $config->setValue('enable_profiler', true);
+        $_SERVER['HTTP_HOST'] = 'something';
+
+        $controller = $this->getController();
+        $_GET['action'] = 'set_options';
+        $results = $controller->go();
+        $json_resonse = json_decode($results);
+        // If the profiler outputs HTML (it shouldn't), the following will fail
+        $this->assertIsA($json_resonse, 'stdClass');
+
+        unset($_SERVER['HTTP_HOST']);
+    }
+
     /**
      * Test bad plugin id
      */

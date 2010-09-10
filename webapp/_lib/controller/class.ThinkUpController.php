@@ -153,7 +153,7 @@ abstract class ThinkUpController {
         if (isset($this->view_template)) {
             if ($this->view_mgr->isViewCached()) {
                 $cache_key = $this->getCacheKeyString();
-                if ($this->profiler_enabled) {
+                if ($this->profiler_enabled && !isset($this->json_data)) {
                     $view_start_time = microtime(true);
                     $cache_source = $this->shouldRefreshCache()?"DATABASE":"FILE";
                     $results = $this->view_mgr->fetch($this->view_template, $cache_key);
@@ -167,7 +167,7 @@ abstract class ThinkUpController {
                     return $this->view_mgr->fetch($this->view_template, $cache_key);
                 }
             } else {
-                if ($this->profiler_enabled) {
+                if ($this->profiler_enabled && !isset($this->json_data)) {
                     $view_start_time = microtime(true);
                     $results = $this->view_mgr->fetch($this->view_template);
                     $view_end_time = microtime(true);
@@ -256,8 +256,8 @@ abstract class ThinkUpController {
     public function go() {
         try {
             $this->initalizeApp();
-            if ($this->profiler_enabled) {
-                $results = $this->control();
+            $results = $this->control();
+            if ($this->profiler_enabled && !isset($this->json_data)) {
                 $end_time = microtime(true);
                 $total_time = $end_time - $this->start_time;
                 $profiler = Profiler::getInstance();
@@ -267,7 +267,7 @@ abstract class ThinkUpController {
                 $this->addToView('profile_items',$profiler->getProfile());
                 return  $results . $this->generateView();
             } else  {
-                return $this->control();
+                return $results;
             }
         } catch (Exception $e) {
             date_default_timezone_set('America/Los_Angeles'); //Temporary fix to avoid Smarty warning
