@@ -207,24 +207,25 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getUpdateCount($ps);
     }
     
-    private function getInstanceUserStats($network_user_id) {
+    private function getInstanceUserStats($network_user_id, $network) {
         $num_posts_max = 25;
         
         $q  = "SELECT pub_date, all_posts.total AS num_posts";
         $q .= "  FROM (";
         $q .= "        SELECT *";
         $q .= "          FROM #prefix#posts";
-        $q .= "         WHERE author_user_id=:uid";
+        $q .= "         WHERE author_user_id=:uid AND network=:network";
         $q .= "         ORDER BY pub_date DESC";
         $q .= "         LIMIT :num_posts) AS p,";
         $q .= "       (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts";
-        $q .= "         WHERE author_user_id=:uid) AS all_posts";
+        $q .= "         WHERE author_user_id=:uid AND network=:network) AS all_posts";
         $q .= " ORDER BY pub_date ASC";
         $q .= " LIMIT 1;";
         $vars = array(
         	':uid' => $network_user_id,
+            ':network' => $network,
             ':num_posts' => $num_posts_max
         );
         $result = $this->getDataRowAsArray($this->execute($q, $vars));
@@ -251,21 +252,22 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         $q .= "  FROM (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts";
-        $q .= "         WHERE author_user_id=:uid";
+        $q .= "         WHERE author_user_id=:uid AND network=:network";
         $q .= "           AND in_reply_to_user_id IS NOT NULL) AS num_replies,";
         $q .= "       (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts AS p";
         $q .= "     LEFT JOIN #prefix#links AS l";
         $q .= "               ON (p.post_id = l.post_id)";
-        $q .= "         WHERE author_user_id=:uid";
+        $q .= "         WHERE author_user_id=:uid AND p.network=:network";
         $q .= "           AND l.post_id IS NOT NULL) AS num_links,";
         $q .= "       (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts";
-        $q .= "         WHERE author_user_id=:uid) AS all_posts;";
+        $q .= "         WHERE author_user_id=:uid AND network=:network) AS all_posts;";
         $vars = array(
-        	':uid' => $network_user_id
+        	':uid' => $network_user_id,
+            ':network' => $network,
         );
         $result = $this->getDataRowAsArray($this->execute($q, $vars));
 
@@ -278,7 +280,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
     public function save($instance_object, $user_xml_total_posts_by_owner, $logger = false) {
         $i = $instance_object;
         list($posts_per_day, $posts_per_week, $percent_replies, $percent_links) = 
-        $this->getInstanceUserStats($i->network_user_id);
+        $this->getInstanceUserStats($i->network_user_id, $i->network);
         $ot = ($user_xml_total_posts_by_owner != '' ? true : false);
         $lsi = ($i->last_status_id != "" ? true : false);
         $is_archive_loaded_follows = $this->convertBoolToDB($i->is_archive_loaded_follows);
