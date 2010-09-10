@@ -68,7 +68,7 @@
       var pid = $("select#pid" + Id + " option:selected").val();
       var u = '{/literal}{$i->network_username|escape:'url'}{literal}';
       var t = 'inline.view.tpl';
-      var ck = '{/literal}{$i->network_username|escape:'url'}-{$smarty.session.user}-{$display}{literal}';
+      var ck = '{/literal}{$i->network_username|escape:'url'}-{$logged_in_user}-{$display}{literal}';
       var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
       $.ajax({
         type: "GET",
