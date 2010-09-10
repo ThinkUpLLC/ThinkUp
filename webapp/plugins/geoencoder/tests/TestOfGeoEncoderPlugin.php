@@ -34,7 +34,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
     function testGeoEncoderCrawl() {
         $builders = $this->buildData();
         
-        $_SESSION['user'] = 'admin@example.com';
+        $this->simulateLogin('admin@example.com', true);
         $crawler = Crawler::getInstance();
         $crawler->crawl();
 

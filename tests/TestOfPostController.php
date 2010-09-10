@@ -51,7 +51,7 @@ class TestOfPostController extends ThinkUpUnitTestCase {
      * Test controller when user is logged in, but there's no Post ID on the query string
      */
     public function testControlLoggedInNoPostID() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
 
         $controller = new PostController(true);
         $results = $controller->go();
@@ -63,7 +63,7 @@ class TestOfPostController extends ThinkUpUnitTestCase {
      * Test controller when user is logged in and there is a valid Post ID on the query string
      */
     public function testControlLoggedInWithPostID() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET["t"] = '1001';
 
         $controller = new PostController(true);
@@ -76,7 +76,7 @@ class TestOfPostController extends ThinkUpUnitTestCase {
      * Test controller when logged in but there's a numeric but nonexistent Post ID
      */
     public function testControlLoggedInWithNumericButNonExistentPostID(){
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET["t"] = '11';
 
         $controller = new PostController(true);
@@ -89,7 +89,7 @@ class TestOfPostController extends ThinkUpUnitTestCase {
      * Test controller when logged in but a non-numeric post ID
      */
     public function testControlLoggedInWithNonNumericPostID(){
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET["t"] = 'notapostID45';
 
         $controller = new PostController(true);

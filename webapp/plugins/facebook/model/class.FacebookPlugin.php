@@ -10,7 +10,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
 
-        $current_owner = $od->getByEmail($_SESSION['user']);
+        $current_owner = $od->getByEmail(Session::getLoggedInUser());
 
         //crawl Facebook user profiles
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook');
@@ -23,7 +23,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $tokens = $oid->getOAuthTokens($instance->id);
             $session_key = $tokens['oauth_access_token'];
 
-            $fb = new Facebook($options['facebook_api_key']->option_value, 
+            $fb = new Facebook($options['facebook_api_key']->option_value,
             $options['facebook_api_secret']->option_value);
 
             $id->updateLastRun($instance->id);
@@ -45,7 +45,7 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $tokens = $oid->getOAuthTokens($instance->id);
             $session_key = $tokens['oauth_access_token'];
 
-            $fb = new Facebook($options['facebook_api_key']->option_value, 
+            $fb = new Facebook($options['facebook_api_key']->option_value,
             $options['facebook_api_secret']->option_value);
 
             $id->updateLastRun($instance->id);

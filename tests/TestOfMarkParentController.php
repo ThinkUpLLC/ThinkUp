@@ -32,7 +32,7 @@ class TestOfMarkParentController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingParams() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
 
         $controller = new MarkParentController(true);
         $results = $controller->go();
@@ -40,7 +40,7 @@ class TestOfMarkParentController extends ThinkUpUnitTestCase {
     }
 
     public function testSuccessfulAssignment() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
 
         $builders = $this->buildPosts();
 

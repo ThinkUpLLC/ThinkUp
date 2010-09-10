@@ -40,7 +40,7 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
             'option_value' => 'dummykey') );
         //$config->setValue('flickr_api_key', 'dummykey');
 
-        $_SESSION['user'] = 'admin@example.com';
+        $this->simulateLogin('admin@example.com', true);
         $crawler->crawl();
 
         $ldao = DAOFactory::getDAO('LinkDAO');

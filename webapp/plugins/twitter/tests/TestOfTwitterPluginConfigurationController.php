@@ -96,9 +96,9 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
 
         //logged in
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
@@ -114,9 +114,9 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         // build some options data
         $options_arry = $this->buildPluginOptions();
 
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $_GET["twitter_username"] = "anildash";
         $_GET["p"]="twitter";

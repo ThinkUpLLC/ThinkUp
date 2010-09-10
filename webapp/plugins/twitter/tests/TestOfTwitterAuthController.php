@@ -52,7 +52,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
 
     //Test no params
     public function testLoggedInMissingParams() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $controller = new TwitterAuthController(true);
         $results = $controller->go();
 
@@ -62,7 +62,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
 
     //Test Session param but no Get param
     public function testLoggedInMissingToken() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_SESSION['oauth_request_token_secret'] = 'XXX';
         $controller = new TwitterAuthController(true);
         $results = $controller->go();
@@ -73,7 +73,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
 
     //Test Session param but no Get param
     public function testLoggedInMissingSessionWithGet() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['oauth_token'] = 'XXX';
         $controller = new TwitterAuthController(true);
         $results = $controller->go();
@@ -83,7 +83,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInAllParams() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['oauth_token'] = 'XXX';
         $_SESSION['oauth_request_token_secret'] = 'XXX';
 

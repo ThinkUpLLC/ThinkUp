@@ -27,7 +27,7 @@ class TestOfExportController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingParams() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $controller = new ExportController(true);
         $this->assertTrue(isset($controller));
 
@@ -36,7 +36,7 @@ class TestOfExportController extends ThinkUpUnitTestCase {
     }
 
     public function testNonExistentUser() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'idontexist';
         $_GET['n'] = 'idontexist';
         $controller = new ExportController(true);
@@ -48,7 +48,7 @@ class TestOfExportController extends ThinkUpUnitTestCase {
 
     public function testOwnerWithoutAccess() {
         $builders = $this->buildData();
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser2';
         $_GET['n'] = 'twitter';
         $controller = new ExportController(true);
@@ -61,7 +61,7 @@ class TestOfExportController extends ThinkUpUnitTestCase {
     public function testOwnerWithAccess() {
         $builders = $this->buildData();
 
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
         $controller = new ExportController(true);
@@ -77,7 +77,7 @@ class TestOfExportController extends ThinkUpUnitTestCase {
     public function testExplicitPostsExport() {
         $builders = $this->buildData();
 
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
         $_GET['type'] = 'posts';
@@ -94,7 +94,7 @@ class TestOfExportController extends ThinkUpUnitTestCase {
     public function testRepliesExport() {
         $builders = $this->buildData();
 
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
         $_GET['type'] = 'replies';

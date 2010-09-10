@@ -71,7 +71,7 @@ class TestOfPublicTimelineController extends ThinkUpUnitTestCase {
     }
 
     public function testControlNoParamsLoggedIn() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
 
         $controller = new PublicTimelineController(true);
         $results = $controller->control();

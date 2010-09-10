@@ -33,11 +33,6 @@ abstract class ThinkUpController {
     private $start_time = 0;
     /**
      *
-     * @var Session
-     */
-    protected $app_session;
-    /**
-     *
      * @var araray
      */
     protected $header_scripts = array ();
@@ -106,8 +101,7 @@ abstract class ThinkUpController {
      * @return bool whether or not user is logged in
      */
     protected function isLoggedIn() {
-        //return (isset($_SESSION['user']) && $_SESSION['user']!= '') ? true : false;
-        return $this->app_session->isLoggedIn();
+        return Session::isLoggedIn();
     }
 
     /**
@@ -116,7 +110,7 @@ abstract class ThinkUpController {
      * @return bool whether or not logged-in user is an admin
      */
     protected function isAdmin() {
-        return $this->app_session->isAdmin();
+        return Session::isAdmin();
     }
 
     /**
@@ -125,11 +119,7 @@ abstract class ThinkUpController {
      * @return str email
      */
     protected function getLoggedInUser() {
-        if ($this->isLoggedIn()) {
-            return $_SESSION['user'];
-        } else {
-            return null;
-        }
+        return Session::getLoggedInUser();
     }
 
     /**

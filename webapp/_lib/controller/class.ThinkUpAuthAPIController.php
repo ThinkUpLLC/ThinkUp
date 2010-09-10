@@ -18,7 +18,9 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
      */
     public function control() {
         if ($this->isAPICallValid()) {
-            $_SESSION['user'] = $this->getLoggedInUser();
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+            Session::completeLogin($owner);
             return $this->authControl();
         }
         $as = $this->getAPISecretFromRequest();
@@ -28,7 +30,7 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
         $this->setContentType("text/plain; charset=UTF-8");
         throw new UnauthorizedUserException("Unauthorized API call");
     }
-    
+
     /**
      * Return the username specified in the request, or from the session.
      * @return string Username
@@ -75,7 +77,7 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
 
     /**
      * Checks if the request is an API call, where the username and API secret were specified in the request.
-     * @return boolean 
+     * @return boolean
      */
     protected function isAPICall() {
         $as = $this->getAPISecretFromRequest();

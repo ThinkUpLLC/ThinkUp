@@ -36,7 +36,7 @@ class Crawler extends PluginHook {
 
     /**
      * Gets called when crawler runs.
-     * 
+     *
      * About crawler exclusivity (mutex usage):
      * When launched by an admin, no other user, admin or not, will be able to launch a crawl until this one is done.
      * When launched by a non-admin, we first check that no admin run is under way, and if that's the case,
@@ -44,21 +44,21 @@ class Crawler extends PluginHook {
      * No user will be able to launch two crawls in parallel, but different non-admin users crawls can run in parallel.
      */
     public function crawl() {
-        if (!isset($_SESSION['user'])) {
+        if (!Session::isLoggedIn() ) {
             throw new UnauthorizedUserException('You need a valid session to launch the crawler.');
         }
         $mutex_dao = DAOFactory::getDAO('MutexDAO');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         if (empty($owner)) {
             throw new UnauthorizedUserException('You need a valid session to launch the crawler.');
         }
-        
+
         $global_mutex_name = 'crawler';
-        
+
         // Everyone needs to check the global mutex
         $lock_successful = $mutex_dao->getMutex($global_mutex_name);
-        
+
         if ($lock_successful) {
             // Global mutex was free, which means no admin crawls are under way
             if ($owner->is_admin) {
@@ -71,7 +71,7 @@ class Crawler extends PluginHook {
                 $mutex_dao->releaseMutex($global_mutex_name);
             }
         }
-        
+
         if ($lock_successful) {
             $this->emitObjectMethod('crawl');
             $mutex_dao->releaseMutex($mutex_name);

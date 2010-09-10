@@ -92,4 +92,17 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     public function __destruct() {
         $this->restoreConfigFile();
     }
+
+    /**
+     * Wrapper for logging in a ThinkUp user in a test
+     * @param str $email
+     * @param bool $is_admin Default to false
+     */
+    protected function simulateLogin($email, $is_admin = false) {
+        $config = Config::getInstance();
+        $_SESSION[$config->getValue('source_root_path')]['user'] = $email;
+        if ($is_admin) {
+            $_SESSION[$config->getValue('source_root_path')]['user_is_admin'] = true;
+        }
+    }
 }

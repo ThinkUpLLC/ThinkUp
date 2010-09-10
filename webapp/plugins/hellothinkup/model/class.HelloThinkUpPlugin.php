@@ -16,7 +16,7 @@ class HelloThinkUpPlugin implements CrawlerPlugin {
           *	$od = DAOFactory::getDAO('OwnerDAO');
           *	$oid = DAOFactory::getDAO('OwnerInstanceDAO');
           *
-          * $current_owner = $od->getByEmail($_SESSION['user']);
+          * $current_owner = $od->getByEmail(Session::getLoggedInUser());
           *
           * $instances = [...]
           * foreach ($instances as $instance) {

@@ -32,7 +32,7 @@ class TestOfTogglePublicInstanceController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingInstanceParam() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['p'] = 1;
         $controller = new TogglePublicInstanceController(true);
         $results = $controller->go();
@@ -40,7 +40,7 @@ class TestOfTogglePublicInstanceController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingPublicParam() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'ginatrapani';
         $controller = new TogglePublicInstanceController(true);
         $results = $controller->go();
@@ -48,7 +48,7 @@ class TestOfTogglePublicInstanceController extends ThinkUpUnitTestCase {
     }
 
     public function testBothParamsNonExistentInstance() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 1;
         $_GET['p'] = 1;
         $controller = new TogglePublicInstanceController(true);
@@ -58,8 +58,7 @@ class TestOfTogglePublicInstanceController extends ThinkUpUnitTestCase {
 
     public function testBothParamsExistentInstance() {
         $builder = FixtureBuilder::build('instances', array('id'=>12, 'is_public'=>1));
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $_GET['u'] = '12';
         $_GET['p'] = '0';
         $controller = new TogglePublicInstanceController(true);

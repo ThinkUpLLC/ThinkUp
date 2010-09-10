@@ -67,15 +67,15 @@ class TestOfCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($crawler->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
 
         $builders = $this->buildData();
-        $_SESSION['user'] = 'admin@example.com';
+        $this->simulateLogin('admin@example.com', true);
         $crawler->crawl();
         $this->assertNoErrors();
 
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $crawler->crawl();
         $this->assertNoErrors();
 
-        unset($_SESSION['user']);
+        Session::logout();
         $this->expectException(new UnauthorizedUserException('You need a valid session to launch the crawler.'));
         $crawler->crawl();
         $this->assertNoErrors();

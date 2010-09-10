@@ -27,7 +27,7 @@ class TestOfGridExportController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingParams() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $controller = new GridExportController(true);
         $this->assertTrue(isset($controller));
         ob_start();
@@ -38,7 +38,7 @@ class TestOfGridExportController extends ThinkUpUnitTestCase {
     }
 
     public function testNonExistentUser() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'idontexist';
         $_GET['n'] = 'idontexist';
         $controller = new GridExportController(true);
@@ -52,7 +52,7 @@ class TestOfGridExportController extends ThinkUpUnitTestCase {
 
     public function testGridExport() {
         $builders = $this->buildData();
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $data = array( array('name' => 'value1'), array('name' => 'value2'));
         $json = json_encode($data);
         //echo $json;

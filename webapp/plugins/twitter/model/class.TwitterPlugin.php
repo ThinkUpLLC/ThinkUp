@@ -20,7 +20,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('twitter', true);
 
-        $current_owner = $od->getByEmail($_SESSION['user']);
+        $current_owner = $od->getByEmail(Session::getLoggedInUser());
 
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('twitter');
         foreach ($instances as $instance) {

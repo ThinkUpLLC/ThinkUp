@@ -46,7 +46,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
      */
     public function testControlNonNumericPostID(){
         $builder = $this->testInstantiateFixtureBuilder();
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET["pid"] = 'notapostID45';
 
         $controller = new MapController(true);
@@ -60,7 +60,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
      */
     public function testMissingPostID(){
         $builder = $this->testInstantiateFixtureBuilder();
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
 
         $controller = new MapController(true);
         $results = $controller->go();
@@ -73,7 +73,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
      */
     public function testControlInvalidNetwork(){
         $builder = $this->testInstantiateFixtureBuilder();
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['n'] = 'notavalidnetwork';
         $_GET["pid"] = '1001';
 
@@ -88,7 +88,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
      */
     public function testControlInvalidType(){
         $builder = $this->testInstantiateFixtureBuilder();
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET["pid"] = '1001';
         $_GET["t"] = 'notavalidtype';
 

@@ -120,7 +120,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
     }
 
     public function testAlreadyLoggedIn() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
 
         $controller = new LoginController(true);
         $results = $controller->go();

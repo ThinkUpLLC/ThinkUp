@@ -32,7 +32,7 @@ class TestOfToggleActiveInstanceController extends ThinkUpUnitTestCase {
     }
 
     public function testNotAnAdmin() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $controller = new ToggleActiveInstanceController(true);
         $results = $controller->go();
 
@@ -42,8 +42,7 @@ class TestOfToggleActiveInstanceController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingInstanceParam() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $_GET['p'] = 1;
         $controller = new ToggleActiveInstanceController(true);
         $results = $controller->go();
@@ -51,8 +50,7 @@ class TestOfToggleActiveInstanceController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingActiveParam() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $_GET['u'] = 'ginatrapani';
         $controller = new ToggleActiveInstanceController(true);
         $results = $controller->go();
@@ -60,8 +58,7 @@ class TestOfToggleActiveInstanceController extends ThinkUpUnitTestCase {
     }
 
     public function testBothParamsNonExistentInstance() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $_GET['u'] = 1;
         $_GET['p'] = 1;
         $controller = new ToggleActiveInstanceController(true);
@@ -71,8 +68,7 @@ class TestOfToggleActiveInstanceController extends ThinkUpUnitTestCase {
 
     public function testBothParamsExistentInstance() {
         $builder = FixtureBuilder::build('instances', array('id'=>12, 'is_active'=>1));
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $_GET['u'] = '12';
         $_GET['p'] = '0';
         $controller = new ToggleActiveInstanceController(true);

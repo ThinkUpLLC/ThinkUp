@@ -77,7 +77,7 @@ class TestOfPrivateDashboardController extends ThinkUpUnitTestCase {
     }
 
     public function testControlLoggedInWithData() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $this->setUpValidOwnerInstanceWithPosts();
         $controller = new PrivateDashboardController(true);
         $results = $controller->go();
@@ -92,7 +92,7 @@ class TestOfPrivateDashboardController extends ThinkUpUnitTestCase {
     }
 
     public function testControlLoggedInWithOutInstance() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $controller = new PrivateDashboardController(true);
         $results = $controller->go();
 

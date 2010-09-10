@@ -48,7 +48,7 @@ class TestOfFacebookAuthController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInMissingParam() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $option_builders = $this->buildPluginOptions();
         $controller = new FacebookAuthController(true);
         $results = $controller->go();
@@ -58,7 +58,7 @@ class TestOfFacebookAuthController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInWithAllParams() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET["sessionKey"] = "1234";
         $option_builders = $this->buildPluginOptions();
         $controller = new FacebookAuthController(true);

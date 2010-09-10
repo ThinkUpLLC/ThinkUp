@@ -79,7 +79,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testAuthControlLoggedInNotAdmin() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $controller = new AccountConfigurationController(true);
         $results = $controller->go();
 
@@ -102,7 +102,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testAuthControlLoggedInAdmin() {
-        $_SESSION['user'] = 'admin@example.com';
+        $this->simulateLogin('admin@example.com', true);
         $controller = new AccountConfigurationController(true);
         $results = $controller->go();
 
@@ -126,7 +126,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testAuthControlLoggedInSpecificPluginExists() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['p'] = 'twitter';
         $controller = new AccountConfigurationController(true);
         $results = $controller->go();
@@ -149,7 +149,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testAuthControlLoggedInSpecificPluginDoesNotExist() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['p'] = 'idontexist';
         $controller = new AccountConfigurationController(true);
         $results = $controller->go();
@@ -170,7 +170,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testAuthControlLoggedInChangePasswordSuccess() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_POST['changepass'] = 'Change password';
         $_POST['oldpass'] = 'oldpassword';
         $_POST['pass1'] = 'newpassword';
@@ -198,7 +198,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testAuthControlLoggedInChangePasswordOldPwdDoesntMatch() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_POST['changepass'] = 'Change password';
         $_POST['oldpass'] = 'oldddpassword';
         $_POST['pass1'] = 'newpassword';
@@ -226,7 +226,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testAuthControlLoggedInChangePasswordOldPwdEmpty() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_POST['changepass'] = 'Change password';
         $_POST['oldpass'] = '';
         $_POST['pass1'] = 'newpassword';
@@ -254,7 +254,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testAuthControlLoggedInChangePasswordNewPwdsDontMatch() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_POST['changepass'] = 'Change password';
         $_POST['oldpass'] = 'oldpassword';
         $_POST['pass1'] = 'newpassword1';
@@ -283,7 +283,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     }
 
     public function testAuthControlLoggedInChangePasswordNewPwdTooShort() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_POST['changepass'] = 'Change password';
         $_POST['oldpass'] = 'oldpassword';
         $_POST['pass1'] = 'new1';

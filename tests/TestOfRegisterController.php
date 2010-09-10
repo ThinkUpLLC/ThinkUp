@@ -40,7 +40,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         $builder2 = FixtureBuilder::build('instances', $instance);
         $owner_instance = array('owner_id'=>1, 'instance_id'=>1);
         $builder3 = FixtureBuilder::build('owner_instances', $owner_instance);
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
 
         $controller = new RegisterController(true);
         $results = $controller->go();

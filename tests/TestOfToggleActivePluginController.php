@@ -32,7 +32,7 @@ class TestOfToggleActivePluginController extends ThinkUpUnitTestCase {
     }
 
     public function testNotAnAdmin() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $controller = new ToggleActivePluginController(true);
         $results = $controller->go();
 
@@ -42,8 +42,7 @@ class TestOfToggleActivePluginController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingPluginIdParam() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $_GET['a'] = 1;
         $controller = new ToggleActivePluginController(true);
         $results = $controller->go();
@@ -51,8 +50,7 @@ class TestOfToggleActivePluginController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingActiveParam() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $_GET['pid'] = 1;
         $controller = new ToggleActivePluginController(true);
         $results = $controller->go();
@@ -60,8 +58,7 @@ class TestOfToggleActivePluginController extends ThinkUpUnitTestCase {
     }
 
     public function testBothParamsNonExistentInstance() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $_GET['pid'] = 1;
         $_GET['a'] = 1;
         $controller = new ToggleActivePluginController(true);
@@ -71,8 +68,7 @@ class TestOfToggleActivePluginController extends ThinkUpUnitTestCase {
 
     public function testBothParamsExistentInstance() {
         $builder = FixtureBuilder::build('plugins', array('id'=>51, 'is_active'=>0));
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $_GET['pid'] = '51';
         $_GET['a'] = '1';
         $controller = new ToggleActivePluginController(true);

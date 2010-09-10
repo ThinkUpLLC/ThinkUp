@@ -27,7 +27,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
     }
 
     public function testMissingParams() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $controller = new UserController(true);
         $this->assertTrue(isset($controller));
 
@@ -36,7 +36,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
     }
 
     public function testNonExistentUser() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'idontexist';
         $_GET['n'] = 'idontexist';
         $controller = new UserController(true);
@@ -49,7 +49,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
     public function testExistentUserWithoutInstance() {
         $builders = $this->buildData();
 
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
         $controller = new UserController(true);
@@ -71,7 +71,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
     public function testExistentUserWithInstance() {
         $builders = $this->buildData();
 
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
         $_GET['i'] = 'instancetestuser';

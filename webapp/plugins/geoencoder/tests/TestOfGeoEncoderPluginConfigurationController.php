@@ -51,9 +51,9 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         // build a user
         $builder = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
 
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
@@ -96,7 +96,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertPattern('/Note: Editing disabled for non admin users/', $submit_p->nodeValue);
 
         $is_admin = 1;
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('admin@example.com', true);
         $build_data = $this->buildController(false);
         $controller = $build_data[0];
         $owner  = $build_data[1];
@@ -121,7 +121,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
     }
 
     public function testSelectDistanceUnit() {
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $owner  = $build_data[1];
@@ -178,9 +178,9 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $plugin_id = $builder_plugin->columns['last_insert_id'];
         $builder_plugin_options = FixtureBuilder::build('plugin_options',
         array('plugin_id' => $plugin_id, 'option_name' => 'gmaps_api_key', 'option_value' => "1234"));
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
         return array($controller, $builder_owner, $builder_plugin, $builder_plugin_options);
     }

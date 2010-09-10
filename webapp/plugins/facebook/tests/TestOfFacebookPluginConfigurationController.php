@@ -74,9 +74,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
     public function testConfigNotSet() {
         $plugin_options_dao = DAOFactory::getDAO("PluginOptionDAO");
         PluginOptionMySQLDAO::$cached_options = array();
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new FacebookPluginConfigurationController($owner);
         $results = $controller->go();
 
@@ -100,9 +100,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
             'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
 
         //logged in
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new FacebookPluginConfigurationController($owner);
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();

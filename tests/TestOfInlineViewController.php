@@ -95,7 +95,7 @@ class TestOfInlineViewController extends ThinkUpUnitTestCase {
     }
 
     public function testControlLoggedInWithOutReqdParams() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $controller = new InlineViewController(true);
         $results = $controller->go();
 
@@ -109,7 +109,7 @@ class TestOfInlineViewController extends ThinkUpUnitTestCase {
 
     public function testControlLoggedInWithReqdParams() {
         //must be logged in
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         //required params
         $_GET['u'] = 'ev';
         $_GET['n'] = 'twitter';
@@ -132,7 +132,7 @@ class TestOfInlineViewController extends ThinkUpUnitTestCase {
 
     public function testControlLoggedInPosts() {
         //must be logged in
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         //required params
         $_GET['u'] = 'ev';
         $_GET['n'] = 'twitter';
@@ -155,7 +155,7 @@ class TestOfInlineViewController extends ThinkUpUnitTestCase {
 
     public function testControlLoggedInConversations() {
         //must be logged in
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         //required params
         $_GET['u'] = 'ev';
         $_GET['n'] = 'twitter';
@@ -194,7 +194,7 @@ class TestOfInlineViewController extends ThinkUpUnitTestCase {
         $follower_builders[] = FixtureBuilder::build('follows', array('user_id'=>'123456', 'follower_id'=>'13'));
 
         //must be logged in
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         //required params
         $_GET['u'] = 'ev';
         $_GET['n'] = 'twitter';

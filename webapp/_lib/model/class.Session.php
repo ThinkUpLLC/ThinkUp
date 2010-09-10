@@ -2,15 +2,13 @@
 /**
  * Session
  *
+ * The object that manages logged-in ThinkUp users' sessions via the web and API calls.
+ *
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
 class Session {
-    /**
-     *
-     * @var mixed
-     */
-    private $data;
     /**
      *
      * @var str
@@ -21,22 +19,13 @@ class Session {
      * @var str
      */
     private static $api_salt = "a3cb4f27bdda09a01adb19df892c3650a7001b6fb";
-    
-    /**
-     * Constructor
-     * @return Session
-     */
-    public function __construct() {
-        if (isset($_SESSION)) {
-            $data = $_SESSION;
-        }
-    }
 
     /**
      * @return bool Is user logged into ThinkUp
      */
-    public function isLoggedIn() {
-        if (!isset($_SESSION['user'])) {
+    public static function isLoggedIn() {
+        $config = Config::getInstance();
+        if (!isset($_SESSION[$config->getValue('source_root_path')]['user'])) {
             return false;
         } else {
             return true;
@@ -46,11 +35,24 @@ class Session {
     /**
      * @return bool Is user logged into ThinkUp an admin
      */
-    public function isAdmin() {
-        if (isset($_SESSION['user_is_admin'])) {
-            return $_SESSION['user_is_admin'];
+    public static function isAdmin() {
+        $config = Config::getInstance();
+        if (isset($_SESSION[$config->getValue('source_root_path')]['user_is_admin'])) {
+            return $_SESSION[$config->getValue('source_root_path')]['user_is_admin'];
         } else {
             return false;
+        }
+    }
+
+    /**
+     * @return str Currently logged-in ThinkUp username (email address)
+     */
+    public static function getLoggedInUser() {
+        $config = Config::getInstance();
+        if (self::isLoggedIn()) {
+            return $_SESSION[$config->getValue('source_root_path')]['user'];
+        } else {
+            return null;
         }
     }
 
@@ -107,19 +109,22 @@ class Session {
      * Complete login action
      * @param Owner $owner
      */
-    public function completeLogin($owner) {
-        $_SESSION['user'] = $owner->email;
-        $_SESSION['user_is_admin'] = $owner->is_admin;
+    public static function completeLogin($owner) {
+        $config = Config::getInstance();
+        $_SESSION[$config->getValue('source_root_path')]['user'] = $owner->email;
+        $_SESSION[$config->getValue('source_root_path')]['user_is_admin'] = $owner->is_admin;
     }
 
     /**
      * Log out
      */
-    public function logout() {
-        unset($_SESSION['user']);
-        unset($_SESSION['user_is_admin']);
+    public static function logout() {
+        $config = Config::getInstance();
+        unset($_SESSION[$config->getValue('source_root_path')]['user']);
+        unset($_SESSION[$config->getValue('source_root_path')]['user_is_admin']);
+        unset($_SESSION[$config->getValue('source_root_path')]);
     }
-    
+
     /**
      * Checks the username and API secret from the request, and returns true if they match, and are both valid.
      * @return boolean Are the provided username and API secret parameters valid?

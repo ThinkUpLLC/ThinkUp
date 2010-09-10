@@ -243,8 +243,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
      * get a plugin option controller
      */
     public function getController() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinktank/');
         return new PluginOptionController(true);

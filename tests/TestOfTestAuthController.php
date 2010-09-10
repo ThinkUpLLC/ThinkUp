@@ -57,7 +57,7 @@ class TestOfTestAuthController extends ThinkUpUnitTestCase {
      * this would enforce valid markup
      */
     public function testIsLoggedIn() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinkup/');
 
@@ -78,7 +78,7 @@ class TestOfTestAuthController extends ThinkUpUnitTestCase {
      * Test cache key logged in, no params
      */
     public function testCacheKeyLoggedIn() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
 
         $config = Config::getInstance();
         $config->setValue('cache_pages', true);

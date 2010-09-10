@@ -49,9 +49,9 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // build a user
         $builder = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
 
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new HelloThinkUpPluginConfigurationController($owner, 'hellothinkup');
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
@@ -116,7 +116,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
 
     public function testAddTextOptionIsAdmin() {
         $is_admin = 1;
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $build_data = $this->buildController();
         // var_dump($build_data[1]);
         $controller = $build_data[0];
@@ -164,7 +164,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
     }
 
     public function testAddRadioOptions() {
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $owner  = $build_data[1];
@@ -203,7 +203,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
     }
 
     public function testAddSelectOptions() {
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $owner  = $build_data[1];
@@ -265,9 +265,9 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $builder_plugin_options =
         FixtureBuilder::build('plugin_options',
         array('plugin_id' => $plugin_id, 'option_name' => 'testname', 'option_value' => "Hal") );
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new HelloThinkUpPluginConfigurationController($owner, 'hellothinkup');
         return array($controller, $builder_owner, $builder_plugin, $builder_plugin_options);
     }

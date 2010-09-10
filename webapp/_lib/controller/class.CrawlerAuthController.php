@@ -43,10 +43,11 @@ class CrawlerAuthController extends ThinkUpController {
             }
 
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            $owner = $owner_dao->getByEmail($username);
             $passcheck = $owner_dao->getPass($username);
             if ($session->pwdCheck($pw, $passcheck)) {
                 $authorized = true;
-                $_SESSION['user'] = $username;
+                Session::completeLogin($owner);
             } else {
                 $output = "ERROR: Incorrect username and password.";
             }

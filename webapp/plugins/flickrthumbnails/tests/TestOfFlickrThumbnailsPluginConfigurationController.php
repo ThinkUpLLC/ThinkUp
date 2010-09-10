@@ -71,9 +71,9 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
         'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
 
         //logged in
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         $this->assertPattern('/Flickr API key/', $output);

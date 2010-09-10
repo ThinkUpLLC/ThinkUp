@@ -52,8 +52,7 @@ class TestOfTestAdminController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInAsAdmin() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinkup/');
 
@@ -71,8 +70,7 @@ class TestOfTestAdminController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInNotAsAdmin() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = false;
+        $this->simulateLogin('me@example.com');
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinkup/');
 
