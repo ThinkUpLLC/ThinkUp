@@ -133,12 +133,12 @@ class PublicTimelineController extends ThinkUpController {
 
             //follows
             $follow_dao = DAOFactory::getDAO('FollowDAO');
-            $least_likely_followers = $follow_dao->getLeastLikelyFollowers($instance->network_user_id, 'twitter', 16);
+            $least_likely_followers = $follow_dao->getLeastLikelyFollowers($instance->network_user_id, $network, 16);
             $this->addToView('least_likely_followers', $least_likely_followers);
 
             //follower count history
             $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
-            $follower_count_history_by_day = $follower_count_dao->getHistory($instance->network_user_id, 'twitter',
+            $follower_count_history_by_day = $follower_count_dao->getHistory($instance->network_user_id, $network,
             'DAY');
             $this->addToView('follower_count_history_by_day', $follower_count_history_by_day);
             $first_follower_count = $follower_count_history_by_day['history'][0]['count'];
@@ -146,7 +146,7 @@ class PublicTimelineController extends ThinkUpController {
             [sizeof($follower_count_history_by_day['history'])-1]['count'];
             $this->addToView('follower_count_by_day_trend',
             ($last_follower_count - $first_follower_count)/sizeof($follower_count_history_by_day['history']));
-            $follower_count_history_by_week = $follower_count_dao->getHistory($instance->network_user_id, 'twitter',
+            $follower_count_history_by_week = $follower_count_dao->getHistory($instance->network_user_id, $network,
             'WEEK');
             $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
             $first_follower_count = $follower_count_history_by_week['history'][0]['count'];

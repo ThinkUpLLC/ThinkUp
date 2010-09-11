@@ -10,7 +10,7 @@
 
 <div class="individual-tweet clearfix{if $t->is_protected} private{/if}">
   <div class="grid_1 alpha">
-    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network}/assets/img/favicon.ico" class="service-icon"/></a>
+    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
   </div>
   <div class="grid_3 right small">
     <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}">{$t->author_username}</a>

@@ -98,7 +98,7 @@
                 <div class="clearfix append_20">
                   <div class="grid_2 prefix_1 alpha">
                   <div class="avatar-container">
-                    <img src="{$profile->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$profile->network}/assets/img/favicon.ico" class="service-icon2"/>
+                    <img src="{$profile->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$profile->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
                   </div>
                   </div>
                   <div class="grid_19 omega">

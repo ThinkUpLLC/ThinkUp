@@ -58,7 +58,7 @@ class MockFacebookRestClient {
         //        echo $q .'
         //        ';
 
-        $fan_of_q = 'SELECT page_id, name, page_url FROM page WHERE page_id IN ';
+        $fan_of_q = 'SELECT page_id, name, page_url, pic_square FROM page WHERE page_id IN ';
         $fan_of_q .= '(SELECT page_id FROM page_fan WHERE uid=606837591)';  //return list of pages for this user
 
         $long_comment_thread_q = "SELECT xid, fromid, time, text, id FROM comment WHERE object_id=125634574117714";

@@ -10,7 +10,7 @@
 
 <div class="individual-tweet post clearfix"{if $smarty.foreach.foo.index % 2 == 1} style="background-color:#EEE"{/if}>
   <div class="grid_1 alpha">
-    <a href="{$site_root_path}user/?u={$r.questioner_username}&n={$r.network}&i={$logged_in_user}"><img src="{$r.questioner_avatar}" class="avatar" alt="{$logged_in_user}"/><img src="{$site_root_path}plugins/{$r.network}/assets/img/favicon.ico" class="service-icon"/></a>
+    <a href="{$site_root_path}user/?u={$r.questioner_username}&n={$r.network}&i={$logged_in_user}"><img src="{$r.questioner_avatar}" class="avatar" alt="{$logged_in_user}"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
   </div>
   <div class="grid_3 right small">
     <a href="{$site_root_path}user/?u={$r.questioner_username}&n={$r.network}&i={$logged_in_user}">{if $r.questioner_username eq $i->network_username}You{else}{$r.questioner_username}{/if}</a>
@@ -34,7 +34,7 @@
 
 <div class="individual-tweet reply clearfix"{if $smarty.foreach.foo.index % 2 == 1} style="background-color:#EEE"{/if}>
   <div class="grid_1 alpha">
-    <a href="{$site_root_path}user/?u={$r.answerer_username}&n={$r.network}&i={$logged_in_user}"><img src="{$r.answerer_avatar}" class="avatar" alt="{$logged_in_user}"/><img src="{$site_root_path}plugins/{$r.network}/assets/img/favicon.ico" class="service-icon"/></a>
+    <a href="{$site_root_path}user/?u={$r.answerer_username}&n={$r.network}&i={$logged_in_user}"><img src="{$r.answerer_avatar}" class="avatar" alt="{$logged_in_user}"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
   </div>
   <div class="grid_3 right small">
     <a href="{$site_root_path}user/?u={$r.answerer_username}&n={$r.network}&i={$logged_in_user}">{if $r.answerer_username eq $i->network_username}You{else}{$r.answerer_username}{/if}</a>

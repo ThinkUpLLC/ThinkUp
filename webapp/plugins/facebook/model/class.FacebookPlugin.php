@@ -52,7 +52,8 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             $crawler = new FacebookCrawler($instance, $fb);
 
             try {
-                $crawler->fetchPagePostsAndReplies($instance->network_user_id, $instance->network_viewer_id, $session_key);
+                $crawler->fetchPagePostsAndReplies($instance->network_user_id, $instance->network_viewer_id,
+                $session_key);
             } catch (Exception $e) {
                 $logger->logStatus('PAGE EXCEPTION: '.$e->getMessage(), get_class($this));
             }

@@ -92,7 +92,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
 
         $session_key = 'asdfasdfasdfa';
         $pages = $fbc->fetchPagesUserIsFanOf($this->instance->network_user_id, $session_key);
-        //        print_r($pages);
+        //print_r($pages);
 
         $this->assertEqual(sizeof($pages), 43);
         $this->assertEqual($pages[29]['page_id'], '63811549237');
@@ -105,7 +105,6 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testFetchPageStream() {
-
         $this->instance->network_user_id = '606837591';
         $fbc = new FacebookCrawler($this->instance, $this->fb);
 
@@ -114,7 +113,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $fbc->fetchPagePostsAndReplies($page_id, $this->instance->network_user_id, $session_key);
 
         $pd = DAOFactory::getDAO('PostDAO');
-        $p = $pd->getPost('125634574117714', 'facebook');
+        $p = $pd->getPost('125634574117714', 'facebook page');
         $this->assertEqual($p->post_text,
         "Thanks for checking out the West Wing Week, your guide to everything that's happening at ".
         "1600 Pennsylvania Ave.");

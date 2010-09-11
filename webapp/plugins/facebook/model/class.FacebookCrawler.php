@@ -50,7 +50,7 @@ class FacebookCrawler {
     }
 
     public function fetchPagesUserIsFanOf($uid, $session_key) {
-        $q = "SELECT page_id, name, page_url FROM page WHERE page_id IN ";
+        $q = "SELECT page_id, name, page_url, pic_square FROM page WHERE page_id IN ";
         $q .= "(SELECT page_id FROM page_fan WHERE uid=".$uid.")";
         try{
             $pages = $this->facebook->api_client->fql_query($q);
@@ -152,7 +152,7 @@ class FacebookCrawler {
             $this->logger->logStatus(sizeof($stream["posts"]).
             " Facebook posts found for page ID $pid with session key $session_key", get_class($this));
 
-            $thinkup_data = $this->parseStream($stream);
+            $thinkup_data = $this->parseStream($stream, 'facebook page');
             $posts = $thinkup_data["posts"];
 
             foreach ($posts as $post) {
@@ -166,7 +166,8 @@ class FacebookCrawler {
                 }
 
                 $added_posts = $this->pd->addPost($post);
-                $this->logger->logStatus("Added $added_posts post for ".$post["author_username"].":".$post["post_text"],
+                $this->logger->logStatus("Added $added_posts post ID ".$post["post_id"]." on ".$post["network"].
+                " for ".$post["author_username"].":".$post["post_text"],
                 get_class($this));
             }
 
@@ -179,11 +180,9 @@ class FacebookCrawler {
         } else {
             $this->logger->logStatus("No Facebook posts found for page ID $pid", get_class($this));
         }
-
     }
 
-
-    private function parseStream($stream) {
+    private function parseStream($stream, $source='facebook') {
         $thinkup_posts = array();
         $thinkup_users = array();
         foreach ($stream["posts"] as $p) {
@@ -193,7 +192,7 @@ class FacebookCrawler {
             $ttp = array("post_id"=>$post_id, "author_username"=>$profile["name"], "author_fullname"=>$profile["name"],
             "author_avatar"=>$profile["pic_square"], "author_user_id"=>$profile['id'], "post_text"=>$p['message'], 
             "pub_date"=>date('Y-m-d H:i:s', $p['created_time']), "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', 
-            "source"=>'', 'network'=>'facebook');
+            "source"=>'', 'network'=>$source);
             array_push($thinkup_posts, $ttp);
             $post_comments = $p["comments"]["comment_list"];
             $post_comments_count = isset($p["comments"]["count"])?$p["comments"]["count"]:0;
@@ -208,14 +207,14 @@ class FacebookCrawler {
                     "author_user_id"=>$commenter["id"], 
                     "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), 
                     "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 
-                    'network'=>'facebook');
+                    'network'=>$source);
                     array_push($thinkup_posts, $ttp);
                     //Get users
                     $ttu = array("user_name"=>$commenter["name"], "full_name"=>$commenter["name"],
                     "user_id"=>$c['fromid'], "avatar"=>$commenter["pic_square"], "location"=>'', 
                     "description"=>'', 
                     "url"=>'', "is_protected"=>'true', "follower_count"=>0, "post_count"=>0, "joined"=>'', 
-                    "found_in"=>"Comments", "network"=>"facebook");
+                    "found_in"=>"Comments", "network"=>$source);
                     array_push($thinkup_users, $ttu);
                 }
             }
@@ -238,7 +237,7 @@ class FacebookCrawler {
                         "author_user_id"=>$c["fromid"], 
                         "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), 
                         "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 
-                        'network'=>'facebook');
+                        'network'=>$source);
                         array_push($thinkup_posts, $ttp);
                     }
                 }

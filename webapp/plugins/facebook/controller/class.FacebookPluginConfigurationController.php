@@ -110,24 +110,46 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         && isset($_GET["viewer_id"]) && isset($_GET["owner_id"]) && isset($_GET["instance_id"])) {
             $page_data = json_decode(str_replace("\\", "", $_GET["facebook_page_id"]));
             $messages = self::insertPage($page_data->page_id, $_GET["viewer_id"], $_GET["owner_id"],
-            $_GET["instance_id"], $page_data->name, $messages);
+            $_GET["instance_id"], $page_data->name, $page_data->pic_square, $messages);
         }
 
         return $messages;
     }
 
-    protected function insertPage($fb_page_id, $viewer_id, $owner_id, $existing_instance_id, $fb_page_name, $messages) {
+    protected function insertPage($fb_page_id, $viewer_id, $owner_id, $existing_instance_id, $fb_page_name,
+    $fb_page_avatar, $messages) {
         //check if instance exists
         $i = $this->id->getByUserAndViewerId($fb_page_id, $viewer_id, 'facebook');
-        if ($i == null) {
-            $instance_id = $this->id->insert($fb_page_id, $fb_page_name, "facebook page", $viewer_id);
-            if ($instance_id) {
-                $messages["success"] .= "Instance ID ".$instance_id.
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user_in_db = $user_dao->isUserInDB($fb_page_name, "facebook page");
+        if ($i == null || !$user_in_db) {
+            if ($i == null ) {
+                $instance_id = $this->id->insert($fb_page_id, $fb_page_name, "facebook page", $viewer_id);
+                if ($instance_id) {
+                    $messages["success"] .= "Instance ID ".$instance_id.
                 " created successfully for Facebook page ID $fb_page_id.";
+                }
+                $tokens = $this->oid->getOAuthTokens($existing_instance_id);
+                $session_key = $tokens['oauth_access_token'];
+                $this->oid->insert($owner_id, $instance_id, $session_key);
             }
-            $tokens = $this->oid->getOAuthTokens($existing_instance_id);
-            $session_key = $tokens['oauth_access_token'];
-            $this->oid->insert($owner_id, $instance_id, $session_key);
+            if (!$user_in_db) {
+                $val = array();
+                $val['user_name'] = $fb_page_name;
+                $val['full_name'] = $fb_page_name;
+                $val['user_id'] = $fb_page_id;
+                $val['avatar'] = $fb_page_avatar;
+                $val['location'] = '';
+                $val['description'] = '';
+                $val['url'] = '';
+                $val['is_protected'] = false;
+                $val['follower_count'] = 0;
+                $val['post_count'] = 0;
+                $val['joined'] = 0;
+                $val['network'] = 'facebook page';
+                $user = new User($val);
+                $result = $user_dao->updateUser($user);
+            }
         } else {
             $messages["info"] .= "Instance ".$fb_page_id.", facebook exists.";
             $instance_id = $i->id;
