@@ -153,7 +153,7 @@ abstract class ThinkUpController {
         if (isset($this->view_template)) {
             if ($this->view_mgr->isViewCached()) {
                 $cache_key = $this->getCacheKeyString();
-                if ($this->profiler_enabled && !isset($this->json_data)) {
+                if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type, 'text/javascript') === false) {
                     $view_start_time = microtime(true);
                     $cache_source = $this->shouldRefreshCache()?"DATABASE":"FILE";
                     $results = $this->view_mgr->fetch($this->view_template, $cache_key);
@@ -167,7 +167,7 @@ abstract class ThinkUpController {
                     return $this->view_mgr->fetch($this->view_template, $cache_key);
                 }
             } else {
-                if ($this->profiler_enabled && !isset($this->json_data)) {
+                if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type, 'text/javascript') === false) {
                     $view_start_time = microtime(true);
                     $results = $this->view_mgr->fetch($this->view_template);
                     $view_end_time = microtime(true);
@@ -257,7 +257,7 @@ abstract class ThinkUpController {
         try {
             $this->initalizeApp();
             $results = $this->control();
-            if ($this->profiler_enabled && !isset($this->json_data)) {
+            if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type, 'text/javascript') === false) {
                 $end_time = microtime(true);
                 $total_time = $end_time - $this->start_time;
                 $profiler = Profiler::getInstance();

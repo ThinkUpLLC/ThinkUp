@@ -54,6 +54,7 @@ class GridController extends ThinkUpAuthController {
      * Outputs javascript callback string with json array/list of post as an argument
      */
     public function authControl() {
+        $this->setContentType('text/javascript');
         if (!$this->is_missing_param) {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             if ( $instance_dao->isUserConfigured($_GET['u'], $_GET['n'])) {

@@ -13,7 +13,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
     }
-
+    
     public function testNotLoggedIn() {
         $controller = new GridController(true);
         $results = $controller->go();
@@ -85,6 +85,32 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $this->assertPattern('/"status":"success"/', $results);
     }
 
+    public function testNoProfilerOutput() {
+        // Enable profiler
+        $config = Config::getInstance();
+        $config->setValue('enable_profiler', true);
+        $_SERVER['HTTP_HOST'] = 'something';
+
+        $builders = $this->buildData();
+        $this->simulateLogin('me@example.com');
+        $_GET['u'] = 'someuser1';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = 'tweets-mostreplies';
+        $controller = new GridController(true);
+        $this->assertTrue(isset($controller));
+        
+        ob_start();
+        $results = $controller->go();
+        $results .= ob_get_contents();
+        ob_end_clean();
+        
+        $json = substr($results, 29, -2);
+        $ob = json_decode($json);
+        // If the profiler outputs HTML (it shouldn't), the following will fail
+        $this->assertIsA($ob, 'stdClass');
+        unset($_SERVER['HTTP_HOST']);
+    }
+    
     private function buildData() {
         $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com'));
         $user_builder = FixtureBuilder::build('users', array('user_id'=>123, 'user_name'=>'someuser2',
