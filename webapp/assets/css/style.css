@@ -74,7 +74,7 @@ ul.user-accounts li ul li {margin-left:2em;}
 
 /* added to tab content */
 #thinkup-tabs .ui-tabs-panel {padding-left:0px;}
-#thinkup-tabs .ui-widget-content {background-color:#EEEEEA;border:0px;}
+#thinkup-tabs .ui-widget-content {background-color:#E6E6E6;border:0px;}
 #thinkup-tabs .ui-corner-bottom {}
 #thinkup-tabs .ui-tabs .ui-tabs-panel {border: 0px;background-color: #FFF;-moz-border-radius: 10px;-webkit-border-radius: 10px;margin-top: 42px;}
 
