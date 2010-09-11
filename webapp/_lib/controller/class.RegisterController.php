@@ -52,7 +52,7 @@ class RegisterController extends ThinkUpController {
                             $this->addErrorMessage("Incorrect email. Please enter valid email address.");
                         } elseif (strcmp($_POST['pass1'], $_POST['pass2']) || empty($_POST['pass1'])) {
                             $this->addErrorMessage("Passwords do not match.");
-                        } elseif (!$captcha->check()) {
+                        } elseif ( $config->getValue('recaptcha_enable') && !$captcha->check()) {
                             // Captcha not valid, captcha handles message...
                         } else {
                             if ($owner_dao->doesOwnerExist($_POST['email'])) {
@@ -86,8 +86,10 @@ class RegisterController extends ThinkUpController {
                         $this->addToView('mail', $_POST["email"]);
                     }
                 }
-                $challenge = $captcha->generate();
-                $this->addToView('captcha', $challenge);
+                if( $config->getValue('recaptcha_enable') ) {
+                    $challenge = $captcha->generate();
+                    $this->addToView('captcha', $challenge);
+                }
             }
             return $this->generateView();
         }

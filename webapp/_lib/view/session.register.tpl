@@ -66,6 +66,7 @@
           </small>
         </div>
       </div>
+      {if $captcha}
       <div class="clearfix">
         <div class="grid_6 prefix_3 right">
           <label for="user_code">
@@ -78,6 +79,7 @@
           </div>
         </div>
       </div>
+      {/if}
       <div class="clearfix">
         <div class="grid_10 prefix_9 left">
           <input type="submit" name="Submit" id="login-save" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Register">
