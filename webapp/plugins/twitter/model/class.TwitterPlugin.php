@@ -302,6 +302,7 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         $ptab = new WebappTab("links-photos", "Photos", 'Photos your friends have posted', $twitter_data_tpl);
         $ptabds = new WebappTabDataset("links", 'LinkDAO', "getPhotosByFriends", array($instance->network_user_id,
         'twitter'));
+        $ptab->addDataset($ptabds);
         array_push($child_tabs, $ptab);
 
         return $child_tabs;
