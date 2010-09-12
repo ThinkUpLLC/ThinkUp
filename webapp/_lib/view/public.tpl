@@ -55,7 +55,7 @@
           {if $replies}
             <div class="append_20 clearfix">
               {foreach from=$replies key=tid item=t name=foo}
-                {include file="_post.public.tpl" t=$t sort='no'}
+                {include file="_post.public.tpl" t=$t sort='no' scrub_reply_username=true}
               {/foreach}
             </div>
           {/if}
@@ -87,7 +87,7 @@
           {if $retweets}
             <div class="append_20 clearfix">
               {foreach from=$retweets key=tid item=t name=foo}
-                {include file="_post.public.tpl" t=$t sort='no'}
+                {include file="_post.public.tpl" t=$t sort='no' scrub_reply_username=false}
               {/foreach}
             </div>
           {/if}
@@ -112,7 +112,7 @@
         {if $description}<h4>{$description}</h4>{/if}
         {if $posts}
           {foreach from=$posts key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t username_link='internal'}
+            {include file="_post.public.tpl" t=$t username_link='internal' scrub_reply_username=false}
           {/foreach}
           {include file="_pagination.tpl"}
         {/if}
@@ -136,7 +136,7 @@
         {if $recent_posts}
 <br /><br />
           {foreach from=$recent_posts key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t headings="NONE"}
+            {include file="_post.public.tpl" t=$t headings="NONE" scrub_reply_username=false}
           {/foreach}
         {/if}
 
@@ -160,7 +160,7 @@
 <hr />
 <h2 style="font-size:200%;margin-top:10px">This Week's Most Replied-To Posts</h2>
           {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t headings="NONE"}
+            {include file="_post.public.tpl" t=$t headings="NONE" scrub_reply_username=false}
           {/foreach}
         {/if}
 
@@ -184,7 +184,7 @@
 <hr />
 <h2 style="font-size:200%;margin-top:10px">This Week's Most Retweeted</h2>
           {foreach from=$most_retweeted_1wk key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t headings="NONE"}
+            {include file="_post.public.tpl" t=$t headings="NONE" scrub_reply_username=false}
           {/foreach}
         {/if}
 
@@ -210,7 +210,7 @@
 <hr />
 <h2 style="font-size:200%;margin-top:10px">All-Time Most Replied-To</h2>
           {foreach from=$most_replied_to_alltime key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t headings="NONE"}
+            {include file="_post.public.tpl" t=$t headings="NONE" scrub_reply_username=false}
           {/foreach}
         {/if}
 
@@ -218,7 +218,7 @@
 <hr />
 <h2 style="font-size:200%;margin-top:10px">All-Time Most Retweeted</h2>
           {foreach from=$most_retweeted_alltime key=tid item=t name=foo}
-            {include file="_post.public.tpl" t=$t headings="NONE"}
+            {include file="_post.public.tpl" t=$t headings="NONE" scrub_reply_username=false}
           {/foreach}
         {/if}
         

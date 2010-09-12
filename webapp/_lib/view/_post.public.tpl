@@ -61,7 +61,11 @@
       {/if}
       <p>
         {if $t->post_text}
-          {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
+          {if $scrub_reply_username}
+            {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
+          {else}
+            {$t->post_text|link_usernames_to_twitter}
+          {/if}
         {else}
           <span class="no-post-text">No post text</span>
         {/if}
