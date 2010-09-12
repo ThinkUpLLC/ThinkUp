@@ -95,10 +95,12 @@
         {/if}
         {/if}">{$t->location|truncate:60:' ...'}</a>
         {else}
+        {if $t->is_geo_encoded neq 6}
         Location: 
         <a href="#" class="with_tooltip"
         willWorkOnID="{if $t->in_reply_to_post_id}locationReplies{else}locationRetweets{/if}"
         value="__NULL__" title="Not Available">Not Available</a>
+        {/if}
         {/if}
       </div>
     </div>

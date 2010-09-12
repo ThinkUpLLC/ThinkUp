@@ -25,9 +25,9 @@
                 </a>
               {/if}
               <div class="grid_10 omega small gray {if $replies or $retweets}prefix_3 prepend{else}prefix_10{/if}">
-                <img src="{$site_root_path}assets/img/social_icons/{$post->network}.png" class="float-l">
-                Posted at {$post->adj_pub_date} via {$post->source}<br>
-                From: {$post->location}
+                <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" class="float-l">
+                Posted at {$post->adj_pub_date}{if $post->source} via {$post->source}{/if}<br>
+                {if $post->location}From: {$post->location}{/if}
                 {if $post->is_geo_encoded eq 1}
                 <div>
                 <a href="{$site_root_path}map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
