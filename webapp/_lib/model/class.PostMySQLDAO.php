@@ -1012,7 +1012,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             );
         }
         $ps = $this->execute($q, $vars);
-        if ($this->getDataIsReturned($ps)) {
+        if ($this->getUpdateCount($ps) > 0) {
             $logstatus = "Geolocation for post $post_id IS_GEO_ENCODED: $is_geo_encoded";
             $this->logger->logStatus($logstatus, get_class($this));
             return true;

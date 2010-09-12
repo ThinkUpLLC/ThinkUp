@@ -228,12 +228,11 @@ abstract class PDODAO {
      * @return bool True if row(s) are returned
      */
     protected final function getDataIsReturned($ps){
-        $count = $ps->rowCount();
+        $row = $ps->fetch();
         $ps->closeCursor();
-        if ($count > 0) {
+        $ret = false;
+        if ($row && count($row) > 0) {
             $ret = true;
-        } else {
-            $ret = false;
         }
         return $ret;
     }
