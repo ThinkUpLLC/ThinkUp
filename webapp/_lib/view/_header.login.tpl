@@ -59,6 +59,7 @@
   </div> <!-- end #status-bar -->
 {/if}
 
+<div id="page-bkgd">
 <div class="container clearfix">
   
   <div id="app-title"><a href="{$site_root_path}{$logo_link}">
@@ -88,3 +89,4 @@
   </div> <!-- end #menu-bar -->
   
 </div> <!-- end .container -->
+</div> <!-- end #page-bkgd -->

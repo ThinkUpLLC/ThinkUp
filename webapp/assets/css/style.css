@@ -104,8 +104,8 @@ text-align: center;
 */
 
 #status-bar {padding:4px 20px;margin:0;font-size:.9em;color:#FFF;background-color:#444;}
-#status-bar .status-bar-left {float:left;width:50%;}
-#status-bar .status-bar-right {float:right;width:50%;}
+#status-bar .status-bar-left {float:left;}
+#status-bar .status-bar-right {float:right;}
 
 #status-bar ul {float:right;margin:0;padding:0;}
 #status-bar li {display: inline;}

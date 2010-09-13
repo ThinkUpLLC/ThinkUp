@@ -17,13 +17,6 @@
 
   {literal}
   <style>
-  #status-bar {
-  background-image:url('{/literal}{$site_root_path}{literal}assets/img/statusbar-bkgd.png');
-  }
-  #page-bkgd {
-  background-image:url('{/literal}{$site_root_path}{literal}assets/img/statusbar-shadow.png');
-  background-repeat:repeat-x;
-  }
   .line { background:url('{/literal}{$site_root_path}{literal}assets/img/border-line-470.gif') no-repeat center bottom;
   margin: 8px auto;
   height: 1px;

@@ -375,3 +375,7 @@ button.fg-button {width:auto;overflow:visible;}
 table.public_user_stats td.name { padding-right:20px; }
 table.public_user_stats td .detail { font-size:smaller; }
 table.public_user_stats td.value { vertical-align:top; }
+
+/* Status bar */
+#status-bar { background-image:url('../img/statusbar-bkgd.png'); }
+#page-bkgd { background-image:url('../img/statusbar-shadow.png'); background-repeat:repeat-x; }
