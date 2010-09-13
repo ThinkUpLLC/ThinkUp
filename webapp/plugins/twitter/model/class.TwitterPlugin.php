@@ -105,15 +105,16 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         //All tab
         $alltab = new WebappTab("tweets-all", "All", "All tweets", $twitter_data_tpl);
-        $alltabds = new WebappTabDataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
-        'twitter', 15));
+        $alltabds = new WebappTabDataset("all_tweets", 'PostDAO',
+        "getAllPosts", array($instance->network_user_id, 'twitter', 15),
+        'getAllPostsIterator', array($instance->network_user_id, 'twitter', GridController::MAX_ROWS) );
         $alltab->addDataset($alltabds);
         array_push($child_tabs, $alltab);
 
         // Most replied-to tab
         $mrttab = new WebappTab("tweets-mostreplies", "Most replied-to", "Tweets with most replies", $twitter_data_tpl);
-        $mrttabds = new WebappTabDataset("most_replied_to_tweets", 'PostDAO', "getMostRepliedToPosts",
-        array($instance->network_user_id, 'twitter', 15));
+        $mrttabds = new WebappTabDataset("most_replied_to_tweets", 'PostDAO',
+        "getMostRepliedToPosts", array($instance->network_user_id, 'twitter', 15) );
         $mrttab->addDataset($mrttabds);
         array_push($child_tabs, $mrttab);
 
@@ -141,8 +142,9 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         //All Mentions
         $amtab = new WebappTab("mentions-all", "All Mentions", "Any post that mentions you", $twitter_data_tpl);
-        $amtabds1 = new WebappTabDataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
-        'twitter', 15));
+        $amtabds1 = new WebappTabDataset("all_tweets", 'PostDAO', 
+        "getAllPosts", array($instance->network_user_id, 'twitter', 15),
+        "getAllMentionsIterator", array($instance->network_username, GridController::MAX_ROWS, 'twitter'));
         $amtabds2 = new WebappTabDataset("all_mentions", 'PostDAO', "getAllMentions",
         array($instance->network_username, 15, $instance->network));
         $amtab->addDataset($amtabds1);

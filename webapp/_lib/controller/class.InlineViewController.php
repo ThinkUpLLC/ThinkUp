@@ -89,6 +89,10 @@ class InlineViewController extends ThinkUpAuthController {
                 $this->addToView('description', $tab->description);
 
                 foreach ($tab->datasets as $dataset) {
+                    if($dataset->isSearchable()) {
+                        $view_name = 'is_searchable';
+                        $this->addToView($view_name, true);
+                    }
                     $this->addToView($dataset->name, $dataset->retrieveDataset());
                 }
             } else {

@@ -40,7 +40,23 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
         $this->assertEqual($dataset->dao_name, 'PostDAO');
         $this->assertEqual($dataset->dao_method_name, 'getAllPosts');
         $this->assertIsA($dataset->method_params, 'array');
+        $this->assertFalse( $dataset->isSearchable() );
     }
+
+    /**
+     * Test constructor with optiona iterator names
+     */
+    public function testConstructorAllowedDAOSearchIterators() {
+        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(), 'getAllPostsByUsernameIterator');
+        $this->assertTrue(isset($dataset));
+        $this->assertEqual($dataset->dao_name, 'PostDAO');
+        $this->assertEqual($dataset->dao_method_name, 'getAllPosts');
+        $this->assertIsA($dataset->method_params, 'array');
+        $this->assertTrue( $dataset->isSearchable() );
+        $this->assertIsA($dataset->iterator_method_params, 'array');
+        $this->assertEqual($dataset->iterator_method_name, 'getAllPostsByUsernameIterator');
+    }
+
 
     /**
      * Test constructor with disallowed DAO name
@@ -61,11 +77,84 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test retrieve Iterator with an existing methods
+     */
+    public function testRetrieveIteratorMethodExists() {
+        $build_data = $this->buildData();
+
+        // getAllPostsByUsernameIterator
+        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
+            'getAllPostsByUsernameIterator', array('someuser2', 'twitter', 10) );
+        $iterator = $dataset->retrieveIterator();
+        $this->assertTrue(isset($iterator));
+        $this->assertIsA($iterator, 'Iterator');
+        $cnt = 0;
+        foreach($iterator as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(2, $cnt, 'count should be 2');
+
+        // getAllPostsByUsernameIterator with a limit of 1
+        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
+            'getAllPostsByUsernameIterator', array('someuser2', 'twitter', 1) );
+        $iterator = $dataset->retrieveIterator();
+        $this->assertTrue(isset($iterator));
+        $this->assertIsA($iterator, 'Iterator');
+        $cnt = 0;
+        foreach($iterator as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(1, $cnt, 'count should be 1');
+
+        // getAllMentionsIterator
+        $dataset = new WebappTabDataset('tweets-mostreplies', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
+            'getAllMentionsIterator', array('someuser1', 10, 'twitter') );
+        $iterator = $dataset->retrieveIterator();
+        $this->assertTrue(isset($iterator));
+        $this->assertIsA($iterator, 'Iterator');
+        $cnt = 0;
+        foreach($iterator as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(2, $cnt, 'count should be 2');
+
+        // getMostRetweetedPostsIterator
+        $dataset = new WebappTabDataset('tweets-mostretweeted', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
+            'getMostRetweetedPostsIterator', array('someuser2', 'twitter', 10, 30) );
+        $iterator = $dataset->retrieveIterator();
+        $this->assertTrue(isset($iterator));
+        $this->assertIsA($iterator, 'Iterator');
+        $cnt = 0;
+        foreach($iterator as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual(1, $cnt, 'count should be 1');
+    }
+
+    /**
      * Test retrieveData with an existing method
      */
     public function testRetrieveDataMethodDoesNotExist() {
         $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPostsIDontExist', array(930061, 'twitter', 15));
         $this->expectException(new Exception('PostDAO does not have a getAllPostsIDontExist method.'));
         $data = $dataset->retrieveDataset();
+    }
+
+    private function buildData() {
+        $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com'));
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>123, 'user_name'=>'someuser2',
+        'network'=>'twitter'));
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>1, 'network_username'=>'someuser1',
+        'network'=>'twitter'));
+        $instance1_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_username'=>'someuser2',
+        'network'=>'twitter'));
+        $owner_instance_builder = FixtureBuilder::build('owner_instances', array('instance_id'=>1, 'owner_id'=>1));
+        $posts1_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser2','author_user_id' => 123,
+        'post_text'=>'@someuser1 My first post', 'network'=>'twitter', 
+        'retweet_count_cache' => 1, 'pub_date' => '+1d' ));
+        $posts2_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser2','author_user_id' => 123,
+        'post_text'=>'My second @someuser1 post', 'network'=>'twitter'));
+        return array($owner_builder, $instance_builder, $instance1_builder, $owner_instance_builder, $posts1_builder,
+        $posts2_builder, $user_builder);
     }
 }

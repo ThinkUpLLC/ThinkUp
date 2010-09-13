@@ -77,7 +77,8 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         //All tab
         $alltab = new WebappTab("all_facebook_posts", "All", '', $fb_data_tpl);
         $alltabds = new WebappTabDataset("all_facebook_posts", 'PostDAO', "getAllPosts",
-        array($instance->network_user_id, 'facebook', 15, false));
+        array($instance->network_user_id, 'facebook', 15, false),
+        'getAllPostsIterator', array($instance->network_user_id, 'facebook', GridController::MAX_ROWS), false );
         $alltab->addDataset($alltabds);
         array_push($child_tabs, $alltab);
         return $child_tabs;

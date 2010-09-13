@@ -32,8 +32,9 @@
   <script type="text/javascript">
     {literal}
       // tabs functionality
+      var current_query_key = 'updates';
       $(function() {
-        $("#tabs").tabs();
+        $("#tabs").tabs( { select: function(event, ui) { current_query_key =  ui.panel.id  } } );
       });
       
       // buttons functionality
@@ -65,7 +66,11 @@
       });
     {/literal}
     {if $load neq 'no'}
-      var current_query_string = "u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}";
+      {literal}var current_query_strings = {{/literal}
+          "updates": "u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}",
+          "replies": "u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$replies_tabs[0]->short_name}"
+      {literal}};{/literal}
+
       {literal}
         $(document).ready(function() {
           // References
@@ -84,8 +89,7 @@
           var links_content =  $("#links_content");
       {/literal}
       showLoading();
-      posts_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}", 
-              hideLoading);
+      posts_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$post_tabs[0]->short_name}", hideLoading);
       replies_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$replies_tabs[0]->short_name}", hideLoading);
       followers_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$followers_tabs[0]->short_name}", hideLoading);
       friends_content.load("{$site_root_path}inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$friends_tabs[0]->short_name}", hideLoading);
@@ -103,14 +107,15 @@
             switch (this.id) { {/literal}
             //posts tabs
             {foreach from=$post_tabs key=ptkey item=pt name=tabloop}
-                case "{$pt->short_name}": 
-                    current_query_string = 'u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}';
+                case "{$pt->short_name}":
+                    current_query_strings['updates'] = 'u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}';
                     posts_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}", hideLoading);
                     break;
             {/foreach}
             //replies tabs
             {foreach from=$replies_tabs key=ptkey item=pt name=tabloop}
                 case "{$pt->short_name}":
+                    current_query_strings['replies'] =  'u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}';
                     replies_content.load("inline.view.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}&d={$pt->short_name}", hideLoading);
                     break;
             {/foreach}
@@ -151,12 +156,15 @@
           }
           
           // Hide loading bar
-          function hideLoading() {
+          function hideLoading(responseText, textStatus, XMLHttpRequest) {
             loading.fadeTo(1000, 0);
             loading_replies.fadeTo(1000, 0);
             loading_followers.fadeTo(1000, 0);
             loading_friends.fadeTo(1000, 0);
             loading_links.fadeTo(1000, 0);
+            var handler = function(event) { tu_grid_search.load_iframe() };
+            $(".grid_search").unbind('click',  handler);
+            $(".grid_search").bind('click',  handler);
           };
         }); // end $(document).ready(function() {
       {/literal}

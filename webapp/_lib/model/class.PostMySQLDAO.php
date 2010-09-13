@@ -489,6 +489,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getAllPosts($author_id, $network, $count, $include_replies=true) {
         return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies);
     }
+    public function getAllPostsIterator($author_id, $network, $count, $include_replies=true) {
+        return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $iterator = true);
+    }
 
     /**
      * Get all posts by a given user with configurable order by field and direction
@@ -501,7 +504,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @return array Posts with link object set
      */
     private function getAllPostsByUserID($author_id, $network, $count, $order_by="pub_date", $direction="DESC",
-    $include_replies=true) {
+    $include_replies=true, $iterator = false) {
         $direction = $direction=="DESC" ? "DESC": "ASC";
         if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
             $order_by="pub_date";
@@ -529,6 +532,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>$count 
         );
         $ps = $this->execute($q, $vars);
+        if($iterator) {
+            return (new PostIterator($ps));
+        }
         $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
         foreach ($all_rows as $row) {
@@ -701,6 +707,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getAllPostsByUserID($user_id, $network, $count, "reply_count_cache", "DESC");
     }
 
+    public function getMostRepliedToPostsIterator($user_id, $network, $count) {
+        return $this->getAllPostsByUserID($user_id, $network, $count, "reply_count_cache", "DESC", false, $iterator = true);
+    }
+    
     public function getMostRetweetedPosts($user_id, $network, $count) {
         return $this->getAllPostsByUserID($user_id, $network, $count, "retweet_count_cache", "DESC");
     }

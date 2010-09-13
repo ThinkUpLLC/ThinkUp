@@ -342,6 +342,26 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test getMostRepliedToPostsIterator
+     */
+    public function testGetMostRepliedToPostsIterator() {
+        $dao = new PostMySQLDAO();
+        $posts_it = $dao->getMostRepliedToPostsIterator(13, 'twitter', 10);
+        $prev_count = 0;
+        $cnt = 0;
+        foreach ($posts_it as $post) {
+             if($cnt == 0) {
+                 $prev_count = $post->reply_count_cache;
+             }
+             $cnt++;
+            $this->assertTrue($post->reply_count_cache <= $prev_count, "previous count ".$prev_count.
+            " should be less than or equal to this post's count of ".$post->reply_count_cache);
+            $prev_count = $post->reply_count_cache;
+        }
+        $this->assertEqual($cnt, 10);
+    }
+
+    /**
      * Test getMostRetweetedPosts
      */
     public function testGetMostRetweetedPosts() {
@@ -521,6 +541,19 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         //non-existent author
         $posts = $dao->getAllPosts(30, 'twitter', 10);
         $this->assertEqual(sizeof($posts), 0);
+    }
+
+    /**
+     * Test getAllPostsIterator
+     */
+    public function testGetAllPostIterators() {
+        $dao = new PostMySQLDAO();
+        $posts_it = $dao->getAllPostsIterator(18, 'twitter', 10);
+        $cnt = 0;
+        foreach($posts_it as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual($cnt, 10);
     }
 
     /**

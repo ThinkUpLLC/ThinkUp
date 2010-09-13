@@ -1,5 +1,10 @@
 <div class="">
   {if $description}<i>{$description}</i>{/if}
+    {if $is_searchable}
+        <a href="#" class="grid_search" title="Search" onclick="return false;">
+        <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
+        {include file="_grid.search.tpl"}
+    {/if}
 </div>
 
 {if ($display eq 'all_facebook_posts' and not $all_facebook_posts) or 
