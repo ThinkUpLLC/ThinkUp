@@ -1,7 +1,9 @@
 <div class="">
   {if $description}
-     <a href="#" class="grid_search" title="Search" onclick="return false;">
-     <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
+    {if $is_searchable}
+        <a href="#" class="grid_search" title="Search" onclick="return false;">
+        <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
+    {/if}
      <i>{$description}</i>
      
   {/if}
@@ -22,24 +24,19 @@
     </p>
   </div>
 {/if}
-
-
 {if $all_tweets and $display eq 'tweets-all'}
-  {include file="_grid.search.tpl" t=$t}
   {foreach from=$all_tweets key=tid item=t name=foo}
     {include file="_post.mine.tpl" t=$t}
   {/foreach}
 {/if}
 
 {if $most_replied_to_tweets}
-  {include file="_grid.search.tpl" t=$t}
   {foreach from=$most_replied_to_tweets key=tid item=t name=foo}
     {include file="_post.mine.tpl" t=$t}
   {/foreach}
 {/if}
 
 {if $most_retweeted}
-  {include file="_grid.search.tpl" t=$t}
   {foreach from=$most_retweeted key=tid item=t name=foo}
     {include file="_post.mine.tpl" t=$t}
   {/foreach}

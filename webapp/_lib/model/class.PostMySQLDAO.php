@@ -491,6 +491,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getAllPosts($author_id, $network, $count, $include_replies=true) {
         return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies);
     }
+    public function getAllPostsIterator($author_id, $network, $count, $include_replies=true) {
+        return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $iterator = true);
+    }
 
     /**
      * Get all posts by a given user with configurable order by field and direction
@@ -503,7 +506,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @return array Posts with link object set
      */
     private function getAllPostsByUserID($author_id, $network, $count, $order_by="pub_date", $direction="DESC",
-    $include_replies=true) {
+    $include_replies=true, $iterator = false) {
         $direction = $direction=="DESC" ? "DESC": "ASC";
         if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
             $order_by="pub_date";
@@ -531,6 +534,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>$count 
         );
         $ps = $this->execute($q, $vars);
+        if($iterator) {
+            return (new PostIterator($ps));
+        }
         $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
         foreach ($all_rows as $row) {
@@ -608,7 +614,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getMostRetweetedPostsIterator($username, $network, $count, $days) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count,
         'retweet_count_cache', $days, $iterator = true);
     }
 
@@ -642,11 +648,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getAllMentionsIterator($author_username, $count, $network = "twitter") {
         return $this->getMentions($author_username, $count, $network, true);
     }
-    
+
     public function getAllMentions($author_username, $count, $network = "twitter") {
         return $this->getMentions($author_username, $count, $network, false);
     }
-    
+
     private function getMentions($author_username, $count, $network, $iterator) {
         $author_username = '@'.$author_username;
         $q = " SELECT l.*, p.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
@@ -703,6 +709,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getAllPostsByUserID($user_id, $network, $count, "reply_count_cache", "DESC");
     }
 
+    public function getMostRepliedToPostsIterator($user_id, $network, $count) {
+        return $this->getAllPostsByUserID($user_id, $network, $count, "reply_count_cache", "DESC", false, $iterator = true);
+    }
+    
     public function getMostRetweetedPosts($user_id, $network, $count) {
         return $this->getAllPostsByUserID($user_id, $network, $count, "retweet_count_cache", "DESC");
     }
@@ -1064,7 +1074,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * Calculate how much each client is used by a user on a specific network
      * @param int $author_id
      * @param string $network
-     * @return array First element of the returned array is an array of all the clients the user used, ever. 
+     * @return array First element of the returned array is an array of all the clients the user used, ever.
      *               The second element is an array of the clients used for the last 25 posts.
      *               Both arrays are sorted by number of use, descending.
      */
@@ -1094,17 +1104,17 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         $rows = $this->getDataRowsAsArrays($this->execute($q, $vars));
         $latest_clients_usage = self::cleanClientsNames($rows);
-        
+
         if (count($latest_clients_usage) == 1 && isset($latest_clients_usage[''])) {
             // Plugin doesn't support 'source'
             $latest_clients_usage = array();
         }
-        
+
         return array($all_time_clients_usage, $latest_clients_usage);
     }
-    
+
     /**
-     * Clean up and sort (by number of use, descending) the source (client) information fetched in 
+     * Clean up and sort (by number of use, descending) the source (client) information fetched in
      * getClientsUsedByUserOnNetwork. To clean up the clients names, we remove the HTML link tag.
      * @param array $rows obtained from the database (as array); columns should be 'num_posts' and 'source'
      * @return array Clients names as keys, number of uses as values.

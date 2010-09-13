@@ -10,6 +10,8 @@ var TUGridSearch = function() {
 
     this.searchString = "";
     
+    this.loading = false;
+    
     /**
      * Init grid search
      */
@@ -19,12 +21,6 @@ var TUGridSearch = function() {
             if (tu_grid_search.DEBUG) {
                 console.log("Grid Search initialized...");
             }
-            $(".grid_search").click(function(event) {
-                if (tu_grid_search.DEBUG) {
-                    console.debug("search button selected");
-                }
-                tu_grid_search.load_iframe();
-            });
             $('#close_grid_search').click(function() {
                 tu_grid_search.close_iframe();
             });
@@ -133,18 +129,25 @@ var TUGridSearch = function() {
      * 
      */
     this.load_iframe = function() {
+        if(tu_grid_search.loading) { return; };
+        tu_grid_search.loading = true;
         window.scroll(0,0);
         $('#screen').css({ opacity: 0.7, "width":$(document).width(),"height":$(document).height()});
         $('#screen').fadeIn(500, function() {
             $('#grid_overlay_div').show();
             $('#grid_iframe').show();
             var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
-            query_string = (typeof('current_query_string') != 'undefined') ? current_query_string : 'not=true';
+            query_key = (typeof('current_query_string') != 'undefined') ? current_query_key : 'updates';
+            query_string = 'not=true';
+            if(typeof('current_query_strings') != 'undefined') {
+                query_string = current_query_strings[query_key];
+            }
             $('#grid_iframe').attr('src',
                     path + 'assets/html/grid.html?' + query_string + '&cb=' + (new Date()).getTime());
             if (tu_grid_search.DEBUG) {
                 console.debug("loading grid search iframe %s",  $('#grid_iframe').attr('src') );
             }
+            tu_grid_search.loading = false;
         });
     }
     /**

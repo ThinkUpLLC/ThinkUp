@@ -122,6 +122,7 @@ class TestOfInlineViewController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All', 'Header');
         $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'All tweets', 'Description');
         $this->assertIsA($v_mgr->getTemplateDataItem('all_tweets'), 'array', 'Array of tweets');
+        $this->assertTrue($v_mgr->getTemplateDataItem('is_searchable'));
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('all_tweets')), 15, '15 posts in listing');
 
         $config = Config::getInstance();

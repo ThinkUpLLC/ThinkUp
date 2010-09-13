@@ -1,5 +1,7 @@
 {include file="_header.tpl"}
 
+{include file="_grid.search.tpl"}
+
 <script type="text/javascript">
   {literal}
   $(document).ready(function() {

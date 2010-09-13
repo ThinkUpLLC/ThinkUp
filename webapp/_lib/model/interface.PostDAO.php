@@ -141,6 +141,16 @@ interface PostDAO {
     public function getAllPosts($author_id, $network, $count, $include_replies=true);
 
     /**
+     * Get all posts by an author given an author ID
+     * @param int $author_id
+     * @param str  $network
+     * @param int $count
+     * @param bool $include_replies If true, return posts with in_reply_to_post_id set
+     * @return Iterator Posts Iterator
+     */
+    public function getAllPostsIterator($author_id, $network, $count, $include_replies=true);
+
+    /**
      * Get all posts by author given the author's username
      * @param str $username
      * @param str $network
@@ -208,6 +218,16 @@ interface PostDAO {
      */
     public function getMostRepliedToPosts($user_id, $network, $count);
 
+    /**
+     * Get posts Iterator by a user ordered by reply count desc
+     * @param int $user_id
+     * @param str $network
+     * @param int $count
+     * @return Iterator Posts with link object set
+     */
+    public function getMostRepliedToPostsIterator($user_id, $network, $count);
+    
+    
     /**
      * Get posts by a usre ordered by retweet count desc
      * @param int $user_id

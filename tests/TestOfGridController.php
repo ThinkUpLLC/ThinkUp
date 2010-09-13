@@ -9,11 +9,17 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $this->UnitTestCase('GridController class test');
     }
 
+    public function setUp(){
+        parent::setUp();
+        $webapp = Webapp::getInstance();
+        $webapp->registerPlugin('twitter', 'TwitterPlugin');
+    }
+
     public function testConstructor() {
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
     }
-    
+
     public function testNotLoggedIn() {
         $controller = new GridController(true);
         $results = $controller->go();
@@ -65,23 +71,22 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $this->assertEqual($ob->message, 'Insufficient privileges.');
     }
 
-    public function testOwnerWithAccessAllMentions() {
+    public function testOwnerWithAccessTweetsAll() {
         $builders = $this->buildData();
         $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
-        $_GET['d'] = 'tweets-mostreplies';
+        $_GET['d'] = 'tweets-all';
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
         ob_start();
         $controller->control();
         $results = ob_get_contents();
         ob_end_clean();
-        $json = substr($results, 29, 210);
+        $json = substr($results, 29, 262);
         $ob = json_decode( $json );
-        // @TODO Figure out why these assertions don't work
-        //        $this->assertEqual($ob->status, 'success');
-        //        $this->assertEqual(count($ob->posts), 3);
+        $this->assertEqual($ob->status, 'success');
+        $this->assertEqual(count($ob->posts), 3);
         $this->assertPattern('/"status":"success"/', $results);
     }
 
@@ -95,37 +100,44 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
-        $_GET['d'] = 'tweets-mostreplies';
+        $_GET['d'] = 'tweets-all';
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
-        
+
         ob_start();
         $results = $controller->go();
         $results .= ob_get_contents();
         ob_end_clean();
-        
-        $json = substr($results, 29, -2);
+        $json = substr($results, 29, 262);
         $ob = json_decode($json);
         // If the profiler outputs HTML (it shouldn't), the following will fail
         $this->assertIsA($ob, 'stdClass');
         unset($_SERVER['HTTP_HOST']);
     }
-    
+
     private function buildData() {
         $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com'));
-        $user_builder = FixtureBuilder::build('users', array('user_id'=>123, 'user_name'=>'someuser2',
+        
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>123, 'user_name'=>'someuser1',
         'network'=>'twitter'));
+        
+        $user_builder2 = FixtureBuilder::build('users', array('user_id'=>1234, 'user_name'=>'someuser2',
+        'network'=>'twitter'));
+        
         $instance_builder = FixtureBuilder::build('instances', array('id'=>1, 'network_username'=>'someuser1',
+        'network'=>'twitter', 'network_user_id' => 123));
+        
+        $instance_builder2 = FixtureBuilder::build('instances', array('id'=>2, 'network_username'=>'someuser2',
         'network'=>'twitter'));
-        $instance1_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_username'=>'someuser2',
-        'network'=>'twitter'));
+        
         $owner_instance_builder = FixtureBuilder::build('owner_instances', array('instance_id'=>1, 'owner_id'=>1));
-        $posts1_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser2','author_user_id' => 123,
-        'post_text'=>'@someuser1 My first post', 'network'=>'twitter'));
-        $posts2_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser2','author_user_id' => 123,
-        'post_text'=>'My second @someuser1 post', 'network'=>'twitter'));
+        
+        $posts1_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser1','author_user_id' => 123,
+        'post_text'=>'@someuser1 My first post', 'network'=>'twitter', 'post_id' => 1));
+        $posts2_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser1','author_user_id' => 123,
+        'post_text'=>'My second @someuser1 post', 'network'=>'twitter', 'post_id' => 2));
         //sleep(10000);
-        return array($owner_builder, $instance_builder, $instance1_builder, $owner_instance_builder, $posts1_builder,
-        $posts2_builder, $user_builder);
+        return array($owner_builder, $instance_builder, $owner_instance_builder, $posts1_builder,
+        $posts2_builder, $user_builder, $user_builder2, $instance_builder2);
     }
 }

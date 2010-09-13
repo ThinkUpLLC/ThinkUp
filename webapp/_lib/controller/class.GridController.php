@@ -67,16 +67,10 @@ class GridController extends ThinkUpAuthController {
                     echo '{"status":"failed","message":"Insufficient privileges."}';
                 } else {
                     echo "tu_grid_search.populate_grid(";
-                    $post_dao = DAOFactory::GetDAO('PostDAO');
-                    $posts_it = null;
-                    if( $_GET['d'] == 'tweets-all') {
-                        $posts_it = $post_dao->getAllPostsByUsernameIterator($_GET['u'], $_GET['n'], self::MAX_ROWS);
-                    } else if ($_GET['d'] == 'tweets-mostreplies') {
-                        $posts_it = $post_dao->getAllMentionsIterator($_GET['u'], self::MAX_ROWS, $_GET['n']);
-                    } else if ($_GET['d'] == 'tweets-mostretweeted') {
-                        $posts_it = $post_dao->getMostRetweetedPostsIterator($_GET['u'], $_GET['n'], 
-                        self::MAX_ROWS, self::MAX_RT_DAYS);
-                    }
+                    $webapp = Webapp::getInstance();
+                    $webapp->setActivePlugin($instance->network);
+                    $tab = $webapp->getTab($_GET['d'], $instance);
+                    $posts_it = $tab->datasets[0]->retrieveIterator();
                     echo '{"status":"success","posts": [' . "\n";
                     $cnt = 0;
                     foreach($posts_it as $key => $value) {
