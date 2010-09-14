@@ -58,7 +58,10 @@ class RSSController extends ThinkUpAuthAPIController {
         }
         
         $items = array();
-        if ($crawler_launched) {
+        $logger = Logger::getInstance();
+        // Don't return an item if there is a crawler log defined;
+        // it would just duplicate the information available in that file.
+        if ($crawler_launched && !isset($logger->log)) {
             $title = 'ThinkUp crawl started on ' . date('Y-m-d H:i:s');
             $link = $base_url.'rss.php?d='.urlencode(date('Y-m-d H:i:s'));
             $description = "Last ThinkUp crawl ended on $freshest_instance->crawler_last_run<br />A new crawl ".

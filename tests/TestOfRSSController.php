@@ -24,16 +24,20 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
     }
 
-    public function testGo() {
+    public function testGoNoLoggerLogSet() {
         $builders = $this->buildData();
         $controller = new RSSController(true);
         $_GET['un'] = 'me@example.com';
         $_GET['as'] = Session::getAPISecretFromPassword('XXX');
+        $logger = Logger::getInstance();
+        $logger->close();
+        $config = Config::getInstance();
+        $config->setValue('log_location', false);
         $results = $controller->go();
         $this->assertPattern("/ThinkUp crawl started/", $results);
         $this->assertPattern("/<rss version=\"2.0\"/", $results);
     }
-    
+
     public function testGetAdditionalItems() {
         $builders = $this->buildData();
         // Test that an item is added in the RSS feed when the crawler log is not writable
@@ -54,18 +58,18 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
             'pwd' => 'XXX', 
             'is_activated' => 1
         ));
-        
+
         $instance_builder = FixtureBuilder::build('instances', array(
             'id' => 1,
             'network_username' => 'jack',
             'network' => 'twitter'
-        ));
+            ));
 
-        $owner_instance_builder = FixtureBuilder::build('owner_instances', array(
+            $owner_instance_builder = FixtureBuilder::build('owner_instances', array(
             'owner_id' => 1, 
             'instance_id' => 1
-        ));
-        
-        return array($owner_builder, $instance_builder, $owner_instance_builder);
+            ));
+
+            return array($owner_builder, $instance_builder, $owner_instance_builder);
     }
 }
