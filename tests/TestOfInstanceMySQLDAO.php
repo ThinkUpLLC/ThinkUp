@@ -62,12 +62,18 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetFreshestByOwnerId(){
+        $instance_builder = FixtureBuilder::build('instances', array('network_username'=>'julie',
+        'network'=>'twitter', 'crawler_last_run'=>'-1d', 'is_activated'=>'1', 'is_public'=>'1'));
+        $owner_instance_builder = FixtureBuilder::build('owner_instances', array(
+        'instance_id'=>$instance_builder->columns['last_insert_id'], 'owner_id'=>'2'));
+
         //try one
-        $result = $this->DAO->getFreshestByOwnerId(2);
-        $this->assertIsA($result, "Instance");
-        $this->assertEqual($result->network_username, 'jill');
-        $this->assertEqual($result->network_user_id, 12);
-        $this->assertEqual($result->network_viewer_id, 12);
+        $instance = $this->DAO->getFreshestByOwnerId(2);
+        $this->assertIsA($instance, "Instance");
+        $this->assertEqual($instance->id, $instance_builder->columns['last_insert_id']);
+        $this->assertEqual($instance->network_username, 'julie');
+        $this->assertEqual($instance->network_user_id, $instance_builder->columns['network_user_id']);
+        $this->assertEqual($instance->network_viewer_id, $instance_builder->columns['network_viewer_id']);
 
         //Try a non existant one
         $result = $this->DAO->getFreshestByOwnerId(3);

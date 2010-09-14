@@ -48,7 +48,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
     }
 
     public function getFreshestByOwnerId($owner_id) {
-        $q  = " SELECT * , ".$this->getAverageReplyCount();
+        $q  = " SELECT i.* , ".$this->getAverageReplyCount();
         $q .= " FROM #prefix#instances AS i ";
         $q .= " INNER JOIN #prefix#owner_instances AS oi ";
         $q .= " ON i.id = oi.instance_id ";
