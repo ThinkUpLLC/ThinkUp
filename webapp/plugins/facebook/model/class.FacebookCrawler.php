@@ -189,10 +189,12 @@ class FacebookCrawler {
             $post_id = explode("_", $p["post_id"]);
             $post_id = $post_id[1];
             $profile = $this->getProfile($p['actor_id'], $stream["profiles"]);
+            //assume profile comments are private and page posts are public
+            $is_protected = ($source=='facebook')?1:0;
             $ttp = array("post_id"=>$post_id, "author_username"=>$profile["name"], "author_fullname"=>$profile["name"],
             "author_avatar"=>$profile["pic_square"], "author_user_id"=>$profile['id'], "post_text"=>$p['message'], 
             "pub_date"=>date('Y-m-d H:i:s', $p['created_time']), "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', 
-            "source"=>'', 'network'=>$source);
+            "source"=>'', 'network'=>$source, 'is_protected'=>$is_protected);
             array_push($thinkup_posts, $ttp);
             $post_comments = $p["comments"]["comment_list"];
             $post_comments_count = isset($p["comments"]["count"])?$p["comments"]["count"]:0;
@@ -207,7 +209,7 @@ class FacebookCrawler {
                     "author_user_id"=>$commenter["id"], 
                     "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), 
                     "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 
-                    'network'=>$source);
+                    'network'=>$source, 'is_protected'=>$is_protected);
                     array_push($thinkup_posts, $ttp);
                     //Get users
                     $ttu = array("user_name"=>$commenter["name"], "full_name"=>$commenter["name"],

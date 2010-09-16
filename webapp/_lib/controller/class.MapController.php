@@ -6,18 +6,9 @@
  *
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class MapController extends ThinkUpController {
-
-    /**
-     * Constructor
-     * @param boolean $session_started
-     */
-    public function __construct($session_started=false) {
-        parent::__construct($session_started);
-        $this->setViewTemplate('map.tpl');
-        $this->setPageTitle('Locate Post on Map');
-    }
 
     /**
      * Main control method
@@ -25,6 +16,8 @@ class MapController extends ThinkUpController {
      */
     public function control() {
         if ($this->shouldRefreshCache()) {
+            $this->setViewTemplate('map.tpl');
+            $this->setPageTitle('Locate Post on Map');
             $post_dao = DAOFactory::getDAO('PostDAO');
 
             $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
@@ -45,9 +38,16 @@ class MapController extends ThinkUpController {
                 $post = $post_dao->getPost($post_id, $network);
                 $this->addToView('post', $post);
 
-                $post_rows =  $post_dao->getRelatedPosts($post_id, $network);
+                $post_rows =  $post_dao->getRelatedPosts($post_id, $network, !$this->isLoggedIn());
+
                 $posts_json = $this->processLocations($post_rows, $post_id);
                 $this->addToView('posts_data', $posts_json);
+
+                $posts = array();
+                foreach ($post_rows as $row) {
+                    $posts[] = new Post($row);
+                }
+                $this->addToView('posts_by_location', $posts);
             } else {
                 $this->addErrorMessage('No visualization data found for this post');
             }

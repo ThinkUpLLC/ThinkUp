@@ -85,36 +85,34 @@ class Link {
      * @param array $val
      */
     private function constructValIncluded($val){
-        if (isset($val["id"])) {
+        if (isset($val["url"])) {
             $this->id = $val["id"];
-        }
+            $this->url = $val["url"];
+            if (isset($val["expanded_url"])) {
+                $this->expanded_url = $val["expanded_url"];
+            }
 
-        $this->url = $val["url"];
+            if (isset($val["title"])) {
+                $this->title = $val["title"];
+            }
 
-        if (isset($val["expanded_url"])) {
-            $this->expanded_url = $val["expanded_url"];
-        }
+            if (isset($val["clicks"])) {
+                $this->clicks = $val["clicks"];
+            }
 
-        if (isset($val["title"])) {
-            $this->title = $val["title"];
-        }
+            if (isset($val["post_id"])) {
+                $this->post_id = $val["post_id"];
+            }
 
-        if (isset($val["clicks"])) {
-            $this->clicks = $val["clicks"];
-        }
+            if (isset($val["network"])) {
+                $this->network = $val["network"];
+            }
 
-        if (isset($val["post_id"])) {
-            $this->post_id = $val["post_id"];
-        }
+            $this->is_image = PDODAO::convertDBToBool($val["is_image"]);
 
-        if (isset($val["network"])) {
-            $this->network = $val["network"];
-        }
-
-        $this->is_image = PDODAO::convertDBToBool($val["is_image"]);
-
-        if (isset($val["error"])) {
-            $this->error = $val["error"];
+            if (isset($val["error"])) {
+                $this->error = $val["error"];
+            }
         }
     }
 

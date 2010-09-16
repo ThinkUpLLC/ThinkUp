@@ -26,8 +26,7 @@
 {else}
 <div class="clearfix" id="locationRetweets">
 {/if}
-  <div class="individual-tweet post clearfix
-  {if $t->short_location}{$t->short_location|escape:'url'|replace:'%':''|replace:'.':''}{else}__NULL__{/if}">
+  <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
     <div class="grid_1 alpha">
       <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
       {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
@@ -80,44 +79,27 @@
       {/if}
       <div class="small gray">
         {if $t->is_geo_encoded < 2}
-        Location:
-        <a href="#" class="with_tooltip"
-        willWorkOnID="{if $t->in_reply_to_post_id}locationReplies{else}locationRetweets{/if}"
-        value="{if $t->short_location}{$t->short_location|escape:'url'|replace:'%':''|replace:'.':''}
-        {else}__NULL__{/if}"
-        title="{if $t->in_reply_to_post_id or $t->in_retweet_of_post_id}
-        {if $t->is_geo_encoded eq 1 && $t->reply_retweet_distance eq 0}
-        From a very nearby place
-        {elseif $t->is_geo_encoded eq 1 && $t->reply_retweet_distance neq -1}
-          {if $unit eq 'km'}
-          {$t->reply_retweet_distance} kms away from post
-          {else}
-          {$t->reply_retweet_distance} miles away from post
-          {/if}
-        {elseif $t->is_geo_encoded eq 0}
-        Distance information not available yet
+        {if $show_distance}
+            {if $unit eq 'km'}
+              {$t->reply_retweet_distance|number_format} kms away
+              {else}
+              {$t->reply_retweet_distance|number_format} miles away in 
+            {/if}
+        {$t->location|truncate:60:' ...'}
         {/if}
-        {/if}">{$t->location|truncate:60:' ...'}</a>
-        {else}
-        {if $t->is_geo_encoded neq 6}
-        Location: 
-        <a href="#" class="with_tooltip"
-        willWorkOnID="{if $t->in_reply_to_post_id}locationReplies{else}locationRetweets{/if}"
-        value="__NULL__" title="Not Available">Not Available</a>
-        {/if}
-        {/if}
+       {/if}
       </div>
     </div>
     <div class="grid_2 center">
       {if $t->reply_count_cache > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
+        <span class="reply-count"><a href="{$site_root_path}public.php?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
       {else}
         &#160;
       {/if}
     </div>
     <div class="grid_2 center omega">
       {if $t->retweet_count_cache > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}#fwds">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
+        <span class="reply-count"><a href="{$site_root_path}public.php?t={$t->post_id}&n={$t->network}#fwds">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
       {else}
         &#160;
       {/if}

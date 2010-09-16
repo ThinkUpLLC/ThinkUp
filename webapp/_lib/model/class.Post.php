@@ -5,28 +5,104 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class Post {
+    /**
+     *
+     * @var int
+     */
     var $id;
+    /**
+     *
+     * @var int
+     */
     var $post_id;
+    /**
+     *
+     * @var int
+     */
     var $author_user_id;
+    /**
+     *
+     * @var str
+     */
     var $author_fullname;
+    /**
+     *
+     * @var str
+     */
     var $author_username;
+    /**
+     *
+     * @var str
+     */
     var $author_avatar;
+    /**
+     *
+     * @var str
+     */
     var $post_text;
+    /**
+     * @var bool
+     */
+    var $is_protected;
+    /**
+     *
+     * @var str
+     */
     var $source;
+    /**
+     *
+     * @var str
+     */
     var $location;
+    /**
+     *
+     * @var str
+     */
     var $place;
+    /**
+     *
+     * @var str
+     */
     var $geo;
+    /**
+     *
+     * @var str
+     */
     var $pub_date;
+    /**
+     *
+     * @var str
+     */
     var $adj_pub_date;
+    /**
+     *
+     * @var int
+     */
     var $in_reply_to_user_id;
     /**
      *
      * @var bool
      */
     var $is_reply_by_friend;
+    /**
+     *
+     * @var int
+     */
     var $in_reply_to_post_id;
+    /**
+     *
+     * @var int
+     */
     var $reply_count_cache;
+    /**
+     *
+     * @var int
+     */
     var $in_retweet_of_post_id;
+    /**
+     *
+     * @var int
+     */
     var $retweet_count_cache;
     /**
      *
@@ -38,19 +114,32 @@ class Post {
      * @var bool
      */
     var $is_retweet_by_friend;
-    var $network;
     /**
      *
+     * @var str
+     */
+    var $network;
+    /**
+     * @TODO Make these constants with meaningful names
      * @var int 0 if Not Geoencoded, 1 if Successful, 2 if ZERO_RESULTS,
-     * 3 if OVER_QUERY_LIMIT, 4 if REQUEST_DENIED, 5 if INVALID_REQUEST, 6 if INSUFFICIENT_DATA 
+     * 3 if OVER_QUERY_LIMIT, 4 if REQUEST_DENIED, 5 if INVALID_REQUEST, 6 if INSUFFICIENT_DATA
      */
     var $is_geo_encoded;
-    var $author; //optional user object
-    var $link; //optional link object
+    /**
+     *
+     * @var User $author Optionally set
+     */
+    var $author;
+    /**
+     *
+     * @var Link $link Optionally set
+     */
+    var $link;
 
     /**
      * Constructor
      * @param array $val Array of key/value pairs
+     * @return Post
      */
     public function __construct($val) {
         $this->id = $val["id"];
@@ -60,6 +149,7 @@ class Post {
         $this->author_fullname = $val["author_fullname"];
         $this->author_avatar = $val["author_avatar"];
         $this->post_text = $val["post_text"];
+        $this->is_protected = PDODAO::convertDBToBool($val["is_protected"]);
         $this->source = $val["source"];
         $this->location = $val["location"];
         $this->place = $val["place"];
@@ -76,6 +166,9 @@ class Post {
         $this->network = $val["network"];
         $this->is_reply_by_friend = PDODAO::convertDBToBool($val["is_reply_by_friend"]);
         $this->is_retweet_by_friend = PDODAO::convertDBToBool($val["is_retweet_by_friend"]);
+        if (isset($val['is_protected'])) {
+            $this->is_protected = PDODAO::convertDBToBool($val["is_protected"]);
+        }
     }
 
     /**

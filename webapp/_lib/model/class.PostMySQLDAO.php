@@ -18,7 +18,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @var array
      */
     var $REQUIRED_FIELDS =  array('post_id','author_username','author_fullname','author_avatar','author_user_id',
-    'post_text','pub_date','source','network');
+    'post_text','is_protected', 'pub_date','source','network');
 
     /**
      * Optional fields in a post
@@ -121,13 +121,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
     $count= 350) {
-        $q = " SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
+        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
-        $q .= " pub_date - interval #gmt_offset# hour as adj_pub_date ";
-        $q .= " FROM #prefix#posts p ";
-        $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND l.network = p.network ";
-        $q .= " INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
-        $q .= " WHERE p.network=:network AND in_reply_to_post_id=:post_id ";
+        $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND l.network = p.network ";
+        $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
+        $q .= "WHERE p.network=:network AND in_reply_to_post_id=:post_id ";
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
@@ -161,7 +161,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getRepliesToPostIterator($post_id, $network, $order_by = 'default', $unit = 'km',
     $is_public = false, $count = 350) {
-        $q = " SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
+        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
@@ -191,11 +191,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $is_public = false) {
         $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
-        $q .= " pub_date - interval #gmt_offset# hour as adj_pub_date ";
-        $q .= " FROM #prefix#posts p ";
-        $q .= " LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND p.network = l.network ";
-        $q .= " INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
-        $q .= " WHERE p.network=:network AND in_retweet_of_post_id=:post_id ";
+        $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND p.network = l.network ";
+        $q .= "INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
+        $q .= "WHERE p.network=:network AND in_retweet_of_post_id=:post_id ";
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
@@ -234,32 +234,31 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         in_retweet_of_post_id=:post_id
         AND p.network = :network AND is_geo_encoded='1' ";
         if ($is_public) {
-            $q .= "AND u.is_protected = 0 ";
+            $q .= "AND p.is_protected = 0 ";
         }
         $q .= ") ";
         $q .= " UNION
-        (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date - interval 7 hour as adj_pub_date
+        (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date - interval 7 hour as adj_pub_date 
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
         ON l.post_id = p.post_id
         WHERE in_reply_to_post_id=:post_id
         AND p.network = :network AND is_geo_encoded='1' ";
         if ($is_public) {
-            $q .= "AND u.is_protected = 0 ";
+            $q .= "AND p.is_protected = 0 ";
         }
         $q .= ") ";
-        $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error,
-        pub_date - interval 7 hour as adj_pub_date
+        $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date - interval 7 hour as adj_pub_date
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
         ON l.post_id = p.post_id
         WHERE p.post_id=:post_id
         AND p.network = :network AND is_geo_encoded='1' ";
         if ($is_public) {
-            $q .= "AND u.is_protected = 0 ";
+            $q .= "AND p.is_protected = 0 ";
         }
         $q .= ") ";
-        $q .= "ORDER BY location LIMIT :limit";
+        $q .= "ORDER BY reply_retweet_distance, location LIMIT :limit";
 
         $vars = array(
             ':post_id'=>$post_id,
@@ -268,8 +267,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
 
         $ps = $this->execute($q, $vars);
-        $all_rows = $this->getDataRowsAsArrays($ps);
-        return $all_rows;
+        return $this->getDataRowsAsArrays($ps);
     }
 
     public function getPostReachViaRetweets($post_id, $network = 'twitter') {
@@ -608,7 +606,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getMostRetweetedPostsIterator($username, $network, $count, $days) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count,
         'retweet_count_cache', $days, $iterator = true);
     }
 
@@ -642,11 +640,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getAllMentionsIterator($author_username, $count, $network = "twitter") {
         return $this->getMentions($author_username, $count, $network, true);
     }
-    
+
     public function getAllMentions($author_username, $count, $network = "twitter") {
         return $this->getMentions($author_username, $count, $network, false);
     }
-    
+
     private function getMentions($author_username, $count, $network, $iterator) {
         $author_username = '@'.$author_username;
         $q = " SELECT l.*, p.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
@@ -1064,7 +1062,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * Calculate how much each client is used by a user on a specific network
      * @param int $author_id
      * @param string $network
-     * @return array First element of the returned array is an array of all the clients the user used, ever. 
+     * @return array First element of the returned array is an array of all the clients the user used, ever.
      *               The second element is an array of the clients used for the last 25 posts.
      *               Both arrays are sorted by number of use, descending.
      */
@@ -1094,17 +1092,17 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         $rows = $this->getDataRowsAsArrays($this->execute($q, $vars));
         $latest_clients_usage = self::cleanClientsNames($rows);
-        
+
         if (count($latest_clients_usage) == 1 && isset($latest_clients_usage[''])) {
             // Plugin doesn't support 'source'
             $latest_clients_usage = array();
         }
-        
+
         return array($all_time_clients_usage, $latest_clients_usage);
     }
-    
+
     /**
-     * Clean up and sort (by number of use, descending) the source (client) information fetched in 
+     * Clean up and sort (by number of use, descending) the source (client) information fetched in
      * getClientsUsedByUserOnNetwork. To clean up the clients names, we remove the HTML link tag.
      * @param array $rows obtained from the database (as array); columns should be 'num_posts' and 'source'
      * @return array Clients names as keys, number of uses as values.

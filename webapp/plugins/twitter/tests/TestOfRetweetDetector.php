@@ -10,19 +10,19 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetect
 class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
     var $logger;
 
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('RetweetDetector class test');
     }
 
-    function setUp() {
+    public function setUp() {
         $this->logger = Logger::getInstance();
     }
 
-    function tearDown() {
+    public function tearDown() {
         $this->logger->close();
     }
 
-    function testIsRetweet() {
+    public function testIsRetweet() {
         $startwithcolon =
         "RT @ginatrapani: how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
         $nostartnocolon =
@@ -42,33 +42,35 @@ class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
         $this->assertTrue(RetweetDetector::isRetweet($lowwercase, 'ginatrapani'));
     }
 
-    function testDetectRetweets() {
+    public function testDetectRetweets() {
         $recent_tweets = array(
         new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
-        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'', 
+        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
         'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
-        'post_id'=>9021481076, 
+        'post_id'=>9021481076, 'is_protected'=>0,
         'post_text'=>'guilty pleasure: dropping the "my wife" bomb on unsuspecting straight people, mid-conversation', 
         'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 'is_geo_encoded'=>0, 
         'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0)),
         new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
-        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'', 
+        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
         'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
-        'post_id'=>9020176425, 
-        'post_text'=>"a Google fangirl's take: no doubt Buzz's privacy issues are seriously problematic, but at least they're iterating quickly and openly.", 
+        'post_id'=>9020176425, 'is_protected'=>0,
+        'post_text'=>"a Google fangirl's take: no doubt Buzz's privacy issues are seriously problematic, but at least'.
+        ' they're iterating quickly and openly.", 
         'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 
         'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0)),
         new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
-        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'', 
+        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
         'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
-        'post_id'=>9031523906, 
-        'post_text'=>"one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx @voiceofsandiego, @dagnysalas, & @samuelhodgson", 
+        'post_id'=>9031523906, 'is_protected'=>0,
+        'post_text'=>"one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx '.
+        '@voiceofsandiego, @dagnysalas, & @samuelhodgson", 
         'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 
         'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0)),
         new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
-        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'', 
+        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
         'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
-        'post_id'=>8925077246, 
+        'post_id'=>8925077246, 'is_protected'=>0,
         'post_text'=>"how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH", 
         'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 
         'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0)));
@@ -76,7 +78,8 @@ class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
         $startwithcolon =
         "RT @ginatrapani: how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
         $nostartnocolon =
-        "Agreed: RT @ginatrapani guilty pleasure: dropping the &quot;my wife&quot; bomb on unsuspecting straight people, mid-conversation";
+        "Agreed: RT @ginatrapani guilty pleasure: dropping the &quot;my wife&quot; bomb on unsuspecting straight '.
+        'people, mid-conversation";
         $startwithcolonspaces =
         "RT @ginatrapani    how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
         $startwithcoloncutoff =

@@ -10,7 +10,7 @@ interface PostDAO {
      * Get post by ID
      * @param int $post_id
      * @param str $network
-     * @return Post Post with link member variable set, null if post doesn't exist
+     * @return Post Post with optional link member object set, null if post doesn't exist
      */
     public function getPost($post_id, $network);
 
@@ -31,7 +31,7 @@ interface PostDAO {
      * @param int $unit Defaults to km
      * @param bool $public Defaults to false
      * @param int $count Defaults to 350
-     * @return array Posts with author and link objects set
+     * @return array Posts with author object set, and optional link object set
      */
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
     $count = 350);
@@ -43,7 +43,7 @@ interface PostDAO {
      * @param str $order_by Order of sorting posts
      * @param int $unit Defaults to km
      * @param bool $public Defaults to false
-     * @return array Retweets of post
+     * @return array Retweets of post with optional link object set
      */
     public function getRetweetsOfPost($post_id, $network = 'twitter', $order_by = 'default', $unit = 'km',
     $is_public = false);
@@ -88,10 +88,10 @@ interface PostDAO {
      * @param int $post_id
      * @param str $network
      * @param str $order_by Order of sorting posts
-     * @param int $unit
+     * @param str $unit 'km' or 'mi'
      * @return array Public posts with author and link objects set
      */
-    public function getPublicRepliesToPost($post_id, $network, $order_by = 'default', $unit = 0);
+    public function getPublicRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km');
 
     /**
      * Check to see if Post is in database

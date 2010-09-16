@@ -124,10 +124,3 @@ text-align: center;
 
 .submenu {padding-left : 20px;}
 #sidemenu {display : none;}
-
-/* EasyTooltip used for tooltips showing distance of post */
-#easyTooltip{display: none; position: absolute; padding: 5px; left: 5px; font-size: 0.8em; background-color: white;
-border: 3px solid #a6c9e2; -moz-border-radius: 5px; -webkit-border-radius: 5px; z-index: 9999}
-
-/* Sort By Proximity and Sory by Reach links */
-.sort_links {font-weight: 500;color: #6184B5;font-size: .8em; margin-right:20px; margin-top:-20px;}

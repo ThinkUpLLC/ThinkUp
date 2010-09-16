@@ -18,83 +18,140 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->UnitTestCase('PostController class test');
     }
 
-    /**
-     * Add test post to database
-     */
     public function setUp(){
         parent::setUp();
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (1001, 13, 'ev', 'Ev Williams', 
-        'avatar.jpg', 'This is a test post', 'web', '2006-01-01 00:05:00', ".rand(0, 4).", 5);";
-        $this->db->exec($q);
     }
 
-    /**
-     * Test constructor
-     */
     public function testConstructor() {
         $controller = new PostController(true);
         $this->assertTrue(isset($controller), 'constructor test');
     }
 
-    /**
-     * Test controller when user is not logged in
-     */
-    public function testControlNotLoggedIn() {
+    public function testControlNoPostID() {
         $controller = new PostController(true);
         $results = $controller->go();
-
-        $this->assertTrue(strpos($results, 'Public Timeline') > 0);
+        $this->assertPattern( "/Post not specified/", $results);
     }
 
-    /**
-     * Test controller when user is logged in, but there's no Post ID on the query string
-     */
-    public function testControlLoggedInNoPostID() {
-        $this->simulateLogin('me@example.com');
-
-        $controller = new PostController(true);
-        $results = $controller->go();
-
-        $this->assertTrue(strpos( $results, "Post not found") > 0, "no post");
-    }
-
-    /**
-     * Test controller when user is logged in and there is a valid Post ID on the query string
-     */
-    public function testControlLoggedInWithPostID() {
-        $this->simulateLogin('me@example.com');
+    public function testControlExistingPublicPostID() {
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter',
+        'is_protected'=>0));
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'0',
+        'network'=>'twitter'));
         $_GET["t"] = '1001';
-
         $controller = new PostController(true);
         $results = $controller->go();
-
-        $this->assertTrue(strpos( $results, "This is a test post") > 0, "no post");
+        $this->assertPattern( "/This is a test post/", $results);
     }
 
-    /**
-     * Test controller when logged in but there's a numeric but nonexistent Post ID
-     */
-    public function testControlLoggedInWithNumericButNonExistentPostID(){
-        $this->simulateLogin('me@example.com');
+    public function testControlWithNumericButNonExistentPostID(){
         $_GET["t"] = '11';
-
         $controller = new PostController(true);
         $results = $controller->go();
-
-        $this->assertTrue(strpos( $results, "Post not found") > 0, "no post");
+        $this->assertPattern("/Post not found/", $results);
     }
 
-    /**
-     * Test controller when logged in but a non-numeric post ID
-     */
-    public function testControlLoggedInWithNonNumericPostID(){
-        $this->simulateLogin('me@example.com');
+    public function testControlNonNumericPostID(){
         $_GET["t"] = 'notapostID45';
-
         $controller = new PostController(true);
         $results = $controller->go();
+        $this->assertPattern("/Post not specified/", $results);
+    }
 
-        $this->assertTrue(strpos( $results, "Post not found") > 0, "no post");
+    public function testControlExistingPrivatePostIDNotLoggedIn() {
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter'));
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'1',
+        'network'=>'twitter'));
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/Insufficient privileges/", $results);
+    }
+
+    public function testControlExistingPrivatePostIDLoggedIn() {
+        $this->simulateLogin('me@example.com');
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter'));
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'1',
+        'network'=>'twitter'));
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+    }
+
+    public function testPublicPostWithMixedAccessRepliesNotLoggedIn() {
+        $builders = $this->buildPublicPostWithMixedAccessResponses();
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+        $this->assertPattern( "/This is a public reply to 1001/", $results);
+        $this->assertPattern( "/Not showing 1 private reply./", $results);
+        $this->assertNoPattern("/This is a private reply to 1001/", $results);
+        $this->assertNoPattern("/This is a private retweet of 1001/", $results);
+    }
+
+    public function testPublicPostWithMixedAccessRepliesLoggedIn() {
+        $this->simulateLogin('me@example.com');
+        $builders = $this->buildPublicPostWithMixedAccessResponses();
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+        $this->assertPattern( "/This is a public reply to 1001/", $results);
+        $this->assertPattern("/This is a private reply to 1001/", $results);
+        $this->assertPattern("/This is a private retweet of 1001/", $results);
+    }
+
+    private function buildPublicPostWithMixedAccessResponses() {
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter',
+        'is_protected'=>'0'));
+        $original_post_author_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev',
+        'is_protected'=>'0', 'network'=>'twitter'));
+
+        $public_reply_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'11', 'username'=>'jack',
+        'is_protected'=>'0', 'network'=>'twitter'));
+        $reply_builder1 = FixtureBuilder::build('posts', array('post_id'=>'1002', 'author_user_id'=>'11',
+        'author_username'=>'jack', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter', 
+        'in_reply_to_post_id'=>1001, 'is_protected'=>'0'));
+
+        $public_reply_author_builder2 = FixtureBuilder::build('users', array('user_id'=>'12', 'username'=>'jill',
+        'is_protected'=>'0', 'network'=>'twitter'));
+        $reply_builder2 = FixtureBuilder::build('posts', array('post_id'=>'1003', 'author_user_id'=>'12',
+        'author_username'=>'jill', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter', 
+        'in_reply_to_post_id'=>1001, 'is_protected'=>'0'));
+
+        $private_reply_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'13', 'username'=>'mary',
+        'is_protected'=>'1', 'network'=>'twitter'));
+        $reply_builder3 = FixtureBuilder::build('posts', array('post_id'=>'1004', 'author_user_id'=>'13',
+        'author_username'=>'mary', 'post_text'=>'This is a private reply to 1001', 'network'=>'twitter', 
+        'in_reply_to_post_id'=>1001, 'is_protected'=>'1'));
+
+        $private_retweet_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'14', 'username'=>'joan',
+        'is_protected'=>'1', 'network'=>'twitter'));
+        $retweet_builder1 = FixtureBuilder::build('posts', array('post_id'=>'1005', 'author_user_id'=>'14',
+        'author_username'=>'joan', 'post_text'=>'This is a private retweet of 1001', 'network'=>'twitter', 
+        'in_retweet_of_post_id'=>1001, 'is_protected'=>'1'));
+
+        $private_retweet_author_builder2 = FixtureBuilder::build('users', array('user_id'=>'15', 'username'=>'peggy',
+        'is_protected'=>'1', 'network'=>'twitter'));
+        $retweet_builder2 = FixtureBuilder::build('posts', array('post_id'=>'1006', 'author_user_id'=>'15',
+        'author_username'=>'peggy', 'post_text'=>'This is a private retweet of 1001', 'network'=>'twitter', 
+        'in_retweet_of_post_id'=>1001, 'is_protected'=>'1'));
+
+        $public_retweet_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'16', 'username'=>'don',
+        'is_protected'=>'0', 'network'=>'twitter'));
+        $retweet_builder3 = FixtureBuilder::build('posts', array('post_id'=>'1007', 'author_user_id'=>'16',
+        'author_username'=>'don', 'post_text'=>'This is a public retweet of 1001', 'network'=>'twitter', 
+        'in_retweet_of_post_id'=>1001, 'is_protected'=>'0'));
+
+        return array($post_builder, $original_post_author_builder, $public_reply_author_builder1, $reply_builder1,
+        $public_reply_author_builder2, $reply_builder2, $private_reply_author_builder1, $reply_builder3,
+        $private_retweet_author_builder1, $retweet_builder1, $private_retweet_author_builder2, $retweet_builder2,
+        $public_retweet_author_builder1, $retweet_builder3);
     }
 }

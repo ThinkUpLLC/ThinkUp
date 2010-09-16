@@ -236,7 +236,5 @@
 
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-  <script type="text/javascript" src="{$site_root_path}assets/js/easytooltip.js"></script>
-  <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/locationfilter.js"></script>
   
 {include file="_footer.tpl" stats="no"}

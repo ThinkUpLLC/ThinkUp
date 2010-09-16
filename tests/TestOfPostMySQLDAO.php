@@ -434,7 +434,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         }
         $this->assertEqual($cnt, 5);
     }
-    
+
     /**
      * Test getStatusSources
      */
@@ -754,6 +754,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['pub_date']='3/1/2010';
         $vals['source']='web';
         $vals['network']= 'twitter';
+        $vals['is_protected'] = 0;
 
         //add post with insufficient location data
         $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
@@ -827,6 +828,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['source']='web';
         $vals['network']= 'twitter';
         $vals['in_reply_to_post_id']= 41;
+        $vals['is_protected'] = 0;
 
         $dao = new PostMySQLDAO();
         $dao->addPost($vals);
@@ -851,6 +853,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['source']='web';
         $vals['network']= 'twitter';
         $vals['in_retweet_of_post_id']= 41;
+        $vals['is_protected'] = 0;
 
         $dao = new PostMySQLDAO();
         $dao->addPost($vals);
