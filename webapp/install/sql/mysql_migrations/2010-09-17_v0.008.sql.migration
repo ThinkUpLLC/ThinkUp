@@ -1,0 +1,32 @@
+--
+-- 2010-08-27
+--
+ALTER TABLE  tu_owners ADD UNIQUE ( email );
+
+--
+-- 2010-09-02
+--
+ALTER TABLE tu_instances
+    ADD posts_per_day decimal(7,2) DEFAULT NULL AFTER total_follows_in_system,
+    ADD posts_per_week decimal(7,2) DEFAULT NULL AFTER posts_per_day,
+    ADD percentage_replies decimal(4,2) DEFAULT NULL AFTER posts_per_week,
+    ADD percentage_links decimal(4,2) DEFAULT NULL AFTER percentage_replies;
+
+--
+-- 2010-09-11
+--
+ALTER TABLE  tu_follows CHANGE  network  network VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'twitter';
+ALTER TABLE  tu_links CHANGE  network  network VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'twitter';
+ALTER TABLE  tu_post_errors CHANGE  network  network VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'twitter';
+ALTER TABLE  tu_user_errors CHANGE  network  network VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'twitter';
+ALTER TABLE  tu_users CHANGE  network  network VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'twitter';
+ALTER TABLE  tu_posts CHANGE  network  network VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'twitter';
+
+--
+-- 2010-09-16
+--
+ALTER TABLE  tu_posts ADD  is_protected TINYINT NOT NULL DEFAULT  '1' AFTER  post_text , ADD INDEX (  is_protected );
+
+UPDATE tu_posts, tu_users SET tu_posts.is_protected = tu_users.is_protected WHERE (tu_posts.author_user_id = tu_users.user_id AND tu_posts.network = tu_users.network); 
+
+ALTER TABLE tu_posts ADD INDEX  (in_reply_to_post_id);

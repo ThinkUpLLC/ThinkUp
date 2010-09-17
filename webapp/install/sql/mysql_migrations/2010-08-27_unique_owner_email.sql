@@ -1,1 +1,0 @@
-ALTER TABLE  tu_owners ADD UNIQUE ( email );
