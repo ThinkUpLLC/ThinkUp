@@ -91,6 +91,24 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         'Cache key');
     }
 
+    public function testNotLoggedInPosts() {
+        $builders = $this->buildData();
+        $_GET['u'] = 'ev';
+        $_GET['n'] = 'twitter';
+        $_GET['v'] = 'tweets-all';
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All Tweets', 'Header');
+        $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'All tweets', 'Description');
+        $this->assertIsA($v_mgr->getTemplateDataItem('all_tweets'), 'array', 'Array of tweets');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('all_tweets')), 15, '15 posts in listing');
+
+        $this->assertFalse($v_mgr->getTemplateDataItem('is_searchable'));
+    }
+
     public function testLoggedInPosts() {
         $builders = $this->buildData();
         $this->simulateLogin('me@example.com');
@@ -112,9 +130,8 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-me@example.com-ev-twitter-tweets-all',
         'Cache key');
         $this->assertTrue($v_mgr->getTemplateDataItem('is_searchable'));
-
     }
-
+    
     public function testLoggedInConversations() {
         $builders = $this->buildData();
         //must be logged in

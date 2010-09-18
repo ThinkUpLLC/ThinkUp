@@ -17,8 +17,8 @@ class TestOfDashboard extends ThinkUpWebTestCase {
         $this->db->exec($q);
 
         //Add instance
-        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234,
-        'thinkupapp', 1)";
+        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public, network) VALUES (1, 17,
+        'thinkupapp', 1, 'twitter')";
         $this->db->exec($q);
 
         //Add instance_owner
@@ -38,8 +38,8 @@ class TestOfDashboard extends ThinkUpWebTestCase {
         'Private Poster', 'avatar.jpg', 1);";
         $this->db->exec($q);
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (17,
-        'thinkupapp', 'ThinkUpers', 'avatar.jpg', 0, 10);";
+        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count, network)
+        VALUES (17, 'thinkupapp', 'ThinkUpers', 'avatar.jpg', 0, 10, 'twitter');";
         $this->db->exec($q);
 
         $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (18,
@@ -196,9 +196,10 @@ class TestOfDashboard extends ThinkUpWebTestCase {
 
         $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Export');
+        //        $this->showSource();
+        $this->assertText('CSV');
 
-        $this->click("Export");
+        $this->click("CSV");
         $this->assertText('This is test post');
     }
 }
