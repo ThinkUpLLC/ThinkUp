@@ -101,7 +101,7 @@ class DashboardController extends ThinkUpController {
                     $this->addToView('next_page', $page+1);
                 }
                 $this->addToView($dataset->name, $dataset->retrieveDataset($page));
-                if($dataset->isSearchable()) {
+                if(Session::isLoggedIn() && $dataset->isSearchable()) {
                     $view_name = 'is_searchable';
                     $this->addToView($view_name, true);
                 }

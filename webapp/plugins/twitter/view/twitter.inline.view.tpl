@@ -1,10 +1,8 @@
 <div class="">
   {if $description}
     {if $is_searchable}
-<!-- Temporarily commented-out till it's fitted into new UI
         <a href="#" class="grid_search" title="Search" onclick="return false;">
         <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
--->
     {/if}
      <i>{$description}</i>
      
@@ -152,3 +150,10 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
   });
   {/literal}
 </script>
+
+{if $is_searchable}
+    {include file="_grid.search.tpl"}
+    <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
+    
+{/if}
+

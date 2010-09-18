@@ -21,6 +21,9 @@ var TUGridSearch = function() {
             if (tu_grid_search.DEBUG) {
                 console.log("Grid Search initialized...");
             }
+            $('#grid_search_icon').click(function() {
+                tu_grid_search.load_iframe();
+            });
             $('#close_grid_search').click(function() {
                 tu_grid_search.close_iframe();
             });
@@ -137,10 +140,10 @@ var TUGridSearch = function() {
             $('#grid_overlay_div').show();
             $('#grid_iframe').show();
             var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
-            query_key = (typeof('current_query_string') != 'undefined') ? current_query_key : 'updates';
             query_string = 'not=true';
-            if(typeof('current_query_strings') != 'undefined') {
-                query_string = current_query_strings[query_key];
+            if(document.location.search) {
+                query_string = document.location.search;
+                query_string = query_string.replace(/^\?v/, 'd');
             }
             $('#grid_iframe').attr('src',
                     path + 'assets/html/grid.html?' + query_string + '&cb=' + (new Date()).getTime());
