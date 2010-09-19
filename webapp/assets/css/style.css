@@ -147,3 +147,18 @@ text-align: center;
 
 .ui-state-highlight p a {color:#416A93;}
 .ui-state-error p a {color:#416A93;}
+
+
+/* Sidebar */
+
+#nav-sidebar {padding-left : 10px;background-color:white;}
+#nav-sidebar h2 {padding-bottom: 10px; padding-top:20px; color: black;font-size: medium;}
+#nav-sidebar h2 a {color : black;}
+#nav-sidebar {font-size: small; color: #999;}
+#nav-sidebar ul {list-style-type: none; padding-bottom : 20px;}
+#nav-sidebar li {list-style-type: none; padding-top: 2px; padding-bottom : 2px;}
+#nav-sidebar a {color: #666;}
+#nav-sidebar ul.side-subnav li:hover {color: white;background-color: #E6E6E6;}
+#top-level-sidenav ul.side-subnav li:before {content : "";}
+#top-level-sidenav {margin-top:7px}
+#nav-sidebar ul.side-subnav .currentview {background-color: #E6E6E6;}

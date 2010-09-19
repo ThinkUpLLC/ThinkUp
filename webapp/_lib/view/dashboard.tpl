@@ -1,39 +1,42 @@
 {include file="_header.tpl"}
 {include file="_statusbar.tpl"}
 
-<div style="float:left;margin:10px">
-<ul>
+
+<div style="float:left;margin:10px" id="nav-sidebar" class="round-all">
+<ul id="top-level-sidenav"><br />
 {if $instance}
-<li><a href="index.php?u={$instance->network_username|urlencode}&n={$instance->network}">Main Dashboard</a></li>
+<ul class="side-subnav">
+<li{if $smarty.get.v eq ''} class="currentview"{/if}><a href="index.php?u={$instance->network_username|urlencode}&n={$instance->network}">Main Dashboard&nbsp;&nbsp;&nbsp;</a></li>
+</ul></li>
 {/if}
 {if $sidebar_menu_posts}
-<li>Posts<ul>
+<li>Posts<ul class="side-subnav">
 {foreach from=$sidebar_menu_posts key=mkey item=mi name=tabloop}
-   <li><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}</a></li>
+   <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
 {/foreach}</ul></li>
 {/if}
 {if $sidebar_menu_replies}
-<li>Replies<ul>
+<li>Replies<ul class="side-subnav">
 {foreach from=$sidebar_menu_replies key=mkey item=mi name=tabloop}
-   <li><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}</a></li>
+   <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
 {/foreach}</ul></li>
 {/if}
 {if $sidebar_menu_friends}
-<li>Friends<ul>
+<li>Friends<ul class="side-subnav">
 {foreach from=$sidebar_menu_friends key=mkey item=mi name=tabloop}
-   <li><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}</a></li>
+   <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
 {/foreach}</ul></li>
 {/if}
 {if $sidebar_menu_followers}
-<li>Followers<ul>
+<li>Followers<ul class="side-subnav">
 {foreach from=$sidebar_menu_followers key=mkey item=mi name=tabloop}
-   <li><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}</a></li>
+   <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
 {/foreach}</ul></li>
 {/if}
 {if $sidebar_menu_links}
-<li>Links<ul>
+<li>Links<ul class="side-subnav">
 {foreach from=$sidebar_menu_links key=mkey item=mi name=tabloop}
-   <li><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}</a></li>
+   <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
 {/foreach}</ul></li>
 {/if}
 </ul>
