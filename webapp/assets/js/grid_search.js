@@ -143,8 +143,9 @@ var TUGridSearch = function() {
             query_string = 'not=true';
             if(document.location.search) {
                 query_string = document.location.search;
-                query_string = query_string.replace(/^\?v/, 'd');
+                query_string = query_string.replace(/^\?/, '').replace(/^\v/, 'd');
             }
+            if(typeof(post_username) != 'undefined') { query_string+= '&u=' + escape(post_username); } 
             $('#grid_iframe').attr('src',
                     path + 'assets/html/grid.html?' + query_string + '&cb=' + (new Date()).getTime());
             if (tu_grid_search.DEBUG) {

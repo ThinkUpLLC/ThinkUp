@@ -37,6 +37,20 @@ interface PostDAO {
     $count = 350);
 
     /**
+     * Get replies Iterator to a post 
+     * @param int $post_id
+     * @param str $network
+     * @param str $order_by Order of sorting posts
+     * @param int $unit Defaults to km
+     * @param bool $public Defaults to false
+     * @param int $count Defaults to 350
+     * @return Iterator Posts with author object set, and optional link object set
+     */
+    public function getRepliesToPostIterator($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
+    $count = 350);
+    
+    
+    /**
      * Get retweets of post
      * @param int $post_id
      * @param str $network Defaults to 'twitter'

@@ -350,10 +350,10 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $prev_count = 0;
         $cnt = 0;
         foreach ($posts_it as $post) {
-             if($cnt == 0) {
-                 $prev_count = $post->reply_count_cache;
-             }
-             $cnt++;
+            if($cnt == 0) {
+                $prev_count = $post->reply_count_cache;
+            }
+            $cnt++;
             $this->assertTrue($post->reply_count_cache <= $prev_count, "previous count ".$prev_count.
             " should be less than or equal to this post's count of ".$post->reply_count_cache);
             $prev_count = $post->reply_count_cache;
@@ -639,6 +639,32 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[1]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
 
         $this->assertEqual($posts[2]->location,'Chennai, Tamil Nadu, India');
+    }
+
+    /**
+     * Test getRepliesToPostIterator
+     */
+    public function testGetRepliesToPostIterator() {
+        $dao = new PostMySQLDAO();
+        // Default Sorting
+        $posts_it = $dao->getRepliesToPostIterator(41, 'twitter');
+        $post1 = null; $post2 = null; $post3 = null;
+        $cnt = 0;
+        foreach ($posts_it as $post) {
+            $cnt++;
+            if($cnt == 1) { $post1 = $post; }
+            if($cnt == 2) { $post2 = $post; }
+            if($cnt == 3) { $post3 = $post; }
+        }
+        $this->assertEqual($cnt, 3);
+        $this->assertEqual($post1->post_text, '@shutterbug Nice shot!', "post reply");
+        $this->assertEqual($post1->location,'New Delhi, Delhi, India');
+
+        $this->assertEqual($post2->location,'Chennai, Tamil Nadu, India');
+        $this->assertEqual($post3->post_text, '@shutterbug This is a link post reply http://example.com/',
+                "post reply");
+        $this->assertEqual($post3->post_id, 133, "post ID");
+
     }
 
     /**
