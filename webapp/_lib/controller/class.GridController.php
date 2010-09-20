@@ -44,6 +44,12 @@ class GridController extends ThinkUpAuthController {
                 $this->is_missing_param = true;
                 $this->setViewTemplate('inline.view.tpl');
             }
+            // or replies?
+            if($this->is_missing_param) {
+                if (isset($_GET['t'])) {
+                    $this->is_missing_param = false;
+                }
+            }
         }
         if (!isset($_GET['d'])) {
             $_GET['d'] = "tweets-all";
@@ -67,10 +73,17 @@ class GridController extends ThinkUpAuthController {
                     echo '{"status":"failed","message":"Insufficient privileges."}';
                 } else {
                     echo "tu_grid_search.populate_grid(";
-                    $webapp = Webapp::getInstance();
-                    $webapp->setActivePlugin($instance->network);
-                    $tab = $webapp->getTab($_GET['d'], $instance);
-                    $posts_it = $tab->datasets[0]->retrieveIterator();
+                    $posts_it;
+                    if(isset($_GET['t'])) {
+                        // replies?
+                        $post_dao = DAOFactory::getDAO('PostDAO');
+                        $posts_it = $post_dao->getRepliesToPostIterator($_GET['t'], $_GET['n']);
+                    } else {
+                        $webapp = Webapp::getInstance();
+                        $webapp->setActivePlugin($instance->network);
+                        $tab = $webapp->getTab($_GET['d'], $instance);
+                        $posts_it = $tab->datasets[0]->retrieveIterator();
+                    }
                     echo '{"status":"success","posts": [' . "\n";
                     $cnt = 0;
                     foreach($posts_it as $key => $value) {

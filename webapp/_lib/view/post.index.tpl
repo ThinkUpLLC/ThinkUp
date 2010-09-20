@@ -43,6 +43,8 @@
                   {if $replies}
                     <h1>{$post->reply_count_cache|number_format}</h1>
                     <h3>replies in {$post->adj_pub_date|relative_datetime} (<a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">CSV</a>)</h3>
+                    <a href="#" class="grid_search" title="Search" onclick="return false;">
+                    <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
                   {else}
                     <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a>
                     fwds to<br><a href="#fwds">{$retweet_reach|number_format}</a></h1>
@@ -117,5 +119,10 @@
 
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  {if $replies}
+    {include file="_grid.search.tpl"}
+    <script type="text/javascript">post_username = '{$post->author_username}';</script>
+    <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
+  {/if}
   
 {include file="_footer.tpl"}
