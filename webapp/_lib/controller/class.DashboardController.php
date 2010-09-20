@@ -99,6 +99,7 @@ class DashboardController extends ThinkUpController {
             foreach ($tab->datasets as $dataset) {
                 if (array_search('#page_number#', $dataset->method_params) !== false) { //there's paging
                     $this->addToView('next_page', $page+1);
+                    $this->addToView('last_page', $page-1);
                 }
                 $this->addToView($dataset->name, $dataset->retrieveDataset($page));
                 if(Session::isLoggedIn() && $dataset->isSearchable()) {
