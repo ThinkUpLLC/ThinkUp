@@ -165,22 +165,14 @@ class DashboardController extends ThinkUpController {
 
             $post_dao = DAOFactory::getDAO('PostDAO');
             //posts
-            $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 5, true);
+            $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 3, true);
             $this->addToView('recent_posts', $recent_posts);
-            $most_replied_to_alltime = $post_dao->getMostRepliedToPosts($this->instance->network_user_id,
-            $this->instance->network, 5);
-            $this->addToView('most_replied_to_alltime', $most_replied_to_alltime);
-            $most_retweeted_alltime = $post_dao->getMostRetweetedPosts($this->instance->network_user_id,
-            $this->instance->network, 5);
-            $this->addToView('most_retweeted_alltime', $most_retweeted_alltime);
             $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
             $this->instance->network, 5);
             $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
             $most_retweeted_1wk = $post_dao->getMostRetweetedPostsInLastWeek($this->instance->network_username,
             $this->instance->network, 5);
             $this->addToView('most_retweeted_1wk', $most_retweeted_1wk);
-            $conversations = $post_dao->getPostsAuthorHasRepliedTo($this->instance->network_user_id, 5);
-            $this->addToView('conversations', $conversations);
 
             //follows
             $follow_dao = DAOFactory::getDAO('FollowDAO');

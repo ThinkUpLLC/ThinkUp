@@ -1,4 +1,4 @@
-{if $smarty.foreach.foo.first && $headings != "NONE"}
+{if $smarty.foreach.foo.first}
   <div class="header clearfix">
     <div class="grid_1 alpha">&#160;</div>
     <div class="grid_3 right">name</div>
@@ -10,11 +10,11 @@
     <div class="grid_2">
       &#160;
     </div>
+    <div class="grid_2 center omega">
+      {if $t->network eq 'twitter'}retweets{/if}
+    </div>
     <div class="grid_2 center">
       replies
-    </div>
-    <div class="grid_2 center omega">
-      forwards
     </div>
   </div>
 {/if}
@@ -88,16 +88,19 @@
        {/if}
       </div>
     </div>
-    <div class="grid_2 center">
-      {if $t->reply_count_cache > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
+    
+    <div class="grid_2 center omega">
+    {if $t->network eq 'twitter'}
+      {if $t->retweet_count_cache > 0}
+        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}#fwds">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
       {else}
         &#160;
       {/if}
+    {/if}
     </div>
-    <div class="grid_2 center omega">
-      {if $t->retweet_count_cache > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}#fwds">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
+    <div class="grid_2 center">
+      {if $t->reply_count_cache > 0}
+        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
       {else}
         &#160;
       {/if}

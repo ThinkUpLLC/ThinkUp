@@ -96,6 +96,17 @@
         {/if}
 
         <br />
+        {if $least_likely_followers}
+            <hr />
+            <h2 style="font-size:200%;margin-top:10px">Star Followers</h2>
+            {foreach from=$least_likely_followers key=uid item=u name=foo}
+            <div class="avatar-container" style="float:left;margin:7px;">  
+               <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.ico" class="service-icon2"/></a> 
+            </div>
+            {/foreach}
+            <div style="clear:all;"><br /><br /><br /></div>
+        {/if}
+
 
         {if $most_replied_to_1wk}
 <hr />
@@ -129,39 +140,6 @@
           {/foreach}
         {/if}
 
-        {if $least_likely_followers}
-            <hr />
-            <h2 style="font-size:200%;margin-top:10px">Most Discerning Followers</h2>
-            {foreach from=$least_likely_followers key=uid item=u name=foo}
-            <div class="avatar-container" style="float:left;margin:7px;">  
-               <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.ico" class="service-icon2"/></a> 
-            </div>
-            {/foreach}
-            <div style="clear:all;"><br /><br /><br /></div>
-        {/if}
-
-        {if $conversations}
-<hr />
-<h2 style="font-size:200%;margin-top:10px">Conversations</h2>
-          {foreach from=$conversations key=tid item=r name=foo}
-            {include file="_post.qa.tpl" t=$t headings="NONE"}
-          {/foreach}
-        {/if}
-        {if $most_replied_to_alltime}
-<hr />
-<h2 style="font-size:200%;margin-top:10px">All-Time Most Replied-To</h2>
-          {foreach from=$most_replied_to_alltime key=tid item=t name=foo}
-            {include file="_post.tpl" t=$t headings="NONE"}
-          {/foreach}
-        {/if}
-
-        {if $most_retweeted_alltime}
-<hr />
-<h2 style="font-size:200%;margin-top:10px">All-Time Most Retweeted</h2>
-          {foreach from=$most_retweeted_alltime key=tid item=t name=foo}
-            {include file="_post.tpl" t=$t headings="NONE"}
-          {/foreach}
-        {/if}
           {/if}
         {/if}
       </div>
