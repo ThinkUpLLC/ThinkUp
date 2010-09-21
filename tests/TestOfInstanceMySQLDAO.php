@@ -425,7 +425,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
                 $reply_to = 'NULL';
             }
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$postid, 'author_user_id'=>$sender,
-            'post_text'=>$data, 'pub_date'=>'-'.$number.'hr', 'in_reply_to_user_id'=>$reply_to));
+            'post_text'=>$data, 'pub_date'=>'-'.$number.'h', 'in_reply_to_user_id'=>$reply_to));
             if($sender == 10){
                 $posts++;
             }
@@ -510,8 +510,9 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->network_viewer_id, 10);
 
         // Check if the stats were correctly calculated and saved
-        $this->assertEqual($result->posts_per_day, $posts);
-        $this->assertEqual($result->posts_per_week, $posts);
+        $posts_per = ($posts > 25) ? 25 : $posts; // post per are limited to a max of 25, see getInstanceUserStats()
+        $this->assertEqual($result->posts_per_day, $posts_per);
+        $this->assertEqual($result->posts_per_week, $posts_per);
         $this->assertEqual($result->percentage_replies, round($replies / $posts * 100, 2));
         $this->assertEqual($result->percentage_links, round($links / $posts * 100, 2));
 
