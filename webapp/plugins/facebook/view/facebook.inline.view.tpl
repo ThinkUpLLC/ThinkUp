@@ -29,6 +29,12 @@
   {/foreach}
 {/if}
 
+{if $most_replied_to_posts}
+  {foreach from=$most_replied_to_posts key=tid item=t name=foo}
+    {include file="_post.tpl" t=$t}
+  {/foreach}
+{/if}
+
 
 {if ($display eq 'followers_mostfollowed' and not $facebook_users) or ($display eq 'friends_mostactive' and not $facebook_users) }
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 

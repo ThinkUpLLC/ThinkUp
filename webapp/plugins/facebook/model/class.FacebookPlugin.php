@@ -81,19 +81,19 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::MAX_ROWS), false );
         $alltab->addDataset($alltabds);
         array_push($child_tabs, $alltab);
+
+        // Most replied-to tab
+        $mrttab = new WebappTab("mostreplies", "Most replied-to", "Posts with most replies", $fb_data_tpl);
+        $mrttabds = new WebappTabDataset("most_replied_to_posts", 'PostDAO', "getMostRepliedToPosts",
+        array($instance->network_user_id, $instance->network, 15, '#page_number#'));
+        $mrttab->addDataset($mrttabds);
+        array_push($child_tabs, $mrttab);
+
         return $child_tabs;
     }
 
     public function getChildTabsUnderReplies($instance) {
-        $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
         $child_tabs = array();
-
-        //All Replies
-        $artab = new WebappTab("all_facebook_replies", "Replies", "Replies to your Facebook posts", $fb_data_tpl);
-        $artabds = new WebappTabDataset("all_facebook_replies", 'PostDAO', "getAllReplies",
-        array($instance->network_user_id, $instance->network, 15, '#page_number'));
-        $artab->addDataset($artabds);
-        array_push($child_tabs, $artab);
         return $child_tabs;
     }
 
