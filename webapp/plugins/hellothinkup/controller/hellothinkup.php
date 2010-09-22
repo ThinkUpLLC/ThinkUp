@@ -1,3 +1,4 @@
+<?php 
 /**
  *
  * ThinkUp/webapp/plugins/hellothinkup/controller/hellothinkup.php
@@ -27,7 +28,6 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
 */
-<?php 
 /* 
  Plugin Name: Hello ThinkUp
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/hellothinkup/
