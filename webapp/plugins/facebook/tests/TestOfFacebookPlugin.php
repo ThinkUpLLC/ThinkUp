@@ -33,7 +33,7 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
 
         $post_tabs = $webapp->getChildTabsUnderPosts($instance);
 
-        $this->assertEqual(sizeof($post_tabs), 1, "Test number of post tabs");
+        $this->assertEqual(sizeof($post_tabs), 2, "Test number of post tabs");
         $first_post_tab = $post_tabs[0];
         $this->assertEqual($first_post_tab->short_name, "all_facebook_posts", "Test short name of first post tab");
         $this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
