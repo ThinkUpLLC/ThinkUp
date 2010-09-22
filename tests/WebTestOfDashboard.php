@@ -4,7 +4,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
-class TestOfDashboard extends ThinkUpWebTestCase {
+class WebTestOfDashboard extends ThinkUpWebTestCase {
 
     public function setUp() {
         parent::setUp();
