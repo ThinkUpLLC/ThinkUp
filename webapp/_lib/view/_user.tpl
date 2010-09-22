@@ -4,7 +4,7 @@
     <div class="grid_3 right">name</div>
     <div class="grid_3 right">followers</div>
     <div class="grid_3 right">friends</div>
-    <div class="grid_12 omega">detail</div>
+    <div class="grid_10 omega">detail</div>
   </div>
 {/if}
 
@@ -21,7 +21,7 @@
   <div class="grid_3 small right">
     {$f.friend_count|number_format}
   </div>
-  <div class="grid_12 omega">
+  <div class="grid_10 omega">
     <p>{if $f.description}{$f.description}{else}&#160;{/if}</p>
     <div class="small gray">Averages {$f.avg_tweets_per_day} updates per day; {$f.post_count|number_format} total.</div>
     {if $f.tweet_count > 0}<div class="small gray">Last post: {$f.last_post|relative_datetime}</div>{/if}

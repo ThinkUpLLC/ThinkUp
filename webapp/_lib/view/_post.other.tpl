@@ -4,7 +4,7 @@
     <div class="grid_3 right">name</div>
     <div class="grid_3 right">followers</div>
     <div class="grid_3 right">date</div>
-    <div class="grid_12 omega">post</div>
+    <div class="grid_10 omega">post</div>
   </div>
 {/if}
 
@@ -32,7 +32,7 @@
         {$t->adj_pub_date|relative_datetime} ago
       </a>
     </div>
-    <div class="grid_12 omega">
+    <div class="grid_10 omega">
       <div class="tweet-body">
         {if $t->link->is_image}
           <a href="{$t->link->url}">

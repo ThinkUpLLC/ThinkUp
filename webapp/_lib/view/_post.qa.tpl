@@ -4,7 +4,7 @@
     <div class="grid_3 right">name</div>
     <div class="grid_3 right">followers</div>
     <div class="grid_3 right">date</div>
-    <div class="grid_11 omega">post</div>
+    <div class="grid_10 omega">post</div>
   </div>
 {/if}
 
@@ -21,7 +21,7 @@
   <div class="grid_3 right small">
     <a href="{$site_root_path}post/?t={$r.question_post_id}&n={$r.network}">{$r.question_adj_pub_date|relative_datetime}</a>
   </div>
-  <div class="grid_12 omega">
+  <div class="grid_10 omega">
     <p>{$r.question|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}</p>
     {if $r.location}
       <div class="small gray">{$r.location}</div>
@@ -45,7 +45,7 @@
   <div class="grid_3 right small">
      <a href="{$site_root_path}post/?t={$r.answer_post_id}&n={$r.network}">{$r.answer_adj_pub_date|relative_datetime}</a>
   </div>
-  <div class="grid_12 omega">
+  <div class="grid_10 omega">
     <p>{$r.answer|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}</p>
     {if $r.location}
       <div class="small gray">{$r.location}</div>

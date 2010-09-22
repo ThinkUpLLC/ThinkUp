@@ -4,7 +4,7 @@
     <div class="grid_3 right">name</div>
     <div class="grid_3 right">followers</div>
     <div class="grid_3 right">date</div>
-    <div class="grid_12 omega">post</div>
+    <div class="grid_10 omega">post</div>
   </div>
 {/if}
 
@@ -21,7 +21,7 @@
   <div class="grid_3 right small">
     <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime}</a>
   </div>
-  <div class="grid_12 omega">
+  <div class="grid_10 omega">
     <div class="tweet-body">
       {if $t->link->is_image}
         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" alt=""></a></div>
