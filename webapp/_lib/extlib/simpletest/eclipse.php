@@ -4,8 +4,8 @@
  *  @package    SimpleTest
  *  @subpackage Eclipse
  *  @version    $Id: eclipse.php 1723 2008-04-08 00:34:10Z lastcraft $
- */
-/**#@+
+ *
+ *
  * simpletest include files
  */
 include_once 'unit_tester.php';

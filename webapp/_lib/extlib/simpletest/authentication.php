@@ -4,8 +4,8 @@
  *  @package    SimpleTest
  *  @subpackage WebTester
  *  @version    $Id: authentication.php 1720 2008-04-07 02:32:43Z lastcraft $
- */
-/**
+ *
+ *
  *  include http class
  */
 require_once(dirname(__FILE__) . '/http.php');

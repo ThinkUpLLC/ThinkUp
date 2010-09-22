@@ -1,10 +1,33 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/controller/class.RSSController.php
+ *
+ * Copyright (c) 2009-2010 Guillaume Boudreau
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * RSS Controller
  *
  * Launch the crawler, if the last updated date is older than X minutes, then return a valid RSS feed.
  * This will allow users to crawl their ThinkUp instances by subscribing to their ThinkUp RSS feed in any RSS reader.
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  */
 class RSSController extends ThinkUpAuthAPIController {
@@ -17,7 +40,7 @@ class RSSController extends ThinkUpAuthAPIController {
         Utils::defineConstants();
         $this->setContentType('application/rss+xml; charset=UTF-8');
         $this->setViewTemplate('rss.tpl');
-        
+
         $config = Config::getInstance();
         $rss_crawler_refresh_rate = $config->getValue('rss_crawler_refresh_rate');
         if (empty($rss_crawler_refresh_rate)) {
@@ -26,7 +49,7 @@ class RSSController extends ThinkUpAuthAPIController {
 
         $protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
         $base_url = "$protocol://".$_SERVER['HTTP_HOST'].THINKUP_BASE_URL;
-        
+
         $crawler_launched = false;
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $freshest_instance = $instance_dao->getInstanceFreshestOne();
@@ -42,7 +65,7 @@ class RSSController extends ThinkUpAuthAPIController {
             curl_setopt($ch, CURLOPT_HEADER, true);
             $result = curl_exec($ch);
             curl_close($ch);
-            $body = substr($result, strpos($result, "\r\n\r\n")+4); 
+            $body = substr($result, strpos($result, "\r\n\r\n")+4);
             if (strpos($result, 'Content-Type: application/json') && function_exists('json_decode')) {
                 $json = json_decode($body);
                 if (isset($json->error)) {
@@ -56,7 +79,7 @@ class RSSController extends ThinkUpAuthAPIController {
                 $crawler_launched = true;
             }
         }
-        
+
         $items = array();
         $logger = Logger::getInstance();
         // Don't return an item if there is a crawler log defined;
@@ -72,7 +95,7 @@ class RSSController extends ThinkUpAuthAPIController {
         $this->addToView('items', $items);
         $this->addToView('logged_in_user', htmlspecialchars($this->getLoggedInUser()));
         $this->addToView('rss_crawler_refresh_rate', htmlspecialchars($rss_crawler_refresh_rate));
-        
+
         return $this->generateView();
     }
 
@@ -86,7 +109,7 @@ class RSSController extends ThinkUpAuthAPIController {
         // Make sure the crawler log, if specified, is writable; add an item if not
         $config = Config::getInstance();
         $log_location = $config->getValue('log_location');
-        if ($log_location !== FALSE && !is_writable($log_location) && 
+        if ($log_location !== FALSE && !is_writable($log_location) &&
         (file_exists($log_location) || !is_writable(dirname($log_location)))) {
             $title = 'Error: crawler log is not writable';
             $link = $base_url.'rss.php?e=1&d='.urlencode(date('Y-m-d H:i:s'));
@@ -99,7 +122,7 @@ class RSSController extends ThinkUpAuthAPIController {
         }
         return $items;
     }
-    
+
     /**
      * Build an RSS item from a title, link and description.
      * @param string $title

@@ -1,7 +1,30 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/model/class.InstanceMySQLDAO.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Instance MySQL Data Access Object Implementation
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
@@ -292,7 +315,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
             $percent_replies = $result['num_replies'] / $result['num_posts'] * 100.0;
             $percent_links = $result['num_links'] / $result['num_posts'] * 100.0;
         }
-        
+
         return array($posts_per_day, $posts_per_week, $percent_replies, $percent_links);
     }
 
