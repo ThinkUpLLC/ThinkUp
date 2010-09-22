@@ -35,9 +35,6 @@ class CrawlerWebController extends ThinkUpAuthAPIController {
             $config->setValue('log_location', false); //this forces output to just echo to page
             $logger = Logger::getInstance();
             $logger->close();
-
-            // Will make sure any exception catched below appears as plain text, and not as HTML
-            $this->setContentType('text/plain; charset=UTF-8');
         }
 
         try {

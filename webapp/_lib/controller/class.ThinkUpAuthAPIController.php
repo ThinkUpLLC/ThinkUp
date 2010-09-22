@@ -27,8 +27,13 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
         if (empty($as) && $this->isLoggedIn()) {
             return $this->authControl();
         }
-        $this->setContentType("text/plain; charset=UTF-8");
-        throw new UnauthorizedUserException("Unauthorized API call");
+        // Assume if no API key is set, that it's a regular HTML page request
+        if (empty($as)) {
+            parent::control();
+        } else {
+            $this->setContentType("text/plain; charset=UTF-8");
+            throw new UnauthorizedUserException("Unauthorized API call");
+        }
     }
 
     /**

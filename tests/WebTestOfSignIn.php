@@ -2,27 +2,13 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 class WebTestOfSignIn extends ThinkUpWebTestCase {
 
     public function setUp() {
         parent::setUp();
-
-        //Add owner
-        $session = new Session();
-        $cryptpass = $session->pwdcrypt("secretpassword");
-        $q = "INSERT INTO tu_owners (id, email, pwd, is_activated) VALUES (1, 'me@example.com', '".
-        $cryptpass."', 1)";
-        $this->db->exec($q);
-
-        //Add instance
-        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public) VALUES (1, 1234,
-        'thinkupapp', 1)";
-        $this->db->exec($q);
-
-        //Add instance_owner
-        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id) VALUES (1, 1)";
-        $this->db->exec($q);
+        self::buildData();
     }
 
     public function tearDown() {
