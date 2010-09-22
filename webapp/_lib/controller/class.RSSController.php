@@ -1,10 +1,36 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/controller/class.RSSController.php
+ *
+ * Copyright (c) 2009-2010 Guillaume Boudreau
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp.
+ * 
+ * ThinkUp is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * ThinkUp is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with ThinkUp.  If not, see <http://www.gnu.org/licenses/>.
+ *
+*/
+/**
  * RSS Controller
  *
  * Launch the crawler, if the last updated date is older than X minutes, then return a valid RSS feed.
  * This will allow users to crawl their ThinkUp instances by subscribing to their ThinkUp RSS feed in any RSS reader.
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  */
 class RSSController extends ThinkUpAuthAPIController {
