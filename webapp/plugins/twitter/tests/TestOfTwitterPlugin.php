@@ -103,4 +103,10 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $links_tab_dataset = $links_tab_datasets[0];
         $this->assertEqual($links_tab_dataset->name, "links");
     }
+
+    public function testRepliesOrdering() {
+        $this->assertEqual(TwitterPlugin::repliesOrdering('default'), 'is_reply_by_friend DESC, follower_count DESC');
+        $this->assertEqual(TwitterPlugin::repliesOrdering('location'), 'geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count DESC');
+        $this->assertEqual(TwitterPlugin::repliesOrdering(''), 'is_reply_by_friend DESC, follower_count DESC');
+    }
 }

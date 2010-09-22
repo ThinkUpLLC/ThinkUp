@@ -346,4 +346,18 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         return $child_tabs;
     }
+    
+    /**
+     * Defines the ordering of replies in the post page (/post/?t=...)
+     * 
+     * @param $order_by Order by distance ('location') or not ('default')
+     * @return string Ordering, to be used in a SQL 'ORDER BY' statement
+     */
+    public static function repliesOrdering($order_by) {
+        if ($order_by == 'location') {
+            return "geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count DESC";
+        } else {
+            return "is_reply_by_friend DESC, follower_count DESC";
+        }
+    }
 }

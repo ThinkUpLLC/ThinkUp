@@ -23,6 +23,8 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
 
 /**
  * Test of PostMySQL DAO implementation
@@ -290,6 +292,26 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'This post should not be on the public timeline', 'web', '2006-03-01 00:00:00');";
         PDODAO::$PDO->exec($q);
 
+        //To test ordering of replies on Facebook
+        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
+        (144, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
+        'This is a Facebook post', '', '2006-01-01 00:00:00', 2, 0, 'facebook');";
+        PDODAO::$PDO->exec($q);
+
+        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, is_reply_by_friend, in_reply_to_post_id, 
+        location, reply_retweet_distance, is_geo_encoded, network) 
+        VALUES (145, 20, 'user1', 'User 1', 'avatar.jpg', '@ev Cool!', '', 
+        '2006-01-03 00:00:00', 0, 0, 1, 144, 'New Delhi, Delhi, India', 0, 1, 'facebook');";
+        PDODAO::$PDO->exec($q);
+
+        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, is_reply_by_friend, in_reply_to_post_id, 
+        location, reply_retweet_distance, is_geo_encoded, network) 
+        VALUES (145, 23, 'user3', 'User 3', 'avatar.jpg', '@ev Rock on!', '', 
+        '2006-03-02 00:00:00', 0, 0, 0, 144, 'New Delhi, Delhi, India', 0, 1, 'facebook');";
+        PDODAO::$PDO->exec($q);
     }
 
     public function tearDown() {
@@ -662,6 +684,12 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[1]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
 
         $this->assertEqual($posts[2]->location,'Chennai, Tamil Nadu, India');
+
+        // Test date ordering for Facebook posts
+        $posts = $dao->getRepliesToPost(144, 'facebook');
+        $this->assertEqual(sizeof($posts), 2);
+        $this->assertEqual($posts[0]->post_text, '@ev Rock on!', "post reply");
+        $this->assertEqual($posts[1]->post_text, '@ev Cool!', "post reply");
     }
 
     /**
@@ -989,8 +1017,9 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $page_of_posts = $pdao->getPostsByPublicInstances(3, 15);
 
-        //Assert DAO returns 10 posts
-        $this->assertTrue(sizeof($page_of_posts) == 10);
+        //Assert DAO returns 11 posts on page 3 (with 15 posts per page)
+        //We have 41 posts, so that's 15+15+11
+        $this->assertTrue(sizeof($page_of_posts) == 11);
 
         $this->assertTrue($page_of_posts[0]->post_text == "This is post 9");
         $this->assertTrue($page_of_posts[9]->post_text == "This is post 0");
@@ -1004,7 +1033,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $totals = $pdao->getTotalPagesAndPostsByPublicInstances(15);
 
-        $this->assertTrue($totals["total_posts"] == 40);
+        $this->assertTrue($totals["total_posts"] == 41);
         $this->assertTrue($totals["total_pages"] == 3);
     }
 

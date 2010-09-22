@@ -154,11 +154,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
-        if ($order_by == 'location') {
-            $q .= " ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
-        } else {
-            $q .= " ORDER BY is_reply_by_friend DESC, follower_count desc ";
+        
+        $class_name = ucfirst($network) . 'Plugin';
+        $ordering = @call_user_func($class_name.'::repliesOrdering', $order_by);
+        if (empty($ordering)) {
+            $ordering = 'pub_date DESC';
         }
+        $q .= ' ORDER BY ' . $ordering;
+        
         $q .= " LIMIT :limit;";
         $vars = array(
             ':post_id'=>$post_id,
