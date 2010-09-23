@@ -37,6 +37,7 @@ class CrawlerWebController extends ThinkUpAuthAPIController {
             // If the request comes from an API call, output JSON instead of HTML
             $this->setContentType('application/json; charset=UTF-8');
         } else {
+            $this->setContentType('text/html; charset=UTF-8');
             $this->setPageTitle("ThinkUp Crawler");
             $this->setViewTemplate('crawler.run-top.tpl');
             $whichphp = exec('which php');

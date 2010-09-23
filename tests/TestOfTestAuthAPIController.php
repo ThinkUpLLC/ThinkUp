@@ -49,19 +49,23 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
 
     public function testControl() {
         $builders = $this->buildData();
+        $config = Config::getInstance();
+        $escaped_site_root_path = str_replace('/', '\/', $config->getValue('site_root_path'));
 
         $controller = new TestAuthAPIController(true);
 
         // No username, no API secret provided
         // This isn't an API call, so present HTML error output
         $results = $controller->go();
-        $this->assertPattern('/You must <a href="\/session\/login.php">log in<\/a> to do this./', $results);
+        $this->assertPattern('/You must <a href="'.$escaped_site_root_path.
+        'session\/login.php">log in<\/a> to do this./', $results);
 
         // No API secret provided
         // This isn't an API call, so present HTML error output
         $_GET['un'] = 'me@example.com';
         $results = $controller->go();
-        $this->assertPattern('/You must <a href="\/session\/login.php">log in<\/a> to do this./', $results);
+        $this->assertPattern('/You must <a href="'.$escaped_site_root_path.
+        'session\/login.php">log in<\/a> to do this./', $results);
 
         // Wrong API secret provided
         $_GET['as'] = 'fail_me';
@@ -92,7 +96,8 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         // And just to make sure, if we 'logout', we should be denied access now
         Session::logout();
         $results = $controller->go();
-        $this->assertPattern('/You must <a href="\/session\/login.php">log in<\/a> to do this./', $results);
+        $this->assertPattern('/You must <a href="'.$escaped_site_root_path.
+        'session\/login.php">log in<\/a> to do this./', $results);
     }
 
     public function testGetLoggedInUser() {
