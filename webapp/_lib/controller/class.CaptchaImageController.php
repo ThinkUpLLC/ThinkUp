@@ -37,17 +37,22 @@ class CaptchaImageController extends ThinkUpController {
      */
     public function go() {
         $config = Config::getInstance();
-        $this->setContentType('image/png');
 
         $random_num = rand(1000,99999);
         $_SESSION['ckey'] = md5($random_num);
 
         $img = rand(1,4);
-        $img_handle = imageCreateFromPNG($config->getValue('source_root_path').
-        "webapp/assets/img/captcha/bg".$img.".PNG");
-        $color = ImageColorAllocate ($img_handle, 0, 0, 0);
-        ImageString ($img_handle, 5, 20, 13, $random_num, $color);
-        ImagePng ($img_handle);
-        ImageDestroy ($img_handle);
+        Utils::defineConstants();
+        $captcha_bg_image_path = THINKUP_WEBAPP_PATH."assets/img/captcha/bg".$img.".PNG";
+        $img_handle = imageCreateFromPNG($captcha_bg_image_path);
+        if ($img_handle===false) {
+            echo 'CAPTCHA image could not be created from '.$captcha_bg_image_path;
+        } else {
+            $this->setContentType('image/png');
+            $color = ImageColorAllocate ($img_handle, 0, 0, 0);
+            ImageString ($img_handle, 5, 20, 13, $random_num, $color);
+            ImagePng ($img_handle);
+            ImageDestroy ($img_handle);
+        }
     }
 }
