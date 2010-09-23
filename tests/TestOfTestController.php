@@ -135,6 +135,20 @@ class TestOfTestController extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test app upgrade status
+     */
+    public function testUpgradeStatus() {
+        $config = Config::getInstance();
+        $upgrade_status_file =
+        $config->getValue('source_root_path') . 'webapp/' . UpgradeController::UPGRADE_IN_PROGRESS_FILE;
+        touch( $upgrade_status_file );
+        $controller = new TestController(true);
+        $results = $controller->go();
+        $this->assertPattern('/<!--  we are upgrading -->/', $results);
+        unlink($upgrade_status_file);
+    }
+
+    /**
      * Test exception handling
      */
     public function testExceptionHandling() {
