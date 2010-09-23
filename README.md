@@ -19,7 +19,7 @@ Currently we're testing a new web-based installer. Give it a try, won't you?
 
 ### System Requirements
 
-- [PHP 5.2](http://php.net) with cURL and GD enabled
+- [PHP 5.2](http://php.net) with cURL, GD, and the PDO MySQL driver enabled
 - [MySQL 5](http://mysql.com/)
 - A public web server. (Twitter authorization requires a public
    callback URL, so you'll need to expose a local dev server to the

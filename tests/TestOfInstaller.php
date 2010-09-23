@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfInstaller.php
  *
- * Copyright (c) 2009-2010 Gina Trapani
+ * Copyright (c) 2009-2010 Dwi Widiastuti, Gina Trapani
  *
  * LICENSE:
  *
@@ -28,7 +28,8 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * Test Of Installer
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2010 Dwi Widiastuti, Gina Trapani
+ * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfInstaller extends ThinkUpUnitTestCase {
@@ -92,6 +93,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $dependency = Installer::checkDependency();
         $this->assertTrue($dependency['curl'], 'cURL is installed');
         $this->assertTrue($dependency['gd'], 'gd lib is installed');
+        $this->assertTrue($dependency['pdo'], 'pdo lib is installed');
+        $this->assertTrue($dependency['pdo_mysql'], 'pdo mysql lib is installed');
     }
 
     public function testInstallerCheckPermission() {

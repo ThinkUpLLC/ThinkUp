@@ -168,13 +168,13 @@ class Installer {
     }
 
     /**
-     * Check GD and cURL
+     * Check GD, cURL and PDO extensions are loaded
      *
-     * @param array $libs can be used for testing for failing
+     * @param array $libs For use in tests
      * @return array
      */
     public function checkDependency($libs = array()) {
-        $ret = array('curl' => false, 'gd' => false);
+        $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false);
         // check curl
         if ( extension_loaded('curl') && function_exists('curl_exec') ) {
             $ret['curl'] = true;
@@ -182,6 +182,14 @@ class Installer {
         // check GD
         if ( extension_loaded('gd') && function_exists('gd_info') ) {
             $ret['gd'] = true;
+        }
+        // check PDO
+        if ( extension_loaded('pdo') ) {
+            $ret['pdo'] = true;
+        }
+        // check PDO MySQL
+        if ( extension_loaded('pdo_mysql') ) {
+            $ret['pdo_mysql'] = true;
         }
         // when testing
         if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($libs) ) {

@@ -31,7 +31,7 @@
     <div class="clearfix append_20">
       <div class="grid_22 push_1 clearfix">
         <h2 class="clearfix step_title">Check System Requirements</h2>
-        {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd}
+        {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd && $libs.pdo && $libs.pdo_mysql}
         <p class="success" style="margin-bottom: 30px">
              <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
              You may proceed to the next step.
@@ -82,7 +82,7 @@
         
         <div class="clearfix append_20">
           <div class="grid_6 prefix_5 right">
-            <span class="label {if !$libs.gd} no{/if}">GD lib installed</span>
+            <span class="label {if !$libs.gd} no{/if}">GD installed</span>
           </div>
           <div class="grid_8 prefix_1 left">
             {if $libs.gd}
@@ -98,6 +98,24 @@
         </div>
         {/if}
         
+        <div class="clearfix append_20">
+          <div class="grid_6 prefix_5 right">
+            <span class="label {if !$libs.pdo OR !$libs.pdo_mysql} no{/if}">PDO installed</span>
+          </div>
+          <div class="grid_8 prefix_1 left">
+            {if $libs.pdo AND $libs.pdo_mysql}
+            <span class="value yes">Yes</span>
+            {else}
+            <span class="value no">No</span>
+            {/if}
+          </div>
+        </div>
+        {if !$libs.pdo OR !$libs.pdo_mysql}
+        <div class="clearfix append_20 info_message">
+          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/pdo.installation.php" target="_blank">PDO extension</a> and the <a href="http://php.net/manual/en/ref.pdo-mysql.php" target="_blank">MySQL driver</a> installed on your system.</p>
+        </div>
+        {/if}
+
         <div class="clearfix append_20">
           <div class="grid_6 prefix_5 right">
             {if $permissions_compat}

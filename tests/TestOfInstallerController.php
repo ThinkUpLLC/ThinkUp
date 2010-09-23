@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfInstallerController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Guillaume Boudreau
+ * Copyright (c) 2009-2010 Dwi Widiastuti, Gina Trapani
  *
  * LICENSE:
  *
@@ -21,8 +21,8 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
+ * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
  */
