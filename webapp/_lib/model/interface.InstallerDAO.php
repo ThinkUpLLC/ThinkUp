@@ -83,8 +83,14 @@ interface InstallerDAO {
      * @param str $table_name with prefix
      * @return array Tables indices of $table_name
      */
-
     public function showIndex($table_name);
+
+    /**
+     * Run a sql migration command
+     *
+     * @param str $sql SQL command to execute
+     */
+    public function runMigrationSQL($sql);
 
     /**
      * Diff the current database table structure with desired table structure.
@@ -96,4 +102,11 @@ interface InstallerDAO {
      * @return array Array of 'queries', and 'for_update', what SQL will update the current structure to desired state
      */
     public function diffDataStructure($queries = '', $tables = array());
+
+    /**
+     * Temporary method to determine if database is 64-bit post ID ready
+     * This method will be deleted when proper install upgrader gets released
+     */
+    public function needsSnowflakeUpgrade();
+
 }

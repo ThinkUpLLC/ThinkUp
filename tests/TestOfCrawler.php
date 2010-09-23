@@ -114,6 +114,25 @@ class TestOfCrawler extends ThinkUpUnitTestCase {
         $this->assertNoErrors();
     }
 
+    public function testCrawlUpgrading() {
+        // up app version
+        $config = Config::getInstance();
+        $init_db_version = $config->getValue('THINKUP_VERSION');
+        $config->setValue('THINKUP_VERSION', $config->getValue('THINKUP_VERSION') + 10); //set a high version num
+
+        $builders = $this->buildData();
+        $crawler = Crawler::getInstance();
+        $crawler->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');
+        $crawler->registerCrawlerPlugin('HelloThinkUpPlugin');
+        $this->simulateLogin('admin@example.com', true);
+        $this->expectException(
+        new InstallerException('ThinkUp needs a database migration, so we are unable to run the crawler.'));
+        $crawler->crawl();
+        $this->assertNoErrors();
+        // reset version
+        $config->setValue('THINKUP_VERSION', $init_db_version);
+    }
+    
     private function buildData() {
         $admin_owner_builder = FixtureBuilder::build('owners', array(
             'id' => 1, 

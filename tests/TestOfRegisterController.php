@@ -143,14 +143,3 @@ class Captcha {
         return true;
     }
 }
-
-/**
- * Mock Mailer for test use
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
-class Mailer {
-    public static function mail($to, $subject, $message) {
-        return $message;
-    }
-}

@@ -57,6 +57,15 @@ SQL;
         return $this->getDataRowsAsObjects($ps, 'Owner');
     }
 
+    public function getAdmins() {
+        $q = " SELECT id, full_name, email, is_admin, is_activated, last_login ";
+        $q .= "FROM #prefix#owners WHERE is_admin = 1 AND is_activated = 1 ORDER BY id";
+        $ps = $this->execute($q);
+        $admins = $this->getDataRowsAsObjects($ps, 'Owner');
+        if(count($admins) == 0) { $admins = null; }
+        return $admins;
+    }
+
     public function doesOwnerExist($email) {
         $q = " SELECT email FROM #prefix#owners WHERE email=:email";
         $vars = array(

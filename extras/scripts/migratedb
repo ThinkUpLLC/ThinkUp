@@ -29,6 +29,17 @@ ALTER DATABASE DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 " > build-db_mysql.sql
 $mysqldump --create-options --skip-set-charset --skip-add-drop-table --no-data --skip-add-locks --skip-disable-keys -u $db_user -p$db_password $db_name |egrep -v "(^SET|^/\*\!)" | sed 's/AUTO_INCREMENT=[0-9]*//' | sed "s/\`//g" |  tail -n+7 >> build-db_mysql.sql
 
+
+## set up app db version option
+DB_VERSION=`cat ../../../install/version.php | grep 'THINKUP_VERSION =' | grep  -o '[0-9]*\.[0-9]*'`;
+
+echo "
+--
+-- Insert DB Version
+--
+INSERT INTO tu_options (namespace, option_name, option_value, last_updated, created)
+VALUES ('application_options', 'database_version', '${DB_VERSION}', NOW(), NOW()); " >> build-db_mysql.sql
+
 echo "
 --
 -- Insert default plugin(s)
