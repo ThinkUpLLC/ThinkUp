@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/tests/TestOfTwitterAPIAccessorOAuth.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Dwi Widiastuti, Mark Wilkie
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -22,10 +22,9 @@
 */
 /**
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Dwi Widiastuti, Mark Wilkie
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie
 */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';

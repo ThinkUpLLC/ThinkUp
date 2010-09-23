@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/tests/TestOfTwitterPlugin.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Dwi Widiastuti, Guillaume Boudreau
+ * Copyright (c) 2009-2010 Gina Trapani, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -34,7 +34,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin
  * Test of TwitterPlugin class
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Dwi Widiastuti, Guillaume Boudreau
+ * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

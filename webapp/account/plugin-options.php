@@ -23,7 +23,7 @@
  *
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Dwi Widiastuti, Mark Wilkie
+ * @copyright 2009-2010 Mark Wilkie
  */
 chdir("..");
 require_once 'init.php';

@@ -30,7 +30,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 /**
- * @author ekansh <ekanshpreet[at]gmail[dot]com>
+ * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Ekansh Preet Singh, Mark Wilkie
  */

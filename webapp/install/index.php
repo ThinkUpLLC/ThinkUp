@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/install/index.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Dwi Widiastuti
+ * Copyright (c) 2009-2010 Gina Trapani
  *
  * LICENSE:
  *
@@ -22,7 +22,6 @@
  *
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Dwi Widiastuti
  */

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPluginConfigurationController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Dwi Widiastuti
+ * Copyright (c) 2009-2010 Gina Trapani
  *
  * LICENSE:
  *
@@ -32,7 +32,7 @@ require_once THINKUP_ROOT_PATH.
  * Test of FlickrThumbnailsPluginConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Dwi Widiastuti
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

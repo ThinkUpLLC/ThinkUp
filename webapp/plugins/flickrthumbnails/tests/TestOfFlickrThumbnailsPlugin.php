@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Christoffer Viken, Dwi Widiastuti, Guillaume Boudreau
+ * Copyright (c) 2009-2010 Gina Trapani, Christoffer Viken, Guillaume Boudreau
  *
  * LICENSE:
  *
@@ -23,10 +23,9 @@
 /**
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
- * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Christoffer Viken, Dwi Widiastuti, Guillaume Boudreau
+ * @copyright 2009-2010 Gina Trapani, Christoffer Viken, Guillaume Boudreau
 */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';

@@ -23,7 +23,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Christoffer Viken, unruthless, Dwi Widiastuti, Russell Smith, is0dvil
+ * @copyright 2009-2010 Gina Trapani
  */
 chdir('..');
 require_once 'init.php';

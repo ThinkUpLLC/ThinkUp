@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/tests/TestOfTwitterAuthController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Dwi Widiastuti
+ * Copyright (c) 2009-2010 Gina Trapani
  *
  * LICENSE:
  *
@@ -38,7 +38,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/controller/class.TwitterA
  * Test of TwitterAuthController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Dwi Widiastuti
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

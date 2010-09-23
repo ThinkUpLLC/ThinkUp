@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php
  *
- * Copyright (c) 2009-2010 Dwi Widiastuti, Gina Trapani, ekansh
+ * Copyright (c) 2009-2010 Gina Trapani, Ekansh Preet Singh
  *
  * LICENSE:
  *
@@ -30,7 +30,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.GeoEn
  * Test of TestOfGeoEncoderPluginConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Dwi Widiastuti, Gina Trapani, ekansh
+ * @copyright 2009-2010 Gina Trapani, Ekansh Preet Singh
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */

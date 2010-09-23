@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/hellothinkup/tests/TestOfHelloThinkUpPluginConfigurationController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie, Dwi Widiastuti
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -34,7 +34,7 @@ require_once THINKUP_ROOT_PATH.
  * Test of TestOfHelloThinkUpPluginConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Dwi Widiastuti
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */
