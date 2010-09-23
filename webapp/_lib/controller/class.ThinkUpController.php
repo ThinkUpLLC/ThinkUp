@@ -278,19 +278,28 @@ abstract class ThinkUpController {
      */
     public function go() {
         try {
-            $this->initalizeApp();
-            $results = $this->control();
-            if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type, 'text/javascript') === false) {
-                $end_time = microtime(true);
-                $total_time = $end_time - $this->start_time;
-                $profiler = Profiler::getInstance();
-                $this->disableCaching();
-                $profiler->add($total_time, "total page execution time, running ".$profiler->total_queries." queries.");
-                $this->setViewTemplate('_profiler.tpl');
-                $this->addToView('profile_items',$profiler->getProfile());
-                return  $results . $this->generateView();
-            } else  {
-                return $results;
+            if(file_exists(THINKUP_WEBAPP_PATH . UpgradeController::UPGRADE_IN_PROGRESS_FILE)
+            && get_class($this) != 'UpgradeController') {
+                //we are upgrading/running a db migration
+                $this->setViewTemplate('upgrade.running.tpl');
+                return $this->generateView();
+            } else {
+                $this->initalizeApp();
+                $results = $this->control();
+                if ($this->profiler_enabled && !isset($this->json_data) 
+                && strpos($this->content_type, 'text/javascript') === false) {
+                    $end_time = microtime(true);
+                    $total_time = $end_time - $this->start_time;
+                    $profiler = Profiler::getInstance();
+                    $this->disableCaching();
+                    $profiler->add($total_time, 
+                    "total page execution time, running ".$profiler->total_queries." queries.");
+                    $this->setViewTemplate('_profiler.tpl');
+                    $this->addToView('profile_items',$profiler->getProfile());
+                    return  $results . $this->generateView();
+                } else  {
+                    return $results;
+                }
             }
         } catch (Exception $e) {
             date_default_timezone_set('America/Los_Angeles'); //Temporary fix to avoid Smarty warning
