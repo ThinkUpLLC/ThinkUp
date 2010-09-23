@@ -70,16 +70,13 @@ class Loader {
      * @param array $additional_paths Array of strings, additional lookup path for classes
      */
     private static function setLookupPath($additional_paths = null ) {
-        if ( !defined('DS') ) {
-            define('DS', '/');
-        }
         // check two required named constants
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', str_replace("\\", DS, dirname(dirname(dirname(dirname(__FILE__))))) . DS);
+            define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(dirname(dirname(__FILE__))))) .'/');
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            define('THINKUP_WEBAPP_PATH', str_replace("\\", DS, dirname(dirname(dirname(__FILE__)))) . DS);
+            define('THINKUP_WEBAPP_PATH', str_replace("\\",'/', dirname(dirname(dirname(__FILE__)))) .'/');
         }
 
         // set default lookup path for classes

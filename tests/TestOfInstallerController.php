@@ -38,14 +38,11 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
-        if ( !defined('DS') ) {
-            define('DS', DIRECTORY_SEPARATOR);
-        }
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) . DS);
+            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) .'/');
         }
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
         }
         if ( !defined('THINKUP_BASE_URL') ) {
             define('THINKUP_BASE_URL', '/test/script/path/');

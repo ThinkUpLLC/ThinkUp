@@ -33,9 +33,9 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 $RUNNING_ALL_TESTS = true;
 
 Loader::register(array(
-THINKUP_ROOT_PATH . 'tests' . DS,
-THINKUP_ROOT_PATH . 'tests' . DS . 'classes' . DS,
-THINKUP_ROOT_PATH . 'tests' . DS . 'fixtures' .DS
+THINKUP_ROOT_PATH . 'tests/',
+THINKUP_ROOT_PATH . 'tests/classes/',
+THINKUP_ROOT_PATH . 'tests/fixtures/'
 ));
 
 /* PLUGIN TESTS */

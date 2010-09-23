@@ -34,15 +34,12 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 class TestOfInstaller extends ThinkUpUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('Installer class test');
-        if ( !defined('DS') ) {
-            define('DS', DIRECTORY_SEPARATOR);
-        }
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) . DS);
+            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) .'/');
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
         }
 
         if ( !defined('THINKUP_BASE_URL') ) {
@@ -100,14 +97,14 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     public function testInstallerCheckPermission() {
         $perms = Installer::checkPermission();
         $this->assertTrue($perms['compiled_view'], THINKUP_ROOT_PATH .
-                'webapp' . DS . 'view' . DS . 'compiled_view is writeable by the webserver');
+                'webapp/view/compiled_view is writeable by the webserver');
         $this->assertTrue($perms['cache'], THINKUP_ROOT_PATH .
-                'webapp' . DS . 'view' . DS . 'compiled_view' . DS . 'cache is writeable by the webserver');
+                'webapp/view/compiled_view/cache is writeable by the webserver');
     }
 
     public function testInstallerCheckPath() {
         $this->assertTrue(Installer::checkPath(array('source_root_path' => THINKUP_ROOT_PATH,
-                'smarty_path' => THINKUP_WEBAPP_PATH . '_lib'.DS.'extlib' . DS . 'Smarty-2.6.26' . DS . 'libs' . DS)));
+                'smarty_path' => THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.26/libs/')));
     }
 
     public function testInstallerCheckStep1() {

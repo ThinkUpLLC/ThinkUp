@@ -38,9 +38,9 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     public function setUp() {
         parent::setUp();
         Loader::register(array(
-        THINKUP_ROOT_PATH . 'tests' . DS,
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'. DS,
-        THINKUP_ROOT_PATH . 'tests' . DS . 'fixtures'. DS
+        THINKUP_ROOT_PATH . 'tests/',
+        THINKUP_ROOT_PATH . 'tests/classes/',
+        THINKUP_ROOT_PATH . 'tests/fixtures/'
         ));
 
         $config = Config::getInstance();

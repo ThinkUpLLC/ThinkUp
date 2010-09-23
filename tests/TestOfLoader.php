@@ -52,30 +52,29 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
 
         // check default lookup path without additionalPath
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS . 'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS . 'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS . 'model'. DS . 'exceptions' . DS
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/'
         ));
 
         // check special classes
         $this->assertEqual( Loader::getSpecialClasses(),
-        array('Smarty'=>THINKUP_WEBAPP_PATH . '_lib' . DS .'extlib' . DS . 'Smarty-2.6.26' . DS .'libs' . DS .
-         'Smarty.class.php'));
+        array('Smarty'=>THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php'));
     }
 
     public function testLoaderRegisterWithStringAdditionalPath() {
         // Loader with string of path as additional path
-        $loader = Loader::register(array(THINKUP_ROOT_PATH . 'tests' . DS . 'classes'));
+        $loader = Loader::register(array(THINKUP_ROOT_PATH . 'tests/classes'));
 
         // check if Loader is registered to spl autoload
         $this->assertTrue($loader, 'Loader is registered to spl autoload');
 
         // check lookup path with single additionalPath
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model'. DS . 'exceptions' . DS,
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
+        THINKUP_ROOT_PATH . 'tests/classes'
         ));
     }
 
@@ -83,7 +82,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         // Loader with array of path as additional path
         $loader = Loader::register(array(
         THINKUP_ROOT_PATH . 'tests',
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'
+        THINKUP_ROOT_PATH . 'tests/classes'
         ));
 
         // check if Loader is registered to spl autoload
@@ -91,11 +90,11 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
 
         // check lookup path with array additionalPath
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model'. DS . 'exceptions' . DS,
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
         THINKUP_ROOT_PATH . 'tests',
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'
+        THINKUP_ROOT_PATH . 'tests/classes'
         ));
     }
 
@@ -127,17 +126,17 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
     public function testAdditionalPathAfterInitialRegister() {
         Loader::register();
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model'. DS . 'exceptions' . DS,
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
         ));
 
-        Loader::addPath(THINKUP_ROOT_PATH . 'tests' . DS . 'classes');
+        Loader::addPath(THINKUP_ROOT_PATH . 'tests/classes');
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model'. DS . 'exceptions' . DS,
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
+        THINKUP_ROOT_PATH . 'tests/classes'
         ));
     }
 

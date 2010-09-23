@@ -28,15 +28,12 @@
 require_once 'config.tests.inc.php';
 
 //set up 3 required constants
-if ( !defined('DS') ) {
-    define('DS', DIRECTORY_SEPARATOR);
-}
 if ( !defined('THINKUP_ROOT_PATH') ) {
-    define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) . DS);
+    define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) .'/');
 }
 
 if ( !defined('THINKUP_WEBAPP_PATH') ) {
-    define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+    define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
 }
 
 if ( !defined('TESTS_RUNNING') ) {
@@ -47,7 +44,7 @@ if ( !defined('TESTS_RUNNING') ) {
 require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
 
 Loader::register(array(
-THINKUP_ROOT_PATH . 'tests' . DS,
-THINKUP_ROOT_PATH . 'tests' . DS . 'classes' . DS,
-THINKUP_ROOT_PATH . 'tests' . DS . 'fixtures' .DS
+THINKUP_ROOT_PATH . 'tests/',
+THINKUP_ROOT_PATH . 'tests/classes/',
+THINKUP_ROOT_PATH . 'tests/fixtures/'
 ));

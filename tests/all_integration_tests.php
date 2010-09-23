@@ -31,9 +31,9 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
 Loader::register(array(
-THINKUP_ROOT_PATH . 'tests' . DS,
-THINKUP_ROOT_PATH . 'tests' . DS . 'classes' . DS,
-THINKUP_ROOT_PATH . 'tests' . DS . 'fixtures' .DS
+THINKUP_ROOT_PATH . 'tests/',
+THINKUP_ROOT_PATH . 'tests/classes/',
+THINKUP_ROOT_PATH . 'tests/fixtures/'
 ));
 
 /* INTEGRATION TESTS */

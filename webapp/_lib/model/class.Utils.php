@@ -158,11 +158,8 @@ class Utils {
     }
 
     public static function defineConstants() {
-        if ( !defined('DS') ) {
-            define('DS', '/');
-        }
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', str_replace("\\", DS, dirname(dirname(__FILE__))) . DS);
+            define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
