@@ -65,6 +65,12 @@ class Config {
             if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php')) {
                 require THINKUP_WEBAPP_PATH . 'config.inc.php';
                 $this->config = $THINKUP_CFG;
+
+                //set version info...
+                require THINKUP_WEBAPP_PATH . 'install/version.php';
+                $this->config['THINKUP_VERSION']  = $THINKUP_VERSION;
+                $this->config['THINKUP_VERSION_REQUIRED'] =
+                array('php' => $THINKUP_VERSION_REQUIRED['php'], 'mysql' => $THINKUP_VERSION_REQUIRED['mysql']);
             } else {
                 throw new Exception('ThinkUp\'s configuration file does not exist! Try <a href="'.THINKUP_BASE_URL.
                 'install/">installing ThinkUp.</a>');

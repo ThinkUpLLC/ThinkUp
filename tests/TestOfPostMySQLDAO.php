@@ -1178,22 +1178,45 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testPerformSnowflakeUpgrade() {
+        // columns to verify
+        $verify_tables = array('posts' => array('post_id', 'in_retweet_of_post_id','in_reply_to_post_id'),
+        'links' => array('post_id'),'post_errors' => array('post_id'),'users' => array('last_post_id'),
+        'instances' => array('last_post_id'));
         $dao = new PostMySQLDAO();
         $this->assertFalse($dao->needsSnowflakeUpgrade());
         $changed = $dao->performSnowflakeUpgrade();
-        $this->assertEqual( $changed, 0);
-
+        foreach($verify_tables as $key => $value) {
+            foreach($value as $column) {
+                $stmt = PostMysqlDAO::$PDO->query("desc " . $this->prefix . "$key $column");
+                $data = $stmt->fetch();
+                $this->assertPattern('/bigint\(20\)\s+unsigned/i', $data['Type']);
+            }
+        }
+        
         $this->db->exec('ALTER TABLE tu_posts CHANGE post_id post_id bigint(11) NOT NULL;');
         $this->db->exec('ALTER TABLE tu_instances CHANGE last_post_id last_status_id bigint(11) NOT NULL;');
         $this->assertTrue($dao->needsSnowflakeUpgrade());
         $changed = $dao->performSnowflakeUpgrade();
-        $this->assertEqual($changed, 149); //144 posts + 5 instances
+        foreach($verify_tables as $key => $value) {
+            foreach($value as $column) {
+                $stmt = PostMysqlDAO::$PDO->query("desc " . $this->prefix . "$key $column");
+                $data = $stmt->fetch();
+                $this->assertPattern('/bigint\(20\)\s+unsigned/i', $data['Type']);
+            }
+        }
 
         $this->db->exec('ALTER TABLE tu_posts CHANGE post_id post_id bigint(11) NOT NULL;');
         $this->db->exec('ALTER TABLE tu_links CHANGE post_id post_id bigint(11) NOT NULL;');
         $this->db->exec('ALTER TABLE tu_instances CHANGE last_post_id last_status_id bigint(11) NOT NULL;');
         $this->assertTrue($dao->needsSnowflakeUpgrade());
         $changed = $dao->performSnowflakeUpgrade();
-        $this->assertEqual($changed, 230); //225 posts + 5 instances
+        foreach($verify_tables as $key => $value) {
+            foreach($value as $column) {
+                $stmt = PostMysqlDAO::$PDO->query("desc " . $this->prefix . "$key $column");
+                $data = $stmt->fetch();
+                $this->assertPattern('/bigint\(20\)\s+unsigned/i', $data['Type']);
+            }
+        }
+
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/install/upgrade.php
+ * ThinkUp/webapp/_lib/model/exceptions/class.DuplicateOptionException.php
  *
  * Copyright (c) 2009-2010 Mark Wilkie
  *
@@ -21,14 +21,8 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
+ * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Mark Wilkie
- * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
- *
  */
-chdir("..");
-require_once '_lib/model/class.Loader.php';
-Loader::register();
-
-$controller = new UpgradeController();
-echo $controller->go();
+class DuplicateOptionException extends Exception {}

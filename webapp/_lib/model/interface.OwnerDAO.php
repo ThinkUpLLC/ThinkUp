@@ -134,4 +134,12 @@ interface OwnerDAO {
      * @return int Update count
      */
     public function promoteToAdmin($email);
+
+    /**
+     * Gets a list of the admin users
+     *
+     * @return array An array of Owners
+     */
+    public function getAdmins();
+
 }

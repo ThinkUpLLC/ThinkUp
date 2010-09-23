@@ -278,19 +278,28 @@ abstract class ThinkUpController {
      */
     public function go() {
         try {
-            $this->initalizeApp();
-            $results = $this->control();
-            if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type, 'text/javascript') === false) {
-                $end_time = microtime(true);
-                $total_time = $end_time - $this->start_time;
-                $profiler = Profiler::getInstance();
-                $this->disableCaching();
-                $profiler->add($total_time, "total page execution time, running ".$profiler->total_queries." queries.");
-                $this->setViewTemplate('_profiler.tpl');
-                $this->addToView('profile_items',$profiler->getProfile());
-                return  $results . $this->generateView();
-            } else  {
-                return $results;
+            // are we in need of a database migration?
+            $classname = get_class($this);
+            if($classname != 'InstallerController' && UpgradeController::isUpgrading( $this->isAdmin(), $classname) ) {
+                $this->setViewTemplate('upgrade.needed.tpl');
+                return $this->generateView();
+            } else {
+                $this->initalizeApp();
+                $results = $this->control();
+                if ($this->profiler_enabled && !isset($this->json_data)
+                && strpos($this->content_type, 'text/javascript') === false) {
+                    $end_time = microtime(true);
+                    $total_time = $end_time - $this->start_time;
+                    $profiler = Profiler::getInstance();
+                    $this->disableCaching();
+                    $profiler->add($total_time,
+                    "total page execution time, running ".$profiler->total_queries." queries.");
+                    $this->setViewTemplate('_profiler.tpl');
+                    $this->addToView('profile_items',$profiler->getProfile());
+                    return  $results . $this->generateView();
+                } else  {
+                    return $results;
+                }
             }
         } catch (Exception $e) {
             //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings

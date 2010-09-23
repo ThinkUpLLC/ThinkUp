@@ -143,6 +143,11 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         } catch (Exception $e) {
             return false;
         }
+	}
+
+    public function runMigrationSQL($sql) {
+        $ps = $this->execute($sql);
+        $result = $this->getUpdateCount($ps);
     }
 
     public function diffDataStructure($desired_structure_sql_string = '', $existing_tables = array()) {

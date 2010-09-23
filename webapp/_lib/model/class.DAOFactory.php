@@ -107,6 +107,10 @@ class DAOFactory {
         'InstallerDAO' => array (
     //MySQL Version
             'mysql' => 'InstallerMySQLDAO'),
+    //Option MySQL DAO
+        'OptionDAO' => array (
+    //MySQL Version
+            'mysql' => 'OptionMySQLDAO'),    
     //Mutex MySQL DAO
         'MutexDAO' => array (
     //MySQL Version
