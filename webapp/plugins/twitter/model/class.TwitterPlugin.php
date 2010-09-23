@@ -246,8 +246,8 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         if (Session::isLoggedIn()) {
             //Former Friends
             $fftab = new WebappTab("friends-former", "Former", '', $twitter_data_tpl);
-            $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowees", array($instance->network_user_id,
-        'twitter', 15));
+            $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowees", array(
+            $instance->network_user_id, 'twitter', 15));
             $fftab->addDataset($fftabds);
             array_push($child_tabs, $fftab);
 
@@ -302,8 +302,8 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         if (Session::isLoggedIn()) {
             //Former followers
             $fftab = new WebappTab("followers-former", "Former", '', $twitter_data_tpl);
-            $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowers", array($instance->network_user_id,
-        'twitter', 15));
+            $fftabds = new WebappTabDataset("people", 'FollowDAO', "getFormerFollowers", array(
+            $instance->network_user_id, 'twitter', 15));
             $fftab->addDataset($fftabds);
             array_push($child_tabs, $fftab);
         }
@@ -346,10 +346,10 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
 
         return $child_tabs;
     }
-    
+
     /**
      * Defines the ordering of replies in the post page (/post/?t=...)
-     * 
+     *
      * @param $order_by Order by distance ('location') or not ('default')
      * @return string Ordering, to be used in a SQL 'ORDER BY' statement
      */

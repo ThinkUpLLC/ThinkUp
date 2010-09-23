@@ -158,7 +158,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $class_name = ucfirst($network) . 'Plugin';
         $ordering = @call_user_func($class_name.'::repliesOrdering', $order_by);
         if (empty($ordering)) {
-            $ordering = 'pub_date DESC';
+            $ordering = 'pub_date ASC';
         }
         $q .= ' ORDER BY ' . $ordering;
         

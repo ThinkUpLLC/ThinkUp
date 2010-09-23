@@ -3,23 +3,23 @@
  *
  * ThinkUp/tests/TestOfPostMySQLDAO.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie, ekansh, Dwi Widiastuti, Guillaume Boudreau
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  *
  * LICENSE:
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -29,7 +29,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlug
 /**
  * Test of PostMySQL DAO implementation
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie, ekansh, Dwi Widiastuti, Guillaume Boudreau
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -688,8 +688,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // Test date ordering for Facebook posts
         $posts = $dao->getRepliesToPost(144, 'facebook');
         $this->assertEqual(sizeof($posts), 2);
-        $this->assertEqual($posts[0]->post_text, '@ev Rock on!', "post reply");
-        $this->assertEqual($posts[1]->post_text, '@ev Cool!', "post reply");
+        $this->assertEqual($posts[0]->post_text, '@ev Cool!', "post reply");
+        $this->assertEqual($posts[1]->post_text, '@ev Rock on!', "post reply");
     }
 
     /**
@@ -1117,7 +1117,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($page_of_posts), 11, "Should be ".sizeof($page_of_posts));
         $this->assertEqual($page_of_posts[0]->post_text, "This is link post 9", $page_of_posts[0]->post_text .
         " == This is link post 9");
-        //$this->assertEqual($page_of_posts[9]->post_text, "This is link post 0", $page_of_posts[9]->post_text . " == This is link post 0");
     }
 
     /**
