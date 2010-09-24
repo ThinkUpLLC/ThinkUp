@@ -3,11 +3,11 @@ a, a:link, a:visited {text-decoration: none;color: #416A93;outline: none;}
 a:hover {text-decoration : none;color : red;}
 /*a:visited {color : black;text-decoration: underline;}*/
 
-.bt {border-top: 1px solid #333;}
-.br {border-right: 1px solid #333;}
-.bb {border-bottom: 1px solid #333;}
-.bl {border-left: 1px solid #333;}
-.border-all {border: 1px solid #333;}
+.bt {border-top: 1px solid #CCC;}
+.br {border-right: 1px solid #CCC;}
+.bb {border-bottom: 1px solid #CCC;}
+.bl {border-left: 1px solid #CCC;padding-left:10px;}
+.border-all {border: 1px solid #CCC;}
 
 .round-tl {-moz-border-radius-topleft: 10px;-webkit-border-top-left-radius: 10px;}
 .round-tr {-moz-border-radius-topright: 10px;-webkit-border-top-right-radius: 10px;}
@@ -156,7 +156,7 @@ text-align: center;
 #nav-sidebar h2 a {color : black;}
 #nav-sidebar {font-size: small; color: #999;}
 #nav-sidebar ul {list-style-type: none; padding-bottom : 20px;}
-#nav-sidebar li {list-style-type: none; padding-top: 2px; padding-bottom : 2px;}
+#nav-sidebar li {list-style-type: none; padding-top: .5em; padding-bottom:.5em;line-height: 1em;color: #6184B5}
 #nav-sidebar a {color: #666;}
 #nav-sidebar ul.side-subnav li:hover {color: white;background-color: #E6E6E6;}
 #top-level-sidenav ul.side-subnav li:before {content : "";}

@@ -18,6 +18,7 @@
 {else}
 <div class="clearfix" id="locationRetweets">
 {/if}
+
   <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
     <div class="grid_1 alpha">
       <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
@@ -39,7 +40,8 @@
     </div>
     <div class="grid_3 right small">
       {if $t->network == 'twitter'}
-      <a href="http://twitter.com/{$t->author_username}/statuses/{$t->post_id}">
+      <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">
+      {* <a href="http://twitter.com/{$t->author_username}/statuses/{$t->post_id}"> *}
         {$t->adj_pub_date|relative_datetime} ago
       </a>
       {else}
@@ -48,7 +50,7 @@
     </div>
     <div class="grid_9">
       {if $t->link->is_image}
-        <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
+        <div class="pic float-l"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
       {/if}
       <p>
         {if $t->post_text}
@@ -65,9 +67,9 @@
         {/if}
       </p>
       {if $t->link->expanded_url and !$t->link->is_image and ($t->link->expanded_url != $t->link->url)}
-        <small>
+        <div class="small">
           <a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a>
-        </small>
+        </div>
       {/if}
       <div class="small gray">
         {if $t->is_geo_encoded < 2}
@@ -98,5 +100,7 @@
         &#160;
       {/if}
     </div>
+
   </div>
+  
 </div>

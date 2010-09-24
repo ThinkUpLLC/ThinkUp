@@ -61,7 +61,7 @@
   <!-- custom css -->
   {literal}
   <style>
-  .line { background:url('{/literal}{$site_root_path}{literal}assets/img/border-line-470.gif') no-repeat center bottom;
+  .line { background:url('{/literal}{$site_root_path}{literal}assets/img/border-line-790.gif') no-repeat center bottom;
   margin: 8px auto;
   height: 1px;
   }

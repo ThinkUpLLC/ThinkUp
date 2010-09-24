@@ -1,18 +1,25 @@
-<div class="">
+<div class="float-l">
+
   {if $description}
-    {if $is_searchable}
-        <a href="#" class="grid_search" title="Search" onclick="return false;">
-        <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
-    {/if}
-     <i>{$description}</i>
-     
+    <h2 class="subhead float-l">{$description}</h2>
   {/if}
+
+  {if $is_searchable}
+      <a href="#" class="grid_search" title="Search" onclick="return false;">
+      <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
+  {/if}
+  
 </div>
-    {if $error}
-    <p class="error">
-        {$error}
-    </p>    
-    {/if}
+
+<div style="clear:both"></div>
+
+{if $error}
+<p class="error">
+    {$error}
+</p>    
+{/if}
+
+   
 {if ($display eq 'tweets-all' and not $all_tweets) or 
     ($display eq 'tweets-mostreplies' and not $most_replied_to_tweets) or
     ($display eq 'tweets-mostretweeted' and not $most_retweeted) or
@@ -24,6 +31,7 @@
     </p>
   </div>
 {/if}
+
 {if $all_tweets and $display eq 'tweets-all'}
   {foreach from=$all_tweets key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}

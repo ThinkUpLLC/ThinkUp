@@ -243,7 +243,7 @@ a img {
 
 /* --- DATA GRIDS ----------------------------- */
 
-.header {padding: 10px 0 0 0;font-weight: 500;color: #6184B5;font-size: .8em;/*border-bottom:1px solid #EEE;*/margin-bottom:.5em;}
+.header {padding: 0;font-weight: 500;color: #6184B5;font-size: .8em;/*border-bottom:1px solid #EEE;*/margin-bottom:.5em;}
 .footnote h2 {font-size:1.6em;padding-left:80px;}
 
 /* --- HEADLINES ------------------------------ */
@@ -293,11 +293,12 @@ img.avatar2 {float:left;margin:6px 0 0 0;width:48px;height:48px;}
 img.avatar_sm {margin:.3em 0 0 0;width:30px;height:30px;}
 img.avatar_xsm {margin:.5em 1px 0 0;width:20px;height:20px;}
 img.avatar_overlay {position: relative;left: 15px;top: -15px;width: 40px;height: 40px;}
-img.service-icon, img.service-icon2 {position: relative;width: 16px;height: 16px;top: -16px;left: 29px;}
-img.service-icon2 {left: 32px;}
+img.service-icon, img.service-icon2 {position: relative;width: 16px;height: 16px;top: -16px;left: 27px;}
+img.service-icon2 {left: 30px;top: -12px}
 
-.pic {border: 1px solid #CCC;padding: 5px 0px 0px 5px;}
+.pic img {border: 1px solid #CCC;padding: 5px;margin: 5px 5px 5px 0;}
 /*.pic {float:right;margin:10px 0 10px 10px;border:1px solid #CCC;padding:5px 5px 0 5px;}*/
+img.friend {border: 4px solid #416A93;padding: 4px;}
 
 .promo-thumb {float:left;width:113px;height:150px;margin-top: 13px;margin-left:15px;}
 .promo-thumb .pic img {height:100px;width:100px;}
@@ -315,6 +316,7 @@ img.service-icon2 {left: 32px;}
 #loading_links {visibility:hidden;position:relative;top:-5px;}
 
 /* --- NUMBERS -------------------------------- */
+.post-stats h1 {font-size:2em;margin:0;padding:0;line-height:.9em;}
 
 #keystats {padding:5px;font-size:medium;display:none;}
 .big-number {color:#000;font-size:1.7em;line-height:1.8em;}
