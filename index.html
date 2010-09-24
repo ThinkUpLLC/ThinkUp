@@ -14,6 +14,11 @@
   <script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
   <script type="text/javascript">var site_root_path = '/';</script>
   
+<!--lightbox-->
+<script type="text/javascript" src="assets/js/prototype.js"></script>
+<script type="text/javascript" src="assets/js/scriptaculous.js?load=effects,builder"></script>
+<script type="text/javascript" src="assets/js/lightbox.js"></script>
+<link rel="stylesheet" href="assets/css/lightbox.css" type="text/css" media="screen" />
 
   <!-- custom css -->
   <style>
@@ -70,28 +75,27 @@
 <table>
 <tr>
 <td width="50%" valign="top">
-	<p>ThinkUp captures and archives your posts, replies, forwards, friends, followers, and links on social networks like (but not limited to) Twitter and Facebook. ThinkUp stores this social data in a database you control, and makes it available to search, sort, filter, export, and visualize in useful ways.</p>
+	<p>ThinkUp captures your posts, replies, retweets, friends, followers, and links on social networks like (but not limited to) Twitter and Facebook. ThinkUp stores this social data in a database you control, and makes it available to search, sort, filter, export, and visualize in useful ways.</p>
 
-	<p>ThinkUp is free software licensed under the <a href="http://www.opensource.org/licenses/gpl-2.0.php">GNU GPL</a>, created by <a href="http://ginatrapani.org">Gina Trapani</a>, sponsored by <a href="http://expertlabs.org">Expert Labs</a>, used by <a href="http://expertlabs.org/2010/02/in-support-of-grand-challenges.html">the White House</a>, and built by an enthusiastic community of contributors like you.</p>
+	<p>ThinkUp is a free software project licensed under the <a href="http://www.opensource.org/licenses/gpl-2.0.php">GNU GPL</a>, founded by <a href="http://ginatrapani.org">Gina Trapani</a>, sponsored by <a href="http://expertlabs.org">Expert Labs</a>, used by <a href="http://expertlabs.org/2010/02/in-support-of-grand-challenges.html">the White House</a>, and built by an enthusiastic community of contributors like you.</p>
 	
-<div ><a href="http://github.com/ginatrapani/thinkup/downloads/"><img src="assets/img/zip.png" style="padding-left:15px;float:left"></a><h2 style="font-weight:bold;font-size:150%"><a href="http://github.com/ginatrapani/thinkup/downloads/">Download ThinkUp &darr;</a></h2><small>You'll need a public web server running PHP 5.2 and MySQL 5. <a href="http://github.com/ginatrapani/ThinkUp/blob/master/README.md">See the full list of system requirements.</a></small><br /><br /></div>
+<div ><a href="http://github.com/ginatrapani/thinkup/downloads/"><img src="assets/img/zip.png" style="padding-left:15px;float:left"></a><h2 style="font-weight:bold;font-size:150%"><a href="http://github.com/ginatrapani/thinkup/downloads/">Download ThinkUp</a></h2><small>You'll need a public web server running PHP 5.2 and MySQL 5. <a href="http://github.com/ginatrapani/ThinkUp/blob/master/README.md">See the full list of system requirements.</a></small><br /><br /></div>
 </td>
 <td width="50%" valign="top"><br />
-	<img width="450" src="assets/img/dashboard-screenshot.png">
+	<a href="assets/img/dashboard-screenshot.png" rel="lightbox"><img width="450" src="assets/img/dashboard-screenshot.png"></a>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top"><br />
 	<h1>Features:</h1>
-	<p>Once you've signed into your social network accounts with it, ThinkUp can:</p> 
+	<p>Once you've signed into your social network accounts with it, ThinkUp will:</p> 
 	<ul style="margin-left:50px">
-		<li><strong>Show you all of your replies</strong> to a message, across both Twitter <em>and</em> Facebook.</li> 
+		<li><strong>Archive all of your social data</strong> for your Twitter and Facebook accounts in your own database and make it searchable, sortable, and exportable &mdash; you can let your friends sign in to archive their messages, too.</li> 
+		<li><strong>Show you all of your replies</strong> to a message, across both Twitter <em>and</em> Facebook in a list or on a Google Map.</li> 
 		<li>Show you a <strong>chart of your number of followers</strong> over time.</li> 
 		<li>Display a stream of all photos your friends have posted, or a list of all the links they've tweeted. ThinkUp automatically expands shortened URLs and shows you photos inline!</li> 
 		<li>Sort replies to your tweets or Facebook status updates by the location of your friends who respond.</li> 
-		<li>Automatically <strong>archive your status updates</strong> (tweets) for all of your Twitter accounts &mdash; you can let your friends sign in to archive their messages, too.</li> 
 		<li>Find out <strong>insights about your followers</strong> and friends, like who's most popular or who updates least often.</li> 
-		<li><strong>Archive all of your data</strong> in your own database. That makes it easy to export your status updates, follower lists, or any other data in the future.</li> 
 		<li>Get <strong>detailed statistics about your activity</strong>, such as your average replies per day, or how often you update.</li> 
 		<li>Publish a presentable list of replies to one of your questions, including integration with blogging tools like WordPress.</li> 
 		<li>Whatever else our developer community and plugin authors can dream up.</li> 
@@ -99,10 +103,29 @@
 </td>
 <td width="50%" valign="top">
 		<h1>Screenshots:</h1>
-		<p>&nbsp;<a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d564c970b-popup"><img class="asset asset-image at-xid-6a00d8345409f069e20120a96d564c970b " src="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d564c970b-120wi" alt="ThinkUp-for-breakfast" /></a> <a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d568b970b-popup"><img class="asset asset-image at-xid-6a00d8345409f069e20120a96d568b970b " src="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d568b970b-120wi" alt="ThinkUp" /></a> <a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e201310fd45873970c-popup"><img class="asset asset-image at-xid-6a00d8345409f069e201310fd45873970c " src="http://anil.typepad.com/.a/6a00d8345409f069e201310fd45873970c-120wi" alt="ThinkUp-answers" /></a></p> 
-		<p>&nbsp;<a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d564c970b-popup"><img class="asset asset-image at-xid-6a00d8345409f069e20120a96d564c970b " src="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d564c970b-120wi" alt="ThinkUp-for-breakfast" /></a> <a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d568b970b-popup"><img class="asset asset-image at-xid-6a00d8345409f069e20120a96d568b970b " src="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d568b970b-120wi" alt="ThinkUp" /></a> <a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e201310fd45873970c-popup"><img class="asset asset-image at-xid-6a00d8345409f069e201310fd45873970c " src="http://anil.typepad.com/.a/6a00d8345409f069e201310fd45873970c-120wi" alt="ThinkUp-answers" /></a></p> 
-		<p>&nbsp;<a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d564c970b-popup"><img class="asset asset-image at-xid-6a00d8345409f069e20120a96d564c970b " src="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d564c970b-120wi" alt="ThinkUp-for-breakfast" /></a> <a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d568b970b-popup"><img class="asset asset-image at-xid-6a00d8345409f069e20120a96d568b970b " src="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d568b970b-120wi" alt="ThinkUp" /></a> <a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e201310fd45873970c-popup"><img class="asset asset-image at-xid-6a00d8345409f069e201310fd45873970c " src="http://anil.typepad.com/.a/6a00d8345409f069e201310fd45873970c-120wi" alt="ThinkUp-answers" /></a></p> 
-		<p>&nbsp;<a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d564c970b-popup"><img class="asset asset-image at-xid-6a00d8345409f069e20120a96d564c970b " src="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d564c970b-120wi" alt="ThinkUp-for-breakfast" /></a> <a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d568b970b-popup"><img class="asset asset-image at-xid-6a00d8345409f069e20120a96d568b970b " src="http://anil.typepad.com/.a/6a00d8345409f069e20120a96d568b970b-120wi" alt="ThinkUp" /></a> <a style="display: inline;" onclick="window.open( this.href, '_blank', 'width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0' ); return false" href="http://anil.typepad.com/.a/6a00d8345409f069e201310fd45873970c-popup"><img class="asset asset-image at-xid-6a00d8345409f069e201310fd45873970c " src="http://anil.typepad.com/.a/6a00d8345409f069e201310fd45873970c-120wi" alt="ThinkUp-answers" /></a></p> 
+		<p>&nbsp;
+			<a href="assets/img/screenshots/01installation.png" rel="lightbox[thinkup]" title="ThinkUp offers a three-step, web-based installer so you can get started in minutes."><img src="assets/img/screenshots/thumbs/01installation.png" width="120" height="100" /></a>
+			<a href="assets/img/screenshots/02connecttwitter.png" rel="lightbox[thinkup]" title="Connect ThinkUp to your Twitter account so it can start gathering your social data."><img src="assets/img/screenshots/thumbs/02connecttwitter.png" width="120" height="100" /></a>
+			<a href="assets/img/screenshots/03plugins.png" rel="lightbox[thinkup]" title="All of ThinkUp's functionality is available in the form of modular plugins, which make it easy for users to enable and disable different features and for developers to make ThinkUp even more useful."><img src="assets/img/screenshots/thumbs/03plugins.png" width="120" height="100" /></a>
+</p> 
+
+		<p>&nbsp;
+			<a href="assets/img/screenshots/04publicdashboard.png" rel="lightbox[thinkup]" title="ThinkUp's public dashboard displays an overview of a user's interactions."><img src="assets/img/screenshots/thumbs/04publicdashboard.png" width="120" height="100" /></a>
+			<a href="assets/img/screenshots/05allposts.png" rel="lightbox[thinkup]" title="Click on any link in the sidebar to view lists of information, like all of a user's posts."><img src="assets/img/screenshots/thumbs/05allposts.png" width="120" height="100" /></a>
+			<a href="assets/img/screenshots/06postreplies.png" rel="lightbox[thinkup]" title="See a list of replies to a particular post, sorted by relationship (friends come first), follower count, or published date."><img src="assets/img/screenshots/thumbs/06postreplies.png" width="120" height="100" /></a>
+</p> 
+
+		<p>&nbsp;
+			<a href="assets/img/screenshots/07mapofreplies.png" rel="lightbox[thinkup]" title="Get a Google Map of replies and retweets to a particular post, and see a list of responses sorted by location--that is, how near they are to the original post."><img src="assets/img/screenshots/thumbs/07mapofreplies.png" width="120" height="100" /></a>
+			<a href="assets/img/screenshots/08addingfacebookaccount.png" rel="lightbox[thinkup]" title="Connect your Facebook account to ThinkUp to gather posts and replies for your user profile, or a Facebook page."><img src="assets/img/screenshots/thumbs/08addingfacebookaccount.png" width="120" height="100" /></a>
+			<a href="assets/img/screenshots/09facebookposts.png" rel="lightbox[thinkup]" title="See Facebook posts and replies inside ThinkUp."><img src="assets/img/screenshots/thumbs/09facebookposts.png" width="120" height="100" /></a>
+</p> 
+
+		<p>&nbsp;
+			<a href="assets/img/screenshots/10photosfromfriends.png" rel="lightbox[thinkup]" title="See all the photos your friends have posted on Twitter."><img src="assets/img/screenshots/thumbs/10photosfromfriends.png" width="120" height="100" /></a>
+			<a href="assets/img/screenshots/11leastlikelyfollowers.png" rel="lightbox[thinkup]" title="See a list of all of your 'least likely followers'."><img src="assets/img/screenshots/thumbs/11leastlikelyfollowers.png" width="120" height="100" /></a>
+			<a href="assets/img/screenshots/12conversations.png" rel="lightbox[thinkup]" title="Easily track back-and-forth conversations on Twitter."><img src="assets/img/screenshots/thumbs/12conversations.png" width="120" height="100" /></a>
+</p> 
 		
 </td>
 </tr>
