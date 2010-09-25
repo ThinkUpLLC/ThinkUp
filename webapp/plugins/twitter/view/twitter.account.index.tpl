@@ -28,10 +28,13 @@
 
 <div id="add-account-div" style="display: none;">
 <h2 class="subhead">Add a Twitter account</h2>
-
 <p>Click on this button to authorize ThinkUp to access your Twitter account.</p>
 <a href="{$oauthorize_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkUp on Twitter</a>
 <br /><br /><br />
+</div>
+
+<div id="contact-admin-div" style="display: none;">
+{include file="_plugin.admin-request.tpl"}
 </div>
 
 <!--<p>Alternately, add a public Twitter username for ThinkUp capture data about:</p>
@@ -39,12 +42,16 @@
 
 
 {if $options_markup}
-<div style="border: solid gray 1px;padding:10px;margin:20px">
+<div {if $is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
+<!-- Configure the Twitter Plugin -->
+{if $is_admin}
 <h2 class="subhead">Configure the Twitter Plugin</h2>
 <ol style="margin-left:40px"><li><a href="http://twitter.com/oauth_clients/">Register your ThinkUp application on Twitter</a>.</li>
 <li>Set the callback URL to <pre>http://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/twitter/auth.php</pre></li>
 <li>Enter the Twitter-provided consumer key and secret here.</li></ol>
+{/if}
 <p>
+
 {$options_markup}
 </p>
 </div>
@@ -52,6 +59,10 @@
 <script type="text/javascript">
 if( option_elements['oauth_consumer_key']['value'] && option_elements['oauth_consumer_secret']['value']) {
     $('#add-account-div').show();
+} else {
+    if(! is_admin) {
+        $('#contact-admin-div').show();
+    }
 }
 {/literal}
 </script>

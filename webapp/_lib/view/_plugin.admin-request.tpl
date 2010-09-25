@@ -1,0 +1,1 @@
+<p>This plugin has not been configured. Contact your ThinkUp adminstrator to activate this plugin.</p>

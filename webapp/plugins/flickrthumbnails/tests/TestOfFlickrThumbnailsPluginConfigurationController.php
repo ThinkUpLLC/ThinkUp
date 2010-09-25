@@ -9,17 +9,17 @@
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
@@ -100,6 +100,40 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
         $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         $this->assertPattern('/Flickr API key/', $output);
+    }
+
+    /**
+     * Test config not admin
+     */
+    public function testConfigOptionsNotAdmin() {
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+        // we have a text form element with proper data
+        $this->assertNoPattern('/save options/', $output); // should have no submit option
+        $this->assertNoPattern('/plugin_options_error_flickr_api_key/', $output); // should have no api key
+        $this->assertPattern('/var is_admin = false/', $output); // not a js admin
+    }
+
+    /**
+     * Test config isa admin
+     */
+    public function testConfigOptionsIsAdmin() {
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', $isadmin = true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+        // we have a text form element with proper data
+        $this->assertPattern('/save options/', $output); // should have submit option
+        $this->assertPattern('/plugin_options_error_flickr_api_key/', $output); // should have api key option
+        $this->assertPattern('/var is_admin = true/', $output); // is a js admin
     }
 
     /**

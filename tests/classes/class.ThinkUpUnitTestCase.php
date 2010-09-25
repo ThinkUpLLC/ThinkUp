@@ -67,4 +67,15 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         $this->db->closeConnection($this->conn);
         parent::tearDown();
     }
+    
+    /**
+     * Returns an xml/xhtml document element by id
+     * @param $doc an xml/xhtml document pobject
+     * @param $id element id
+     * @return Element
+     */
+    public function getElementById($doc, $id) {
+        $xpath = new DOMXPath($doc);
+        return $xpath->query("//*[@id='$id']")->item(0);
+    }
 }
