@@ -1,10 +1,19 @@
 <script type="text/javascript">
+{if $is_admin}
 var option_elements = {$option_elements_json};
 var option_not_required = {$option_not_required_json};
 var option_required_message = {$option_required_message_json};
 var plugin_id = '{$plugin_id}';
 var site_root = '{$site_root_path}';
+{/if}
 var is_admin = {if $is_admin}true;{else}false;{/if}
+{assign var='required_values_set' value=true}
+{foreach from=$option_elements key=option_name item=option_obj}
+    {if ! $option_not_required.$option_name && ! $option_obj.value && $required_values_set}
+        {assign var='required_values_set' value=false}
+    {/if}
+{/foreach}
+var required_values_set = {if $required_values_set}true{else}false{/if}
 </script>
 
 <form id="plugin_option_form" onsubmit="return false;">
@@ -29,6 +38,8 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
     </p>
 </div>
 
+{if $is_admin}
+<!-- plugin options form elements -->
 {foreach from=$option_elements key=option_name item=option_obj}
 
     {if $option_headers.$option_name}
@@ -101,11 +112,12 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
 <div style="clear: both;"></div>
 
 {/foreach}
+
+{/if}
+
 <p style="margin-top: 10px;" id="plugin_option_submit_p">
 {if $is_admin}
 <input type="submit" value="save options" />
-{else}
-<b>Note:</b> Editing disabled for non admin users
 {/if}
 </p>
 

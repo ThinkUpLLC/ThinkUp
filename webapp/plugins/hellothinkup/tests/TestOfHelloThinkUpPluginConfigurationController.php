@@ -125,16 +125,6 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // parse our html
         $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
 
-        // we have a text form element with proper data
-        $input_field = $this->getElementById($doc, 'plugin_options_testname');
-        $this->assertTrue($input_field->getAttribute('value'), $plugin_option->columns['option_value']);
-
-        // submit and elemnts should be disbaled
-        //var_dump( $input_field->getAttribute('disabled') );
-        $this->assertTrue($input_field->getAttribute('disabled'));
-        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/Note: Editing disabled for non admin users/', $submit_p->nodeValue);
-
     }
 
     public function testAddTextOptionIsAdmin() {

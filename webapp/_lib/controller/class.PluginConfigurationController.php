@@ -181,6 +181,7 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
             $view_mgr->assign('option_select_visible', $this->option_select_visible);
             $view_mgr->assign('plugin_id', $this->plugin_id);
             $view_mgr->assign('is_admin', $this->isAdmin());
+            $this->addToView('is_admin', $this->isAdmin());
             //$view_mgr->assign('is_admin', false);
             $options_markup = '';
             if ($this->profiler_enabled) {
