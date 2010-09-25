@@ -29,6 +29,7 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
     </p>
 </div>
 
+{if $is_admin}
 {foreach from=$option_elements key=option_name item=option_obj}
 
     {if $option_headers.$option_name}
@@ -101,6 +102,9 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
 <div style="clear: both;"></div>
 
 {/foreach}
+
+{/if}
+
 <p style="margin-top: 10px;" id="plugin_option_submit_p">
 {if $is_admin}
 <input type="submit" value="save options" />

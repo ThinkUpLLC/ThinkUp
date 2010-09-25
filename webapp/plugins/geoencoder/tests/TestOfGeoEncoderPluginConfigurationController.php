@@ -114,7 +114,6 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
 
         // we have a text form element with proper data
         $input_field = $this->getElementById($doc, 'plugin_options_gmaps_api_key');
-        $this->assertTrue($input_field->getAttribute('disabled'));
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
         $this->assertPattern('/Note: Editing disabled for non admin users/', $submit_p->nodeValue);
 
