@@ -65,7 +65,7 @@
  *
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2010 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 
@@ -180,8 +180,7 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
             $view_mgr->assign('option_select_multiple', $this->option_select_multiple);
             $view_mgr->assign('option_select_visible', $this->option_select_visible);
             $view_mgr->assign('plugin_id', $this->plugin_id);
-            $view_mgr->assign('is_admin', $this->isAdmin());
-            //$view_mgr->assign('is_admin', false);
+            $view_mgr->assign('user_is_admin', $this->isAdmin());
             $options_markup = '';
             if ($this->profiler_enabled) {
                 $view_start_time = microtime(true);

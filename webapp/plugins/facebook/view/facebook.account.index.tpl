@@ -47,7 +47,7 @@
     <br />
     {/if}
 
-<h2 class="subhead">Add a Facebook Page</h2>
+
 {foreach from=$owner_instances key=iid item=i name=foo}
   {assign var='facebook_user_id' value=$i->network_user_id}
   {if $user_pages.$facebook_user_id}
@@ -122,14 +122,21 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     };
 </script>
 {/literal}
+
+<div id="contact-admin-div" style="display: none;">
+{include file="_plugin.admin-request.tpl"}
+</div>
+
 {if $options_markup}
-<div style="border: solid gray 1px;padding:10px;margin:20px">
+<div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
+{if $user_is_admin}
 <h2 class="subhead">Configure the Facebook Plugin</h2>
 <ol style="margin-left:40px">
 <li><a href="http://developers.facebook.com/setup/">Create a ThinkUp Facebook application.</a></li>
 <li>Set the Web Site &gt; Site URL to <pre>http://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}</pre></li>
 <li>Set the Advanced &gt; Deauthorize Callback to <pre>http://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}account/?p=facebook</pre></li>
 <li>Enter the Facebook-provided API Key and Application Secret here.</li></ol>
+{/if}
 <p>
 {$options_markup}
 </p>
@@ -137,8 +144,12 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 
 {literal}
 <script type="text/javascript">
-if( option_elements['facebook_api_key']['value'] && option_elements['facebook_api_secret']['value']) {
+if( required_values_set ) {
     $('#add-account-div').show();
+} else {
+    if(! is_admin) {
+        $('#contact-admin-div').show();
+    }
 }
 {/literal}
 </script>

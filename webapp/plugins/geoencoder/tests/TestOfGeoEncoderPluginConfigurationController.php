@@ -3,37 +3,37 @@
  *
  * ThinkUp/webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Ekansh Preet Singh
+ * Copyright (c) 2009-2010 Mark Wilkie, Ekansh Preet Singh
  *
  * LICENSE:
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ *
+ *
+ * Test of TestOfGeoEncoderPluginConfigurationController
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Mark Wilkie, Ekansh Preet Singh
+ * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ *
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.GeoEncoderPluginConfigurationController.php';
 
-/**
- * Test of TestOfGeoEncoderPluginConfigurationController
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Ekansh Preet Singh
- * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
- *
- */
 class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase {
 
     public function __construct() {
@@ -114,10 +114,10 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
 
         // we have a text form element with proper data
         $input_field = $this->getElementById($doc, 'plugin_options_gmaps_api_key');
-        $this->assertTrue($input_field->getAttribute('disabled'));
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/Note: Editing disabled for non admin users/', $submit_p->nodeValue);
+        $this->assertPattern('/^\s+$/', $submit_p->nodeValue); //should be empty, no submit
 
+        //now as an admin...
         $is_admin = 1;
         $this->simulateLogin('admin@example.com', true);
         $build_data = $this->buildController(false);
@@ -126,7 +126,6 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $plugin  = $build_data[2];
         $plugin_option  = $build_data[3];
 
-        // just name, not an admin, so view only
         $output = $controller->go();
 
         $v_mgr = $controller->getViewManager();
@@ -192,6 +191,53 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertEqual($controller->getPluginOption('gmaps_api_key'), '1234');
     }
 
+    /**
+     * Test config not admin
+     */
+    public function testConfigOptionsNotAdmin() {
+        $build_data = $this->buildController();
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
+        $output = $controller->go();
+        // we have a text form element with proper data
+        $this->assertNoPattern('/save options/', $output); // should have no submit option
+        $this->assertNoPattern('/plugin_options_error_gmaps_api_key/', $output); // should have no api key
+        $this->assertPattern('/var is_admin = false/', $output); // not a js admin
+        $this->assertPattern('/var required_values_set = true/', $output); // is configured
+
+        //app not configured
+        $build_data[3]->truncateTable('plugin_options');
+        $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
+        $output = $controller->go();
+        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+    }
+
+    /**
+     * Test config isa admin
+     */
+    public function testConfigOptionsIsAdmin() {
+        $build_data = $this->buildController();
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
+        $output = $controller->go();
+        // we have a text form element with proper data
+        $this->assertPattern('/save options/', $output); // should have submit option
+        $this->assertPattern('/plugin_options_error_gmaps_api_key/', $output); // should have api key option
+        $this->assertPattern('/var is_admin = true/', $output); // is a js admin
+        $this->assertPattern('/var required_values_set = true/', $output); // is configured
+
+        //app not configured
+        $build_data[3]->truncateTable('plugin_options');
+        $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
+        $output = $controller->go();
+        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+
+    }
+
     private function buildController($build_owner=true) {
         $builder_owner = null;
         if ($build_owner) {
@@ -208,8 +254,4 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         return array($controller, $builder_owner, $builder_plugin, $builder_plugin_options);
     }
 
-    protected function getElementById($doc, $id) {
-        $xpath = new DOMXPath($doc);
-        return $xpath->query("//*[@id='$id']")->item(0);
-    }
 }
