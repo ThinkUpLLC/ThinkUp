@@ -2,7 +2,7 @@
 /*
  Plugin Name: GeoEncoder
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/geoencoder/
- Description: Geo encodes location data
+ Description: Fetches lattitude and longitude points for a post or user's location to plot on a Google Map.
  Icon: assets/img/geoencoder_icon.png
  Version: 0.01
  Author: Ekansh Preet Singh, Mark Wilkie
