@@ -72,6 +72,18 @@
 
           <div class="clearfix append_20">
             <div class="grid_5 prefix_3 right">
+              <label>Database Host</label>
+            </div>
+            <div class="grid_10 prefix_1 left">
+              <input type="text" name="db_host" id="db_host"{if isset($db_host)} value="{$db_host}"{/if}>
+              <span class="input_information">This is usually <strong>localhost</strong> or a host name specified by 
+              your hosting provider.</span>
+            </div>
+          </div>
+          
+
+          <div class="clearfix append_20">
+            <div class="grid_5 prefix_3 right">
               <label>Database Name</label>
             </div>
             <div class="grid_10 prefix_1 left">
@@ -111,17 +123,6 @@
                   leave the default settings or check with your hosting provider.
                 </p>
              </div>
-              
-              <div class="clearfix append_20">
-                <div class="grid_5 prefix_3 right">
-                  <label>Database Host</label>
-                </div>
-                <div class="grid_10 prefix_1 left">
-                  <input type="text" name="db_host" id="db_host"{if isset($db_host)} value="{$db_host}"{/if}>
-                  <span class="input_information">This is usually <strong>localhost</strong> or a host name specified by 
-                  your hosting provider.</span>
-                </div>
-              </div>
               
               <div class="clearfix append_20">
                 <div class="grid_5 prefix_3 right">

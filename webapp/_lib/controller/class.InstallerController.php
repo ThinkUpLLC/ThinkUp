@@ -165,10 +165,10 @@ class InstallerController extends ThinkUpController {
             return;
         }
 
-        $this->addToView('db_name', 'thinkup');
-        $this->addToView('db_user', 'username');
-        $this->addToView('db_passwd', 'password');
-        $this->addToView('db_host', 'localhost');
+        $this->addToView('db_name', '');
+        $this->addToView('db_user', '');
+        $this->addToView('db_passwd', '');
+        $this->addToView('db_host', '');
         $this->addToView('db_prefix', 'tu_');
         $this->addToView('db_socket', '');
         $this->addToView('db_port', '');
