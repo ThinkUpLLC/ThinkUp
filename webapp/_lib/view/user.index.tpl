@@ -135,7 +135,7 @@
                       {include file="_post.qa.tpl" t=$t}
                     {/foreach}
                   {else}
-                    ThinkUp has not captured any conversations between {$instance->network_username} and {$profile->user_name}.
+                    ThinkUp has not captured any conversations between {$instance->network_username} and {$profile->username}.
                   {/if}
                 </div>
               </div>
@@ -147,7 +147,7 @@
             <div id="top" class="clearfix">
               <div class="thinkup-canvas container_24">
                 <div class="grid_22 push_1 append_20">
-                  Detailed data about this user's {$profile->follower_count|number_format} followers not yet available in ThinkUp.
+                  Detailed data about {$profile->username}'s {$profile->follower_count|number_format} followers not yet available in ThinkUp.
                 </div>
               </div>
             </div> <!-- end #top -->
@@ -158,7 +158,7 @@
             <div id="top" class="clearfix">
               <div class="thinkup-canvas container_24">
                 <div class="grid_22 push_1 append_20">
-                  Detailed data about this user's {$profile->friend_count|number_format} friends not yet available in ThinkUp.
+                  Detailed data about {$profile->username}'s {$profile->friend_count|number_format} friends not yet available in ThinkUp.
                 </div>
               </div>
             </div> <!-- end #top -->
