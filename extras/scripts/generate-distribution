@@ -1,6 +1,8 @@
 #! /bin/bash
 
 cp -R thinkup/webapp build/.
+cp -R thinkup/COPYING build/webapp/.
+cp -R thinkup/README.md build/webapp/.
 mv build/webapp build/thinkup
 rm -rf build/thinkup/_lib/view/compiled_view/*.tpl.php
 rm -rf build/thinkup/_lib/view/compiled_view/cache/*.tpl
