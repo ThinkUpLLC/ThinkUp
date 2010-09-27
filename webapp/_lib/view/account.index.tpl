@@ -151,7 +151,7 @@ $(function() {
         data: dataString,
         success: function() {
           $('#div' + u).html("<span class='success' id='message" + u + "'></span>");
-          $('#message' + u).html("Added to public timeline!").hide().fadeIn(1500, function() {
+          $('#message' + u).html("Set to public!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
         }
@@ -169,7 +169,7 @@ $(function() {
         data: dataString,
         success: function() {
           $('#div' + u).html("<span class='success' id='message" + u + "'></span>");
-          $('#message' + u).html("Removed from public timeline!").hide().fadeIn(1500, function() {
+          $('#message' + u).html("Set to private!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
         }
