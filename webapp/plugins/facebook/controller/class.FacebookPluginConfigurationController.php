@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
+ *
  * Facebook Plugin Configuration controller
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau, Mark Wilkie
@@ -132,14 +132,14 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         if (isset($_GET["action"]) && $_GET["action"] == "add page" && isset($_GET["facebook_page_id"])
         && isset($_GET["viewer_id"]) && isset($_GET["owner_id"]) && isset($_GET["instance_id"])) {
             $page_data = json_decode(str_replace("\\", "", $_GET["facebook_page_id"]));
-            $messages = self::insertPage($page_data->page_id, $_GET["viewer_id"], $_GET["owner_id"],
-            $_GET["instance_id"], $page_data->name, $page_data->pic_square, $messages);
+            $messages = self::insertPage($page_data->page_id, $_GET["viewer_id"], $_GET["instance_id"],
+            $page_data->name, $page_data->pic_square, $messages);
         }
 
         return $messages;
     }
 
-    protected function insertPage($fb_page_id, $viewer_id, $owner_id, $existing_instance_id, $fb_page_name,
+    protected function insertPage($fb_page_id, $viewer_id, $existing_instance_id, $fb_page_name,
     $fb_page_avatar, $messages) {
         //check if instance exists
         $i = $this->id->getByUserAndViewerId($fb_page_id, $viewer_id, 'facebook');
@@ -154,7 +154,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 }
                 $tokens = $this->oid->getOAuthTokens($existing_instance_id);
                 $session_key = $tokens['oauth_access_token'];
-                $this->oid->insert($owner_id, $instance_id, $session_key);
+                $this->oid->insert($this->owner->id, $instance_id, $session_key);
             }
             if (!$user_in_db) {
                 $val = array();
