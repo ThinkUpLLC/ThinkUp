@@ -1,23 +1,13 @@
-# ThinkUp
+# ThinkUp, social media insights engine
 
-ThinkUp is a free installable web application that captures the insights and expertise of your social network by 
+ThinkUp is a free, installable web application that captures the insights and expertise of your social network by 
 collecting and organizing replies to your conversations on Twitter, Facebook and (soon!) other networks. 
-See screenshots and more at  [http://thinkupapp.com](http://thinkupapp.com)
+Find out more at  [http://thinkupapp.com](http://thinkupapp.com)
 
-ThinkUp is sponsored by [Expert Labs](http://expertlabs.org), led by [Gina Trapani](http://ginatrapani.org), and used 
-to be named ThinkTank and Twitalytic. 
+*WARNING: ThinkUp is in early beta. There may be bugs and security risks involved in running it on your web server. 
+PROCEED AT YOUR OWN RISK!*
 
-*WARNING: Beta code, PROCEED AT YOUR OWN RISK!*
-
-This is not production code. This is an early beta web application. The intended audience is server administrators with 
-experience installing and troubleshooting PHP/MySQL hosted web applications. Right now this code is for 
-experimentation and tinkering only. Do not run on a production server. You have been warned. 
-
-## INSTALL
-
-Currently we're testing a new web-based installer. Give it a try, won't you?
-
-### System Requirements
+## SYSTEM REQUIREMENTS
 
 - [PHP 5.2](http://php.net) with cURL, GD, and the PDO MySQL driver enabled
 - [MySQL 5](http://mysql.com/)
@@ -26,7 +16,9 @@ Currently we're testing a new web-based installer. Give it a try, won't you?
    internet for initial authorization; after that the server doesn't
    have to be publicly available.) 
 
-### Download source code
+## INSTALL
+
+ThinkUp includes a three-step, web-based installer. To use it:
 
 1. Download the [latest distribution](http://github.com/ginatrapani/ThinkUp/downloads) of ThinkUp. 
 2. Extract the zip file into a web-accessible folder.
@@ -50,7 +42,7 @@ documentation, see [the ThinkUp wiki](http://wiki.github.com/ginatrapani/thinkup
 ## LICENSE
 
 ThinkUp's source code is licensed under the
-[GNU General Public License](http://github.com/ginatrapani/thinkup/blob/master/GPL-LICENSE.txt),
+[GNU General Public License](http://www.gnu.org/licenses/gpl.html),
 except for the  external libraries listed below.
 
 ## EXTERNAL LIBRARIES
