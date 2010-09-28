@@ -68,7 +68,8 @@ class TwitterAuthController extends ThinkUpAuthController {
 
             if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
                 $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'],
-                $options['oauth_consumer_key']->option_value, $options['oauth_consumer_secret']->option_value);
+                $options['oauth_consumer_key']->option_value, $options['oauth_consumer_secret']->option_value,
+                $options['num_twitter_errors']->option_value);
 
                 $u = $api->verifyCredentials();
 

@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
+ *
  * Twitter Plugin Configuration Controller
  *
  * Handles plugin configuration requests.
@@ -50,13 +50,13 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $oauth_consumer_key = $this->getPluginOption('oauth_consumer_key');
         $oauth_consumer_secret = $this->getPluginOption('oauth_consumer_secret');
         $archive_limit = $this->getPluginOption('archive_limit');
+        $num_twitter_errors = $this->getPluginOption('num_twitter_errors');
         //Add public user instance
         if (isset($_GET['twitter_username'])) { // if form was submitted
             $logger = Logger::getInstance();
 
-            //Check user exists and is public
             $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret,
-            $archive_limit);
+            $num_twitter_errors);
             $api_call = str_replace("[id]", $_GET['twitter_username'], $api->cURL_source['show_user']);
             list($cURL_status, $data) = $api->apiRequestFromWebapp($api_call);
             if ($cURL_status == 200) {
@@ -140,11 +140,15 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $oauth_consumer_secret = array('name' => 'oauth_consumer_secret', 'label' => 'Consumer secret');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_secret);
         $archive_limit_label = 'Pagination Limit <span style="font-size: 10px;">' .
-            '[<a href="http://dev.twitter.com/pages/every_developer" title="Twitter still maintains a database of all the tweets sent by a user. However, to ensure performance of the site, this artificial limit of 3,200 posts is temporarily in place." '.
-            'target="_blank">?</a>]</span>';
-        $archive_limit = array('name' => 'archive_limit',
-                               'label' => $archive_limit_label, 'default_value' => '3200');
+        '[<a href="http://dev.twitter.com/pages/every_developer" title="Twitter still maintains a database '.
+        'of all the tweets sent by a user. However, to ensure performance of the site, this artificial limit of '.
+        '3,200 posts is temporarily in place." target="_blank">?</a>]</span>';
+        $archive_limit = array('name' => 'archive_limit','label' => $archive_limit_label, 'default_value' => '3200');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $archive_limit);
+        $num_twitter_errors_label = 'Total API Errors to Tolerate';
+        $num_twitter_errors = array('name' => 'num_twitter_errors', 'label' => $num_twitter_errors_label,
+        'default_value' => '5');
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $num_twitter_errors);
 
     }
 }

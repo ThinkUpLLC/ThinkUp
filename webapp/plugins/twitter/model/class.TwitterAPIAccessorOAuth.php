@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
+ *
  * Twitter API Accessor
  * Accesses the Twitter.com API via OAuth authentication.
  *
@@ -38,9 +38,7 @@ class TwitterAPIAccessorOAuth {
     var $oauth_access_token_secret;
     var $next_cursor;
     /**
-     * Total API errors the crawler should tolerate during a given crawler run
-     * @TODO Set this in the Twitter plugin options area
-     * @var int
+     * @var int defaults to 3
      */
     var $total_errors_to_tolerate = 3;
     /**
@@ -51,13 +49,20 @@ class TwitterAPIAccessorOAuth {
     var $total_errors_so_far = 0;
 
     public function __construct($oauth_access_token, $oauth_access_token_secret, $oauth_consumer_key,
-    $oauth_consumer_secret) {
+    $oauth_consumer_secret, $num_twitter_errors) {
         $this->$oauth_access_token = $oauth_access_token;
         $this->$oauth_access_token_secret = $oauth_access_token_secret;
 
         $this->to = new TwitterOAuthThinkUp($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token,
         $this->$oauth_access_token_secret);
         $this->cURL_source = $this->prepAPI();
+
+        $logger = Logger::getInstance();
+        $te = (int) $num_twitter_errors;
+        if (is_integer($te) && $te > 0) {
+            $this->total_errors_to_tolerate = $te;
+        }
+        $logger->logStatus('Errors to tolerate: ' . $this->total_errors_to_tolerate, get_class($this));
     }
 
     public function verifyCredentials() {
@@ -94,8 +99,8 @@ class TwitterAPIAccessorOAuth {
             "credentials"=>"/account/verify_credentials", "block"=>"/blocks/create/[id]", 
             "remove_block"=>"/blocks/destroy/[id]", "messages_received"=>"/direct_messages", 
             "delete_message"=>"/direct_messages/destroy/[id]", "post_message"=>"/direct_messages/new", 
-            "messages_sent"=>"/direct_messages/sent", "bookmarks"=>"/favorites/[id]", 
-            "create_bookmark"=>"/favorites/create/[id]", "remove_bookmark"=>"/favorites/destroy/[id]", 
+            "messages_sent"=>"/direct_messages/sent", "favorites"=>"/favorites/[id]", 
+            "create_favorite"=>"/favorites/create/[id]", "remove_favorite"=>"/favorites/destroy/[id]", 
             "followers_ids"=>"/followers/ids", "following_ids"=>"/friends/ids", "follow"=>"/friendships/create/[id]", 
             "unfollow"=>"/friendships/destroy/[id]", "confirm_follow"=>"/friendships/exists", 
             "show_friendship"=>"/friendships/show", "test"=>"/help/test", 
@@ -249,6 +254,7 @@ class TwitterAPIAccessorOAuth {
                             'post_text'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 
                             'in_reply_to_post_id'=>$xml->in_reply_to_status_id, 
                             'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 'source'=>$xml->source, 
+                            'favorited' => $xml->favorited,
                             'geo'=>(isset($georss)?$georss->point:''), 'place'=>$xml->place->full_name, 
                             'network'=>'twitter');
                         break;
@@ -307,6 +313,7 @@ class TwitterAPIAccessorOAuth {
                                 'favorites_count'=>$item->user->favourites_count, 
                                 'in_reply_to_post_id'=>$item->in_reply_to_status_id, 
                                 'in_reply_to_user_id'=>$item->in_reply_to_user_id, 'source'=>$item->source, 
+                                'favorited' => $xml->favorited,
                                 'geo'=>(isset($georss)?$georss->point:''), 'place'=>$item->place->full_name, 
                                 'network'=>'twitter');
                         }
