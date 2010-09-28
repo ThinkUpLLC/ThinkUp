@@ -95,14 +95,6 @@ interface PostDAO {
     public function getRelatedPosts($post_id, $network = 'twitter', $is_public = false, $count = 350);
 
     /**
-     * Get total number of followers by retweeters
-     * @param int $post_id
-     * @param str $network Defaults to 'twitter'
-     * @return int total followers
-     */
-    public function getPostReachViaRetweets($post_id, $network = 'twitter');
-
-    /**
      * Get posts that author has replied to (for question/answer exchanges)
      * @param int $author_id
      * @param int $count
@@ -120,16 +112,6 @@ interface PostDAO {
      * @return array Back and forth posts
      */
     public function getExchangesBetweenUsers($author_id, $other_user_id, $network = 'twitter');
-
-    /**
-     * Get public replies to post
-     * @param int $post_id
-     * @param str $network
-     * @param str $order_by Order of sorting posts
-     * @param str $unit 'km' or 'mi'
-     * @return array Public posts with author and link objects set
-     */
-    public function getPublicRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km');
 
     /**
      * Check to see if Post is in database
@@ -261,16 +243,6 @@ interface PostDAO {
     public function getMostRepliedToPosts($user_id, $network, $count, $page=1);
 
     /**
-     * Get posts Iterator by a user ordered by reply count desc
-     * @param int $user_id
-     * @param str $network
-     * @param int $count
-     * @return Iterator Posts with link object set
-     */
-    public function getMostRepliedToPostsIterator($user_id, $network, $count);
-
-
-    /**
      * Get posts by a usre ordered by retweet count desc
      * @param int $user_id
      * @param str $network
@@ -287,60 +259,13 @@ interface PostDAO {
      * @return array Posts with link set
      */
     public function getPostsByPublicInstances($page, $count);
-
-    /**
-     * Get a page of posts by public instances ordered by reply_count_cache desc
-     * @param int $page
-     * @param int $count
-     * @return array Posts with link set
-     */
-    public function getMostRepliedToPostsByPublicInstances($page, $count);
-
-    /**
-     * Get a page of posts by public instances ordered by retweet_count_cache desc
-     * @param int $page
-     * @param int $count
-     * @return array Posts with link set
-     */
-    public function getMostRetweetedPostsByPublicInstances($page, $count);
-
-    /**
-     * Get total posts and pages by public instances for a specified number of past days
-     * @param int $count Number of posts per page
-     * @param int $last_x_days 0 for all time (default)
-     * @return array $row['total_posts'], $row['total_pages']
-     */
-    public function getTotalPagesAndPostsByPublicInstances($count, $last_x_days=0);
-
-    /**
-     * Get photo posts by public instances
-     * @param int $page
-     * @param int $count
-     * @return array posts with link set
-     */
-    public function getPhotoPostsByPublicInstances($page, $count);
-
+    
     /**
      * Get total photo posts and pages by public instances
      * @param int $count number of photo posts per page
      * @return array Posts with link set
      */
     public function getTotalPhotoPagesAndPostsByPublicInstances($count);
-
-    /**
-     * Get link posts by public instances
-     * @param int $page
-     * @param int $count number of posts per page
-     * @return array Posts with link set
-     */
-    public function getLinkPostsByPublicInstances($page, $count);
-
-    /**
-     * Get total link posts and pages by public instances
-     * @param int $count number of posts per page
-     * @return array posts with link set
-     */
-    public function getTotalLinkPagesAndPostsByPublicInstances($count);
 
     /**
      * Assign parent replied-to post ID to a given post, and increment/decrement reply count cache totals as needed
@@ -360,17 +285,6 @@ interface PostDAO {
      * @return array Post objects with author set
      */
     public function getOrphanReplies($username, $count, $network = 'twitter');
-
-    /**
-     * Get orphan replies (no in_reply_to_post_id or in_retweet_of_post_id) posted after a potential parent post
-     * @param str $parent_pub_date
-     * @param int $author_user_id
-     * @param str $author_username
-     * @param str $network
-     * @param int $count
-     * @return array Post objects with author set
-     */
-    public function getLikelyOrphansForParent($parent_pub_date, $author_user_id, $author_username, $network, $count);
 
     /**
      * Get stray replied-to posts--posts that are listed in the in_repy_to_post_id field, but aren't in the posts table
@@ -401,30 +315,6 @@ interface PostDAO {
     public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = NULL, $geodata = NULL, $distance = 0);
 
     /**
-     * Check if post is by a public instance
-     * @param int $post_id
-     * @param str $network
-     * @return bool True if post is by a public instance
-     */
-    public function isPostByPublicInstance($post_id, $network);
-
-    /**
-     * Get a page of posts in the last week by public instances ordered by reply_count_cache desc
-     * @param int $page
-     * @param int $count
-     * @return array Posts with link set
-     */
-    public function getMostRetweetedPostsByPublicInstancesInLastWeek($page, $count);
-
-    /**
-     * Get a page of posts in the last week by public instances ordered by retweet_count_cache desc
-     * @param int $page
-     * @param int $count
-     * @return array Posts with link set
-     */
-    public function getMostRepliedToPostsByPublicInstancesInLastWeek($page, $count);
-
-    /**
      * Get specified number of most-replied-to posts by a username on a network
      * @param str $username
      * @param str $network
@@ -441,15 +331,6 @@ interface PostDAO {
      * @return array Posts
      */
     public function getMostRetweetedPostsInLastWeek($username, $network, $count);
-
-    /**
-     * Get specified number of most-retweeted posts by a username on a network
-     * @param str $username
-     * @param str $network
-     * @param int $count
-     * @return array PostIterator
-     */
-    public function getMostRetweetedPostsIterator($username, $network, $count, $days);
 
     /**
      * Calculate how much each client is used by a user on a specific network
