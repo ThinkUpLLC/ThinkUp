@@ -50,13 +50,17 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $oauth_consumer_key = $this->getPluginOption('oauth_consumer_key');
         $oauth_consumer_secret = $this->getPluginOption('oauth_consumer_secret');
         $archive_limit = $this->getPluginOption('archive_limit');
+        $num_twitter_errors = $this->getPluginOption('num_twitter_errors');
         //Add public user instance
         if (isset($_GET['twitter_username'])) { // if form was submitted
             $logger = Logger::getInstance();
 
             //Check user exists and is public
+            // aju -- passing of archive limit into this constructor was a bug? [constructor does not use it]
             $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret,
-            $archive_limit);
+              $num_twitter_errors);
+            // $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret,
+              // $archive_limit);
             $api_call = str_replace("[id]", $_GET['twitter_username'], $api->cURL_source['show_user']);
             list($cURL_status, $data) = $api->apiRequestFromWebapp($api_call);
             if ($cURL_status == 200) {
@@ -145,6 +149,11 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $archive_limit = array('name' => 'archive_limit',
                                'label' => $archive_limit_label, 'default_value' => '3200');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $archive_limit);
+        // aju
+        $num_twitter_errors_label = 'Number of Twitter Errors Tolerated';
+        $num_twitter_errors = array('name' => 'num_twitter_errors',
+                               'label' => $num_twitter_errors_label, 'default_value' => '5');
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $num_twitter_errors);
 
     }
 }

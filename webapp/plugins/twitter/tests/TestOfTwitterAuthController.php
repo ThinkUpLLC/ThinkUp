@@ -115,6 +115,8 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         'option_name'=>'oauth_consumer_key', 'option_value'=>'XXX'));
         $plugn_opt_builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
+        $plugn_opt_builder3 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
 
         $controller = new TwitterAuthController(true);
         $results = $controller->go();

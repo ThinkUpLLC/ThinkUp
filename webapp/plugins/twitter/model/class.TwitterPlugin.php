@@ -54,6 +54,8 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
             $noauth = true;
+            $num_twitter_errors = 
+              isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
             if (isset($tokens['oauth_access_token']) && $tokens['oauth_access_token'] != ''
             && isset($tokens['oauth_access_token_secret']) && $tokens['oauth_access_token_secret'] != '') {
                 $noauth = false;
@@ -63,12 +65,14 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
                 $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH',
                 $options['oauth_consumer_key']->option_value,
                 $options['oauth_consumer_secret']->option_value,
-                $instance, $options['archive_limit']->option_value);
+                $instance, $options['archive_limit']->option_value,
+                $num_twitter_errors);
             } else {
                 $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
                 $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
                 $options['oauth_consumer_secret']->option_value,
-                $instance, $options['archive_limit']->option_value);
+                $instance, $options['archive_limit']->option_value,
+                $num_twitter_errors);
             }
 
             $crawler = new TwitterCrawler($instance, $api);

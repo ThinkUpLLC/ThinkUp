@@ -87,7 +87,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->instance = new Instance($r);
 
         $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key',
-        'fake_secret', $this->instance, 1234);
+        'fake_secret', $this->instance, 1234, 5);
 
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
@@ -106,7 +106,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->instance = new Instance($r);
 
         $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key',
-        'fake_secret', $this->instance, 1234);
+        'fake_secret', $this->instance, 1234, 5);
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
         $this->instance->is_archive_loaded_follows = true;
