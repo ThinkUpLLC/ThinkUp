@@ -130,7 +130,7 @@ text-align: center;
 #close_grid_search_div {text-align: right; margin-right: 10px;}
 #grid_overlay_div { 
     width: 920px; height: 700px; border: solid black 2px; display: none; top: 30px; left: 50%;
-    z-index: 100; margin-left: -460px; position: absolute; background-color: #fff;
+    z-index: 100; margin-left: -536px; position: absolute; background-color: #fff;
 }
 
 /* body overlay div (backround grayout for slick grid search unit */
