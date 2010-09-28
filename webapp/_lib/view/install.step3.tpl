@@ -27,7 +27,7 @@
   </div>
   
   <div id="installer-page" class="container_24 round-all">
-    <img id="dart2" class="dart" alt="" src="{$site_root_path}assets/img/dart_wht.png">
+    <img id="dart3" class="dart" alt="" src="{$site_root_path}assets/img/dart_wht.png">
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
       <h2 class="clearfix step_title">Congratulations!</h2>
