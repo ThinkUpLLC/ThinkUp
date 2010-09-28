@@ -140,18 +140,6 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
             $cnt++;
         }
         $this->assertEqual(2, $cnt, 'count should be 2');
-
-        // getMostRetweetedPostsIterator
-        $dataset = new WebappTabDataset('tweets-mostretweeted', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
-            'getMostRetweetedPostsIterator', array('someuser2', 'twitter', 10, 30) );
-        $iterator = $dataset->retrieveIterator();
-        $this->assertTrue(isset($iterator));
-        $this->assertIsA($iterator, 'Iterator');
-        $cnt = 0;
-        foreach($iterator as $key => $value) {
-            $cnt++;
-        }
-        $this->assertEqual(1, $cnt, 'count should be 1');
     }
 
     /**
