@@ -32,7 +32,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function insert($url, $expanded, $title, $post_id, $network, $is_image = false ){
         $is_image = $this->convertBoolToDB($is_image);
 
-        $q  = " INSERT INTO #prefix#links ";
+        $q  = " INSERT IGNORE INTO #prefix#links ";
         $q .= " (url, expanded_url, title, post_id, network, is_image) ";
         $q .= " VALUES ( :url, :expanded, :title, :post_id, :network, :is_image ) ";
 

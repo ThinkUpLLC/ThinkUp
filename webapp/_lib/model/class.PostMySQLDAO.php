@@ -428,75 +428,90 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function addPost($vals) {
-        if ($this->hasAllRequiredFields($vals)) {
-            if (!$this->isPostInDB($vals['post_id'], $vals['network'])) {
-                //process location information
-                if (!isset($vals['location']) && !isset($vals['geo']) && !isset($vals['place'])) {
-                    $vals['is_geo_encoded'] = 6;
-                }
-                //process reply
-                if (isset($vals['in_reply_to_post_id']) && $vals['in_reply_to_post_id'] != '') {
-                    $replied_to_post = $this->getPost($vals['in_reply_to_post_id'], $vals['network']);
-                    if (isset($replied_to_post)) {
-                        //check if reply author is followed by the original post author
-                        $follow_dao = DAOFactory::getDAO('FollowDAO');
-                        if ($follow_dao->followExists($vals['author_user_id'], $replied_to_post->author_user_id,
-                        $replied_to_post->network)) {
-                            $vals['is_reply_by_friend'] = 1;
-                            $this->logger->logStatus("Found reply by a friend!", get_class($this));
-                        }
-                        $this->incrementReplyCountCache($vals['in_reply_to_post_id'], $vals['network']);
-                        $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"].
-                    "; updating reply cache count";
-                        $this->logger->logStatus($status_message, get_class($this));
-                    }
-                }
-                //process retweet
-                if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '') {
-                    $retweeted_post = $this->getPost($vals['in_retweet_of_post_id'], $vals['network']);
-                    if (isset($retweeted_post)) {
-                        $follow_dao = DAOFactory::getDAO('FollowDAO');
-                        if ($follow_dao->followExists($vals['author_user_id'], $retweeted_post->author_user_id,
-                        $retweeted_post->network)) {
-                            $vals['is_retweet_by_friend'] = 1;
-                            $this->logger->logStatus("Found retweet by a friend!", get_class($this));
-                        }
-                        $this->incrementRepostCountCache($vals['in_retweet_of_post_id'], $vals['network']);
-                        $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
-                    " ID: ".$vals["post_id"]."; updating retweet cache count";
-                        $this->logger->logStatus($status_message, get_class($this));
-                    }
-                }
-                //SQL variables to bind
-                $vars = array();
-                //SQL query
-                $q = "INSERT INTO #prefix#posts SET ";
-                //Set up required fields
-                foreach ($this->REQUIRED_FIELDS as $field) {
-                    $q .= $field."=:".$field.", ";
-                    $vars[':'.$field] = $vals[$field];
-                }
-                //Set up any optional fields
-                foreach ($this->OPTIONAL_FIELDS as $field) {
-                    if (isset($vals[$field]) && $vals[$field] != '') {
-                        $q .= " ".$field."=:".$field.", ";
-                        $vars[':'.$field] = $vals[$field];
-                    }
-                }
-                //Trim off that last comma and space
-                $q = substr($q, 0, (strlen($q)-2));
-                $ps = $this->execute($q, $vars);
-
-                return $this->getUpdateCount($ps);
-            } else {
-                //already in DB
-                return 0;
+      if ($this->hasAllRequiredFields($vals)) {
+        // if (!$this->isPostInDB($vals['post_id'], $vals['network'])) {
+          //process location information
+          if (!isset($vals['location']) && !isset($vals['geo']) && !isset($vals['place'])) {
+            $vals['is_geo_encoded'] = 6;
+          }
+          //process reply
+          if (isset($vals['in_reply_to_post_id']) && $vals['in_reply_to_post_id'] != '') {
+            $replied_to_post = $this->getPost($vals['in_reply_to_post_id'], $vals['network']);
+            if (isset($replied_to_post)) {
+              //check if reply author is followed by the original post author
+              $follow_dao = DAOFactory::getDAO('FollowDAO');
+              if ($follow_dao->followExists($vals['author_user_id'], $replied_to_post->author_user_id,
+              $replied_to_post->network)) {
+                $vals['is_reply_by_friend'] = 1;
+                $this->logger->logStatus("Found reply by a friend!", get_class($this));
+              }
+              // $this->incrementReplyCountCache($vals['in_reply_to_post_id'], $vals['network']);
+              // $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"].
+              //   "; updating reply cache count";
+              // $this->logger->logStatus($status_message, get_class($this));
             }
+          }
+          //process retweet
+          if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '') {
+            $retweeted_post = $this->getPost($vals['in_retweet_of_post_id'], $vals['network']);
+            if (isset($retweeted_post)) {
+              $follow_dao = DAOFactory::getDAO('FollowDAO');
+              if ($follow_dao->followExists($vals['author_user_id'], $retweeted_post->author_user_id,
+              $retweeted_post->network)) {
+                $vals['is_retweet_by_friend'] = 1;
+                $this->logger->logStatus("Found retweet by a friend!", get_class($this));
+              }
+              // $this->incrementRepostCountCache($vals['in_retweet_of_post_id'], $vals['network']);
+              // $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
+              //   " ID: ".$vals["post_id"]."; updating retweet cache count";
+              // $this->logger->logStatus($status_message, get_class($this));
+            }
+          }
+          //SQL variables to bind
+          $vars = array();
+          //SQL query
+          $q = "INSERT IGNORE INTO #prefix#posts SET ";
+          //Set up required fields
+          foreach ($this->REQUIRED_FIELDS as $field) {
+            $q .= $field."=:".$field.", ";
+            $vars[':'.$field] = $vals[$field];
+          }
+          //Set up any optional fields
+          foreach ($this->OPTIONAL_FIELDS as $field) {
+            if (isset($vals[$field]) && $vals[$field] != '') {
+              $q .= " ".$field."=:".$field.", ";
+              $vars[':'.$field] = $vals[$field];
+            }
+          }
+          //Trim off that last comma and space
+          $q = substr($q, 0, (strlen($q)-2));
+          $ps = $this->execute($q, $vars);
+          $res = $this->getUpdateCount($ps);
+
+          //only update the other post records if insert went through. 
+          //This avoids incorrect counts in case of attempt to insert dup.
+          if ($res) {
+            //...
+            if (isset($replied_to_post)) {
+              $this->incrementReplyCountCache($vals['in_reply_to_post_id'], $vals['network']);
+              $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"].
+                "; updating reply cache count";
+              $this->logger->logStatus($status_message, get_class($this));
+            }
+            if (isset($retweeted_post)) {
+              $this->incrementRepostCountCache($vals['in_retweet_of_post_id'], $vals['network']);
+              $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
+                " ID: ".$vals["post_id"]."; updating retweet cache count";
+              $this->logger->logStatus($status_message, get_class($this));
+            }
+          }
+
+          return $res;
         } else {
-            //doesn't have all req'd values
-            return 0;
+          //doesn't have all req'd values
+          return 0;
         }
-    }
+      }
 
     public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true) {
         return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $page);

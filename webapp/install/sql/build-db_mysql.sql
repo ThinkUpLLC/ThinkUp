@@ -93,6 +93,7 @@ CREATE TABLE tu_links (
   is_image tinyint(4) NOT NULL DEFAULT '0',
   error varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (id),
+  UNIQUE KEY url (url,post_id,network),
   KEY is_image (is_image),
   KEY post_id (post_id,network)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -203,6 +204,7 @@ CREATE TABLE tu_posts (
   network varchar(20) NOT NULL DEFAULT 'twitter',
   is_geo_encoded int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
+  UNIQUE KEY postnetwk (post_id,network),
   KEY author_username (author_username),
   KEY pub_date (pub_date),
   KEY author_user_id (author_user_id),
@@ -258,7 +260,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2010-10-19 15:17:19
+-- Dump completed on 2010-10-19 19:45:01
 
 --
 -- Insert default plugin(s)

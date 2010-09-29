@@ -797,7 +797,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testIsPostInDB() {
         $dao = new PostMySQLDAO();
         $this->assertTrue($dao->isPostInDB(129, 'twitter'));
-
+    
         $this->assertTrue(!$dao->isPostInDB(250, 'twitter'));
     }
 
@@ -807,7 +807,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testIsReplyInDB() {
         $dao = new PostMySQLDAO();
         $this->assertTrue($dao->isReplyInDB(138, 'twitter'));
-
+    
         $this->assertTrue(!$dao->isReplyInDB(250, 'twitter'));
     }
 
@@ -1058,8 +1058,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $id += $counter;
             $builders[] = FixtureBuilder::build('posts', array(
-                'id'=>$id,
-                'post_id'=>(144+$counter),
+                'id'=>$id, 
+                'post_id'=>(147+$counter),
                 'author_user_id'=>23,
                 'author_username'=>'user3',
                 'pub_date'=>'-'.$counter.'d',
@@ -1085,7 +1085,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $id += $counter;
             $builders[] = FixtureBuilder::build('posts', array(
             'id'=>$id,
-            'post_id'=>(144+$counter),
+            'post_id'=>(147+$counter),
             'author_user_id'=>23,
             'author_username'=>'user3',
             'pub_date'=>'-'.$counter.'d',
@@ -1195,5 +1195,53 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue($dao->needsSnowflakeUpgrade());
         $changed = $dao->performSnowflakeUpgrade();
         $this->assertEqual($changed, 230); //225 posts + 5 instances
+      }
+
+    /**
+     * test adding a dup, with the IGNORE modifier, check the result.
+     * Set counter higher to avoid clashes w/ prev post inserts.
+     */
+    public function testUniqueConstraint1() {
+      $counter = 1000;
+      $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+      $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+      $q = "INSERT IGNORE INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+      post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
+      ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
+      'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
+      $res = PDODAO::$PDO->exec($q);
+      $this->assertEqual($res, 1);
+
+      $q = "INSERT IGNORE INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+      post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
+      ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
+      'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
+      $res = PDODAO::$PDO->exec($q);
+      $this->assertEqual($res, 0);
+    }
+    
+    /**
+     * test adding a dup w/out the IGNORE modifier; should throw exception on second insert
+     */
+    public function testUniqueConstraint2() {
+      $counter = 1002;
+      $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+      $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+      $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+      post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
+      ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
+      'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
+      $res = PDODAO::$PDO->exec($q);
+
+      $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+      post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
+      ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
+      'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
+      try {
+        $res = PDODAO::$PDO->exec($q);
+      }
+      catch(PDOException $e) {
+          $this->assertPattern('/Integrity constraint violation/', $e->getMessage());
+      }
     }
 }

@@ -20,6 +20,6 @@ Alternately, if you have web-based access to your database, like via PHPMyAdmin,
 
 ## Migration Script Assumptions
 
-The scripts listed here assume you're using the ThinkUp default table prefix `tt_`. 
+The scripts listed here assume you're using the ThinkUp default table prefix `tu_`. 
 
 If you are not, manually modify the script to use your prefix or delete it entirely to match your setup before you run it (or else you'll get table not found errors).

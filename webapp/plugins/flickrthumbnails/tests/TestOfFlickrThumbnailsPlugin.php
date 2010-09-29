@@ -117,8 +117,9 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
         }
 
         //Insert test links (images on Flickr that don't exist, not expanded)
-        $counter = 0;
-        while ($counter < 2) {
+        //avoid dup links.  This change requires an additional test data file.
+        $counter = 40;
+        while ($counter < 42) {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
