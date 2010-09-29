@@ -75,7 +75,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 0;
         while ($counter < 5) {
             $post_id = $counter + 80;
-            $builders[] = FixtureBuilder::build('links', array('url'=>'http://flic.kr/p/'.$counter,
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://flic.kr/p/'.$counter.'e',
             'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 
             'is_image'=>1, 'error'=>'Generic test error message, Photo not found', 
             'expanded_url'=>'', 'error'=>''));
@@ -281,7 +281,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetLinksToExpand() {
         $linkstoexpand = $this->DAO->getLinksToExpand();
-        $this->assertEqual(count($linkstoexpand), 46);
+        $this->assertEqual(count($linkstoexpand), 51);
         $this->assertIsA($linkstoexpand, "array");
     }
 
@@ -301,7 +301,46 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetLinksToExpandByURL() {
         $flickrlinkstoexpand = $this->DAO->getLinksToExpandByUrl('http://flic.kr/');
 
-        $this->assertEqual(count($flickrlinkstoexpand), 5);
+        $this->assertEqual(count($flickrlinkstoexpand), 10);
         $this->assertIsA($flickrlinkstoexpand, "array");
+    }
+
+    /**
+     * test adding a dup, with the IGNORE modifier, check the result.
+     * Set counter higher to avoid clashes w/ prev inserts.
+     */
+    public function testUniqueConstraint1() {
+        $counter = 2000;
+        $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+        $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+        $q  = "INSERT IGNORE INTO tu_links (url, title, clicks, post_id, network, is_image) ";
+        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
+        $res = PDODAO::$PDO->exec($q);
+        $this->assertEqual($res, 1);
+
+        $q  = "INSERT IGNORE INTO tu_links (url, title, clicks, post_id, network, is_image) ";
+        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
+        $res = PDODAO::$PDO->exec($q);
+        $this->assertEqual($res, 0);
+    }
+
+    /**
+     * test adding a dup w/out the IGNORE modifier; should throw exception on second insert
+     */
+    public function testUniqueConstraint2() {
+        $counter = 2002;
+        $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
+        $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
+        $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
+        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
+        $res = PDODAO::$PDO->exec($q);
+
+        $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
+        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
+        try {
+            $res = PDODAO::$PDO->exec($q);
+        } catch(PDOException $e) {
+            $this->assertPattern('/Integrity constraint violation/', $e->getMessage());
+        }
     }
 }
