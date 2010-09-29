@@ -38,7 +38,7 @@
     </p>
     <h3></h3>
     {if $l->container_post->location}
-      <h4 class="tweetstamp">{$l->container_post->location}</h4>
+      <div class="small gray">{$l->container_post->location}</div>
     {/if}
   </div>
   <div class="grid_2 center omega"> 
