@@ -38,13 +38,9 @@
       {/if}    
     </div>
     <div class="grid_3 right small">
-      {if $t->network == 'twitter'}
-      <a href="http://twitter.com/{$t->author_username}/statuses/{$t->post_id}">
+      <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">
         {$t->adj_pub_date|relative_datetime} ago
       </a>
-      {else}
-      {$t->adj_pub_date|relative_datetime} ago
-      {/if}
     </div>
     <div class="grid_9">
       {if $t->link->is_image}
