@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/facebook/model/class.FacebookPlugin.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie, Christoffer Viken, Guillaume Boudreau
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -19,14 +19,12 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
- * @author Christoffer Viken <christoffer[at]viken[dot]me>
- * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Christoffer Viken, Guillaume Boudreau
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie
  */
 class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
     public function crawl() {
@@ -117,6 +115,14 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
         $mrttab->addDataset($mrttabds);
         array_push($child_tabs, $mrttab);
+
+        //Questions tab
+        $qtab = new WebappTab("questions", "Inquiries", "Inquiries, or posts with a question mark in them",
+        $fb_data_tpl);
+        $qtabds = new WebappTabDataset("all_facebook_posts", 'PostDAO', "getAllQuestionPosts",
+        array($instance->network_user_id, $instance->network, 15, "#page_number#"));
+        $qtab->addDataset($qtabds);
+        array_push($child_tabs, $qtab);
 
         return $child_tabs;
     }

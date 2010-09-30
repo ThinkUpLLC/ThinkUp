@@ -162,6 +162,16 @@ interface PostDAO {
     public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true);
 
     /**
+     * Get all posts by an author given an author ID that contain a question mark
+     * @param int $author_id
+     * @param str  $network
+     * @param int $count
+     * @param int $page
+     * @return array Posts by author with a question mark in them with link set
+     */
+    public function getAllQuestionPosts($author_id, $network, $count, $page=1);
+
+    /**
      * Get all posts by an author given an author ID
      * @param int $author_id
      * @param str  $network
@@ -259,7 +269,7 @@ interface PostDAO {
      * @return array Posts with link set
      */
     public function getPostsByPublicInstances($page, $count);
-    
+
     /**
      * Get total photo posts and pages by public instances
      * @param int $count number of photo posts per page

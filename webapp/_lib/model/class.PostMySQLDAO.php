@@ -154,14 +154,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
         }
-        
+
         $class_name = ucfirst($network) . 'Plugin';
         $ordering = @call_user_func($class_name.'::repliesOrdering', $order_by);
         if (empty($ordering)) {
             $ordering = 'pub_date ASC';
         }
         $q .= ' ORDER BY ' . $ordering;
-        
+
         $q .= " LIMIT :limit;";
         $vars = array(
             ':post_id'=>$post_id,
@@ -356,7 +356,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         return $posts_replied_to;
     }
-    
+
     public function isPostInDB($post_id, $network) {
         $q = "SELECT post_id FROM  #prefix#posts ";
         $q .= " WHERE post_id = :post_id AND network=:network;";
@@ -500,8 +500,35 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true) {
         return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $page);
     }
+
     public function getAllPostsIterator($author_id, $network, $count, $include_replies=true) {
         return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $iterator = true);
+    }
+
+    public function getAllQuestionPosts($author_id, $network, $count, $page=1) {
+        $start_on_record = ($page - 1) * $count;
+        $order_by="pub_date";
+        $q = "SELECT * FROM ( SELECT p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "WHERE p.author_user_id = :author_id AND p.network=:network ";
+        $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) ) AS p ";
+        $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id AND p.network = l.network ";
+        $q .= "WHERE post_text LIKE '%?%' ";
+        $q .= "ORDER BY ".$order_by." DESC ";
+        $q .= "LIMIT :start_on_record, :limit";
+        $vars = array(
+            ':author_id'=>$author_id,
+            ':network'=>$network,
+            ':limit'=>$count,
+            ':start_on_record'=>(int)$start_on_record
+        );
+        $ps = $this->execute($q, $vars);
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+        foreach ($all_rows as $row) {
+            $posts[] = $this->setPostWithLink($row);
+        }
+        return $posts;
     }
 
     /**
@@ -853,7 +880,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         return $all_posts;
     }
-    
+
     public function getPostsByPublicInstances($page, $count) {
         return $this->getPostsByPublicInstancesOrderedBy($page, $count, "pub_date");
     }

@@ -24,7 +24,7 @@
     </p>
   </div>
 {/if}
-{if $all_tweets and $display eq 'tweets-all'}
+{if $all_tweets and ($display eq 'tweets-all' or $display eq 'tweets-questions')}
   {foreach from=$all_tweets key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}
   {/foreach}

@@ -19,6 +19,13 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Test of PostMySQL DAO implementation
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -26,13 +33,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
 
-/**
- * Test of PostMySQL DAO implementation
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     /**
      *
@@ -326,6 +326,25 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
     }
 
+    public function testGetAllQuestionPosts() {
+        //Add a question
+        $question_builder = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
+        'post_text'=>'I need a new cell phone. What should I buy?', 'network'=>'twitter', 'in_reply_to_post_id'=>0,
+        'pub_date'=>'-1d'));
+
+        $dao = new PostMySQLDAO();
+        $questions = $dao->getAllQuestionPosts(13, 'twitter', 10);
+        $this->assertTrue(sizeof($questions), 1);
+        $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?' );
+
+        //Add another question
+        $question_builder1 = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
+        'post_text'=>'Best sushi in NY? downtown', 'network'=>'twitter', 'in_reply_to_post_id'=>0, 'pub_date'=>'-2d'));
+        $questions = $dao->getAllQuestionPosts(13, 'twitter', 10);
+        $this->assertTrue(sizeof($questions), 1);
+        $this->assertEqual($questions[1]->post_text, 'Best sushi in NY? downtown' );
+        $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?' );
+    }
     /**
      * Test getOrphanReplies
      */
@@ -339,7 +358,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($replies), 10);
         $this->assertEqual($replies[0]->post_text, "Hey @ev and @jack should fix Twitter - post 9");
     }
-     
+
     /**
      * Test getStrayRepliedToPosts
      */
@@ -350,7 +369,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[0]["in_reply_to_post_id"], 150);
         $this->assertEqual($posts[1]["in_reply_to_post_id"], 151);
     }
-     
+
     /**
      * Test getMostRepliedToPosts
      */
@@ -364,7 +383,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $prev_count = $post->reply_count_cache;
         }
     }
-    
+
     /**
      * Test getMostRetweetedPosts
      */
@@ -430,7 +449,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         }
         $this->assertEqual($cnt, 10);
     }
-    
+
     /**
      * Test getStatusSources
      */
@@ -937,7 +956,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue($totals["total_posts"] == 40);
         $this->assertTrue($totals["total_pages"] == 3);
     }
-    
+
     /**
      * Test getTotalPostsByUser
      */
@@ -954,18 +973,18 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testAssignParent() {
         //Add two "parent" posts
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (550, 19, 'linkbaiter', 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (550, 19, 'linkbaiter',
         'Link Baiter', 'avatar.jpg', 'This is parent post 1', 'web', '2006-03-01 00:01:00', 1, 0);";
         PDODAO::$PDO->exec($q);
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (551, 19, 'linkbaiter', 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (551, 19, 'linkbaiter',
         'Link Baiter', 'avatar.jpg', 'This is parent post 2', 'web', '2006-03-01 00:01:00', 0, 0);";
         PDODAO::$PDO->exec($q);
 
         //Add a post with the parent post 550
         $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id) 
-        VALUES (552, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is a reply with the wrong parent', 
+        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id)
+        VALUES (552, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is a reply with the wrong parent',
         'web', '2006-03-01 00:01:00', 0, 0, 550);";
         PDODAO::$PDO->exec($q);
 
@@ -998,7 +1017,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $id += $counter;
             $builders[] = FixtureBuilder::build('posts', array(
-                'id'=>$id, 
+                'id'=>$id,
                 'post_id'=>(144+$counter),
                 'author_user_id'=>23,
                 'author_username'=>'user3',
@@ -1024,7 +1043,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $id += $counter;
             $builders[] = FixtureBuilder::build('posts', array(
-                'id'=>$id, 
+                'id'=>$id,
                 'post_id'=>(144+$counter),
                 'author_user_id'=>23,
                 'author_username'=>'user3',

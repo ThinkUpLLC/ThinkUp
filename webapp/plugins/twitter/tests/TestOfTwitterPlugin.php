@@ -19,6 +19,14 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Test of TwitterPlugin class
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
  */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
@@ -30,14 +38,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
-/**
- * Test of TwitterPlugin class
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
     var $logger;
     var $webapp;
@@ -69,7 +69,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $post_tabs = $this->webapp->getChildTabsUnderPosts($instance);
 
-        $this->assertEqual(sizeof($post_tabs), 3, "Test number of post tabs");
+        $this->assertEqual(sizeof($post_tabs), 4, "Test number of post tabs");
         $first_post_tab = $post_tabs[0];
         $this->assertEqual($first_post_tab->short_name, "tweets-all", "Test short name of first post tab");
         $this->assertEqual($first_post_tab->name, "All Tweets", "Test name of first post tab");

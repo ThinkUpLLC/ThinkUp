@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
+ *
  * Twitter Plugin
  *
  * Twitter crawler and webapp plugin retrieves data from Twitter and displays it.
@@ -54,8 +54,8 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
             $noauth = true;
-            $num_twitter_errors = 
-              isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
+            $num_twitter_errors =
+            isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
             if (isset($tokens['oauth_access_token']) && $tokens['oauth_access_token'] != ''
             && isset($tokens['oauth_access_token_secret']) && $tokens['oauth_access_token_secret'] != '') {
                 $noauth = false;
@@ -137,6 +137,14 @@ class TwitterPlugin implements CrawlerPlugin, WebappPlugin {
         'getAllPostsIterator', array($instance->network_user_id, 'twitter', GridController::MAX_ROWS) );
         $alltab->addDataset($alltabds);
         array_push($child_tabs, $alltab);
+
+        //Questions tab
+        $qtab = new WebappTab("tweets-questions", "Inquiries", "Inquiries, or tweets with a question mark in them",
+        $twitter_data_tpl);
+        $qtabds = new WebappTabDataset("all_tweets", 'PostDAO', "getAllQuestionPosts",
+        array($instance->network_user_id, 'twitter', 15, "#page_number#"));
+        $qtab->addDataset($qtabds);
+        array_push($child_tabs, $qtab);
 
         // Most replied-to tab
         $mrttab = new WebappTab("tweets-mostreplies", "Most replied-to", "Tweets with most replies", $twitter_data_tpl);

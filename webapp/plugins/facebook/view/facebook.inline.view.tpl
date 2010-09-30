@@ -17,7 +17,7 @@
   </div>
 {/if}
 
-{if $all_facebook_posts and $display eq 'all_facebook_posts'}
+{if $all_facebook_posts and ($display eq 'all_facebook_posts' OR $display eq 'questions')}
   {foreach from=$all_facebook_posts key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}
   {/foreach}
