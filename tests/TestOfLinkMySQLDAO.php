@@ -104,10 +104,10 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
             $q  = "INSERT INTO tu_posts ( ";
-            $q .= " post_id, author_user_id, author_username, author_fullname ";
+            $q .= " post_id, author_user_id, author_username, author_fullname, post_text ";
             $q .= " ) ";
-            $q .= "VALUES ('$post_id', $user_id, 'user$counter', 'User$counter Name$counter' ";
-            $q .= " );";
+            $q .= "VALUES ('$post_id', $user_id, 'user$counter', 'User$counter Name$counter',
+            'Post by user$counter' );";
             $this->db->exec($q);
             $counter++;
         }
@@ -249,6 +249,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $uid = $posts[$num]['uid'];
             $this->assertEqual($val->container_post->post_id, $pid);
             $this->assertEqual($val->container_post->author_user_id, $uid);
+            $this->assertEqual($val->container_post->post_text, 'Post by '.$val->container_post->author_username);
+            $this->assertEqual($val->container_post->in_reply_to_post_id, 0);
             $this->assertTrue($posts[$num]['fr']);
         }
     }
@@ -277,6 +279,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $uid = $posts[$num]['uid'];
             $this->assertEqual($val->container_post->post_id, $pid);
             $this->assertEqual($val->container_post->author_user_id, $uid);
+            $this->assertEqual($val->container_post->post_text, 'Post by '.$val->container_post->author_username);
+            $this->assertEqual($val->container_post->in_reply_to_post_id, 0);
             $this->assertTrue($posts[$num]['fr']);
         }
     }

@@ -118,6 +118,15 @@ class ThinkUpWebTestCase extends WebTestCase {
         $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (16, 12, '1/1/2006');";
         $this->db->exec($q);
 
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (17, 13, '1/1/2006');";
+        $this->db->exec($q);
+
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (18, 13, '1/1/2006');";
+        $this->db->exec($q);
+
+        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (19, 13, '1/1/2006');";
+        $this->db->exec($q);
+
         $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (13, 'ev', 1);";
         $this->db->exec($q);
 

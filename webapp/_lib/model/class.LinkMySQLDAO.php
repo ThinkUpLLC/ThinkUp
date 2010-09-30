@@ -109,7 +109,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function getLinksByFriends($user_id, $network) {
-        $q  = "SELECT l.*, p.*, pub_date - interval 8 hour AS adj_pub_date ";
+        $q  = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#links AS l ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
@@ -124,27 +124,47 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
-        return $this->getDataRowsAsObjects($ps, "Link");
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        $links = array();
+        foreach ($all_rows as $row) {
+            $links[] = $this->setLinkWithPost($row);
+        }
+        return $links;
+    }
+
+    /**
+     * Add post object to link
+     * @param array $row
+     * @return Link object with post member object set
+     */
+    private function setLinkWithPost($row) {
+        $link = new Link($row);
+        $post = new Post($row);
+        $link->container_post = $post;
+        return $link;
     }
 
     public function getPhotosByFriends($user_id, $network) {
-        $q  = " SELECT l.*, p.*, pub_date - interval 8 hour as adj_pub_date ";
-        $q .= " FROM #prefix#links AS l ";
-        $q .= " INNER JOIN #prefix#posts p ";
-        $q .= " ON p.post_id = l.post_id AND p.network = l.network ";
-        $q .= " WHERE is_image = 1 AND l.network=:network AND p.author_user_id in ( ";
+        $q  = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#links AS l ";
+        $q .= "INNER JOIN #prefix#posts p ";
+        $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
+        $q .= "WHERE is_image = 1 AND l.network=:network AND p.author_user_id in ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
-        $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network = :network ";
-        $q .= " ) ";
-        $q .= " ORDER BY l.post_id DESC  ";
-        $q .= " LIMIT 15 ";
+        $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network = :network) ";
+        $q .= "ORDER BY l.post_id DESC  ";
+        $q .= "LIMIT 15 ";
         $vars = array(
             ':user_id'=>$user_id,
             ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
-
-        return $this->getDataRowsAsObjects($ps, "Link");
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        $links = array();
+        foreach ($all_rows as $row) {
+            $links[] = $this->setLinkWithPost($row);
+        }
+        return $links;
     }
 
     public function getLinksToExpand($limit = 1500) {

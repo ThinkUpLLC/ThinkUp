@@ -43,4 +43,5 @@ $web_tests->addTestCase(new WebTestOfCrawlerRun());
 $web_tests->addTestCase(new WebTestOfDashboard());
 $web_tests->addTestCase(new WebTestOfSignIn());
 $web_tests->addTestCase(new WebTestOfCaptchaImage());
+$web_tests->addTestCase(new WebTestOfTwitterPluginViews());
 $web_tests->run( new TextReporter());
