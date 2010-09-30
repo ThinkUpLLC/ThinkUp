@@ -26,7 +26,7 @@
               {/if}
               <div class="grid_10 omega small gray {if $replies or $retweets}prefix_3 prepend{else}prefix_10{/if}">
                 <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" class="float-l">
-                Posted at {$post->adj_pub_date}{if $post->source} via {$post->source}{/if}<br>
+                Posted at <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">{$post->adj_pub_date}</a>{if $post->source} via {$post->source}{/if}<br>
                 {if $post->location}From: {$post->location}{/if}
                 {if $post->is_geo_encoded eq 1}
                 <div>
@@ -48,9 +48,11 @@
                       <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
                     {/if}
                   {else}
+                  	{if $retweets}
                     <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a>
                     fwds to<br><a href="#fwds">{$retweet_reach|number_format}</a></h1>
                     <h3>total reach</h3>
+                    {/if}
                   {/if}
                 </div>
               </div>
