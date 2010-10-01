@@ -37,26 +37,28 @@
                 {/if}
               </div>
             </div>
-            <div class="grid_7 center big-number omega">
-              <div class="bl">
-                <div class="key-stat">
-                  {if $replies}
-                    <h1>{$post->reply_count_cache|number_format}</h1>
-                    <h3>replies in {$post->adj_pub_date|relative_datetime} (<a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">CSV</a>)</h3>
-                    {if $logged_in_user}
-                      <a href="#" class="grid_search" title="Search" onclick="return false;">
-                      <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
+            {if $replies or $retweets}
+              <div class="grid_7 center big-number omega">
+                <div class="bl">
+                  <div class="key-stat">
+                    {if $replies}
+                      <h1>{$post->reply_count_cache|number_format}</h1>
+                      <h3>replies in {$post->adj_pub_date|relative_datetime} (<a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">CSV</a>)</h3>
+                      {if $logged_in_user}
+                        <a href="#" class="grid_search" title="Search" onclick="return false;">
+                        <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
+                      {/if}
+                    {else}
+                    	{if $retweets}
+                        <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a>
+                        fwds to<br><a href="#fwds">{$retweet_reach|number_format}</a></h1>
+                        <h3>total reach</h3>
+                      {/if}
                     {/if}
-                  {else}
-                  	{if $retweets}
-                    <h1><a href="#fwds" name="fwds">{$retweets|@count|number_format}</a>
-                    fwds to<br><a href="#fwds">{$retweet_reach|number_format}</a></h1>
-                    <h3>total reach</h3>
-                    {/if}
-                  {/if}
+                  </div>
                 </div>
               </div>
-            </div>
+            {/if}
           </div> <!-- end .clearfix -->
           {if $replies}
             <div class="append_20 clearfix"><br />
