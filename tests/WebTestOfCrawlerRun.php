@@ -34,10 +34,11 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
 
     public function setUp() {
         parent::setUp();
-        self::buildData();
+        $this->builders = self::buildData();
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
     }
 

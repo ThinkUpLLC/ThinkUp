@@ -31,14 +31,13 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 class WebTestOfDashboard extends ThinkUpWebTestCase {
-
     public function setUp() {
         parent::setUp();
-
-        self::buildData();
+        $this->builders = self::buildData();
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
     }
 
