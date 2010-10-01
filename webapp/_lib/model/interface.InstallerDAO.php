@@ -37,6 +37,17 @@ interface InstallerDAO {
     public function getTables();
 
     /**
+     * Attempts to create the database specified in the install process. If it
+     * already exists then nothing happens. If it does not exist, this
+     * function tries to create it.
+     *
+     * @param array $cfg_vals The array of config values supplied to the
+     * installer.
+     * @return boolean True on success, false on failure.
+     */
+    public function createInstallDatabase($cfg_vals = null);
+
+    /**
      * Check table
      *
      * @param str $table_name

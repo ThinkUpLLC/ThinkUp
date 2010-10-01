@@ -70,4 +70,34 @@ class ThinkUpTestDatabaseHelper {
             $db->exec($q);
         }
     }
+
+    public function databaseExists($db_name) {
+        $config = Config::getInstance();
+        $server = $config->getValue('db_host');
+        if ($config->getValue('db_port')) {
+            $server .= ':'.$config->getValue('db_port');
+        }
+        $con = mysql_connect($server, $config->getValue('db_user'), $config->getValue('db_password'));
+        $return = mysql_select_db($db_name, $con);
+        //Set the db back to what it was.
+        mysql_select_db($config->getValue('db_name'), $con);
+        //Shouldn't close the connection, it's needed for other tests.
+        //mysql_close($con);
+        return $return;
+    }
+
+    public function deleteDatabase($db_name) {
+        $config = Config::getInstance();
+        $server = $config->getValue('db_host');
+        if ($config->getValue('db_port')) {
+            $server .= ':'.$config->getValue('db_port');
+        }
+        $con = mysql_connect($server, $config->getValue('db_user'), $config->getValue('db_password'));
+        $db_name = mysql_real_escape_string($db_name);
+        $return = mysql_query("DROP DATABASE `".$db_name."`");
+        //Shouldn't close the connection, it's needed for other tests.
+        //mysql_close($con);
+        return $return;
+    }
+
 }

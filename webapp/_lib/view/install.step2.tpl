@@ -25,14 +25,15 @@
       </div>
     </div>
   </div>
-  
+
   <div id="installer-page" class="container_24 round-all">
     <img id="dart2" class="dart" alt="" src="{$site_root_path}assets/img/dart_wht.png">
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
         <form class="input" name="form1" method="post" action="index.php?step=3">
             {include file="_usermessage.tpl"}
-          <h2 class="clearfix step_title">Create Your ThinkUp Account</h2>
+
+            <h2 class="clearfix step_title">Create Your ThinkUp Account</h2>
           <div class="clearfix append_20">
             <div class="grid_5 prefix_3 right">
               <label>Name</label>
@@ -49,7 +50,7 @@
               <input type="text" name="site_email" id="site_email"{if isset($site_email)} value="{$site_email}"{/if}>
             </div>
           </div>
-          
+
           <div class="clearfix append_20">
             <div class="grid_5 prefix_3 right">
               <label>Choose&nbsp;Password</label>
@@ -58,7 +59,7 @@
               <input type="password" name="password" id="password"{if isset($password)} value="{$password}"{/if}>
             </div>
           </div>
-          
+
           <div class="clearfix append_20">
             <div class="grid_6 prefix_2 right">
               <label>Confirm Password</label>
@@ -106,7 +107,7 @@
             </div>
             <div class="grid_10 prefix_1 left">
               <input type="text" name="db_name" id="db_name"{if isset($db_name)} value="{$db_name}"{/if}>
-              <span class="input_information">This MySQL database should already exist.</span>
+              <span class="input_information">If the database does not exist, ThinkUp will attempt to create it.</span>
             </div>
           </div>
           
@@ -129,19 +130,19 @@
               <span class="input_information">Your MySQL password.</span>
             </div>
           </div>
-          
+
           <h2 class="clearfix step_title toggle-advanced-options">
             <a href="#">Advanced Options<span class="ui-icon ui-icon-circle-triangle-e"></span></a>
           </h2>
           <div id="database-advance-options">
-              <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
+              <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;">
                 <p>
                   <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
-                  These options are only necessary for some sites. If you're not sure what you should enter here, 
+                  These options are only necessary for some sites. If you're not sure what you should enter here,
                   leave the default settings or check with your hosting provider.
                 </p>
              </div>
-              
+
               <div class="clearfix append_20">
                 <div class="grid_5 prefix_3 right">
                   <label>Database Socket</label>
@@ -151,7 +152,7 @@
                   <span class="input_information">If you're not sure about this, leave it blank.</span>
                 </div>
               </div>
-              
+
               <div class="clearfix append_20">
                 <div class="grid_5 prefix_3 right">
                   <label>Database Port</label>
@@ -161,7 +162,7 @@
                   <span class="input_information">If you're not sure about this, leave it blank.</span>
                 </div>
               </div>
-              
+
               <div class="clearfix append_20">
                 <div class="grid_5 prefix_3 right">
                   <label>Table Prefix</label>
@@ -172,7 +173,6 @@
                 </div>
               </div>
           </div>
-          
           
           <div class="clearfix append_20">
             <div class="grid_10 prefix_9 left">

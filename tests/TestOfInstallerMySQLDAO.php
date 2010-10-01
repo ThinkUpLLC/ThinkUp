@@ -45,6 +45,34 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
+    public function testCreateDatabase() {
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
+        $dao = new InstallerMySQLDAO($config_array);
+
+        $config_array['db_name'] = 'thinkup_db_creation_test_db-yes';
+
+        //Check that the database exists before trying to create it.
+        $before = $this->testdb_helper->databaseExists($config_array['db_name']);
+        $this->assertFalse($before);
+
+        //Create the database. True on success, false on fail.
+        //Destroy the current correct config array, replaced with the test db
+        //name array in the createInstallDatabase function
+        Config::destroyInstance();
+        $create_db = $dao->createInstallDatabase($config_array);
+        //Check the database exists after creation.
+        Config::destroyInstance();
+        $after = $this->testdb_helper->databaseExists($config_array['db_name']);
+        $this->assertTrue($create_db && $after);
+
+        //Delete the database. True on success, false on fail.
+        $deleted = $this->testdb_helper->deleteDatabase($config_array['db_name']);
+
+        //Assert that the testing database for this function was cleaned up
+        $this->assertTrue($deleted);
+    }
+
     public function testConstructor() {
         $config = Config::getInstance();
         $config_array = $config->getValuesArray();
