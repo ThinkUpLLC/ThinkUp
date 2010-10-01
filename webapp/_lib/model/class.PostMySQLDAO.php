@@ -508,7 +508,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getAllQuestionPosts($author_id, $network, $count, $page=1) {
         $start_on_record = ($page - 1) * $count;
         $order_by="pub_date";
-        $q = "SELECT * FROM ( SELECT p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date FROM ( SELECT * ";
         $q .= "FROM #prefix#posts p ";
         $q .= "WHERE p.author_user_id = :author_id AND p.network=:network ";
         $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) ) AS p ";
