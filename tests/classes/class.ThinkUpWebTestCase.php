@@ -55,96 +55,80 @@ class ThinkUpWebTestCase extends WebTestCase {
 
     /**
      * Insert some test data to navigate the app
-     * @TODO Convert this to FixtureBuilder
      */
     protected function buildData() {
+        $builders = array();
+         
         //Add owner
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
-        $q = "INSERT INTO tu_owners (id, email, pwd, is_activated, is_admin) VALUES (1, 'me@example.com', '".
-        $cryptpass."', 1, 1)";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass,
+        'is_activated'=>1,'is_admin'=>1));
 
         //Add instance
-        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public, network) VALUES (1, 17,
-        'thinkupapp', 1, 'twitter')";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>17,
+        'network_username'=>'thinkupapp', 'is_public'=>1, 'network'=>'twitter'));
 
         //Add instance_owner
-        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id) VALUES (1, 1)";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
 
         //Insert test data into test table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (12, 'jack', 'Jack Dorsey',
-        'avatar.jpg');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>12, 'user_name'=>'jack',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated, network) VALUES (13, 'ev',
-        'Ev Williams', 'avatar.jpg', '1/1/2005', 'twitter');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
+        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'1/1/2005', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected) VALUES (16, 'private',
-        'Private Poster', 'avatar.jpg', 1);";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>16, 'user_name'=>'private',
+        'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count, network)
-        VALUES (17, 'thinkupapp', 'ThinkUpers', 'avatar.jpg', 0, 10, 'twitter');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>17, 'user_name'=>'thinkupapp',
+        'full_name'=>'ThinkUpers', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10, 
+        'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (18,
-        'shutterbug', 'Shutter Bug', 'avatar.jpg', 0, 10);";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>18, 'user_name'=>'shutterbug',
+        'full_name'=>'Shutter Bug', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
+        'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count) VALUES (19,
-        'linkbaiter', 'Link Baiter', 'avatar.jpg', 0, 10);";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>19, 'user_name'=>'linkbaiter',
+        'full_name'=>'Link Baiter', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
+        'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_user_errors (user_id, error_code, error_text, error_issued_to_user_id) VALUES (15, 404,
-        'User not found', 13);";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('user_errors', array('user_id'=>15, 'error_code'=>404,
+        'error_text'=>'User not found', 'error_issued_to_user_id'=>13));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (13, 12, '1/1/2006');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>13, 'follower_id'=>12));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (13, 14, '1/1/2006');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>13, 'follower_id'=>14));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (13, 15, '1/1/2006');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>13, 'follower_id'=>15));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (13, 16, '1/1/2006');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>13, 'follower_id'=>16));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (16, 12, '1/1/2006');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>16, 'follower_id'=>12));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (17, 13, '1/1/2006');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>19, 'follower_id'=>13));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (18, 13, '1/1/2006');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>18, 'follower_id'=>13));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen) VALUES (19, 13, '1/1/2006');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>13, 'network_username'=>'ev',
+        'is_public'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (13, 'ev', 1);";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>18,
+        'network_username'=>'shutterbug', 'is_public'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (18, 'shutterbug', 1);";
-        $this->db->exec($q);
-
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (19, 'linkbaiter', 1);";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>19,
+        'network_username'=>'linkbaiter', 'is_public'=>1, 'network'=>'twitter'));
 
         $counter = 0;
         while ($counter < 40) {
             $reply_or_forward_count = $counter + 200;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 
-            'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', 
-            $reply_or_forward_count, $reply_or_forward_count);";
-            $this->db->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
+            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 'source'=>'web', 
+            'pub_date'=>'2006-01-01 00:$pseudo_minute:00', 'reply_count_cache'=>$reply_or_forward_count, 
+            'retweet_count_cache'=>$reply_or_forward_count, 'post_text'=>'This is post '.$counter, 
+            'network'=>'twitter'));
 
             $counter++;
         }
@@ -153,15 +137,14 @@ class ThinkUpWebTestCase extends WebTestCase {
         while ($counter < 40) {
             $post_id = $counter + 40;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($post_id, 18, 'shutterbug', 
-            'Shutter Bug', 'avatar.jpg', 'This is image post $counter', 'web', 
-            '2006-01-02 00:$pseudo_minute:00', 0, 0);";
-            $this->db->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>18,
+            'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
+            'source'=>'web', 'pub_date'=>'2006-01-02 00:$pseudo_minute:00', 'reply_count_cache'=>0, 
+            'retweet_count_cache'=>0, 'post_text'=>'This is image post '.$counter, 'network'=>'twitter'));
 
-            $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image)
-            VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".jpg', '', 0, $post_id, 1);";
-            $this->db->exec($q);
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'expanded_url'=>'http://example.com/'.$counter.'jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>$post_id, 
+            'is_image'=>1));
 
             $counter++;
         }
@@ -170,16 +153,14 @@ class ThinkUpWebTestCase extends WebTestCase {
         while ($counter < 40) {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($post_id, 19, 'linkbaiter', 
-            'Link Baiter', 'avatar.jpg', 'This is link post $counter', 'web', 
-            '2006-03-01 00:$pseudo_minute:00', 0, 0);";
-            $this->db->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>19,
+            'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'author_avatar'=>'avatar.jpg', 
+            'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:$pseudo_minute:00',
+            'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
 
-            $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image) VALUES
-            ('http://example.com/".$counter."', 'http://example.com/".$counter.".html', 'Link $counter', 0, 
-            $post_id, 0);";
-            $this->db->exec($q);
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'expanded_url'=>'http://example.com/'.$counter.'html', 
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'is_image'=>0));
 
             $counter++;
         }
@@ -187,13 +168,13 @@ class ThinkUpWebTestCase extends WebTestCase {
         while ($counter < 10) {
             $post_id = $counter + 120;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($post_id, 1234, 
-            'thinkupapp', 'thinkupapp', 'avatar.jpg', 'This is test post $counter', 'web', 
-            '2006-03-01 00:$pseudo_minute:00', 0, 0);";
-            $this->db->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>1234,
+            'author_username'=>'thinkupapp', 'author_fullname'=>'thinkupapp', 'author_avatar'=>'avatar.jpg', 
+            'post_text'=>'This is test post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:$pseudo_minute:00',
+            'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
+
             $counter++;
         }
-
+        return $builders;
     }
 }

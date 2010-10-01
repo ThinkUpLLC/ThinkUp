@@ -34,7 +34,6 @@ class WebTestOfCaptchaImage extends ThinkUpWebTestCase {
 
     public function setUp() {
         parent::setUp();
-        self::buildData();
     }
 
     public function tearDown() {
