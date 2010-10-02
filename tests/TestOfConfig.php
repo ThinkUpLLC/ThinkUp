@@ -86,4 +86,20 @@ class TestOfConfig extends ThinkUpBasicUnitTestCase {
         }
         $this->restoreConfigFile();
     }
+
+    public function testGetGMTOffset() {
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        $config = Config::getInstance(array('timezone' => 'America/Los_Angeles'));
+        $this->assertEqual($config->getGMTOffset('January 1, 2010'), -8);
+        $this->assertEqual($config->getGMTOffset('August 1, 2010'), -7);
+
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        $config = Config::getInstance(array('timezone' => 'America/New_York'));
+        $this->assertEqual($config->getGMTOffset('January 1, 2010'), -5);
+        $this->assertEqual($config->getGMTOffset('August 1, 2010'), -4);
+
+        $this->restoreConfigFile();
+    }
 }

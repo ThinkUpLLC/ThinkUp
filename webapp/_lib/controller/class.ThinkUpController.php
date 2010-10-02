@@ -293,7 +293,8 @@ abstract class ThinkUpController {
                 return $results;
             }
         } catch (Exception $e) {
-            date_default_timezone_set('America/Los_Angeles'); //Temporary fix to avoid Smarty warning
+            //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings
+            date_default_timezone_set('America/Los_Angeles');
             $content_type = $this->content_type;
             if (strpos($content_type, ';') !== FALSE) {
                 $content_type = array_shift(explode(';', $content_type));

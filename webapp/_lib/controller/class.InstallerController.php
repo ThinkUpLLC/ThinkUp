@@ -38,7 +38,8 @@ class InstallerController extends ThinkUpController {
     private $installer;
 
     public function __construct($session_started=false) {
-        date_default_timezone_set('America/Los_Angeles'); //Temporary fix to avoid Smarty warning
+        //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings
+        date_default_timezone_set('America/Los_Angeles');
         Utils::defineConstants();
         //Don't call parent constructor because config.inc.php doesn't exist yet
         //Instead, set up the view manager with manual array configuration
@@ -165,6 +166,8 @@ class InstallerController extends ThinkUpController {
             return;
         }
 
+        $current_tz = isset($_POST['timezone']) ? $_POST['timezone'] : date_default_timezone_get();
+
         $this->addToView('db_name', '');
         $this->addToView('db_user', '');
         $this->addToView('db_passwd', '');
@@ -172,6 +175,8 @@ class InstallerController extends ThinkUpController {
         $this->addToView('db_prefix', 'tu_');
         $this->addToView('db_socket', '');
         $this->addToView('db_port', '');
+        $this->addToView('tz_list', $this->getTimeZoneList());
+        $this->addToView('current_tz', $current_tz);
         $this->addToView('site_email', 'you@example.com');
     }
 
@@ -205,6 +210,7 @@ class InstallerController extends ThinkUpController {
             $db_config['db_port']      = $THINKUP_CFG['db_port'];
             $db_config['table_prefix'] = $THINKUP_CFG['table_prefix'];
             $db_config['GMT_offset']   = $THINKUP_CFG['GMT_offset'];
+            $db_config['timezone']     = $THINKUP_CFG['timezone'];
             $email                     = trim($_POST['site_email']);
         } else {
             // make sure we're not from error of couldn't write config.inc.php
@@ -224,8 +230,14 @@ class InstallerController extends ThinkUpController {
             $db_config['db_socket']    = trim($_POST['db_socket']);
             $db_config['db_port']      = trim($_POST['db_port']);
             $db_config['table_prefix'] = trim($_POST['db_prefix']);
-            $db_config['GMT_offset']   = 7;
+            $db_config['timezone']     = trim($_POST['timezone']);
             $email                     = trim($_POST['site_email']);
+
+            // get GMT offset in hours
+            $db_config['GMT_offset'] = timezone_offset_get(
+            new DateTimeZone($_POST['timezone']),
+            new DateTime('now')
+            ) / 3600;
         }
         $db_config['db_type'] = 'mysql'; //default for now
         $password = $_POST['password'];
@@ -270,6 +282,8 @@ class InstallerController extends ThinkUpController {
             $this->addToView('db_socket', $db_config['db_socket']);
             $this->addToView('db_port', $db_config['db_port']);
             $this->addToView('db_type', $db_config['db_type']);
+            $this->addToView('current_tz', $_POST['timezone']);
+            $this->addToView('tz_list', $this->getTimeZoneList());
             $this->addToView('site_email', $email);
             $this->addToView('full_name', $full_name);
             return;
@@ -421,5 +435,36 @@ class InstallerController extends ThinkUpController {
                 $this->addToView('action_form', $_SERVER['REQUEST_URI']);
             }
         }
+    }
+
+    /**
+     * Returns an array of time zone options formatted for display in a select field.
+     *
+     * @return array An associative array of options, ready for optgrouping.
+     */
+    protected function getTimeZoneList() {
+        $tz_options = timezone_identifiers_list();
+        $view_tzs = array();
+
+        foreach ($tz_options as $option) {
+            $option_data = explode('/', $option);
+
+            // don't allow user to select UTC
+            if ($option_data[0] == 'UTC') {
+                continue;
+            }
+
+            // handle things like the many Indianas
+            if (isset($option_data[2])) {
+                $option_data[1] = $option_data[1] . ': ' . $option_data[2];
+            }
+
+            $view_tzs[$option_data[0]][] = array(
+                'val' => $option,
+                'display' => str_replace('_', ' ', $option_data[1])
+            );
+        }
+
+        return $view_tzs;
     }
 }

@@ -75,7 +75,7 @@ abstract class PDODAO {
             $this->connect();
         }
         $this->prefix = $this->config->getValue('table_prefix');
-        $this->gmt_offset = $this->config->getValue('GMT_offset');
+        $this->gmt_offset = $this->config->getGMTOffset();
         $this->profiler_enabled = Profiler::isEnabled();
     }
 
