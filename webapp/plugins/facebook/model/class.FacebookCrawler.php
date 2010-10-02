@@ -19,107 +19,93 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
+ * Facebook Crawler
+ *
+ * Retrieves user data from Facebook, converts it to ThinkUp objects, and stores them in the ThinkUp database.
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  */
 class FacebookCrawler {
+    /**
+     *
+     * @var Instance
+     */
     var $instance;
+    /**
+     *
+     * @var Logger
+     */
     var $logger;
-    var $facebook;
-    var $owner_object;
-    var $user_dao;
-    var $pd;
-
-    public function __construct($instance, $facebook) {
+    /**
+     * @var str
+     */
+    var $access_token;
+    /**
+     *
+     * @param Instance $instance
+     * @return FacebookCrawler
+     */
+    public function __construct($instance, $access_token) {
         $this->instance = $instance;
-        $this->facebook = $facebook;
         $this->logger = Logger::getInstance();
         $this->logger->setUsername($instance->network_username);
-        $this->user_dao = DAOFactory::getDAO('UserDAO');
-        $this->pd = DAOFactory::getDAO('PostDAO');
+        $this->access_token = $access_token;
     }
 
-    public function fetchInstanceUserInfo($uid, $session_key) {
-        $user = $this->fetchUserInfo($uid, $session_key, "Owner Status");
-        $this->owner_object = $user;
-        if (isset($this->owner_object)) {
-            $status_message = 'Owner info set.';
-        } else {
-            $status_message = 'Owner was not set.';
+    /**
+     * Fetch and save the instance user's information.
+     */
+    public function fetchInstanceUserInfo() {
+        $user = $this->fetchUserInfo($this->instance->network_user_id, "Owner Status");
+        if (isset($user)) {
+            $this->logger->logStatus('Owner info set.', get_class($this));
         }
-        $this->logger->logStatus($status_message, get_class($this));
     }
 
-    public function fetchUserInfo($uid, $session_key, $found_in) {
+    /**
+     * Fetch and save a Facebook user's information.
+     * @param int $uid Facebook user ID
+     * @param str $found_in Where the user was found
+     * @return User
+     */
+    public function fetchUserInfo($uid, $found_in) {
         // Get owner user details and save them to DB
-        $user_details = $this->facebook->api_client->users_getInfo($uid,
-        'first_name,last_name,current_location,username,website,pic_square,about_me');
-
-        /*
-         $serialized = serialize($user_details);
-         echo "SERIALIZED USER DETAILS FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-         print_r($user_details);
-         */
+        $fields = $found_in!='facebook page'?'id,name,about,location,website':'id,name,location,website';
+        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token,
+        $fields);
 
         $user = $this->parseUserDetails($user_details);
         if (isset($user)) {
-            $user["post_count"] = $this->pd->getTotalPostsByUser($uid, 'facebook');
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $user["post_count"] = $post_dao->getTotalPostsByUser($uid, 'facebook');
             $user_object = new User($user, $found_in);
-            $this->user_dao->updateUser($user_object);
+            $user_dao = DAOFactory::getDAO('UserDAO');
+            $user_dao->updateUser($user_object);
             return $user_object;
         } else {
             return null;
         }
     }
 
-    public function fetchPagesUserIsFanOf($uid, $session_key) {
-        $q = "SELECT page_id, name, page_url, pic_square FROM page WHERE page_id IN ";
-        $q .= "(SELECT page_id FROM page_fan WHERE uid=".$uid.")";
-        try{
-            $pages = $this->facebook->api_client->fql_query($q);
-
-            /*
-             $serialized = serialize($pages);
-             echo "SERIALIZED PAGES FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-             print_r($pages);
-             */
-             
-        } catch (Exception $e){
-            $this->logger->logStatus("Exception '".$e->getMessage()."' thrown when trying to retrieve pages for $uid",
-            get_class($this));
-            $pages = false;
-        }
-        return $pages;
-    }
-
+    /**
+     * Convert decoded JSON data from Facebook into a ThinkUp user object.
+     * @param array $details
+     */
     private function parseUserDetails($details) {
-        if (isset($details[0])) {
+        if (isset($details->name) && isset($details->id)) {
             $ua = array();
 
-            $ua["user_name"] = $details[0]["username"];
-            $ua["full_name"] = $details[0]["first_name"]." ".$details[0]["last_name"];
-            $ua["user_id"] = $details[0]["uid"];
-            $ua["avatar"] = $details[0]["pic_square"];
+            $ua["user_name"] = $details->name;
+            $ua["full_name"] = $details->name;
+            $ua["user_id"] = $details->id;
+            $ua["avatar"] = 'https://graph.facebook.com/'.$details->id.'/picture';
+            $ua['url'] = isset($details->website)?$details->website:'';
             $ua["follower_count"] = 0;
-            $current_location = '';
-            $larr = $details[0]["current_location"];
-            if (count($larr) > 0) {
-                if (isset($larr["city"])) {
-                    $current_location .= $larr["city"];
-                }
-                if (isset($larr["state"])) {
-                    $current_location .= $larr["state"];
-                }
-                if (isset($larr["country"])) {
-                    $current_location .= $larr["country"];
-                }
-            }
-            $ua["location"] = $current_location;
-            $ua["url"] = $details[0]["website"];
-            $ua["description"] = $details[0]["about_me"];
+            $ua["location"] = isset($details->location->name)?$details->location->name:'';
+            $ua["description"] = isset($details->about)?$details->about:'';
             $ua["is_protected"] = '';
             $ua["post_count"] = 0;
             $ua["joined"] = null;
@@ -130,33 +116,35 @@ class FacebookCrawler {
         }
     }
 
+    /**
+     * Fetch a save the posts and replies on a user's profile.
+     * @param int $uid
+     */
+    public function fetchUserPostsAndReplies($uid) {
+        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$uid.'/posts', $this->access_token);
 
-    public function fetchUserPostsAndReplies($uid, $session_key) {
-        $stream = $this->facebook->api_client->stream_get($uid, $uid, '', '', 10, $session_key, '');
-
-        /*
-         $serialized = serialize($stream);
-         echo "SERIALIZED STREAM FOR $uid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-         print_r($stream);
-         */
-
-        if (isset($stream['posts']) && is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
-            $this->logger->logStatus(sizeof($stream["posts"]).
-            " Facebook posts found for user ID $uid with session key $session_key", get_class($this));
+        if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
+            $this->logger->logStatus(sizeof($stream->data)." Facebook posts found for user ID $uid",
+            get_class($this));
 
             $thinkup_data = $this->parseStream($stream);
             $posts = $thinkup_data["posts"];
 
+            $post_dao = DAOFactory::getDAO('PostDAO');
             foreach ($posts as $post) {
-                $added_posts = $this->pd->addPost($post);
-                $this->logger->logStatus("Added $added_posts post for ".$post["author_username"].":".$post["post_text"],
-                get_class($this));
+                $added_posts = $post_dao->addPost($post);
+                $this->logger->logStatus("Added $added_posts post for ".$post["author_username"].":".
+                $post["post_text"], get_class($this));
             }
 
             $users = $thinkup_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
-                    $this->fetchUserInfo($user["user_id"], $session_key, "Comments");
+                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_id'], 'facebook');
+                    $found_in = 'Facebook user profile stream';
+                    $user_object = new User($user, $found_in);
+                    $user_dao = DAOFactory::getDAO('UserDAO');
+                    $user_dao->updateUser($user_object);
                 }
             }
         } else {
@@ -165,25 +153,24 @@ class FacebookCrawler {
 
     }
 
-    public function fetchPagePostsAndReplies($pid, $uid, $session_key) {
-        $stream = $this->facebook->api_client->stream_get($uid, $pid, '', '', 2, $session_key, '');
+    /**
+     * Fetch a save the posts and replies on a Facebook page.
+     * @param int $pid Page ID
+     */
+    public function fetchPagePostsAndReplies($pid) {
+        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$pid.'/posts', $this->access_token);
 
-        /*
-         $serialized = serialize($stream);
-         echo "SERIALIZED STREAM FOR PAGE $pid STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW";
-         print_r($stream);
-         */
-
-        if (isset($stream['posts']) && is_array($stream['posts']) && sizeof($stream['posts'] > 0)) {
-            $this->logger->logStatus(sizeof($stream["posts"]).
-            " Facebook posts found for page ID $pid with session key $session_key", get_class($this));
+        if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
+            $this->logger->logStatus(sizeof($stream->data)." Facebook posts found for page ID $pid",
+            get_class($this));
 
             $thinkup_data = $this->parseStream($stream, 'facebook page');
             $posts = $thinkup_data["posts"];
 
+            $post_dao = DAOFactory::getDAO('PostDAO');
             foreach ($posts as $post) {
                 if ($post['author_username']== "" && isset($post['author_user_id'])) {
-                    $commenter_object = $this->fetchUserInfo($post['author_user_id'], $session_key, 'Comments');
+                    $commenter_object = $this->fetchUserInfo($post['author_user_id'], 'facebook page');
                     if (isset($commenter_object)) {
                         $post["author_username"] = $commenter_object->full_name;
                         $post["author_fullname"] = $commenter_object->full_name;
@@ -191,16 +178,19 @@ class FacebookCrawler {
                     }
                 }
 
-                $added_posts = $this->pd->addPost($post);
+                $added_posts =$post_dao->addPost($post);
                 $this->logger->logStatus("Added $added_posts post ID ".$post["post_id"]." on ".$post["network"].
-                " for ".$post["author_username"].":".$post["post_text"],
-                get_class($this));
+                " for ".$post["author_username"].":".$post["post_text"], get_class($this));
             }
 
             $users = $thinkup_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
-                    $this->fetchUserInfo($user["user_id"], $session_key, "Comments");
+                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_id'], 'facebook');
+                    $found_in = 'Facebook page stream';
+                    $user_object = new User($user, $found_in);
+                    $user_dao = DAOFactory::getDAO('UserDAO');
+                    $user_dao->updateUser($user_object);
                 }
             }
         } else {
@@ -208,65 +198,84 @@ class FacebookCrawler {
         }
     }
 
-    private function parseStream($stream, $source='facebook') {
+    /**
+     * Convert parsed JSON of a profile or page's posts into ThinkUp posts and users
+     * @param Object $stream
+     * @param str $source The network for the post; by default 'facebook'
+     */
+    private function parseStream($stream, $network='facebook') {
         $thinkup_posts = array();
         $thinkup_users = array();
-        foreach ($stream["posts"] as $p) {
-            $post_id = explode("_", $p["post_id"]);
+        foreach ($stream->data as $p) {
+            $post_id = explode("_", $p->id);
             $post_id = $post_id[1];
-            $profile = $this->getProfile($p['actor_id'], $stream["profiles"]);
+            $profile = $this->fetchUserInfo($p->from->id, $network);
             //assume profile comments are private and page posts are public
-            $is_protected = ($source=='facebook')?1:0;
-            $ttp = array("post_id"=>$post_id, "author_username"=>$profile["name"], "author_fullname"=>$profile["name"],
-            "author_avatar"=>$profile["pic_square"], "author_user_id"=>$profile['id'], "post_text"=>$p['message'], 
-            "pub_date"=>date('Y-m-d H:i:s', $p['created_time']), "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', 
-            "source"=>'', 'network'=>$source, 'is_protected'=>$is_protected);
+            $is_protected = ($network=='facebook')?1:0;
+            $ttp = array("post_id"=>$post_id, "author_username"=>$profile->username,
+            "author_fullname"=>$profile->username,"author_avatar"=>$profile->avatar, 
+            "author_user_id"=>$profile->user_id, "post_text"=>isset($p->message)?$p->message:'', 
+            "pub_date"=>$p->created_time, 
+            "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
+            'is_protected'=>$is_protected);
             array_push($thinkup_posts, $ttp);
-            $post_comments = $p["comments"]["comment_list"];
-            $post_comments_count = isset($p["comments"]["count"])?$p["comments"]["count"]:0;
-            if (is_array($post_comments) && sizeof($post_comments) > 0) {
-                foreach ($post_comments as $c) {
-                    $comment_id = explode("_", $c["id"]);
-                    $comment_id = $comment_id[2];
-                    $commenter = $this->getProfile($c['fromid'], $stream["profiles"]);
-                    //Get posts
-                    $ttp = array("post_id"=>$comment_id, "author_username"=>$commenter["name"],
-                    "author_fullname"=>$commenter["name"], "author_avatar"=>$commenter["pic_square"], 
-                    "author_user_id"=>$commenter["id"], 
-                    "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), 
-                    "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 
-                    'network'=>$source, 'is_protected'=>$is_protected);
-                    array_push($thinkup_posts, $ttp);
-                    //Get users
-                    $ttu = array("user_name"=>$commenter["name"], "full_name"=>$commenter["name"],
-                    "user_id"=>$c['fromid'], "avatar"=>$commenter["pic_square"], "location"=>'', 
-                    "description"=>'', 
-                    "url"=>'', "is_protected"=>'true', "follower_count"=>0, "post_count"=>0, "joined"=>'', 
-                    "found_in"=>"Comments", "network"=>$source);
-                    array_push($thinkup_users, $ttu);
+            if ( isset($p->comments)) {
+                $comments_captured = 0;
+                if (isset($p->comments->data)) {
+                    $post_comments = $p->comments->data;
+                    $post_comments_count = isset($post_comments)?sizeof($post_comments):0;
+                    if (is_array($post_comments) && sizeof($post_comments) > 0) {
+                        foreach ($post_comments as $c) {
+                            if (isset($c->from)) {
+                                $comment_id = explode("_", $c->id);
+                                $comment_id = $comment_id[2];
+                                //Get posts
+                                $ttp = array("post_id"=>$comment_id, "author_username"=>$c->from->name,
+                                "author_fullname"=>$c->from->name,
+                                "author_avatar"=>'https://graph.facebook.com/'.$c->from->id.'/picture', 
+                                "author_user_id"=>$c->from->id, "post_text"=>$c->message, 
+                                "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id, 
+                                "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network, 
+                                'is_protected'=>$is_protected);
+                                array_push($thinkup_posts, $ttp);
+                                //Get users
+                                $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
+                                "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->id.'/picture', 
+                                "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true',
+                                "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments",
+                                "network"=>$network);
+                                array_push($thinkup_users, $ttu);
+                                $comments_captured = $comments_captured + 1;
+                            }
+                        }
+                    }
                 }
-            }
-            // collapsed comment thread
-            if ($p["comments"]["count"] > 0 && $p["comments"]["count"] > sizeof($post_comments)) {
-                $comments_stream = $this->facebook->api_client->fql_query(
-                'SELECT xid, fromid, time, text, id FROM comment WHERE object_id='.$post_id);
-                /*
-                 $serialized = serialize($comments_stream);
-                 echo "SERIALIZED STREAM FOR POST $post_id STARTING NOW:\n".$serialized."\n SERIALIZING ENDING NOW\n";
-                 print_r($comments_stream);
-                 */
-                if (isset($comments_stream) && is_array($comments_stream)) {
-                    foreach ($comments_stream as $c) {
-                        $comment_id = explode("_", $c["id"]);
-                        $comment_id = $comment_id[1];
-                        //Get posts
-                        $ttp = array("post_id"=>$comment_id, "author_username"=>'',
-                        "author_fullname"=>'', "author_avatar"=>'', 
-                        "author_user_id"=>$c["fromid"], 
-                        "post_text"=>$c['text'], "pub_date"=>date('Y-m-d H:i:s', $c['time']), 
-                        "in_reply_to_user_id"=>$profile['id'], "in_reply_to_post_id"=>$post_id, "source"=>'', 
-                        'network'=>$source);
-                        array_push($thinkup_posts, $ttp);
+                // collapsed comment thread
+                if (isset($p->comments->count) && $p->comments->count > $comments_captured) {
+                    $comments_stream = FacebookGraphAPIAccessor::apiRequest('/'.$p->from->id.
+                        '_'.$post_id.'/comments', $this->access_token);
+                    if (isset($comments_stream) && is_array($comments_stream->data)) {
+                        foreach ($comments_stream->data as $c) {
+                            if (isset($c->from)) {
+                                $comment_id = explode("_", $c->id);
+                                $comment_id = $comment_id[2];
+                                //Get posts
+                                $ttp = array("post_id"=>$comment_id, "author_username"=>$c->from->name,
+                                "author_fullname"=>$c->from->name, "author_avatar"=>'https://graph.facebook.com/'.
+                                $c->from->id.'/picture', "author_user_id"=>$c->from->id, "post_text"=>$c->message,
+                                "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id, 
+                                "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network, 
+                                'is_protected'=>$is_protected);
+                                array_push($thinkup_posts, $ttp);
+                                //Get users
+                                $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
+                                "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->id.'/picture', 
+                                "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true', 
+                                "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments", 
+                                "network"=>$network);
+                                array_push($thinkup_users, $ttu);
+                            }
+                        }
                     }
                 }
             }
@@ -274,12 +283,4 @@ class FacebookCrawler {
         return array("posts"=>$thinkup_posts, "users"=>$thinkup_users);
     }
 
-    private function getProfile($userid, $profiles) {
-        foreach ($profiles as $p) {
-            if ($p['id'] == $userid) {
-                return $p;
-            }
-        }
-        return null;
-    }
 }

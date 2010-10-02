@@ -1,0 +1,105 @@
+{
+   "id": "697015835",
+   "name": "Mitch Wagner",
+   "first_name": "Mitch",
+   "last_name": "Wagner",
+   "link": "http://www.facebook.com/mitch.wagner",
+   "birthday": "07/23",
+   "hometown": {
+      "id": "",
+      "name": null
+   },
+   "location": {
+      "id": "104017092966941",
+      "name": "La Mesa, California"
+   },
+   "work": [
+      {
+         "employer": {
+            "id": "118547591497204",
+            "name": "Computerworld"
+         },
+         "position": {
+            "id": "134032896620355",
+            "name": "Blogger"
+         },
+         "start_date": "0000-01",
+         "end_date": "0000-00"
+      },
+      {
+         "employer": {
+            "id": "105077156198533",
+            "name": "The New Jersey Herald"
+         },
+         "start_date": "0000-00",
+         "end_date": "0000-00"
+      },
+      {
+         "employer": {
+            "id": "106186156085193",
+            "name": "TechWeb"
+         },
+         "start_date": "0000-00",
+         "end_date": "0000-00"
+      },
+      {
+         "employer": {
+            "id": "113224855361197",
+            "name": "CMP Technology"
+         },
+         "start_date": "0000-00",
+         "end_date": "0000-00"
+      },
+      {
+         "employer": {
+            "id": "119423731409918",
+            "name": "Palisade Systems"
+         },
+         "position": {
+            "id": "131000603601060",
+            "name": "Social Media Director"
+         },
+         "start_date": "2010-02",
+         "end_date": "0000-00"
+      },
+      {
+         "employer": {
+            "id": "105193932853449",
+            "name": "Mitch Wagner Communications"
+         },
+         "location": {
+            "id": "104017092966941",
+            "name": "La Mesa, California"
+         },
+         "position": {
+            "id": "105912669449525",
+            "name": "Principal"
+         },
+         "start_date": "2009-12",
+         "end_date": "0000-00",
+         "description": "Technology journalist, writer, Internet marketing consultant."
+      },
+      {
+         "employer": {
+            "id": "114424988567661",
+            "name": "InformationWeek"
+         },
+         "position": {
+            "id": "110449235650864",
+            "name": "Executive Editor"
+         },
+         "start_date": "2005-07",
+         "end_date": "2009-12",
+         "description": "Journalist and blogger."
+      }
+   ],
+   "gender": "male",
+   "relationship_status": "Married",
+   "significant_other": {
+      "name": "Julie Brown",
+      "id": "1582551571"
+   },
+   "website": "http://www.twitter.com/mitchwagner\nhttp://wagner.typepad.com\nhttp://www.copperrobot.com\n",
+   "locale": "en_US",
+   "updated_time": "2010-09-26T23:48:24+0000"
+}

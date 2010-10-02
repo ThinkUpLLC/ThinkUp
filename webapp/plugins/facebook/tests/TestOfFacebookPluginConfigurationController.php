@@ -19,18 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
-    require_once '../../../../tests/config.tests.inc.php';
-}
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-
-require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.facebook.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/controller/class.FacebookPluginConfigurationController.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/facebook/facebook.php';
-
-/**
+ *
+ *
  * Test of FacebookPluginConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -38,6 +28,15 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/facebook/facebook.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+    require_once '../../../../tests/config.tests.inc.php';
+}
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/controller/class.FacebookPluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/facebook/facebook.php';
+
 class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
     /**
@@ -84,6 +83,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
             $this->db->exec($q);
             $counter++;
         }
+        $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+        $_SERVER['HTTP_HOST'] = 'http://';
+        $_SERVER['REQUEST_URI'] = '';
     }
 
     /**
@@ -106,7 +108,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         //@TODO Figure out why API keys are not set here in the test, but they are in the controller
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
-        'Please set your Facebook API Key and Application Secret.');
+        'Please set your Facebook API key, application ID and secret.');
     }
 
     /**
@@ -150,7 +152,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/plugin_options_error_message_facebook_api_secret/', $output); // no secret
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
-        
+
         //app not configured
         $options_arry[0]->truncateTable('plugin_options');
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
@@ -175,7 +177,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern('/plugin_options_error_message_facebook_api_secret/', $output); // secret option
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
-        
+
         //app not configured
         $options_arry[0]->truncateTable('plugin_options');
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
@@ -192,6 +194,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         array('plugin_id' => 2, 'option_name' => 'facebook_api_key', 'option_value' => "dummy_key") );
         $plugin_opt2 = FixtureBuilder::build('plugin_options',
         array('plugin_id' => 2, 'option_name' => 'facebook_api_secret', 'option_value' => "dummy_secret") );
-        return array($plugin_opt1, $plugin_opt2, $plugin1);
+        $plugin_opt3 = FixtureBuilder::build('plugin_options',
+        array('plugin_id' => 2, 'option_name' => 'facebook_app_id', 'option_value' => "12345") );
+        return array($plugin1, $plugin_opt1, $plugin_opt2, $plugin_opt3);
     }
 }

@@ -64,7 +64,7 @@
             <input type="hidden" name ="owner_id" value="{$owner->id}" />
             <select name="facebook_page_id">
                 {foreach from=$user_pages.$facebook_user_id key=page_id item=page name=p}
-                    <option value="{$page.json|escape:'html'}">{if strlen($page.name)>27}{$page.name|substr:0:27}...{else}{$page.name}{/if}</option> <br />
+                    <option value="{$page->id}">{if strlen($page->name)>27}{$page->name|substr:0:27}...{else}{$page->name}{/if}</option> <br />
                 {/foreach}
              </select>
              {/if}
@@ -82,46 +82,8 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 <div id="add-account-div" style="display: none;">
     {if $fbconnect_link}<h2 class="subhead">Add a Facebook User</h2>{$fbconnect_link}{/if}
     <div>
-        <fb:prompt-permission perms="read_stream,publish_stream,offline_access" next_fbjs="save_session()">
-            Click here to grant offline access!
-        </fb:prompt-permission>
     </div>
 </div>
-<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript">
-</script>
-<script type="text/javascript">
-                FB.init("{$fb_api_key}", "{$site_root_path}plugins/facebook/xd_receiver.php", {literal}{
-                    permsToRequestOnConnect: "read_stream,offline_access",
-                });
-</script>
-<script>
-    function save_session(){
-        session = FB.Facebook.apiClient.get_session();
-        var sessionKey = session.session_key;
-        $.ajax({
-            type: "GET",
-            url: '{/literal}{$site_root_path}{literal}plugins/facebook/auth.php',
-            data: {
-                sessionKey: sessionKey
-            },
-            dataType: "json",
-            async: false,
-            time: 10,
-            success: function(msg){
-            
-            }
-        })
-    };
-</script>
-
-<script src="{/literal}{$site_root_path}{literal}plugins/facebook/assets/js/fbconnect.js" type="text/javascript">
-</script>
-<script type="text/javascript">
-    window.onload = function(){
-        facebook_onload(true);
-    };
-</script>
-{/literal}
 
 <div id="contact-admin-div" style="display: none;">
 {include file="_plugin.admin-request.tpl"}
@@ -134,8 +96,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 <ol style="margin-left:40px">
 <li><a href="http://developers.facebook.com/setup/">Create a ThinkUp Facebook application.</a></li>
 <li>Set the Web Site &gt; Site URL to <pre>http://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}</pre></li>
-<li>Set the Advanced &gt; Deauthorize Callback to <pre>http://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}account/?p=facebook</pre></li>
-<li>Enter the Facebook-provided API Key and Application Secret here.</li></ol>
+<li>Enter the Facebook-provided API Key, Application Secret and Application ID here.</li></ol>
 {/if}
 <p>
 {$options_markup}

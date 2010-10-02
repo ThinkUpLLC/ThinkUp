@@ -85,6 +85,9 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
             $this->db->exec($q);
             $counter++;
         }
+        $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+        $_SERVER['HTTP_HOST'] = 'http://';
+        $_SERVER['REQUEST_URI'] = '';
 
     }
 
