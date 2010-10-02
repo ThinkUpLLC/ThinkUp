@@ -614,13 +614,15 @@ class Installer {
             'db_name' => $db_config['db_name'],
             'db_socket' => $db_config['db_socket'],
             'db_port' => $db_config['db_port'],
-            'table_prefix' => $db_config['table_prefix']
+            'table_prefix' => $db_config['table_prefix'],
+            'GMT_offset' => $db_config['GMT_offset'],
+            'timezone' => $db_config['timezone']
         );
 
         // read sample configuration file and replace some lines
         $sample_config = file($sample_config_filename);
         foreach ($sample_config as $line_num => $line) {
-            if (preg_match('/\[\'([a-z0-9_]+)\'\]/', $line, $regs)) {
+            if (preg_match('/\[\'([a-zA-Z0-9_]+)\'\]/', $line, $regs)) {
                 $what = $regs[1];
                 if (isset($new_config[$what])) {
                     $sample_config[$line_num] = preg_replace('/=.*;(.*)/', "= '" . $new_config[$what] . "';\\1",

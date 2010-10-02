@@ -53,7 +53,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getPost($post_id, $network) {
         $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, ";
-        $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON l.post_id = p.post_id AND l.network = p.network ";
         $q .= "WHERE p.post_id=:post_id AND p.network=:network;";
         $vars = array(
@@ -112,7 +112,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getStandaloneReplies($username, $network, $limit) {
         $username = '@'.$username;
-        $q = " SELECT p.*, u.*, pub_date - INTERVAL #gmt_offset# hour AS adj_pub_date ";
+        $q = " SELECT p.*, u.*, pub_date + INTERVAL #gmt_offset# hour AS adj_pub_date ";
         $q .= " FROM #prefix#posts AS p ";
         $q .= " INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id WHERE ";
 
@@ -146,7 +146,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $count= 350) {
         $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
-        $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND l.network = p.network ";
         $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id AND u.network = :user_network ";
@@ -190,7 +190,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $is_public = false, $count = 350) {
         $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
-        $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND l.network = p.network ";
         $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
@@ -218,7 +218,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $is_public = false) {
         $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
-        $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND p.network = l.network ";
         $q .= "INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
@@ -253,7 +253,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getRelatedPosts($post_id, $network='twitter', $is_public = false, $count = 350) {
-        $q = "(SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date - interval 7 hour as adj_pub_date
+        $q = "(SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
         ON l.post_id = p.post_id
@@ -265,7 +265,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         $q .= ") ";
         $q .= " UNION
-        (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date - interval 7 hour as adj_pub_date 
+        (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date 
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
         ON l.post_id = p.post_id
@@ -275,7 +275,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $q .= "AND p.is_protected = 0 ";
         }
         $q .= ") ";
-        $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date - interval 7 hour as adj_pub_date
+        $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
         ON l.post_id = p.post_id
@@ -305,10 +305,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         $q = "SELECT p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, ";
         $q .= "p2.follower_count as answerer_follower_count, p1.post_id as question_post_id, ";
-        $q .= "p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, ";
+        $q .= "p1.post_text as question, p1.pub_date + interval #gmt_offset# hour as question_adj_pub_date, ";
         $q .= "p.post_id as answer_post_id, p.author_username as answerer_username, ";
         $q .= "p.author_avatar as answerer_avatar, p3.follower_count as questioner_follower_count, ";
-        $q .= "p.post_text as answer, p.network, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
+        $q .= "p.post_text as answer, p.network, p.pub_date + interval #gmt_offset# hour as answer_adj_pub_date ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= "JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= "JOIN #prefix#users p3 on p3.user_id = p.in_reply_to_user_id ";
@@ -332,10 +332,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getExchangesBetweenUsers($author_id, $other_user_id, $network='twitter') {
         $q = "SELECT   p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, ";
         $q .= " p2.follower_count as questioner_follower_count, p1.post_id as question_post_id, ";
-        $q .= " p1.post_text as question, p1.pub_date - interval #gmt_offset# hour as question_adj_pub_date, ";
+        $q .= " p1.post_text as question, p1.pub_date + interval #gmt_offset# hour as question_adj_pub_date, ";
         $q .= " p.post_id as answer_post_id,  p.author_username as answerer_username, ";
         $q .= " p.author_avatar as answerer_avatar, p3.follower_count as answerer_follower_count, ";
-        $q .= " p.post_text as answer, p.network, p.pub_date - interval #gmt_offset# hour as answer_adj_pub_date ";
+        $q .= " p.post_text as answer, p.network, p.pub_date + interval #gmt_offset# hour as answer_adj_pub_date ";
         $q .= " FROM  #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= " JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= " JOIN #prefix#users p3 on p3.user_id = :other_user_id ";
@@ -509,7 +509,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getAllQuestionPosts($author_id, $network, $count, $page=1) {
         $start_on_record = ($page - 1) * $count;
         $order_by="pub_date";
-        $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date FROM ( SELECT * ";
+        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date FROM ( SELECT * ";
         $q .= "FROM #prefix#posts p ";
         $q .= "WHERE p.author_user_id = :author_id AND p.network=:network ";
         $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) ) AS p ";
@@ -551,7 +551,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
             $order_by="pub_date";
         }
-        $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
@@ -602,7 +602,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':author_username'=>$author_username,
             ':network'=>$network
         );
-        $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
@@ -692,7 +692,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $start_on_record = ($page - 1) * $count;
 
         $author_username = '@'.$author_username;
-        $q = " SELECT l.*, p.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = " SELECT l.*, p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
         $q .= "LEFT JOIN #prefix#links AS l ON p.post_id = l.post_id AND l.network = p.network ";
@@ -728,7 +728,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllReplies($user_id, $network, $count) {
-        $q = "SELECT l.*, p.*, u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT l.*, p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON p.post_id = l.post_id AND l.network = p.network ";
         $q .= "INNER JOIN #prefix#users u ON p.author_user_id = u.user_id ";
         $q .= "WHERE in_reply_to_user_id = :user_id AND p.network=:network ORDER BY pub_date DESC LIMIT :limit;";
@@ -756,7 +756,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getOrphanReplies($username, $count, $network = "twitter") {
         $username = "@".$username;
-        $q = " SELECT p.* , u.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = " SELECT p.* , u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
         $q .= " INNER JOIN #prefix#users u ON u.user_id = p.author_user_id WHERE ";
         //fulltext search only works for words longer than 4 chars
@@ -860,7 +860,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':start_on_record'=>(int)$start_on_record
         );
 
-        $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
         $q .= "ON p.author_user_id = i.network_user_id ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id AND l.network = p.network ";

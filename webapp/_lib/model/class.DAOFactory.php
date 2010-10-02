@@ -117,7 +117,7 @@ class DAOFactory {
      * Creates a DAO instance and returns it
      *
      * @param string $dao_key the name of the dao you wish to init
-     * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'GMT_offset', 'db_type',
+     * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'db_type',
      * 'db_socket', 'db_name', 'db_host', 'db_user', 'db_password'
      * @returns PDODAO A concrete dao instance
      */
@@ -142,7 +142,7 @@ class DAOFactory {
      *     $THINKUP_CFG['db_type'] = 'somedb';
      *</code>
      *
-     * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'GMT_offset', 'db_type',
+     * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'db_type',
      * 'db_socket', 'db_name', 'db_host', 'db_user', 'db_password'
      * @return string db_type, will default to 'mysql' if not defined
      */

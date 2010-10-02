@@ -13,8 +13,8 @@ $THINKUP_CFG['site_root_path']            = '/';
 // Full server path to /thinkup/ folder.
 $THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
 
-// Your GMT offset, not (necessarily) your web server's. Pacific: 7, Eastern: 4
-$THINKUP_CFG['GMT_offset']                = 7;
+// Deprecated. Use Config::getGMTOffset() instead; it dynamically updates.
+$THINKUP_CFG['GMT_offset']                = '-7';
 
 // Your timezone
 $THINKUP_CFG['timezone']                  = 'America/Los_Angeles';

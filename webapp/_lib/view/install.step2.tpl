@@ -68,6 +68,24 @@
             </div>
           </div>
 
+          <div class="clearfix append_20">
+            <div class="grid_6 prefix_2 right">
+              <label>Time Zone</label>
+            </div>
+            <div class="grid_10 prefix_1 left">
+              <select name="timezone" id="timezone" style="margin-top:1.25em">
+                {foreach from=$tz_list key=group_name item=group}
+                  <optgroup label='{$group_name}'>
+                    {foreach from=$group item=tz}
+                      <option value='{$tz.val}'{if $current_tz eq $tz.val} selected{/if}>{$tz.display}</option>
+                    {/foreach}
+                  </optgroup>
+                {/foreach}
+              </select>
+              <span class="input_information">Choose the location closest to you.</span>
+            </div>
+          </div>
+
           <h2 class="clearfix step_title">Connect ThinkUp to Your Database</h2>
 
           <div class="clearfix append_20">

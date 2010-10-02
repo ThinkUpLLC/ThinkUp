@@ -131,6 +131,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['password'] = "yoyo";
         $_POST['confirm_password'] = "yoyo";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
@@ -160,6 +161,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['password'] = "";
         $_POST['confirm_password'] = "";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
@@ -189,6 +191,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['password'] = "asdfadsf";
         $_POST['confirm_password'] = "asdfasdfasdfasdfasdf";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
@@ -226,6 +229,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['password'] = "asdfadsf";
         $_POST['confirm_password'] = "asdfadsf";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $_SERVER['HTTP_HOST'] = "http://example.com";
 
@@ -276,6 +280,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_port'] = "";
         $_POST['db_prefix'] = "tu_";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $_SERVER['HTTP_HOST'] = "http://example.com";
 

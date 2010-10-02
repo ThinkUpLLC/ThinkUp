@@ -120,4 +120,21 @@ class Config {
     public function getValuesArray() {
         return $this->config;
     }
+
+    /**
+     * Returns the GMT offset in hours based on the application's defined timezone.
+     *
+     * If $time is given, gives the offset for that time; otherwise uses the current time.
+     *
+     * @param int $time The time to base it on, as anything strtotime() takes; leave blank for current time.
+     * @return int The GMT offset in hours.
+     */
+    public function getGMTOffset($time = 0) {
+        $time = $time ? $time : 'now';
+
+        return timezone_offset_get(
+            new DateTimeZone($this->getValue('timezone')),
+            new DateTime($time)
+        ) / 3600;
+    }
 }

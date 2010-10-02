@@ -109,7 +109,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function getLinksByFriends($user_id, $network) {
-        $q  = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date ";
+        $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#links AS l ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
@@ -145,7 +145,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function getPhotosByFriends($user_id, $network) {
-        $q  = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date ";
+        $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#links AS l ";
         $q .= "INNER JOIN #prefix#posts p ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
