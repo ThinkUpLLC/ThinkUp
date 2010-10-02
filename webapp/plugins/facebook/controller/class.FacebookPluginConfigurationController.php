@@ -33,9 +33,6 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
      * @var Owner
      */
     var $owner;
-    var $id;
-    var $od;
-    var $oid;
     /**
      * Constructor
      * @param Owner $owner
@@ -45,9 +42,6 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         parent::__construct($owner, 'facebook');
         $this->disableCaching();
         $this->owner = $owner;
-        $this->id = DAOFactory::getDAO('InstanceDAO');
-        $this->od = DAOFactory::getDAO('OwnerDAO');
-        $this->oid = DAOFactory::getDAO('OwnerInstanceDAO');
     }
 
     public function authControl() {
@@ -72,89 +66,165 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $this->addPluginOptionRequiredMessage('facebook_api_secret',
         'The Facebook plugin requires a valid Application Secret.');
 
-        $status = self::processPageActions();
+        // Application ID text field
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_app_id',
+        'label'=>'Your Facebook Application ID')); // add element
+        // set a special required message
+        $this->addPluginOptionRequiredMessage('facebook_app_id',
+        'The Facebook plugin requires a valid Application ID.');
+
+        $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
+
+        if (isset($options['facebook_app_id']->option_value) && isset($options['facebook_api_secret']->option_value)) {
+            $this->setUpFacebookInteractions($options);
+        } else {
+            $this->addErrorMessage('Please set your Facebook API key, application ID and secret.');
+        }
+        return $this->generateView();
+    }
+
+    protected function setUpFacebookInteractions($options) {
+        // Create our Facebook Application instance
+        $facebook = new Facebook(array(
+        'appId'  => $options['facebook_app_id']->option_value,
+        'secret' => $options['facebook_api_secret']->option_value,
+        'cookie' => false,
+        ));
+
+        //check status of current FB user
+        $session = $facebook->getSession();
+        $fb_user = null;
+        if ($session) {
+            $fb_user_id = $facebook->getUser();
+            $fb_user = $facebook->api('/me');
+        }
+
+        // login or logout url will be needed depending on current user state.
+        if (isset($fb_user)) {
+            $logoutUrl = $facebook->getLogoutUrl();
+            $fbconnect_link = '<img src="https://graph.facebook.com/'. $fb_user_id .'/picture" style="float:left;">'.
+            $fb_user['name'].'<br /><a href="'. $logoutUrl .'">
+            <img src="http://static.ak.fbcdn.net/rsrc.php/z2Y31/hash/cxrz4k7j.gif"></a>';
+        } else {
+            $redirect_uri = urlencode('http://'.$_SERVER['SERVER_NAME'].THINKUP_BASE_URL.'account/?p=facebook');
+            $params = array('req_perms'=>'offline_access', 'redirect_uri'=>$redirect_uri);
+            $loginUrl = $facebook->getLoginUrl($params);
+
+            $fbconnect_link =  '<a href="'. $loginUrl .
+            '"><img src="http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif"></a>';
+        }
+
+        $this->addToView('fbconnect_link', $fbconnect_link);
+
+        $status = self::processPageActions($fb_user, $facebook->getAccessToken());
         $this->addToView("info", $status["info"]);
         $this->addToView("error", $status["error"]);
         $this->addToView("success", $status["success"]);
 
         $logger = Logger::getInstance();
         $user_pages = array();
-        $owner_instances = $this->id->getByOwnerAndNetwork($this->owner, 'facebook');
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook');
 
-        $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
-        $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
-
-        if (isset($options['facebook_api_key']) && isset($options['facebook_api_secret'])) {
-            $api_key = $options['facebook_api_key']->option_value;
-            $api_secret = $options['facebook_api_secret']->option_value;
-            //echo "keys set: ".$api_key." ".$api_secret;
-            $facebook = new Facebook($api_key, $api_secret);
-            foreach ($owner_instances as $instance) {
-                $crawler = new FacebookCrawler($instance, $facebook);
-                $tokens = $this->oid->getOAuthTokens($instance->id);
-                $session_key = $tokens['oauth_access_token'];
-                if ($instance->network_user_id == $instance->network_viewer_id) {
-                    $pages = $crawler->fetchPagesUserIsFanOf($instance->network_user_id, $session_key);
-                    if ($pages) {
-                        $keys = array_keys($pages);
-                        foreach ($keys as $key) {
-                            $pages[$key]["json"] = json_encode($pages[$key]);
-                        }
-                        $user_pages[$instance->network_user_id] = $pages;
-                        $this->addToView('user_pages', $user_pages);
-                    }
+        $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+        foreach ($owner_instances as $instance) {
+            $tokens = $ownerinstance_dao->getOAuthTokens($instance->id);
+            $access_token = $tokens['oauth_access_token'];
+            if ($instance->network == 'facebook') { //not a page
+                $pages = FacebookGraphAPIAccessor::apiRequest('/'.$instance->network_user_id.'/likes', $access_token);
+                if ($pages->data) {
+                    $user_pages[$instance->network_user_id] = $pages->data;
                 }
             }
-        } else {
-            $this->addErrorMessage("Please set your Facebook API Key and Application Secret.");
         }
+        //print_r($user_pages);
+        $this->addToView('user_pages', $user_pages);
 
-        $owner_instance_pages = $this->id->getByOwnerAndNetwork($this->owner, 'facebook page');
+        $owner_instance_pages = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook page');
         $this->addToView('owner_instance_pages', $owner_instance_pages);
 
-        $fbconnect_link = '<a href="#" onclick="FB.Connect.requireSession(); return false;" >
-        <img id="fb_login_image" 
-        src="http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_long.gif" alt="Connect"/>
-            </a>';
-        $this->addToView('fbconnect_link', $fbconnect_link);
         $this->addToView('owner_instances', $owner_instances);
         if (isset($options['facebook_api_key'])) {
             $this->addToView('fb_api_key', $options['facebook_api_key']->option_value);
         }
-
-        return $this->generateView();
     }
 
-    protected function processPageActions() {
+    protected function processPageActions($fb_user, $access_token) {
         $messages = array("error"=>'', "success"=>'', "info"=>'');
+
+        //authorize user
+        if (isset($_GET["session"]) ) {
+            $session_data = json_decode(str_replace("\\", "", $_GET["session"]));
+            $messages['info'] = $this->saveAccessToken($session_data->uid, $session_data->access_token,
+            $fb_user['name']);
+        }
 
         //insert pages
         if (isset($_GET["action"]) && $_GET["action"] == "add page" && isset($_GET["facebook_page_id"])
         && isset($_GET["viewer_id"]) && isset($_GET["owner_id"]) && isset($_GET["instance_id"])) {
-            $page_data = json_decode(str_replace("\\", "", $_GET["facebook_page_id"]));
-            $messages = self::insertPage($page_data->page_id, $_GET["viewer_id"], $_GET["instance_id"],
-            $page_data->name, $page_data->pic_square, $messages);
+            //$page_data = json_decode(str_replace("\\", "", $_GET["facebook_page_id"]));
+            $page_data = FacebookGraphAPIAccessor::apiRequest('/'.$_GET["facebook_page_id"], $access_token);
+            $messages = self::insertPage($page_data->id, $_GET["viewer_id"], $_GET["instance_id"],
+            $page_data->name, $page_data->picture, $messages);
+        }
+        return $messages;
+    }
+
+    protected function saveAccessToken($fb_user_id, $fb_access_token, $fb_username) {
+        $msg = '';
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $oid = DAOFactory::getDAO('OwnerInstanceDAO');
+        $user_dao = DAOFactory::getDAO('UserDAO');
+
+        $instance = $instance_dao->getByUserIdOnNetwork($fb_user_id, 'facebook');
+        if (isset($instance)) {
+            $msg .= "Instance exists<br />";
+            $oi = $oid->get($this->owner->id, $instance->id);
+            if ($oi == null) { //Instance already exists, owner instance doesn't
+                $oid->insert($this->owner->id, $instance->id, $fb_access_token); //Add owner instance with session key
+                $msg .= "Created owner instance.<br />";
+            }
+        } else { //Instance does not exist
+            $msg .= "Instance does not exist<br />";
+
+            $instance_dao->insert($fb_user_id, $fb_username, 'facebook');
+            $msg .= "Created instance";
+
+            $instance = $instance_dao->getByUserIdOnNetwork($fb_user_id, 'facebook');
+            $oid->insert($this->owner->id, $instance->id, $fb_access_token);
+            $msg .= "Created owner instance.<br />";
         }
 
-        return $messages;
+        if (!$user_dao->isUserInDB($fb_user_id, 'facebook')) {
+            $r = array('user_id'=>$fb_user_id, 'user_name'=>$fb_username,'full_name'=>$fb_username, 'avatar'=>'',
+                'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0, 
+                'friend_count'=>0, 'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'', 
+                'last_post_id'=>'', 'network'=>'facebook' );
+            $u = new User($r, 'Owner info');
+            $user_dao->updateUser($u);
+        }
+        return $msg;
     }
 
     protected function insertPage($fb_page_id, $viewer_id, $existing_instance_id, $fb_page_name,
     $fb_page_avatar, $messages) {
         //check if instance exists
-        $i = $this->id->getByUserAndViewerId($fb_page_id, $viewer_id, 'facebook');
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+        $i = $instance_dao->getByUserAndViewerId($fb_page_id, $viewer_id, 'facebook page');
         $user_dao = DAOFactory::getDAO('UserDAO');
         $user_in_db = $user_dao->isUserInDB($fb_page_name, "facebook page");
         if ($i == null || !$user_in_db) {
             if ($i == null ) {
-                $instance_id = $this->id->insert($fb_page_id, $fb_page_name, "facebook page", $viewer_id);
+                $instance_id = $instance_dao->insert($fb_page_id, $fb_page_name, "facebook page", $viewer_id);
                 if ($instance_id) {
                     $messages["success"] .= "Instance ID ".$instance_id.
                 " created successfully for Facebook page ID $fb_page_id.";
                 }
-                $tokens = $this->oid->getOAuthTokens($existing_instance_id);
+                $tokens = $owner_instance_dao->getOAuthTokens($existing_instance_id);
                 $session_key = $tokens['oauth_access_token'];
-                $this->oid->insert($this->owner->id, $instance_id, $session_key);
+                $owner_instance_dao->insert($this->owner->id, $instance_id, $session_key);
             }
             if (!$user_in_db) {
                 $val = array();
@@ -179,4 +249,5 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
         return $messages;
     }
+
 }

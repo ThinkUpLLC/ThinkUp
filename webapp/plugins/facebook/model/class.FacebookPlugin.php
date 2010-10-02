@@ -48,21 +48,18 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
             }
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
-            $session_key = $tokens['oauth_access_token'];
-
-            $fb = new Facebook($options['facebook_api_key']->option_value,
-            $options['facebook_api_secret']->option_value);
+            $access_token = $tokens['oauth_access_token'];
 
             $id->updateLastRun($instance->id);
-            $crawler = new FacebookCrawler($instance, $fb);
+            $crawler = new FacebookCrawler($instance, $access_token);
             try {
-                $crawler->fetchInstanceUserInfo($instance->network_user_id, $session_key);
-                $crawler->fetchUserPostsAndReplies($instance->network_user_id, $session_key);
+                $crawler->fetchInstanceUserInfo();
+                $crawler->fetchUserPostsAndReplies($instance->network_user_id);
             } catch (Exception $e) {
                 $logger->logStatus('PROFILE EXCEPTION: '.$e->getMessage(), get_class($this));
             }
 
-            $id->save($crawler->instance, $crawler->owner_object->post_count, $logger);
+            $id->save($crawler->instance, 0, $logger);
         }
 
         //crawl Facebook pages
@@ -70,17 +67,13 @@ class FacebookPlugin implements CrawlerPlugin, WebappPlugin {
         foreach ($instances as $instance) {
             $logger->setUsername($instance->network_username);
             $tokens = $oid->getOAuthTokens($instance->id);
-            $session_key = $tokens['oauth_access_token'];
-
-            $fb = new Facebook($options['facebook_api_key']->option_value,
-            $options['facebook_api_secret']->option_value);
+            $access_token = $tokens['oauth_access_token'];
 
             $id->updateLastRun($instance->id);
-            $crawler = new FacebookCrawler($instance, $fb);
+            $crawler = new FacebookCrawler($instance, $access_token);
 
             try {
-                $crawler->fetchPagePostsAndReplies($instance->network_user_id, $instance->network_viewer_id,
-                $session_key);
+                $crawler->fetchPagePostsAndReplies($instance->network_user_id);
             } catch (Exception $e) {
                 $logger->logStatus('PAGE EXCEPTION: '.$e->getMessage(), get_class($this));
             }

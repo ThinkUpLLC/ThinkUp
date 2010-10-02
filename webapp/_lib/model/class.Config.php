@@ -19,9 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-
-/**
+ *
+ *
  * Configuration singleton
  *
  * Singleton acess object for ThinkUp configuration values set in config.inc.php.

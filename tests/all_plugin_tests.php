@@ -40,9 +40,9 @@ THINKUP_ROOT_PATH . 'tests/fixtures/'
 
 /* PLUGIN TESTS */
 require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookAuthController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookCrawler.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPluginConfigurationController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfRetweetDetector.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterAPIAccessorOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterAuthController.php';
@@ -50,7 +50,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterCrawle
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPluginConfigurationController.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPluginConfigurationController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrAPIAccessor.php';
 require_once THINKUP_ROOT_PATH.
 'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPluginConfigurationController.php';
@@ -59,10 +58,8 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoder
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/tests/TestOfHelloThinkUpPluginConfigurationController.php';
 
-
 $plugin_tests = & new GroupTest('Plugin tests');
 $plugin_tests->addTestCase(new TestOfExpandURLsPlugin());
-$plugin_tests->addTestCase(new TestOfFacebookAuthController());
 $plugin_tests->addTestCase(new TestOfFacebookCrawler());
 $plugin_tests->addTestCase(new TestOfFacebookPlugin());
 $plugin_tests->addTestCase(new TestOfFacebookPluginConfigurationController());

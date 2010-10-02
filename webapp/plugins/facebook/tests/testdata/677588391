@@ -1,0 +1,96 @@
+{
+   "id": "677588391",
+   "name": "Kevin Purdy",
+   "first_name": "Kevin",
+   "last_name": "Purdy",
+   "link": "http://www.facebook.com/kspurdy",
+   "hometown": {
+      "id": "106009546097758",
+      "name": "Baldwinsville, New York"
+   },
+   "location": {
+      "id": "109324835754083",
+      "name": "Buffalo, New York"
+   },
+   "work": [
+      {
+         "employer": {
+            "id": "113978535286078",
+            "name": "Freelance Writer"
+         },
+         "start_date": "2007-11",
+         "description": "(Always) looking for new outlets to write for, mostly about technology, business, crime and/or food."
+      },
+      {
+         "employer": {
+            "id": "107801579252627",
+            "name": "Gawker Media"
+         },
+         "start_date": "2007-10"
+      },
+      {
+         "employer": {
+            "id": "111391608887988",
+            "name": "Greater Niagara Newspapers / Niagara Gazette"
+         },
+         "position": {
+            "id": "111959505488730",
+            "name": "Features Reporter"
+         },
+         "start_date": "2005-10",
+         "end_date": "2007-11",
+         "description": "(also covered two towns and business beats for the Gazette)"
+      },
+      {
+         "employer": {
+            "id": "110059242348438",
+            "name": "Sandusky Register"
+         },
+         "position": {
+            "id": "111762652183890",
+            "name": "Cops & Courts Reporter"
+         },
+         "start_date": "2004-05",
+         "end_date": "2005-10"
+      },
+      {
+         "employer": {
+            "id": "114194348597793",
+            "name": "Buffalo News"
+         },
+         "position": {
+            "id": "108069565893190",
+            "name": "Freelancer / Intern / General Assignment"
+         },
+         "start_date": "2003-06",
+         "end_date": "2004-05"
+      }
+   ],
+   "education": [
+      {
+         "school": {
+            "id": "106377376064566",
+            "name": "Charles W. Baker High School"
+         },
+         "year": {
+            "id": "111286148895828",
+            "name": "1999"
+         },
+         "type": "High School"
+      },
+      {
+         "school": {
+            "id": "111568078860131",
+            "name": "University at Buffalo, The State University of New York"
+         },
+         "year": {
+            "id": "108783302486371",
+            "name": "2003"
+         },
+         "type": "College"
+      }
+   ],
+   "gender": "male",
+   "locale": "en_US",
+   "updated_time": "2010-07-25T22:53:13+0000"
+}
