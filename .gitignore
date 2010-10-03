@@ -11,5 +11,6 @@ tests/config.tests.inc.php
 extras/cron/config
 extras/scripts/autodeploy-conf
 extras/scripts/migratedb-conf
+extras/scripts/lic_header.py
 webapp/test_installer/*
 build/*
