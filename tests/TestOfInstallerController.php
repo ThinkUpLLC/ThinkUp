@@ -39,7 +39,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) .'/');
+            define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
         }
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
             define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
