@@ -29,7 +29,7 @@ require_once 'config.tests.inc.php';
 
 //set up 3 required constants
 if ( !defined('THINKUP_ROOT_PATH') ) {
-    define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) .'/');
+    define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
 }
 
 if ( !defined('THINKUP_WEBAPP_PATH') ) {
