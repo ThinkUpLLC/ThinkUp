@@ -23,6 +23,9 @@
  * Facebook Crawler
  *
  * Retrieves user data from Facebook, converts it to ThinkUp objects, and stores them in the ThinkUp database.
+ * All Facebook users are inserted with the network set to 'facebook', except for page instances' corresponding user
+ * (those get network='facebook page'). Comments on Facebook page posts get listed with network 'facebook page', even
+ * though they are by users with network set to 'facebook'.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
@@ -59,7 +62,7 @@ class FacebookCrawler {
      * Fetch and save the instance user's information.
      */
     public function fetchInstanceUserInfo() {
-        $user = $this->fetchUserInfo($this->instance->network_user_id, "Owner Status");
+        $user = $this->fetchUserInfo($this->instance->network_user_id, $this->instance->network, "Owner Status");
         if (isset($user)) {
             $this->logger->logStatus('Owner info set.', get_class($this));
         }
@@ -68,14 +71,16 @@ class FacebookCrawler {
     /**
      * Fetch and save a Facebook user's information.
      * @param int $uid Facebook user ID
+     * @param str $network Either 'facebook page' or 'facebook'
      * @param str $found_in Where the user was found
      * @return User
      */
-    public function fetchUserInfo($uid, $found_in) {
+    public function fetchUserInfo($uid, $network, $found_in) {
         // Get owner user details and save them to DB
-        $fields = $found_in!='facebook page'?'id,name,about,location,website':'id,name,location,website';
+        $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
         $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token,
         $fields);
+        $user_details->network = $network;
 
         $user = $this->parseUserDetails($user_details);
         if (isset($user)) {
@@ -109,7 +114,7 @@ class FacebookCrawler {
             $ua["is_protected"] = '';
             $ua["post_count"] = 0;
             $ua["joined"] = null;
-            $ua["network"] = "facebook";
+            $ua["network"] = $details->network;
             return $ua;
         } else {
             return null;
@@ -127,7 +132,7 @@ class FacebookCrawler {
             $this->logger->logStatus(sizeof($stream->data)." Facebook posts found for user ID $uid",
             get_class($this));
 
-            $thinkup_data = $this->parseStream($stream);
+            $thinkup_data = $this->parseStream($stream, 'facebook');
             $posts = $thinkup_data["posts"];
 
             $post_dao = DAOFactory::getDAO('PostDAO');
@@ -170,7 +175,8 @@ class FacebookCrawler {
             $post_dao = DAOFactory::getDAO('PostDAO');
             foreach ($posts as $post) {
                 if ($post['author_username']== "" && isset($post['author_user_id'])) {
-                    $commenter_object = $this->fetchUserInfo($post['author_user_id'], 'facebook page');
+                    $commenter_object = $this->fetchUserInfo($post['author_user_id'], 'facebook',
+                    'Facebook page comments');
                     if (isset($commenter_object)) {
                         $post["author_username"] = $commenter_object->full_name;
                         $post["author_fullname"] = $commenter_object->full_name;
@@ -186,7 +192,7 @@ class FacebookCrawler {
             $users = $thinkup_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
-                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_id'], 'facebook');
+                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_id'], $user['network']);
                     $found_in = 'Facebook page stream';
                     $user_object = new User($user, $found_in);
                     $user_dao = DAOFactory::getDAO('UserDAO');
@@ -203,13 +209,16 @@ class FacebookCrawler {
      * @param Object $stream
      * @param str $source The network for the post; by default 'facebook'
      */
-    private function parseStream($stream, $network='facebook') {
+    private function parseStream($stream, $network) {
         $thinkup_posts = array();
         $thinkup_users = array();
+        $profile = null;
         foreach ($stream->data as $p) {
             $post_id = explode("_", $p->id);
             $post_id = $post_id[1];
-            $profile = $this->fetchUserInfo($p->from->id, $network);
+            if ($profile==null) {
+                $profile = $this->fetchUserInfo($p->from->id, $network, 'Post stream');
+            }
             //assume profile comments are private and page posts are public
             $is_protected = ($network=='facebook')?1:0;
             $ttp = array("post_id"=>$post_id, "author_username"=>$profile->username,
@@ -243,7 +252,7 @@ class FacebookCrawler {
                                 "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->id.'/picture', 
                                 "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true',
                                 "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments",
-                                "network"=>$network);
+                                "network"=>'facebook'); //Users are always set to network=facebook
                                 array_push($thinkup_users, $ttu);
                                 $comments_captured = $comments_captured + 1;
                             }
@@ -272,7 +281,7 @@ class FacebookCrawler {
                                 "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->id.'/picture', 
                                 "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true', 
                                 "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments", 
-                                "network"=>$network);
+                                "network"=>'facebook'); //Users are always set to network=facebook
                                 array_push($thinkup_users, $ttu);
                             }
                         }
