@@ -1,15 +1,7 @@
 <?php
-/*
- Plugin Name: Facebook
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/facebook/
- Description: Crawler plugin pulls data from Facebook for authorized users and pages.
- Icon: assets/img/facebook_icon.png
- Version: 0.01
- Author: Gina Trapani
- */
 /**
  *
- * ThinkUp/webapp/plugins/facebook/controller/facebook.php
+ * ThinkUp/webapp/plugins/facebook/tests/classes/mock.facebook.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -27,19 +19,47 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
+ *
+ * Mock Facebook object
+ *
+ * Use this Facebook object for testing so tests don't hit the live Facebook API.
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2010 Gina Trapani
+ *
  */
-Utils::defineConstants();
-require_once THINKUP_WEBAPP_PATH.'_lib/extlib/facebook/facebook.php';
+class Facebook {
 
+    public function __construct($config) {
+    }
 
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('facebook', 'FacebookPlugin');
-$webapp->registerPlugin('facebook page', 'FacebookPlugin');
+    public function setAppId($appId) {
+    }
 
-$crawler = Crawler::getInstance();
-$crawler->registerCrawlerPlugin('FacebookPlugin');
+    public function getSession() {
+        return 'session';
+    }
+
+    public function getUser() {
+        $session = $this->getSession();
+        return $session ? $session['uid'] : null;
+    }
+
+    public function getAccessToken() {
+        return 'accesstoken';
+    }
+
+    public function getLoginUrl($params=array()) {
+        return 'mockloginurl';
+    }
+
+    public function getLogoutUrl($params=array()) {
+        return 'mocklogouturl';
+    }
+
+    public function api($str) {
+
+    }
+}

@@ -89,7 +89,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $facebook = new Facebook(array(
         'appId'  => $options['facebook_app_id']->option_value,
         'secret' => $options['facebook_api_secret']->option_value,
-        'cookie' => false,
+        'cookie' => true,
         ));
 
         //check status of current FB user
@@ -117,7 +117,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
         $this->addToView('fbconnect_link', $fbconnect_link);
 
-        $status = self::processPageActions($fb_user, $facebook->getAccessToken());
+        $status = self::processPageActions($fb_user);
         $this->addToView("info", $status["info"]);
         $this->addToView("error", $status["error"]);
         $this->addToView("success", $status["success"]);
@@ -133,7 +133,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             $access_token = $tokens['oauth_access_token'];
             if ($instance->network == 'facebook') { //not a page
                 $pages = FacebookGraphAPIAccessor::apiRequest('/'.$instance->network_user_id.'/likes', $access_token);
-                if ($pages->data) {
+                if (@$pages->data) {
                     $user_pages[$instance->network_user_id] = $pages->data;
                 }
             }
@@ -150,20 +150,30 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
     }
 
-    protected function processPageActions($fb_user, $access_token) {
+    protected function processPageActions($fb_user) {
         $messages = array("error"=>'', "success"=>'', "info"=>'');
 
         //authorize user
         if (isset($_GET["session"]) ) {
             $session_data = json_decode(str_replace("\\", "", $_GET["session"]));
+            if (!isset($fb_user) && !isset($fb_user['name'])) {
+                $user = FacebookGraphAPIAccessor::apiRequest('/me', $session_data->access_token);
+                $fb_username = $user->name;
+            } else {
+                $fb_username = $fb_user['name'];
+            }
             $messages['info'] = $this->saveAccessToken($session_data->uid, $session_data->access_token,
-            $fb_user['name']);
+            $fb_username);
         }
 
         //insert pages
         if (isset($_GET["action"]) && $_GET["action"] == "add page" && isset($_GET["facebook_page_id"])
         && isset($_GET["viewer_id"]) && isset($_GET["owner_id"]) && isset($_GET["instance_id"])) {
-            //$page_data = json_decode(str_replace("\\", "", $_GET["facebook_page_id"]));
+            //get access token
+            $oid = DAOFactory::getDAO('OwnerInstanceDAO');
+            $tokens = $oid->getOAuthTokens($_GET["instance_id"]);
+            $access_token = $tokens['oauth_access_token'];
+
             $page_data = FacebookGraphAPIAccessor::apiRequest('/'.$_GET["facebook_page_id"], $access_token);
             $messages = self::insertPage($page_data->id, $_GET["viewer_id"], $_GET["instance_id"],
             $page_data->name, $page_data->picture, $messages);

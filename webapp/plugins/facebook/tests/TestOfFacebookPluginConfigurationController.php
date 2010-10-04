@@ -32,13 +32,18 @@ if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/controller/class.FacebookPluginConfigurationController.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/facebook/facebook.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.FacebookGraphAPIAccessor.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.facebook.php';
 
 class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
+    /**
+     * Data fixture builders
+     * @var array
+     */
+    var $builders;
     /**
      * Constructor
      */
@@ -51,41 +56,47 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
      */
     public function setUp(){
         parent::setUp();
+        $this->builders = array();
+
         $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $webapp->registerPlugin('facebook', 'FacebookPlugin');
 
         //Add owner
-        $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com', is_activated=1,
-        pwd='XXX', activation_code='8888'";
-        $this->db->exec($q);
+        $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'me@example.com', 'is_activated'=>1));
+        array_push($this->builders, $owner_builder);
 
-        //Add instance_owner
-        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id) VALUES (1, 1)";
-        $this->db->exec($q);
+        //Add instance
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>606837591,
+        'network_username'=>'Gina Trapani', 'network'=>'facebook', 'is_active'=>1));
+        array_push($this->builders, $instance_builder);
 
-        //Insert test data into test table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
-        'Ev Williams', 'avatar.jpg', '1/1/2005');";
-        $this->db->exec($q);
+        //Add owner instance_owner
+        $owner_instance_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
+        array_push($this->builders, $owner_instance_builder);
 
-        //Make public
-        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public) VALUES (1, 13, 'ev', 1);";
-        $this->db->exec($q);
+        //Add second owner
+        $owner2_builder = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp J. User 2',
+        'email'=>'me2@example.com', 'is_activated'=>1));
+        array_push($this->builders, $owner2_builder);
 
-        //Add a bunch of posts
-        $counter = 0;
-        while ($counter < 40) {
-            $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 
-            'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".
-            rand(0, 4).", 5);";
-            $this->db->exec($q);
-            $counter++;
-        }
+        //Add second instance
+        $instance2_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>668406218,
+        'network_username'=>'Penelope Caridad', 'network'=>'facebook', 'is_active'=>1));
+        array_push($this->builders, $instance2_builder);
+
+        //Add second owner instance_owner
+        $owner_instance2_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2));
+        array_push($this->builders, $owner_instance2_builder);
+
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
         $_SERVER['HTTP_HOST'] = 'http://';
         $_SERVER['REQUEST_URI'] = '';
+    }
+
+    public function tearDown() {
+        $this->builders = null;
+        parent::tearDown();
     }
 
     /**
@@ -106,7 +117,6 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        //@TODO Figure out why API keys are not set here in the test, but they are in the controller
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
         'Please set your Facebook API key, application ID and secret.');
     }
@@ -122,7 +132,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
         $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-            'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
 
         //logged in
         $this->simulateLogin('me@example.com');
@@ -183,6 +193,49 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+    }
+
+    public function testConfiguredPluginWithOneFacebookUserWithSeveralLikedPages() {
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        //The mock API accessor reads the page likes JSON from the testdata/606837591_likes file
+        $v_mgr = $controller->getViewManager();
+        $liked_pages = $v_mgr->getTemplateDataItem('user_pages');
+        $this->assertIsA($liked_pages, 'Array');
+        $this->assertEqual($liked_pages[606837591][0]->name, 'jenny o.');
+        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instance_pages'), 'Array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instance_pages')), 0);
+        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'Array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instances')), 1);
+        $this->assertPattern("/The Wire/", $output);
+        $this->assertPattern("/Glee/", $output);
+        $this->assertPattern("/Brooklyn, New York/", $output);
+    }
+
+    public function testConfiguredPluginWithOneFacebookUserNoLikedPages() {
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me2@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        //The mock API accessor reads the page likes JSON from the testdata/668406218_likes file
+        $v_mgr = $controller->getViewManager();
+        $liked_pages = $v_mgr->getTemplateDataItem('user_pages');
+        $this->assertIsA($liked_pages, 'Array');
+        $this->assertEqual(sizeof($liked_pages), 0);
+        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instance_pages'), 'Array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instance_pages')), 0);
+        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'Array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instances')), 1);
     }
 
     /**

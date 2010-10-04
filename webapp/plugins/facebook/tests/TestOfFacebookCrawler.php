@@ -35,8 +35,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookCrawler.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.FacebookGraphAPIAccessor.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/facebook/facebook.php';
-
+require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/classes/mock.facebook.php';
 
 class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     /**
@@ -82,6 +81,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $fbc->fetchInstanceUserInfo();
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
+
         $this->assertTrue(isset($user));
         $this->assertEqual($user->username, 'Gina Trapani');
         $this->assertEqual($user->full_name, 'Gina Trapani');
@@ -122,5 +122,14 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $post = $pd->getPost('437900891355', 'facebook page');
         $this->assertEqual($post->post_text, 'Top 10 iOS Jailbreak Hacks');
         $this->assertEqual($post->reply_count_cache, 8);
+
+        //assert user network is set to Facebook, not Facebook Page
+        $ud = new UserMySQLDAO();
+        $user = $ud->getUserByName('Matthew Fleisher', 'facebook');
+        $this->assertEqual($user->full_name, 'Matthew Fleisher');
+        $this->assertEqual($user->network, 'facebook');
+
+        $user = $ud->getUserByName('Matthew Fleisher', 'facebook page');
+        $this->assertEqual($user, null);
     }
 }

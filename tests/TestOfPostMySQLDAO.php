@@ -291,27 +291,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         post_text, source, pub_date) VALUES (143, 24, 'notonpublictimeline', 'Not on public timeline', 'avatar.jpg', 
         'This post should not be on the public timeline', 'web', '2006-03-01 00:00:00');";
         PDODAO::$PDO->exec($q);
-
-        //To test ordering of replies on Facebook
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
-        (144, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
-        'This is a Facebook post', '', '2006-01-01 00:00:00', 2, 0, 'facebook');";
-        PDODAO::$PDO->exec($q);
-
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, is_reply_by_friend, in_reply_to_post_id, 
-        location, reply_retweet_distance, is_geo_encoded, network) 
-        VALUES (145, 20, 'user1', 'User 1', 'avatar.jpg', '@ev Cool!', '', 
-        '2006-01-03 00:00:00', 0, 0, 1, 144, 'New Delhi, Delhi, India', 0, 1, 'facebook');";
-        PDODAO::$PDO->exec($q);
-
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, is_reply_by_friend, in_reply_to_post_id, 
-        location, reply_retweet_distance, is_geo_encoded, network) 
-        VALUES (145, 23, 'user3', 'User 3', 'avatar.jpg', '@ev Rock on!', '', 
-        '2006-03-02 00:00:00', 0, 0, 0, 144, 'New Delhi, Delhi, India', 0, 1, 'facebook');";
-        PDODAO::$PDO->exec($q);
     }
 
     public function tearDown() {
@@ -636,10 +615,87 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[2]->location,'Chennai, Tamil Nadu, India');
 
         // Test date ordering for Facebook posts
+        $builders = $this->buildFacebookPostAndReplies();
         $posts = $dao->getRepliesToPost(144, 'facebook');
         $this->assertEqual(sizeof($posts), 2);
         $this->assertEqual($posts[0]->post_text, '@ev Cool!', "post reply");
         $this->assertEqual($posts[1]->post_text, '@ev Rock on!', "post reply");
+    }
+
+    private function buildFacebookPostAndReplies() {
+        $builders = array();
+        $ub1 = FixtureBuilder::build('users', array('user_id'=>30, 'user_name'=>'fbuser1',
+        'full_name'=>'Facebook User 1', 'is_protected'=>0, 'network'=>'facebook'));
+        array_push($builders, $ub1);
+
+        $ub2 = FixtureBuilder::build('users', array('user_id'=>31, 'user_name'=>'fbuser2',
+        'full_name'=>'Facebook User 2', 'is_protected'=>0, 'network'=>'facebook'));
+        array_push($builders, $ub2);
+
+        $ub3 = FixtureBuilder::build('users', array('user_id'=>32, 'user_name'=>'fbuser3',
+        'full_name'=>'Facebook User 3', 'is_protected'=>0, 'network'=>'facebook'));
+        array_push($builders, $ub3);
+
+        $pb1 = FixtureBuilder::build('posts', array('post_id'=>144, 'author_user_id'=>30,
+        'author_full_name'=>'Facebook User 3', 'post_text'=>'This is a Facebook post', 'reply_count_cache'=>2,
+        'network'=>'facebook'));
+        array_push($builders, $pb1);
+
+        $pb2 = FixtureBuilder::build('posts', array('post_id'=>145, 'author_user_id'=>31,
+        'author_full_name'=>'Facebook User 2', 'post_text'=>'@ev Cool!', 'reply_count_cache'=>0,
+        'in_reply_to_post_id'=>144, 'network'=>'facebook'));
+        array_push($builders, $pb2);
+
+        $pb3 = FixtureBuilder::build('posts', array('post_id'=>146, 'author_user_id'=>32,
+        'author_full_name'=>'Facebook User 3', 'post_text'=>'@ev Rock on!', 'reply_count_cache'=>0,
+        'in_reply_to_post_id'=>144, 'network'=>'facebook'));
+        array_push($builders, $pb3);
+
+        return $builders;
+    }
+
+    public function testGetRepliesToFacebookPagePost() {
+        //Facebook page posts are a special case, because the users have their network set to 'facebook', but the post
+        //network is 'facebook page'
+        $dao = new PostMySQLDAO();
+        $builders = $this->buildFacebookPagePostAndReplies();
+        $posts = $dao->getRepliesToPost(144, 'facebook page');
+        $this->assertEqual(sizeof($posts), 2);
+        $this->assertEqual($posts[0]->post_text, '@ev Cool!', "post reply");
+        $this->assertEqual($posts[1]->post_text, '@ev Rock on!', "post reply");
+
+    }
+
+    private function buildFacebookPagePostAndReplies() {
+        $builders = array();
+        $ub1 = FixtureBuilder::build('users', array('user_id'=>30, 'user_name'=>'fbuser1',
+        'full_name'=>'Facebook User 1', 'is_protected'=>0, 'network'=>'facebook'));
+        array_push($builders, $ub1);
+
+        $ub2 = FixtureBuilder::build('users', array('user_id'=>31, 'user_name'=>'fbuser2',
+        'full_name'=>'Facebook User 2', 'is_protected'=>0, 'network'=>'facebook'));
+        array_push($builders, $ub2);
+
+        $ub3 = FixtureBuilder::build('users', array('user_id'=>32, 'user_name'=>'fbuser3',
+        'full_name'=>'Facebook User 3', 'is_protected'=>0, 'network'=>'facebook'));
+        array_push($builders, $ub3);
+
+        $pb1 = FixtureBuilder::build('posts', array('post_id'=>144, 'author_user_id'=>30,
+        'author_full_name'=>'Facebook User 3', 'post_text'=>'This is a Facebook post', 'reply_count_cache'=>2,
+        'network'=>'facebook page'));
+        array_push($builders, $pb1);
+
+        $pb2 = FixtureBuilder::build('posts', array('post_id'=>145, 'author_user_id'=>31,
+        'author_full_name'=>'Facebook User 2', 'post_text'=>'@ev Cool!', 'reply_count_cache'=>0,
+        'in_reply_to_post_id'=>144, 'network'=>'facebook page'));
+        array_push($builders, $pb2);
+
+        $pb3 = FixtureBuilder::build('posts', array('post_id'=>146, 'author_user_id'=>32,
+        'author_full_name'=>'Facebook User 3', 'post_text'=>'@ev Rock on!', 'reply_count_cache'=>0,
+        'in_reply_to_post_id'=>144, 'network'=>'facebook page'));
+        array_push($builders, $pb3);
+
+        return $builders;
     }
 
     /**
@@ -938,9 +994,9 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $page_of_posts = $pdao->getPostsByPublicInstances(3, 15);
 
-        //Assert DAO returns 11 posts on page 3 (with 15 posts per page)
-        //We have 41 posts, so that's 15+15+11
-        $this->assertTrue(sizeof($page_of_posts) == 11);
+        //Assert DAO returns 10 posts on page 3 (with 15 posts per page)
+        //We have 40 posts, so that's 15+15+10
+        $this->assertEqual(sizeof($page_of_posts), 10);
 
         $this->assertTrue($page_of_posts[0]->post_text == "This is post 9");
         $this->assertTrue($page_of_posts[9]->post_text == "This is post 0");

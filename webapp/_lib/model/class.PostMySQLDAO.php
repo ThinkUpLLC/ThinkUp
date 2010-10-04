@@ -149,7 +149,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "pub_date - interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links AS l ON l.post_id = p.post_id AND l.network = p.network ";
-        $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
+        $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id AND u.network = :user_network ";
         $q .= "WHERE p.network=:network AND in_reply_to_post_id=:post_id ";
         if ($is_public) {
             $q .= "AND u.is_protected = 0 ";
@@ -166,7 +166,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network,
-            ':limit'=>$count
+            ':limit'=>$count,
+            ':user_network'=>($network=='facebook page')?'facebook':$network
         );
 
         $ps = $this->execute($q, $vars);
