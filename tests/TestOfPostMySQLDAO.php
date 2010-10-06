@@ -50,8 +50,12 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
         $config = Config::getInstance();
         $this->prefix = $config->getValue('table_prefix');
-
         $this->DAO = new PostMySQLDAO();
+        $this->builders = self::buildData();
+        
+    }
+
+     protected function buildData() {
         $builders = array();
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
 
@@ -290,6 +294,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'is_reply_by_friend'=>0, 'in_reply_to_post_id'=>144, 
         'location'=>'New Delhi, Delhi, India', 'reply_retweet_distance'=>0, 'is_geo_encoded'=>1, 
         'network'=>'facebook'));
+        
+    return $builders;
     }
 
     public function tearDown() {
@@ -1342,4 +1348,5 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($keys[1], 'Tweet Button');
         $this->assertEqual($keys[2], 'Tweetie for Mac');
     }
+
 }
