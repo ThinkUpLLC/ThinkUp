@@ -91,7 +91,7 @@ class SmartyThinkUp extends Smarty {
      * @param string $key
      * @param mixed $value
      */
-    public function assign($key, $value) {
+    public function assign($key, $value = null) {
         parent::assign($key, $value);
         if ($this->debug) {
             $this->template_data[$key] = $value;
@@ -127,7 +127,7 @@ class SmartyThinkUp extends Smarty {
      * @param str $cache_key Cache key
      * @param str Results
      */
-    public function fetch($template, $cache_key=null) {
+    public function fetch($template, $cache_key=null, $compile_id=null, $display=false) {
         if (! is_writable($this->compile_dir) || ! is_writable($this->compile_dir.'/cache') ) {
             Utils::defineConstants();
             $whoami = exec('whoami');
@@ -138,11 +138,7 @@ class SmartyThinkUp extends Smarty {
             array(THINKUP_BASE_URL, $whoami, $this->compile_dir),
             file_get_contents(THINKUP_WEBAPP_PATH.'_lib/view/500-perm.html'));
         } else {
-            if ($cache_key != null) {
-                return parent::fetch($template, $cache_key);
-            } else {
-                return parent::fetch($template);
-            }
+            return parent::fetch($template, $cache_key, $compile_id, $display);
         }
     }
 }

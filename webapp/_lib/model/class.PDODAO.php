@@ -74,8 +74,8 @@ abstract class PDODAO {
         if(is_null(self::$PDO)) {
             $this->connect();
         }
-        $this->prefix = $this->config->getValue('table_prefix');
-        $this->gmt_offset = $this->config->getGMTOffset();
+        self::$prefix = $this->config->getValue('table_prefix');
+        self::$gmt_offset = $this->config->getGMTOffset();
         $this->profiler_enabled = Profiler::isEnabled();
     }
 
@@ -141,8 +141,8 @@ abstract class PDODAO {
         if ($this->profiler_enabled) {
             $start_time = microtime(true);;
         }
-        $sql = preg_replace("/#prefix#/", $this->prefix, $sql);
-        $sql = preg_replace("/#gmt_offset#/", $this->gmt_offset, $sql);
+        $sql = preg_replace("/#prefix#/", self::$prefix, $sql);
+        $sql = preg_replace("/#gmt_offset#/", self::$gmt_offset, $sql);
         $stmt = self::$PDO->prepare($sql);
         if(is_array($binds) and count($binds) >= 1) {
             foreach ($binds as $key => $value) {
