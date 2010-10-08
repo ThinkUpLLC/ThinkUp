@@ -6,6 +6,8 @@
 		As an administrator you can see all accounts in the system.</p>
 	</div>
     {/if}
+    
+    {include file="_usermessage.tpl"}
 
     {if count($owner_instances) > 0 }
     <h2 class="subhead">Facebook User Accounts</h2>

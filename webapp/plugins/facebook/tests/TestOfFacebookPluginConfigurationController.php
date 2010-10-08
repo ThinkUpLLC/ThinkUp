@@ -72,7 +72,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         array_push($this->builders, $instance_builder);
 
         //Add owner instance_owner
-        $owner_instance_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
+        $owner_instance_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1,
+        'oauth_access_token'=>'faux-access-token1'));
         array_push($this->builders, $owner_instance_builder);
 
         //Add second owner
@@ -86,7 +87,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         array_push($this->builders, $instance2_builder);
 
         //Add second owner instance_owner
-        $owner_instance2_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2));
+        $owner_instance2_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2,
+        'oauth_access_token'=>'faux-access-token2'));
         array_push($this->builders, $owner_instance2_builder);
 
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
@@ -250,5 +252,73 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $plugin_opt3 = FixtureBuilder::build('plugin_options',
         array('plugin_id' => 2, 'option_name' => 'facebook_app_id', 'option_value' => "12345") );
         return array($plugin1, $plugin_opt1, $plugin_opt2, $plugin_opt3);
+    }
+
+    public function testAddPage() {
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $owner_dao = new OwnerMySQLDAO();
+
+        //page doesn't exist
+        $_GET['action'] = 'add page';
+        $_GET['instance_id'] = 1;
+        $_GET['viewer_id'] = 606837591;
+        $_GET['facebook_page_id'] = 162504567094163;
+        $_GET['p'] = 'facebook';
+        $_GET['owner_id'] = '';
+
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me2@example.com', true);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'array', 'Owner instances set');
+        $this->assertTrue($v_mgr->getTemplateDataItem('fbconnect_link') != '', 'Authorization link set');
+        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Success! Your Facebook page has been added.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), null, $v_mgr->getTemplateDataItem('errormsg'));
+        $instance = $instance_dao->getByUserIdOnNetwork(162504567094163, 'facebook page');
+        $this->assertTrue(isset($instance));
+        $this->assertEqual($instance->id, 3);
+        $oinstance = $owner_instance_dao->get( $owner->id, 3);
+        $this->assertTrue(isset($oinstance));
+
+        //page exists
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), null);
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'This Facebook Page is already in ThinkUp.',
+        $v_mgr->getTemplateDataItem('errormsg'));
+    }
+
+    public function testReconnectAccount()  {
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_dao = new OwnerMySQLDAO();
+
+        $_GET['p'] = 'facebook';
+        $_GET['perms'] = 'offline_access,read_stream,user_likes,user_location,user_website,read_friendlists';
+        $_GET['selected_profiles'] = 606837591;
+        $_GET['session'] = '{"session_key":"new-faux-access-token","uid":"606837591","expires":0,"secret":'.
+        '"itsasecret","access_token":"new-faux-access-token","sig":"siggysigsig"}';
+
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), "Success! You've reconnected your Facebook ".
+        "account.");
+
+        $instance = $instance_dao->getByUserIdOnNetwork(606837591, 'facebook');
+        $this->assertTrue(isset($instance));
+
+        $oinstance = $owner_instance_dao->get($owner->id, $instance->id);
+        $this->assertTrue(isset($oinstance));
+        $this->assertEqual($oinstance->oauth_access_token, 'new-faux-access-token');
     }
 }
