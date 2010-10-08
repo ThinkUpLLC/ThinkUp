@@ -34,14 +34,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
 
 class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
-    /**
-     *
-     * @var PostMySQLDAO
-     */
-    protected $dao;
-    /**
-     * Constructor
-     */
+
     public function __construct() {
         $this->UnitTestCase('PostMySQLDAO class test');
     }
@@ -50,60 +43,63 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
         $config = Config::getInstance();
         $this->prefix = $config->getValue('table_prefix');
+        $this->builders = self::buildData();
+    }
 
-        $this->DAO = new PostMySQLDAO();
-        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id) VALUES (1, 1)";
-        PDODAO::$PDO->exec($q);
+    public function tearDown() {
+        $this->builders = null;
+        parent::tearDown();
+    }
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated)
-        VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
-        PDODAO::$PDO->exec($q);
+    protected function buildData() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 0, 10);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
+        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
+        'last_updated'=>'1/1/2005', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 0, 70);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>18, 'user_name'=>'shutterbug',
+        'full_name'=>'Shutter Bug', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
+        'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (20, 'user1', 'User 1', 'avatar.jpg', 0, 90);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>19, 'user_name'=>'linkbaiter',
+        'full_name'=>'Link Baiter', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>70,
+        'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>20, 'user_name'=>'user1',
+        'full_name'=>'User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>90,
+        'network'=>'twitter'));
 
         //protected user
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (21, 'user2', 'User 2', 'avatar.jpg', 1, 80);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>21, 'user_name'=>'user2',
+        'full_name'=>'User 2', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>80,
+        'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (22, 'quoter', 'Quotables', 'avatar.jpg', 0, 80);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>22, 'user_name'=>'quoter',
+        'full_name'=>'Quotables', 'is_protected'=>0, 'follower_count'=>80, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (23, 'user3', 'User 3', 'avatar.jpg', 0, 100);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>23, 'user_name'=>'user3',
+        'full_name'=>'User 3', 'is_protected'=>0, 'follower_count'=>100, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (24, 'notonpublictimeline', 'Not on Public Timeline', 'avatar.jpg', 1, 100);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>24, 'user_name'=>'notonpublictimeline',
+        'full_name'=>'Not on Public Timeline', 'is_protected'=>1, 'network'=>'twitter', 'follower_count'=>100));
 
         //Make public
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (13, 'ev', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>13, 'network_username'=>'ev',
+        'is_public'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (18, 'shutterbug', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>18, 'network_username'=>'shutterbug',
+        'is_public'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (19, 'linkbaiter', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>19, 'network_username'=>'linkbaiter',
+        'is_public'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (23, 'user3', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>23, 'network_username'=>'user3',
+        'is_public'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public)
-        VALUES (24, 'notonpublictimeline', 0);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>24,
+        'network_username'=>'notonpublictimeline', 'is_public'=>0, 'network'=>'twitter'));
 
         //Add straight text posts
         $counter = 0;
@@ -116,11 +112,11 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             } else {
                 $source = 'web';
             }
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
-            ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
-            'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
+            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
+            'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.
+            $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5, 'network'=>'twitter',
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
             $counter++;
         }
 
@@ -129,15 +125,15 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $post_id = $counter + 40;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
-            VALUES ($post_id, 18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 'This is image post $counter', 'Flickr', 
-            '2006-01-02 00:$pseudo_minute:00', 0, 0, 'twitter');";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>18,
+            'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
+            'post_text'=>'This is image post '.$counter, 'source'=>'Flickr', 'in_reply_to_post_id'=>null,
+            'in_retweet_of_post_id'=>null,
+            'pub_date'=>'2006-01-02 00:'.$pseudo_minute.':00', 'network'=>'twitter', 'is_geo_encoded'=>0));
 
-            $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image)
-            VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".jpg', '', 0, $post_id, 1);";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'expanded_url'=>'http://example.com/'.$counter.'.jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>$post_id, 
+            'is_image'=>1));
 
             $counter++;
         }
@@ -147,16 +143,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
-            VALUES ($post_id, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
-            'This is link post $counter', 'web', '2006-03-01 00:$pseudo_minute:00', 0, 0, 'twitter');";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>19,
+            'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+            'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
+            $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
 
-            $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image)
-            VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".html', 
-            'Link $counter', 0, $post_id, 0);";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'explanded_url'=>'http://example.com/'.$counter.'.html', 'title'=>'Link $counter', 'clicks'=>0, 
+            'post_id'=>$post_id, 'is_image'=>0));
 
             $counter++;
         }
@@ -167,134 +161,120 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $post_id = $counter + 120;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             if ( ($counter/2) == 0 ) {
-                $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-                post_text, source, pub_date, reply_count_cache, retweet_count_cache, location, network) 
-                VALUES ($post_id, 20, 'user1', 'User 1', 'avatar.jpg', 
-                'Hey @ev and @jack thanks for founding Twitter  post $counter', 'web', 
-                '2006-03-01 00:$pseudo_minute:00', 0, 0, 'New Delhi', 'twitter');";
+                $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>20,
+                'author_username'=>'user1', 'author_fullname'=>'User 1', 'in_reply_to_post_id'=>null, 
+                'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'network'=>'twitter',
+                'post_text'=>'Hey @ev and @jack thanks for founding Twitter post '.$counter, 
+                'pub_date'=>'2006-03-01 00:'.$pseudo_minute.':00', 'location'=>'New Delhi'));
             } else {
-                $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname,
-                author_avatar, post_text, source, pub_date, reply_count_cache, retweet_count_cache, place, network) 
-                VALUES ($post_id, 21, 'user2', 'User 2', 'avatar.jpg', 
-                'Hey @ev and @jack should fix Twitter - post $counter', 'web', 
-                '2006-03-01 00:$pseudo_minute:00', 0, 0, 'New Delhi', 'twitter');";
+                $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>21,
+                'author_username'=>'user2', 'author_fullname'=>'User 2', 'in_reply_to_post_id'=>null, 
+                'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'network'=>'twitter',
+                'post_text'=>'Hey @ev and @jack should fix Twitter - post '.$counter,
+                'pub_date'=>'2006-03-01 00:'.$pseudo_minute.':00', 'place'=>'New Delhi'));
             }
-            PDODAO::$PDO->exec($q);
-
             $counter++;
         }
 
-
         //Add replies to specific post
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, location,
-        reply_retweet_distance, is_geo_encoded) 
-        VALUES (131, 20, 'user1', 'User 1', 'avatar.jpg', '@shutterbug Nice shot!', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 41, 'New Delhi, Delhi, India', 0, 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>131, 'author_user_id'=>20,
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
+        'post_text'=>'@shutterbug Nice shot!', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_post_id'=>41, 
+        'location'=>'New Delhi, Delhi, India', 'reply_retweet_distance'=>0, 'is_geo_encoded'=>1));
 
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, location,
-        reply_retweet_distance, is_geo_encoded) 
-        VALUES (132, 21, 'user2', 'User 2', 'avatar.jpg', '@shutterbug Nice shot!', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 41, 'Chennai, Tamil Nadu, India', 2000, 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>132, 'author_user_id'=>21,
+        'author_username'=>'user2', 'author_fullname'=>'User 2', 'network'=>'twitter', 
+        'post_text'=>'@shutterbug Nice shot!', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_post_id'=>41, 
+        'location'=>'Chennai, Tamil Nadu, India', 'reply_retweet_distance'=>2000, 'is_geo_encoded'=>1));
 
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id, location,
-        reply_retweet_distance, is_geo_encoded) 
-        VALUES (133, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
-        '@shutterbug This is a link post reply http://example.com/', 'web', '2006-03-01 00:00:00', 0, 0, 41,
-        'Mumbai, Maharashtra, India', 1500, 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>133, 'author_user_id'=>19,
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'network'=>'twitter', 
+        'post_text'=>'@shutterbug This is a link post reply http://example.com/', 'source'=>'web', 
+        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'in_reply_to_post_id'=>41, 'location'=>'Mumbai, Maharashtra, India', 'reply_retweet_distance'=>1500, 
+        'is_geo_encoded'=>1));
 
-        $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image)
-        VALUES ('http://example.com/', 'http://example.com/expanded-link.html', 'Link 1', 0, 133, 0);";
-        PDODAO::$PDO->exec($q);
-
-        //Add replies to specific post
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, is_reply_by_friend, in_reply_to_post_id,
-        network, location, geo, is_geo_encoded) VALUES (144, 20, 'user1', 'User 1', 'avatar.jpg',
-        '@shutterbug Nice shot!', 'web', '2006-03-01 00:00:00', 0, 0, 1, 134, 'twitter', 'New Delhi, Delhi, India',
-        '28.635308,77.22496', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com',
+        'expanded_url'=>'http://example.com/expanded-link.html', 'title'=>'Link 1', 'clicks'=>0, 'post_id'=>133, 
+        'is_image'=>0));
 
         //Add retweets of a specific post
         //original post
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, location, geo, is_geo_encoded) 
-        VALUES (134, 22, 'quoter', 'Quoter of Quotables', 'avatar.jpg', 
-        'Be liberal in what you accept and conservative in what you send', 'web', '2006-03-01 00:00:00', 0, 0,
-        'New Delhi, Delhi, India' , '28.635308,77.22496', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>134, 'author_user_id'=>22,
+        'author_username'=>'quoter', 'author_fullname'=>'Quoter of Quotables', 'network'=>'twitter', 
+        'post_text'=>'Be liberal in what you accept and conservative in what you send', 'source'=>'web', 
+        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'location'=>'New Delhi, Delhi, India', 'geo'=>'28.635308,77.22496', 'is_geo_encoded'=>1));
         //retweet 1
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id,
-        location, geo, reply_retweet_distance, is_geo_encoded) 
-        VALUES (135, 20, 'user1', 'User 1', 'avatar.jpg', 
-        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web',
-        '2006-03-01 00:00:00', 0, 0, 134, 'Chennai, Tamil Nadu, India', '13.060416,80.249634', 2000, 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>135, 'author_user_id'=>20,
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
+        'post_text'=>'RT @quoter Be liberal in what you accept and conservative in what you send', 'source'=>'web', 
+        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'in_retweet_of_post_id'=>134, 'location'=>'Chennai, Tamil Nadu, India', 'geo'=>'13.060416,80.249634', 
+        'reply_retweet_distance'=>2000, 'is_geo_encoded'=>1, 'in_reply_to_post_id'=>null));
         //retweet 2
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id,
-        location, geo, reply_retweet_distance, is_geo_encoded) 
-        VALUES (136, 21, 'user2', 'User 2', 'avatar.jpg', 
-        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 134, 'Dwarka, New Delhi, Delhi, India', '28.635308,77.22496', 0, 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>136, 'author_user_id'=>21,
+        'author_username'=>'user2', 'author_fullname'=>'User 2', 'network'=>'twitter', 
+        'post_text'=>'RT @quoter Be liberal in what you accept and conservative in what you send', 
+        'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'in_retweet_of_post_id'=>134, 'location'=>'Dwarka, New Delhi, Delhi, India', 'geo'=>'28.635308,77.22496', 
+        'reply_retweet_distance'=>'0', 'is_geo_encoded'=>1));
         //retweet 3
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_retweet_of_post_id,
-        location, geo, reply_retweet_distance, is_geo_encoded) 
-        VALUES (137, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
-        'RT @quoter Be liberal in what you accept and conservative in what you send', 'web', 
-        '2006-03-01 00:00:00', 0, 0, 134, 'Mumbai, Maharashtra, India', '19.017656,72.856178', 1500, 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>137, 'author_user_id'=>19,
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'network'=>'twitter', 
+        'post_text'=>'RT @quoter Be liberal in what you accept and conservative in what you send', 
+        'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'in_retweet_of_post_id'=>134, 'location'=>'Mumbai, Maharashtra, India', 'geo'=>'19.017656,72.856178', 
+        'reply_retweet_distance'=>1500, 'is_geo_encoded'=>1));
 
         //Add reply back
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_user_id, 
-        in_reply_to_post_id) VALUES (138, 18, 'shutterbug', 'Shutterbug', 'avatar.jpg', 
-        '@user2 Thanks!', 'web', '2006-03-01 00:00:00', 0, 0, 21, 132);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>138, 'author_user_id'=>18,
+        'author_username'=>'shutterbug', 'author_fullname'=>'Shutterbug', 'network'=>'twitter', 
+        'post_text'=>'@user2 Thanks!', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>21, 'in_reply_to_post_id'=>132));
 
         //Add user exchange
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_user_id) 
-        VALUES (139, 20, 'user1', 'User 1', 'avatar.jpg', '@ev When will Twitter have a business model?', 
-        'web', '2006-03-01 00:00:00', 0, 0, 13);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>139, 'author_user_id'=>20,
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
+        'post_text'=>'@ev When will Twitter have a business model?', 'source'=>'web', 
+        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'in_reply_to_post_id'=>null, 'in_reply_to_user_id'=>13 ));
 
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, 
-        in_reply_to_user_id, in_reply_to_post_id) VALUES (140, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
-        '@user1 Soon....', 'web', '2006-03-01 00:00:00', 0, 0, 20, 139);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>140, 'author_user_id'=>13,
+        'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'network'=>'twitter', 
+        'post_text'=>'@user1 Soon...', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>139));
 
         //Add posts replying to post not in the system
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_user_id, 
-        in_reply_to_post_id) VALUES (141, 23, 'user3', 'User 3', 'avatar.jpg', 
-        '@user4 I\'m replying to a post not in the TT db', 'web', '2006-03-01 00:00:00', 0, 0, 20, 150);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>141, 'author_user_id'=>23,
+        'author_username'=>'user3', 'author_fullname'=>'User 3', 'network'=>'twitter', 
+        'post_text'=>'@user4 I\'m replying to a post not in the TT db', 'source'=>'web', 
+        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>250));
 
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_user_id, in_reply_to_post_id) 
-        VALUES (142, 23, 'user3', 'User 3', 'avatar.jpg', 
-        '@user4 I\'m replying to another post not in the TT db', 'web', '2006-03-01 00:00:00', 0, 0, 20, 151);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>142, 'author_user_id'=>23,
+        'author_username'=>'user3', 'author_fullname'=>'User 3', 'network'=>'twitter', 
+        'post_text'=>'@user4 I\'m replying to another post not in the TT db', 'source'=>'web', 
+        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>251));
 
         //Add post by instance not on public timeline
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date) VALUES (143, 24, 'notonpublictimeline', 'Not on public timeline', 'avatar.jpg', 
-        'This post should not be on the public timeline', 'web', '2006-03-01 00:00:00');";
-        PDODAO::$PDO->exec($q);
-    }
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>143, 'author_user_id'=>24,
+        'author_username'=>'notonpublictimeline', 'author_fullname'=>'Not on public timeline', 
+        'network'=>'twitter', 'post_text'=>'This post should not be on the public timeline', 
+        'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00'));
 
-    public function tearDown() {
-        parent::tearDown();
+        //Add replies to specific post
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>144, 'author_user_id'=>20,
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
+        'post_text'=>'@quoter Indeed, Jon Postel.', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'is_reply_by_friend'=>1, 'in_reply_to_post_id'=>134, 
+        'network'=>'twitter', 'location'=>'New Delhi, Delhi, India', 'geo'=>'28.635308,77.22496', 
+        'is_geo_encoded'=>1));
+
+        return $builders;
     }
 
     /**
@@ -345,8 +325,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PostMySQLDAO();
         $posts = $dao->getStrayRepliedToPosts(23, 'twitter');
         $this->assertEqual(sizeof($posts), 2);
-        $this->assertEqual($posts[0]["in_reply_to_post_id"], 150);
-        $this->assertEqual($posts[1]["in_reply_to_post_id"], 151);
+        $this->assertEqual($posts[0]["in_reply_to_post_id"], 250);
+        $this->assertEqual($posts[1]["in_reply_to_post_id"], 251);
     }
 
     /**
@@ -616,7 +596,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // Test date ordering for Facebook posts
         $builders = $this->buildFacebookPostAndReplies();
-        $posts = $dao->getRepliesToPost(144, 'facebook');
+        $posts = $dao->getRepliesToPost(145, 'facebook');
         $this->assertEqual(sizeof($posts), 2);
         $this->assertEqual($posts[0]->post_text, '@ev Cool!', "post reply");
         $this->assertEqual($posts[1]->post_text, '@ev Rock on!', "post reply");
@@ -636,19 +616,19 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'full_name'=>'Facebook User 3', 'is_protected'=>0, 'network'=>'facebook'));
         array_push($builders, $ub3);
 
-        $pb1 = FixtureBuilder::build('posts', array('post_id'=>144, 'author_user_id'=>30,
+        $pb1 = FixtureBuilder::build('posts', array('post_id'=>145, 'author_user_id'=>30,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'This is a Facebook post', 'reply_count_cache'=>2,
         'network'=>'facebook'));
         array_push($builders, $pb1);
 
-        $pb2 = FixtureBuilder::build('posts', array('post_id'=>145, 'author_user_id'=>31,
+        $pb2 = FixtureBuilder::build('posts', array('post_id'=>146, 'author_user_id'=>31,
         'author_full_name'=>'Facebook User 2', 'post_text'=>'@ev Cool!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>144, 'network'=>'facebook'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook'));
         array_push($builders, $pb2);
 
-        $pb3 = FixtureBuilder::build('posts', array('post_id'=>146, 'author_user_id'=>32,
+        $pb3 = FixtureBuilder::build('posts', array('post_id'=>147, 'author_user_id'=>32,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'@ev Rock on!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>144, 'network'=>'facebook'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook'));
         array_push($builders, $pb3);
 
         return $builders;
@@ -659,7 +639,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         //network is 'facebook page'
         $dao = new PostMySQLDAO();
         $builders = $this->buildFacebookPagePostAndReplies();
-        $posts = $dao->getRepliesToPost(144, 'facebook page');
+        $posts = $dao->getRepliesToPost(145, 'facebook page');
         $this->assertEqual(sizeof($posts), 2);
         $this->assertEqual($posts[0]->post_text, '@ev Cool!', "post reply");
         $this->assertEqual($posts[1]->post_text, '@ev Rock on!', "post reply");
@@ -680,19 +660,19 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'full_name'=>'Facebook User 3', 'is_protected'=>0, 'network'=>'facebook'));
         array_push($builders, $ub3);
 
-        $pb1 = FixtureBuilder::build('posts', array('post_id'=>144, 'author_user_id'=>30,
+        $pb1 = FixtureBuilder::build('posts', array('post_id'=>145, 'author_user_id'=>30,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'This is a Facebook post', 'reply_count_cache'=>2,
         'network'=>'facebook page'));
         array_push($builders, $pb1);
 
-        $pb2 = FixtureBuilder::build('posts', array('post_id'=>145, 'author_user_id'=>31,
+        $pb2 = FixtureBuilder::build('posts', array('post_id'=>146, 'author_user_id'=>31,
         'author_full_name'=>'Facebook User 2', 'post_text'=>'@ev Cool!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>144, 'network'=>'facebook page'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook page'));
         array_push($builders, $pb2);
 
-        $pb3 = FixtureBuilder::build('posts', array('post_id'=>146, 'author_user_id'=>32,
+        $pb3 = FixtureBuilder::build('posts', array('post_id'=>147, 'author_user_id'=>32,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'@ev Rock on!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>144, 'network'=>'facebook page'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook page'));
         array_push($builders, $pb3);
 
         return $builders;
@@ -774,10 +754,13 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts_replied_to[0]["answer"], "@user2 Thanks!");
 
         $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10, 'twitter');
+        $this->assertEqual(sizeof($posts_replied_to), 1);
+        $this->assertEqual($posts_replied_to[0]["question_post_id"], 139);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user1");
         $this->assertEqual($posts_replied_to[0]["question"], "@ev When will Twitter have a business model?");
+        $this->assertEqual($posts_replied_to[0]['answer_post_id'], 140);
         $this->assertEqual($posts_replied_to[0]["answerer_username"], "ev");
-        $this->assertEqual($posts_replied_to[0]["answer"], "@user1 Soon....");
+        $this->assertEqual($posts_replied_to[0]["answer"], "@user1 Soon...");
     }
 
     /**
@@ -797,12 +780,15 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts_replied_to[1]["answerer_username"], "shutterbug");
         $this->assertEqual($posts_replied_to[1]["answer"], "@user2 Thanks!");
 
-        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 20, 'twitter');
+        $posts_replied_to = $dao->getExchangesBetweenUsers(13, 20, 'twitter');
         $this->assertEqual(sizeof($posts_replied_to), 1);
+
+        $this->assertEqual($posts_replied_to[0]["question_post_id"], 139);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user1");
         $this->assertEqual($posts_replied_to[0]["question"], "@ev When will Twitter have a business model?");
+        $this->assertEqual($posts_replied_to[0]['answer_post_id'], 140);
         $this->assertEqual($posts_replied_to[0]["answerer_username"], "ev");
-        $this->assertEqual($posts_replied_to[0]["answer"], "@user1 Soon....");
+        $this->assertEqual($posts_replied_to[0]["answer"], "@user1 Soon...");
     }
 
     /**
@@ -1028,21 +1014,20 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testAssignParent() {
         //Add two "parent" posts
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (550, 19, 'linkbaiter',
-        'Link Baiter', 'avatar.jpg', 'This is parent post 1', 'web', '2006-03-01 00:01:00', 1, 0);";
-        PDODAO::$PDO->exec($q);
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (551, 19, 'linkbaiter',
-        'Link Baiter', 'avatar.jpg', 'This is parent post 2', 'web', '2006-03-01 00:01:00', 0, 0);";
-        PDODAO::$PDO->exec($q);
+        $builders = array();
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>550, 'author_user_id'=>19,
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'post_text'=>'This is parent post 1',
+        'reply_count_cache'=>1, 'retweet_count_cache'=>0));
+
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>551, 'author_user_id'=>19,
+        'author_fullname'=>'Link Baiter', 'post_text'=>'This is parent post 2', 'reply_count_cache'=>0,
+        'retweet_count_cache'=>0));
 
         //Add a post with the parent post 550
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, in_reply_to_post_id)
-        VALUES (552, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 'This is a reply with the wrong parent',
-        'web', '2006-03-01 00:01:00', 0, 0, 550);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>552, 'author_user_id'=>19,
+        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter',
+        'post_text'=>'This is a reply with the wrong parent', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
+        'in_reply_to_post_id'=>550));
 
         $pdao = new PostMySQLDAO();
 
@@ -1099,12 +1084,12 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $id += $counter;
             $builders[] = FixtureBuilder::build('posts', array(
-                'id'=>$id,
-                'post_id'=>(144+$counter),
-                'author_user_id'=>23,
-                'author_username'=>'user3',
-                'pub_date'=>'-'.$counter.'d',
-                'retweet_count_cache'=>$counter));
+            'id'=>$id,
+            'post_id'=>(144+$counter),
+            'author_user_id'=>23,
+            'author_username'=>'user3',
+            'pub_date'=>'-'.$counter.'d',
+            'retweet_count_cache'=>$counter));
             $counter++;
         }
         $pdao = new PostMySQLDAO();
@@ -1123,7 +1108,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetPoststoGeoencode() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getPoststoGeoencode();
-        $this->assertEqual(count($posts), 10);
+        $this->assertEqual(count($posts), 136);
         $this->assertIsA($posts, "array");
     }
 
