@@ -54,7 +54,7 @@ function thinkup_chron_archive_handler($atts) {
     }
 
     $sql = $wpdb2->prepare("select pub_date, post_text, post_id from ".$options_array['thinkup_table_prefix']['value'].
-    "posts where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc", $twitter_username);
+    "posts where author_username='%s' and in_reply_to_user_id is null  order by pub_date desc", $twitter_username);
 
     $tweets = $wpdb2->get_results($sql);
 
