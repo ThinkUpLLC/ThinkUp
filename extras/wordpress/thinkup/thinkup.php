@@ -40,34 +40,44 @@ function thinkup_chron_archive_handler($atts) {
 
     extract(shortcode_atts(array('twitter_username'=>get_option('thinkup_twitter_username'), 'title'=>
     '<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order '.
-    '(sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 
+    '(sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 
+    'before_tweet_alt'=>'<li class="alt">', 'after_tweet'=>'</li>', 
     'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia',
     'gmt_offset'=>get_option('gmt_offset'), 'order'=>'desc', ), $atts));
 
     $options_array = thinkup_get_options_array();
 
-    if ($options_array['thinkup_server']['value'] != '')
-    $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'],
-    $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
-    else {
+    if ($options_array['thinkup_server']['value'] != '') {
+        $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'],
+        $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
+    } else {
         global $wpdb;
         $wpdb2 = $wpdb;
     }
 
     $sql = $wpdb2->prepare("select pub_date, post_text, post_id from ".$options_array['thinkup_table_prefix']['value'].
-    "posts where author_username='%s' and in_reply_to_user_id is null order by pub_date %s", $twitter_username, $order);
-
+    "posts where author_username='%s' and in_reply_to_user_id is null order by pub_date ".$order, $twitter_username);
     $tweets = $wpdb2->get_results($sql);
 
     if ($tweets) {
         echo str_replace('#twitter_username#', $twitter_username, $title);
         echo "{$before}";
+
+        $cur = 0;
         foreach ($tweets as $t) {
-            $tweet_content = linkUrls($t->post_text);
+            $tweet_content = htmlentities ($t->post_text);
+            $tweet_content = linkUrls($tweet_content);
             $tweet_content = linkTwitterUsers($tweet_content);
-            echo "{$before_tweet}{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}
+            echo "{$before_tweet}{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}";
+            if ($cur % 2) {
+                echo $before_tweet;
+            } else {
+                echo $before_tweet_alt;
+            }
+            echo "{$after_tweet_html} {$before_date}
             <a href=\"http://twitter.com/{$twitter_username}/statuses/{$t->post_id}/\">".
             actual_time($date_format, $gmt_offset, strtotime($t->pub_date))."</a>{$after_date}{$after_tweet}";
+            $cur++;
         }
         echo "{$after}";
     } else {
@@ -96,17 +106,17 @@ function thinkup_replies_handler($atts) {
     }
 
     $sql = $wpdb2->prepare("select
-                t.*, u.*
+                p.*, u.*
             from 
-                ".$options_array['thinkup_table_prefix']['value']."posts t
+                ".$options_array['thinkup_table_prefix']['value']."posts p
             inner join 
                 ".$options_array['thinkup_table_prefix']['value']."users u 
             on 
-                t.author_user_id = u.user_id 
+                p.author_user_id = u.user_id 
             where 
                 in_reply_to_post_id = %0.0f 
-                AND network = '%s'
-                AND u.is_protected = 0    
+                AND p.network = '%s'
+                AND p.is_protected = 0    
             order by 
                 follower_count desc;", $post_id, $network);
 
@@ -152,18 +162,18 @@ function thinkup_reply_count_handler($atts) {
     $sql = $wpdb2->prepare("select
                 count(*)
             from 
-                ".$options_array['thinkup_table_prefix']['value']."posts t
+                ".$options_array['thinkup_table_prefix']['value']."posts p
             inner join 
                 ".$options_array['thinkup_table_prefix']['value']."users u 
             on 
-                t.author_user_id = u.user_id 
+                p.author_user_id = u.user_id 
             where 
-                in_reply_to_post_id=%0.0f
-                AND network = '%s' 
-                AND u.is_protected = 0    
+                p.in_reply_to_post_id=%0.0f 
+                AND p.network = '%s' 
+                AND p.is_protected = 0    
             order by 
                 follower_count desc;", $post_id, $network);
-    //echo $sql;
+
     $count = $wpdb2->get_var($sql);
     $before_mod = str_replace('#permalink#', get_permalink(), $before);
     return "{$before_mod}{$count}{$after}";
@@ -291,7 +301,7 @@ function thinkup_options() {
     // options form
     ?>
 <form name="form1" method="post" action=""><input type="hidden"
-	name="<?php echo $options_hidden_field_name; ?>" value="Y">
+    name="<?php echo $options_hidden_field_name; ?>" value="Y">
 <table>
 <?php
 foreach ($options_array as $opt) {
@@ -301,21 +311,21 @@ foreach ($options_array as $opt) {
     $field_value = get_option($opt['key']);
 
     ?>
-	<tr>
-		<td align="right" valign="top"><?php _e($opt['label'], 'mt_trans_domain'); ?>
-		</td>
-		<td><input type="<?php echo $opt['type']; ?>"
-			name="<?php echo $opt['key'] ?>" value="<?php echo $field_value ?>"
-			size="20"> <br />
-		<small> <?php echo $opt['description']; ?> </small></td>
-	</tr>
-	<?php } ?>
+    <tr>
+        <td align="right" valign="top"><?php _e($opt['label'], 'mt_trans_domain'); ?>
+        </td>
+        <td><input type="<?php echo $opt['type']; ?>"
+            name="<?php echo $opt['key'] ?>" value="<?php echo $field_value ?>"
+            size="20"> <br />
+        <small> <?php echo $opt['description']; ?> </small></td>
+    </tr>
+    <?php } ?>
 </table>
 <p class="submit"><input type="submit" name="Submit"
-	value="<?php _e('Update Options', 'mt_trans_domain' ) ?>" /></p>
+    value="<?php _e('Update Options', 'mt_trans_domain' ) ?>" /></p>
 </form>
 </div>
-	<?php
+    <?php
 }
 
 add_action('admin_menu', 'thinkup_menu');

@@ -23,8 +23,8 @@ Displays Twitter data pulled from the [ThinkUp](http://thinkupapp.com) on your W
 and database details (if the ThinkUp database is separate from WordPress).
 4. Place the right shortcode in a post or page. 
 For example, 
-`[thinkup_chronological_archive]` lists all tweets for the default username without replies. 
-`[thinkup_status_reply_count post_id="12345" network="twitter']` outputs the number of replies for post ID 12345 on
+`[thinkup_chronological_archive order='asc']` lists all tweets for the default username without replies. 
+`[thinkup_reply_count post_id="12345" network="twitter']` outputs the number of replies for post ID 12345 on
 'twitter' network by the default username.
 `[thinkup_status_replies post_id="12345" network="twitter']` lists all replies for status id 12345 by the default 
 username. Add the `twitter_username="yourtwittername"` parameter to the shortcode to use a username other than 
