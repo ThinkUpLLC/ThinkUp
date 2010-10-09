@@ -62,7 +62,8 @@ function thinkup_chron_archive_handler($atts) {
         echo str_replace('#twitter_username#', $twitter_username, $title);
         echo "{$before}";
         foreach ($tweets as $t) {
-            $tweet_content = linkUrls($t->post_text);
+            $tweet_content = htmlentities ($t->post_text);
+            $tweet_content = linkUrls($tweet_content);
             $tweet_content = linkTwitterUsers($tweet_content);
             echo "{$before_tweet}{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}
             <a href=\"http://twitter.com/{$twitter_username}/statuses/{$t->post_id}/\">".
