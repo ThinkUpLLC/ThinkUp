@@ -42,32 +42,51 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->DAO = new InstanceMySQLDAO();
-        $q  = "INSERT INTO tu_instances ";
-        $q .= "(network_user_id, network_username, network, ";
-        $q .= "network_viewer_id, crawler_last_run, is_active, is_public) VALUES ";
-        $q .= "(10 , 'jack', 'twitter', 10, '1988-01-20 12:00:00', 1, 0), ";
-        $q .= "(12, 'jill', 'twitter', 12, '2010-01-20 12:00:00', 1, 0), ";
-        $q .= "(13 , 'stuart', 'twitter', 13, '2010-01-01 12:00:00', 0, 1), ";
-        $q .= "(15 , 'Jillian Dickerson', 'facebook', 15, '2010-01-01 12:00:01', 1, 1), ";
-        $q .= "(16 , 'Paul Clark', 'facebook', 16, '2010-01-01 12:00:02', 0, 1) ";
-        PDODAO::$PDO->exec($q);
+        $this->builders = self::buildData();
+    }
 
-        $q  = "INSERT INTO  tu_owner_instances (owner_id , instance_id) ";
-        $q .= "VALUES ('2',  '1'), ('2', '2');";
-        PDODAO::$PDO->exec($q);
+    protected function buildData() {
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>10,
+        'network_username'=>'jack', 'network'=>'twitter', 'network_viewer_id'=>10, 
+        'crawler_last_run'=>'1988-01-20 12:00:00', 'is_active'=>1, 'is_public'=>0));
+
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>12,
+        'network_username'=>'jill', 'network'=>'twitter', 'network_viewer_id'=>12, 
+        'crawler_last_run'=>'2010-01-20 12:00:00', 'is_active'=>1, 'is_public'=>0));
+
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>13,
+        'network_username'=>'stuart', 'network'=>'twitter', 'network_viewer_id'=>13, 
+        'crawler_last_run'=>'2010-01-01 12:00:00', 'is_active'=>0, 'is_public'=>1));
+
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>15,
+        'network_username'=>'Jillian Dickerson', 'network'=>'facebook', 'network_viewer_id'=>15, 
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1, 'is_public'=>1));
+
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>16,
+        'network_username'=>'Paul Clark', 'network'=>'facebook', 'network_viewer_id'=>16, 
+        'crawler_last_run'=>'2010-01-01 12:00:02', 'is_active'=>0, 'is_public'=>1));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>1));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2));
+
+        return $builders;
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
     }
 
     public function testGetHoursSinceLastCrawlerRun() {
         $dao = new InstanceMySQLDAO();
-        $instance_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-3h'));
+        $builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-3h'));
         $hours = $dao->getHoursSinceLastCrawlerRun();
         $this->assertEqual($hours, 3);
 
-        $instance1_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-2h'));
+        $builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-2h'));
         $hours = $dao->getHoursSinceLastCrawlerRun();
         $this->assertEqual($hours, 2);
     }
@@ -593,11 +612,9 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetByUserAndViewerId() {
         $this->DAO = new InstanceMySQLDAO();
-        $q  = "INSERT INTO tu_instances ";
-        $q .= "(network_user_id, network_username, network, ";
-        $q .= "network_viewer_id, crawler_last_run, is_active) VALUES ";
-        $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17,
+        'network_username'=>'Jillian Micheals', 'network'=>'facebook', 'network_viewer_id'=>15, 
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
 
         $result = $this->DAO->getByUserAndViewerId(10, 10, 'twitter');
         $this->assertEqual($result->network_username, 'jack');
@@ -608,11 +625,9 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetByViewerId() {
         $this->DAO = new InstanceMySQLDAO();
-        $q  = "INSERT INTO tu_instances ";
-        $q .= "(network_user_id, network_username, network, ";
-        $q .= "network_viewer_id, crawler_last_run, is_active) VALUES ";
-        $q .= "(17 , 'Jillian Micheals', 'facebook', 15, '2010-01-01 12:00:01', 1) ";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17,
+        'network_username'=>'Jillian Micheals', 'network'=>'facebook', 'network_viewer_id'=>15, 
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
 
         $result = $this->DAO->getByViewerId(15);
         $this->assertEqual($result[0]->network_username, 'Jillian Dickerson');
@@ -621,12 +636,13 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetByUsernameOnNetwork() {
         $this->DAO = new InstanceMySQLDAO();
-        $q  = "INSERT INTO tu_instances ";
-        $q .= "(network_user_id, network_username, network, ";
-        $q .= "network_viewer_id, crawler_last_run, is_active) VALUES ";
-        $q .= "(17 , 'salma', 'facebook', 15, '2010-01-01 12:00:01', 1), ";
-        $q .= "(18 , 'salma', 'facebook page', 15, '2010-01-01 12:00:01', 1) ";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17,
+        'network_username'=>'salma', 'network'=>'facebook', 'network_viewer_id'=>15, 
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
+
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>18,
+        'network_username'=>'salma', 'network'=>'facebook page', 'network_viewer_id'=>15, 
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
 
         $result = $this->DAO->getByUsernameOnNetwork('salma', 'facebook');
         $this->assertEqual($result->network_username, 'salma');
@@ -640,7 +656,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetInstanceFreshestPublicOne() {
-        $instance_builder = FixtureBuilder::build('instances', array('network_user_id'=>'501',
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>'501',
         'network_username'=>'mememe', 'is_public'=>'1', 'is_activated'=>'1', 'crawler_last_run'=>'-1h'));
         //try one
         $result = $this->DAO->getInstanceFreshestPublicOne();
@@ -648,7 +664,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->network_username, 'mememe');
         $this->assertEqual($result->network_user_id, 501);
 
-        $instance_builder1 = FixtureBuilder::build('instances', array('network_user_id'=>'502',
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>'502',
         'network_username'=>'mememetoo', 'is_public'=>'1', 'is_activated'=>'1', 'crawler_last_run'=>'-30m'));
         //try one
         $result = $this->DAO->getInstanceFreshestPublicOne();
