@@ -39,8 +39,9 @@ function thinkup_chron_archive_handler($atts) {
 
     extract(shortcode_atts(array('twitter_username'=>get_option('thinkup_twitter_username'), 'title'=>
     '<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order '.
-    '(sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 
-    'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia',
+    '(sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>',
+    'before_tweet_alt'=>'<li class="alt">', 'after_tweet'=>'</li>', 'before_date'=>'', 'after_date'=>'',
+    'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia',
     'gmt_offset'=>get_option('gmt_offset'), ), $atts));
 
     $options_array = thinkup_get_options_array();
@@ -61,13 +62,18 @@ function thinkup_chron_archive_handler($atts) {
     if ($tweets) {
         echo str_replace('#twitter_username#', $twitter_username, $title);
         echo "{$before}";
+
+	$cur = 0;
         foreach ($tweets as $t) {
             $tweet_content = htmlentities ($t->post_text);
             $tweet_content = linkUrls($tweet_content);
             $tweet_content = linkTwitterUsers($tweet_content);
             echo "{$before_tweet}{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}
+	    if ($cur % 2) { echo $before_tweet; } else { echo $before_tweet_alt; }
+            echo "{$tweet_content}{$after_tweet_html} {$before_date}
             <a href=\"http://twitter.com/{$twitter_username}/statuses/{$t->post_id}/\">".
             actual_time($date_format, $gmt_offset, strtotime($t->pub_date))."</a>{$after_date}{$after_tweet}";
+	    $cur++;
         }
         echo "{$after}";
     } else {
