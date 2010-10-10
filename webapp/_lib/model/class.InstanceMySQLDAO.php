@@ -73,7 +73,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getInsertId($ps);
     }
 
-    public function delete($network_username, $network = "twitter") {
+    public function delete($network_username, $network) {
         $q  = "DELETE FROM #prefix#instances ";
         $q .= "WHERE network_username = :username AND network = :network;";
         $vars = array(
