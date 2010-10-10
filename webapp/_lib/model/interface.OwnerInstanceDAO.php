@@ -39,8 +39,8 @@ interface OwnerInstanceDAO {
      */
     public function doesOwnerHaveAccess($owner, $instance);
 
-    /*
-     * Get an instance by $owner_id and instance_id
+    /**
+     * Get an owner instance by owner_id and instance_id
      * @param int owner_id
      * @param int instance_id
      * @return OwnerInstance
@@ -48,8 +48,14 @@ interface OwnerInstanceDAO {
     public function get($owner_id, $instance_id);
 
     /**
+     * Get owner instances by an instance id
+     * @param int instance_id
+     * @return array OwnerInstance objects
+     */
+    public function getByInstance($instance_id);
+
+    /**
      * Inserts an owner instance record
-     *
      * @param int owner_id
      * @param int instance_id
      * @param str auth_token
@@ -58,7 +64,22 @@ interface OwnerInstanceDAO {
      */
     public function insert($owner_id, $instance_id, $oauth_token = '', $oauth_token_secret = '');
 
-    /*
+    /**
+     * Delete an owner instance record
+     * @param int owner_id
+     * @param int instance_id
+     * @return int Number of rows affected
+     */
+    public function delete($owner_id, $instance_id);
+
+    /**
+     * Delete all owner instances by instance ID.
+     * @param int instance_id
+     * @return int Number of rows affected
+     */
+    public function deleteByInstance($instance_id);
+
+    /**
      * Updates tokens based on user and instance ids, return true|false  update status
      * @param int owner_id
      * @param int instance_id
@@ -70,10 +91,8 @@ interface OwnerInstanceDAO {
 
     /**
      * Gets auth tokens by instance_id
-     *
      * @param int instance_id
      * @return array $token_assoc_array
      */
     public function getOAuthTokens($id);
-
 }

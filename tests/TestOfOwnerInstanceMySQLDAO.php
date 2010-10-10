@@ -51,6 +51,50 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->logger->close();
     }
 
+    public function testDelete() {
+        $dao = new OwnerInstanceMysqlDAO();
+        $builder = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50) );
+        $owner_instance = $dao->get(50, 20);
+        $this->assertNotNull($owner_instance);
+
+        $result = $dao->delete(50, 20);
+        $this->assertEqual($result, 1);
+        $owner_instance = $dao->get(50, 20);
+        $this->assertNull($owner_instance);
+    }
+
+    public function testDeleteByInstance() {
+        $dao = new OwnerInstanceMysqlDAO();
+        $builder1 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50) );
+        $builder2 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>51) );
+        $builder3 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>52) );
+        $owner_instance = $dao->get(50, 20);
+        $this->assertNotNull($owner_instance);
+        $owner_instance = $dao->get(51, 20);
+        $this->assertNotNull($owner_instance);
+        $owner_instance = $dao->get(52, 20);
+        $this->assertNotNull($owner_instance);
+
+        $result = $dao->deleteByInstance(20);
+        $this->assertEqual($result, 3);
+        $owner_instance = $dao->get(50, 20);
+        $this->assertNull($owner_instance);
+        $owner_instance = $dao->get(51, 20);
+        $this->assertNull($owner_instance);
+        $owner_instance = $dao->get(52, 20);
+        $this->assertNull($owner_instance);
+    }
+
+    public function testGetByInstance() {
+        $dao = new OwnerInstanceMysqlDAO();
+        $builder1 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50) );
+        $builder2 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>51) );
+        $builder3 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>52) );
+        $owner_instances = $dao->getByInstance(20);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 3);
+    }
+
     public function testInsertOwnerInstance() {
         $dao = new OwnerInstanceMysqlDAO();
         $result = $dao->insert(10, 20, 'aaa', 'bbb');

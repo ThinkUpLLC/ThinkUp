@@ -62,8 +62,7 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
     }
 
     public function get($owner_id, $instance_id) {
-        $q = "
-            SELECT 
+        $q = "SELECT
                 id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret
             FROM 
                 #prefix#owner_instances 
@@ -74,6 +73,19 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         $stmt = $this->execute($q, $vars);
         $owner_instance = $this->getDataRowAsObject($stmt, 'OwnerInstance');
         return $owner_instance;
+    }
+
+    public function getByInstance($instance_id) {
+        $q = "SELECT
+                id, owner_id, instance_id, oauth_access_token, oauth_access_token_secret
+            FROM 
+                #prefix#owner_instances 
+            WHERE  instance_id = :instance_id";
+
+        $vars = array(':instance_id' => $instance_id);
+        $stmt = $this->execute($q, $vars);
+        $owner_instances = $this->getDataRowsAsObjects($stmt, 'OwnerInstance');
+        return $owner_instances;
     }
 
     public function insert($owner_id, $instance_id, $oauth_token = '', $oauth_token_secret = '') {
@@ -92,6 +104,27 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         } else {
             return false;
         }
+    }
+
+    public function delete($owner_id, $instance_id) {
+        $q  = "DELETE FROM #prefix#owner_instances ";
+        $q .= "WHERE owner_id=:owner_id AND instance_id=:instance_id;";
+        $vars = array(
+            ':owner_id'=>$owner_id,
+            ':instance_id'=>$instance_id
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+
+    public function deleteByInstance($instance_id) {
+        $q  = "DELETE FROM #prefix#owner_instances ";
+        $q .= "WHERE instance_id=:instance_id;";
+        $vars = array(
+            ':instance_id'=>$instance_id
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
     }
 
     public function updateTokens($owner_id, $instance_id, $oauth_token, $oauth_token_secret) {

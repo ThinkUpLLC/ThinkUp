@@ -30,6 +30,13 @@
  */
 interface InstanceDAO {
     /**
+     * Gets the instance by ID
+     * @param in $instance_id
+     * @return Instance
+     */
+    public function get($instance_id);
+
+    /**
      * Get all active instances, by last run oldest first limited to a network
      * @param str $network name of network to limit to
      * @return array with Instance
@@ -69,6 +76,14 @@ interface InstanceDAO {
      * @return int inserted Instance ID
      */
     public function insert($network_user_id, $network_username, $network = "twitter", $viewer_id = false);
+
+    /**
+     * Delete instance
+     * @param string $network_username
+     * @param string $network - "twitter", "facebook"
+     * @return int affected rows
+     */
+    public function delete($network_username, $network);
 
     /**
      * Get freshest (most recently updated) instance by owner

@@ -80,6 +80,29 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
+    public function testDeleteInstance() {
+        $i = $this->DAO->getByUsernameOnNetwork('jack', 'twitter');
+        $this->assertNotNull($i);
+        $result = $this->DAO->delete('jack', 'twitter');
+        $this->assertEqual($result, 1);
+        $i = $this->DAO->getByUsernameOnNetwork('jack', 'twitter');
+        $this->assertNull($i);
+
+        $result = $this->DAO->delete('idontexist', 'somenonexistentnetwork');
+        $this->assertEqual($result, 0);
+    }
+
+    public function testGet() {
+        $i = $this->DAO->get(1);
+        $this->assertEqual($i->id, 1);
+        $this->assertEqual($i->network_user_id, 10);
+        $this->assertEqual($i->network_username, 'jack');
+        $this->assertEqual($i->network, 'twitter');
+
+        $i = $this->DAO->get(100);
+        $this->assertNull($i);
+    }
+
     public function testGetHoursSinceLastCrawlerRun() {
         $dao = new InstanceMySQLDAO();
         $builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-3h'));

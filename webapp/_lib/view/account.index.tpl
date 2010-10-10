@@ -1,6 +1,7 @@
 {include file="_header.tpl" enable_tabs=true}
 {include file="_statusbar.tpl"}
 <div class="container_24">
+
   <div role="application" id="tabs">
     
     <ul>
@@ -20,6 +21,7 @@
               </p>
             </div>
         {/if}
+        {include file="_usermessage.tpl"}
           {if $installed_plugins}
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
               {if $smarty.foreach.foo.first}

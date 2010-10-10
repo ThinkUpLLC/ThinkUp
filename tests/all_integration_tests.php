@@ -41,6 +41,7 @@ $web_tests = & new GroupTest('Integration tests');
 $web_tests->addTestCase(new WebTestOfChangePassword());
 $web_tests->addTestCase(new WebTestOfCrawlerRun());
 $web_tests->addTestCase(new WebTestOfDashboard());
+$web_tests->addTestCase(new WebTestOfDeleteInstance());
 $web_tests->addTestCase(new WebTestOfSignIn());
 $web_tests->addTestCase(new WebTestOfCaptchaImage());
 $web_tests->addTestCase(new WebTestOfTwitterPluginViews());

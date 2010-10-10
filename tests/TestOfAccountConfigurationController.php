@@ -19,6 +19,14 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Test of AccountConfigurationController
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -31,14 +39,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthT
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/controller/class.TwitterPluginConfigurationController.php';
 
-/**
- * Test of AccountConfigurationController
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
+
 class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
     public function __construct() {
@@ -49,46 +50,245 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         parent::setUp();
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $this->builders = self::buildData();
+    }
+
+    public function tearDown() {
+        $this->builders = null;
+        parent::tearDown();
+    }
+
+    protected function buildData() {
+        $builders = array();
 
         //Add owner
         $session = new Session();
         $cryptpass = $session->pwdcrypt("oldpassword");
-        $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com', is_activated=1,
-        pwd='".$cryptpass."', activation_code='8888'";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>$cryptpass));
 
-        $q = "INSERT INTO tu_owners SET id=2, full_name='ThinkUp J. Admin', email='admin@example.com',
-        is_activated=1, is_admin=1, pwd='XXX', activation_code='8888'";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp J. Admin',
+        'email'=>'admin@example.com', 'is_activated'=>1, 'is_admin'=>1));
 
         //Add instance_owner
-        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id, oauth_access_token, oauth_access_token_secret)
-        VALUES (1, 1, 'xxx', 'yyy')";
-        $this->db->exec($q);
-        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id, oauth_access_token, oauth_access_token_secret)
-        VALUES (2, 1, 'xxx', 'yyy')";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>1));
 
         //Insert test data into test table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
-        'Ev Williams', 'avatar.jpg', '1/1/2005');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
+        'full_name'=>'Ev Williams'));
 
         //Make public
-        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public, network)
-        VALUES (1, 13, 'ev', 1, 'twitter');";
-        $this->db->exec($q);
+        //Insert test data into test table
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>13,
+        'network_username'=>'ev', 'is_public'=>1, 'network'=>'twitter'));
+
+        return $builders;
     }
 
-    public function tearDown() {
-        parent::tearDown();
-    }
     public function testConstructor() {
         $controller = new AccountConfigurationController(true);
         $this->assertTrue(isset($controller), 'constructor test');
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Configure Your Account');
+    }
+
+    public function testDeleteExistingInstanceAsAdmin() {
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Admin: should delete all owner instances and instance
+        $this->simulateLogin('admin@example.com', true);
+        $_POST['action'] = "delete";
+        $_POST["instance_id"] = 1;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(1);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(1);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 2);
+
+        //process controller
+        $controller->go();
+
+        //instance should be deleted
+        $instance = $instance_dao->get(1);
+        $this->assertNull($instance);
+
+        //all owner_instances should be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(1);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 0);
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertNotNull($v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('errormsg'));
+    }
+
+    public function testDeleteExistingInstanceWithPrivilegesNoOtherOwners() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+        'network_username'=>'tuinstance', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2,
+        'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+
+        //Not admin with access privs, no other owners (delete owner instance AND instance)
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Should delete the owner instance, and since there's no other owner, the instance itself
+        $this->simulateLogin('me@example.com');
+        $_POST['action'] = "delete";
+        $_POST["instance_id"] = 2;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+
+        //process controller
+        $controller->go();
+
+        //instance should be deleted
+        $instance = $instance_dao->get(2);
+        $this->assertNull($instance);
+
+        //all owner_instances should be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 0);
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertNotNull($v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('errormsg'));
+    }
+
+    public function testDeleteExistingInstanceWithPrivilegesWithOtherOwners() {
+        //Not admin with access privs, with other owners (delete owner instance and NOT instance)
+        $builders = array();
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+        'network_username'=>'tuinstance', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2,
+        'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2,
+        'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Should delete the owner instance but leave the instance alone
+        $this->simulateLogin('me@example.com');
+        $_POST['action'] = "delete";
+        $_POST["instance_id"] = 2;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 2);
+
+        //process controller
+        $controller->go();
+
+        //instance should NOT be deleted
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+
+        //just one owner_instance should be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertNotNull($v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('errormsg'));
+    }
+
+    public function testDeleteExistingInstanceNoPrivileges() {
+        //Not admin without access privs (set error messages)
+        $builders = array();
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>12,
+        'network_username'=>'tuinstance', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>2, 'instance_id'=>2,
+        'oauth_access_token'=>'xxx', 'oauth_access_token_secret'=>'yyy'));
+
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Should delete the owner instance but leave the instance alone
+        $this->simulateLogin('me@example.com');
+        $_POST['action'] = "delete";
+        $_POST["instance_id"] = 2;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+
+        //process controller
+        $controller->go();
+
+        //instance should NOT be deleted
+        $instance = $instance_dao->get(2);
+        $this->assertNotNull($instance);
+
+        //owner instance should NOT be deleted
+        $owner_instances = $owner_instance_dao->getByInstance(2);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 1);
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertNull($v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertNotNull($v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Insufficient privileges.');
+    }
+
+    public function testDeleteNonExistentInstance() {
+        //Not admin, non existent instance (set error message)
+
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Should delete the owner instance but leave the instance alone
+        $this->simulateLogin('me@example.com');
+        $_POST['action'] = "delete";
+        $_POST["instance_id"] = 57;
+        $controller = new AccountConfigurationController(true);
+
+        //process controller
+        $controller->go();
+
+        //set error msg
+        $v_mgr = $controller->getViewManager();
+        $this->assertNull($v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertNotNull($v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Instance doesn\'t exist.');
     }
 
     public function testControlNotLoggedIn() {
@@ -333,6 +533,4 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
     }
-
 }
-

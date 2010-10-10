@@ -65,9 +65,21 @@ class ThinkUpWebTestCase extends WebTestCase {
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass,
         'is_activated'=>1,'is_admin'=>1));
 
-        //Add instance
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$cryptpass,
+        'is_activated'=>1,'is_admin'=>0));
+
+        //Add instances
         $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>17,
         'network_username'=>'thinkupapp', 'is_public'=>1, 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>13, 'network_username'=>'ev',
+        'is_public'=>1, 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>18,
+        'network_username'=>'shutterbug', 'is_public'=>1, 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('instances', array('id'=>4, 'network_user_id'=>19,
+        'network_username'=>'linkbaiter', 'is_public'=>1, 'network'=>'twitter'));
 
         //Add instance_owner
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
@@ -110,15 +122,6 @@ class ThinkUpWebTestCase extends WebTestCase {
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>19, 'follower_id'=>13));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>18, 'follower_id'=>13));
-
-        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>13, 'network_username'=>'ev',
-        'is_public'=>1, 'network'=>'twitter'));
-
-        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>18,
-        'network_username'=>'shutterbug', 'is_public'=>1, 'network'=>'twitter'));
-
-        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>19,
-        'network_username'=>'linkbaiter', 'is_public'=>1, 'network'=>'twitter'));
 
         $counter = 0;
         while ($counter < 40) {

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/WebTestOfSignIn.php
+ * ThinkUp/tests/WebTestOfDeleteInstance.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -27,10 +27,9 @@
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
-class WebTestOfSignIn extends ThinkUpWebTestCase {
+class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -42,35 +41,50 @@ class WebTestOfSignIn extends ThinkUpWebTestCase {
         parent::tearDown();
     }
 
-    public function testSignInSuccessAndPrivateDashboard() {
+    public function testDeleteInstance() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
-        $this->click("Log In");
 
+        $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
-    }
 
-    public function testSignInFailureAttemptThenSuccess() {
+        $this->click("Configuration");
+        $this->click("Twitter");
+
+        $this->assertLink('ev');
+        $this->assertLink('thinkupapp');
+        $this->assertLink('linkbaiter');
+        $this->assertLink('shutterbug');
+        $this->assertSubmit('delete');
+
+        //delete existing instance
+        $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'delete', 'instance_id'=>'3'));
+        $this->assertText('Account deleted.');
+        $this->assertLink('thinkupapp');
+        $this->assertLink('linkbaiter');
+        $this->assertNoLink('shutterbug');
+        $this->assertSubmit('delete');
+
+        //delete non-existent instance
+        $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'delete', 'instance_id'=>'231'));
+        $this->assertText("Instance doesn't exist.");
+        $this->assertLink('thinkupapp');
+        $this->assertLink('linkbaiter');
+        $this->assertSubmit('delete');
+
+        $this->click('Log Out');
+        $this->assertText('You have successfully logged out');
+
         $this->get($this->url.'/session/login.php');
-        $this->setField('email', 'me51@example.com');
-        $this->setField('pwd', 'wrongemail');
-        $this->click("Log In");
-
-        $this->assertText('Incorrect email');
-
-        $this->setField('email', 'me@example.com');
-        $this->setField('pwd', 'wrongpassword');
-        $this->click("Log In");
-
-        $this->assertText('Incorrect password');
-        $this->assertField('email', 'me@example.com');
-
+        $this->setField('email', 'me2@example.com');
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
 
-        $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Logged in as: me@example.com');
+        //delete instance with no privileges
+        $this->post($this->url.'/account/index.php?p=twitter', array('action'=>'delete', 'instance_id'=>'2'));
+
+        $this->assertText("Insufficient privileges.");
     }
 }

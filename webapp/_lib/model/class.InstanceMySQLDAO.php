@@ -73,6 +73,17 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         return $this->getInsertId($ps);
     }
 
+    public function delete($network_username, $network = "twitter") {
+        $q  = "DELETE FROM #prefix#instances ";
+        $q .= "WHERE network_username = :username AND network = :network;";
+        $vars = array(
+            ':username'=>$network_username,
+            ':network'=>$network
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+
     public function getFreshestByOwnerId($owner_id) {
         $q  = " SELECT i.* , ".$this->getAverageReplyCount();
         $q .= " FROM #prefix#instances AS i ";
@@ -119,6 +130,18 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         );
         $ps = $this->execute($q, $vars);
 
+        return $this->getDataRowAsObject($ps, "Instance");
+    }
+
+    public function get($instance_id) {
+        $q  = "SELECT * , ".$this->getAverageReplyCount()." ";
+        $q .= "FROM #prefix#instances ";
+        $q .= "WHERE id=:id ";
+        $q .= "LIMIT 1 ";
+        $vars = array(
+            ':id'=>$instance_id
+        );
+        $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, "Instance");
     }
 
