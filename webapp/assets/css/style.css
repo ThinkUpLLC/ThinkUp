@@ -39,6 +39,8 @@ ul.user-accounts li ul li {margin-left:2em;}
 .ui-tabs .ui-tabs-panel {padding:0;}
 .ui-widget {font-size:1em;}
 
+ul.tabs li {list-style:none;}
+
 /*.ui-tabs {padding:0}
 .ui-widget-content {border:0px;}
 .ui-widget-header {margin:1em;background-image:none;background-color:#FFF;border:none;}*/
@@ -151,7 +153,7 @@ text-align: center;
 
 /* Sidebar */
 
-#nav-sidebar {padding-left : 10px;background-color:white;}
+#nav-sidebar {padding-left : 10px;/*background-color:white;*/}
 #nav-sidebar h2 {padding-bottom: 10px; padding-top:20px; color: black;font-size: medium;}
 #nav-sidebar h2 a {color : black;}
 #nav-sidebar {font-size: small; color: #999;}

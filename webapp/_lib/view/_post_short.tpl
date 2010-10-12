@@ -1,9 +1,7 @@
 {if $smarty.foreach.foo.first}
   <div class="header clearfix">
-    <div class="grid_1 alpha">&#160;</div>
-    <div class="grid_3 right">name</div>
-    <div class="grid_3 right">date</div>
-    <div class="grid_9">post</div>
+    <div class="grid_2 right alpha">date</div>
+    <div class="grid_12">post</div>
     <div class="grid_2 center">
       {if $t->network eq 'twitter'}retweets{/if}
     </div>
@@ -20,6 +18,7 @@
 {/if}
 
   <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
+    {*
     <div class="grid_1 alpha">
       <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
       {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
@@ -38,7 +37,8 @@
         <br>{$t->author->follower_count|number_format} followers
       {/if}    
     </div>
-    <div class="grid_3 right small">
+    *}
+    <div class="grid_2 right small alpha">
       {if $t->network == 'twitter'}
       <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">
       {* <a href="http://twitter.com/{$t->author_username}/statuses/{$t->post_id}"> *}
@@ -48,7 +48,7 @@
       {$t->adj_pub_date|relative_datetime} ago
       {/if}
     </div>
-    <div class="grid_9">
+    <div class="grid_12">
       {if $t->link->is_image}
         <div class="pic float-l"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
       {/if}
