@@ -39,13 +39,9 @@
     </div>
     *}
     <div class="grid_2 right small alpha">
+      <a href="{$site_root_path}post/?u={$user_details->username}&t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
       {if $t->network == 'twitter'}
-      <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">
-      {* <a href="http://twitter.com/{$t->author_username}/statuses/{$t->post_id}"> *}
-        {$t->adj_pub_date|relative_datetime} ago
-      </a>
-      {else}
-      {$t->adj_pub_date|relative_datetime} ago
+        {* <a href="http://twitter.com/{$t->author_username}/statuses/{$t->post_id}"> *}
       {/if}
     </div>
     <div class="grid_12">

@@ -30,6 +30,10 @@ ul.user-accounts li ul li {margin-left:2em;}
 
 /* TABS, MENUS, NAVIGATION, STATUS BAR, ETC 
 ==============================*/
+li .tab-button {background-color: #ccc;padding:4px 0;}
+li.active .tab-button {
+background-color: #FFF;
+}
 
 /* Map Icon */
 .map-icon {margin-right:-20px; margin-top:-40px; float:right;}

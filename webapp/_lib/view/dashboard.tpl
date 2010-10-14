@@ -88,7 +88,7 @@
               <br>
               <h2 class="subhead">This Week's Most Replied-To Posts</h2>
                 {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
-                  {include file="_post.tpl" t=$t headings="NONE"}
+                  {include file="_post_short.tpl" t=$t headings="NONE"}
                 {/foreach}
           {/if}
 

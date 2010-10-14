@@ -349,7 +349,7 @@ line-height:1.8em;
 /* --- BUTTONS -------------------------------- */
 /* adapted from the filament group: http://www.filamentgroup.com/examples/buttonFrameworkCSS/ */
 
-.tt-button {outline:0;margin:4px 4px 4px 0;padding:0.4em 1em;text-decoration:none !important;cursor:pointer;position:relative;text-align:center;zoom:1;}
+.tt-button {outline:0;margin:0px 4px 0px 0;padding:0.4em 1em;text-decoration:none !important;cursor:pointer;position:relative;text-align:center;zoom:1;}
 .tt-button .ui-icon {position:absolute;top:50%;margin-top:-8px;left:50%;margin-left:-8px;}
 a.tt-button {float:left;}
 
