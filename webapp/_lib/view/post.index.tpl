@@ -130,7 +130,7 @@
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
   {if $replies && $logged_in_user}
-    {include file="_grid.search.tpl"}
+    {include file="_grid.search.tpl" version2=true}
     <script type="text/javascript">post_username = '{$post->author_username}';</script>
     <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
   {/if}
