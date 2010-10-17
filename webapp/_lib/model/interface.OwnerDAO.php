@@ -134,4 +134,14 @@ interface OwnerDAO {
      * @return int Update count
      */
     public function promoteToAdmin($email);
+
+    /**
+     * Activates an owner account.
+     * 
+     * @param str $owner_id
+     * @param bool $is_activated , Active = 1, Inactive=0.
+     * @return int number of updated rows.
+     */
+    public function setOwnerActive($id, $is_activated);
+    
 }

@@ -180,4 +180,12 @@ SQL;
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
+
+    public function setOwnerActive($id, $is_activated) {
+        $q = "UPDATE #prefix#owners
+             SET is_activated=:is_activated
+             WHERE id=:id";
+        $stmt = $this->execute($q, array(':is_activated' => $is_activated, ':id' => $id));
+        return $this->getUpdateCount($stmt);
+    }
 }

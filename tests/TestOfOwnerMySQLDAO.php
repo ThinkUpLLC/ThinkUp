@@ -47,6 +47,14 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->DAO = new OwnerMySQLDAO();
+        $this->builders = self::buildData();
+        $this->config = Config::getInstance();
+        $this->prefix = $this->config->getValue('table_prefix');
+    }
+
+    protected function buildData() {
+        $builders = array();
+        
         $q = "INSERT INTO tu_owners SET full_name='ThinkUp J. User', email='ttuser@example.com', is_activated=0,
         pwd='XXX', activation_code='8888'";
         PDODAO::$PDO->exec($q);
@@ -55,10 +63,13 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         pwd='YYY'";
         PDODAO::$PDO->exec($q);
 
+        return $builders;
+
     }
 
     public function tearDown() {
         parent::tearDown();
+        $this->builders = null;
     }
 
     /**
@@ -198,6 +209,47 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result, 1); //one row updated
 
         $this->assertTrue($dao->doesAdminExist());
+    }
+
+    public function testSetOwnerActive() {
+        $builders_array = array();
+        # build our data
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User', 
+        'email'=>'ttuser2@example.com', 'is_activated'=>0));
+
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User', 
+        'email'=>'ttuser3@example.com', 'is_activated'=>1));
+        # init our dao
+        $dao = new OwnerMySQLDAO();
+
+        // flip form flase to true
+        $test_owners_records = $builders_array[0]->columns;
+        $id = $test_owners_records['last_insert_id'];
+        $this->assertTrue($dao->setOwnerActive($id, 1));
+        $sql = "select * from " . $this->prefix . 'owners where id = ' . $test_owners_records['last_insert_id'];
+        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data['is_activated'], 1);
+
+        // already true
+        $test_owners_records = $builders_array[1]->columns;
+        $id = $test_owners_records['last_insert_id'];
+        // nothing updated, so false
+        $this->assertFalse($dao->setOwnerActive($id, 1));
+        $sql = "select * from " . $this->prefix . 'owners where id = ' . $test_owners_records['last_insert_id'];
+        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data['is_activated'], 1);
+
+        // flip to false
+        $test_owners_records = $builders_array[0]->columns;
+        $id = $test_owners_records['last_insert_id'];
+        $this->assertTrue($dao->setOwnerActive($id, 0));
+        $sql = "select * from " . $this->prefix . 'owners where id = ' . $test_owners_records['last_insert_id'];
+        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data['is_activated'], 0);
+
     }
 
 }

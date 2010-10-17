@@ -112,11 +112,19 @@
                 As an administrator you can see all accounts in the system.
               </p>
             </div>
+          {foreach from=$owners key=oid item=o}
             <ul class="user-accounts">
-              {foreach from=$owners key=oid item=o}
-                <li>
+                {if $user_is_admin}
+                <div class="prepend append">
+                <div class="grid_20 bt prepend append">
+                  <span class="grid_4 omega" id="spanowneractivation{$o->id}">
+                      <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerButton" id="{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+                  </span>
+                  <span style="display: none;" class='success mt_10' id="message1{$o->id}"></span>
+                {/if}
                   <b>{$o->full_name} ({$o->email})</b>{if $o->last_login neq '0000-00-00'}, last logged in {$o->last_login}{/if}
-                  <br />{if $o->is_activated}Activated{else}Not activated{/if}{if $o->is_admin}, Administrator{/if}
+                  <br />
+                  {if $o->is_admin}, Administrator{/if}
                   {if $o->instances neq null}
                     <ul>
                       {foreach from=$o->instances key=iid item=i}
@@ -128,15 +136,14 @@
                     </ul>
                   {/if}
                 </li>
+                </div>
               {/foreach}
             </ul>
+            </div>
           </div>
         </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #ttusers -->
     {/if} <!-- end is_admin -->
-    
-  </div>
-</div>
 
 <script type="text/javascript">
   {literal}
@@ -279,6 +286,72 @@ $(function() {
       }
     });
   });
+  
+  
+    $(function() {
+    var activateOwner = function(u) {
+      var dataString = 'oid=' + u + "&a=1";
+      $.ajax({
+        type: "GET",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
+        data: dataString,
+        success: function() {
+          $('#spanowneractivation' + u).css('display', 'none');
+          $('#message1' + u).html("Activated!").hide().fadeIn(1500, function() {
+            $('#message1' + u);
+          });
+          $('#spanownernamelink' + u).css('display', 'inline');
+          $('#' + u).val('Deactivate');
+          $('#spanownernametext' + u).css('display', 'none');
+          $('#' + u).removeClass('btnActivate');
+          $('#' + u).addClass('btnDectivate');
+          setTimeout(function() {
+              $('#message1' + u).css('display', 'none');
+              $('#spanowneractivation' + u).hide().fadeIn(1500);
+            },
+            2000
+          );
+        }
+      });
+      return false;
+    };
+
+    var deactivateOwner = function(u) {
+      var dataString = 'oid=' + u + "&a=0";
+      $.ajax({
+        type: "GET",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
+        data: dataString,
+        success: function() {
+          $('#spanowneractivation' + u).css('display', 'none');
+          $('#message1' + u).html("Deactivated!").hide().fadeIn(1500, function() {
+            $('#message1' + u);
+          });
+          $('#spanownernamelink' + u).css('display', 'none');
+          $('#spanownernametext' + u).css('display', 'inline');
+          $('#' + u).val('Activate');
+          $('#' + u).removeClass('btnDeactivate');
+          $('#' + u).addClass('btnActivate');
+          setTimeout(function() {
+              $('#message1' + u).css('display', 'none');
+              $('#spanowneractivation' + u).hide().fadeIn(1500);
+            },
+            2000
+          );
+        }
+      });
+      return false;
+    };
+
+    $(".toggleOwnerButton").click(function() {
+      if($(this).val() == 'Activate') {
+        activateOwner($(this).attr("id"));
+      } else {
+        deactivateOwner($(this).attr("id"));
+      }
+    });
+  });
+
   {/literal}
 </script>
 
