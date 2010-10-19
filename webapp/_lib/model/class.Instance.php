@@ -30,7 +30,7 @@ class Instance {
     var $network_username;
     var $network_user_id;
     var $network_viewer_id;
-    var $last_status_id;
+    var $last_post_id;
     var $last_page_fetched_replies;
     var $last_page_fetched_tweets;
     var $total_posts_in_system;
@@ -54,7 +54,7 @@ class Instance {
             $this->id = $r['id'];
             $this->network_username = $r['network_username'];
             $this->network_user_id = $r['network_user_id'];
-            $this->last_status_id = $r['last_status_id'];
+            $this->last_post_id = $r['last_post_id'];
             $this->last_page_fetched_replies = $r['last_page_fetched_replies'];
             $this->last_page_fetched_tweets = $r['last_page_fetched_tweets'];
             $this->total_posts_in_system = $r['total_posts_in_system'];

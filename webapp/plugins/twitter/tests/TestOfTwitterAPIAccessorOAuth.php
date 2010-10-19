@@ -47,7 +47,7 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $r['network_username'] = 'user';
         $r['network_user_id'] = 0;
         $r['network_viewer_id'] = 0;
-        $r['last_status_id'] = 0;
+        $r['last_post_id'] = 0;
         $r['last_page_fetched_replies'] = 0;
         $r['last_page_fetched_tweets'] = 0;
         $r['total_posts_in_system'] = 0;

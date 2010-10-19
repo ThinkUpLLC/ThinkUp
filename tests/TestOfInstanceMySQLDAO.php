@@ -542,7 +542,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $i = $this->DAO->getByUsername('jack');
 
         //Edit it.
-        $i->last_status_id = 512;
+        $i->last_post_id = 512;
         $i->last_page_fetched_replies = 2;
         $i->last_page_fetched_tweets = 17;
         $i->is_archive_loaded_follows = 1;
@@ -564,7 +564,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getByUsername('jack');
         $this->assertEqual($result->total_posts_by_owner, 1024);
         $this->assertEqual($result->last_page_fetched_replies, 2);
-        $this->assertEqual($result->last_status_id, 512);
+        $this->assertEqual($result->last_post_id, 512);
         $this->assertEqual($result->last_page_fetched_tweets, 17);
         $this->assertEqual($result->total_replies_in_system, $mentions);
         $this->assertEqual($result->total_follows_in_system, $follows);

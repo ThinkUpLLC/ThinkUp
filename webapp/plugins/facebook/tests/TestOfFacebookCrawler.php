@@ -57,7 +57,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $r = array('id'=>1, 'network_username'=>'Gina Trapani', 'network_user_id'=>'606837591',
-        'network_viewer_id'=>'606837591', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 
+        'network_viewer_id'=>'606837591', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
         'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 

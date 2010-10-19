@@ -347,13 +347,13 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         list($posts_per_day, $posts_per_week, $percent_replies, $percent_links) =
         $this->getInstanceUserStats($i->network_user_id, $i->network);
         $ot = ($user_xml_total_posts_by_owner != '' ? true : false);
-        $lsi = ($i->last_status_id != "" ? true : false);
+        $lsi = ($i->last_post_id != "" ? true : false);
         $is_archive_loaded_follows = $this->convertBoolToDB($i->is_archive_loaded_follows);
         $is_archive_loaded_replies = $this->convertBoolToDB($i->is_archive_loaded_replies);
         $q  = " UPDATE #prefix#instances ";
         $q .= " SET ";
         if ($lsi){
-            $q .= " last_status_id = :laststatusid, ";
+            $q .= " last_post_id = :last_post_id, ";
         }
         $q .= " last_page_fetched_replies = :lpfr, ";
         $q .= " last_page_fetched_tweets = :lpft , ";
@@ -382,7 +382,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         $q .= " WHERE network_user_id = :uid;";
 
         $vars = array(
-            ':laststatusid' => $i->last_status_id,
+            ':last_post_id' => $i->last_post_id,
             ':lpfr'         => $i->last_page_fetched_replies,
             ':lpft'         => $i->last_page_fetched_tweets,
             ':uid'          => $i->network_user_id,
