@@ -1036,4 +1036,96 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         arsort($clients);
         return $clients;
     }
+
+    /**
+     * Temporary method to determine if database is 64-bit post ID ready
+     * This method will be deleted when proper install upgrader gets released
+     */
+    public function needsSnowflakeUpgrade() {
+        $q  = "DESCRIBE #prefix#posts;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+            if ($row['Field'] == 'in_retweet_of_post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+            if ($row['Field'] == 'in_reply_to_post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+        }
+        $q  = "DESCRIBE #prefix#links;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+        }
+        $q  = "DESCRIBE #prefix#post_errors;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+        }
+        $q  = "DESCRIBE #prefix#users;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'last_post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+        }
+        $q  = "DESCRIBE #prefix#instances;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'last_status_id') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Temporary method to make database 64-bit post ID ready
+     * This method will be deleted when proper install upgrader gets released
+     */
+    public function performSnowflakeUpgrade() {
+        $total_rows_affected = 0;
+        $q  = "ALTER TABLE #prefix#posts CHANGE post_id post_id  bigint(20) UNSIGNED NOT NULL;";
+        $ps = $this->execute($q);
+        $total_rows_affected = $total_rows_affected + $this->getUpdateCount($ps);
+
+        $q  = "ALTER TABLE #prefix#posts CHANGE in_retweet_of_post_id in_retweet_of_post_id  bigint(20) UNSIGNED NULL;";
+        $ps = $this->execute($q);
+        $total_rows_affected = $total_rows_affected + $this->getUpdateCount($ps);
+
+        $q  = "ALTER TABLE #prefix#posts CHANGE in_reply_to_post_id in_reply_to_post_id bigint(20) UNSIGNED NULL;";
+        $ps = $this->execute($q);
+        $total_rows_affected = $total_rows_affected + $this->getUpdateCount($ps);
+
+        $q  = "ALTER TABLE #prefix#links CHANGE post_id post_id  bigint(20) UNSIGNED NOT NULL;";
+        $ps = $this->execute($q);
+        $total_rows_affected = $total_rows_affected + $this->getUpdateCount($ps);
+
+        $q  = "ALTER TABLE #prefix#post_errors CHANGE post_id post_id  bigint(20) UNSIGNED NOT NULL;";
+        $ps = $this->execute($q);
+        $total_rows_affected = $total_rows_affected + $this->getUpdateCount($ps);
+
+        $q  = "ALTER TABLE #prefix#users CHANGE last_post_id last_post_id  bigint(20) UNSIGNED NOT NULL;";
+        $ps = $this->execute($q);
+        $total_rows_affected = $total_rows_affected + $this->getUpdateCount($ps);
+
+        $q  = "DESCRIBE #prefix#instances;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'last_status_id') {
+                $q  = "ALTER TABLE #prefix#instances CHANGE last_status_id last_post_id  bigint(20) UNSIGNED NOT NULL;";
+                $ps = $this->execute($q);
+                $total_rows_affected = $total_rows_affected + $this->getUpdateCount($ps);
+            }
+        }
+
+        return $total_rows_affected;
+    }
 }

@@ -1169,4 +1169,31 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($keys[1], 'Tweet Button');
         $this->assertEqual($keys[2], 'Tweetie for Mac');
     }
+
+    public function testNeedsSnowflakeUpgrade() {
+        $dao = new PostMySQLDAO();
+        $this->assertFalse($dao->needsSnowflakeUpgrade());
+        $this->db->exec('ALTER TABLE tu_posts CHANGE post_id post_id bigint(11) NOT NULL;');
+        $this->assertTrue($dao->needsSnowflakeUpgrade());
+    }
+
+    public function testPerformSnowflakeUpgrade() {
+        $dao = new PostMySQLDAO();
+        $this->assertFalse($dao->needsSnowflakeUpgrade());
+        $changed = $dao->performSnowflakeUpgrade();
+        $this->assertEqual( $changed, 0);
+
+        $this->db->exec('ALTER TABLE tu_posts CHANGE post_id post_id bigint(11) NOT NULL;');
+        $this->db->exec('ALTER TABLE tu_instances CHANGE last_post_id last_status_id bigint(11) NOT NULL;');
+        $this->assertTrue($dao->needsSnowflakeUpgrade());
+        $changed = $dao->performSnowflakeUpgrade();
+        $this->assertEqual($changed, 149); //144 posts + 5 instances
+
+        $this->db->exec('ALTER TABLE tu_posts CHANGE post_id post_id bigint(11) NOT NULL;');
+        $this->db->exec('ALTER TABLE tu_links CHANGE post_id post_id bigint(11) NOT NULL;');
+        $this->db->exec('ALTER TABLE tu_instances CHANGE last_post_id last_status_id bigint(11) NOT NULL;');
+        $this->assertTrue($dao->needsSnowflakeUpgrade());
+        $changed = $dao->performSnowflakeUpgrade();
+        $this->assertEqual($changed, 230); //225 posts + 5 instances
+    }
 }
