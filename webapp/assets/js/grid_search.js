@@ -69,7 +69,8 @@ var TUGridSearch = function() {
                 value = value.replace(url_match, '<a href="$1" target="_blank">$1</a> ');
                 value = value.replace(/@(\w+)/g, '<a href="http://twitter.com/$1" target="_blank">@$1</a>');
                 return '<a href="http://twitter.com/' + dataContext['author'] + 
-                '/status/' + dataContext['post_id'] + '" target="_blank">#</a>&nbsp; ' + value;
+                '/status/' + dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) 
+                + '" target="_blank">#</a>&nbsp; ' + value;
             }
         } ];
 
