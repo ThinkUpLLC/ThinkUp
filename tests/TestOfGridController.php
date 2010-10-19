@@ -111,7 +111,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $controller->control();
         $results = ob_get_contents();
         ob_end_clean();
-        $json = substr($results, 29, 262);
+        $json = substr($results, 29, strrpos($results, ';') - 30);
         $ob = json_decode( $json );
         $this->assertEqual($ob->status, 'success');
         $this->assertEqual(count($ob->posts), 3);
@@ -122,18 +122,20 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
-        $_GET['t'] = '1';
+        $_GET['t'] = '10765432100123456781';
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
         ob_start();
         $controller->control();
         $results = ob_get_contents();
         ob_end_clean();
-        $json = substr($results, 29, 162);
+        $json = substr($results, 29, strrpos($results, ';') - 30);
         $ob = json_decode( $json );
         $this->assertEqual($ob->status, 'success');
         $this->assertEqual(count($ob->posts), 2);
         $this->assertEqual($ob->posts[0]->text, 'Reply to a post');
+        $this->assertEqual($ob->posts[0]->post_id_str, '10765432100123456783_str');
+        
     }
 
     public function testNoProfilerOutput() {
@@ -154,7 +156,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $results .= ob_get_contents();
         ob_end_clean();
-        $json = substr($results, 29, 262);
+        $json = substr($results, 29, strrpos($results, ';') - 30);
         $ob = json_decode($json);
         // If the profiler outputs HTML (it shouldn't), the following will fail
         $this->assertIsA($ob, 'stdClass');
@@ -179,14 +181,14 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $owner_instance_builder = FixtureBuilder::build('owner_instances', array('instance_id'=>1, 'owner_id'=>1));
 
         $posts1_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser1','author_user_id' => 123,
-        'post_text'=>'@someuser1 My first post', 'network'=>'twitter', 'post_id' => 1));
+        'post_text'=>'@someuser1 My first post', 'network'=>'twitter', 'post_id' => '10765432100123456781'));
 
         $posts2_builder = FixtureBuilder::build('posts', array('author_username'=>'someuser1','author_user_id' => 123,
-        'post_text'=>'My second @someuser1 post', 'network'=>'twitter', 'post_id' => 2));
+        'post_text'=>'My second @someuser1 post', 'network'=>'twitter', 'post_id' => '10765432100123456782'));
 
-        $reply_builder = FixtureBuilder::build('posts', array('post_id' => 3, 'author_username'=>'reply_user',
-        'post_text'=>'Reply to a post', 'network'=>'twitter', 'in_reply_to_post_id' => '1', 
-        'author_user_id'=>'1234'));
+        $reply_builder = FixtureBuilder::build('posts', array('post_id' => '10765432100123456783',
+        'author_username'=>'reply_user', 'post_text'=>'Reply to a post', 'network'=>'twitter', 
+        'in_reply_to_post_id' => '10765432100123456781', 'author_user_id'=>'1234'));
 
         //sleep(10000);
         return array($owner_builder, $instance_builder, $owner_instance_builder, $posts1_builder,
