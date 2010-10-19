@@ -258,7 +258,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2010-10-19 11:16:40
+-- Dump completed on 2010-10-19 15:17:19
 
 --
 -- Insert default plugin(s)
