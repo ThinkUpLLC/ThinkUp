@@ -105,7 +105,9 @@ a img {
 .container_24 .grid_6  { width: 230px; }
 .container_24 .grid_7  { width: 270px; }
 .container_24 .grid_8  { width: 310px; }
-.container_24 .grid_9  { width: 350px; }
+/* grid_9 contains the tweet/status content. Word wrapping and overflow handling
+are in place to stop long URLs or words from overflowing. */
+.container_24 .grid_9  { width: 350px; word-wrap: break-word; overflow: auto; }
 .container_24 .grid_10 { width: 390px; }
 .container_24 .grid_11 { width: 430px; }
 .container_24 .grid_12 { width: 470px; }
