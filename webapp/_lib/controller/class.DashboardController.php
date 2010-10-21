@@ -55,7 +55,11 @@ class DashboardController extends ThinkUpController {
             $this->loadView();
         } else {
             if (!Session::isLoggedIn()) {
-                $this->addInfoMessage('There are no public accounts set up in this ThinkUp installation.');
+                $this->addInfoMessage('There are no public accounts set up in this ThinkUp installation.<br /><br />
+To make a current account public you need to first log in, then once you are logged
+in click on "Configuration" button in the top right hand side of the screen.
+Then click on one of the plugins that contain accounts (Facebook, Twitter, etc.) and click
+"Set Public" next to the account you wish to make public.');
             } else  {
                 $config = Config::getInstance();
                 $this->addInfoMessage('You have no accounts configured. <a href="'.$config->getValue('site_root_path').
