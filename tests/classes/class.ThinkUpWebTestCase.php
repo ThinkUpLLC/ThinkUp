@@ -25,18 +25,15 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  */
-class ThinkUpWebTestCase extends WebTestCase {
+class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
     var $db;
     var $conn;
     var $testdb_helper;
-    var $url;
 
     public function setUp() {
+        parent::setUp();
         require THINKUP_WEBAPP_PATH.'config.inc.php';
         global $TEST_DATABASE;
-        global $TEST_SERVER_DOMAIN;
-
-        $this->url = $TEST_SERVER_DOMAIN;
 
         //Override default CFG values
         $THINKUP_CFG['db_name'] = $TEST_DATABASE;
@@ -51,6 +48,7 @@ class ThinkUpWebTestCase extends WebTestCase {
     public function tearDown() {
         $this->testdb_helper->drop($this->db);
         $this->db->closeConnection($this->conn);
+        parent::tearDown();
     }
 
     /**
@@ -58,7 +56,7 @@ class ThinkUpWebTestCase extends WebTestCase {
      */
     protected function buildData() {
         $builders = array();
-         
+
         //Add owner
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");

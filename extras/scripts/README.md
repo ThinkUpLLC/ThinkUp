@@ -19,7 +19,7 @@ Example: `./extras/scripts/autdeploy-scp`
 
 ## generate-distribution (creates user distribution of app)
 
-Generates a user distribution of the web application.
+Generates a user distribution of the web application called thinkup.zip, and drops it into a thinkup/build directory.
 
 Run this from ThinkUp's parent directory, and make sure a directory named build exists there.
   
