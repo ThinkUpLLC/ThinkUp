@@ -134,6 +134,7 @@ class Logger {
         } else {
             echo $message.'
 ';
+            @flush();
         }
     }
 
