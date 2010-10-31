@@ -47,9 +47,15 @@ class TwitterAPIAccessorOAuth {
      * @var ints
      */
     var $total_errors_so_far = 0;
+    /**
+     * The maximum number of API calls that should be made during a given crawl. This setting is here to ratchet
+     * down activity for whitelisted Twitter accounts which get 20k calls per hour.
+     * @var int Defaults to 350
+     */
+    var $max_api_calls_per_crawl = 350;
 
     public function __construct($oauth_access_token, $oauth_access_token_secret, $oauth_consumer_key,
-    $oauth_consumer_secret, $num_twitter_errors) {
+    $oauth_consumer_secret, $num_twitter_errors, $max_api_calls_per_crawl) {
         $this->$oauth_access_token = $oauth_access_token;
         $this->$oauth_access_token_secret = $oauth_access_token_secret;
 
@@ -62,6 +68,8 @@ class TwitterAPIAccessorOAuth {
         if (is_integer($te) && $te > 0) {
             $this->total_errors_to_tolerate = $te;
         }
+
+        $this->max_api_calls_per_crawl = $max_api_calls_per_crawl;
         $logger->logStatus('Errors to tolerate: ' . $this->total_errors_to_tolerate, get_class($this));
     }
 

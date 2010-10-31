@@ -9,17 +9,17 @@
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
 }
@@ -117,6 +117,8 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
         $plugn_opt_builder3 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
         'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
+        $plugn_opt_builder4 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        'option_name'=>'max_api_calls_per_crawl', 'option_value'=>'350'));
 
         $controller = new TwitterAuthController(true);
         $results = $controller->go();

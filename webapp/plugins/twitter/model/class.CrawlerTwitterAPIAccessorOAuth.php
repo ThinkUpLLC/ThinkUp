@@ -38,9 +38,9 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     var $num_retries = 2;
 
     public function __construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
-    $instance, $archive_limit, $num_twitter_errors) {
+    $instance, $archive_limit, $num_twitter_errors, $max_api_calls_per_crawl) {
         parent::__construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
-        $num_twitter_errors);
+        $num_twitter_errors, $max_api_calls_per_crawl);
         $this->api_calls_to_leave_unmade_per_minute = $instance->api_calls_to_leave_unmade_per_minute;
         $this->archive_limit = $archive_limit;
     }
@@ -72,14 +72,19 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                 $next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
                 $current_time_in_minutes = (int) date("i", time());
                 $minutes_left_in_hour = 60;
-                if ($next_reset_in_minutes > $current_time_in_minutes)
-                $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
-                elseif ($next_reset_in_minutes < $current_time_in_minutes)
-                $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
+                if ($next_reset_in_minutes > $current_time_in_minutes) {
+                    $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
+                } elseif ($next_reset_in_minutes < $current_time_in_minutes) {
+                    $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
+                }
 
                 $this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
                 $this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter -
                 round($this->api_calls_to_leave_unmade);
+                //Enforce configurable ceiling for whitelisted Twitter accounts
+                if ($this->available_api_calls_for_crawler > $this->max_api_calls_per_crawl) {
+                    $this->available_api_calls_for_crawler = $this->max_api_calls_per_crawl;
+                }
             } catch(Exception $e) {
                 $status_message = 'Could not parse account status: '.$e->getMessage();
             }

@@ -51,12 +51,13 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $oauth_consumer_secret = $this->getPluginOption('oauth_consumer_secret');
         $archive_limit = $this->getPluginOption('archive_limit');
         $num_twitter_errors = $this->getPluginOption('num_twitter_errors');
+        $max_api_calls_per_crawl = $this->getPluginOption('max_api_calls_per_crawl');
         //Add public user instance
         if (isset($_GET['twitter_username'])) { // if form was submitted
             $logger = Logger::getInstance();
 
             $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret,
-            $num_twitter_errors);
+            $num_twitter_errors, $max_api_calls_per_crawl);
             $api_call = str_replace("[id]", $_GET['twitter_username'], $api->cURL_source['show_user']);
             list($cURL_status, $data) = $api->apiRequestFromWebapp($api_call);
             if ($cURL_status == 200) {
@@ -150,5 +151,9 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         'default_value' => '5');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $num_twitter_errors);
 
+        $max_api_calls_per_crawl_label = 'Max API Calls Per Crawl';
+        $max_api_calls_per_crawl = array('name' => 'max_api_calls_per_crawl', 'label' => $max_api_calls_per_crawl_label,
+        'default_value' => '350');
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_api_calls_per_crawl);
     }
 }
