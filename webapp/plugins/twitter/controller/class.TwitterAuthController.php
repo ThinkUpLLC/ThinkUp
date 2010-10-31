@@ -127,6 +127,8 @@ class TwitterAuthController extends ThinkUpAuthController {
                     }
                 }
             }
+            $this->view_mgr->clear_all_cache();
+
             $config = Config::getInstance();
             $msg .= '<a href="'.$config->getValue('site_root_path').
         'account/index.php?p=twitter" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span 

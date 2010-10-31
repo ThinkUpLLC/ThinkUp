@@ -213,6 +213,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             $u = new User($r, 'Owner info');
             $user_dao->updateUser($u);
         }
+        $this->view_mgr->clear_all_cache();
+
         return $msg;
     }
 

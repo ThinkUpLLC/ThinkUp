@@ -99,6 +99,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $this->addErrorMessage('Instance doesn\'t exist.');
             }
         }
+        $this->view_mgr->clear_all_cache();
 
         /* Begin plugin-specific configuration handling */
         if (isset($_GET['p'])) {
