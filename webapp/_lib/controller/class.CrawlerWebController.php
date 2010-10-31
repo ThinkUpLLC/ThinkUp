@@ -40,7 +40,7 @@ class CrawlerWebController extends ThinkUpAuthAPIController {
             $this->setContentType('text/html; charset=UTF-8');
             $this->setPageTitle("ThinkUp Crawler");
             $this->setViewTemplate('crawler.run-top.tpl');
-            $whichphp = exec('which php');
+            $whichphp = @exec('which php');
             $php_path =  (!empty($whichphp))?$whichphp:'php';
             $this->addSuccessMessage('ThinkUp has just started to collect your posts. This is going to take a little '.
             'while, but if you want to see the technical details of what\'s going on, there\'s a log below. ');

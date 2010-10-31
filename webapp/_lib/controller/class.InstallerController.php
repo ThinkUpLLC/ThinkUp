@@ -297,7 +297,7 @@ class InstallerController extends ThinkUpController {
             foreach ($config_file_contents_arr as $line) {
                 $config_file_contents_str .= htmlentities($line);
             }
-            $whoami = exec('whoami');
+            $whoami = @exec('whoami');
             if (!empty($whoami)) {
                 $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
                 "Use root (or sudo) to create the file manually, and allow PHP to write to it, by executing the ".

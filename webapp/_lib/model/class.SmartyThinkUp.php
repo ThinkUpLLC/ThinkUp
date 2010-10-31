@@ -130,7 +130,7 @@ class SmartyThinkUp extends Smarty {
     public function fetch($template, $cache_key=null, $compile_id=null, $display=false) {
         if (! is_writable($this->compile_dir) || ! is_writable($this->compile_dir.'/cache') ) {
             Utils::defineConstants();
-            $whoami = exec('whoami');
+            $whoami = @exec('whoami');
             if (empty($whoami)) {
                 $whoami = 'nobody';
             }
