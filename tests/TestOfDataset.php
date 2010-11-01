@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/TestOfWebappTabDataset.php
+ * ThinkUp/tests/TestOfDataset.php
  *
  * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
  *
@@ -25,19 +25,19 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 /**
- * Test of WebappTabDataset
+ * Test of Dataset
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
+class TestOfDataset extends ThinkUpUnitTestCase {
 
     /**
      * Constructor
      */
     public function __construct() {
-        $this->UnitTestCase('WebappTabDataset class test');
+        $this->UnitTestCase('Dataset class test');
     }
 
     /**
@@ -58,7 +58,7 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
      * Test constructor with allowed DAO name
      */
     public function testConstructorAllowedDAO() {
-        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts');
+        $dataset = new Dataset('all-posts', 'PostDAO', 'getAllPosts');
         $this->assertTrue(isset($dataset));
         $this->assertEqual($dataset->dao_name, 'PostDAO');
         $this->assertEqual($dataset->dao_method_name, 'getAllPosts');
@@ -70,7 +70,7 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
      * Test constructor with optiona iterator names
      */
     public function testConstructorAllowedDAOSearchIterators() {
-        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(), 'getAllPostsByUsernameIterator');
+        $dataset = new Dataset('all-posts', 'PostDAO', 'getAllPosts', array(), 'getAllPostsByUsernameIterator');
         $this->assertTrue(isset($dataset));
         $this->assertEqual($dataset->dao_name, 'PostDAO');
         $this->assertEqual($dataset->dao_method_name, 'getAllPosts');
@@ -86,14 +86,14 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
      */
     public function testConstructorDisallowedDAO() {
         $this->expectException(new Exception('BadDAO is not one of the allowed DAOs'));
-        $dataset = new WebappTabDataset('all-posts', 'BadDAO', 'getAllPosts');
+        $dataset = new Dataset('all-posts', 'BadDAO', 'getAllPosts');
     }
 
     /**
      * Test retrieveData with an existing method
      */
     public function testRetrieveDataMethodExists() {
-        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15));
+        $dataset = new Dataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15));
         $data = $dataset->retrieveDataset();
         $this->assertTrue(isset($data));
         $this->assertIsA($data, 'array');
@@ -106,7 +106,7 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
         $build_data = $this->buildData();
 
         // getAllPostsByUsernameIterator
-        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
+        $dataset = new Dataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
             'getAllPostsByUsernameIterator', array('someuser2', 'twitter', 10) );
         $iterator = $dataset->retrieveIterator();
         $this->assertTrue(isset($iterator));
@@ -118,7 +118,7 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
         $this->assertEqual(2, $cnt, 'count should be 2');
 
         // getAllPostsByUsernameIterator with a limit of 1
-        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
+        $dataset = new Dataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
             'getAllPostsByUsernameIterator', array('someuser2', 'twitter', 1) );
         $iterator = $dataset->retrieveIterator();
         $this->assertTrue(isset($iterator));
@@ -130,7 +130,7 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
         $this->assertEqual(1, $cnt, 'count should be 1');
 
         // getAllMentionsIterator
-        $dataset = new WebappTabDataset('tweets-mostreplies', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
+        $dataset = new Dataset('tweets-mostreplies', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15),
             'getAllMentionsIterator', array('someuser1', 10, 'twitter') );
         $iterator = $dataset->retrieveIterator();
         $this->assertTrue(isset($iterator));
@@ -146,9 +146,9 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
      * Test retrieveData with an existing method AND page number
      */
     public function testRetrieveDataMethodExistsWithPage() {
-        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15,
+        $dataset = new Dataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15,
         '#page_number#'));
-        //        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15));
+        //        $dataset = new Dataset('all-posts', 'PostDAO', 'getAllPosts', array(930061, 'twitter', 15));
         $data = $dataset->retrieveDataset();
         $this->assertTrue(isset($data));
         $this->assertIsA($data, 'array');
@@ -158,7 +158,7 @@ class TestOfWebappTabDataset extends ThinkUpUnitTestCase {
      * Test retrieveData with a non-existing method
      */
     public function testRetrieveDataMethodDoesNotExist() {
-        $dataset = new WebappTabDataset('all-posts', 'PostDAO', 'getAllPostsIDontExist', array(930061, 'twitter', 15));
+        $dataset = new Dataset('all-posts', 'PostDAO', 'getAllPostsIDontExist', array(930061, 'twitter', 15));
         $this->expectException(new Exception('PostDAO does not have a getAllPostsIDontExist method.'));
         $data = $dataset->retrieveDataset();
     }

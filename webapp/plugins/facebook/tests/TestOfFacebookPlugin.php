@@ -50,17 +50,18 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testWebappTabRegistration() {
+    public function testMenuItemRegistration() {
         $webapp = Webapp::getInstance();
         $logger = Logger::getInstance();
         $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();
         $instance->network_user_id = 1;
 
-        $post_tabs = $webapp->getChildTabsUnderPosts($instance);
+        $menus = $webapp->getDashboardMenu($instance);
+        $posts_menu = $menus[0]->items;
 
-        $this->assertEqual(sizeof($post_tabs), 3, "Test number of post tabs");
-        $first_post_tab = $post_tabs[0];
+        $this->assertEqual(sizeof($posts_menu), 3, "Test number of post tabs");
+        $first_post_tab = $posts_menu[0];
         $this->assertEqual($first_post_tab->short_name, "all_facebook_posts", "Test short name of first post tab");
         $this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
         $this->assertEqual($first_post_tab->description, "", "Test description of first post tab");

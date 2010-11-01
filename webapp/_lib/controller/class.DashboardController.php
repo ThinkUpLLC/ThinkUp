@@ -51,7 +51,8 @@ class DashboardController extends ThinkUpController {
         $webapp = Webapp::getInstance();
         if (isset($this->instance)) {
             $webapp->setActivePlugin($this->instance->network);
-            $this->loadSidebarMenu();
+            $sidebar_menu = $webapp->getDashboardMenu($this->instance);
+            $this->addToView('sidebar_menu', $sidebar_menu);
             $this->loadView();
         } else {
             if (!Session::isLoggedIn()) {
@@ -68,44 +69,6 @@ class DashboardController extends ThinkUpController {
         return $this->generateView();
     }
 
-
-    private function loadSidebarMenu() {
-        $webapp = Webapp::getInstance();
-        $tabs = $webapp->getChildTabsUnderPosts($this->instance);
-        $tabs_array = array();
-        foreach ($tabs as $tab) {
-            $tabs_array[$tab->short_name] = $tab->name;
-        }
-        $this->addToView("sidebar_menu_posts", $tabs_array);
-
-        $tabs = $webapp->getChildTabsUnderReplies($this->instance);
-        $tabs_array = array();
-        foreach ($tabs as $tab) {
-            $tabs_array[$tab->short_name] = $tab->name;
-        }
-        $this->addToView("sidebar_menu_replies", $tabs_array);
-
-        $tabs = $webapp->getChildTabsUnderFriends($this->instance);
-        $tabs_array = array();
-        foreach ($tabs as $tab) {
-            $tabs_array[$tab->short_name] = $tab->name;
-        }
-        $this->addToView("sidebar_menu_friends", $tabs_array);
-
-        $tabs = $webapp->getChildTabsUnderFollowers($this->instance);
-        $tabs_array = array();
-        foreach ($tabs as $tab) {
-            $tabs_array[$tab->short_name] = $tab->name;
-        }
-        $this->addToView("sidebar_menu_followers", $tabs_array);
-
-        $tabs = $webapp->getChildTabsUnderLinks($this->instance);
-        $tabs_array = array();
-        foreach ($tabs as $tab) {
-            $tabs_array[$tab->short_name] = $tab->name;
-        }
-        $this->addToView("sidebar_menu_links", $tabs_array);
-    }
     /**
      * Load the view with required variables
      */
@@ -114,7 +77,7 @@ class DashboardController extends ThinkUpController {
         if ($this->view_name == 'default') {
             $this->loadDefaultDashboard();
         } else {
-            $tab = $webapp->getTab($this->view_name, $this->instance);
+            $tab = $webapp->getMenuItem($this->view_name, $this->instance);
             $this->addToView('data_template', $tab->view_template);
             $this->addToView('display', $tab->short_name);
             $this->addToView('header', $tab->name);

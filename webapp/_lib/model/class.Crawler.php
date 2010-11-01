@@ -105,7 +105,8 @@ class Crawler extends PluginHook {
 
     /**
      * Register crawler plugin.
-     * @param str $object_name Name of Crawler plugin object which instantiates the Crawler interface, like "TwitterPlugin"
+     * @param str $object_name Name of Crawler plugin object which instantiates the Crawler interface, like
+     * "TwitterPlugin"
      */
     public function registerCrawlerPlugin($object_name) {
         $this->registerObjectMethod('crawl', $object_name, 'crawl');

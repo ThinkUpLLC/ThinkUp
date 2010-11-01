@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.WebappTab.php
+ * ThinkUp/webapp/_lib/model/class.MenuItem.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -21,13 +21,14 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Webapp Tab
+ * Menu Item
+ * Sidebar menu item, contains datasets to render in the view.
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class WebappTab {
+class MenuItem {
     /**
      *
      * @var str
@@ -60,7 +61,7 @@ class WebappTab {
      * @param str $name
      * @param str $description
      * @param str $view_template
-     * @return WebappTab
+     * @return MenuItem
      */
     public function __construct($short_name, $name, $description='', $view_template='inline.view.tpl') {
         $this->short_name = $short_name;
@@ -71,10 +72,10 @@ class WebappTab {
 
     /**
      * Add dataset
-     * @param WebappTabDataset $dataset
+     * @param MenuItemDataset $dataset
      */
     public function addDataset($dataset) {
-        if (get_class($dataset) == 'WebappTabDataset') {
+        if (get_class($dataset) == 'Dataset') {
             array_push($this->datasets, $dataset);
         } else {
             //throw exception here?
@@ -83,7 +84,7 @@ class WebappTab {
 
     /**
      * Get datasets
-     * @return array WebappTabDatasets
+     * @return array MenuItemDatasets
      */
     public function getDatasets() {
         return $this->datasets;

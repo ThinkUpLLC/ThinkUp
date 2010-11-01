@@ -13,35 +13,13 @@
         <li{if $smarty.get.v eq ''} class="currentview"{/if}><a href="index.php?u={$instance->network_username|urlencode}&n={$instance->network}">Main Dashboard&nbsp;&nbsp;&nbsp;</a></li>
         </ul></li>
         {/if}
-        {if $sidebar_menu_posts}
-        <li>Posts<ul class="side-subnav">
-        {foreach from=$sidebar_menu_posts key=mkey item=mi name=tabloop}
-        <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
+        {if $sidebar_menu}
+        {foreach from=$sidebar_menu key=mkey item=m name=menuloop}
+        <li>{$m->heading}<ul class="side-subnav">
+        {foreach from=$m->items key=ikey item=mi name=menuitemloop}
+        <li{if $smarty.get.v eq $mi->short_name} class="currentview"{/if}><a href="index.php?v={$mi->short_name}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi->name}&nbsp;&nbsp;&nbsp;</a></li>
         {/foreach}</ul></li>
-        {/if}
-        {if $sidebar_menu_replies}
-        <li>Replies<ul class="side-subnav">
-        {foreach from=$sidebar_menu_replies key=mkey item=mi name=tabloop}
-        <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
-        {/foreach}</ul></li>
-        {/if}
-        {if $sidebar_menu_friends}
-        <li>Friends<ul class="side-subnav">
-        {foreach from=$sidebar_menu_friends key=mkey item=mi name=tabloop}
-        <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
-        {/foreach}</ul></li>
-        {/if}
-        {if $sidebar_menu_followers}
-        <li>Followers<ul class="side-subnav">
-        {foreach from=$sidebar_menu_followers key=mkey item=mi name=tabloop}
-        <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
-        {/foreach}</ul></li>
-        {/if}
-        {if $sidebar_menu_links}
-        <li>Links<ul class="side-subnav">
-        {foreach from=$sidebar_menu_links key=mkey item=mi name=tabloop}
-        <li{if $smarty.get.v eq $mkey} class="currentview"{/if}><a href="index.php?v={$mkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$mi}&nbsp;&nbsp;&nbsp;</a></li>
-        {/foreach}</ul></li>
+        {/foreach}
         {/if}
         </ul>
         </div>

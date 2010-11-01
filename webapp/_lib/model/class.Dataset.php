@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.WebappTabDataset.php
+ * ThinkUp/webapp/_lib/model/class.Dataset.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -21,13 +21,14 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Webapp Tab Dataset
+ * Dataset
+ * Parameters needed to retrieve a set of data to display in ThinkUp.
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class WebappTabDataset {
+class Dataset {
     /**
      * @var str
      */
@@ -68,7 +69,7 @@ class WebappTabDataset {
      * @param str $dao_name
      * @param str $dao_method_name
      * @param array $method_params
-     * @return WebappTabDataset
+     * @return Dataset
      */
     public function __construct($name, $dao_name, $dao_method_name, $method_params=array(),
     $iterator_method_name = null, $iterator_method_params = array()) {

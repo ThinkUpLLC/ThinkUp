@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/TestOfWebappTab.php
+ * ThinkUp/tests/TestOfMenuItem.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -25,19 +25,19 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 /**
- * Test of WebappTab
+ * Test of MenuItem
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfWebappTab extends ThinkUpBasicUnitTestCase {
+class TestOfMenuItem extends ThinkUpBasicUnitTestCase {
 
     /**
      * Constructor
      */
     public function __construct() {
-        $this->UnitTestCase('WebappTab class test');
+        $this->UnitTestCase('MenuItem class test');
     }
 
     /**
@@ -58,7 +58,7 @@ class TestOfWebappTab extends ThinkUpBasicUnitTestCase {
      * Test constructor
      */
     public function testConstructor() {
-        $tab = new WebappTab('my_short_name', "Name of My Tab");
+        $tab = new MenuItem('my_short_name', "Name of My Tab");
         $this->assertEqual($tab->short_name, 'my_short_name');
         $this->assertEqual($tab->name, 'Name of My Tab');
         $this->assertEqual($tab->description, '');

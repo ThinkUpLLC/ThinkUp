@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/interface.WebappPlugin.php
+ * ThinkUp/webapp/_lib/model/class.Menu.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -21,22 +21,37 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Webapp plugin interface
- *
+ * Menu
+ * Container for a set of menu items.
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-interface WebappPlugin extends ThinkUpPlugin {
-    public function getChildTabsUnderPosts($instance);
+class Menu {
+    /**
+     * @var str
+     */
+    var $heading;
+    /**
+     * @var array
+     */
+    var $items = array();
 
-    public function getChildTabsUnderReplies($instance);
+    /**
+     * Constructor
+     * @param str $heading Menu heading
+     * @return Menu
+     */
+    public function __construct($heading) {
+        $this->heading = $heading;
+    }
 
-    public function getChildTabsUnderFriends($instance);
-
-    public function getChildTabsUnderFollowers($instance);
-
-    public function getChildTabsUnderLinks($instance);
+    /**
+     * Add item to menu
+     * @param MenuItem $menu_item
+     */
+    public function addMenuItem($menu_item) {
+        array_push($this->items, $menu_item);
+    }
 }
-
