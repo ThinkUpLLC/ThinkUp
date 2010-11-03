@@ -34,6 +34,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  */
+
 // [thinkup_chronological_archive]
 function thinkup_chron_archive_handler($atts) {
 
@@ -41,7 +42,7 @@ function thinkup_chron_archive_handler($atts) {
     '<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order '.
     '(sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 
     'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia',
-    'gmt_offset'=>get_option('gmt_offset'), ), $atts));
+    'gmt_offset'=>get_option('gmt_offset'), 'order'=>'desc', ), $atts));
 
     $options_array = thinkup_get_options_array();
 
@@ -54,7 +55,7 @@ function thinkup_chron_archive_handler($atts) {
     }
 
     $sql = $wpdb2->prepare("select pub_date, post_text, post_id from ".$options_array['thinkup_table_prefix']['value'].
-    "posts where author_username='%s' and in_reply_to_user_id is null  order by pub_date asc", $twitter_username);
+    "posts where author_username='%s' and in_reply_to_user_id is null order by pub_date %s", $twitter_username, $order);
 
     $tweets = $wpdb2->get_results($sql);
 
@@ -77,18 +78,19 @@ function thinkup_chron_archive_handler($atts) {
 // [thinkup_status_replies post_id="12345"]
 function thinkup_replies_handler($atts) {
 
-    extract(shortcode_atts(array('post_id'=>0, 'twitter_username'=>get_option('thinkup_twitter_username'),
-    'title'=>'<h3>Public Twitter replies to <a href="http://twitter.com/#twitter_username#/statuses/#post_id#/">'.
-    '@#twitter_username#\'s tweet</a>:</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 
-    'after_tweet'=>'</li>', 'before_user'=>'<b>', 'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'',
-    'date_format'=>'Y.m.d, g:ia', 'gmt_offset'=>8, ), $atts));
+    extract(shortcode_atts(array('post_id'=>0, 'network'=>'twitter',
+    'twitter_username'=>get_option('thinkup_twitter_username'), 'title'=>'<h3>Public Twitter replies to '.
+    '<a href="http://twitter.com/#twitter_username#/statuses/#post_id#/">@#twitter_username#\'s tweet</a>:</h3>',
+    'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>',
+    'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 
+    'gmt_offset'=>8, ), $atts));
 
     $options_array = thinkup_get_options_array();
 
-    if ($options_array['thinkup_server']['value'] != '')
-    $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'],
-    $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
-    else {
+    if ($options_array['thinkup_server']['value'] != '') {
+        $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'],
+        $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
+    }else {
         global $wpdb;
         $wpdb2 = $wpdb;
     }
@@ -103,9 +105,10 @@ function thinkup_replies_handler($atts) {
                 t.author_user_id = u.user_id 
             where 
                 in_reply_to_post_id = %0.0f 
+                AND network = '%s'
                 AND u.is_protected = 0    
             order by 
-                follower_count desc;", $post_id);
+                follower_count desc;", $post_id, $network);
 
     $replies = $wpdb2->get_results($sql);
 
@@ -132,15 +135,15 @@ function thinkup_replies_handler($atts) {
 
 // [thinkup_status_reply_count post_id="12345"]
 function thinkup_reply_count_handler($atts) {
-    extract(shortcode_atts(array('post_id'=>0, 'before'=>'<a href="#permalink#">', 'after'=>' Twitter replies</a>', ),
-    $atts));
+    extract(shortcode_atts(array('post_id'=>0, 'before'=>'<a href="#permalink#">', 'after'=>' Twitter replies</a>',
+    'network'=>'twitter', ), $atts));
 
     $options_array = thinkup_get_options_array();
 
-    if ($options_array['thinkup_server']['value'] != '')
-    $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'],
-    $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
-    else {
+    if ($options_array['thinkup_server']['value'] != '') {
+        $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'],
+        $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
+    } else {
         global $wpdb;
         $wpdb2 = $wpdb;
     }
@@ -156,9 +159,10 @@ function thinkup_reply_count_handler($atts) {
                 t.author_user_id = u.user_id 
             where 
                 in_reply_to_post_id=%0.0f
+                AND network = '%s' 
                 AND u.is_protected = 0    
             order by 
-                follower_count desc;", $post_id);
+                follower_count desc;", $post_id, $network);
     //echo $sql;
     $count = $wpdb2->get_var($sql);
     $before_mod = str_replace('#permalink#', get_permalink(), $before);
