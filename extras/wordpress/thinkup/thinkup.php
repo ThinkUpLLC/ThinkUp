@@ -68,12 +68,12 @@ function thinkup_chron_archive_handler($atts) {
             $tweet_content = htmlentities ($t->post_text);
             $tweet_content = linkUrls($tweet_content);
             $tweet_content = linkTwitterUsers($tweet_content);
-            echo "{$before_tweet}{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}";
             if ($cur % 2) {
                 echo $before_tweet;
             } else {
                 echo $before_tweet_alt;
             }
+            echo "{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}";
             echo "{$after_tweet_html} {$before_date}
             <a href=\"http://twitter.com/{$twitter_username}/statuses/{$t->post_id}/\">".
             actual_time($date_format, $gmt_offset, strtotime($t->pub_date))."</a>{$after_date}{$after_tweet}";
