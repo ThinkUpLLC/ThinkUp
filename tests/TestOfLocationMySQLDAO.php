@@ -41,22 +41,27 @@ class TestOfLocationMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $this->DAO = new LocationMySQLDAO();
+        $this->builders = self::buildData();
+    }
+
+    protected function buildData() {
+        $builders = array();
 
         //Insert test data into test table
-        $q = "INSERT INTO tu_encoded_locations (short_name, full_name, latlng)
-        VALUES ('New Delhi', 'New Delhi, Delhi, India', '28.635308,77.22496');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('encoded_locations', array('short_name'=>'New Delhi', 
+        'full_name'=>'New Delhi, Delhi, India', 'latlng'=>'28.635308,77.22496'));
 
-        $q = "INSERT INTO tu_encoded_locations (short_name, full_name, latlng)
-        VALUES ('Chennai', 'Chennai, Tamil Nadu, India', '13.060416,80.249634');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('encoded_locations', array('short_name'=>'Chennai', 
+        'full_name'=>'Chennai, Tamil Nadu, India', 'latlng'=>'13.060416,80.249634'));
 
-        $q = "INSERT INTO tu_encoded_locations (short_name, full_name, latlng)
-        VALUES ('19.017656 72.856178', 'Mumbai, Maharashtra, India', '19.017656,72.856178');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('encoded_locations', array('short_name'=>'19.017656 72.856178', 
+        'full_name'=>'Mumbai, Maharashtra, India', 'latlng'=>'19.017656,72.856178'));
+
+        return $builders;
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
         $this->logger->close();
         $this->DAO = null;
