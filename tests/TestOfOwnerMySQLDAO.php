@@ -46,18 +46,30 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->builders = self::buildData();
         $this->DAO = new OwnerMySQLDAO();
-        $q = "INSERT INTO tu_owners SET full_name='ThinkUp J. User', email='ttuser@example.com', is_activated=0,
-        pwd='XXX', activation_code='8888'";
-        PDODAO::$PDO->exec($q);
+    }
+    
+    protected function buildData() {
+        $builders = array();
+        
+        $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User', 
+        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>'XXX', 'activation_code'=>'8888'));
+//        $q = "INSERT INTO tu_owners SET full_name='ThinkUp J. User', email='ttuser@example.com', is_activated=0,
+//        pwd='XXX', activation_code='8888'";
+//        PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tu_owners SET full_name='ThinkUp J. User1', email='ttuser1@example.com', is_activated=1,
-        pwd='YYY'";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1', 
+        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>'YYY'));
+//        $q = "INSERT INTO tu_owners SET full_name='ThinkUp J. User1', email='ttuser1@example.com', is_activated=1,
+//        pwd='YYY'";
+//        PDODAO::$PDO->exec($q);
 
+        return $builders;
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
     }
 
