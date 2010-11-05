@@ -19,12 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
+ *
  * Test of UserErrorMySQLDAO
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -32,6 +28,11 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
+
 class TestOfUserErrorMySQLDAO extends ThinkUpUnitTestCase {
 
     /**
@@ -47,18 +48,23 @@ class TestOfUserErrorMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function setUp() {
         parent::setUp();
+        $this->builders = self::buildData();
+    }
 
+    protected function buildData() {
+        $builders = array();
         //Insert test data into test table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, location)
-        VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg', 'San Francisco');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>12, 'user_name'=>'jack',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'location'=>'San Francisco'));
         $this->logger = Logger::getInstance();
+        return $builders;
     }
 
     /**
      * Tear down
      */
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
         $this->logger->close();
     }

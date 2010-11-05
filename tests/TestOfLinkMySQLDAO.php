@@ -19,18 +19,18 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
+ *
  * Test Of Link DAO
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Christoffer Viken
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author christoffer Viken <christoffer[at]viken[dot]me>
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     /**
      * Constructor
@@ -45,16 +45,19 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->DAO = new LinkMySQLDAO();
+        $this->builders = self::buildData();
+    }
 
+    protected function buildData() {
+
+        $builders = array();
         //Insert test links (not images, not expanded)
         $counter = 0;
         while ($counter < 40) {
             $post_id = $counter + 80;
-            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-
-            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
-            $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $post_id, 'twitter', 0);";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>0, 
+            'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
 
@@ -62,11 +65,9 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 0;
         while ($counter < 5) {
             $post_id = $counter + 80;
-            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-
-            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
-            $q .= "VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 'twitter', 1);";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://flic.kr/p/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>1, 
+            'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
 
@@ -74,13 +75,10 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 0;
         while ($counter < 5) {
             $post_id = $counter + 80;
-            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-
-            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image, error) ";
-            $q .= "VALUES ('http://flic.kr/p/".$counter."', 'Link $counter', 0, $post_id, 'twitter', 1, ";
-            $q .= "'Generic test error message, Photo not found');";
-            PDODAO::$PDO->exec($q);
-
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://flic.kr/p/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 
+            'is_image'=>1, 'error'=>'Generic test error message, Photo not found', 
+            'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
 
@@ -88,11 +86,9 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 0;
         while ($counter < 5) {
             $post_id = $counter + 80;
-            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-
-            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image, error) ";
-            $q .= "VALUES ('http://bit.ly/beEEfs', 'Link $counter', 0, $post_id, 'twitter', 1, '');";
-            $this->db->exec($q);
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://bit.ly/beEEfs',
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter',  'is_image'=>1, 
+            'error'=>'',  'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
 
@@ -101,35 +97,28 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 5) {
             $post_id = $counter + 80;
             $user_id = ($counter * 5) + 2;
-            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-
-            $q  = "INSERT INTO tu_posts ( ";
-            $q .= " post_id, author_user_id, author_username, author_fullname, post_text ";
-            $q .= " ) ";
-            $q .= "VALUES ('$post_id', $user_id, 'user$counter', 'User$counter Name$counter',
-            'Post by user$counter' );";
-            $this->db->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id,
+            'author_user_id'=>$user_id, 'author_username'=>'user'.$counter, 'in_reply_to_post_id'=>0,
+            'author_fullname'=>'User.'.$counter.' Name.'.$counter, 'post_text'=>'Post by user'.$counter));
             $counter++;
         }
 
-        $q  = "INSERT INTO tu_follows (";
-        $q .= " follower_id, user_id, active ";
-        $q .= " ) ";
-        $q .= " VALUES ";
-        $q .= " (2, 7, 1), ";
-        $q .= " (2, 22, 1), ";
-        $q .= " (2, 17, 1), ";
-        $q .= " (2, 12, 0), ";
-        $q .= " (27, 2, 1), ";
-        $q .= " (18, 22, 0), ";
-        $q .= " (12, 22, 1) ";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('follower_id'=>2, 'user_id'=>7, 'active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('follower_id'=>2, 'user_id'=>22, 'active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('follower_id'=>2, 'user_id'=>17, 'active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('follower_id'=>2, 'user_id'=>12, 'active'=>0));
+        $builders[] = FixtureBuilder::build('follows', array('follower_id'=>27, 'user_id'=>2, 'active'=>1));
+        $builders[] = FixtureBuilder::build('follows', array('follower_id'=>18, 'user_id'=>22, 'active'=>0));
+        $builders[] = FixtureBuilder::build('follows', array('follower_id'=>12, 'user_id'=>22,  'active'=>1));
+
+        return $builders;
     }
 
     /**
      * Destructs the database, so it can be reconstructed for next test
      */
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
         $this->DAO = null;
     }
@@ -162,6 +151,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testSaveExpandedUrl() {
         $linkstoexpand = $this->DAO->getLinksToExpand();
+        $this->assertIsA($linkstoexpand, 'Array');
+        $this->assertTrue(sizeof($linkstoexpand)>0);
 
         $link = $linkstoexpand[0];
         $this->DAO->saveExpandedUrl($link, "http://expandedurl.com");
@@ -313,5 +304,4 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($flickrlinkstoexpand), 5);
         $this->assertIsA($flickrlinkstoexpand, "array");
     }
-
 }
