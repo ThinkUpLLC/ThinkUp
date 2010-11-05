@@ -140,13 +140,14 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         "owners, ".$config->getValue('table_prefix')."plugin_options,
         ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
         $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users,".$config->getValue('table_prefix')."options";
         PDODAO::$PDO->exec($q);
 
         $installer = Installer::getInstance();
         Installer::$show_tables = null; //set show_tables to null to force a refresh
         $tables = $installer->showTables($config_array);
         $expected = array($config->getValue('table_prefix').'follows', $config->getValue('table_prefix').'links');
+        
         $this->assertIdentical(Installer::$show_tables, $expected);
 
         // test with a table
@@ -194,7 +195,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         "owners, ".$config->getValue('table_prefix')."plugin_options,
         ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
         $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users," . $config->getValue('table_prefix')."options";
         PDODAO::$PDO->exec($q);
 
         Installer::$show_tables = array();
@@ -240,7 +241,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         "owners, ".$config->getValue('table_prefix')."plugin_options,
         ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
         $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users;";
+        $config->getValue('table_prefix')."users," . $config->getValue('table_prefix')."options";
         PDODAO::$PDO->exec($q);
 
         Installer::$show_tables = array();
@@ -287,7 +288,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
         $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
         $config->getValue('table_prefix')."users, ".$config->getValue('table_prefix')."follows, ".
-        $config->getValue('table_prefix')."links;";
+        $config->getValue('table_prefix')."links," . $config->getValue('table_prefix')."options";
         PDODAO::$PDO->exec($q);
 
         Installer::$show_tables = array();
@@ -308,7 +309,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
         $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
         $config->getValue('table_prefix')."users, ".$config->getValue('table_prefix')."follows, ".
-        $config->getValue('table_prefix')."links, ".$config->getValue('table_prefix')."owners;";
+        $config->getValue('table_prefix')."links, ".$config->getValue('table_prefix')."owners," .
+        $config->getValue('table_prefix')."options";
         PDODAO::$PDO->exec($q);
 
         Installer::$show_tables = array();
@@ -328,7 +330,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."plugin_options, ".$config->getValue('table_prefix')."plugins, ".
         $config->getValue('table_prefix')."post_errors, ".$config->getValue('table_prefix')."posts, ".
         $config->getValue('table_prefix')."user_errors, ".$config->getValue('table_prefix')."users, ".
-        $config->getValue('table_prefix')."follows, ".$config->getValue('table_prefix')."links;";
+        $config->getValue('table_prefix')."follows, ".$config->getValue('table_prefix')."links," .
+        $config->getValue('table_prefix')."options";
         PDODAO::$PDO->exec($q);
         $q = "CREATE TABLE weird_random_table(id INT);";
         PDODAO::$PDO->exec($q);
@@ -376,7 +379,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     public function testGetTablesToInstall(){
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
-        $expected_tables = array('encoded_locations', 'follower_count', 'follows', 'instances', 'links',
+        $expected_tables = array('encoded_locations', 'follower_count', 'follows', 'instances', 'links','options',
         'owner_instances', 'owners', 'plugin_options', 'plugins', 'post_errors', 'posts', 'user_errors', 'users');
         $this->assertIdentical($tables, $expected_tables);
     }

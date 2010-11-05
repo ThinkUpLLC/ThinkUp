@@ -143,6 +143,11 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         } catch (Exception $e) {
             return false;
         }
+	}
+
+    public function runMigrationSQL($sql) {
+        $ps = $this->execute($sql);
+        $result = $this->getUpdateCount($ps);
     }
 
     public function diffDataStructure($desired_structure_sql_string = '', $existing_tables = array()) {
@@ -343,5 +348,54 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
 
         $all_queries = array_merge($creation_queries, $insert_update_queries);
         return array('queries' => $all_queries, 'for_update' => $for_update);
+    }
+
+    /**
+     * Temporary method to determine if database is 64-bit post ID ready
+     * This method will be deleted when proper install upgrader gets released
+     */
+    public function needsSnowflakeUpgrade() {
+        $q  = "DESCRIBE #prefix#posts;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+            if ($row['Field'] == 'in_retweet_of_post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+            if ($row['Field'] == 'in_reply_to_post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+        }
+        $q  = "DESCRIBE #prefix#links;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+        }
+        $q  = "DESCRIBE #prefix#post_errors;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+        }
+        $q  = "DESCRIBE #prefix#users;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'last_post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+                return true;
+            }
+        }
+        $q  = "DESCRIBE #prefix#instances;";
+        $rows = $this->getDataRowsAsArrays($this->execute($q));
+        foreach ($rows as $row) {
+            if ($row['Field'] == 'last_status_id') {
+                return true;
+            }
+        }
+        return false;
     }
 }

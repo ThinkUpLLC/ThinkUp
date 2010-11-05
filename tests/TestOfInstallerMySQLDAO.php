@@ -85,7 +85,7 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $config_array = $config->getValuesArray();
         $dao = new InstallerMySQLDAO($config_array);
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 13);
+        $this->assertEqual(sizeof($result), 14);
         $this->assertEqual($result[0], $config_array["table_prefix"].'encoded_locations');
     }
     public function testCheckTable() {
@@ -132,17 +132,22 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $install_queries = file_get_contents(THINKUP_ROOT_PATH."webapp/install/sql/build-db_mysql.sql");
 
         //clean SQL: diffDataStructure requires two spaces after PRIMARY KEY, and a space between key name and (field)
-        $install_queries = str_replace('PRIMARY KEY ', 'PRIMARY KEY  ', $install_queries);
+        $install_queries = str_replace('PRIMARY KEY (', 'PRIMARY KEY  (', $install_queries);
 
         // test on complete table set; this should return just the INSERT query into plugins table
         $config = Config::getInstance();
         $config_array = $config->getValuesArray();
         $dao = new InstallerMySQLDAO($config_array);
         $output = $dao->diffDataStructure($install_queries, $dao->getTables());
+
         $this->assertEqual(sizeof($output['for_update']), 0 );
         //var_dump($output);
-        $expected = "/INSERT INTO ".$config_array["table_prefix"]."plugins/i";
+        $expected = "/INSERT INTO ".$config_array["table_prefix"]."options/i";
         $this->assertPattern( $expected, $output['queries'][0] );
+
+        $expected = "/INSERT INTO ".$config_array["table_prefix"]."plugins/i";
+        $this->assertPattern( $expected, $output['queries'][1] );
+
 
         // test on missing tables
         InstallerMySQLDAO::$PDO->exec("DROP TABLE " . $config_array["table_prefix"] . "owners");
@@ -170,7 +175,15 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         // test on missing column
         InstallerMySQLDAO::$PDO->exec("ALTER TABLE ".$config_array["table_prefix"]."posts DROP place");
         $output = $dao->diffDataStructure($install_queries, $dao->getTables(false));
-        $add_idx = "ALTER TABLE ".$config_array["table_prefix"]."posts ADD COLUMN place varchar(255) DEFAULT NULL";
-        $this->assertTrue(in_array($add_idx, $output['queries']));
+        $regex = "/ALTER TABLE ".$config_array["table_prefix"]."posts ADD COLUMN place varchar\(255\) DEFAULT NULL/i";
+        $this->assertPattern($regex, $output['queries'][2]);
     }
+
+    public function testNeedsSnowflakeUpgrade() {
+        $dao = new InstallerMySQLDAO();
+        $this->assertFalse($dao->needsSnowflakeUpgrade());
+        $this->db->exec('ALTER TABLE tu_posts CHANGE post_id post_id bigint(11) NOT NULL;');
+        $this->assertTrue($dao->needsSnowflakeUpgrade());
+    }
+
 }

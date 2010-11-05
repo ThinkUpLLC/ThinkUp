@@ -77,6 +77,11 @@ class Crawler extends PluginHook {
             throw new UnauthorizedUserException('You need a valid session to launch the crawler.');
         }
 
+        // are we in an upgrading state
+        if(UpgradeController::isUpgrading(true, 'Crawler')) {
+            throw new InstallerException("ThinkUp needs a database migration, so we are unable to run the crawler.");
+        }
+
         $global_mutex_name = 'crawler';
 
         // Everyone needs to check the global mutex

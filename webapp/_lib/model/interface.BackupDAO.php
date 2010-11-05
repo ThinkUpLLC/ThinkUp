@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/tests/all_tests.php
+ * ThinkUp/webapp/_lib/model/interface.BackupDAO.php
  *
- * Copyright (c) 2009-2010 Gina Trapani
+ * Copyright (c) 2009-2010 Mark Wilkie
  *
  * LICENSE:
  *
@@ -21,23 +21,31 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * Backup Data Access Object Interface
+ *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2010 Mark Wilkie
+ * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
-require_once 'init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
-$RUNNING_ALL_TESTS = true;
+interface BackupDAO {
 
-require_once THINKUP_ROOT_PATH.'tests/all_model_tests.php';
+    /**
+     *
+     * @var const db export dir
+     */
+    const CACHE_DIR = '_lib/view/compiled_view';
 
-require_once THINKUP_ROOT_PATH.'tests/all_plugin_tests.php';
+    /**
+     * Export database to tmp dir
+     * @return $str Path to backup file
+     */
+    public function export();
 
-require_once THINKUP_ROOT_PATH.'tests/all_integration_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_install_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_controller_tests.php';
+    /**
+     * Import database zip file
+     * @ str Import zip file
+     * @return boolean tru if suceeds
+     */
+    public function import($zipfile);
+}

@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/tests/all_tests.php
+ * ThinkUp/webapp/install/backup.php
  *
- * Copyright (c) 2009-2010 Gina Trapani
+ * Copyright (c) 2009-2010 Mark Wilkie
  *
  * LICENSE:
  *
@@ -21,23 +21,11 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2010 Mark Wilkie
  */
-require_once 'init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
-
-$RUNNING_ALL_TESTS = true;
-
-require_once THINKUP_ROOT_PATH.'tests/all_model_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_plugin_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_integration_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_install_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_controller_tests.php';
+chdir('..');
+require_once 'init.php';
+$controller = new BackupController();
+echo $controller->go();

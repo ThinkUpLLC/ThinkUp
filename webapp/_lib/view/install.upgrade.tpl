@@ -1,37 +1,84 @@
 {include file="_header.tpl"}
 {include file="_statusbar.tpl"}
-  <div class="thinkup-canvas round-all container_24">
-    <div class="clearfix prepend_20 append_20">
-      <div class="grid_22 push_1 clearfix">
-        {include file="_usermessage.tpl"}
-        <br /><br />
-        {if $needs_upgrade}
-        <form method="POST">
-        <input type="hidden" value="yes" name="upgrade" />
-        <input type="submit" value="Upgrade ThinkUp's database now" />
-        </form>
-        
-        <br /><br /><br />
-        
-        Note: Advanced users with more than a few hundred thousand posts in their  ThinkUp database should run this 
-        update by hand and watch its progress.<br />To do so, run the following SQL commands in your ThinkUp database. 
-        <br />(Be sure to replace tu_ with your ThinkUp table prefix.)
-        <textarea cols="100" rows="10">
-ALTER TABLE tu_posts CHANGE post_id post_id  bigint(20) UNSIGNED NOT NULL;
-ALTER TABLE tu_posts CHANGE in_retweet_of_post_id in_retweet_of_post_id  bigint(20) UNSIGNED NULL;
-ALTER TABLE tu_posts CHANGE in_reply_to_post_id in_reply_to_post_id bigint(20) UNSIGNED NULL;
+<div class="container_24 thinkup-canvas round-all">
+  <div class="prepend_20">
+    <h1>Upgrade ThinkUp</h1>
+  </div>
+  <div class="clearfix prepend_20">
+    <div class="grid_17 prefix_3 left">
+    {include file="_usermessage.tpl"}
+    </div>
+  </div>
 
-ALTER TABLE tu_links CHANGE post_id post_id  bigint(20) UNSIGNED NOT NULL;
-
-ALTER TABLE tu_post_errors CHANGE post_id post_id  bigint(20) UNSIGNED NOT NULL;
-
-ALTER TABLE tu_users CHANGE last_post_id last_post_id  bigint(20) UNSIGNED NOT NULL;
-
-ALTER TABLE tu_instances CHANGE last_status_id last_post_id  bigint(20) UNSIGNED NOT NULL;</textarea>
+    {if ! $migrations[0]}
+    <div class="success" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
+    <!-- no upgrade needed -->
+    <p>Your database is up to date. <a href="{$site_root_path}">Continue using ThinkUp</a>, or <a href="backup.php">back up your database.</a></p>
+        {if $version_updated}
+        <p>Your application database version has been updated to reflect the latest installed version of ThinkUp.</p>
         {/if}
-        
-	      </div>
-	    </div>
-	  </div> <!-- end .thinkup-canvas -->
+    </div>
+    {else}
+    <div id="info-parent" class="ui-state-highlight ui-corner-all" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
+        <div id="migration-info">
+        <p>
+        <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
+        Your ThinkUp installation needs {$migrations|@count} database update{if $migrations|@count gt 1}s{/if}. Before you proceed, 
+        <a href="{$site_root_path}install/backup.php">back up your current ThinkUp database</a>.
+        </p>
+        </div>
+        <script type="text/javascript">
+        var sql_array = {$migrations_json};
+        </script>
+    </div>
+    {/if}
+    
+    {if $migrations[0]}
+    <div class="clearfix">
+    <br /><br />
+        <div class="grid_10 prefix_9 left">
+        <form name="upgrade" method="get" action="" id="upgrade-form" onsubmit="return false;">
+        <input id="migration-submit" 
+        name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" 
+        value="Update ThinkUp's Database" type="submit" style="font-size:24px;line-height:2.2em;">
+        </form>
+        </div>
+     </div>
+     
+     <div id="upgrade-error" class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em; display: none;">
+     Error
+     </div>
 
-	{include file="_footer.tpl"}
+     <div id="migration-status-details" style="margin: 20px; display: none;"><p><a href="javascript:jchange('migration-status');">Show update details:</a></p></div>
+     {literal}
+<script language="javascript" type="text/javascript">
+function jchange(o) {
+if(document.getElementById(o).style.display=='none') {
+document.getElementById(o).style.display='block';
+ } 
+}
+</script>
+{/literal}
+     
+     <div style="text-align:center; height: 31px;">
+        <img src="{$site_root_path}assets/img/loading.gif" style="display: none;" 
+        id="migrate_spinner" width="31" height="31">
+     </div>
+     
+     <div id="migration-status" style="margin: 20px; display: none;">
+     </div>
+    {/if}
+
+<br />&nbsp;<br />
+    
+</div>
+
+{if $upgrade_token}
+<script type="text/javascript">
+var upgrade_token = '{$upgrade_token}';
+</script>
+{/if}
+<script type="text/javascript" src="{$site_root_path}assets/js/upgrade.js"></script>
+
+
+{include file="_footer.tpl"}

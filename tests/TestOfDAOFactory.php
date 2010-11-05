@@ -19,12 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
+ *
  * Test of DAOFactory
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -33,6 +29,10 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfDAOFactory extends ThinkUpUnitTestCase {
 
     public function __construct() {
@@ -114,7 +114,6 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertNotNull($data_obj);
         $this->assertEqual($data_obj->test_name, 'Mojo Jojo');
         $this->assertEqual($data_obj->test_id, 2001);
-
     }
     /**
      * Test get InstanceDAO
@@ -244,7 +243,23 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $mutex_dao = DAOFactory::getDAO('MutexDAO');
         $this->assertNotNull($mutex_dao);
         $this->assertIsA($mutex_dao, 'MutexMySQLDAO');
+    }
 
+    /**
+     * Test get OptionDAO
+     */
+    public function testGetOptionDAO() {
+        $dao = DAOFactory::getDAO('OptionDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'OptionMySQLDAO');
+    }
+    /**
+     * Test get BackupDAO
+     */
+    public function testGetBackupDAO() {
+        $dao = DAOFactory::getDAO('BackupDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'BackupMySQLDAO');
     }
 
     /**
@@ -259,7 +274,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 14);
+        $this->assertEqual(sizeof($result), 15);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
     }

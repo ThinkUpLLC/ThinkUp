@@ -97,7 +97,7 @@ abstract class ThinkUpController {
             if ($this->isAdmin()) {
                 $this->addToView('user_is_admin', true);
             }
-            require (THINKUP_WEBAPP_PATH . 'install/version.php');
+            $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
         } catch (Exception $e) {
             Utils::defineConstants();
@@ -176,28 +176,30 @@ abstract class ThinkUpController {
         if (isset($this->view_template)) {
             if ($this->view_mgr->isViewCached()) {
                 $cache_key = $this->getCacheKeyString();
-                if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type, 'text/javascript') === false) {
-                    $view_start_time = microtime(true);
-                    $cache_source = $this->shouldRefreshCache()?"DATABASE":"FILE";
-                    $results = $this->view_mgr->fetch($this->view_template, $cache_key);
-                    $view_end_time = microtime(true);
-                    $total_time = $view_end_time - $view_start_time;
-                    $profiler = Profiler::getInstance();
-                    $profiler->add($total_time, "Rendered view from ". $cache_source . ", cache key: <i>".
-                    $this->getCacheKeyString(), false).'</i>';
-                    return $results;
+                if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type,
+                'text/javascript') === false) {
+                $view_start_time = microtime(true);
+                $cache_source = $this->shouldRefreshCache()?"DATABASE":"FILE";
+                $results = $this->view_mgr->fetch($this->view_template, $cache_key);
+                $view_end_time = microtime(true);
+                $total_time = $view_end_time - $view_start_time;
+                $profiler = Profiler::getInstance();
+                $profiler->add($total_time, "Rendered view from ". $cache_source . ", cache key: <i>".
+                $this->getCacheKeyString(), false).'</i>';
+                return $results;
                 } else {
                     return $this->view_mgr->fetch($this->view_template, $cache_key);
                 }
             } else {
-                if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type, 'text/javascript') === false) {
-                    $view_start_time = microtime(true);
-                    $results = $this->view_mgr->fetch($this->view_template);
-                    $view_end_time = microtime(true);
-                    $total_time = $view_end_time - $view_start_time;
-                    $profiler = Profiler::getInstance();
-                    $profiler->add($total_time, "Rendered view (not cached)", false);
-                    return $results;
+                if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type,
+                'text/javascript') === false) {
+                $view_start_time = microtime(true);
+                $results = $this->view_mgr->fetch($this->view_template);
+                $view_end_time = microtime(true);
+                $total_time = $view_end_time - $view_start_time;
+                $profiler = Profiler::getInstance();
+                $profiler->add($total_time, "Rendered view (not cached)", false);
+                return $results;
                 } else  {
                     return $this->view_mgr->fetch($this->view_template);
                 }
@@ -279,18 +281,29 @@ abstract class ThinkUpController {
     public function go() {
         try {
             $this->initalizeApp();
-            $results = $this->control();
-            if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type, 'text/javascript') === false) {
-                $end_time = microtime(true);
-                $total_time = $end_time - $this->start_time;
-                $profiler = Profiler::getInstance();
-                $this->disableCaching();
-                $profiler->add($total_time, "total page execution time, running ".$profiler->total_queries." queries.");
-                $this->setViewTemplate('_profiler.tpl');
-                $this->addToView('profile_items',$profiler->getProfile());
-                return  $results . $this->generateView();
-            } else  {
-                return $results;
+
+            // are we in need of a database migration?
+            $classname = get_class($this);
+            if ($classname != 'InstallerController' && $classname != 'BackupController' &&
+            UpgradeController::isUpgrading( $this->isAdmin(), $classname) ) {
+                $this->setViewTemplate('install.upgradeneeded.tpl');
+                return $this->generateView();
+            } else {
+                $results = $this->control();
+                if ($this->profiler_enabled && !isset($this->json_data)
+                && strpos($this->content_type, 'text/javascript') === false) {
+                    $end_time = microtime(true);
+                    $total_time = $end_time - $this->start_time;
+                    $profiler = Profiler::getInstance();
+                    $this->disableCaching();
+                    $profiler->add($total_time,
+                    "total page execution time, running ".$profiler->total_queries." queries.");
+                    $this->setViewTemplate('_profiler.tpl');
+                    $this->addToView('profile_items',$profiler->getProfile());
+                    return  $results . $this->generateView();
+                } else  {
+                    return $results;
+                }
             }
         } catch (Exception $e) {
             //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings
@@ -321,7 +334,8 @@ abstract class ThinkUpController {
      * @throws Exception
      */
     private function initalizeApp() {
-        if (get_class($this) != "InstallerController" ) {
+        $classname = get_class($this);
+        if ($classname != "InstallerController") {
             //Initialize config
             $config = Config::getInstance();
             if ($config->getValue('timezone')) {
@@ -331,18 +345,19 @@ abstract class ThinkUpController {
                 ini_set("display_errors", 1);
                 ini_set("error_reporting", E_ALL);
             }
-
-            //Init plugins
-            $pdao = DAOFactory::getDAO('PluginDAO');
-            $active_plugins = $pdao->getActivePlugins();
-            foreach ($active_plugins as $ap) {
+            if($classname != "BackupController") {
+                //Init plugins
+                $pdao = DAOFactory::getDAO('PluginDAO');
+                $active_plugins = $pdao->getActivePlugins();
                 Utils::defineConstants();
-                //add plugin's model and controller folders as Loader paths here
-                Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/model/");
-                Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name.
-                "/controller/");
-                //require the main plugin registration file here
-                require_once THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.".php";
+                foreach ($active_plugins as $ap) {
+                    //add plugin's model and controller folders as Loader paths here
+                    Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/model/");
+                    Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name.
+                    "/controller/");
+                    //require the main plugin registration file here
+                    require_once THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.".php";
+                }
             }
         }
     }
@@ -410,6 +425,4 @@ abstract class ThinkUpController {
         $this->disableCaching();
         $this->addToView('infomsg', $msg );
     }
-
-
 }

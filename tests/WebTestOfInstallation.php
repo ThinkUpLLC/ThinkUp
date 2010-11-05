@@ -35,6 +35,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
     public function setUp() {
         parent::setUp();
 
+        global $THINKUP_CFG;
         //Make sure test_installer directory exists
         if (!file_exists($THINKUP_CFG['source_root_path'].'webapp/test_installer/')) {
             exec('mkdir webapp/test_installer/');
@@ -51,6 +52,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
     }
 
     public function tearDown() {
+        global $THINKUP_CFG;
         //Clean up test installation files
         exec('rm -rf webapp/test_installer/*');
 

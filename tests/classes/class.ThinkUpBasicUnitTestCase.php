@@ -71,6 +71,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $this->unsetArray($_GET);
         $this->unsetArray($_REQUEST);
         $this->unsetArray($_SERVER);
+        $this->unsetArray($_FILES);
         Loader::unregister();
         parent::tearDown();
     }

@@ -49,11 +49,15 @@ class TestOfConfig extends ThinkUpBasicUnitTestCase {
 
     public function testGetValuesArray() {
         require THINKUP_ROOT_PATH.'webapp/config.inc.php';
+        require THINKUP_ROOT_PATH.'webapp/install/version.php';
         $config = Config::getInstance();
-        $values_array = $config->getValuesArray();
         //tests assume profiler and caching is off
-        $THINKUP_CFG['enable_profiler']=false;
         $THINKUP_CFG['cache_pages']=false;
+        $THINKUP_CFG['THINKUP_VERSION'] = $THINKUP_VERSION;
+        $THINKUP_CFG['THINKUP_VERSION_REQUIRED'] =
+        array('php' => $THINKUP_VERSION_REQUIRED['php'], 'mysql' => $THINKUP_VERSION_REQUIRED['mysql']);
+        $THINKUP_CFG['enable_profiler']=false;
+        $values_array = $config->getValuesArray();
         $this->assertIdentical($THINKUP_CFG, $values_array);
     }
 

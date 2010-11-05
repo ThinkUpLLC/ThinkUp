@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/all_tests.php
+ * ThinkUp/tests/all_install_tests.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -30,14 +30,15 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
-$RUNNING_ALL_TESTS = true;
+Loader::register(array(
+THINKUP_ROOT_PATH . 'tests/',
+THINKUP_ROOT_PATH . 'tests/classes/',
+THINKUP_ROOT_PATH . 'tests/fixtures/'
+));
 
-require_once THINKUP_ROOT_PATH.'tests/all_model_tests.php';
+/* INSTALLER AND UPGRADER TESTS */
+$installer_tests = & new GroupTest('Installer tests');
+$installer_tests->addTestCase(new WebTestOfInstallation());
+$installer_tests->addTestCase(new WebTestOfUpgradeDatabase());
 
-require_once THINKUP_ROOT_PATH.'tests/all_plugin_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_integration_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_install_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_controller_tests.php';
+$installer_tests->run( new TextReporter());

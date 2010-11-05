@@ -19,18 +19,17 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
  * Test of OwnerMySQL DAO implementation
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Michael Louis Thaler
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
     /**
      *
@@ -46,6 +45,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
+
         $this->DAO = new OwnerMySQLDAO();
         $q = "INSERT INTO tu_owners SET full_name='ThinkUp J. User', email='ttuser@example.com', is_activated=0,
         pwd='XXX', activation_code='8888'";
@@ -54,7 +54,6 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $q = "INSERT INTO tu_owners SET full_name='ThinkUp J. User1', email='ttuser1@example.com', is_activated=1,
         pwd='YYY'";
         PDODAO::$PDO->exec($q);
-
     }
 
     public function tearDown() {
@@ -84,6 +83,40 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($all_owners), 2);
         $this->assertEqual($all_owners[0]->email, 'ttuser@example.com');
         $this->assertEqual($all_owners[1]->email, 'ttuser1@example.com');
+    }
+
+    /**
+     * Test getAdminOwners
+     */
+    public function testGetAdminOwners() {
+        // no admins
+        $admin_owners = $this->DAO->getAdmins();
+        $this->assertNull($admin_owners, 'no admins');
+
+        // build 1 valid admin and two invalid admins
+        $builder1 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 1, 'email' => 'm@w.nz'));
+        $builder2 = FixtureBuilder::build('owners', array('is_admin' => 0, 'is_activated' => 1, 'email' => 'm2@w.nz'));
+        $builder3 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 0, 'email' => 'm3@w.nz'));
+
+        $admin_owners = $this->DAO->getAdmins();
+        $this->assertNotNull($admin_owners, 'an admin');
+        $this->assertEqual(count($admin_owners), 1, 'an admin');
+        $this->assertEqual($admin_owners[0]->is_admin, 1, 'valid admin');
+        $this->assertEqual($admin_owners[0]->is_activated, 1, 'valid admin');
+        $this->assertEqual($admin_owners[0]->email, 'm@w.nz', 'valid admin with email');
+
+        // add one more valid admin
+        $builder4 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 1, 'email' => 'm4@w.nz'));
+
+        $admin_owners = $this->DAO->getAdmins();
+        $this->assertNotNull($admin_owners, 'we have admins admin');
+        $this->assertEqual(count($admin_owners), 2, 'two admins');
+        $this->assertEqual($admin_owners[0]->is_admin, 1, 'valid admin');
+        $this->assertEqual($admin_owners[0]->is_activated, 1, 'valid admin');
+        $this->assertEqual($admin_owners[0]->email, 'm@w.nz', 'valid admin with email');
+        $this->assertEqual($admin_owners[1]->is_admin, 1, 'valid admin');
+        $this->assertEqual($admin_owners[1]->is_activated, 1, 'valid admin');
+        $this->assertEqual($admin_owners[1]->email, 'm4@w.nz', 'valid admin with email');
     }
 
     /**
@@ -131,6 +164,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $existing_owner = $this->DAO->getByEmail('ttuser@example.com');
         $this->assertTrue($existing_owner->is_activated);
     }
+
     /**
      * Test updatePassword
      */
@@ -148,6 +182,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         //Create new owner who does exist
         $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 0);
     }
+
     /**
      * Test updateLastLogin
      */
@@ -199,5 +234,4 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertTrue($dao->doesAdminExist());
     }
-
 }
