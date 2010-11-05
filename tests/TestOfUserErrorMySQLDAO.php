@@ -47,18 +47,26 @@ class TestOfUserErrorMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function setUp() {
         parent::setUp();
+        $this->builders = self::buildData();
+    }
 
+    protected function buildData() {
+        $builders = array();
         //Insert test data into test table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, location)
-        VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg', 'San Francisco');";
-        $this->db->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>12, 'user_name'=>'jack', 
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'location'=>'San Francisco'));
+//        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, location)
+//        VALUES (12, 'jack', 'Jack Dorsey', 'avatar.jpg', 'San Francisco');";
+//        $this->db->exec($q);
         $this->logger = Logger::getInstance();
+        return $builders;
     }
 
     /**
      * Tear down
      */
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
         $this->logger->close();
     }
