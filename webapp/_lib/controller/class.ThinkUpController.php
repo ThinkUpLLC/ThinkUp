@@ -321,7 +321,7 @@ abstract class ThinkUpController {
      * @throws Exception
      */
     private function initalizeApp() {
-        if (get_class($this) != "InstallerController" ) {
+        if (get_class($this) != "InstallerController" && get_class($this) != "BackupController") {
             //Initialize config
             $config = Config::getInstance();
             if ($config->getValue('timezone')) {

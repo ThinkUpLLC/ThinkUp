@@ -248,6 +248,15 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test get BackupDAO
+     */
+    public function testGetBackupDAO() {
+        $dao = DAOFactory::getDAO('BackupDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'BackupMySQLDAO');
+    }
+
+    /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
     public function testGetInstallerDAONoConfigFile(){

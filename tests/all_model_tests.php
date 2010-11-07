@@ -64,4 +64,5 @@ $model_tests->addTestCase(new TestOfMenuItem());
 $model_tests->addTestCase(new TestOfDataset());
 $model_tests->addTestCase(new TestOfPostIterator());
 $model_tests->addTestCase(new TestOfMutexMySQLDAO());
+$model_tests->addTestCase(new TestOfBackupMySQLDAO());
 $model_tests->run( new TextReporter());
