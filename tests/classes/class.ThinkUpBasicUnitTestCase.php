@@ -1,9 +1,32 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/classes/class.ThinkUpBasicUnitTestCase.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
 /**
  * ThinkUp Basic Unit Test Case
  *
  * Base test case for tests without the need for database availability.
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -15,9 +38,9 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     public function setUp() {
         parent::setUp();
         Loader::register(array(
-        THINKUP_ROOT_PATH . 'tests' . DS,
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'. DS,
-        THINKUP_ROOT_PATH . 'tests' . DS . 'fixtures'. DS
+        THINKUP_ROOT_PATH . 'tests/',
+        THINKUP_ROOT_PATH . 'tests/classes/',
+        THINKUP_ROOT_PATH . 'tests/fixtures/'
         ));
 
         $config = Config::getInstance();
@@ -91,5 +114,18 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
 
     public function __destruct() {
         $this->restoreConfigFile();
+    }
+
+    /**
+     * Wrapper for logging in a ThinkUp user in a test
+     * @param str $email
+     * @param bool $is_admin Default to false
+     */
+    protected function simulateLogin($email, $is_admin = false) {
+        $config = Config::getInstance();
+        $_SESSION[$config->getValue('source_root_path')]['user'] = $email;
+        if ($is_admin) {
+            $_SESSION[$config->getValue('source_root_path')]['user_is_admin'] = true;
+        }
     }
 }

@@ -1,4 +1,5 @@
-{include file="_header.tpl" load="no" title=$profile->username}
+{include file="_header.tpl" enable_tabs=true}
+{include file="_statusbar.tpl"}
 
 <script type="text/javascript">
   {literal}
@@ -98,7 +99,7 @@
                 <div class="clearfix append_20">
                   <div class="grid_2 prefix_1 alpha">
                   <div class="avatar-container">
-                    <img src="{$profile->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$profile->network}/assets/img/favicon.ico" class="service-icon2"/>
+                    <img src="{$profile->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$profile->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
                   </div>
                   </div>
                   <div class="grid_19 omega">
@@ -116,7 +117,7 @@
                 <div class="grid_22 push_1">
                   {foreach from=$user_statuses key=tid item=t name=foo}
                     <div>
-                      {include file="_post.mine.tpl" t=$t}
+                      {include file="_post.tpl" t=$t}
                     </div>
                   {/foreach}
                 </div>
@@ -134,7 +135,7 @@
                       {include file="_post.qa.tpl" t=$t}
                     {/foreach}
                   {else}
-                    ThinkUp has not captured any conversations between {$instance->network_username} and {$profile->user_name}.
+                    ThinkUp has not captured any conversations between {$instance->network_username} and {$profile->username}.
                   {/if}
                 </div>
               </div>
@@ -146,7 +147,7 @@
             <div id="top" class="clearfix">
               <div class="thinkup-canvas container_24">
                 <div class="grid_22 push_1 append_20">
-                  Detailed data about this user's {$profile->follower_count|number_format} followers not yet available in ThinkUp.
+                  Detailed data about {$profile->username}'s {$profile->follower_count|number_format} followers not yet available in ThinkUp.
                 </div>
               </div>
             </div> <!-- end #top -->
@@ -157,7 +158,7 @@
             <div id="top" class="clearfix">
               <div class="thinkup-canvas container_24">
                 <div class="grid_22 push_1 append_20">
-                  Detailed data about this user's {$profile->friend_count|number_format} friends not yet available in ThinkUp.
+                  Detailed data about {$profile->username}'s {$profile->friend_count|number_format} friends not yet available in ThinkUp.
                 </div>
               </div>
             </div> <!-- end #top -->

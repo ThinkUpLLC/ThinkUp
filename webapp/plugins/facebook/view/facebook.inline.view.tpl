@@ -1,5 +1,10 @@
 <div class="">
   {if $description}<i>{$description}</i>{/if}
+    {if $is_searchable}
+        <a href="#" class="grid_search" title="Search" onclick="return false;">
+        <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
+        {include file="_grid.search.tpl"}
+    {/if}
 </div>
 
 {if ($display eq 'all_facebook_posts' and not $all_facebook_posts) or 
@@ -12,15 +17,21 @@
   </div>
 {/if}
 
-{if $all_facebook_posts and $display eq 'all_facebook_posts'}
+{if $all_facebook_posts and ($display eq 'all_facebook_posts' OR $display eq 'questions')}
   {foreach from=$all_facebook_posts key=tid item=t name=foo}
-    {include file="_post.mine.tpl" t=$t}
+    {include file="_post.tpl" t=$t}
   {/foreach}
 {/if}
 
 {if $all_facebook_replies}
   {foreach from=$all_facebook_replies key=tid item=t name=foo}
     {include file="_post.other.tpl" t=$t}
+  {/foreach}
+{/if}
+
+{if $most_replied_to_posts}
+  {foreach from=$most_replied_to_posts key=tid item=t name=foo}
+    {include file="_post.tpl" t=$t}
   {/foreach}
 {/if}
 
@@ -68,7 +79,7 @@
       var pid = $("select#pid" + Id + " option:selected").val();
       var u = '{/literal}{$i->network_username|escape:'url'}{literal}';
       var t = 'inline.view.tpl';
-      var ck = '{/literal}{$i->network_username|escape:'url'}-{$smarty.session.user}-{$display}{literal}';
+      var ck = '{/literal}{$i->network_username|escape:'url'}-{$logged_in_user}-{$display}{literal}';
       var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
       $.ajax({
         type: "GET",
@@ -86,3 +97,10 @@
   });
   {/literal}
 </script>
+
+{if $is_searchable}
+    {include file="_grid.search.tpl"}
+    <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
+    
+{/if}
+

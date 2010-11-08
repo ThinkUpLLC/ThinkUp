@@ -1,4 +1,25 @@
 <?php
+/**
+ *
+ * ThinkUp/webapp/plugins/twitter/tests/TestOfTwitterCrawler.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
 }
@@ -17,6 +38,8 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetect
  *
  * @TODO Test the rest of the TwitterCrawler methods
  * @TODO Add testFetchTweetsWithLinks, assert Links and images get inserted
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -56,15 +79,15 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     private function setUpInstanceUserAnilDash() {
         global $THINKUP_CFG;
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823',
-        'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
+        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
         'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
         'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 
         'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 'api_calls_to_leave_unmade_per_minute'=>2, 
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'twitter');
         $this->instance = new Instance($r);
 
-        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key',
-        'fake_secret', $this->instance, 1234);
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', $this->instance,
+        1234, 5, 350);
 
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
@@ -74,7 +97,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     private function setUpInstanceUserGinaTrapani() {
         global $THINKUP_CFG;
         $r = array('id'=>1, 'network_username'=>'ginatrapani', 'network_user_id'=>'930061',
-        'network_viewer_id'=>'930061', 'last_status_id'=>'0', 'last_page_fetched_replies'=>0, 
+        'network_viewer_id'=>'930061', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
         'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
@@ -82,8 +105,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'network'=>'twitter');
         $this->instance = new Instance($r);
 
-        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key',
-        'fake_secret', $this->instance, 1234);
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', $this->instance,
+        1234, 5, 350);
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
         $this->instance->is_archive_loaded_follows = true;

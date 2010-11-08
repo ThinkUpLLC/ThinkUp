@@ -1,6 +1,7 @@
-{include file="_header.tpl" load="no"}
-
+{include file="_header.tpl" enable_tabs=true}
+{include file="_statusbar.tpl"}
 <div class="container_24">
+
   <div role="application" id="tabs">
     
     <ul>
@@ -20,6 +21,7 @@
               </p>
             </div>
         {/if}
+        {include file="_usermessage.tpl"}
           {if $installed_plugins}
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
               {if $smarty.foreach.foo.first}
@@ -151,7 +153,7 @@ $(function() {
         data: dataString,
         success: function() {
           $('#div' + u).html("<span class='success' id='message" + u + "'></span>");
-          $('#message' + u).html("Added to public timeline!").hide().fadeIn(1500, function() {
+          $('#message' + u).html("Set to public!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
         }
@@ -169,7 +171,7 @@ $(function() {
         data: dataString,
         success: function() {
           $('#div' + u).html("<span class='success' id='message" + u + "'></span>");
-          $('#message' + u).html("Removed from public timeline!").hide().fadeIn(1500, function() {
+          $('#message' + u).html("Set to private!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
         }
@@ -282,4 +284,4 @@ $(function() {
   {/literal}
 </script>
 
-{include file="_footer.tpl" stats="no"}
+{include file="_footer.tpl"}

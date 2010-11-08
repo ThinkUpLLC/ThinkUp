@@ -1,4 +1,25 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfTestAuthController.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -7,6 +28,8 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * Test TestAuthController class
  *
  * TestController isn't a real ThinkUp controller, this is just a template for all Controller tests.
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfTestAuthController extends ThinkUpUnitTestCase {
@@ -57,7 +80,7 @@ class TestOfTestAuthController extends ThinkUpUnitTestCase {
      * this would enforce valid markup
      */
     public function testIsLoggedIn() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinkup/');
 
@@ -78,7 +101,7 @@ class TestOfTestAuthController extends ThinkUpUnitTestCase {
      * Test cache key logged in, no params
      */
     public function testCacheKeyLoggedIn() {
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
 
         $config = Config::getInstance();
         $config->setValue('cache_pages', true);

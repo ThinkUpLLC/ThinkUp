@@ -4,16 +4,16 @@
     <div class="grid_3 right">name</div>
     <div class="grid_3 right">followers</div>
     <div class="grid_3 right">date</div>
-    <div class="grid_12 omega">post</div>
+    <div class="grid_10 omega">post</div>
   </div>
 {/if}
 
 <div class="individual-tweet clearfix{if $t->is_protected} private{/if}">
   <div class="grid_1 alpha">
-    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$smarty.session.network_username}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network}/assets/img/favicon.ico" class="service-icon"/></a>
+    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
   </div>
   <div class="grid_3 right small">
-    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$smarty.session.network_username}">{$t->author_username}</a>
+    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}">{$t->author_username}</a>
   </div>
   <div class="grid_3 right small">
     {$t->author->follower_count|number_format}
@@ -21,7 +21,7 @@
   <div class="grid_3 right small">
     <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime}</a>
   </div>
-  <div class="grid_12 omega">
+  <div class="grid_10 omega">
     <div class="tweet-body">
       {if $t->link->is_image}
         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" alt=""></a></div>
@@ -49,6 +49,7 @@
           Description: {$t->author->description}
         </div>
       {/if}
+      {if $logged_in_user}
       <div id="div{$t->post_id}">
         <form action="" class="post-setparent">
           <select name="pid{$t->post_id}" id="pid{$t->post_id}" onselect> <!-- what is this onselect? -->
@@ -61,6 +62,7 @@
           <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save">
         </form>
       </div>
+      {/if}
     </div>
   </div>
 </div>

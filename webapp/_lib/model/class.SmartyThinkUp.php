@@ -1,9 +1,32 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/model/class.SmartyThinkUp.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * ThinkUp's Smarty object
  *
  * Configures and initalizes Smarty per ThinkUp's configuration.
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -68,7 +91,7 @@ class SmartyThinkUp extends Smarty {
      * @param string $key
      * @param mixed $value
      */
-    public function assign($key, $value) {
+    public function assign($key, $value = null) {
         parent::assign($key, $value);
         if ($this->debug) {
             $this->template_data[$key] = $value;
@@ -104,17 +127,18 @@ class SmartyThinkUp extends Smarty {
      * @param str $cache_key Cache key
      * @param str Results
      */
-    public function fetch($template, $cache_key=null) {
-        if (! is_writable($this->compile_dir) ) {
+    public function fetch($template, $cache_key=null, $compile_id=null, $display=false) {
+        if (! is_writable($this->compile_dir) || ! is_writable($this->compile_dir.'/cache') ) {
             Utils::defineConstants();
-            return str_replace('#THINKUP_BASE_URL#', THINKUP_BASE_URL,
+            $whoami = @exec('whoami');
+            if (empty($whoami)) {
+                $whoami = 'nobody';
+            }
+            return str_replace(array('#THINKUP_BASE_URL#', '#WHOAMI#', '#COMPILE_DIR#'),
+            array(THINKUP_BASE_URL, $whoami, $this->compile_dir),
             file_get_contents(THINKUP_WEBAPP_PATH.'_lib/view/500-perm.html'));
         } else {
-            if ($cache_key != null) {
-                return parent::fetch($template, $cache_key);
-            } else {
-                return parent::fetch($template);
-            }
+            return parent::fetch($template, $cache_key, $compile_id, $display);
         }
     }
 }

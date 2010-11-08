@@ -1,7 +1,7 @@
 GeoEncoder ThinkUp Plugin
 ============================
 
-The GeoEncoder ThinkUp plugin geocodes location data available in the database to point to a neighbourhood from
+The GeoEncoder ThinkUp plugin geocodes location data available in the database to point to a neighborhood from
 where a particular post has been made.
 
 Crawler Plugin

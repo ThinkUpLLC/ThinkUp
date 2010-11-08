@@ -40,7 +40,7 @@ data fixtures to test against.
 
 ### Controller Tests (`all_controller_tests.php`)
 
-See `TestOfPublicTimelineController.php` as an example of a set of controller test cases.
+See `TestOfDashboardController.php` as an example of a set of controller test cases.
 
 ### Plugin Tests (`all_plugin_tests.php`)
 

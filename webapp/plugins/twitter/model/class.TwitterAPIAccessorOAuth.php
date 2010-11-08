@@ -1,8 +1,31 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Twitter API Accessor
  * Accesses the Twitter.com API via OAuth authentication.
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 
@@ -15,9 +38,7 @@ class TwitterAPIAccessorOAuth {
     var $oauth_access_token_secret;
     var $next_cursor;
     /**
-     * Total API errors the crawler should tolerate during a given crawler run
-     * @TODO Set this in the Twitter plugin options area
-     * @var int
+     * @var int defaults to 3
      */
     var $total_errors_to_tolerate = 3;
     /**
@@ -26,15 +47,30 @@ class TwitterAPIAccessorOAuth {
      * @var ints
      */
     var $total_errors_so_far = 0;
+    /**
+     * The maximum number of API calls that should be made during a given crawl. This setting is here to ratchet
+     * down activity for whitelisted Twitter accounts which get 20k calls per hour.
+     * @var int Defaults to 350
+     */
+    var $max_api_calls_per_crawl = 350;
 
     public function __construct($oauth_access_token, $oauth_access_token_secret, $oauth_consumer_key,
-    $oauth_consumer_secret) {
+    $oauth_consumer_secret, $num_twitter_errors, $max_api_calls_per_crawl) {
         $this->$oauth_access_token = $oauth_access_token;
         $this->$oauth_access_token_secret = $oauth_access_token_secret;
 
         $this->to = new TwitterOAuthThinkUp($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token,
         $this->$oauth_access_token_secret);
         $this->cURL_source = $this->prepAPI();
+
+        $logger = Logger::getInstance();
+        $te = (int) $num_twitter_errors;
+        if (is_integer($te) && $te > 0) {
+            $this->total_errors_to_tolerate = $te;
+        }
+
+        $this->max_api_calls_per_crawl = $max_api_calls_per_crawl;
+        $logger->logStatus('Errors to tolerate: ' . $this->total_errors_to_tolerate, get_class($this));
     }
 
     public function verifyCredentials() {
@@ -71,8 +107,8 @@ class TwitterAPIAccessorOAuth {
             "credentials"=>"/account/verify_credentials", "block"=>"/blocks/create/[id]", 
             "remove_block"=>"/blocks/destroy/[id]", "messages_received"=>"/direct_messages", 
             "delete_message"=>"/direct_messages/destroy/[id]", "post_message"=>"/direct_messages/new", 
-            "messages_sent"=>"/direct_messages/sent", "bookmarks"=>"/favorites/[id]", 
-            "create_bookmark"=>"/favorites/create/[id]", "remove_bookmark"=>"/favorites/destroy/[id]", 
+            "messages_sent"=>"/direct_messages/sent", "favorites"=>"/favorites/[id]", 
+            "create_favorite"=>"/favorites/create/[id]", "remove_favorite"=>"/favorites/destroy/[id]", 
             "followers_ids"=>"/followers/ids", "following_ids"=>"/friends/ids", "follow"=>"/friendships/create/[id]", 
             "unfollow"=>"/friendships/destroy/[id]", "confirm_follow"=>"/friendships/exists", 
             "show_friendship"=>"/friendships/show", "test"=>"/help/test", 
@@ -226,6 +262,7 @@ class TwitterAPIAccessorOAuth {
                             'post_text'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 
                             'in_reply_to_post_id'=>$xml->in_reply_to_status_id, 
                             'in_reply_to_user_id'=>$xml->in_reply_to_user_id, 'source'=>$xml->source, 
+                            'favorited' => $xml->favorited,
                             'geo'=>(isset($georss)?$georss->point:''), 'place'=>$xml->place->full_name, 
                             'network'=>'twitter');
                         break;
@@ -284,6 +321,7 @@ class TwitterAPIAccessorOAuth {
                                 'favorites_count'=>$item->user->favourites_count, 
                                 'in_reply_to_post_id'=>$item->in_reply_to_status_id, 
                                 'in_reply_to_user_id'=>$item->in_reply_to_user_id, 'source'=>$item->source, 
+                                'favorited' => $xml->favorited,
                                 'geo'=>(isset($georss)?$georss->point:''), 'place'=>$item->place->full_name, 
                                 'network'=>'twitter');
                         }

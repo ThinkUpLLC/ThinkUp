@@ -1,4 +1,25 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfTestAdminController.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -8,6 +29,8 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  *
  * TestController isn't a real ThinkUp controller, this is just a template for all Controller tests.
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfTestAdminController extends ThinkUpUnitTestCase {
@@ -52,8 +75,7 @@ class TestOfTestAdminController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInAsAdmin() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinkup/');
 
@@ -71,8 +93,7 @@ class TestOfTestAdminController extends ThinkUpUnitTestCase {
     }
 
     public function testLoggedInNotAsAdmin() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = false;
+        $this->simulateLogin('me@example.com');
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinkup/');
 

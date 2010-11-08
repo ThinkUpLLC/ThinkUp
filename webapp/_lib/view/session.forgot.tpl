@@ -1,4 +1,5 @@
-{include file="_header.tpl" title="Forgot password" statusbar="no"}
+{include file="_header.tpl"}
+{include file="_statusbar.tpl"}
 
 <div class="container_24 thinkup-canvas round-all">
   <div class="prepend_20">
@@ -43,4 +44,4 @@
   </div>
 </div>
 
-{include file="_footer.tpl" stats="no"}
+{include file="_footer.tpl"}

@@ -1,10 +1,36 @@
 <?php
+/**
+ *
+ * ThinkUp/webapp/_lib/model/class.Instance.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
+ */
 class Instance {
     var $id;
     var $network_username;
     var $network_user_id;
     var $network_viewer_id;
-    var $last_status_id;
+    var $last_post_id;
     var $last_page_fetched_replies;
     var $last_page_fetched_tweets;
     var $total_posts_in_system;
@@ -28,7 +54,7 @@ class Instance {
             $this->id = $r['id'];
             $this->network_username = $r['network_username'];
             $this->network_user_id = $r['network_user_id'];
-            $this->last_status_id = $r['last_status_id'];
+            $this->last_post_id = $r['last_post_id'];
             $this->last_page_fetched_replies = $r['last_page_fetched_replies'];
             $this->last_page_fetched_tweets = $r['last_page_fetched_tweets'];
             $this->total_posts_in_system = $r['total_posts_in_system'];

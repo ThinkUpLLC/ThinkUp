@@ -1,4 +1,31 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfFollowMySQLDAO.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Christoffer Viken
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Christoffer Viken <christoffer[at]viken[dot]me>
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Christoffer Viken
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -14,70 +41,67 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $this->DAO = new FollowMySQLDAO();
+        $this->builders = self::buildData();
+    }
 
+    protected function buildData() {
+
+        $builders = array();
         //Insert test data into test table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, follower_count, friend_count)
-        VALUES (1234567890, 'jack', 'Jack Dorsey', 'avatar.jpg', 150210, 124);";
-        PDODAO::$PDO->exec($q);
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated)
-        VALUES (1324567890, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>1234567890, 'user_name'=>'jack',
+        'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>150210, 'friend_count'=>124));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count)
-        VALUES (1623457890, 'private', 'Private Poster', 'avatar.jpg', 1, 35342, 1345);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>1324567890, 'user_name'=>'ev',
+        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'1/1/2005'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count,
-        network) VALUES (1723457890, 'facebookuser1', 'Facebook User 1', 'avatar.jpg', 1, 35342, 1345, 'facebook');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>1623457890, 'user_name'=>'private',
+        'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342, 
+        'friend_count'=>1345));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count, friend_count,
-        network) VALUES (1823457890, 'facebookuser2', 'Facebook User 2', 'avatar.jpg', 1, 35342, 1345, 'facebook');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>1723457890, 'user_name'=>'facebookuser1',
+        'full_name'=>'Facebook User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342, 
+        'friend_count'=>1345, 'network'=>'facebook'));
 
-        $q = "INSERT INTO tu_user_errors (user_id, error_code, error_text, error_issued_to_user_id, network)
-        VALUES (15, 404, 'User not found', 1324567890, 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>1823457890, 'user_name'=>'facebookuser2',
+        'full_name'=>'Facebook User 2', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342, 
+        'friend_count'=>1345, 'network'=>'facebook'));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
-        VALUES (1324567890, 1234567890, '2006-01-08 23:54:41', 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('user_errors', array('user_id'=>15, 'error_code'=>404,
+        'error_text'=>'User not found', 'error_issued_to_user_id'=>1324567890, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
-        VALUES (1324567890, 14, '2006-01-08 23:54:41', 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>1234567890,
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
-        VALUES (1324567890, 15, '2006-01-08 23:54:41', 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>14,
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
-        VALUES (1324567890, 1623457890, '2006-01-08 23:54:41', 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>15,
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
-        VALUES (1623457890, 1324567890, '2006-01-08 23:54:41', 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>1623457890,
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, network)
-        VALUES (1623457890, 1234567890, '2006-01-08 23:54:41', 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1623457890, 'follower_id'=>1324567890,
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, active, last_seen, network)
-        VALUES (14, 1234567890, 0, '2006-01-08 23:54:41', 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1623457890, 'follower_id'=>1234567890,
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, active, last_seen, network)
-        VALUES (1324567890, 17, 0, '2006-01-08 23:54:41', 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>14, 'follower_id'=>1234567890,
+        'active'=>0, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_follows (user_id, follower_id, active, last_seen, network)
-        VALUES (1723457890, 1823457890, 1, '2006-01-08 23:54:41', 'facebook');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>17, 'active'=>0,
+        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>1723457890, 'follower_id'=>1823457890,
+        'active'=>1, 'last_seen'=>'2006-01-08 23:54:41', 'network'=>'facebook'));
+
+        return $builders;
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
         $this->logger->close();
         $this->DAO = null;
@@ -166,9 +190,8 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetOldestFollow() {
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen, active, network)
-        VALUES (930061, 20, '2001-04-08 23:54:41', 1, 'twitter');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>930061, 'follower_id'=>20,
+        'last_seen'=>'2001-04-08 23:54:41', 'active'=>1, 'network'=>'twitter'));
 
         $oldest_follow = $this->DAO->getOldestFollow('twitter');
 
@@ -241,8 +264,8 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 2);
-        $this->assertEqual($result[0]['user_id'], 1623457890);
-        $this->assertEqual($result[1]['user_id'], 1324567890);
+        $this->assertEqual($result[1]['user_id'], 1623457890);
+        $this->assertEqual($result[0]['user_id'], 1324567890);
     }
 
     public function testGetMutualFriends(){
@@ -258,7 +281,7 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 2);
-        $this->assertEqual($result[0]['user_id'], 1324567890);
-        $this->assertEqual($result[1]['user_id'], 1623457890);
+        $this->assertEqual($result[1]['user_id'], 1324567890);
+        $this->assertEqual($result[0]['user_id'], 1623457890);
     }
 }

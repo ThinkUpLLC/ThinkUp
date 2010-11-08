@@ -1,7 +1,30 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/model/class.PDODAO.php
+ *
+ * Copyright (c) 2009-2010 Mark Wilkie, Christoffer Viken, Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * PDO DAO
  * Parent class for PDO DAOs
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Mark Wilkie, Christoffer Viken, Gina Trapani
  * @author Christoffer Viken <christoffer@viken.me>
  * @author Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
@@ -51,8 +74,8 @@ abstract class PDODAO {
         if(is_null(self::$PDO)) {
             $this->connect();
         }
-        $this->prefix = $this->config->getValue('table_prefix');
-        $this->gmt_offset = $this->config->getValue('GMT_offset');
+        self::$prefix = $this->config->getValue('table_prefix');
+        self::$gmt_offset = $this->config->getGMTOffset();
         $this->profiler_enabled = Profiler::isEnabled();
     }
 
@@ -61,29 +84,43 @@ abstract class PDODAO {
      */
     public final function connect(){
         if(is_null(self::$PDO)) {
-            //set default db type to mysql if not set
-            $db_type = $this->config->getValue('db_type');
-            if(! $db_type) { $db_type = 'mysql'; }
-            $db_socket = $this->config->getValue('db_socket');
-            if ( !$db_socket) {
-                $db_socket = '';
-            } else {
-                $db_socket=";unix_socket=".$db_socket;
-            }
-            $db_string = sprintf(
-                "%s:dbname=%s;host=%s%s", 
-            $db_type,
-            $this->config->getValue('db_name'),
-            $this->config->getValue('db_host'),
-            $db_socket
-            );
             self::$PDO = new PDO(
-            $db_string,
+            self::getConnectString($this->config),
             $this->config->getValue('db_user'),
             $this->config->getValue('db_password')
             );
             self::$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
+    }
+
+    /**
+     * Generates a connect string to use when creating a PDO object.
+     * @param Config $config
+     * @return string PDO connect string
+     */
+    public static function getConnectString($config) {
+        //set default db type to mysql if not set
+        $db_type = $config->getValue('db_type');
+        if(! $db_type) { $db_type = 'mysql'; }
+        $db_socket = $config->getValue('db_socket');
+        if ( !$db_socket) {
+            $db_port = $config->getValue('db_port');
+            if (!$db_port) {
+                $db_socket = '';
+            } else {
+                $db_socket = ";port=".$config->getValue('db_port');
+            }
+        } else {
+            $db_socket=";unix_socket=".$db_socket;
+        }
+        $db_string = sprintf(
+            "%s:dbname=%s;host=%s%s", 
+        $db_type,
+        $config->getValue('db_name'),
+        $config->getValue('db_host'),
+        $db_socket
+        );
+        return $db_string;
     }
 
     /**
@@ -104,8 +141,8 @@ abstract class PDODAO {
         if ($this->profiler_enabled) {
             $start_time = microtime(true);;
         }
-        $sql = preg_replace("/#prefix#/", $this->prefix, $sql);
-        $sql = preg_replace("/#gmt_offset#/", $this->gmt_offset, $sql);
+        $sql = preg_replace("/#prefix#/", self::$prefix, $sql);
+        $sql = preg_replace("/#gmt_offset#/", self::$gmt_offset, $sql);
         $stmt = self::$PDO->prepare($sql);
         if(is_array($binds) and count($binds) >= 1) {
             foreach ($binds as $key => $value) {
@@ -214,12 +251,11 @@ abstract class PDODAO {
      * @return bool True if row(s) are returned
      */
     protected final function getDataIsReturned($ps){
-        $count = $ps->rowCount();
+        $row = $ps->fetch();
         $ps->closeCursor();
-        if ($count > 0) {
+        $ret = false;
+        if ($row && count($row) > 0) {
             $ret = true;
-        } else {
-            $ret = false;
         }
         return $ret;
     }

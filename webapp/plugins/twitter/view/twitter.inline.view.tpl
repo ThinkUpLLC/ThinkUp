@@ -1,5 +1,12 @@
 <div class="">
-  {if $description}<i>{$description}</i>{/if}
+  {if $description}
+    {if $is_searchable}
+        <a href="#" class="grid_search" title="Search" onclick="return false;">
+        <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
+    {/if}
+     <i>{$description}</i>
+     
+  {/if}
 </div>
     {if $error}
     <p class="error">
@@ -13,26 +20,25 @@
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-      No tweets to display.
+      No tweets to display. <a href="{$site_root_path}crawler/run.php">Update your data now.</a>
     </p>
   </div>
 {/if}
-
-{if $all_tweets and $display eq 'tweets-all'}
+{if $all_tweets and ($display eq 'tweets-all' or $display eq 'tweets-questions')}
   {foreach from=$all_tweets key=tid item=t name=foo}
-    {include file="_post.mine.tpl" t=$t}
+    {include file="_post.tpl" t=$t}
   {/foreach}
 {/if}
 
 {if $most_replied_to_tweets}
   {foreach from=$most_replied_to_tweets key=tid item=t name=foo}
-    {include file="_post.mine.tpl" t=$t}
+    {include file="_post.tpl" t=$t}
   {/foreach}
 {/if}
 
 {if $most_retweeted}
   {foreach from=$most_retweeted key=tid item=t name=foo}
-    {include file="_post.mine.tpl" t=$t}
+    {include file="_post.tpl" t=$t}
   {/foreach}
 {/if}
 
@@ -49,7 +55,7 @@
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-      No data to display.
+      No data to display. <a href="{$site_root_path}crawler/run.php">Update your data now.</a>
     </p>
   </div>
 {/if}
@@ -87,7 +93,7 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-      No users found.
+      No users found. <a href="{$site_root_path}crawler/run.php">Update your data now.</a>
     </p>
   </div>
 {/if}
@@ -98,11 +104,11 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
   {/foreach}
 {/if}
 
-{if ($display eq 'links-friends' and not $links) or ($display eq 'links-favorites' and not $links)}
+{if ($display eq 'links-friends' and not $links) or ($display eq 'links-favorites' and not $links) or ($display eq 'links-photos' and not $links)}
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-      No data to display.
+      No data to display. <a href="{$site_root_path}crawler/run.php">Update your data now.</a>
     </p>
   </div>
 {/if}
@@ -126,7 +132,7 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
       var pid = $("select#pid" + Id + " option:selected").val();
       var u = '{/literal}{$i->network_username|escape:'url'}{literal}';
       var t = 'inline.view.tpl';
-      var ck = '{/literal}{$i->network_username|escape:'url'}-{$smarty.session.user}-{$display}{literal}';
+      var ck = '{/literal}{$i->network_username|escape:'url'}-{$logged_in_user}-{$display}{literal}';
       var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
       $.ajax({
         type: "GET",
@@ -144,3 +150,10 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
   });
   {/literal}
 </script>
+
+{if $is_searchable}
+    {include file="_grid.search.tpl"}
+    <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
+    
+{/if}
+

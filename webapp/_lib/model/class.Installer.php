@@ -1,8 +1,31 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/model/class.Installer.php
+ *
+ * Copyright (c) 2009-2010 Dwi Widiastuti, Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Installer
  * A singleton class that doess the heavy lifting of installing ThinkUp.
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Dwi Widiastuti, Gina Trapani
  * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
@@ -93,13 +116,13 @@ class Installer {
 
             // use lazy loading
             if ( !class_exists('Loader', FALSE) ) {
-                require_once THINKUP_WEBAPP_PATH . '_lib'.DS.'model' . DS . 'class.Loader.php';
+                require_once THINKUP_WEBAPP_PATH . '_lib/model/class.Loader.php';
             }
             Loader::register();
 
             // get required version of php and mysql
             // and set current version
-            require (THINKUP_WEBAPP_PATH . 'install' . DS . 'version.php');
+            require (THINKUP_WEBAPP_PATH . 'install/version.php');
 
             self::$required_version = array(
                 'php' => $THINKUP_VERSION_REQUIRED['php'],
@@ -145,13 +168,13 @@ class Installer {
     }
 
     /**
-     * Check GD and cURL
+     * Check GD, cURL and PDO extensions are loaded
      *
-     * @param array $libs can be used for testing for failing
+     * @param array $libs For use in tests
      * @return array
      */
     public function checkDependency($libs = array()) {
-        $ret = array('curl' => false, 'gd' => false);
+        $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false);
         // check curl
         if ( extension_loaded('curl') && function_exists('curl_exec') ) {
             $ret['curl'] = true;
@@ -159,6 +182,14 @@ class Installer {
         // check GD
         if ( extension_loaded('gd') && function_exists('gd_info') ) {
             $ret['gd'] = true;
+        }
+        // check PDO
+        if ( extension_loaded('pdo') ) {
+            $ret['pdo'] = true;
+        }
+        // check PDO MySQL
+        if ( extension_loaded('pdo_mysql') ) {
+            $ret['pdo_mysql'] = true;
         }
         // when testing
         if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($libs) ) {
@@ -174,8 +205,8 @@ class Installer {
      * @return array 'compiled_view'=>true/false, 'cache'=>true/false
      */
     public function checkPermission($perms = array()) {
-        $compile_dir = THINKUP_WEBAPP_PATH . '_lib'.DS.'view' . DS . 'compiled_view';
-        $cache_dir = $compile_dir . DS . 'cache';
+        $compile_dir = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view';
+        $cache_dir = "$compile_dir/cache";
         $ret = array('compiled_view' => false, 'cache' => false);
         if ( is_writable($compile_dir) ) {
             $ret['compiled_view'] = true;
@@ -282,7 +313,7 @@ class Installer {
             self::setDb($config);
             return true;
         } catch (InstallerException $e) {
-            return false;
+            return $e;
         }
     }
 
@@ -305,8 +336,10 @@ class Installer {
                     // database contains at least 1 ThinkUp table
                     throw new InstallerException("<strong>Oops!</strong><br /> Looks like at least some of ThinkUp's ".
                     "database tables already exist. To install ThinkUp from scratch, drop its tables in the ".
-                    "<code>{$config['db_name']}</code> database.<br />To repair your existing tables, click " .
-                    "<a href=\"" . THINKUP_BASE_URL . "install/index.php?step=repair&m=db\">here</a>.",
+                    "<code style='font-family: Consolas,Monaco,Courier,monospace; border: 1px solid #999; ".
+                    "background-color: #ccc;'>{$config['db_name']}</code> database.<br />".
+                    "To repair your existing tables, click <a href=\"" . THINKUP_BASE_URL . 
+                    "install/index.php?step=repair&m=db\">here</a>.",
                     self::ERROR_DB_TABLES_EXIST);
                 }
             }
@@ -400,7 +433,7 @@ class Installer {
             $table_present = false;
         }
 
-        return ($version_met && $db_check && $table_present);
+        return ($version_met && $db_check === true && $table_present);
     }
 
     /**
@@ -427,7 +460,7 @@ class Installer {
      * @return string
      */
     private function getInstallQueries($table_prefix) {
-        $query_file = THINKUP_WEBAPP_PATH . 'install' . DS . 'sql' . DS . 'build-db_mysql.sql';
+        $query_file = THINKUP_WEBAPP_PATH . 'install/sql/build-db_mysql.sql';
         if ( !file_exists($query_file) ) {
             throw new InstallerException("File <code>$query_file</code> is not found.", self::ERROR_FILE_NOT_FOUND);
         }
@@ -540,13 +573,14 @@ class Installer {
      */
     public function createConfigFile($db_config, $admin_user) {
         $config_file = THINKUP_WEBAPP_PATH . 'config.inc.php';
-        $config_file_exists = file_exists($config_file);
 
-        // check sample configuration file
-        // when config.inc.php is not exist
-        if (!$config_file_exists) {
+        if (!file_exists($config_file) || filesize($config_file) === 0) {
             $new_config_file_contents = self::generateConfigFile($db_config, $admin_user);
-            if ( !is_writable(THINKUP_WEBAPP_PATH) ) {
+            if ( !file_exists($config_file) && !is_writable(dirname($config_file)) ) {
+                // Config file doesn't exist, and I won't be able to create it.
+                return false;
+            } else if ( file_exists($config_file) && !is_writable($config_file) ) {
+                // Config file exist, but I can't write to it.
                 return false;
             } else {
                 /* write the config file */
@@ -555,7 +589,6 @@ class Installer {
                     fwrite($handle, $line);
                 }
                 fclose($handle);
-                chmod($config_file, 0666);
                 return true;
             }
         }
@@ -572,56 +605,29 @@ class Installer {
         $sample_config_filename = THINKUP_WEBAPP_PATH . 'config.sample.inc.php';
         self::checkSampleConfig($sample_config_filename);
 
+        $new_config = array(
+            'site_root_path' => THINKUP_BASE_URL,
+            'source_root_path' => THINKUP_ROOT_PATH,
+            'db_host' => $db_config['db_host'],
+            'db_user' => $db_config['db_user'],
+            'db_password' => $db_config['db_password'],
+            'db_name' => $db_config['db_name'],
+            'db_socket' => $db_config['db_socket'],
+            'db_port' => $db_config['db_port'],
+            'table_prefix' => $db_config['table_prefix'],
+            'GMT_offset' => $db_config['GMT_offset'],
+            'timezone' => $db_config['timezone']
+        );
+
         // read sample configuration file and replace some lines
         $sample_config = file($sample_config_filename);
         foreach ($sample_config as $line_num => $line) {
-            switch ( substr($line, 12, 30) ) {
-                case "['site_root_path']            ":
-                    $sample_config[$line_num] = str_replace(
-                          "'/'", "'" . THINKUP_BASE_URL . "'", $line
-                    );
-                    break;
-                case "['source_root_path']          ":
-                    $sample_config[$line_num] = str_replace(
-                          "'/your-server-path-to/thinkup/'",
-                          "'" . THINKUP_ROOT_PATH . "'", $line
-                    );
-                    break;
-                case "['db_host']                   ":
-                    $sample_config[$line_num] = str_replace(
-                          "'localhost'", "'" . $db_config['db_host'] . "'", $line
-                    );
-                    break;
-                case "['db_user']                   ":
-                    $sample_config[$line_num] = str_replace(
-                          "'your_database_username'", "'" . $db_config['db_user'] . "'", $line
-                    );
-                    break;
-                case "['db_password']               ":
-                    $sample_config[$line_num] = str_replace(
-                          "'your_database_password'", "'" . $db_config['db_password'] . "'", $line
-                    );
-                    break;
-                case "['db_name']                   ":
-                    $sample_config[$line_num] = str_replace(
-                          "'your_thinkup_database_name'", "'" . $db_config['db_name'] . "'", $line
-                    );
-                    break;
-                case "['db_socket']                 ":
-                    $sample_config[$line_num] = str_replace(
-                          "= '';", "= '" . $db_config['db_socket'] . "';", $line
-                    );
-                    break;
-                case "['db_port']                   ":
-                    $sample_config[$line_num] = str_replace(
-                          "= '';", "= '" . $db_config['db_port'] . "';", $line
-                    );
-                    break;
-                case "['table_prefix']              ":
-                    $sample_config[$line_num] = str_replace(
-                          "'tu_'", "'" . $db_config['table_prefix'] . "'", $line
-                    );
-                    break;
+            if (preg_match('/\[\'([a-zA-Z0-9_]+)\'\]/', $line, $regs)) {
+                $what = $regs[1];
+                if (isset($new_config[$what])) {
+                    $sample_config[$line_num] = preg_replace('/=.*;(.*)/', "= '" . $new_config[$what] . "';\\1",
+                    $sample_config[$line_num]);
+                }
             }
         } // end foreach
         return $sample_config;

@@ -1,10 +1,19 @@
 <script type="text/javascript">
+{if $user_is_admin}
 var option_elements = {$option_elements_json};
 var option_not_required = {$option_not_required_json};
 var option_required_message = {$option_required_message_json};
 var plugin_id = '{$plugin_id}';
 var site_root = '{$site_root_path}';
-var is_admin = {if $is_admin}true;{else}false;{/if}
+{/if}
+var is_admin = {if $user_is_admin}true;{else}false;{/if}
+{assign var='required_values_set' value=true}
+{foreach from=$option_elements key=option_name item=option_obj}
+    {if ! $option_not_required.$option_name && ! $option_obj.value && $required_values_set}
+        {assign var='required_values_set' value=false}
+    {/if}
+{/foreach}
+var required_values_set = {if $required_values_set}true{else}false{/if}
 </script>
 
 <form id="plugin_option_form" onsubmit="return false;">
@@ -29,6 +38,8 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
     </p>
 </div>
 
+{if $user_is_admin}
+<!-- plugin options form elements -->
 {foreach from=$option_elements key=option_name item=option_obj}
 
     {if $option_headers.$option_name}
@@ -45,7 +56,7 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
     </p>
 </div>
 
-<div style="float: left; margin-top: 10px;">
+<div style="float: left; margin-top: 10px; width: 200px;">
     <label id="plugin_options_{$option_obj.name}_label">
     {if $option_not_required.$option_name}<i>*</i>{/if}
     {if $option_obj.label}
@@ -63,7 +74,7 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
         <input type="text" 
         value="{if isset($option_obj.value)}{$option_obj.value|escape:'html'}{/if}"
             name="plugin_options_{$option_obj.name}" id="plugin_options_{$option_obj.name}" 
-            {if ! $is_admin} disabled="true"{/if} />
+            {if ! $user_is_admin} disabled="true"{/if} />
     {/if}
     {if $option_obj.type eq 'radio_element'}
     
@@ -72,7 +83,7 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
             {foreach from=$option_obj.values key=radio_name item=radio_value}
                 <div style="float: left;">
                     <input type="radio" name="plugin_options_{$option_obj.name}" value="{$radio_value|escape:'html'}" 
-                        {if ! $is_admin} disabled="true"{/if} 
+                        {if ! $user_is_admin} disabled="true"{/if} 
                         {if  isset($option_obj.value) && $option_obj.value == $radio_value} checked="true"{/if} 
                         /> {$radio_name|escape:'html'} &nbsp;
                 </div>
@@ -85,7 +96,7 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
     {if $option_obj.type eq 'select_element'}
         <div style="float: left;">
         <select name="plugin_options_{$option_obj.name}" id="plugin_options_{$option_obj.name}" 
-        {if ! $is_admin} disabled="true"{/if} >
+        {if ! $user_is_admin} disabled="true"{/if} >
         {foreach from=$option_obj.values key=select_name item=select_value}
                 <option value="{$select_value|escape:'html'}"
                 {if isset($option_obj.value) && $option_obj.value == $select_value}selected="true"{/if}>
@@ -101,11 +112,12 @@ var is_admin = {if $is_admin}true;{else}false;{/if}
 <div style="clear: both;"></div>
 
 {/foreach}
+
+{/if}
+
 <p style="margin-top: 10px;" id="plugin_option_submit_p">
-{if $is_admin}
+{if $user_is_admin}
 <input type="submit" value="save options" />
-{else}
-<b>Note:</b> Editing disabled for non admin users
 {/if}
 </p>
 

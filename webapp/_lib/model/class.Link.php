@@ -1,6 +1,29 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/model/class.Link.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Link object
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author christoffer Viken <christoffer[at]viken[dot]me>
  */
@@ -85,36 +108,34 @@ class Link {
      * @param array $val
      */
     private function constructValIncluded($val){
-        if (isset($val["id"])) {
+        if (isset($val["url"])) {
             $this->id = $val["id"];
-        }
+            $this->url = $val["url"];
+            if (isset($val["expanded_url"])) {
+                $this->expanded_url = $val["expanded_url"];
+            }
 
-        $this->url = $val["url"];
+            if (isset($val["title"])) {
+                $this->title = $val["title"];
+            }
 
-        if (isset($val["expanded_url"])) {
-            $this->expanded_url = $val["expanded_url"];
-        }
+            if (isset($val["clicks"])) {
+                $this->clicks = $val["clicks"];
+            }
 
-        if (isset($val["title"])) {
-            $this->title = $val["title"];
-        }
+            if (isset($val["post_id"])) {
+                $this->post_id = $val["post_id"];
+            }
 
-        if (isset($val["clicks"])) {
-            $this->clicks = $val["clicks"];
-        }
+            if (isset($val["network"])) {
+                $this->network = $val["network"];
+            }
 
-        if (isset($val["post_id"])) {
-            $this->post_id = $val["post_id"];
-        }
+            $this->is_image = PDODAO::convertDBToBool($val["is_image"]);
 
-        if (isset($val["network"])) {
-            $this->network = $val["network"];
-        }
-
-        $this->is_image = PDODAO::convertDBToBool($val["is_image"]);
-
-        if (isset($val["error"])) {
-            $this->error = $val["error"];
+            if (isset($val["error"])) {
+                $this->error = $val["error"];
+            }
         }
     }
 

@@ -1,4 +1,31 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfInstallerController.php
+ *
+ * Copyright (c) 2009-2010 Dwi Widiastuti, Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -11,14 +38,11 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
-        if ( !defined('DS') ) {
-            define('DS', DIRECTORY_SEPARATOR);
-        }
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) . DS);
+            define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
         }
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
         }
         if ( !defined('THINKUP_BASE_URL') ) {
             define('THINKUP_BASE_URL', '/test/script/path/');
@@ -82,7 +106,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->go();
-        $this->assertPattern('/Database Setup and Site Configuration/', $result);
+        $this->assertPattern('/Configure ThinkUp/', $result);
         $this->restoreConfigFile();
     }
 
@@ -107,6 +131,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['password'] = "yoyo";
         $_POST['confirm_password'] = "yoyo";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
@@ -136,6 +161,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['password'] = "";
         $_POST['confirm_password'] = "";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
@@ -165,6 +191,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['password'] = "asdfadsf";
         $_POST['confirm_password'] = "asdfasdfasdfasdfasdf";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
@@ -174,6 +201,11 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
     }
 
     public function testFreshInstallStep3InvalidDatabaseCredentials() {
+        //get valid connection information
+        $config = Config::getInstance();
+        $valid_db_host = $config->getValue('db_host');
+        $valid_db_socket = $config->getValue('db_socket');
+
         //drop DB
         $this->testdb_helper->drop($this->db);
         //remove config file
@@ -190,13 +222,14 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_passwd'] = "pass";
         $_POST['db_name'] = "mythinkupdb";
         $_POST['db_type'] = "mysql";
-        $_POST['db_host'] = "localhost";
-        $_POST['db_socket'] = "/tmp/mysql.sock";
+        $_POST['db_host'] = $valid_db_host;
+        $_POST['db_socket'] = $valid_db_socket;
         $_POST['db_port'] = "";
         $_POST['db_prefix'] = "tu_";
         $_POST['password'] = "asdfadsf";
         $_POST['confirm_password'] = "asdfadsf";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $_SERVER['HTTP_HOST'] = "http://example.com";
 
@@ -204,9 +237,102 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->go();
 
-        $this->assertPattern('/Couldn\'t connect to your database; please re-enter your database credentials./',
-        $result);
+        $this->assertPattern('/ThinkUp couldn\'t connect to your database. The error message is:/', $result);
+        $this->assertPattern('/Access denied for user \'username\'/', $result);
         $this->restoreConfigFile();
+    }
+
+    public function testFreshInstallStep3InvalidDatabaseName() {
+        //get valid connection information
+        $config = Config::getInstance();
+        $valid_db_host = $config->getValue('db_host');
+        $valid_db_socket = $config->getValue('db_socket');
+        $valid_db_user = $config->getValue('db_user');
+        $valid_db_password = $config->getValue('db_password');
+
+        //drop DB
+        $this->testdb_helper->drop($this->db);
+        //remove config file
+        Config::destroyInstance();
+        //unset PDO so it must be recreated
+        InstallerMySQLDAO::$PDO = null;
+        $this->removeConfigFile();
+
+        //set param for step 2
+        $_GET['step'] = '3';
+        //set post values from form
+        $_POST['site_email'] = "you@example.com";
+        $_POST['db_user'] = $valid_db_user;
+        $_POST['db_passwd'] = $valid_db_password;
+        $_POST['db_name'] = "mythinkupdb `lol";
+        $_POST['db_type'] = "mysql";
+        $_POST['db_host'] = $valid_db_host;
+        $_POST['db_socket'] = $valid_db_socket;
+        $_POST['db_port'] = "";
+        $_POST['db_prefix'] = "tu_";
+        $_POST['password'] = "asdfadsf";
+        $_POST['confirm_password'] = "asdfadsf";
+        $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
+
+        $_SERVER['HTTP_HOST'] = "http://example.com";
+
+        $controller = new InstallerController(true);
+        $this->assertTrue(isset($controller));
+        $result = $controller->go();
+
+        $this->assertPattern('/ThinkUp couldn\'t connect to your database. The error message is:/', $result);
+        $this->assertPattern('/Unknown database \'mythinkupdb `lol\'/', $result);
+        $this->restoreConfigFile();
+    }
+
+    public function testFreshInstallStep3InvalidDatabaseHost() {
+        //get valid connection information
+        $config = Config::getInstance();
+        $valid_db_socket = $config->getValue('db_socket');
+        $valid_db_user = $config->getValue('db_user');
+        $valid_db_password = $config->getvalue('db_password');
+        $valid_db_port = $config->getValue('db_port');
+
+        //drop DB
+        $this->testdb_helper->drop($this->db);
+        //remove config file
+        Config::destroyInstance();
+        //unset PDO so it must be recreated
+        InstallerMySQLDAO::$PDO = null;
+        $this->removeConfigFile();
+
+        ini_set("error_reporting", E_ERROR);
+
+        //set param for step 2
+        $_GET['step'] = '3';
+        //set post values from form
+        $_POST['site_email'] = "you@example.com";
+        $_POST['db_user'] = $valid_db_user;
+        $_POST['db_passwd'] = $valid_db_password;
+        $_POST['db_name'] = "mythinkupdb";
+        $_POST['db_type'] = "mysql";
+        $_POST['db_host'] = "localcheese";
+        $_POST['db_socket'] = $valid_db_socket;
+        $_POST['db_port'] = $valid_db_port;
+        $_POST['db_prefix'] = "tu_";
+        $_POST['password'] = "asdfadsf";
+        $_POST['confirm_password'] = "asdfadsf";
+        $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
+
+        $_SERVER['HTTP_HOST'] = "http://example.com";
+
+        $controller = new InstallerController(true);
+        $this->assertTrue(isset($controller));
+        $result = $controller->go();
+
+        $this->assertPattern('/ThinkUp couldn\'t connect to your database./', $result);
+        //Different systems get different errors
+        //$this->assertPattern('/Unknown MySQL server host \'localcheese\'/', $result);
+        //$this->assertPattern('/php_network_getaddresses: getaddrinfo failed', $result);
+        $this->restoreConfigFile();
+        ini_set("error_reporting", E_ALL);
     }
 
     public function testFreshInstallStep3SuccessfulInstall() {
@@ -247,6 +373,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_port'] = "";
         $_POST['db_prefix'] = "tu_";
         $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
 
         $_SERVER['HTTP_HOST'] = "http://example.com";
 
@@ -254,7 +381,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->go();
 
-        $this->assertPattern('/Congratulations! ThinkUp has been installed./', $result);
+        $this->assertPattern('/ThinkUp has been installed successfully./', $result);
         $this->restoreConfigFile();
         //echo $result;
     }

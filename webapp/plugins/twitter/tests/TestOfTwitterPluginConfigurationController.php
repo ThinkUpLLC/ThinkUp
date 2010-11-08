@@ -1,4 +1,33 @@
 <?php
+/**
+ *
+ * ThinkUp/webapp/plugins/twitter/tests/TestOfTwitterPluginConfigurationController.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Test of TwitterPluginConfigurationController
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
 }
@@ -10,12 +39,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAcc
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/controller/class.TwitterPluginConfigurationController.php';
 
-/**
- * Test of TwitterPluginConfigurationController
- *
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
 
     /**
@@ -62,6 +85,9 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
             $this->db->exec($q);
             $counter++;
         }
+        $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+        $_SERVER['HTTP_HOST'] = 'http://';
+        $_SERVER['REQUEST_URI'] = '';
 
     }
 
@@ -96,9 +122,9 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
 
         //logged in
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
@@ -113,10 +139,9 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
 
         // build some options data
         $options_arry = $this->buildPluginOptions();
-
-        $_SESSION['user'] = 'me@example.com';
+        $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $owner = $owner_dao->getByEmail($_SESSION['user']);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $_GET["twitter_username"] = "anildash";
         $_GET["p"]="twitter";
@@ -125,6 +150,58 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), "Added anildash to ThinkUp.");
         $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'array', 'Owner instances set');
         $this->assertTrue($v_mgr->getTemplateDataItem('oauthorize_link') != '', 'Authorization link set');
+    }
+
+    /**
+     * Test config not admin
+     */
+    public function testConfigOptionsNotAdmin() {
+
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
+        $output = $controller->go();
+        // we have a text form element with proper data
+        $this->assertNoPattern('/save options/', $output); // should have no submit option
+        $this->assertNoPattern('/plugin_options_oauth_consumer_secret/', $output); // should have no secret option
+        $this->assertNoPattern('/plugin_options_archive_limit/', $output); // should have no limit option
+        $this->assertNoPattern('/plugin_options_oauth_consumer_key/', $output); // should have no key option
+        $this->assertPattern('/var is_admin = false/', $output); // not a js admin
+
+        //app not configured
+        $options_arry[0]->truncateTable('plugin_options');
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+    }
+
+    /**
+     * Test config isa admin
+     */
+    public function testConfigOptionsIsAdmin() {
+
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
+        $output = $controller->go();
+        // we have a text form element with proper data
+        $this->assertPattern('/save options/', $output); // should have no submit option
+        $this->assertPattern('/plugin_options_oauth_consumer_secret/', $output); // should have secret option
+        $this->assertPattern('/plugin_options_archive_limit/', $output); // should have limit option
+        $this->assertPattern('/plugin_options_oauth_consumer_key/', $output); // should have key option
+        $this->assertPattern('/var is_admin = true/', $output); // is a js admin
+
+        //app not configured
+        $options_arry[0]->truncateTable('plugin_options');
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
     }
 
     /**

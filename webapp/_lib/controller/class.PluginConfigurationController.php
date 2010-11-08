@@ -1,5 +1,26 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/controller/class.PluginConfigurationController.php
+ *
+ * Copyright (c) 2009-2010 Mark Wilkie, Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Plugin Configuration Controller
  * Extends ThinkUpAuthController to add plugin configuration option functionality
  *  <code>
@@ -43,6 +64,8 @@
  *  </code>
  *
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 
@@ -157,8 +180,7 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
             $view_mgr->assign('option_select_multiple', $this->option_select_multiple);
             $view_mgr->assign('option_select_visible', $this->option_select_visible);
             $view_mgr->assign('plugin_id', $this->plugin_id);
-            $view_mgr->assign('is_admin', $this->isAdmin());
-            //$view_mgr->assign('is_admin', false);
+            $view_mgr->assign('user_is_admin', $this->isAdmin());
             $options_markup = '';
             if ($this->profiler_enabled) {
                 $view_start_time = microtime(true);

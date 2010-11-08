@@ -1,23 +1,37 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/controller/class.MapController.php
+ *
+ * Copyright (c) 2009-2010 Ekansh Preet Singh, Mark Wilkie
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Map Controller
  *
  * Renders the map for a post showing the post and its replies and retweets
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class MapController extends ThinkUpController {
-
-    /**
-     * Constructor
-     * @param boolean $session_started
-     */
-    public function __construct($session_started=false) {
-        parent::__construct($session_started);
-        $this->setViewTemplate('map.tpl');
-        $this->setPageTitle('Locate Post on Map');
-    }
 
     /**
      * Main control method
@@ -25,6 +39,8 @@ class MapController extends ThinkUpController {
      */
     public function control() {
         if ($this->shouldRefreshCache()) {
+            $this->setViewTemplate('map.tpl');
+            $this->setPageTitle('Locate Post on Map');
             $post_dao = DAOFactory::getDAO('PostDAO');
 
             $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
@@ -45,9 +61,16 @@ class MapController extends ThinkUpController {
                 $post = $post_dao->getPost($post_id, $network);
                 $this->addToView('post', $post);
 
-                $post_rows =  $post_dao->getRelatedPosts($post_id, $network);
+                $post_rows =  $post_dao->getRelatedPosts($post_id, $network, !$this->isLoggedIn());
+
                 $posts_json = $this->processLocations($post_rows, $post_id);
                 $this->addToView('posts_data', $posts_json);
+
+                $posts = array();
+                foreach ($post_rows as $row) {
+                    $posts[] = new Post($row);
+                }
+                $this->addToView('posts_by_location', $posts);
             } else {
                 $this->addErrorMessage('No visualization data found for this post');
             }

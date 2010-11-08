@@ -1,4 +1,25 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfPluginOptionController.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -6,6 +27,8 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 /**
  * Test TestOfPluginOptionController class
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 class TestOfPluginOptionController extends ThinkUpUnitTestCase {
@@ -61,6 +84,22 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_resonse->status, 'failed');
         $this->assertEqual($json_resonse->message, 'No action defined for this request');
 
+    }
+
+    public function testNoProfilerOutput() {
+        // Enable profiler
+        $config = Config::getInstance();
+        $config->setValue('enable_profiler', true);
+        $_SERVER['HTTP_HOST'] = 'something';
+
+        $controller = $this->getController();
+        $_GET['action'] = 'set_options';
+        $results = $controller->go();
+        $json_resonse = json_decode($results);
+        // If the profiler outputs HTML (it shouldn't), the following will fail
+        $this->assertIsA($json_resonse, 'stdClass');
+
+        unset($_SERVER['HTTP_HOST']);
     }
 
     /**
@@ -243,8 +282,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
      * get a plugin option controller
      */
     public function getController() {
-        $_SESSION['user'] = 'me@example.com';
-        $_SESSION['user_is_admin'] = true;
+        $this->simulateLogin('me@example.com', true);
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinktank/');
         return new PluginOptionController(true);

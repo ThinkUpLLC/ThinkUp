@@ -1,4 +1,25 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfTestController.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Guillaume Boudreau, Mark Wilkie
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -7,6 +28,8 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * Test TestController class
  *
  * TestController isn't a real ThinkUp controller, this is just a template for all Controller tests.
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfTestController extends ThinkUpUnitTestCase {
@@ -122,5 +145,22 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
         $this->assertEqual('Testing exception handling!', $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertPattern('/<html/', $results);
+
+        $_GET['json'] = true;
+        $results = $controller->go();
+        $this->assertFalse(strpos($results, '<html'));
+        $this->assertPattern('/{/', $results);
+        $this->assertPattern('/Testing exception handling/', $results);
+        $this->assertEqual('Exception', $v_mgr->getTemplateDataItem('error_type'));
+        unset($_GET['json']);
+
+        $_GET['text'] = true;
+        $results = $controller->go();
+        $this->assertFalse(strpos($results, '<html'));
+        $this->assertFalse(strpos($results, '{'));
+        $this->assertPattern('/Testing exception handling/', $results);
+        $this->assertEqual('Exception', $v_mgr->getTemplateDataItem('error_type'));
+        unset($_GET['text']);
     }
 }

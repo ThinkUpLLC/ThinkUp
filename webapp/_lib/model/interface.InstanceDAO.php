@@ -1,11 +1,41 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/model/interface.InstanceDAO.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Instance Data Access Object Interface
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
 interface InstanceDAO {
+    /**
+     * Gets the instance by ID
+     * @param in $instance_id
+     * @return Instance
+     */
+    public function get($instance_id);
+
     /**
      * Get all active instances, by last run oldest first limited to a network
      * @param str $network name of network to limit to
@@ -26,6 +56,12 @@ interface InstanceDAO {
     public function getInstanceFreshestOne();
 
     /**
+     * Gets the public instance that got updated last
+     * @return Instance Freshest public instance
+     */
+    public function getInstanceFreshestPublicOne();
+
+    /**
      * Gets the instance that ran the longest time ago
      * @return Instance Stalest Instance
      */
@@ -40,6 +76,14 @@ interface InstanceDAO {
      * @return int inserted Instance ID
      */
     public function insert($network_user_id, $network_username, $network = "twitter", $viewer_id = false);
+
+    /**
+     * Delete instance
+     * @param string $network_username
+     * @param string $network - "twitter", "facebook"
+     * @return int affected rows
+     */
+    public function delete($network_username, $network);
 
     /**
      * Get freshest (most recently updated) instance by owner
@@ -90,6 +134,12 @@ interface InstanceDAO {
      * @return array Instance objects
      */
     public function getByOwner($owner, $force_not_admin = false);
+
+    /**
+     * Get public instances
+     * @return array Instance objects
+     */
+    public function getPublicInstances();
 
     /**
      * Get instances by owner and network

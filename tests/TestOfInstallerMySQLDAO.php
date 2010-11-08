@@ -1,4 +1,25 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfInstallerMySQLDAO.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Guillaume Boudreau
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -6,7 +27,8 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 /**
  * Test Of Installer MySQLDAO
  *
- * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
@@ -21,6 +43,34 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
 
     public function tearDown() {
         parent::tearDown();
+    }
+
+    public function testCreateDatabase() {
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
+        $dao = new InstallerMySQLDAO($config_array);
+
+        $config_array['db_name'] = 'thinkup_db_creation_test_db-yes';
+
+        //Check that the database exists before trying to create it.
+        $before = $this->testdb_helper->databaseExists($config_array['db_name']);
+        $this->assertFalse($before);
+
+        //Create the database. True on success, false on fail.
+        //Destroy the current correct config array, replaced with the test db
+        //name array in the createInstallDatabase function
+        Config::destroyInstance();
+        $create_db = $dao->createInstallDatabase($config_array);
+        //Check the database exists after creation.
+        Config::destroyInstance();
+        $after = $this->testdb_helper->databaseExists($config_array['db_name']);
+        $this->assertTrue($create_db && $after);
+
+        //Delete the database. True on success, false on fail.
+        $deleted = $this->testdb_helper->deleteDatabase($config_array['db_name']);
+
+        //Assert that the testing database for this function was cleaned up
+        $this->assertTrue($deleted);
     }
 
     public function testConstructor() {
@@ -60,11 +110,11 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new InstallerMySQLDAO($config_array);
         $result = $dao->describeTable($config_array["table_prefix"].'owners');
         foreach ($result as $field) {
-            $this->assertTrue(isset($field->Field));
-            $this->assertTrue(isset($field->Type));
-            $this->assertTrue(isset($field->Null));
-            $this->assertTrue(isset($field->Key));
-            $this->assertTrue(isset($field->Extra));
+            $this->assertTrue(isset($field['Field']));
+            $this->assertTrue(isset($field['Type']));
+            $this->assertTrue(isset($field['Null']));
+            $this->assertTrue(isset($field['Key']));
+            $this->assertTrue(isset($field['Extra']));
         }
     }
 

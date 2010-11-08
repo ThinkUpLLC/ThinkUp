@@ -6,13 +6,13 @@
           <li id="step-tab-1" class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
             <div class="key-stat install_step">
             <h1>1</h1>
-            <h3>Requirements Check</h3>
+            <h3>Check System Requirements</h3>
             </div>  
           </li>
           <li id="step-tab-2" class="ui-state-default ui-corner-top">
             <div class="key-stat install_step">
             <h1>2</h1>
-            <h3>Database Setup and Site Configuration</h3>
+            <h3>Configure ThinkUp</h3>
             </div>
           </li>
           <li id="step-tab-3" class="no-border ui-state-default ui-corner-top">
@@ -30,8 +30,8 @@
     <img id="dart1" class="dart" alt="" src="{$site_root_path}assets/img/dart_wht.png">
     <div class="clearfix append_20">
       <div class="grid_22 push_1 clearfix">
-        <h2 class="clearfix step_title">Requirements Check</h2>
-        {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd}
+        <h2 class="clearfix step_title">Check System Requirements</h2>
+        {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd && $libs.pdo && $libs.pdo_mysql}
         <p class="success" style="margin-bottom: 30px">
              <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
              You may proceed to the next step.
@@ -76,13 +76,13 @@
         </div>
         {if !$libs.curl}
         <div class="clearfix append_20 info_message">
-          <p>ThinkUp needs cURL installed on your system.</p>
+          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.curl.php" target="_blank">cURL PHP library</a> installed on your system.</p>
         </div>
         {/if}
         
         <div class="clearfix append_20">
           <div class="grid_6 prefix_5 right">
-            <span class="label {if !$libs.gd} no{/if}">GD lib installed</span>
+            <span class="label {if !$libs.gd} no{/if}">GD installed</span>
           </div>
           <div class="grid_8 prefix_1 left">
             {if $libs.gd}
@@ -94,14 +94,32 @@
         </div>
         {if !$libs.gd}
         <div class="clearfix append_20 info_message">
-          <p>Thinkup needs GD lib installed on your system.</p>
+          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.image.php" target="_blank">GD PHP library</a> installed on your system.</p>
         </div>
         {/if}
         
         <div class="clearfix append_20">
           <div class="grid_6 prefix_5 right">
+            <span class="label {if !$libs.pdo OR !$libs.pdo_mysql} no{/if}">PDO installed</span>
+          </div>
+          <div class="grid_8 prefix_1 left">
+            {if $libs.pdo AND $libs.pdo_mysql}
+            <span class="value yes">Yes</span>
+            {else}
+            <span class="value no">No</span>
+            {/if}
+          </div>
+        </div>
+        {if !$libs.pdo OR !$libs.pdo_mysql}
+        <div class="clearfix append_20 info_message">
+          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/pdo.installation.php" target="_blank">PDO extension</a> and the <a href="http://php.net/manual/en/ref.pdo-mysql.php" target="_blank">MySQL driver</a> installed on your system.</p>
+        </div>
+        {/if}
+
+        <div class="clearfix append_20">
+          <div class="grid_6 prefix_5 right">
             {if $permissions_compat}
-            <span class="label">Template and cache directories are writeable?</span>
+            <span class="label">Template and cache directories are writeable</span>
             {else}
             <span class="label no">Template and cache directories are writeable?</span>
             {/if}
@@ -120,8 +138,9 @@
           <p><code>{$writeable_directories.logs}</code></p>
           <p><code>{$writeable_directories.compiled_view}</code></p>
           <p><code>{$writeable_directories.cache}</code></p>
-          <p class="prepend_20">If you have command line (SSH) access to your web server then you can simply copy and paste the following command into your shell:</p>
-          <p><code>chmod -R 777 {$writeable_directories.logs} {$writeable_directories.compiled_view} {$writeable_directories.cache}</code></p>
+          <p class="prepend_20">If you have terminal (SSH) access to your web server then you can simply copy and paste the following command into your terminal:</p>
+          <p>As root: <code>chown -R apache {$writeable_directories.logs} {$writeable_directories.compiled_view} {$writeable_directories.cache}</code></p>
+          <p>Or if you don't have root access: <code>chmod -R 777 {$writeable_directories.logs} {$writeable_directories.compiled_view} {$writeable_directories.cache}</code></p>
         </div>
         {/if}
         
@@ -129,7 +148,7 @@
         <div class="clearfix">
           <div class="grid_10 prefix_8 left">
             <div class="next_step tt-button ui-state-default ui-priority-secondary ui-corner-all">
-              <a href="index.php?step=2">Next Step &raquo;</a>
+              <a href="index.php?step=2" style="color:black" id="nextstep">Next Step &raquo;</a>
             </div>
           </div>
         </div>

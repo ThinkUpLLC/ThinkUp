@@ -1,4 +1,25 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfInstaller.php
+ *
+ * Copyright (c) 2009-2010 Dwi Widiastuti, Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -6,21 +27,20 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 /**
  * Test Of Installer
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Dwi Widiastuti, Gina Trapani
  * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfInstaller extends ThinkUpUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('Installer class test');
-        if ( !defined('DS') ) {
-            define('DS', DIRECTORY_SEPARATOR);
-        }
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) . DS);
+            define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
         }
 
         if ( !defined('THINKUP_BASE_URL') ) {
@@ -73,19 +93,21 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $dependency = Installer::checkDependency();
         $this->assertTrue($dependency['curl'], 'cURL is installed');
         $this->assertTrue($dependency['gd'], 'gd lib is installed');
+        $this->assertTrue($dependency['pdo'], 'pdo lib is installed');
+        $this->assertTrue($dependency['pdo_mysql'], 'pdo mysql lib is installed');
     }
 
     public function testInstallerCheckPermission() {
         $perms = Installer::checkPermission();
         $this->assertTrue($perms['compiled_view'], THINKUP_ROOT_PATH .
-                'webapp' . DS . 'view' . DS . 'compiled_view is writeable by the webserver');
+                'webapp/view/compiled_view is writeable by the webserver');
         $this->assertTrue($perms['cache'], THINKUP_ROOT_PATH .
-                'webapp' . DS . 'view' . DS . 'compiled_view' . DS . 'cache is writeable by the webserver');
+                'webapp/view/compiled_view/cache is writeable by the webserver');
     }
 
     public function testInstallerCheckPath() {
         $this->assertTrue(Installer::checkPath(array('source_root_path' => THINKUP_ROOT_PATH,
-                'smarty_path' => THINKUP_WEBAPP_PATH . '_lib'.DS.'extlib' . DS . 'Smarty-2.6.26' . DS . 'libs' . DS)));
+                'smarty_path' => THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.26/libs/')));
     }
 
     public function testInstallerCheckStep1() {

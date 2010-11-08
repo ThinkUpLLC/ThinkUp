@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <title>{if $controller_title}{$controller_title} | {/if}{$app_title}</title>
-  <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="{$site_root_path}assets/img/favicon.png">
   
   <!-- jquery -->
   <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
@@ -31,6 +31,15 @@
         e.preventDefault();
         return false;
       });
+      
+      $('.toggle-help-msg').click(function(e) {
+        var helpMessage = $(this).next('#help-no-email-message');
+        helpMessage.slideToggle(500);
+        e.preventDefault();
+        return false;
+      });
+
+      
     });
   </script>
   {/literal}

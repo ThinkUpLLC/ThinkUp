@@ -1,4 +1,31 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfPluginMySQLDAO.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Mark Wilkie <mark[at]bitterpill[dot]org>
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -23,6 +50,10 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $this->logger->close();
     }
 
+    private static function pluginSort($a, $b) {
+        return strcmp($a->name, $b->name);
+    }
+
     public function testGetInstalledPlugins() {
         # build our data
         $builders_array = $this->buildData();
@@ -32,6 +63,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $plugins = $dao->getInstalledPlugins($this->config->getValue("source_root_path"));
         $this->assertEqual(count($plugins),6);
 
+        usort($plugins, 'self::pluginSort');
         $this->assertEqual($plugins[0]->name,"Expand URLs", "Ex-url 'name' Test");
         $this->assertEqual($plugins[0]->folder_name,"expandurls", "Ex-url 'folder_name' test");
 
@@ -41,11 +73,14 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($plugins[2]->name,"Flickr Thumbnails", "Flickr 'name' Test");
         $this->assertEqual($plugins[2]->folder_name,"flickrthumbnails", "Flickr 'folder_name' test");
 
-        $this->assertTrue($plugins[3]->name == "GeoEncoder", "GeoEncoder 'name' Test");
-        $this->assertTrue($plugins[3]->folder_name == "geoencoder", "GeoEncoder 'folder_name' test");
+        $this->assertEqual($plugins[3]->name, "GeoEncoder", "GeoEncoder 'name' Test");
+        $this->assertEqual($plugins[3]->folder_name, "geoencoder", "GeoEncoder 'folder_name' test");
 
         $this->assertEqual($plugins[4]->name,"Hello ThinkUp", "Hello 'name' Test");
         $this->assertEqual($plugins[4]->folder_name,"hellothinkup", "Hello 'folder_name' test");
+
+        $this->assertEqual($plugins[5]->name,"Twitter", "Twitter 'name' Test");
+        $this->assertEqual($plugins[5]->folder_name,"twitter", "Twitter 'folder_name' test");
     }
 
     public function testInsertPugin() {

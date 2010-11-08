@@ -1,6 +1,26 @@
 <?php
-
 /**
+ *
+ * ThinkUp/webapp/_lib/model/class.Config.php
+ *
+ * Copyright (c) 2009-2010 Mark Wilkie, Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Configuration singleton
  *
  * Singleton acess object for ThinkUp configuration values set in config.inc.php.
@@ -16,6 +36,8 @@
  * </code>
  *
  * @package     ThinkUp
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
  * @author      Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author      Mark Wilkie
  */
@@ -39,6 +61,7 @@ class Config {
         if ($vals != null ) {
             $this->config = $vals;
         } else {
+            Utils::defineConstants();
             if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php')) {
                 require THINKUP_WEBAPP_PATH . 'config.inc.php';
                 $this->config = $THINKUP_CFG;
@@ -96,5 +119,19 @@ class Config {
      */
     public function getValuesArray() {
         return $this->config;
+    }
+
+    /**
+     * Returns the GMT offset in hours based on the application's defined timezone.
+     *
+     * If $time is given, gives the offset for that time; otherwise uses the current time.
+     *
+     * @param int $time The time to base it on, as anything strtotime() takes; leave blank for current time.
+     * @return int The GMT offset in hours.
+     */
+    public function getGMTOffset($time = 0) {
+        $time = $time ? $time : 'now';
+        $tz = ($this->getValue('timezone')==null)?date('e'):$this->getValue('timezone');
+        return timezone_offset_get( new DateTimeZone($tz), new DateTime($time) ) / 3600;
     }
 }

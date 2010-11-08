@@ -4,8 +4,8 @@
  *  @package    SimpleTest
  *  @subpackage UnitTester
  *  @version    $Id: dumper.php 1723 2008-04-08 00:34:10Z lastcraft $
- */
-/**
+ *
+ *
  * does type matter
  */
 if (! defined('TYPE_MATTERS')) {

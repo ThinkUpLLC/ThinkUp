@@ -105,7 +105,9 @@ a img {
 .container_24 .grid_6  { width: 230px; }
 .container_24 .grid_7  { width: 270px; }
 .container_24 .grid_8  { width: 310px; }
-.container_24 .grid_9  { width: 350px; }
+/* grid_9 contains the tweet/status content. Word wrapping and overflow handling
+are in place to stop long URLs or words from overflowing. */
+.container_24 .grid_9  { width: 350px; word-wrap: break-word; overflow: auto; }
 .container_24 .grid_10 { width: 390px; }
 .container_24 .grid_11 { width: 430px; }
 .container_24 .grid_12 { width: 470px; }
@@ -256,7 +258,7 @@ a img {
 
 /* --- CONTENT -------------------------------- */
 
-.post {padding:5px 0;border-top:1px solid #CCC;margin-top:5px;}
+.post {padding:5px 0;border-top:1px solid #CCC;padding-top:5px;}
 .tweet {font-size:1.6em;line-height:1.1em;}
 .individual-tweet {padding:0;border-top:1px solid #CCC;}
 .individual-tweet a:link, .individual-tweet a:visited {color:#0060E0;text-decoration:none;}
@@ -288,12 +290,12 @@ form.login .captcha img {margin-top:0.6em;padding-right:90px;float:right;}
 /* --- IMAGES AND GRAPHICS -------------------- */
 
 .avatar-container { width: 40px; height: 40px; }
-img.avatar {float:left;margin:5px 0 5px 0;width:40px;height:40px;}
+img.avatar {float:left;margin:5px 0 5px 5px;width:40px;height:40px;}
 img.avatar2 {float:left;margin:6px 0 0 0;width:48px;height:48px;}
 img.avatar_sm {margin:.3em 0 0 0;width:30px;height:30px;}
 img.avatar_xsm {margin:.5em 1px 0 0;width:20px;height:20px;}
 img.avatar_overlay {position: relative;left: 15px;top: -15px;width: 40px;height: 40px;}
-img.service-icon, img.service-icon2 {position: relative;width: 16px;height: 16px;top: -16px;left: 24px;}
+img.service-icon, img.service-icon2 {position: relative;width: 16px;height: 16px;top: -16px;left: 29px;}
 img.service-icon2 {left: 32px;}
 
 .pic {border: 1px solid #CCC;padding: 5px 0px 0px 5px;}
@@ -307,12 +309,6 @@ img.service-icon2 {left: 32px;}
 #dart3 {position:relative;top:-45px;left:430px;height:45px;}
 #dart4 {position:relative;top:-45px;left:620px;height:45px;}
 #dart5 {position:relative;top:-45px;left:810px;height:45px;}
-
-/* --- SYSTEM MESSAGING ----------------------- */
-
-.success {position:relative;background-color:#BFDFBF;padding:0.5em;-moz-border-radius:5px;-webkit-border-radius:5px;top:10px;line-height:1.6em;}
-.info {background-color:#FFFFAD;padding:1em 2em;-moz-border-radius:5px;-webkit-border-radius:5px;margin:0.5em 0;}
-.error {background-color:#920000;padding:1em 2em;-moz-border-radius:5px;-webkit-border-radius:5px;color:#FFF;text-align:center;font-weight:700;margin-bottom:0.5em;}
 
 #loading_updates,
 #loading_mentions,
@@ -372,3 +368,10 @@ button.fg-button {width:auto;overflow:visible;}
 .tt-toolbar .fg-buttonset {margin-right:1.5em;padding-left:1px;}
 .tt-toolbar .fg-button {font-size:1em;}
 
+table.public_user_stats td.name { padding-right:20px; }
+table.public_user_stats td .detail { font-size:smaller; }
+table.public_user_stats td.value { vertical-align:top; }
+
+/* Status bar */
+#status-bar { background-image:url('../img/statusbar-bkgd.png'); }
+#page-bkgd { background-image:url('../img/statusbar-shadow.png'); background-repeat:repeat-x; }

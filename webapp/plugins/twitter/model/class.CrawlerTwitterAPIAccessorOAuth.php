@@ -1,7 +1,30 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/plugins/twitter/model/class.CrawlerTwitterAPIAccessorOAuth.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Crawler TwitterAPI Accessor, via OAuth
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -12,10 +35,12 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
     var $available_api_calls_for_twitter = null;
     var $api_hourly_limit = null;
     var $archive_limit;
+    var $num_retries = 2;
 
     public function __construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
-    $instance, $archive_limit) {
-        parent::__construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret);
+    $instance, $archive_limit, $num_twitter_errors, $max_api_calls_per_crawl) {
+        parent::__construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
+        $num_twitter_errors, $max_api_calls_per_crawl);
         $this->api_calls_to_leave_unmade_per_minute = $instance->api_calls_to_leave_unmade_per_minute;
         $this->archive_limit = $archive_limit;
     }
@@ -47,14 +72,19 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                 $next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
                 $current_time_in_minutes = (int) date("i", time());
                 $minutes_left_in_hour = 60;
-                if ($next_reset_in_minutes > $current_time_in_minutes)
-                $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
-                elseif ($next_reset_in_minutes < $current_time_in_minutes)
-                $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
+                if ($next_reset_in_minutes > $current_time_in_minutes) {
+                    $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
+                } elseif ($next_reset_in_minutes < $current_time_in_minutes) {
+                    $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
+                }
 
                 $this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
                 $this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter -
                 round($this->api_calls_to_leave_unmade);
+                //Enforce configurable ceiling for whitelisted Twitter accounts
+                if ($this->available_api_calls_for_crawler > $this->max_api_calls_per_crawl) {
+                    $this->available_api_calls_for_crawler = $this->max_api_calls_per_crawl;
+                }
             } catch(Exception $e) {
                 $status_message = 'Could not parse account status: '.$e->getMessage();
             }
@@ -65,50 +95,60 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 
     public function apiRequest($url, $args = array(), $auth = true) {
         $logger = Logger::getInstance();
+        $attempts = 0;
+        $continue = true;
+
         if ($auth) {
-            $content = $this->to->OAuthRequest($url, 'GET', $args);
-            $status = $this->to->lastStatusCode();
+            while ($attempts <= $this->num_retries && $continue) {
+                // $logger->logStatus("****attempts: $attempts; num_retries: " . $this->num_retries, get_class($this));
+                $content = $this->to->OAuthRequest($url, 'GET', $args);
+                $status = $this->to->lastStatusCode();
 
-            $this->available_api_calls_for_twitter = $this->available_api_calls_for_twitter - 1;
-            $this->available_api_calls_for_crawler = $this->available_api_calls_for_crawler - 1;
-            $status_message = "";
-            if ($status > 200) {
-                $status_message = "Could not retrieve $url";
-                if (sizeof($args) > 0) {
-                    $status_message .= "?";
-                }
-                foreach ($args as $key=>$value) {
-                    $status_message .= $key."=".$value."&";
-                }
-                $status_message .= " | API ERROR: $status";
-                $status_message .= "\n\n$content\n\n";
-                if ($status != 404 && $status != 403) {
-                    //$this->available = false;
-                    if ($this->total_errors_so_far >= $this->total_errors_to_tolerate) {
-                        $this->available = false;
-                    } else {
-                        $this->total_errors_so_far = $this->total_errors_so_far + 1;
-                        $logger->logStatus('Total API errors so far: ' . $this->total_errors_so_far .
-                ' | Total errors to tolerate '. $this->total_errors_to_tolerate, get_class($this));
+                $this->available_api_calls_for_twitter = $this->available_api_calls_for_twitter - 1;
+                $this->available_api_calls_for_crawler = $this->available_api_calls_for_crawler - 1;
+                $status_message = "";
+                if ($status > 200) {
+                    $status_message = "Could not retrieve $url";
+                    if (sizeof($args) > 0) {
+                        $status_message .= "?";
                     }
-
+                    foreach ($args as $key=>$value) {
+                        $status_message .= $key."=".$value."&";
+                    }
+                    $status_message .= " | API ERROR: $status";
+                    $status_message .= "\n\n$content\n\n";
+                    if ($status != 404 && $status != 403) {
+                        $attempts++;
+                        if ($this->total_errors_so_far >= $this->total_errors_to_tolerate) {
+                            $this->available = false;
+                        } else {
+                            $this->total_errors_so_far = $this->total_errors_so_far + 1;
+                            $logger->logStatus('Total API errors so far: ' . $this->total_errors_so_far .
+                            ' | Total errors to tolerate '. $this->total_errors_to_tolerate, get_class($this));
+                        }
+                    }
+                    else {
+                        $continue = false;
+                    }
+                    $logger->logStatus($status_message, get_class($this));
+                    $status_message = "";
+                } else {
+                    $continue = false;
+                    $url = Utils::getURLWithParams($url, $args);
+                    $status_message = "API request: ".$url;
                 }
+
                 $logger->logStatus($status_message, get_class($this));
                 $status_message = "";
-            } else {
-                $url = Utils::getURLWithParams($url, $args);
-                $status_message = "API request: ".$url;
-            }
 
-            $logger->logStatus($status_message, get_class($this));
-            $status_message = "";
-
-            if ($url != "https://api.twitter.com/1/account/rate_limit_status.xml") {
-                $status_message = $this->getStatus();
-                $logger->logStatus($status_message, get_class($this));
-                $status_message = "";
+                if ($url != "https://api.twitter.com/1/account/rate_limit_status.xml") {
+                    $status_message = $this->getStatus();
+                    $logger->logStatus($status_message, get_class($this));
+                    $status_message = "";
+                }
             }
-        } else {
+        }
+        else {
             $logger->logStatus("OAuth-free request: $url", get_class($this));
             $content = $this->to->noAuthRequest($url);
             $status = $this->to->lastStatusCode();

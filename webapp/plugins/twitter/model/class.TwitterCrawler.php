@@ -1,10 +1,33 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/plugins/twitter/model/class.TwitterCrawler.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+/**
  * Twitter Crawler
  *
  * Retrieves tweets, replies, users, and following relationships from Twitter.com
  *
  * @TODO Complete docblocks
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -140,8 +163,8 @@ class TwitterCrawler {
                     $args["page"] = $this->instance->last_page_fetched_tweets;
 
                 } else {
-                    if (!$got_latest_page_of_tweets && $this->instance->last_status_id > 0)
-                    $args["since_id"] = $this->instance->last_status_id;
+                    if (!$got_latest_page_of_tweets && $this->instance->last_post_id > 0)
+                    $args["since_id"] = $this->instance->last_post_id;
                 }
 
                 list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $args);
@@ -163,8 +186,8 @@ class TwitterCrawler {
                                 $this->processTweetURLs($tweet);
 
                             }
-                            if ($tweet['post_id'] > $this->instance->last_status_id)
-                            $this->instance->last_status_id = $tweet['post_id'];
+                            if ($tweet['post_id'] > $this->instance->last_post_id)
+                            $this->instance->last_post_id = $tweet['post_id'];
 
                         }
                         $status_message .= count($tweets)." tweet(s) found and $count saved";

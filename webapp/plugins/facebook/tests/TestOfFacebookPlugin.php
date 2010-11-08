@@ -1,4 +1,30 @@
 <?php
+/**
+ *
+ * ThinkUp/webapp/plugins/facebook/tests/TestOfFacebookPlugin.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
@@ -24,17 +50,18 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
-    public function testWebappTabRegistration() {
+    public function testMenuItemRegistration() {
         $webapp = Webapp::getInstance();
         $logger = Logger::getInstance();
         $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();
         $instance->network_user_id = 1;
 
-        $post_tabs = $webapp->getChildTabsUnderPosts($instance);
+        $menus = $webapp->getDashboardMenu($instance);
+        $posts_menu = $menus[0]->items;
 
-        $this->assertEqual(sizeof($post_tabs), 1, "Test number of post tabs");
-        $first_post_tab = $post_tabs[0];
+        $this->assertEqual(sizeof($posts_menu), 3, "Test number of post tabs");
+        $first_post_tab = $posts_menu[0];
         $this->assertEqual($first_post_tab->short_name, "all_facebook_posts", "Test short name of first post tab");
         $this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
         $this->assertEqual($first_post_tab->description, "", "Test description of first post tab");

@@ -1,4 +1,25 @@
 <?php
+/**
+ *
+ * ThinkUp/tests/TestOfLoader.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -6,7 +27,8 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 /**
  * Test of Loader class
  *
- * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfLoader extends ThinkUpBasicUnitTestCase {
@@ -30,30 +52,29 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
 
         // check default lookup path without additionalPath
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS . 'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS . 'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS . 'model'. DS . 'exceptions' . DS
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/'
         ));
 
         // check special classes
         $this->assertEqual( Loader::getSpecialClasses(),
-        array('Smarty'=>THINKUP_WEBAPP_PATH . '_lib' . DS .'extlib' . DS . 'Smarty-2.6.26' . DS .'libs' . DS .
-         'Smarty.class.php'));
+        array('Smarty'=>THINKUP_WEBAPP_PATH . '_lib/extlib/Smarty-2.6.26/libs/Smarty.class.php'));
     }
 
     public function testLoaderRegisterWithStringAdditionalPath() {
         // Loader with string of path as additional path
-        $loader = Loader::register(array(THINKUP_ROOT_PATH . 'tests' . DS . 'classes'));
+        $loader = Loader::register(array(THINKUP_ROOT_PATH . 'tests/classes'));
 
         // check if Loader is registered to spl autoload
         $this->assertTrue($loader, 'Loader is registered to spl autoload');
 
         // check lookup path with single additionalPath
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model'. DS . 'exceptions' . DS,
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
+        THINKUP_ROOT_PATH . 'tests/classes'
         ));
     }
 
@@ -61,7 +82,7 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
         // Loader with array of path as additional path
         $loader = Loader::register(array(
         THINKUP_ROOT_PATH . 'tests',
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'
+        THINKUP_ROOT_PATH . 'tests/classes'
         ));
 
         // check if Loader is registered to spl autoload
@@ -69,11 +90,11 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
 
         // check lookup path with array additionalPath
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model'. DS . 'exceptions' . DS,
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
         THINKUP_ROOT_PATH . 'tests',
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'
+        THINKUP_ROOT_PATH . 'tests/classes'
         ));
     }
 
@@ -105,17 +126,17 @@ class TestOfLoader extends ThinkUpBasicUnitTestCase {
     public function testAdditionalPathAfterInitialRegister() {
         Loader::register();
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model'. DS . 'exceptions' . DS,
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
         ));
 
-        Loader::addPath(THINKUP_ROOT_PATH . 'tests' . DS . 'classes');
+        Loader::addPath(THINKUP_ROOT_PATH . 'tests/classes');
         $this->assertEqual( Loader::getLookupPath(), array(
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'controller' . DS,
-        THINKUP_WEBAPP_PATH . '_lib' . DS .'model'. DS . 'exceptions' . DS,
-        THINKUP_ROOT_PATH . 'tests' . DS . 'classes'
+        THINKUP_WEBAPP_PATH . '_lib/model/',
+        THINKUP_WEBAPP_PATH . '_lib/controller/',
+        THINKUP_WEBAPP_PATH . '_lib/model/exceptions/',
+        THINKUP_ROOT_PATH . 'tests/classes'
         ));
     }
 

@@ -1,90 +1,38 @@
-# ThinkUp
+# ThinkUp, social media insights engine
 
-ThinkUp is a free installable web application that captures the insights and expertise of your social network by 
+ThinkUp is a free, installable web application that captures the insights and expertise of your social network by 
 collecting and organizing replies to your conversations on Twitter, Facebook and (soon!) other networks. 
-See screenshots and more at  [http://thinkupapp.com](http://thinkupapp.com)
+Find out more at  [http://thinkupapp.com](http://thinkupapp.com)
 
-ThinkUp is sponsored by [Expert Labs](http://expertlabs.org), led by [Gina Trapani](http://ginatrapani.org), and used 
-to be named ThinkTank and Twitalytic. 
+*WARNING: ThinkUp is in early beta. There may be bugs and security risks involved in running it on your web server. 
+PROCEED AT YOUR OWN RISK!*
 
-*WARNING: Alpha code, PROCEED AT YOUR OWN RISK!*
+## SYSTEM REQUIREMENTS
 
-This is not production code. This is an alpha web application. The intended audience is server administrators with 
-experience installing and troubleshooting  PHP/MySQL hosted web applications. Right now  this code is for 
-experimentation and tinkering only. Do not run on a production server. You have been warned. 
-
-## INSTALL
-
-In future versions, this will get easier.
-
-### System Requirements
-
-- [PHP 5.2](http://php.net) with cURL and GD enabled
+- [PHP 5.2](http://php.net) with cURL, GD, and the PDO MySQL driver enabled
 - [MySQL 5](http://mysql.com/)
 - A public web server. (Twitter authorization requires a public
    callback URL, so you'll need to expose a local dev server to the
    internet for initial authorization; after that the server doesn't
    have to be publicly available.) 
 
-### Install application files
+## INSTALL
 
-1. Download source code. Save the `thinkup` directory one level above your web site's DocumentRoot. For example, if your site's DocumentRoot is  `/var/www/vhosts/example.com/httpdocs/` Put the `thinkup` directory here:  `/var/www/vhosts/example.com/thinkup/`
-2. Create a symbolic link to the `thinkup/webapp` directory in your site's DocumentRoot folder. To do so, `cd` to the DocumentRoot, and use the command: `ln -s ../thinkup/webapp/ thinkup`
-3. Make the following directories writable by the web server:
+ThinkUp includes a three-step, web-based installer. To use it:
 
-    `thinkup/webapp/view/compiled_view/`
-    
-    `thinkup/webapp/view/compiled_view/cache/`
-    
-    `thinkup/logs/`
-
-*Note for upgraders:* If you're upgrading a previous installation, you should delete your cookies (in Firefox under 
-`Preferences / Privacy / delete individual cookies`.  In Chrome, you can delete individual cookies under
-`Preferences / Under the Hood / Content Settings / Cookies / Show Cookies and other site data`).
-
-### Set up database
-
-1. Create a database and select it, i.e., 
-  `CREATE DATABASE thinkup`
-
-2. Build tables with `thinkup/sql/build-db_mysql.sql`
-
-### Configure the application
-
-Rename `thinkup/webapp/config.sample.inc.php` to `config.inc.php` and set the appropriate application and database 
-values for your environment.
-
-Visit your ThinkUp install in a web browser and register as a ThinkUp user. In your database, set yourself as an
-application administrator by setting the `tu_owners` table `is_admin` field to 1.
+1. Download the [latest distribution](http://github.com/ginatrapani/ThinkUp/downloads) of ThinkUp. 
+2. Extract the zip file into a web-accessible folder.
+3. Visit that URL in your browser and proceed through the installation process.
 
 ### Configure the application's plugins
 
-In ThinkUp, visit the Configuration page to activate the plugins of your choice.
+Once ThinkUp is installed, log in and visit the Configuration page to activate the plugins of your choice.
 Click on each one to visit its settings page and configure any necessary API keys or other settings.
 
-## RUN
+### Run the ThinkUp crawler
 
-Visit the web application on your server, register and log in. On the Plugins page, activate Twitter, Facebook, and 
-any other plugins you want. Once they're activated, click on the plugin link and authorize your Twitter and/or 
-Facebook accounts in ThinkUp. 
-
-Then, to run the crawler to load your social network data, `cd` to `/your-path-to-thinkup/webapp/crawler/`, and run:
-
-    $ export THINKUP_PASSWORD=yourttpassword; php crawl.php you@example.com
-
-Where `you@example.com` is your ThinkUp login email address, and `yourttpassword` is your ThinkUp password.
-
-To view what's going on with the crawler, use this command:
-
-    $ tail -f /your-path-to-thinkank/logs/crawler.log
-
-Cron the crawler's run command to go at least once an hour. Hint: you may configure and cron this pre-fab bash script,
-which will run the crawler and rotate its logs:
-
-    /thinkup/extras/cron/cron
-
-See the script's [README](http://github.com/ginatrapani/thinkup/blob/master/extras/cron/README) for more information on
-configuring it.
+Log into ThinkUp, and click the *Update now* link in the top left corner to run the ThinkUp crawler and begin 
+capturing your posts and replies.
 
 ## SUPPORT AND MORE INFORMATION
 
@@ -94,7 +42,7 @@ documentation, see [the ThinkUp wiki](http://wiki.github.com/ginatrapani/thinkup
 ## LICENSE
 
 ThinkUp's source code is licensed under the
-[GNU General Public License](http://github.com/ginatrapani/thinkup/blob/master/GPL-LICENSE.txt),
+[GNU General Public License](http://www.gnu.org/licenses/gpl.html),
 except for the  external libraries listed below.
 
 ## EXTERNAL LIBRARIES

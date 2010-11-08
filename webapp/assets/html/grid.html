@@ -1,0 +1,39 @@
+<html>
+<meta charset="utf-8">
+<head><title>Grid Iframe</title></head>
+
+<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<link type="text/css" rel="stylesheet" href="../css/slickgrid/slick.grid.css">
+<link type="text/css" rel="stylesheet" href="../css/slickgrid/slick.grid.thinkup.css">
+
+<script type="text/javascript" src="../js/jquery.event.drag-2.0.min.js"></script>
+<script type="text/javascript" src="../js/jquery.json-2.2.min.js"></script>
+<script type="text/javascript" src="../js/slickgrid/slick.grid.js"></script>
+<script type="text/javascript" src="../js/slickgrid/slick.editors.js"></script>
+<script type="text/javascript" src="../js/slickgrid/slick.grid.js"></script>
+<script type="text/javascript" src="../js/slickgrid/slick.model.js?s=111"></script>
+<script type="text/javascript" src="../js/slickgrid/slick.pager.js"></script>
+<script type="text/javascript" src="../js/slickgrid/slick.columnpicker.js"></script>
+<script type="text/javascript" src="../js/grid_search.js?v=1234888"></script>
+
+<body>
+<form onsubmit="return false;"  id="grid_search_form">
+<p style="padding-left: 20px">
+<label style="font-size: 20px;">Search:&nbsp;</label><input type=text id="grid_search_input" style="width:100px;">
+<input type="submit" value="search">
+<input type="button" value="export" id="grid_export">
+&nbsp; <span style="font-size: 20px;"><b><span id="grid_search_count" style="font-size: 20px;">0</span></b> results</span>
+</p>
+</form>
+<img src="../img/loading.gif" id="grid_search_spinner" style="margin: 250px 0px 0px 430px;">
+<div id="myGrid" style="width:860px;height:600px; display: none; margin: 20px 0px 0px 20px;"></div>
+<script type="text/javascript">
+    tu_grid_search.get_data();
+</script>
+<form onsubmit="return false;"  action="../../post/grid-export.php" method="post" id="grid_export_form" target="_blank">
+<input type="hidden" name="grid_export_data" value="" id="grid_export_data"/>
+</form>
+</body>
+</html>

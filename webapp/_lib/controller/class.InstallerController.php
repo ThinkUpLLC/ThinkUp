@@ -1,8 +1,31 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/controller/class.InstallerController.php
+ *
+ * Copyright (c) 2009-2010 Dwi Widiastuti, Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Installer Controller
  * Web-based application installer.
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Dwi Widiastuti, Gina Trapani
  * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
@@ -15,6 +38,8 @@ class InstallerController extends ThinkUpController {
     private $installer;
 
     public function __construct($session_started=false) {
+        //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings
+        date_default_timezone_set('America/Los_Angeles');
         Utils::defineConstants();
         //Don't call parent constructor because config.inc.php doesn't exist yet
         //Instead, set up the view manager with manual array configuration
@@ -32,7 +57,9 @@ class InstallerController extends ThinkUpController {
     public function control() {
         $this->installer = Installer::getInstance();
 
-        $this->checkForExistingInstallation();
+        if (@$_GET['step'] != 'repair') {
+            $this->checkForExistingInstallation();
+        }
 
         //route user to the right step
         if (!isset($_GET['step']) || $_GET['step'] == '1') {
@@ -56,7 +83,8 @@ class InstallerController extends ThinkUpController {
      */
     private function checkForExistingInstallation() {
         //if config file exists, check if ThinkUp is installed
-        if ( file_exists( THINKUP_WEBAPP_PATH . 'config.inc.php' ) ) {
+        if ( file_exists( THINKUP_WEBAPP_PATH . 'config.inc.php' ) &&
+        filesize( THINKUP_WEBAPP_PATH . 'config.inc.php' ) > 0 ) {
             require THINKUP_WEBAPP_PATH . 'config.inc.php';
             if ( $this->installer->isThinkUpInstalled($THINKUP_CFG) && $this->installer->checkPath($THINKUP_CFG) ) {
                 // ThinkUp is installed, but check at least one admin owner exists, if not, let user know
@@ -123,7 +151,7 @@ class InstallerController extends ThinkUpController {
         // other vars set to view
         $requirements_met = ($php_compat && $libs_compat && $permissions_compat);
         $this->addToView('requirements_met', $requirements_met);
-        $this->addToView('subtitle', 'Requirements Check');
+        $this->addToView('subtitle', 'Check System Requirements');
     }
 
     /**
@@ -138,13 +166,17 @@ class InstallerController extends ThinkUpController {
             return;
         }
 
-        $this->addToView('db_name', 'thinkup');
-        $this->addToView('db_user', 'username');
-        $this->addToView('db_passwd', 'password');
-        $this->addToView('db_host', 'localhost');
+        $current_tz = isset($_POST['timezone']) ? $_POST['timezone'] : date_default_timezone_get();
+
+        $this->addToView('db_name', '');
+        $this->addToView('db_user', '');
+        $this->addToView('db_passwd', '');
+        $this->addToView('db_host', '');
         $this->addToView('db_prefix', 'tu_');
         $this->addToView('db_socket', '');
         $this->addToView('db_port', '');
+        $this->addToView('tz_list', $this->getTimeZoneList());
+        $this->addToView('current_tz', $current_tz);
         $this->addToView('site_email', 'you@example.com');
     }
 
@@ -164,7 +196,7 @@ class InstallerController extends ThinkUpController {
         }
 
         // check if we have made config.inc.php
-        if ( file_exists($config_file) ) {
+        if ( file_exists($config_file) && filesize($config_file) > 0 ) {
             // this is could be from step 2 is not able writing
             // to webapp dir
             $config_file_exists = true;
@@ -178,6 +210,7 @@ class InstallerController extends ThinkUpController {
             $db_config['db_port']      = $THINKUP_CFG['db_port'];
             $db_config['table_prefix'] = $THINKUP_CFG['table_prefix'];
             $db_config['GMT_offset']   = $THINKUP_CFG['GMT_offset'];
+            $db_config['timezone']     = $THINKUP_CFG['timezone'];
             $email                     = trim($_POST['site_email']);
         } else {
             // make sure we're not from error of couldn't write config.inc.php
@@ -189,7 +222,7 @@ class InstallerController extends ThinkUpController {
             }
 
             // trim each posted value
-            $db_config['db_type']      = trim($_POST['db_type']);
+            $db_config['db_type']      = trim(@$_POST['db_type']);
             $db_config['db_name']      = trim($_POST['db_name']);
             $db_config['db_user']      = trim($_POST['db_user']);
             $db_config['db_password']  = trim($_POST['db_passwd']);
@@ -197,12 +230,14 @@ class InstallerController extends ThinkUpController {
             $db_config['db_socket']    = trim($_POST['db_socket']);
             $db_config['db_port']      = trim($_POST['db_port']);
             $db_config['table_prefix'] = trim($_POST['db_prefix']);
-            $db_config['GMT_offset']   = 7;
+            $db_config['timezone']     = trim($_POST['timezone']);
             $email                     = trim($_POST['site_email']);
 
-            if ( empty($db_config['table_prefix']) ) {
-                $db_config['table_prefix'] = 'tu_';
-            }
+            // get GMT offset in hours
+            $db_config['GMT_offset'] = timezone_offset_get(
+            new DateTimeZone($_POST['timezone']),
+            new DateTime('now')
+            ) / 3600;
         }
         $db_config['db_type'] = 'mysql'; //default for now
         $password = $_POST['password'];
@@ -223,8 +258,17 @@ class InstallerController extends ThinkUpController {
             }
             $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
-        } elseif (!$this->installer->checkDb($db_config)) { //check db
-            $this->addErrorMessage("Couldn't connect to your database; please re-enter your database credentials.");
+        } elseif (($error = $this->installer->checkDb($db_config)) !== true) { //check db
+            if (($p = strpos($error->getMessage(), "Unknown MySQL server host")) !== false ||
+            ($p = strpos($error->getMessage(), "Can't connect to MySQL server")) !== false ||
+            ($p = strpos($error->getMessage(), "Can't connect to local MySQL server through socket")) !== false ||
+            ($p = strpos($error->getMessage(), "Access denied for user")) !== false) {
+                $db_error = substr($error->getMessage(), $p);
+            } else {
+                $db_error = $error->getMessage();
+            }
+            $this->addErrorMessage("ThinkUp couldn't connect to your database. The error message is:<br /> ".
+            " <strong>$db_error</strong><br />Please correct your database information and try again.");
             $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
         }
@@ -238,6 +282,8 @@ class InstallerController extends ThinkUpController {
             $this->addToView('db_socket', $db_config['db_socket']);
             $this->addToView('db_port', $db_config['db_port']);
             $this->addToView('db_type', $db_config['db_type']);
+            $this->addToView('current_tz', $_POST['timezone']);
+            $this->addToView('tz_list', $this->getTimeZoneList());
             $this->addToView('site_email', $email);
             $this->addToView('full_name', $full_name);
             return;
@@ -251,9 +297,21 @@ class InstallerController extends ThinkUpController {
             foreach ($config_file_contents_arr as $line) {
                 $config_file_contents_str .= htmlentities($line);
             }
-            $this->addErrorMessage("ThinkUp couldn't write <code>config.inc.php</code> file. Either make the ".
-            "<code>" . THINKUP_WEBAPP_PATH . "</code> folder writeable or create the <code>config.inc.php</code> file ".
-            "there manually and paste the following text into it.");
+            $whoami = @exec('whoami');
+            if (!empty($whoami)) {
+                $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
+                "Use root (or sudo) to create the file manually, and allow PHP to write to it, by executing the ".
+                "following commands:<br /><code>touch " . escapeshellcmd(THINKUP_WEBAPP_PATH . "config.inc.php") .
+                "</code><br /><code>chown $whoami " . escapeshellcmd(THINKUP_WEBAPP_PATH . 
+                "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" . 
+                THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
+                "<br /><br />Click the <strong>Next Step</strong> button below once you did either.");
+            } else {
+                $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
+                "You will need to create the <code>" . 
+                THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
+                "<br /><br />Click the <strong>Next Step</strong> button once this is done.");
+            }
             $this->addToView('config_file_contents', $config_file_contents_str );
             $this->addToView('_POST', $_POST);
 
@@ -377,5 +435,36 @@ class InstallerController extends ThinkUpController {
                 $this->addToView('action_form', $_SERVER['REQUEST_URI']);
             }
         }
+    }
+
+    /**
+     * Returns an array of time zone options formatted for display in a select field.
+     *
+     * @return array An associative array of options, ready for optgrouping.
+     */
+    protected function getTimeZoneList() {
+        $tz_options = timezone_identifiers_list();
+        $view_tzs = array();
+
+        foreach ($tz_options as $option) {
+            $option_data = explode('/', $option);
+
+            // don't allow user to select UTC
+            if ($option_data[0] == 'UTC') {
+                continue;
+            }
+
+            // handle things like the many Indianas
+            if (isset($option_data[2])) {
+                $option_data[1] = $option_data[1] . ': ' . $option_data[2];
+            }
+
+            $view_tzs[$option_data[0]][] = array(
+                'val' => $option,
+                'display' => str_replace('_', ' ', $option_data[1])
+            );
+        }
+
+        return $view_tzs;
     }
 }

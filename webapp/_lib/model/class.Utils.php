@@ -1,8 +1,31 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/model/class.Utils.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Utils
  *
  * Generic, reusable, common utility methods
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -62,7 +85,7 @@ class Utils {
         } else {
             while (($file = readdir($dh)) !== false) {
                 if ($file != '.' && $file != '..') {
-                    $requiredFile = $dir.DIRECTORY_SEPARATOR.$file;
+                    $requiredFile = "$dir/$file";
                     if (is_dir($requiredFile)) {
                         array_push($plugins, $file);
                     }
@@ -135,18 +158,15 @@ class Utils {
     }
 
     public static function defineConstants() {
-        if ( !defined('DS') ) {
-            define('DS', DIRECTORY_SEPARATOR);
-        }
         if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', dirname(dirname(__FILE__)) . DS);
+            define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
         }
 
         if ( !defined('THINKUP_WEBAPP_PATH') ) {
             if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
-                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp' . DS);
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
             } else {
-                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup' . DS);
+                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup/');
             }
         }
 

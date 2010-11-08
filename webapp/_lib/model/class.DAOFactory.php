@@ -1,5 +1,26 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/model/class.DAOFactory.php
+ *
+ * Copyright (c) 2009-2010 Mark Wilkie, Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Data Access Object Factory
  *
  * Inits a DAO based on the ThinkUp config db_type and $dao_mapping definitions.
@@ -13,6 +34,8 @@
  *  DAOFactory::getDAO('SomeDAO');
  * </code>
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
@@ -83,14 +106,18 @@ class DAOFactory {
     //Installer MySQL DAO
         'InstallerDAO' => array (
     //MySQL Version
-            'mysql' => 'InstallerMySQLDAO')
+            'mysql' => 'InstallerMySQLDAO'),
+    //Mutex MySQL DAO
+        'MutexDAO' => array (
+    //MySQL Version
+            'mysql' => 'MutexMySQLDAO')
     );
 
     /*
      * Creates a DAO instance and returns it
      *
      * @param string $dao_key the name of the dao you wish to init
-     * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'GMT_offset', 'db_type',
+     * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'db_type',
      * 'db_socket', 'db_name', 'db_host', 'db_user', 'db_password'
      * @returns PDODAO A concrete dao instance
      */
@@ -115,7 +142,7 @@ class DAOFactory {
      *     $THINKUP_CFG['db_type'] = 'somedb';
      *</code>
      *
-     * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'GMT_offset', 'db_type',
+     * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'db_type',
      * 'db_socket', 'db_name', 'db_host', 'db_user', 'db_password'
      * @return string db_type, will default to 'mysql' if not defined
      */

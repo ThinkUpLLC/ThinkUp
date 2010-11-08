@@ -1,24 +1,43 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/controller/class.LoginController.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Login Controller
  *
  * @TODO Build mechanism for redirecting user to originally-requested logged-in only page.
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
 class LoginController extends ThinkUpController {
 
-    public function __construct($session_started=false) {
-        parent::__construct($session_started);
+    public function control() {
         $this->setPageTitle('Log in');
         $this->setViewTemplate('session.login.tpl');
         $this->disableCaching();
-    }
-
-    public function control() {
         //don't show login form if already logged in
         if ($this->isLoggedIn()) {
-            $controller = new PrivateDashboardController(true);
+            $controller = new DashboardController(true);
             return $controller->go();
         } else  {
             $od = DAOFactory::getDAO('OwnerDAO');
@@ -48,8 +67,8 @@ class LoginController extends ThinkUpController {
                         // this sets variables in the session
                         $session->completeLogin($owner);
                         $od->updateLastLogin($user_email);
-                        $controller = new PrivateDashboardController(true);
-                        return $controller->go();
+                        $controller = new DashboardController(true);
+                        return $controller->control();
                     }
                 }
             } else  {

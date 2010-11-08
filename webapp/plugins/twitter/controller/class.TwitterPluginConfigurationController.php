@@ -1,9 +1,32 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/plugins/twitter/controller/class.TwitterPluginConfigurationController.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Twitter Plugin Configuration Controller
  *
  * Handles plugin configuration requests.
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -27,13 +50,14 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $oauth_consumer_key = $this->getPluginOption('oauth_consumer_key');
         $oauth_consumer_secret = $this->getPluginOption('oauth_consumer_secret');
         $archive_limit = $this->getPluginOption('archive_limit');
+        $num_twitter_errors = $this->getPluginOption('num_twitter_errors');
+        $max_api_calls_per_crawl = $this->getPluginOption('max_api_calls_per_crawl');
         //Add public user instance
         if (isset($_GET['twitter_username'])) { // if form was submitted
             $logger = Logger::getInstance();
 
-            //Check user exists and is public
             $api = new TwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH', $oauth_consumer_key, $oauth_consumer_secret,
-            $archive_limit);
+            $num_twitter_errors, $max_api_calls_per_crawl);
             $api_call = str_replace("[id]", $_GET['twitter_username'], $api->cURL_source['show_user']);
             list($cURL_status, $data) = $api->apiRequestFromWebapp($api_call);
             if ($cURL_status == 200) {
@@ -116,12 +140,20 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
 
         $oauth_consumer_secret = array('name' => 'oauth_consumer_secret', 'label' => 'Consumer secret');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_secret);
-        $archive_limit_label = 'Archive Limit <span style="font-size: 10px;">' .
-            '[<a href="http://apiwiki.twitter.com/Things-Every-Developer-Should-Know#6Therearepaginationlimits">' .
-            '?</a>]</span>';
-        $archive_limit = array('name' => 'archive_limit',
-                               'label' => $archive_limit_label, 'default_value' => '3200');
+        $archive_limit_label = 'Pagination Limit <span style="font-size: 10px;">' .
+        '[<a href="http://dev.twitter.com/pages/every_developer" title="Twitter still maintains a database '.
+        'of all the tweets sent by a user. However, to ensure performance of the site, this artificial limit of '.
+        '3,200 posts is temporarily in place." target="_blank">?</a>]</span>';
+        $archive_limit = array('name' => 'archive_limit','label' => $archive_limit_label, 'default_value' => '3200');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $archive_limit);
+        $num_twitter_errors_label = 'Total API Errors to Tolerate';
+        $num_twitter_errors = array('name' => 'num_twitter_errors', 'label' => $num_twitter_errors_label,
+        'default_value' => '5');
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $num_twitter_errors);
 
+        $max_api_calls_per_crawl_label = 'Max API Calls Per Crawl';
+        $max_api_calls_per_crawl = array('name' => 'max_api_calls_per_crawl', 'label' => $max_api_calls_per_crawl_label,
+        'default_value' => '350');
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_api_calls_per_crawl);
     }
 }

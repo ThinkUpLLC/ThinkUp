@@ -1,7 +1,30 @@
 <?php
 /**
+ *
+ * ThinkUp/webapp/_lib/model/class.LinkMySQLDAO.php
+ *
+ * Copyright (c) 2009-2010 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
  * Link MySQL Data Access Object
  *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
@@ -86,7 +109,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function getLinksByFriends($user_id, $network) {
-        $q  = "SELECT l.*, p.*, pub_date - interval 8 hour AS adj_pub_date ";
+        $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#links AS l ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
@@ -101,27 +124,47 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
-        return $this->getDataRowsAsObjects($ps, "Link");
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        $links = array();
+        foreach ($all_rows as $row) {
+            $links[] = $this->setLinkWithPost($row);
+        }
+        return $links;
+    }
+
+    /**
+     * Add post object to link
+     * @param array $row
+     * @return Link object with post member object set
+     */
+    private function setLinkWithPost($row) {
+        $link = new Link($row);
+        $post = new Post($row);
+        $link->container_post = $post;
+        return $link;
     }
 
     public function getPhotosByFriends($user_id, $network) {
-        $q  = " SELECT l.*, p.*, pub_date - interval 8 hour as adj_pub_date ";
-        $q .= " FROM #prefix#links AS l ";
-        $q .= " INNER JOIN #prefix#posts p ";
-        $q .= " ON p.post_id = l.post_id AND p.network = l.network ";
-        $q .= " WHERE is_image = 1 AND l.network=:network AND p.author_user_id in ( ";
+        $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#links AS l ";
+        $q .= "INNER JOIN #prefix#posts p ";
+        $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
+        $q .= "WHERE is_image = 1 AND l.network=:network AND p.author_user_id in ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
-        $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network = :network ";
-        $q .= " ) ";
-        $q .= " ORDER BY l.post_id DESC  ";
-        $q .= " LIMIT 15 ";
+        $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network = :network) ";
+        $q .= "ORDER BY l.post_id DESC  ";
+        $q .= "LIMIT 15 ";
         $vars = array(
             ':user_id'=>$user_id,
             ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
-
-        return $this->getDataRowsAsObjects($ps, "Link");
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        $links = array();
+        foreach ($all_rows as $row) {
+            $links[] = $this->setLinkWithPost($row);
+        }
+        return $links;
     }
 
     public function getLinksToExpand($limit = 1500) {
