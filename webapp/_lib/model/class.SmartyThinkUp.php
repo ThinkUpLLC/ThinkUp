@@ -141,4 +141,16 @@ class SmartyThinkUp extends Smarty {
             return parent::fetch($template, $cache_key, $compile_id, $display);
         }
     }
+
+    /**
+     * Override the parent's clear_all_cache method to check if caching is on to begin with. We do this to prevent the
+     * cache/MAKETHISDIRWRITABLE.txt from being deleted during test runs; this file needs to exist in order for the
+     * cache directory to remain in the git repository.
+     * @param int $expire_time
+     */
+    public function clear_all_cache($exp_time = null) {
+        if ($this->caching == 1) {
+            parent::clear_all_cache($exp_time);
+        }
+    }
 }
