@@ -9,17 +9,17 @@
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
 }
@@ -88,7 +88,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $options_hash = $controller->optionList2HashByOptionName();
-        $this->assertEqual($options_hash['testname']->id, 1);
+        $this->assertEqual($options_hash['testname']->id, 2);
         $this->assertEqual($options_hash['testname']->option_name, 'testname');
         $this->assertEqual($options_hash['testname']->option_value, 'Hal');
 
@@ -258,7 +258,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $options_hash = $controller->getPluginOptions();
-        $this->assertEqual($options_hash['testname']->id, 1);
+        $this->assertEqual($options_hash['testname']->id, 2);
         $this->assertEqual($options_hash['testname']->option_name, 'testname');
         $this->assertEqual($options_hash['testname']->option_value, 'Hal');
 
@@ -275,9 +275,10 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
         $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'hellothinkup', 'is_active' => 1) );
         $plugin_id = $builder_plugin->columns['last_insert_id'];
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .$plugin_id;
         $builder_plugin_options =
-        FixtureBuilder::build('plugin_options',
-        array('plugin_id' => $plugin_id, 'option_name' => 'testname', 'option_value' => "Hal") );
+        FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name' => 'testname', 'option_value' => "Hal") );
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
