@@ -111,13 +111,14 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $_SESSION['oauth_request_token_secret'] = 'XXX';
 
         $owner_builder = FixtureBuilder::build('owners', array('id'=>'10', 'email'=>'me@example.com'));
-        $plugn_opt_builder1 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $plugn_opt_builder1 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'oauth_consumer_key', 'option_value'=>'XXX'));
-        $plugn_opt_builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        $plugn_opt_builder2 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
-        $plugn_opt_builder3 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        $plugn_opt_builder3 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
-        $plugn_opt_builder4 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        $plugn_opt_builder4 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'max_api_calls_per_crawl', 'option_value'=>'350'));
 
         $controller = new TwitterAuthController(true);

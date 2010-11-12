@@ -424,8 +424,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
         //set cfg value
-        $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_cleanup_pages',
-        'option_value'=>3));
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $builder2 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name'=>'favs_cleanup_pages', 'option_value'=>3));
 
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
@@ -446,10 +447,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $this->logger->logInfo("in testAddRmOldFavMaintSearch", __METHOD__.','.__LINE__);
         //set plugin cfg values
-        $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_older_pages',
-        'option_value'=>1));
-        $builder3 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_cleanup_pages',
-        'option_value'=>3));
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $builder2 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name'=>'favs_older_pages','option_value'=>1));
+        $builder3 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name'=>'favs_cleanup_pages','option_value'=>3));
 
         $id = DAOFactory::getDAO('InstanceDAO');
 

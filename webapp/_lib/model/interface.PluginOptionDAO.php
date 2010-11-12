@@ -50,11 +50,11 @@ interface PluginOptionDAO {
 
     /**
      * Get plugin options
-     * @param str A plugin folder (optional). If not defined returns all options for all plugins
+     * @param str A plugin folder
      * @param bool $cached Whether or not to retrieved cached options, default to false
      * @return array A list of PluginOption objects
      */
-    public function getOptions($plugin_folder = null, $cached = false);
+    public function getOptions($plugin_folder, $cached = false);
 
     /**
      * Delete a plugin option by id

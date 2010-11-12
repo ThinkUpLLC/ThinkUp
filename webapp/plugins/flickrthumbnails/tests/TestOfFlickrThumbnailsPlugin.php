@@ -62,8 +62,8 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
 
         //use fake Flickr API key
         $plugin_builder = FixtureBuilder::build('plugins', array('id'=>'2', 'folder_name'=>'flickrthumbnails'));
-        $option_builder = FixtureBuilder::build('plugin_options', array(
-            'plugin_id' => '2',
+        $option_builder = FixtureBuilder::build('options', array(
+            'namespace' => OptionDAO::PLUGIN_OPTIONS . '-2',
             'option_name' => 'flickr_api_key',
             'option_value' => 'dummykey') );
         //$config->setValue('flickr_api_key', 'dummykey');

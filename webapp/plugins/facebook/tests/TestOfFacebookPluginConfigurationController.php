@@ -166,7 +166,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
 
         //app not configured
-        $options_arry[0]->truncateTable('plugin_options');
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        OwnerMysqlDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
@@ -191,6 +193,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
 
         //app not configured
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        OwnerMysqlDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
         $options_arry[0]->truncateTable('plugin_options');
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
@@ -245,12 +250,13 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
      */
     private function buildPluginOptions() {
         $plugin1 = FixtureBuilder::build('plugins', array('id'=>2, 'folder_name'=>'facebook'));
-        $plugin_opt1 = FixtureBuilder::build('plugin_options',
-        array('plugin_id' => 2, 'option_name' => 'facebook_api_key', 'option_value' => "dummy_key") );
-        $plugin_opt2 = FixtureBuilder::build('plugin_options',
-        array('plugin_id' => 2, 'option_name' => 'facebook_api_secret', 'option_value' => "dummy_secret") );
-        $plugin_opt3 = FixtureBuilder::build('plugin_options',
-        array('plugin_id' => 2, 'option_name' => 'facebook_app_id', 'option_value' => "12345") );
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
+        $plugin_opt1 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name' => 'facebook_api_key', 'option_value' => "dummy_key") );
+        $plugin_opt2 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name' => 'facebook_api_secret', 'option_value' => "dummy_secret") );
+        $plugin_opt3 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name' => 'facebook_app_id', 'option_value' => "12345") );
         return array($plugin1, $plugin_opt1, $plugin_opt2, $plugin_opt3);
     }
 

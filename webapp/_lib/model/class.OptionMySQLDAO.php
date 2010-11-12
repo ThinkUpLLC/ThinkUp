@@ -46,12 +46,19 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
         return $this->getInsertId($stmt);
     }
 
-    public function updateOption($id, $value) {
+    public function updateOption($id, $value, $name = null) {
         $option = $this->getOption($id);
         if($option) {
-            $q = 'UPDATE #prefix#options set option_value = :option_value, last_updated = now() '.
-            'WHERE option_id = :option_id';
-            $stmt = $this->execute($q, array(':option_id' => $id, ':option_value' => $value));
+            $q = 'UPDATE #prefix#options set option_value = :option_value, last_updated = now() ';
+            if($name) {
+                $q .= ', option_name  = :option_name';
+            }
+            $q .= ' WHERE option_id = :option_id';
+            $data = array(':option_id' => $id, ':option_value' => $value);
+            if($name) {
+                $data[':option_name'] = $name;
+            }
+            $stmt = $this->execute($q, $data);
             $this->clearSessionData($option->namespace);
             return $this->getUpdateCount($stmt);
         } else {
