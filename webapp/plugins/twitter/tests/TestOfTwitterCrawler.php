@@ -187,16 +187,15 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->place, "");
         $this->assertEqual($post->geo, "");
     }
-    
-    public function testFetchInstanceUserTweetsRetweets() {
 
+    public function testFetchInstanceUserTweetsRetweets() {
         self::setUpInstanceUserAmygdala();
-        $this->instance->last_page_fetched_tweets = 17; 
+        $this->instance->last_page_fetched_tweets = 17;
 
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
         $tc->fetchInstanceUserTweets();
-        
+
         $pdao = DAOFactory::getDAO('PostDAO');
         $post = $pdao->getPost(13708601491193856, 'twitter');
         $retweets = $pdao->getRetweetsOfPost(13708601491193856, 'twitter', true);
@@ -207,7 +206,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->in_retweet_of_post_id, 13708601491193856);
         $this->assertEqual($post->in_rt_of_user_id, 20542737);
         $this->assertEqual($post->link->url, "http://is.gd/izUl5");
-        
+
         $tc->fetchInstanceUserMentions();
         $post = $pdao->getPost(8957053141778432, 'twitter');
         $this->assertEqual($post->in_rt_of_user_id, 2768241);
@@ -292,13 +291,12 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testFetchRetweetsOfInstanceuser() {
-        
         self::setUpInstanceUserGinaTrapani();
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
 
         //first, load retweeted tweet into db
-        // we now get the 'new-style' retweet count from the retweet_count field in the xml, 
+        // we now get the 'new-style' retweet count from the retweet_count field in the xml,
         // which is parsed into 'retweet_count_cache' in the post vals.  This will not necessarily match
         // the number of retweets in the database any more (but does in this test case).
         $builder = FixtureBuilder::build('posts', array('post_id'=>14947487415, 'author_user_id'=>930061,
@@ -323,12 +321,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets detected');
         $retweets = $pdao->getRetweetsOfPost(14947487415, 'twitter', true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
-        
+
         $post = $pdao->getPost(12722783896, 'twitter');
         $rts2 = $pdao->getRetweetsOfPost(12722783896, 'twitter', true);
         $this->assertEqual(sizeof($rts2), 1, '1 retweet loaded');
         $this->assertEqual($rts2[0]->in_rt_of_user_id, 930061);
-        
     }
 
     public function testFetchStrayRepliedToTweets() {
@@ -363,7 +360,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($this->instance->owner_favs_in_system, 22);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 4);
         $this->assertEqual($this->instance->favorites_profile, 82);
-
 
         $this->logger->logInfo("second round of archiving", __METHOD__.','.__LINE__);
         $this->api->available_api_calls_for_crawler = 10;
@@ -464,8 +460,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
         //set cfg value
-        $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_cleanup_pages',
-        'option_value'=>3));
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $builder2 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name'=>'favs_cleanup_pages', 'option_value'=>3));
 
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
@@ -483,13 +480,13 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testAddRmOldFavMaintSearch() {
-
         $this->logger->logInfo("in testAddRmOldFavMaintSearch", __METHOD__.','.__LINE__);
         //set plugin cfg values
-        $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_older_pages',
-        'option_value'=>1));
-        $builder3 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_cleanup_pages',
-        'option_value'=>3));
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $builder2 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name'=>'favs_older_pages','option_value'=>1));
+        $builder3 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name'=>'favs_cleanup_pages','option_value'=>3));
 
         $id = DAOFactory::getDAO('InstanceDAO');
 

@@ -19,7 +19,15 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ * Test of TwitterAuthController
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
  */
+
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
 }
@@ -34,14 +42,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAcc
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/controller/class.TwitterAuthController.php';
 
-/**
- * Test of TwitterAuthController
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
 
     /**
@@ -70,7 +70,6 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
         'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
-
     }
 
     //Test no params
@@ -111,13 +110,14 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $_SESSION['oauth_request_token_secret'] = 'XXX';
 
         $owner_builder = FixtureBuilder::build('owners', array('id'=>'10', 'email'=>'me@example.com'));
-        $plugn_opt_builder1 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $plugn_opt_builder1 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'oauth_consumer_key', 'option_value'=>'XXX'));
-        $plugn_opt_builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        $plugn_opt_builder2 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
-        $plugn_opt_builder3 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        $plugn_opt_builder3 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
-        $plugn_opt_builder4 = FixtureBuilder::build('plugin_options', array('plugin_id'=>'1',
+        $plugn_opt_builder4 = FixtureBuilder::build('options', array('namespace'=>$namespace,
         'option_name'=>'max_api_calls_per_crawl', 'option_value'=>'350'));
 
         $controller = new TwitterAuthController(true);
@@ -129,5 +129,4 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $this->assertTrue(strpos($results, 'Instance does not exist.')>0);
         $this->assertTrue(strpos($results, 'Created instance.')>0);
     }
-
 }

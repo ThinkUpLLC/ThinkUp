@@ -88,7 +88,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $options_hash = $controller->optionList2HashByOptionName();
-        $this->assertEqual($options_hash['testname']->id, 1);
+        $this->assertEqual($options_hash['testname']->id, 2);
         $this->assertEqual($options_hash['testname']->option_name, 'testname');
         $this->assertEqual($options_hash['testname']->option_value, 'Hal');
 
@@ -281,7 +281,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $options_hash = $controller->getPluginOptions();
-        $this->assertEqual($options_hash['testname']->id, 1);
+        $this->assertEqual($options_hash['testname']->id, 2);
         $this->assertEqual($options_hash['testname']->option_name, 'testname');
         $this->assertEqual($options_hash['testname']->option_value, 'Hal');
 
@@ -298,9 +298,10 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
         $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'hellothinkup', 'is_active' => 1) );
         $plugin_id = $builder_plugin->columns['last_insert_id'];
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .$plugin_id;
         $builder_plugin_options =
-        FixtureBuilder::build('plugin_options',
-        array('plugin_id' => $plugin_id, 'option_name' => 'testname', 'option_value' => "Hal") );
+        FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name' => 'testname', 'option_value' => "Hal") );
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());

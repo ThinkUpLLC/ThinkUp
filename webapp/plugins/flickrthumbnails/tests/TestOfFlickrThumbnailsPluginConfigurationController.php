@@ -76,8 +76,8 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
             $this->db->exec($q);
             $counter++;
         }
-
     }
+
     public function testConstructor() {
         $controller = new FlickrThumbnailsPluginConfigurationController(null, 'flickrthumbnails');
         $this->assertTrue(isset($controller), 'constructor test');

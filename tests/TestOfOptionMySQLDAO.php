@@ -162,6 +162,32 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue(strtotime($data['last_updated']) > (time() - 10) );
     }
 
+    public function testUpdateOptionByIdWithnameUpdate() {
+        // add one option
+        $optiondao = new OptionMySQLDAO();
+
+        $builder1 = FixtureBuilder::build(self::TEST_TABLE,
+        array('namespace' => 'test', 'option_name' => 'testname', 'created' => '-2d', 'last_updated' => '-2d') );
+        $builder2 = FixtureBuilder::build(self::TEST_TABLE,
+        array('namespace' => 'test2', 'option_name' => 'testname2', 'created' => '-2d', 'last_updated' => '-2d') );
+
+        $this->assertEqual(1, $optiondao->updateOption($builder1->columns['last_insert_id'], 'test_value123', 'newname'));
+
+        $sql = "select * from " . $this->prefix . 'options where option_id = ' . $builder1->columns['last_insert_id'];
+        $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($data['option_name'], 'newname');
+        $this->assertEqual($data['namespace'], 'test');
+        $this->assertEqual($data['option_value'], 'test_value123');
+        # we'll add or subtract a few seconds from/to the date to account for any lag...
+        # date created is still 2 days old
+        $this->assertTrue(strtotime($data['created']) < (time() - (24 * 60 * 60 * 2) + 20000 ), '
+        '.strtotime($data['created']) . ' 
+        ' . (time() - (24 * 60 * 60 * 2) + 20000 ));
+        # last updated is now
+        $this->assertTrue(strtotime($data['last_updated']) > (time() - 10) );
+    }
+
     public function testUpdateOptionByName() {
         // add one option
         $optiondao = new OptionMySQLDAO();
@@ -236,7 +262,6 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         $builder3 = FixtureBuilder::build(self::TEST_TABLE, $data3);
 
         $options = $optiondao->getOptions('test');
-        //var_dump($options);
         $this->assertEqual(count($options), 2);
         $this->assertIsa($options['testname'], 'Option');
         $this->assertIsa($options['testname2'], 'Option');
@@ -250,6 +275,7 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         'option_name' => 'testname2', 'option_value' => 'test_value2');
         $option2 = new Option($data2);
         $this->assertIdentical($options['testname2'], $option2);
+        ;
     }
 
     public function testGetOptionValue() {

@@ -301,7 +301,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2010-12-20 12:41:09
+-- Dump completed on 2010-12-20 16:20:29
 
 --
 -- Insert DB Version
