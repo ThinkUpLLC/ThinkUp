@@ -120,14 +120,12 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         //now as an admin...
         $is_admin = 1;
         $this->simulateLogin('admin@example.com', true);
-        $build_data = $this->buildController(false);
         $controller = $build_data[0];
         $owner  = $build_data[1];
         $plugin  = $build_data[2];
         $plugin_option  = $build_data[3];
 
         $output = $controller->go();
-
         $v_mgr = $controller->getViewManager();
         $options_markup = $v_mgr->getTemplateDataItem('options_markup');
         // parse our html
@@ -136,7 +134,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         // we have a text form element with proper data
         $input_field = $this->getElementById($doc, 'plugin_options_gmaps_api_key');
 
-        // submit and elemnts should be disbaled
+        // submit elements should be disbaled
         $this->assertFalse($input_field->getAttribute('disabled'));
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
         $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
@@ -180,7 +178,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $options_hash = $controller->getPluginOptions();
-        $this->assertEqual($options_hash['gmaps_api_key']->id, 1);
+        $this->assertEqual($options_hash['gmaps_api_key']->id, 2);
         $this->assertEqual($options_hash['gmaps_api_key']->option_name, 'gmaps_api_key');
         $this->assertEqual($options_hash['gmaps_api_key']->option_value, '1234');
 
@@ -207,8 +205,12 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
 
-        //app not configured
+        // not configured
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        $namespace = $build_data[3]->columns['namespace'];
+        OwnerMysqlDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
         $build_data[3]->truncateTable('plugin_options');
+
         $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
@@ -231,6 +233,9 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
 
         //app not configured
+        $prefix = Config::getInstance()->getValue('table_prefix');
+        $namespace = $build_data[3]->columns['namespace'];
+        OwnerMysqlDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
         $build_data[3]->truncateTable('plugin_options');
         $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
         $output = $controller->go();
@@ -245,8 +250,10 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         }
         $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'geoencoder', 'is_active' => 1) );
         $plugin_id = $builder_plugin->columns['last_insert_id'];
-        $builder_plugin_options = FixtureBuilder::build('plugin_options',
-        array('plugin_id' => $plugin_id, 'option_name' => 'gmaps_api_key', 'option_value' => "1234"));
+
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-' . $plugin_id;
+        $builder_plugin_options = FixtureBuilder::build('options',
+        array('namespace'=>$namespace, 'option_name' => 'gmaps_api_key', 'option_value' => "1234"));
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());

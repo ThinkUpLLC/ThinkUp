@@ -9,24 +9,24 @@
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ */
 /**
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Christoffer Viken, Guillaume Boudreau
-*/
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
@@ -62,8 +62,8 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
 
         //use fake Flickr API key
         $plugin_builder = FixtureBuilder::build('plugins', array('id'=>'2', 'folder_name'=>'flickrthumbnails'));
-        $option_builder = FixtureBuilder::build('plugin_options', array(
-            'plugin_id' => '2',
+        $option_builder = FixtureBuilder::build('options', array(
+            'namespace' => OptionDAO::PLUGIN_OPTIONS . '-2',
             'option_name' => 'flickr_api_key',
             'option_value' => 'dummykey') );
         //$config->setValue('flickr_api_key', 'dummykey');
@@ -112,7 +112,7 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
                 'is_image' => 0,
                 'error' => null
             ));
-            
+
             $counter++;
         }
 
@@ -132,7 +132,7 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
                 'is_image' => 1,
                 'error' => null
             ));
-            
+
             $counter++;
         }
 
@@ -161,11 +161,11 @@ class TestOfFlickrThumbnailsPlugin extends ThinkUpUnitTestCase {
                 'post_id' => $post_id,
                 'is_image' => 1,
                 'error' => 'Photo not found'
-            ));
-            
-            $counter++;
+                ));
+
+                $counter++;
         }
-        
+
         return $builders;
     }
 }

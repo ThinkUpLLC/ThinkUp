@@ -53,10 +53,11 @@ interface OptionDAO {
     /**
      * Update a plugin option by id
      * @param int A option id
-     * @param int A option value
-     * @return bool If successful or not
+     * @param str A option value
+     * @param str An optional name value
+     * @return int Number of records updated
      */
-    public function updateOption($id, $value);
+    public function updateOption($id, $value, $name = null);
 
 
     /**
