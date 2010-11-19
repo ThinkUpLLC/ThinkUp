@@ -176,7 +176,7 @@ class UpgradeController extends ThinkUpAuthController {
             if($this->isTokenAuth($_GET['upgrade_token'])) {
                 return $this->authControl();
             } else {
-                throw new Exception("You must be a ThinkUp admin to do this");
+                throw new Exception("This update has already been completed.");
             }
         } else {
             throw new Exception("You must be a ThinkUp admin to do this");
