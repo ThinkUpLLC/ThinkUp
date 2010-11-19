@@ -36,11 +36,12 @@ class GeoEncoderPlugin implements CrawlerPlugin {
 
     public function crawl() {
         $logger = Logger::getInstance();
+        $logger->setUsername(null);
         $pdao = DAOFactory::getDAO('PostDAO');
         $crawler = new GeoEncoderCrawler;
 
         $posts_to_geoencode = $pdao->getPostsToGeoencode(2000);
-        $logger->logStatus(count($posts_to_geoencode)." posts to geoencode", "GeoEncoder Plugin");
+        $logger->logUserInfo("There are ".count($posts_to_geoencode)." posts to geoencode.", __METHOD__.','.__LINE__);
 
         foreach ($posts_to_geoencode as $post_data) {
             if ($post_data['geo']!='') {
@@ -49,8 +50,7 @@ class GeoEncoderPlugin implements CrawlerPlugin {
                 $crawler->performGeoencoding($pdao, $post_data);
             }
         }
-        $logger->logStatus("Geoencoding posts complete", "GeoEncoderPlugin");
-        $logger->close(); # Close logging
+        $logger->logUserSuccess("Post geoencoding complete.", __METHOD__.','.__LINE__);
     }
 
     public function renderConfiguration($owner) {

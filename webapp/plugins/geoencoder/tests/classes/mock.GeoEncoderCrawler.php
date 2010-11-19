@@ -80,7 +80,7 @@ class GeoEncoderCrawler {
                     }
                     $pdao->setGeoencodedPost($post_id, self::SUCCESS, $data['full_name'], $data['latlng'],
                     $reply_retweet_distance);
-                    $logger->logStatus('Lat/long coordinates found in DB', get_class($this));
+                    $logger->logInfo('Lat/long coordinates found in DB', __METHOD__.','.__LINE__);
                     return;
                 }
                 $string = self::getDataForGeoencoding($location);
@@ -96,7 +96,7 @@ class GeoEncoderCrawler {
                         }
                     }
                     $pdao->setGeoencodedPost($post_id, self::SUCCESS, $location, $geodata, $reply_retweet_distance);
-                    $logger->logStatus('Lat/long coordinates retrieved via API', get_class($this));
+                    $logger->logInfo('Lat/long coordinates retrieved via API', __METHOD__.','.__LINE__);
                     $vals = array (
                         'short_name'=>$short_location,
                         'full_name'=>$location,
@@ -133,7 +133,7 @@ class GeoEncoderCrawler {
                 }
                 $pdao->setGeoencodedPost($post_id, self::SUCCESS, $data['full_name'], $data['latlng'],
                 $reply_retweet_distance);
-                $logger->logStatus('Lat/long coordinates found in DB', get_class($this));
+                $logger->logInfo('Lat/long coordinates found in DB', __METHOD__.','.__LINE__);
                 return;
             }
             $string = self::getDataForReverseGeoencoding($geodata);
@@ -158,7 +158,7 @@ class GeoEncoderCrawler {
                             }
                             $pdao->setGeoencodedPost($post_id, self::SUCCESS, $location, $geodata,
                             $reply_retweet_distance);
-                            $logger->logStatus('Lat/long coordinates retrieved via API', get_class($this));
+                            $logger->logInfo('Lat/long coordinates retrieved via API', __METHOD__.','.__LINE__);
                             $vals = array (
                                 'short_name'=>$post['geo'],
                                 'full_name'=>$location,

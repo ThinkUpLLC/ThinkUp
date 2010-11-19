@@ -1,9 +1,10 @@
 {include file="_header.tpl"}
-{include file="_statusbar.tpl"}
 
+  <style type="text/css">
+  {literal}
+  body { background-color:white!important;}
+  html {background:white!important;}
+  {/literal}
+  </style>
 
-<div class="container">
-
-<div class="container_24 thinkup-canvas clearfix">
-<div class="grid_22 prefix_1 alpha omega prepend_20 append_20 clearfix">
-	{include file="_usermessage.tpl"}
+<div style="background-color:white;padding:5px">

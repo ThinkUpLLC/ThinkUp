@@ -1,5 +1,4 @@
 </div>
-</div>
-</div>
+</body>
 
-{include file="_footer.tpl"}
+</html>

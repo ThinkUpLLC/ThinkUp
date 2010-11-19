@@ -399,7 +399,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
 
         $status_message = "Updated ".$i->network_username."'s system status.";
         if($logger){
-            $logger->logStatus($status_message, get_class($this));
+            $logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
         }
         return $this->getUpdateCount($ps);
     }

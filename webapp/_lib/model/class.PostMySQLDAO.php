@@ -442,7 +442,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                     if ($follow_dao->followExists($vals['author_user_id'], $replied_to_post->author_user_id,
                     $replied_to_post->network)) {
                         $vals['is_reply_by_friend'] = 1;
-                        $this->logger->logStatus("Found reply by a friend!", get_class($this));
+                        $this->logger->logInfo("Found reply by a friend!", __METHOD__.','.__LINE__);
                     }
                 }
             }
@@ -454,7 +454,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                     if ($follow_dao->followExists($vals['author_user_id'], $retweeted_post->author_user_id,
                     $retweeted_post->network)) {
                         $vals['is_retweet_by_friend'] = 1;
-                        $this->logger->logStatus("Found retweet by a friend!", get_class($this));
+                        $this->logger->logInfo("Found retweet by a friend!", __METHOD__.','.__LINE__);
                     }
                 }
             }
@@ -486,13 +486,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                     $this->incrementReplyCountCache($vals['in_reply_to_post_id'], $vals['network']);
                     $status_message = "Reply found for ".$vals['in_reply_to_post_id'].", ID: ".$vals["post_id"].
                     "; updating reply cache count";
-                    $this->logger->logStatus($status_message, get_class($this));
+                    $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
                 }
                 if (isset($retweeted_post)) {
                     $this->incrementRepostCountCache($vals['in_retweet_of_post_id'], $vals['network']);
                     $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
                     " ID: ".$vals["post_id"]."; updating retweet cache count";
-                    $this->logger->logStatus($status_message, get_class($this));
+                    $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
                 }
             }
             return $res;
@@ -940,11 +940,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $ps = $this->execute($q, $vars);
         if ($this->getUpdateCount($ps) > 0) {
             $logstatus = "Geolocation for post $post_id IS_GEO_ENCODED: $is_geo_encoded";
-            $this->logger->logStatus($logstatus, get_class($this));
+            $this->logger->logInfo($logstatus, __METHOD__.','.__LINE__);
             return true;
         } else {
             $logstatus = "Geolocation for post_id=$post_id IS_GEO_ENCODED: $is_geo_encoded not saved";
-            $this->logger->logStatus($logstatus, get_class($this));
+            $this->logger->logInfo($logstatus, __METHOD__.','.__LINE__);
             return false;
         }
     }

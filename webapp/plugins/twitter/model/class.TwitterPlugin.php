@@ -52,6 +52,8 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin {
                 continue;
             }
             $logger->setUsername($instance->network_username);
+            $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Twitter.",
+            __METHOD__.','.__LINE__);
             $tokens = $oid->getOAuthTokens($instance->id);
             $noauth = true;
             $num_twitter_errors =
@@ -94,9 +96,9 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin {
                 if (!$noauth) {
                     // Auth req'd, for calling user only
                     $crawler->fetchInstanceUserMentions();
-                    $crawler->fetchRetweetsOfInstanceUser();
                     $crawler->fetchInstanceUserFriends();
                     $crawler->fetchInstanceUserFollowers();
+                    $crawler->fetchRetweetsOfInstanceUser();
                 }
 
                 $crawler->fetchStrayRepliedToTweets();
@@ -116,10 +118,10 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin {
                 if (isset($crawler->owner_object)) {
                     $id->save($instance, $crawler->owner_object->post_count, $logger);
                 }
+                $logger->logUserSuccess("Finished collecting data for ".$instance->network_username." on Twitter.",
+                __METHOD__.','.__LINE__);
             }
         }
-
-        $logger->close(); # Close logging
     }
 
     public function renderConfiguration($owner) {

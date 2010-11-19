@@ -52,7 +52,7 @@ class LocationMySQLDAO extends PDODAO implements LocationDAO  {
         );
         $ps = $this->execute($q, $vars);
         $logstatus = "Location (".$vals['short_name'].") added to DB";
-        $this->logger->logStatus($logstatus, get_class($this));
+        $this->logger->logInfo($logstatus, __METHOD__.','.__LINE__);
         return $this->getUpdateCount($ps);
     }
 

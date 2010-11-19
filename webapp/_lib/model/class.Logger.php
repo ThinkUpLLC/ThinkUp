@@ -45,7 +45,40 @@ class Logger {
      * @var str $network_username The user we're logging about
      */
     var $network_username = null;
-
+    /**
+     *
+     * @var int All (user and developer) messages
+     */
+    const ALL_MSGS = 0;
+    /**
+     *
+     * @var int User-level messages
+     */
+    const USER_MSGS = 1;
+    /**
+     *
+     * @var int Information-type messages
+     */
+    const INFO = 0;
+    /**
+     *
+     * @var int Error-type messages
+     */
+    const ERROR = 1;
+    /**
+     *
+     * @var int Success-type messages
+     */
+    const SUCCESS = 2;
+    /**
+     *
+     * @var int Log verbosity level (either self::ALL_MSGS or self::USER_MSGS)
+     */
+    var $verbosity = 0;
+    /**
+     * @var bool Whether or not output should be HTML
+     */
+    var $html_output = false;
     /**
      * Open the log file; Append to any prior file
      * @param str $location
@@ -60,8 +93,8 @@ class Logger {
      * The singleton constructor
      */
     public static function getInstance() {
-        $config = Config::getInstance();
         if (!isset(self::$instance)) {
+            $config = Config::getInstance();
             self::$instance = new Logger($config->getValue('log_location'));
         }
         return self::$instance;
@@ -76,20 +109,123 @@ class Logger {
     }
 
     /**
+     * Set the verbosity level of the log.
+     * @param int $level Either self::ALL_MSGS or self::USER_MSGS
+     */
+    public function setVerbosity($level) {
+        $this->verbosity = $level;
+    }
+
+    /**
+     * Turn on HTML output.
+     */
+    public function enableHTMLOutput() {
+        $this->html_output = true;
+    }
+    /**
      * Write to log
      * @param str $status_message
      * @param str $classname The name of the class logging the info
      */
-    public function logStatus($status_message, $classname) {
-        $status_signature = date("Y-m-d H:i:s", time())." | ".
-        (string) number_format(round(memory_get_usage() / 1024000, 2), 2)." MB | ";
-        if (isset($this->network_username)) {
-            $status_signature .= $this->network_username .' | ';
+    private function logStatus($status_message, $classname, $verbosity = self::ALL_MSGS, $type = self::INFO) {
+        if ($this->verbosity <= $verbosity) {
+            if (!$this->html_output) {
+                $status_signature = date("Y-m-d H:i:s", time())." | ".
+                (string) number_format(round(memory_get_usage() / 1024000, 2), 1)."MB | ";
+                switch ($type) {
+                    case self::ERROR:
+                        $status_signature .= 'ERROR  | ';
+                        break;
+                    case self::SUCCESS:
+                        $status_signature .= 'SUCCESS| ';
+                        break;
+                    default:
+                        $status_signature .= 'INFO   | ';
+                }
+                if (isset($this->network_username)) {
+                    $status_signature .= $this->network_username .' | ';
+                }
+                $status_signature .= $classname." | ";
+                if (strlen($status_message) > 0) {
+                    $this->output($status_signature.$status_message); # Write status to log
+                }
+            } else {
+                $message_wrapper = '';
+                $just_classname = explode('::', $classname);
+                if (isset($just_classname[0])) {
+                    $message_wrapper .= $just_classname[0].": ";
+                }
+                $message_wrapper .= '<span style="color:';
+                switch ($type) {
+                    case self::ERROR:
+                        $message_wrapper .= 'red">';
+                        break;
+                    case self::SUCCESS:
+                        $message_wrapper .= 'green">';
+                        break;
+                    default:
+                        $message_wrapper .= 'black">';
+                }
+                if (strlen($status_message) > 0) {
+                    $this->output($message_wrapper.$status_message."</span><br >"); // Write status to log
+                }
+            }
         }
-        $status_signature .= $classname.":";
-        if (strlen($status_message) > 0) {
-            $this->output($status_signature.$status_message); # Write status to log
-        }
+    }
+
+    /**
+     * Write info message to log.
+     * @param str $status_message
+     * @param str $classname
+     */
+    public function logInfo($status_message, $classname) {
+        $this->logStatus($status_message, $classname, self::ALL_MSGS, self::INFO);
+    }
+
+    /**
+     * Write error message to log.
+     * @param str $status_message
+     * @param str $classname
+     */
+    public function logError($status_message, $classname) {
+        $this->logStatus($status_message, $classname, self::ALL_MSGS, self::ERROR);
+    }
+
+    /**
+     * Write success message to log.
+     * @param str $status_message
+     * @param str $classname
+     */
+    public function logSuccess($status_message, $classname) {
+        $this->logStatus($status_message, $classname, self::ALL_MSGS, self::SUCCESS);
+    }
+
+
+    /**
+     * Write user-level info message to log.
+     * @param str $status_message
+     * @param str $classname
+     */
+    public function logUserInfo($status_message, $classname) {
+        $this->logStatus($status_message, $classname, self::USER_MSGS, self::INFO);
+    }
+
+    /**
+     * Write user-level error message to log.
+     * @param str $status_message
+     * @param str $classname
+     */
+    public function logUserError($status_message, $classname) {
+        $this->logStatus($status_message, $classname, self::USER_MSGS, self::ERROR);
+    }
+
+    /**
+     * Write user-level success message to log.
+     * @param str $status_message
+     * @param str $classname
+     */
+    public function logUserSuccess($status_message, $classname) {
+        $this->logStatus($status_message, $classname, self::USER_MSGS, self::SUCCESS);
     }
 
     /**

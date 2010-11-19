@@ -32,9 +32,9 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function insert($url, $expanded, $title, $post_id, $network, $is_image = false ){
         $is_image = $this->convertBoolToDB($is_image);
 
-        $q  = " INSERT IGNORE INTO #prefix#links ";
-        $q .= " (url, expanded_url, title, post_id, network, is_image) ";
-        $q .= " VALUES ( :url, :expanded, :title, :post_id, :network, :is_image ) ";
+        $q  = "INSERT IGNORE INTO #prefix#links ";
+        $q .= "(url, expanded_url, title, post_id, network, is_image) ";
+        $q .= "VALUES ( :url, :expanded, :title, :post_id, :network, :is_image ) ";
 
         $vars = array(
             ':url'=>$url,
@@ -52,9 +52,9 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function saveExpandedURL($url, $expanded, $title = '', $is_image = false  ){
         $is_image = $this->convertBoolToDB($is_image);
 
-        $q  = " UPDATE #prefix#links ";
-        $q .= " SET expanded_url=:expanded, title=:title, is_image=:isimage ";
-        $q .= " WHERE url=:url ";
+        $q  = "UPDATE #prefix#links ";
+        $q .= "SET expanded_url=:expanded, title=:title, is_image=:isimage ";
+        $q .= "WHERE url=:url ";
         $vars = array(
             ':url'=>$url,
             ':expanded'=>$expanded,
@@ -65,17 +65,17 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
         $ret = $this->getUpdateCount($ps);
         if ($ret > 0) {
-            $this->logger->logStatus("Expanded URL $expanded for $url saved", get_class($this));
+            $this->logger->logSuccess("Expanded URL $expanded for $url saved", __METHOD__.','.__LINE__);
         } else {
-            $this->logger->logStatus("Expanded URL NOT saved", get_class($this));
+            $this->logger->logError("Expanded URL NOT saved", __METHOD__.','.__LINE__);
         }
         return $ret;
     }
 
     public function saveExpansionError($url, $error_text){
-        $q  = " UPDATE #prefix#links ";
-        $q .= " SET error=:error ";
-        $q .= " WHERE url=:url ";
+        $q  = "UPDATE #prefix#links ";
+        $q .= "SET error=:error ";
+        $q .= "WHERE url=:url ";
         $vars = array(
             ':url'=>$url,
             ':error'=>$error_text
@@ -84,18 +84,18 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
         $ret = $this->getUpdateCount($ps);
         if ($ret > 0) {
-            $this->logger->logStatus("Error '$error_text' saved for link ID $url saved", get_class($this));
+            $this->logger->logInfo("Error '$error_text' saved for link ID $url saved", __METHOD__.','.__LINE__);
         } else {
-            $this->logger->logStatus("Error '$error_text' for URL NOT saved", get_class($this));
+            $this->logger->logInfo("Error '$error_text' for URL NOT saved", __METHOD__.','.__LINE__);
         }
         return $ret;
     }
 
     public function update( $url, $expanded, $title, $post_id, $network, $is_image = false ){
-        $q  = " UPDATE #prefix#links ";
-        $q .= " SET expanded_url=:expanded, title=:title, ";
-        $q .= " post_id=:post_id, is_image=:is_image, network=:network ";
-        $q .= " WHERE url=:url; ";
+        $q  = "UPDATE #prefix#links ";
+        $q .= "SET expanded_url=:expanded, title=:title, ";
+        $q .= "post_id=:post_id, is_image=:is_image, network=:network ";
+        $q .= "WHERE url=:url; ";
         $vars = array(
             ':url'=>$url,
             ':expanded'=>$expanded,
@@ -168,14 +168,14 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function getLinksToExpand($limit = 1500) {
-        $q  = " SELECT l1.url AS url ";
-        $q .= " FROM (  ";
+        $q  = "SELECT l1.url AS url ";
+        $q .= "FROM (  ";
         $q .= "   SELECT l.url, l.post_id ";
         $q .= "   FROM #prefix#links AS l ";
         $q .= "   WHERE l.expanded_url = '' and l.error = '' ";
         $q .= "   ORDER BY post_id DESC LIMIT :limit ";
-        $q .= " ) AS l1 ";
-        $q .= " GROUP BY l1.url ";
+        $q .= ") AS l1 ";
+        $q .= "GROUP BY l1.url ";
         $vars = array(
             ':limit'=>$limit
         );
@@ -190,11 +190,11 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function getLinksToExpandByURL($url) {
-        $q  = " SELECT l.url ";
-        $q .= " FROM #prefix#links AS l ";
-        $q .= " WHERE l.expanded_url = ''  ";
-        $q .= " AND l.url LIKE :url AND l.error = '' ";
-        $q .= " GROUP BY l.url";
+        $q  = "SELECT l.url ";
+        $q .= "FROM #prefix#links AS l ";
+        $q .= "WHERE l.expanded_url = ''  ";
+        $q .= "AND l.url LIKE :url AND l.error = '' ";
+        $q .= "GROUP BY l.url";
         $vars = array(
             ':url'=>$url."%"
             );
@@ -209,9 +209,9 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function getLinkById($id) {
-        $q  = " SELECT l.* ";
-        $q .= " FROM #prefix#links AS l ";
-        $q .= " WHERE l.id=:id ";
+        $q  = "SELECT l.* ";
+        $q .= "FROM #prefix#links AS l ";
+        $q .= "WHERE l.id=:id ";
         $vars = array(
             ':id'=>$id
         );
@@ -221,9 +221,9 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function getLinkByUrl($url) {
-        $q  = " SELECT l.* ";
-        $q .= " FROM #prefix#links AS l ";
-        $q .= " WHERE l.url=:url ";
+        $q  = "SELECT l.* ";
+        $q .= "FROM #prefix#links AS l ";
+        $q .= "WHERE l.url=:url ";
         $vars = array(
             ':url'=>$url
         );

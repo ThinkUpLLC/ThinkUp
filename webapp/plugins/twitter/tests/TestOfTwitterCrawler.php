@@ -19,6 +19,15 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ * Test of TwitterCrawler
+ *
+ * @TODO Test the rest of the TwitterCrawler methods
+ * @TODO Add testFetchTweetsWithLinks, assert Links and images get inserted
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
  */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
@@ -33,19 +42,20 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterCrawle
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
 
-/**
- * Test of TwitterCrawler
- *
- * @TODO Test the rest of the TwitterCrawler methods
- * @TODO Add testFetchTweetsWithLinks, assert Links and images get inserted
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
+    /**
+     * @var CrawlerTwitterAPIAccessorOAuth API accessor object
+     */
     var $api;
+    /**
+     *
+     * @var Instance
+     */
     var $instance;
+    /**
+     *
+     * @var Logger
+     */
     var $logger;
 
     public function __construct() {
@@ -57,23 +67,23 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->logger = Logger::getInstance();
 
         //insert test users
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated)
-        VALUES (36823, 'anildash', 'Anil Dash', 'avatar.jpg', '2007-01-01');";
-        $this->db->exec($q);
+        $this->builders[] = FixtureBuilder::build('users', array('user_id'=>'36823', 'user_name'=>'anildash',
+        'full_name'=>'Anil Dash', 'last_updated'=>'2007-01-01 20:34:13', 'network'=>'twitter', 'is_protected'=>0,
+        'last_post_id'=>''));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated)
-        VALUES (930061, 'ginatrapani', 'Gina Trapani', 'avatar.jpg', '2007-01-01');";
-        $this->db->exec($q);
+        $this->builders[] = FixtureBuilder::build('users', array('user_id'=>'930061', 'user_name'=>'ginatrapani',
+        'full_name'=>'Gina Trapani', 'last_updated'=>'2007-01-01 20:34:13', 'network'=>'twitter', 'is_protected'=>0,
+        'last_post_id'=>''));
 
-        //insert test follow
-        $q = "INSERT INTO tu_follows (user_id, follower_id, last_seen)
-        VALUES (930061, 36823, '2006-01-08 23:54:41');";
-        $this->db->exec($q);
+        // insert test follow
+        $this->builders[] = FixtureBuilder::build('follows', array('user_id'=>930061, 'follower_id'=>36823,
+        'last_seen'=>'-2y'));
     }
 
     public function tearDown() {
-        parent::tearDown();
+        $this->builders = null;
         $this->logger->close();
+        parent::tearDown();
     }
 
     private function setUpInstanceUserAnilDash() {
@@ -183,8 +193,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $udao = DAOFactory::getDAO('UserDAO');
         $updated_user = $udao->getUserByName('meatballhat', 'twitter');
-        $this->assertEqual($updated_user->full_name, 'Dan Buch', 'follower full name set to '.$updated_user->full_name);
-        $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower location set to '.$updated_user->location);
+        $this->assertEqual($updated_user->full_name, 'Dan Buch', 'follower full name set to '.
+        $updated_user->full_name);
+        $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower location set to '.
+        $updated_user->location);
     }
 
     public function testFetchInstanceUserFriends() {
@@ -235,12 +247,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
 
         //first, load retweeted tweet into db
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES (14947487415, 930061, 
-        'ginatrapani', 'Gina Trapani', 'avatar.jpg', 
-        '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'web', 
-        '2006-01-01 00:00:00', ".rand(0, 4).", 0);";
-        $this->db->exec($q);
+        $builder = FixtureBuilder::build('posts', array('post_id'=>14947487415, 'author_user_id'=>930061,
+        'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani', 'post_text'=>
+        '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'pub_date'=>'-1d',
+        'reply_count_cache'=>1, 'retweet_count_cache'=>0));
 
         $pdao = DAOFactory::getDAO('PostDAO');
         $tc->fetchRetweetsOfInstanceUser();

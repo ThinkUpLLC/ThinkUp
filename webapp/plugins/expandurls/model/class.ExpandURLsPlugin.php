@@ -31,32 +31,46 @@
 class ExpandURLsPlugin implements CrawlerPlugin {
     /**
      * Run when the crawler does
+     * @TODO Set limit on total number of links to expand per crawler run in the plugin settings, for now 1500
      */
     public function crawl() {
         $logger = Logger::getInstance();
+        $logger->setUsername(null);
         $ldao = DAOFactory::getDAO('LinkDAO');
-        //@TODO Set limit on total number of links to expand per crawler run in the plugin settings, for now 1500
         $linkstoexpand = $ldao->getLinksToExpand(1500);
 
-        $logger->logStatus(count($linkstoexpand)." links to expand", "Expand URLs Plugin");
+        $logger->logUserInfo(count($linkstoexpand)." links to expand. Please wait. Working...",
+        __METHOD__.','.__LINE__);
 
+        $total_expanded = 0;
+        $total_errors = 0;
         foreach ($linkstoexpand as $l) {
             if (Utils::validateURL($l)) {
+                $logger->logInfo("Expanding ".($total_expanded+1). " of ".count($linkstoexpand)." (".$l.")",
+                __METHOD__.','.__LINE__);
+
                 $eurl = self::untinyurl($l, $ldao);
                 if ($eurl != '') {
                     $ldao->saveExpandedUrl($l, $eurl);
+                    $total_expanded = $total_expanded + 1;
+                } else {
+                    $total_errors = $total_errors + 1;
                 }
             } else {
-                $logger->logStatus($l." is not a valid URL; skipping expansion", "Expand URLs Plugin");
+                $total_errors = $total_errors + 1;
+                $logger->logError($l." is not a valid URL; skipping expansion", __METHOD__.','.__LINE__);
             }
         }
-        $logger->logStatus("URL expansion complete for this run", "Expand URLs Plugin");
-        $logger->close(); # Close logging
+        $logger->logUserSuccess($total_expanded." URLs successfully expanded (".$total_errors." errors).", 
+        __METHOD__.','.__LINE__);
     }
 
+    /**
+     * @TODO: Write ExpandURLsPluginConfigurationController class, show its view
+     */
     public function renderConfiguration($owner) {
-        //@TODO: Write controller class, echo its results
-        //Set the number of links to expand per run in the options panel
+        //        $controller = new ExpandURLsPluginConfigurationController($owner, 'twitter');
+        //        return $controller->go();
     }
 
     /**
@@ -74,7 +88,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $query = isset($url['query']) ? '?'.$url['query'] : '';
         $fragment = isset($url['fragment']) ? '#'.$url['fragment'] : '';
         if (empty($url['path'])) {
-            $logger->logstatus("$tinyurl has no path", "Expand URLs Plugin");
+            $logger->logError("$tinyurl has no path", __METHOD__.','.__LINE__);
             $ldao->saveExpansionError($tinyurl, "Error expanding URL");
             return '';
         } else {
@@ -90,7 +104,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         $response = curl_exec($ch);
         if ($response === false) {
-            $logger->logstatus("cURL error: ".curl_error($ch), "Expand URLs Plugin");
+            $logger->logError("cURL error: ".curl_error($ch), __METHOD__.','.__LINE__);
             $ldao->saveExpansionError($tinyurl, "Error expanding URL");
             $tinyurl = '';
         }
@@ -105,7 +119,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         }
 
         if (strpos($response, 'HTTP/1.1 404 Not Found') === 0) {
-            $logger->logstatus("Short URL returned '404 Not Found'", "Expand URLs Plugin");
+            $logger->logError("Short URL returned '404 Not Found'", __METHOD__.','.__LINE__);
             $ldao->saveExpansionError($tinyurl, "Error expanding URL");
             return '';
         }

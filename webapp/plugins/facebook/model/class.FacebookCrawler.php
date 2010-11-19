@@ -64,7 +64,8 @@ class FacebookCrawler {
     public function fetchInstanceUserInfo() {
         $user = $this->fetchUserInfo($this->instance->network_user_id, $this->instance->network, "Owner Status");
         if (isset($user)) {
-            $this->logger->logStatus('Owner info set.', get_class($this));
+            $this->logger->logUserSuccess("Successfully fetched ".$this->instance->network_username.
+            "'s details from Facebook", __METHOD__.','.__LINE__);
         }
     }
 
@@ -129,17 +130,24 @@ class FacebookCrawler {
         $stream = FacebookGraphAPIAccessor::apiRequest('/'.$uid.'/posts', $this->access_token);
 
         if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
-            $this->logger->logStatus(sizeof($stream->data)." Facebook posts found for user ID $uid",
-            get_class($this));
+            $this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
+            __METHOD__.','.__LINE__);
 
             $thinkup_data = $this->parseStream($stream, 'facebook');
             $posts = $thinkup_data["posts"];
 
+            $total_posts_added = 0;
             $post_dao = DAOFactory::getDAO('PostDAO');
             foreach ($posts as $post) {
                 $added_posts = $post_dao->addPost($post);
-                $this->logger->logStatus("Added $added_posts post for ".$post["author_username"].":".
-                $post["post_text"], get_class($this));
+                $total_posts_added = $total_posts_added + $added_posts;
+                $this->logger->logInfo("Added $added_posts post for ".$post["author_username"].":".
+                $post["post_text"], __METHOD__.','.__LINE__);
+            }
+            if ($total_posts_added > 0 ) {
+                $this->logger->logUserSuccess("Collected $total_posts_added new posts", __METHOD__.','.__LINE__);
+            } else {
+                $this->logger->logUserInfo("No new posts found.", __METHOD__.','.__LINE__);
             }
 
             $users = $thinkup_data["users"];
@@ -152,10 +160,10 @@ class FacebookCrawler {
                     $user_dao->updateUser($user_object);
                 }
             }
+            $this->logger->logUserSuccess("Updated or inserted ".count($users)." user(s).", __METHOD__.','.__LINE__);
         } else {
-            $this->logger->logStatus("No Facebook posts found for user ID $uid", get_class($this));
+            $this->logger->logInfo("No Facebook posts found for user ID $uid", __METHOD__.','.__LINE__);
         }
-
     }
 
     /**
@@ -166,13 +174,14 @@ class FacebookCrawler {
         $stream = FacebookGraphAPIAccessor::apiRequest('/'.$pid.'/posts', $this->access_token);
 
         if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
-            $this->logger->logStatus(sizeof($stream->data)." Facebook posts found for page ID $pid",
-            get_class($this));
+            $this->logger->logSuccess(sizeof($stream->data)." Facebook posts found for page ID $pid.",
+            __METHOD__.','.__LINE__);
 
             $thinkup_data = $this->parseStream($stream, 'facebook page');
             $posts = $thinkup_data["posts"];
 
             $post_dao = DAOFactory::getDAO('PostDAO');
+            $added_posts = 0;
             foreach ($posts as $post) {
                 if ($post['author_username']== "" && isset($post['author_user_id'])) {
                     $commenter_object = $this->fetchUserInfo($post['author_user_id'], 'facebook',
@@ -184,11 +193,12 @@ class FacebookCrawler {
                     }
                 }
 
-                $added_posts =$post_dao->addPost($post);
-                $this->logger->logStatus("Added $added_posts post ID ".$post["post_id"]." on ".$post["network"].
-                " for ".$post["author_username"].":".$post["post_text"], get_class($this));
+                $added_posts = $added_posts + $post_dao->addPost($post);
+                $this->logger->logInfo("Added post ID ".$post["post_id"]." on ".$post["network"].
+                " for ".$post["author_username"].":".$post["post_text"], __METHOD__.','.__LINE__);
             }
 
+            $added_users = 0;
             $users = $thinkup_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
@@ -197,10 +207,17 @@ class FacebookCrawler {
                     $user_object = new User($user, $found_in);
                     $user_dao = DAOFactory::getDAO('UserDAO');
                     $user_dao->updateUser($user_object);
+                    $added_users = $added_users + 1;
                 }
             }
+            if ($added_posts > 0 || $added_users > 0) {
+                $this->logger->logUserSuccess($added_posts." post(s) added; ".$added_users." user(s) updated.",
+                __METHOD__.','.__LINE__);
+            } else {
+                $this->logger->logUserInfo("No new page posts found.", __METHOD__.','.__LINE__);
+            }
         } else {
-            $this->logger->logStatus("No Facebook posts found for page ID $pid", get_class($this));
+            $this->logger->logInfo("No Facebook posts found for page ID $pid", __METHOD__.','.__LINE__);
         }
     }
 

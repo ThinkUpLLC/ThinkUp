@@ -72,7 +72,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             }
             $status_message .= "$count users affected.";
         }
-        $this->logger->logStatus($status_message, get_class($this));
+        $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
         $status_message = "";
         return $count;
     }
@@ -134,7 +134,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $ps = $this->execute($q, $vars);
         $results = $this->getUpdateCount($ps);
         if ($results > 0) {
-            $this->logger->logStatus("User ".$user->username." updated in system.", get_class($this));
+            $this->logger->logInfo("User ".$user->username." updated in system.", __METHOD__.','.__LINE__);
         }
         return $results;
     }

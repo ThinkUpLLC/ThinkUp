@@ -44,7 +44,7 @@ class MySQLDAO {
             $r = $this->db->exec($q);
         } catch(Exception $e) {
             if ( isset($this->logger) && $this->logger != null ){
-                $this->logger->logStatus($e->getMessage(), get_class($this));
+                $this->logger->logInfo($e->getMessage(), __METHOD__.','.__LINE__);
             } else {
                 die(get_class($this) ." | " . $e->getMessage());
             }

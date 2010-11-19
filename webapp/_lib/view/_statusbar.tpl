@@ -44,7 +44,7 @@
           }
         </script>
       {/literal}
-      {$instance->network_username} ({$instance->network|capitalize}) updated {$instance->crawler_last_run|relative_datetime} ago {if $logged_in_user}| <a href="{$site_root_path}crawler/run.php">Update now</a>{/if}
+      {$instance->network_username} ({$instance->network|capitalize}) updated {$instance->crawler_last_run|relative_datetime} ago {if $logged_in_user}| <a href="{$site_root_path}crawler/updatenow.php">Update now</a>{/if}
       {if $instances|@count > 1 }
        | <span id="choose-instance"><span class="underline">Switch user</span></span>
       <span id="instance-selector" style="display:none;">

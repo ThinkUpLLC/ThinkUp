@@ -30,12 +30,33 @@
  */
 
 class TwitterAPIAccessorOAuth {
+    /**
+     * @var boolean
+     */
     var $available = true;
+    /**
+     * @var str
+     */
     var $next_api_reset = null;
+    /**
+     * @var str
+     */
     var $cURL_source;
+    /**
+     * @var TwitterOAuthThinkUp
+     */
     var $to;
+    /**
+     * @var str
+     */
     var $oauth_access_token;
+    /**
+     * @var str
+     */
     var $oauth_access_token_secret;
+    /**
+     * @var int
+     */
     var $next_cursor;
     /**
      * @var int defaults to 3
@@ -53,7 +74,16 @@ class TwitterAPIAccessorOAuth {
      * @var int Defaults to 350
      */
     var $max_api_calls_per_crawl = 350;
-
+    /**
+     * Constructor
+     * @param str $oauth_access_token
+     * @param str $oauth_access_token_secret
+     * @param str $oauth_consumer_key
+     * @param str $oauth_consumer_secret
+     * @param int $num_twitter_errors
+     * @param int $max_api_calls_per_crawl
+     * @return TwitterAPIAccessorOAuth
+     */
     public function __construct($oauth_access_token, $oauth_access_token_secret, $oauth_consumer_key,
     $oauth_consumer_secret, $num_twitter_errors, $max_api_calls_per_crawl) {
         $this->$oauth_access_token = $oauth_access_token;
@@ -70,11 +100,14 @@ class TwitterAPIAccessorOAuth {
         }
 
         $this->max_api_calls_per_crawl = $max_api_calls_per_crawl;
-        $logger->logStatus('Errors to tolerate: ' . $this->total_errors_to_tolerate, get_class($this));
+        $logger->logInfo('Errors to tolerate: ' . $this->total_errors_to_tolerate, __METHOD__.','.__LINE__);
     }
 
+    /**
+     * Verify OAuth Twitter credentials.
+     * @return mixed -1 if not authorized; array of user data if authorized
+     */
     public function verifyCredentials() {
-        //returns user array; -1 if not.
         $auth = $this->cURL_source['credentials'];
         list($cURL_status, $twitter_data) = $this->apiRequestFromWebapp($auth);
         if ($cURL_status == 200) {
@@ -84,13 +117,21 @@ class TwitterAPIAccessorOAuth {
             return - 1;
         }
     }
-
+    /**
+     * Make an API request from the webapp (as opposed to the crawler)
+     * @param str $url
+     * @return array (cURL status, cURL retrieved content)
+     */
     public function apiRequestFromWebapp($url) {
         $content = $this->to->OAuthRequest($url, 'GET', array());
         $status = $this->to->lastStatusCode();
         return array($status, $content);
     }
 
+    /**
+     * Define how to access the Twitter API.
+     * @return array URLs by API call.
+     */
     public function prepAPI() {
         # Define how to access Twitter API
         $api_domain = 'https://api.twitter.com/1';
@@ -120,7 +161,6 @@ class TwitterAPIAccessorOAuth {
             "user_timeline"=>"/statuses/user_timeline/[id]", "show_user"=>"/users/show/[id]", 
             "retweeted_by_me"=>"/statuses/retweeted_by_me", "retweets_of_me"=>"/statuses/retweets_of_me", 
             "retweeted_by"=>"/statuses/[id]/retweeted_by");
-        //http://api.twitter.com/1/statuses/14947487415/retweeted_by.xml
         # Construct cURL sources
         foreach ($api_method as $key=>$value) {
             $urls[$key] = $api_domain.$value.".".$api_format;
@@ -132,51 +172,11 @@ class TwitterAPIAccessorOAuth {
         return $urls;
     }
 
-    public function parseFeed($url, $date = 0) {
-        $parsed_payload = array();
-        $feed_title = '';
-        if (preg_match("/^http/", $url)) {
-            try {
-                $doc = createDOMfromURL($url);
-
-                $feed_title = $doc->getElementsByTagName('title')->item(0)->nodeValue;
-
-                $item = $doc->getElementsByTagName('item');
-                foreach ($item as $item) {
-                    $articleInfo = array('title'=>$item->getElementsByTagName('title')->item(0)->nodeValue,
-                    'link'=>$item->getElementsByTagName('link')->item(0)->nodeValue, 
-                    'id'=>$item->getElementsByTagName('id')->item(0)->nodeValue, 
-                    'pubDate'=>$item->getElementsByTagName('pubDate')->item(0)->nodeValue);
-                    if (($date == 0) || (strtotime($articleInfo['pubDate']) > strtotime($date))) {
-                        array_push($parsed_payload, $articleInfo);
-                    }
-                }
-
-                $entry = $doc->getElementsByTagName('entry');
-                foreach ($entry as $entry) {
-                    $articleInfo = array('title'=>$entry->getElementsByTagName('title')->item(0)->nodeValue,
-                    'link'=>$entry->getElementsByTagName('link')->item(0)->getAttribute('href'), 
-                    'id'=>$entry->getElementsByTagName('id')->item(0)->nodeValue, 
-                    'pubDate'=>$entry->getElementsByTagName('pubDate')->item(0)->nodeValue, 
-                    'published'=>$entry->getElementsByTagName('published')->item(0)->nodeValue);
-                    foreach ($articleInfo as $key=>$value) {
-                        $articleInfo[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-                    }
-                    if (($date == 0) || (strtotime($articleInfo['pubDate']) > strtotime($date))
-                    || (strtotime($articleInfo['published']) > strtotime($date))) {
-                        array_push($parsed_payload, $articleInfo);
-                    }
-                }
-            } catch(Exception $e) {
-                $logger = Logger::getInstance();
-                $logger->logStatus('parseFeed Exception caught: ' . $e->getMessage(), get_class($this));
-            }
-        }
-
-        $feed_title = htmlspecialchars($feed_title, ENT_QUOTES, 'UTF-8');
-        return array($parsed_payload, $feed_title);
-    }
-
+    /**
+     * Parse JSON list of tweets.
+     * @param str $data JSON list of tweets.
+     * @return array Posts
+     */
     public function parseJSON($data) {
         $pj = json_decode($data);
         //print_r($pj);
@@ -194,7 +194,11 @@ class TwitterAPIAccessorOAuth {
         }
         return $parsed_payload;
     }
-
+    /**
+     * Parse error XML
+     * @param str $data
+     * @return array Error
+     */
     public function parseError($data) {
         $parsed_payload = array();
         try {
@@ -211,12 +215,17 @@ class TwitterAPIAccessorOAuth {
             }
         } catch(Exception $e) {
             $logger = Logger::getInstance();
-            $logger->logStatus('parseError Exception caught: ' . $e->getMessage(), get_class($this));
+            $logger->logUserError('parseError Exception caught: ' . $e->getMessage(), __METHOD__.','.__LINE__);
         }
 
         return $parsed_payload;
     }
 
+    /**
+     * Parse XML data returned from Twitter.
+     * @param str $data
+     * @return array Mixed data types, users, IDs, tweets, etc
+     */
     public function parseXML($data) {
         $parsed_payload = array();
         try {
@@ -340,21 +349,32 @@ class TwitterAPIAccessorOAuth {
             }
         } catch(Exception $e) {
             $logger = Logger::getInstance();
-            $logger->logStatus('parseXML Exception caught: ' . $e->getMessage(), get_class($this));
+            $logger->logUserError('parseXML Exception caught: ' . $e->getMessage(), __METHOD__.','.__LINE__);
         }
         return $parsed_payload;
     }
-
+    /**
+     * Get next cursor.
+     * @return int
+     */
     public function getNextCursor() {
         return $this->next_cursor;
     }
-
+    /**
+     * Create DOM from URL.
+     * @param str $url
+     * @return DOMDocument
+     */
     public function createDOMfromURL($url) {
         $doc = new DOMDocument();
         $doc->load($url);
         return $doc;
     }
-
+    /**
+     * Create XML parser from string.
+     * @param str $data
+     * @return object
+     */
     public function createParserFromString($data) {
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($data);
@@ -366,25 +386,29 @@ class TwitterAPIAccessorOAuth {
         }
         return $xml;
     }
-
+    /**
+     * Log XML error.
+     * @param object $error
+     * @param str $data
+     */
     private function logXMLError($error, $data) {
         $xml = explode("\n", $data);
         $logger = Logger::getInstance();
-        $logger->logStatus('LIBXML '.$xml[$error->line - 1], get_class($this));
-        $logger->logStatus('LIBXML '.str_repeat('-', $error->column) . "^", get_class($this));
+        $logger->logUserError('LIBXML '.$xml[$error->line - 1], __METHOD__.','.__LINE__);
+        $logger->logUserError('LIBXML '.str_repeat('-', $error->column) . "^", __METHOD__.','.__LINE__);
 
         switch ($error->level) {
             case LIBXML_ERR_WARNING:
-                $logger->logStatus("LIBXML Warning $error->code: ", get_class($this));
+                $logger->logInfo("LIBXML Warning $error->code: ", __METHOD__.','.__LINE__);
                 break;
             case LIBXML_ERR_ERROR:
-                $logger->logStatus("LIBXML Error $error->code: ", get_class($this));
+                $logger->logInfo("LIBXML Error $error->code: ", __METHOD__.','.__LINE__);
                 break;
             case LIBXML_ERR_FATAL:
-                $logger->logStatus("LIBXML Fatal Error $error->code: ", get_class($this));
+                $logger->logInfo("LIBXML Fatal Error $error->code: ", __METHOD__.','.__LINE__);
                 break;
         }
-        $logger->logStatus('LIBXML '.trim($error->message). " Line: $error->line, Column $error->column",
-        get_class($this));
+        $logger->logUserError('LIBXML '.trim($error->message). " Line: $error->line, Column $error->column",
+        __METHOD__.','.__LINE__);
     }
 }

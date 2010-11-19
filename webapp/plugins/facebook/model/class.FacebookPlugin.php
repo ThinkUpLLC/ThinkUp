@@ -47,6 +47,9 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
                 continue;
             }
             $logger->setUsername($instance->network_username);
+            $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Facebook.",
+            __METHOD__.','.__LINE__);
+
             $tokens = $oid->getOAuthTokens($instance->id);
             $access_token = $tokens['oauth_access_token'];
 
@@ -56,16 +59,20 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
                 $crawler->fetchInstanceUserInfo();
                 $crawler->fetchUserPostsAndReplies($instance->network_user_id);
             } catch (Exception $e) {
-                $logger->logStatus('PROFILE EXCEPTION: '.$e->getMessage(), get_class($this));
+                $logger->logUserError('PROFILE EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }
 
             $id->save($crawler->instance, 0, $logger);
+            $logger->logUserSuccess("Finished collecting data for ".$instance->network_username." on Facebook.",
+            __METHOD__.','.__LINE__);
         }
 
         //crawl Facebook pages
         $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook page');
         foreach ($instances as $instance) {
             $logger->setUsername($instance->network_username);
+            $logger->logUserSuccess("Starting to collect data for ".$instance->network_username."'s Facebook Page.",
+            __METHOD__.','.__LINE__);
             $tokens = $oid->getOAuthTokens($instance->id);
             $access_token = $tokens['oauth_access_token'];
 
@@ -75,13 +82,12 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
             try {
                 $crawler->fetchPagePostsAndReplies($instance->network_user_id);
             } catch (Exception $e) {
-                $logger->logStatus('PAGE EXCEPTION: '.$e->getMessage(), get_class($this));
+                $logger->logUserError('PAGE EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }
             $id->save($crawler->instance, 0, $logger);
-
+            $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s Facebook Page.",
+            __METHOD__.','.__LINE__);
         }
-        $logger->close(); # Close logging
-
     }
 
     public function renderConfiguration($owner) {
@@ -118,7 +124,7 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
         array($instance->network_user_id, $instance->network, 15, "#page_number#"));
         $qtab->addDataset($qtabds);
         $posts_menu->addMenuItem($qtab);
-        
+
         array_push($menus, $posts_menu);
 
         return $menus;

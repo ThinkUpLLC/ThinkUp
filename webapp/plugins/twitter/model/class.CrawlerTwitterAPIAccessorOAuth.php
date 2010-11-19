@@ -29,14 +29,53 @@
  *
  */
 class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
+    /**
+     *
+     * @var int
+     */
     var $api_calls_to_leave_unmade;
+    /**
+     *
+     * @var int
+     */
     var $api_calls_to_leave_unmade_per_minute;
+    /**
+     *
+     * @var int
+     */
     var $available_api_calls_for_crawler = null;
+    /**
+     *
+     * @var int
+     */
     var $available_api_calls_for_twitter = null;
+    /**
+     *
+     * @var int
+     */
     var $api_hourly_limit = null;
+    /**
+     *
+     * @var int
+     */
     var $archive_limit;
+    /**
+     *
+     * @var int
+     */
     var $num_retries = 2;
-
+    /**
+     * Constructor
+     * @param str $oauth_token
+     * @param str $oauth_token_secret
+     * @param str $oauth_consumer_key
+     * @param str $oauth_consumer_secret
+     * @param Instance $instance
+     * @param int $archive_limit
+     * @param int $num_twitter_errors
+     * @param int $max_api_calls_per_crawl
+     * @return CrawlerTwitterAPIAccessorOAuth
+     */
     public function __construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
     $instance, $archive_limit, $num_twitter_errors, $max_api_calls_per_crawl) {
         parent::__construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
@@ -45,6 +84,9 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
         $this->archive_limit = $archive_limit;
     }
 
+    /**
+     * Initalize the API accessor.
+     */
     public function init() {
         $logger = Logger::getInstance();
         $status_message = "";
@@ -56,43 +98,44 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
         if ($cURL_status > 200) {
             $this->available = false;
         } else {
-            try {
-                # Parse file
-                $status_message = "Parsing XML data from $account_status ";
-                $status = $this->parseXML($twitter_data);
+            $status_message = "Parsing XML data from $account_status ";
+            $status = $this->parseXML($twitter_data);
 
-                if (isset($status['remaining-hits']) && isset($status['hourly-limit']) && isset($status['reset-time'])){
-                    $this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
-                    $this->api_hourly_limit = $status['hourly-limit'];//get this from API
-                    $this->next_api_reset = $status['reset-time'];//get this from API
-                } else {
-                    throw new Exception('API status came back malformed');
-                }
-                //Figure out how many minutes are left in the hour, then multiply that x 1 for api calls to leave unmade
-                $next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
-                $current_time_in_minutes = (int) date("i", time());
-                $minutes_left_in_hour = 60;
-                if ($next_reset_in_minutes > $current_time_in_minutes) {
-                    $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
-                } elseif ($next_reset_in_minutes < $current_time_in_minutes) {
-                    $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
-                }
+            if (isset($status['remaining-hits']) && isset($status['hourly-limit']) && isset($status['reset-time'])){
+                $this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
+                $this->api_hourly_limit = $status['hourly-limit'];//get this from API
+                $this->next_api_reset = $status['reset-time'];//get this from API
+            } else {
+                throw new Exception('API status came back malformed');
+            }
+            //Figure out how many minutes are left in the hour, then multiply that x 1 for api calls to leave unmade
+            $next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
+            $current_time_in_minutes = (int) date("i", time());
+            $minutes_left_in_hour = 60;
+            if ($next_reset_in_minutes > $current_time_in_minutes) {
+                $minutes_left_in_hour = $next_reset_in_minutes - $current_time_in_minutes;
+            } elseif ($next_reset_in_minutes < $current_time_in_minutes) {
+                $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
+            }
 
-                $this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
-                $this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter -
-                round($this->api_calls_to_leave_unmade);
-                //Enforce configurable ceiling for whitelisted Twitter accounts
-                if ($this->available_api_calls_for_crawler > $this->max_api_calls_per_crawl) {
-                    $this->available_api_calls_for_crawler = $this->max_api_calls_per_crawl;
-                }
-            } catch(Exception $e) {
-                $status_message = 'Could not parse account status: '.$e->getMessage();
+            $this->api_calls_to_leave_unmade = $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
+            $this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter -
+            round($this->api_calls_to_leave_unmade);
+            //Enforce configurable ceiling for whitelisted Twitter accounts
+            if ($this->available_api_calls_for_crawler > $this->max_api_calls_per_crawl) {
+                $this->available_api_calls_for_crawler = $this->max_api_calls_per_crawl;
             }
         }
-        $logger->logStatus($status_message, get_class($this));
-        $logger->logStatus($this->getStatus(), get_class($this));
+        $logger->logUserInfo($this->getStatus(), __METHOD__.','.__LINE__);
     }
 
+    /**
+     * Make Twitter API request.
+     * @param str $url
+     * @param array $args URL query string parameters
+     * @param boolean $auth Does it require authorization via OAuth
+     * @return array (cURL status, cURL content returned)
+     */
     public function apiRequest($url, $args = array(), $auth = true) {
         $logger = Logger::getInstance();
         $attempts = 0;
@@ -100,7 +143,6 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 
         if ($auth) {
             while ($attempts <= $this->num_retries && $continue) {
-                // $logger->logStatus("****attempts: $attempts; num_retries: " . $this->num_retries, get_class($this));
                 $content = $this->to->OAuthRequest($url, 'GET', $args);
                 $status = $this->to->lastStatusCode();
 
@@ -116,50 +158,48 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                         $status_message .= $key."=".$value."&";
                     }
                     $status_message .= " | API ERROR: $status";
-                    $status_message .= "\n\n$content\n\n";
+                    //$status_message .= "\n\n$content\n\n";
+                    $logger->logUserError($status_message, __METHOD__.','.__LINE__);
+                    $status_message = "";
                     if ($status != 404 && $status != 403) {
                         $attempts++;
                         if ($this->total_errors_so_far >= $this->total_errors_to_tolerate) {
                             $this->available = false;
                         } else {
                             $this->total_errors_so_far = $this->total_errors_so_far + 1;
-                            $logger->logStatus('Total API errors so far: ' . $this->total_errors_so_far .
-                            ' | Total errors to tolerate '. $this->total_errors_to_tolerate, get_class($this));
+                            $logger->logUserInfo('Total API errors so far: ' . $this->total_errors_so_far .
+                            ' | Total errors to tolerate '. $this->total_errors_to_tolerate, __METHOD__.','.__LINE__);
                         }
-                    }
-                    else {
+                    } else {
                         $continue = false;
                     }
-                    $logger->logStatus($status_message, get_class($this));
-                    $status_message = "";
                 } else {
                     $continue = false;
                     $url = Utils::getURLWithParams($url, $args);
                     $status_message = "API request: ".$url;
+                    $logger->logInfo($status_message, __METHOD__.','.__LINE__);
                 }
-
-                $logger->logStatus($status_message, get_class($this));
-                $status_message = "";
 
                 if ($url != "https://api.twitter.com/1/account/rate_limit_status.xml") {
-                    $status_message = $this->getStatus();
-                    $logger->logStatus($status_message, get_class($this));
-                    $status_message = "";
+                    $logger->logInfo($this->getStatus(), __METHOD__.','.__LINE__);
                 }
             }
-        }
-        else {
-            $logger->logStatus("OAuth-free request: $url", get_class($this));
+        } else {
+            $logger->logInfo("OAuth-free request: $url", __METHOD__.','.__LINE__);
             $content = $this->to->noAuthRequest($url);
             $status = $this->to->lastStatusCode();
-            //$logger->logStatus("no OAuth content returned: $content", get_class($this));
+            //$logger->logInfo("no OAuth content returned: $content", __METHOD__.','.__LINE__);
         }
         return array($status, $content);
     }
 
+    /**
+     * Get API call balance information formatted for logging.
+     * @return str
+     */
     public function getStatus() {
-        return $this->available_api_calls_for_twitter." of ".$this->api_hourly_limit." API calls left this hour; ".
-        round($this->available_api_calls_for_crawler)." for crawler until ".
-        date('H:i:s', (int) $this->next_api_reset);
+        return $this->available_api_calls_for_twitter." of ".$this->api_hourly_limit." Twitter API calls ".
+        "left this hour; ". round($this->available_api_calls_for_crawler)." budgeted for ThinkUp until ".
+        date('H:i', (int) $this->next_api_reset).".";
     }
 }
