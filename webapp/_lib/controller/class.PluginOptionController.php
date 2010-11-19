@@ -36,6 +36,7 @@ class PluginOptionController extends ThinkUpAdminController {
 
     public function adminControl() {
         // set inital state
+        $this->setContentType('application/json');
         $this->json = array('status' => 'failed');
 
         // verify we have a proper action and plugin id

@@ -108,9 +108,10 @@ var PluginOptions = function() {
                 },
                 success: function(data) {
                     if(plugin_options.DEBUG) { console.debug(data); }
-                    if(data.status == 'failed') {
+                    if(data.status == 'failed' || data.error) {
                         plugin_options.submitting = false;
-                        $('#plugin_option_server_error_message').html(data.message);
+                        var message = (data.error) ? 'Exception: ' + data.error.message : data.message;
+                        $('#plugin_option_server_error_message').html(message);
                         $('#plugin_option_server_error').show();
                     } else {
                         $('#plugin_options_success').show();

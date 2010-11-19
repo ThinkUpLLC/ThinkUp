@@ -279,6 +279,25 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
     }
 
     /**
+     * test add plugin options
+     */
+    public function testPluginOptionException() {
+
+        // add one option
+        $controller = $this->getController();
+        $builder = $this->buildPlugin();
+        $this->pdo->query("drop table tu_plugin_options");
+        $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
+        $_GET['action'] = 'set_options';
+        $_GET['option_test0'] = 'value0';
+        $results = $controller->go();
+        $json_resonse = json_decode($results);
+        $this->assertIsA($json_resonse, 'stdClass');
+        $this->assertEqual($json_resonse->error->type, 'PDOException');
+        $this->assertPattern("/tu_plugin_options' doesn't exist/", $json_resonse->error->message);
+    }
+
+    /**
      * get a plugin option controller
      */
     public function getController() {
