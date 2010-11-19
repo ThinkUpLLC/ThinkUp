@@ -121,7 +121,7 @@ var TUGridSearch = function() {
      * search filter
      */
     this.myFilter = function (item) {
-    	if(item['id'] == -1) { return false; }
+        if(item['id'] == -1 || item['text'] == null) { return false; }
         if (tu_grid_search.searchString != "" && item["text"].toLowerCase().indexOf(tu_grid_search.searchString.toLowerCase()) == -1) {
             return false;
         } else {
