@@ -71,18 +71,18 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         // no actions defined
         $results = $controller->go();
         // var_dump($results);
-        $json_resonse = json_decode($results);
-        $this->assertIsA($json_resonse, 'stdClass');
-        $this->assertEqual($json_resonse->status, 'failed');
-        $this->assertEqual($json_resonse->message, 'No action defined for this request');
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
+        $this->assertEqual($json_response->status, 'failed');
+        $this->assertEqual($json_response->message, 'No action defined for this request');
 
         // a bad action defined
         $_GET['action'] = 'a bad action';
         $results = $controller->go();
-        $json_resonse = json_decode($results);
-        $this->assertIsA($json_resonse, 'stdClass');
-        $this->assertEqual($json_resonse->status, 'failed');
-        $this->assertEqual($json_resonse->message, 'No action defined for this request');
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
+        $this->assertEqual($json_response->status, 'failed');
+        $this->assertEqual($json_response->message, 'No action defined for this request');
 
     }
 
@@ -95,9 +95,9 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $controller = $this->getController();
         $_GET['action'] = 'set_options';
         $results = $controller->go();
-        $json_resonse = json_decode($results);
+        $json_response = json_decode($results);
         // If the profiler outputs HTML (it shouldn't), the following will fail
-        $this->assertIsA($json_resonse, 'stdClass');
+        $this->assertIsA($json_response, 'stdClass');
 
         unset($_SERVER['HTTP_HOST']);
     }
@@ -111,28 +111,28 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         // no plugin id defined
         $_GET['action'] = 'set_options';
         $results = $controller->go();
-        $json_resonse = json_decode($results);
-        $this->assertIsA($json_resonse, 'stdClass');
-        $this->assertEqual($json_resonse->status, 'failed');
-        $this->assertEqual($json_resonse->message, 'Bad plugin id defined for this request');
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
+        $this->assertEqual($json_response->status, 'failed');
+        $this->assertEqual($json_response->message, 'Bad plugin id defined for this request');
 
         // bad plugin id defined
         $_GET['action'] = 'set_options';
         $_GET['plugin_id'] = 'not an integer';
         $results = $controller->go();
-        $json_resonse = json_decode($results);
-        $this->assertIsA($json_resonse, 'stdClass');
-        $this->assertEqual($json_resonse->status, 'failed');
-        $this->assertEqual($json_resonse->message, 'Bad plugin id defined for this request');
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
+        $this->assertEqual($json_response->status, 'failed');
+        $this->assertEqual($json_response->message, 'Bad plugin id defined for this request');
 
         // plugin id not found
         $_GET['action'] = 'set_options';
         $_GET['plugin_id'] = -99;
         $results = $controller->go();
-        $json_resonse = json_decode($results);
-        $this->assertIsA($json_resonse, 'stdClass');
-        $this->assertEqual($json_resonse->status, 'failed');
-        $this->assertEqual($json_resonse->message, 'Bad plugin id defined for this request');
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
+        $this->assertEqual($json_response->status, 'failed');
+        $this->assertEqual($json_response->message, 'Bad plugin id defined for this request');
 
 
     }
@@ -161,11 +161,11 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $_GET['action'] = 'set_options';
         $_GET['option_test0'] = 'value0';
         $results = $controller->go();
-        $json_resonse = json_decode($results);
-        $this->assertIsA($json_resonse, 'stdClass');
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
         // {"status":"success","results":{"updated":1}}
-        $this->assertEqual($json_resonse->status, 'success');
-        $this->assertEqual($json_resonse->results->updated, 1);
+        $this->assertEqual($json_response->status, 'success');
+        $this->assertEqual($json_response->results->updated, 1);
         unset($_GET['option_test0']);
 
         // add more
@@ -173,13 +173,13 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $_GET['option_test1'] = 'value1';
         $_GET['option_test2'] = 'value2';
         $results = $controller->go();
-        $json_resonse = json_decode($results);
-        $this->assertIsA($json_resonse, 'stdClass');
-        $this->assertEqual($json_resonse->status, 'success');
-        $this->assertEqual($json_resonse->results->updated, 2);
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
+        $this->assertEqual($json_response->status, 'success');
+        $this->assertEqual($json_response->results->updated, 2);
         // has insert info with id
-        $this->assertEqual($json_resonse->results->inserted->test1, 2);
-        $this->assertEqual($json_resonse->results->inserted->test2, 3);
+        $this->assertEqual($json_response->results->inserted->test1, 2);
+        $this->assertEqual($json_response->results->inserted->test2, 3);
 
         $sql = "select * from " . $this->prefix . 'plugin_options where plugin_id = '
         . $builder->columns[ 'last_insert_id' ];
@@ -213,11 +213,11 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $_GET['id_option_' . $builder_pos[2]->columns['option_name']] = $builder_pos[2]->columns['last_insert_id'];
 
         $results = $controller->go();
-        $json_resonse = json_decode($results);
-        $this->assertIsA($json_resonse, 'stdClass');
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
         // // {"status":"success","results":{"updated":1}}
-        $this->assertEqual($json_resonse->status, 'success');
-        $this->assertEqual($json_resonse->results->updated, 2);
+        $this->assertEqual($json_response->status, 'success');
+        $this->assertEqual($json_response->results->updated, 2);
 
         $sql = "select * from " . $this->prefix . 'plugin_options where plugin_id = '
         . $builder->columns[ 'last_insert_id' ];
@@ -255,11 +255,11 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $_GET['id_option_' . $builder_pos[2]->columns['option_name']] = $builder_pos[2]->columns['last_insert_id'];
 
         $results = $controller->go();
-        $json_resonse = json_decode($results);
-        $this->assertIsA($json_resonse, 'stdClass');
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
         // // {"status":"success","results":{"updated":1}}
-        $this->assertEqual($json_resonse->status, 'success');
-        $this->assertEqual($json_resonse->results->updated, 2);
+        $this->assertEqual($json_response->status, 'success');
+        $this->assertEqual($json_response->results->updated, 2);
 
         $sql = "select * from " . $this->prefix . 'plugin_options where plugin_id = '
         . $builder->columns[ 'last_insert_id' ];
@@ -276,6 +276,25 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
                 $this->assertEqual($data[$i]['option_value'], $builder_pos[$i]->columns['option_value']);
             }
         }
+    }
+
+    /**
+     * test add plugin options
+     */
+    public function testPluginOptionException() {
+
+        // add one option
+        $controller = $this->getController();
+        $builder = $this->buildPlugin();
+        $this->pdo->query("drop table tu_plugin_options");
+        $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
+        $_GET['action'] = 'set_options';
+        $_GET['option_test0'] = 'value0';
+        $results = $controller->go();
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
+        $this->assertEqual($json_response->error->type, 'PDOException');
+        $this->assertPattern("/tu_plugin_options' doesn't exist/", $json_response->error->message);
     }
 
     /**
