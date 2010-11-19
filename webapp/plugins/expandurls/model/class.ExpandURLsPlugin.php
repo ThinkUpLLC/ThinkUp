@@ -61,7 +61,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                 $logger->logError($l." is not a valid URL; skipping expansion", __METHOD__.','.__LINE__);
             }
         }
-        $logger->logUserSuccess($total_expanded." URLs successfully expanded (".$total_errors." errors).", 
+        $logger->logUserSuccess($total_expanded." URLs successfully expanded (".$total_errors." errors).",
         __METHOD__.','.__LINE__);
     }
 
@@ -98,7 +98,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, "http://$host:$port".$path.$query.$fragment);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // seconds
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5); // seconds
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_NOBODY, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
