@@ -154,7 +154,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         // login with a bad token
         $_GET['upgrade_token'] = 'badtoken';
         $results = $controller->go();
-        $this->assertPattern('/You must be a ThinkUp admin to do this/', $results);
+        $this->assertPattern('/This update has already been completed/', $results);
 
         // log in with a valid token
         $this->simulateLogin('me@example.com', false);
