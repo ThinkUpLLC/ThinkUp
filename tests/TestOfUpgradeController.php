@@ -59,6 +59,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->migrations_dir = THINKUP_WEBAPP_PATH . 'install/sql/mysql_migrations/';
         $this->migrations_file1 = 'migration1.sql';
         $this->migrations_file2 = 'migration2.sql';
+        $this->migrations_file3 = 'migration3.sql';
     }
 
     public function tearDown(){
@@ -230,11 +231,11 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertTrue($obj->processed);
         $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[0]));
 
-        $sql = "show tables like  'test1'";
+        $sql = "show tables like  'tu_test1'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
-        $this->assertEqual($data[0], 'test1');
-        $sql = 'select * from test1';
+        $this->assertEqual($data[0], 'tu_test1');
+        $sql = 'select * from tu_test1';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 3);
@@ -284,11 +285,11 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertTrue($obj->processed);
         $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[1]));
 
-        $sql = "show tables like  'test2'";
+        $sql = "show tables like  'tu_test2'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
-        $this->assertEqual($data[0], 'test2');
-        $sql = 'select * from test2';
+        $this->assertEqual($data[0], 'tu_test2');
+        $sql = 'select * from tu_test2';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 1);
@@ -299,11 +300,11 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertTrue($obj->processed);
         $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[0]));
 
-        $sql = "show tables like  'test1'";
+        $sql = "show tables like  'tu_test1'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
-        $this->assertEqual($data[0], 'test1');
-        $sql = 'select * from test1';
+        $this->assertEqual($data[0], 'tu_test1');
+        $sql = 'select * from tu_test1';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 3);
@@ -375,6 +376,45 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $data = $stmt->fetch();
         $this->assertEqual($data['option_value'], $app_version);
         $this->assertFalse( file_exists($this->token_file) );
+    }
+
+    public function testProcessMigrationsDifferentPrefix() {
+
+        $config = Config::getInstance();
+        $config->setValue('table_prefix', 'new_prefix_');
+
+        $stmt = $this->pdo->query("show tables");
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        //var_dump($data);
+        foreach($data as $table) {
+            foreach($table as $key=> $value) {
+                $new_value = preg_replace("/tu_/", " new_prefix_", $value);
+                $sql = "RENAME TABLE $value TO $new_value";
+                $this->pdo->query($sql);
+            }
+        }
+
+        $this->simulateLogin('me@example.com', true);
+        $controller = new UpgradeController(true);
+        $this->migrationFiles(1);
+        $_GET['migration_index'] = 1;
+        $results = $controller->go();
+
+        $obj = json_decode($results);
+        $this->assertTrue($obj->processed);
+        $updated_file = file_get_contents($this->test_migrations[0]);
+        $updated_file = preg_replace("/\s`tu_/", " `new_prefix_", $updated_file);
+        $updated_file = preg_replace("/\stu_/", " new_prefix_", $updated_file);
+        $this->assertEqual($obj->sql, $updated_file);
+        $sql = "show tables like 'new_prefix_test1'";
+        $stmt = $this->pdo->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data[0], 'new_prefix_test1');
+        $sql = 'select * from new_prefix_test1';
+        $stmt = $this->pdo->query($sql);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertEqual(count($data), 3);
     }
 
     private function migrationFiles($count = 1) {
