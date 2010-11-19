@@ -98,7 +98,7 @@ $MIGRATIONS = array(
 
     /* beta 0.4 */
     '0.4' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.4.1.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -114,6 +114,28 @@ $MIGRATIONS = array(
                     'match' => "/^0\.4$/",
                     'column' => 'option_value', 
                 )
+            )
+        )
+    ),
+
+    /* beta 0.5 */
+    '0.5' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => 'show index from tu_posts where Key_name = \'postnetwk\' and Column_name = '.
+                    '\'post_id\' and Non_unique = 0;',
+                    'match' => "/postnetwk/",
+                    'column' => 'Key_name', 
+                ),
+                array(
+                    'query' => 'show index from tu_links where Key_name = \'url\' and Column_name = '.
+                    '\'url\' and Non_unique = 0;',
+                    'match' => "/url/",
+                    'column' => 'Key_name', 
+                ),
             )
         )
     ),
