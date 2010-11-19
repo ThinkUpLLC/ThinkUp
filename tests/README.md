@@ -59,3 +59,14 @@ Add tests for particular pages inside the webapp to an appropriately-named class
 example. 
 
 Once your tests work, add them to the `all_tests.php` file to run along with the existing tests. 
+
+## Debugging during integration testing
+
+If you want to print variable valies to the terminal while running tests, there is a ThinkUpWebTestCase::debug method.
+To use it, add a line like this to your integration test:
+
+`$this->debug("This is my debugging statement which will print during my test run.")`
+
+To see your debug statements, run your test like so:
+
+`TEST_DEBUG=1 php tests/test.php`

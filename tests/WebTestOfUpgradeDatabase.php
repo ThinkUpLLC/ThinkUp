@@ -160,8 +160,10 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $current_version = $config->getValue('THINKUP_VERSION');
         if($LATEST_VERSION == $current_version) {
+            $this->debug("Building  build for latest version: $LATEST_VERSION");
             $sql_files = glob($migration_sql_dir . '*.sql');
             if (sizeof($sql_files) > 0) {
+                $this->debug("found sql update for lasest version $LATEST_VERSION: $sql_files[0]");
                 $latest_migration = glob($migration_sql_dir . '*_v' . $LATEST_VERSION .'.sql.migration');
                 if(! isset($latest_migration[0])) {
                     $latest_migration_file = $migration_sql_dir . '0001-01-01_v' . $LATEST_VERSION .'.sql.migration';
@@ -180,7 +182,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         }
 
         foreach($MIGRATIONS as  $version => $migration_data) {
-            //print "Running migration test for version: $version\n";
+            $this->debug("Running migration test for version: $version");
             $url = $migration_data['zip_url'];
             $zipfile = $this->getIntsall($url, $version, $this->installs_dir);
             if(! $zipfile) {
