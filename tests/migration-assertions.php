@@ -98,7 +98,7 @@ $MIGRATIONS = array(
 
     /* beta 0.4 */
     '0.4' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.4.1.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
