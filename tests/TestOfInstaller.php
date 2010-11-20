@@ -148,7 +148,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         Installer::$show_tables = null; //set show_tables to null to force a refresh
         $tables = $installer->showTables($config_array);
         $expected = array($config->getValue('table_prefix').'follows', $config->getValue('table_prefix').'links');
-        
+
         $this->assertIdentical(Installer::$show_tables, $expected);
 
         // test with a table
@@ -387,8 +387,9 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     public function testGetTablesToInstall(){
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
-        $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'instances', 'links','options',
-        'owner_instances', 'owners', 'plugin_options', 'plugins', 'post_errors', 'posts', 'user_errors', 'users');
+        $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'instances', 'links',
+        'options', 'owner_instances', 'owners', 'plugin_options', 'plugins', 'post_errors', 'posts', 'user_errors', 
+        'users');
         $this->assertIdentical($tables, $expected_tables);
     }
 }

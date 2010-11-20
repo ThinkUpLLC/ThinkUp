@@ -99,14 +99,12 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin {
                     $crawler->fetchInstanceUserFriends();
                     $crawler->fetchInstanceUserFollowers();
                     $crawler->fetchRetweetsOfInstanceUser();
+                    $crawler->fetchInstanceFavorites();
+                    $crawler->cleanUpMissedFavsUnFavs();
                 }
 
                 $crawler->fetchStrayRepliedToTweets();
                 $crawler->fetchUnloadedFollowerDetails();
-                // checkpoint - save instance
-                if (isset($crawler->owner_object)) {
-                    $id->save($instance, $crawler->owner_object->post_count, $logger);
-                }
                 $crawler->fetchFriendTweetsAndFriends();
 
                 if ($noauth) {
@@ -336,20 +334,23 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin {
         $links_menu = new Menu('Links');
 
         //Links from friends
-        $fltab = new MenuItem("links-friends", 'Links from People You Follow', 'Links your friends posted', $twitter_data_tpl);
+        $fltab = new MenuItem("links-friends", 'Links from People You Follow', 'Links your friends posted',
+        $twitter_data_tpl);
         $fltabds = new Dataset("links", 'LinkDAO', "getLinksByFriends", array($instance->network_user_id,
         'twitter'));
         $fltab->addDataset($fltabds);
         $links_menu->addMenuItem($fltab);
 
         //Links from favorites
-        $lftab = new MenuItem("links-favorites", 'Links From Favorites', 'Links in posts you favorited',  $twitter_data_tpl);
+        $lftab = new MenuItem("links-favorites", 'Links From Favorites', 'Links in posts you favorited',
+        $twitter_data_tpl);
         $lftabds = new Dataset("links", 'LinkDAO', "getLinksByFavorites", array($instance->network_user_id, 'twitter'));
         $lftab->addDataset($lftabds);
         $links_menu->addMenuItem($lftab);
 
         //Photos
-        $ptab = new MenuItem("links-photos", "Photos from People You Follow", 'Photos your friends have posted', $twitter_data_tpl);
+        $ptab = new MenuItem("links-photos", "Photos from People You Follow", 'Photos your friends have posted',
+        $twitter_data_tpl);
         $ptabds = new Dataset("links", 'LinkDAO', "getPhotosByFriends", array($instance->network_user_id,
         'twitter'));
         $ptab->addDataset($ptabds);

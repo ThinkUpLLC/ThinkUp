@@ -10,12 +10,11 @@ ALTER TABLE `tu_users` ADD `favorites_count` int(11) default NULL;
 
 CREATE TABLE IF NOT EXISTS `tu_favorites` (
     `status_id` bigint(20) UNSIGNED NOT NULL,
-    `author_user_id` int(11) NOT NULL,
-    `fav_of_user_id` int(11) NOT NULL,
-    `network` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT 'twitter',
-    UNIQUE KEY `status_id` (`status_id`),
+    `author_user_id` bigint(11) NOT NULL,
+    `fav_of_user_id` bigint(11) NOT NULL,
+    `network` varchar(20) NOT NULL DEFAULT 'twitter',
+    KEY `status_id` (`status_id`),
     KEY `author_user_id` (`author_user_id`),
     KEY `fav_of_user_id` (`fav_of_user_id`),
-    KEY `status_id_2` (`status_id`,`fav_of_user_id`,`network`)
-  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
+    UNIQUE KEY `status_id_2` (`status_id`,`fav_of_user_id`,`network`)
+  ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
