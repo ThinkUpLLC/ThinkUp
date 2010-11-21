@@ -150,9 +150,15 @@ class Logger {
                     $this->output($status_signature.$status_message); # Write status to log
                 }
             } else {
-                $message_wrapper = '';
+                $message_wrapper = '<span style="color:#ccc">'.date("H:i", time()).'</span> ';
                 $just_classname = explode('::', $classname);
                 if (isset($just_classname[0])) {
+                    if ( $just_classname[0] == 'CrawlerTwitterAPIAccessorOAuth') {
+                        $just_classname[0] = 'TwitterCrawler';
+                    }
+                    if ( strtoupper(substr ( $just_classname[0] , strlen($just_classname[0])-3, 3  ))  == 'DAO') {
+                        $just_classname[0] = 'Database';
+                    }
                     $message_wrapper .= $just_classname[0].": ";
                 }
                 $message_wrapper .= '<span style="color:';

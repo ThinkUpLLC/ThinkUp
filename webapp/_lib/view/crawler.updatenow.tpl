@@ -12,7 +12,7 @@ ThinkUp is updating your data. To see the technical details of what's going on, 
 This could take awhile. Leave this page open until it's complete.
 </p>
 <br />
-<iframe width="850" height="500" src="run.php" style="border:solid black 1px">
+<iframe width="850" height="500" src="run.php{if $log == 'full'}?log=full{/if}" style="border:solid black 1px">
 </iframe>
 <br /><br />
     {include file="_usermessage.tpl"}

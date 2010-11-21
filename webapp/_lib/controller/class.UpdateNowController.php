@@ -44,6 +44,9 @@ class UpdateNowController extends ThinkUpAuthAPIController {
             '<code style="font-family:Courier">cd '.THINKUP_WEBAPP_PATH.
             'crawler/;export THINKUP_PASSWORD=yourpassword; '.$php_path.' crawl.php '.$this->getLoggedInUser().
             '</code>');
+        if (isset($_GET['log']) && $_GET['log'] == 'full') {
+            $this->addToView('log', 'full');
+        }
         return $this->generateView();
     }
 }

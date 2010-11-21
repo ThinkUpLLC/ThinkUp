@@ -48,8 +48,13 @@ class CrawlerWebController extends ThinkUpAuthAPIController {
 
         try {
             $logger = Logger::getInstance();
-            $logger->setVerbosity(Logger::USER_MSGS);
-            $logger->enableHTMLOutput();
+            if (isset($_GET['log']) && $_GET['log'] == 'full') {
+                $logger->setVerbosity(Logger::ALL_MSGS);
+                echo '<pre style="font-family:Courier;font-size:10px;">';
+            } else {
+                $logger->setVerbosity(Logger::USER_MSGS);
+                $logger->enableHTMLOutput();
+            }
             $crawler = Crawler::getInstance();
             $crawler->crawl();
             $logger->close();
