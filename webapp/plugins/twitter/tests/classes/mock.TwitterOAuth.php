@@ -43,7 +43,7 @@ class TwitterOAuth {
 
     public function oAuthRequest($url, $method = NULL, $args = array()) {
         $url = Utils::getURLWithParams($url, $args);
-        // aju
+
         $FAUX_DATA_PATH = THINKUP_ROOT_PATH . $this->data_path;
         $url = str_replace('https://twitter.com/', '', $url);
         $url = str_replace('https://api.twitter.com/1/', '', $url);
@@ -58,7 +58,7 @@ class TwitterOAuth {
     
     public function setDataPath($data_path) {
       $this->data_path = $data_path;
-      print "data path is: " . $this->data_path . "\n";
+      // print "data path is: " . $this->data_path . "\n";
     }
 
     public function http($url) {

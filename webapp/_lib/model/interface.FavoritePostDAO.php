@@ -32,14 +32,67 @@
 interface FavoritePostDAO extends PostDAO {
 
     
+    /**
+     * Inserts the given post record (if it does not already exist), then creates a row in the favorites 'join' table
+     * to store information about the 'favorited' relationship. $vals holds the parsed post information.
+     * @param array $vals
+     * @param int $favoriter_id
+     * @return int
+     */
     public function addFavorite($favoriter_id, $vals);
+    /**
+     * 'Unfavorites' a post with respect to a given user, by removing the relevant entry from
+     * the favorites table.
+     * @param int $tid
+     * @param int $uid
+     * @param str $network
+     * @return int
+     */
     public function unFavorite($tid, $uid, $network);
     
+    /**
+     * wrapper function for getAllFPostsByUserID. Supports pagination.
+     * @param int $owner_id
+     * @param str $network
+     * @param int $count
+     * @param int $page
+     * @return array Posts with link object set
+     */
     public function getAllFPosts($owner_id, $network, $count, $page);
+    /**
+     * wrapper function for getAllFPostsByUserID.  Takes an 'upper bound' argument ($ub)-- if set,
+     * only posts with id < $ub are retrieved.
+     * @param int $owner_id
+     * @param str $network
+     * @param int $count
+     * @param int $ub
+     * @return array Posts with link object set 
+     */
     public function getAllFPostsUB($owner_id, $network, $count, $ub);
-    public function getAllFPostsByUsername($username, $network, $count, $page);
+    /**
+     * wrapper function for getAllFPostsByUsernameOrderedBy
+     * @param str $username
+     * @param str $network
+     * @param int $count
+     * @return array Posts with link object set 
+     */
+    public function getAllFPostsByUsername($username, $network, $count);
     
-    public function getAllFPostsByUsernameIterator($owner_id, $network, $count);
-    public function getAllFPostsIterator($user_id, $network, $count, $include_replies);
+    /**
+     * iterator wrapper for getAllFPostsByUsernameOrderedBy
+     * @param str $username
+     * @param str $network
+     * @param int $count
+     * @return PostIterator
+     */
+    public function getAllFPostsByUsernameIterator($username, $network, $count);
+    /**
+     * iterator wrapper for getAllFPostsByUserID
+     * @param int $user_id
+     * @param str $network
+     * @param int $count
+     * @return PostIterator
+     */
+    public function getAllFPostsIterator($user_id, $network, $count);
 
 }

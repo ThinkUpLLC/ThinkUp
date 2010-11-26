@@ -52,7 +52,9 @@ class TwitterCrawler {
      * @var Logger
      */
     var $logger;
+    
     var $config;
+    var $twitter_options; 
 
     /**
      * Constructor
@@ -67,6 +69,8 @@ class TwitterCrawler {
         $this->logger->setUsername($instance->network_username);
         $this->user_dao = DAOFactory::getDAO('UserDAO');
         $this->config = Config::getInstance();
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $this->twitter_options = $plugin_option_dao->getOptionsHash('twitter');
     }
     /**
      * Get owner user details and save them to the database.
@@ -956,7 +960,7 @@ class TwitterCrawler {
      * For each API call left, grab oldest follow relationship, check if it exists, and update table.
      */
     public function cleanUpFollows() {
-        $this->logger->logInfo("****working on cleanUpFollows****", __METHOD__.','.__LINE__);
+        $this->logger->logInfo("Working on cleanUpFollows", __METHOD__.','.__LINE__);
 
         $fd = DAOFactory::getDAO('FollowDAO');
         $continue_fetching = true;
@@ -1015,11 +1019,18 @@ class TwitterCrawler {
      * @author Amy Unruh
      */
     public function fetchInstanceFavorites() {
+        
+        // first, check that we have the resources to do work
+        if (!($this->api->available && $this->api->available_api_calls_for_crawler)) {
+            $this->logger->logInfo("terminating fetchInstanceFavorites-- no API calls available",  __METHOD__.','.__LINE__);
+            return true;
+        }
+
         $status_message = "";
         // todo - can we get this from API?
         $page_size = 20; // number of favs per page retrieved from the API call
 
-        $this->logger->logInfo("****working on favorites****", __METHOD__.','.__LINE__);
+        $this->logger->logUserInfo("Checking for new favorites.", __METHOD__.','.__LINE__);
 
         $last_favorites_count = $this->instance->favorites_profile;
         $this->logger->logInfo("last favs count: $last_favorites_count", __METHOD__.','.__LINE__);
@@ -1028,7 +1039,7 @@ class TwitterCrawler {
         $curr_favs_count = $this->user->favorites_count;
         $this->logger->logInfo("curr favs count: $curr_favs_count", __METHOD__.','.__LINE__);
 
-        $last_page_of_favs = round($this->api->archive_limit / $page_size) + 1;
+        $last_page_of_favs = round($this->api->archive_limit / $page_size);
 
         if ($last_page_fetched_favorites == "") {
             $last_page_fetched_favorites = 0;
@@ -1063,14 +1074,15 @@ class TwitterCrawler {
             // figure out start page based on where we left off last time, and how many favs added since then
             $extra_pages = ceil($new_favs_to_add / $page_size);
             $this->logger->logInfo("extra pages: $extra_pages", __METHOD__.','.__LINE__);
+            $finished_first_fetch = false;
             if ($last_page_fetched_favorites == 0) {
-                // if at first fetch
-                $last_page_fetched_favorites = $extra_pages + 1;
+                // if at initial starting fetch (first time favs ever crawled)
+                $last_page_fetched_favs_start = $extra_pages + 1;
             } else {
-                $last_page_fetched_favorites += $extra_pages;
+                $last_page_fetched_favs_start = $last_page_fetched_favorites + $extra_pages;
             }
-            if ($last_page_fetched_favorites > $last_page_of_favs) {
-                $last_page_fetched_favorites = $last_page_of_favs + 1;
+            if ($last_page_fetched_favs_start > $last_page_of_favs) {
+                $last_page_fetched_favs_start = $last_page_of_favs + 1;
             }
         }
 
@@ -1090,23 +1102,36 @@ class TwitterCrawler {
         $this->api->available_api_calls_for_crawler;
         $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
 
-        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue) {
-            if ($mode != 0) { // in maintenance, not archiving mode
-                if ($new_favs_to_add == 0) {
-                    //then done;
-                    $continue = false;
-                } else {
-                    list($fcount, $mpage, $older_favs_smode, $stop_page, $new_favs_to_add, $last_fav_id,
-                    $last_page_fetched_favorites, $continue) =
-                    $this->maintFavsFetch ($starting_fav_id, $fcount, $mpage, $older_favs_smode, $stop_page,
-                    $new_favs_to_add, $last_fav_id, $last_page_fetched_favorites, $continue);
+        try {
+            while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue) {
+                if ($mode != 0) { // in maintenance, not archiving mode
+                    // temp. ignore this check, due to twitter API inconsistencies
+                    // if ($new_favs_to_add == 0) {
+                        //then done;
+                        // $continue = false;
+                    // } else {
+                        list($fcount, $mpage, $older_favs_smode, $stop_page, $new_favs_to_add, $last_fav_id,
+                        $last_page_fetched_favorites, $continue) =
+                        $this->maintFavsFetch ($starting_fav_id, $fcount, $mpage, $older_favs_smode, $stop_page,
+                        $new_favs_to_add, $last_fav_id, $last_page_fetched_favorites, $continue);
+                    // }
+                } else { // mode 0 -- archiving mode
+                    if (!$finished_first_fetch) {
+                        $this->logger->logInfo("in 'first_archiving_fetch' clause", __METHOD__.','.__LINE__);
+                        list($fcount, $last_fav_id, $last_page_fetched_favorites, $continue) = 
+                        $this->archivingFavsFetch($fcount, $last_fav_id, $last_page_fetched_favs_start, $continue);
+                        $finished_first_fetch = true;
+                    } else {
+                        list($fcount, $last_fav_id, $last_page_fetched_favorites, $continue) = 
+                        $this->archivingFavsFetch($fcount, $last_fav_id, $last_page_fetched_favorites, $continue);
+                    }
                 }
-            } else { // mode 0 -- archiving mode
-                list($fcount, $last_fav_id, $last_page_fetched_favorites, $continue) =
-                $this->archivingFavsFetch($fcount, $last_fav_id, $last_page_fetched_favorites, $continue);
-            }
 
-        } // end while
+            } // end while
+        } catch(Exception $e) {
+            $this->logger->logError("Got exception processing favorites: " . $e->getMessage(), __METHOD__.','.__LINE__);
+            return false;
+        }            
         // update necessary instance fields
         $this->logger->logInfo("new_favs_to_add: $new_favs_to_add, fcount: $fcount", __METHOD__.','.__LINE__);
         $this->logger->logInfo("new 'last fav id': $last_fav_id", __METHOD__.','.__LINE__);
@@ -1114,6 +1139,7 @@ class TwitterCrawler {
         $this->instance->last_favorite_id = $last_fav_id;
         $this->instance->last_page_fetched_favorites =$last_page_fetched_favorites;
         $this->instance->favorites_profile = $curr_favs_count;
+        $this->logger->logUserInfo("Added $fcount new favorites", __METHOD__.','.__LINE__);
         return true;
 
     } // end fetchInstanceFavorites
@@ -1132,7 +1158,8 @@ class TwitterCrawler {
         // $this->logger->logInfo("in maintFavsFetch", __METHOD__.','.__LINE__);
 
         $status_message = "";
-        $older_favs_pages = 2; // default, should be overridden by config file info
+        $older_favs_pages = 2; // default number of additional pages to check back through
+                               // for older favs added non-chronologically
 
         list($tweets, $cURL_status, $twitter_data) = $this->getFavsPage($mpage);
         if ($cURL_status == 200) {
@@ -1143,7 +1170,7 @@ class TwitterCrawler {
             }
             if (sizeof($tweets) == 0) {
                 // then done -- this should happen when we have run out of favs
-                $this->logger->logInfo("****it appears we have run out of favorites to process",
+                $this->logger->logInfo("It appears that we have run out of favorites to process",
                 __METHOD__.','.__LINE__);
                 $continue = false;
             } else {
@@ -1157,6 +1184,7 @@ class TwitterCrawler {
                         //expand and insert links contained in tweet
                         $this->processTweetURLs($tweet);
                         $this->logger->logInfo("fcount: $fcount", __METHOD__.','.__LINE__);
+                        $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
                     } else {
                         // fav was already stored, so take no action. This could happen both because some
                         // of the favs on the given page were processed last time, or because a separate process,
@@ -1190,13 +1218,18 @@ class TwitterCrawler {
             if ($older_favs_smode == false) {
                 // last-processed tweet
                 if ($tweet['post_id'] <= $starting_fav_id) {
-                    $older_favs_smode = true;
 
-                    // get the number of older pages to check, from the config file.
-                    $conf_older_favs_pages = (int)$this->config->getValue('tfavs_older_pages');
-                    if (is_integer($conf_older_favs_pages) && $conf_older_favs_pages > 0) {
-                        $older_favs_pages = $conf_older_favs_pages;
+                    // get 'favs_older_pages' plugin option value if it exists & is pos. int, otherwise use default
+                    $topt = $this->twitter_options;
+                    if (isset($topt['favs_older_pages'])) {
+                        $conf_older_favs_pages = $topt['favs_older_pages']->option_value;
+                        if (is_integer((int)$conf_older_favs_pages) && $conf_older_favs_pages > 0) {
+                            $older_favs_pages = $conf_older_favs_pages;
+                        }
                     }
+                    $this->logger->logInfo("older_favs_pages: $older_favs_pages", __METHOD__.','.__LINE__);
+                    
+                    $older_favs_smode = true;
                     $stop_page = $mpage + $older_favs_pages -1;
                     $this->logger->logInfo("next will be searching for older favs: stop page: $stop_page,
                     fav <= $starting_fav_id ", __METHOD__.','.__LINE__);
@@ -1205,9 +1238,9 @@ class TwitterCrawler {
                 $this->logger->logInfo("in older favs search mode with stop page $stop_page", __METHOD__.','.__LINE__);
                 // check for terminating condition, which is (for now), that we have searched N more pages back
                 // or found all the add'l tweets
-                // 23/10/10 2:41 PM arghh, again making temp change due to broken API.
+                // 23/10/10 making temp (?) change due to broken API.
                 //           if ($mpage > $stop_page || $fcount >= $new_favs_to_add) {
-                // aju temp change to not use the 'new favs to add' info while the api favs bug still exists-- it
+                // temp change to not use the 'new favs to add' info while the api favs bug still exists-- it
                 // breaks things under some circs.
                 // hopefully this will be fixed again by twitter at some point.
                 if ($mpage > $stop_page ) {
@@ -1240,27 +1273,36 @@ class TwitterCrawler {
         list($tweets, $cURL_status, $twitter_data) = $this->getFavsPage($last_page_fetched_favorites - 1);
 
         if ($cURL_status == 200) {
-            if ($tweets == -1 || sizeof($tweets) == 0) {
+            if ($tweets == -1 ) {
                 $this->logger->logInfo("in archivingFavsFetch; could not extract any tweets from response",
                 __METHOD__.','.__LINE__);
                 throw new Exception("could not extract any tweets from response");
             }
-            // $fcfg['oid'] = $this->user->user_id;
+            if (sizeof($tweets) == 0) {
+                // then just continue to the next smaller page of favs.  This case should actually not be reached,
+                // but would catch the potential situation where twitter is serving up fewer
+                // favs pages than calculated that it should based on the given archive limit and page size.
+                $this->logger->logInfo("received empty page of favs", __METHOD__.','.__LINE__);
+                $last_page_fetched_favorites--;
+                if ($last_page_fetched_favorites == 1) {
+                    $continue = false;
+                }
+                return array($fcount, $last_fav_id, $last_page_fetched_favorites, $continue);
+            }
             $pd = DAOFactory::getDAO('FavoritePostDAO');
-            // $pd->setFavoriterId($this->user->user_id);
             $status_message = "user id: " . $this->user->user_id;
             $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
             foreach ($tweets as $tweet) {
                 $tweet['network'] = 'twitter';
                 $this->logger->logInfo("working on fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
-                // $this->logger->logInfo(Utils::var_dump_ret($tweet), __METHOD__.','.__LINE__);
 
                 if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
                     $fcount++;
                     // insert links contained in tweet
                     $this->processTweetURLs($tweet);
+                    $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
                 } else {
-                    $status_message = "have already stored fav ". $tweet['post_id'];
+                    $status_message = "have already stored favorite: ". $tweet['post_id'];
                     $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
                 }
 
@@ -1295,8 +1337,6 @@ class TwitterCrawler {
             // Parse the XML file
             $tweets = $this->api->parseXML($twitter_data);
             if (!(isset($tweets) && sizeof($tweets) == 0) && $tweets == null) { // arghh, empty array evals to null.
-                //                print "in getFavsPage- tweets: ";
-                //                print_r($tweets);
                 $this->logger->logInfo("in getFavsPage; could not extract any tweets from response",
                 __METHOD__.','.__LINE__);
                 throw new Exception("could not extract any tweets from response");
@@ -1306,7 +1346,7 @@ class TwitterCrawler {
     }
 
     /**
-     * cleanUpMissedFavsUnFavs is called by the twiter plugin.
+     * cleanUpMissedFavsUnFavs is called by the twitter plugin.
      * It pages back through the older pages of favs, checking for favs that are not yet in the database,
      * as well as favs that were added to the db but are no longer returned by twitter's API.
      * However, that latter calculation, for un-fav'd tweets, is currently not reliable due to a bug on Twitter's end,
@@ -1319,12 +1359,29 @@ class TwitterCrawler {
      */
     public function cleanUpMissedFavsUnFavs() {
 
-        $this->logger->logInfo("*********in cleanUpMissedFavsUnFavs**********", __METHOD__.','.__LINE__);
-        $this->logger->logInfo("****owner user id: " . $this->user->user_id . "\n", __METHOD__.','.__LINE__);
+        // first, check that we have the resources to do work
+        if (!($this->api->available && $this->api->available_api_calls_for_crawler)) {
+            $this->logger->logInfo("terminating cleanUpMissedFavsUnFavs-- no API calls available",  __METHOD__.','.__LINE__);
+            return true;
+        }
+        $this->logger->logInfo("In cleanUpMissedFavsUnFavs", __METHOD__.','.__LINE__);
+        $this->logger->logInfo("User id: " . $this->user->user_id . "\n", __METHOD__.','.__LINE__);
+
+        $fcount = 0;
+        $favs_cleanup_pages = 1; // default number of pages to process each time the crawler runs
+        // get plugin option value if it exists & is positive int, otherwise use default 
+        $topt = $this->twitter_options;
+        if (isset($topt['favs_cleanup_pages'])) {
+            $conf_favs_cleanup_pages = $topt['favs_cleanup_pages']->option_value;
+            $this->logger->logInfo("conf_favs_cleanup_pages: $conf_favs_cleanup_pages ", __METHOD__.','.__LINE__);
+            if (is_integer((int)$conf_favs_cleanup_pages) && $conf_favs_cleanup_pages > 0) {
+                $favs_cleanup_pages = $conf_favs_cleanup_pages;
+            }
+        }
+        $this->logger->logInfo("favs_cleanup_pages: $favs_cleanup_pages ", __METHOD__.','.__LINE__);
 
         $fpd = DAOFactory::getDAO('FavoritePostDAO');
 
-        $favs_cleanup_pages = 1; // default number of pages to process each time the crawler runs
         $pagesize = 20; // number of favs per page retrieved from the API call... (tbd: any way to get
         //this from the API?)
         // get the number of older pages to check, from the config file. Used to calculate the default start
@@ -1336,13 +1393,6 @@ class TwitterCrawler {
             $default_start_page = 2;
         }
         $last_page_of_favs = round($this->api->archive_limit / $pagesize) + 1;
-
-        // get how many cleanup pages to process each time the crawler runs, from the config file.
-        // Fall back to default if not set.
-        $conf_favs_cleanup_pages = (int)$this->config->getValue('tfavs_cleanup_pages');
-        if (is_integer($conf_favs_cleanup_pages) && $conf_favs_cleanup_pages > 0) {
-            $favs_cleanup_pages = $conf_favs_cleanup_pages;
-        }
 
         $last_unfav_page_checked = $this->instance->last_unfav_page_checked;
         $start_page = $last_unfav_page_checked > 0? $last_unfav_page_checked + 1 : $default_start_page;
@@ -1377,6 +1427,7 @@ class TwitterCrawler {
                     // insert links contained in tweet
                     $this->processTweetURLs($fav);
                     $this->logger->logInfo("added fav " . $fav['post_id'], __METHOD__.','.__LINE__);
+                    $fcount++;
                 } else {
                     $status_message = "have already stored fav ". $fav['post_id'];
                     $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
@@ -1423,6 +1474,7 @@ class TwitterCrawler {
             }
             $count++;
         }
+        $this->logger->logUserInfo("Added $fcount older missed favorites", __METHOD__.','.__LINE__);
         return true;
     } // end cleanUpUnFavs
 

@@ -348,7 +348,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         $this->getInstanceUserStats($i->network_user_id, $i->network);
         $ot = ($user_xml_total_posts_by_owner != '' ? true : false);
         $lsi = ($i->last_post_id != "" ? true : false);
-        //aju
+
         $lfi = ($i->last_favorite_id != "" ? true : false);
 
         $is_archive_loaded_follows = $this->convertBoolToDB($i->is_archive_loaded_follows);
@@ -358,14 +358,12 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         if ($lsi){
             $q .= " last_post_id = :last_post_id, ";
         }
-        // aju
         if ($lfi){
             $q .= " last_favorite_id = :lastfavid, ";
         }
         $q .= " last_page_fetched_replies = :lpfr, ";
         $q .= " last_page_fetched_tweets = :lpft , ";
         
-        //aju
         $q .= " last_unfav_page_checked = :lastunfav, ";
         $q .= " last_page_fetched_favorites = :lpfv, ";
         $q .= " favorites_profile = :fp, ";
@@ -397,7 +395,7 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
 
         $vars = array(
             ':last_post_id' => $i->last_post_id,
-            // aju
+
             ':lastfavid'    => $i->last_favorite_id,
             ':lastunfav'    => $i->last_unfav_page_checked,
             ':lpfv'         => $i->last_page_fetched_favorites,

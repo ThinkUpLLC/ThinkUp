@@ -80,7 +80,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
     public function updateUser($user) {
         $status_message = "";
         $has_friend_count = $user->friend_count != '' ? true : false;
-        // aju
+
         $has_favorites_count = $user->favorites_count != '' ? true : false;
         $has_last_post = $user->last_post != '' ? true : false;
         $has_last_post_id = $user->last_post_id != '' ? true : false;
@@ -130,7 +130,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         if ($has_friend_count) {
             $vars[':friend_count'] = $user->friend_count;
         }
-        // aju
+
         if ($has_favorites_count) {
             $vars[':favorites_count'] = $user->favorites_count;
         }

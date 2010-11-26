@@ -185,7 +185,7 @@ class Utils {
     }
 
     /**
-     * aju....
+     * utility function to generate var dump to string
      */
     public static function var_dump_ret($mixed = null) {
       ob_start();

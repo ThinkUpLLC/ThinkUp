@@ -350,20 +350,18 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetFavoritedLinks() {
 
-        //setup: put here because the additional data alters the counts of the other tests...
+        $lbuilders = array();
 
         // test links for fav checking
         $counter = 0;
         while ($counter < 5) {
             $post_id = $counter + 180;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-
-            $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
-            $q .= " VALUES ('http://example2.com/".$counter."', 'Link $counter', 0, $post_id, 'twitter', 0);";
-            PDODAO::$PDO->exec($q);
+            $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>0, 
+            'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
-
         //Insert several posts for fav checking-- links will be associated with 5 of them
         $counter = 0;
         while ($counter < 10) {
@@ -371,17 +369,16 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $user_id = ($counter * 5) + 2;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
-            $q  = "INSERT INTO tu_posts ( ";
-            $q .= " post_id, author_user_id, author_username, author_fullname ";
-            $q .= " ) ";
-            $q .= "VALUES ('$post_id', $user_id, 'user$counter', 'User$counter Name$counter' ";
-            $q .= " );";
-            $this->db->exec($q);
+            $lbuilders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>$user_id,
+            'author_username'=>"user$counter", 'author_fullname'=>"User$counter Name$counter", 'author_avatar'=>'avatar.jpg', 
+            'post_text'=>'This is post '.$post_id, 'pub_date'=>'2009-01-01 00:'.
+            $pseudo_minute.':00', 'network'=>'twitter',
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
             // user '20' favorites the first 7 of the test posts, only 5 of which will have links
             if ($counter < 7) {
-                $q1 = "INSERT IGNORE INTO tu_favorites (status_id, author_user_id, fav_of_user_id, network) VALUES (" .
-               "$post_id, $user_id, 20, 'twitter');";
-                $this->db->exec($q1);
+                $lbuilders[] = FixtureBuilder::build('favorites', array('status_id'=>$post_id, 'author_user_id'=>$user_id, 
+                'fav_of_user_id'=>20, 'network'=>'twitter'));
             }
 
             $counter++;
@@ -390,8 +387,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getLinksByFavorites(20, 'twitter');
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 5);
-        // print "in testGetFavoritedLinks\n";
-        // print_r($result);
+        $lbuilders = null;
     }
 
 }

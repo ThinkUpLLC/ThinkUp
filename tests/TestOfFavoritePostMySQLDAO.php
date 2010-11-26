@@ -19,7 +19,11 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Amy Unruh, Gina Trapani
+ * @author Amy Unruh
  */
+
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -27,11 +31,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
 
 /**
- * Test of PostMySQL DAO implementation
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Amy Unruh, Gina Trapani
- * @author Amy Unruh
- *
+ * Tests for FavoritePostMySQLDAO
  */
 class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
     /**
@@ -50,62 +50,58 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
         $config = Config::getInstance();
         $this->prefix = $config->getValue('table_prefix');
+        $this->builders = self::buildData();
+    }
+    
+    protected function buildData() {
 
-        $this->DAO = new FavoritePostMySQLDAO();
-        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id) VALUES (1, 1)";
-        PDODAO::$PDO->exec($q);
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated)
-        VALUES (13, 'ev', 'Ev Williams', 'avatar.jpg', '1/1/2005');";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
+        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
+        'last_updated'=>'1/1/2005', 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (18, 'shutterbug', 'Shutter Bug', 'avatar.jpg', 0, 10);";
-        PDODAO::$PDO->exec($q);
+        // $builders[] = FixtureBuilder::build('users', array('user_id'=>18, 'user_name'=>'shutterbug',
+        // 'full_name'=>'Shutter Bug', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
+        // 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 0, 70);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>19, 'user_name'=>'linkbaiter',
+        'full_name'=>'Link Baiter', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>70,
+        'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (20, 'user1', 'User 1', 'avatar.jpg', 0, 90);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>20, 'user_name'=>'user1',
+        'full_name'=>'User 1', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>90,
+        'network'=>'twitter'));
 
         //protected user
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (21, 'user2', 'User 2', 'avatar.jpg', 1, 80);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>21, 'user_name'=>'user2',
+        'full_name'=>'User 2', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>80,
+        'network'=>'twitter'));
+        
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>22, 'user_name'=>'quoter',
+        'full_name'=>'Quotables', 'is_protected'=>0, 'follower_count'=>80, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (22, 'quoter', 'Quotables', 'avatar.jpg', 0, 80);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>23, 'user_name'=>'user3',
+        'full_name'=>'User 3', 'is_protected'=>0, 'follower_count'=>100, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (23, 'user3', 'User 3', 'avatar.jpg', 0, 100);";
-        PDODAO::$PDO->exec($q);
-
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, is_protected, follower_count)
-        VALUES (24, 'notonpublictimeline', 'Not on Public Timeline', 'avatar.jpg', 1, 100);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>24, 'user_name'=>'notonpublictimeline',
+        'full_name'=>'Not on Public Timeline', 'is_protected'=>1, 'network'=>'twitter', 'follower_count'=>100));
 
         //Make public
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (13, 'ev', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>13, 'network_username'=>'ev',
+        'is_public'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (18, 'shutterbug', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>19, 'network_username'=>'linkbaiter',
+        'is_public'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (19, 'linkbaiter', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>23, 'network_username'=>'user3',
+        'is_public'=>1, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public) VALUES (23, 'user3', 1);";
-        PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>24,
+        'network_username'=>'notonpublictimeline', 'is_public'=>0, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_instances (network_user_id, network_username, is_public)
-        VALUES (24, 'notonpublictimeline', 0);";
-        PDODAO::$PDO->exec($q);
-
-        //Add straight text posts
+        //Add straight text posts from ev
         $counter = 0;
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
@@ -116,50 +112,57 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
             } else {
                 $source = 'web';
             }
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
-            ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
-            'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
+            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
+            'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.
+            $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5, 'network'=>'twitter',
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
             $counter++;
         }
 
-        //Add link posts
+
+        //Add link posts from 'linkbaiter'
         $counter = 0;
         while ($counter < 40) {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) 
-            VALUES ($post_id, 19, 'linkbaiter', 'Link Baiter', 'avatar.jpg', 
-            'This is link post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', 0, 0, 'twitter');";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>19,
+            'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+            'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
+            $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
 
-            $q = "INSERT INTO tu_links (url, expanded_url, title, clicks, post_id, is_image)
-            VALUES ('http://example.com/".$counter."', 'http://example.com/".$counter.".html', 
-            'Link $counter', 0, $post_id, 0);";
-            PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'explanded_url'=>'http://example.com/'.$counter.'.html', 'title'=>'Link $counter', 'clicks'=>0, 
+            'post_id'=>$post_id, 'is_image'=>0));
 
             $counter++;
-            
-            // have 'user1' favorite some of ev's posts
-            for ($i = 0; $i < 20; $i++) {
-              // $rand_postid = rand(0, 40);
-              $q = "INSERT IGNORE INTO tu_favorites (status_id, author_user_id, fav_of_user_id, network) VALUES (" .
-                "$i, 13, 20, 'twitter');";
-              PDODAO::$PDO->exec($q);
-            }
-            // have 'user1' favorite some linkbaiter posts
-            for ($i = 80; $i < 100; $i++) {
-              // $rand_postid = rand(0, 40);
-              $q = "INSERT IGNORE INTO tu_favorites (status_id, author_user_id, fav_of_user_id, network) VALUES (" .
-                "$i, 19, 20, 'twitter');";
-              PDODAO::$PDO->exec($q);
-            }
         }
+        
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>10822735852740608, 'author_user_id'=>23,
+        'author_username'=>'user3', 'author_fullname'=>'User 3', 'network'=>'twitter', 
+        'post_text'=>'@nytimes has posted an interactive panoramic photo that shows how Times Square has changed over the last 20 years http://nyti.ms/hmTVzP', 
+        'source'=>'web', 'pub_date'=>'-300s', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'location'=>'New York City', 'is_geo_encoded'=>0));
+            
+        // have 'user1' favorite some of ev's posts
+        for ($i = 0; $i < 20; $i++) {
+            $builders[] = FixtureBuilder::build('favorites', array('status_id'=>$i, 
+            'author_user_id'=>13, 'fav_of_user_id'=>20, 'network'=>'twitter'));
+        }
+        // have 'user1' favorite some linkbaiter posts
+        for ($i = 80; $i < 100; $i++) {
+            $builders[] = FixtureBuilder::build('favorites', array('status_id'=>$i, 
+            'author_user_id'=>19, 'fav_of_user_id'=>20, 'network'=>'twitter'));
+        }
+        // have 'user2' favorite one of the same linkbaiter posts
+        $builders[] = FixtureBuilder::build('favorites', array('status_id'=>87, 
+        'author_user_id'=>19, 'fav_of_user_id'=>21, 'network'=>'twitter'));
+
+        return $builders;
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
     }
 
@@ -173,59 +176,139 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
 
 
     /**
-     * Test creation of fav post
+     * Test creation of fav post, where the post has not yet been saved to database.
      */
     public function testFavPostCreation() {
-      
+        $dao = new FavoritePostMySQLDAO();
+        $favoriter_id = 21; //user 2
+        $vals = $this->buildPostArray1();
+        $res = $dao->addFavorite($favoriter_id, $vals);
+        $this->assertEqual($res, 1);
     }
     
     /**
-     * Test unfavoriting of fav post
+     * Test creation of fav post, where post already exists in db, but not favorite bookkeeping,
+     * and so we are just adding an entry to the favorites table.
+     */
+    public function testFavPostCreationPostExists() {
+        $dao = new FavoritePostMySQLDAO();
+        $favoriter_id = 21; //user 2
+        $vals = $this->buildPostArray2();
+        $res = $dao->addFavorite($favoriter_id, $vals);
+        $this->assertEqual($res, 1);
+        // now try again-- this time the 'add' should return 0
+        $res = $dao->addFavorite($favoriter_id, $vals);
+        $this->assertEqual($res, 0);
+    }
+    
+    /**
+     * Test unfavoriting of fav'd post
      */
     public function testFavPostUnfav() {
-      
+        $dao = new FavoritePostMySQLDAO();
+        $res = $dao->unFavorite(81, 20, 'twitter');
+        $this->assertEqual($res, 1);
     }
     
     /**
-     * Test attempted unfav of a post that is not favorited by the owner
+     * Test attempted unfav of a post that is favorited, but not by the given user
      */
     public function testNonFavPostUnfav() {
-      
+        $dao = new FavoritePostMySQLDAO();
+        $res = $dao->unFavorite(82, 19, 'twitter');
+        $this->assertEqual($res, 0);      
     }
+    
+    /**
+     * Check unfavoriting the same post by multiple users
+     */
+     public function testMultipleFavsOfPost() {
+         $dao = new FavoritePostMySQLDAO();
+         $res = $dao->unFavorite(87, 20, 'twitter');
+         $this->assertEqual($res, 1);      
+         $res = $dao->unFavorite(87, 21, 'twitter');
+         $this->assertEqual($res, 1);      
+         $res = $dao->unFavorite(87, 20, 'twitter');
+         $this->assertEqual($res, 0);      
+     }
 
     /**
-     * Test fetch of all favorited posts for a given user by userid
+     * Test fetch of N favorited posts for a given user by userid
      */
     public function testGetAllFavsForUserID() {
-      $dao = new FavoritePostMySQLDAO();
-      $res = $dao->getAllFPosts(20, 'twitter', 6);
-      $this->assertIsA($res, "array");
-      $this->assertEqual(count($res), 6);
-      // print_r($res);
+        $dao = new FavoritePostMySQLDAO();
+        $res = $dao->getAllFPosts(20, 'twitter', 6);
+        $this->assertIsA($res, "array");
+        $this->assertEqual(count($res), 6);
+        $this->assertEqual($res[0]->post_text, 'This is link post 19');
     }
     
     /**
      * Test fetch of all favorited posts for a given user by username
      */
     public function testGetAllFavsForUsername() {
-      $dao = new FavoritePostMySQLDAO();
-      $res = $dao->getAllFPostsByUsername('user1', 'twitter', 6);
-      $this->assertIsA($res, "array");
-      $this->assertEqual(count($res), 6);
-      // print_r($res);
+        $dao = new FavoritePostMySQLDAO();
+        $res = $dao->getAllFPostsByUsername('user1', 'twitter', 100);
+        $this->assertIsA($res, "array");
+        $this->assertEqual(count($res), 40);
     }
     
     /**
      * Test fetch of all favorited posts for a given user with post # less than a given upper bound.
      */
     public function testGetAllFavsForUserUB() {
-      
+        $dao = new FavoritePostMySQLDAO();
+        $res = $dao->getAllFPostsUB(20, 'twitter', 100, 10);
+        $this->assertIsA($res, "array");
+        $this->assertEqual(count($res), 10);      
     }
     
     /**
      * Test pagination
      */
     public function testFavoritesPagination() {
-      
+        $dao = new FavoritePostMySQLDAO();
+        $res = $dao->getAllFPosts(20, 'twitter', 10, 3); // fetch page 3
+        $this->assertIsA($res, "array");
+        $this->assertEqual(count($res), 10);
+        $this->assertEqual($res[0]->post_text, 'This is post 19');
+    }
+    
+    /**
+     * helper method to build a post
+     */
+    private function buildPostArray1() {
+        $dao = new PostMySQLDAO();
+        $vals = array();
+        $vals['post_id']=2904;
+        $vals['author_username']='quoter';
+        $vals['author_fullname']="Quoter of Quotables";
+        $vals['author_avatar']='avatar.jpg';
+        $vals['author_user_id']= 22;
+        $vals['post_text']="Go confidently in the direction of your dreams! Live the life you've imagined.";
+        $vals['pub_date']='3/1/2010';
+        $vals['source']='web';
+        $vals['network']= 'twitter';
+        $vals['is_protected'] = 0;
+        return $vals;
+    }
+    
+    /**
+     * helper method to build a post
+     */
+    private function buildPostArray2() {
+        $dao = new PostMySQLDAO();
+        $vals = array();
+        $vals['post_id']=10822735852740608;
+        $vals['author_username']='user3';
+        $vals['author_fullname']="User 3";
+        $vals['author_avatar']='avatar.jpg';
+        $vals['author_user_id']= 23;
+        $vals['post_text']="@nytimes has posted an interactive panoramic photo that shows how Times Square has changed over the last 20 years http://nyti.ms/hmTVzP";
+        $vals['pub_date']='-200s';
+        $vals['source']='web';
+        $vals['network']= 'twitter';
+        $vals['is_protected'] = 0;
+        return $vals;
     }
 }
