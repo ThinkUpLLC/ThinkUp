@@ -287,22 +287,28 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetAllQuestionPosts() {
         //Add a question
-        $question_builder = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
+        $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
         'post_text'=>'I need a new cell phone. What should I buy?', 'network'=>'twitter', 'in_reply_to_post_id'=>0,
         'pub_date'=>'-1d'));
 
         $dao = new PostMySQLDAO();
         $questions = $dao->getAllQuestionPosts(13, 'twitter', 10);
-        $this->assertTrue(sizeof($questions), 1);
+        $this->assertEqual(sizeof($questions), 1);
         $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?' );
 
         //Add another question
-        $question_builder1 = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
+        $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
         'post_text'=>'Best sushi in NY? downtown', 'network'=>'twitter', 'in_reply_to_post_id'=>0, 'pub_date'=>'-2d'));
         $questions = $dao->getAllQuestionPosts(13, 'twitter', 10);
-        $this->assertTrue(sizeof($questions), 1);
+        $this->assertEqual(sizeof($questions), 2);
         $this->assertEqual($questions[1]->post_text, 'Best sushi in NY? downtown' );
         $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?' );
+
+        //Messages with a question mark in between two characters (e.g. URLs) aren't necessarily questions
+        $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
+        'post_text'=>'Love this video: http://www.youtube.com/watch?v=PQu-zrE-k5s', 'network'=>'twitter', 'in_reply_to_post_id'=>0, 'pub_date'=>'-3d'));
+        $questions = $dao->getAllQuestionPosts(13, 'twitter', 10);
+        $this->assertEqual(sizeof($questions), 2);
     }
     /**
      * Test getOrphanReplies
