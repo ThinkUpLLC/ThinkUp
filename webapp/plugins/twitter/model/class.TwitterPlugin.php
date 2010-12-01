@@ -115,8 +115,8 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin {
                 $crawler->cleanUpFollows();
 
                 // Save instance
-                if (isset($crawler->owner_object)) {
-                    $id->save($instance, $crawler->owner_object->post_count, $logger);
+                if (isset($crawler->user)) {
+                    $id->save($instance, $crawler->user->post_count, $logger);
                 }
                 $logger->logUserSuccess("Finished collecting data for ".$instance->network_username." on Twitter.",
                 __METHOD__.','.__LINE__);
