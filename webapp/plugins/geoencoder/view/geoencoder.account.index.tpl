@@ -2,7 +2,7 @@
 <h2 class="subhead">GeoEncoder Plugin</h2>
 
 <p>
-    The Geoencoder plugin fetches lattitude and longitude points for a post or user's location to plot on a Google Map.
+    The Geoencoder plugin fetches latitude and longitude points for a post or user's location to plot on a Google Map.
 </p>
 <br>
 
