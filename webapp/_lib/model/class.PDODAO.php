@@ -153,12 +153,25 @@ abstract class PDODAO {
                 }
             }
         }
-        $stmt->execute();
+        try {
+            $stmt->execute();
+        } catch (PDOException $e) {
+            $config = Config::getInstance();
+            $exception_details = 'Database error! ';
+            if ($config->getValue('debug')) {
+                $exception_details .= '<br>ThinkUp could not execute the following query:<br> '.
+                str_replace(chr(10), "", $stmt->queryString) . '  <br>PDOException: '. $e->getMessage();
+            } else {
+                $exception_details .=
+                '<br>To see the technical details of what went wrong, set debug = true in ThinkUp\'s config file.';
+            }
+            throw new PDOException ($exception_details);
+        }
         if ($this->profiler_enabled) {
             $end_time = microtime(true);
             $total_time = $end_time - $start_time;
             $profiler = Profiler::getInstance();
-            $profiler->add($total_time, $sql, true, $stmt->rowCount());
+            $profiler->add($total_time, $stmt->queryString, true, $stmt->rowCount());
         }
         return $stmt;
     }
