@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.Menu.php
+ * ThinkUp/webapp/_lib/model/interface.PostDetailPlugin.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -21,37 +21,18 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Menu
- * Container for a set of menu items.
+ * Post detail page plugin interface
+ *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class Menu {
+interface PostDetailPlugin extends ThinkUpPlugin {
     /**
-     * @var str
+     * Get Post Detail menu
+     * @param $post Post
+     * @return array of Menu objects (Tweets, Friends, Followers, etc)
      */
-    var $heading;
-    /**
-     * @var array
-     */
-    var $items = array();
-
-    /**
-     * Constructor
-     * @param str $heading Menu heading
-     * @return Menu
-     */
-    public function __construct($heading) {
-        $this->heading = $heading;
-    }
-
-    /**
-     * Add item to menu
-     * @param MenuItem $menu_item
-     */
-    public function addMenuItem($menu_item) {
-        array_push($this->items, $menu_item);
-    }
+    public function getPostDetailMenuItems($post);
 }

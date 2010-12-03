@@ -35,27 +35,10 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/model/class.HelloThi
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
 
-class TestOfWebapp extends ThinkUpBasicUnitTestCase {
+class TestOfWebapp extends ThinkUpUnitTestCase {
 
-    /**
-     * Constructor
-     */
     public function __construct() {
         $this->UnitTestCase('Webapp class test');
-    }
-
-    /**
-     * Set up test
-     */
-    public function setUp() {
-        parent::setUp();
-    }
-
-    /**
-     * Tear down test
-     */
-    public function tearDown() {
-        parent::tearDown();
     }
 
     /**
@@ -84,20 +67,17 @@ class TestOfWebapp extends ThinkUpBasicUnitTestCase {
     /**
      * Test registerPlugin when plugin object does not have the right methods available
      */
-    public function testWebappRegisterPluginWithoutWebappInterfaceImplemented() {
+    public function testWebappRegisterPluginWithoutDashboardPluginInterfaceImplemented() {
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('hellothinkup', "HelloThinkUpPlugin");
         $webapp->setActivePlugin('hellothinkup');
 
-        $this->expectException( new Exception(
-        "The HelloThinkUpPlugin object does not have a getDashboardMenu method.") );
-        $webapp->getDashboardMenu(null);
+        $menu = $webapp->getDashboardMenu(null);
+        $this->assertIsA($menu, 'Array');
+        $this->assertEqual(sizeof($menu), 0);
     }
 
-    /**
-     * Test getMenuItem
-     */
-    public function testGetMenuItem() {
+    public function testGetDashboardMenu() {
         $webapp = Webapp::getInstance();
         $config = Config::getInstance();
         $webapp->registerPlugin('twitter', "TwitterPlugin");
@@ -106,17 +86,76 @@ class TestOfWebapp extends ThinkUpBasicUnitTestCase {
         $instance = new Instance();
         $instance->network_user_id = 930061;
 
-        $tab = $webapp->getMenuItem('tweets-all', $instance);
-        $this->assertIsA($tab, 'MenuItem');
-        $this->assertEqual($tab->view_template, Utils::getPluginViewDirectory('twitter').'twitter.inline.view.tpl',
-        "Template ");
-        $this->assertEqual($tab->short_name, 'tweets-all', "Short name");
-        $this->assertEqual($tab->name, 'All Tweets', "Name");
-        $this->assertEqual($tab->description, 'All tweets', "Description");
-        $this->assertIsA($tab->datasets, 'array');
-        $this->assertEqual(sizeOf($tab->datasets), 1);
+        $menus_array = $webapp->getDashboardMenu($instance);
+        $this->assertIsA($menus_array, 'Array');
+        $this->assertEqual(sizeof($menus_array), 17);
+        $this->assertIsA($menus_array['tweets-all'], 'MenuItem');
+    }
 
-        $tab = $webapp->getMenuItem('nonexistent', $instance);
-        $this->assertEqual($tab, null);
+    public function testGetDashboardMenuItem() {
+        $webapp = Webapp::getInstance();
+        $config = Config::getInstance();
+        $webapp->registerPlugin('twitter', "TwitterPlugin");
+        $webapp->setActivePlugin('twitter');
+
+        $instance = new Instance();
+        $instance->network_user_id = 930061;
+
+        $menu_item = $webapp->getDashboardMenuItem('tweets-all', $instance);
+        $this->assertIsA($menu_item, 'MenuItem');
+        $this->assertEqual($menu_item->view_template, Utils::getPluginViewDirectory('twitter').
+        'twitter.inline.view.tpl', "Template ");
+        $this->assertEqual($menu_item->name, 'All Tweets', "Name");
+        $this->assertEqual($menu_item->description, 'All tweets', "Description");
+        $this->assertIsA($menu_item->datasets, 'array');
+        $this->assertEqual(sizeOf($menu_item->datasets), 1);
+
+        $menu_item = $webapp->getDashboardMenuItem('nonexistent', $instance);
+        $this->assertEqual($menu_item, null);
+    }
+
+    public function testGetPostDetailMenu() {
+        $webapp = Webapp::getInstance();
+        $config = Config::getInstance();
+        $webapp->registerPlugin('twitter', "TwitterPlugin");
+        $webapp->setActivePlugin('twitter');
+
+        $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
+        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
+        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'post_id'=>9021481076, 'is_protected'=>0,
+        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 
+        'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
+
+        $menus_array = $webapp->getPostDetailMenu($post);
+        $this->assertIsA($menus_array, 'Array');
+        $this->assertEqual(sizeof($menus_array), 1);
+        $this->assertIsA($menus_array['fwds'], 'MenuItem');
+    }
+
+    public function testGetPostDetailMenuItem() {
+        $webapp = Webapp::getInstance();
+        $config = Config::getInstance();
+        $webapp->registerPlugin('twitter', "TwitterPlugin");
+        $webapp->setActivePlugin('twitter');
+
+        $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
+        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
+        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'post_id'=>9021481076, 'is_protected'=>0,
+        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 
+        'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
+
+        $menu_item = $webapp->getPostDetailMenuItem('fwds', $post);
+        $this->assertIsA($menu_item, 'MenuItem');
+        $this->assertEqual($menu_item->view_template, Utils::getPluginViewDirectory('twitter').
+        'twitter.post.retweets.tpl', "Template ");
+        $this->assertEqual($menu_item->name, 'Retweets', "Name");
+        $this->assertEqual($menu_item->description, 'Retweets of this tweet', "Description");
+        $this->assertIsA($menu_item->datasets, 'array');
+        $this->assertEqual(sizeOf($menu_item->datasets), 1);
+
+        $menu_item = $webapp->getPostDetailMenuItem('nonexistent', $post);
+        $this->assertEqual($menu_item, null);
     }
 }

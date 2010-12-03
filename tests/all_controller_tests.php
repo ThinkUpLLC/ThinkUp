@@ -46,7 +46,6 @@ $controller_test->addTestCase(new TestOfInstallerController());
 $controller_test->addTestCase(new TestOfLoginController());
 $controller_test->addTestCase(new TestOfLogoutController());
 $controller_test->addTestCase(new TestOfPasswordResetController());
-$controller_test->addTestCase(new TestOfMapController());
 $controller_test->addTestCase(new TestOfMarkParentController());
 $controller_test->addTestCase(new TestOfPostController());
 $controller_test->addTestCase(new TestOfRegisterController());

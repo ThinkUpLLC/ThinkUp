@@ -129,7 +129,7 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
             'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 'source'=>'web', 
             'pub_date'=>"2006-01-01 00:$pseudo_minute:00", 'reply_count_cache'=>$reply_or_forward_count, 
             'retweet_count_cache'=>$reply_or_forward_count, 'post_text'=>'This is post '.$counter, 
-            'network'=>'twitter'));
+            'network'=>'twitter', 'is_protected'=>0));
 
             $counter++;
         }

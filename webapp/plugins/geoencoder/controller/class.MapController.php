@@ -39,7 +39,7 @@ class MapController extends ThinkUpController {
      */
     public function control() {
         if ($this->shouldRefreshCache()) {
-            $this->setViewTemplate('map.tpl');
+            $this->setViewTemplate(Utils::getPluginViewDirectory('geoencoder').'geoencoder.map.iframe.tpl');
             $this->setPageTitle('Locate Post on Map');
             $post_dao = DAOFactory::getDAO('PostDAO');
 
@@ -53,26 +53,20 @@ class MapController extends ThinkUpController {
             $network = (isset($_GET['n']))?$_GET['n']:'twitter';
             $type = (isset($_GET['t']))?$_GET['t']:'post';
             $post_id = (isset($_GET['pid']))?$_GET['pid']:'post_id';
+            $post = $post_dao->getPost($post_id, $network);
 
-            if ($type == 'post' && $post_dao->isPostInDB($post_id, $network)) {
+            if ($type == 'post' && isset($post) && $post->is_geo_encoded == 1) {
+                $this->addToView('post', $post);
+
                 $this->addHeaderJavaScript('plugins/geoencoder/assets/js/generatemap.js');
                 $this->addToView('gmaps_api', $api_key);
 
-                $post = $post_dao->getPost($post_id, $network);
-                $this->addToView('post', $post);
-
-                $post_rows =  $post_dao->getRelatedPosts($post_id, $network, !$this->isLoggedIn());
+                $post_rows =  $post_dao->getRelatedPostsArray($post_id, $network, !$this->isLoggedIn());
 
                 $posts_json = $this->processLocations($post_rows, $post_id);
                 $this->addToView('posts_data', $posts_json);
-
-                $posts = array();
-                foreach ($post_rows as $row) {
-                    $posts[] = new Post($row);
-                }
-                $this->addToView('posts_by_location', $posts);
             } else {
-                $this->addErrorMessage('No visualization data found for this post');
+                $this->addErrorMessage('This post has not been geoencoded yet; cannot display map.');
             }
         }
         return $this->generateView();

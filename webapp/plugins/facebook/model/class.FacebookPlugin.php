@@ -95,37 +95,33 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
         return $controller->go();
     }
 
-    public function getDashboardMenu($instance) {
+    public function getDashboardMenuItems($instance) {
         $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
 
         $menus = array();
 
-        $posts_menu = new Menu('Posts');
-
         //All tab
-        $alltab = new MenuItem("all_facebook_posts", "All", '', $fb_data_tpl);
+        $alltab = new MenuItem("All", '', $fb_data_tpl, 'Posts');
         $alltabds = new Dataset("all_facebook_posts", 'PostDAO', "getAllPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"),
         'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::MAX_ROWS), false );
         $alltab->addDataset($alltabds);
-        $posts_menu->addMenuItem($alltab);
+        $menus["all_facebook_posts"] = $alltab;
 
         // Most replied-to tab
-        $mrttab = new MenuItem("mostreplies", "Most replied-to", "Posts with most replies", $fb_data_tpl);
+        $mrttab = new MenuItem("Most replied-to", "Posts with most replies", $fb_data_tpl);
         $mrttabds = new Dataset("most_replied_to_posts", 'PostDAO', "getMostRepliedToPosts",
         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
         $mrttab->addDataset($mrttabds);
-        $posts_menu->addMenuItem($mrttab);
+        $menus["mostreplies"] = $mrttab;
 
         //Questions tab
-        $qtab = new MenuItem("questions", "Inquiries", "Inquiries, or posts with a question mark in them",
+        $qtab = new MenuItem("Inquiries", "Inquiries, or posts with a question mark in them",
         $fb_data_tpl);
         $qtabds = new Dataset("all_facebook_posts", 'PostDAO', "getAllQuestionPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"));
         $qtab->addDataset($qtabds);
-        $posts_menu->addMenuItem($qtab);
-
-        array_push($menus, $posts_menu);
+        $menus["questions"] = $qtab;
 
         return $menus;
     }

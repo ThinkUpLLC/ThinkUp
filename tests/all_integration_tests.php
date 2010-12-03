@@ -44,5 +44,6 @@ $web_tests->addTestCase(new WebTestOfDashboard());
 $web_tests->addTestCase(new WebTestOfDeleteInstance());
 $web_tests->addTestCase(new WebTestOfSignIn());
 $web_tests->addTestCase(new WebTestOfCaptchaImage());
-$web_tests->addTestCase(new WebTestOfTwitterPluginViews());
+$web_tests->addTestCase(new WebTestOfTwitterDashboard());
+$web_tests->addTestCase(new WebTestOfPostDetailPage());
 $web_tests->run( new TextReporter());

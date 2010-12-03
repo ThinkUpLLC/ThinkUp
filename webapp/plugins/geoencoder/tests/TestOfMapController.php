@@ -19,12 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
+ *
  * Test of Map Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -34,18 +30,18 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
+    require_once '../../../../tests/config.tests.inc.php';
+}
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.MapController.php';
+
 class TestOfMapController extends ThinkUpUnitTestCase {
 
-    /**
-     * Constructor
-     */
     public function __construct() {
         $this->UnitTestCase('MapController class test');
     }
 
-    /**
-     * Test constructor
-     */
     public function testConstructor() {
         $controller = new MapController(true);
         $this->assertTrue(isset($controller), 'constructor test');
@@ -62,7 +58,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
         $controller = new MapController(true);
         $results = $controller->go();
 
-        $this->assertPattern('/This is a test post/', $results);
+        $this->assertPattern('/All Post Locations/', $results);
         $this->assertNoPattern("/This is a private retweet to 1001/", $results);
         $this->assertNoPattern("/This is a private reply to 1001/", $results);
     }
@@ -92,7 +88,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
         $controller = new MapController(true);
         $results = $controller->go();
 
-        $this->assertPattern("/No visualization data found for this post/", $results);
+        $this->assertPattern("/This post has not been geoencoded yet; cannot display map./", $results);
     }
 
     /**
@@ -105,7 +101,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
         $controller = new MapController(true);
         $results = $controller->go();
 
-        $this->assertPattern("/No visualization data found for this post/", $results);
+        $this->assertPattern("/This post has not been geoencoded yet; cannot display map./", $results);
     }
 
     /**
@@ -120,7 +116,7 @@ class TestOfMapController extends ThinkUpUnitTestCase {
         $controller = new MapController(true);
         $results = $controller->go();
 
-        $this->assertPattern("/No visualization data found for this post/", $results);
+        $this->assertPattern("/This post has not been geoencoded yet; cannot display map./", $results);
     }
 
     /**
@@ -135,21 +131,17 @@ class TestOfMapController extends ThinkUpUnitTestCase {
         $controller = new MapController(true);
         $results = $controller->go();
 
-        $this->assertPattern("/No visualization data found for this post/", $results);
+        $this->assertPattern("/This post has not been geoencoded yet; cannot display map./", $results);
     }
 
     /**
      * Method to instantiate FixtureBuilder
      */
     private function buildData() {
-        $post_data = array(
-            'post_id' => 1001,
-            'post_text' => 'This is a test post',
-            'location' => 'New Delhi, Delhi, India',
-            'geo' => '28.11,78.08',
-            'is_geo_encoded' => 1
-        );
+        $post_data = array( 'post_id' => 1001, 'post_text' => 'This is a test post',
+        'location' => 'New Delhi, Delhi, India', 'geo' => '28.11,78.08', 'is_geo_encoded' => 1 );
         $post_builder = FixtureBuilder::build('posts', $post_data);
+
         $original_post_author_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev',
         'is_protected'=>'0', 'network'=>'twitter'));
 
@@ -194,5 +186,4 @@ class TestOfMapController extends ThinkUpUnitTestCase {
         $private_retweet_author_builder1, $retweet_builder1, $private_retweet_author_builder2, $retweet_builder2,
         $public_retweet_author_builder1, $retweet_builder3);
     }
-
 }

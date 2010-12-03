@@ -26,7 +26,9 @@
  * @copyright 2009-2010 Gina Trapani
  */
 chdir('..');
+chdir('..');
 require_once 'init.php';
+require_once 'plugins/geoencoder/controller/class.MapController.php';
 
 $controller = new MapController();
 echo $controller->go();

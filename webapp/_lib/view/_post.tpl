@@ -81,7 +81,7 @@
     <div class="grid_2 center">
     {if $t->network eq 'twitter'}
       {if $t->retweet_count_cache > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}#fwds">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
+        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}&v=fwds">{$t->retweet_count_cache}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
       {else}
         &#160;
       {/if}

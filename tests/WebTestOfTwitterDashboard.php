@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/WebTestOfTwitterPluginViews.php
+ * ThinkUp/tests/WebTestOfTwitterDashboard.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -30,7 +30,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
-class WebTestOfTwitterPluginViews extends ThinkUpWebTestCase {
+class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
 
     public function setUp() {
         parent::setUp();

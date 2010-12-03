@@ -19,37 +19,29 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
+ *
  * Test of MenuItem
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfMenuItem extends ThinkUpBasicUnitTestCase {
 
-    /**
-     * Constructor
-     */
     public function __construct() {
         $this->UnitTestCase('MenuItem class test');
     }
 
-    /**
-     * Set up test
-     */
     public function setUp() {
         parent::setUp();
     }
 
-    /**
-     * Tear down test
-     */
     public function tearDown() {
         parent::tearDown();
     }
@@ -58,15 +50,20 @@ class TestOfMenuItem extends ThinkUpBasicUnitTestCase {
      * Test constructor
      */
     public function testConstructor() {
-        $tab = new MenuItem('my_short_name', "Name of My Tab");
-        $this->assertEqual($tab->short_name, 'my_short_name');
-        $this->assertEqual($tab->name, 'Name of My Tab');
-        $this->assertEqual($tab->description, '');
-        $this->assertEqual($tab->view_template, 'inline.view.tpl');
+        $menu_item = new MenuItem("Name of My Menu Item");
+        $this->assertEqual($menu_item->name, 'Name of My Menu Item');
+        $this->assertEqual($menu_item->description, '');
+        $this->assertEqual($menu_item->view_template, 'inline.view.tpl');
+        $this->assertEqual($menu_item->header, null);
 
-        $datasets = $tab->getDatasets();
+        $datasets = $menu_item->getDatasets();
         $this->assertIsA($datasets, 'array');
         $this->assertEqual(sizeof($datasets), 0);
 
+        $menu_item1 = new MenuItem("Name of My Menu Item 1", 'descriptive text', 'mytemplate.tpl', "My Menu Header");
+        $this->assertEqual($menu_item1->name, 'Name of My Menu Item 1');
+        $this->assertEqual($menu_item1->description, 'descriptive text');
+        $this->assertEqual($menu_item1->view_template, 'mytemplate.tpl');
+        $this->assertEqual($menu_item1->header, "My Menu Header");
     }
 }

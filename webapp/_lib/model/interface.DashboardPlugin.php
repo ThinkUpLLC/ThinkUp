@@ -32,7 +32,7 @@ interface DashboardPlugin extends ThinkUpPlugin {
     /**
      * Get Dashboard menu
      * @param $instance Instance
-     * @return array of Menu objects (Tweets, Friends, Followers, etc)
+     * @return array of MenuItem objects (Tweets, Friends, Followers, etc)
      */
-    public function getDashboardMenu($instance);
+    public function getDashboardMenuItems($instance);
 }

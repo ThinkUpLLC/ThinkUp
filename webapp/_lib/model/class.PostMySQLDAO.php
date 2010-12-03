@@ -224,7 +224,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
         $q .= "WHERE p.network=:network AND in_retweet_of_post_id=:post_id ";
         if ($is_public) {
-            $q .= "AND u.is_protected = 0 ";
+            $q .= "AND p.is_protected = 0 ";
         }
         if ($order_by == 'location') {
             $q .= " ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
@@ -235,7 +235,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':post_id'=>$post_id,
             ':network'=>$network
         );
-
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $retweets = array();
@@ -252,8 +251,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $retweets;
     }
 
-    public function getRelatedPosts($post_id, $network='twitter', $is_public = false, $count = 350) {
-        $q = "(SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
+    public function getRelatedPostsArray($post_id, $network='twitter', $is_public = false, $count = 350) {
+        $q = "(SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as
+        adj_pub_date
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
         ON l.post_id = p.post_id
@@ -265,7 +265,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         $q .= ") ";
         $q .= " UNION
-        (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date 
+        (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
         ON l.post_id = p.post_id
@@ -275,7 +275,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $q .= "AND p.is_protected = 0 ";
         }
         $q .= ") ";
-        $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
+        $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as
+        adj_pub_date
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
         ON l.post_id = p.post_id
@@ -295,6 +296,19 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
+    }
+
+    public function getRelatedPosts($post_id, $network='twitter', $is_public = false, $count = 350) {
+        $all_rows = $this->getRelatedPostsArray($post_id, $network='twitter', $is_public = false, $count = 350);
+        $responses = array();
+        $location = array();
+        foreach ($all_rows as $row) {
+            if ($row['is_geo_encoded'] == 1) {
+                $row['short_location'] = $this->processLocationRows($row['location']);
+            }
+            $responses[] = new Post($row);
+        }
+        return $responses;
     }
 
     /**

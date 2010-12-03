@@ -62,57 +62,60 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $this->logger->close();
     }
 
-    public function testMenuItemRegistration() {
+    public function testMenuItemRegistrationForDashboardAndPost() {
         $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();
         $instance->network_user_id = 1;
 
         $menus = $this->webapp->getDashboardMenu($instance);
-        $posts_menu = $menus[0];
 
-        $this->assertEqual(sizeof($posts_menu->items), 4, "Test number of post tabs");
-        $first_post_tab = $posts_menu->items[0];
-        $this->assertEqual($first_post_tab->short_name, "tweets-all", "Test short name of first post tab");
-        $this->assertEqual($first_post_tab->name, "All Tweets", "Test name of first post tab");
-        $this->assertEqual($first_post_tab->description, "All tweets", "Test description of first post tab");
+        $this->assertEqual(sizeof($menus), 17, "Test number of Twitter Dashboard menu items");
+        $first_post_menuitem = $menus["tweets-all"];
+        $this->assertEqual($first_post_menuitem->name, "All Tweets", "Test name of first post menu item");
+        $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");
 
-        $first_post_tab_datasets = $first_post_tab->getDatasets();
-        $first_post_tab_dataset = $first_post_tab_datasets[0];
-        $this->assertEqual($first_post_tab_dataset->name, "all_tweets", "Test first post tab's first dataset name");
-        $this->assertEqual($first_post_tab_dataset->dao_name, 'PostDAO');
-        $this->assertEqual($first_post_tab_dataset->dao_method_name, "getAllPosts",
-        "Test first post tab's first dataset fetching method");
+        $first_post_menuitem_datasets = $first_post_menuitem->getDatasets();
+        $first_post_menuitem_dataset = $first_post_menuitem_datasets[0];
+        $this->assertEqual($first_post_menuitem_dataset->name, "all_tweets", "Test 1st menu item's 1st dataset name");
+        $this->assertEqual($first_post_menuitem_dataset->dao_name, 'PostDAO');
+        $this->assertEqual($first_post_menuitem_dataset->dao_method_name, "getAllPosts",
+        "Test first post menu item's first dataset fetching method");
 
-        // check favorites menu, which just has one tab currently
-        $favs_menu = $menus[4];
-        $this->assertEqual(sizeof($favs_menu->items), 1);
-        $favs_tab = $favs_menu->items[0];
-        $this->assertEqual($favs_tab->short_name, "ftweets-all");
-        $favs_tab_datasets = $favs_tab->getDatasets();
-        $favs_tab_dataset = $favs_tab_datasets[0];
-        $this->assertEqual($favs_tab_dataset->name, "all_tweets");
-        
+        // check favorites menu, which just has one item currently
+        $favs_menu = $menus["ftweets-all"];
+        $this->assertEqual(sizeof($favs_menu), 1);
+        $favs_menuitem_datasets = $favs_menu->getDatasets();
+        $favs_menuitem_dataset = $favs_menuitem_datasets[0];
+        $this->assertEqual($favs_menuitem_dataset->name, "all_tweets");
+
         // check links menu
-        $links_menu = $menus[5];
-        $this->assertEqual(sizeof($links_menu->items), 3);
+        $links_menu = $menus["links-friends"];
+        $links_menuitem_datasets = $links_menu->getDatasets();
+        $links_menuitem_dataset = $links_menuitem_datasets[0];
+        $this->assertEqual($links_menuitem_dataset->name, "links");
 
-        $links_tab = $links_menu->items[0];
-        $this->assertEqual($links_tab->short_name, "links-friends");
-        $links_tab_datasets = $links_tab->getDatasets();
-        $links_tab_dataset = $links_tab_datasets[0];
-        $this->assertEqual($links_tab_dataset->name, "links");
+        $links_menuitem = $menus["links-favorites"];
+        $links_menuitem_datasets = $links_menuitem->getDatasets();
+        $links_menuitem_dataset = $links_menuitem_datasets[0];
+        $this->assertEqual($links_menuitem_dataset->name, "links");
 
-        $links_tab = $links_menu->items[1];
-        $this->assertEqual($links_tab->short_name, "links-favorites");
-        $links_tab_datasets = $links_tab->getDatasets();
-        $links_tab_dataset = $links_tab_datasets[0];
-        $this->assertEqual($links_tab_dataset->name, "links");
+        $links_menuitem = $menus["links-photos"];
+        $links_menuitem_datasets = $links_menuitem->getDatasets();
+        $links_menuitem_dataset = $links_menuitem_datasets[0];
+        $this->assertEqual($links_menuitem_dataset->name, "links");
 
-        $links_tab = $links_menu->items[2];
-        $this->assertEqual($links_tab->short_name, "links-photos");
-        $links_tab_datasets = $links_tab->getDatasets();
-        $links_tab_dataset = $links_tab_datasets[0];
-        $this->assertEqual($links_tab_dataset->name, "links");
+        //Test post page menu items
+        $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
+        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
+        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'post_id'=>9021481076, 'is_protected'=>0,
+        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 
+        'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
+
+        $post_menus_array = $this->webapp->getPostDetailMenu($post);
+        $this->assertIsA($post_menus_array, 'Array');
+        $this->assertEqual(sizeof($post_menus_array), 1);
+        $this->assertIsA($post_menus_array['fwds'], 'MenuItem');
     }
 
     public function testRepliesOrdering() {

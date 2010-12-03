@@ -33,11 +33,6 @@ class MenuItem {
      *
      * @var str
      */
-    var $short_name;
-    /**
-     *
-     * @var str
-     */
     var $name;
     /**
      *
@@ -54,20 +49,23 @@ class MenuItem {
      * @var str
      */
     var $view_template;
-
+    /**
+     *
+     * @var str Header that appears just before menu item in the sidebar
+     */
+    var $header = null;
     /**
      * Constructor
-     * @param str $short_name
      * @param str $name
      * @param str $description
      * @param str $view_template
      * @return MenuItem
      */
-    public function __construct($short_name, $name, $description='', $view_template='inline.view.tpl') {
-        $this->short_name = $short_name;
+    public function __construct($name, $description='', $view_template='inline.view.tpl', $header=null) {
         $this->name = $name;
         $this->description = $description;
         $this->view_template = $view_template;
+        $this->header = $header;
     }
 
     /**

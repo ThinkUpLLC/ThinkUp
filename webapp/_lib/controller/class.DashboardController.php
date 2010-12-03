@@ -36,7 +36,6 @@ class DashboardController extends ThinkUpController {
      * @var Instance
      */
     var $instance;
-
     /**
      * View name
      * @var str
@@ -77,15 +76,15 @@ class DashboardController extends ThinkUpController {
         if ($this->view_name == 'default') {
             $this->loadDefaultDashboard();
         } else {
-            $tab = $webapp->getMenuItem($this->view_name, $this->instance);
-            $this->addToView('data_template', $tab->view_template);
-            $this->addToView('display', $tab->short_name);
-            $this->addToView('header', $tab->name);
-            $this->addToView('description', $tab->description);
+            $menu_item = $webapp->getDashboardMenuItem($this->view_name, $this->instance);
+            $this->addToView('data_template', $menu_item->view_template);
+            $this->addToView('display', $this->view_name);
+            $this->addToView('header', $menu_item->name);
+            $this->addToView('description', $menu_item->description);
 
             $this->setPageTitle($this->instance->network_username.' on '.ucfirst($this->instance->network));
             $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
-            foreach ($tab->datasets as $dataset) {
+            foreach ($menu_item->datasets as $dataset) {
                 if (array_search('#page_number#', $dataset->method_params) !== false) { //there's paging
                     $this->addToView('next_page', $page+1);
                     $this->addToView('last_page', $page-1);

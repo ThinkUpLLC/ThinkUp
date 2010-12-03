@@ -19,12 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
+ *
  * Test of Post Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -32,17 +28,27 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfPostController extends ThinkUpUnitTestCase {
 
-    /**
-     * Constructor
-     */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
+
+class TestOfPostController extends ThinkUpUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('PostController class test');
     }
 
     public function setUp(){
         parent::setUp();
+        $webapp = Webapp::getInstance();
+        $webapp->registerPlugin('twitter', 'TwitterPlugin');
+    }
+
+    public function tearDown(){
+        parent::tearDown();
     }
 
     public function testConstructor() {
@@ -84,7 +90,8 @@ class TestOfPostController extends ThinkUpUnitTestCase {
 
     public function testControlExistingPrivatePostIDNotLoggedIn() {
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
-        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter'));
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 
+        'network'=>'twitter'));
         $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'1',
         'network'=>'twitter'));
         $_GET["t"] = '1001';
@@ -114,7 +121,6 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertPattern( "/This is a public reply to 1001/", $results);
         $this->assertPattern( "/Not showing 1 private reply./", $results);
         $this->assertNoPattern("/This is a private reply to 1001/", $results);
-        $this->assertNoPattern("/This is a private retweet of 1001/", $results);
     }
 
     public function testPublicPostWithMixedAccessRepliesLoggedIn() {
@@ -126,7 +132,68 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertPattern( "/This is a test post/", $results);
         $this->assertPattern( "/This is a public reply to 1001/", $results);
         $this->assertPattern("/This is a private reply to 1001/", $results);
+    }
+
+    public function testNotLoggedInPostWithViewsSpecified() {
+        $builders = $this->buildPublicPostWithMixedAccessResponses();
+        $_GET["t"] = '1001';
+        //default menu item
+        $_GET["v"] = 'default';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+        $this->assertPattern( "/This is a public reply to 1001/", $results);
+        $this->assertNoPattern("/This is a private reply to 1001/", $results);
+
+        //retweets menu item
+        $_GET["v"] = 'fwds';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+        $this->assertPattern( "/This is a public retweet of 1001/", $results);
+        //not logged in, shouldn't see private RTs
+        $this->assertNoPattern("/This is a private retweet of 1001/", $results);
+
+        //non-existent menu item
+        $_GET["v"] = 'idontexist';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+    }
+
+    public function testLoggedInPostWithViewsSpecified() {
+        $builders = $this->buildPublicPostWithMixedAccessResponses();
+        $_GET["t"] = '1001';
+        $_GET['n'] = 'twitter';
+        //Log in and see private replies and retweets
+        $this->simulateLogin('me@example.com');
+        //default menu item
+        $_GET["v"] = 'default';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+        $this->assertPattern( "/This is a public reply to 1001/", $results);
+        $this->assertPattern("/This is a private reply to 1001/", $results);
+
+        //retweets menu item
+        $this->simulateLogin('me@example.com');
+        $_GET["v"] = 'fwds';
+        $controller = new PostController(true);
+
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+        //shouldn't see replies, just retweets
+        $this->assertNoPattern( "/This is a public reply to 1001/", $results);
+        $this->assertNoPattern("/This is a private reply to 1001/", $results);
+        $this->assertPattern( "/This is a public retweet of 1001/", $results);
+        //logged in, should see private responses
         $this->assertPattern("/This is a private retweet of 1001/", $results);
+
+        //non-existent menu item
+        $_GET["v"] = 'idontexist';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
     }
 
     private function buildPublicPostWithMixedAccessResponses() {

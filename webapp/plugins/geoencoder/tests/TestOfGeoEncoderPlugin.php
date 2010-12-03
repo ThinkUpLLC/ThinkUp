@@ -9,17 +9,26 @@
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ *
+ * Test of GeoEncoder ThinkUp plugin
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
+ * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
+ * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ *
+ */
+
 if (!isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS) {
     require_once '../../../../tests/config.tests.inc.php';
 }
@@ -29,16 +38,8 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/model/class.GeoEncoderPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/classes/mock.GeoEncoderCrawler.php';
 
-/**
- * Test of GeoEncoder ThinkUp plugin
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
- * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
- * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
- *
- */
 class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
+    var $webapp;
 
     public function __construct() {
         $this->UnitTestCase('GeoEncoder plugin class test');
@@ -46,17 +47,20 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->webapp = Webapp::getInstance();
+        $this->webapp->registerPlugin('geoencoder', 'GeoEncoderPlugin');
+        $this->webapp->registerPlugin('twitter', 'TwitterPlugin');
         $crawler = Crawler::getInstance();
         $crawler->registerCrawlerPlugin('GeoEncoderPlugin');
     }
 
-    function tearDown() {
+    public function tearDown() {
         parent::tearDown();
     }
 
-    function testGeoEncoderCrawl() {
+    public function testGeoEncoderCrawl() {
         $builders = $this->buildData();
-        
+
         $this->simulateLogin('admin@example.com', true);
         $crawler = Crawler::getInstance();
         $crawler->crawl();
@@ -201,6 +205,23 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($locations[5]['short_name'], "40.681839 -73.983734");
     }
 
+    public function testMenuItemRegistrationOnPostPage() {
+        $builders = $this->buildData();
+        //Test post page menu items
+        $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
+        'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
+        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'post_id'=>9021481076, 'is_protected'=>0,
+        'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 
+        'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
+
+        $post_menus_array = $this->webapp->getPostDetailMenu($post);
+        $this->assertIsA($post_menus_array, 'Array');
+        $this->assertEqual(sizeof($post_menus_array), 3); //1 from Twitter plugin 2, from Geoencoder
+        $this->assertIsA($post_menus_array['geoencoder_map'], 'MenuItem');
+        $this->assertIsA($post_menus_array['geoencoder_nearest'], 'MenuItem');
+    }
+
     private function buildData() {
         $builders = array();
 
@@ -212,7 +233,10 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
             'is_admin' => 1 
         ));
 
-        // TODO Convert the inserts below to use FixtureBuilder
+        $builders[] = FixtureBuilder::build('plugins', array('name'=>'Geoencoder', 'folder_name'=>'geoencoder',
+        'is_active'=>1));
+
+        // @TODO Convert the inserts below to use FixtureBuilder
 
         //Insert test posts
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
@@ -287,7 +311,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_retweet_by_friend, in_retweet_of_post_id, is_geo_encoded) ";
-        $q .= "VALUES (18, 13212618909, 772673, 'mwilkie', 'Just watched chris corn cob a sheep.', 
+        $q .= "VALUES (18, 13212618909, 772673, 'mwilkie', 'Just watched chris corn cob a sheep.',
         'iPhone: 40.681839,-73.983734', ";
         $q .= "NULL, NULL, 1, '11259110570', 0)";
         $this->db->exec($q);
@@ -312,7 +336,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (22, 11331235880, 127567137, 'ekanshpreet', ";
         $q .= "':)', 'New Delhi', NULL, '28.60abc2815 77.049136', 0)";
         $this->db->exec($q);
-        
+
         return $builders;
     }
 }

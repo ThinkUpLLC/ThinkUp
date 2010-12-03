@@ -90,7 +90,16 @@ interface PostDAO {
      * @param int $post_id
      * @param str $network Defaults to 'twitter'
      * @param bool $is_public Defaults to false
-     * @return str json with data of all related posts along with data about the main post
+     * @return array Array of replies, retweets, and original post
+     */
+    public function getRelatedPostsArray($post_id, $network = 'twitter', $is_public = false, $count = 350);
+
+    /**
+     * Get all related posts (retweets and replies)
+     * @param int $post_id
+     * @param str $network Defaults to 'twitter'
+     * @param bool $is_public Defaults to false
+     * @return array Array of post objects
      */
     public function getRelatedPosts($post_id, $network = 'twitter', $is_public = false, $count = 350);
 

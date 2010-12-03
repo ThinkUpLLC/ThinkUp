@@ -4,11 +4,12 @@
 .username {float: left; color: #666;}
 .pub_date {float: right; color: #666;}
 .post_text {float: right; width: 307px;}
-#wrap { height:500px; font-size:75%; line-height:20px; margin:auto; margin-top:60px;margin-bottom:60px;}
+#wrap { height:500px; font-size:75%; line-height:20px; margin:auto; margin-top:10px;margin-bottom:60px;}
 #wrap h3 { margin-top:10px; line-height:20px; font-weight:bold; padding-left:10px;}
 #userpanel { margin-top:10px; padding-left:10px; width:280px; height:100%; left:0; top:0; float:left}
 #userpanel a {font-size: 14px; padding-left: 4px; margin-bottom:10px;}
-#mappanel { height:98%; float:right; width:565px; margin-right:10px; border:1px solid #666;}
+#mappanel { height:98%; float:right; width:750px; margin-right:10px; border:1px solid #666;}
 #map { height:100%; }
 #markerlist { margin:10px 5px 0 10px; overflow:auto; height:425px; position:relative;}
 .heading {width:870px; margin: auto; padding:20px 0px; border-bottom:1px solid #cccccc; margin-bottom:40px;}
+html {background: #fff!important;}

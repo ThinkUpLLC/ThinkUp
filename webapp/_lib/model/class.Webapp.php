@@ -36,18 +36,27 @@ class Webapp extends PluginHook {
      * @var Webapp
      */
     private static $instance;
-
-    /**
-     * @var array MenuItems
-     */
-    private $menuItems = array();
-
     /**
      *
      * @var string Name of the active plugin, defaults to "twitter"
      */
-    private $activePlugin = "twitter";
+    private $active_plugin = "twitter";
 
+    /**
+     *
+     * @var array Plugin objects
+     */
+    private $active_plugins = null;
+    /**
+     *
+     * @var array MenuItem objects
+     */
+    private $post_detail_menus = null;
+    /**
+     *
+     * @var array MenuItem objects
+     */
+    private $dashboard_menus = null;
     /**
      * Get the singleton instance of Webapp
      * @return Webapp
@@ -73,7 +82,7 @@ class Webapp extends PluginHook {
      * @return str Name of active plugin (like "twitter" or "facebook")
      */
     public function getActivePlugin() {
-        return $this->activePlugin;
+        return $this->active_plugin;
     }
 
     /**
@@ -81,33 +90,70 @@ class Webapp extends PluginHook {
      * @param string $ap
      */
     public function setActivePlugin($ap) {
-        $this->activePlugin = $ap;
+        $this->active_plugin = $ap;
     }
 
     public function getDashboardMenu($instance) {
-        $pobj = $this->getPluginObject($this->activePlugin);
-        $p = new $pobj;
-        if (method_exists($p, 'getDashboardMenu')) {
-            return call_user_func(array($p, 'getDashboardMenu'), $instance);
-        } else {
-            throw new Exception("The ".get_class($p)." object does not have a getDashboardMenu method.");
+        if ($this->dashboard_menus === null) {
+            $this->dashboard_menus = array();
+            $plugin_class_name = $this->getPluginObject($this->active_plugin);
+            $p = new $plugin_class_name;
+            if ($p instanceof DashboardPlugin) {
+                $this->dashboard_menus = $p->getDashboardMenuItems($instance);
+            }
         }
+        return $this->dashboard_menus;
+    }
+
+    public function getPostDetailMenu($post) {
+        if ($this->post_detail_menus === null) {
+            $this->post_detail_menus = array();
+            //Get all active plugins
+            $plugin_dao = DAOFactory::getDAO('PluginDAO');
+            $this->active_plugins = $plugin_dao->getActivePlugins();
+            //For each active plugin, check if getPostDetailMenu method exists
+            foreach ($this->active_plugins as $plugin) {
+                $plugin_class_name = $this->getPluginObject($plugin->folder_name);
+                //if so, add to sidebar_menu
+                $p = new $plugin_class_name;
+                if ($p instanceof PostDetailPlugin) {
+                    $menus = $p->getPostDetailMenuItems($post);
+                    $this->post_detail_menus = array_merge($this->post_detail_menus, $menus);
+                }
+            }
+        }
+        return $this->post_detail_menus;
     }
     /**
-     * Get individual MenuItem
+     * Get individual Dashboard MenuItem
      * @param str $menu_item_short_name
      * @param Instance $instance
      * @return MenuItem for instance, null if none available for given short name
      */
-    public function getMenuItem($menu_item_short_name, $instance) {
-        $menus = $this->getDashboardMenu($instance);
-        foreach ($menus as $menu) {
-            foreach ($menu->items as $menu_item) {
-                if ($menu_item->short_name == $menu_item_short_name) {
-                    return $menu_item;
-                }
-            }
+    public function getDashboardMenuItem($menu_item_short_name, $instance) {
+        if ($this->dashboard_menus === null) {
+            $this->getDashboardMenu($instance);
         }
-        return null;
+        if ( isset($this->dashboard_menus[$menu_item_short_name]) ) {
+            return $this->dashboard_menus[$menu_item_short_name];
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Get individual post detail MenuItem
+     * @param str $menu_item_short_name
+     * @param Post $post
+     * @return MenuItem for instance, null if none available for given short name
+     */
+    public function getPostDetailMenuItem($menu_item_short_name, $post) {
+        if ($this->post_detail_menus === null) {
+            $this->getPostDetailMenu($post);
+        }
+        if ( isset($this->post_detail_menus[$menu_item_short_name]) ) {
+            return $this->post_detail_menus[$menu_item_short_name];
+        } else {
+            return null;
+        }
     }
 }

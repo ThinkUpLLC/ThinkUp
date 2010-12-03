@@ -104,7 +104,7 @@ class GridController extends ThinkUpAuthController {
                     } else {
                         $webapp = Webapp::getInstance();
                         $webapp->setActivePlugin($instance->network);
-                        $tab = $webapp->getMenuItem($_GET['d'], $instance);
+                        $tab = $webapp->getDashboardMenuItem($_GET['d'], $instance);
                         $posts_it = $tab->datasets[0]->retrieveIterator();
                     }
                     echo '{"status":"success","posts": [' . "\n";

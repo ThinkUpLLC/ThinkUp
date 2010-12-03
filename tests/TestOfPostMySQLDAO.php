@@ -744,6 +744,19 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PostMySQLDAO();
         $posts = $dao->getRelatedPosts(134, 'twitter');
         $this->assertEqual(count($posts), 5);
+        $this->assertIsA($posts[0], 'Post');
+        $posts = $dao->getRelatedPosts(1344545, 'twitter');
+        $this->assertEqual(count($posts), 0);
+    }
+
+    /**
+     * Test getRelatedPosts
+     */
+    public function testGetRelatedPostsArray() {
+        $dao = new PostMySQLDAO();
+        $posts = $dao->getRelatedPostsArray(134, 'twitter');
+        $this->assertEqual(count($posts), 5);
+        $this->assertIsA($posts[0], 'Array');
         $posts = $dao->getRelatedPosts(1344545, 'twitter');
         $this->assertEqual(count($posts), 0);
     }

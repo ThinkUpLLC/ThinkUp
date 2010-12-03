@@ -56,6 +56,7 @@ require_once THINKUP_ROOT_PATH.
 require_once THINKUP_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfMapController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/tests/TestOfHelloThinkUpPluginConfigurationController.php';
 
 $plugin_tests = & new GroupTest('Plugin tests');
@@ -68,6 +69,7 @@ $plugin_tests->addTestCase(new TestOfFlickrThumbnailsPluginConfigurationControll
 $plugin_tests->addTestCase(new TestOfFlickrThumbnailsPlugin());
 $plugin_tests->addTestCase(new TestOfGeoEncoderPlugin());
 $plugin_tests->addTestCase(new TestOfGeoEncoderPluginConfigurationController());
+$plugin_tests->addTestCase(new TestOfMapController());
 $plugin_tests->addTestCase(new TestOfTwitterAPIAccessorOAuth());
 $plugin_tests->addTestCase(new TestOfTwitterAuthController());
 $plugin_tests->addTestCase(new TestOfTwitterCrawler());
