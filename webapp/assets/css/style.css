@@ -86,8 +86,8 @@ ul.user-accounts li ul li {margin-left:2em;}
 
 #menu-bar {float: right;margin:20px 0 20px 0;}
 #menu-bar ul {}
-#menu-bar li {display: inline;background-color: #222;padding: 15px 10px;margin: 0 1px 0 0;font-size: 1.2em;float: left;}
-#menu-bar li a:link, #menu-bar li a:visited {color: #FFF;text-decoration: none;}
+#menu-bar li {display: inline;background-color: #222;padding: 0;margin: 0 1px 0 0;font-size: 1.2em;float: left;}
+#menu-bar li a:link, #menu-bar li a:visited {color: #FFF;display: block;padding: 15px 10px;text-decoration: none;}
 
 
 /*
