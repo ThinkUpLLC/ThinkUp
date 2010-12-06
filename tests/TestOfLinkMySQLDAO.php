@@ -332,17 +332,18 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 2002;
         $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
         $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
-        $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
-        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
-        $res = PDODAO::$PDO->exec($q);
-
-        $q  = "INSERT INTO tu_links (url, title, clicks, post_id, network, is_image) ";
-        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
+        $builder1 = $builder2 = null;
         try {
-            $res = PDODAO::$PDO->exec($q);
+            $builder1 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$counter, 'network'=>'twitter', 'is_image'=>0, 
+                'expanded_url'=>'', 'error'=>''));
+            $builder2 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$counter, 'network'=>'twitter', 'is_image'=>0, 
+                'expanded_url'=>'', 'error'=>''));
         } catch(PDOException $e) {
             $this->assertPattern('/Integrity constraint violation/', $e->getMessage());
         }
+        $builder1 = null; $builder2 = null;
     }
 
     /**
