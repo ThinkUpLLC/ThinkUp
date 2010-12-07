@@ -90,9 +90,6 @@ abstract class PDODAO {
             $this->config->getValue('db_password')
             );
             self::$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // aju - I need the following to be set for my database install (for complicated reasons), 
-            // but it breaks my geoencoder tests.
-            // self::$PDO->exec('SET CHARACTER SET utf8');
         }
     }
 

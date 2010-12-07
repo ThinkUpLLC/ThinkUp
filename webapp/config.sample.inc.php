@@ -64,4 +64,3 @@ $THINKUP_CFG['debug']                     = true;
 
 $THINKUP_CFG['enable_profiler']           = false;
 
-
