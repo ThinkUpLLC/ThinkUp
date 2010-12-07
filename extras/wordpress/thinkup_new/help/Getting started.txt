@@ -1,0 +1,45 @@
+Hi there! So you've downloaded the ThinkUp WordPress plugin and you're a bit stuck on how to get started. That's no problem, after reading this guide you should be well and truly up to scratch on what's what and ready to get using the plugin like a pro!
+
+<b>Getting the plugin ready to use</b>
+
+First off, you need to make sure that you're a ThinkUp user. If the word ThinkUp means absolutely nothing to you then head on over to <a href="http://thinkupapp.com" target="_blank">http://thinkupapp.com</a>. Otherwise you can move on to the next step.
+
+Secondly, you need to make sure that your database credentials are set up properly. If your ThinkUp database tables are located in exactly the same place as your WordPress tables (e.g. you can see ThinkUp tables and WordPress tables in the same database) then you don't need to worry about database credentials. Otherwise, you have some info to fill in.
+
+<b>My ThinkUp tables are on a totally different server!</b>
+
+Not to worry. Simple enter your database credentials into the form on the settings page and Bob's your uncle. If you don't know your database credentials then you should get in contact with your hosting provider and ask them for your MySQL server host, MySQL username and MySQL password.
+
+<b>My ThinkUp tables are on the same server but in a different database.</b>
+
+In this case all you need to do is enter the database name that your ThinkUp tables are in. No need to enter a new server, username or password.
+
+<b>I have absolutely no idea where my ThinkUp tables are.</b>
+
+If you don't run your own ThinkUp installation but use someone else's then you should ask them for the credentials of the database that your data is on. They should be able to give you the information you require.
+
+If you do run your own ThinkUp installation but don't know where your tables are, they are in the database you specified upon installing ThinkUp. Usually prepended with tu_ unless you changed that during installation. 
+
+<b>Using the plugin</b>
+
+The ThinkUp WordPress plugin works using shortcodes. If you aren't sure what shortcodes are then head on over to the FAQ section and look up the section called "What are shortcodes and how do I use them?".
+
+The shortcodes currently available to you in this plugin are as follows:
+
+[thinkup_chronological_archive]
+
+[thinkup_status_replies post_id="post_id"]
+
+[thinkup_reply_count post_id="post_id"]
+
+The first shortcode does not require any arguments. The other two, however, require you to specify at least the post_id attribute so that they know what post to look for.
+
+Easiest first, [thinkup_reply_count post_id="1234"] will show you how many replies the post with a post_id of 1234 has. By default this will look for a Twitter post but you can change that by specifying the network attribute like so: [thinkup_reply_count post_id="1234" network="facebook"].
+
+You can display the replies for any post by using the [thinkup_status_replies post_id="1234"] shortcode. Again, this will search for Twitter psots by default but by specifying the network attribute you can change it to Facebook. 
+
+And finally, you can view your ThinkUp's entire archive for any account by using the [thinkup_chronological_archive] shortcode. By default this will use the Twitter username specified in the settings and display Tweets. However, you can change this to your Facebook account by setting the username attribute to your full name on Facebook and the network attribute to "facebook", e.g. [thinkup_chronoglogical_archive network="facebook" username="Sam Rose"] will display my entire chronological archive of Facebook statuses. 
+
+By default, the chronological archive will display newest to oldest (descending order) but you can change this by specifying order="asc".
+
+That's the basics of this plugin, check out the more advanced topics if you want some more information on what's possible!

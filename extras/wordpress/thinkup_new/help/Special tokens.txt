@@ -1,0 +1,11 @@
+In most of the shortcodes there are a variety of "special tokens" that you can use to pull certain information from the plugin and display in your custom attributes. To do this, simply have an attribute like so: before="#original_post# - The original post!" and that will display the contents of the original post in question followed by " - The original post!".
+
+Here are list of the available special tokens:
+
+<ul>
+<li><b>#username#</b> - Gets the username of the post in question.</li>
+<li><b>#post_id#</b> - Gets the ID of the post in question.</li>
+<li><b>#original_post#</b> - Gets the contents of the original post.</li>
+<li><b>#postlink#</b> - Gets a link to the original post.</li>
+<li><b>#userlink#</b> - Gets a link to the user's profile.</li>
+</ul>
