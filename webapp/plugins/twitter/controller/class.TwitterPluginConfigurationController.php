@@ -144,16 +144,17 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         '[<a href="http://dev.twitter.com/pages/every_developer" title="Twitter still maintains a database '.
         'of all the tweets sent by a user. However, to ensure performance of the site, this artificial limit of '.
         '3,200 posts is temporarily in place." target="_blank">?</a>]</span>';
-        $archive_limit = array('name' => 'archive_limit','label' => $archive_limit_label, 'default_value' => '3200');
+        $archive_limit = array('name' => 'archive_limit','label' => $archive_limit_label, 'default_value' => '3200',
+        'advanced'=> true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $archive_limit);
         $num_twitter_errors_label = 'Total API Errors to Tolerate';
         $num_twitter_errors = array('name' => 'num_twitter_errors', 'label' => $num_twitter_errors_label,
-        'default_value' => '5');
+        'default_value' => '5', 'advanced'=>true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $num_twitter_errors);
 
         $max_api_calls_per_crawl_label = 'Max API Calls Per Crawl';
         $max_api_calls_per_crawl = array('name' => 'max_api_calls_per_crawl', 'label' => $max_api_calls_per_crawl_label,
-        'default_value' => '350');
+        'default_value' => '350', 'advanced'=> true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_api_calls_per_crawl);
     }
 }

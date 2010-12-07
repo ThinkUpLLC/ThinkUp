@@ -9,17 +9,25 @@
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ *
+ *
+ * Test of TestOfHelloThinkUpPluginConfigurationController
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani, Mark Wilkie
+ * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
+ *
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
 }
@@ -30,14 +38,6 @@ require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php
 require_once THINKUP_ROOT_PATH.
 'webapp/plugins/hellothinkup/controller/class.HelloThinkUpPluginConfigurationController.php';
 
-/**
- * Test of TestOfHelloThinkUpPluginConfigurationController
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie
- * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
- *
- */
 class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCase {
 
     public function __construct() {
@@ -105,14 +105,14 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // $controller->addPluginOption(PluginConfigurationController::FORM_TEXT_ELEMENT, array('name' => 'testname'));
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertEqual( count($controller->option_elements), 7);
         $this->assertNotNull( $controller->option_elements['testname']);
         $this->assertEqual(
         PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['testname']['type'] );
         $this->assertTrue( isset($controller->option_elements['testname']['default_value']) );
         $this->assertEqual( count($controller->option_headers), 2);
         $this->assertTrue( isset($controller->option_headers['testname']));
-        $this->assertEqual( count($controller->option_not_required), 1);
+        $this->assertEqual( count($controller->option_not_required), 3);
         $this->assertFalse( isset($controller->option_not_required['testname']));
         $this->assertEqual( count($controller->option_required_message), 2);
         $this->assertTrue( isset($controller->option_required_message['testname']));
@@ -140,14 +140,14 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // just name, is admin, so form should be enabled
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertEqual( count($controller->option_elements), 7);
         $this->assertNotNull( $controller->option_elements['testname']);
         $this->assertEqual(
         PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['testname']['type'] );
         $this->assertTrue( isset($controller->option_elements['testname']['default_value']) );
         $this->assertEqual( count($controller->option_headers), 2);
         $this->assertTrue( isset($controller->option_headers['testname']));
-        $this->assertEqual( count($controller->option_not_required), 1);
+        $this->assertEqual( count($controller->option_not_required), 3);
         $this->assertFalse( isset($controller->option_not_required['testname']));
         $this->assertEqual( count($controller->option_required_message), 2);
         $this->assertTrue( isset($controller->option_required_message['testname']));
@@ -187,13 +187,13 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // radio options name, is admin, so form should be enabled
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertEqual( count($controller->option_elements), 7);
         $this->assertNotNull( $controller->option_elements['testname']);
         $this->assertEqual(
-        PluginConfigurationController::FORM_RADIO_ELEMENT, $controller->option_elements['testgender']['type'] );
-        $this->assertTrue( isset($controller->option_elements['testgender']['default_value']) );
+        PluginConfigurationController::FORM_RADIO_ELEMENT, $controller->option_elements['testradio']['type'] );
+        $this->assertTrue( isset($controller->option_elements['testradio']['default_value']) );
         $this->assertEqual( count($controller->option_headers), 2);
-        $this->assertFalse( isset($controller->option_required_message['testgender']));
+        $this->assertFalse( isset($controller->option_required_message['testradio']));
         $v_mgr = $controller->getViewManager();
         $options_markup = $v_mgr->getTemplateDataItem('options_markup');
         $this->assertNotNull($options_markup);
@@ -204,7 +204,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         // we have a text form element with proper data
-        $radio_div = $this->getElementById($doc, 'plugin_options_testgender');
+        $radio_div = $this->getElementById($doc, 'plugin_options_testradio');
         $radios = $radio_div->getElementsByTagName('input');
         $this->assertEqual(3, $radios->length);
         $this->assertEqual( $radios->item(0)->getAttribute('value'), '1');
@@ -226,7 +226,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // radio options name, is admin, so form should be enabled
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertEqual( count($controller->option_elements), 7);
         $this->assertNotNull( $controller->option_elements['testbirthyear']);
         $this->assertEqual(
         PluginConfigurationController::FORM_SELECT_ELEMENT, $controller->option_elements['testbirthyear']['type'] );
@@ -254,6 +254,29 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
 
     }
 
+    public function testAddAdvancedOptions() {
+        $this->simulateLogin('me@example.com', true);
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+
+        // radio options name, is admin, so form should be enabled
+        $output = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+
+        $show_adv = $this->getElementById($doc, 'adv-flip-prompt');
+        $this->assertPattern('/Show/', $doc->saveXML( $show_adv ) );
+
+    }
     public function testGetPluginOptions() {
         $build_data = $this->buildController();
         $controller = $build_data[0];

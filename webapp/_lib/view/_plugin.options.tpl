@@ -14,6 +14,25 @@ var is_admin = {if $user_is_admin}true;{else}false;{/if}
     {/if}
 {/foreach}
 var required_values_set = {if $required_values_set}true{else}false{/if}
+
+{literal}
+var advanced_visible = false;
+function show_advanced() {
+    if(advanced_visible) {
+        $(".advanced-option-label").hide();
+        $(".advanced-option-input").hide();
+        $('#adv-flip-prompt').html('Show');
+        advanced_visible = false;
+        $("#advanced-icon").attr("src", site_root + "assets/img/slickgrid/actions.gif");
+    } else {
+        $(".advanced-option-label").show();
+        $(".advanced-option-input").show();
+        $('#adv-flip-prompt').html('Hide');
+        advanced_visible = true;
+        $("#advanced-icon").attr("src", site_root + "assets/img/slickgrid/actions_reverse.jpg");
+    }
+}
+{/literal}
 </script>
 
 <form id="plugin_option_form" onsubmit="return false;">
@@ -41,7 +60,9 @@ var required_values_set = {if $required_values_set}true{else}false{/if}
 {if $user_is_admin}
 <!-- plugin options form elements -->
 {foreach from=$option_elements key=option_name item=option_obj}
-
+    {if $option_obj.advanced}
+        {assign var=advanced_options value=1}
+    {/if}
     {if $option_headers.$option_name}
         <div id="plugin_options_{$option_obj.name}_header" style="font-weight: bold; margin: 10px 0px 0px 0px;">
             {$option_headers.$option_name}
@@ -56,18 +77,20 @@ var required_values_set = {if $required_values_set}true{else}false{/if}
     </p>
 </div>
 
-<div style="float: left; margin-top: 10px; width: 200px;">
+<div style="float: left; margin-top: 10px; width: 200px;{if $option_obj.advanced}display: none;{/if}" 
+{if $option_obj.advanced}class="advanced-option-label"{/if}>
     <label id="plugin_options_{$option_obj.name}_label">
-    {if $option_not_required.$option_name}<i>*</i>{/if}
     {if $option_obj.label}
         {$option_obj.label}:
     {else}
         {$option_obj.name}:
     {/if}
+    {if $option_not_required.$option_name}<i>(optional)</i>{/if}
     </label>
 </div>
 
-<div style="float: left; margin: 10px 0px 0px 5px;">
+<div style="float: left; margin: 10px 0px 0px 5px;{if $option_obj.advanced}display: none;{/if}"
+{if $option_obj.advanced}class="advanced-option-input"{/if}>
 
     {if $option_obj.type eq 'text_element'}
 
@@ -110,8 +133,16 @@ var required_values_set = {if $required_values_set}true{else}false{/if}
 </div>
 
 <div style="clear: both;"></div>
-
 {/foreach}
+
+{if $advanced_options}
+<p style="margin: 20px;">
+    <a href="#" onclick="show_advanced(); return false">
+    <img id="advanced-icon" src="{$site_root_path}assets/img/slickgrid/actions.gif" /> <span id="adv-flip-prompt">Show</span>
+    Advanced Options
+    </a>
+</p>
+{/if}
 
 {/if}
 
@@ -121,10 +152,10 @@ var required_values_set = {if $required_values_set}true{else}false{/if}
 {/if}
 </p>
 
-{if $option_not_required|@count > 0}
+<!--{if $option_not_required|@count > 0}
 <p>
-    <i style="font-size: 12px;">* not required</i>
+    <i style="font-size: 12px;">* optional</i>
 </p>
-{/if}
+{/if}-->
 
 </form> 

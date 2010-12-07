@@ -39,8 +39,8 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
 
         /** set option fields **/
         // name text field
-        $name_field = array('name' => 'testname', 'label' => 'Enter Your Name'); // set an element name and label
-        $name_field['default_value'] = 'Think Tank User'; // set default value
+        $name_field = array('name' => 'testname', 'label' => 'Your Name'); // set an element name and label
+        $name_field['default_value'] = 'ThinkUp User'; // set default value
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add element
         // set testname header
         $this->addPluginOptionHeader('testname', 'User Info'); // add a header for an element
@@ -49,8 +49,8 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
             'Please enter a name, because we\'d really like to have one...');
 
         // gender radio field
-        $gender_field = array('name' => 'testgender', 'label' => 'Select a Gender'); // set an element name and label
-        $gender_field['values'] = array('Female' => 1, 'Male' => 2, 'Other' => 3);
+        $gender_field = array('name' => 'testradio', 'label' => 'You Like'); // set an element name and label
+        $gender_field['values'] = array('Cookies' => 1, 'Cake' => 2, 'Other' => 3);
         $gender_field['default_value'] = '3'; // set default value
         $this->addPluginOption(self::FORM_RADIO_ELEMENT, $gender_field); // add element
 
@@ -78,6 +78,15 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
         $this->setPluginOptionNotRequired('RegKey');
         $this->addPluginOptionRequiredMessage('RegKey',
             'Please enter interger value for RegKey');
+
+        // advanced data
+        $adv1 = array('name' => 'AdvancedInfo1', 'label' => '1st advanced field', 'advanced' => true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $adv1);
+        $this->setPluginOptionNotRequired('AdvancedInfo1'); // by default not required
+
+        $adv2 = array('name' => 'AdvancedInfo2', 'label' => '2nd advanced field', 'advanced' => true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $adv2);
+
         return $this->generateView();
 
     }
