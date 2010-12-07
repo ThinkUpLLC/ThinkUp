@@ -90,6 +90,10 @@ abstract class PDODAO {
             $this->config->getValue('db_password')
             );
             self::$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // if THINKUP_CFG var 'set_pdo_charset' is set to true, set the connection charset to utf8
+            if ($this->config->getValue('set_pdo_charset')) {
+                self::$PDO->exec('SET CHARACTER SET utf8');
+            }
         }
     }
 
