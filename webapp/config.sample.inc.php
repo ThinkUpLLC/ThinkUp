@@ -63,3 +63,7 @@ $THINKUP_CFG['slow_query_log_threshold']  = 2.0;
 $THINKUP_CFG['debug']                     = true;
 
 $THINKUP_CFG['enable_profiler']           = false;
+
+// Set this to true if you want your PDO object's database connection's charset to be explicitly set to utf8.
+// If false (or unset), the database connection's charset will not be explicitly set.
+$THINKUP_CFG['set_pdo_charset']           = false;
