@@ -34,14 +34,6 @@
  *
  */
 class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
-
-    /**
-     * Inserts the given post record (if it does not already exist), then creates a row in the favorites 'join' table
-     * to store information about the 'favorited' relationship. $vals holds the parsed post information.
-     * @param array $vals
-     * @param int $favoriter_id
-     * @return int
-     */
     public function addFavorite($favoriter_id, $vals) {
         if (!$favoriter_id) {
             throw new Exception("error: favoriter/owner id not set");
@@ -49,7 +41,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         // first add the post (if need be-- this post may have already been inserted).
         $retval = $this->addPost($vals);
         $q = " INSERT IGNORE INTO #prefix#favorites
-         (status_id, author_user_id, fav_of_user_id, network)
+         (post_id, author_user_id, fav_of_user_id, network)
         VALUES ( :pid, :uid, :fid, :network) ";
         $vars = array(
             ':pid' => $vals['post_id'],
@@ -60,17 +52,8 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $res = $this->execute($q, $vars);
         return $this->getUpdateCount($res);
     }
-
-    /**
-     * 'Unfavorites' a post with respect to a given user, by removing the relevant entry from
-     * the favorites table.
-     * @param int $tid
-     * @param int $uid
-     * @param str $network
-     * @return int
-     */
     public function unFavorite($tid, $uid, $network = 'twitter') {
-        $q = " DELETE FROM #prefix#favorites where status_id = :tid AND fav_of_user_id = :uid AND network = :network";
+        $q = " DELETE FROM #prefix#favorites where post_id = :tid AND fav_of_user_id = :uid AND network = :network";
         $vars = array(
             ':tid' => $tid,
             ':uid' => $uid,
@@ -79,43 +62,15 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $res = $this->execute($q, $vars);
         return $this->getUpdateCount($res);
     }
-
-    /**
-     * wrapper function for getAllFPostsByUserID. Supports pagination.
-     * @param int $owner_id
-     * @param str $network
-     * @param int $count
-     * @param int $page
-     * @return array Posts with link object set
-     */
-    public function getAllFPosts($owner_id, $network, $count, $page=1) {
-        return $this->getAllFPostsByUserID($owner_id, $network, $count, "pub_date", "DESC", null, $page);
+    public function getAllFavoritePosts($owner_id, $network, $count, $page=1) {
+        return $this->getAllFavoritePostsByUserID($owner_id, $network, $count, "pub_date", "DESC", null, $page);
     }
-
-    /**
-     * wrapper function for getAllFPostsByUserID.  Takes an 'upper bound' argument ($ub)-- if set,
-     * only posts with id < $ub are retrieved.
-     * @param int $owner_id
-     * @param str $network
-     * @param int $count
-     * @param int $ub
-     * @return array Posts with link object set 
-     */
-    public function getAllFPostsUB($owner_id, $network, $count, $ub) {
-        return $this->getAllFPostsByUserID($owner_id, $network, $count, "pub_date", "DESC", $ub);
+    public function getAllFavoritePostsUpperBound($owner_id, $network, $count, $ub) {
+        return $this->getAllFavoritePostsByUserID($owner_id, $network, $count, "pub_date", "DESC", $ub);
     }
-
-    /**
-     * wrapper function for getAllFPostsByUsernameOrderedBy
-     * @param str $username
-     * @param str $network
-     * @param int $count
-     * @return array Posts with link object set 
-     */
-    public function getAllFPostsByUsername($username, $network, $count) {
-        return $this->getAllFPostsByUsernameOrderedBy($username, $network, $count, "pub_date");
+    public function getAllFavoritePostsByUsername($username, $network, $count) {
+        return $this->getAllFavoritePostsByUsernameOrderedBy($username, $network, $count, "pub_date");
     }
-
     /**
      * Get all favorited posts by a given user id, with configurable order by field and direction.
      * Returns either an iterator or an array, as specified by $iterator. Supports pagination.
@@ -129,7 +84,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
      * @param bool $iterator
      * @return array Posts with link object set or PostIterator
      */
-    private function getAllFPostsByUserID($owner_id, $network, $count, $order_by="pub_date", $direction="DESC",
+    private function getAllFavoritePostsByUserID($owner_id, $network, $count, $order_by="pub_date", $direction="DESC",
     $ubound = null, $page=1, $iterator = false) {
         $direction = $direction=="DESC" ? "DESC": "ASC";
         $start_on_record = ($page - 1) * $count;
@@ -137,7 +92,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             $order_by="pub_date";
         }
         $q = "select l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date from (#prefix#posts p
-        LEFT JOIN #prefix#favorites f on f.status_id = p.post_id) LEFT JOIN #prefix#links l on l.post_id = p.post_id 
+        LEFT JOIN #prefix#favorites f on f.post_id = p.post_id) LEFT JOIN #prefix#links l on l.post_id = p.post_id 
         where f.fav_of_user_id = :owner_id AND p.network=:network ";
 
         if ($order_by == 'reply_count_cache') {
@@ -187,7 +142,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
      * @param bool $iterator
      * @return array Posts with link object set or PostIterator
      */
-    private function getAllFPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
+    private function getAllFavoritePostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
     $order_by="pub_date", $in_last_x_days = 0, $iterator = false) {
         if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
             $order_by="pub_date";
@@ -197,7 +152,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
           ':network'=>$network
         );
         $q = "select l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date from
-        ((#prefix#posts p LEFT JOIN #prefix#favorites f on f.status_id = p.post_id) LEFT JOIN 
+        ((#prefix#posts p LEFT JOIN #prefix#favorites f on f.post_id = p.post_id) LEFT JOIN 
         #prefix#links l on l.post_id = p.post_id) LEFT JOIN #prefix#users u on u.user_id = f.fav_of_user_id 
         where u.user_name = :author_username AND p.network=:network ";
 
@@ -227,28 +182,12 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         }
         return $posts;
     }
-
-    /**
-     * iterator wrapper for getAllFPostsByUsernameOrderedBy
-     * @param str $username
-     * @param str $network
-     * @param int $count
-     * @return PostIterator
-     */
-    public function getAllFPostsByUsernameIterator($username, $network, $count = 0) {
-        return $this->getAllFPostsByUsernameOrderedBy($username, $network="twitter", $count, null, null,
+    public function getAllFavoritePostsByUsernameIterator($username, $network, $count = 0) {
+        return $this->getAllFavoritePostsByUsernameOrderedBy($username, $network="twitter", $count, null, null,
         $iterator = true);
     }
-
-    /**
-     * iterator wrapper for getAllFPostsByUserID
-     * @param int $user_id
-     * @param str $network
-     * @param int $count
-     * @return PostIterator
-     */
-    public function getAllFPostsIterator($user_id, $network, $count) {
-        return $this->getAllFPostsByUserID($user_id, $network, $count, "pub_date",
+    public function getAllFavoritePostsIterator($user_id, $network, $count) {
+        return $this->getAllFavoritePostsByUserID($user_id, $network, $count, "pub_date",
         "DESC", null, $iterator = true);
     }
 }

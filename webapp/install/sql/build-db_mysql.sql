@@ -23,12 +23,12 @@ CREATE TABLE tu_encoded_locations (
 --
 
 CREATE TABLE tu_favorites (
-  status_id bigint(20) unsigned NOT NULL,
+  post_id bigint(20) unsigned NOT NULL,
   author_user_id bigint(11) NOT NULL,
   fav_of_user_id bigint(11) NOT NULL,
   network varchar(20) NOT NULL DEFAULT 'twitter',
-  UNIQUE KEY status_id_2 (status_id,fav_of_user_id,network),
-  KEY status_id (status_id),
+  UNIQUE KEY post_id_2 (post_id,fav_of_user_id,network),
+  KEY post_id (post_id),
   KEY author_user_id (author_user_id),
   KEY fav_of_user_id (fav_of_user_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -297,7 +297,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2010-12-06 16:11:44
+-- Dump completed on 2010-12-06 16:44:33
 
 --
 -- Insert DB Version

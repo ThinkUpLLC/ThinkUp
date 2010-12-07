@@ -146,7 +146,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
     public function getLinksByFavorites($user_id, $network) {
         $q  = "SELECT l.*, p.*, pub_date - interval 8 hour AS adj_pub_date ";
-        $q .= "FROM #prefix#posts as p, #prefix#favorites as f, #prefix#links as l WHERE f.status_id = p.post_id ";
+        $q .= "FROM #prefix#posts as p, #prefix#favorites as f, #prefix#links as l WHERE f.post_id = p.post_id ";
         // $q .= "INNER JOIN #prefix#links AS l ";
         $q .= "AND p.post_id = l.post_id AND p.network = l.network ";
         $q .= "AND l.network = :network AND  f.fav_of_user_id = :user_id ";

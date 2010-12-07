@@ -49,7 +49,6 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     protected function buildData() {
-
         $builders = array();
         //Insert test links (not images, not expanded)
         $counter = 0;
@@ -350,9 +349,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      * Test of getLinksByFavorites method
      */
     public function testGetFavoritedLinks() {
-
         $lbuilders = array();
-
         // test links for fav checking
         $counter = 0;
         while ($counter < 5) {
@@ -371,20 +368,18 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
 
             $lbuilders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>$user_id,
-            'author_username'=>"user$counter", 'author_fullname'=>"User$counter Name$counter", 'author_avatar'=>'avatar.jpg', 
-            'post_text'=>'This is post '.$post_id, 'pub_date'=>'2009-01-01 00:'.
+            'author_username'=>"user$counter", 'author_fullname'=>"User$counter Name$counter", 
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$post_id, 'pub_date'=>'2009-01-01 00:'.
             $pseudo_minute.':00', 'network'=>'twitter',
             'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
 
             // user '20' favorites the first 7 of the test posts, only 5 of which will have links
             if ($counter < 7) {
-                $lbuilders[] = FixtureBuilder::build('favorites', array('status_id'=>$post_id, 'author_user_id'=>$user_id, 
-                'fav_of_user_id'=>20, 'network'=>'twitter'));
+                $lbuilders[] = FixtureBuilder::build('favorites', array('post_id'=>$post_id,
+                'author_user_id'=>$user_id, 'fav_of_user_id'=>20, 'network'=>'twitter'));
             }
-
             $counter++;
         }
-
         $result = $this->DAO->getLinksByFavorites(20, 'twitter');
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 5);

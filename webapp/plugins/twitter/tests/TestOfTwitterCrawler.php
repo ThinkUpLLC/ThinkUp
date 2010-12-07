@@ -82,7 +82,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     public function tearDown() {
         $this->builders = null;
-        FixtureBuilder::truncateTable('favorites');
         $this->logger->close();
         parent::tearDown();
     }
@@ -319,13 +318,13 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
-    
+
         $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 22);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 4);
         $this->assertEqual($this->instance->favorites_profile, 82);
-    
-    
+
+
         $this->logger->logInfo("second round of archiving", __METHOD__.','.__LINE__);
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage2/');
@@ -341,7 +340,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 84);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
-    
+
         $this->logger->logInfo("now in maintenance mode", __METHOD__.','.__LINE__);
         $this->api->available_api_calls_for_crawler = 4;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
@@ -356,7 +355,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($this->instance->owner_favs_in_system, 87);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
         $this->assertEqual($retval, true);
-    
+
         // now test case where there are 'extra' favs being reported by twitter,
         // not findable via the N pages searched back through, with existing pages < N
         // override a cfg value
@@ -376,7 +375,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($retval, true);
         $builder2 = null;
     }
-    
+
     public function testFetchFavoritesOfInstanceuserBadResponse() {
         $this->logger->logInfo("in testFetchFavoritesOfInstanceuserBadResponse", __METHOD__.','.__LINE__);
         self::setUpInstanceUserAmygdala();
@@ -390,12 +389,12 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
-    
+
         $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 0);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
     }
-    
+
     public function testFetchFavoritesOfInstanceuserNoAPICalls() {
         $this->logger->logInfo("in testFetchFavoritesOfInstanceuserNoAPICalls", __METHOD__.','.__LINE__);
         self::setUpInstanceUserAmygdala();
@@ -409,7 +408,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
-    
+
         $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 0);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 0);
@@ -427,7 +426,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         //set cfg value
         $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_cleanup_pages',
         'option_value'=>3));
-        
+
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
         $retval = $tc->cleanUpMissedFavsUnFavs();
@@ -444,7 +443,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testAddRmOldFavMaintSearch() {
-    
+
         $this->logger->logInfo("in testAddRmOldFavMaintSearch", __METHOD__.','.__LINE__);
         //set plugin cfg values
         $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_older_pages',
@@ -453,7 +452,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'option_value'=>3));
 
         $id = DAOFactory::getDAO('InstanceDAO');
-    
+
         self::setUpInstanceUserAmygdala();
         $this->api->available_api_calls_for_crawler = 3;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
@@ -470,7 +469,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
         // check fav count
         $this->assertEqual($this->instance->owner_favs_in_system, 40);
-    
+
         $this->logger->logInfo("in testAddRmOldFavMaintSearch, second traversal", __METHOD__.','.__LINE__ );
         // now add an additional older fav , remove one, and traverse again
         $this->api->available_api_calls_for_crawler = 3;
@@ -487,10 +486,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         }
         $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
         // check fav count- should have removed 2 and added 21...
-        // update: due to issue with twitter API, not currently removing un-favs from database
+        // update: due to issue with TwitterAPI, not currently removing un-favs from database
         // $this->assertEqual($this->instance->owner_favs_in_system, 59);
         $this->assertEqual($this->instance->owner_favs_in_system, 61);
         $builder2 = null; $builder3 = null;
     }
-
 }

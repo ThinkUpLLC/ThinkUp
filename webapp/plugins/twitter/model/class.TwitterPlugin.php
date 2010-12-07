@@ -97,9 +97,9 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin {
                     // Auth req'd, for calling user only
                     $crawler->fetchInstanceUserMentions();
                     $crawler->fetchInstanceUserFriends();
+                    $crawler->fetchInstanceFavorites();
                     $crawler->fetchInstanceUserFollowers();
                     $crawler->fetchRetweetsOfInstanceUser();
-                    $crawler->fetchInstanceFavorites();
                     $crawler->cleanUpMissedFavsUnFavs();
                 }
 
@@ -323,9 +323,9 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin {
 
         $favorites_menu = new Menu('Favorites');
         $fvalltab = new MenuItem("ftweets-all", "All", "All favorites", $twitter_data_tpl);
-        $fvalltabds = new Dataset("all_tweets", 'FavoritePostDAO', "getAllFPosts", array($instance->network_user_id,
+        $fvalltabds = new Dataset("all_tweets", 'FavoritePostDAO', "getAllFavoritePosts", array($instance->network_user_id,
            'twitter', 20, "#page_number#"),
-           'getAllFPostsIterator', array($instance->network_user_id, 'twitter', GridController::MAX_ROWS)
+           'getAllFavoritePostsIterator', array($instance->network_user_id, 'twitter', GridController::MAX_ROWS)
         );
         $fvalltab->addDataset($fvalltabds);
         $favorites_menu->addMenuItem($fvalltab);

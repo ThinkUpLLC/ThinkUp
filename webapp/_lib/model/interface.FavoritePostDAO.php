@@ -30,13 +30,11 @@
  *
  */
 interface FavoritePostDAO extends PostDAO {
-
-    
     /**
      * Inserts the given post record (if it does not already exist), then creates a row in the favorites 'join' table
      * to store information about the 'favorited' relationship. $vals holds the parsed post information.
-     * @param array $vals
      * @param int $favoriter_id
+     * @param array $vals
      * @return int
      */
     public function addFavorite($favoriter_id, $vals);
@@ -49,50 +47,47 @@ interface FavoritePostDAO extends PostDAO {
      * @return int
      */
     public function unFavorite($tid, $uid, $network);
-    
     /**
-     * wrapper function for getAllFPostsByUserID. Supports pagination.
+     * Wrapper function for getAllFavoritePostsByUserID. Supports pagination.
      * @param int $owner_id
      * @param str $network
      * @param int $count
      * @param int $page
      * @return array Posts with link object set
      */
-    public function getAllFPosts($owner_id, $network, $count, $page);
+    public function getAllFavoritePosts($owner_id, $network, $count, $page);
     /**
-     * wrapper function for getAllFPostsByUserID.  Takes an 'upper bound' argument ($ub)-- if set,
+     * Wrapper function for getAllFavoritePostsByUserID. Takes an 'upper bound' argument ($ub)-- if set,
      * only posts with id < $ub are retrieved.
      * @param int $owner_id
      * @param str $network
      * @param int $count
      * @param int $ub
-     * @return array Posts with link object set 
+     * @return array Posts with link object set
      */
-    public function getAllFPostsUB($owner_id, $network, $count, $ub);
+    public function getAllFavoritePostsUpperBound($owner_id, $network, $count, $ub);
     /**
-     * wrapper function for getAllFPostsByUsernameOrderedBy
+     * wrapper function for getAllFavoritePostsByUsernameOrderedBy
      * @param str $username
      * @param str $network
      * @param int $count
-     * @return array Posts with link object set 
+     * @return array Posts with link object set
      */
-    public function getAllFPostsByUsername($username, $network, $count);
-    
+    public function getAllFavoritePostsByUsername($username, $network, $count);
     /**
-     * iterator wrapper for getAllFPostsByUsernameOrderedBy
+     * iterator wrapper for getAllFavoritePostsByUsernameOrderedBy
      * @param str $username
      * @param str $network
      * @param int $count
      * @return PostIterator
      */
-    public function getAllFPostsByUsernameIterator($username, $network, $count);
+    public function getAllFavoritePostsByUsernameIterator($username, $network, $count);
     /**
-     * iterator wrapper for getAllFPostsByUserID
+     * iterator wrapper for getAllFavoritePostsByUserID
      * @param int $user_id
      * @param str $network
      * @param int $count
      * @return PostIterator
      */
-    public function getAllFPostsIterator($user_id, $network, $count);
-
+    public function getAllFavoritePostsIterator($user_id, $network, $count);
 }

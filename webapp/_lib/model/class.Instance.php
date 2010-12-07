@@ -20,38 +20,124 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
+ * Instance - a service and user account
+ *
+ * An instance is a service and user account, i.e., @thinkupapp on Twitter is an instance. The ThinkUp Facebook Page
+ * is also an instance.
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  */
 class Instance {
+    /**
+     * @var int
+     */
     var $id;
+    /**
+     * @var str
+     */
     var $network_username;
+    /**
+     * @var int Service-specific ID, like the Twitter ID or Facebook user ID
+     */
     var $network_user_id;
+    /**
+     * var @int Service-specific ID of user viewing the instance, needed when permissions are different depending on
+     * who the viewer user is
+     */
     var $network_viewer_id;
+    /**
+     * @var int
+     */
     var $last_post_id;
+    /**
+     * @var int
+     */
     var $last_page_fetched_replies;
+    /**
+     * @var int
+     */
     var $last_page_fetched_tweets;
+    /**
+     * @var int
+     */
     var $total_posts_in_system;
+    /**
+     * @var int
+     */
     var $total_replies_in_system;
+    /**
+     * @var int
+     */
     var $total_follows_in_system;
+    /**
+     * @var int
+     */
     var $total_friends_in_system;
+    /**
+     * @var int
+     */
     var $total_users_in_system;
+    /**
+     * @var bool
+     */
     var $is_archive_loaded_replies;
+    /**
+     * @var bool
+     */
     var $is_archive_loaded_follows;
+    /**
+     * @var bool
+     */
     var $is_archive_loaded_friends;
+    /**
+     * @var date
+     */
     var $crawler_last_run;
+    /**
+     * @var int
+     */
     var $earliest_reply_in_system;
+    /**
+     * @var int
+     */
     var $api_calls_to_leave_unmade_per_minute;
+    /**
+     * @var int
+     */
     var $avg_replies_per_day;
+    /**
+     * @var bool
+     */
     var $is_public = false;
+    /**
+     * @var bool
+     */
     var $is_active = true;
+    /**
+     * @var str
+     */
     var $network;
+    /**
+     * @var int
+     */
     var $last_favorite_id;
+    /**
+     * @var int
+     */
     var $last_unfav_page_checked;
+    /**
+     * @var int
+     */
     var $last_page_fetched_favorites;
+    /**
+     * @var int
+     */
     var $favorites_profile;
+    /**
+     * @var int
+     */
     var $owner_favs_in_system;
 
     public function __construct($r = false) {

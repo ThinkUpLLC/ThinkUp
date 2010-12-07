@@ -23,7 +23,6 @@
  * @copyright 2009-2010 Amy Unruh, Gina Trapani
  * @author Amy Unruh
  */
-
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -52,7 +51,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $this->prefix = $config->getValue('table_prefix');
         $this->builders = self::buildData();
     }
-    
+
     protected function buildData() {
 
         $builders = array();
@@ -61,10 +60,6 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
         'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
         'last_updated'=>'1/1/2005', 'network'=>'twitter'));
-
-        // $builders[] = FixtureBuilder::build('users', array('user_id'=>18, 'user_name'=>'shutterbug',
-        // 'full_name'=>'Shutter Bug', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>10,
-        // 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>19, 'user_name'=>'linkbaiter',
         'full_name'=>'Link Baiter', 'avatar'=>'avatar.jpg', 'is_protected'=>0, 'follower_count'=>70,
@@ -78,7 +73,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('users', array('user_id'=>21, 'user_name'=>'user2',
         'full_name'=>'User 2', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>80,
         'network'=>'twitter'));
-        
+
         $builders[] = FixtureBuilder::build('users', array('user_id'=>22, 'user_name'=>'quoter',
         'full_name'=>'Quotables', 'is_protected'=>0, 'follower_count'=>80, 'network'=>'twitter'));
 
@@ -120,7 +115,6 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
             $counter++;
         }
 
-
         //Add link posts from 'linkbaiter'
         $counter = 0;
         while ($counter < 40) {
@@ -137,25 +131,26 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
 
             $counter++;
         }
-        
+
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>10822735852740608, 'author_user_id'=>23,
         'author_username'=>'user3', 'author_fullname'=>'User 3', 'network'=>'twitter', 
-        'post_text'=>'@nytimes has posted an interactive panoramic photo that shows how Times Square has changed over the last 20 years http://nyti.ms/hmTVzP', 
+        'post_text'=>'@nytimes has posted an interactive panoramic photo that shows how Times Square has changed over'.
+        ' the last 20 years http://nyti.ms/hmTVzP', 
         'source'=>'web', 'pub_date'=>'-300s', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
         'location'=>'New York City', 'is_geo_encoded'=>0));
-            
+
         // have 'user1' favorite some of ev's posts
         for ($i = 0; $i < 20; $i++) {
-            $builders[] = FixtureBuilder::build('favorites', array('status_id'=>$i, 
+            $builders[] = FixtureBuilder::build('favorites', array('post_id'=>$i,
             'author_user_id'=>13, 'fav_of_user_id'=>20, 'network'=>'twitter'));
         }
         // have 'user1' favorite some linkbaiter posts
         for ($i = 80; $i < 100; $i++) {
-            $builders[] = FixtureBuilder::build('favorites', array('status_id'=>$i, 
+            $builders[] = FixtureBuilder::build('favorites', array('post_id'=>$i,
             'author_user_id'=>19, 'fav_of_user_id'=>20, 'network'=>'twitter'));
         }
         // have 'user2' favorite one of the same linkbaiter posts
-        $builders[] = FixtureBuilder::build('favorites', array('status_id'=>87, 
+        $builders[] = FixtureBuilder::build('favorites', array('post_id'=>87,
         'author_user_id'=>19, 'fav_of_user_id'=>21, 'network'=>'twitter'));
 
         return $builders;
@@ -174,7 +169,6 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
     }
 
-
     /**
      * Test creation of fav post, where the post has not yet been saved to database.
      */
@@ -185,7 +179,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $res = $dao->addFavorite($favoriter_id, $vals);
         $this->assertEqual($res, 1);
     }
-    
+
     /**
      * Test creation of fav post, where post already exists in db, but not favorite bookkeeping,
      * and so we are just adding an entry to the favorites table.
@@ -200,7 +194,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $res = $dao->addFavorite($favoriter_id, $vals);
         $this->assertEqual($res, 0);
     }
-    
+
     /**
      * Test unfavoriting of fav'd post
      */
@@ -209,71 +203,71 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $res = $dao->unFavorite(81, 20, 'twitter');
         $this->assertEqual($res, 1);
     }
-    
+
     /**
      * Test attempted unfav of a post that is favorited, but not by the given user
      */
     public function testNonFavPostUnfav() {
         $dao = new FavoritePostMySQLDAO();
         $res = $dao->unFavorite(82, 19, 'twitter');
-        $this->assertEqual($res, 0);      
+        $this->assertEqual($res, 0);
     }
-    
+
     /**
      * Check unfavoriting the same post by multiple users
      */
-     public function testMultipleFavsOfPost() {
-         $dao = new FavoritePostMySQLDAO();
-         $res = $dao->unFavorite(87, 20, 'twitter');
-         $this->assertEqual($res, 1);      
-         $res = $dao->unFavorite(87, 21, 'twitter');
-         $this->assertEqual($res, 1);      
-         $res = $dao->unFavorite(87, 20, 'twitter');
-         $this->assertEqual($res, 0);      
-     }
+    public function testMultipleFavsOfPost() {
+        $dao = new FavoritePostMySQLDAO();
+        $res = $dao->unFavorite(87, 20, 'twitter');
+        $this->assertEqual($res, 1);
+        $res = $dao->unFavorite(87, 21, 'twitter');
+        $this->assertEqual($res, 1);
+        $res = $dao->unFavorite(87, 20, 'twitter');
+        $this->assertEqual($res, 0);
+    }
 
     /**
      * Test fetch of N favorited posts for a given user by userid
      */
     public function testGetAllFavsForUserID() {
         $dao = new FavoritePostMySQLDAO();
-        $res = $dao->getAllFPosts(20, 'twitter', 6);
+        $res = $dao->getAllFavoritePosts(20, 'twitter', 6);
         $this->assertIsA($res, "array");
         $this->assertEqual(count($res), 6);
         $this->assertEqual($res[0]->post_text, 'This is link post 19');
     }
-    
+
     /**
      * Test fetch of all favorited posts for a given user by username
      */
     public function testGetAllFavsForUsername() {
         $dao = new FavoritePostMySQLDAO();
-        $res = $dao->getAllFPostsByUsername('user1', 'twitter', 100);
+        $res = $dao->getAllFavoritePostsByUsername('user1', 'twitter', 100);
         $this->assertIsA($res, "array");
         $this->assertEqual(count($res), 40);
     }
-    
+
     /**
      * Test fetch of all favorited posts for a given user with post # less than a given upper bound.
      */
-    public function testGetAllFavsForUserUB() {
+    public function testGetAllFavsForUserUpperBound() {
         $dao = new FavoritePostMySQLDAO();
-        $res = $dao->getAllFPostsUB(20, 'twitter', 100, 10);
+        $res = $dao->getAllFavoritePostsUpperBound(20, 'twitter', 100, 10);
         $this->assertIsA($res, "array");
-        $this->assertEqual(count($res), 10);      
+        $this->assertEqual(count($res), 10);
     }
-    
+
     /**
      * Test pagination
      */
     public function testFavoritesPagination() {
         $dao = new FavoritePostMySQLDAO();
-        $res = $dao->getAllFPosts(20, 'twitter', 10, 3); // fetch page 3
+        $res = $dao->getAllFavoritePosts(20, 'twitter', 10, 3); // fetch page 3
         $this->assertIsA($res, "array");
         $this->assertEqual(count($res), 10);
         $this->assertEqual($res[0]->post_text, 'This is post 19');
     }
-    
+
     /**
      * helper method to build a post
      */
@@ -292,7 +286,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['is_protected'] = 0;
         return $vals;
     }
-    
+
     /**
      * helper method to build a post
      */
@@ -304,7 +298,8 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['author_fullname']="User 3";
         $vals['author_avatar']='avatar.jpg';
         $vals['author_user_id']= 23;
-        $vals['post_text']="@nytimes has posted an interactive panoramic photo that shows how Times Square has changed over the last 20 years http://nyti.ms/hmTVzP";
+        $vals['post_text']="@nytimes has posted an interactive panoramic photo that shows how Times Square has ".
+        "changed over the last 20 years http://nyti.ms/hmTVzP";
         $vals['pub_date']='-200s';
         $vals['source']='web';
         $vals['network']= 'twitter';
