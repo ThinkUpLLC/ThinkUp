@@ -230,21 +230,61 @@ function thinkup_menu() {
 
 function thinkup_get_options_array() {
 
-    $arr = array('thinkup_twitter_username'=>array('key'=>'thinkup_twitter_username',
-    'label'=>'Default Twitter username:', 'description'=>'(Required) Override this by using the twitter_username '.
-    'parameter in the shortcode', 'type'=>'text', 'value'=>get_option('thinkup_twitter_username')), 
-    'thinkup_table_prefix'=>array('key'=>'thinkup_table_prefix', 'label'=>'ThinkUp table prefix:', 
-    'description'=>'(Optional) For example <i>tu_</i>', 'type'=>'text', 'value'=>get_option('thinkup_table_prefix')), 
-    'thinkup_server'=>array('key'=>'thinkup_server', 'label'=>'ThinkUp database server:', 
-    'description'=>'(Optional) If ThinkUp is located in a different database than WordPress', 'type'=>'text', 
-    'value'=>get_option('thinkup_server')), 'thinkup_db'=>array('key'=>'thinkup_db', 'label'=>'ThinkUp database name:',
-    'description'=>'(Optional) If ThinkUp is located in a different database than WordPress', 'type'=>'text', 
-    'value'=>get_option('thinkup_db')), 'thinkup_dbusername'=>array('key'=>'thinkup_dbusername',
-    'label'=>'ThinkUp database username:', 'description'=>'(Optional) If ThinkUp is located in a different database '.
-    'than WordPress', 'type'=>'text', 'value'=>get_option('thinkup_dbusername')), 'thinkup_dbpw'=>array(
-    'key'=>'thinkup_dbpw', 'label'=>'ThinkUp database password:', 'description'=>
-    '(Optional) If ThinkUp is located in a different database than WordPress', 'type'=>'password', 
-    'value'=>thinkup_unscramble_password(get_option('thinkup_dbpw'))));
+    $arr = array(
+    'thinkup_twitter_username'=>
+        array(
+            'key'=>'thinkup_twitter_username',
+            'label'=>'Default Twitter username:',
+            'description'=>'(Required) Override this by using the twitter_username parameter in the shortcode',
+            'type'=>'text',
+            'value'=>get_option('thinkup_twitter_username')
+        ),
+
+    'thinkup_table_prefix'=>
+        array(
+            'key'=>'thinkup_table_prefix',
+            'label'=>'ThinkUp table prefix:',
+            'description'=>'(Optional) For example <i>tu_</i>',
+            'type'=>'text', 'value'=>get_option('thinkup_table_prefix')
+        ),
+    
+    'thinkup_server'=>
+        array(
+            'key'=>'thinkup_server',
+            'label'=>'ThinkUp database server:',
+            'description'=>'(Optional) If ThinkUp is located in a different database than WordPress',
+            'type'=>'text',
+            'value'=>get_option('thinkup_server')
+        ),
+
+    'thinkup_db'=>
+        array(
+            'key'=>'thinkup_db',
+            'label'=>'ThinkUp database name:',
+            'description'=>'(Optional) If ThinkUp is located in a different database than WordPress',
+            'type'=>'text',
+            'value'=>get_option('thinkup_db')
+        ),
+
+    'thinkup_dbusername'=>
+        array(
+            'key'=>'thinkup_dbusername',
+            'label'=>'ThinkUp database username:',
+            'description'=>'(Optional) If ThinkUp is located in a different database than WordPress',
+            'type'=>'text',
+            'value'=>get_option('thinkup_dbusername')
+        ),
+
+    'thinkup_dbpw'=>
+        array(
+            'key'=>'thinkup_dbpw',
+            'label'=>'ThinkUp database password:',
+            'description'=>'(Optional) If ThinkUp is located in a different database than WordPress',
+            'type'=>'password',
+            'value'=>thinkup_unscramble_password(get_option('thinkup_dbpw'))
+        )
+    );
+
     return $arr;
 
 }
