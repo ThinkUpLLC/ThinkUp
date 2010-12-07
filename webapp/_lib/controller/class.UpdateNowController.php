@@ -29,9 +29,9 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class UpdateNowController extends ThinkUpAuthAPIController {
-
     public function authControl() {
         Utils::defineConstants();
+        $this->setContentType('text/html; charset=UTF-8');
         $this->setPageTitle("ThinkUp Crawler");
         $this->setViewTemplate('crawler.updatenow.tpl');
         $whichphp = @exec('which php');
