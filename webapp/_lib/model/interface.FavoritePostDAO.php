@@ -46,7 +46,7 @@ interface FavoritePostDAO extends PostDAO {
      * @param str $network
      * @return int
      */
-    public function unFavorite($tid, $uid, $network);
+    public function unFavorite($tid, $uid, $network="twitter");
     /**
      * Wrapper function for getAllFavoritePostsByUserID. Supports pagination.
      * @param int $owner_id
@@ -55,7 +55,7 @@ interface FavoritePostDAO extends PostDAO {
      * @param int $page
      * @return array Posts with link object set
      */
-    public function getAllFavoritePosts($owner_id, $network, $count, $page);
+    public function getAllFavoritePosts($owner_id, $network, $count, $page=1);
     /**
      * Wrapper function for getAllFavoritePostsByUserID. Takes an 'upper bound' argument ($ub)-- if set,
      * only posts with id < $ub are retrieved.
@@ -81,7 +81,7 @@ interface FavoritePostDAO extends PostDAO {
      * @param int $count
      * @return PostIterator
      */
-    public function getAllFavoritePostsByUsernameIterator($username, $network, $count);
+    public function getAllFavoritePostsByUsernameIterator($username, $network, $count=0);
     /**
      * iterator wrapper for getAllFavoritePostsByUserID
      * @param int $user_id
