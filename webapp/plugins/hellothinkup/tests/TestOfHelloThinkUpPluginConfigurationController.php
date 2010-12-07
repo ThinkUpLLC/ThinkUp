@@ -105,14 +105,14 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // $controller->addPluginOption(PluginConfigurationController::FORM_TEXT_ELEMENT, array('name' => 'testname'));
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertEqual( count($controller->option_elements), 7);
         $this->assertNotNull( $controller->option_elements['testname']);
         $this->assertEqual(
         PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['testname']['type'] );
         $this->assertTrue( isset($controller->option_elements['testname']['default_value']) );
         $this->assertEqual( count($controller->option_headers), 2);
         $this->assertTrue( isset($controller->option_headers['testname']));
-        $this->assertEqual( count($controller->option_not_required), 1);
+        $this->assertEqual( count($controller->option_not_required), 3);
         $this->assertFalse( isset($controller->option_not_required['testname']));
         $this->assertEqual( count($controller->option_required_message), 2);
         $this->assertTrue( isset($controller->option_required_message['testname']));
@@ -140,14 +140,14 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // just name, is admin, so form should be enabled
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertEqual( count($controller->option_elements), 7);
         $this->assertNotNull( $controller->option_elements['testname']);
         $this->assertEqual(
         PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['testname']['type'] );
         $this->assertTrue( isset($controller->option_elements['testname']['default_value']) );
         $this->assertEqual( count($controller->option_headers), 2);
         $this->assertTrue( isset($controller->option_headers['testname']));
-        $this->assertEqual( count($controller->option_not_required), 1);
+        $this->assertEqual( count($controller->option_not_required), 3);
         $this->assertFalse( isset($controller->option_not_required['testname']));
         $this->assertEqual( count($controller->option_required_message), 2);
         $this->assertTrue( isset($controller->option_required_message['testname']));
@@ -187,7 +187,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // radio options name, is admin, so form should be enabled
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertEqual( count($controller->option_elements), 7);
         $this->assertNotNull( $controller->option_elements['testname']);
         $this->assertEqual(
         PluginConfigurationController::FORM_RADIO_ELEMENT, $controller->option_elements['testgender']['type'] );
@@ -226,7 +226,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // radio options name, is admin, so form should be enabled
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 5);
+        $this->assertEqual( count($controller->option_elements), 7);
         $this->assertNotNull( $controller->option_elements['testbirthyear']);
         $this->assertEqual(
         PluginConfigurationController::FORM_SELECT_ELEMENT, $controller->option_elements['testbirthyear']['type'] );
@@ -254,6 +254,29 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
 
     }
 
+    public function testAddAdvancedOptions() {
+        $this->simulateLogin('me@example.com', true);
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+
+        // radio options name, is admin, so form should be enabled
+        $output = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+
+        $show_adv = $this->getElementById($doc, 'adv-flip-prompt');
+        $this->assertPattern('/Show/', $doc->saveXML( $show_adv ) );
+
+    }
     public function testGetPluginOptions() {
         $build_data = $this->buildController();
         $controller = $build_data[0];

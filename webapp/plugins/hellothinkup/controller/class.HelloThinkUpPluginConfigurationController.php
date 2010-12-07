@@ -78,6 +78,15 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
         $this->setPluginOptionNotRequired('RegKey');
         $this->addPluginOptionRequiredMessage('RegKey',
             'Please enter interger value for RegKey');
+
+        // advanced data
+        $adv1 = array('name' => 'AdvancedInfo1', 'label' => 'An advanced field', 'advanced' => true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $adv1);
+        $this->setPluginOptionNotRequired('AdvancedInfo1'); // by default not required
+
+        $adv2 = array('name' => 'AdvancedInfo2', 'label' => 'An advanced field 2', 'advanced' => true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $adv2);
+
         return $this->generateView();
 
     }
