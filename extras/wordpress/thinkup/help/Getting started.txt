@@ -1,0 +1,31 @@
+Hi there! The ThinkUp plugin for WordPress lets you display tweets and status updates as well as replies to them already stored in your ThinkUp database on your WordPress blog.
+
+<b>Set up the ThinkUp WordPress plugin</b>
+
+In order to use this plugin you must have <a href="http://thinkupapp.com" target="_blank">ThinkUp installed and running on your server</a>. If you don't, start there.
+
+Next, set up the plugin's database access in the Settings area. If your ThinkUp database tables are located in exactly the same place as your WordPress tables (e.g. you can see ThinkUp tables and WordPress tables in the same database) then you don't need to worry about database credentials. 
+
+<b>Using the ThinkUp WordPress plugin</b>
+
+The ThinkUp WordPress plugin works using shortcodes. If you aren't sure what shortcodes are then head on over to the FAQ section and look up the section called "What are shortcodes and how do I use them?".
+
+The shortcodes currently available to you in this plugin are as follows:
+
+[thinkup_chronological_archive]
+
+[thinkup_post_replies post_id="post_id"]
+
+[thinkup_reply_count post_id="post_id"]
+
+The first shortcode does not require any arguments. The other two, however, require you to specify at least the post_id attribute so that they know what post to look for.
+
+Easiest first, [thinkup_reply_count post_id="1234"] will show you how many replies the post with a post_id of 1234 has. By default this will look for a Twitter post but you can change that by specifying the network attribute like so: [thinkup_reply_count post_id="1234" network="facebook"].
+
+You can display the replies for any post by using the [thinkup_post_replies post_id="1234"] shortcode. Again, this will search for Twitter psots by default but by specifying the network attribute you can change it to Facebook. 
+
+Finally, list your your ThinkUp's entire archive for any account by using the [thinkup_chronological_archive] shortcode. By default this will use the Twitter username specified in the settings and display tweets. However, you can change this to your Facebook account by setting the username attribute to your full name on Facebook and the network attribute to "facebook", e.g. [thinkup_chronoglogical_archive network="facebook" username="Sam Rose"] will display my entire chronological archive of Facebook statuses. 
+
+By default, the chronological archive will display newest to oldest (descending order) but you can change this by specifying order="asc".
+
+Those are the basics of this plugin. Check out the more advanced topics if you want some more information on what's possible!

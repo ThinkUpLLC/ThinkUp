@@ -1,0 +1,15 @@
+If your ThinkUp database tables are located in exactly the same place as your WordPress tables (e.g. you can see ThinkUp tables and WordPress tables in the same database) then you don't need to worry about entering database credentials. 
+
+<b>But my ThinkUp tables are on a totally different server!</b>
+
+Not to worry. In the Settings area, fill in the correct information in the "ThinkUp database server," "ThinkUp database name," "ThinkUp database username," and "ThinkUp database password" fields. If you don't know your database credentials then you should get in contact with your hosting provider and ask them for your MySQL server host, MySQL username and MySQL password.
+
+<b>My ThinkUp tables are on the same server but in a different database.</b>
+
+In this case, make sure you fill in all four database-related fields in the Settings area. Your server name should be the same one listed as 'DB_HOST' in your WordPress configuration file (wp-config.php).
+
+<b>I have absolutely no idea where my ThinkUp tables are.</b>
+
+If you don't run your own ThinkUp installation but use someone else's then you should ask them for the credentials of the database that your data is on. They should be able to give you the information you require.
+
+If you do run your own ThinkUp installation but don't know where your tables are, they are in the database you specified upon installing ThinkUp. Usually prepended with tu_ unless you changed that during installation.

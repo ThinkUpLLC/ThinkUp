@@ -1,0 +1,21 @@
+Every shortcode in this plugin is highly customisable through the use of attributes. Heres a list of the attributes that you can specify for the chronological archive and replies shortcodes:
+
+<ul>
+<li><b>post_id</b> - The post ID to use.</li>
+<li><b>network</b> - The network that the post is from. Defaults to 'twitter'.</li>
+<li><b>username</b> - The username to use in the shortcodes. Defaults to the username specified in your settings.</li>
+<li><b>title</b> - Text displayed at the top of what the shortcode prints out. Defaults to "&lt;h3&gt;&lt;a href="#userlink#"&gt;#username#&lt;/a&gt;'s Posts in Chronological Order '.
+    '(sans replies)&lt;/h3&gt;".</li>
+<li><b>before</b> - Anything you want to display before the entire section. Defaults to "&lt;br /&gt;&lt;ul&gt;".</li>
+<li><b>after</b> - Anything you want to display after the entire section. Defaults to "&lt;/ul&gt;".</li>
+<li><b>before_post</b> - Anything you want displayed before each post. Defaults to "&lt;li&gt;".</li>
+<li><b>after_post</b> - Anything you want displayed after each post. Defaults to "&lt;/li&gt;".</li>
+<li><b>before_date</b> - Anything you want displayed before each date. Defaults to "&lt;br />&lt;small&gt;".</li>
+<li><b>after_date</b> - Anything you want displayed after each date. Defaults to "&lt;/small&gt;".</li>
+<li><b>before_user</b> - Anything you want displayed before each user. Defaults to "&lt;b&gt;".</li>
+<li><b>after_user</b> - Anything you want displayed after each user. Defaults to "&lt;/b&gt;".</li>
+<li><b>date_format</b> - Date format string. Check <a href="http://php.net/manual/en/function.gmdate.php" target="_blank">http://php.net/manual/en/function.gmdate.php</a> for more details. Defaults to "Y.m.d, g:ia".</li>
+<li><b>gmt_offset</b> - Your GMT offset. Defaults to whatever is stored in your "gmt_offset" option as set in your WordPress settings.</li>
+</ul>
+
+The thinkup_reply_count only uses the "before" and "after" attributes as well as the usual post_id, username and network.

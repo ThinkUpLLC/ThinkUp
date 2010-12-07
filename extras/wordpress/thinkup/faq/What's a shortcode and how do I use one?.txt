@@ -1,0 +1,5 @@
+A shortcode is what's called a "tag" that you can use in blog posts to alter how text is displayed or to display things like emoticons or images. You may have used them before in forums to [b]bold[/b] or [i]italic[/i] your text.
+
+In the ThinkUp WordPress plugin there are currently three shortcodes: thinkup_chronological_archive, thinkup_post_replies and thinkup_reply_count. To use them, simply add them in square brackets to a blog post, like so: [thinkup_chronological_archive]. This shortcode will print out an archive of all of your posts.
+
+You can pass arguments to shortcodes and some of them will actually require you to in able to function correctly. Check out the Help section for a guide on how to get started.
