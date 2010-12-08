@@ -1,9 +1,9 @@
 <?php
 /*
- Plugin Name: ThinkUp Integration
+ Plugin Name: ThinkUp WP Plugin
  Plugin URI: http://thinkupapp.com
  Description: Displays ThinkUp data on your WordPress blog.
- Version: 0.5
+ Version: 0.1
  Author: Gina Trapani
  Author URI: http://ginatrapani.org
  */
@@ -29,348 +29,251 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
+
+require_once 'classes/ThinkUpShortcodeHandler.class.php';
+require_once 'classes/ThinkUpAdminPages.class.php';
+require_once 'classes/ThinkUpPost.class.php';
+require_once 'classes/ThinkUpUser.class.php';
+
 /**
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * The main driver class to the ThiknUp WordPress plugin.
+ *
+ * @author Sam Rose
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  */
+class ThinkUpWordPressPlugin {
 
-// [thinkup_chronological_archive]
-function thinkup_chron_archive_handler($atts) {
+    /**
+     * Where the options array is stored after a call to
+     * getOptionsArray().
+     *
+     * @var Array Cache for the options array.
+     */
+    private static $options;
 
-    extract(shortcode_atts(array('twitter_username'=>get_option('thinkup_twitter_username'), 'title'=>
-    '<h3><a href="http://twitter.com/#twitter_username#/">@#twitter_username#</a>\'s Tweets in Chronological Order '.
-    '(sans replies)</h3>', 'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 
-    'before_tweet_alt'=>'<li class="alt">', 'after_tweet'=>'</li>', 
-    'before_date'=>'', 'after_date'=>'', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia',
-    'gmt_offset'=>get_option('gmt_offset'), 'order'=>'desc', ), $atts));
+    /**
+     * Stores the database connection for the WordPress plugin. May or
+     * may not be the same as teh global $wpdb depending on the user's
+     * settings.
+     *
+     * @var wpdb
+     */
+    private static $db_connection;
 
-    $options_array = thinkup_get_options_array();
+    public function __construct() {
+        add_action(
+                'admin_menu', 
+                array('ThinkUpAdminPages', 'addOptionsPage'));
 
-    if ($options_array['thinkup_server']['value'] != '') {
-        $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'],
-        $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
-    } else {
-        global $wpdb;
-        $wpdb2 = $wpdb;
+        // initiate the shortcode handler, constructor adds the actions
+        new ThinkUpShortcodeHandler();
     }
 
-    $sql = $wpdb2->prepare("select pub_date, post_text, post_id from ".$options_array['thinkup_table_prefix']['value'].
-    "posts where author_username='%s' and in_reply_to_user_id is null order by pub_date ".$order, $twitter_username);
-    $tweets = $wpdb2->get_results($sql);
+    /**
+     * Checks if the thinkup_server value has been set and if it has,
+     * creates a new database connection to that server based on the
+     * values supplied on the options page of the plugin.
+     *
+     * This is useful for maintaining the ability to have your WordPress
+     * and ThinkUp install on different servers.
+     *
+     * @global wpdb $wpdb
+     * @return wpdb
+     */
+    public static function getDatabaseConnection() {
+        if (is_null(self::$db_connection)) {
+            $options_array = self::getOptionsArray();
 
-    if ($tweets) {
-        echo str_replace('#twitter_username#', $twitter_username, $title);
-        echo "{$before}";
-
-        $cur = 0;
-        foreach ($tweets as $t) {
-            $tweet_content = htmlentities ($t->post_text);
-            $tweet_content = linkUrls($tweet_content);
-            $tweet_content = linkTwitterUsers($tweet_content);
-            if ($cur % 2) {
-                echo $before_tweet;
+            if ($options_array['thinkup_server']['value'] != '') {
+                self::$db_connection = new wpdb(
+                        $options_array['thinkup_dbusername']['value'],
+                        $options_array['thinkup_dbpw']['value'],
+                        $options_array['thinkup_db']['value'],
+                        $options_array['thinkup_server']['value']);
             } else {
-                echo $before_tweet_alt;
+                global $wpdb;
+                self::$db_connection = $wpdb;
             }
-            echo "{$before_tweet_html}{$tweet_content}{$after_tweet_html} {$before_date}";
-            echo "{$after_tweet_html} {$before_date}
-            <a href=\"http://twitter.com/{$twitter_username}/statuses/{$t->post_id}/\">".
-            actual_time($date_format, $gmt_offset, strtotime($t->pub_date))."</a>{$after_date}{$after_tweet}";
-            $cur++;
         }
-        echo "{$after}";
-    } else {
-        echo "No tweets found in ThinkUp for {$twitter_username}.";
+
+        return self::$db_connection;
     }
-}
-
-// [thinkup_status_replies post_id="12345"]
-function thinkup_replies_handler($atts) {
-
-    extract(shortcode_atts(array('post_id'=>0, 'network'=>'twitter',
-    'twitter_username'=>get_option('thinkup_twitter_username'), 'title'=>'<h3>Public Twitter replies to '.
-    '<a href="http://twitter.com/#twitter_username#/statuses/#post_id#/">@#twitter_username#\'s tweet</a>:</h3>',
-    'before'=>'<br /><ul>', 'after'=>'</ul>', 'before_tweet'=>'<li>', 'after_tweet'=>'</li>', 'before_user'=>'<b>',
-    'after_user'=>'</b>', 'before_tweet_html'=>'', 'after_tweet_html'=>'', 'date_format'=>'Y.m.d, g:ia', 
-    'gmt_offset'=>8, ), $atts));
-
-    $options_array = thinkup_get_options_array();
-
-    if ($options_array['thinkup_server']['value'] != '') {
-        $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'],
-        $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
-    }else {
-        global $wpdb;
-        $wpdb2 = $wpdb;
-    }
-
-    $sql = $wpdb2->prepare("select
-                p.*, u.*
-            from 
-                ".$options_array['thinkup_table_prefix']['value']."posts p
-            inner join 
-                ".$options_array['thinkup_table_prefix']['value']."users u 
-            on 
-                p.author_user_id = u.user_id 
-            where 
-                in_reply_to_post_id = %0.0f 
-                AND p.network = '%s'
-                AND p.is_protected = 0    
-            order by 
-                follower_count desc;", $post_id, $network);
-
-    $replies = $wpdb2->get_results($sql);
-
-    $output = '';
-    if ($replies) {
-        $modified_title = str_replace('#twitter_username#', $twitter_username, $title);
-        $modified_title = str_replace('#post_id#', $post_id, $modified_title);
-        $output .= "{$before}";
-        $output .= "{$modified_title}";
-        foreach ($replies as $t) {
-            $tweet_content = strip_starter_username($t->post_text);
-            $tweet_content = linkUrls($tweet_content);
-            $tweet_content = linkTwitterUsers($tweet_content);
-            $output .= "{$before_tweet}{$before_user}<a href=\"http://twitter.com/{$t->author_username}/statuses/".
-            "{$t->post_id}/\">{$t->author_username}</a>{$after_user}: {$before_tweet_html}{$tweet_content}".
-            "{$after_tweet_html}{$after_tweet}";
-        }
-        $output .= "{$after}";
-    } else {
-        $output .= "No replies found for status {$post_id}.";
-    }
-    return $output;
-}
-
-// [thinkup_status_reply_count post_id="12345"]
-function thinkup_reply_count_handler($atts) {
-    extract(shortcode_atts(array('post_id'=>0, 'before'=>'<a href="#permalink#">', 'after'=>' Twitter replies</a>',
-    'network'=>'twitter', ), $atts));
-
-    $options_array = thinkup_get_options_array();
-
-    if ($options_array['thinkup_server']['value'] != '') {
-        $wpdb2 = new wpdb($options_array['thinkup_dbusername']['value'], $options_array['thinkup_dbpw']['value'],
-        $options_array['thinkup_db']['value'], $options_array['thinkup_server']['value']);
-    } else {
-        global $wpdb;
-        $wpdb2 = $wpdb;
-    }
-
-
-    $sql = $wpdb2->prepare("select
-                count(*)
-            from 
-                ".$options_array['thinkup_table_prefix']['value']."posts p
-            inner join 
-                ".$options_array['thinkup_table_prefix']['value']."users u 
-            on 
-                p.author_user_id = u.user_id 
-            where 
-                p.in_reply_to_post_id=%0.0f 
-                AND p.network = '%s' 
-                AND p.is_protected = 0    
-            order by 
-                follower_count desc;", $post_id, $network);
-
-    $count = $wpdb2->get_var($sql);
-    $before_mod = str_replace('#permalink#', get_permalink(), $before);
-    return "{$before_mod}{$count}{$after}";
-}
-
-function linkTwitterUsers($text) {
-    $text = preg_replace('/(^|\s)@(\w*)/i', '$1<a href="http://twitter.com/$2" class="twitter-user">@$2</a>', $text);
-    return $text;
-}
-
-function linkUrls($text) {
-    /**
-     * match protocol://address/path/file.extension?some=variable&another=asf%
-     * $1 is a possible space, this keeps us from linking href="[link]" etc
-     * $2 is the whole URL
-     * $3 is protocol://
-     * $4 is the URL without the protocol://
-     * $5 is the URL parameters
-     */
-    $text = preg_replace("/(^|\s)(([a-zA-Z]+:\/\/)([a-z][a-z0-9_\..-]*[a-z]{2,6})([a-zA-Z0-9~\/*-?&%]*))/i",
-    "$1<a href=\"$2\">$2</a>", $text);
 
     /**
-     * match www.something.domain/path/file.extension?some=variable&another=asf%
-     * $1 is a possible space, this keeps us from linking href="[link]" etc
-     * $2 is the whole URL that was matched.  The protocol is missing, so we assume http://
-     * $3 is www.
-     * $4 is the URL matched without the www.
-     * $5 is the URL parameters
+     * Generates and returns the ThinkUp options array. Caches the result
+     * after the first call to the function to speed up future calls.
+     *
+     * If the $force_update (first argument) is set to 'force-update',
+     * the function will update the cached options array and return it.
+     *
+     * @return Array options array
      */
-    $text = preg_replace("/(^|\s)(www\.([a-z][a-z0-9_\..-]*[a-z]{2,6})([a-zA-Z0-9~\/*-?&%]*))/i",
-    "$1<a href=\"http://$2\">$2</a>", $text);
+    public static function getOptionsArray($force_update = null) {
 
-    return $text;
-}
+        if (!is_array(self::$options) || $force_update == 'force-update') {
 
-function actual_time($format, $offset, $timestamp) {
-    //Offset is in hours from gmt, including a - sign if applicable.
-    //So lets turn offset into seconds
-    $offset = $offset * 60 * 60;
-    $timestamp = $timestamp + $offset;
-    //Remember, adding a negative is still subtraction ;)
-    return gmdate($format, $timestamp);
-}
-
-function strip_starter_username($text) {
-    return preg_replace("/^@[a-zA-Z0-9_]+/", '', $text);
-}
-
-
-function thinkup_menu() {
-    add_options_page('ThinkUp Plug-in Options', 'ThinkUp', 6, __FILE__, 'thinkup_options');
-}
-
-function thinkup_get_options_array() {
-
-    $arr = array(
-    'thinkup_twitter_username'=>
-        array(
-            'key'=>'thinkup_twitter_username',
-            'label'=>'Default Twitter username:',
-            'description'=>'(Required) Override this by using the twitter_username parameter in the shortcode',
-            'type'=>'text',
-            'value'=>get_option('thinkup_twitter_username')
-        ),
-
-    'thinkup_table_prefix'=>
-        array(
-            'key'=>'thinkup_table_prefix',
-            'label'=>'ThinkUp table prefix:',
-            'description'=>'(Optional) For example <i>tu_</i>',
-            'type'=>'text', 'value'=>get_option('thinkup_table_prefix')
-        ),
-    
-    'thinkup_server'=>
-        array(
-            'key'=>'thinkup_server',
-            'label'=>'ThinkUp database server:',
-            'description'=>'(Optional) If ThinkUp is located in a different database than WordPress',
-            'type'=>'text',
-            'value'=>get_option('thinkup_server')
-        ),
-
-    'thinkup_db'=>
-        array(
-            'key'=>'thinkup_db',
-            'label'=>'ThinkUp database name:',
-            'description'=>'(Optional) If ThinkUp is located in a different database than WordPress',
-            'type'=>'text',
-            'value'=>get_option('thinkup_db')
-        ),
-
-    'thinkup_dbusername'=>
-        array(
-            'key'=>'thinkup_dbusername',
-            'label'=>'ThinkUp database username:',
-            'description'=>'(Optional) If ThinkUp is located in a different database than WordPress',
-            'type'=>'text',
-            'value'=>get_option('thinkup_dbusername')
-        ),
-
-    'thinkup_dbpw'=>
-        array(
-            'key'=>'thinkup_dbpw',
-            'label'=>'ThinkUp database password:',
-            'description'=>'(Optional) If ThinkUp is located in a different database than WordPress',
-            'type'=>'password',
-            'value'=>thinkup_unscramble_password(get_option('thinkup_dbpw'))
-        )
-    );
-
-    return $arr;
-
-}
-
-//Don't want to store passwords in plaintext in the database
-//This isn't perfect but it's better than clear text
-function thinkup_scramble_password($password) {
-    $salt = substr(str_pad(dechex(mt_rand()), 8, '0', STR_PAD_LEFT), -8);
-    $modified = $password.$salt;
-    $secured = $salt.base64_encode(bin2hex(strrev(str_rot13($modified))));
-    return $secured;
-}
-
-function thinkup_unscramble_password($stored_password) {
-    $salt = substr($stored_password, 0, 8);
-    $modified = substr($stored_password, 8, strlen($stored_password) - 8);
-    $modified = str_rot13(strrev(pack("H*", base64_decode($modified))));
-    $password = substr($modified, 0, strlen($modified) - 8);
-    return $password;
-}
-
-function thinkup_options() {
-    // variables for the field and option names
-    $options_hidden_field_name = 'thinkup_submit_hidden';
-
-    $options_array = thinkup_get_options_array();
-
-    // See if the user has posted us some information
-    // If they did, this hidden field will be set to 'Y'
-    if ($_POST[$options_hidden_field_name] == 'Y') {
-
-        foreach ($options_array as $opt) {
-            // Read their posted value
-            $opt['value'] = $_POST[$opt['key']];
-            // Save the posted value in the database
-
-            if ($opt['key'] == 'thinkup_dbpw')
-            update_option($opt['key'], thinkup_scramble_password($opt['value']));
-            else
-            update_option($opt['key'], $opt['value']);
+            self::$options = array(
+                'thinkup_twitter_username' =>
+                array(
+                    'key' => 'thinkup_twitter_username',
+                    'label' => 'Default Twitter username:',
+                    'description' => '(Required) Override this by using the "username" parameter in the shortcodes.',
+                    'type' => 'text',
+                    'value' => get_option('thinkup_twitter_username')
+                ),
+                'thinkup_table_prefix' =>
+                array(
+                    'key' => 'thinkup_table_prefix',
+                    'label' => 'ThinkUp table prefix:',
+                    'description' => '(Optional) The prefix on your ThinkUp tables, e.g. <i>tu_</i>',
+                    'type' => 'text',
+                    'value' => get_option('thinkup_table_prefix')
+                ),
+                'thinkup_server' =>
+                array(
+                    'key' => 'thinkup_server',
+                    'label' => 'ThinkUp database server:',
+                    'description' => '(Optional) If the ThinkUp tables are located in a different database to WordPress.',
+                    'type' => 'text',
+                    'value' => get_option('thinkup_server')
+                ),
+                'thinkup_db' =>
+                array(
+                    'key' => 'thinkup_db',
+                    'label' => 'ThinkUp database name:',
+                    'description' => '(Optional) If the ThinkUp tables are located in a different database to WordPress.',
+                    'type' => 'text',
+                    'value' => get_option('thinkup_db')
+                ),
+                'thinkup_dbusername' =>
+                array(
+                    'key' => 'thinkup_dbusername',
+                    'label' => 'ThinkUp database username:',
+                    'description' => '(Optional) If the ThinkUp tables are located in a different database to WordPress.',
+                    'type' => 'text',
+                    'value' => get_option('thinkup_dbusername')
+                ),
+                'thinkup_dbpw' =>
+                array(
+                    'key' => 'thinkup_dbpw',
+                    'label' => 'ThinkUp database password:',
+                    'description' => '(Optional) If the ThinkUp tables are located in a different database to WordPress.',
+                    'type' => 'password',
+                    'value' => ThinkUpWordPressPlugin::unscramblePassword(
+                        (get_option('thinkup_dbpw')))
+                )
+            );
         }
-        // Put an options updated message on the screen
 
-        ?>
-<div class="updated">
-<p><strong><?php _e('Options saved.', 'mt_trans_domain'); ?></strong></p>
-</div>
-        <?php
+        return self::$options;
     }
-    // Now display the options editing screen
-    echo '<div class="wrap">';
-    // header
-    echo "<h2>".__('ThinkUp Plugin Options', 'mt_trans_domain')."</h2>";
-    // options form
-    ?>
-<form name="form1" method="post" action=""><input type="hidden"
-    name="<?php echo $options_hidden_field_name; ?>" value="Y">
-<table>
-<?php
-foreach ($options_array as $opt) {
-    if ($opt['key'] == 'thinkup_dbpw')
-    $field_value = thinkup_unscramble_password(get_option($opt['key']));
-    else
-    $field_value = get_option($opt['key']);
 
-    ?>
-    <tr>
-        <td align="right" valign="top"><?php _e($opt['label'], 'mt_trans_domain'); ?>
-        </td>
-        <td><input type="<?php echo $opt['type']; ?>"
-            name="<?php echo $opt['key'] ?>" value="<?php echo $field_value ?>"
-            size="20"> <br />
-        <small> <?php echo $opt['description']; ?> </small></td>
-    </tr>
-    <?php } ?>
-</table>
-<p class="submit"><input type="submit" name="Submit"
-    value="<?php _e('Update Options', 'mt_trans_domain' ) ?>" /></p>
-</form>
-</div>
-    <?php
+    /**
+     * In an effort to not store passwords as plain text in the database
+     * this function uses obfuscation techniques to mess up the string.
+     *
+     * Not perfect but better than clear text.
+     *
+     * @return string Scrambled password.
+     */
+    public static function scramblePassword($password) {
+        $salt = substr(str_pad(dechex(mt_rand()), 8, '0', STR_PAD_LEFT), -8);
+        $modified = $password.$salt;
+        $secured = $salt.base64_encode(bin2hex(strrev(str_rot13($modified))));
+        return $secured;
+    }
+
+    /**
+     * Unscrambles the obfuscated password from the database.
+     *
+     * @return string Plain text password.
+     */
+    public static function unscramblePassword($stored_password) {
+        $salt = substr($stored_password, 0, 8);
+        $modified = substr($stored_password, 8, strlen($stored_password) - 8);
+        $modified = str_rot13(strrev(pack("H*", base64_decode($modified))));
+        $password = substr($modified, 0, strlen($modified) - 8);
+        return $password;
+    }
+
+    /**
+     * Returns the plugin's unique identifier for use in i18n and
+     * creation of option pages.
+     *
+     * @return String Plugin's unique string identifier.
+     */
+    public static function uniqueIdentifier() {
+        return 'thinkup-wp-plugin';
+    }
+
+    /**
+     * Returns the version number of the plugin as a string. Remember
+     * to keep this updated in subsequent versions.
+     *
+     * Does not have a use as of yet.
+     *
+     * @return String Version number
+     */
+    public static function version() {
+        return '0.1';
+    }
+
+    /**
+     * Returns a string representing a capability required to access the
+     * plugin settings for this plugin. Currently set to "edit_plugins"
+     * which more or less means admins only.
+     *
+     * More info on user levels and roles:
+     * http://codex.wordpress.org/Roles_and_Capabilities
+     *
+     * @return string User role required to access plugin options.
+     */
+    public static function settingsAccessLevel() {
+        return 'edit_plugins';
+    }
+
+    /**
+     * Returns a string representing a capability required to access the
+     * plugin menu. Currently set to "publish_posts" which means authors
+     * and up can view it. This is for viewing the help section.
+     *
+     * More info on user levels and roles:
+     * http://codex.wordpress.org/Roles_and_Capabilities
+     *
+     * @return string User role required to access plugin menu.
+     */
+    public static function accessLevel() {
+        return 'publish_posts';
+    }
+
+    /**
+     * Returns a string to be used as the name for our nonce fields.
+     *
+     * For more information on nonce fields:
+     * http://codex.wordpress.org/Function_Reference/wp_nonce_field
+     *
+     * @return string md5 hash of the unique identifier to use as a nonce.
+     */
+    public static function nonceName() {
+        return md5(ThinkUpWordPressPlugin::uniqueIdentifier());
+    }
+
+    /**
+     * Returns the absolute file path to this plugin's main/root directory.
+     * Amazing how useful it can be.
+     *
+     * @return string The absolute file path to this plugin's root directory.
+     */
+    public static function pluginDirectory() {
+        return WP_PLUGIN_DIR. '/'. basename(dirname(__FILE__));
+    }
 }
 
-add_action('admin_menu', 'thinkup_menu');
+//initiate the plugin
+new ThinkUpWordPressPlugin();
 
-add_shortcode('thinkup_chronological_archive', 'thinkup_chron_archive_handler');
-add_shortcode('thinkup_status_replies', 'thinkup_replies_handler');
-add_shortcode('thinkup_reply_count', 'thinkup_reply_count_handler');
+// proof of concept: function prints out 94083951404072966, 1 less than expected
+// echo sprintf('%0.0f', 9408395140407297);
+
 ?>

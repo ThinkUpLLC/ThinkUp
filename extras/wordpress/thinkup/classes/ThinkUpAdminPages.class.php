@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/extras/wordpress/thinkup/thinkup.php
+ * ThinkUp/extras/wordpress/thinkup/classes/ThinkUpAdminPages.class.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -137,7 +137,7 @@ class ThinkUpAdminPages {
             <div class="postbox" id="thinkup_settings">
                 <h3><?php _e('ThinkUp Plugin Settings',
                     ThinkUpWordPressPlugin::uniqueIdentifier()); ?></h3>
-                <div class="inside">
+                <div class="inside" style="line-height: 2;">
                     <form name="thinkup_settings_form" method="post"
                           action="">
                         <?php
@@ -160,7 +160,8 @@ class ThinkUpAdminPages {
 
                             ?>
                             <tr>
-                                <td align="right" valign="top"><?php _e($opt['label'], 'mt_trans_domain'); ?>
+                                <td align="right" valign="top"><?php _e($opt['label'], 
+                                        ThinkUpWordPressPlugin::uniqueIdentifier()); ?>
                                 </td>
                                 <td><input type="<?php echo $opt['type']; ?>"
                                     name="<?php echo $opt['key'] ?>" value="<?php echo $field_value ?>"
@@ -259,7 +260,7 @@ class ThinkUpAdminPages {
             $title = __($title, ThinkUpWordPressPlugin::uniqueIdentifier());
             $content = __($content, ThinkUpWordPressPlugin::uniqueIdentifier());
             ?>
-            <div id="poststuff" class="ui-sortable meta-box-sortable">
+            <div id="poststuff" class="ui-sortable meta-box-sortable" style="max-width: 700px">
                 <div class="postbox" id="<?php echo $title ?>">
                     <h3>
                         <?php echo $title; ?>
@@ -281,7 +282,7 @@ class ThinkUpAdminPages {
         $title = __($title, ThinkUpWordPressPlugin::uniqueIdentifier());
 
         ?>
-        <div id="poststuff" class="ui-sortable meta-box-sortable">
+        <div id="poststuff" class="ui-sortable meta-box-sortable" style="max-width: 700px">
             <div class="postbox" id="contents">
                 <h3>
                     <?php echo $title; ?>

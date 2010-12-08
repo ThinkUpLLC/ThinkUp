@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/extras/wordpress/thinkup/thinkup.php
+ * ThinkUp/extras/wordpress/thinkup/classes/ThinkUpUser.class.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -22,7 +22,8 @@
  */
 
 /**
- * Description of ThinkUpUser
+ * This class allows you to instantiate a user and retrieve their information
+ * from the ThinkUp user database table.
  *
  * @author Sam Rose
  */

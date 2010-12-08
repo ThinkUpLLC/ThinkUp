@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/extras/wordpress/thinkup/thinkup.php
+ * ThinkUp/extras/wordpress/thinkup/classes/ThinkUpPost.class.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *

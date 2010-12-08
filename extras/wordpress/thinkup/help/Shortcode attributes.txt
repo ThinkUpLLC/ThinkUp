@@ -18,4 +18,4 @@ Every shortcode in this plugin is highly customisable through the use of attribu
 <li><b>gmt_offset</b> - Your GMT offset. Defaults to whatever is stored in your "gmt_offset" option as set in your WordPress settings.</li>
 </ul>
 
-The thinkup_status_reply_count only uses the "before" and "after" attributes as well as the usual post_id, username and network.
+The thinkup_reply_count only uses the "before" and "after" attributes as well as the usual post_id, username and network.

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/extras/wordpress/thinkup/thinkup.php
+ * ThinkUp/extras/wordpress/thinkup/classes/ThinkUpShortcodeHandler.class.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -34,10 +34,15 @@ class ThinkUpShortcodeHandler {
      */
     function __construct() {
 
+        // backwards compatibility hook
         add_shortcode('thinkup_status_replies',
-                array('ThinkUpShortcodeHandler', 'statusReplies'));
+                array('ThinkUpShortcodeHandler', 'postReplies'));
+
+
+        add_shortcode('thinkup_post_replies',
+                array('ThinkUpShortcodeHandler', 'postReplies'));
         add_shortcode('thinkup_reply_count',
-                array('ThinkUpShortcodeHandler', 'statusReplyCount'));
+                array('ThinkUpShortcodeHandler', 'postReplyCount'));
         add_shortcode('thinkup_chronological_archive',
                 array('ThinkUpShortcodeHandler', 'chronologicalArchive'));
 
@@ -50,8 +55,8 @@ class ThinkUpShortcodeHandler {
      * @param <type> $atts
      * @return <type>
      */
-    public static function statusReplies($atts) {
-        $atts = self::getShortcodeAtts($atts, 'thinkup_status_replies');
+    public static function postReplies($atts) {
+        $atts = self::getShortcodeAtts($atts, 'thinkup_post_replies');
 
         $post = new ThinkUpPost($atts['post_id'], $atts['network']);
 
@@ -65,8 +70,8 @@ class ThinkUpShortcodeHandler {
      * @param <type> $atts
      * @return <type>
      */
-    public static function statusReplyCount($atts) {
-        $atts = self::getShortcodeAtts($atts, 'thinkup_status_reply_count');
+    public static function postReplyCount($atts) {
+        $atts = self::getShortcodeAtts($atts, 'thinkup_reply_count');
 
         $post = new ThinkUpPost($atts['post_id'], $atts['network']);
         
@@ -123,7 +128,7 @@ class ThinkUpShortcodeHandler {
 
         // fine tune the default shortcode atts for each shortcode
         switch($shortcode) {
-            case 'thinkup_status_replies':
+            case 'thinkup_post_replies':
                 $default_atts['title'] = '<h3>Public replies to
                     <a href="http://twitter.com/#username#/statuses/#post_id#/">
                     #username#\'s post</a>:</h3>#original_post#<br /><br />';
@@ -133,7 +138,7 @@ class ThinkUpShortcodeHandler {
 
                 break;
 
-            case 'thinkup_status_reply_count':
+            case 'thinkup_reply_count':
                 $default_atts['before'] = '<a href="#postlink#">This post has ';
                 $default_atts['after'] = ' replies</a>';
                 break;
