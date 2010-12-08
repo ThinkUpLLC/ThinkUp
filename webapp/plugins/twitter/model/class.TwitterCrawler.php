@@ -1182,7 +1182,7 @@ class TwitterCrawler {
             // if have gone earlier than highest fav id from last time, then switch to 'search for older favs' mode
             if ($older_favs_smode == false) {
                 // last-processed tweet
-                if ($tweet['post_id'] <= $starting_fav_id) {
+                if ($tweet && $tweet['post_id'] <= $starting_fav_id) {
 
                     // get 'favs_older_pages' plugin option value if it exists & is pos. int, otherwise use default
                     $topt = $this->twitter_options;
@@ -1213,7 +1213,7 @@ class TwitterCrawler {
                 }
             }
         } else {
-            $this->logger->logInfo("error: curl status: $cURL_status", __METHOD__.','.__LINE__);
+            $this->logger->logError("cURL status: $cURL_status", __METHOD__.','.__LINE__);
             $this->logger->logInfo($twitter_data, __METHOD__.','.__LINE__);
             $continue = false;
         }
@@ -1362,7 +1362,7 @@ class TwitterCrawler {
             }
         }
         $this->logger->logInfo("default start page: $default_start_page ", __METHOD__.','.__LINE__);
-        
+
         $last_page_of_favs = round($this->api->archive_limit / $pagesize);
 
         $last_unfav_page_checked = $this->instance->last_unfav_page_checked;
@@ -1413,8 +1413,8 @@ class TwitterCrawler {
             $fposts = $fpd->getAllFavoritePostsUpperBound($this->user->user_id, 'twitter', $pagesize, $max_tweet + 1);
             foreach ($fposts as $old_fav) {
                 $old_fav_id = $old_fav->post_id;
-                if ($old_fav < $min_tweet) {
-                    $this->logger->logInfo("old fav $old_fav_id out of range ", __METHOD__.','.__LINE__);
+                if ($old_fav_id < $min_tweet) {
+                    $this->logger->logInfo("Old fav $old_fav_id out of range ", __METHOD__.','.__LINE__);
                     break; // all the rest will be out of range also then
                 }
                 // look for the old_fav_id in the array of fetched favs
