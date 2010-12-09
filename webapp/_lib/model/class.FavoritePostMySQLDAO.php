@@ -34,12 +34,13 @@
  *
  */
 class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
+    
     public function addFavorite($favoriter_id, $vals) {
         if (!$favoriter_id) {
             throw new Exception("error: favoriter/owner id not set");
         }
         // first add the post (if need be-- this post may have already been inserted).
-        $retval = $this->addPost($vals);
+        $retval = $this->addPostAndEntities($vals, null);
         $q = " INSERT IGNORE INTO #prefix#favorites
          (post_id, author_user_id, fav_of_user_id, network)
         VALUES ( :pid, :uid, :fid, :network) ";

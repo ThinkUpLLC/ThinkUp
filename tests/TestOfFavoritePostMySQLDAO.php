@@ -23,15 +23,14 @@
  * @copyright 2009-2010 Amy Unruh, Gina Trapani
  * @author Amy Unruh
  */
+
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
 
-/**
- * Tests for FavoritePostMySQLDAO
- */
 class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
     /**
      *

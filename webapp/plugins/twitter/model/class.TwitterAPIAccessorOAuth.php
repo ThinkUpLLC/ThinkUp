@@ -310,30 +310,7 @@ class TwitterAPIAccessorOAuth {
                         break;
                     case 'statuses':
                         foreach ($xml->children() as $item) {
-                            $georss = null;
-                            $namespaces = $item->getNameSpaces(true);
-                            if(isset($namespaces['georss'])) {
-                                $georss = $item->geo->children($namespaces['georss']);
-                            }
-                            $parsed_payload[] = array('post_id'=>$item->id,
-                                'author_user_id'=>$item->user->id, 'user_id'=>$item->user->id,
-                                'author_username'=>$item->user->screen_name, 'user_name'=>$item->user->screen_name,
-                                'author_fullname'=>$item->user->name, 'full_name'=>$item->user->name,
-                                'author_avatar'=>$item->user->profile_image_url,
-                                'avatar'=>$item->user->profile_image_url, 
-                                'location'=>$item->user->location, 
-                                'description'=>$item->user->description, 'url'=>$item->user->url, 
-                                'is_protected'=>$item->user->protected , 'follower_count'=>$item->user->followers_count,
-                                'friend_count'=>$item->user->friends_count, 'post_count'=>$item->user->statuses_count,
-                                'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->user->created_at)), 
-                                'post_text'=>$item->text, 
-                                'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 
-                                'favorites_count'=>$item->user->favourites_count, 
-                                'in_reply_to_post_id'=>$item->in_reply_to_status_id, 
-                                'in_reply_to_user_id'=>$item->in_reply_to_user_id, 'source'=>$item->source, 
-                                'favorited' => $xml->favorited,
-                                'geo'=>(isset($georss)?$georss->point:''), 'place'=>$item->place->full_name, 
-                                'network'=>'twitter');
+                            $parsed_payload[] = $this->parsePostXML($item);
                         }
                         break;
                     case 'hash':
@@ -354,6 +331,62 @@ class TwitterAPIAccessorOAuth {
         }
         return $parsed_payload;
     }
+    
+    
+    private function parsePostXML($post) {
+
+        $logger = Logger::getInstance();
+        // $logger->logInfo("In parsePostXML for post " . $post->id . ", " . $post->text, __METHOD__.','.__LINE__);
+        
+        $georss = null;
+        $namespaces = $post->getNameSpaces(true);
+        if(isset($namespaces['georss'])) {
+            $georss = $post->geo->children($namespaces['georss']);
+        }
+        $parsed_data = array('post_id'=>$post->id,
+            'author_user_id'=>$post->user->id, 'user_id'=>$post->user->id,
+            'author_username'=>$post->user->screen_name, 'user_name'=>$post->user->screen_name,
+            'author_fullname'=>$post->user->name, 'full_name'=>$post->user->name,
+            'author_avatar'=>$post->user->profile_image_url,
+            'avatar'=>$post->user->profile_image_url, 
+            'location'=>$post->user->location, 
+            'description'=>$post->user->description, 'url'=>$post->user->url, 
+            'is_protected'=>$post->user->protected , 'follower_count'=>$post->user->followers_count,
+            'friend_count'=>$post->user->friends_count, 'post_count'=>$post->user->statuses_count,
+            'joined'=>gmdate("Y-m-d H:i:s", strToTime($post->user->created_at)), 
+            'post_text'=>$post->text, 
+            'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($post->created_at)), 
+            'favorites_count'=>$post->user->favourites_count, 
+            'in_reply_to_post_id'=>$post->in_reply_to_status_id, 
+            'in_reply_to_user_id'=>$post->in_reply_to_user_id, 'source'=>$post->source, 
+            // 'favorited' => $xml->favorited, // what did this do?
+            'geo'=>(isset($georss)?$georss->point:''), 'place'=>$post->place->full_name, 
+            'network'=>'twitter');
+        if (isset($post->retweet_count) && !isset($post->retweeted_status)) {
+            // do this only for the original post (rt will have rt count too)
+            $retweet_count_cache = $post->retweet_count;
+            $pos = strrpos($post->retweet_count, '+');
+            if ($pos != false) {
+                // remove '+', e.g. '100+' -- so currently 100 is max that can be indicated
+               $retweet_count_cache = substr($post->retweet_count, 0, $pos) ;
+            }
+            $parsed_data['retweet_count_cache'] = $retweet_count_cache;
+        }
+        if (isset($post->retweeted_status)) {
+            // then this is a retweet.  
+            // Process its original too.
+            // $logger->logInfo("this is a retweet, will process original post " . $post_retweeted_status->id . 
+            // "from user " . $post_retweeted_status->user->id, __METHOD__.','.__LINE__);
+            $rtp = array();
+            $rtp['content']= $this->parsePostXML($post->retweeted_status);
+            $parsed_data['retweeted_post'] = $rtp;
+            $parsed_data['in_retweet_of_post_id'] = $post->retweeted_status->id;
+            $parsed_data['in_rt_of_user_id'] = $post->retweeted_status->user->id;
+            
+        }
+         return $parsed_data;
+    }
+    
     /**
      * Get next cursor.
      * @return int

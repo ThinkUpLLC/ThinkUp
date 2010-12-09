@@ -160,6 +160,28 @@ interface PostDAO {
     public function addPost($vals);
 
     /**
+     * Insert post given an array of values, and related post entities
+     *
+     * Values expected:
+     * <code>
+     *  $vals['post_id']
+     *  $vals['user_name']
+     *  $vals['full_name']
+     *  $vals['avatar']
+     *  $vals['user_id']
+     *  $vals['post_text']
+     *  $vals['pub_date']
+     *  $vals['source']
+     *  $vals['network']
+     * </code>
+     *
+     * @param array $vals see above
+     * @param array $entities ['urls']
+     * @return int number of posts inserted
+     */
+    public function addPostAndEntities($vals, $entities);
+
+    /**
      * Get all posts by an author given an author ID
      * @param int $author_id
      * @param str  $network

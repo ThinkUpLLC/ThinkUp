@@ -128,7 +128,7 @@ class TwitterCrawler {
 
                         if ($pd->addPost($tweet) > 0) {
                             $count = $count + 1;
-                            $this->processTweetURLs($tweet);
+                            URLProcessor::processTweetURLs($this->logger, $tweet);
 
                             //don't update owner info from reply
                             if ($tweet['user_id'] != $this->user->user_id) {
@@ -201,7 +201,7 @@ class TwitterCrawler {
                             $count = $count + 1;
                             $this->instance->total_posts_in_system = $this->instance->total_posts_in_system + 1;
                             //expand and insert links contained in tweet
-                            $this->processTweetURLs($tweet);
+                            URLProcessor::processTweetURLs($this->logger, $tweet);
                         }
                         if ($tweet['post_id'] > $this->instance->last_post_id)
                         $this->instance->last_post_id = $tweet['post_id'];
@@ -239,43 +239,6 @@ class TwitterCrawler {
         }
     }
     /**
-     * Insert links in a tweet in the links table.
-     * If it's an image (Twitpic/Twitgoo/Yfrog/Flickr for now) insert direct path to thumb as expanded url.
-     * Otherwise, just expand.
-     * @TODO Abstract out this image thumbnail link expansion into a plugin modeled after the Flickr Thumbnails plugin
-     * @param str $tweet
-     */
-    private function processTweetURLs($tweet) {
-        $ld = DAOFactory::getDAO('LinkDAO');
-        $urls = Post::extractURLs($tweet['post_text']);
-        foreach ($urls as $u) {
-            $is_image = 0;
-            $title = '';
-            $eurl = '';
-            if (substr($u, 0, strlen('http://twitpic.com/')) == 'http://twitpic.com/') {
-                $eurl = 'http://twitpic.com/show/thumb/'.substr($u, strlen('http://twitpic.com/'));
-                $is_image = 1;
-            } elseif (substr($u, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/') {
-                $eurl = $u.'.th.jpg';
-                $is_image = 1;
-            } elseif (substr($u, 0, strlen('http://picplz.com/')) == 'http://picplz.com/') {
-                $eurl = $u.'/thumb/';
-                $is_image = 1;
-            } elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
-                $eurl = 'http://twitgoo.com/show/thumb/'.substr($u, strlen('http://twitgoo.com/'));
-                $is_image = 1;
-            } elseif (substr($u, 0, strlen('http://flic.kr/')) == 'http://flic.kr/') {
-                $is_image = 1;
-            }
-            if ($ld->insert($u, $eurl, $title, $tweet['post_id'], 'twitter', $is_image)) {
-                $this->logger->logSuccess("Inserted ".$u." (".$eurl.", ".$is_image."), into links table",
-                __METHOD__.','.__LINE__);
-            } else {
-                $this->logger->logError("Did NOT insert ".$u." (".$eurl.") into links table", __METHOD__.','.__LINE__);
-            }
-        }
-    }
-    /**
      * Fetch a replied-to tweet and add it and any URLs it contains to the database.
      * @param int $tid
      */
@@ -293,7 +256,7 @@ class TwitterCrawler {
                 foreach ($tweets as $tweet) {
                     if ($pd->addPost($tweet, $this->user, $this->logger) > 0) {
                         $status_message = 'Added replied to tweet ID '.$tid." to database.";
-                        $this->processTweetURLs($tweet);
+                        URLProcessor::processTweetURLs($this->logger, $tweet);
                     }
                 }
             } elseif ($cURL_status == 404 || $cURL_status == 403) {
@@ -355,6 +318,9 @@ class TwitterCrawler {
                             if (RetweetDetector::isRetweet($tweet['post_text'], $this->user->username)) {
                                 $this->logger->logInfo("Retweet found, ".substr($tweet['post_text'], 0, 50).
                                     "... ", __METHOD__.','.__LINE__);
+                                // if did find retweet, add in_rt_of_user_id info
+                                // even if can't find original post id
+                                $tweet['in_rt_of_user_id'] = $this->user->user_id;
                                 $originalTweetId = RetweetDetector::detectOriginalTweet($tweet['post_text'],
                                 $recentTweets);
                                 if ($originalTweetId != false) {
@@ -366,7 +332,7 @@ class TwitterCrawler {
                             if ($pd->addPost($tweet, $this->user, $this->logger) > 0) {
                                 $count++;
                                 //expand and insert links contained in tweet
-                                $this->processTweetURLs($tweet);
+                                URLProcessor::processTweetURLs($this->logger, $tweet);
                                 if ($tweet['user_id'] != $this->user->user_id) {
                                     //don't update owner info from reply
                                     $u = new User($tweet, 'mentions');
@@ -489,7 +455,7 @@ class TwitterCrawler {
                         if ($pd->addPost($tweet, $user_with_retweet, $this->logger) > 0) {
                             $count++;
                             //expand and insert links contained in tweet
-                            $this->processTweetURLs($tweet);
+                            URLProcessor::processTweetURLs($this->logger, $tweet);
                             $this->user_dao->updateUser($user_with_retweet);
                         }
                     }
@@ -777,7 +743,7 @@ class TwitterCrawler {
                                 if ($pd->addPost($tweet, $stale_friend, $this->logger) > 0) {
                                     $count++;
                                     //expand and insert links contained in tweet
-                                    $this->processTweetURLs($tweet);
+                                    URLProcessor::processTweetURLs($this->logger, $tweet);
                                 }
                                 if (!$stale_friend_updated_from_tweets) {
                                     //Update stale_friend values here
@@ -1160,8 +1126,8 @@ class TwitterCrawler {
                     if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
                         $this->logger->logInfo("found new fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
                         $fcount++;
-                        //expand and insert links contained in tweet
-                        $this->processTweetURLs($tweet);
+                        // the following no longer necessary -- is done within addFavorite via addPostAndEntities.
+                        // $this->processTweetURLs($tweet);
                         $this->logger->logInfo("fcount: $fcount", __METHOD__.','.__LINE__);
                         $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
                     } else {
@@ -1270,8 +1236,8 @@ class TwitterCrawler {
 
                 if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
                     $fcount++;
-                    // insert links contained in tweet
-                    $this->processTweetURLs($tweet);
+                    // the following no longer necessary -- is done within addFavorite via addPostAndEntities.
+                    // $this->processTweetURLs($tweet);
                     $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
                 } else {
                     $status_message = "have already stored favorite: ". $tweet['post_id'];
@@ -1398,8 +1364,8 @@ class TwitterCrawler {
                 $fav['network'] = 'twitter';
                 // check whether the tweet is in the db-- if not, add it.
                 if ($fpd->addFavorite($this->user->user_id, $fav) > 0) {
-                    // insert links contained in tweet
-                    $this->processTweetURLs($fav);
+                    // the following no longer necessary -- is done within addFavorite via addPostAndEntities.
+                    // $this->processTweetURLs($fav);
                     $this->logger->logInfo("added fav " . $fav['post_id'], __METHOD__.','.__LINE__);
                     $fcount++;
                 } else {

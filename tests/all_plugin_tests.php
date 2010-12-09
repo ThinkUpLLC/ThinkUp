@@ -50,6 +50,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterCrawle
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfURLProcessor.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrAPIAccessor.php';
 require_once THINKUP_ROOT_PATH.
 'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPluginConfigurationController.php';
@@ -76,6 +77,7 @@ $plugin_tests->addTestCase(new TestOfTwitterCrawler());
 $plugin_tests->addTestCase(new TestOfTwitterOAuth());
 $plugin_tests->addTestCase(new TestOfTwitterPlugin());
 $plugin_tests->addTestCase(new TestOfTwitterPluginConfigurationController());
+$plugin_tests->addTestCase(new TestOfURLProcessor());
 $plugin_tests->addTestCase(new TestOfRetweetDetector());
 $plugin_tests->addTestCase(new TestOfHelloThinkUpPluginConfigurationController());
 

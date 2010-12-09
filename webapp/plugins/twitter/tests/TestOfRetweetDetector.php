@@ -73,6 +73,7 @@ class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
         new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
         'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'in_rt_of_user_id' => '', 'old_retweet_count_cache' => 0,
         'post_id'=>9021481076, 'is_protected'=>0,
         'post_text'=>'guilty pleasure: dropping the "my wife" bomb on unsuspecting straight people, mid-conversation', 
         'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 'is_geo_encoded'=>0, 
@@ -80,6 +81,7 @@ class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
         new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
         'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'in_rt_of_user_id' => '', 'old_retweet_count_cache' => 0,
         'post_id'=>9020176425, 'is_protected'=>0,
         'post_text'=>"a Google fangirl's take: no doubt Buzz's privacy issues are seriously problematic, but at least'.
         ' they're iterating quickly and openly.", 
@@ -88,6 +90,7 @@ class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
         new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
         'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'in_rt_of_user_id' => '', 'old_retweet_count_cache' => 0,
         'post_id'=>9031523906, 'is_protected'=>0,
         'post_text'=>"one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx '.
         '@voiceofsandiego, @dagnysalas, & @samuelhodgson", 
@@ -96,6 +99,7 @@ class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
         new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
         'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'in_rt_of_user_id' => '', 'old_retweet_count_cache' => 0,
         'post_id'=>8925077246, 'is_protected'=>0,
         'post_text'=>"how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH", 
         'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 
