@@ -32,6 +32,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
 
 class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
@@ -116,6 +117,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.
             $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5, 'network'=>'twitter',
+            'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
             'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
             $counter++;
         }
@@ -129,6 +131,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is image post '.$counter, 'source'=>'Flickr', 'in_reply_to_post_id'=>null,
             'in_retweet_of_post_id'=>null,
+            'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
             'pub_date'=>'2006-01-02 00:'.$pseudo_minute.':00', 'network'=>'twitter', 'is_geo_encoded'=>0));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
@@ -145,6 +148,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>19,
             'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
+            'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
             $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
 
@@ -164,12 +168,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                 $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>20,
                 'author_username'=>'user1', 'author_fullname'=>'User 1', 'in_reply_to_post_id'=>null, 
                 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'network'=>'twitter',
+                'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
                 'post_text'=>'Hey @ev and @jack thanks for founding Twitter post '.$counter, 
                 'pub_date'=>'2006-03-01 00:'.$pseudo_minute.':00', 'location'=>'New Delhi'));
             } else {
                 $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>21,
                 'author_username'=>'user2', 'author_fullname'=>'User 2', 'in_reply_to_post_id'=>null, 
                 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'network'=>'twitter',
+                'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
                 'post_text'=>'Hey @ev and @jack should fix Twitter - post '.$counter,
                 'pub_date'=>'2006-03-01 00:'.$pseudo_minute.':00', 'place'=>'New Delhi'));
             }
@@ -181,18 +187,21 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
         'post_text'=>'@shutterbug Nice shot!', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_post_id'=>41, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'location'=>'New Delhi, Delhi, India', 'reply_retweet_distance'=>0, 'is_geo_encoded'=>1));
 
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>132, 'author_user_id'=>21,
         'author_username'=>'user2', 'author_fullname'=>'User 2', 'network'=>'twitter', 
         'post_text'=>'@shutterbug Nice shot!', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_post_id'=>41, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'location'=>'Chennai, Tamil Nadu, India', 'reply_retweet_distance'=>2000, 'is_geo_encoded'=>1));
 
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>133, 'author_user_id'=>19,
         'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'network'=>'twitter', 
         'post_text'=>'@shutterbug This is a link post reply http://example.com/', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_reply_to_post_id'=>41, 'location'=>'Mumbai, Maharashtra, India', 'reply_retweet_distance'=>1500, 
         'is_geo_encoded'=>1));
 
@@ -205,13 +214,15 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>134, 'author_user_id'=>22,
         'author_username'=>'quoter', 'author_fullname'=>'Quoter of Quotables', 'network'=>'twitter', 
         'post_text'=>'Be liberal in what you accept and conservative in what you send', 'source'=>'web', 
-        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'location'=>'New Delhi, Delhi, India', 'geo'=>'28.635308,77.22496', 'is_geo_encoded'=>1));
         //retweet 1
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>135, 'author_user_id'=>20,
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
         'post_text'=>'RT @quoter Be liberal in what you accept and conservative in what you send', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_retweet_of_post_id'=>134, 'location'=>'Chennai, Tamil Nadu, India', 'geo'=>'13.060416,80.249634', 
         'reply_retweet_distance'=>2000, 'is_geo_encoded'=>1, 'in_reply_to_post_id'=>null));
         //retweet 2
@@ -219,6 +230,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'user2', 'author_fullname'=>'User 2', 'network'=>'twitter', 
         'post_text'=>'RT @quoter Be liberal in what you accept and conservative in what you send', 
         'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_retweet_of_post_id'=>134, 'location'=>'Dwarka, New Delhi, Delhi, India', 'geo'=>'28.635308,77.22496', 
         'reply_retweet_distance'=>'0', 'is_geo_encoded'=>1));
         //retweet 3
@@ -226,6 +238,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'network'=>'twitter', 
         'post_text'=>'RT @quoter Be liberal in what you accept and conservative in what you send', 
         'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_retweet_of_post_id'=>134, 'location'=>'Mumbai, Maharashtra, India', 'geo'=>'19.017656,72.856178', 
         'reply_retweet_distance'=>1500, 'is_geo_encoded'=>1));
 
@@ -233,6 +246,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>138, 'author_user_id'=>18,
         'author_username'=>'shutterbug', 'author_fullname'=>'Shutterbug', 'network'=>'twitter', 
         'post_text'=>'@user2 Thanks!', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>21, 'in_reply_to_post_id'=>132));
 
         //Add user exchange
@@ -240,11 +254,13 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
         'post_text'=>'@ev When will Twitter have a business model?', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_reply_to_post_id'=>null, 'in_reply_to_user_id'=>13 ));
 
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>140, 'author_user_id'=>13,
         'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'network'=>'twitter', 
         'post_text'=>'@user1 Soon...', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>139));
 
         //Add posts replying to post not in the system
@@ -252,24 +268,28 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'user3', 'author_fullname'=>'User 3', 'network'=>'twitter', 
         'post_text'=>'@user4 I\'m replying to a post not in the TT db', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>250));
 
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>142, 'author_user_id'=>23,
         'author_username'=>'user3', 'author_fullname'=>'User 3', 'network'=>'twitter', 
         'post_text'=>'@user4 I\'m replying to another post not in the TT db', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>251));
 
         //Add post by instance not on public timeline
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>143, 'author_user_id'=>24,
         'author_username'=>'notonpublictimeline', 'author_fullname'=>'Not on public timeline', 
         'network'=>'twitter', 'post_text'=>'This post should not be on the public timeline', 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00'));
 
         //Add replies to specific post
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>144, 'author_user_id'=>20,
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
         'post_text'=>'@quoter Indeed, Jon Postel.', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'is_reply_by_friend'=>1, 'in_reply_to_post_id'=>134, 
         'network'=>'twitter', 'location'=>'New Delhi, Delhi, India', 'geo'=>'28.635308,77.22496', 
         'is_geo_encoded'=>1));
@@ -905,7 +925,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['in_retweet_of_post_id']= 128;
         $this->assertEqual($dao->addPost($vals), 1, "Retweet inserted");
         $post = $dao->getPost(128, 'twitter');
-        $this->assertEqual($post->retweet_count_cache, 1, "retweet count got updated");
+        $this->assertEqual($post->old_retweet_count_cache, 1, "old-style retweet count got updated");
     }
 
     public function testAddReplyToPostByFriend() {

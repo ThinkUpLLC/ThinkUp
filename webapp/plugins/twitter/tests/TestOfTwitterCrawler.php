@@ -41,6 +41,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAcc
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterCrawler.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
 
 class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     /**
@@ -186,6 +187,35 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->place, "");
         $this->assertEqual($post->geo, "");
     }
+    
+    public function testFetchInstanceUserTweetsRetweets() {
+
+        self::setUpInstanceUserAmygdala();
+        $this->instance->last_page_fetched_tweets = 17; 
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceUserTweets();
+        
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $post = $pdao->getPost(13708601491193856, 'twitter');
+        $retweets = $pdao->getRetweetsOfPost(13708601491193856, 'twitter', true);
+        $this->assertEqual(sizeof($retweets), 1);
+        $this->assertEqual($post->link->url, "http://is.gd/izUl5");
+
+        $post = $pdao->getPost(13960125416996864, 'twitter');
+        $this->assertEqual($post->in_retweet_of_post_id, 13708601491193856);
+        $this->assertEqual($post->in_rt_of_user_id, 20542737);
+        $this->assertEqual($post->link->url, "http://is.gd/izUl5");
+        
+        $tc->fetchInstanceUserMentions();
+        $post = $pdao->getPost(8957053141778432, 'twitter');
+        $this->assertEqual($post->in_rt_of_user_id, 2768241);
+        $this->assertEqual($post->in_retweet_of_post_id, 8927196122972160);
+        $post_orig = $pdao->getPost(8927196122972160, 'twitter');
+        $this->assertEqual($post_orig->old_retweet_count_cache, 1);
+        $this->assertEqual($post_orig->retweet_count_cache, 0);
+    }
 
     public function testFetchSearchResults() {
         self::setUpInstanceUserAnilDash();
@@ -262,20 +292,24 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testFetchRetweetsOfInstanceuser() {
+        
         self::setUpInstanceUserGinaTrapani();
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
 
         //first, load retweeted tweet into db
+        // we now get the 'new-style' retweet count from the retweet_count field in the xml, 
+        // which is parsed into 'retweet_count_cache' in the post vals.  This will not necessarily match
+        // the number of retweets in the database any more (but does in this test case).
         $builder = FixtureBuilder::build('posts', array('post_id'=>14947487415, 'author_user_id'=>930061,
         'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani', 'post_text'=>
         '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'pub_date'=>'-1d',
-        'reply_count_cache'=>1, 'retweet_count_cache'=>0));
+        'reply_count_cache'=>1, 'old_retweet_count_cache'=>0, 'retweet_count_cache'=>3));
 
         $pdao = DAOFactory::getDAO('PostDAO');
         $tc->fetchRetweetsOfInstanceUser();
         $post = $pdao->getPost(14947487415, 'twitter');
-        $this->assertEqual($post->retweet_count_cache, 3, '3 retweets loaded');
+        $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets detected');
         $retweets = $pdao->getRetweetsOfPost(14947487415, 'twitter', true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
 
@@ -286,9 +320,15 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $tc->fetchRetweetsOfInstanceUser();
         $post = $pdao->getPost(14947487415, 'twitter');
-        $this->assertEqual($post->retweet_count_cache, 3, '3 retweets loaded');
+        $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets detected');
         $retweets = $pdao->getRetweetsOfPost(14947487415, 'twitter', true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
+        
+        $post = $pdao->getPost(12722783896, 'twitter');
+        $rts2 = $pdao->getRetweetsOfPost(12722783896, 'twitter', true);
+        $this->assertEqual(sizeof($rts2), 1, '1 retweet loaded');
+        $this->assertEqual($rts2[0]->in_rt_of_user_id, 930061);
+        
     }
 
     public function testFetchStrayRepliedToTweets() {

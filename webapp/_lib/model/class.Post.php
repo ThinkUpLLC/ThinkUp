@@ -123,10 +123,18 @@ class Post {
      */
     var $in_retweet_of_post_id;
     /**
+     * @var int
+     */
+    var $in_rt_of_user_id;
+    /**
      *
      * @var int
      */
     var $retweet_count_cache;
+    /**
+     * @var int
+     */
+    var $old_retweet_count_cache;
     /**
      *
      * @var int
@@ -165,6 +173,10 @@ class Post {
      * @var Link $link Optionally set
      */
     var $link;
+    /**
+     * @var int, non-persistent, used for UI
+     */
+     var $all_retweets;
 
     /**
      * Constructor
@@ -190,7 +202,9 @@ class Post {
         $this->in_reply_to_post_id = $val["in_reply_to_post_id"];
         $this->reply_count_cache = $val["reply_count_cache"];
         $this->in_retweet_of_post_id = $val["in_retweet_of_post_id"];
+        $this->in_rt_of_user_id = $val["in_rt_of_user_id"];
         $this->retweet_count_cache = $val["retweet_count_cache"];
+        $this->old_retweet_count_cache = $val["old_retweet_count_cache"];
         $this->reply_retweet_distance = $val["reply_retweet_distance"];
         $this->is_geo_encoded = $val["is_geo_encoded"];
         $this->network = $val["network"];
@@ -205,6 +219,8 @@ class Post {
         if (isset($val["favorited"])) {
           $this->favorited = $val["favorited"];
         }
+        // non-persistent, sum of two persistent values, used for UI information display
+        $this->all_retweets = $val['old_retweet_count_cache'] + $val['retweet_count_cache'];
     }
 
     /**

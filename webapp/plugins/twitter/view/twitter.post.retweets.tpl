@@ -50,8 +50,8 @@
               <div class="grid_5 center big-number omega">
                 <div class="bl">
                   <div class="key-stat">
-                      <h1>{$post->retweet_count_cache|number_format}</h1>
-                      <h3>fwd{if $post->retweet_count_cache > 1}s{/if} to {$reach|number_format}</h3>
+                      <h1>{$post->all_retweets|number_format}</h1>
+                      <h3>fwd{if $post->all_retweets > 1}s{/if} to {$reach|number_format}</h3>
                     {/if}
                   </div>
                 </div>
