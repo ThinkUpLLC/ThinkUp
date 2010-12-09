@@ -53,13 +53,13 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
         $this->assertText('Logged in as: me@example.com');
         $this->assertText('thinkupapp');
 
-        $this->assertText('Update now');
+        $this->assertText('1 month ago');
 
         //For the sake of time, set all instances to inactive so the crawler itself doesn't actually run
         $q = "UPDATE tu_instances SET is_active=0;";
         $this->db->exec($q);
 
-        $this->click("Update now");
+        $this->click("1 month ago");
         //$this->showHeaders();
         $this->assertHeader('Content-Type', 'text/html; charset=UTF-8');
     }

@@ -50,7 +50,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
-        $this->click("Configuration");
+        $this->click("Settings");
         $this->assertText('Your ThinkUp Password');
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'secretpassword1');
@@ -77,7 +77,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
-        $this->click("Configuration");
+        $this->click("Settings");
         $this->assertText('Your ThinkUp Password');
         $this->setField('oldpass', 'secretpassworddd');
         $this->setField('pass1', 'secretpassword1');
@@ -95,7 +95,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
-        $this->click("Configuration");
+        $this->click("Settings");
         $this->assertText('Your ThinkUp Password');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
@@ -112,7 +112,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
-        $this->click("Configuration");
+        $this->click("Settings");
         $this->assertText('Your ThinkUp Password');
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'secretpassword1');
@@ -130,7 +130,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
-        $this->click("Configuration");
+        $this->click("Settings");
         $this->assertText('Your ThinkUp Password');
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'dd');

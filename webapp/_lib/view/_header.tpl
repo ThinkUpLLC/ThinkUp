@@ -69,5 +69,18 @@
   .thinkup-canvas a {color:#6184b5;}
   </style>
   {/literal}
+  
+{literal}
+  <script type="text/javascript">
+  $(document).ready(function() {
+      $(".post").hover(
+        function() { $(this).children(".small").children(".metaroll").show(); },
+        function() { $(this).children(".small").children(".metaroll").hide(); }
+      );
+      $(".metaroll").hide();
+    });
+  </script>
+{/literal}
+
 </head>
 <body>

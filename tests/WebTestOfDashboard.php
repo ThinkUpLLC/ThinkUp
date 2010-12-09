@@ -79,7 +79,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
 
-        $this->click("Configuration");
+        $this->click("Settings");
         $this->assertTitle('Configure Your Account | ThinkUp');
         $this->assertText('configure');
         $this->assertText('Expand URLs');

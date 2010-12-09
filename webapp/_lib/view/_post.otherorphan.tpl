@@ -1,11 +1,9 @@
 {if $smarty.foreach.foo.first}
-  <div class="header clearfix">
+<!--  <div class="header clearfix">
     <div class="grid_1 alpha">&#160;</div>
     <div class="grid_3 right">name</div>
-    <div class="grid_3 right">followers</div>
-    <div class="grid_3 right">date</div>
-    <div class="grid_10 omega">post</div>
-  </div>
+    <div class="grid_16 omega">post</div>
+  </div>-->
 {/if}
 
 <div class="individual-tweet clearfix{if $t->is_protected} private{/if}">
@@ -13,20 +11,15 @@
     <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
   </div>
   <div class="grid_3 right small">
-    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}">{$t->author_username}</a>
+    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}">{$t->author_username}</a><br>
+    <span class="small gray">{$t->author->follower_count|number_format} followers</span>
   </div>
-  <div class="grid_3 right small">
-    {$t->author->follower_count|number_format}
-  </div>
-  <div class="grid_3 right small">
-    <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime}</a>
-  </div>
-  <div class="grid_10 omega">
-    <div class="tweet-body">
+  <div class="grid_16 omega">
       {if $t->link->is_image}
         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" alt=""></a></div>
       {/if}
-      <p>
+      
+      <div class="post">
         {if $t->post_text}
           {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$t->network}
         {else}
@@ -35,20 +28,16 @@
         {if $t->in_reply_to_post_id}
           <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>
         {/if}
-      </p>
       {if $t->link->expanded_url}
         <a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->title}</a>
       {/if}
-      {if $t->author->location}
         <div class="small gray">
-          Location: {$t->author->location}
+          <span class="metaroll"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a> {$t->author->location}</span>&nbsp;
         </div>
-      {/if}
-      {if $t->author->description}
         <div class="small gray">
-          Description: {$t->author->description}
+          <span class="metaroll"> {$t->author->description|truncate:100}</span>&nbsp;
         </div>
-      {/if}
+          
       {if $logged_in_user}
       <div id="div{$t->post_id}">
         <form action="" class="post-setparent">

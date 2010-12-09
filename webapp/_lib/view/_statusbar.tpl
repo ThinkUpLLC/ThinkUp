@@ -9,8 +9,7 @@
         $('#instance-selector').hide();
         $('#choose-instance').show();
       });
-    });
-    function changeMe() {
+      function changeMe() {
       var _mu = $("select#instance-select").val();
       if (_mu != "null") {
         document.location.href = _mu;
@@ -44,12 +43,12 @@
           }
         </script>
       {/literal}
-      {$instance->network_username} ({$instance->network|capitalize}) updated {$instance->crawler_last_run|relative_datetime} ago {if $logged_in_user}| <a href="{$site_root_path}crawler/updatenow.php">Update now</a>{/if}
+      
       {if $instances|@count > 1 }
-       | <span id="choose-instance"><span class="underline">Switch user</span></span>
+      <span id="choose-instance"><span class="underline">{$instance->network_username} - {$instance->network|capitalize}</span></span>
       <span id="instance-selector" style="display:none;">
         <select id="instance-select" onchange="changeMe();">
-          <option value="">-- Select an instance --</option>
+          <option value="">-- Switch user --</option>
           {foreach from=$instances key=tid item=i}
             {if $i->network_user_id != $instance->network_user_id}
               <option value="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username} - {$i->network|capitalize} (updated {$i->crawler_last_run|relative_datetime} ago{if !$i->is_active} (paused){/if})</option>
@@ -58,6 +57,8 @@
         </select>
         <span id="cancel-instance">Cancel</span>
       </span>
+    {else}
+        {$instance->network_username} ({$instance->network|capitalize})
     {/if}
     {else}
       <!-- the user has not selected an instance -->
@@ -65,17 +66,20 @@
       Last update: {$crawler_last_run|relative_datetime} ago
       {/if}
     {/if}
+    {if $instance} updated {if $logged_in_user} <a href="{$site_root_path}crawler/updatenow.php">{/if}{$instance->crawler_last_run|relative_datetime} ago{if $logged_in_user}</a>{/if}{/if}
   </div> <!-- .status-bar-left -->
   
   <div class="status-bar-right text-right">
     <ul> 
       {if $logged_in_user}
-        <li>Logged in as: {$logged_in_user} | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
+        <li>Logged in as: {$logged_in_user} | <a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
       {else}
-        <li><a href="{$site_root_path}session/login.php">Log In</a></li>
+      
+        <li><a href="http://thinkupapp.com/">Get ThinkUp</a> | <a href="{$site_root_path}session/login.php">Log In</a></li>
       {/if}
     </ul>
   </div> <!-- .status-bar-right -->
+
   
 </div> <!-- #status-bar -->
 
@@ -88,13 +92,4 @@
     <h2>New ideas</h2>
   </a></div> <!-- end #app-title -->
   
-  <div id="menu-bar">
-    <ul>
-      {if $logged_in_user}
-        <li class="round-tr round-br round-tl round-bl"><a href="{$site_root_path}account/?m=manage">Configuration</a></li>
-      {else}
-        <li class="round-tr round-br round-tl round-bl"><a href="http://thinkupapp.com/">Get ThinkUp</a></li>
-      {/if}
-    </ul>
-  </div> <!-- end #menu-bar -->  
 </div> <!-- end .container -->

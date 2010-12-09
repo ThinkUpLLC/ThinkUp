@@ -50,7 +50,7 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
 
-        $this->click("Configuration");
+        $this->click("Settings");
         $this->click("Twitter");
 
         $this->assertLink('ev');

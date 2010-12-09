@@ -134,8 +134,8 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->click("Log In");
         $this->assertText('You have no accounts configured. Set up an account now');
 
-        //Visit Configuration page and assert content there
-        $this->click("Configuration");
+        //Visit Settings page and assert content there
+        $this->click("Settings");
         $this->assertTitle('Configure Your Account | ThinkUp');
         $this->assertText('As an administrator you can configure all installed plugins.');
     }

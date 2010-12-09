@@ -2,9 +2,7 @@
   <div class="header clearfix">
     <div class="grid_1 alpha">&nbsp;</div>
     <div class="grid_3 right">name</div>
-    <div class="grid_3 right">date</div>
-    <div class="grid_11">post</div>
-    <div class="grid_2 center omega">replies</div>
+    <div class="grid_14">post</div>
   </div>
 {/if}
 
@@ -15,10 +13,7 @@
   <div class="grid_3 right small">
     <a href="http://twitter.com/{$l->container_post->author_username}">{$l->container_post->author_username}</a>
   </div>
-  <div class="grid_3 right small">
-    <a href="http://twitter.com/{$l->container_post->author_username}/post/{$l->container_post->post_id}">{$l->container_post->adj_pub_date|relative_datetime}</a>
-  </div>
-  <div class="grid_11">
+  <div class="grid_14">
     {if $l->is_image}
       <a href="{$l->url}"><div class="pic"><img src="{$l->expanded_url}" /></div></a>
     {else}
@@ -26,7 +21,7 @@
         <a href="{$l->expanded_url}" title="{$l->expanded_url}">{$l->title}</a>
       {/if}
     {/if}
-    <p>
+    <div class="post">
       {if $l->container_post->post_text}
         {$l->container_post->post_text|link_usernames:$i->network_username:$t->network}
       {else}
@@ -35,15 +30,9 @@
       {if $l->container_post->in_reply_to_post_id}
         [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>]
       {/if}
-    </p>
-    <h3></h3>
-    {if $l->container_post->location}
-      <div class="small gray">{$l->container_post->location}</div>
-    {/if}
+      <div class="small gray">
+      <span class="metaroll"><a href="http://twitter.com/{$l->container_post->author_username}/post/{$l->container_post->post_id}">{$l->container_post->adj_pub_date|relative_datetime}</a>
+       {$l->container_post->location}</span>&nbsp;</div>
   </div>
-  <div class="grid_2 center omega"> 
-    {if $l->container_post->reply_count_cache > 0}
-      <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$l->container_post->reply_count_cache}</a></span>
-    {/if}
   </div>
 </div>

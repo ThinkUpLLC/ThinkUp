@@ -68,10 +68,10 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
 
         //Add instances
         $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>17,
-        'network_username'=>'thinkupapp', 'is_public'=>1, 'network'=>'twitter'));
+        'network_username'=>'thinkupapp', 'is_public'=>1, 'network'=>'twitter', 'crawler_last_run'=>'-31d'));
 
         $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>13, 'network_username'=>'ev',
-        'is_public'=>1, 'network'=>'twitter'));
+        'is_public'=>1, 'network'=>'twitter', 'crawler_last_run'=>'-31d'));
 
         $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_user_id'=>18,
         'network_username'=>'shutterbug', 'is_public'=>1, 'network'=>'twitter'));
