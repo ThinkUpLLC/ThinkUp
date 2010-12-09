@@ -1,10 +1,9 @@
 <div class="">
   {if $description}
-    {if $is_searchable}
-        <a href="#" class="grid_search" title="Search" onclick="return false;">
-        <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
-    {/if}
-     <i>{$description}</i>
+    
+     <h2>{$description} {if $is_searchable}
+        [<a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a>]
+    {/if}</h2>
      
   {/if}
 </div>

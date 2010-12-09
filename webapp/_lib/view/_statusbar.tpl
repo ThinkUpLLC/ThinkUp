@@ -44,9 +44,9 @@
           }
         </script>
       {/literal}
-      {$instance->network_username} ({$instance->network|capitalize}) updated {$instance->crawler_last_run|relative_datetime} ago {if $logged_in_user}| <a href="{$site_root_path}crawler/updatenow.php">Update now</a>{/if}
+      {$instance->network|capitalize}: 
       {if $instances|@count > 1 }
-       | <span id="choose-instance"><span class="underline">Switch user</span></span>
+      <span id="choose-instance"><span class="underline">{$instance->network_username}</span></span>
       <span id="instance-selector" style="display:none;">
         <select id="instance-select" onchange="changeMe();">
           <option value="">-- Select an instance --</option>
@@ -65,17 +65,20 @@
       Last update: {$crawler_last_run|relative_datetime} ago
       {/if}
     {/if}
+    {if $logged_in_user}| <a href="{$site_root_path}crawler/updatenow.php">{/if}| Updated {$instance->crawler_last_run|relative_datetime} ago{if $logged_in_user}</a>{/if}
   </div> <!-- .status-bar-left -->
   
   <div class="status-bar-right text-right">
     <ul> 
       {if $logged_in_user}
-        <li>Logged in as: {$logged_in_user} | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
+        <li>Logged in as: {$logged_in_user} | <a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
       {else}
-        <li><a href="{$site_root_path}session/login.php">Log In</a></li>
+      
+        <li><a href="http://thinkupapp.com/">Get ThinkUp</a> | <a href="{$site_root_path}session/login.php">Log In</a></li>
       {/if}
     </ul>
   </div> <!-- .status-bar-right -->
+
   
 </div> <!-- #status-bar -->
 
@@ -88,13 +91,4 @@
     <h2>New ideas</h2>
   </a></div> <!-- end #app-title -->
   
-  <div id="menu-bar">
-    <ul>
-      {if $logged_in_user}
-        <li class="round-tr round-br round-tl round-bl"><a href="{$site_root_path}account/?m=manage">Configuration</a></li>
-      {else}
-        <li class="round-tr round-br round-tl round-bl"><a href="http://thinkupapp.com/">Get ThinkUp</a></li>
-      {/if}
-    </ul>
-  </div> <!-- end #menu-bar -->  
 </div> <!-- end .container -->
