@@ -70,3 +70,10 @@ To use it, add a line like this to your integration test:
 To see your debug statements, run your test like so:
 
 `TEST_DEBUG=1 php tests/test.php`
+
+
+## Run a single test from a given TestCase
+
+To run only a single test in a file, set the TEST_METHOD environment variable. For example:
+
+$ TEST_METHOD=testIsPluginActive php tests/TestOfPluginMySQLDAO.php
