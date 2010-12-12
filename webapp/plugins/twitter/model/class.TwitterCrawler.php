@@ -1182,7 +1182,7 @@ class TwitterCrawler {
             // if have gone earlier than highest fav id from last time, then switch to 'search for older favs' mode
             if ($older_favs_smode == false) {
                 // last-processed tweet
-                if ($tweet && $tweet['post_id'] <= $starting_fav_id) {
+                if (isset($tweet) && $tweet['post_id'] <= $starting_fav_id) {
 
                     // get 'favs_older_pages' plugin option value if it exists & is pos. int, otherwise use default
                     $topt = $this->twitter_options;
