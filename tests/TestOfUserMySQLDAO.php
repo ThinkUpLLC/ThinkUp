@@ -19,12 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
+ *
  * Test of UserDAO
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -32,19 +28,17 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
 
-    /**
-     * Constructor
-     * @return TestOfUserDAO
-     */
     public function __construct() {
         $this->UnitTestCase('UserMySQLDAO class test');
     }
 
-    /**
-     * Set Up
-     */
     public function setUp() {
         parent::setUp();
         $this->builders = self::buildData();
@@ -101,7 +95,6 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($udao->isUserInDBByName('gina', 'twitter'));
         $this->assertTrue($udao->isUserInDBByName('zuck', 'facebook'));
         $this->assertFalse($udao->isUserInDBByName('zuck', 'twitter'));
-
     }
 
     /**
@@ -150,14 +143,14 @@ class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($user_from_db->avatar, 'avatar.jpg');
         $this->assertEqual($user_from_db->location, 'NYC');
 
-        $uarr = array('user_id'=>13, 'user_name'=>'ginatrapani', 'full_name'=>'Gina Trapani ',
+        $uarr = array('user_id'=>13, 'user_name'=>'ginatrapanichanged', 'full_name'=>'Gina Trapani ',
         'avatar'=>'avatara.jpg', 'location'=>'San Diego', 'description'=>'Blogger', 'url'=>'http://ginatrapani.org', 
         'is_protected'=>0, 'follower_count'=>5000, 'post_count'=>1000, 'joined'=>'3/6/2007', 'network'=>'twitter');
         $user1 = new User($uarr, 'Test Update');
         $this->assertEqual($udao->updateUser($user1), 1, "1 row updated");
         $user_from_db = $udao->getDetails(13, 'twitter');
         $this->assertEqual($user_from_db->user_id, 13);
-        $this->assertEqual($user_from_db->username, 'ginatrapani');
+        $this->assertEqual($user_from_db->username, 'ginatrapanichanged');
         $this->assertEqual($user_from_db->avatar, 'avatara.jpg');
         $this->assertEqual($user_from_db->location, 'San Diego');
     }

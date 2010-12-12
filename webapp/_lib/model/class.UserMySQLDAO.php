@@ -117,7 +117,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ($has_last_post_id ? ", :last_post_id " : "")." )";
         } else {
             $q = "UPDATE #prefix#users SET full_name = :full_name, avatar = :avatar,  location = :location, ";
-            $q .= "description = :description, url = :url, is_protected = :is_protected, ";
+            $q .= "user_name = :username, description = :description, url = :url, is_protected = :is_protected, ";
             $q .= "follower_count = :follower_count, post_count = :post_count,  ".
             ($has_friend_count ? "friend_count= :friend_count, " : "")." ".
             ($has_favorites_count ? "favorites_count= :favorites_count, " : "")." ".            
