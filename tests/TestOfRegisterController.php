@@ -44,6 +44,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         parent::setUp();
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
+
     }
 
     public function testConstructor() {
@@ -71,6 +72,12 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testAllMissingFields() {
+
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
         $_POST['Submit'] = 'Register';
         $controller = new RegisterController(true);
         $results = $controller->go();
@@ -81,6 +88,12 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testSomeMissingFields() {
+
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
@@ -95,6 +108,11 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testMismatchedPasswords() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
@@ -112,6 +130,12 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testSuccessfulRegistration() {
+
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
         $_SERVER['HTTP_HOST'] = "http://mytestthinkup/";
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";

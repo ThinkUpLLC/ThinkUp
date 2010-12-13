@@ -33,7 +33,7 @@
 class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
 
     const TEST_EMAIL = '/upgrade_test_email';
-    
+
     var $db;
     var $conn;
     var $testdb_helper;
@@ -94,7 +94,7 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
  */
 class Mailer {
     public static function mail($to, $subject, $message) {
-        $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . TestOfUpgradeController::TEST_EMAIL;
+        $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . ThinkUpUnitTestCase::TEST_EMAIL;
         $fp = fopen($test_email, 'w');
         fwrite($fp, "to: $to\n");
         fwrite($fp, "subject: $subject\n");

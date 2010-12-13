@@ -34,6 +34,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 $controller_test = & new GroupTest('Controller tests');
 $controller_test->addTestCase(new TestOfAccountConfigurationController());
 $controller_test->addTestCase(new TestOfActivateAccountController());
+$controller_test->addTestCase(new TestOfAppConfigController());
 $controller_test->addTestCase(new TestOfBackupController());
 $controller_test->addTestCase(new TestOfCheckCrawlerController());
 $controller_test->addTestCase(new TestOfCrawlerAuthController());
