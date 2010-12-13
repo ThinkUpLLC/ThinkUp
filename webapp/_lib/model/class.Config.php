@@ -65,7 +65,6 @@ class Config {
             if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php')) {
                 require THINKUP_WEBAPP_PATH . 'config.inc.php';
                 $this->config = $THINKUP_CFG;
-
                 //set version info...
                 require THINKUP_WEBAPP_PATH . 'install/version.php';
                 $this->config['THINKUP_VERSION']  = $THINKUP_VERSION;
@@ -77,7 +76,6 @@ class Config {
             }
         }
     }
-
     /**
      * Get the singleton instance of Config
      * @param array $vals Optional values to override file config
@@ -89,17 +87,31 @@ class Config {
         }
         return self::$instance;
     }
-
     /**
      * Get the configuration value
      * @param    string   $key   key of the configuration key/value pair
      * @return   mixed    value of the configuration key/value pair
      */
     public function getValue($key) {
-        $value = isset($this->config[$key]) ? $this->config[$key] : null;
+        // is this config value stored in the db?
+        $db_value_config = AppConfig::getConfigValue($key);
+        $value = null;
+        if($db_value_config) {
+            $option_dao = DAOFactory::getDAO("OptionDAO");
+            $db_value = $option_dao->getOptionValue(OptionDAO::APP_OPTIONS, $key, true);
+            $value =  $db_value ? $db_value : $db_value_config['default'];
+            // convert db text booleans if needed
+            if($value == 'false') {
+                $value = false;
+            } else if ($value == 'true') {
+                $value = true;
+            }
+        } else {
+            // if not a db config value, get from config file
+            $value = isset($this->config[$key]) ? $this->config[$key] : null;
+        }
         return $value;
     }
-
     /**
      * Provided only for use when overriding config.inc.php values in tests
      * @param string $key
@@ -110,7 +122,6 @@ class Config {
         $value = $this->config[$key] = $value;
         return $value;
     }
-
     /**
      * Provided only for tests that want to kill Config object in tearDown()
      */
@@ -119,14 +130,12 @@ class Config {
             self::$instance = null;
         }
     }
-
     /**
      * Provided for tests which expect an array
      */
     public function getValuesArray() {
         return $this->config;
     }
-
     /**
      * Returns the GMT offset in hours based on the application's defined timezone.
      *

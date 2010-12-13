@@ -19,6 +19,13 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ * Test of RegisterController
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -27,14 +34,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
-/**
- * Test of RegisterController
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfRegisterController extends ThinkUpUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('RegisterController class test');
@@ -71,6 +70,11 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testAllMissingFields() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
         $_POST['Submit'] = 'Register';
         $controller = new RegisterController(true);
         $results = $controller->go();
@@ -81,6 +85,11 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testSomeMissingFields() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
@@ -95,6 +104,11 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testMismatchedPasswords() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
@@ -112,6 +126,11 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testSuccessfulRegistration() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
         $_SERVER['HTTP_HOST'] = "http://mytestthinkup/";
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";

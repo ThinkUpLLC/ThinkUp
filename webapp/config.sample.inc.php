@@ -19,17 +19,6 @@ $THINKUP_CFG['timezone']                  = 'America/Los_Angeles';
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
 $THINKUP_CFG['cache_pages']               = true;
 
-// Set whether or not your site's registration page is available.
-// @TODO Build email invitation system so this isn't simply a binary choice.
-$THINKUP_CFG['is_registration_open']      = true;
-
-// To enable reCAPTCHA on registration, set enable to true and fill in your keys and libpath;
-// Otherwise, leave these settings as-is.
-// More info at http://recaptcha.net/plugins/php/
-$THINKUP_CFG['recaptcha_enable']          = false;
-$THINKUP_CFG['recaptcha_public_key']      = '';
-$THINKUP_CFG['recaptcha_private_key']     = '';
-
 // The crawler, when triggered by requests to the RSS feed, will only launch if it's been
 // 20 minutes or more since the last crawl.
 $THINKUP_CFG['rss_crawler_refresh_rate']  = 20;

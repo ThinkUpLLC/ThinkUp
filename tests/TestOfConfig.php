@@ -19,25 +19,40 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
  * Test of Config object
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfConfig extends ThinkUpBasicUnitTestCase {
+
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
+class TestOfConfig extends ThinkUpUnitTestCase {
     /**
      * Constructor
      */
     public function  __construct() {
         $this->UnitTestCase('Config class test');
     }
+
+    public function setUp() {
+        parent::setUp();
+        $this->logger = Logger::getInstance();
+        $this->config = Config::getInstance();
+        $this->prefix = $this->config->getValue('table_prefix');
+        $optiondao = new OptionMySQLDAO();
+        $this->pdo = $optiondao->connect();
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        $this->logger->close();
+    }
+
     /**
      * Test config singleton instantiation
      */
@@ -89,6 +104,42 @@ class TestOfConfig extends ThinkUpBasicUnitTestCase {
             $this->assertPattern("/ThinkUp's configuration file does not exist!/", $e->getMessage());
         }
         $this->restoreConfigFile();
+    }
+
+    public function testDBConfigValues() {
+        Config::destroyInstance();
+        $config = Config::getInstance();
+        $this->assertEqual($config->getValue('is_registration_open'), '', "uses default app config value");
+        $this->assertFalse($config->getValue('recaptcha_enable'), "uses default app config value");
+        $this->assertEqual($config->getValue('recaptcha_private_key'), '', "uses default app config value");
+        $this->assertEqual($config->getValue('recaptcha_public_key'), '', "uses default app config value");
+
+        $this->unsetArray($_SESSION);
+
+        $bvalue = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'recaptcha_enable',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalue);
+        $this->assertFalse($config->getValue('is_registration_open'), "uses default app config value");
+        $this->assertFalse($config->getValue('recaptcha_enable'), "uses db config value");
+        $this->assertEqual($config->getValue('recaptcha_private_key'), '', "uses default app config value");
+        $this->assertEqual($config->getValue('recaptcha_public_key'), '', "uses default app config value");
+
+        $this->unsetArray($_SESSION);
+        FixtureBuilder::truncateTable('options');
+        $bvalue['option_value'] = 'true';
+        $bvalue2 = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'recaptcha_private_key',
+        'option_value' => 'abc123');
+        $bvalue3 = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'recaptcha_public_key',
+        'option_value' => 'abc123public');
+        $bvalue4 = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata2 = FixtureBuilder::build('options', $bvalue);
+        $bdata3 = FixtureBuilder::build('options', $bvalue2);
+        $bdata4 = FixtureBuilder::build('options', $bvalue3);
+        $bdata5 = FixtureBuilder::build('options', $bvalue4);
+        $this->assertTrue($config->getValue('recaptcha_enable'), "uses db config value");
+        $this->assertEqual($config->getValue('recaptcha_private_key'), 'abc123', "uses db config value");
+        $this->assertEqual($config->getValue('is_registration_open'), true, "uses db config value");
     }
 
     public function testGetGMTOffset() {

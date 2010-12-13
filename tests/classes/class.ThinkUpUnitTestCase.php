@@ -19,9 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-
-/**
+ *
  * ThinkUp Unit Test Case
  *
  * Adds database support to the basic unit test case, for tests that need ThinkUp's database structure.
@@ -33,7 +31,7 @@
 class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
 
     const TEST_EMAIL = '/upgrade_test_email';
-    
+
     var $db;
     var $conn;
     var $testdb_helper;
@@ -55,8 +53,6 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         $this->db = new Database($THINKUP_CFG);
         $this->conn = $this->db->getConnection();
 
-        //        $loader_paths = Loader::getLookupPath();
-        //        var_dump($loader_paths);
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
         $this->testdb_helper->drop($this->db);
         $this->testdb_helper->create($this->db);
@@ -74,7 +70,6 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         if(file_exists($test_email)) {
             unlink($test_email);
         }
-
     }
 
     /**
@@ -94,7 +89,7 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
  */
 class Mailer {
     public static function mail($to, $subject, $message) {
-        $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . TestOfUpgradeController::TEST_EMAIL;
+        $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . ThinkUpUnitTestCase::TEST_EMAIL;
         $fp = fopen($test_email, 'w');
         fwrite($fp, "to: $to\n");
         fwrite($fp, "subject: $subject\n");

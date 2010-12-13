@@ -6,6 +6,9 @@
     
     <ul>
       <li><a href="#plugins">Plug-ins</a></li>
+      {if $user_is_admin}
+      <li><a id="app-settings-tab" href="#app_settings">Settings</a></li>
+      {/if}
       <li><a href="#instances">Your ThinkUp Password</a></li>
       {if $user_is_admin}<li><a href="#ttusers">All ThinkUp Accounts</a></li>{/if}
     </ul>
@@ -64,7 +67,21 @@
         {/if}
       </div>
     </div> <!-- end #plugins -->
-    
+
+    {if $user_is_admin}
+    <div class="section thinkup-canvas clearfix" id="app_settings">
+        <div style="text-align: center" id="app_setting_loading_div">
+            Loading application settings...<br /><br />
+            <img src="{$site_root_path}assets/img/loading.gif" width="31" height="31" />
+        </div>
+        <div id="app_settings_div" style="display: none;">
+         {include file="account.appconfig.tpl"}
+        </div>
+        <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
+        <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
+    </div> <!-- end #app_setting -->
+    {/if}
+
     <div class="section" id="instances">
       <div class="thinkup-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
