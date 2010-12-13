@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = 0.5;
+$LATEST_VERSION = 0.6;
 
 $MIGRATIONS = array(
 
@@ -120,7 +120,7 @@ $MIGRATIONS = array(
 
     /* beta 0.5 */
     '0.5' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.5.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -137,6 +137,31 @@ $MIGRATIONS = array(
                     'column' => 'Key_name', 
                 ),
             )
+        )
+    ),
+
+    /* beta 0.6 */
+    '0.6' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => 'DESCRIBE tu_instances last_favorite_id',
+                    'match' => "/bigint\(20\) UNSIGNED/i",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_users favorites_count',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_favorites post_id',
+                    'match' => "/bigint\(20\) UNSIGNED/i",
+                    'column' => 'Type', 
+                ),
+           )
         )
     ),
 );
