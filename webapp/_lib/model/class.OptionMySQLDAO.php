@@ -98,6 +98,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
             $stmt = $this->execute($q, array(':option_id' => $option_id));
             $this->clearSessionData($option->namespace);
             return $this->getUpdateCount($stmt);
+            $this->clearSessionData($namespace);
         } else {
             return 0;
         }
@@ -140,7 +141,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
 
     public function getOptionValue($namespace, $name, $cached = false) {
         $options = $this->getOptions($namespace, $cached);
-        if($options && $options[$name]) {
+        if($options && isset($options[$name])) {
             return $options[$name]->option_value;
         } else {
             return null;

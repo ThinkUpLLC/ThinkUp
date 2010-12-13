@@ -65,7 +65,6 @@ class Config {
             if (file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php')) {
                 require THINKUP_WEBAPP_PATH . 'config.inc.php';
                 $this->config = $THINKUP_CFG;
-
                 //set version info...
                 require THINKUP_WEBAPP_PATH . 'install/version.php';
                 $this->config['THINKUP_VERSION']  = $THINKUP_VERSION;
@@ -96,8 +95,25 @@ class Config {
      * @return   mixed    value of the configuration key/value pair
      */
     public function getValue($key) {
-        $value = isset($this->config[$key]) ? $this->config[$key] : null;
+        // is this config value stored in the db?
+        $db_value_config = AppConfig::getConfigValue($key);
+        $value = null;
+        if($db_value_config) {
+            $option_dao = DAOFactory::getDAO("OptionDAO");
+            $db_value = $option_dao->getOptionValue(OptionDAO::APP_OPTIONS, $key, true);
+            $value =  $db_value ? $db_value : $db_value_config['default'];
+            // convert db text booleans if needed
+            if($value == 'false') {
+                $value = false;
+            } else if ($value == 'true') {
+                $value = true;
+            }
+        } else {
+            // if not a db config value, get from config file
+            $value = isset($this->config[$key]) ? $this->config[$key] : null;
+        }
         return $value;
+
     }
 
     /**
