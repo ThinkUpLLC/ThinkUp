@@ -37,7 +37,13 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $logger = Logger::getInstance();
         $logger->setUsername(null);
         $ldao = DAOFactory::getDAO('LinkDAO');
-        $linkstoexpand = $ldao->getLinksToExpand(1500);
+
+        $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash('expandurls', true);
+
+        $total_links_to_expand = isset($options['links_to_expand']->option_value) ? 
+        (int)$options['links_to_expand']->option_value : 1500;
+        $linkstoexpand = $ldao->getLinksToExpand($total_links_to_expand);
 
         $logger->logUserInfo(count($linkstoexpand)." links to expand. Please wait. Working...",
         __METHOD__.','.__LINE__);
@@ -66,11 +72,11 @@ class ExpandURLsPlugin implements CrawlerPlugin {
     }
 
     /**
-     * @TODO: Write ExpandURLsPluginConfigurationController class, show its view
+     * Render the config page.
      */
     public function renderConfiguration($owner) {
-        //        $controller = new ExpandURLsPluginConfigurationController($owner, 'twitter');
-        //        return $controller->go();
+        $controller = new ExpandURLsPluginConfigurationController($owner, 'expandurls');
+        return $controller->go();
     }
 
     /**
