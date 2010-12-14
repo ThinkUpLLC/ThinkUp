@@ -74,12 +74,44 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     }
 
     public function testMigrations() {
+
+        // run updates and migrations
+        require 'tests/migration-assertions.php';
+        $migrations_count = count($MIGRATIONS);
+        $migration_versions = array();
+        foreach($MIGRATIONS as  $version => $migration_data) {
+            array_push($migration_versions, $version);
+        }
+        $migration_max_index = $migrations_count-1;
+        for($i = 1; $i < $migrations_count-1; $i++) {
+            $run_migrations = array($migration_versions[$migration_max_index] =>
+            $MIGRATIONS[ $migration_versions[$migration_max_index] ]);
+            $this->debug("test migration " . $migration_versions[$i] . " => "
+            . $migration_versions[$migration_max_index] );
+            $data = $this->_set_up_app($migration_versions[$i], $MIGRATIONS);
+            //break;
+            $this->_run_migrations($run_migrations, $migration_versions[$i]);
+            if($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {
+                unlink( $data['latest_migration_file'] );
+            }
+            $this->tearDown();
+            $this->restart();
+            //break;
+        }
+    }
+
+    /**
+     * sets up inital app
+     */
+    public function _set_up_app($version, $MIGRATIONS) {
+        // run updates and migrations
+        require 'tests/migration-assertions.php';
+        $this->debug("Setting up base install for upgrade: $version");
+        $zip_url = $MIGRATIONS[$version];
         require THINKUP_WEBAPP_PATH.'config.inc.php';
         global $TEST_DATABASE;
-
         //install beta 1
-        $zipfile = $this->getIntsall('http://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.1.zip',
-        '0.1', $this->installs_dir);
+        $zipfile = $this->getIntsall($zip_url, $version, $this->installs_dir);
 
         //Extract into test_installer directory and set necessary folder permissions
         exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
@@ -98,7 +130,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->assertText('Great! Your system has everything it needs to run ThinkUp. You may proceed to the next '.
         'step.');
         $this->get('index.php?step=2');
-        //$this->showSource();
         $this->assertText('Create Your ThinkUp Account');
 
         $this->setField('full_name', 'ThinkUp J. User');
@@ -123,6 +154,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         //Test bad activation code
         $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code=dummycode');
+        //$this->showText();
         $this->assertText('Houston, we have a problem: Account activation failed.');
 
         //Get activation code for user from database
@@ -160,7 +192,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $current_version = $config->getValue('THINKUP_VERSION');
         if($LATEST_VERSION == $current_version) {
-            $this->debug("Building  build for latest version: $LATEST_VERSION");
+            $this->debug("Building zip for latest version: $LATEST_VERSION");
             $sql_files = glob($migration_sql_dir . '*.sql');
             if (sizeof($sql_files) > 0) {
                 $this->debug("found sql update for lasest version $LATEST_VERSION: $sql_files[0]");
@@ -180,7 +212,13 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             exec('extras/scripts/generate-distribution');
             exec('cp build/thinkup.zip build/' . $LATEST_VERSION . '.zip');
         }
+        return array('MIGRATIONS' => $MIGRATIONS, 'latest_migration_file'  => $latest_migration_file );
+    }
 
+    /**
+     * runs migrations list
+     */
+    public function _run_migrations($MIGRATIONS, $base_version) {
         foreach($MIGRATIONS as  $version => $migration_data) {
             $this->debug("Running migration test for version: $version");
             $url = $migration_data['zip_url'];
@@ -193,6 +231,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
             'cd webapp/test_installer/;unzip -o ' . $zipfile);
 
+            // run updates and migrations
+            require 'tests/migration-assertions.php';
+
             // update version php file
             if($version == $LATEST_VERSION) {
                 $version_file = $this->install_dir . '/thinkup/install/version.php';
@@ -204,31 +245,37 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 fclose($fp);
             }
 
-            // no web based upgrade mode until version 4
-            if($version > 0.3) {
-                $this->get($this->url.'/test_installer/thinkup/');
-                $this->assertText("ThinkUp's database needs an update");
-                $file_token = file_get_contents($this->install_dir.'/thinkup/_lib/view/compiled_view/upgrade_token');
-                $token_url = $this->url.'/test_installer/thinkup/install/upgrade.php?upgrade_token=' . $file_token;
-                $this->get($token_url);
-                for($i = 1; $i <= $migration_data['migrations']; $i++) {
-                    $this->get($token_url . "&migration_index=" . $i);
-                }
-                $this->get($token_url . '&migration_done=true');
-                $this->assertText('{"migration_complete":true}');
-                $this->get($this->url.'/test_installer/thinkup/');
-                $this->assertText('Logged in as: user@example.com');
-            } else {
-                $dir = $this->install_dir . '/thinkup/install/sql/mysql_migrations';
-                $dir_list = glob($dir . '/*.migration');
-                for ($i = 0; $i < count($dir_list); $i++) {
-                    $mig_match = '/_v' . $version .'\.sql\.migration/';
-                    if(preg_match($mig_match, $dir_list[$i], $matches)) {
-                        $migration_string = file_get_contents($dir_list[$i]);
-                        $this->pdo->query($migration_string);
+            $this->get($this->url.'/test_installer/thinkup/');
+            $this->assertText("ThinkUp's database needs an update");
+            $file_token = file_get_contents($this->install_dir.'/thinkup/_lib/view/compiled_view/upgrade_token');
+            $token_url = $this->url.'/test_installer/thinkup/install/upgrade.php?upgrade_token=' . $file_token;
+            $this->get($token_url);
+            // grab  update sql count
+            $dir = THINKUP_WEBAPP_PATH . UpgradeController::MIGRATION_DIR;
+            $dir_list = glob($dir . '/*.migration');
+            $migrations = array();
+            $config = Config::getInstance();
+            $cnt = 0;
+            for ($i = 0; $i < count($dir_list); $i++) {
+                if(preg_match('/_v(\d+\.\d+)\.sql\.migration/', $dir_list[$i], $matches)) {
+                    $migration_version = $matches[1];
+                    if($migration_version > $base_version  && $migration_version <= $version) {
+                        $cnt++;
                     }
                 }
             }
+            for($i = 1; $i <= $cnt; $i++) {
+                $this->debug("running migration: $i");
+                $this->get($token_url . "&migration_index=" . $i);
+                $this->assertText('{"processed":true,');
+                //$this->showSource();
+                //break;
+            }
+            $this->get($token_url . '&migration_done=true');
+            $this->assertText('{"migration_complete":true}');
+            $this->get($this->url.'/test_installer/thinkup/');
+            $this->assertText('Logged in as: user@example.com');
+             
             // run db migration tests
             foreach($migration_data['migration_assertions'] as $assertions) {
                 foreach($assertions as $assertion) {
@@ -239,9 +286,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                     $stmt->closeCursor();
                 }
             }
-        }
-        if($latest_migration_file && file_exists($latest_migration_file)) {
-            unlink( $latest_migration_file );
         }
     }
 
