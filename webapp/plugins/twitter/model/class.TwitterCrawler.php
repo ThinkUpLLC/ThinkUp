@@ -258,6 +258,9 @@ class TwitterCrawler {
             } elseif (substr($u, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/') {
                 $eurl = $u.'.th.jpg';
                 $is_image = 1;
+            } elseif (substr($u, 0, strlen('http://picplz.com/')) == 'http://picplz.com/') {
+                $eurl = $u.'/thumb/';
+                $is_image = 1;
             } elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
                 $eurl = 'http://twitgoo.com/show/thumb/'.substr($u, strlen('http://twitgoo.com/'));
                 $is_image = 1;
