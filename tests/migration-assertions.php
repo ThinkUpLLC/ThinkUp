@@ -32,6 +32,19 @@
 $LATEST_VERSION = 0.6;
 
 $MIGRATIONS = array(
+    /* beta 0.1 */
+    '0.1' => array(
+        'zip_url' => 'http://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.1.zip',
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => 'desc tu_owners email',
+                    'match' => "/varchar\(200\)/",
+                    'column' => 'Type', 
+                )
+            )
+        )
+    ),
 
     /* beta 0.2 */
     '0.2' => array(

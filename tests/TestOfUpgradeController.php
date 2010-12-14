@@ -242,28 +242,36 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
     }
 
     public function testProcessSnowflakeMigration() {
+        $config = Config::getInstance();
+        $app_path = $config->getValue('source_root_path');
+        $snowflakekey = 'runnig_snowflake_uprade';
+
+
         // no snowflake update needed...
         $this->pdo->query("truncate table " . $this->prefix . "options");
         $this->simulateLogin('me@example.com', true);
+        $this->assertFalse(isset($_SESSION[$app_path][$snowflakekey]));
+
         $config = Config::getInstance();
-        $config->setValue('THINKUP_VERSION', '0.3');
+        $config->setValue('THINKUP_VERSION', '0.4');
         $controller = new UpgradeController(true);
         $results = $controller->go();
-        $this->assertPattern('/no upgrade needed/', $results);
+        $this->assertPattern('/needs 1 database update/', $results);
 
         // snowflake update needed...
-        $this->pdo->query("truncate table " . $this->prefix . "options");
+        $this->pdo->query("drop table " . $this->prefix . "options");
         $this->db->exec('ALTER TABLE ' . $this->prefix .
         'instances CHANGE last_post_id last_status_id bigint(11) NOT NULL');
         $controller = new UpgradeController(true);
         $results = $controller->go();
-        $this->assertPattern('/needs 1 database update/', $results);
+        $this->assertPattern('/needs 2 database updates/', $results);
         $v_mgr = $controller->getViewManager();
         $queries = $v_mgr->getTemplateDataItem('migrations');
-        $this->assertEqual(1, count($queries), 'one migration query');
+        $this->assertEqual(2, count($queries), 'two migration queries');
+        $this->assertTrue($_SESSION[$app_path][$snowflakekey]);
+
 
         // run snowflake migration
-        $this->pdo->query("truncate table " . $this->prefix . "options");
         $_GET['migration_index'] = 1;
         $controller = new UpgradeController(true);
         $results = $controller->go();
@@ -273,6 +281,26 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $data = $stmt->fetch();
         $this->assertEqual($data['Field'], 'last_post_id');
         $this->assertPattern('/bigint\(20\)\s+unsigned/i', $data['Type']);
+        $this->assertTrue($_SESSION[$app_path][$snowflakekey]);
+
+        // run version 4 upgrade
+        $_GET['migration_index'] = 2;
+        $controller = new UpgradeController(true);
+        $results = $controller->go();
+        $this->assertTrue($obj->processed);
+        $stmt = $this->pdo->query("desc " . $this->prefix . "instances last_post_id");
+        $data = $stmt->fetch();
+        $this->assertEqual($data['Field'], 'last_post_id');
+        $this->assertPattern('/bigint\(20\)\s+unsigned/i', $data['Type']);
+
+        // no snowflake session data when complete
+        $config = Config::getInstance();
+        unset($_GET['migration_index']);
+        $_GET['migration_done'] = true;
+        $results = $controller->go();
+        $obj = json_decode($results);
+        $this->assertTrue($obj->migration_complete);
+        $this->assertFalse(isset($_SESSION[$app_path][$snowflakekey]));
     }
 
     public function testProcessTwoMigrations() {
