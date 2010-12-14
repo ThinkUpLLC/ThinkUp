@@ -106,6 +106,8 @@ class UpgradeController extends ThinkUpAuthController {
             }
             $this->setJsonData(array('migration_complete' => true) );
             $this->deleteTokenFile();
+            // remove snowflake in progress session if needed
+            $this->snowflakeSession(false, true);
         } else {
             $this->setPageTitle('Upgrade the ThinkUp Database Structure');
             $this->setViewTemplate('install.upgrade.tpl');
@@ -233,8 +235,11 @@ class UpgradeController extends ThinkUpAuthController {
                 if($migration_version > $version && $migration_version <= $config->getValue('THINKUP_VERSION')) {
                     if($migration_version == 0.3) {
                         $install_dao = DAOFactory::getDAO('InstallerDAO');
-                        if(! $install_dao->needsSnowflakeUpgrade()) {
+                        if(! $install_dao->needsSnowflakeUpgrade() && ! $this->snowflakeSession(false) ) {
                             continue;
+                        } else {
+                            // set snowflake in progress session
+                            $this->snowflakeSession(true, false);
                         }
                     }
                     $migration_string = file_get_contents($dir_list[$i]);
@@ -291,6 +296,31 @@ class UpgradeController extends ThinkUpAuthController {
                 $message = $upgrade_email->fetch('_email.upgradetoken.tpl');
                 $config = Config::getInstance();
                 Mailer::mail($to, "Upgrade Your ThinkUp Database", $message);
+            }
+        }
+    }
+
+    /**
+     * Sets/Deletes data in the session to let us know we needed to run the snowflake migration
+     * @param boolean Delete the seeion if defined
+     */
+    public function snowflakeSession($value = false, $delete = false) {
+        $config = Config::getInstance();
+        $app_path = $config->getValue('source_root_path');
+        $key = 'runnig_snowflake_uprade';
+        if($delete) {
+            if(isset( $_SESSION[$app_path][$key] )) {
+                unset($_SESSION[$app_path][$key]);
+            }
+        } else {
+            if($value) {
+                $_SESSION[$app_path][$key] = $value;
+            } else {
+                if(isset($_SESSION[$app_path]) && isset($_SESSION[$app_path][$key]) ) {
+                    return $_SESSION[$app_path][$key];
+                } else {
+                    return false;
+                }
             }
         }
     }
