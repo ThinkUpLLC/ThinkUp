@@ -103,6 +103,8 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
 
     public function testMessageTypes() {
         $config = Config::getInstance();
+        // set debugging to true
+        $config->setValue('debug', true);
         $logger_file = $config->getValue('log_location');
         $logger = Logger::getInstance();
         $this->assertIsA($logger, 'Logger');
@@ -112,12 +114,14 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $logger->logInfo("This is an info message", __METHOD__.','.__LINE__);
         $logger->logError("This is an error message", __METHOD__.','.__LINE__);
         $logger->logSuccess("This is a success message", __METHOD__.','.__LINE__);
+        $logger->logDebug("This is a debug message", __METHOD__.','.__LINE__);
 
         $messages = null;
         $messages = file($config->getValue('log_location'));
-        $this->assertPattern('/This is an info message/', $messages[sizeof($messages) - 3]);
-        $this->assertPattern('/This is an error message/', $messages[sizeof($messages) - 2]);
-        $this->assertPattern('/This is a success message/', $messages[sizeof($messages) - 1]);
+        $this->assertPattern('/This is an info message/', $messages[sizeof($messages) - 4]);
+        $this->assertPattern('/This is an error message/', $messages[sizeof($messages) - 3]);
+        $this->assertPattern('/This is a success message/', $messages[sizeof($messages) - 2]);
+        $this->assertPattern('/This is a debug message/', $messages[sizeof($messages) - 1]);
 
         $logger->setVerbosity(Logger::USER_MSGS);
         $logger->logUserInfo("This is a user info message", __METHOD__.','.__LINE__);
@@ -126,6 +130,7 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $logger->logError("This is an info message", __METHOD__.','.__LINE__);
         $logger->logUserSuccess("This is a user success message", __METHOD__.','.__LINE__);
         $logger->logSuccess("This is an info message", __METHOD__.','.__LINE__);
+        $logger->logDebug("This is a debug message", __METHOD__.','.__LINE__);
 
         $messages = null;
         $messages = file($config->getValue('log_location'));
@@ -136,6 +141,29 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $this->assertPattern('/SUCC | TestOfLogger::testMessageTypes,127 | This is a user success message/',
         $messages[sizeof($messages) - 1]);
         $logger->close();
+    }
+
+    public function testAllMsgsNoDebug() {
+        $config = Config::getInstance();
+        // set debugging to false
+        $config->setValue('debug', false);
+        $logger_file = $config->getValue('log_location');
+        $logger = Logger::getInstance();
+        $this->assertIsA($logger, 'Logger');
+
+        $logger = Logger::getInstance();
+        $logger->setVerbosity(Logger::ALL_MSGS);
+        $logger->logInfo("This is an info message", __METHOD__.','.__LINE__);
+        $logger->logError("This is an error message", __METHOD__.','.__LINE__);
+        $logger->logSuccess("This is a success message", __METHOD__.','.__LINE__);
+        // with debug set to false, this should not log anything
+        $logger->logDebug("This is a debug message", __METHOD__.','.__LINE__);
+
+        $messages = null;
+        $messages = file($config->getValue('log_location'));
+        $this->assertPattern('/This is an info message/', $messages[sizeof($messages) - 3]);
+        $this->assertPattern('/This is an error message/', $messages[sizeof($messages) - 2]);
+        $this->assertPattern('/This is a success message/', $messages[sizeof($messages) - 1]);
     }
 
     public function testHTMLOutput() {
@@ -163,6 +191,7 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $logger->logError("This is an info message", __METHOD__.','.__LINE__);
         $logger->logUserSuccess("This is a user success message", __METHOD__.','.__LINE__);
         $logger->logSuccess("This is an info message", __METHOD__.','.__LINE__);
+        $logger->logDebug("This is a debugging message", __METHOD__.','.__LINE__);
 
         $messages = null;
         $messages = file($config->getValue('log_location'));

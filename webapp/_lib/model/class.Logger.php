@@ -71,10 +71,18 @@ class Logger {
      */
     const SUCCESS = 2;
     /**
+     * @var int debugging messages -- log only
+     */
+    const DEBUG = 3;
+    /**
      *
      * @var int Log verbosity level (either self::ALL_MSGS or self::USER_MSGS)
      */
     var $verbosity = 0;
+    /**
+     * @var bool whether to output debug-level log stmts
+     */
+    var $debug = false;
     /**
      * @var bool Whether or not output should be HTML
      */
@@ -83,10 +91,11 @@ class Logger {
      * Open the log file; Append to any prior file
      * @param str $location
      */
-    public function __construct($location) {
+    public function __construct($location, $debug = false) {
         if ( $location != false ) {
             $this->log = $this->openFile($location, 'a');
         }
+        $this->debug = $debug;
     }
 
     /**
@@ -95,7 +104,8 @@ class Logger {
     public static function getInstance() {
         if (!isset(self::$instance)) {
             $config = Config::getInstance();
-            self::$instance = new Logger($config->getValue('log_location'));
+            $debug = $config->getValue('debug') ? true : false;
+            self::$instance = new Logger($config->getValue('log_location'), $debug);
         }
         return self::$instance;
     }
@@ -138,6 +148,9 @@ class Logger {
                         break;
                     case self::SUCCESS:
                         $status_signature .= 'SUCCESS| ';
+                        break;
+                    case self::DEBUG:
+                        $status_signature .= 'DEBUG  | ';
                         break;
                     default:
                         $status_signature .= 'INFO   | ';
@@ -186,6 +199,17 @@ class Logger {
      */
     public function logInfo($status_message, $classname) {
         $this->logStatus($status_message, $classname, self::ALL_MSGS, self::INFO);
+    }
+
+    /**
+     * Write debug message to log if 'debug' config var is set to 'true'.
+     * @param str $status_message
+     * @param str $classname
+     */
+    public function logDebug($status_message, $classname) {
+        if ($this->debug) {
+            $this->logStatus($status_message, $classname, self::ALL_MSGS, self::DEBUG);
+        }
     }
 
     /**
