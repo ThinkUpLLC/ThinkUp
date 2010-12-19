@@ -202,6 +202,11 @@ class Logger {
     }
 
 
+    /**
+     * Write debug message to log if 'debug' config var is set to 'true'.
+     * @param str $status_message
+     * @param str $classname
+     */
     public function logDebug($status_message, $classname) {
         if ($this->debug) {
             $this->logStatus($status_message, $classname, self::ALL_MSGS, self::DEBUG);
