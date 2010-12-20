@@ -2,6 +2,11 @@
 
 All code submitted to the repository should have corresponding tests that pass. Here's how to run and write tests. 
 
+# WARNING
+
+**Do *not* run tests on your live ThinkUp database.** If you run tests without properly configuring a separate database,
+you will DESTROY ALL DATA IN YOUR THINKUP INSTANCE. That would be so sad!
+
 ## Running Tests
 
 First, configure your test environment. Copy `tests/config.tests.sample.inc.php` to `tests/config.tests.inc.php` and 
