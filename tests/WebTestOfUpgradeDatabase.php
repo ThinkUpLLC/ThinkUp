@@ -55,7 +55,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $config = Config::getInstance();
         $this->prefix = $config->getValue('table_prefix');
-
     }
 
     public function tearDown() {
@@ -78,7 +77,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     }
 
     public function testMigrations() {
-
         // run updates and migrations
         require 'tests/migration-assertions.php';
         $migrations_count = count($MIGRATIONS);
@@ -92,8 +90,8 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $MIGRATIONS[ $migration_versions[$migration_max_index] ]);
             $this->debug("Testing migration " . $migration_versions[$i] . " => "
             . $migration_versions[$migration_max_index] );
-            $data = $this->_set_up_app($migration_versions[$i], $MIGRATIONS);
-            $this->_run_migrations($run_migrations, $migration_versions[$i]);
+            $data = $this->setUpApp($migration_versions[$i], $MIGRATIONS);
+            $this->runMigrations($run_migrations, $migration_versions[$i]);
             if($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {
                 unlink( $data['latest_migration_file'] );
             }
@@ -108,23 +106,21 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->debug("Testing snowflake migration/update");
         $run_migrations = array($migration_versions[$migration_max_index] =>
         $MIGRATIONS[ $migration_versions[$migration_max_index] ]);
-        $this->debug("Testing migration " . $migration_versions[2] . " => "
-        . $migration_versions[$migration_max_index] );
-        $data = $this->_set_up_app($migration_versions[2], $MIGRATIONS);
+        $this->debug("Testing migration " . $migration_versions[2] . " => ".$migration_versions[$migration_max_index]);
+        $data = $this->setUpApp($migration_versions[2], $MIGRATIONS);
         $this->pdo->query('ALTER TABLE ' . $this->prefix .
         'instances CHANGE last_post_id last_status_id bigint(11) NOT NULL');
-        $this->_run_migrations($run_migrations, $migration_versions[$i]);
+        $this->runMigrations($run_migrations, $migration_versions[$i]);
         if($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {
             unlink( $data['latest_migration_file'] );
         }
         $this->debug("Done Testing snowflake migration/updaye");
-
     }
 
     /**
-     * sets up inital app
+     * Sets up inital app
      */
-    public function _set_up_app($version, $MIGRATIONS) {
+    private function setUpApp($version, $MIGRATIONS) {
         // run updates and migrations
         require 'tests/migration-assertions.php';
         $this->debug("Setting up base install for upgrade: $version");
@@ -133,7 +129,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         require THINKUP_WEBAPP_PATH.'config.inc.php';
         global $TEST_DATABASE;
         //install beta 1
-        $zipfile = $this->getIntsall($zip_url, $version, $this->installs_dir);
+        $zipfile = $this->getInstall($zip_url, $version, $this->installs_dir);
 
         //Extract into test_installer directory and set necessary folder permissions
         exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
@@ -238,14 +234,14 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     }
 
     /**
-     * runs migrations list
+     * Runs migrations list
      */
-    public function _run_migrations($TMIGRATIONS, $base_version) {
+    private function runMigrations($TMIGRATIONS, $base_version) {
         require 'tests/migration-assertions.php';
         foreach($TMIGRATIONS as  $version => $migration_data) {
             $this->debug("Running migration test for version: $version");
             $url = $migration_data['zip_url'];
-            $zipfile = $this->getIntsall($url, $version, $this->installs_dir);
+            $zipfile = $this->getInstall($url, $version, $this->installs_dir);
             if(! $zipfile) {
                 error_log("Warn: $zipfile not found...");
                 continue;
@@ -326,10 +322,10 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
      * @param str Version
      * @return str Path to download file
      */
-    public function getIntsall($url, $version, $path) {
+    private function getInstall($url, $version, $path) {
         $ch = curl_init();
         $zipfile = $path . '/' . $version . '.zip';
-        
+
         // if zip file is not there or is older than 8 hours old
         if(! file_exists($zipfile) || ( time() - filemtime($zipfile) > (60 * 60 * 8) ) ) {
             if( file_exists($zipfile) ) {

@@ -246,7 +246,6 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $app_path = $config->getValue('source_root_path');
         $snowflakekey = 'runnig_snowflake_uprade';
 
-
         // no snowflake update needed...
         $this->pdo->query("truncate table " . $this->prefix . "options");
         $this->simulateLogin('me@example.com', true);
@@ -269,7 +268,6 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $queries = $v_mgr->getTemplateDataItem('migrations');
         $this->assertEqual(2, count($queries), 'two migration queries');
         $this->assertTrue($_SESSION[$app_path][$snowflakekey]);
-
 
         // run snowflake migration
         $_GET['migration_index'] = 1;
