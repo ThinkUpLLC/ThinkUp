@@ -3,7 +3,7 @@
 
 <div class="container_24 thinkup-canvas round-all">
   <div class="prepend_20">
-    <h1>Forgot Password</h1>
+    <h1>Reset Your Password</h1>
   </div>
   <div class="clearfix prepend_20">
     <div class="grid_17 prefix_3 left">
@@ -33,7 +33,7 @@
       </div>
       <div class="clearfix">
         <div class="grid_10 prefix_9 left">
-          <input type="submit" id="login-save" name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Send">
+          <input type="submit" id="login-save" name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Send Reset">
         </div>
       </div>
     </form>

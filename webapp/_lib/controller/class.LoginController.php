@@ -40,10 +40,10 @@ class LoginController extends ThinkUpController {
             $controller = new DashboardController(true);
             return $controller->go();
         } else  {
-            $od = DAOFactory::getDAO('OwnerDAO');
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
 
-            if (isset($_POST['Submit']) && $_POST['Submit']=='Log In'
-            && isset($_POST['email']) && isset($_POST['pwd']) ) {
+            if (isset($_POST['Submit']) && $_POST['Submit']=='Log In' && isset($_POST['email']) &&
+            isset($_POST['pwd']) ) {
                 if ( $_POST['email']=='' || $_POST['pwd']=='') {
                     if ( $_POST['email']=='') {
                         $this->addErrorMessage("Email must not be empty");
@@ -56,17 +56,29 @@ class LoginController extends ThinkUpController {
                     $session = new Session();
                     $user_email = $_POST['email'];
                     $this->addToView('email', $user_email);
-                    $owner = $od->getByEmail($user_email);
+                    $owner = $owner_dao->getByEmail($user_email);
                     if (!$owner) {
                         $this->addErrorMessage("Incorrect email");
                         return $this->generateView();
-                    } elseif (!$session->pwdCheck($_POST['pwd'], $od->getPass($user_email))) {
+                    } elseif (!$owner->is_activated) {
+                        $this->addErrorMessage("Inactive account. " . $owner->account_status. ". ".
+                        '<a href="forgot.php">Reset your password.</a>');
+                        return $this->generateView();
+                    } elseif (!$session->pwdCheck($_POST['pwd'], $owner_dao->getPass($user_email))) { //failed login
+                        if ($owner->failed_logins >= 10) {
+                            $owner_dao->deactivateOwner($user_email);
+                            $owner_dao->setAccountStatus($user_email,
+                            "Account deactivated due to too many failed logins");
+                        }
+                        $owner_dao->incrementFailedLogins($user_email);
                         $this->addErrorMessage("Incorrect password");
                         return $this->generateView();
                     } else {
                         // this sets variables in the session
                         $session->completeLogin($owner);
-                        $od->updateLastLogin($user_email);
+                        $owner_dao->updateLastLogin($user_email);
+                        $owner_dao->resetFailedLogins($user_email);
+                        $owner_dao->clearAccountStatus('');
                         $controller = new DashboardController(true);
                         return $controller->control();
                     }

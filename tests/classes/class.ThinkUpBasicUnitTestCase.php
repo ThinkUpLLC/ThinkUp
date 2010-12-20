@@ -19,9 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
-/**
+ *
  * ThinkUp Basic Unit Test Case
  *
  * Base test case for tests without the need for database availability.
@@ -30,6 +28,8 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
+
 class ThinkUpBasicUnitTestCase extends UnitTestCase {
     /**
      * Set up

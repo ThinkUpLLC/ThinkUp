@@ -38,7 +38,9 @@ SELECT
     is_admin,
     last_login,
     is_activated,
-    password_token
+    password_token,
+    account_status,
+    failed_logins
 FROM #prefix#owners AS o
 WHERE email = :email;
 SQL;
@@ -98,10 +100,25 @@ SQL;
         return $this->getDataRowAsArray($ps);
     }
 
-    public function updateActivate($email) {
-        $q = " UPDATE #prefix#owners SET is_activated=1 WHERE email=:email";
+    public function activateOwner($email) {
+        $this->updateActivation($email, true);
+    }
+
+    public function deactivateOwner($email) {
+        $this->updateActivation($email, false);
+    }
+
+    /**
+     * Set the value of the is_activated field.
+     * @param str $email
+     * @param bool $is_activated
+     * @return int Count of affected rows
+     */
+    private function updateActivation($email, $is_activated) {
+        $q = " UPDATE #prefix#owners SET is_activated=:is_activated WHERE email=:email";
         $vars = array(
-            ':email'=>$email
+            ':email'=>$email,
+            ':is_activated'=>(($is_activated)?1:0)
         );
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
@@ -188,5 +205,43 @@ SQL;
         );
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
+    }
+
+    public function incrementFailedLogins($email) {
+        $q = "UPDATE #prefix#owners
+              SET failed_logins=failed_logins+1
+              WHERE email=:email";
+        $vars = array(
+            ":email" => $email
+        );
+        $ps = $this->execute($q, $vars);
+        return ( $this->getUpdateCount($ps) > 0 )? true : false;
+    }
+
+    public function resetFailedLogins($email) {
+        $q = "UPDATE #prefix#owners
+              SET failed_logins=0
+              WHERE email=:email";
+        $vars = array(
+            ":email" => $email
+        );
+        $ps = $this->execute($q, $vars);
+        return ( $this->getUpdateCount($ps) > 0 )? true : false;
+    }
+
+    public function setAccountStatus($email, $status) {
+        $q = "UPDATE #prefix#owners
+              SET account_status=:account_status
+              WHERE email=:email";
+        $vars = array(
+            ":account_status" => $status,
+            ":email" => $email
+        );
+        $ps = $this->execute($q, $vars);
+        return ( $this->getUpdateCount($ps) > 0 )? true : false;
+    }
+
+    public function clearAccountStatus($email) {
+        return  $this->setAccountStatus($email, '');
     }
 }

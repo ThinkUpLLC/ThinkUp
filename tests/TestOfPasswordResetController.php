@@ -125,6 +125,9 @@ SQL;
     }
 
     public function testOfControllerGoodTokenMatchedNewPassword() {
+        $dao = DAOFactory::getDAO('OwnerDAO');
+        $dao->setAccountStatus("me@example.com", "Deactivated account");
+
         $time = strtotime('-1 hour');
         $q = <<<SQL
 UPDATE #prefix#owners
@@ -139,10 +142,11 @@ SQL;
         $controller = new PasswordResetController(true);
         $result = $controller->go();
 
-        $dao = DAOFactory::getDAO('OwnerDAO');
         $session = new Session();
 
         $this->assertTrue($session->pwdCheck($_POST['password'], $dao->getPass('me@example.com')));
+        $owner = $dao->getByEmail('me@example.com');
+        $this->assertEqual($owner->account_status, '');
     }
 
 }

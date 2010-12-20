@@ -46,6 +46,7 @@ $model_tests->addTestCase(new TestOfLinkMySQLDAO());
 $model_tests->addTestCase(new TestOfLoader());
 $model_tests->addTestCase(new TestOfLocationMySQLDAO());
 $model_tests->addTestCase(new TestOfOptionMySQLDAO());
+$model_tests->addTestCase(new TestOfOwner());
 $model_tests->addTestCase(new TestOfOwnerMySQLDAO());
 $model_tests->addTestCase(new TestOfOwnerInstanceMySQLDAO());
 $model_tests->addTestCase(new TestOfPluginMySQLDAO());

@@ -21,7 +21,8 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * A controller for sending requests for forgotten passwords.
+ * Forgot Password Controller
+ * Handles requests for ThinkUp user password reset links.
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
@@ -31,8 +32,7 @@
 class ForgotPasswordController extends ThinkUpController {
 
     public function control() {
-
-        if (isset($_POST['Submit']) && $_POST['Submit'] == 'Send') {
+        if (isset($_POST['Submit']) && $_POST['Submit'] == 'Send Reset') {
             $this->disableCaching();
 
             $dao = DAOFactory::getDAO('OwnerDAO');
@@ -57,10 +57,7 @@ class ForgotPasswordController extends ThinkUpController {
                 $this->addErrorMessage('Error: account does not exist.');
             }
         }
-
         $this->setViewTemplate('session.forgot.tpl');
-
         return $this->generateView();
     }
-
 }

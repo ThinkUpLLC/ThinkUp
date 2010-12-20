@@ -19,7 +19,14 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ * Test of LoginController
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2010 Gina Trapani
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
+
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -27,14 +34,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
-/**
- * Test of LoginController
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfLoginController extends ThinkUpUnitTestCase {
     var $builder1;
     var $builder2;
@@ -60,7 +59,6 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $owner_instance = array('owner_id'=>1, 'instance_id'=>1);
         $this->builder3 = FixtureBuilder::build('owner_instances', $owner_instance);
-
     }
 
     public function tearDown() {
@@ -131,6 +129,24 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $this->assertPattern("/Log In/", $results);
     }
 
+    public function testDeactivatedUser() {
+        $session = new Session();
+        $cryptpass = $session->pwdcrypt("blah");
+
+        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$cryptpass, 'is_activated'=>0);
+        $builder = FixtureBuilder::build('owners', $owner);
+
+        $_POST['Submit'] = 'Log In';
+        $_POST['email'] = 'me2@example.com';
+        $_POST['pwd'] = 'blah';
+        $controller = new LoginController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
+        $this->assertPattern("/Inactive account/", $v_mgr->getTemplateDataItem('errormsg'));
+    }
+
     public function testCorrectUserPassword() {
         $_POST['Submit'] = 'Log In';
         $_POST['email'] = 'me@example.com';
@@ -149,6 +165,79 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $this->assertPattern('/Logged in as: me@example.com/', $results);
+    }
+
+    public function testFailedLoginIncrements() {
+        $session = new Session();
+        $cryptpass = $session->pwdcrypt("blah");
+
+        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
+        $builder = FixtureBuilder::build('owners', $owner);
+
+        //try 5 failed logins then a successful one and assert failed login count gets reset
+        $i = 1;
+        while ($i <= 5) {
+            $_POST['Submit'] = 'Log In';
+            $_POST['email'] = 'me2@example.com';
+            $_POST['pwd'] = 'incorrectpassword';
+            $controller = new LoginController(true);
+            $results = $controller->go();
+
+            $v_mgr = $controller->getViewManager();
+            $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
+            $this->assertPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('errormsg'));
+            $owner_dao = new OwnerMySQLDAO();
+            $owner = $owner_dao->getByEmail('me2@example.com');
+            $this->assertEqual($owner->failed_logins, $i);
+            $i = $i + 1;
+        }
+
+        $_POST['Submit'] = 'Log In';
+        $_POST['email'] = 'me2@example.com';
+        $_POST['pwd'] = 'blah';
+        $controller = new LoginController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
+        $this->assertNoPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('errormsg'));
+        $owner_dao = new OwnerMySQLDAO();
+        $owner = $owner_dao->getByEmail('me2@example.com');
+        $this->assertEqual($owner->failed_logins, 0);
+    }
+
+    public function testFailedLoginLockout() {
+        $session = new Session();
+        $cryptpass = $session->pwdcrypt("blah");
+
+        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
+        $builder = FixtureBuilder::build('owners', $owner);
+
+        //force login lockout by providing the wrong password more than 10 times
+        $i = 1;
+        while ($i <= 15) {
+            $_POST['Submit'] = 'Log In';
+            $_POST['email'] = 'me2@example.com';
+            $_POST['pwd'] = 'blah1';
+            $controller = new LoginController(true);
+            $results = $controller->go();
+
+            $v_mgr = $controller->getViewManager();
+            $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
+            if ($i <= 11) {
+                $this->assertPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('errormsg'));
+                $owner_dao = new OwnerMySQLDAO();
+                $owner = $owner_dao->getByEmail('me2@example.com');
+                $this->assertEqual($owner->failed_logins, $i);
+            } else {
+                $this->assertEqual("Inactive account. Account deactivated due to too many failed logins. ".
+                '<a href="forgot.php">Reset your password.</a>', $v_mgr->getTemplateDataItem('errormsg'));
+                $owner_dao = new OwnerMySQLDAO();
+                $owner = $owner_dao->getByEmail('me2@example.com');
+                $this->assertEqual($owner->account_status, "Account deactivated due to too many failed logins");
+            }
+            $i = $i + 1;
+        }
     }
 }
 

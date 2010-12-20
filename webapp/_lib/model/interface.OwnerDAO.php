@@ -67,7 +67,14 @@ interface OwnerDAO {
      * @param str $email
      * @return int Affected rows
      */
-    public function updateActivate($email);
+    public function activateOwner($email);
+
+    /**
+     * Dectivate an owner
+     * @param str $email
+     * @return int Affected rows
+     */
+    public function deactivateOwner($email);
 
     /**
      * Set owner password
@@ -141,4 +148,32 @@ interface OwnerDAO {
      * @return array An array of Owners
      */
     public function getAdmins();
+
+    /**
+     * Increment the number of failed logins for a given owner.
+     * @param str $email
+     */
+    public function incrementFailedLogins($email);
+
+    /**
+     * Reset the number of failed login attempts to 0 (called on a successful login).
+     * @param str $email
+     * @return bool True on success
+     */
+    public function resetFailedLogins($email);
+
+    /**
+     * Set the contents of the acount status field for an owner.
+     * @param str $email
+     * @param str $status
+     * @return bool True on success
+     */
+    public function setAccountStatus($email, $status);
+
+    /**
+     * Sets the account status to an empty string.
+     * @param str $email
+     * @return bool True on success
+     */
+    public function clearAccountStatus($email);
 }

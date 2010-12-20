@@ -19,12 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
  * Test of Session
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -32,6 +27,11 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
+
 class TestOfSession extends ThinkUpUnitTestCase {
     var $builder1;
     var $builder2;
@@ -86,6 +86,8 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $val['last_login'] = '1/1/2006';
         $val["is_admin"] = 0;
         $val["is_activated"] = 1;
+        $val["failed_logins"] = 0;
+        $val["account_status"] = '';
 
         $owner = new Owner($val);
 
@@ -111,6 +113,8 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $val['last_login'] = '1/1/2006';
         $val["is_admin"] = 0;
         $val["is_activated"] = 1;
+        $val["failed_logins"] = 0;
+        $val["account_status"] = '';
 
         $owner = new Owner($val);
 
@@ -127,6 +131,8 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $val['last_login'] = '1/1/2006';
         $val["is_admin"] = 1;
         $val["is_activated"] = 1;
+        $val["failed_logins"] = 0;
+        $val["account_status"] = '';
 
         $owner = new Owner($val);
         $session->completeLogin($owner);

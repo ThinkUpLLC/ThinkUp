@@ -26,13 +26,11 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Michael Louis Thaler
  */
+
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
-/**
- * Test ForgotPasswordController class
- */
 class TestOfForgotPasswordController extends ThinkUpUnitTestCase {
 
     public function __construct() {
@@ -60,12 +58,12 @@ SQL;
         $controller = new ForgotPasswordController(true);
         $result = $controller->go();
 
-        $this->assertTrue(strpos($result, 'Forgot Password') > 0);
+        $this->assertPattern('/Reset Your Password/', $result);
     }
 
     public function testOfControllerWithBadEmailAddress() {
         $_POST['email'] = 'im a broken email address';
-        $_POST['Submit'] = "Send";
+        $_POST['Submit'] = "Send Reset";
 
         $controller = new ForgotPasswordController(true);
         $result = $controller->go();
@@ -76,7 +74,7 @@ SQL;
 
     public function testOfControllerWithValidEmailAddress() {
         $_POST['email'] = 'me@example.com';
-        $_POST['Submit'] = "Send";
+        $_POST['Submit'] = "Send Reset";
 
         $controller = new ForgotPasswordController(true);
         $result = $controller->go();

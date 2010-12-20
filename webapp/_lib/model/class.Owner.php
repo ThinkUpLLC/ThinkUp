@@ -69,6 +69,18 @@ class Owner {
     var $password_token;
 
     /**
+     * Count of failed login attempts
+     * @var int
+     */
+    var $failed_logins;
+
+    /**
+     * String describing acount status, like "Too many failed logins" or "Never activated"
+     * @var str
+     */
+    var $account_status;
+
+    /**
      * Constructor
      * @param array $val Key/value pairs to construct Owner
      * @return Owner
@@ -81,6 +93,8 @@ class Owner {
             $this->last_login = $val['last_login'];
             $this->is_admin = PDODAO::convertDBToBool($val["is_admin"]);
             $this->is_activated = PDODAO::convertDBToBool($val["is_activated"]);
+            $this->account_status = $val["account_status"];
+            $this->failed_logins = $val["failed_logins"];
         }
     }
 
@@ -95,9 +109,8 @@ class Owner {
     /**
      * Generates a new password recovery token and returns it.
      *
-     * The internal format of the token is a Unix timestamp of when it was
-     * set (for checking if it's stale), an underscore, and then the token
-     * itself.
+     * The internal format of the token is a Unix timestamp of when it was set (for checking if it's stale), an
+     * underscore, and then the token itself.
      *
      * @return string A new password token for embedding in a link and emailing a user.
      */
@@ -111,8 +124,8 @@ class Owner {
     /**
      * Returns whether a given password recovery token is valid or not.
      *
-     * This requires that the token not be stale (older than a day), and that
-     * token itself matches what's in the database.
+     * This requires that the token not be stale (older than a day), and that  token itself matches what's in the
+     * database.
      *
      * @param string $token The token to validate against the database.
      * @return bool Whether the token is valid or not.

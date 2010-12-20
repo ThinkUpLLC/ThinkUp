@@ -53,10 +53,11 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $builders = array();
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
-        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>'XXX', 'activation_code'=>'8888'));
+        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>'XXX', 'activation_code'=>'8888', 
+        'account_status'=>''));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
-        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>'YYY'));
+        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>'YYY', 'account_status'=>''));
 
         return $builders;
     }
@@ -75,6 +76,8 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($existing_owner));
         $this->assertEqual($existing_owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($existing_owner->email, 'ttuser@example.com');
+        $this->assertEqual($existing_owner->failed_logins, 0);
+        $this->assertEqual($existing_owner->account_status, '');
 
         //owner does not exist
         $non_existing_owner = $this->DAO->getByEmail('idontexist@example.com');
@@ -160,15 +163,16 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getActivationCode('ttuser@example.com');
         $this->assertEqual($result['activation_code'], '8888');
     }
-    /**
-     * Test updateActivate
-     */
-    public function testUpdateActivate() {
+
+    public function testActivate() {
         $existing_owner = $this->DAO->getByEmail('ttuser@example.com');
         $this->assertTrue(!$existing_owner->is_activated);
-        $this->DAO->updateActivate('ttuser@example.com');
+        $this->DAO->activateOwner('ttuser@example.com');
         $existing_owner = $this->DAO->getByEmail('ttuser@example.com');
         $this->assertTrue($existing_owner->is_activated);
+        $this->DAO->deactivateOwner('ttuser@example.com');
+        $existing_owner = $this->DAO->getByEmail('ttuser@example.com');
+        $this->assertFalse($existing_owner->is_activated);
     }
 
     /**
@@ -239,5 +243,40 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result, 1); //one row updated
 
         $this->assertTrue($dao->doesAdminExist());
+    }
+
+    public function testFailedLoginManagement() {
+        $owner = $this->DAO->getByEmail('ttuser@example.com');
+        //default value is 0
+        $this->assertEqual($owner->failed_logins, 0);
+
+        //increment to 1
+        $this->assertTrue($this->DAO->incrementFailedLogins('ttuser@example.com'));
+        $owner = $this->DAO->getByEmail('ttuser@example.com');
+        $this->assertEqual($owner->failed_logins, 1);
+
+        //return false for non-existent owner
+        $this->assertFalse($this->DAO->incrementFailedLogins('idontexist@example.com'));
+
+        //increment to 2
+        $this->assertTrue($this->DAO->incrementFailedLogins('ttuser@example.com'));
+        $owner = $this->DAO->getByEmail('ttuser@example.com');
+        $this->assertEqual($owner->failed_logins, 2);
+
+        //reset to 0
+        $this->assertTrue($this->DAO->resetFailedLogins('ttuser@example.com'));
+        $owner = $this->DAO->getByEmail('ttuser@example.com');
+        $this->assertEqual($owner->failed_logins, 0);
+    }
+
+    public function testAccountStatus() {
+        $owner = $this->DAO->getByEmail('ttuser@example.com');
+        //default value is empty string (set in buildData)
+        $this->assertEqual($owner->account_status, '');
+
+        $this->DAO->setAccountStatus('ttuser@example.com', 'this is a test account status');
+        $owner = $this->DAO->getByEmail('ttuser@example.com');
+        //new status
+        $this->assertEqual($owner->account_status, 'this is a test account status');
     }
 }

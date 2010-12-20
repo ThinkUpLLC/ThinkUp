@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/WebTestOfSignIn.php
+ * ThinkUp/tests/WebTestOfLogin.php
  *
  * Copyright (c) 2009-2010 Gina Trapani
  *
@@ -30,7 +30,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
-class WebTestOfSignIn extends ThinkUpWebTestCase {
+class WebTestOfLogin extends ThinkUpWebTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -42,7 +42,7 @@ class WebTestOfSignIn extends ThinkUpWebTestCase {
         parent::tearDown();
     }
 
-    public function testSignInSuccessAndPrivateDashboard() {
+    public function testLoginSuccessAndPrivateDashboard() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
@@ -52,7 +52,7 @@ class WebTestOfSignIn extends ThinkUpWebTestCase {
         $this->assertText('Logged in as: me@example.com');
     }
 
-    public function testSignInFailureAttemptThenSuccess() {
+    public function testLoginFailureAttemptThenSuccess() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me51@example.com');
         $this->setField('pwd', 'wrongemail');
@@ -72,5 +72,23 @@ class WebTestOfSignIn extends ThinkUpWebTestCase {
 
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
         $this->assertText('Logged in as: me@example.com');
+    }
+
+    public function testLoginLockout() {
+        $i = 1;
+        while ($i <= 12) {
+            $this->get($this->url.'/session/login.php');
+            $this->setField('email', 'me@example.com');
+            $this->setField('pwd', 'wrongpassword');
+            $this->click("Log In");
+
+            if ($i <= 11) {
+                $this->assertText('Incorrect password');
+                $this->assertField('email', 'me@example.com');
+            } else {
+                $this->assertText("Inactive account. Account deactivated due to too many failed logins.");
+            }
+            $i = $i + 1;
+        }
     }
 }

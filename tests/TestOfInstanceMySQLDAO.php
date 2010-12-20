@@ -295,58 +295,60 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
             'email'=>'me@example.com',
             'last_login'=>'Yesterday',
             'is_admin'=>1,
-            'is_activated'=>1
-        );
-        $owner = new Owner($data);
+            'is_activated'=>1,
+            'failed_logins'=>0,
+            'account_status'=>''
+            );
+            $owner = new Owner($data);
 
-        // Test is-admin
-        $result = $this->DAO->getByOwner($owner);
-        $this->assertIsA($result, "array");
-        $this->assertEqual(count($result), 5);
-        $users = array('jill','Paul Clark','Jillian Dickerson','stuart','jack');
-        $uID = array(12,16,15,13,10);
-        $vID = array(12,16,15,13,10);
-        foreach($result as $id=>$i){
-            $this->assertIsA($i, "Instance");
-            $this->assertEqual($i->network_username, $users[$id]);
-            $this->assertEqual($i->network_user_id, $uID[$id]);
-            $this->assertEqual($i->network_viewer_id, $vID[$id]);
-        }
+            // Test is-admin
+            $result = $this->DAO->getByOwner($owner);
+            $this->assertIsA($result, "array");
+            $this->assertEqual(count($result), 5);
+            $users = array('jill','Paul Clark','Jillian Dickerson','stuart','jack');
+            $uID = array(12,16,15,13,10);
+            $vID = array(12,16,15,13,10);
+            foreach($result as $id=>$i){
+                $this->assertIsA($i, "Instance");
+                $this->assertEqual($i->network_username, $users[$id]);
+                $this->assertEqual($i->network_user_id, $uID[$id]);
+                $this->assertEqual($i->network_viewer_id, $vID[$id]);
+            }
 
-        // Test Is Admin - Forced Not
-        $result = $this->DAO->getByOwner($owner, true);
-        $this->assertIsA($result, "array");
-        $this->assertEqual(count($result), 2);
-        $users = array('jill','jack');
-        $uID = array(12,10);
-        $vID = array(12,10);
-        foreach($result as $id=>$i){
-            $this->assertIsA($i, "Instance");
-            $this->assertEqual($i->network_username, $users[$id]);
-            $this->assertEqual($i->network_user_id, $uID[$id]);
-            $this->assertEqual($i->network_viewer_id, $vID[$id]);
-        }
+            // Test Is Admin - Forced Not
+            $result = $this->DAO->getByOwner($owner, true);
+            $this->assertIsA($result, "array");
+            $this->assertEqual(count($result), 2);
+            $users = array('jill','jack');
+            $uID = array(12,10);
+            $vID = array(12,10);
+            foreach($result as $id=>$i){
+                $this->assertIsA($i, "Instance");
+                $this->assertEqual($i->network_username, $users[$id]);
+                $this->assertEqual($i->network_user_id, $uID[$id]);
+                $this->assertEqual($i->network_viewer_id, $vID[$id]);
+            }
 
-        // Test not admin
-        $owner->is_admin = false;
-        $result = $this->DAO->getByOwner($owner);
-        $this->assertIsA($result, "array");
-        $this->assertEqual(count($result), 2);
-        $users = array('jill','jack');
-        $uID = array(12,10);
-        $vID = array(12,10);
-        foreach($result as $id=>$i){
-            $this->assertIsA($i, "Instance");
-            $this->assertEqual($i->network_username, $users[$id]);
-            $this->assertEqual($i->network_user_id, $uID[$id]);
-            $this->assertEqual($i->network_viewer_id, $vID[$id]);
-        }
+            // Test not admin
+            $owner->is_admin = false;
+            $result = $this->DAO->getByOwner($owner);
+            $this->assertIsA($result, "array");
+            $this->assertEqual(count($result), 2);
+            $users = array('jill','jack');
+            $uID = array(12,10);
+            $vID = array(12,10);
+            foreach($result as $id=>$i){
+                $this->assertIsA($i, "Instance");
+                $this->assertEqual($i->network_username, $users[$id]);
+                $this->assertEqual($i->network_user_id, $uID[$id]);
+                $this->assertEqual($i->network_viewer_id, $vID[$id]);
+            }
 
-        $owner->id = 3;
-        //Try empty
-        $result = $this->DAO->getByOwner($owner);
-        $this->assertIsA($result, "array");
-        $this->assertEqual(count($result), 0);
+            $owner->id = 3;
+            //Try empty
+            $result = $this->DAO->getByOwner($owner);
+            $this->assertIsA($result, "array");
+            $this->assertEqual(count($result), 0);
     }
 
     public function testGetByOwnerAndNetwork(){
@@ -357,7 +359,9 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
             'email'=>'me@example.com',
             'last_login'=>'Yesterday',
             'is_admin'=>1,
-            'is_activated'=>1
+            'is_activated'=>1,
+            'failed_logins'=>0,
+            'account_status'=>''
         );
         $owner = new Owner($data);
 
