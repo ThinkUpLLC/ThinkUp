@@ -2,6 +2,14 @@
 
 All code submitted to the repository should have corresponding tests that pass. Here's how to run and write tests. 
 
+# WARNING
+
+**Do *not* run tests on your live ThinkUp database.** If you run tests without properly configuring a separate database,
+you will DESTROY ALL DATA IN YOUR THINKUP INSTANCE. That would be so sad!
+
+To avoid data loss, make sure both your `tests/config.tests.inc.php` and `webapp/config.inc.php` files point to a 
+clean, empty tests database.
+
 ## Running Tests
 
 First, configure your test environment. Copy `tests/config.tests.sample.inc.php` to `tests/config.tests.inc.php` and 
@@ -17,6 +25,10 @@ To run all the tests, use:
 
     $ php tests/all_tests.php
 
+To run a single test, set the TEST_METHOD environment variable. For example:
+
+$ TEST_METHOD=testIsPluginActive php tests/TestOfPluginMySQLDAO.php
+
 The webapp tests contained in `tests/all_integration_tests.php` make three assumptions:
 
 * You have a local installation of ThinkUp and that it is using your test database
@@ -31,7 +43,7 @@ can access. If your test needs to read and write to the ThinkUp database, extend
 an empty copy of the ThinkUp database structure to execute a test, then drop all the tables in it when the test is
 complete. After you call the parent `setUp()` method in your test's `setUp()`, insert the data your test requires. 
 
-Best practices for writing tests are still getting developed. In the meantime, use some existing tests as examples. 
+Best practices for writing tests are still getting developed. In the meantime, use existing tests as examples. 
 
 ### Model Tests (`all_model_tests.php`)
 
@@ -48,15 +60,15 @@ All plugin-specific tests should live in the `thinkup/webapp/plugins/plugin-name
 for the plugin's model objects and controller methods. 
 
 To test consumption of data from web services, mock up the appropriate classes and store test data to local files in 
-the format the API would return them in. For example, the `classes/mock.TwitterOAuth.php` class reads Twitter data from 
-the files in the `testdata` directory. 
+the format the API would return them in. For example, the `classes/mock.TwitterOAuth.php` class reads Twitter data 
+from the files in the `testdata` directory. 
 
 See `/thinkup/webapp/plugins/twitter/tests/` for examples of Twitter crawler plugin tests. 
 
 ### Integration Tests (`all_integration_tests.php`)
 
-Add tests for particular pages inside the webapp to an appropriately-named class. See `TestOfChangePassword.php` for an
-example. 
+Add tests for particular pages inside the webapp to an appropriately-named class. See `WebTestOfChangePassword.php` 
+for an example. 
 
 Once your tests work, add them to the `all_tests.php` file to run along with the existing tests. 
 
@@ -70,10 +82,3 @@ To use it, add a line like this to your integration test:
 To see your debug statements, run your test like so:
 
 `TEST_DEBUG=1 php tests/test.php`
-
-
-## Run a single test from a given TestCase
-
-To run only a single test in a file, set the TEST_METHOD environment variable. For example:
-
-$ TEST_METHOD=testIsPluginActive php tests/TestOfPluginMySQLDAO.php
