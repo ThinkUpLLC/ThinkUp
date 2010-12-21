@@ -36,7 +36,7 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
         global $TEST_SERVER_DOMAIN;
 
         $this->url = $TEST_SERVER_DOMAIN;
-        $this->DEBUG = isset($_ENV['TEST_DEBUG']) ? true : false;
+        $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
     }
 
     public function tearDown() {

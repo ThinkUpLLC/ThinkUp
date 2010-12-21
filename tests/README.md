@@ -27,7 +27,7 @@ To run all the tests, use:
 
 To run a single test, set the TEST_METHOD environment variable. For example:
 
-$ TEST_METHOD=testIsPluginActive php tests/TestOfPluginMySQLDAO.php
+    $ TEST_METHOD=testIsPluginActive php tests/TestOfPluginMySQLDAO.php
 
 The webapp tests contained in `tests/all_integration_tests.php` make three assumptions:
 

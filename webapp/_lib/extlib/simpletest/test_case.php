@@ -129,9 +129,9 @@ class SimpleTestCase {
         $this->_reporter = &$reporter;
         $started = false;
         foreach ($this->getTests() as $method) {
-            if(isset($_ENV['TEST_METHOD']) && $method != $_ENV['TEST_METHOD']) {
+            if(getenv('TEST_METHOD') !== false && $method != getenv('TEST_METHOD')) {
                 continue;
-            } else if (isset($_ENV['TEST_METHOD'])) {
+            } else if (getenv('TEST_METHOD')!==false) {
                 echo "Running Single Test: $method\n";
             }
             if ($reporter->shouldInvoke($this->getLabel(), $method)) {

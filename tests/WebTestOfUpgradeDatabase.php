@@ -114,7 +114,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         if($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {
             unlink( $data['latest_migration_file'] );
         }
-        $this->debug("Done Testing snowflake migration/updaye");
+        $this->debug("Done Testing snowflake migration/update");
     }
 
     /**
