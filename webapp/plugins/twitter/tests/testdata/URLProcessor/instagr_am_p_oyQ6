@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name = "viewport" content = "width = 480">
+	<title>instagr.am</title>
+	<link rel="shortcut icon" href="/static/images/favicon.ico">
+	<link rel="stylesheet" href="/static/styles/reset.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="/static/styles/master.css?r=1" type="text/css" media="screen" title="no title" charset="utf-8">
+	
+	
+    <link rel="stylesheet" href="/static/styles/waitlist.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/static/media/styles/detail.css?v=2" type="text/css" media="screen" title="no title" charset="utf-8">
+
+	<script src="/static/scripts/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-18105282-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            var agent = navigator.userAgent.toLowerCase();
+            var is_iphone = agent.indexOf('iphone') != -1;
+            if (is_iphone) {
+                $('#download-banner').show();
+                window.scrollTo(0, 0);
+            }
+        });
+    </script>
+
+    
+    <meta property="og:title" content="thespambot's photo"/>
+    <meta property="og:image" content="http://distillery.s3.amazonaws.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg"/>
+    <meta property="og:site_name" content="Instagram">
+    
+    <meta property="og:description" content="Railroad Crossing"/>
+    
+
+</head>
+<body>
+    
+    <div id="download-banner">
+        <p>Want to take pictures like this? <a href="http://itunes.com/apps/instagram/">Try the free app</a></p>
+    </div>
+
+    <div id="wrap" class="group">
+        <div id="content">
+            
+    <div id="photo" >
+            <div class="group frame">
+                    <img src="http://distillery.s3.amazonaws.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg" class="photo" />
+                    <div class="photo-info">
+                        <img src="http://distillery.s3.amazonaws.com/profiles/profile_626603_75sq_1289545248.jpg" class="profile-photo"/>
+                        <div class="profile-info">
+                            <h1>thespambot</h1>
+                            <span class="number-statistic">31</span> photos
+                             &middot;
+                            <span class="number-statistic">7</span> followers
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="promo">
+                <img src="http://distillery.s3.amazonaws.com/static/images/logoCamera.png" class="logo-camera"/>
+                <table class="promo-table">
+                    <tr class="top-spacer-row">
+                        <td><!-- not empty --></td>
+                    </tr>
+                    <tr class="bottom-spacer-row">
+                        <td><!-- not empty --></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="description">
+                                Jonah is using Instagram - a fun &amp; quirky way to share your life with friends through a series of pictures. Snap a photo, then choose a filter to transform the look and feel of the shot into a memory to keep around forever.
+                                <span style="font-weight:bold;">It's free!</span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">
+                            <a href="http://itunes.com/apps/instagram/"><img src="/static/images/appStoreBadge.png" alt="Available on the App Store"/></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">
+                        <!-- AddThis Button BEGIN -->
+                        <div class="addthis_toolbox addthis_default_style" style="padding-left:4em; padding-top:3em;">
+                        <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+                        <a class="addthis_button_tweet"></a>
+                        <a class="addthis_counter addthis_pill_style"></a>
+                        </div>
+                        <script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
+                        <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=burbn"></script>
+                        <!-- AddThis Button END -->
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    
+    <div id="footer" class="group">
+        
+        <p style="color:#999; margin:1em 0; text-align:center; font-size:1.2em;">
+            <a href="/accounts/edit/">Edit Account</a>
+        </p>
+        
+        <span id="footer-links">
+            <a href="/about/">About us</a> | <a href="/blog/">Blog</a> | <a href="/about/faq">FAQ</a> | <a href="/about/jobs/">Jobs</a> <br/>
+        </span>         
+        Copyright 2010, Burbn, Inc. contact@instagr.am
+    </div>
+    
+    
+
+</body>
+</html>

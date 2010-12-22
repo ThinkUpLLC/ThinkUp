@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/tests/TestOfURLProcessor.php
  *
- * Copyright (c) 2009-2010
+ * Copyright (c) 2009-2010 Gina Trapani, Amy Unruh
  *
  * LICENSE:
  *
@@ -21,7 +21,9 @@
  * <http://www.gnu.org/licenses/>.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010
+ * @copyright 2009-2010 Gina Trapani
+ * @author Gina Trapani
+ * @author Amy Unruh
  */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/init.tests.php';
@@ -32,7 +34,14 @@ require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
 
 class TestOfURLProcessor extends ThinkUpUnitTestCase {
+    /**
+     * @var Logger
+     */
     var $logger;
+    /**
+     * @var str
+     */
+    var $faux_data_path;
 
     public function __construct() {
         $this->UnitTestCase('URLProcessor class test');
@@ -40,6 +49,7 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
 
     public function setUp() {
         $this->logger = Logger::getInstance();
+        $this->faux_data_path = THINKUP_ROOT_PATH. 'webapp/plugins/twitter/tests/testdata/URLProcessor';
         parent::setUp();
     }
 
@@ -123,5 +133,44 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->post_id, 104);
         $this->assertEqual($result->network, 'twitter');
         $this->assertTrue($result->is_image);
+    }
+
+    public function testProcessTweetInstagramURLs() {
+        //instagr.am
+        $tweet["post_id"] = 105;
+        $tweet['post_text'] = "This is an Instagram post:  http://instagr.am/p/oyQ6/ :)";
+        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $link_dao = new LinkMySQLDAO();
+        $result = $link_dao->getLinkByUrl('http://instagr.am/p/oyQ6/');
+        $this->assertIsA($result, "Link");
+        $this->assertEqual($result->url, 'http://instagr.am/p/oyQ6/');
+        $this->assertEqual($result->expanded_url,
+        'http://distillery.s3.amazonaws.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
+        $this->assertEqual($result->title, '');
+        $this->assertEqual($result->post_id, 105);
+        $this->assertEqual($result->network, 'twitter');
+        $this->assertTrue($result->is_image);
+
+        // bad instagr.am URL
+        $tweet["post_id"] = 106;
+        $tweet['post_text'] = "This is an Instagram post with a bad URL:  http://instagr.am/p/oyQ5/ :(";
+        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $link_dao = new LinkMySQLDAO();
+        $result = $link_dao->getLinkByUrl('http://instagr.am/p/oyQ5/');
+        $this->assertIsA($result, "Link");
+        $this->assertEqual($result->url, 'http://instagr.am/p/oyQ5/');
+        $this->assertEqual($result->expanded_url, '');
+        $this->assertEqual($result->title, '');
+        $this->assertEqual($result->post_id, 106);
+        $this->assertEqual($result->network, 'twitter');
+        $this->assertFalse($result->is_image);
+
+        // test regexp extraction of image link from html
+        $api_call = $this->faux_data_path . "/instagr_am_p_oyQ6";
+        $resp = file_get_contents($api_call);
+        list($eurl, $is_image) = URLProcessor::extractInstagramImageURL($this->logger, $resp);
+        $this->assertEqual($eurl,
+        'http://distillery.s3.amazonaws.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
+        $this->assertTrue($is_image);
     }
 }

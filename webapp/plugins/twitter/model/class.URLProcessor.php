@@ -58,6 +58,10 @@ class URLProcessor {
                 $is_image = 1;
             } elseif (substr($u, 0, strlen('http://flic.kr/')) == 'http://flic.kr/') {
                 $is_image = 1;
+            } elseif (substr($u, 0, strlen('http://instagr.am/')) == 'http://instagr.am/') {
+                $logger->logInfo("processing instagram url: $u", __METHOD__.','.__LINE__);
+                $html = (string) Utils::getURLContents($u);
+                list($eurl, $is_image) = self::extractInstagramImageURL($logger, $html);
             }
             if ($link_dao->insert($u, $eurl, $title, $tweet['post_id'], 'twitter', $is_image)) {
                 $logger->logSuccess("Inserted ".$u." (".$eurl.", ".$is_image."), into links table",
@@ -66,5 +70,19 @@ class URLProcessor {
                 $logger->logError("Did NOT insert ".$u." (".$eurl.") into links table", __METHOD__.','.__LINE__);
             }
         }
+    }
+
+    public static function extractInstagramImageURL($logger, $html) {
+        $eurl = '';
+        $is_image = 0;
+        if ($html) {
+            preg_match('/<meta property="og:image" content="[^"]+"\/>/i', $html, $matches);
+            if (isset($matches[0])) {
+                $eurl = substr($matches[0], 35, -3);
+                $logger->logDebug("got instagram eurl: $eurl", __METHOD__.','.__LINE__);
+                $is_image = 1;
+            }
+        }
+        return array($eurl, $is_image);
     }
 }
