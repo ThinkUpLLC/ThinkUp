@@ -56,7 +56,10 @@
       {/if}
       <div class="small gray">
        <span class="metaroll">
-        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a> 
+        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
+        {if $t->network == 'twitter'}
+         - <a href="http://twitter.com/?status=@{$t->author_username}%20&in_reply_to_status_id={$t->post_id}&in_reply_to={$t->author_username}" target="_blank">Reply</a>
+        {/if}
         {if $t->is_geo_encoded < 2}
         {if $show_distance}
             {if $unit eq 'km'}

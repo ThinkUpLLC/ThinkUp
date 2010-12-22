@@ -23,6 +23,9 @@
   </div>
   <div class="grid_10 omega">
     <p>{$r.question|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}</p>
+    {if $r.network == 'twitter'}
+    <a class="small" href="http://twitter.com/?status=@{$r.questioner_username}%20&in_reply_to_status_id={$r.question_post_id}&in_reply_to={$r.questioner_username}" target="_blank">Reply</a>
+    {/if}
     {if $r.location}
       <div class="small gray">{$r.location}</div>
     {/if}
@@ -47,6 +50,9 @@
   </div>
   <div class="grid_10 omega">
     <p>{$r.answer|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}</p>
+    {if $r.network == 'twitter'}
+    <a class="small" href="http://twitter.com/?status=@{$r.answerer_username}%20&in_reply_to_status_id={$r.answer_post_id}&in_reply_to={$r.answerer_username}" target="_blank">Reply</a>
+    {/if}
     {if $r.location}
       <div class="small gray">{$r.location}</div>
     {/if}

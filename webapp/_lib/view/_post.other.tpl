@@ -45,6 +45,9 @@
           {/if}
         <div class="small gray">
         <span class="metaroll">
+            {if $t->network == 'twitter'}
+            <a href="http://twitter.com/?status=@{$t->author_username}%20&in_reply_to_status_id={$t->post_id}&in_reply_to={$t->author_username}" target="_blank">Reply</a>
+            {/if}
             {if $t->is_geo_encoded < 2}
             Location: 
             {$t->location|truncate:60:' ...'}
