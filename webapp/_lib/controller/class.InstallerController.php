@@ -459,6 +459,11 @@ class InstallerController extends ThinkUpController {
                 $option_data[1] = $option_data[1] . ': ' . $option_data[2];
             }
 
+            if(!isset($option_data[1]))
+            {
+            	$option_data[1] = $option_data[0];
+            }
+            
             $view_tzs[$option_data[0]][] = array(
                 'val' => $option,
                 'display' => str_replace('_', ' ', $option_data[1])
