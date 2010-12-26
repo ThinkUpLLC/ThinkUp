@@ -39,7 +39,7 @@ $config = Config::getInstance();
 //@TODO: Figure out a better way to do this
 if (!class_exists('TwitterOAuth')) {
     Utils::defineConstants();
-    require_once THINKUP_WEBAPP_PATH.'_lib/extlib/twitteroauth/twitteroauth.php';
+    require_once THINKUP_WEBAPP_PATH.'plugins/twitter/extlib/twitteroauth/twitteroauth.php';
 }
 
 $webapp = Webapp::getInstance();

@@ -34,7 +34,7 @@
  * @copyright 2009-2010 Gina Trapani
  */
 Utils::defineConstants();
-require_once THINKUP_WEBAPP_PATH.'_lib/extlib/facebook/facebook.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/facebook/extlib/facebook/facebook.php';
 
 
 $webapp = Webapp::getInstance();
