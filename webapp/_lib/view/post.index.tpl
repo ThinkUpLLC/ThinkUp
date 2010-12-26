@@ -61,6 +61,9 @@
                   {$post->link->expanded_url}
                 </a>
               {/if}
+              {if $post->link->expanded_url and $post->link->is_image}<br ><br >
+                <div class="pic"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" alt=""></a></div>
+              {/if}
               <div class="grid_6 omega small gray {if $replies}prefix_3 prepend{else}prefix_10{/if}">
                 <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" class="float-l">
                 {if $post->network eq 'twitter'}

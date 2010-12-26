@@ -299,7 +299,7 @@ img.avatar_overlay {position: relative;left: 15px;top: -15px;width: 40px;height:
 img.service-icon, img.service-icon2 {position: relative;width: 16px;height: 16px;top: -16px;left: 29px;}
 img.service-icon2 {left: 32px;}
 
-.pic {border: 1px solid #CCC;padding: 5px 0px 0px 5px;}
+/* .pic {border: 1px solid #CCC;padding: 5px 0px 0px 5px;} */
 /*.pic {float:right;margin:10px 0 10px 10px;border:1px solid #CCC;padding:5px 5px 0 5px;}*/
 
 .promo-thumb {float:left;width:113px;height:150px;margin-top: 13px;margin-left:15px;}
