@@ -118,7 +118,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     }
 
     /**
-     * Sets up inital app
+     * Sets up initial app
      */
     private function setUpApp($version, $MIGRATIONS) {
         // run updates and migrations
@@ -195,8 +195,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->click("Log In");
         $this->assertText('You have no accounts configured. Set up an account now');
 
-        //Visit Configuration page and assert content there
-        $this->click("Configuration");
+        //Visit Configuration/Settings page and assert content there
+        if (floatval($version) >= 0.6) {
+            $this->click("Settings"); //link name changed in beta 6
+        } else {
+            $this->click("Configuration");
+        }
         $this->assertTitle('Configure Your Account | ThinkUp');
         $this->assertText('As an administrator you can configure all installed plugins.');
 

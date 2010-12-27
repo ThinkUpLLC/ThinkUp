@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = 0.6;
+$LATEST_VERSION = 0.7;
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -38,7 +38,7 @@ $MIGRATIONS = array(
         'migration_assertions' => array(
             'sql' => array(
                 array(
-                    'query' => 'desc tu_owners email',
+                    'query' => 'DESCRIBE tu_owners email',
                     'match' => "/varchar\(200\)/",
                     'column' => 'Type', 
                 )
@@ -52,12 +52,12 @@ $MIGRATIONS = array(
         'migration_assertions' => array(
             'sql' => array(
                 array(
-                    'query' => 'desc tu_owners email',
+                    'query' => 'DESCRIBE tu_owners email',
                     'match' => "/varchar\(200\)/",
                     'column' => 'Type', 
                 ),
                 array(
-                    'query' => 'desc tu_posts post_id',
+                    'query' => 'DESCRIBE tu_posts post_id',
                     'match' => "/bigint\(11\)/",
                     'column' => 'Type', 
                 )
@@ -71,37 +71,37 @@ $MIGRATIONS = array(
         'migration_assertions' => array(
             'sql' => array(
                 array(
-                    'query' => 'desc tu_posts in_retweet_of_post_id',
+                    'query' => 'DESCRIBE tu_posts in_retweet_of_post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
                     'column' => 'Type', 
                 ),
                 array(
-                    'query' => 'desc tu_posts post_id',
+                    'query' => 'DESCRIBE tu_posts post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
                     'column' => 'Type', 
                 ),
                 array(
-                    'query' => 'desc tu_posts in_reply_to_post_id',
+                    'query' => 'DESCRIBE tu_posts in_reply_to_post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
                     'column' => 'Type', 
                 ),
                 array(
-                    'query' => 'desc tu_links post_id',
+                    'query' => 'DESCRIBE tu_links post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
                     'column' => 'Type', 
                 ),
                 array(
-                    'query' => 'desc tu_post_errors post_id',
+                    'query' => 'DESCRIBE tu_post_errors post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
                     'column' => 'Type', 
                 ),
                 array(
-                    'query' => 'desc tu_users last_post_id',
+                    'query' => 'DESCRIBE tu_users last_post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
                     'column' => 'Type', 
                 ),
                 array(
-                    'query' => 'desc tu_instances last_post_id',
+                    'query' => 'DESCRIBE tu_instances last_post_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
                     'column' => 'Type', 
                 ),
@@ -116,7 +116,7 @@ $MIGRATIONS = array(
         'migration_assertions' => array(
             'sql' => array(
                 array(
-                    'query' => 'desc tu_options option_id',
+                    'query' => 'DESCRIBE tu_options option_id',
                     'match' => "/int\(11\)/",
                     'column' => 'Type', 
                 ),
@@ -155,13 +155,33 @@ $MIGRATIONS = array(
 
     /* beta 0.6 */
     '0.6' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.6.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
                 array(
                     'query' => 'DESCRIBE tu_instances last_favorite_id',
                     'match' => "/bigint\(20\) UNSIGNED/i",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_instances last_unfav_page_checked',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_instances last_page_fetched_favorites',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_instances favorites_profile',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_instances owner_favs_in_system',
+                    'match' => "/int\(11\)/",
                     'column' => 'Type', 
                 ),
                 array(
@@ -174,6 +194,41 @@ $MIGRATIONS = array(
                     'match' => "/bigint\(20\) UNSIGNED/i",
                     'column' => 'Type', 
                 ),
+           )
+        )
+    ),
+
+    /* beta 0.7 */
+    '0.7' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => 'DESCRIBE tu_owners failed_logins',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_owners account_status',
+                    'match' => "/varchar\(150\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_posts in_rt_of_user_id',
+                    'match' => "/bigint\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_posts old_retweet_count_cache',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+//                array(
+//                    'query' => "SELECT namespace FROM tu_options WHERE namespace LIKE 'plugin_options-1' ",
+//                    'match' => "/plugin_options-1/",
+//                    'column' => 'namespace', 
+//                ),
            )
         )
     ),

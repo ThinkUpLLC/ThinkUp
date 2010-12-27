@@ -1,0 +1,20 @@
+--
+-- 2010-12-27 Login lockout
+--
+ALTER TABLE  tu_owners ADD  failed_logins INT NOT NULL DEFAULT  '0';
+
+ALTER TABLE  tu_owners ADD  account_status VARCHAR( 150 ) NOT NULL DEFAULT  '';
+
+--
+-- 2010-12-21 Plugin option migration
+--
+
+INSERT INTO tu_options (namespace, option_name, option_value, last_updated, created)
+(SELECT concat('plugin_options-', plugin_id), option_name, option_value, now(), now() FROM tu_plugin_options);
+
+--
+-- 2010-12-21 Retweet handling
+--
+ALTER TABLE tu_posts ADD in_rt_of_user_id bigint(11) DEFAULT NULL;
+ALTER TABLE tu_posts CHANGE retweet_count_cache old_retweet_count_cache int(11) NOT NULL DEFAULT '0';
+ALTER TABLE tu_posts ADD retweet_count_cache int(11) NOT NULL DEFAULT '0';
