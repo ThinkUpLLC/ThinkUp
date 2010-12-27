@@ -280,8 +280,8 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $mftab->addDataset($mftabds);
         $menus["followers-mostfollowed"] =  $mftab;
 
-        //Least likely
-        $lltab = new MenuItem("Least Likely", 'Followers with the greatest follower-to-friend ratio',
+        //Least likely/Most Discerning
+        $lltab = new MenuItem("Most Discerning", 'Followers with the greatest follower-to-friend ratio',
         $twitter_data_tpl);
         $lltabds = new Dataset("people", 'FollowDAO', "getLeastLikelyFollowers", array(
         $instance->network_user_id, 'twitter', 15));

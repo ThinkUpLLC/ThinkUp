@@ -1,9 +1,9 @@
 <div class="">
+<h2>{$header}</h2>
   {if $description}
-    
-     <h2>{$description} {if $is_searchable}
+     <i>{$description} {if $is_searchable}
         [<a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a>]
-    {/if}</h2>
+    {/if}</i>
      
   {/if}
 </div>
