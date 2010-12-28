@@ -18,7 +18,9 @@
       <a href="{$l->url}"><div class="pic"><img src="{$l->expanded_url}" /></div></a>
     {else}
       {if $l->expanded_url}
-        <a href="{$l->expanded_url}" title="{$l->expanded_url}">{$l->title}</a>
+      <small>
+        <a href="{$l->expanded_url}" title="{$l->expanded_url}">{if $l->title}{$l->title}{else}{$l->expanded_url}{/if}</a>
+      </small>
       {/if}
     {/if}
     <div class="post">
