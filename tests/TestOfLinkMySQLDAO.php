@@ -243,6 +243,10 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $this->assertEqual($val->container_post->in_reply_to_post_id, 0);
             $this->assertTrue($posts[$num]['fr']);
         }
+        // check pagination
+        $result = $this->DAO->getLinksByFriends(2, 'twitter', 5, 2);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 5);
     }
 
 
@@ -274,6 +278,10 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $this->assertEqual($val->container_post->in_reply_to_post_id, 0);
             $this->assertTrue($posts[$num]['fr']);
         }
+        // check pagination
+        $result = $this->DAO->getPhotosByFriends(2, 'twitter', 5, 2);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 4);
     }
 
     /**
@@ -386,4 +394,45 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $lbuilders = null;
     }
 
+    public function testGetFavoritedLinksPaging() {
+        $lbuilders = array();
+        $counter = 0;
+        while ($counter < 15) {
+            $post_id = $counter + 280;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+            $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>0, 
+            'expanded_url'=>'', 'error'=>''));
+            $counter++;
+        }
+        //create posts-- links will be associated with the first 15 of them
+        $counter = 0;
+        while ($counter < 30) {
+            $post_id = $counter + 280;
+            $user_id = ($counter * 5) + 2;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $lbuilders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>$user_id,
+            'author_username'=>"user$counter", 'author_fullname'=>"User$counter Name$counter", 
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$post_id, 'pub_date'=>'2009-01-01 00:'.
+            $pseudo_minute.':00', 'network'=>'twitter',
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+            // user '20' favorites the first 20 of the test posts, only 15 of which will have links
+            if ($counter < 20) {
+                $lbuilders[] = FixtureBuilder::build('favorites', array('post_id'=>$post_id,
+                'author_user_id'=>$user_id, 'fav_of_user_id'=>20, 'network'=>'twitter'));
+            }
+            $counter++;
+        }
+        // 1st page, default count is 15
+        $result = $this->DAO->getLinksByFavorites(20, 'twitter');
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 15);
+        // 2nd page, ask for count of 10. So, there should be 5 favs returned.
+        $result = $this->DAO->getLinksByFavorites(20, 'twitter', 10, 2);
+        $this->assertEqual(count($result), 5);
+
+        $lbuilders = null;
+    }
 }

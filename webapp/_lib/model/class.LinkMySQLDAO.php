@@ -108,7 +108,9 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getUpdateCount($ps);
     }
 
-    public function getLinksByFriends($user_id, $network) {
+    public function getLinksByFriends($user_id, $network, $count = 15, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#links AS l ";
@@ -118,10 +120,12 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network=:network ";
         $q .= ")";
         $q .= "ORDER BY l.post_id DESC ";
-        $q .= "LIMIT 15 ";
+        $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':user_id'=>$user_id,
-            ':network'=>$network
+            ':network'=>$network,
+            ':limit'=>$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -144,23 +148,28 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $link;
     }
 
-    public function getLinksByFavorites($user_id, $network) {
+    public function getLinksByFavorites($user_id, $network, $count = 15, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = "SELECT l.*, p.*, pub_date - interval 8 hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts as p, #prefix#favorites as f, #prefix#links as l WHERE f.post_id = p.post_id ";
-        // $q .= "INNER JOIN #prefix#links AS l ";
         $q .= "AND p.post_id = l.post_id AND p.network = l.network ";
         $q .= "AND l.network = :network AND  f.fav_of_user_id = :user_id ";
         $q .= "ORDER BY l.post_id DESC ";
-        $q .= "LIMIT 15 ";
+        $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':user_id'=>$user_id,
-            ':network'=>$network
+            ':network'=>$network,
+            ':limit'=>$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, "Link");
     }
 
-    public function getPhotosByFriends($user_id, $network) {
+    public function getPhotosByFriends($user_id, $network, $count = 15, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#links AS l ";
         $q .= "INNER JOIN #prefix#posts p ";
@@ -169,10 +178,12 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
         $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network = :network) ";
         $q .= "ORDER BY l.post_id DESC  ";
-        $q .= "LIMIT 15 ";
+        $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':user_id'=>$user_id,
-            ':network'=>$network
+            ':network'=>$network,
+            ':limit'=>$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);

@@ -60,7 +60,7 @@ interface LinkDAO {
     public function saveExpansionError($url, $error_text);
 
     /**
-     * Updates a URL in storage
+     * Updates a URL in storage.
      * @param str $url
      * @param str $expanded
      * @param str $title
@@ -72,24 +72,38 @@ interface LinkDAO {
     public function update($url, $expanded, $title, $post_id, $network, $is_image = false );
 
     /**
-     * Get the links posted by a users friends
+     * Get the links posted by a user's friends.
      * @param int $user_id
      * @param str $network
+     * @param int $count
+     * @param int $page
      * @return array with Link objects
      */
-    public function getLinksByFriends($user_id, $network);
+    public function getLinksByFriends($user_id, $network, $count = 15, $page = 1);
 
     /**
-     * Get the images posted by a users friends
+     * Get the links in a user's favorites.
      * @param int $user_id
      * @param str $network
+     * @param int $count
+     * @param int $page
+     * @return array with Link objects
+     */
+    public function getLinksByFavorites($user_id, $network, $count = 15, $page = 1);
+
+    /**
+     * Get the images posted by a user's friends.
+     * @param int $user_id
+     * @param str $network
+     * @param int $count
+     * @param int $page
      * @return array numbered keys, with Link objects
      */
-    public function getPhotosByFriends($user_id, $network);
+    public function getPhotosByFriends($user_id, $network, $count = 15, $page = 1);
 
     /**
      * Gets a number of links that has not been expanded.
-     * Non standard output - Sceduled for deprecation.
+     * Non standard output - Scheduled for deprecation.
      * @param int $limit
      * @return array with numbered keys, with strings
      */
