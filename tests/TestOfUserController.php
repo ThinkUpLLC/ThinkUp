@@ -90,6 +90,8 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('user_statuses')), 1 );
         $this->assertIsA($v_mgr->getTemplateDataItem('instances'), 'array');
         $this->assertIsA($v_mgr->getTemplateDataItem('profile'), 'User');
+        $this->assertEqual($v_mgr->getTemplateDataItem('next_page'), 2);
+        $this->assertEqual($v_mgr->getTemplateDataItem('last_page'), 0);        
 
         $this->assertEqual($controller->getCacheKeyString(), 'user.index.tpl-me@example.com-someuser1-twitter');
     }
@@ -101,6 +103,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
         $_GET['i'] = 'instancetestuser';
+        $_GET['page'] = '3';
         $controller = new UserController(true);
         $this->assertTrue(isset($controller));
 
@@ -111,9 +114,11 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'User Details: someuser1');
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), 'index.php');
+        $this->assertEqual($v_mgr->getTemplateDataItem('next_page'), 4);
+        $this->assertEqual($v_mgr->getTemplateDataItem('last_page'), 2);
 
         $this->assertEqual($controller->getCacheKeyString(),
-        'user.index.tpl-me@example.com-someuser1-twitter-instancetestuser');
+        'user.index.tpl-me@example.com-someuser1-twitter-instancetestuser-3');
     }
 
     private function buildData() {

@@ -57,6 +57,7 @@ class UserController extends ThinkUpAuthController {
             $username = $_GET['u'];
             $network = $_GET['n'];
             $user_dao = DAOFactory::getDAO('UserDAO');
+            $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
             if ( $user_dao->isUserInDBByName($username, $network) ){
                 $this->setPageTitle('User Details: '.$username);
@@ -71,7 +72,7 @@ class UserController extends ThinkUpAuthController {
                 $this->addToView('profile', $user);
 
                 $post_dao = DAOFactory::getDAO('PostDAO');
-                $this->addToView('user_statuses',  $post_dao->getAllPosts($user->user_id, $user->network, 20));
+                $this->addToView('user_statuses',  $post_dao->getAllPosts($user->user_id, $user->network, 20, $page));
                 $this->addToView('sources', $post_dao->getStatusSources($user->user_id, $user->network));
                 if ( isset($_GET['i']) ) {
                     $i = $instance_dao->getByUsername($_GET['i'], 'twitter');
@@ -90,6 +91,8 @@ class UserController extends ThinkUpAuthController {
                         $this->addToView('total_mutual_friends', count($mutual_friends) );
                     }
                 }
+                $this->addToView('next_page', $page+1);
+                $this->addToView('last_page', $page-1);
             } else {
                 $this->addErrorMessage($username. ' is not in the system.');
             }
