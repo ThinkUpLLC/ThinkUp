@@ -287,6 +287,7 @@ abstract class ThinkUpController {
             if ($classname != 'InstallerController' && $classname != 'BackupController' &&
             UpgradeController::isUpgrading( $this->isAdmin(), $classname) ) {
                 $this->setViewTemplate('install.upgradeneeded.tpl');
+                $this->disableCaching();
                 return $this->generateView();
             } else {
                 $results = $this->control();
