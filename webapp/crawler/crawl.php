@@ -26,8 +26,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
  */
-chdir("..");
-require_once 'init.php';
+require_once "../init.php";
 
 $controller = new CrawlerAuthController($argc, $argv);
 echo $controller->go();
