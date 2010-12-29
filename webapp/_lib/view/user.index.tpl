@@ -75,10 +75,19 @@
 
         {if $user_statuses}
         <div class="clearfix">
-            <h2>User statuses</h2>
+            <h2>Posts</h2>
             {foreach from=$user_statuses key=tid item=t name=foo}
               {include file="_post.lite.tpl" t=$t}
             {/foreach}
+
+           <div class="float-l">
+           {if $next_page}
+               <a href="{$site_root_path}user/?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n}&{/if}page={$next_page}" id="next_page">&#60; Older Posts</a>
+           {/if}
+           {if $last_page}
+               | <a href="{$site_root_path}user/?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n}&{/if}page={$last_page}" id="last_page">Newer Posts  &#62;</a>
+           {/if}
+           </div>
         </div>
         {/if}
 
@@ -87,7 +96,7 @@
           {if count($sources > 0)}
             {foreach from=$sources key=tid item=s name=foo}
               <div class="clearfix">
-                <div class="grid_12 bold">{$s.total} statuses posted via</div>
+                <div class="grid_12 bold">{$s.total} post{if $s.total > 1}s{/if} via</div>
                 <div class="grid_6 right">{if $s.source eq 'web'} the {$s.source}{else}{$s.source}{/if}</div>
               </div>
             {/foreach}

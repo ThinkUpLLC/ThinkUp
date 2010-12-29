@@ -57,6 +57,7 @@ class UserController extends ThinkUpAuthController {
             $username = $_GET['u'];
             $network = $_GET['n'];
             $user_dao = DAOFactory::getDAO('UserDAO');
+            $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
             if ( $user_dao->isUserInDBByName($username, $network) ){
                 $this->setPageTitle('User Details: '.$username);
@@ -71,10 +72,18 @@ class UserController extends ThinkUpAuthController {
                 $this->addToView('profile', $user);
 
                 $post_dao = DAOFactory::getDAO('PostDAO');
-                $this->addToView('user_statuses',  $post_dao->getAllPosts($user->user_id, $user->network, 20));
+                $user_posts = $post_dao->getAllPosts($user->user_id, $user->network, 20, $page);
+                $this->addToView('user_statuses',  $user_posts );
+                if (sizeof($user_posts) == 20) {
+                    $this->addToView('next_page', $page+1);
+                }
+                $this->addToView('last_page', $page-1);
+
                 $this->addToView('sources', $post_dao->getStatusSources($user->user_id, $user->network));
-                if ( isset($_GET['i']) ) {
-                    $i = $instance_dao->getByUsername($_GET['i'], 'twitter');
+                if (SessionCache::isKeySet('selected_instance_username') &&
+                SessionCache::isKeySet('selected_instance_network')) {
+                    $i = $instance_dao->getByUsername(SessionCache::get('selected_instance_username'),
+                    SessionCache::get('selected_instance_network'));
                     if (isset($i)) {
                         $this->addToView('instance', $i);
                         $exchanges =  $post_dao->getExchangesBetweenUsers($i->network_user_id, $i->network,
