@@ -10,11 +10,12 @@
         $('#choose-instance').show();
       });
       function changeMe() {
-      var _mu = $("select#instance-select").val();
-      if (_mu != "null") {
-        document.location.href = _mu;
+        var _mu = $("select#instance-select").val();
+        if (_mu != "null") {
+          document.location.href = _mu;
+        }
       }
-    }
+    });
   </script>
 {/literal}
 
