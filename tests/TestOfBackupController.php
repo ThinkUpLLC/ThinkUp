@@ -172,7 +172,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $dao = new BackupMySQLDAO();
         $export_file = $dao->export();
 
-        $this->pdo->query("drop table tu_plugin_options");
+        $this->pdo->query("drop table tu_plugins");
 
 
         $this->simulateLogin('me@example.com', true);

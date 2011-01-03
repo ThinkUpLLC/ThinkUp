@@ -209,7 +209,6 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $prefix = Config::getInstance()->getValue('table_prefix');
         $namespace = $build_data[3]->columns['namespace'];
         OwnerMysqlDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
-        $build_data[3]->truncateTable('plugin_options');
 
         $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
         $output = $controller->go();
@@ -236,7 +235,6 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $prefix = Config::getInstance()->getValue('table_prefix');
         $namespace = $build_data[3]->columns['namespace'];
         OwnerMysqlDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
-        $build_data[3]->truncateTable('plugin_options');
         $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured

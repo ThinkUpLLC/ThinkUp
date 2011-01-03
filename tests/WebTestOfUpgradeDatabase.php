@@ -213,12 +213,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $config = Config::getInstance();
 
         $current_version = $config->getValue('THINKUP_VERSION');
+        $latest_migration = glob($migration_sql_dir . '*_v' . $LATEST_VERSION .'.sql.migration');
         if($LATEST_VERSION == $current_version) {
             $this->debug("Building zip for latest version: $LATEST_VERSION");
             $sql_files = glob($migration_sql_dir . '*.sql');
             if (sizeof($sql_files) > 0) {
-                $this->debug("found sql update for lasest version $LATEST_VERSION: $sql_files[0]");
-                $latest_migration = glob($migration_sql_dir . '*_v' . $LATEST_VERSION .'.sql.migration');
+                $this->debug("found sql update for latest version $LATEST_VERSION: $sql_files[0]");
                 if(! isset($latest_migration[0])) {
                     $latest_migration_file = $migration_sql_dir . '0001-01-01_v' . $LATEST_VERSION .'.sql.migration';
                     $fp = fopen($latest_migration_file, 'w');
@@ -233,6 +233,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             }
             exec('extras/scripts/generate-distribution');
             exec('cp build/thinkup.zip build/' . $LATEST_VERSION . '.zip');
+            if(file_exists($latest_migration_file)) {
+                unlink( $latest_migration_file );
+            }
         }
         return array('MIGRATIONS' => $MIGRATIONS, 'latest_migration_file'  => $latest_migration_file );
     }
@@ -285,7 +288,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 $this->assertText('{"processed":true,');
                 $this->debug("Running migration assertion test for " . $json_migration->version);
                 $assertions = $MIGRATIONS[ $json_migration->version ];
-                //var_dump($assertions);
                 foreach($assertions['migration_assertions']['sql'] as $assertion_sql) {
                     // don't run the database_version assertion if it exists, this will get run below...
                     if(preg_match("/database_version/i", $assertion_sql['query'])) {
@@ -294,8 +296,13 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                     $this->debug("Running assertion sql: " . $assertion_sql['query']);
                     $stmt = $this->pdo->query($assertion_sql['query']);
                     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-                    $this->assertEqual(preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ]), 1,
-                    $assertion_sql['match'] . ' should match ' .  $data[ $assertion_sql['column'] ]);
+                    if(isset($assertion_sql['no_match'])) {
+                        $this->assertFalse($data, 'no results for query'); // a table or column deleted?
+                    } else {
+                        $this->assertEqual(preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ]), 1,
+                        $assertion_sql['match'] . ' should match ' .  $data[ $assertion_sql['column'] ]);
+                        $stmt->closeCursor();
+                    }
                     $stmt->closeCursor();
                 }
             }
@@ -312,8 +319,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                     $this->debug("Running assertion sql: " . $assertion['query']);
                     $stmt = $this->pdo->query($assertion['query']);
                     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-                    $this->assertEqual(preg_match($assertion['match'], $data[ $assertion['column'] ]), 1,
-                    $assertion['match'] . ' should match ' .  $data[ $assertion['column'] ]);
+                    if(isset($assertion['no_match'])) {
+                        $this->assertFalse($data, 'no results for query'); // a table or column deleted?
+                    } else {
+                        $this->assertEqual(preg_match($assertion['match'], $data[ $assertion['column'] ]), 1,
+                        $assertion['match'] . ' should match ' .  $data[ $assertion['column'] ]);
+                    }
                     $stmt->closeCursor();
                 }
             }

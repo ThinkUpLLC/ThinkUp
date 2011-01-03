@@ -364,8 +364,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->logger->logInfo("second round of archiving", __METHOD__.','.__LINE__);
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage2/');
-        $builder2 = FixtureBuilder::build('plugin_options', array('plugin_id'=>1, 'option_name'=>'favs_older_pages',
-        'option_value'=>10));
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
         $tc->fetchInstanceFavorites();
