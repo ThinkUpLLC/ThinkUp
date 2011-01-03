@@ -128,7 +128,7 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
     public function testImportData() {
         $dao = new BackupMySQLDAO();
         $export_file = $dao->export();
-        $this->pdo->query("drop table tu_plugin_options");
+        //$this->pdo->query("drop table tu_plugin_options");
         $this->assertTrue( $dao->import($export_file) );
         $stmt = $this->pdo->query("show create table tu_plugins");
         $data = $stmt->fetch();

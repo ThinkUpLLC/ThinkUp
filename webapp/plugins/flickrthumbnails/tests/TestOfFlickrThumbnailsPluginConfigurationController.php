@@ -84,8 +84,6 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
     }
 
     public function testOutputNoParams() {
-        // build some options data
-        $options_arry = $this->buildPluginOptions();
 
         //not logged in, no owner set
         $controller = new FlickrThumbnailsPluginConfigurationController(null, 'flickrthumbnails');
@@ -109,7 +107,6 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
      */
     public function testConfigOptionsNotAdmin() {
         // build some options data
-        $options_arry = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -121,7 +118,6 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
 
         //app not configured
-        $options_arry[0]->truncateTable('plugin_options');
         $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
@@ -132,7 +128,6 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
      */
     public function testConfigOptionsIsAdmin() {
         // build some options data
-        $options_arry = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', $isadmin = true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
@@ -144,19 +139,9 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
 
         //app not configured
-        $options_arry[0]->truncateTable('plugin_options');
         $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
     }
 
-    /**
-     * build plugin option values
-     */
-    private function buildPluginOptions() {
-        $plugin_options1 =
-        FixtureBuilder::build('plugin_options',
-        array('plugin_id' => 1, 'option_name' => 'flickr_api_key', 'option_value' => "dummykey") );
-        return array($plugin_options1);
-    }
 }
