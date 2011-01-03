@@ -196,7 +196,6 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
         $prefix = Config::getInstance()->getValue('table_prefix');
         OwnerMysqlDAO::$PDO->query("delete from " . $prefix . "options where namespace = '$namespace'");
-        $options_arry[0]->truncateTable('plugin_options');
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured

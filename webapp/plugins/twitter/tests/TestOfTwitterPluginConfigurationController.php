@@ -171,7 +171,6 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
 
         //app not configured
-        $options_arry[0]->truncateTable('plugin_options');
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
@@ -197,7 +196,6 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
 
         //app not configured
-        $options_arry[0]->truncateTable('plugin_options');
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
@@ -215,7 +213,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'oauth_consumer_secret', 'option_value' => "12345") );
         $plugin_options3 =
-        FixtureBuilder::build('plugin_options',
+        FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'num_twitter_errors', 'option_value' => "5") );
         return array($plugin_options1, $plugin_options2, $plugin_options3);
     }
