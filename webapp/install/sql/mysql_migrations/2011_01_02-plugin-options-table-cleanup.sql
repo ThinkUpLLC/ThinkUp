@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS tu_plugin_options;

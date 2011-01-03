@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = 0.7;
+$LATEST_VERSION = '0.8';
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -200,8 +200,19 @@ $MIGRATIONS = array(
 
     /* beta 0.7 */
     '0.7' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.7.zip',
         'migrations' => 1,
+        'setup_sql' => array("DROP TABLE IF EXISTS tu_plugin_options",
+                            "CREATE TABLE  `tu_plugin_options` (" .
+                            "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," .
+                            "`plugin_id` INT NOT NULL ," .
+                            "`option_name` VARCHAR( 255 ) NOT NULL ," .
+                            "`option_value` VARCHAR( 255 ) NOT NULL ," .
+                            "INDEX (  `plugin_id` )" .
+                            ") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin",
+                            "INSERT INTO tu_plugin_options (plugin_id, option_name, option_value) " .
+                            "VALUES (2345, 'test_plugin_name', 'test_plugin_value')" 
+        ),
         'migration_assertions' => array(
             'sql' => array(
                 array(
@@ -224,11 +235,25 @@ $MIGRATIONS = array(
                     'match' => "/int\(11\)/",
                     'column' => 'Type', 
                 ),
-//                array(
-//                    'query' => "SELECT namespace FROM tu_options WHERE namespace LIKE 'plugin_options-1' ",
-//                    'match' => "/plugin_options-1/",
-//                    'column' => 'namespace', 
-//                ),
+                array(
+                    'query' => "SELECT namespace FROM tu_options WHERE namespace LIKE 'plugin_options-2345' ",
+                    'match' => "/plugin_options-2345/",
+                    'column' => 'namespace', 
+                )
+           )
+        )
+    ),
+
+    /* beta 0.8 */
+    '0.8' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => "show tables like 'tu_plugin_options'", // table is dropped
+                    'no_match' => true,
+                )
            )
         )
     ),
