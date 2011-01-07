@@ -19,7 +19,7 @@ $THINKUP_CFG['timezone']                  = 'America/Los_Angeles';
 //Keep Logged in? Should enable only on test servers, mostly local
 // Only admin email should be given for it to work.
 // @TODO Add this to the interface/installer
-$THINKUP_CFG['keep_logged_in']               = true;
+$THINKUP_CFG['keep_logged_in']            = true;
 $THINKUP_CFG['login_email']               = '';
 
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
