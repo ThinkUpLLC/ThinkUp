@@ -60,7 +60,7 @@
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-      No data to display. <a href="{$site_root_path}crawler/update.php">Update your data now.</a>
+      No data to display. <a href="{$site_root_path}crawler/updatenow.php">Update your data now.</a>
     </p>
   </div>
 {/if}
