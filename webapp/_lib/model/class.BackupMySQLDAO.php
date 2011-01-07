@@ -58,6 +58,9 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
 
                 // rebuild db
                 $sql = file_get_contents($create_table);
+                if(getenv('BACKUP_VERBOSE')!==false) {
+                    print "  Creating tables...\n\n";
+                }
                 $stmt = $this->execute($sql);
                 $stmt->closeCursor();
                 unlink($create_table);
@@ -69,6 +72,9 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                     $matches = array();
                     if(preg_match('#.*/(\w+).txt$#', $table, $matches)) {
                         $table = $matches[1];
+                        if(getenv('BACKUP_VERBOSE')!==false) {
+                            print "  Restoring data for table: $table\n";
+                        }
                         $q = "LOAD DATA INFILE '$infile' INTO TABLE $table";
                         $stmt = $this->execute($q);
                         if(! $stmt) {
@@ -86,7 +92,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         }
     }
 
-    public function export() {
+    public function export($backup_file = null) {
         // get table names...
         $q = "show tables";
         $q2 = "show create table ";
@@ -94,12 +100,21 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         $data = $this->getDataRowsAsArrays($stmt);
         $create_tables = '';
         $zip_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/thinkup_db_backup.zip';
+        if($backup_file) {
+            $zip_file = $backup_file;
+        }
         $zip = new ZipArchive();
         if(file_exists($zip_file)) {
             unlink($zip_file);
         }
-        if ($zip->open($zip_file, ZIPARCHIVE::CREATE)!==TRUE) {
-            throw new Exception("Unable to open backup for for exporting: $zip_file");
+        // make sure w can create this zip file, ZipArchive is a little funky and wont let us know its status
+        // until we call close
+        $zip_create_status = @touch($zip_file);
+        if($zip_create_status) {
+            unlink($zip_file);
+        }
+        if (! $zip_create_status || $zip->open($zip_file, ZIPARCHIVE::CREATE)!==TRUE) {
+            throw new Exception("Unable to open backup file for exporting: $zip_file");
         }
 
         // lock tables for writes...
@@ -108,7 +123,9 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         $tmp_table_files = array();
         foreach($data as $table) {
             foreach($table as $key => $value) {
-
+                if(getenv('BACKUP_VERBOSE')!==false) {
+                    print "  Backing up data for table: $value\n";
+                }
                 $stmt = $this->execute($q2 . $value);
                 $create_tables .= "-- Create $value table statement\n";
                 $create_tables .= "DROP TABLE IF EXISTS $value;\n";
@@ -130,12 +147,17 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
 
         // unlock tables...
         $stmt = $this->execute("unlock tables");
-
+        if(getenv('BACKUP_VERBOSE')!==false) {
+            print "\n  Backing up create table statments\n";
+        }
         $zip->addFromString("create_tables.sql", $create_tables);
-        $zip->close();
+        $zip_close_status = $zip->close();
         // clean up tmp table files
         foreach($tmp_table_files as $tmp_file) {
             unlink($tmp_file);
+        }
+        if($zip_close_status == false) {
+            throw new Exception("Unable to create backup file for exporting, bad file path?: $zip_file");
         }
         return $zip_file;
     }

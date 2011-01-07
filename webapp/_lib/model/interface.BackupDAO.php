@@ -38,9 +38,10 @@ interface BackupDAO {
 
     /**
      * Export database to tmp dir
+     * @param $str Backup File (optional)
      * @return $str Path to backup file
      */
-    public function export();
+    public function export($backup_file = null);
 
     /**
      * Import database zip file
