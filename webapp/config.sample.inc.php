@@ -20,7 +20,7 @@ $THINKUP_CFG['timezone']                  = 'America/Los_Angeles';
 // Only admin email should be given for it to work.
 // @TODO Add this to the interface/installer
 $THINKUP_CFG['keep_logged_in']            = true;
-$THINKUP_CFG['login_email']               = '';
+$THINKUP_CFG['admin_email']               = '';
 
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
 $THINKUP_CFG['cache_pages']               = true;
