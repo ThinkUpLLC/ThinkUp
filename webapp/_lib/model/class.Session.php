@@ -29,6 +29,7 @@
  * @copyright 2009-2010 Christoffer Viken, Gina Trapani
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Piyush Mishra <me[at]piyushmishra[dot]com>
  *
  */
 class Session {
@@ -42,6 +43,25 @@ class Session {
      * @var str
      */
     private static $api_salt = "a3cb4f27bdda09a01adb19df892c3650a7001b6fb";
+    /**
+     * Constructs Session
+     *
+     *  Loads config to check for keep_logged_in and logs in the admin_email automatically
+     *  
+     */
+     public function __construct() {
+        $config = Config::getInstance();
+        $owner_dao= DAOFactory::getDAO('OwnerDAO');
+        $user_email= $config->getValue('login_email');
+        if ($config->getValue('keep_logged_in') && isset($user_email) && $owner_dao->doesAdminExist($user_email)) {
+            $owner = $owner_dao->getByEmail($user_email);
+            $this->completeLogin($owner);
+            $owner_dao->updateLastLogin($user_email);
+            $owner_dao->resetFailedLogins($user_email);
+            $owner_dao->clearAccountStatus('');
+        }
+    }
+    
 
     /**
      * @return bool Is user logged into ThinkUp
