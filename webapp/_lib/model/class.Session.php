@@ -52,12 +52,12 @@ class Session {
      public function __construct() {
         $config = Config::getInstance();
         $owner_dao= DAOFactory::getDAO('OwnerDAO');
-        $user_email= $config->getValue('login_email');
-        if ($config->getValue('keep_logged_in') && isset($user_email) && $owner_dao->doesAdminExist($user_email)) {
-            $owner = $owner_dao->getByEmail($user_email);
+        $admin_email= $config->getValue('admin_email');
+        if ($config->getValue('keep_logged_in') && isset($admin_email) && $owner_dao->doesAdminExist($admin_email)) {
+            $owner = $owner_dao->getByEmail($admin_email);
             $this->completeLogin($owner);
-            $owner_dao->updateLastLogin($user_email);
-            $owner_dao->resetFailedLogins($user_email);
+            $owner_dao->updateLastLogin($admin_email);
+            $owner_dao->resetFailedLogins($admin_email);
             $owner_dao->clearAccountStatus('');
         }
     }
