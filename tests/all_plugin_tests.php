@@ -59,6 +59,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoder
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfMapController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/tests/TestOfHelloThinkUpPluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.'tests/TestOfSmartyModifierLinkUsernames.php';
 
 $plugin_tests = & new GroupTest('Plugin tests');
 $plugin_tests->addTestCase(new TestOfExpandURLsPlugin());
@@ -80,5 +81,6 @@ $plugin_tests->addTestCase(new TestOfTwitterPluginConfigurationController());
 $plugin_tests->addTestCase(new TestOfURLProcessor());
 $plugin_tests->addTestCase(new TestOfRetweetDetector());
 $plugin_tests->addTestCase(new TestOfHelloThinkUpPluginConfigurationController());
+$plugin_tests->addTestCase(new TestOfSmartyModiferLinkUsernames());
 
 $plugin_tests->run( new TextReporter());

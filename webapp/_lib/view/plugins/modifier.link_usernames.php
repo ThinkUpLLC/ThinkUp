@@ -9,17 +9,17 @@
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ */
 /**
  * Smarty plugin
  * @package Smarty
@@ -43,21 +43,8 @@
  * @return string
  */
 function smarty_modifier_link_usernames($text, $instance_username, $network) {
-    //TODO: Find a more elegant way to do this that's totally regex-based, not loving this explod/implode approach
     $config = Config::getInstance();
-    $words = explode(" ", $text);
-    $pattern = '/^@[a-zA-Z0-9_]+/';
-    for($k = 0; $k < count($words); $k++) {
-        if ( substr($words[$k], 0, 1) == '@' ) {
-            preg_match($pattern, $words[$k], $matches);
-            $words[$k] = '<a href="'.$config->getValue('site_root_path').'user/?u='.substr($matches[0],1).
-            '&n='.$network.'&i='.$instance_username.'">'.$words[$k].'</a>';
-        } else if ( substr($words[$k], 0, 2) == '(@' ) { //for usersnames in parentheses
-            preg_match($pattern, substr($words[$k], 1, strlen($words[$k])), $matches);
-            $words[$k] = '<a href="'.$config->getValue('site_root_path').'user/?u='.substr($matches[0],1).
-            '&n='.$network.'&i='.$instance_username.'">'.$words[$k].'</a>';
-        }
-    }
-    return implode($words, ' ');
+    $site_root_path = $config->getValue('site_root_path');
+    return preg_replace('/(^|[^a-z0-9_])@([a-z0-9_]+)/i', '$1<a href="'.$site_root_path.'user/?u=$2&n='.$network.
+    '&i='.$instance_username.'">@$2</a>', $text);
 }
-?>

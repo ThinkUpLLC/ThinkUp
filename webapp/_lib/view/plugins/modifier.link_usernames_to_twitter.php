@@ -9,17 +9,17 @@
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
+ */
 /**
  * Smarty plugin
  * @package Smarty
@@ -44,17 +44,5 @@
  * @return string
  */
 function smarty_modifier_link_usernames_to_twitter($text) {
-    $words = explode(" ", $text);
-    $pattern = '/^@[a-zA-Z0-9_]+/';
-    for($k = 0; $k < count($words); $k++) {
-        if ( substr($words[$k], 0, 1) == '@' ) {
-            preg_match($pattern, $words[$k], $matches);
-            $words[$k] = '<a href="http://twitter.com/'.substr($matches[0],1).'">'.$words[$k].'</a>';
-        } else if ( substr($words[$k], 0, 2) == '(@' ) { //for usersnames in parentheses
-            preg_match($pattern, substr($words[$k], 1, strlen($words[$k])), $matches);
-            $words[$k] = '<a href="http://twitter.com/'.substr($matches[0],1).'">'.$words[$k].'</a>';
-        }
-    }
-    return implode($words, ' ');
+    return preg_replace('/(^|[^a-z0-9_])@([a-z0-9_]+)/i', '$1<a href="http://twitter.com/$2">@$2</a>', $text);
 }
-?>
