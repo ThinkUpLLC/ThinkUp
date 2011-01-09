@@ -82,21 +82,23 @@
     </div> <!-- end #app_setting -->
     {/if}
 
-    <div class="section" id="instances">
+    <div class="sections" id="instances">
       <div class="thinkup-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
-{include file="_usermessage.tpl"}
-          <form name="changepass" method="post" action="index.php?m=manage#instances" class="login prepend_20 append_20">
+        {include file="_usermessage.tpl"}
+          <form name="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
             <div class="clearfix">
               <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>
-              <div class="grid_9 left"><input name="oldpass" type="password" id="oldpass"></div>
+              <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
+                <input name="oldpass" type="password" id="oldpass">
+              </div>
             </div>
             <div class="clearfix">
               <div class="grid_9 prefix_1 right"><label for="pass1">New password:</label></div>
               <div class="grid_9 left">
                 <input name="pass1" type="password" id="pass1">
                 <br>
-                <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: .5em 0.7em;"> 
+                <div class="ui-state-highlight ui-corner-all" style="margin: 10px 0px 10px 0px; padding: .5em 0.7em;"> 
                   <p>
                     <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
                     Must be at least 5 characters.
@@ -107,7 +109,7 @@
                 <div class="grid_9 prefix_1 right">
                   <label for="pass2">Re-type new password:</label>
                 </div>
-                <div class="grid_9 left">
+                <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
                   <input name="pass2" type="password" id="pass2">
                 </div>
               </div>
