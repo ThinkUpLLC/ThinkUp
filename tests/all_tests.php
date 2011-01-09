@@ -31,6 +31,8 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
 $RUNNING_ALL_TESTS = true;
+$TOTAL_PASSES = 0;
+$TOTAL_FAILURES = 0;
 
 require_once THINKUP_ROOT_PATH.'tests/all_model_tests.php';
 
@@ -41,3 +43,8 @@ require_once THINKUP_ROOT_PATH.'tests/all_integration_tests.php';
 require_once THINKUP_ROOT_PATH.'tests/all_install_tests.php';
 
 require_once THINKUP_ROOT_PATH.'tests/all_controller_tests.php';
+
+echo "
+Total ThinkUp test passes: ".$TOTAL_PASSES."
+Total ThinkUp test failures: ".$TOTAL_FAILURES."
+";

@@ -46,4 +46,10 @@ $web_tests->addTestCase(new WebTestOfLogin());
 $web_tests->addTestCase(new WebTestOfCaptchaImage());
 $web_tests->addTestCase(new WebTestOfTwitterDashboard());
 $web_tests->addTestCase(new WebTestOfPostDetailPage());
-$web_tests->run( new TextReporter());
+
+$tr = new TextReporter();
+$web_tests->run( $tr );
+if (isset($RUNNING_ALL_TESTS) && $RUNNING_ALL_TESTS) {
+    $TOTAL_PASSES = $TOTAL_PASSES + $tr->getPassCount();
+    $TOTAL_FAILURES = $TOTAL_FAILURES + $tr->getFailCount();
+}

@@ -41,4 +41,9 @@ $installer_tests = & new GroupTest('Installer tests');
 $installer_tests->addTestCase(new WebTestOfInstallation());
 $installer_tests->addTestCase(new WebTestOfUpgradeDatabase());
 
-$installer_tests->run( new TextReporter());
+$tr = new TextReporter();
+$installer_tests->run( $tr );
+if (isset($RUNNING_ALL_TESTS) && $RUNNING_ALL_TESTS) {
+    $TOTAL_PASSES = $TOTAL_PASSES + $tr->getPassCount();
+    $TOTAL_FAILURES = $TOTAL_FAILURES + $tr->getFailCount();
+}

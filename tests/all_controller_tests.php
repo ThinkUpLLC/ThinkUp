@@ -60,4 +60,10 @@ $controller_test->addTestCase(new TestOfPluginOptionController());
 $controller_test->addTestCase(new TestOfTestAuthAPIController());
 $controller_test->addTestCase(new TestOfRSSController());
 $controller_test->addTestCase(new TestOfUpgradeController());
-$controller_test->run( new TextReporter());
+
+$tr = new TextReporter();
+$controller_test->run( $tr );
+if (isset($RUNNING_ALL_TESTS) && $RUNNING_ALL_TESTS) {
+    $TOTAL_PASSES = $TOTAL_PASSES + $tr->getPassCount();
+    $TOTAL_FAILURES = $TOTAL_FAILURES + $tr->getFailCount();
+}

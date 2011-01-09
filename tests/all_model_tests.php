@@ -69,4 +69,9 @@ $model_tests->addTestCase(new TestOfMutexMySQLDAO());
 $model_tests->addTestCase(new TestOfBackupMySQLDAO());
 $model_tests->addTestCase(new TestOfFavoritePostMySQLDAO());
 
-$model_tests->run( new TextReporter());
+$tr = new TextReporter();
+$model_tests->run( $tr );
+if (isset($RUNNING_ALL_TESTS) && $RUNNING_ALL_TESTS) {
+    $TOTAL_PASSES = $TOTAL_PASSES + $tr->getPassCount();
+    $TOTAL_FAILURES = $TOTAL_FAILURES + $tr->getFailCount();
+}

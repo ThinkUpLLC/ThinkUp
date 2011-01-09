@@ -83,4 +83,9 @@ $plugin_tests->addTestCase(new TestOfRetweetDetector());
 $plugin_tests->addTestCase(new TestOfHelloThinkUpPluginConfigurationController());
 $plugin_tests->addTestCase(new TestOfSmartyModiferLinkUsernames());
 
-$plugin_tests->run( new TextReporter());
+$tr = new TextReporter();
+$plugin_tests->run( $tr );
+if (isset($RUNNING_ALL_TESTS) && $RUNNING_ALL_TESTS) {
+    $TOTAL_PASSES = $TOTAL_PASSES + $tr->getPassCount();
+    $TOTAL_FAILURES = $TOTAL_FAILURES + $tr->getFailCount();
+}
