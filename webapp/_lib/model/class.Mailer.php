@@ -27,9 +27,15 @@
  */
 class Mailer {
     public static function mail($to, $subject, $message) {
-        $mailheader = "From: \"Auto-Response\" <notifications@host>\r\n";
+        $host = self::getHost();
+
+        $mailheader = "From: \"Auto-Response\" <notifications@{$host}>\r\n";
         $mailheader .= "X-Mailer: PHP/".phpversion();
         mail($to, $subject, $message, $mailheader);
+    }
+
+    private static function getHost() {
+        return $_SERVER['HTTP_HOST'];
     }
 }
 ?>
