@@ -40,6 +40,8 @@ THINKUP_ROOT_PATH . 'tests/fixtures/'
 
 /* PLUGIN TESTS */
 require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/embedthread/tests/TestOfThinkUpEmbedController.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/embedthread/tests/TestOfThreadJSController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookCrawler.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/tests/TestOfFacebookPluginConfigurationController.php';
@@ -63,6 +65,8 @@ require_once THINKUP_ROOT_PATH.'tests/TestOfSmartyModifierLinkUsernames.php';
 
 $plugin_tests = & new GroupTest('Plugin tests');
 $plugin_tests->addTestCase(new TestOfExpandURLsPlugin());
+$plugin_tests->addTestCase(new TestOfThinkUpEmbedController());
+$plugin_tests->addTestCase(new TestOfThreadJSController());
 $plugin_tests->addTestCase(new TestOfFacebookCrawler());
 $plugin_tests->addTestCase(new TestOfFacebookPlugin());
 $plugin_tests->addTestCase(new TestOfFacebookPluginConfigurationController());
