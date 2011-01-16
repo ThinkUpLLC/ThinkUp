@@ -31,6 +31,12 @@
  *
  */
 class PostController extends ThinkUpController {
+
+    /**
+     *  Replies Top 20 Words number of reply post min to show option in menu...
+     */
+    const TOP_20_WORDS_POST_MIN = 20;
+
     /**
      * View name
      * @var str
@@ -43,6 +49,8 @@ class PostController extends ThinkUpController {
         $post_dao = DAOFactory::getDAO('PostDAO');
         $this->setPageTitle('Post Details');
         $this->setViewTemplate('post.index.tpl');
+        $this->addToView('top_20_post_min', self::TOP_20_WORDS_POST_MIN);
+
         $network = (isset($_GET['n']) )?$_GET['n']:'twitter';
         if ($this->shouldRefreshCache()) {
             if ( isset($_GET['t']) && is_numeric($_GET['t']) ) {

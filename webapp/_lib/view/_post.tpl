@@ -22,7 +22,8 @@
     </div>
     <div class="grid_3 right small">
       {if $t->network == 'twitter' && $username_link != 'internal'}
-      <a href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
+      <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
+      href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
       {else}
       <a href="{$site_root_path}public.php?u={$t->author_username|urlencode}&n={$t->network|urlencode}">
         {$t->author_username}
@@ -39,7 +40,11 @@
       <div class="post">
         {if $t->post_text}
           {if $scrub_reply_username}
+            {if $reply_count && $reply_count > $top_20_post_min}
+                <div class="reply_text" id="reply_text-{$smarty.foreach.foo.iteration}">
+            {/if} 
             {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
+            {if $reply_count && $reply_count > $top_20_post_min}</div>{/if}
           {else}
             {$t->post_text|link_usernames_to_twitter}
           {/if}
