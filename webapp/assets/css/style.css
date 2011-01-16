@@ -176,11 +176,22 @@ text-align: center;
 #nav-sidebar ul.side-subnav li a:hover {color: white;}
 #top-level-sidenav {margin-top:7px}
 #nav-sidebar ul.side-subnav .currentview a, #nav-sidebar ul.side-subnav .currentview a:hover {
-	color: #6184B5;
-	background-color: #E6E6E6;
-	-moz-border-radius: 3px;-webkit-border-radius: 3px;
-	background-color: #e6e6e6;
-	background: -moz-linear-gradient(top, #FFFFFF, #E6E6E6);  
-	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#E6E6E6));  
-	border: 0px solid #ddd;
+  color: #6184B5;
+  background-color: #E6E6E6;
+  -moz-border-radius: 3px;-webkit-border-radius: 3px;
+  background-color: #e6e6e6;
+  background: -moz-linear-gradient(top, #FFFFFF, #E6E6E6);  
+  background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#E6E6E6));  
+  border: 0px solid #ddd;
 }
+
+/* word frequency list */
+.word-frequency-div div {
+  float: left;;
+  list-style-type: none;
+  background-color: #2a98de;
+  padding: 1px 4px 1px 4px;
+  margin: 10px 5px 0px 5px;
+}
+.word-frequency-count { font-weight: bold; }
+.word-frequency-word { cursor: pointer; }

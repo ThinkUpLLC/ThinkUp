@@ -6,13 +6,16 @@
         <div id="nav-sidebar">
         <ul id="top-level-sidenav"><br />
         {if $post}
-        <ul class="side-subnav">
-        <li{if $smarty.get.v eq ''} class="currentview"{/if}><a href="index.php?t={$post->post_id}&n={$post->network}">Post Replies&nbsp;&nbsp;&nbsp;</a></li>
-      {if $logged_in_user}
-        <li><a href="#" class="grid_search" title="Search" onclick="return false;"><span  id="grid_search_icon">Search & Filter Replies</span></a></li>
-      {/if}
-        <li><a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">Export Replies (CSV)</a></li>
-        </ul></li>
+          <ul class="side-subnav">
+          <li{if $smarty.get.v eq ''} class="currentview"{/if}><a href="index.php?t={$post->post_id}&n={$post->network}">Post Replies&nbsp;&nbsp;&nbsp;</a></li>
+          {if $logged_in_user}
+            <li><a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search & Filter Replies</span></a></li>
+          {/if}
+          <li><a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">Export Replies (CSV)</a></li>
+          {if $post->reply_count_cache > $top_20_post_min}
+            <li><a href="#" class="grid_search" title="Search" onclick="return false;"><span class="word_frequency">Top 20 Words</span></a></li>
+          {/if}
+          </ul></li>
         {/if}
         {if $sidebar_menu}
             {foreach from=$sidebar_menu key=smkey item=sidebar_menu_item name=smenuloop}
@@ -95,9 +98,18 @@
           </div> <!-- end .clearfix -->
           {if $replies}
             <div class="append_20 clearfix"><br />
-              {foreach from=$replies key=tid item=t name=foo}
-                {include file="_post.tpl" t=$t sort='no' scrub_reply_username=true}
-              {/foreach}
+              {if $post->reply_count_cache > $top_20_post_min}
+                 {include file="_post.word-frequency.tpl"}
+              {/if}
+              <div id="post-replies-div">
+                {foreach from=$replies key=tid item=t name=foo}
+                  {include file="_post.tpl" t=$t sort='no' scrub_reply_username=true reply_count=$post->reply_count_cache}
+                {/foreach}
+              </div>
+              {if $post->reply_count_cache > $top_20_post_min}
+              {include file="_post.word-frequency.tpl"}
+              <script src="{$site_root_path}assets/js/word_frequency.js" type="text/javascript"></script>
+              {/if}
               {if !$logged_in_user && $private_reply_count > 0}
               <span style="font-size:12px">Not showing {$private_reply_count} private repl{if $private_reply_count == 1}y{else}ies{/if}.</span>
               {/if}
