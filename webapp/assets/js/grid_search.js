@@ -136,9 +136,15 @@ var TUGridSearch = function() {
         if(tu_grid_search.loading) { return; };
         tu_grid_search.loading = true;
         window.scroll(0,0);
-        $('#screen').css({ opacity: 0.7, "width":$(document).width(),"height":$(document).height()});
-        $('#screen').fadeIn(500, function() {
-            $('#grid_overlay_div').show();
+        var fade = 1;
+        if(typeof(GS_NO_OVERLAY) == 'undefined') {
+            $('#screen').css({ opacity: 0.7, "width":$(document).width(),"height":$(document).height()});
+            fade = 500;
+        }
+        $('#screen').fadeIn(fade, function() {
+            if(typeof(GS_NO_OVERLAY) == 'undefined') {
+                $('#grid_overlay_div').show();
+            }
             $('#grid_iframe').show();
             var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
             query_string = 'not=true';
