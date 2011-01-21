@@ -62,7 +62,7 @@ def update_source(filename, shortfn, copyright):
     isUTF = False
     nl = get_copyright_namelist(filename, False)
     filename_str = filename.replace(THINKUP_HOME, "ThinkUp")
-    copyright_str = "* " + filename_str + "\n*\n* Copyright (c) 2009-2010 " + nl +"\n"
+    copyright_str = " * " + filename_str + "\n *\n * Copyright (c) 2009-2010 " + nl +"\n"
 
     phpHeader = ""
     if (fdata.startswith(utfstr)):
@@ -75,7 +75,7 @@ def update_source(filename, shortfn, copyright):
     tempfn = "/tmp" + shortfn
     nla = get_copyright_namelist(filename, True)
     nlc = get_copyright_namelist(filename, False)
-    fdata = phpHeader + "/**\n*\n" + copyright_str + copyright + build_docblock(nla, nlc) + fdata
+    fdata = phpHeader + "/**\n *\n" + copyright_str + copyright + build_docblock(nla, nlc) + fdata
     if (isUTF):
       file(tempfn,"w").write(utfstr+fdata)
     else:
@@ -115,12 +115,12 @@ def recursive_traversal(dir, copyright):
 def build_docblock(nla, nlc):
   if nla is not "":
     nla += "\n"
-  docblock = ("%s" + build_docblock_lic_copy(nlc) +"*/\n") % (nla,)
+  docblock = ("%s" + build_docblock_lic_copy(nlc) +" */\n") % (nla,)
   return docblock
     
 def build_docblock_lic_copy(nl):
   global license_line
-  return "* @license %s\n* @copyright 2009-2010 %s\n" % (license_line, nl)
+  return " * @license %s\n * @copyright 2009-2010 %s\n" % (license_line, nl)
 
 def get_copyright_namelist(filename, emailsp):
 
@@ -149,7 +149,7 @@ def numstrip(line, emailsp):
     if (emailsp):
         nl = nl.replace("@", "[at]")
         nl = nl.replace(".", "[dot]")
-        nl = "* @author " + nl
+        nl = " * @author " + nl
     return nl
 
 
