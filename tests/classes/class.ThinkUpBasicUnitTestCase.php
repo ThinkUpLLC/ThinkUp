@@ -54,6 +54,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         }
         $webapp = Webapp::getInstance();
         $crawler = Crawler::getInstance();
+        $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
     }
 
     /**
@@ -129,4 +130,12 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
             $_SESSION[$config->getValue('source_root_path')]['user_is_admin'] = true;
         }
     }
+
+    public function debug($message) {
+        if($this->DEBUG) {
+            $bt = debug_backtrace();
+            print get_class($this) . ": line " . $bt[0]['line'] . " - " . $message . "\n";
+        }
+    }
+
 }
