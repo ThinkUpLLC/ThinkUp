@@ -51,6 +51,9 @@ try {
             usage();
         } else {
 
+            // set global mutex
+            BackupController::mutexLock();
+
             putenv('BACKUP_VERBOSE=true');
             $backup_dao = DAOFactory::getDAO('BackupDAO');
             if($argv[0] == '--export') {
@@ -67,6 +70,10 @@ try {
                 print "\nImport completed...\n\n";
 
             }
+
+            // release global mutex
+            BackupController::mutexLock(true);
+
         }
     }
 } catch(Exception $e) {
