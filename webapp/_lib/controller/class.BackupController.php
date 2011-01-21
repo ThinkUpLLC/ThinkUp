@@ -43,6 +43,7 @@ class BackupController extends ThinkUpAdminController {
         try {
             $backup_dao = DAOFactory::getDAO('BackupDAO');
             if(isset($_GET['backup'])) {
+                self::mutexLock();
                 /* export/download backup file */
                 $backup_dao->export();
                 if( ! headers_sent() ) { // this is so our test don't barf on us
@@ -63,7 +64,9 @@ class BackupController extends ThinkUpAdminController {
                 } else {
                     throw new Exception("Unable to read backup zip file: " + $this->backup_file);
                 }
+                self::mutexLock(true);
             } else if(isset($_FILES['backup_file'])) {
+                self::mutexLock();
                 /* upload backup file */
                 if($_FILES['backup_file']['error']) {
                     if($_FILES['backup_file']['error'] == UPLOAD_ERR_INI_SIZE) {
@@ -79,7 +82,7 @@ class BackupController extends ThinkUpAdminController {
                     $this->addSuccessMessage("Data Import Successfull!");
                     return $this->generateView();
                 }
-
+                self::mutexLock(true);
             } else {
                 /* load default form */
                 return $this->generateView();
@@ -87,6 +90,25 @@ class BackupController extends ThinkUpAdminController {
         } catch (Exception  $e) {
             $this->addErrorMessage($e->getMessage());
             return $this->generateView();
+        }
+    }
+
+    /**
+     *
+     * @param boolean $release, if defined release mutex, else get it
+     * @throws CrawlerLockedException if unable to get crawler mutex
+     */
+    static function mutexLock($release = false) {
+        $mutex_dao = DAOFactory::getDAO('MutexDAO');
+        $global_mutex_name = Crawler::GLOBAL_MUTEX;
+        if($release) {
+            $mutex_dao->releaseMutex($global_mutex_name);
+        } else {
+            // Everyone needs to check the global mutex
+            $lock_successful = $mutex_dao->getMutex($global_mutex_name);
+            if (! $lock_successful) {
+                throw new CrawlerLockedException("A crawl is in progress, please wait until completed...");
+            }
         }
     }
 }
