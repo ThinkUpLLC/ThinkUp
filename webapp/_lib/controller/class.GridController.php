@@ -31,33 +31,28 @@
  *
  */
 class GridController extends ThinkUpAuthController {
-
     /**
      * const max rows for grid
      */
     const MAX_ROWS = 5000;
-
     /**
      * number of days to look back for retweeted posts
      */
     const MAX_RT_DAYS = 30;
-
     /**
      * Required query string parameters
      * @var array u = instance username, n = network
      */
     var $REQUIRED_PARAMS = array('u', 'n');
-
     /**
      *
      * @var boolean
      */
     var $is_missing_param = false;
-
     /**
      * Constructor
      * @param bool $session_started
-     * @return InlineViewController
+     * @return GridController
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
@@ -80,7 +75,7 @@ class GridController extends ThinkUpAuthController {
     }
 
     /**
-     * Outputs javascript callback string with json array/list of post as an argument
+     * Outputs JavaScript callback string with json array/list of post as an argument
      */
     public function authControl() {
         $this->setContentType('text/javascript');
@@ -111,7 +106,7 @@ class GridController extends ThinkUpAuthController {
                     $cnt = 0;
                     foreach($posts_it as $key => $value) {
                         $cnt++;
-                        $data = array('id' => $cnt, 'text' => $value->post_text, 
+                        $data = array('id' => $cnt, 'text' => $value->post_text,
                         'post_id_str' => $value->post_id . '_str', 'author' => $value->author_username, 
                         'date' => $value->adj_pub_date);
                         echo json_encode($data) . ",\n";
@@ -128,6 +123,5 @@ class GridController extends ThinkUpAuthController {
         } else {
             echo '{"status":"failed","message":"Missing Parameters"}';
         }
-
     }
 }

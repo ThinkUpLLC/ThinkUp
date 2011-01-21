@@ -74,8 +74,8 @@ class ExportController extends ThinkUpAuthController {
                             $this->exportReplies();
                             break;
                         case 'favorites':
-                          $this->exportAllFavPosts();
-                          break;
+                            $this->exportAllFavPosts();
+                            break;
                         case 'posts':
                         default:
                             $this->exportAllPosts();
@@ -98,7 +98,7 @@ class ExportController extends ThinkUpAuthController {
 
         self::outputCSV($posts_it, $column_labels, 'posts-'.$_GET['u'].'-'.$_GET['n']);
     }
-    
+
     protected function exportAllFavPosts() {
         $fpost_dao = DAOFactory::getDAO('FavoritePostDAO');
         $posts_it = $fpost_dao->getAllFavoritePostsByUsernameIterator($_GET['u'], $_GET['n']);
