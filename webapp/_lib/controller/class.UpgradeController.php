@@ -71,7 +71,9 @@ class UpgradeController extends ThinkUpAuthController {
      * @return UpgradeController
      */
     public function __construct($session_started=false) {
-        parent::__construct($session_started);
+        if(! getenv('CLI_BACKUP')) {
+            parent::__construct($session_started);
+        }
     }
 
     public function authControl() {

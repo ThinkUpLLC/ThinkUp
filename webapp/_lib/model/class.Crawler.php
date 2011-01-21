@@ -31,6 +31,13 @@
  *
  */
 class Crawler extends PluginHook {
+
+    /**
+     *
+     * @var Crawler
+     */
+    const GLOBAL_MUTEX = 'crawler';
+
     /**
      *
      * @var Crawler
@@ -82,7 +89,7 @@ class Crawler extends PluginHook {
             throw new InstallerException("ThinkUp needs a database migration, so we are unable to run the crawler.");
         }
 
-        $global_mutex_name = 'crawler';
+        $global_mutex_name = self::GLOBAL_MUTEX;
 
         // Everyone needs to check the global mutex
         $lock_successful = $mutex_dao->getMutex($global_mutex_name);
