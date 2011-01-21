@@ -91,7 +91,7 @@ class Logger {
      * Open the log file; Append to any prior file
      * @param str $location
      */
-    public function __construct($location, $debug = false) {
+    private function __construct($location, $debug = false) {
         if ( $location != false ) {
             $this->log = $this->openFile($location, 'a');
         }

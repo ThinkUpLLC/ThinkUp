@@ -53,11 +53,11 @@ class Config {
      */
     var $config = array();
     /**
-     * Constructor
+     * Private Constructor
      * @param array $vals Optional values to override file config
      * @return Config
      */
-    public function __construct($vals = null) {
+    private function __construct($vals = null) {
         if ($vals != null ) {
             $this->config = $vals;
         } else {

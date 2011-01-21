@@ -9,22 +9,21 @@
  *
  * This file is part of ThinkUp (http://thinkupapp.com).
  *
- * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any 
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see 
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
-*/
-/**
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
-*/
+ */
 if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
     require_once '../../../../tests/config.tests.inc.php';
 }
@@ -35,19 +34,12 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/classes/mo
 
 class TestOfFlickrAPIAccessor extends UnitTestCase {
 
-    function TestOfFlickrAPIAccessor() {
+    public function TestOfFlickrAPIAccessor() {
         $this->UnitTestCase('FlickrAPIAccessor class test');
     }
 
-    function setUp() {
-    }
-
-    function tearDown() {
-    }
-
-    function testGetFlickrPhotoSourceFlickrAPINonResponsive() {
-        global $THINKUP_CFG;
-        $logger = new Logger($THINKUP_CFG['log_location']);
+    public function testGetFlickrPhotoSourceFlickrAPINonResponsive() {
+        $logger = Logger::getInstance();
         $fa = new FlickrAPIAccessor('dummykey', $logger);
 
         $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AEasdfasdfasdfasdfasdf');
@@ -57,9 +49,8 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
         $logger->close();
     }
 
-    function testGetFlickrPhotoSourceNoFlickrAPIKey() {
-        global $THINKUP_CFG;
-        $logger = new Logger($THINKUP_CFG['log_location']);
+    public function testGetFlickrPhotoSourceNoFlickrAPIKey() {
+        $logger = Logger::getInstance();
         $fa = new FlickrAPIAccessor('', $logger);
 
         $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AE');
@@ -70,9 +61,8 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
         $logger->close();
     }
 
-    function testGetFlickrPhotoSourceFlickrAPIReturnsError() {
-        global $THINKUP_CFG;
-        $logger = new Logger($THINKUP_CFG['log_location']);
+    public function testGetFlickrPhotoSourceFlickrAPIReturnsError() {
+        $logger = Logger::getInstance();
         $fa = new FlickrAPIAccessor('dummykey', $logger);
 
         $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AE');
@@ -82,9 +72,8 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
         $logger->close();
     }
 
-    function testGetFlickrPhotoSourceSuccess() {
-        global $THINKUP_CFG;
-        $logger = new Logger($THINKUP_CFG['log_location']);
+    public function testGetFlickrPhotoSourceSuccess() {
+        $logger = Logger::getInstance();
         $fa = new FlickrAPIAccessor('dummykey', $logger);
 
         $this->assertTrue(isset($fa));
@@ -94,6 +83,4 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
 
         $logger->close();
     }
-
 }
-?>
