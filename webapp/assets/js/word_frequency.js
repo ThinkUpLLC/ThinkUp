@@ -29,7 +29,7 @@ var TUWordFrequency = function() {
     /* our word temnplates... */
     this.word_template = '<div class="word-frequency-word" id="${id}"><span class="word-frequency-count">' +
         '${count}</span>&nbsp;${word}</div>';
-    this.post_template = '<div style="padding: 10px;">${post} - <a href="http://twitter.com/${author}">${author}</a>';
+    this.post_template = '<div style="padding: 10px;">${post} <a href="http://twitter.com/${author}">${author}</a>';
 
     /* our stop words... */
     this.stop_words = new Array('i', 'a', '-', "a's", "able", "about", "above", "according", "accordingly", "across", 
@@ -104,7 +104,9 @@ var TUWordFrequency = function() {
         }
         $('.word_frequency').each(function(index) {
             $(this).click(function() {
-                tu_word_freq.find_words();
+                $('#word-frequency-spinner').show();
+                $('#word-frequency-div').show();
+                setTimeout(function() { tu_word_freq.find_words(); } , 300);
             });
         });
         
@@ -155,9 +157,9 @@ var TUWordFrequency = function() {
             if(i >= 20 ) {
                 break;
             }
-            var sorted_word = this.sorted_words[i]; 
+            var sorted_word = this.sorted_words[i];
             var litext = this.word_template.replace(/\${count}/, sorted_word['count']);
-            var litext = litext.replace(/\${word}/, sorted_word['word']);
+            var litext = litext.replace(/\${word}/, sorted_word['default']);
             var litext = litext.replace(/\${id}/, 'sorted_word' + i);
             $('#word-frequency-words').append(litext);
         }
@@ -176,11 +178,17 @@ var TUWordFrequency = function() {
                     var author = $('#' + author_id).html();
                     var post = tu_word_freq.post_template.replace(/\${post}/, post);
                     if(author) {
-                        var post = post.replace(/\${author}/, author);
-                        var post = post.replace(/\${author}/, '@' + author);
+                        post = post.replace(/\${author}/, author);
+                        post = post.replace(/\${author}/, ' - @' + author);
+                    } else {
+                        post = post.replace(/\${author}/g, '');
                     }
                     var regex = new RegExp(sorted_word['word'], 'ig');
                     post = post.toString().replace(regex, '<strong><i>' + sorted_word['word']  + '</i></strong>');
+                    for(var unstemmed in sorted_word['unstemmed'][key]) {
+                        var regex = new RegExp(unstemmed, 'ig');
+                        post = post.toString().replace(regex, '<strong><i>' + unstemmed  + '</i></strong>');
+                    }
                     $('#word-frequency-posts').append(post);
                 }
                 $('#word-frequency-posts-div').show();
@@ -197,34 +205,49 @@ var TUWordFrequency = function() {
      */
     this.get_words = function(text, reply_id) {
         var words = text.split(/\s+/g);
-        words.pop(); words.shift();
         var cleaned_words = Array();
+
         for(j = 0; j < words.length; j++) {
             var tmp_word = words[j].toLowerCase();
+
             // clean a bit...
+            tmp_word = tmp_word.replace(/^("|\(|')|("|'|\))$/g, '');
             tmp_word = tmp_word.replace(/('s|\?|\.|!|,|'s(\.|\?|!))$/g, '');
+            tmp_word = tmp_word.replace(/^'|^"|'$|"$/g, '');
             var good_status = true;
-            if(tmp_word.length < 3 || tmp_word.match(/^&/) || this.stop_words_lookup[tmp_word]) { 
+
+            var stemmer = new Snowball('english');
+            stemmer.setCurrent(tmp_word);
+            stemmer.stem();
+            var stemmer_word = stemmer.getCurrent();
+
+            if(stemmer_word.length < 3 || tmp_word.match(/^&/) || this.stop_words_lookup[stemmer_word]) { 
                 good_status = false; 
             }
             if(good_status) {
-                cleaned_words[cleaned_words.length] = tmp_word;
-                if(this.words[tmp_word]) {
+                cleaned_words[cleaned_words.length] = stemmer_word;
+                if(this.words[stemmer_word]) {
                     var cnt = 
-                    this.words[tmp_word]['count']++;
+                    this.words[stemmer_word]['count']++;
                 } else {
-                    this.words[tmp_word] = {count: 1};
+                    this.words[stemmer_word] = {count: 1};
                 }
             }
             
             // store post ids with the word...
-            if( this.words[tmp_word] ) {
-                if(! this.words[tmp_word]['reply_ids']) {
-                    this.words[tmp_word]['reply_ids'] = new Object();
+            if( this.words[stemmer_word] ) {
+                if(! this.words[stemmer_word]['reply_ids']) {
+                    this.words[stemmer_word]['reply_ids'] = new Object();
+                    this.words[stemmer_word]['unstemmed'] = new Object();
+                    this.words[stemmer_word]['default'] = tmp_word;
                 }
-                if(! this.words[tmp_word]['reply_ids'][reply_id]) {
-                    this.words[tmp_word]['reply_ids'][reply_id] = reply_id;
+                if(! this.words[stemmer_word]['reply_ids'][reply_id]) {
+                    this.words[stemmer_word]['reply_ids'][reply_id] = reply_id;
                 }
+                if(! this.words[stemmer_word]['unstemmed'][reply_id]) {
+                    this.words[stemmer_word]['unstemmed'][reply_id] = new Object();
+                }
+                this.words[stemmer_word]['unstemmed'][reply_id][tmp_word] = true;
             }
         }
         return cleaned_words;
@@ -237,7 +260,14 @@ var TUWordFrequency = function() {
         //create an array of word counts form our object for sorting
         var wordlist = new Array();
         for (var key in this.words) {
-            wordlist[wordlist.length] = {word: key, count: this.words[key]['count']};
+            if(this.words[key]['count'] < 2) {
+                continue;
+            }
+            wordlist[wordlist.length] = {
+                    word: key, count: this.words[key]['count'], 
+                    default: this.words[key]['default'],
+                    unstemmed: this.words[key]['unstemmed']
+            };
         }
 
         // our comparator
@@ -251,6 +281,22 @@ var TUWordFrequency = function() {
         wordlist = wordlist.sort(compare);
         return wordlist;
     }
+    
+    /**
+     * soundex js
+     * NOTE: not currently using...
+     */
+    this.soundex = function(string, p){
+        var i, j, l, r, p = isNaN(p) ? 4 : p > 10 ? 10 : p < 4 ? 4 : p,
+                m = {BFPV: 1, CGJKQSXZ: 2, DT: 3, L: 4, MN: 5, R: 6},
+                r = (s = string.toUpperCase().replace(/[^A-Z]/g, "").split("")).splice(0, 1);
+        for(i = -1, l = s.length; ++i < l;)
+            for(j in m)
+                if(j.indexOf(s[i]) + 1 && r[r.length-1] != m[j] && r.push(m[j]))
+                    break;
+        return r.length > p && (r.length = p), r.join("") + (new Array(p - r.length + 1)).join("0");
+    }
+
 }
 
 var tu_word_freq = new TUWordFrequency();

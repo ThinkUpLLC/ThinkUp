@@ -108,6 +108,7 @@
               </div>
               {if $post->reply_count_cache > $top_20_post_min}
               {include file="_post.word-frequency.tpl"}
+              <script src="{$site_root_path}assets/js/extlib/Snowball.stemmer.min.js" type="text/javascript"></script>
               <script src="{$site_root_path}assets/js/word_frequency.js" type="text/javascript"></script>
               {/if}
               {if !$logged_in_user && $private_reply_count > 0}
