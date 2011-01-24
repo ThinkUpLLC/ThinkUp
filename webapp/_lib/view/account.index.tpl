@@ -118,7 +118,9 @@
                 <div class="prepend append">
                 <div class="grid_20 bt prepend append">
                   <span class="grid_4 omega" id="spanowneractivation{$o->id}">
-                      <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerButton" id="{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+                      {if !$o->is_admin}
+                      <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+                      {/if}
                   </span>
                   <span style="display: none;" class='success mt_10' id="message1{$o->id}"></span>
                 {/if}
@@ -290,6 +292,8 @@ $(function() {
   
     $(function() {
     var activateOwner = function(u) {
+      //removing the "user" to stop conflict with plugins
+      u = u.substr(4);
       var dataString = 'oid=' + u + "&a=1";
       $.ajax({
         type: "GET",
@@ -301,10 +305,10 @@ $(function() {
             $('#message1' + u);
           });
           $('#spanownernamelink' + u).css('display', 'inline');
-          $('#' + u).val('Deactivate');
+          $('#user' + u).val('Deactivate');
           $('#spanownernametext' + u).css('display', 'none');
-          $('#' + u).removeClass('btnActivate');
-          $('#' + u).addClass('btnDectivate');
+          $('#user' + u).removeClass('btnActivate');
+          $('#user' + u).addClass('btnDectivate');
           setTimeout(function() {
               $('#message1' + u).css('display', 'none');
               $('#spanowneractivation' + u).hide().fadeIn(1500);
@@ -317,6 +321,8 @@ $(function() {
     };
 
     var deactivateOwner = function(u) {
+      //removing the "user" to stop conflict with plugins
+      u = u.substr(4);
       var dataString = 'oid=' + u + "&a=0";
       $.ajax({
         type: "GET",
@@ -329,9 +335,9 @@ $(function() {
           });
           $('#spanownernamelink' + u).css('display', 'none');
           $('#spanownernametext' + u).css('display', 'inline');
-          $('#' + u).val('Activate');
-          $('#' + u).removeClass('btnDeactivate');
-          $('#' + u).addClass('btnActivate');
+          $('#user' + u).val('Activate');
+          $('#user' + u).removeClass('btnDeactivate');
+          $('#user' + u).addClass('btnActivate');
           setTimeout(function() {
               $('#message1' + u).css('display', 'none');
               $('#spanowneractivation' + u).hide().fadeIn(1500);
