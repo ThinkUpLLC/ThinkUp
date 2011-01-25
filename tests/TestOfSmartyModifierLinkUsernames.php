@@ -49,6 +49,7 @@ class TestOfSmartyModiferLinkUsernames extends ThinkUpBasicUnitTestCase {
 
     public function __construct() {
         $this->UnitTestCase('Link Twitter usernames Smarty modifier test');
+        $config = Config::getInstance();
         $this->test_tweets = array(
         "Hey @anildash think this up!", 
         "If you're interested, @ me details", 
@@ -57,12 +58,15 @@ class TestOfSmartyModiferLinkUsernames extends ThinkUpBasicUnitTestCase {
         "Blah blah blah (@username). Blah blah");
 
         $this->internally_linked_tweets = array(
-        'Hey <a href="/user/?u=anildash&n=twitter&i=me">@anildash</a> think this up!', 
+        'Hey <a href="' . $config->getValue('site_root_path') .
+        'user/?u=anildash&n=twitter&i=me">@anildash</a> think this up!', 
         "If you're interested, @ me details", 
-        '.<a href="/user/?u=anildash&n=twitter&i=me">@anildash</a> thinks so',
-        'This is a tweet with multiple usernames like <a href="/user/?u=waxpancake&n=twitter&i=me">@waxpancake</a> '.
-        'and <a href="/user/?u=thinkupapp&n=twitter&i=me">@thinkupapp</a>',
-        'Blah blah blah (<a href="/user/?u=username&n=twitter&i=me">@username</a>). Blah blah');
+        '.<a href="'.$config->getValue('site_root_path') .'user/?u=anildash&n=twitter&i=me">@anildash</a> thinks so',
+        'This is a tweet with multiple usernames like <a href="' . $config->getValue('site_root_path') . 
+        'user/?u=waxpancake&n=twitter&i=me">@waxpancake</a> '.
+        'and <a href="' . $config->getValue('site_root_path') . 'user/?u=thinkupapp&n=twitter&i=me">@thinkupapp</a>',
+        'Blah blah blah (<a href="' . $config->getValue('site_root_path') . 
+        'user/?u=username&n=twitter&i=me">@username</a>). Blah blah');
 
         $this->externally_linked_tweets = array(
         'Hey <a href="http://twitter.com/anildash">@anildash</a> think this up!', 
