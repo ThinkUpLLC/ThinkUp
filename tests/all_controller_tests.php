@@ -54,6 +54,7 @@ $controller_test->addTestCase(new TestOfTestController());
 $controller_test->addTestCase(new TestOfTestAuthController());
 $controller_test->addTestCase(new TestOfTestAdminController());
 $controller_test->addTestCase(new TestOfToggleActiveInstanceController());
+$controller_test->addTestCase(new TestOfToggleActiveOwnerController());
 $controller_test->addTestCase(new TestOfToggleActivePluginController());
 $controller_test->addTestCase(new TestOfTogglePublicInstanceController());
 $controller_test->addTestCase(new TestOfUserController());
@@ -61,6 +62,8 @@ $controller_test->addTestCase(new TestOfPluginOptionController());
 $controller_test->addTestCase(new TestOfTestAuthAPIController());
 $controller_test->addTestCase(new TestOfRSSController());
 $controller_test->addTestCase(new TestOfUpgradeController());
+
+
 
 $tr = new TextReporter();
 $controller_test->run( $tr );
