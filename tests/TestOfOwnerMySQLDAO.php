@@ -279,4 +279,46 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         //new status
         $this->assertEqual($owner->account_status, 'this is a test account status');
     }
+    
+        public function testSetOwnerActive() {
+        $builders_array = array();
+        # build our data
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User', 
+        'email'=>'ttuser2@example.com', 'is_activated'=>0));
+
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User', 
+        'email'=>'ttuser3@example.com', 'is_activated'=>1));
+        # init our dao
+        $dao = new OwnerMySQLDAO();
+
+        // flip form flase to true
+        $test_owners_records = $builders_array[0]->columns;
+        $id = $test_owners_records['last_insert_id'];
+        $this->assertTrue($dao->setOwnerActive($id, 1));
+        $sql = "select * from " . $this->prefix . 'owners where id = ' . $test_owners_records['last_insert_id'];
+        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data['is_activated'], 1);
+
+        // already true
+        $test_owners_records = $builders_array[1]->columns;
+        $id = $test_owners_records['last_insert_id'];
+        // nothing updated, so false
+        $this->assertFalse($dao->setOwnerActive($id, 1));
+        $sql = "select * from " . $this->prefix . 'owners where id = ' . $test_owners_records['last_insert_id'];
+        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data['is_activated'], 1);
+
+        // flip to false
+        $test_owners_records = $builders_array[0]->columns;
+        $id = $test_owners_records['last_insert_id'];
+        $this->assertTrue($dao->setOwnerActive($id, 0));
+        $sql = "select * from " . $this->prefix . 'owners where id = ' . $test_owners_records['last_insert_id'];
+        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data['is_activated'], 0);
+
+    }
+
 }
