@@ -1,1 +1,0 @@
-ALTER TABLE tu_posts MODIFY `post_text` VARCHAR(420) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;

@@ -1,0 +1,10 @@
+--
+-- 2011-01-02 Drop deprecated options table
+--
+DROP TABLE IF EXISTS tu_plugin_options;
+
+
+--
+-- 2011-01-24 Enlarge post text file to accomodate Facebook posts
+--
+ALTER TABLE tu_posts MODIFY `post_text` VARCHAR(420) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
