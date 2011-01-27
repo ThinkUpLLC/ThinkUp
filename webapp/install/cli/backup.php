@@ -35,7 +35,7 @@ date_default_timezone_set($THINKUP_CFG['timezone']);
 
 // don't run via the web...
 if(isset($_SERVER['SERVER_NAME'])) {
-    die("This script should only be run via the command line...");
+    die("This script should only be run via the command line.");
 }
 
 try {
@@ -43,7 +43,6 @@ try {
     if($argv[0] && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
         usage();
     }
-
 
     if (count($argv) != 2 || ! preg_match('/^(\-\-export|\-\-import)$/', $argv[0]) ) {
         usage();
@@ -71,12 +70,10 @@ try {
                 print "\nImporting data from: $filename\n\n";
                 $backup_dao->import($filename);
                 print "\nImport completed...\n\n";
-
             }
 
             // release global mutex
             BackupController::mutexLock(true);
-
         }
     }
 } catch(Exception $e) {

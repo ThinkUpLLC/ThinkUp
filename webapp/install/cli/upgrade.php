@@ -29,27 +29,29 @@
  */
 chdir('../..');
 require_once 'init.php';
+//Avoid "Error: DateTime::__construct(): It is not safe to rely on the system's timezone settings" error
+require_once 'config.inc.php';
+date_default_timezone_set($THINKUP_CFG['timezone']);
 
 // don't run via the web...
 if(isset($_SERVER['SERVER_NAME'])) {
-    die("This script should only be run via the command line...");
+    die("This script should only be run via the command line.");
 }
 
 // help?
 array_shift($argv);
-if($argv[0] && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
+if(isset($argv[0]) && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
     usage();
 }
 
 try {
-
     // do we need a migration?
     $db_version = UpgradeController::getCurrentDBVersion($cached = false);
     $config = Config::getInstance();
     $thinkup_db_version = $config->getValue('THINKUP_VERSION');
     $filename = false;
     if($db_version == $thinkup_db_version) {
-        error_log("\nYour system is up to date...\n");
+        error_log("\nYour ThinkUp database structure is up to date.\n");
         exit;
     } else {
         print "\nThinkup needs to be upgraded to version $thinkup_db_version, proceed => [y|n] ";
@@ -69,12 +71,11 @@ try {
         }
     }
 
-
     // set global mutex
     BackupController::mutexLock();
 
     // run backup first?
-    if($argv[0] && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
+    if(isset($argv[0]) && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
         usage();
     } else if($filename) {
         if( ! preg_match('/\.zip$/', $filename) ) {
@@ -85,14 +86,15 @@ try {
             $backup_dao = DAOFactory::getDAO('BackupDAO');
             print "\nExporting data to: $filename\n\n";
             $backup_dao->export($filename);
-            print "\nBackup completed...\n\n";
+            print "\nBackup completed.\n\n";
         }
     }
-
     // run updates...
 
     // get migrations we need to run...
     print "\nUpgrading Thinkup to version $thinkup_db_version...\n\n";
+
+    $upgrade_start_time = microtime(true);
     putenv('CLI_BACKUP=true');
     $upgrade_ctl = new UpgradeController();
     $migrations = $upgrade_ctl->getMigrationList($db_version);
@@ -113,7 +115,12 @@ try {
     // release global mutex
     BackupController::mutexLock();
 
-    print "\nUpgrade complete...\n\n";
+    // delete upgrade token if it exists
+    $upgrade_ctl->deleteTokenFile();
+
+    $upgrade_end_time = microtime(true);
+    $total_time = $upgrade_end_time - $upgrade_start_time;
+    print "\nUpgrade complete. Total time elapsed: ".round($total_time, 2)." seconds\n\n";
 
 } catch(Exception $e) {
     error_log("  Error: " . $e->getMessage() . "\n");
@@ -121,7 +128,7 @@ try {
 
 function usage() {
     print "\n Usage:\n\n";
-    print "   php update.php [--help]\n\n";
+    print "   php upgrade.php [--help]\n\n";
     print "    --help - usage help\n\n";
     exit;
 }
