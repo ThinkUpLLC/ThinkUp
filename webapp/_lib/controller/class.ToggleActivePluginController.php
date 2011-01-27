@@ -56,6 +56,7 @@ class ToggleActivePluginController extends ThinkUpAdminController {
             $is_active = ($_GET["a"] != 1)?false:true;
             $plugin_dao = DAOFactory::getDAO('PluginDAO');
             $this->addToView('result', $plugin_dao->setActive($_GET["pid"], $is_active));
+            $this->view_mgr->clear_all_cache();
         }
         return $this->generateView();
     }
