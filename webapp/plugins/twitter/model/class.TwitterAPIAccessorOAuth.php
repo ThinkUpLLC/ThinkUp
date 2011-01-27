@@ -61,7 +61,7 @@ class TwitterAPIAccessorOAuth {
     /**
      * @var int defaults to 3
      */
-   // this is now the fallback default- should be set in plugin config
+    // this is now the fallback default- should be set in plugin config
     var $total_errors_to_tolerate = 3;
     /**
      * Tally of the API errors returned during a given run
@@ -75,6 +75,10 @@ class TwitterAPIAccessorOAuth {
      * @var int Defaults to 350
      */
     var $max_api_calls_per_crawl = 350;
+    /***
+     * @var bool Whether or not to log messages
+     */
+    var $log ;
     /**
      * Constructor
      * @param str $oauth_access_token
@@ -83,12 +87,14 @@ class TwitterAPIAccessorOAuth {
      * @param str $oauth_consumer_secret
      * @param int $num_twitter_errors
      * @param int $max_api_calls_per_crawl
+     * @param bool $log Whether or not to log progress (don't on initial web auth, do on crawl)
      * @return TwitterAPIAccessorOAuth
      */
     public function __construct($oauth_access_token, $oauth_access_token_secret, $oauth_consumer_key,
-    $oauth_consumer_secret, $num_twitter_errors, $max_api_calls_per_crawl) {
+    $oauth_consumer_secret, $num_twitter_errors, $max_api_calls_per_crawl, $log=true) {
         $this->$oauth_access_token = $oauth_access_token;
         $this->$oauth_access_token_secret = $oauth_access_token_secret;
+        $this->log = $log;
 
         $this->to = new TwitterOAuthThinkUp($oauth_consumer_key, $oauth_consumer_secret, $this->$oauth_access_token,
         $this->$oauth_access_token_secret);
@@ -101,7 +107,9 @@ class TwitterAPIAccessorOAuth {
         }
 
         $this->max_api_calls_per_crawl = $max_api_calls_per_crawl;
-        $logger->logInfo('Errors to tolerate: ' . $this->total_errors_to_tolerate, __METHOD__.','.__LINE__);
+        if ($this->log) {
+            $logger->logInfo('Errors to tolerate: ' . $this->total_errors_to_tolerate, __METHOD__.','.__LINE__);
+        }
     }
 
     /**
@@ -331,13 +339,13 @@ class TwitterAPIAccessorOAuth {
         }
         return $parsed_payload;
     }
-    
-    
+
+
     private function parsePostXML($post) {
 
         $logger = Logger::getInstance();
         // $logger->logInfo("In parsePostXML for post " . $post->id . ", " . $post->text, __METHOD__.','.__LINE__);
-        
+
         $georss = null;
         $namespaces = $post->getNameSpaces(true);
         if(isset($namespaces['georss'])) {
@@ -359,7 +367,7 @@ class TwitterAPIAccessorOAuth {
             'favorites_count'=>$post->user->favourites_count, 
             'in_reply_to_post_id'=>$post->in_reply_to_status_id, 
             'in_reply_to_user_id'=>$post->in_reply_to_user_id, 'source'=>$post->source, 
-            // 'favorited' => $xml->favorited, // what did this do?
+        // 'favorited' => $xml->favorited, // what did this do?
             'geo'=>(isset($georss)?$georss->point:''), 'place'=>$post->place->full_name, 
             'network'=>'twitter');
         if (isset($post->retweet_count) && !isset($post->retweeted_status)) {
@@ -368,25 +376,25 @@ class TwitterAPIAccessorOAuth {
             $pos = strrpos($post->retweet_count, '+');
             if ($pos != false) {
                 // remove '+', e.g. '100+' -- so currently 100 is max that can be indicated
-               $retweet_count_cache = substr($post->retweet_count, 0, $pos) ;
+                $retweet_count_cache = substr($post->retweet_count, 0, $pos) ;
             }
             $parsed_data['retweet_count_cache'] = $retweet_count_cache;
         }
         if (isset($post->retweeted_status)) {
-            // then this is a retweet.  
+            // then this is a retweet.
             // Process its original too.
-            // $logger->logInfo("this is a retweet, will process original post " . $post_retweeted_status->id . 
+            // $logger->logInfo("this is a retweet, will process original post " . $post_retweeted_status->id .
             // "from user " . $post_retweeted_status->user->id, __METHOD__.','.__LINE__);
             $rtp = array();
             $rtp['content']= $this->parsePostXML($post->retweeted_status);
             $parsed_data['retweeted_post'] = $rtp;
             $parsed_data['in_retweet_of_post_id'] = $post->retweeted_status->id;
             $parsed_data['in_rt_of_user_id'] = $post->retweeted_status->user->id;
-            
+
         }
-         return $parsed_data;
+        return $parsed_data;
     }
-    
+
     /**
      * Get next cursor.
      * @return int

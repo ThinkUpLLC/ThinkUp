@@ -19,8 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
  * Twitter Auth Controller
  * Save the OAuth tokens for Twitter account authorization.
  * @license http://www.gnu.org/licenses/gpl.html
@@ -69,7 +68,7 @@ class TwitterAuthController extends ThinkUpAuthController {
             if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
                 $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'],
                 $options['oauth_consumer_key']->option_value, $options['oauth_consumer_secret']->option_value,
-                $options['num_twitter_errors']->option_value, $options['max_api_calls_per_crawl']->option_value);
+                $options['num_twitter_errors']->option_value, $options['max_api_calls_per_crawl']->option_value, false);
 
                 $u = $api->verifyCredentials();
 
@@ -126,11 +125,14 @@ class TwitterAuthController extends ThinkUpAuthController {
                         }
                     }
                 }
+            } else {
+                $msg = "PROBLEM! Twitter authorization did not complete successfully. Check if your account already ".
+                " exists. If not, please try again.";
             }
             $this->view_mgr->clear_all_cache();
 
             $config = Config::getInstance();
-            $msg .= '<a href="'.$config->getValue('site_root_path').
+            $msg .= '<br /><br /><a href="'.$config->getValue('site_root_path').
         'account/index.php?p=twitter" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span 
         class="ui-icon ui-icon-circle-arrow-e"></span>Back to your account</a>';
             $this->addInfoMessage($msg);
