@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfPDODAO.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie, Christoffer Viken, Guillaume Boudreau
+ * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie, Christoffer Viken, Guillaume Boudreau
  *
  * LICENSE:
  *

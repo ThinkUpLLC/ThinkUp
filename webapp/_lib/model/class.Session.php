@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.Session.php
  *
- * Copyright (c) 2009-2010 Christoffer Viken, Gina Trapani
+ * Copyright (c) 2009-2011 Christoffer Viken, Gina Trapani
  *
  * LICENSE:
  *

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/tests/TestOfTwitterAuthController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani
+ * Copyright (c) 2009-2011 Gina Trapani
  *
  * LICENSE:
  *

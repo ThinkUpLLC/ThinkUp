@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/geoencoder/tests/TestOfGeoEncoderPlugin.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
+ * Copyright (c) 2009-2011 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
  *
  * LICENSE:
  *

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.UnauthorizedUserException.php
  *
- * Copyright (c) 2009-2010 Guillaume Boudreau
+ * Copyright (c) 2009-2011 Guillaume Boudreau
  *
  * LICENSE:
  *

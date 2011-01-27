@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/classes/class.TestFauxDAO.php
  *
- * Copyright (c) 2009-2010 Christoffer Viken, Gina Trapani, Mark Wilkie
+ * Copyright (c) 2009-2011 Christoffer Viken, Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.InstanceMySQLDAO.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  *
  * LICENSE:
  *

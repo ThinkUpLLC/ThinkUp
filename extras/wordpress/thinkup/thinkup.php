@@ -12,7 +12,7 @@
  *
  * ThinkUp/extras/wordpress/thinkup/thinkup.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Sam Rose
+ * Copyright (c) 2009-2011 Gina Trapani, Sam Rose
  *
  * LICENSE:
  *

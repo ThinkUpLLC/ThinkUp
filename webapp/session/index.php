@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/session/index.php
  *
- * Copyright (c) 2009-2010 Gina Trapani
+ * Copyright (c) 2009-2011 Gina Trapani
  *
  * LICENSE:
  *

@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/twitter/model/class.URLProcessor.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Amy Unruh
+ * Copyright (c) 2009-2011 Gina Trapani, Amy Unruh
  *
  * LICENSE:
  *

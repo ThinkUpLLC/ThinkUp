@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.ActivateAccountController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani
+ * Copyright (c) 2009-2011 Gina Trapani
  *
  * LICENSE:
  *

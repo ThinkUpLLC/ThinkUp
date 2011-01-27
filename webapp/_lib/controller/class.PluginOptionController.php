@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.PluginOptionController.php
  *
- * Copyright (c) 2009-2010 Mark Wilkie, Gina Trapani
+ * Copyright (c) 2009-2011 Mark Wilkie, Gina Trapani
  *
  * LICENSE:
  *

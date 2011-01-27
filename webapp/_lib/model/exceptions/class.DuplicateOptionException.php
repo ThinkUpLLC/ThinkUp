@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/exceptions/class.DuplicateOptionException.php
  *
- * Copyright (c) 2009-2010 Mark Wilkie
+ * Copyright (c) 2009-2011 Mark Wilkie
  *
  * LICENSE:
  *

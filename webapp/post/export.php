@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/post/export.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Christoffer Viken, Mark Wilkie
+ * Copyright (c) 2009-2011 Gina Trapani, Christoffer Viken, Mark Wilkie
  *
  * LICENSE:
  *

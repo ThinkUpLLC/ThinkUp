@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/classes/interface.TestDAO.php
  *
- * Copyright (c) 2009-2010 Christoffer Viken, Mark Wilkie
+ * Copyright (c) 2009-2011 Christoffer Viken, Mark Wilkie
  *
  * LICENSE:
  *

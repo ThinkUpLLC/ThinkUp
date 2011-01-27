@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfInstanceMySQLDAO.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Guillaume Boudreau, Christoffer Viken, Mark Wilkie
+ * Copyright (c) 2009-2011 Gina Trapani, Guillaume Boudreau, Christoffer Viken, Mark Wilkie
  *
  * LICENSE:
  *

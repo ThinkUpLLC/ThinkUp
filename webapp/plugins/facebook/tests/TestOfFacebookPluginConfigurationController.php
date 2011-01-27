@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/facebook/tests/TestOfFacebookPluginConfigurationController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Guillaume Boudreau
+ * Copyright (c) 2009-2011 Gina Trapani, Guillaume Boudreau
  *
  * LICENSE:
  *

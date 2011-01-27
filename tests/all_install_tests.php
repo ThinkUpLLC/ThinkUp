@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/all_install_tests.php
  *
- * Copyright (c) 2009-2010 Gina Trapani
+ * Copyright (c) 2009-2011 Gina Trapani
  *
  * LICENSE:
  *

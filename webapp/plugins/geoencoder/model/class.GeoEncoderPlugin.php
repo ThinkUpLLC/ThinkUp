@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/geoencoder/model/class.GeoEncoderPlugin.php
  *
- * Copyright (c) 2009-2010 Ekansh Preet Singh, Mark Wilkie
+ * Copyright (c) 2009-2011 Ekansh Preet Singh, Mark Wilkie
  *
  * LICENSE:
  *

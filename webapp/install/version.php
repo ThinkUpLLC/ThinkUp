@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/install/version.php
  *
- * Copyright (c) 2009-2010 Dwi Widiastuti, Gina Trapani
+ * Copyright (c) 2009-2011 Dwi Widiastuti, Gina Trapani
  *
  * LICENSE:
  *

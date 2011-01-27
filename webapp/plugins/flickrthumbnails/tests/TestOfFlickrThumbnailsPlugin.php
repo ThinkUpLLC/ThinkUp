@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Christoffer Viken, Guillaume Boudreau
+ * Copyright (c) 2009-2011 Gina Trapani, Christoffer Viken, Guillaume Boudreau
  *
  * LICENSE:
  *

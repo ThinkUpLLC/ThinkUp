@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfLocationMySQLDAO.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Ekansh Preet Singh
+ * Copyright (c) 2009-2011 Gina Trapani, Ekansh Preet Singh
  *
  * LICENSE:
  *

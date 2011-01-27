@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.OwnerInstanceDAO.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie
+ * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *

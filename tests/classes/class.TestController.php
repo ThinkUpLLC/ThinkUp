@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/classes/class.TestController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Guillaume Boudreau, Mark Wilkie
+ * Copyright (c) 2009-2011 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  *
  * LICENSE:
  *

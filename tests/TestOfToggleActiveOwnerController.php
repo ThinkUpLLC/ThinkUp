@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfToggleActiveOwnerController.php
  *
- * Copyright (c) 2009-2010 Gina Trapani
+ * Copyright (c) 2009-2011 Gina Trapani
  * 
  * @author Randi Miller <techrandy[at]gmail[dot]com>
  *

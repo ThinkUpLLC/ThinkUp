@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/session/forgot.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Michael Louis Thaler
+ * Copyright (c) 2009-2011 Gina Trapani, Michael Louis Thaler
  *
  * LICENSE:
  *

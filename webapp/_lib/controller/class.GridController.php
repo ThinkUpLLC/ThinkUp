@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.GridController.php
  *
- * Copyright (c) 2009-2010 Mark Wilkie, Guillaume Boudreau
+ * Copyright (c) 2009-2011 Mark Wilkie, Guillaume Boudreau
  *
  * LICENSE:
  *

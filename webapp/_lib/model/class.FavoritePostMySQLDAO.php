@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.FavoritePostMySQLDAO.php
  *
- * Copyright (c) 2009-2010 Amy Unruh, Gina Trapani
+ * Copyright (c) 2009-2011 Amy Unruh, Gina Trapani
  *
  * LICENSE:
  *

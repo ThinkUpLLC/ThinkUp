@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/interface.FollowDAO.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Christoffer Viken
+ * Copyright (c) 2009-2011 Gina Trapani, Christoffer Viken
  *
  * LICENSE:
  *

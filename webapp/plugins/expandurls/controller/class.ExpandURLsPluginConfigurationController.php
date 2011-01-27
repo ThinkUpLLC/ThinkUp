@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.ExpandURLsPluginConfigurationController.php
  *
- * Copyright (c) 2009-2010 Sam Rose
+ * Copyright (c) 2009-2011 Sam Rose
  *
  * LICENSE:
  *

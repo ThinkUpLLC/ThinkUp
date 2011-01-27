@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfDAOFactory.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Mark Wilkie, Christoffer Viken
+ * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie, Christoffer Viken
  *
  * LICENSE:
  *

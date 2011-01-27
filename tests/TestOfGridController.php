@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfGridController.php
  *
- * Copyright (c) 2009-2010 Mark Wilkie, Gina Trapani, Guillaume Boudreau
+ * Copyright (c) 2009-2011 Mark Wilkie, Gina Trapani, Guillaume Boudreau
  *
  * LICENSE:
  *

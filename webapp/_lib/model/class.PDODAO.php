@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/model/class.PDODAO.php
  *
- * Copyright (c) 2009-2010 Mark Wilkie, Christoffer Viken, Gina Trapani
+ * Copyright (c) 2009-2011 Mark Wilkie, Christoffer Viken, Gina Trapani
  *
  * LICENSE:
  *

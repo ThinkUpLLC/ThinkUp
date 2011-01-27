@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php
  *
- * Copyright (c) 2009-2010 Gina Trapani, Guillaume Boudreau, Christoffer Viken
+ * Copyright (c) 2009-2011 Gina Trapani, Guillaume Boudreau, Christoffer Viken
  *
  * LICENSE:
  *
