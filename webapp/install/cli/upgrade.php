@@ -37,7 +37,7 @@ if(isset($_SERVER['SERVER_NAME'])) {
 
 // help?
 array_shift($argv);
-if($argv[0] && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
+if(isset($argv[0]) && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
     usage();
 }
 
@@ -74,7 +74,7 @@ try {
     BackupController::mutexLock();
 
     // run backup first?
-    if($argv[0] && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
+    if(isset($argv[0]) && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
         usage();
     } else if($filename) {
         if( ! preg_match('/\.zip$/', $filename) ) {
@@ -121,7 +121,7 @@ try {
 
 function usage() {
     print "\n Usage:\n\n";
-    print "   php update.php [--help]\n\n";
+    print "   php upgrade.php [--help]\n\n";
     print "    --help - usage help\n\n";
     exit;
 }
