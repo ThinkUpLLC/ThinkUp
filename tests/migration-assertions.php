@@ -245,16 +245,21 @@ $MIGRATIONS = array(
     ),
 
     /* beta 0.8 */
-//    '0.8' => array(
-//        'zip_url' => 'file://./build/thinkup.zip',
-//        'migrations' => 1,
-//        'migration_assertions' => array(
-//            'sql' => array(
-//                array(
-//                    'query' => "show tables like 'tu_plugin_options'", // table is dropped
-//                    'no_match' => true,
-//                )
-//           )
-//        )
-//    ),
+    '0.8' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => "SHOW TABLES LIKE 'tu_plugin_options'", // table is dropped
+                    'no_match' => true,
+                ),
+                array(
+                    'query' => "DESCRIBE tu_posts post_text", // enlarged post_text field
+                    'match' => "/varchar\(420\)/",
+                    'column' => 'Type',
+                )
+           )
+        )
+    ),
 );
