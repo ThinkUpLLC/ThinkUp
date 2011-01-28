@@ -168,13 +168,13 @@ class Installer {
     }
 
     /**
-     * Check GD, cURL and PDO extensions are loaded
+     * Check GD, cURL, PDO, and JSON extensions are loaded
      *
      * @param array $libs For use in tests
      * @return array
      */
     public function checkDependency($libs = array()) {
-        $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false);
+        $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false);
         // check curl
         if ( extension_loaded('curl') && function_exists('curl_exec') ) {
             $ret['curl'] = true;
@@ -190,6 +190,10 @@ class Installer {
         // check PDO MySQL
         if ( extension_loaded('pdo_mysql') ) {
             $ret['pdo_mysql'] = true;
+        }
+        // check JSON
+        if ( extension_loaded('json') ) {
+            $ret['json'] = true;
         }
         // when testing
         if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($libs) ) {
@@ -239,7 +243,7 @@ class Installer {
 
     /**
      * Check all requirements on step 1
-     * Check PHP version, cURL, GD and path permission
+     * Check PHP version, cURL, GD, JSON, and path permission
      *
      * @param array $pass can be used for testing for failing
      * @return bool
