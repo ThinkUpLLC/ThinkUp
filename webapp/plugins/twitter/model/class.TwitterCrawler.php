@@ -248,6 +248,7 @@ class TwitterCrawler {
         if (isset($this->user)) {
             $tweet_deets = str_replace("[id]", $tid, $this->api->cURL_source['show_tweet']);
             list($cURL_status, $twitter_data) = $this->api->apiRequest($tweet_deets);
+            $status_message = "";
 
             if ($cURL_status == 200) {
                 $tweets = $this->api->parseXML($twitter_data);
@@ -1040,7 +1041,7 @@ class TwitterCrawler {
            ", last page fetched: $last_page_fetched_favorites, last fav id: $last_fav_id";
         $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
         $this->logger->logInfo("current favs count: $curr_favs_count" .
-               ", new favs to add: $new_favs_to_add, last page of favs: $last_page_of_favs, mode: $mode", 
+               ", new favs to add: $new_favs_to_add, last page of favs: $last_page_of_favs, mode: $mode",
         __METHOD__.','.__LINE__);
 
         $continue = true;
