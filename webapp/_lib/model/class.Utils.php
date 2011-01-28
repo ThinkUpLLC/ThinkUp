@@ -133,7 +133,7 @@ class Utils {
      * @param string $email Email address to validate
      * @return bool Whether or not it's a valid address
      */
-    public function validateEmail($email = '') {
+    public static function validateEmail($email = '') {
         $hostname = '(?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4}|museum|travel)';
         $pattern = '/^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@' . $hostname . '$/i';
         return preg_match($pattern, $email);
