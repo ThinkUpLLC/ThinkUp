@@ -95,6 +95,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $this->assertTrue($dependency['gd'], 'gd lib is installed');
         $this->assertTrue($dependency['pdo'], 'pdo lib is installed');
         $this->assertTrue($dependency['pdo_mysql'], 'pdo mysql lib is installed');
+        $this->assertTrue($dependency['json'], 'json lib is installed');
     }
 
     public function testInstallerCheckPermission() {

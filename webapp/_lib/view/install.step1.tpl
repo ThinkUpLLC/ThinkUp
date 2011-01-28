@@ -25,13 +25,14 @@
       </div>
     </div>
   </div>
-  
+
   <div id="installer-page" class="container_24 round-all">
     <img id="dart1" class="dart" alt="" src="{$site_root_path}assets/img/dart_wht.png">
     <div class="clearfix append_20">
       <div class="grid_22 push_1 clearfix">
         <h2 class="clearfix step_title">Check System Requirements</h2>
-        {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd && $libs.pdo && $libs.pdo_mysql}
+        {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd && $libs.pdo
+            && $libs.pdo_mysql && $libs.json}
         <p class="success" style="margin-bottom: 30px">
              <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
              You may proceed to the next step.
@@ -58,7 +59,7 @@
         </div>
         {if !$php_compat}
         <div class="clearfix append_20 info_message">
-          <p>thinkup needs PHP version greater or equal to v.{$php_required_version}</p>
+          <p>ThinkUp needs PHP version greater or equal to v.{$php_required_version}</p>
         </div>
         {/if}
         
@@ -113,6 +114,24 @@
         {if !$libs.pdo OR !$libs.pdo_mysql}
         <div class="clearfix append_20 info_message">
           <p>ThinkUp needs the <a href="http://www.php.net/manual/en/pdo.installation.php" target="_blank">PDO extension</a> and the <a href="http://php.net/manual/en/ref.pdo-mysql.php" target="_blank">MySQL driver</a> installed on your system.</p>
+        </div>
+        {/if}
+
+        <div class="clearfix append_20">
+          <div class="grid_6 prefix_5 right">
+            <span class="label{if !$libs.json} no{/if}">JSON installed</span>
+          </div>
+          <div class="grid_8 prefix_1 left">
+            {if $libs.json}
+            <span class="value yes">Yes</span>
+            {else}
+            <span class="value no">No</span>
+            {/if}
+          </div>
+        </div>
+        {if !$libs.json}
+        <div class="clearfix append_20 info_message">
+          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.json.php" target="_blank">JSON PHP extension</a> installed on your system.</p>
         </div>
         {/if}
 
