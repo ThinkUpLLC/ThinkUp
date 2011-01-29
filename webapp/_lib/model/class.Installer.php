@@ -176,7 +176,7 @@ class Installer {
     public function checkDependency($libs = array()) {
         $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false);
         // check curl
-        if ( extension_loaded('curl') && function_exists('curl_exec') ) {
+        if ( self::curlDependenciesMet() ) {
             $ret['curl'] = true;
         }
         // check GD
@@ -200,6 +200,22 @@ class Installer {
             $ret = $libs;
         }
         return $ret;
+    }
+
+    /**
+     * Confirm that the cURL extension is loaded and configured as needed
+     *
+     * @return bool
+     */
+    private function curlDependenciesMet() {
+        if ( !extension_loaded('curl') || !function_exists('curl_exec') || !function_exists('curl_version') ) {
+            return false;
+        }
+        $curl_ver = curl_version();
+        if ( !in_array( 'https', $curl_ver['protocols'] ) ) {
+            return false;
+        }
+        return true;
     }
 
     /**
