@@ -192,7 +192,7 @@ class Installer {
             $ret['pdo_mysql'] = true;
         }
         // check JSON
-        if ( extension_loaded('json') ) {
+        if ( extension_loaded('json') && function_exists('json_decode') && function_exists('json_encode') ) {
             $ret['json'] = true;
         }
         // when testing
