@@ -18,6 +18,13 @@
 <script type="text/javascript" src="../js/slickgrid/slick.columnpicker.js"></script>
 <script type="text/javascript" src="../js/grid_search.js?v=1234888"></script>
 
+<script type="text/javascript">
+// close grid search with escape key
+$(document).keyup(function(e) {
+  if (e.keyCode == 27) { parent.tu_grid_search.close_iframe(); }
+});
+</script>
+
 <body>
 <form onsubmit="return false;"  id="grid_search_form">
 <p style="padding-left: 20px">
@@ -25,6 +32,7 @@
 <input type="submit" value="search">
 <input type="button" value="export" id="grid_export">
 &nbsp; <span style="font-size: 20px;"><b><span id="grid_search_count" style="font-size: 20px;">0</span></b> results</span>
+&nbsp; &nbsp; <span style="font-size: 10px;"><em>hint: esc key closes search</e></span>
 </p>
 </form>
 <img src="../img/loading.gif" id="grid_search_spinner" style="margin: 250px 0px 0px 430px;">

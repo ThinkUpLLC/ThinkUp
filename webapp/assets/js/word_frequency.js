@@ -104,18 +104,19 @@ var TUWordFrequency = function() {
         }
         $('.word_frequency').each(function(index) {
             $(this).click(function() {
+                // close grid search if needed
+                if(typeof(tu_grid_search) != 'undefined') {
+                    tu_grid_search.close_iframe();
+                }
                 $('#word-frequency-spinner').show();
                 $('#word-frequency-div').show();
+                $('#post_replies').hide();
                 setTimeout(function() { tu_word_freq.find_words(); } , 300);
             });
         });
         
         // close word freq div...
-        $('#word-frequency-close').click(function() {
-            $('#word-frequency-div').hide();
-            $('#word-frequency-list').hide();
-            $('#word-frequency-spinner').show();
-        });
+        $('#word-frequency-close').click( function() { tu_word_freq.close(); } );
 
         // close word-frequency-posts-close div
         $('#word-frequency-posts-close').click( function() {
@@ -125,6 +126,16 @@ var TUWordFrequency = function() {
         if(document.location.search.match(/wordf=true/)) {
             this.find_words();
         }
+    }
+
+    /**
+     * close word frequency 
+     */
+    this.close = function() {
+        $('#word-frequency-div').hide();
+        $('#word-frequency-list').hide();
+        $('#word-frequency-spinner').show();
+        $('#post_replies').show();
     }
 
     /**
