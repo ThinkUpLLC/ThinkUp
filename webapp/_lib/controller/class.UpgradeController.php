@@ -86,6 +86,9 @@ class UpgradeController extends ThinkUpAuthController {
         $db_version = self::getCurrentDBVersion($cached = false);
         $option_dao = DAOFactory::getDAO('OptionDAO');
 
+        // clear options session data
+        $option_dao->clearSessionData(OptionDAO::APP_OPTIONS);
+
         if(isset($_GET['migration_index'])) {
             $migrations = $this->getMigrationList($db_version);
             $migration_index = $_GET['migration_index'] - 1;
