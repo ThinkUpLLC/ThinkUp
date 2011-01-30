@@ -8,12 +8,12 @@
         {if $post}
           <ul class="side-subnav">
           <li{if $smarty.get.v eq ''} class="currentview"{/if}><a href="index.php?t={$post->post_id}&n={$post->network}">Post Replies&nbsp;&nbsp;&nbsp;</a></li>
-          {if $logged_in_user}
-            <li><a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search & Filter Replies</span></a></li>
+          {if $logged_in_user && $post->reply_count_cache && $post->reply_count_cache > 1}
+            <li id="grid_search_icon"><a href="#" class="grid_search" title="Search" onclick="return false;"><span>Search & Filter Replies</span></a></li>
           {/if}
           <li><a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">Export Replies (CSV)</a></li>
           {if $post->reply_count_cache > $top_20_post_min}
-            <li><a href="#" class="grid_search" title="Search" onclick="return false;"><span class="word_frequency">Top 20 Words</span></a></li>
+            <li class="word_frequency"><a href="#" title="Top 20 Words" onclick="return false;"><span>Top 20 Words</span></a></li>
           {/if}
           </ul></li>
         {/if}
@@ -101,10 +101,15 @@
               {if $post->reply_count_cache > $top_20_post_min}
                  {include file="_post.word-frequency.tpl"}
               {/if}
+              {if $replies && $logged_in_user}
+                  {include file="_grid.search.tpl" version2=true}
+              {/if}
               <div id="post-replies-div">
+                <div id="post_replies">
                 {foreach from=$replies key=tid item=t name=foo}
                   {include file="_post.tpl" t=$t sort='no' scrub_reply_username=true reply_count=$post->reply_count_cache}
                 {/foreach}
+                </div>
               </div>
               {if $post->reply_count_cache > $top_20_post_min}
               {include file="_post.word-frequency.tpl"}
@@ -134,7 +139,6 @@
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
   {if $replies && $logged_in_user}
-    {include file="_grid.search.tpl" version2=true}
     <script type="text/javascript">post_username = '{$post->author_username}';</script>
     <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
   {/if}

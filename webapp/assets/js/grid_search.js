@@ -11,7 +11,13 @@ var TUGridSearch = function() {
     this.searchString = "";
     
     this.loading = false;
-    
+
+    this.keyup = function(e) {
+        if (e.keyCode == 27) { 
+            tu_grid_search.close_iframe();
+        }
+    };
+
     /**
      * Init grid search
      */
@@ -73,6 +79,9 @@ var TUGridSearch = function() {
                 + '" target="_blank">#</a>&nbsp; ' + value;
             }
         } ];
+        if( parent.GRID_TYPE == 2) {
+            columns[3].width = 455;
+        }
 
         var options = {
             enableCellNavigation : false,
@@ -128,16 +137,27 @@ var TUGridSearch = function() {
             return true;
         }
     }
-    
+
     /**
      * 
      */
     this.load_iframe = function() {
+
+        // close grid search with escape key
+        $(document).keyup( this.keyup );
+
         if(tu_grid_search.loading) { return; };
+        // close top 20 words if needed
+        if(typeof(tu_word_freq) != 'undefined') { tu_word_freq.close(); };
         tu_grid_search.loading = true;
-        window.scroll(0,0);
-        $('#screen').css({ opacity: 0.7, "width":$(document).width(),"height":$(document).height()});
-        $('#screen').fadeIn(500, function() {
+        if(GRID_TYPE==1) {
+            window.scroll(0,0);
+            $('#screen').css({ opacity: 0.7, "width":$(document).width(),"height":$(document).height()});
+        } else {
+            $('#post_replies').hide();
+        }
+        var fade = (GRID_TYPE==1) ? 500 : 1;
+        $('#screen').fadeIn(fade, function() {
             $('#grid_overlay_div').show();
             $('#grid_iframe').show();
             var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
@@ -163,7 +183,12 @@ var TUGridSearch = function() {
         $('#grid_iframe').attr('src', path + '/assets/img/ui-bg_glass_65_ffffff_1x400.png');
         $('#grid_overlay_div').hide();
         $('#grid_iframe').hide();
-        $('#screen').fadeOut(500);
+        if(GRID_TYPE==1) {
+            $('#screen').fadeOut(500);
+        } else {
+            $('#post_replies').show();
+        }
+        $(document).unbind('keyup', this.keyup);
     }
     
     /**

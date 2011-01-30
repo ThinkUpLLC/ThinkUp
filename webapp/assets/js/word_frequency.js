@@ -26,6 +26,13 @@
  */
 
 var TUWordFrequency = function() {
+
+    this.keyup = function(e) {
+        if (e.keyCode == 27) { 
+            tu_word_freq.close();
+        }
+    };
+
     /* our word temnplates... */
     this.word_template = '<div class="word-frequency-word" id="${id}"><span class="word-frequency-count">' +
         '${count}</span>&nbsp;${word}</div>';
@@ -104,6 +111,10 @@ var TUWordFrequency = function() {
         }
         $('.word_frequency').each(function(index) {
             $(this).click(function() {
+                // close grid search if needed
+                if(typeof(tu_grid_search) != 'undefined') {
+                    tu_grid_search.close_iframe();
+                }
                 $('#word-frequency-spinner').show();
                 $('#word-frequency-div').show();
                 setTimeout(function() { tu_word_freq.find_words(); } , 300);
@@ -111,20 +122,23 @@ var TUWordFrequency = function() {
         });
         
         // close word freq div...
-        $('#word-frequency-close').click(function() {
-            $('#word-frequency-div').hide();
-            $('#word-frequency-list').hide();
-            $('#word-frequency-spinner').show();
-        });
-
-        // close word-frequency-posts-close div
-        $('#word-frequency-posts-close').click( function() {
-            $('#word-frequency-posts-div').hide();
-        })
+        $('#word-frequency-close').click( function() { tu_word_freq.close(); } );
 
         if(document.location.search.match(/wordf=true/)) {
             this.find_words();
         }
+    }
+
+    /**
+     * close word frequency 
+     */
+    this.close = function() {
+        $('#word-frequency-div').hide();
+        $('#word-frequency-list').hide();
+        $('#word-frequency-spinner').show();
+        $('#post_replies').show();
+        $('#word-frequency-posts-div').hide();
+        $(document).unbind('keyup', this.keyup);
     }
 
     /**
@@ -139,6 +153,10 @@ var TUWordFrequency = function() {
 
         // show frequency div
         $('#word-frequency-div').show();
+
+        // close on esc
+        $(document).keyup( this.keyup );
+
         //pull in and clean post texts...
         var posts = $('.reply_text');
         for(i = 0; i < posts.length; i++ ) {
@@ -192,6 +210,7 @@ var TUWordFrequency = function() {
                     $('#word-frequency-posts').append(post);
                 }
                 $('#word-frequency-posts-div').show();
+                $('#post_replies').hide();
             });
         });
         // hide spinner and show words...
