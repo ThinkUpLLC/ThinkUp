@@ -68,6 +68,17 @@ ThinkUp's database needs an update. <a href="{$site_root_path}install/upgrade.ph
 ThinkUp is currently in the process of upgrading. Please try back again in a little while.<br /><br />
 If you are the administrator of this ThinkUp installation, check your email to complete the upgrade process.<br />
 (<a href="https://github.com/ginatrapani/ThinkUp/wiki/%22ThinkUp-is-currently-in-the-process-of-upgrading%22">What? Help!</a>)
+
+<p>
+<form method="get" action="{$site_root_path}install/upgrade.php" style="margin-top: 20px">
+If you have an
+<a href="https://github.com/ginatrapani/ThinkUp/wiki/%22ThinkUp-is-currently-in-the-process-of-upgrading%22">
+upgrade token</a>, you can enter it here:
+<input type="text" name="upgrade_token" />
+<input type="submit" value="Submit Token" />
+</form>
+</p>
+
 {/if}
 </p>
 </div>

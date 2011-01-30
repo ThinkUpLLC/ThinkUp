@@ -289,7 +289,7 @@ abstract class ThinkUpController {
                 $this->setViewTemplate('install.upgradeneeded.tpl');
                 $this->disableCaching();
                 $option_dao = DAOFactory::getDAO('OptionDAO');
-                $option_dao->clearSessionData('application_options');
+                $option_dao->clearSessionData(OptionDAO::APP_OPTIONS);
                 return $this->generateView();
             } else {
                 $results = $this->control();
