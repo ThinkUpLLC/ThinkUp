@@ -210,7 +210,7 @@ class Installer {
 
         $curl_ver = curl_version();
 
-        if ( !in_array( 'https', $curl_ver['protocols'] )
+        if ( !in_array( 'https', $curl_ver['protocols'] ) )
             return false;
 
         return true;
