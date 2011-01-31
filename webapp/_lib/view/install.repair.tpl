@@ -52,6 +52,4 @@
       </div>
     </div>
   </div>
-</body>
-</html>
 {include file="_install.footer.tpl"}
