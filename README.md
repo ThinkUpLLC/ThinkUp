@@ -9,8 +9,8 @@ PROCEED AT YOUR OWN RISK!*
 
 ## SYSTEM REQUIREMENTS
 
-- [PHP 5.2](http://php.net) with cURL, GD, and the PDO MySQL driver enabled
-- [MySQL 5](http://mysql.com/)
+- [PHP 5.2](http://php.net) or higher with cURL, GD, and the PDO MySQL driver enabled
+- [MySQL 5.0.3](http://mysql.com/) or higher
 - A public web server. (Twitter authorization requires a public
    callback URL, so you'll need to expose a local dev server to the
    internet for initial authorization; after that the server doesn't
