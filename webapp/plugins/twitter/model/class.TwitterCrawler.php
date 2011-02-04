@@ -992,7 +992,10 @@ class TwitterCrawler {
 
         $last_page_of_favs = round($this->api->archive_limit / $page_size);
 
-        if ($last_page_fetched_favorites == "") {
+        // under normal circs the latter clause below should never hold, but due to a previously-existing
+        // bug that could set a negative last_page_fetched_favorites value in the db in some cases,
+        // it is necessary for recovery.
+        if ($last_page_fetched_favorites == "" || $last_page_fetched_favorites < 0) {
             $last_page_fetched_favorites = 0;
         }
         $this->logger->logInfo("got last_page_fetched_favorites: $last_page_fetched_favorites",
@@ -1020,6 +1023,10 @@ class TwitterCrawler {
         } else {
             // we are in archiving mode.
             $new_favs_to_add = $curr_favs_count - $last_favorites_count;
+            // twitter profile information is not always consistent, so ensure that this value is not negative
+            if ($new_favs_to_add < 0) {
+                $new_favs_to_add == 0;
+            }
             $this->logger->logInfo("new favs to add: $new_favs_to_add", __METHOD__.','.__LINE__);
 
             // figure out start page based on where we left off last time, and how many favs added since then
@@ -1028,6 +1035,9 @@ class TwitterCrawler {
             $finished_first_fetch = false;
             if ($last_page_fetched_favorites == 0) {
                 // if at initial starting fetch (first time favs ever crawled)
+                if ($extra_pages == 0   ) {
+                    $extra_pages = 1; // always check at least one page on initial fetch
+                }
                 $last_page_fetched_favs_start = $extra_pages + 1;
             } else {
                 $last_page_fetched_favs_start = $last_page_fetched_favorites + $extra_pages;
@@ -1062,7 +1072,6 @@ class TwitterCrawler {
                 // }
             } else { // mode 0 -- archiving mode
                 if (!$finished_first_fetch) {
-                    $this->logger->logInfo("in 'first_archiving_fetch' clause", __METHOD__.','.__LINE__);
                     list($fcount, $last_fav_id, $last_page_fetched_favorites, $continue) =
                     $this->archivingFavsFetch($fcount, $last_fav_id, $last_page_fetched_favs_start, $continue);
                     $finished_first_fetch = true;
@@ -1217,12 +1226,10 @@ class TwitterCrawler {
                 throw new Exception("could not extract any tweets from response");
             }
             if (sizeof($tweets) == 0) {
-                // then just continue to the next smaller page of favs.  This case should actually not be reached,
-                // but would catch the potential situation where Twitter is serving up fewer
-                // favs pages than calculated that it should based on the given archive limit and page size.
+                // then just continue to the next smaller page of favs.
                 $this->logger->logInfo("received empty page of favs", __METHOD__.','.__LINE__);
                 $last_page_fetched_favorites--;
-                if ($last_page_fetched_favorites == 1) {
+                if ($last_page_fetched_favorites <= 1) { //'should' never be < 1;
                     $continue = false;
                 }
                 return array($fcount, $last_fav_id, $last_page_fetched_favorites, $continue);

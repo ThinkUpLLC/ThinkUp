@@ -429,6 +429,95 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
     }
 
+    public function testNoFavorites() {
+        $this->logger->logInfo("in testNoFavorites", __METHOD__.','.__LINE__);
+        self::setUpInstanceUserAmygdala();
+        $this->api->available_api_calls_for_crawler = 10;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage7/');
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->fetchInstanceFavorites();
+        // Save instance
+        $id = DAOFactory::getDAO('InstanceDAO');
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 0);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
+
+        $this->logger->logInfo("now in maintenance mode, second pass", __METHOD__.','.__LINE__);
+        $this->api->available_api_calls_for_crawler = 10;
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->fetchInstanceFavorites();
+        // Save instance
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 0);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
+    }
+
+    /**
+     * necessary due to previously-existing bug- should not normally occur
+     */
+    public function testNegPageRecovery() {
+        $this->logger->logInfo("in testNegPageRecovery", __METHOD__.','.__LINE__);
+        self::setUpInstanceUserAmygdala();
+        $this->api->available_api_calls_for_crawler = 10;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage8/');
+        $this->instance->last_page_fetched_favorites = -20;
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->fetchInstanceFavorites();
+        // Save instance
+        $id = DAOFactory::getDAO('InstanceDAO');
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 3);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
+    }
+
+    /**
+     * the user has favs, but they're not indicated in the profile yet.
+     */
+    public function testNoReportedFavorites() {
+        $this->logger->logInfo("in testNoReportedFavorites", __METHOD__.','.__LINE__);
+        self::setUpInstanceUserAmygdala();
+        $this->api->available_api_calls_for_crawler = 10;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage8/');
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->fetchInstanceFavorites();
+        // Save instance
+        $id = DAOFactory::getDAO('InstanceDAO');
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 3);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
+
+        $this->logger->logInfo("now in maintenance mode, second pass", __METHOD__.','.__LINE__);
+        $this->api->available_api_calls_for_crawler = 10;
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->fetchInstanceFavorites();
+        // Save instance
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 3);
+        $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
+    }
+
     public function testFetchFavoritesOfInstanceuserNoAPICalls() {
         $this->logger->logInfo("in testFetchFavoritesOfInstanceuserNoAPICalls", __METHOD__.','.__LINE__);
         self::setUpInstanceUserAmygdala();
