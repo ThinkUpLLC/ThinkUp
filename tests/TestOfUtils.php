@@ -36,6 +36,26 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $this->UnitTestCase('Utils class test');
     }
 
+    public function testRootPathConstant() {
+        Utils::defineConstantRootPath();
+
+        $this->assertTrue( defined('THINKUP_ROOT_PATH') );
+        $this->assertTrue( is_readable(THINKUP_ROOT_PATH) );
+    }
+
+    public function testWebappPathConstant() {
+        Utils::defineConstantWebappPath();
+
+        $this->assertTrue( defined('THINKUP_WEBAPP_PATH') );
+        $this->assertTrue( is_readable(THINKUP_WEBAPP_PATH) );
+    }
+
+    public function testBaseUrlConstant() {
+        Utils::defineConstantBaseUrl();
+
+        $this->assertTrue( defined('THINKUP_BASE_URL') );
+    }
+
     public function testgetPluginViewDirectory() {
         $config = Config::getInstance();
         $path = Utils::getPluginViewDirectory('twitter');

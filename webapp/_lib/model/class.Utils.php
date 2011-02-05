@@ -157,31 +157,51 @@ class Utils {
         }
     }
 
+    /**
+     * Define application constants
+     */
     public static function defineConstants() {
-        if ( !defined('THINKUP_ROOT_PATH') ) {
-            define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
-        }
+        self::defineConstantRootPath();
+        self::defineConstantWebappPath();
+        self::defineConstantBaseUrl();
+    }
 
-        if ( !defined('THINKUP_WEBAPP_PATH') ) {
-            if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
-                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
-            } else {
-                define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup/');
-            }
-        }
+    /**
+     * Define the root path to ThinkUp on the filesystem
+     */
+    public static function defineConstantRootPath() {
+        if ( defined('THINKUP_ROOT_PATH') ) return;
 
-        if ( !defined('THINKUP_BASE_URL') ) {
-            // Define base URL, the same as $THINKUP_CFG['site_root_path']
-            $current_script_path = explode('/', $_SERVER['PHP_SELF']);
+        define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
+    }
+
+    /**
+     * Define the ThinkUp's web root on the filesystem
+     */
+    public static function defineConstantWebappPath() {
+        if ( defined('THINKUP_WEBAPP_PATH') ) return;
+
+        if (file_exists(THINKUP_ROOT_PATH . 'webapp')) {
+            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
+        } else {
+            define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'thinkup/');
+        }
+    }
+
+    /**
+     * Define base URL, the same as $THINKUP_CFG['site_root_path']
+     */
+    public static function defineConstantBaseUrl() {
+        if ( defined('THINKUP_BASE_URL') ) return;
+
+        $dirs_under_root = array('account', 'post', 'session', 'user', 'install');
+        $current_script_path = explode('/', $_SERVER['PHP_SELF']);
+        array_pop($current_script_path);
+        if ( in_array( end($current_script_path), $dirs_under_root ) ) {
             array_pop($current_script_path);
-            if ( in_array($current_script_path[count($current_script_path)-1],
-            array('account', 'post', 'session', 'user', 'install')) ) {
-                array_pop($current_script_path);
-            }
-            $current_script_path = implode('/', $current_script_path) . '/';
-            define('THINKUP_BASE_URL', $current_script_path);
         }
-
+        $current_script_path = implode('/', $current_script_path) . '/';
+        define('THINKUP_BASE_URL', $current_script_path);
     }
 
     /**
