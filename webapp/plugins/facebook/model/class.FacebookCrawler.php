@@ -278,31 +278,41 @@ class FacebookCrawler {
                 }
                 // collapsed comment thread
                 if (isset($p->comments->count) && $p->comments->count > $comments_captured) {
-                    $comments_stream = FacebookGraphAPIAccessor::apiRequest('/'.$p->from->id.
-                        '_'.$post_id.'/comments', $this->access_token);
-                    if (isset($comments_stream) && is_array($comments_stream->data)) {
-                        foreach ($comments_stream->data as $c) {
-                            if (isset($c->from)) {
-                                $comment_id = explode("_", $c->id);
-                                $comment_id = $comment_id[2];
-                                //Get posts
-                                $ttp = array("post_id"=>$comment_id, "author_username"=>$c->from->name,
-                                "author_fullname"=>$c->from->name, "author_avatar"=>'https://graph.facebook.com/'.
-                                $c->from->id.'/picture', "author_user_id"=>$c->from->id, "post_text"=>$c->message,
-                                "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id, 
-                                "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network, 
-                                'is_protected'=>$is_protected);
-                                array_push($thinkup_posts, $ttp);
-                                //Get users
-                                $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
-                                "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->id.'/picture', 
-                                "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true', 
-                                "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments", 
-                                "network"=>'facebook'); //Users are always set to network=facebook
-                                array_push($thinkup_users, $ttu);
+                    $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/comments?access_token='.$this->access_token;
+                    do {
+                        $comments_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
+                        if (isset($comments_stream) && is_array($comments_stream->data)) {
+                            foreach ($comments_stream->data as $c) {
+                                if (isset($c->from)) {
+                                    $comment_id = explode("_", $c->id);
+                                    $comment_id = $comment_id[sizeof($comment_id)-1];
+                                    //Get posts
+                                    $ttp = array("post_id"=>$comment_id, "author_username"=>$c->from->name,
+                                    "author_fullname"=>$c->from->name, "author_avatar"=>'https://graph.facebook.com/'.
+                                    $c->from->id.'/picture', "author_user_id"=>$c->from->id, "post_text"=>$c->message,
+                                    "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id,
+                                    "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network,
+                                    'is_protected'=>$is_protected);
+                                    array_push($thinkup_posts, $ttp);
+                                    //Get users
+                                    $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
+                                    "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->id.'/picture',
+                                    "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true',
+                                    "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments",
+                                    "network"=>'facebook'); //Users are always set to network=facebook
+                                    array_push($thinkup_users, $ttu);
+                                }
+                            }
+                            if (isset($comments_stream->paging->next)) {
+                                $api_call = str_replace('\u00257C', '|', $comments_stream->paging->next);
                             }
                         }
+                        else {
+                            // no comments (pun intended)
+                            break;
+                        }
                     }
+                    while (isset($comments_stream->paging->next));
                 }
             }
         }
