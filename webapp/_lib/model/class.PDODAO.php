@@ -28,6 +28,7 @@
  * @author Christoffer Viken <christoffer@viken.me>
  * @author Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Piyush Mishra <me[at]piyushmishra[dot]com>
  */
 
 abstract class PDODAO {
@@ -226,10 +227,8 @@ abstract class PDODAO {
      * @return array numbered keys, with Objects
      */
     protected final function getDataRowsAsObjects($ps, $obj){
-        $data = array();
-        while($row = $ps->fetchObject($obj)){
-            $data[] = $row;
-        }
+        $ps->setFetchMode(PDO::FETCH_CLASS,$obj);
+        $data = $ps->fetchAll();
         $ps->closeCursor();
         return $data;
     }
@@ -283,9 +282,8 @@ abstract class PDODAO {
      * @return int|bool Inserted ID or false if there is none.
      */
     protected final function getInsertId($ps){
-        $rc = $ps->rowCount();
+        $rc = getUpdateCount($ps);
         $id = self::$PDO->lastInsertId();
-        $ps->closeCursor();
         if ($rc > 0 and $id > 0) {
             return $id;
         } else {
@@ -294,14 +292,13 @@ abstract class PDODAO {
     }
 
     /**
-     * Gets the number of inserted rows by a statement
+     * Proxy for getUpdateCount
      * @param PDOStatement $ps
      * @return int Insert count
      */
     protected final function getInsertCount($ps){
-        $rc = $ps->rowCount();
-        $ps->closeCursor();
-        return $rc;
+        //Alias for getUpdateCount
+        return getUpdateCount($ps);
     }
 
     /**
