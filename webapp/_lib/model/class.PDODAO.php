@@ -28,6 +28,7 @@
  * @author Christoffer Viken <christoffer@viken.me>
  * @author Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Piyush Mishra <me[at]piyushmishra[dot]com>
  */
 
 abstract class PDODAO {
@@ -187,9 +188,28 @@ abstract class PDODAO {
      */
     protected final function getDeleteCount($ps){
         //Alias for getUpdateCount
-        return $this->getUpdateCount($ps);
+        return self::getUpdateCount($ps);
     }
-
+    /**
+     * Gets a single row and closes cursor.
+     * @param PDOStatement $ps
+     * @return various array,object depending on context
+     */
+    protected final function fetchAndClose($ps){
+        $row = $ps->fetch();
+        $ps->closeCursor();
+        return $row;
+    }
+    /**
+     * Gets a multiple rows and closes cursor.
+     * @param PDOStatement $ps
+     * @return array of arrays/objects depending on context
+     */
+    protected final function fetchAllAndClose($ps){
+        $rows = $ps->fetchAll();
+        $ps->closeCursor();
+        return $rows;
+    }
     /**
      * Gets the rows returned by a statement as array of objects.
      * @param PDOStatement $ps
@@ -197,8 +217,8 @@ abstract class PDODAO {
      * @return array numbered keys, with objects
      */
     protected final function getDataRowAsObject($ps, $obj){
-        $row = $ps->fetchObject($obj);
-        $ps->closeCursor();
+        $ps->setFetchMode(PDO::FETCH_CLASS,$obj);
+        $row = $this->fetchAndClose($ps);
         if(!$row){
             $row = null;
         }
@@ -211,8 +231,8 @@ abstract class PDODAO {
      * @return array named keys
      */
     protected final function getDataRowAsArray($ps){
-        $row = $ps->fetch(PDO::FETCH_ASSOC);
-        $ps->closeCursor();
+        $ps->setFetchMode(PDO::FETCH_ASSOC);
+        $row = $this->fetchAndClose($ps);
         if(!$row){
             $row = null;
         }
@@ -226,11 +246,8 @@ abstract class PDODAO {
      * @return array numbered keys, with Objects
      */
     protected final function getDataRowsAsObjects($ps, $obj){
-        $data = array();
-        while($row = $ps->fetchObject($obj)){
-            $data[] = $row;
-        }
-        $ps->closeCursor();
+        $ps->setFetchMode(PDO::FETCH_CLASS,$obj);
+        $data = $this->fetchAllAndClose($ps);
         return $data;
     }
 
@@ -240,8 +257,8 @@ abstract class PDODAO {
      * @return array numbered keys, with array named keys
      */
     protected final function getDataRowsAsArrays($ps){
-        $data = $ps->fetchAll(PDO::FETCH_ASSOC);
-        $ps->closeCursor();
+        $ps->setFetchMode(PDO::FETCH_ASSOC);
+        $data = $this->fetchAllAndClose($ps);
         return $data;
     }
 
@@ -252,8 +269,8 @@ abstract class PDODAO {
      * @param int Count
      */
     protected final function getDataCountResult($ps){
-        $row = $ps->fetch(PDO::FETCH_ASSOC);
-        $ps->closeCursor();
+        $ps->setFetchMode(PDO::FETCH_ASSOC);
+        $row = $this->fetchAndClose($ps);
         if(!$row or !isset($row['count'])){
             $count = 0;
         } else {
@@ -268,8 +285,7 @@ abstract class PDODAO {
      * @return bool True if row(s) are returned
      */
     protected final function getDataIsReturned($ps){
-        $row = $ps->fetch();
-        $ps->closeCursor();
+        $row = $this->fetchAndClose($ps);
         $ret = false;
         if ($row && count($row) > 0) {
             $ret = true;
@@ -283,9 +299,8 @@ abstract class PDODAO {
      * @return int|bool Inserted ID or false if there is none.
      */
     protected final function getInsertId($ps){
-        $rc = $ps->rowCount();
+        $rc = self::getUpdateCount($ps);
         $id = self::$PDO->lastInsertId();
-        $ps->closeCursor();
         if ($rc > 0 and $id > 0) {
             return $id;
         } else {
@@ -294,14 +309,13 @@ abstract class PDODAO {
     }
 
     /**
-     * Gets the number of inserted rows by a statement
+     * Proxy for getUpdateCount
      * @param PDOStatement $ps
      * @return int Insert count
      */
     protected final function getInsertCount($ps){
-        $rc = $ps->rowCount();
-        $ps->closeCursor();
-        return $rc;
+        //Alias for getUpdateCount
+        return self::getUpdateCount($ps);
     }
 
     /**
@@ -333,5 +347,4 @@ abstract class PDODAO {
     public final static function convertDBToBool($val){
         return $val == 0 ? false : true;
     }
-
 }

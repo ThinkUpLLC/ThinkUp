@@ -74,7 +74,7 @@ SQL;
             ':email'=>$email
         );
         $ps = $this->execute($q, $vars);
-        return $this->getDataIsReturned($ps, $vars);
+        return $this->getDataIsReturned($ps);
     }
 
     public function getPass($email) {
