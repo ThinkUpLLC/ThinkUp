@@ -136,4 +136,13 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $user = $ud->getUserByName('Matthew Fleisher', 'facebook page');
         $this->assertEqual($user, null);
     }
+
+    public function testPostReplyPaging() {
+        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken');
+
+        $fbc->fetchPagePostsAndReplies('133954286636768');
+        $pd = new PostMySQLDAO();
+        $post = $pd->getPost('144568048938151', 'facebook page');
+        $this->assertEqual($post->reply_count_cache, 70);
+    }
 }
