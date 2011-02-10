@@ -306,7 +306,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 }
                 $cnt++;
                 $this->get($token_url . "&migration_index=" . $cnt);
-                $this->assertText('{"processed":true,');
+                $this->assertText('{ "processed":true,');
 
                 $this->debug("Running migration assertion test for " . $json_migration->version);
                 $assertions = $MIGRATIONS[ $json_migration->version ];
@@ -330,7 +330,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 }
             }
             $this->get($token_url . '&migration_done=true');
-            $this->assertText('{"migration_complete":true}');
+            $this->assertText('{ "migration_complete":true }');
             $this->get($this->url.'/test_installer/thinkup/');
             $this->assertText('Logged in as: user@example.com');
              
@@ -354,7 +354,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     }
     /**
      * Downloads install/upgrade zip file if needed, returns path to zip file.
-     * @param str Url
+     * @param str URL
      * @param str Version
      * @return str Path to download file
      */

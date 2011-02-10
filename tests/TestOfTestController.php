@@ -97,6 +97,7 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $this->assertIsA($obj, 'stdClass');
         $this->assertEqual($obj->aname, 'a value');
         $this->assertIsA($obj->alist, 'Array');
+        $this->assertEqual($obj->alink, 'http://thinkupapp.com');
         $this->assertEqual( $controller->getContentType(),'application/json');
     }
 
@@ -142,6 +143,7 @@ class TestOfTestController extends ThinkUpUnitTestCase {
 
         $_GET['json'] = true;
         $results = $controller->go();
+        $this->debug($results);
         $this->assertFalse(strpos($results, '<html'));
         $this->assertPattern('/{/', $results);
         $this->assertPattern('/Testing exception handling/', $results);
