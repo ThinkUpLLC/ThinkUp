@@ -54,10 +54,12 @@ interface PostDAO {
      * @param int $unit Defaults to km
      * @param bool $public Defaults to false
      * @param int $count Defaults to 350
+     * @param int $page The page of results to return. Defaults to 1. Pages start
+     * at 1, not 0.
      * @return array Posts with author object set, and optional link object set
      */
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
-    $count = 350);
+    $count = 350, $page = 1);
 
     /**
      * Get replies Iterator to a post
@@ -67,10 +69,12 @@ interface PostDAO {
      * @param int $unit Defaults to km
      * @param bool $public Defaults to false
      * @param int $count Defaults to 350
+     * @param int $page The page of results to return. Defaults to 1. Pages start
+     * at 1, not 0.
      * @return Iterator Posts with author object set, and optional link object set
      */
     public function getRepliesToPostIterator($post_id, $network, $order_by = 'default', $unit = 'km',
-    $is_public = false, $count = 350);
+    $is_public = false, $count = 350, $page = 1);
 
     /**
      * Get retweets of post
@@ -79,28 +83,40 @@ interface PostDAO {
      * @param str $order_by Order of sorting posts
      * @param int $unit Defaults to km
      * @param bool $public Defaults to false
+     * @param int $count The number of results to return. Defaults to null which
+     * means return all retweets of this post.
+     * @param int $page The page of results to return. Defaults to 1. The pages
+     * start at 1, not 0.
      * @return array Retweets of post with optional link object set
      */
     public function getRetweetsOfPost($post_id, $network = 'twitter', $order_by = 'default', $unit = 'km',
-    $is_public = false);
+    $is_public = false, $count = null, $page = 1);
 
     /**
      * Get all related posts (retweets and replies)
      * @param int $post_id
      * @param str $network Defaults to 'twitter'
      * @param bool $is_public Defaults to false
+     * @param int $page The page of results to return. Defaults to 1.
+     * @param bool $geo_encoded_only Defaults to true.
+     * @param bool $include_original_post Whether or not to include the post you're querying. Defaults to true.
      * @return array Array of replies, retweets, and original post
      */
-    public function getRelatedPostsArray($post_id, $network = 'twitter', $is_public = false, $count = 350);
+    public function getRelatedPostsArray($post_id, $network = 'twitter', $is_public = false, $count = 350, $page =1,
+            $geo_encoded_only = true, $include_original_post = true);
 
     /**
      * Get all related posts (retweets and replies)
      * @param int $post_id
      * @param str $network Defaults to 'twitter'
      * @param bool $is_public Defaults to false
+     * @param int $page The page of results to return. Defaults to 1.
+     * @param bool $geo_encoded_only Defaults to true.
+     * @param bool $include_original_post Whether or not to include the post you're querying. Defaults to true.
      * @return array Array of post objects
      */
-    public function getRelatedPosts($post_id, $network = 'twitter', $is_public = false, $count = 350);
+    public function getRelatedPosts($post_id, $network = 'twitter', $is_public = false, $count = 350, $page = 1,
+            $geo_encoded_only = true, $include_original_post = true);
 
     /**
      * Get posts that author has replied to (for question/answer exchanges)
@@ -187,9 +203,14 @@ interface PostDAO {
      * @param int $count
      * @param int $page
      * @param bool $include_replies If true, return posts with in_reply_to_post_id set
+     * @param str $order_by The column to order the results by. Defaults to "pub_date".
+     * @param str $direction The direction with which to order the results. Defaults
+     * to "DESC".
+     * @param bool $is_public Whether or not these results are going to be shown publicly.
      * @return array Posts by author with link set
      */
-    public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true);
+    public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true,
+            $order_by = 'pub_date', $direction = 'DESC', $is_public = false);
 
     /**
      * Get all posts by an author given an author ID that contain a question mark
@@ -197,9 +218,31 @@ interface PostDAO {
      * @param str  $network
      * @param int $count
      * @param int $page
+     * @param str $order_by The column to order the results by. Defaults to "pub_date".
+     * @param str $direction The direction with which to order the results. Defaults
+     * to "DESC".
+     * @param bool $is_public Whether or not these results are going to be shown publicly. Defaults to false.
      * @return array Posts by author with a question mark in them with link set
      */
-    public function getAllQuestionPosts($author_id, $network, $count, $page=1);
+    public function getAllQuestionPosts($author_id, $network, $count, $page=1, $order_by = 'pub_date',
+            $direction = 'DESC', $is_public = false);
+
+    /**
+     * Get all posts by a given user based on a given time frame.
+     *
+     * @param int $author_id The ID of the author to search for.
+     * @param str $network The network of the user to search for.
+     * @param mixed $from The date to search from. Can be a unix timestamp or a valid date string.
+     * @param mixed $ntil The date to search until (not inclusive). Can be a unix timestamp or a valid date string.
+     * @param str $order_by field name to order by. Defaults to pub_date.
+     * @param str $direction either "DESC" or "ASC". Defaults to DESC.
+     * @param bool $iterator Specify whether or not you want a post iterator returned. Default to
+     * false.
+     * @param bool $is_public Whether or not these results are going to be displayed publicly. Defaults to false.
+     * @return array Posts with link object set
+     */
+    public function getPostsByUserInRange($author_id, $network, $from, $until, $order_by="pub_date", $direction="DESC",
+            $iterator=false, $is_public = false);
 
     /**
      * Get all posts by an author given an author ID
@@ -207,9 +250,14 @@ interface PostDAO {
      * @param str  $network
      * @param int $count
      * @param bool $include_replies If true, return posts with in_reply_to_post_id set
+     * @param str $order_by The database column to order the results by.
+     * @param str $direction The direction with which to order the results. Defaults
+     * to "DESC".
+     * @param bool $is_public Whether or not these results are going to be shown publicly. Defaults to false.
      * @return Iterator Posts Iterator
      */
-    public function getAllPostsIterator($author_id, $network, $count, $include_replies=true);
+    public function getAllPostsIterator($author_id, $network, $count, $include_replies=true,
+            $order_by = 'pub_date', $direction = 'DESC', $is_public = false);
 
     /**
      * Get all posts by author given the author's username
@@ -248,9 +296,13 @@ interface PostDAO {
      * @param str  $author_username
      * @param int $count
      * @param str $network defaults to "twitter"
+     * @param int $page Page number, defaults to 1
+     * @param bool $public Public mentions only, defaults to false
+     * @param bool $include_rts Whether or not to include retweets. Defaults to true.
      * @return Iterator PostIterator object
      */
-    public function getAllMentionsIterator($author_username, $count, $network = "twitter");
+    public function getAllMentionsIterator($author_username, $count, $network = "twitter", $page=1, $public=false,
+            $include_rts = true);
 
     /**
      * Get a certain number of mentions of a username on a given network
@@ -259,18 +311,27 @@ interface PostDAO {
      * @param str $network defaults to "twitter"
      * @param int $page Page number, defaults to 1
      * @param bool $public Public mentions only, defaults to false
+     * @param bool $include_rts Whether or not to include retweets. Defaults to true.
      * @return array of Post objects with author and link set
      */
-    public function getAllMentions($author_username, $count, $network = "twitter", $page=1, $public=false);
+    public function getAllMentions($author_username, $count, $network = "twitter", $page=1, $public=false,
+            $include_rts = true);
 
     /**
      * Get all replies to a given user ID
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page Page number, defaults to 1
+     * @param str $order_by The database column to order the results by.
+     * @param str $direction The direction with which to order the results. Defaults
+     * to "DESC".
+     * @param bool $is_public Whether or not the result of the method call will be displayed publicly. Defaults to
+     * false.
      * @return array Posts with author and link set
      */
-    public function getAllReplies($user_id, $network, $count);
+    public function getAllReplies($user_id, $network, $count, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
+            $is_public = false);
 
     /**
      * Get posts by a user ordered by reply count desc
@@ -278,9 +339,11 @@ interface PostDAO {
      * @param str $network
      * @param int $count
      * @param int $page Page number, defaults to 1
+     * @param bool $is_public Whether or not the results of this method call are going to be publicly displayed.
+     * Defaults to false.
      * @return array Posts with link object set
      */
-    public function getMostRepliedToPosts($user_id, $network, $count, $page=1);
+    public function getMostRepliedToPosts($user_id, $network, $count, $page=1, $is_public = false);
 
     /**
      * Get posts by a usre ordered by retweet count desc
@@ -288,9 +351,11 @@ interface PostDAO {
      * @param str $network
      * @param int $count
      * @param int $page Page number, defaults to 1
+     * @param bool $is_public Whether or not the results of this method call are going to be publicly displayed.
+     * Defaults to false.
      * @return array Posts with link object set
      */
-    public function getMostRetweetedPosts($user_id, $network, $count, $page=1);
+    public function getMostRetweetedPosts($user_id, $network, $count, $page=1, $is_public = false);
 
     /**
      * Get a page of posts by public instances ordered by pub_date desc
@@ -356,21 +421,25 @@ interface PostDAO {
 
     /**
      * Get specified number of most-replied-to posts by a username on a network
-     * @param str $username
-     * @param str $network
-     * @param int $count
+     * @param str $username The username of the user to fetch posts for.
+     * @param str $network The network of the user to fetch posts for.
+     * @param int $count The number of posts to fetch.
+     * @param bool $is_public Whether or not the results from this method call are going to be publicly displayed.
+     * Defaults to false.
      * @return array Posts
      */
-    public function getMostRepliedToPostsInLastWeek($username, $network, $count);
+    public function getMostRepliedToPostsInLastWeek($username, $network, $count, $is_public = false);
 
     /**
      * Get specified number of most-retweeted posts by a username on a network
-     * @param str $username
-     * @param str $network
-     * @param int $count
+     * @param str $username The username of the user to fetch posts for.
+     * @param str $network The network of the user to fetch posts for.
+     * @param int $count The number of posts to fetch.
+     * @param bool $is_public Whether or not the results from this method call are going to be publicly displayed.
+     * Defaults to false.
      * @return array Posts
      */
-    public function getMostRetweetedPostsInLastWeek($username, $network, $count);
+    public function getMostRetweetedPostsInLastWeek($username, $network, $count, $is_public = false);
 
     /**
      * Calculate how much each client is used by a user on a specific network

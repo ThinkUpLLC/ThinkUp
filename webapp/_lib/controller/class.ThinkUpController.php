@@ -186,35 +186,55 @@ abstract class ThinkUpController {
                 $cache_key = $this->getCacheKeyString();
                 if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type,
                 'text/javascript') === false) {
-                $view_start_time = microtime(true);
-                $cache_source = $this->shouldRefreshCache()?"DATABASE":"FILE";
-                $results = $this->view_mgr->fetch($this->view_template, $cache_key);
-                $view_end_time = microtime(true);
-                $total_time = $view_end_time - $view_start_time;
-                $profiler = Profiler::getInstance();
-                $profiler->add($total_time, "Rendered view from ". $cache_source . ", cache key: <i>".
-                $this->getCacheKeyString(), false).'</i>';
-                return $results;
+                    $view_start_time = microtime(true);
+                    $cache_source = $this->shouldRefreshCache()?"DATABASE":"FILE";
+                    $results = $this->view_mgr->fetch($this->view_template, $cache_key);
+                    $view_end_time = microtime(true);
+                    $total_time = $view_end_time - $view_start_time;
+                    $profiler = Profiler::getInstance();
+                    $profiler->add($total_time, "Rendered view from ". $cache_source . ", cache key: <i>".
+                    $this->getCacheKeyString(), false).'</i>';
+                    return $results;
                 } else {
                     return $this->view_mgr->fetch($this->view_template, $cache_key);
                 }
             } else {
                 if ($this->profiler_enabled && !isset($this->json_data) && strpos($this->content_type,
                 'text/javascript') === false) {
-                $view_start_time = microtime(true);
-                $results = $this->view_mgr->fetch($this->view_template);
-                $view_end_time = microtime(true);
-                $total_time = $view_end_time - $view_start_time;
-                $profiler = Profiler::getInstance();
-                $profiler->add($total_time, "Rendered view (not cached)", false);
-                return $results;
+                    $view_start_time = microtime(true);
+                    $results = $this->view_mgr->fetch($this->view_template);
+                    $view_end_time = microtime(true);
+                    $total_time = $view_end_time - $view_start_time;
+                    $profiler = Profiler::getInstance();
+                    $profiler->add($total_time, "Rendered view (not cached)", false);
+                    return $results;
                 } else  {
                     return $this->view_mgr->fetch($this->view_template);
                 }
             }
         } else if(isset($this->json_data) ) {
             $this->setContentType('application/json');
-            return json_encode($this->json_data);
+            if ($this->view_mgr->isViewCached()) {
+                if ($this->view_mgr->is_cached('json.tpl', $this->getCacheKeyString())) {
+                    return $this->view_mgr->fetch('json.tpl', $this->getCacheKeyString());
+                } else {
+                    $json = json_encode($this->json_data);
+                    // strip escaped forwardslashes
+                    $json = preg_replace("/\\\\\//", '/', $json);
+                    $json = Utils::convertNumericStrings($json);
+                    $json = Utils::indentJSON($json);
+                    $this->addToView('json', $json);
+                    return $this->view_mgr->fetch('json.tpl', $this->getCacheKeyString());
+                }
+            } else {
+                $json = json_encode($this->json_data);
+                // strip escaped forwardslashes
+                $json = preg_replace("/\\\\\//", '/', $json);
+                $json = Utils::convertNumericStrings($json);
+                $json = Utils::indentJSON($json);
+                $this->addToView('json', $json);
+                return $this->view_mgr->fetch('json.tpl');
+            }
         } else {
             throw new Exception(get_class($this).': No view template specified');
         }

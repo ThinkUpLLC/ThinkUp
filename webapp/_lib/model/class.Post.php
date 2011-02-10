@@ -250,4 +250,38 @@ class Post {
         preg_match_all('!https?://[\w][\S]+!', $post_text, $matches);
         return $matches[0];
     }
+
+    /**
+     * Extracts mentions from a Tweet.
+     *
+     * @param str $post_text The post text to search.
+     * @return array $matches All mentions in this tweet.
+     */
+    public static function extractMentions($post_text) {
+        preg_match_all('/(^|[^a-z0-9_])@([a-z0-9_]+)/i', $post_text, $matches);
+
+        // sometimes there's leading or trailing whitespace on the match, trim it
+        foreach ($matches[0] as $key=>$match) {
+            $matches[0][$key] = trim($match, ' ');
+        }
+
+        return $matches[0];
+    }
+
+    /**
+     * Extracts hashtags from a Tweet.
+     *
+     * @param str $post_text The post text to search.
+     * @return array $matches All hashtags in this tweet.
+     */
+    public static function extractHashtags($post_text) {
+        preg_match_all('/(^|[^a-z0-9_])#([a-z0-9_]+)/i', $post_text, $matches);
+
+        // sometimes there's leading or trailing whitespace on the match, trim it
+        foreach ($matches[0] as $key=>$match) {
+            $matches[0][$key] = trim($match, ' ');
+        }
+
+        return $matches[0];
+    }
 }

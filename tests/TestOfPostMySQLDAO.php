@@ -309,6 +309,9 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new PostMySQLDAO();
         $questions = $dao->getAllQuestionPosts(13, 'twitter', 10);
+
+        $this->debug('Questions: ' . $questions);
+
         $this->assertEqual(sizeof($questions), 1);
         $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?' );
 
@@ -325,6 +328,24 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'post_text'=>'Love this video: http://www.youtube.com/watch?v=PQu-zrE-k5s', 'network'=>'twitter', 'in_reply_to_post_id'=>0, 'pub_date'=>'-3d'));
         $questions = $dao->getAllQuestionPosts(13, 'twitter', 10);
         $this->assertEqual(sizeof($questions), 2);
+
+        // test paging
+        $questions = $dao->getAllQuestionPosts(13, 'twitter', $count = 1, $page = 1);
+        $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?');
+
+        $questions = $dao->getAllQuestionPosts(13, 'twitter', $count = 1, $page = 2);
+        $this->assertEqual($questions[0]->post_text, 'Best sushi in NY? downtown');
+
+        // test count
+        $questions = $dao->getAllQuestionPosts(13, 'twitter', $count = 1, $page = 1);
+        $this->assertEqual(sizeof($questions), 1);
+
+        $questions = $dao->getAllQuestionPosts(13, 'twitter', $count = 2, $page = 1);
+        $this->assertEqual(sizeof($questions), 2);
+
+        // test default order
+        $questions = $dao->getAllQuestionPosts(13, 'twitter', $count = 1, $page = 1, "';-- SELECT");
+        $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?');
     }
     /**
      * Test getOrphanReplies
@@ -363,6 +384,22 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             " should be less than or equal to this post's count of ".$post->reply_count_cache);
             $prev_count = $post->reply_count_cache;
         }
+
+        // test paging
+        $posts = $dao->getMostRepliedToPosts(13, 'twitter', $count = 1, $page = 1);
+        $prev_count = $posts[0]->reply_count_cache;
+        for ($i = 2; $i <= 10; $i++) {
+            $posts = $dao->getMostRepliedToPosts(13, 'twitter', $count = 1, $page = $i);
+            $this->assertTrue($posts[0]->reply_count_cache <= $prev_count, "previous count ".$prev_count.
+            " should be less than or equal to this post's count of ".$posts[0]->reply_count_cache);
+            $prev_count = $posts[0]->reply_count_cache;
+        }
+
+        // test count
+        for ($i = 2; $i <= 10; $i++) {
+            $posts = $dao->getMostRepliedToPosts(13, 'twitter', $count = $i, $page = 1);
+            $this->assertTrue(count($posts) == $i);
+        }
     }
 
     /**
@@ -375,7 +412,23 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         foreach ($posts as $post) {
             $this->assertTrue($post->retweet_count_cache >= $prev_count, "previous count ".$prev_count.
             " should be less than or equal to this post's count of ".$post->retweet_count_cache);
-            $prev_count = $post->reply_count_cache;
+            $prev_count = $post->retweet_count_cache;
+        }
+
+        // test paging
+        $posts = $dao->getMostRetweetedPosts(13, 'twitter', $count = 1, $page = 1);
+        $prev_count = $posts[0]->retweet_count_cache;
+        for ($i = 2; $i <= 10; $i++) {
+            $posts = $dao->getMostRetweetedPosts(13, 'twitter', $count = 1, $page = $i);
+            $this->assertTrue($posts[0]->retweet_count_cache <= $prev_count, "previous count ".$prev_count.
+            " should be less than or equal to this post's count of ".$posts[0]->retweet_count_cache);
+            $prev_count = $posts[0]->retweet_count_cache;
+        }
+
+        // test count
+        for ($i = 2; $i <= 10; $i++) {
+            $posts = $dao->getMostRetweetedPosts(13, 'twitter', $count = $i, $page = 1);
+            $this->assertTrue(count($posts) == $i);
         }
     }
 
@@ -385,12 +438,32 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetAllReplies() {
         $dao = new PostMySQLDAO();
         $replies = $dao->getAllReplies(13, 'twitter', 10);
-        $this->assertTrue(sizeof($replies), 10);
         $this->assertEqual(sizeof($replies), 1);
         $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
 
+        // test paging
+        $replies = $dao->getAllReplies(13, 'twitter', $count = 1, $page = 1);
+        $this->assertEqual(sizeof($replies), 1);
+        $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
+
+        // this query doesn't have a second page, so this should return nothing
+        $replies = $dao->getAllReplies(13, 'twitter', $count = 1, $page = 2);
+        $this->assertEqual(sizeof($replies), 0);
+
+        // test count
+        $replies = $dao->getAllReplies(13, 'twitter', $count = 0, $page = 1);
+        $this->assertEqual(sizeof($replies), 0);
+
+        $replies = $dao->getAllReplies(13, 'twitter', $count = 1, $page = 1);
+        $this->assertEqual(sizeof($replies), 1);
+
         $replies = $dao->getAllReplies(18, 'twitter', 10);
         $this->assertEqual(sizeof($replies), 0);
+
+        // test default order_by
+        $replies = $dao->getAllReplies(13, 'twitter', 10, 1, "';-- SELECT");
+        $this->assertEqual(sizeof($replies), 1);
+        $this->assertEqual($replies[0]->post_text, "@ev When will Twitter have a business model?");
     }
 
     /**
@@ -405,6 +478,48 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $mentions = $dao->getAllMentions("jack", 10, 'twitter');
         $this->assertTrue(sizeof($mentions), 10);
         $this->assertEqual($mentions[0]->post_text, "Hey @ev and @jack should fix Twitter - post 9");
+
+        // test paging
+        $mentions = $dao->getAllMentions("jack", $count = 1, 'twitter', $page = 1);
+        $this->assertEqual($mentions[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9');
+
+        $mentions = $dao->getAllMentions("jack", $count = 1, 'twitter', $page = 2);
+        $this->assertEqual($mentions[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 8');
+
+        $mentions = $dao->getAllMentions("jack", $count = 1, 'twitter', $page = 3);
+        $this->assertEqual($mentions[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 7');
+
+        // test count
+        $mentions = $dao->getAllMentions("jack", $count = 1, 'twitter', $page = 1);
+        $this->assertEqual(count($mentions), 1);
+
+        $mentions = $dao->getAllMentions("jack", $count = 2, 'twitter', $page = 1);
+        $this->assertEqual(count($mentions), 2);
+
+        $mentions = $dao->getAllMentions("jack", $count = 3, 'twitter', $page = 1);
+        $this->assertEqual(count($mentions), 3);
+
+        // insert a retweet
+        $builders[] = FixtureBuilder::build('posts', array('author_user_id'=>20,
+                'author_username'=>'user1', 'author_fullname'=>'User 1', 'in_reply_to_post_id'=>null,
+                'in_retweet_of_post_id'=>121, 'is_geo_encoded'=>0, 'network'=>'twitter',
+                'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => 13,
+                'post_text'=>'Hey @ev and @jack thanks for founding Twitter retweet 1',
+                'pub_date'=>'2006-03-01 00:01:00', 'location'=>'New Delhi'));
+
+        // test no retweets
+        $mentions = $dao->getAllMentions("jack", 10, 'twitter', $page = 1, $public = false,
+                $include_rts = false);
+        $this->assertEqual(sizeof($mentions), 10);
+
+        foreach ($mentions as $mention) {
+            $this->assertTrue($mention->in_retweet_of_post_id == null, "Retweet included in a call to getAllMentions
+                that specifies no retweets.");
+        }
+
+        // test default order_by
+        $mentions = $dao->getAllMentions("jack", $count = 1, 'twitter', $page = 1, false, true, "';-- SELECT");
+        $this->assertEqual($mentions[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9');
     }
 
     /**
@@ -429,6 +544,42 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $cnt++;
         }
         $this->assertEqual($cnt, 10);
+
+        // test paging
+        $mentions = $dao->getAllMentionsIterator("ev", $count = 1, 'twitter', $page = 1);
+        $mentions->valid();
+        $this->assertEqual($mentions->current()->post_text, "Hey @ev and @jack should fix Twitter - post 9");
+
+        $mentions = $dao->getAllMentionsIterator("ev", $count = 1, 'twitter', $page = 2);
+        $mentions->valid();
+        $this->assertEqual($mentions->current()->post_text, "Hey @ev and @jack should fix Twitter - post 8");
+
+        $mentions = $dao->getAllMentionsIterator("ev", $count = 1, 'twitter', $page = 3);
+        $mentions->valid();
+        $this->assertEqual($mentions->current()->post_text, "Hey @ev and @jack should fix Twitter - post 7");
+
+        // insert a retweet
+        $builders[] = FixtureBuilder::build('posts', array('author_user_id'=>20,
+                'author_username'=>'user1', 'author_fullname'=>'User 1', 'in_reply_to_post_id'=>null,
+                'in_retweet_of_post_id'=>121, 'is_geo_encoded'=>0, 'network'=>'twitter',
+                'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => 13,
+                'post_text'=>'Hey @ev and @jack thanks for founding Twitter retweet 1',
+                'pub_date'=>'2006-03-01 00:01:00', 'location'=>'New Delhi'));
+
+        // test count and no retweets
+        $mentions = $dao->getAllMentionsIterator("ev", $count = 10, 'twitter', $page = 1, $public = false,
+                $include_rts = false);
+        $count = 0;
+        foreach ($mentions as $mention) {
+            $this->assertEqual($mention->in_retweet_of_post_id, null);
+            $count++;
+        }
+        $this->assertEqual($count, 10);
+
+        // test default order_by
+        $mentions = $dao->getAllMentionsIterator("ev", $count = 1, 'twitter', $page = 1, false, true, "';-- SELECT");
+        $mentions->valid();
+        $this->assertEqual($mentions->current()->post_text, "Hey @ev and @jack should fix Twitter - post 9");
     }
 
     /**
@@ -521,6 +672,24 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         //non-existent author
         $posts = $dao->getAllPosts(30, 'twitter', 10);
         $this->assertEqual(sizeof($posts), 0);
+
+        // test order by
+        $posts = $dao->getAllPosts(18, 'twitter', 10, $page = 1, $include_replies = true, $order_by = 'pub_date',
+                $direction = 'DESC');
+        $this->assertEqual(sizeof($posts), 10);
+
+        $this->assertEqual($posts[0]->post_id, 138);
+        $this->assertEqual($posts[1]->post_id, 79);
+        $this->assertEqual($posts[2]->post_id, 78);
+
+        // test default order_by
+        $posts = $dao->getAllPosts(18, 'twitter', 10, $page = 1, $include_replies = true, $order_by = "';-- SELECT",
+                $direction = 'DESC');
+        $this->assertEqual(sizeof($posts), 10);
+
+        $this->assertEqual($posts[0]->post_id, 138);
+        $this->assertEqual($posts[1]->post_id, 79);
+        $this->assertEqual($posts[2]->post_id, 78);
     }
 
     /**
@@ -535,6 +704,17 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $cnt++;
         }
         $this->assertEqual($cnt, 10);
+
+        // test order by
+        $posts = $dao->getAllPostsIterator(18, 'twitter', 10, $include_replies = true,
+                $order_by = 'pub_date', $direction = 'DESC');
+
+        $posts->valid();
+        $this->assertEqual($posts->current()->post_id, 138);
+        $posts->valid();
+        $this->assertEqual($posts->current()->post_id, 79);
+        $posts->valid();
+        $this->assertEqual($posts->current()->post_id, 78);
     }
 
     /**
@@ -623,6 +803,46 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($posts), 2);
         $this->assertEqual($posts[0]->post_text, '@ev Cool!', "post reply");
         $this->assertEqual($posts[1]->post_text, '@ev Rock on!', "post reply");
+
+        // test paging
+        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+                $count = 1, $page = 1);
+        $this->assertEqual(sizeof($posts), 1);
+        $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
+        $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
+        $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
+
+        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+                $count = 1, $page = 2);
+        $this->assertEqual(sizeof($posts), 1);
+        $this->assertEqual($posts[0]->post_text, '@shutterbug This is a link post reply http://example.com/');
+        $this->assertEqual($posts[0]->author->username, 'linkbaiter');
+        $this->assertEqual($posts[0]->location,'Mumbai, Maharashtra, India');
+
+        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+                $count = 1, $page = 3);
+        $this->assertEqual(sizeof($posts), 1);
+        $this->assertEqual($posts[0]->location,'Chennai, Tamil Nadu, India');
+
+        // test count
+        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+                $count = 1, $page = 1);
+        $this->assertEqual(sizeof($posts), 1);
+        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+                $count = 2, $page = 1);
+        $this->assertEqual(sizeof($posts), 2);
+        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+                $count = 3, $page = 1);
+        $this->assertEqual(sizeof($posts), 3);
+
+        // test default order_by
+        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+                $count = 3, $page = 1, "';-- SELECT");
+        $this->assertEqual(sizeof($posts), 3);
+        $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
+        $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
+        $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
+
     }
 
     private function buildFacebookPostAndReplies() {
@@ -725,6 +945,47 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                 "post reply");
         $this->assertEqual($post3->post_id, 133, "post ID");
 
+        // test paging
+        $posts_it = $dao->getRepliesToPostIterator(41, 'twitter', $order_by = 'default', $unit = 'km',
+                $is_public = false, $count = 1, $page = 1);
+        $posts_it->valid();
+        $this->assertEqual($posts_it->current()->post_text, '@shutterbug Nice shot!');
+
+        $posts_it = $dao->getRepliesToPostIterator(41, 'twitter', $order_by = 'default', $unit = 'km',
+                $is_public = false, $count = 1, $page = 2);
+        $posts_it->valid();
+        $this->assertEqual($posts_it->current()->location, 'Chennai, Tamil Nadu, India');
+
+        $posts_it = $dao->getRepliesToPostIterator(41, 'twitter', $order_by = 'default', $unit = 'km',
+                $is_public = false, $count = 1, $page = 3);
+        $posts_it->valid();
+        $this->assertEqual($posts_it->current()->post_text,
+                '@shutterbug This is a link post reply http://example.com/');
+
+        // test count
+        $posts = array();
+        $posts_it = $dao->getRepliesToPostIterator(41, 'twitter', $order_by = 'default', $unit = 'km',
+                $is_public = false, $count = 1, $page = 1);
+        foreach($posts_it as $post) {
+            $posts[] = $post;
+        }
+        $this->assertEqual(sizeof($posts), 1);
+
+        $posts = array();
+        $posts_it = $dao->getRepliesToPostIterator(41, 'twitter', $order_by = 'default', $unit = 'km',
+                $is_public = false, $count = 2, $page = 1);
+        foreach($posts_it as $post) {
+            $posts[] = $post;
+        }
+        $this->assertEqual(sizeof($posts), 2);
+
+        $posts = array();
+        $posts_it = $dao->getRepliesToPostIterator(41, 'twitter', $order_by = 'default', $unit = 'km',
+                $is_public = false, $count = 3, $page = 1);
+        foreach($posts_it as $post) {
+            $posts[] = $post;
+        }
+        $this->assertEqual(sizeof($posts), 3);
     }
 
     /**
@@ -752,6 +1013,44 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'RT @quoter Be liberal in what you accept and conservative in what you send', "post reply");
         $this->assertEqual($posts[2]->location,'Chennai, Tamil Nadu, India');
         $this->assertEqual($posts[2]->author->username, 'user1', "Post author");
+
+        // Sorting by Date
+        $posts = $dao->getRetweetsOfPost(134, 'twitter', $order_by = 'pub_date', $unit = 'km', $is_public = false,
+                $count = 10, $page = 1);
+        $pub_date = strtotime($posts[0]->pub_date);
+        foreach ($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) <= $pub_date);
+            $pub_date = strtotime($post->pub_date);
+        }
+
+        // test paging
+        $posts = $dao->getRetweetsOfPost(134, 'twitter', $order_by = 'default', $unit = 'km', $is_public = false,
+                $count = 1, $page = 1);
+        $this->assertEqual(sizeof($posts), 1);
+        $this->assertEqual($posts[0]->location,'Chennai, Tamil Nadu, India');
+
+        $posts = $dao->getRetweetsOfPost(134, 'twitter', $order_by = 'default', $unit = 'km', $is_public = false,
+                $count = 1, $page = 2);
+        $this->assertEqual(sizeof($posts), 1);
+        $this->assertEqual($posts[0]->location,'Dwarka, New Delhi, Delhi, India');
+
+        $posts = $dao->getRetweetsOfPost(134, 'twitter', $order_by = 'default', $unit = 'km', $is_public = false,
+                $count = 1, $page = 3);
+        $this->assertEqual(sizeof($posts), 1);
+        $this->assertEqual($posts[0]->location,'Mumbai, Maharashtra, India');
+
+        // test count
+        $posts = $dao->getRetweetsOfPost(134, 'twitter', $order_by = 'default', $unit = 'km', $is_public = false,
+                $count = 1, $page = 1);
+        $this->assertEqual(sizeof($posts), 1);
+
+        $posts = $dao->getRetweetsOfPost(134, 'twitter', $order_by = 'default', $unit = 'km', $is_public = false,
+                $count = 2, $page = 1);
+        $this->assertEqual(sizeof($posts), 2);
+
+        $posts = $dao->getRetweetsOfPost(134, 'twitter', $order_by = 'default', $unit = 'km', $is_public = false,
+                $count = 3, $page = 1);
+        $this->assertEqual(sizeof($posts), 3);
     }
 
     /**
@@ -764,6 +1063,51 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($posts[0], 'Post');
         $posts = $dao->getRelatedPosts(1344545, 'twitter');
         $this->assertEqual(count($posts), 0);
+
+        //test paging
+        $posts = $dao->getRelatedPosts(134, 'twitter', $is_public = false, $count = 1, $page = 1,
+                $geo_encoded_only = true, $include_original_post = false);
+        $this->assertEqual($posts[0]->post_id, 136);
+        $this->assertEqual($posts[0]->post_text,
+                'RT @quoter Be liberal in what you accept and conservative in what you send');
+
+        $posts = $dao->getRelatedPosts(134, 'twitter', $is_public = false, $count = 1, $page = 2,
+                $geo_encoded_only = true, $include_original_post = false);
+        $this->assertEqual($posts[0]->post_id, 144);
+        $this->assertEqual($posts[0]->post_text,
+                '@quoter Indeed, Jon Postel.');
+
+        $posts = $dao->getRelatedPosts(134, 'twitter', $is_public = false, $count = 1, $page = 3,
+                $geo_encoded_only = true, $include_original_post = false);
+        $this->assertEqual($posts[0]->post_id, 137);
+        $this->assertEqual($posts[0]->post_text,
+                'RT @quoter Be liberal in what you accept and conservative in what you send');
+
+        //test count
+        $posts = $dao->getRelatedPosts(134, 'twitter', $is_public = false, $count = 1, $page = 1,
+                $geo_encoded_only = true, $include_original_post = false);
+        $this->assertEqual(count($posts), 1);
+        $posts = $dao->getRelatedPosts(134, 'twitter', $is_public = false, $count = 2, $page = 1,
+                $geo_encoded_only = true, $include_original_post = false);
+        $this->assertEqual(count($posts), 2);
+        $posts = $dao->getRelatedPosts(134, 'twitter', $is_public = false, $count = 3, $page = 1,
+                $geo_encoded_only = true, $include_original_post = false);
+        $this->assertEqual(count($posts), 3);
+
+        // test geocoded only
+        $posts = $dao->getRelatedPosts(134, 'twitter', $is_public = false, $count = 5, $page = 1,
+                $geo_encoded_only = true, $include_original_post = false);
+        foreach($posts as $post) {
+            $this->assertEqual($post->is_geo_encoded, 1);
+        }
+
+        // test don't include original post
+        $posts = $dao->getRelatedPosts(134, 'twitter', $is_public = false, $count = 500, $page = 1,
+                $geo_encoded_only = true, $include_original_post = false);
+        $this->assertTrue(count($posts) < 500, "Didn't fetch all posts for original post test. Change count.");
+        foreach($posts as $post) {
+            $this->assertNotEqual($post->post_id, 134, "Fetched original post when not meant to.");
+        }
     }
 
     /**
@@ -805,6 +1149,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetExchangesBetweenUsers() {
         $dao = new PostMySQLDAO();
         $posts_replied_to = $dao->getExchangesBetweenUsers(18, 21, 'twitter');
+
         $this->assertEqual(sizeof($posts_replied_to), 2);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "shutterbug");
         $this->assertEqual($posts_replied_to[0]["question"], "This is image post 1");
@@ -1251,5 +1596,56 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         } catch(PDOException $e) {
             $this->assertPattern('/Integrity constraint violation/', $e->getMessage());
         }
+    }
+
+    public function testGetUserPostsInRange() {
+        $dao = new PostMySQLDAO();
+        $posts = $dao->getPostsByUserInRange(18, 'twitter', $from = '2006-01-02 00:00:00',
+                $until = '2006-01-02 00:30:59',  $order_by="pub_date", $direction="DESC", $iterator=false,
+                $is_public = false);
+
+        // test date ordering and time range check
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertEqual($post->author_user_id, 18);
+            $this->assertTrue(strtotime($post->pub_date) >= strtotime('2006-01-02 00:00:00'));
+            $this->assertTrue(strtotime($post->pub_date) < strtotime('2006-01-02 00:30:59'));
+            $this->assertTrue(strtotime($post->pub_date) <= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test ascending order
+        $posts = $dao->getPostsByUserInRange(18, 'twitter', $from = '2006-01-02 00:00:00',
+                $until = '2006-01-02 00:30:59',  $order_by="pub_date", $direction="ASC", $iterator=false,
+                $is_public = false);
+
+        $date = strtotime($posts[0]->pub_date);
+        foreach($posts as $post) {
+            $this->assertTrue(strtotime($post->pub_date) >= $date);
+            $date = strtotime($post->pub_date);
+        }
+
+        // test filter protected posts
+        $posts = $dao->getPostsByUserInRange(18, 'twitter', $from = '2006-01-02 00:00:00',
+                $until = '2006-01-02 00:59:59',  $order_by="pub_date", $direction="DESC", $iterator=false,
+                $is_public = true);
+
+        foreach($posts as $post) {
+            $this->assertEqual($post->is_protected, false);
+        }
+
+        // test range with no posts
+        $posts = $dao->getPostsByUserInRange(18, 'twitter', $from = '1970-01-02 00:00:00',
+                $until = '1971-01-02 00:59:59',  $order_by="pub_date", $direction="DESC", $iterator=false,
+                $is_public = true);
+
+        $this->assertEqual(sizeof($posts), 0);
+
+        // test from greater than until
+        $posts = $dao->getPostsByUserInRange(18, 'twitter', $from = '2008-01-02 00:00:00',
+                $until = '2006-01-02 00:59:59',  $order_by="pub_date", $direction="DESC", $iterator=false,
+                $is_public = true);
+
+        $this->assertEqual(sizeof($posts), 0);
     }
 }
