@@ -40,7 +40,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * Fields required for a post.
      * @var array
      */
-    var $REQUIRED_FIELDS =  array('post_id','author_username','author_fullname','author_avatar','author_user_id',
+    var $REQUIRED_FIELDS =  array('post_id', 'author_username','author_fullname','author_avatar','author_user_id',
     'post_text','is_protected', 'pub_date','source','network');
 
     /**
@@ -50,13 +50,33 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id',
     'in_rt_of_user_id', 'location', 'place', 'geo', 'retweet_count_cache', 'old_retweet_count_cache', 
     'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend',
-    'reply_retweet_distance', 'is_geo_encoded');
+    'reply_retweet_distance', 'is_geo_encoded', 'author_follower_count');
 
-    public function getPost($post_id, $network) {
+    /**
+     * Sanitises an order_by argument to avoid SQL injection and ensure that the table you're ordering by is valid.
+     * @param string $order_by Column to order on.
+     * @return string Sanitised column name. If the column was invalid, "pub_date" is returned.
+     */
+    public function sanitiseOrderBy($order_by) {
+        // some order_by clauses have a table attached to the front of them, remove this for checking.
+        $sans_table = preg_replace('/^[A-Za-z]\./', '', $order_by);
+        
+        if ( !in_array($sans_table, $this->REQUIRED_FIELDS) && !in_array($sans_table, $this->OPTIONAL_FIELDS  )) {
+                $order_by="pub_date";
+        }
+
+        return $order_by;
+    }
+
+    public function getPost($post_id, $network, $is_public = false) {
         $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON l.post_id = p.post_id AND l.network = p.network ";
-        $q .= "WHERE p.post_id=:post_id AND p.network=:network;";
+        $q .= "WHERE p.post_id=:post_id AND p.network=:network ";
+        if ($is_public) {
+            $q .= 'AND p.is_protected = 0 ';
+        }
+        $q .= ';';
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network
@@ -131,7 +151,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $vars = array(
             ':username'=>$username,
             ':network'=>$network,
-            ':limit'=>$limit
+            ':limit'=>(int)$limit
         );
 
         $ps = $this->execute($q, $vars);
@@ -144,7 +164,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
-    $count= 350) {
+    $count= 350, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
@@ -163,13 +185,22 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         $q .= ' ORDER BY ' . $ordering;
 
-        $q .= " LIMIT :limit;";
+        if ($count > 0) {
+            $q .= " LIMIT :start_on_record, :limit;";
+        } else {
+            $q .= ';';
+        }
+
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network,
-            ':limit'=>$count,
-            ':user_network'=>($network=='facebook page')?'facebook':$network
+            ':user_network'=>($network == 'facebook page') ? 'facebook' : $network
         );
+
+        if ($count > 0) {
+            $vars[':limit'] = (int)$count;
+            $vars['start_on_record'] = (int)$start_on_record;
+        }
 
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -188,7 +219,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getRepliesToPostIterator($post_id, $network, $order_by = 'default', $unit = 'km',
-    $is_public = false, $count = 350) {
+    $is_public = false, $count = 350, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
@@ -204,12 +237,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         } else {
             $q .= "ORDER BY is_reply_by_friend DESC, follower_count desc ";
         }
-        $q .= " LIMIT :limit;";
+        $q .= " LIMIT :start_on_record, :limit;";
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network,
-            ':limit'=>$count,
-            ':user_network'=>($network=='facebook page')?'facebook':$network
+            ':limit'=>(int)$count,
+            ':user_network'=>($network=='facebook page')?'facebook':$network,
+            ':start_on_record'=>(int)$start_on_record
         );
 
         $ps = $this->execute($q, $vars);
@@ -217,7 +251,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getRetweetsOfPost($post_id, $network='twitter', $order_by = 'default', $unit = 'km',
-    $is_public = false) {
+    $is_public = false, $count = null, $page = 1) {
         $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
@@ -230,13 +264,25 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         if ($order_by == 'location') {
             $q .= " ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
+        } else if ($order_by != 'default') {
+            $order_by = $this->sanitiseOrderBy($order_by);
+            $q .= " ORDER BY $order_by DESC ";
         } else {
             $q .= " ORDER BY is_reply_by_friend DESC, follower_count desc ";
         }
+
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network
         );
+
+        if ($count != null && $count > 0) {
+            $start_on_record = ($page - 1) * $count;
+            $q .= 'LIMIT :start_on_record, :limit';
+            $vars[':limit'] = (int)$count;
+            $vars[':start_on_record'] = (int)$start_on_record;
+        }
+        
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $retweets = array();
@@ -253,55 +299,57 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $retweets;
     }
 
-    public function getRelatedPostsArray($post_id, $network='twitter', $is_public = false, $count = 350) {
+    public function getRelatedPostsArray($post_id, $network='twitter', $is_public = false, $count = 350, $page = 1,
+            $geo_encoded_only = true, $include_original_post = true) {
+        $start_on_record = ($page - 1) * $count;
+        
         $q = "(SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as
         adj_pub_date
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
         ON l.post_id = p.post_id
         WHERE
-        in_retweet_of_post_id=:post_id
-        AND p.network = :network AND is_geo_encoded='1' ";
+        (in_retweet_of_post_id=:post_id OR in_reply_to_post_id=:post_id)
+        AND p.network = :network ";
+        if ($geo_encoded_only) {
+            $q .= "AND is_geo_encoded='1' ";
+        }
         if ($is_public) {
             $q .= "AND p.is_protected = 0 ";
         }
         $q .= ") ";
-        $q .= " UNION
-        (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
-        FROM #prefix#posts p
-        LEFT JOIN #prefix#links AS l
-        ON l.post_id = p.post_id
-        WHERE in_reply_to_post_id=:post_id
-        AND p.network = :network AND is_geo_encoded='1' ";
-        if ($is_public) {
-            $q .= "AND p.is_protected = 0 ";
+        if ($include_original_post) {
+            $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour
+            as adj_pub_date
+            FROM #prefix#posts p
+            LEFT JOIN #prefix#links AS l
+            ON l.post_id = p.post_id
+            WHERE p.post_id=:post_id
+            AND p.network = :network ";
+            if ($geo_encoded_only) {
+                $q .= "AND is_geo_encoded='1' ";
+            }
+            if ($is_public) {
+                $q .= "AND p.is_protected = 0 ";
+            }
+            $q .= ") ";
         }
-        $q .= ") ";
-        $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as
-        adj_pub_date
-        FROM #prefix#posts p
-        LEFT JOIN #prefix#links AS l
-        ON l.post_id = p.post_id
-        WHERE p.post_id=:post_id
-        AND p.network = :network AND is_geo_encoded='1' ";
-        if ($is_public) {
-            $q .= "AND p.is_protected = 0 ";
-        }
-        $q .= ") ";
-        $q .= "ORDER BY reply_retweet_distance, location LIMIT :limit";
+        $q .= "ORDER BY reply_retweet_distance, location, id LIMIT :start_on_record, :limit";
 
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network,
-            ':limit'=>$count
+            ':limit'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
-
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
     }
 
-    public function getRelatedPosts($post_id, $network='twitter', $is_public = false, $count = 350) {
-        $all_rows = $this->getRelatedPostsArray($post_id, $network='twitter', $is_public = false, $count = 350);
+    public function getRelatedPosts($post_id, $network='twitter', $is_public = false, $count = 350, $page = 1,
+            $geo_encoded_only = true, $include_original_post = true) {
+        $all_rows = $this->getRelatedPostsArray($post_id, $network, $is_public, $count, $page, $geo_encoded_only,
+                $include_original_post);
         $responses = array();
         $location = array();
         foreach ($all_rows as $row) {
@@ -333,8 +381,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $vars = array(
             ':author_id'=>$author_id,
             ':network'=>$network,
-            ':start_on_record'=>$start_on_record,
-            ':limit'=>$count
+            ':start_on_record'=>(int)$start_on_record,
+            ':limit'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -589,30 +637,44 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
     }
 
-    public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true) {
-        return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $page);
+    public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true,
+            $order_by = 'pub_date', $direction = 'DESC', $is_public = false) {
+        return $this->getAllPostsByUserID($author_id, $network, $count, $order_by, $direction, $include_replies, $page,
+                false, $is_public);
     }
 
-    public function getAllPostsIterator($author_id, $network, $count, $include_replies=true) {
-        return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $page = 1,
-        $iterator = true);
+    public function getAllPostsIterator($author_id, $network, $count, $include_replies=true,
+            $order_by = 'pub_date', $direction = 'DESC', $is_public = false) {
+        return $this->getAllPostsByUserID($author_id, $network, $count, $order_by, $direction, $include_replies, 1,
+                $iterator = true, $is_public);
     }
 
-    public function getAllQuestionPosts($author_id, $network, $count, $page=1) {
+    public function getAllQuestionPosts($author_id, $network, $count, $page=1, $order_by = 'pub_date',
+            $direction = 'DESC', $is_public = false) {
         $start_on_record = ($page - 1) * $count;
-        $order_by="pub_date";
+
+        $order_by = $this->sanitiseOrderBy($order_by);
+
+        $direction = $direction == 'DESC' ? 'DESC' : 'ASC';
+
+        if ($is_public) {
+            $protected = 'AND p.is_protected = 0';
+        } else {
+            $protected = '';
+        }
+
         $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date FROM ( SELECT * ";
         $q .= "FROM #prefix#posts p ";
         $q .= "WHERE p.author_user_id = :author_id AND p.network=:network ";
-        $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) ) AS p ";
+        $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) $protected) AS p ";
         $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id AND p.network = l.network ";
         $q .= "WHERE post_text RLIKE '\\\\?$' OR post_text like '%? %' ";
-        $q .= "ORDER BY ".$order_by." DESC ";
+        $q .= "ORDER BY " . $order_by. ' ' . $direction . ' ';
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':author_id'=>$author_id,
             ':network'=>$network,
-            ':limit'=>$count,
+            ':limit'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
         );
         $ps = $this->execute($q, $vars);
@@ -633,16 +695,17 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @param str $direction either "DESC" or "ASC
      * @param bool $include_replies If true, return posts with in_reply_to_post_id set, if not don't
      * @param int $page Page number, defaults to 1
+     * @param bool $iterator Specify whether or not you want a post iterator returned. Default to
+     * false.
+     * @param bool $is_public Whether or not these results are going to be displayed publicly. Defaults to false.
      * @return array Posts with link object set
      */
     private function getAllPostsByUserID($author_id, $network, $count, $order_by="pub_date", $direction="DESC",
-    $include_replies=true, $page=1, $iterator=false) {
+    $include_replies=true, $page=1, $iterator=false, $is_public = false) {
         $direction = $direction=="DESC" ? "DESC": "ASC";
         $start_on_record = ($page - 1) * $count;
+        $order_by = $this->sanitiseOrderBy($order_by);
 
-        if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
-            $order_by="pub_date";
-        }
         $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links l ";
@@ -657,15 +720,67 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($order_by == 'retweet_count_cache') {
             $q .= "AND retweet_count_cache > 0 ";
         }
-        $q .= "ORDER BY ".$order_by." ".$direction." ";
+        if ($is_public) {
+            $q .= 'AND p.is_protected = 0 ';
+        }
+        $q .= "ORDER BY $order_by $direction ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':author_id'=>$author_id,
             ':network'=>$network,
-            ':limit'=>$count,
+            ':limit'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
         );
 
+        $ps = $this->execute($q, $vars);
+
+        if($iterator) {
+            return (new PostIterator($ps));
+        }
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+        foreach ($all_rows as $row) {
+            $posts[] = $this->setPostWithLink($row);
+        }
+        return $posts;
+    }
+
+    public function getPostsByUserInRange($author_id, $network, $from, $until, $order_by="pub_date", $direction="DESC",
+            $iterator=false, $is_public = false) {
+        $direction = $direction=="DESC" ? "DESC": "ASC";
+        
+        if (is_string($from)) {
+            $from = strtotime($from);
+        }
+        if (is_string($until)) {
+            $until = strtotime($until);
+        }
+
+        $order_by = $this->sanitiseOrderBy($order_by);
+
+        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
+        $q .= "LEFT JOIN #prefix#links l ";
+        $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
+        $q .= "WHERE author_user_id = :author_id AND p.network=:network AND pub_date BETWEEN FROM_UNIXTIME(:from) ";
+        $q .= "AND FROM_UNIXTIME(:until) ";
+        if ($order_by == 'reply_count_cache') {
+            $q .= "AND reply_count_cache > 0 ";
+        }
+        if ($order_by == 'retweet_count_cache') {
+            $q .= "AND retweet_count_cache > 0 ";
+        }
+        if ($is_public) {
+            $q .= 'AND p.is_protected = 0 ';
+        }
+        $q .= "ORDER BY $order_by $direction ";
+        $vars = array(
+            ':author_id'=> $author_id,
+            ':network'=> $network,
+            ':from' => $from,
+            ':until' => $until
+        );
+        
         $ps = $this->execute($q, $vars);
 
         if($iterator) {
@@ -688,10 +803,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @return array Posts with link object set
      */
     private function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
-    $order_by="pub_date", $in_last_x_days = 0, $iterator = false) {
-        if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
-            $order_by="pub_date";
-        }
+    $order_by="pub_date", $in_last_x_days = 0, $iterator = false, $is_public = false) {
+        $order_by = $this->sanitiseOrderBy($order_by);
         $vars = array(
             ':author_username'=>$author_username,
             ':network'=>$network
@@ -711,6 +824,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         if ($order_by == 'retweet_count_cache') {
             $q .= "AND retweet_count_cache > 0 ";
+        }
+        if ($is_public) {
+            $q .= 'AND p.is_protected = 0 ';
         }
         $q .= " ORDER BY ".$order_by." DESC ";
         if ($count) {
@@ -739,12 +855,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $iterator = false);
     }
 
-    public function getMostRepliedToPostsInLastWeek($username, $network, $count) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'reply_count_cache', 7);
+    public function getMostRepliedToPostsInLastWeek($username, $network, $count, $is_public = false) {
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'reply_count_cache', 7,
+                $iterator = false, $is_public);
     }
 
-    public function getMostRetweetedPostsInLastWeek($username, $network, $count) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'retweet_count_cache', 7);
+    public function getMostRetweetedPostsInLastWeek($username, $network, $count, $is_public = false) {
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'retweet_count_cache', 7,
+                $iterator = false, $is_public);
     }
 
     public function getTotalPostsByUser($user_id, $network) {
@@ -774,16 +892,25 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getDataRowsAsArrays($ps);
     }
 
-    public function getAllMentionsIterator($author_username, $count, $network = "twitter") {
-        return $this->getMentions($author_username, $count, $network, true);
+    public function getAllMentionsIterator($author_username, $count, $network = "twitter", $page=1, $public=false,
+            $include_rts = true, $order_by = 'pub_date', $direction = 'DESC') {
+        return $this->getMentions($author_username, $count, $network, $iterator = true, $page, $public, $include_rts,
+                $order_by, $direction);
     }
 
-    public function getAllMentions($author_username, $count, $network = "twitter", $page=1, $public=false) {
-        return $this->getMentions($author_username, $count, $network, false, $page, $public);
+    public function getAllMentions($author_username, $count, $network = "twitter", $page=1, $public=false,
+            $include_rts = true, $order_by = 'pub_date', $direction = 'DESC') {
+        return $this->getMentions($author_username, $count, $network, $iterator = false, $page, $public, $include_rts,
+                $order_by, $direction);
     }
 
-    private function getMentions($author_username, $count, $network, $iterator, $page=1, $public=false) {
+    private function getMentions($author_username, $count, $network, $iterator, $page=1, $public=false,
+            $include_rts = true, $order_by = 'pub_date', $direction = 'DESC') {
         $start_on_record = ($page - 1) * $count;
+
+        $order_by = $this->sanitiseOrderBy($order_by);
+
+        $direction = ($direction == 'DESC') ? 'DESC' : 'ASC';
 
         $author_username = '@'.$author_username;
         $q = " SELECT l.*, p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
@@ -801,13 +928,16 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($public) {
             $q .= "AND u.is_protected = 0 ";
         }
-        $q .= "ORDER BY pub_date DESC ";
+        if ($include_rts == false) {
+            $q .= 'AND p.in_retweet_of_post_id IS NULL ';
+        }
+        $q .= "ORDER BY $order_by $direction ";
         $q .= "LIMIT :start_on_record, :limit;";
         $vars = array(
             ':author_username'=>$author_username,
             ':network'=>$network,
-            ':start_on_record'=>$start_on_record,
-            ':limit'=>$count
+            ':start_on_record'=>(int)$start_on_record,
+            ':limit'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
         if($iterator) {
@@ -821,15 +951,27 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_posts;
     }
 
-    public function getAllReplies($user_id, $network, $count) {
+    public function getAllReplies($user_id, $network, $count, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
+            $is_public = false) {
+        $start_on_record = ($page - 1) * $count;
+
+        $order_by = $this->sanitiseOrderBy($order_by);
+
+        $direction = $direction == 'DESC' ? 'DESC' : 'ASC';
+
         $q = "SELECT l.*, p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON p.post_id = l.post_id AND l.network = p.network ";
         $q .= "INNER JOIN #prefix#users u ON p.author_user_id = u.user_id ";
-        $q .= "WHERE in_reply_to_user_id = :user_id AND p.network=:network ORDER BY pub_date DESC LIMIT :limit;";
+        $q .= "WHERE in_reply_to_user_id = :user_id AND p.network=:network ";
+        if ($is_public) {
+            $q .= 'AND p.is_protected = 0 ';
+        }
+        $q .= "ORDER BY $order_by $direction LIMIT :start_on_record, :limit;";
         $vars = array(
             ':user_id'=>$user_id,
             ':network'=>$network,
-            ':limit'=>$count
+            ':start_on_record'=>(int)$start_on_record,
+            ':limit'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -840,12 +982,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_posts;
     }
 
-    public function getMostRepliedToPosts($user_id, $network, $count, $page=1) {
-        return $this->getAllPostsByUserID($user_id, $network, $count, "reply_count_cache", "DESC", true, $page);
+    public function getMostRepliedToPosts($user_id, $network, $count, $page=1, $is_public = false) {
+        return $this->getAllPostsByUserID($user_id, $network, $count, "reply_count_cache", "DESC", true, $page,
+                $iterator = false, $is_public);
     }
 
-    public function getMostRetweetedPosts($user_id, $network, $count, $page=1) {
-        return $this->getAllPostsByUserID($user_id, $network, $count, "retweet_count_cache", "DESC", true, $page);
+    public function getMostRetweetedPosts($user_id, $network, $count, $page=1, $is_public = false) {
+        return $this->getAllPostsByUserID($user_id, $network, $count, "retweet_count_cache", "DESC", true, $page,
+                $iterator = false, $is_public);
     }
 
     public function getOrphanReplies($username, $count, $network = "twitter") {
@@ -867,7 +1011,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $vars = array(
             ':username'=>$username,
             ':network'=>$network,
-            ':limit'=>$count
+            ':limit'=>(int)$count
         );
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -946,11 +1090,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     private function getPostsByPublicInstancesOrderedBy($page, $count, $order_by, $in_last_x_days = 0) {
         $start_on_record = ($page - 1) * $count;
         //make sure order_by var is set to a valid column name, else default to pub_date
-        if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
-            $order_by="pub_date";
-        }
+        $order_by = $this->sanitiseOrderBy($order_by);
+        
         $vars = array(
-            ':limit'=>$count,
+            ':limit'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
         );
 
@@ -1001,7 +1144,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " AND (p.is_geo_encoded='0' OR p.is_geo_encoded='3') ";
         $q .= " ORDER BY id DESC LIMIT :limit) AS q ORDER BY q.id";
         $vars = array(
-            ':limit'=>$limit    
+            ':limit'=>(int)$limit
         );
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);

@@ -89,4 +89,90 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $this->assertTrue(Utils::validateURL('http://asdf.com'));
         $this->assertTrue(Utils::validateURL('https://asdf.com'));
     }
+
+    public function testIndentJSON() {
+        $data = array(
+            'jam',
+            'jelly',
+            'ham',
+            'biscuits',
+            array (
+                'cola',
+                'beer',
+                'grapefruit juice'
+            )
+        );
+
+        $test_str = '[
+    "jam",
+    "jelly",
+    "ham",
+    "biscuits",
+    [
+        "cola",
+        "beer",
+        "grapefruit juice"
+    ]
+]';
+        
+        $json_data = json_encode($data);
+        $indented_json_data = Utils::indentJSON($json_data);
+        $this->assertEqual($test_str, $indented_json_data);
+        $this->assertNotEqual($json_data, $indented_json_data);
+
+        $data = new stdClass();
+        $data->name = 'Dave';
+        $data->job = 'Fixing stuff.';
+        $data->link = 'http://thereifixedit.com';
+        $data->spouse = new stdClass();
+        $data->spouse->name = 'Jill';
+        $data->spouse->job = 'CEO of MadeUp inc.';
+
+        $test_str = '{
+    "name":"Dave",
+    "job":"Fixing stuff.",
+    "link":"http:\/\/thereifixedit.com",
+    "spouse":{
+        "name":"Jill",
+        "job":"CEO of MadeUp inc."
+    }
+}';
+
+        $json_data = json_encode($data);
+        $indented_json_data = Utils::indentJSON($json_data);
+        $this->assertEqual($test_str, $indented_json_data);
+        $this->assertNotEqual($json_data, $indented_json_data);
+    }
+
+    public function testConvertNumericStrings() {
+        // integer
+        $test_str = '"123456789"';
+        $number = '123456789';
+        $converted = Utils::convertNumericStrings($test_str);
+        $this->assertEqual($converted, $number);
+
+        // float
+        $test_str = '"1234.56789"';
+        $number = '1234.56789';
+        $converted = Utils::convertNumericStrings($test_str);
+        $this->assertEqual($converted, $number);
+
+        // not a number
+        $test_str = '"123456789s"';
+        $number = '"123456789s"';
+        $converted = Utils::convertNumericStrings($test_str);
+        $this->assertEqual($converted, $number);
+
+        // not a float
+        $test_str = '"12345.6789s"';
+        $number = '"12345.6789s"';
+        $converted = Utils::convertNumericStrings($test_str);
+        $this->assertEqual($converted, $number);
+
+        // two dots, not a number
+        $test_str = '"12345.6.789"';
+        $number = '"12345.6.789"';
+        $converted = Utils::convertNumericStrings($test_str);
+        $this->assertEqual($converted, $number);
+    }
 }

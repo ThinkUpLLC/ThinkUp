@@ -54,4 +54,98 @@ class TestOfPost extends ThinkUpBasicUnitTestCase {
         $expected = array ('http://yo.com/exi.xml?hi=yes', 'http://example.org/blah/yoiadsf/934324/');
         $this->assertIdentical($expected, $urls);
     }
+
+    public function testExtractMentions() {
+        $test_str = '@samwhoo woot yay win cake';
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@samwhoo');
+        $this->assertIdentical($mentions, $actual_mentions);
+
+        $test_str = '@samwhoo @anildash woot yay win cake';
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@samwhoo', '@anildash');
+        $this->assertIdentical($mentions, $actual_mentions);
+
+        $test_str = '@samwhoo @anildash @ginatrapani woot yay win cake';
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@samwhoo', '@anildash', '@ginatrapani');
+        $this->assertIdentical($mentions, $actual_mentions);
+
+        $test_str = 'woot yay win cake #game';
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array();
+        $this->assertIdentical($mentions, $actual_mentions);
+
+        $test_str = "@sam'whoo woot yay win cake";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@sam');
+        $this->assertIdentical($mentions, $actual_mentions);
+
+        $test_str = "@sam#whoo woot yay win cake";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@sam');
+        $this->assertIdentical($mentions, $actual_mentions);
+
+        $test_str = "@sam/whoo woot yay win cake";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@sam');
+        $this->assertIdentical($mentions, $actual_mentions);
+
+        $test_str = "@sam.whoo woot yay win cake";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@sam');
+        $this->assertIdentical($mentions, $actual_mentions);
+
+        $test_str = "@sam-whoo woot yay win cake";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@sam');
+        $this->assertIdentical($mentions, $actual_mentions);
+    }
+
+    public function testExtractHashtags() {
+        $test_str = '@samwhoo woot yay win #cake';
+        $hashtags = Post::extractHashtags($test_str);
+        $actual_hashtags = array('#cake');
+        $this->assertIdentical($hashtags, $actual_hashtags);
+
+        $test_str = '@samwhoo woot yay #win #cake';
+        $hashtags = Post::extractHashtags($test_str);
+        $actual_hashtags = array('#win', '#cake');
+        $this->assertIdentical($hashtags, $actual_hashtags);
+
+        $test_str = '@samwhoo woot #yay #win #cake';
+        $hashtags = Post::extractHashtags($test_str);
+        $actual_hashtags = array('#yay', '#win', '#cake');
+        $this->assertIdentical($hashtags, $actual_hashtags);
+
+        $test_str = '@samwhoo woot yay win cake';
+        $hashtags = Post::extractHashtags($test_str);
+        $actual_hashtags = array();
+        $this->assertIdentical($hashtags, $actual_hashtags);
+
+        $test_str = '@samwhoo woot yay win #ca-ke';
+        $hashtags = Post::extractHashtags($test_str);
+        $actual_hashtags = array('#ca');
+        $this->assertIdentical($hashtags, $actual_hashtags);
+
+        $test_str = '@samwhoo woot yay win #ca@ke';
+        $hashtags = Post::extractHashtags($test_str);
+        $actual_hashtags = array('#ca');
+        $this->assertIdentical($hashtags, $actual_hashtags);
+
+        $test_str = '@samwhoo woot yay win #ca.ke';
+        $hashtags = Post::extractHashtags($test_str);
+        $actual_hashtags = array('#ca');
+        $this->assertIdentical($hashtags, $actual_hashtags);
+
+        $test_str = "@samwhoo woot yay win #ca'ke";
+        $hashtags = Post::extractHashtags($test_str);
+        $actual_hashtags = array('#ca');
+        $this->assertIdentical($hashtags, $actual_hashtags);
+
+        $test_str = '@samwhoo woot yay win #ca/ke';
+        $hashtags = Post::extractHashtags($test_str);
+        $actual_hashtags = array('#ca');
+        $this->assertIdentical($hashtags, $actual_hashtags);
+    }
 }
