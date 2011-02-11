@@ -201,6 +201,27 @@ abstract class PDODAO {
         return $row;
     }
     /**
+     * Gets a multiple rows and closes cursor.
+     * @param PDOStatement $ps
+     * @return array of arrays/objects depending on context
+     */
+    protected final function fetchAllAndClose($ps){
+        $rows = $ps->fetchAll();
+        $ps->closeCursor();
+        return $rows;
+    }
+
+    /**
+     * Gets a single row and closes cursor.
+     * @param PDOStatement $ps
+     * @return various array,object depending on context
+     */
+    protected final function fetchAndClose($ps){
+        $row = $ps->fetch();
+        $ps->closeCursor();
+        return $row;
+    }
+    /**
      * Gets multiple rows and closes cursor.
      * @param PDOStatement $ps
      * @return array of arrays/objects depending on context
@@ -210,6 +231,7 @@ abstract class PDODAO {
         $ps->closeCursor();
         return $rows;
     }
+
     /**
      * Gets the rows returned by a statement as array of objects.
      * @param PDOStatement $ps
@@ -299,7 +321,8 @@ abstract class PDODAO {
      * @return int|bool Inserted ID or false if there is none.
      */
     protected final function getInsertId($ps){
-        $rc = getUpdateCount($ps);
+
+        $rc = $this->getUpdateCount($ps);
         $id = self::$PDO->lastInsertId();
         if ($rc > 0 and $id > 0) {
             return $id;
@@ -315,7 +338,8 @@ abstract class PDODAO {
      */
     protected final function getInsertCount($ps){
         //Alias for getUpdateCount
-        return getUpdateCount($ps);
+
+        return $this->getUpdateCount($ps);
     }
 
     /**
@@ -347,5 +371,4 @@ abstract class PDODAO {
     public final static function convertDBToBool($val){
         return $val == 0 ? false : true;
     }
-
 }
