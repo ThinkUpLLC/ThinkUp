@@ -190,7 +190,26 @@ abstract class PDODAO {
         //Alias for getUpdateCount
         return $this->getUpdateCount($ps);
     }
-
+    /**
+     * Gets a single row and closes cursor.
+     * @param PDOStatement $ps
+     * @return various array,object depending on context
+     */
+    protected final function fetchAndClose($ps){
+        $row = $ps->fetch();
+        $ps->closeCursor();
+        return $row;
+    }
+    /**
+     * Gets a multiple rows and closes cursor.
+     * @param PDOStatement $ps
+     * @return array of arrays/objects depending on context
+     */
+    protected final function fetchAllAndClose($ps){
+        $rows = $ps->fetchAll();
+        $ps->closeCursor();
+        return $rows;
+    }
     /**
      * Gets the rows returned by a statement as array of objects.
      * @param PDOStatement $ps
@@ -198,8 +217,8 @@ abstract class PDODAO {
      * @return array numbered keys, with objects
      */
     protected final function getDataRowAsObject($ps, $obj){
-        $row = $ps->fetchObject($obj);
-        $ps->closeCursor();
+        $ps->setFetchMode(PDO::FETCH_CLASS,$obj);
+        $row = $this->fetchAndClose($ps);
         if(!$row){
             $row = null;
         }
@@ -212,8 +231,8 @@ abstract class PDODAO {
      * @return array named keys
      */
     protected final function getDataRowAsArray($ps){
-        $row = $ps->fetch(PDO::FETCH_ASSOC);
-        $ps->closeCursor();
+    	$ps->setFetchMode(PDO::FETCH_ASSOC);
+        $row = $this->fetchAndClose($ps);
         if(!$row){
             $row = null;
         }
@@ -228,8 +247,7 @@ abstract class PDODAO {
      */
     protected final function getDataRowsAsObjects($ps, $obj){
         $ps->setFetchMode(PDO::FETCH_CLASS,$obj);
-        $data = $ps->fetchAll();
-        $ps->closeCursor();
+        $data = $this->fetchAllAndClose($ps);
         return $data;
     }
 
@@ -239,8 +257,8 @@ abstract class PDODAO {
      * @return array numbered keys, with array named keys
      */
     protected final function getDataRowsAsArrays($ps){
-        $data = $ps->fetchAll(PDO::FETCH_ASSOC);
-        $ps->closeCursor();
+        $ps->setFetchMode(PDO::FETCH_ASSOC);
+        $data = $this->fetchAllAndClose($ps);
         return $data;
     }
 
@@ -251,8 +269,8 @@ abstract class PDODAO {
      * @param int Count
      */
     protected final function getDataCountResult($ps){
-        $row = $ps->fetch(PDO::FETCH_ASSOC);
-        $ps->closeCursor();
+        $ps->setFetchMode(PDO::FETCH_ASSOC);
+        $row = $this->fetchAndClose($ps);
         if(!$row or !isset($row['count'])){
             $count = 0;
         } else {
@@ -267,8 +285,7 @@ abstract class PDODAO {
      * @return bool True if row(s) are returned
      */
     protected final function getDataIsReturned($ps){
-        $row = $ps->fetch();
-        $ps->closeCursor();
+        $row = $this->fetchAndClose($ps);
         $ret = false;
         if ($row && count($row) > 0) {
             $ret = true;
