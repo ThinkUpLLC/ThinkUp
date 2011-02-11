@@ -201,7 +201,7 @@ abstract class PDODAO {
         return $row;
     }
     /**
-     * Gets a multiple rows and closes cursor.
+     * Gets multiple rows and closes cursor.
      * @param PDOStatement $ps
      * @return array of arrays/objects depending on context
      */
