@@ -50,4 +50,28 @@ class FacebookGraphAPIAccessor {
         $result=  file_get_contents($FAUX_DATA_PATH.$url);
         return json_decode($result);
     }
+
+    /**
+     * Make a Graph API request with the absolute URL. This URL needs to
+     * include the https://graph.facebook.com/ at the start and the
+     * access token at the end as well as everything in between. It is
+     * literally the raw URL that needs to be passed in.
+     *
+     * @param str $path
+     * @return array Decoded JSON response
+     */
+    public static function rawApiRequest($path) {
+        $url = $path;//.'?access_token='.$access_token;
+
+        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/facebook/tests/testdata/';
+        $url = str_replace('https://graph.facebook.com/', '', $url);
+        $url = str_replace('?access_token=fauxaccesstoken', '', $url);
+        $url = str_replace('/', '_', $url);
+        $url = str_replace('&', '-', $url);
+        $url = str_replace('?', '-', $url);
+        //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
+        //';
+        $result=  file_get_contents($FAUX_DATA_PATH.$url);
+        return json_decode($result);
+    }
 }

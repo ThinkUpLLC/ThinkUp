@@ -66,7 +66,7 @@ var TUWordFrequency = function() {
             "little", "look", "looking", "looks", "ltd", "mainly", "many", "may", "maybe", "me", "mean", "meanwhile", 
             "merely", "might", "more", "moreover", "most", "mostly", "much", "must", "my", "myself", "name", "namely",
             "nd", "near", "nearly", "necessary", "need", "needs", "neither", "never", "nevertheless", "new", "next", 
-            "nine", "no", "nobody", "non", "none", "noone", "nor", "normally", "not", "nothing", "novel", "now", 
+            "nine", /*"no", */"nobody", "non", "none", "noone", "nor", "normally", "not", "nothing", "novel", "now", 
             "nowhere", "obviously", "of", "off", "often", "oh", "ok", "okay", "old", "on", "once", "one", "ones", 
             "only", "onto", "or", "other", "others", "otherwise", "ought", "our", "ours", "ourselves", "out", 
             "outside", "over", "overall", "own", "particular", "particularly", "per", "perhaps", "placed", "please", 
@@ -88,7 +88,7 @@ var TUWordFrequency = function() {
             "well", "went", "were", "weren't", "what", "what's", "whatever", "when", "whence", "whenever", "where", 
             "where's", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", 
             "while", "whither", "who", "who's", "whoever", "whole", "whom", "whose", "why", "will", "willing", "wish", 
-            "with", "within", "without", "won't", "wonder", "would", "would", "wouldn't", "yes", "yet", "you", 
+            "with", "within", "without", "won't", "wonder", "would", "would", "wouldn't", /*"yes",*/ "yet", "you", 
             "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", "zero");
 
     /* our stop words hash that will get auto generated on init */
