@@ -54,6 +54,9 @@ class ExportController extends ThinkUpAuthController {
     }
 
     public function authControl() {
+        // set the content type to avoid profiler data in our .csv file
+        $this->setContentType('text/csv');
+
         if (!$this->is_missing_param) {
             $od = DAOFactory::getDAO('OwnerDAO');
             $owner = $od->getByEmail( $this->getLoggedInUser() );
@@ -133,6 +136,9 @@ class ExportController extends ThinkUpAuthController {
         if (ob_get_contents()) {
             ob_end_clean();
         }
+
+        // make sure the file name does not contain spaces.
+        $filename = str_replace(' ', '_', $filename);
 
         if( ! headers_sent() ) { // this is so our test don't barf on us
             header('Content-Type: text/csv');

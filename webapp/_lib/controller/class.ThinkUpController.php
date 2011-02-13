@@ -294,7 +294,8 @@ abstract class ThinkUpController {
             } else {
                 $results = $this->control();
                 if ($this->profiler_enabled && !isset($this->json_data)
-                && strpos($this->content_type, 'text/javascript') === false) {
+                && strpos($this->content_type, 'text/javascript') === false
+                && strpos($this->content_type, 'text/csv') === false) {
                     $end_time = microtime(true);
                     $total_time = $end_time - $this->start_time;
                     $profiler = Profiler::getInstance();
