@@ -29,7 +29,7 @@
  *
  */
 class CheckCrawlerController extends ThinkUpController {
-    var $threshold = 3.0;
+    private $threshold;
 
     /**
      * Constructor
@@ -40,6 +40,9 @@ class CheckCrawlerController extends ThinkUpController {
         parent::__construct($session_started);
         $this->setViewTemplate('crawler.checkcrawler.tpl');
         $this->disableCaching();
+        $this->profiler_enabled = false;
+
+        $this->threshold = isset($_GET['threshold']) ? floatval($_GET['threshold']) : 3.0;
     }
 
     public function control() {
