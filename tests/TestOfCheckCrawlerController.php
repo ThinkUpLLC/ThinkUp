@@ -19,19 +19,17 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
  * Test of CheckCrawlerController
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfCheckCrawlerController extends ThinkUpUnitTestCase {
 
     public function __construct() {
@@ -58,16 +56,46 @@ class TestOfCheckCrawlerController extends ThinkUpUnitTestCase {
     }
 
     public function testInstanceLessThan3Hours() {
-        $instance_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-1h'));
+        $instance_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-1h', 'is_active'=>1));
         $controller = new CheckCrawlerController(true);
         $results = $controller->go();
         $this->assertEqual('', $results);
     }
 
-    public function testInstanceMoreThan3Hours() {
-        $instance_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-4h'));
+    public function testActiveInstancesMoreThan3Hours() {
+        $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-4h', 'is_active'=>1));
+        $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-3h', 'is_active'=>1));
+        $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-2h', 'is_active'=>1));
         $controller = new CheckCrawlerController(true);
         $results = $controller->go();
-        $this->assertEqual("Crawler hasn't run in 4 hours", $results, $results);
+        $this->assertEqual("Crawler hasn't run in 4 hours", $results);
+    }
+
+    public function testInactiveInstancesMoreThan3Hours() {
+        $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-4h', 'is_active'=>0));
+        $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-3h', 'is_active'=>0));
+        $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-2h', 'is_active'=>0));
+        $controller = new CheckCrawlerController(true);
+        $results = $controller->go();
+        $this->assertEqual('', $results);
+    }
+
+    public function testInstanceDifferentThreshold() {
+        $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-2h', 'is_active'=>1));
+
+        // 2nd argument is $argc, third argument is $argv
+        $controller = new CheckCrawlerController(true, 1, array(1.0));
+
+        $results = $controller->go();
+        $this->assertEqual("Crawler hasn't run in 2 hours", $results);
+
+        $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-3h', 'is_active'=>1));
+        $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-4h', 'is_active'=>1));
+
+        // 2nd argument is $argc, third argument is $argv
+        $controller = new CheckCrawlerController(true, 1, array(1.0));
+
+        $results = $controller->go();
+        $this->assertEqual("Crawler hasn't run in 4 hours", $results);
     }
 }

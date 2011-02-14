@@ -25,7 +25,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  */
-require_once 'init.php';
+require_once dirname(__FILE__).'/../init.php';
 
-$controller = new CheckCrawlerController(true);
+$controller = new CheckCrawlerController(true, $argc, $argv);
 echo $controller->go();
