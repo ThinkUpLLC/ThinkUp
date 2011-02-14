@@ -61,13 +61,43 @@ class TestOfCheckCrawlerController extends ThinkUpUnitTestCase {
         $instance_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-1h'));
         $controller = new CheckCrawlerController(true);
         $results = $controller->go();
-        $this->assertEqual('', $results);
+        $pass = $this->assertEqual('', $results);
+
+        if (!$pass) {
+            // debug message in case of a false negative test result
+            $this->debug('testInstanceLessThan3Hours can fail if you do
+                not have the correct permissions on your compiled_view
+                folder. Folder needs to be writable.');
+        }
     }
 
     public function testInstanceMoreThan3Hours() {
         $instance_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-4h'));
         $controller = new CheckCrawlerController(true);
         $results = $controller->go();
-        $this->assertEqual("Crawler hasn't run in 4 hours", $results, $results);
+        $pass = $this->assertEqual("Crawler hasn't run in 4 hours", $results);
+        if (!$pass) {
+            // debug message in case of a false negative test result
+            $this->debug('testInstanceMoreThan3Hours can fail if you do
+                not have the correct permissions on your compiled_view
+                folder. Folder needs to be writable.');
+        }
+    }
+
+    public function testInstanceDifferentThreshold() {
+        $instance_builder = FixtureBuilder::build('instances', array('crawler_last_run'=>'-2h'));
+
+        // 2nd argument is $argc, third argument is $argv
+        $controller = new CheckCrawlerController(true, 1, array(1.0));
+        
+        $results = $controller->go();
+        $pass = $this->assertEqual("Crawler hasn't run in 2 hours", $results);
+
+        if (!$pass) {
+            // debug message in case of a false negative test result
+            $this->debug('testInstanceDifferentThreshold can fail if you do
+                not have the correct permissions on your compiled_view
+                folder. Folder needs to be writable.');
+        }
     }
 }

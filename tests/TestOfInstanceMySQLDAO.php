@@ -42,7 +42,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->DAO = new InstanceMySQLDAO();
-        $this->builders = self::buildData();
+        $this->builders = $this->buildData();
     }
 
     protected function buildData() {
@@ -110,6 +110,12 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($hours, 3);
 
         $builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-2h'));
+        $hours = $dao->getHoursSinceLastCrawlerRun();
+        $this->assertEqual($hours, 2);
+
+        // test that it ignores inactive instances
+        $builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-1h',
+            'is_active' => 0));
         $hours = $dao->getHoursSinceLastCrawlerRun();
         $this->assertEqual($hours, 2);
     }
