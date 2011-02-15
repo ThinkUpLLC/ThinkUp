@@ -83,6 +83,8 @@ class RegisterController extends ThinkUpController {
                             } else {
                                 $es = new SmartyThinkUp();
                                 $es->caching=false;
+                                // this next line is purely for testing purposes (tests needs to set the site root path)
+                                $es->assign('site_root_path', $this->view_mgr->getTemplateDataItem('site_root_path'));
                                 $session = new Session();
                                 $activ_code = rand(1000, 9999);
                                 $cryptpass = $session->pwdcrypt($_POST['pass2']);
