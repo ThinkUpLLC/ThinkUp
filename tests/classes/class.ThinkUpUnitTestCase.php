@@ -97,4 +97,8 @@ class Mailer {
         fclose($fp);
         return $message;
     }
+
+    public static function getLastMail() {
+        return file_get_contents(THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . ThinkUpUnitTestCase::TEST_EMAIL);
+    }
 }
