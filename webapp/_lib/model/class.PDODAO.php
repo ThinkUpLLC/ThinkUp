@@ -188,7 +188,7 @@ abstract class PDODAO {
      */
     protected final function getDeleteCount($ps){
         //Alias for getUpdateCount
-        return self::getUpdateCount($ps);
+        return $this->getUpdateCount($ps);
     }
     /**
      * Gets a single row and closes cursor.
@@ -299,7 +299,7 @@ abstract class PDODAO {
      * @return int|bool Inserted ID or false if there is none.
      */
     protected final function getInsertId($ps){
-        $rc = self::getUpdateCount($ps);
+        $rc = $this->getUpdateCount($ps);
         $id = self::$PDO->lastInsertId();
         if ($rc > 0 and $id > 0) {
             return $id;
@@ -315,7 +315,7 @@ abstract class PDODAO {
      */
     protected final function getInsertCount($ps){
         //Alias for getUpdateCount
-        return self::getUpdateCount($ps);
+        return $this->getUpdateCount($ps);
     }
 
     /**
