@@ -50,7 +50,12 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $this->logger->close();
     }
 
-    private static function pluginSort($a, $b) {
+    /**
+     * For PHP 5.2 compatibility, this method must be public so that we can call usort($plugins, 
+     * 'TestOfPluginMySQLDAO::pluginSort')
+     * private/self::pluginSort doesn't work in PHP 5.2
+     */
+    public static function pluginSort($a, $b) {
         return strcmp($a->name, $b->name);
     }
 
@@ -63,7 +68,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $plugins = $dao->getInstalledPlugins($this->config->getValue("source_root_path"));
         $this->assertEqual(count($plugins), 7);
 
-        usort($plugins, 'self::pluginSort');
+        usort($plugins, 'TestOfPluginMySQLDAO::pluginSort');
         $this->assertEqual($plugins[0]->name,"Embed Thread", "Embed Thread 'name' Test");
         $this->assertEqual($plugins[0]->folder_name,"embedthread", "Embed Thread 'folder_name' test");
 

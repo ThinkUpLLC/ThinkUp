@@ -24,11 +24,8 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
  */
-if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
-    require_once '../../../../tests/init.tests.php';
-}
+require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/embedthread/controller/class.ThinkUpEmbedController.php';
 

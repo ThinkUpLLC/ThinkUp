@@ -14,14 +14,24 @@ clean, empty tests database.
 
 First, configure your test environment. Copy `tests/config.tests.sample.inc.php` to `tests/config.tests.inc.php` and 
 set the appropriate values. You will need a clean, empty database to run your tests. By default, name it 
-`thinkup_tests` and set the `$TEST_DATABASE` config variable to that name. The tests also assume you have a working
-connection to the internet.
+`thinkup_tests` and set the `$TEST_DATABASE` config variable to that name.
 
-Then, to run a particular test, like the UserDAO test, in the thinkup source code root folder, use this command: 
+### Test Assumptions
+
+In order for the tests to pass, you must:
+
+* Have a `tests/config.tests.inc.php` file with the correct values set
+* Set the crawler log file in `webapp/config.inc.php` and make that file writable
+* Set the database name to an empty tests database which the tests will destroy each run in `webapp/config.inc.php`
+* Set caching to false in `webapp/config.inc.php`
+* Have a local installation of ThinkUp using your test database
+* Have a working internet connection
+
+To run a particular test case, like the UserDAO test, in the ThinkUp source code root folder, use this command: 
 
     $ php tests/TestOfUserDAO.php
 
-To run all the tests, use:
+To run all the test cases, use:
 
     $ php tests/all_tests.php
 
@@ -30,10 +40,6 @@ To run a single test, set the TEST_METHOD environment variable. For example:
     $ TEST_METHOD=testIsPluginActive php tests/TestOfPluginMySQLDAO.php
 
 The webapp tests contained in `tests/all_integration_tests.php` make three assumptions:
-
-* You have a local installation of ThinkUp and that it is using your test database
-* Your local installation's `config.inc.php` points to the `thinkup_tests` database
-* Your local installation's `config.inc.php` has caching set to false
 
 ## Writing Tests
 
@@ -72,13 +78,13 @@ for an example.
 
 Once your tests work, add them to the `all_tests.php` file to run along with the existing tests. 
 
-## Debugging during integration testing
+## Debugging during testing
 
-If you want to print variable valies to the terminal while running tests, there is a ThinkUpWebTestCase::debug method.
-To use it, add a line like this to your integration test:
+If you want to print variable valies to the terminal while running tests, there is a ThinkUpWebTestCase::debug method
+and a ThinkUpBasicTestCase::debug method. To use it, add a line like this to your test:
 
 `$this->debug("This is my debugging statement which will print during my test run.")`
 
 To see your debug statements, run your test like so:
 
-`TEST_DEBUG=1 php tests/test.php`
+`TEST_DEBUG=1 php tests/yourtest.php`

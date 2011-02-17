@@ -25,9 +25,7 @@
  * @author Gina Trapani
  * @author Amy Unruh
  */
-if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
-    require_once '../../../../tests/init.tests.php';
-}
+require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';

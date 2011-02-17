@@ -28,9 +28,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
-    require_once '../../../../tests/config.tests.inc.php';
-}
+require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/controller/class.FacebookPluginConfigurationController.php';
@@ -267,8 +265,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         //page doesn't exist
         $_GET['action'] = 'add page';
         $_GET['instance_id'] = 1;
-        $_GET['viewer_id'] = 606837591;
-        $_GET['facebook_page_id'] = 162504567094163;
+        $_GET['viewer_id'] = '606837591';
+        $_GET['facebook_page_id'] = '162504567094163';
         $_GET['p'] = 'facebook';
         $_GET['owner_id'] = '';
 
@@ -283,7 +281,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue($v_mgr->getTemplateDataItem('fbconnect_link') != '', 'Authorization link set');
         $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Success! Your Facebook page has been added.');
         $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), null, $v_mgr->getTemplateDataItem('errormsg'));
-        $instance = $instance_dao->getByUserIdOnNetwork(162504567094163, 'facebook page');
+        $instance = $instance_dao->getByUserIdOnNetwork('162504567094163', 'facebook page');
         $this->assertTrue(isset($instance));
         $this->assertEqual($instance->id, 3);
         $oinstance = $owner_instance_dao->get( $owner->id, 3);
@@ -305,7 +303,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         $_GET['p'] = 'facebook';
         $_GET['perms'] = 'offline_access,read_stream,user_likes,user_location,user_website,read_friendlists';
-        $_GET['selected_profiles'] = 606837591;
+        $_GET['selected_profiles'] = '606837591';
         $_GET['session'] = '{"session_key":"new-faux-access-token","uid":"606837591","expires":0,"secret":'.
         '"itsasecret","access_token":"new-faux-access-token","sig":"siggysigsig"}';
 
@@ -319,7 +317,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), "Success! You've reconnected your Facebook ".
         "account.");
 
-        $instance = $instance_dao->getByUserIdOnNetwork(606837591, 'facebook');
+        $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
         $this->assertTrue(isset($instance));
 
         $oinstance = $owner_instance_dao->get($owner->id, $instance->id);

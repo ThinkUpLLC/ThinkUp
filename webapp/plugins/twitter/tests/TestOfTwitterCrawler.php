@@ -29,12 +29,9 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-if ( !isset($RUNNING_ALL_TESTS) || !$RUNNING_ALL_TESTS ) {
-    require_once '../../../../tests/init.tests.php';
-}
+require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
-
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
@@ -197,21 +194,21 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserTweets();
 
         $pdao = DAOFactory::getDAO('PostDAO');
-        $post = $pdao->getPost(13708601491193856, 'twitter');
-        $retweets = $pdao->getRetweetsOfPost(13708601491193856, 'twitter', true);
+        $post = $pdao->getPost('13708601491193856', 'twitter');
+        $retweets = $pdao->getRetweetsOfPost('13708601491193856', 'twitter', true);
         $this->assertEqual(sizeof($retweets), 1);
         $this->assertEqual($post->link->url, "http://is.gd/izUl5");
 
-        $post = $pdao->getPost(13960125416996864, 'twitter');
-        $this->assertEqual($post->in_retweet_of_post_id, 13708601491193856);
+        $post = $pdao->getPost('13960125416996864', 'twitter');
+        $this->assertEqual($post->in_retweet_of_post_id, '13708601491193856');
         $this->assertEqual($post->in_rt_of_user_id, 20542737);
         $this->assertEqual($post->link->url, "http://is.gd/izUl5");
 
         $tc->fetchInstanceUserMentions();
-        $post = $pdao->getPost(8957053141778432, 'twitter');
+        $post = $pdao->getPost('8957053141778432', 'twitter');
         $this->assertEqual($post->in_rt_of_user_id, 2768241);
-        $this->assertEqual($post->in_retweet_of_post_id, 8927196122972160);
-        $post_orig = $pdao->getPost(8927196122972160, 'twitter');
+        $this->assertEqual($post->in_retweet_of_post_id, '8927196122972160');
+        $post_orig = $pdao->getPost('8927196122972160', 'twitter');
         $this->assertEqual($post_orig->old_retweet_count_cache, 1);
         $this->assertEqual($post_orig->retweet_count_cache, 0);
     }
@@ -223,9 +220,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
         $tc->fetchSearchResults('@whitehouse');
         $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertTrue($pdao->isPostInDB(11837263794, 'twitter'));
+        $this->assertTrue($pdao->isPostInDB('11837263794', 'twitter'));
 
-        $post = $pdao->getPost(11837263794, 'twitter');
+        $post = $pdao->getPost('11837263794', 'twitter');
         $this->assertEqual($post->post_text,
         "RT @whitehouse: The New Start Treaty: Read the text and remarks by President Obama &amp; ".
         'President Medvedev http://bit.ly/cAm9hF');

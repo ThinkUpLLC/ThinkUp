@@ -76,7 +76,6 @@ class TestOfGridExportController extends ThinkUpUnitTestCase {
         $this->assertPattern("/No search data to export./", $results);
     }
 
-
     public function testGridExport() {
         $builders = $this->buildData();
         $this->simulateLogin('me@example.com');
@@ -98,7 +97,6 @@ class TestOfGridExportController extends ThinkUpUnitTestCase {
         $this->assertEqual($data[2], '');
     }
 
-
     private function buildData() {
         $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com'));
         $instance_builder = FixtureBuilder::build('instances', array('id'=>1, 'network_username'=>'someuser1',
@@ -107,5 +105,24 @@ class TestOfGridExportController extends ThinkUpUnitTestCase {
         'network'=>'twitter'));
         $owner_instance_builder = FixtureBuilder::build('owner_instances', array('instance_id'=>1, 'owner_id'=>1));
         return array($owner_builder, $instance_builder, $instance1_builder, $owner_instance_builder);
+    }
+}
+
+/**
+ * The following PHP 5.2-compatible code courtesy of:
+ * http://www.php.net/manual/en/function.str-getcsv.php#88311
+ */
+
+if (!function_exists('str_getcsv')) {
+    function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
+        $fiveMBs = 5 * 1024 * 1024;
+        $fp = fopen("php://temp/maxmemory:$fiveMBs", 'r+');
+        fputs($fp, $input);
+        rewind($fp);
+
+        $data = fgetcsv($fp, 1000, $delimiter, $enclosure); //  $escape only got added in 5.3.0
+
+        fclose($fp);
+        return $data;
     }
 }
