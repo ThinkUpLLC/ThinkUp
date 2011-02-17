@@ -12,7 +12,7 @@ sudo apt-get -y install apache2 php5-mysql libapache2-mod-php5
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -q -y mysql-server 
 sudo apt-get -y install unzip htop mysql-client
-sudo apt-get -y install curl libcurl3 libcurl3-dev php5-curl php5-mcrypt php5-gd php5-mysql --fix-missing
+sudo apt-get -y install curl libcurl3 libcurl3-dev php5-curl php5-mcrypt php5-gd --fix-missing
 sudo apt-get -y install sendmail
 
 # Opitional "Apache Best Practice"
