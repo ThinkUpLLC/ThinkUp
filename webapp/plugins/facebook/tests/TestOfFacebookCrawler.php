@@ -112,6 +112,19 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertPattern('/not the target demographic/', $post->post_text);
         $this->assertEqual($post->reply_count_cache, 0);
         $this->assertEqual($post->in_reply_to_post_id, '153956564638648');
+
+        $user_dao = new UserMySQLDAO();
+        $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
+        $this->assertTrue(isset($user));
+        $this->assertEqual($user->username, 'Gina Trapani');
+        $this->assertEqual($user->full_name, 'Gina Trapani');
+        $this->assertEqual($user->user_id, 606837591);
+        $this->assertEqual($user->avatar, 'https://graph.facebook.com/606837591/picture');
+
+        $user = $user_dao->getUserByName('Mitch Wagner', 'facebook');
+        $this->assertTrue(isset($user));
+        $this->assertEqual($user->user_id, 697015835);
+        $this->assertEqual($user->avatar, 'https://graph.facebook.com/697015835/picture');
     }
 
     public function testFetchPageStream() {

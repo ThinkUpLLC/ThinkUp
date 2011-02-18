@@ -266,8 +266,8 @@ class FacebookCrawler {
                                 array_push($thinkup_posts, $ttp);
                                 //Get users
                                 $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
-                                "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->id.'/picture', 
-                                "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true',
+                                "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->from->id.
+                                '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true',
                                 "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments",
                                 "network"=>'facebook'); //Users are always set to network=facebook
                                 array_push($thinkup_users, $ttu);
@@ -297,8 +297,8 @@ class FacebookCrawler {
                                     array_push($thinkup_posts, $ttp);
                                     //Get users
                                     $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
-                                    "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->id.'/picture',
-                                    "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true',
+                                    "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->from->id.
+                                    '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true',
                                     "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments",
                                     "network"=>'facebook'); //Users are always set to network=facebook
                                     array_push($thinkup_users, $ttu);
