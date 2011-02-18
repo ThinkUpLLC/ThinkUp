@@ -914,9 +914,13 @@ class TwitterCrawler {
     public function cleanUpFollows() {
         $this->logger->logInfo("Working on cleanUpFollows", __METHOD__.','.__LINE__);
 
+        $num_allowed_errors = 5;
+        $num_errors = 0;
+
         $fd = DAOFactory::getDAO('FollowDAO');
         $continue_fetching = true;
-        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching &&
+        $num_errors < $num_allowed_errors) {
             $oldfollow = $fd->getOldestFollow('twitter');
             if ($oldfollow != null) {
                 $friendship_call = $this->api->cURL_source['show_friendship'];
@@ -943,7 +947,17 @@ class TwitterCrawler {
                         Utils::getURLWithParams($friendship_call, $args));
                     }
                 } else {
-                    $continue_fetching = false;
+                    $this->logger->logError("Got non-200 response for " .
+                    Utils::getURLWithParams($friendship_call, $args), __METHOD__.','.__LINE__);
+                    if ($cURL_status == 404) {
+                        $this->logger->logError("Marking follow inactive due to 404 response", __METHOD__.','.__LINE__);
+                        // deactivate in both directions
+                        $fd->deactivate($oldfollow["followee_id"], $oldfollow["follower_id"], 'twitter',
+                        Utils::getURLWithParams($friendship_call, $args));
+                        $fd->deactivate($oldfollow["follower_id"], $oldfollow["followee_id"], 'twitter',
+                        Utils::getURLWithParams($friendship_call, $args));
+                    }
+                    $num_errors++;
                 }
             } else {
                 $continue_fetching = false;
@@ -1091,6 +1105,7 @@ class TwitterCrawler {
         $this->logger->logUserSuccess("Saved $fcount new favorites.", __METHOD__.','.__LINE__);
         return true;
     }
+
     /**
      * maintFavsFetch implements the core of the crawler's 'maintenance fetch' for favs.  It goes into this mode
      * after the initial archving process.  In maintenance mode the crawler is just looking for new favs. It searches

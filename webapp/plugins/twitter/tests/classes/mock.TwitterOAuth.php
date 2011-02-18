@@ -27,9 +27,11 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TwitterOAuth {
-  
+
     var $data_path = 'webapp/plugins/twitter/tests/testdata/';
-    
+
+    private $last_status_code = 200;
+
     /**
      * Constructor
      * @param str $consumer_key
@@ -53,12 +55,17 @@ class TwitterOAuth {
         $url = str_replace('?', '-', $url);
         //        echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
         //        ';
-        return file_get_contents($FAUX_DATA_PATH.$url);
+        if (!file_exists($FAUX_DATA_PATH.$url)) {
+            $this->last_status_code = 404;
+            return "";
+        } else {
+            return file_get_contents($FAUX_DATA_PATH.$url);
+        }
     }
-    
+
     public function setDataPath($data_path) {
-      $this->data_path = $data_path;
-      // print "data path is: " . $this->data_path . "\n";
+        $this->data_path = $data_path;
+        // print "data path is: " . $this->data_path . "\n";
     }
 
     public function http($url) {
@@ -74,7 +81,7 @@ class TwitterOAuth {
     }
 
     public function lastStatusCode() {
-        return 200;
+        return $this->last_status_code;
     }
 
     public function getRequestToken() {

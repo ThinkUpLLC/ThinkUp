@@ -111,6 +111,14 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue($this->DAO->followExists(1324567890, 1234567890, 'twitter'));
         $this->assertTrue($this->DAO->followExists(1723457890, 1823457890, 'facebook'));
         $this->assertFalse($this->DAO->followExists(1234567890, 1324567890, 'twitter'));
+
+        //inactive follow
+        $this->assertFalse($this->DAO->followExists(14, 1234567890, 'twitter', true));
+        $this->assertTrue($this->DAO->followExists(14, 1234567890, 'twitter'));
+
+        //active follow
+        $this->assertTrue($this->DAO->followExists(1723457890, 1823457890, 'facebook', true));
+        $this->assertTrue($this->DAO->followExists(1723457890, 1823457890, 'facebook'));
     }
 
     public function testUpdate() {

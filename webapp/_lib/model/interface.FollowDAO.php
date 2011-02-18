@@ -35,9 +35,10 @@ interface FollowDAO {
      * @param int $user_id
      * @param int $follower_id
      * @param str $network
-     * @return bool true if follow exist.
+     * @param bool $is_active Whether or not relationship should be active only
+     * @return bool true if follow exists
      */
-    public function followExists($user_id, $follower_id, $network);
+    public function followExists($user_id, $follower_id, $network, $is_active=false);
 
     /**
      * Updates 'last seen' in storage.

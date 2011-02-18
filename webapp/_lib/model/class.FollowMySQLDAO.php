@@ -40,10 +40,14 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $r;
     }
 
-    public function followExists($user_id, $follower_id, $network) {
+    public function followExists($user_id, $follower_id, $network, $is_active=false) {
         $q = " SELECT user_id, follower_id ";
         $q .= " FROM #prefix#follows ";
-        $q .= " WHERE user_id = :userid AND follower_id = :followerid AND network = :network;";
+        $q .= " WHERE user_id = :userid AND follower_id = :followerid AND network = :network ";
+        if ($is_active) {
+            $q .= "AND active=1";
+        }
+        $q .= ";";
         $vars = array(
             ':userid'=>$user_id, 
             ':followerid'=>$follower_id,

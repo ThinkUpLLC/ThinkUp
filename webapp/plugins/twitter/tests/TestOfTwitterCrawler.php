@@ -33,8 +33,10 @@ require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
+
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.CrawlerTwitterAPIAccessorOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterCrawler.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
@@ -134,8 +136,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $iid = $instd->insert('2768241', 'amygdala', 'twitter');
         $this->instance = $instd->getByUsernameOnNetwork("amygdala", "twitter");
 
-        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key',
-          'fake_secret', $this->instance, 1234, 5, 350);
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', $this->instance, 1234,
+        5, 350);
         $this->api->available = true;
         $this->api->available_api_calls_for_crawler = 20;
     }
@@ -611,5 +613,16 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         // $this->assertEqual($this->instance->owner_favs_in_system, 59);
         $this->assertEqual($this->instance->owner_favs_in_system, 61);
         $builder2 = null; $builder3 = null;
+    }
+
+    public function testCleanUpFollows404() {
+        self::setUpInstanceUserGinaTrapani();
+        $tc = new TwitterCrawler($this->instance, $this->api);
+
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertTrue($follow_dao->followExists(930061, 36823, 'twitter', true), 'Active follow exists');
+
+        $tc->cleanUpFollows();
+        $this->assertFalse($follow_dao->followExists(930061, 36823, 'twitter', true), 'Follow marked inactive');
     }
 }
