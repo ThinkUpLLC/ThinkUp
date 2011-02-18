@@ -284,7 +284,7 @@ class GeoEncoderCrawler {
     public function getDataForGeoencoding ($location) {
         $location = urlencode($location);
         $url = "http://maps.google.com/maps/api/geocode/json?address=".$location."&sensor=true";
-        $filecontents=file_get_contents("$url");
+        $filecontents=Utils::getURLContents($url);
         return $filecontents;
     }
 
@@ -297,7 +297,7 @@ class GeoEncoderCrawler {
     public function getDataForReverseGeoencoding($latlng) {
         $latlng = explode(' ', $latlng, 2);
         $url = "http://maps.google.com/maps/api/geocode/json?latlng=$latlng[0],$latlng[1]&sensor=true";
-        $filecontents=file_get_contents("$url");
+        $filecontents=Utils::getURLContents($url);
         return $filecontents;
     }
 }
