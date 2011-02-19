@@ -143,7 +143,7 @@ class Utils {
      * @param str $url
      * @return bool Whether or not it's a "valid" URL
      */
-    public function validateURL($url) {
+    public static function validateURL($url) {
         return filter_var($url, FILTER_VALIDATE_URL);
     }
 
