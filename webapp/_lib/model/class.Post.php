@@ -226,7 +226,7 @@ class Post {
      * @return array $matches
      */
     public static function extractURLs($post_text) {
-        preg_match_all('!https?://[\S]+!', $post_text, $matches);
+        preg_match_all('!https?://[\w][\S]+!', $post_text, $matches);
         return $matches[0];
     }
 }

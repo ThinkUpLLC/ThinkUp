@@ -74,7 +74,7 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
 
     public function testValidateEmail(){
         $this->assertFalse(Utils::validateEmail('yaya'));
-        $this->assertFalse(Utils::validateEmail('yaya@yaya'));
+        $this->assertTrue(Utils::validateEmail('yaya@yaya'));
         $this->assertTrue(Utils::validateEmail('h@bit.ly'));
         $this->assertTrue(Utils::validateEmail('you@example.com'));
     }
