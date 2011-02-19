@@ -29,9 +29,8 @@
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
               {if $smarty.foreach.foo.first}
                 <div class="clearfix header">
-                  <div class="grid_4 alpha">configure</div>
-                  <div class="grid_4">version/author</div>
-                  <div class="grid_10">description</div>
+                  <div class="grid_6 alpha">Name</div>
+                  <div class="grid_12">Description</div>
                   {if $is_user_admin}
                   <div class="grid_4 omega">activate/deactivate</div>
                   {/if}
@@ -39,14 +38,13 @@
               {/if}
               {if $user_is_admin || $ip->is_active}
               <div class="clearfix bt append prepend">
-                <div class="grid_4 small alpha"><span  id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l"></span>
-                    <span {if !$ip->is_active}style="display: none;"{/if} id="spanpluginnamelink{$ip->id}"><a href="?p={$ip->folder_name}">{$ip->name}</a></span>
+                <div class="grid_6 small alpha"><a href="?p={$ip->folder_name}"><span  id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l"></span>
+                    <span {if !$ip->is_active}style="display: none;"{/if} id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
                     <span {if $ip->is_active}style="display: none;"{/if} id="spanpluginnametext{$ip->id}">{$ip->name}</span>
                 </div>
-                <div class="grid_4 small"><!--(Currently {if $ip->is_active}Active{else}Inactive{/if})<br />-->Version {$ip->version}<br />by {$ip->author}</div>
-                <div class="grid_10">
-                  {$ip->description}
-                  <a href="{$ip->homepage}">[Plug-in home]</a>
+                <div class="grid_12">
+                  {$ip->description} <!--(Currently {if $ip->is_active}Active{else}Inactive{/if})<br />--><br />
+                  <span class="spanpluginmetainfo"></span>[v{$ip->version} by {$ip->author}, <a href="{$ip->homepage}">plug-in homepage</a>]</span>
                 </div>
                 {if $user_is_admin}
                 <div class="grid_4 omega">
