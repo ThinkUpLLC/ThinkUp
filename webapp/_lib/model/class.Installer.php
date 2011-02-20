@@ -141,10 +141,11 @@ class Installer {
      * @return bool Whether or not required version of PHP is present
      */
     public function checkVersion($ver = '') {
-        $version = phpversion();
         // when testing
         if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($ver) ) {
             $version = $ver;
+        } else {
+            $version = PHP_VERSION;
         }
         return version_compare( $version, self::$required_version['php'], '>=' );
     }
