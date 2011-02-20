@@ -84,7 +84,7 @@
         {/if}
         </div>
         
-        <h2>Follower Count By Week{if $follower_count_history_by_week.history|@count < 2}<br /><i>Not enough data yet</i>{else} {if $follower_count_by_week_trend != 0}({if $follower_count_by_week_trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_by_week_trend|round|number_format}</span> per week){/if}</h2>
+        <h2>Follower Count By Week{if $follower_count_history_by_week.history|@count < 2}<br /><i>Not enough data yet</i><br clear="all"/>{else} {if $follower_count_by_week_trend != 0}({if $follower_count_by_week_trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_by_week_trend|round|number_format}</span> per week){/if}</h2>
         <img src="http://chart.apis.google.com/chart?chs=360x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
         {/if}
 
