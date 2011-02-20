@@ -26,10 +26,8 @@
  * @copyright 2009-2010 Gina Trapani
  *
  */
-$version = explode('.', PHP_VERSION);
-if ($version[0] < 5) {
-    echo "ERROR: ThinkUp requires PHP 5. The current version of PHP is ".phpversion().".";
-    die();
+if ( !version_compare(PHP_VERSION, '5.2', '>=') ) {
+    exit("ERROR: ThinkUp requires PHP 5.2 or greater. The current version of PHP is ".PHP_VERSION.".");
 }
 
 //Register our lazy class loader
