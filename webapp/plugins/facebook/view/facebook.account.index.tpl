@@ -67,7 +67,7 @@
             {$i->network_username}&nbsp;likes:
         </div>
         <form name="addpage" action="index.php?p=facebook">
-        <div class="grid_8">
+        <div class="grid_8" style="padding-top: .5em;">
             {if $user_pages.$facebook_user_id}
             <input type="hidden" name="instance_id" value="{$i->id}">
             <input type="hidden" name="p" value="facebook">
