@@ -17,7 +17,9 @@ sudo apt-get -y install sendmail
 # Install MySQL directly on instance
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -q -y mysql-server 
 
-# RDS - Would you rather us RDS instead? Comment out the line above and uncomment the line below
+# RDS - Would you rather use AWS RDS instead? 
+# Comment out the line above that install MySQL Server
+# and uncomment the line below
 #sudo apt-get -y install mysql-client
 
 
