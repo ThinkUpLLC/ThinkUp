@@ -443,7 +443,6 @@ class InstallerController extends ThinkUpController {
      * @return array An associative array of options, ready for optgrouping.
      */
     protected function getTimeZoneList() {
-        $tz_options = timezone_identifiers_list();
         $view_tzs = array();
 
         $view_tzs[] = array(
