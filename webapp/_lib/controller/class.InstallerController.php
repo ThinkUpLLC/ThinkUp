@@ -446,30 +446,236 @@ class InstallerController extends ThinkUpController {
         $tz_options = timezone_identifiers_list();
         $view_tzs = array();
 
-        foreach ($tz_options as $option) {
-            $option_data = explode('/', $option);
+        $view_tzs[] = array(
+                'title' => '-12',
+                'val' => 'Kwajalein',
+                'display' => '(GMT -12:00) Eniwetok, Kwajalein'
+        );
+    
 
-            // don't allow user to select UTC
-            if ($option_data[0] == 'UTC') {
-                continue;
-            }
+        $view_tzs[] = array(
+                'title' => '-11',
+                'val' => 'Pacific/Samoa',
+                'display' => '(GMT -11:00) Midway Island, Samoa'
+        );
+    
 
-            // handle things like the many Indianas
-            if (isset($option_data[2])) {
-                $option_data[1] = $option_data[1] . ': ' . $option_data[2];
-            }
+        $view_tzs[] = array(
+                'title' => '-10',
+                'val' => 'Pacific/Honolulu',
+                'display' => '(GMT -10:00) Hawaii'
+        );
+    
 
-            //avoid undefined offset error
-            if(!isset($option_data[1])) {
-                $option_data[1] = $option_data[0];
-            }
+        $view_tzs[] = array(
+                'title' => '-9',
+                'val' => 'America/Anchorage',
+                'display' => '(GMT -9:00) Alaska'
+        );
+    
 
-            $view_tzs[$option_data[0]][] = array(
-                'val' => $option,
-                'display' => str_replace('_', ' ', $option_data[1])
-            );
-        }
+        $view_tzs[] = array(
+                'title' => '-8',
+                'val' => 'America/Los_Angeles',
+                'display' => '(GMT -8:00) Pacific Time (US &amp; Canada)'
+        );
+    
 
+        $view_tzs[] = array(
+                'title' => '-7',
+                'val' => 'America/Denver',
+                'display' => '(GMT -7:00) Mountain Time (US &amp; Canada)'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '-6',
+                'val' => 'America/Chicago',
+                'display' => '(GMT -6:00) Central Time (US &amp; Canada), Mexico City'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '-5',
+                'val' => 'America/New_York',
+                'display' => '(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '-4.5',
+                'val' => 'America/Caracas',
+                'display' => '(GMT -4:30) Caracas'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '-4',
+                'val' => 'America/Halifax',
+                'display' => '(GMT -4:00) Atlantic Time (Canada), La Paz'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '-3.5',
+                'val' => 'America/St_Johns',
+                'display' => '(GMT -3:30) Newfoundland'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '-3',
+                'val' => 'America/Argentina/Buenos_Aires',
+                'display' => '(GMT -3:00) Brazil, Buenos Aires, Georgetown'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '-2',
+                'val' => 'Atlantic/South_Georgia',
+                'display' => '(GMT -2:00) Mid-Atlantic'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '-1',
+                'val' => 'Atlantic/Cape_Verde',
+                'display' => '(GMT -1:00 hour) Azores, Cape Verde Islands'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '0',
+                'val' => 'Europe/London',
+                'display' => '(GMT) Western Europe Time, London, Lisbon, Casablanca'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '1',
+                'val' => 'Europe/Paris',
+                'display' => '(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '2',
+                'val' => 'Africa/Windhoek',
+                'display' => '(GMT +2:00) Kaliningrad, South Africa'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '3',
+                'val' => 'Asia/Baghdad',
+                'display' => '(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '3.5',
+                'val' => 'Asia/Tehran',
+                'display' => '(GMT +3:30) Tehran'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '4',
+                'val' => 'Asia/Muscat',
+                'display' => '(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '4.5',
+                'val' => 'Asia/Kabul',
+                'display' => '(GMT +4:30) Kabul'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '5',
+                'val' => 'Asia/Karachi',
+                'display' => '(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '5.5',
+                'val' => 'Asia/Kolkata',
+                'display' => '(GMT +5:30) Bombay, Calcutta, Madras, New Delhi'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '5.75',
+                'val' => 'Asia/Kathmandu',
+                'display' => '(GMT +5:45) Kathmandu'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '6',
+                'val' => 'Asia/Dhaka',
+                'display' => '(GMT +6:00) Almaty, Dhaka, Colombo'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '6.5',
+                'val' => 'Asia/Rangoon',
+                'display' => '(GMT +6:30) Rangoon'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '7',
+                'val' => 'Asia/Bangkok',
+                'display' => '(GMT +7:00) Bangkok, Hanoi, Jakarta'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '8',
+                'val' => 'Asia/Hong_Kong',
+                'display' => '(GMT +8:00) Beijing, Perth, Singapore, Hong Kong'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '9',
+                'val' => 'Asia/Tokyo',
+                'display' => '(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '9.5',
+                'val' => 'Australia/Adelaide',
+                'display' => '(GMT +9:30) Adelaide, Darwin'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '10',
+                'val' => 'Australia/Sydney',
+                'display' => '(GMT +10:00) Eastern Australia, Guam, Vladivostok'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '11',
+                'val' => 'Asia/Magadan',
+                'display' => '(GMT +11:00) Magadan, Solomon Islands, New Caledonia'
+        );
+    
+
+        $view_tzs[] = array(
+                'title' => '12',
+                'val' => 'Pacific/Auckland',
+                'display' => '(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka'
+        );
+    
         return $view_tzs;
     }
 }
