@@ -38,8 +38,8 @@
         e.preventDefault();
         return false;
       });
-
-      
+		var tz_offset = (new Date).getTimezoneOffset() / (-60); //Get Timezone offset in minutes from the user's client.
+      $('#timezone').find('option').filter('[title='+tz_offset+']').attr('selected','selected');
     });
   </script>
   {/literal}
