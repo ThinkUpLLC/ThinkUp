@@ -1,5 +1,6 @@
 {include file="_header.tpl" enable_tabs=true}
 {include file="_statusbar.tpl"}
+
 <div class="container_24">
 
   <div role="application" id="tabs">
@@ -29,31 +30,30 @@
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
               {if $smarty.foreach.foo.first}
                 <div class="clearfix header">
-                  <div class="grid_4 alpha">configure</div>
-                  <div class="grid_4">version/author</div>
-                  <div class="grid_10">description</div>
-                  {if $is_user_admin}
+                  <div class="grid_4 alpha">name</div>
+                  <div class="grid_14">description</div>
+                  {if $user_is_admin}
                   <div class="grid_4 omega">activate/deactivate</div>
                   {/if}
                 </div>
               {/if}
               {if $user_is_admin || $ip->is_active}
               <div class="clearfix bt append prepend">
-                <div class="grid_4 small alpha"><span  id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l"></span>
-                    <span {if !$ip->is_active}style="display: none;"{/if} id="spanpluginnamelink{$ip->id}"><a href="?p={$ip->folder_name}">{$ip->name}</a></span>
+                <div class="grid_4 small alpha"><a href="?p={$ip->folder_name}"><span  id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l"></span>
+                    <span {if !$ip->is_active}style="display: none;"{/if} id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
                     <span {if $ip->is_active}style="display: none;"{/if} id="spanpluginnametext{$ip->id}">{$ip->name}</span>
                 </div>
-                <div class="grid_4 small"><!--(Currently {if $ip->is_active}Active{else}Inactive{/if})<br />-->Version {$ip->version}<br />by {$ip->author}</div>
-                <div class="grid_10">
-                  {$ip->description}
-                  <a href="{$ip->homepage}">[Plug-in home]</a>
+                <div class="grid_14">
+                  <div style="font-size:14px">{$ip->description}</div>
+                  <span style="font-size:12px;color:#999"><a href="{$ip->homepage}">v{$ip->version}</a> by {$ip->author}</span>
                 </div>
                 {if $user_is_admin}
                 <div class="grid_4 omega">
                   <span id="spanpluginactivation{$ip->id}">
                       <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
                   </span>
-                  <span style="display: none;" class='success mt_10' id="message{$ip->id}"></span>                </div>
+                  <span style="display: none;" class='success mt_10' id="message{$ip->id}"></span>
+                  </div>
                 {/if}
               </div>
               {/if}

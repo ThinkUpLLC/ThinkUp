@@ -136,7 +136,6 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
         return $folder_name;
     }
 
-
     public function setActive($id, $active) {
         $q = "
             UPDATE 
@@ -152,7 +151,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
     public function getInstalledPlugins($plugin_path) {
         // Detect what plugins exist in the filesystem; parse their header comments for plugin metadata
         Utils::defineConstants();
-        $installed_plugins = array();
+        $active_plugins = $inactive_plugins = array();
         $plugin_files = Utils::getPlugins(THINKUP_WEBAPP_PATH.'plugins');
         foreach ($plugin_files as $pf) {
             foreach (glob(THINKUP_WEBAPP_PATH.'plugins/'.$pf."/controller/".$pf.".php") as $includefile) {
@@ -169,11 +168,16 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
                             $this->updatePlugin($installed_plugin);
                         }
                     }
-                    array_push($installed_plugins, $installed_plugin);
+                    // Store in list, active first
+                    if ($installed_plugin->is_active) {
+                        array_push($active_plugins, $installed_plugin);
+                    } else {
+                        array_push($inactive_plugins, $installed_plugin);
+                    }
                 }
             }
         }
-        return $installed_plugins;
+        return array_merge($active_plugins, $inactive_plugins);
     }
 
     private function parseFileContents($contents, $pf) {
