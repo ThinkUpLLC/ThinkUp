@@ -74,9 +74,11 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
 
     public function testValidateEmail(){
         $this->assertFalse(Utils::validateEmail('yaya'));
-        $this->assertTrue(Utils::validateEmail('yaya@yaya'));
+        //don't validate local addresses
+        $this->assertFalse(Utils::validateEmail('yaya@yaya'));
         $this->assertTrue(Utils::validateEmail('h@bit.ly'));
         $this->assertTrue(Utils::validateEmail('you@example.com'));
+        $this->assertTrue(Utils::validateEmail('youfirstname.yourlastname@example.co.uk'));
     }
 
     public function testValidateURL(){

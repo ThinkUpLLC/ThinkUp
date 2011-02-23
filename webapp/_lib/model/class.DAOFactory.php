@@ -42,13 +42,13 @@
 class DAOFactory {
 
     /**
-     * maps DAO from db_type and defines interface names and class implementation
+     * Maps DAO from db_type and defines interface names and class implementation
      */
     static $dao_mapping = array (
     //Test DAO
         'TestDAO' => array( 
     //MySQL Version
-            'mysql' => 'TestMysqlDAO',
+            'mysql' => 'TestMySQLDAO',
     //faux Version
             'faux' => 'TestFauxDAO' ),
     //Instance DAO
@@ -69,9 +69,8 @@ class DAOFactory {
             'mysql' => 'PostMySQLDAO' ),
     //FavoritePost DAO
         'FavoritePostDAO' => array(
-     //MySQL Version
+    //MySQL Version
             'mysql' => 'FavoritePostMySQLDAO' ),
-            // 'mysql' => array( 'class' => 'FavoritePostMySQLDAO', 'path' => 'model/class.FavoritePostMySQLDAO.php')
     //User DAO
         'UserDAO' => array(
     //MySQL Version

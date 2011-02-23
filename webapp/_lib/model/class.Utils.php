@@ -128,13 +128,17 @@ class Utils {
     }
 
     /**
-     * Validate email
+     * Validate email address
+     * Note: Local email addresses (without a dot in the domain name) will return false.
+     * As of PHP 5.3.3, the FILTER_VALIDATE_EMAIL validates local email addresses. From 5.2 to 5.3.3, it does not.
+     * Therefore, this method couples filter_var with the preg_match to return consistent results regardless of PHP
+     * version.
      *
      * @param string $email Email address to validate
      * @return bool Whether or not it's a valid address
      */
     public static function validateEmail($email = '') {
-        return filter_var($email, FILTER_VALIDATE_EMAIL);
+        return filter_var($email, FILTER_VALIDATE_EMAIL) && preg_match('/@.+\./', $email);
     }
 
     /**
