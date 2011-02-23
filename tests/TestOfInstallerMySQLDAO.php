@@ -182,7 +182,7 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
     public function testNeedsSnowflakeUpgrade() {
         $dao = new InstallerMySQLDAO();
         $this->assertFalse($dao->needsSnowflakeUpgrade());
-        $this->db->exec('ALTER TABLE tu_posts CHANGE post_id post_id bigint(11) NOT NULL;');
+        $this->testdb_helper->runSQL('ALTER TABLE tu_posts CHANGE post_id post_id bigint(11) NOT NULL;');
         $this->assertTrue($dao->needsSnowflakeUpgrade());
     }
 

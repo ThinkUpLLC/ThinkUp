@@ -259,7 +259,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         // snowflake update needed...
         $this->pdo->query("drop table " . $this->prefix . "options");
-        $this->db->exec('ALTER TABLE ' . $this->prefix .
+        $this->testdb_helper->runSQL('ALTER TABLE ' . $this->prefix .
         'instances CHANGE last_post_id last_status_id bigint(11) NOT NULL');
         $controller = new UpgradeController(true);
         $results = $controller->go();

@@ -51,7 +51,7 @@ INSERT INTO #prefix#owners SET
     activation_code='8888',
     is_activated =1
 SQL;
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
     }
 
     public function testOfControllerNoParams() {

@@ -63,15 +63,11 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         // Delete test database created during installation process
         require THINKUP_WEBAPP_PATH.'config.inc.php';
-        global $TEST_DATABASE;
 
         //Override default CFG values
-        $THINKUP_CFG['db_name'] = $TEST_DATABASE;
-        $this->db = new Database($THINKUP_CFG);
-        $this->conn = $this->db->getConnection();
+        $THINKUP_CFG['db_name'] = $this->test_database_name;
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
-        $this->testdb_helper->drop($this->db);
-        $this->db->closeConnection($this->conn);
+        $this->testdb_helper->drop($this->test_database_name);
 
         parent::tearDown();
     }
@@ -127,7 +123,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $zip_url = $MIGRATIONS[$version]['zip_url'];
 
         require THINKUP_WEBAPP_PATH.'config.inc.php';
-        global $TEST_DATABASE;
         //install beta 1
         $zipfile = $this->getInstall($zip_url, $version, $this->installs_dir);
 
@@ -157,7 +152,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->setField('timezone', 'America/Los_Angeles');
 
         $this->setField('db_host', $THINKUP_CFG['db_host']);
-        $this->setField('db_name', $TEST_DATABASE);
+        $this->setField('db_name', $this->test_database_name);
         $this->setField('db_user', $THINKUP_CFG['db_user']);
         $this->setField('db_passwd', $THINKUP_CFG['db_password']);
         $this->setField('db_socket', $THINKUP_CFG['db_socket']);

@@ -56,20 +56,20 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         //Add owner
         $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com',
         is_activated=1, pwd='XXX', activation_code='8888'";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         //Add instance_owner
         $q = "INSERT INTO tu_owner_instances (owner_id, instance_id) VALUES (1, 1)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         //Insert test data into test table
         $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
         'Ev Williams', 'avatar.jpg', '1/1/2005');";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         //Make public
         $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public) VALUES (1, 13, 'ev', 1);";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         //Add a bunch of posts
         $counter = 0;
@@ -79,7 +79,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
             post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 
             'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".
             rand(0, 4).", 5);";
-            $this->db->exec($q);
+            $this->testdb_helper->runSQL($q);
             $counter++;
         }
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';

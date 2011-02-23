@@ -57,7 +57,7 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
 
         //For the sake of time, set all instances to inactive so the crawler itself doesn't actually run
         $q = "UPDATE tu_instances SET is_active=0;";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $this->click("1 month ago");
         //$this->showHeaders();

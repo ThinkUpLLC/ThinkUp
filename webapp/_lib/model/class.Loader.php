@@ -156,11 +156,6 @@ class Loader {
                 require_once $file_name;
                 return;
             }
-            $file_name = $path . 'class.'. $class . '.deprecated.php';
-            if ( file_exists( $file_name )) {
-                require_once $file_name;
-                return;
-            }
         }
 
         // if $class is special class filename

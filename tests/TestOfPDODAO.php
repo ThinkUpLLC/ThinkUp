@@ -47,21 +47,21 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
             'test_id int(11),' .
             'unique key test_id_idx (test_id)' .
             ')';
-        $this->db->exec($test_table_sql);
+        $this->testdb_helper->runSQL($test_table_sql);
 
         $q = sprintf("INSERT INTO tu_test_table (test_name, test_id) VALUES ('name%s', %d)", 1, 1);
         for($i = 2; $i <= 20; $i++) {
             $q .= sprintf(",('name%s', %d)", $i, $i);
         }
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         // Insert test data into test user table
         $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (12, 'mary', 'Mary Jane',
         'avatar.jpg');";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
         $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (13, 'sweetmary', 'Sweet Mary Jane',
         'avatar.jpg');";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
     }
 
     public function tearDown() {
@@ -70,7 +70,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
 
     public function testInitDAO() {
         $testdao = DAOFactory::getDAO('TestDAO');
-        $this->assertNotNull(TestMysqlDAO::$PDO);
+        $this->assertNotNull(TestMySQLDAO::$PDO);
         $this->assertNotNull($testdao->config);
         $this->assertNotNull($testdao->logger);
     }

@@ -85,7 +85,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         Config::destroyInstance();
         $this->removeConfigFile();
         //drop DB
-        $this->testdb_helper->drop($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
@@ -96,7 +96,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
     public function testFreshInstallStep2() {
         //drop DB
-        $this->testdb_helper->drop($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
         //remove config file
         Config::destroyInstance();
         $this->removeConfigFile();
@@ -112,7 +112,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
     public function testFreshInstallStep3InvalidEmail() {
         //drop DB
-        $this->testdb_helper->drop($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
         //remove config file
         Config::destroyInstance();
         $this->removeConfigFile();
@@ -142,7 +142,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
     public function testFreshInstallStep3MisssingPasswords() {
         //drop DB
-        $this->testdb_helper->drop($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
         //remove config file
         Config::destroyInstance();
         $this->removeConfigFile();
@@ -172,7 +172,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
     public function testFreshInstallStep3MismatchedPasswords() {
         //drop DB
-        $this->testdb_helper->drop($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
         //remove config file
         Config::destroyInstance();
         $this->removeConfigFile();
@@ -207,7 +207,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $valid_db_socket = $config->getValue('db_socket');
 
         //drop DB
-        $this->testdb_helper->drop($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
         //remove config file
         Config::destroyInstance();
         //unset PDO so it must be recreated
@@ -235,8 +235,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
-        $result = $controller->go();
 
+        $result = $controller->go();
         $this->assertPattern('/ThinkUp couldn\'t connect to your database. The error message is:/', $result);
         $this->assertPattern('/Access denied for user \'username\'/', $result);
         $this->restoreConfigFile();
@@ -249,9 +249,9 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $valid_db_socket = $config->getValue('db_socket');
         $valid_db_user = $config->getValue('db_user');
         $valid_db_password = $config->getValue('db_password');
-
         //drop DB
-        $this->testdb_helper->drop($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
+
         //remove config file
         Config::destroyInstance();
         //unset PDO so it must be recreated
@@ -295,7 +295,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $valid_db_port = $config->getValue('db_port');
 
         //drop DB
-        $this->testdb_helper->drop($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
         //remove config file
         Config::destroyInstance();
         //unset PDO so it must be recreated
@@ -345,7 +345,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $valid_db_socket = $config->getValue('db_socket');
 
         //drop DB
-        $this->testdb_helper->drop($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
 
         //remove config file
         $config = null;

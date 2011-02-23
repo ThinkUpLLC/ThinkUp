@@ -240,100 +240,100 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (1, 15645300636, 127567137, 'ekanshpreet', ";
         $q .= "'thinking....', 'New Delhi', NULL, '28.602815 77.049136', 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (2, 15435434230, 127567137, 'ekanshpreet', ";
         $q .= "'i think its working now :D...', NULL, NULL, NULL, 6)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_retweet_by_friend, in_retweet_of_post_id, is_geo_encoded) ";
         $q .= "VALUES (3, 15344199472, 127567137, 'ekanshpreet', 'lets try again ...', 'New Delhi', NULL, NULL, ";
         $q .= "1, 15645300636, 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (4, 15338041815, 127567137, 'ekanshpreet', ";
         $q .= "'howdy ???', 'Mumbai', NULL, NULL, 3)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (5, 15331235880, 127567137, 'ekanshpreet', ";
         $q .= "':)', 'New Delhi', NULL, '28.60abc2815 77.049136', 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (6, 15268690400, 127567137, 'ekanshpreet', ";
         $q .= "'hmm... lets c...', 'abc', NULL, NULL, 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (7, 15244973830, 127567137, 'ekanshpreet', ";
         $q .= "'hmmm....', 'Ü', NULL, NULL, 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (8, 15219161227, 127567137, 'ekanshpreet', ";
         $q .= "'RT @jerrybrito: New Podcast: Gina Trapani and Anil Dash on Expert Labs and ThinkUp ow.ly/17zfrX', ";
         $q .= "'New Delhi', NULL, '28.56213 77.165297', 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
         $q .= "(12, 15052338902, 127567137, 'ekanshpreet', '@imnishantg thats the problem.... :P', 'New Delhi', ";
         $q .= "'Sector 8, R.K. Puram, New Delhi', NULL, 1, '15338041815', 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
         $q .= "(13, 14914043658, 127567137, 'ekanshpreet', 'is done with exams !!!', 'New Delhi', ";
         $q .= "'Sector 8, R.K. Puram, New Delhi', NULL, 1, 999999, 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (14, 14913946516, 127567137, 'ekanshpreet', ";
         $q .= "'is done with exams !!! :-)', 'New Delhi', 'abc', NULL, 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
         $q .= "(15, 11259110570, 127567137, 'ekanshpreet', 'im here finally ;)....', 'New Delhi', ";
         $q .= "'Sector 8, R.K. Puram, New Delhi', '28.56213 77.165297', 1, 14914043658, 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (16, 12259110570, 127567137, 'ekanshpreet', ";
         $q .= "'im here finally ;)....', 'New Delhi', 'request_denied', NULL, 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_retweet_by_friend, in_retweet_of_post_id, is_geo_encoded) ";
         $q .= "VALUES (18, 13212618909, 772673, 'mwilkie', 'Just watched chris corn cob a sheep.',
         'iPhone: 40.681839,-73.983734', ";
         $q .= "NULL, NULL, 1, '11259110570', 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
         $q .= "(19, 1231210570, 127567137, 'ekanshpreet', 'im here finally ;)....', 'New Delhi', ";
         $q .= "'Sector 8, R.K. Puram, New Delhi', '28.56213 77.165297', 1, 14914043658, 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (20, 13259110570, 127567137, 'ekanshpreet', ";
         $q .= "'im here finally ;)....', 'New Delhi', 'over_query_limit', NULL, 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (21, 15645301636, 127567137, 'ekanshpreet', ";
         $q .= "'thinking....', 'New Delhi', NULL, '28.602815 77.049136', 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (22, 11331235880, 127567137, 'ekanshpreet', ";
         $q .= "':)', 'New Delhi', NULL, '28.60abc2815 77.049136', 0)";
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         return $builders;
     }

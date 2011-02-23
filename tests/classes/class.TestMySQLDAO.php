@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/classes/class.TestMysqlDAO.php
+ * ThinkUp/tests/classes/class.TestMySQLDAO.php
  *
  * Copyright (c) 2009-2011 Christoffer Viken, Gina Trapani, Mark Wilkie
  *
@@ -20,17 +20,15 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- *
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Christoffer Viken, Gina Trapani, Mark Wilkie
  *
- *
  * MySQL TestDAO implementation class for TestOfPDODAO and TestOfDAOFactory
  */
-class TestMysqlDAO extends PDODAO implements TestDAO {
+class TestMySQLDAO extends PDODAO implements TestDAO {
 
     // test select query using $stmt directly...
     public function getUserCount($min_id, $user_name) {

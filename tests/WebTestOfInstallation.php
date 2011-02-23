@@ -58,23 +58,18 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         //Delete test database created during installation process
         require THINKUP_WEBAPP_PATH.'config.inc.php';
-        global $TEST_DATABASE;
 
         //Override default CFG values
-        $THINKUP_CFG['db_name'] = $TEST_DATABASE;
+        $THINKUP_CFG['db_name'] = $this->test_database_name;
 
-        $this->db = new Database($THINKUP_CFG);
-        $this->conn = $this->db->getConnection();
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
-        $this->testdb_helper->drop($this->db);
-        $this->db->closeConnection($this->conn);
+        $this->testdb_helper->drop($this->test_database_name);
 
         parent::tearDown();
     }
 
     public function testSuccessfulInstallationAndAccountActivation() {
         require THINKUP_WEBAPP_PATH.'config.inc.php';
-        global $TEST_DATABASE;
 
         //Config file doesn't exist
         $this->assertFalse(file_exists($THINKUP_CFG['source_root_path'].
@@ -97,7 +92,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->setField('timezone', 'America/Los_Angeles');
 
         $this->setField('db_host', $THINKUP_CFG['db_host']);
-        $this->setField('db_name', $TEST_DATABASE);
+        $this->setField('db_name', $this->test_database_name);
         $this->setField('db_user', $THINKUP_CFG['db_user']);
         $this->setField('db_passwd', $THINKUP_CFG['db_password']);
         $this->setField('db_socket', $THINKUP_CFG['db_socket']);

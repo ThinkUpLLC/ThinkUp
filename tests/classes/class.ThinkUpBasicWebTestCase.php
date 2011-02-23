@@ -31,6 +31,10 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
      * @var str The test web server URL, ie, http://dev.thinkup.com
      */
     var $url;
+    /**
+     * @var str
+     */
+    var $test_database_name;
 
     public function setUp() {
         global $TEST_SERVER_DOMAIN;
@@ -39,6 +43,9 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
 
         self::isWebTestEnvironmentReady();
+
+        require THINKUP_ROOT_PATH.'tests/config.tests.inc.php';
+        $this->test_database_name = $TEST_DATABASE;
     }
 
     public function tearDown() {
@@ -61,21 +68,18 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
         require THINKUP_WEBAPP_PATH.'config.inc.php';
         global $TEST_DATABASE;
 
-        $is_test_env_ready = true;
         if ($THINKUP_CFG['db_name'] != $TEST_DATABASE) {
             $message = "The database name in webapp/config.inc.php does not match \$TEST_DATABASE in ".
             "tests/config.tests.inc.php. 
 In order to test your ThinkUp installation without losing data, these database names must both point to the same ".
 "empty test database.";
-            $is_test_env_ready = false;
         }
 
         if ($THINKUP_CFG['cache_pages']) {
             $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['cache_pages'] must be set to false.";
-            $is_test_env_ready = false;
         }
 
-        if (!$is_test_env_ready) {
+        if (isset($message)) {
             die("Stopping tests...Integration test environment isn't ready.
 ".$message."
 Please try again.

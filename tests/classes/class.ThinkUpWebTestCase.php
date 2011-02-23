@@ -26,28 +26,27 @@
  * @copyright 2009-2010 Gina Trapani
  */
 class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
-    var $db;
-    var $conn;
+    /**
+     * @var ThinkUpTestDatabaseHelper
+     */
     var $testdb_helper;
-
     public function setUp() {
         parent::setUp();
         require THINKUP_WEBAPP_PATH.'config.inc.php';
-        global $TEST_DATABASE;
+        $config = Config::getInstance();
+        if ($config->getValue('timezone')) {
+            date_default_timezone_set($config->getValue('timezone'));
+        }
 
         //Override default CFG values
-        $THINKUP_CFG['db_name'] = $TEST_DATABASE;
-
-        $this->db = new Database($THINKUP_CFG);
-        $this->conn = $this->db->getConnection();
+        $THINKUP_CFG['db_name'] = $this->test_database_name;
 
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
-        $this->testdb_helper->create($this->db);
+        $this->testdb_helper->create($THINKUP_CFG['source_root_path']."webapp/install/sql/build-db_mysql.sql");
     }
 
     public function tearDown() {
-        $this->testdb_helper->drop($this->db);
-        $this->db->closeConnection($this->conn);
+        $this->testdb_helper->drop($this->test_database_name);
         parent::tearDown();
     }
 

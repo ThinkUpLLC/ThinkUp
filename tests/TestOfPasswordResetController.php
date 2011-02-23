@@ -53,7 +53,7 @@ INSERT INTO #prefix#owners SET
     activation_code='8888',
     is_activated =1
 SQL;
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $dao = DAOFactory::getDAO('OwnerDAO');
         $this->owner = $dao->getByEmail('me@example.com');
@@ -77,7 +77,7 @@ UPDATE #prefix#owners
 SET password_token = '{$this->token}_{$expired_time}'
 WHERE id = 1;
 SQL;
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $_GET['token'] = $this->token;
         $controller = new PasswordResetController(true);
@@ -94,7 +94,7 @@ UPDATE #prefix#owners
 SET password_token = '{$this->token}_{$time}'
 WHERE id = 1;
 SQL;
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $_GET['token'] = $this->token;
         $controller = new PasswordResetController(true);
@@ -112,7 +112,7 @@ UPDATE #prefix#owners
 SET password_token = '{$this->token}_{$time}'
 WHERE id = 1;
 SQL;
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $_POST['password'] = 'not';
         $_POST['password_confirm'] = 'the same';
@@ -134,7 +134,7 @@ UPDATE #prefix#owners
 SET password_token = '{$this->token}_{$time}'
 WHERE id = 1;
 SQL;
-        $this->db->exec($q);
+        $this->testdb_helper->runSQL($q);
 
         $_POST['password'] = 'the same';
         $_POST['password_confirm'] = 'the same';

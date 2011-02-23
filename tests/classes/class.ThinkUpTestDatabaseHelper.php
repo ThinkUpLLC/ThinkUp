@@ -30,45 +30,43 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class ThinkUpTestDatabaseHelper {
+class ThinkUpTestDatabaseHelper extends PDODAO {
 
     /**
      * Create ThinkUp tables
-     *
-     * @TODO: Use PDO instead of deprecated Database class.
-     * @param Database $db
      */
-    public function create($db) {
-        global $THINKUP_CFG;
-
+    public function create($script_path) {
         error_reporting(22527); //Don't show E_DEPRECATED PHP messages, split() is deprecated
-
         //Create all the tables based on the build script
-        $create_db_script = file_get_contents($THINKUP_CFG['source_root_path']."webapp/install/sql/build-db_mysql.sql");
+        $create_db_script = file_get_contents($script_path);
         $create_statements = split(";", $create_db_script);
         foreach ($create_statements as $q) {
             if (trim($q) != '') {
-                $db->exec($q.";");
+                self::execute($q);
             }
         }
     }
 
     /**
      * Drop ThinkUp tables
-     *
-     * @TODO: Use PDO instead of deprecated Database class.
-     * @param Database $db
      */
     public function drop($db) {
-        global $TEST_DATABASE;
-
         //Delete test data by dropping all existing tables
-        $q = "SHOW TABLES FROM ".$TEST_DATABASE;
-        $result = $db->exec($q);
-        while ($row = mysql_fetch_assoc($result)) {
-            $q = "DROP TABLE ".$row['Tables_in_'.$TEST_DATABASE];
-            $db->exec($q);
+        $q = "SHOW TABLES FROM ".$db;
+        $stmt = self::execute($q);
+        $results = $this->getDataRowsAsArrays($stmt);
+        foreach ($results as $result) {
+            $q = "DROP TABLE ".$result['Tables_in_'.$db];
+            self::execute($q);
         }
+    }
+
+    /**
+     * Exposing protected execute method for direct use by tests only
+     * @param $sql
+     */
+    public function runSQL($sql) {
+        return self::execute($sql);
     }
 
     public function databaseExists($db_name) {
@@ -99,5 +97,4 @@ class ThinkUpTestDatabaseHelper {
         //mysql_close($con);
         return $return;
     }
-
 }

@@ -29,41 +29,44 @@
  *
  */
 class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
-
+    /**
+     * @var str
+     */
     const TEST_EMAIL = '/upgrade_test_email';
-
-    var $db;
-    var $conn;
+    /**
+     * @var ThinkUpTestDatabaseHelper
+     */
     var $testdb_helper;
-
+    /**
+     * @var str
+     */
+    var $test_database_name;
     /**
      * Create a clean copy of the ThinkUp database structure
      */
     public function setUp() {
         parent::setUp();
         require THINKUP_WEBAPP_PATH.'config.inc.php';
-
-        global $TEST_DATABASE;
+        require THINKUP_ROOT_PATH .'tests/config.tests.inc.php';
+        $this->test_database_name = $TEST_DATABASE;
 
         //Override default CFG values
-        $THINKUP_CFG['db_name'] = $TEST_DATABASE;
+        $THINKUP_CFG['db_name'] = $this->test_database_name;
         $config = Config::getInstance();
-        $config->setValue('db_name', $TEST_DATABASE);
-
-        $this->db = new Database($THINKUP_CFG);
-        $this->conn = $this->db->getConnection();
+        $config->setValue('db_name', $this->test_database_name);
 
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
-        $this->testdb_helper->drop($this->db);
-        $this->testdb_helper->create($this->db);
+        $this->testdb_helper->drop($this->test_database_name);
+        $this->testdb_helper->create($THINKUP_CFG['source_root_path']."webapp/install/sql/build-db_mysql.sql");
     }
 
     /**
      * Drop the database and kill the connection
      */
     public function tearDown() {
-        $this->testdb_helper->drop($this->db);
-        $this->db->closeConnection($this->conn);
+        if (isset(ThinkUpTestDatabaseHelper::$PDO)) {
+            $this->testdb_helper->drop($this->test_database_name);
+        }
         parent::tearDown();
         // delete test email file if it exists
         $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . self::TEST_EMAIL;

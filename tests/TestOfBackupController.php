@@ -89,7 +89,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
     public function XtestBackupCrawlerHasMutex() {
         // mutex needs to be on another db handle, so can't use doa framework to test to test
         $mutex_name = $this->config->getValue('db_name') . '.' . 'crawler';
-        $result = $this->db->exec("SELECT GET_LOCK('$mutex_name', 1)");
+        $result = $this->testdb_helper->runSQL("SELECT GET_LOCK('$mutex_name', 1)");
         var_dump(mysql_fetch_assoc($result));
         $this->simulateLogin('me@example.com', true);
         $controller = new BackupController(true);
@@ -99,7 +99,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $results = ob_get_contents();
         ob_end_clean();
         echo $results;
-        $this->db->exec("SELECT RELEASE_LOCK('$mutex_name')");
+        $this->testdb_helper->runSQL("SELECT RELEASE_LOCK('$mutex_name')");
     }
 
     public function testBackup() {
