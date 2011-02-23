@@ -55,6 +55,8 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         $webapp = Webapp::getInstance();
         $crawler = Crawler::getInstance();
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
+
+        self::isTestEnvironmentReady();
     }
 
     /**
@@ -135,6 +137,42 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         if($this->DEBUG) {
             $bt = debug_backtrace();
             print get_class($this) . ": line " . $bt[0]['line'] . " - " . $message . "\n";
+        }
+    }
+
+    /**
+     * Preemptively halt test run if testing environment requirement isn't met.
+     * Prevents unnecessary/inexplicable failures and data loss.
+     */
+    public static function isTestEnvironmentReady() {
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
+
+        $is_test_env_ready = true;
+        if (!is_writable(THINKUP_WEBAPP_PATH. '_lib/view/compiled_view')) {
+            $message = "In order to test your ThinkUp installation, ".THINKUP_WEBAPP_PATH. '_lib/view/compiled_view'.
+            "must be writable.";
+            $is_test_env_ready = false;
+        }
+        if (!is_writable(THINKUP_WEBAPP_PATH. '_lib/view/compiled_view/cache')) {
+            $message = "In order to test your ThinkUp installation, ".THINKUP_WEBAPP_PATH.
+            '_lib/view/compiled_view/cache'. "must be writable.";
+            $is_test_env_ready = false;
+        }
+        if ($THINKUP_CFG['log_location'] === false) {
+            $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['log_location'] must be set to a ".
+            "writable file.";
+            $is_test_env_ready = false;
+        } else if (!is_writable($THINKUP_CFG['log_location'])) {
+            $message = "In order to test your ThinkUp installation with your current settings, ".
+            $THINKUP_CFG['log_location']. " must be a writable file.";
+            $is_test_env_ready = false;
+        }
+
+        if (!$is_test_env_ready) {
+            die("Stopping tests...Test environment isn't ready.
+".$message."
+Please try again.
+");
         }
     }
 

@@ -37,6 +37,8 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
 
         $this->url = $TEST_SERVER_DOMAIN;
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
+
+        self::isWebTestEnvironmentReady();
     }
 
     public function tearDown() {
@@ -48,4 +50,37 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
             print get_class($this) . ": line " . $bt[0]['line'] . " - " . $message . "\n";
         }
     }
+
+    /**
+     * Preemptively halt test run if integration testing environment requirement isn't met.
+     * Prevents unnecessary/inexplicable failures and data loss.
+     */
+    public static function isWebTestEnvironmentReady() {
+        ThinkUpBasicUnitTestCase::isTestEnvironmentReady();
+
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
+        global $TEST_DATABASE;
+
+        $is_test_env_ready = true;
+        if ($THINKUP_CFG['db_name'] != $TEST_DATABASE) {
+            $message = "The database name in webapp/config.inc.php does not match \$TEST_DATABASE in ".
+            "tests/config.tests.inc.php. 
+In order to test your ThinkUp installation without losing data, these database names must both point to the same ".
+"empty test database.";
+            $is_test_env_ready = false;
+        }
+
+        if ($THINKUP_CFG['cache_pages']) {
+            $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['cache_pages'] must be set to false.";
+            $is_test_env_ready = false;
+        }
+
+        if (!$is_test_env_ready) {
+            die("Stopping tests...Integration test environment isn't ready.
+".$message."
+Please try again.
+");
+        }
+    }
+
 }
