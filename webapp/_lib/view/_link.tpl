@@ -33,7 +33,7 @@
         [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>]
       {/if}
       <div class="small gray">
-      <span class="metaroll"><a href="http://twitter.com/{$l->container_post->author_username}/post/{$l->container_post->post_id}">{$l->container_post->adj_pub_date|relative_datetime}</a>
+      <span class="metaroll"><a href="http://twitter.com/{$l->container_post->author_username}/status/{$l->container_post->post_id}">{$l->container_post->adj_pub_date|relative_datetime}</a>
        {$l->container_post->location}</span>&nbsp;</div>
   </div>
   </div>
