@@ -25,10 +25,13 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Mark Wilkie
  */
+
+require_once dirname(__FILE__).'/../../init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'tests/config.tests.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once 'webapp/model/class.Config.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Config.php';
 require_once THINKUP_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 
 class TestOfixtureBuilder extends UnitTestCase {
@@ -57,6 +60,7 @@ class TestOfixtureBuilder extends UnitTestCase {
             'date_created timestamp default CURRENT_TIMESTAMP,' .
             'date_updated datetime,' .
             'birthday date,' .
+            'numeric_ip_address int default 2015153756,' .
             'worth decimal(11,2)  default 12.99' .
             ')');
     }
@@ -124,9 +128,29 @@ class TestOfixtureBuilder extends UnitTestCase {
         $match_date = time() + (60 * 60 * 24);
         $this->assertTrue($this->_testDatesAreClose($mysql_date, $match_date), 'dates are within 2 seconds');
         $this->assertEqual('1978-06-20', $builder3->columns['birthday'], 'birthday set properly');
-
         $this->assertEqual('12.99', $builder3->columns['worth'], 'worth 12.99');
+        $stmt = $this->pdo->query( 'select * from ' . $this->test_table . ' where id = 3');
+        $data = $stmt->fetch();
+        $this->assertEqual('1978-06-20', $data['birthday'], 'birthday set properly');
+        $this->assertEqual('12.99', $data['worth'], 'worth 12.99');
 
+
+        // mysql functions
+        $date_fixture_data = array('test_id' => 4,
+        'numeric_ip_address' =>  array("INET_ATON('127.0.0.1')") );
+        try {
+            $builder3a = FixtureBuilder::build(self::TEST_TABLE, $date_fixture_data);
+            $this->fail("should throw exception");
+        } catch(FixtureBuilderException $fbe) {
+            $this->pass("caught FixtureBuilderException");
+        }
+
+        $date_fixture_data = array('test_id' => 4,
+        'numeric_ip_address' =>  array("function" => "INET_ATON('127.0.0.1')"));
+        $builder4 = FixtureBuilder::build(self::TEST_TABLE, $date_fixture_data);
+        $stmt = $this->pdo->query( 'select * from ' . $this->test_table . ' where id = 4');
+        $data = $stmt->fetch();
+        $this->assertEqual(2130706433, $data['numeric_ip_address']);
 
     }
 
@@ -173,7 +197,7 @@ class TestOfixtureBuilder extends UnitTestCase {
             $this->assertPattern('/Unable to describe table "tu_notable"/', $e->getMessage());
         }
         $columns = $this->builder->describeTable(self::TEST_TABLE);
-        $this->assertEqual(count($columns), 10, 'column count valid');
+        $this->assertEqual(count($columns), 11, 'column count valid');
     }
 
 
