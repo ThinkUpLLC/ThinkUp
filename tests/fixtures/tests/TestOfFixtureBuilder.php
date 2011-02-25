@@ -25,20 +25,26 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Mark Wilkie
  */
+
+require_once dirname(__FILE__).'/../../init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'tests/config.tests.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once 'webapp/model/class.Config.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Config.php';
 require_once THINKUP_ROOT_PATH.'tests/fixtures/class.FixtureBuilder.php';
 
 class TestOfixtureBuilder extends UnitTestCase {
 
     const TEST_TABLE = 'test_table';
 
-    function setUp() {
+    public function setUp() {
         global $TEST_DATABASE;
         $this->config = Config::getInstance();
         $this->config->setValue('db_name', $TEST_DATABASE);
+        if ($this->config->getValue('timezone')) {
+            date_default_timezone_set($this->config->getValue('timezone'));
+        }
 
         //add prefix to the test table
         $this->test_table = Config::getInstance()->getValue('table_prefix') . self::TEST_TABLE;
@@ -57,16 +63,16 @@ class TestOfixtureBuilder extends UnitTestCase {
             'date_created timestamp default CURRENT_TIMESTAMP,' .
             'date_updated datetime,' .
             'birthday date,' .
+            'numeric_ip_address int default 2015153756,' .
             'worth decimal(11,2)  default 12.99' .
             ')');
     }
 
-
-    function tearDown() {
+    public function tearDown() {
         $this->pdo->query('drop table ' . $this->test_table);
     }
 
-    function testBuildData() {
+    public function testBuildData() {
         $builder = FixtureBuilder::build(self::TEST_TABLE, array('test_id' => 1), true );
 
         // auto inc id
@@ -84,7 +90,8 @@ class TestOfixtureBuilder extends UnitTestCase {
 
         // test fav_food enum
         $enum_array = array('red', 'blue', 'green');
-        $this->assertTrue($this->_testEnum($enum_array, $builder->columns['fav_color']), 'we have a valid enum value ' . $builder->columns['fav_color']);
+        $this->assertTrue($this->_testEnum($enum_array, $builder->columns['fav_color']), 'we have a valid enum value '.
+        $builder->columns['fav_color']);
 
         // test fav_food enum
         $enum_array = array("apple''s", 'hotdog', 'roll');
@@ -101,10 +108,10 @@ class TestOfixtureBuilder extends UnitTestCase {
         // test_id is an int?
         $this->assertEqual(2, $builder2->columns['test_id'], 'we have a test_id');
 
-
         // test fav_color enum
         $enum_array = array('red', 'blue', 'green');
-        $this->assertTrue($this->_testEnum($enum_array, $builder2->columns['fav_color']), 'we have a valid enum value ' . $builder->columns['fav_color']);
+        $this->assertTrue($this->_testEnum($enum_array, $builder2->columns['fav_color']), 'we have a valid enum value '.
+        $builder->columns['fav_color']);
 
         // test fav_food enum
         $this->assertEqual($builder2->columns['fav_food'], 'hotdog', 'we have a enum value: hotdog');
@@ -124,13 +131,33 @@ class TestOfixtureBuilder extends UnitTestCase {
         $match_date = time() + (60 * 60 * 24);
         $this->assertTrue($this->_testDatesAreClose($mysql_date, $match_date), 'dates are within 2 seconds');
         $this->assertEqual('1978-06-20', $builder3->columns['birthday'], 'birthday set properly');
-
         $this->assertEqual('12.99', $builder3->columns['worth'], 'worth 12.99');
+        $stmt = $this->pdo->query( 'select * from ' . $this->test_table . ' where id = 3');
+        $data = $stmt->fetch();
+        $this->assertEqual('1978-06-20', $data['birthday'], 'birthday set properly');
+        $this->assertEqual('12.99', $data['worth'], 'worth 12.99');
 
+
+        // mysql functions
+        $date_fixture_data = array('test_id' => 4,
+        'numeric_ip_address' =>  array("INET_ATON('127.0.0.1')") );
+        try {
+            $builder3a = FixtureBuilder::build(self::TEST_TABLE, $date_fixture_data);
+            $this->fail("should throw exception");
+        } catch(FixtureBuilderException $fbe) {
+            $this->pass("caught FixtureBuilderException");
+        }
+
+        $date_fixture_data = array('test_id' => 4,
+        'numeric_ip_address' =>  array("function" => "INET_ATON('127.0.0.1')"));
+        $builder4 = FixtureBuilder::build(self::TEST_TABLE, $date_fixture_data);
+        $stmt = $this->pdo->query( 'select * from ' . $this->test_table . ' where id = 4');
+        $data = $stmt->fetch();
+        $this->assertEqual(2130706433, $data['numeric_ip_address']);
 
     }
 
-    function testDestroyData() {
+    public function testDestroyData() {
         $builder = FixtureBuilder::build(self::TEST_TABLE, array('test_id' => 1) );
         $stmt = $this->pdo->query( "select count(*) as count from " . $this->test_table );
         $data = $stmt->fetch();
@@ -144,7 +171,7 @@ class TestOfixtureBuilder extends UnitTestCase {
     }
 
 
-    function testTruncateTable() {
+    public function testTruncateTable() {
         // bad table name
         try {
             FixtureBuilder::truncateTable('notable');
@@ -166,18 +193,18 @@ class TestOfixtureBuilder extends UnitTestCase {
     }
 
 
-    function testDescribeTable() {
+    public function testDescribeTable() {
         try {
             $this->builder->describeTable('notable');
         } catch(FixtureBuilderException $e) {
             $this->assertPattern('/Unable to describe table "tu_notable"/', $e->getMessage());
         }
         $columns = $this->builder->describeTable(self::TEST_TABLE);
-        $this->assertEqual(count($columns), 10, 'column count valid');
+        $this->assertEqual(count($columns), 11, 'column count valid');
     }
 
 
-    function testGendata() {
+    public function testGendata() {
 
         // test enum
         $enum_array = array("apple''s",'hotdog','roll');
@@ -308,18 +335,16 @@ class TestOfixtureBuilder extends UnitTestCase {
         }
     }
 
-    function _testDatesAreClose($date1, $date2) {
+    public function _testDatesAreClose($date1, $date2) {
         $date_diff = $date1 - $date2;
         return ($date_diff < 2 && $date_diff > - 2);
     }
 
-    function _testEnum($enum_array, $value) {
+    public function _testEnum($enum_array, $value) {
         $pass = false;
         for($i = 0; $i < count($enum_array); $i++) {
             if( $value == $enum_array[$i] ) { $pass = true; }
         }
         return $pass;
     }
-
-
 }
