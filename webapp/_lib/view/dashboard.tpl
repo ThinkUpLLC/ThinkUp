@@ -80,12 +80,12 @@
 
 		<div style="float : left; padding-right : 20px;">
         <h2>Follower Count By Day{if $follower_count_history_by_day.history|@count < 2}<br /><i>Not enough data yet</i>{else} {if $follower_count_by_day_trend != 0}({if $follower_count_by_day_trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_by_day_trend|round|number_format}</span> per day){/if}</h2>
-        <img src="http://chart.apis.google.com/chart?chs=360x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_day.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
+        <img width="360" height="200" src="http://chart.apis.google.com/chart?chs=360x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_day.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
         {/if}
         </div>
         
         <h2>Follower Count By Week{if $follower_count_history_by_week.history|@count < 2}<br /><i>Not enough data yet</i><br clear="all"/>{else} {if $follower_count_by_week_trend != 0}({if $follower_count_by_week_trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_by_week_trend|round|number_format}</span> per week){/if}</h2>
-        <img src="http://chart.apis.google.com/chart?chs=360x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
+        <img width="360" height="200" src="http://chart.apis.google.com/chart?chs=360x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
         {/if}
 
 		{/if}
@@ -117,12 +117,12 @@
                 <div class="public_user_stats">
                 {$instance->percentage_replies|round}% posts are replies<br />
                 {$instance->percentage_links|round}% posts contain links<br />
-                <img src="http://chart.apis.google.com/chart?chxt=x,y&cht=bhg&chd=t:{$instance->percentage_replies|round},{$instance->percentage_links|round}&chco=6184B5&chls=2.0&chs=250x175&chxl=1:|Broadcaster|Conversationalist|0:||20%||60%||100%|&chbh=50" />
+                <img width="250" height="175" src="http://chart.apis.google.com/chart?chxt=x,y&cht=bhg&chd=t:{$instance->percentage_replies|round},{$instance->percentage_links|round}&chco=6184B5&chls=2.0&chs=250x175&chxl=1:|Broadcaster|Conversationalist|0:||20%||60%||100%|&chbh=50" />
                 </div>
             </div>
             <div class="grid_10 omega">
               <h2>Client Usage <span class="detail">(all posts)</span></h2>
-              <img src="http://chart.apis.google.com/chart?cht=p&chd=t:{foreach from=$all_time_clients_usage key=name item=num_posts name=foo}{if $num_posts>0}{math equation="round(x/y*100,2)" x=$num_posts y=$all_time_clients_usage|@array_sum}{else}0{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chs=400x200&chl={foreach from=$all_time_clients_usage key=name item=num_posts name=foo}{$name}+({$num_posts}){if !$smarty.foreach.foo.last}|{/if}{/foreach}&chco=6184B5,E6E6E6"><br /><br />
+              <img width="400" height="200" src="http://chart.apis.google.com/chart?cht=p&chd=t:{foreach from=$all_time_clients_usage key=name item=num_posts name=foo}{if $num_posts>0}{math equation="round(x/y*100,2)" x=$num_posts y=$all_time_clients_usage|@array_sum}{else}0{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chs=400x200&chl={foreach from=$all_time_clients_usage key=name item=num_posts name=foo}{$name}+({$num_posts}){if !$smarty.foreach.foo.last}|{/if}{/foreach}&chco=6184B5,E6E6E6"><br /><br />
             </div>
         {/if}
 
