@@ -64,7 +64,6 @@
         {/if}</span>&nbsp;
         </div>
       </div>
-      </div>
     </div>
   </div>
 </div>
