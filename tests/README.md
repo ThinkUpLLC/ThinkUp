@@ -23,6 +23,7 @@ In order for the tests to pass, you must:
 * Have a `tests/config.tests.inc.php` file with the correct values set
 * Set the crawler log file in `webapp/config.inc.php` and make that file writable
 * Set the database name to an empty tests database which the tests will destroy each run in `webapp/config.inc.php`
+* Set the database user to a user with all privileges in the test database and global CREATE, DROP, and FILE privs
 * Set caching to false in `webapp/config.inc.php`
 * Have a local installation of ThinkUp using your test database
 * Have a working internet connection
