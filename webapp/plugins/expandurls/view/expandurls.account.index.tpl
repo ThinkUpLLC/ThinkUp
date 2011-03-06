@@ -1,4 +1,12 @@
-<b>Expand URLs Plugin Configuration</b>
+<div class="append_20">
+<h2 class="subhead">Expand URLs Plugin</h2>
+
+<p>Expands shortened links, including images.</p>
+
+<div id="contact-admin-div" style="display: none; margin-top: 20px;">
+{include file="_plugin.admin-request.tpl"}
+</div>
+
 
 {if $options_markup}
 <br />

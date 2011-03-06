@@ -163,6 +163,19 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
             $THINKUP_CFG['log_location']. " must be a writable file.";
         }
 
+        global $TEST_DATABASE;
+
+        if ($THINKUP_CFG['db_name'] != $TEST_DATABASE) {
+            $message = "The database name in webapp/config.inc.php does not match \$TEST_DATABASE in ".
+            "tests/config.tests.inc.php. 
+In order to test your ThinkUp installation without losing data, these database names must both point to the same ".
+"empty test database.";
+        }
+
+        if ($THINKUP_CFG['cache_pages']) {
+            $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['cache_pages'] must be set to false.";
+        }
+
         if (isset($message)) {
             die("Stopping tests...Test environment isn't ready.
 ".$message."

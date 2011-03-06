@@ -1,1 +1,0 @@
-chmod -R 777 compiled_view/cache/

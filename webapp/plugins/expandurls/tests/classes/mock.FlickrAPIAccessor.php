@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
@@ -38,7 +38,7 @@ class FlickrAPIAccessor {
     }
 
     public function getFlickrPhotoSource($u) {
-        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/flickrthumbnails/tests/testdata/';
+        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/expandurls/tests/testdata/';
 
         if ($this->api_key != '') {
             $this->logger->logInfo("Flickr API key set", __METHOD__.','.__LINE__);
@@ -63,7 +63,7 @@ class FlickrAPIAccessor {
             $api_call = str_replace('/', '_', $api_call);
             $api_call = str_replace('?', '-', $api_call);
             $api_call = str_replace('&', '-', $api_call);
-            // echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$api_call . "\n";
+            //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$api_call . "\n";
             $resp = file_get_contents($FAUX_DATA_PATH.$api_call);
 
             if ($resp === "NONRESPONSE") {
@@ -93,7 +93,6 @@ class FlickrAPIAccessor {
             return array("expanded_url"=>'', "error"=>'');
         }
     }
-
 
     public function base_decode($num, $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ") {
         $decoded = 0;

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPluginConfigurationController.php
+ * ThinkUp/webapp/plugins/flickrthumbnails/tests/TestOfExpandURLsPluginConfigurationController.php
  *
  * Copyright (c) 2009-2011 Gina Trapani
  *
@@ -21,7 +21,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Test of FlickrThumbnailsPluginConfigurationController
+ * Test of ExpandURLsPluginConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2010 Gina Trapani
@@ -32,17 +32,17 @@ require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 
 require_once THINKUP_ROOT_PATH.
-'webapp/plugins/flickrthumbnails/controller/class.FlickrThumbnailsPluginConfigurationController.php';
+'webapp/plugins/expandurls/controller/class.ExpandURLsPluginConfigurationController.php';
 
 
-class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTestCase {
+class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase {
     public function __construct() {
-        $this->UnitTestCase('FlickrThumbnailsPluginConfigurationController class test');
+        $this->UnitTestCase('ExpandURLsPluginConfigurationController class test');
     }
     public function setUp(){
         parent::setUp();
         $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('flickr', 'FlickrThumbnailsPlugin');
+        $webapp->registerPlugin('flickr', 'ExpandURLsPlugin');
 
         //Add owner
         $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com',
@@ -76,14 +76,14 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
     }
 
     public function testConstructor() {
-        $controller = new FlickrThumbnailsPluginConfigurationController(null, 'flickrthumbnails');
+        $controller = new ExpandURLsPluginConfigurationController(null, 'flickrthumbnails');
         $this->assertTrue(isset($controller), 'constructor test');
     }
 
     public function testOutputNoParams() {
 
         //not logged in, no owner set
-        $controller = new FlickrThumbnailsPluginConfigurationController(null, 'flickrthumbnails');
+        $controller = new ExpandURLsPluginConfigurationController(null, 'flickrthumbnails');
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
@@ -94,7 +94,7 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
         $this->simulateLogin('me@example.com', true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
-        $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
+        $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         $this->assertPattern('/Flickr API key/', $output);
     }
@@ -107,7 +107,7 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
-        $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
+        $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         // we have a text form element with proper data
         $this->assertNoPattern('/save options/', $output); // should have no submit option
@@ -115,7 +115,7 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
 
         //app not configured
-        $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
+        $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
     }
@@ -128,7 +128,7 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
         $this->simulateLogin('me@example.com', $isadmin = true);
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
-        $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
+        $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         // we have a text form element with proper data
         $this->assertPattern('/save options/', $output); // should have submit option
@@ -136,9 +136,8 @@ class TestOfFlickrThumbnailsPluginConfigurationController extends ThinkUpUnitTes
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
 
         //app not configured
-        $controller = new FlickrThumbnailsPluginConfigurationController($owner, 'flickrthumbnails');
+        $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
     }
-
 }
