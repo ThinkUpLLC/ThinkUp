@@ -360,7 +360,11 @@ abstract class ThinkUpController {
                     Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name.
                     "/controller/");
                     //require the main plugin registration file here
-                    require_once THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.".php";
+                    if ( file_exists(
+                    THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.".php")) {
+                        require_once THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.
+                        ".php";
+                    }
                 }
             }
         }
