@@ -30,7 +30,7 @@
       </a>
       {/if}
       {if $t->author->follower_count > 0}
-        <br>{$t->author->follower_count|number_format} followers
+        <div class="small gray">{$t->author->follower_count|number_format} followers</div>
       {/if}
         </div>
     <div class="grid_12">
