@@ -163,13 +163,13 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         //var_dump($tables);
         $output = $dao->diffDataStructure($install_queries, $tables);
         $add_pk = "ALTER TABLE " . $config_array["table_prefix"] .
-        "follows ADD UNIQUE KEY user_id (user_id,follower_id,network)";
+        "follows ADD UNIQUE KEY user_id (network,follower_id,user_id)";
         $this->assertTrue(in_array($add_pk, $output['queries']));
 
         // test on missing index
         InstallerMySQLDAO::$PDO->exec("ALTER TABLE ".$config_array["table_prefix"]."follows DROP INDEX active");
         $output = $dao->diffDataStructure($install_queries, $dao->getTables(false));
-        $add_idx = "ALTER TABLE ".$config_array["table_prefix"]."follows ADD KEY active (active)";
+        $add_idx = "ALTER TABLE ".$config_array["table_prefix"]."follows ADD KEY active (network,active)";
         $this->assertTrue(in_array($add_idx, $output['queries']));
 
         // test on missing column

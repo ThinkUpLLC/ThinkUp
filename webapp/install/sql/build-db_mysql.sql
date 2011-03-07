@@ -56,8 +56,8 @@ CREATE TABLE tu_follows (
   network varchar(20) NOT NULL DEFAULT 'twitter',
   debug_api_call varchar(255) NOT NULL,
   UNIQUE KEY user_id (network,follower_id,user_id),
-  UNIQUE KEY network (network,last_seen),
-  KEY active (network,active)
+  KEY active (network,active),
+  KEY network (network,last_seen)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -289,7 +289,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2011-03-07  9:55:25
+-- Dump completed on 2011-03-07 12:19:36
 
 --
 -- Insert DB Version

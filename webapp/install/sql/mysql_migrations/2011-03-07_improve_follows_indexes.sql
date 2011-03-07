@@ -6,4 +6,4 @@ ALTER TABLE  tu_follows DROP INDEX  user_id, ADD UNIQUE  user_id (network, follo
 
 ALTER TABLE  tu_follows DROP INDEX  active, ADD INDEX  active (network,  active);
 
-ALTER TABLE  tu_follows ADD UNIQUE (network, last_seen);
+ALTER TABLE  tu_follows ADD INDEX (network, last_seen);
