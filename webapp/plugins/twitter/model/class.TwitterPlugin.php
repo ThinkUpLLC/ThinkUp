@@ -261,14 +261,14 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $follower_history_tpl = Utils::getPluginViewDirectory('twitter').'twitter.followercount.tpl';
         $trendtab = new MenuItem('Follower Count', 'Your follower count over time',
         $follower_history_tpl, 'Followers');
-        $trendtabds = new Dataset("historybyday", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'DAY', 20));
+        $trendtabds = new Dataset("follower_count_history_by_day", 'FollowerCountDAO', 'getHistory',
+        array($instance->network_user_id, 'twitter', 'DAY', 15));
         $trendtab->addDataset($trendtabds);
-        $trendtabweekds = new Dataset("historybyweek", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'WEEK', 20));
+        $trendtabweekds = new Dataset("follower_count_history_by_week", 'FollowerCountDAO', 'getHistory',
+        array($instance->network_user_id, 'twitter', 'WEEK', 15));
         $trendtab->addDataset($trendtabweekds);
-        $trendtabmonthds = new Dataset("historybymonth", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'MONTH', 20));
+        $trendtabmonthds = new Dataset("follower_count_history_by_month", 'FollowerCountDAO', 'getHistory',
+        array($instance->network_user_id, 'twitter', 'MONTH', 15));
         $trendtab->addDataset($trendtabmonthds);
         $menus['followers-history'] = $trendtab;
 

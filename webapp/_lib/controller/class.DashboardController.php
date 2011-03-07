@@ -169,23 +169,17 @@ class DashboardController extends ThinkUpController {
             $this->addToView('least_likely_followers', $least_likely_followers);
 
             //follower count history
+            //by day
             $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
             $follower_count_history_by_day = $follower_count_dao->getHistory($this->instance->network_user_id,
-            'twitter', 'DAY');
+            'twitter', 'DAY', 5);
+            //print_r($follower_count_history_by_day);
             $this->addToView('follower_count_history_by_day', $follower_count_history_by_day);
-            $first_follower_count = $follower_count_history_by_day['history'][0]['count'];
-            $last_follower_count = $follower_count_history_by_day['history']
-            [sizeof($follower_count_history_by_day['history'])-1]['count'];
-            $this->addToView('follower_count_by_day_trend',
-            ($last_follower_count - $first_follower_count)/sizeof($follower_count_history_by_day['history']));
+
+            //by week
             $follower_count_history_by_week = $follower_count_dao->getHistory($this->instance->network_user_id,
-            'twitter', 'WEEK');
+            'twitter', 'WEEK', 5);
             $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
-            $first_follower_count = $follower_count_history_by_week['history'][0]['count'];
-            $last_follower_count = $follower_count_history_by_week['history']
-            [sizeof($follower_count_history_by_week['history'])-1]['count'];
-            $this->addToView('follower_count_by_week_trend',
-            ($last_follower_count - $first_follower_count)/sizeof($follower_count_history_by_week['history']));
 
             $post_dao = DAOFactory::getDAO('PostDAO');
             list($all_time_clients_usage, $latest_clients_usage) =

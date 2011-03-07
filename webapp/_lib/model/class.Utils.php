@@ -197,4 +197,16 @@ class Utils {
         $current_script_path = implode('/', $current_script_path) . '/';
         define('THINKUP_BASE_URL', $current_script_path);
     }
+
+    /**
+     * Generate var dump to string.
+     * @return str
+     */
+    public static function varDumpToString($mixed = null) {
+        ob_start();
+        var_dump($mixed);
+        $content = ob_get_contents();
+        ob_end_clean();
+        return $content;
+    }
 }

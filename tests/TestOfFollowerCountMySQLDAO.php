@@ -54,7 +54,10 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result, 1, 'One count inserted');
     }
 
-    public function testGetHistory() {
+    public function testGetDayHistoryNoGaps() {
+        $format = 'n/j';
+        $date = date ( $format );
+
         $follower_count = array('network_user_id'=>930061, 'network'=>'twitter', 'date'=>'-1d', 'count'=>140);
         $builder1 = FixtureBuilder::build('follower_count', $follower_count);
 
@@ -65,14 +68,94 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
         $builder3 = FixtureBuilder::build('follower_count', $follower_count);
 
         $dao = new FollowerCountMySQLDAO();
-        $result = $dao->getHistory(930061, 'twitter', 'DAY');
-        $this->assertEqual(sizeof($result), 3, '3 sets of data returned--history, percentages, Y axis');
+        $result = $dao->getHistory(930061, 'twitter', 'DAY', 3);
+        $this->assertEqual(sizeof($result), 4, '4 sets of data returned--history, percentages, Y axis, trend');
+
+        $this->debug(Utils::varDumpToString($result));
+        //check history
         $this->assertEqual(sizeof($result['history']), 3, '3 counts returned');
+
+        $date_ago = date ($format, strtotime('-3 day'.$date));
+        $this->assertEqual($result['history'][$date_ago], 120);
+
+        $date_ago = date ($format, strtotime('-2 day'.$date));
+        $this->assertEqual($result['history'][$date_ago], 100);
+
+        $date_ago = date ($format, strtotime('-1 day'.$date));
+        $this->assertEqual($result['history'][$date_ago], 140);
+
+        //check percentages
         $this->assertEqual(sizeof($result['percentages']), 3, '3 percentages returned');
-        $this->assertEqual(sizeof($result['y_axis']), 4, '4 Y axis points returned');
+        $this->assertEqual($result['percentages'][0], 50);
+        $this->assertEqual($result['percentages'][1], 0);
+        $this->assertEqual($result['percentages'][2], 100);
+
+        //check Y-axis
+        $this->assertEqual(sizeof($result['y_axis']), 5, '5 Y axis points returned');
         $this->assertEqual($result['y_axis'][0], 100);
         $this->assertEqual($result['y_axis'][1], 110);
         $this->assertEqual($result['y_axis'][2], 120);
-        $this->assertEqual($result['y_axis'][3], 140);
+        $this->assertEqual($result['y_axis'][3], 130);
+        $this->assertEqual($result['y_axis'][4], 140);
+
+        //check trend
+        $this->assertEqual($result['trend'], 7);
+    }
+
+    public function testGetDayHistoryWithGaps() {
+        $format = 'n/j';
+        $date = date ( $format );
+
+        $follower_count = array('network_user_id'=>930061, 'network'=>'twitter', 'date'=>'-1d', 'count'=>140);
+        $builder1 = FixtureBuilder::build('follower_count', $follower_count);
+
+        $follower_count = array('network_user_id'=>930061, 'network'=>'twitter', 'date'=>'-2d', 'count'=>100);
+        $builder2 = FixtureBuilder::build('follower_count', $follower_count);
+
+        $follower_count = array('network_user_id'=>930061, 'network'=>'twitter', 'date'=>'-5d', 'count'=>120);
+        $builder3 = FixtureBuilder::build('follower_count', $follower_count);
+
+        $dao = new FollowerCountMySQLDAO();
+        $result = $dao->getHistory(930061, 'twitter', 'DAY', 5);
+        $this->assertEqual(sizeof($result), 4, '4 sets of data returned--history, percentages, Y axis, trend');
+
+        //check history
+        $this->assertEqual(sizeof($result['history']), 5, '5 counts returned');
+
+        $this->debug(Utils::varDumpToString($result));
+        $date_ago = date ($format, strtotime('-5 day'.$date));
+        $this->assertEqual($result['history'][$date_ago], 120);
+
+        $date_ago = date ($format, strtotime('-4 day'.$date));
+        $this->assertEqual($result['history'][$date_ago], 'no data');
+
+        $date_ago = date ($format, strtotime('-3 day'.$date));
+        $this->assertEqual($result['history'][$date_ago], 'no data');
+
+        $date_ago = date ($format, strtotime('-2 day'.$date));
+        $this->assertEqual($result['history'][$date_ago], 100);
+
+        $date_ago = date ($format, strtotime('-1 day'.$date));
+        $this->assertEqual($result['history'][$date_ago], 140);
+
+        //check percentages
+        $this->assertEqual(sizeof($result['percentages']), 5, '5 percentages returned');
+        $this->assertEqual($result['percentages'][0], 50);
+        $this->assertEqual($result['percentages'][1], 0);
+        $this->assertEqual($result['percentages'][2], 0);
+        $this->assertEqual($result['percentages'][3], 0);
+        $this->assertEqual($result['percentages'][4], 100);
+
+        //check y-axis
+        $this->assertEqual(sizeof($result['y_axis']), 5, '5 Y axis points returned');
+
+        $this->assertEqual($result['y_axis'][0], 100);
+        $this->assertEqual($result['y_axis'][1], 110);
+        $this->assertEqual($result['y_axis'][2], 120);
+        $this->assertEqual($result['y_axis'][3], 130);
+        $this->assertEqual($result['y_axis'][4], 140);
+
+        //check trend
+        $this->assertFalse($result['trend']);
     }
 }

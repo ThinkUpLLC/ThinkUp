@@ -65,19 +65,56 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
             ':limit'=>(int)$limit
         );
         $ps = $this->execute($q, $vars);
-        $history = $this->getDataRowsAsArrays($ps);
-        $percentages = array();
-        if (sizeof($history) > 0 ) {
-            $max_count = $history[0]['count'];
-            $min_count = $history[0]['count'];
-            foreach ($history as $row) {
-                $min_count = ($row['count'] < $min_count)?$row['count']:$min_count;
-                $max_count = ($row['count'] > $max_count)?$row['count']:$max_count;
+        $history_rows = $this->getDataRowsAsArrays($ps);
+
+        if (sizeof($history_rows) > 1 ) {
+            //break down rows into a simpler date=>count assoc array
+            $simplified_history = array();
+            foreach ($history_rows as $history_row) {
+                $simplified_history[$history_row["date"]] = $history_row["count"];
+            }
+
+            $trend = false;
+            if (sizeof($history_rows) == $limit) { //we have a complete data set
+                //calculate the trend
+                $first_follower_count = reset($simplified_history);
+                $last_follower_count = end($simplified_history);
+                $trend = ($last_follower_count - $first_follower_count)/sizeof($simplified_history);
+                $trend = round($trend);
+                //complete data set
+                $history = $simplified_history;
+            } else { //there are dates with missing data
+                //set up an array of all the dates to show in the chart
+                $dates_to_display = array();
+                $format = 'n/j';
+                $date = date ( $format );
+                $i = $limit;
+                while ($i > 0 ) {
+                    $date_ago = date ($format, strtotime('-'.$i.' day'.$date));
+                    $dates_to_display[$date_ago] = "no data";
+                    $i--;
+                }
+                //merge the data we do have with the dates we want
+                $history = array_merge($dates_to_display, $simplified_history);
+            }
+
+            //calculate the point percentages
+            $percentages = array();
+
+            $max_count = intval($history_rows[0]['count']);
+            $min_count = intval($history_rows[0]['count']);
+            foreach ($history_rows as $row) {
+                $min_count = ($row['count'] < $min_count)?intval($row['count']):$min_count;
+                $max_count = ($row['count'] > $max_count)?intval($row['count']):$max_count;
             }
             $difference = $max_count - $min_count;
-            foreach ($history as $row) {
-                $amount_above_min = $row['count'] - $min_count;
-                $percentages[] = round(Utils::getPercentage($amount_above_min, $difference));
+            foreach ($history as $data_point) {
+                if ($data_point == 'no data') {
+                    $percentages[] = 0;
+                } else {
+                    $amount_above_min = $data_point - $min_count;
+                    $percentages[] = round(Utils::getPercentage($amount_above_min, $difference));
+                }
             }
 
             $y_axis = array();
@@ -88,11 +125,13 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
                 $y_axis[$i] = $min_count + ($y_axis_interval_size * $i);
                 $i = $i+1;
             }
-            $y_axis[$num_y_axis_points-1] = $max_count;
+            $y_axis[$num_y_axis_points] = $max_count;
         } else  {
             $history = false;
             $y_axis = false;
+            $trend = false;
+            $percentages = false;
         }
-        return array('history'=>$history, 'percentages'=>$percentages, 'y_axis'=>$y_axis);
+        return array('history'=>$history, 'percentages'=>$percentages, 'y_axis'=>$y_axis, 'trend'=>$trend);
     }
 }
