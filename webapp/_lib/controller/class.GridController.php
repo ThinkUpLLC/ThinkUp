@@ -104,6 +104,10 @@ class GridController extends ThinkUpAuthController {
                     }
                     echo '{"status":"success","posts": [' . "\n";
                     $cnt = 0;
+                    // lets make sure we have a post iterator, and not just a list of posts
+                    if( get_class($posts_it) != 'PostIterator' ) {
+                        throw Exception("Grid Search should use a PostIterator to conserve memory");
+                    } 
                     foreach($posts_it as $key => $value) {
                         $cnt++;
                         $data = array('id' => $cnt, 'text' => $value->post_text,

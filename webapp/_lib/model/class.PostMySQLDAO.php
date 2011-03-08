@@ -585,7 +585,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllPostsIterator($author_id, $network, $count, $include_replies=true) {
-        return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $iterator = true);
+        return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $page = 1,
+        $iterator = true);
     }
 
     public function getAllQuestionPosts($author_id, $network, $count, $page=1) {
@@ -655,7 +656,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>$count,
             ':start_on_record'=>(int)$start_on_record
         );
+
         $ps = $this->execute($q, $vars);
+
         if($iterator) {
             return (new PostIterator($ps));
         }
