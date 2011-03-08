@@ -12,9 +12,14 @@ clean, empty tests database.
 
 ## Running Tests
 
-First, configure your test environment. Copy `tests/config.tests.sample.inc.php` to `tests/config.tests.inc.php` and 
+First, configure your test environment. 
+
+Copy `tests/config.tests.sample.inc.php` to `tests/config.tests.inc.php` and 
 set the appropriate values. You will need a clean, empty database to run your tests. By default, name it 
 `thinkup_tests` and set the `$TEST_DATABASE` config variable to that name.
+
+In `webapp/config.inc.php`, in the DEVELOPER CONFIG section, set the name of your tests database, and the username and
+password to access it. This database name should match the one you just set in `tests/config.tests.inc.php`.
 
 ### Test Assumptions
 
@@ -22,8 +27,8 @@ In order for the tests to pass, you must:
 
 * Have a `tests/config.tests.inc.php` file with the correct values set
 * Set the crawler log file in `webapp/config.inc.php` and make that file writable
-* Set the database name to an empty tests database which the tests will destroy each run in `webapp/config.inc.php`
-* Set the database user to a user with all privileges in the test database and global CREATE, DROP, and FILE privs
+* Set the test database name to an empty tests database which the tests will destroy each run in `webapp/config.inc.php`
+* Set the test database user to a user with all privileges in the test database and global CREATE, DROP, and FILE privs
 * Set caching to false in `webapp/config.inc.php`
 * Have a local installation of ThinkUp using your test database
 * Have a working internet connection

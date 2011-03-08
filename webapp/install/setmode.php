@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/tests/init.tests.php
+ * ThinkUp/webapp/install/setmode.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2011 Gina Trapani
  *
  * LICENSE:
  *
@@ -20,31 +20,26 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2011 Gina Trapani
  */
-putenv("MODE=TESTS");
-require_once 'config.tests.inc.php';
-
-//set up 3 required constants
-if ( !defined('THINKUP_ROOT_PATH') ) {
-    define('THINKUP_ROOT_PATH', str_replace("\\",'/', dirname(dirname(__FILE__))) .'/');
+session_start();
+if (strtolower($_GET['m']) == "tests") {
+    putenv("MODE=TESTS");
+    $_SESSION["MODE"] = "TESTS";
+    echo "Set to tests mode";
+} elseif (strtolower($_GET['m']) == "prod") {
+    putenv("MODE=PROD");
+    $_SESSION["MODE"] = "PROD";
+    echo "Set to prod mode";
+} else {
+    echo "Currently in ";
+    if (isset($_SESSION["MODE"])) {
+        echo strtolower($_SESSION["MODE"]);
+    } else {
+        echo " prod ";
+    }
+    echo " mode";
 }
-
-if ( !defined('THINKUP_WEBAPP_PATH') ) {
-    define('THINKUP_WEBAPP_PATH', THINKUP_ROOT_PATH . 'webapp/');
-}
-
-if ( !defined('TESTS_RUNNING') ) {
-    define('TESTS_RUNNING', true);
-}
-
-//Register our lazy class loader
-require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
-
-Loader::register(array(
-THINKUP_ROOT_PATH . 'tests/',
-THINKUP_ROOT_PATH . 'tests/classes/',
-THINKUP_ROOT_PATH . 'tests/fixtures/'
-));

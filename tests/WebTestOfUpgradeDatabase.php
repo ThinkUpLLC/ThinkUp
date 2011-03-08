@@ -135,6 +135,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->assertFalse(file_exists($THINKUP_CFG['source_root_path'].
         'webapp/test_installer/thinkup/config.inc.php'));
 
+        //Set test mode
+        $this->get($this->url.'/test_installer/thinkup/install/setmode.php?m=tests');
+        //Include config again to get test db credentials
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
+        //$this->showText();
+
         //Start installation process
         $this->get($this->url.'/test_installer/thinkup/');
         $this->assertTitle("ThinkUp");
@@ -142,6 +148,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->clickLink("installing ThinkUp.");
         $this->assertText('Great! Your system has everything it needs to run ThinkUp. You may proceed to the next '.
         'step.');
+
+        //Set test mode
+        putenv("MODE=TESTS");
+        //Include config again to get test db credentials
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
+
         $this->get('index.php?step=2');
         $this->assertText('Create Your ThinkUp Account');
 
@@ -152,7 +164,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->setField('timezone', 'America/Los_Angeles');
 
         $this->setField('db_host', $THINKUP_CFG['db_host']);
-        $this->setField('db_name', $this->test_database_name);
+        $this->setField('db_name', $THINKUP_CFG['db_name']);
         $this->setField('db_user', $THINKUP_CFG['db_user']);
         $this->setField('db_passwd', $THINKUP_CFG['db_password']);
         $this->setField('db_socket', $THINKUP_CFG['db_socket']);

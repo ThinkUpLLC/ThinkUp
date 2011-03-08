@@ -23,7 +23,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 class ThinkUpBasicWebTestCase extends WebTestCase {
     /**
@@ -42,6 +42,9 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
         $this->url = $TEST_SERVER_DOMAIN;
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
 
+        putenv("MODE=TESTS");
+        $this->get($this->url.'/install/setmode.php?m=tests');
+
         self::isWebTestEnvironmentReady();
 
         require THINKUP_ROOT_PATH.'tests/config.tests.inc.php';
@@ -49,6 +52,8 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
     }
 
     public function tearDown() {
+        putenv("MODE=PROD");
+        $this->get($this->url.'/install/setmode.php?m=prod');
     }
 
     public function debug($message) {
