@@ -241,6 +241,53 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertEqual(count($data), 3);
     }
 
+    public function testProcessMinorVersionMigration() {
+        $this->simulateLogin('me@example.com', true);
+        $config = Config::getInstance();
+        $config->setValue('THINKUP_VERSION', $config->getValue('THINKUP_VERSION') + 10.1); //set a high minor version
+        $controller = new UpgradeController(true);
+        $this->migrationFiles(1);
+        $_GET['migration_index'] = 1;
+        $results = $controller->go();
+        $obj = json_decode($results);
+        $this->assertTrue($obj->processed);
+        $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[0]));
+
+        $sql = "show tables like  'tu_test1'";
+        $stmt = $this->pdo->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data[0], 'tu_test1');
+        $sql = 'select * from tu_test1';
+        $stmt = $this->pdo->query($sql);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertEqual(count($data), 3);
+    }
+
+    public function testProcessMinorBetaVersionMigration() {
+        $this->simulateLogin('me@example.com', true);
+        $config = Config::getInstance();
+        $test_version = $config->getValue('THINKUP_VERSION') + 10.1;
+        $test_version .= 'beta';
+        $config->setValue('THINKUP_VERSION', $test_version); //set a high minor version with beta string
+        $controller = new UpgradeController(true);
+        $this->migrationFiles(1);
+        $_GET['migration_index'] = 1;
+        $results = $controller->go();
+        $obj = json_decode($results);
+        $this->assertTrue($obj->processed);
+        $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[0]));
+
+        $sql = "show tables like  'tu_test1'";
+        $stmt = $this->pdo->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data[0], 'tu_test1');
+        $sql = 'select * from tu_test1';
+        $stmt = $this->pdo->query($sql);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertEqual(count($data), 3);
+    }
+    
+    
     public function testProcessSnowflakeMigration() {
         $config = Config::getInstance();
         $app_path = $config->getValue('source_root_path');
@@ -455,6 +502,8 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         if($count == 2) {
             $migration_test2 = $this->migrations_test_dir . $this->migrations_file2;
             $migration_version--;
+            $migration_version += 0.12;
+            $migration_version .= 'beta'; 
             $migration2 = $this->migrations_dir
             . '2010-09-16_v' . $migration_version . '.sql.migration';
             copy($migration_test2, $migration2);
