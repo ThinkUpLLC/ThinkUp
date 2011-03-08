@@ -534,6 +534,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PostMySQLDAO();
         $posts_it = $dao->getAllPostsIterator(18, 'twitter', 10);
         $cnt = 0;
+        $this->assertIsA($posts_it,'PostIterator');
         foreach($posts_it as $key => $value) {
             $cnt++;
         }
