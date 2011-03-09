@@ -485,6 +485,15 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $retweeted_post_data = $vals['retweeted_post']['content'];
             // $this->logger->logInfo("this is a retweet- first processing original " .
             // $retweeted_post_data['post_id'] . ".", __METHOD__.','.__LINE__);
+            // it turns out that for a native retweet, Twitter may not reliably update the count stored in the
+            // original-- there may be a lag.  So, if there is a first retweet, the original post still
+            // may show 0 rts. This is less common w/ the REST API than the streaming API, but does not hurt to
+            // address it anyway. So, if we know there was a retweet, but the rt count is showing 0, set it to 1.
+            // We know it is at least 1.
+            if (isset($retweeted_post_data['retweet_count_cache']) &&
+            ($retweeted_post_data['retweet_count_cache'] == 0 )) {
+                $retweeted_post_data['retweet_count_cache'] = 1;
+            }
             // if so, process the original post first.
             $this->addPostAndEntities($retweeted_post_data, null);
         }
