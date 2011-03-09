@@ -436,22 +436,42 @@ class TwitterCrawler {
                 if (count($tweets) > 0) {
                     $pd = DAOFactory::getDAO('PostDAO');
                     foreach ($tweets as $tweet) {
-                        if (RetweetDetector::isRetweet($tweet['post_text'], $this->user->username)) {
-                            $this->logger->logInfo("Retweet by ".$tweet['user_name']. " found, ".
-                            substr($tweet['post_text'], 0, 50)."... ", __METHOD__.','.__LINE__);
-                            if ( RetweetDetector::isRetweetOfTweet($tweet["post_text"],
-                            $retweeted_status["post_text"]) ){
-                                $tweet['in_retweet_of_post_id'] = $retweeted_status_id;
-                                $this->logger->logInfo("Retweet by ".$tweet['user_name']." of ".
-                                $this->user->username." original status ID found: ".$retweeted_status_id,
-                                __METHOD__.','.__LINE__);
-                            } else {
-                                $this->logger->logInfo("Retweet by ".$tweet['user_name']." of ".
-                                $this->user->username." original status ID NOT found: ".
-                                $retweeted_status["post_text"]." NOT a RT of: ". $tweet["post_text"],
-                                __METHOD__.','.__LINE__);
+                        // The parser now processes native retweet information for posts (and includes the 
+                        // orig post in the parsed data if there was a RT). This method can now take advantage
+                        // of this additional processing.
+                        // If it was detected that this tweet was a native RT during parsing of the xml, the
+                        // 'in_retweet_of_post_id' value should already be set. If it is not set, go through the
+                        // usual procedure to try to find it.
+                        // This is just an efficiency fix, since if 'in_retweet_of_post_id' *is* set, it's not 
+                        // going to be unset if the retweet detector doesn't pick up on anything.
+                        if (!isset($tweet['in_retweet_of_post_id']) || !$tweet['in_retweet_of_post_id']) {
+                            // then try to find rt -- otherwise, information already there
+                            if (RetweetDetector::isRetweet($tweet['post_text'], $this->user->username)) {
+                                $this->logger->logInfo("Retweet by ".$tweet['user_name']. " found, ".
+                                substr($tweet['post_text'], 0, 50)."... ", __METHOD__.','.__LINE__);
+                                if ( RetweetDetector::isRetweetOfTweet($tweet["post_text"],
+                                $retweeted_status["post_text"]) ){
+                                    $tweet['in_retweet_of_post_id'] = $retweeted_status_id;
+                                    $this->logger->logInfo("Retweet by ".$tweet['user_name']." of ".
+                                    $this->user->username." original status ID found: ".$retweeted_status_id,
+                                    __METHOD__.','.__LINE__);
+                                } else {
+                                    $this->logger->logInfo("Retweet by ".$tweet['user_name']." of ".
+                                    $this->user->username." original status ID NOT found: ".
+                                    $retweeted_status["post_text"]." NOT a RT of: ". $tweet["post_text"],
+                                    __METHOD__.','.__LINE__);
+                                }
                             }
                         }
+                        // an 'else' clause (if 'in_retweet_of_post_id' WAS set) can be used to log
+                        // diagnostic information. Leaving in as example for now.
+                        // else { 
+                        //     // $rtp = $tweet['retweeted_post']['content'];
+                        //     $this->logger->logDebug("Post " . $tweet['post_id'] . //", " . $tweet['post_text'] . 
+                        //     " from " . $tweet['user_name'] . 
+                        //     " is rt of " . $tweet['in_retweet_of_post_id'],// . ", ". $rtp['post_text'],
+                        //     __METHOD__.','.__LINE__);
+                        // }
                         if ($pd->addPost($tweet, $user_with_retweet, $this->logger) > 0) {
                             $count++;
                             //expand and insert links contained in tweet
