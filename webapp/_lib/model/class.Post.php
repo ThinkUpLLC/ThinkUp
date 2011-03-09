@@ -28,6 +28,13 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class Post {
+    
+    /**
+     * @const int
+     * twitter currently maxes out on returning a RT count at 100.
+     */
+    const TWITTER_RT_THRESHOLD = 100;
+    
     /**
      *
      * @var int
@@ -217,7 +224,14 @@ class Post {
             $this->favorited = $val["favorited"];
         }
         // non-persistent, sum of two persistent values, used for UI information display
-        $this->all_retweets = $val['old_retweet_count_cache'] + $val['retweet_count_cache'];
+        // add a '+' if the count from twitter has maxed out, to indicate as much.
+        $rt_sum = $val['old_retweet_count_cache'] + $val['retweet_count_cache'];
+        if ($val['retweet_count_cache'] >= self::TWITTER_RT_THRESHOLD) {
+            $this->all_retweets = $rt_sum . "+";
+        }
+        else {
+            $this->all_retweets = $rt_sum;
+        }
     }
 
     /**
