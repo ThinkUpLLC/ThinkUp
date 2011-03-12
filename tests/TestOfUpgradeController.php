@@ -288,8 +288,8 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 3);
     }
-    
-    
+
+
     public function testProcessSnowflakeMigration() {
         $config = Config::getInstance();
         $app_path = $config->getValue('source_root_path');
@@ -505,7 +505,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
             $migration_test2 = $this->migrations_test_dir . $this->migrations_file2;
             $migration_version--;
             $migration_version += 0.12;
-            $migration_version .= 'beta'; 
+            $migration_version .= 'beta';
             $migration2 = $this->migrations_dir
             . '2010-09-16_v' . $migration_version . '.sql.migration';
             copy($migration_test2, $migration2);

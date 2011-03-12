@@ -77,7 +77,7 @@ class UpgradeController extends ThinkUpAuthController {
     }
 
     public function authControl() {
-        
+
         $this->disableCaching();
         Utils::defineConstants();
         $config = Config::getInstance();
@@ -242,7 +242,7 @@ class UpgradeController extends ThinkUpAuthController {
                 if(preg_match('/^0\.00/', $migration_version)) {
                     continue;
                 }
-                if(version_compare($migration_version, $version) > 0 && 
+                if(version_compare($migration_version, $version) > 0 &&
                 version_compare($migration_version, $config->getValue('THINKUP_VERSION')) < 1 ) {
                     if($migration_version == 0.3) {
                         $install_dao = DAOFactory::getDAO('InstallerDAO');
