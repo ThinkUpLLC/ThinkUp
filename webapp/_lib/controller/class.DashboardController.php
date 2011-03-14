@@ -61,8 +61,12 @@ class DashboardController extends ThinkUpController {
                 ' should appear to users who are not logged in.');
             } else  {
                 $config = Config::getInstance();
-                $this->addInfoMessage('You have no accounts configured. <a href="'.$config->getValue('site_root_path').
-                'account/?p=twitter">Set up an account now&rarr;</a>');
+                $this->addInfoMessage('You have no plugins configured.<br /><br />'.
+                'When you click on the "Setup a plugin now" '.
+                'link you will be taken to a dashboard where you can configure a Twitter or Facebook '.
+                'account for use with ThinkUp (depending on what plugins are activated). <br /><br />'.
+                '<a href="'.$config->getValue('site_root_path').
+                'account/">Set up a plugin now&rarr;</a>');
             }
         }
         return $this->generateView();
