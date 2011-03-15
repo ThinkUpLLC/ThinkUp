@@ -1,0 +1,1 @@
+ALTER TABLE  tu_instances DROP  api_calls_to_leave_unmade_per_minute;

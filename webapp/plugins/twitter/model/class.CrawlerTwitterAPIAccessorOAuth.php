@@ -77,10 +77,10 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
      * @return CrawlerTwitterAPIAccessorOAuth
      */
     public function __construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
-    $instance, $archive_limit, $num_twitter_errors, $max_api_calls_per_crawl) {
+    $api_calls_to_leave_unmade_per_minute, $archive_limit, $num_twitter_errors, $max_api_calls_per_crawl) {
         parent::__construct($oauth_token, $oauth_token_secret, $oauth_consumer_key, $oauth_consumer_secret,
         $num_twitter_errors, $max_api_calls_per_crawl);
-        $this->api_calls_to_leave_unmade_per_minute = $instance->api_calls_to_leave_unmade_per_minute;
+        $this->api_calls_to_leave_unmade_per_minute = $api_calls_to_leave_unmade_per_minute;
         $this->archive_limit = $archive_limit;
     }
 

@@ -167,9 +167,11 @@ class TwitterCrawler {
                 $recent_tweets = str_replace("[id]", $this->user->username,
                 $this->api->cURL_source['user_timeline']);
                 $args = array();
-                $args["count"] = 200;
+                $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+                $this->twitter_options['tweet_count_per_call']->option_value:100;
+                $args["count"] = $count_arg;
                 $args["include_rts"] = "true";
-                $last_page_of_tweets = round($this->api->archive_limit / 200) + 1;
+                $last_page_of_tweets = round($this->api->archive_limit / $count_arg) + 1;
 
                 //set page and since_id params for API call
                 if ($got_latest_page_of_tweets
@@ -285,7 +287,9 @@ class TwitterCrawler {
                 $continue_fetching) {
                     $mentions = $this->api->cURL_source['mentions'];
                     $args = array();
-                    $args['count'] = 200;
+                    $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+                    $this->twitter_options['tweet_count_per_call']->option_value:100;
+                    $args["count"] = $count_arg;
                     $args['include_rts']='true';
 
                     if ($got_newest_mentions) {
@@ -424,7 +428,9 @@ class TwitterCrawler {
             $stream_with_retweet = str_replace("[id]", $user_with_retweet->username,
             $this->api->cURL_source['user_timeline']);
             $args = array();
-            $args["count"] = 200;
+            $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+            $this->twitter_options['tweet_count_per_call']->option_value:100;
+            $args['count'] = $count_arg;
             $args["include_rts"]="true";
 
             list($cURL_status, $twitter_data) = $this->api->apiRequest($stream_with_retweet, $args);
@@ -724,7 +730,9 @@ class TwitterCrawler {
                     $stale_friend_tweets = str_replace("[id]", $stale_friend->username,
                     $this->api->cURL_source['user_timeline']);
                     $args = array();
-                    $args["count"] = 200;
+                    $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+                    $this->twitter_options['tweet_count_per_call']->option_value:100;
+                    $args['count'] = $count_arg;
 
                     if ($stale_friend->last_post_id > 0) {
                         $args['since_id'] = $stale_friend->last_post_id;
@@ -775,7 +783,8 @@ class TwitterCrawler {
                     } elseif ($cURL_status == 401 || $cURL_status == 404) {
                         $e = $this->api->parseError($twitter_data);
                         $ued = DAOFactory::getDAO('UserErrorDAO');
-                        $ued->insertError($stale_friend->user_id, $cURL_status, $e['error'],
+                        $ued->insertError($stale_friend->user_id, $cURL_status,
+                        (isset($e['error']))?$e['error']:$twitter_data,
                         $this->user->user_id, 'twitter');
                         $this->logger->logInfo('User error saved', __METHOD__.','.__LINE__);
                     }

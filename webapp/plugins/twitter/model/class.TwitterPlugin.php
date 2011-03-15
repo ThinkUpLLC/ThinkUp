@@ -64,18 +64,20 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             && isset($tokens['oauth_access_token_secret']) && $tokens['oauth_access_token_secret'] != '') {
                 $noauth = false;
             }
+            $api_calls_to_leave_unmade_per_minute =  isset($options['api_calls_to_leave_unmade_per_minute']) ?
+            $options['api_calls_to_leave_unmade_per_minute']->option_value : 2.0;
 
             if ($noauth) {
                 $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH',
                 $options['oauth_consumer_key']->option_value,
                 $options['oauth_consumer_secret']->option_value,
-                $instance, $options['archive_limit']->option_value,
+                $api_calls_to_leave_unmade_per_minute, $options['archive_limit']->option_value,
                 $num_twitter_errors, $max_api_calls_per_crawl);
             } else {
                 $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
                 $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
                 $options['oauth_consumer_secret']->option_value,
-                $instance, $options['archive_limit']->option_value,
+                $api_calls_to_leave_unmade_per_minute, $options['archive_limit']->option_value,
                 $num_twitter_errors, $max_api_calls_per_crawl);
             }
 
