@@ -244,7 +244,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
     public function testProcessMinorVersionMigration() {
         $this->simulateLogin('me@example.com', true);
         $config = Config::getInstance();
-        $config->setValue('THINKUP_VERSION', $config->getValue('THINKUP_VERSION') + 10.1); //set a high minor version
+        $version = $config->getValue('THINKUP_VERSION') + 10;
+        $version .= '.2';
+        $config->setValue('THINKUP_VERSION', $version); //set a high minor version
         $controller = new UpgradeController(true);
         $this->migrationFiles(1);
         $_GET['migration_index'] = 1;
@@ -267,7 +269,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com', true);
         $config = Config::getInstance();
         $test_version = $config->getValue('THINKUP_VERSION') + 10.1;
-        $test_version .= 'beta';
+        $test_version .= '.2beta';
         $config->setValue('THINKUP_VERSION', $test_version); //set a high minor version with beta string
         $controller = new UpgradeController(true);
         $this->migrationFiles(1);
