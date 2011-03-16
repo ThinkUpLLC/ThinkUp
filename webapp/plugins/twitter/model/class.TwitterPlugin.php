@@ -270,7 +270,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         array($instance->network_user_id, 'twitter', 'WEEK', 15));
         $trendtab->addDataset($trendtabweekds);
         $trendtabmonthds = new Dataset("follower_count_history_by_month", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'MONTH', 15));
+        array($instance->network_user_id, 'twitter', 'MONTH', 11));
         $trendtab->addDataset($trendtabmonthds);
         $menus['followers-history'] = $trendtab;
 
