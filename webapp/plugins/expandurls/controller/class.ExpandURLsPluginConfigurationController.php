@@ -23,7 +23,7 @@
  *
  * Expand URLs Plugin Configuration controller
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Sam Rose
+ * @copyright 2009-2011 Sam Rose
  * @author Sam Rose
  */
 class ExpandURLsPluginConfigurationController extends PluginConfigurationController {

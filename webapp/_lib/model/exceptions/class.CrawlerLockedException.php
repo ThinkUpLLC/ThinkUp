@@ -23,6 +23,6 @@
  *
  * @author Guillaume Boudreau <gboudreau[at]pommepause[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Guillaume Boudreau
+ * @copyright 2009-2011 Guillaume Boudreau
  */
 class CrawlerLockedException extends Exception {}

@@ -24,7 +24,7 @@
  * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Dwi Widiastuti, Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2011 Dwi Widiastuti, Gina Trapani, Guillaume Boudreau
  */
 $THINKUP_VERSION = '0.8';
 $THINKUP_VERSION_REQUIRED['php'] = '5.2';

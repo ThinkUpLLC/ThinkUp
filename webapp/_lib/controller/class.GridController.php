@@ -26,7 +26,7 @@
  * Returns Unbuffered JS XSS callback/JSON list of posts for javascript grid search view
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie, Guillaume Boudreau
+ * @copyright 2009-2011 Mark Wilkie, Guillaume Boudreau
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */

@@ -28,7 +28,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * Test Of Installer MySQLDAO
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {

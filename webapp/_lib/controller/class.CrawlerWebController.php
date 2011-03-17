@@ -25,7 +25,7 @@
  *
  * Runs crawler from the web for the logged-in user and outputs logging into a text area.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class CrawlerWebController extends ThinkUpAuthAPIController {

@@ -28,7 +28,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * Test of TestAuthAPIController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  *
  */

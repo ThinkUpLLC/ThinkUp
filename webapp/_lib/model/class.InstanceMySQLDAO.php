@@ -24,7 +24,7 @@
  * Instance MySQL Data Access Object Implementation
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class InstanceMySQLDAO extends PDODAO implements InstanceDAO {

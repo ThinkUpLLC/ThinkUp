@@ -29,7 +29,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/model/class.HelloThi
 /**
  * Test Crawler object
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

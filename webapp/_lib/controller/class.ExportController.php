@@ -25,7 +25,7 @@
  * Exports posts from an instance user on ThinkUp.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Michael Louis Thaler
+ * @copyright 2009-2011 Gina Trapani, Michael Louis Thaler
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

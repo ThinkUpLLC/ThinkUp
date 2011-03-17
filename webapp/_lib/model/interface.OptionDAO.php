@@ -24,7 +24,7 @@
  * Option Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie, Gina Trapani
+ * @copyright 2009-2011 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 interface OptionDAO {

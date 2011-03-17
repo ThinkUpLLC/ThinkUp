@@ -24,7 +24,7 @@
  * Test of Map Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Ekansh Preet Singh
+ * @copyright 2009-2011 Gina Trapani, Ekansh Preet Singh
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>

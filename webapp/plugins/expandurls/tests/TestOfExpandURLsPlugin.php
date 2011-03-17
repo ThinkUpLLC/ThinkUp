@@ -23,7 +23,7 @@
  * Test of ExpandURLs Crawler plugin
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau, Christoffer Viken
+ * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau, Christoffer Viken
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once 'tests/init.tests.php';

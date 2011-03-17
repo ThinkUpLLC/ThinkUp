@@ -24,7 +24,7 @@
  * Mutex Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Guillaume Boudreau
+ * @copyright 2009-2011 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  *
  */

@@ -24,7 +24,7 @@
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Christoffer Viken
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie, Christoffer Viken
  */
 chdir("..");
 chdir("..");

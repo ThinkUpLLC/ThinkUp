@@ -27,7 +27,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 /**
  * Test of Dataset
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */

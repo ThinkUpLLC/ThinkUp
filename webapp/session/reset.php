@@ -23,7 +23,7 @@
  *
  * @author Michael Louis Thaler <michael[dot]louis[dot]thaler[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Michael Louis Thaler
+ * @copyright 2009-2011 Gina Trapani, Michael Louis Thaler
  */
 chdir('..');
 require_once 'init.php';

@@ -28,7 +28,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * Test of RSSController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Guillaume Boudreau
+ * @copyright 2009-2011 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  *
  */

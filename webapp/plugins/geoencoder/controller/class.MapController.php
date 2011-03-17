@@ -26,7 +26,7 @@
  * Renders the map for a post showing the post and its replies and retweets
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>

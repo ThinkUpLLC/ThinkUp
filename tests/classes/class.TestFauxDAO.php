@@ -25,7 +25,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Christoffer Viken, Gina Trapani, Mark Wilkie
+ * @copyright 2009-2011 Christoffer Viken, Gina Trapani, Mark Wilkie
  */
 require_once 'tests/classes/interface.TestDAO.php';
 
