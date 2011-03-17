@@ -143,7 +143,7 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://instagr.am/p/oyQ6/');
         $this->assertEqual($result->expanded_url,
-        'http://distillery.s3.amazonaws.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
+        'http://images.instagram.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 105);
         $this->assertEqual($result->network, 'twitter');
