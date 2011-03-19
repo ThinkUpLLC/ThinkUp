@@ -126,10 +126,9 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
      * @param bool $is_admin Default to false
      */
     protected function simulateLogin($email, $is_admin = false) {
-        $config = Config::getInstance();
-        $_SESSION[$config->getValue('source_root_path')]['user'] = $email;
+        SessionCache::put('user', $email);
         if ($is_admin) {
-            $_SESSION[$config->getValue('source_root_path')]['user_is_admin'] = true;
+            SessionCache::put('user_is_admin', true);
         }
     }
 

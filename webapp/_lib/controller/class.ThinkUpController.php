@@ -99,6 +99,14 @@ abstract class ThinkUpController {
             }
             $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
+
+            if (SessionCache::isKeySet('selected_instance_network') &&
+            SessionCache::isKeySet('selected_instance_username')) {
+                $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));
+                $this->addToView('selected_instance_username', SessionCache::get('selected_instance_username'));
+                $this->addToView('logo_link', 'index.php?u='. SessionCache::get('selected_instance_username')
+                .'&n='. SessionCache::get('selected_instance_network'));
+            }
         } catch (Exception $e) {
             Utils::defineConstants();
             $cfg_array =  array(

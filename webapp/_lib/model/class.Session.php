@@ -47,8 +47,7 @@ class Session {
      * @return bool Is user logged into ThinkUp
      */
     public static function isLoggedIn() {
-        $config = Config::getInstance();
-        if (!isset($_SESSION[$config->getValue('source_root_path')]['user'])) {
+        if (!SessionCache::isKeySet('user')) {
             return false;
         } else {
             return true;
@@ -59,9 +58,8 @@ class Session {
      * @return bool Is user logged into ThinkUp an admin
      */
     public static function isAdmin() {
-        $config = Config::getInstance();
-        if (isset($_SESSION[$config->getValue('source_root_path')]['user_is_admin'])) {
-            return $_SESSION[$config->getValue('source_root_path')]['user_is_admin'];
+        if (SessionCache::isKeySet('user_is_admin')) {
+            return SessionCache::get('user_is_admin');
         } else {
             return false;
         }
@@ -71,9 +69,8 @@ class Session {
      * @return str Currently logged-in ThinkUp username (email address)
      */
     public static function getLoggedInUser() {
-        $config = Config::getInstance();
         if (self::isLoggedIn()) {
-            return $_SESSION[$config->getValue('source_root_path')]['user'];
+            return SessionCache::get('user');
         } else {
             return null;
         }
@@ -133,19 +130,16 @@ class Session {
      * @param Owner $owner
      */
     public static function completeLogin($owner) {
-        $config = Config::getInstance();
-        $_SESSION[$config->getValue('source_root_path')]['user'] = $owner->email;
-        $_SESSION[$config->getValue('source_root_path')]['user_is_admin'] = $owner->is_admin;
+        SessionCache::put('user', $owner->email);
+        SessionCache::put('user_is_admin', $owner->is_admin);
     }
 
     /**
      * Log out
      */
     public static function logout() {
-        $config = Config::getInstance();
-        unset($_SESSION[$config->getValue('source_root_path')]['user']);
-        unset($_SESSION[$config->getValue('source_root_path')]['user_is_admin']);
-        unset($_SESSION[$config->getValue('source_root_path')]);
+        SessionCache::unsetKey('user');
+        SessionCache::unsetKey('user_is_admin');
     }
 
     /**

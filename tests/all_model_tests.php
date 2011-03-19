@@ -57,6 +57,7 @@ $model_tests->addTestCase(new TestOfPostMySQLDAO());
 $model_tests->addTestCase(new TestOfPostErrorMySQLDAO());
 $model_tests->addTestCase(new TestOfProfiler());
 $model_tests->addTestCase(new TestOfSession());
+$model_tests->addTestCase(new TestOfSessionCache());
 $model_tests->addTestCase(new TestOfSmartyThinkUp());
 $model_tests->addTestCase(new TestOfUserMySQLDAO());
 $model_tests->addTestCase(new TestOfUserErrorMySQLDAO());

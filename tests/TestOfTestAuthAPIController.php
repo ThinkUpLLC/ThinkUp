@@ -85,7 +85,7 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         $this->assertPattern('/{"result":"success"}/', $results);
 
         $config = Config::getInstance();
-        $this->assertEqual($_SESSION[$config->getValue('source_root_path')]['user'], 'me@example.com');
+        $this->assertEqual(SessionCache::get('user'), 'me@example.com');
 
         // Now that _SESSION['user'] is set, we shouldn't need to provide un/as to use this controller
         // Also, the result will be returned as HTML, not JSON

@@ -139,6 +139,9 @@ class DashboardController extends ThinkUpController {
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user = $user_dao->getDetails($this->instance->network_user_id, $this->instance->network);
             $this->addToView('user_details', $user);
+
+            SessionCache::put('selected_instance_network', $this->instance->network);
+            SessionCache::put('selected_instance_username', $this->instance->network_username);
         }
     }
 
