@@ -1,201 +1,399 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>ThinkUp: Social Media Insights Platform</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="http://960ls.atomidata.com/static/cssserve/2011/3/20/5dd9fb3d4d4944d58a41a1b9eff0fdf2.css"/>
+	<link href='http://fonts.googleapis.com/css?family=Cabin:regular,bold' rel='stylesheet' type='text/css' />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+	<script src="assets/js/jcarousellite_1.0.1.min.js"></script>
+	
+	<style type="text/css">
+		
+		body {
+			font-family : 'Helvetica Neue', Helvetica, arial, serif;
+			background-color : silver;
+			margin-top : 0px;
+		}
+		
+		h1, h2, h3 { font-family: 'Cabin', 'Helvetica Neue', Helvetica, arial, serif; }
+		
+		h1, a {
+			color : #406A93;
+			font-weight : bold;
+			text-decoration : none;
+		}
+		
+		a:hover {
+			text-decoration : underline;
+		}
+	
+		h2 {
+			color : #E2AA58;
+			font-size : xx-large;
+		}
+		
+		strong, #promo a { color : #3B9877; }
+		
+		p {
+			font-size : 18px;
+			line-height : 150%; 
+		}
+		
+		.container_12 {
+			padding-right : 30px;
+			padding-left : 30px;
+		}
+		
+		h3 {
+			color : #3B9877;
+			font-size : 24px;
+			margin-bottom : -10px	;
+			padding-bottom : 0px;
+		}
+		
+		h4 {
+			font-size : 14px;
+			font-weight : normal;
+		}
+		
+		.featurebox p { font-size : 16px; }
+		
+		.twtr-tweets p { font-size : 12px; }
+		
+		.twtr-bd .twtr-timeline { height : 75px; }
+		
+		.twtr-hd, .twtr-ft { display : none; }
+		
+		#header, #content, #footer { background-color : white; }
+		
+		#header {
+			background-image: url('assest/img/header-gradient.jpg');
+			background-repeat: repeat;
+			background-position: left bottom;
+			padding-bottom : 20px;
+		}
 
-<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+		#identity h1 {
+			text-indent: -5000px;
+			height: 56px;
+			background-image: url('assets/img/thinkup-logo.png');
+			background-repeat: no-repeat;
+			background-position: left bottom;
+			margin-bottom : 0px;
+			padding-bottom : 0px;
+		}
+		
+		#identity h2 {
+			margin-top : 0px;
+			padding-top : 0px;
+			font-size : x-large;
+		}
+		
+		#promo {
+			text-align : right;
+		}
+		
+		#promo p { font-size : 14px; }
+		
+		#promo ul#promoitems {
+			display ; inline;
+			width : 460px;
+			list-style-type : none;
+			padding: 0px;
+			margin : 0px;
+		}
+		
+		#content { padding-top : 30px; }
+		
+		#intro, #introtext {
+			margin-top : 0px;
+			padding-top : 0px;
+		}
+		
+		#download, #download h3 {
+			text-align : center;
+			color : white;
+		}
+		
+		#download h3 {
+			padding-top : 0px;
+			margin-top : 6px;
+			font-weight : normal;
+		}
+		
+		a#download, a#download:link, a#download:visited {
+			display:block;
+			margin: 0px 100px 10px 100px;
+			height: 65px;
+			-webkit-border-radius: 8px;
+			-moz-border-radius: 8px;
+			border-radius: 8px;
+			border: 1px solid #3B9877;
+			color:#fff;
+			overflow:visible;
+			background:#6ECBAB;
+			background: -moz-linear-gradient(top, #6ECBAB 0%, #3B9877 100%);
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6ECBAB), color-stop(100%,#3B9877));
+			background: linear-gradient(top, #6ECBAB 0%, #3B9877 100%);
+			filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#6ECBAB', endColorstr='#3B9877',GradientType=0 );
+		}
+		
+		a#download:hover {
+			background:#3B9877;
+			text-decoration : none;
+			border: 1px solid #666;
+		}
+		
+		#promo h3, #promo h3 a, #fundamentals .featurebox h3 { color : #504B9E; }
+		
+		#fundamentals { padding-top : 20px; }
+		
+		#publish { clear : left; }
+		
+		#footertext {
+			padding-top : 20px;
+			padding-bottom : 20px;
+			margin-top : 40px;
+			border-top : 1px solid silver;
+		}
+		
+		#footer p {
+			text-align : center;
+			font-size : small;
+		}
+		
+		#footer a { font-weight : normal; }
+		
 
-  <title>ThinkUp: Social Media Insights Engine</title>
-  <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-  <link type="text/css" rel="stylesheet" href="assets/css/base.css">
-  <link type="text/css" rel="stylesheet" href="assets/css/positioning.css">
-  <link type="text/css" rel="stylesheet" href="assets/css/style.css">
-  <link type="text/css" rel="stylesheet" href="assets/css/jquery-ui-1.7.1.custom.css">
+	</style> 
+	
+	<script type="text/javascript">
 
-  <!-- jquery -->
-  <link type="text/css" rel="stylesheet" href="assets/css/jquery-ui.css">
-  <script type="text/javascript" src="assets/js/jquery.min.js"></script>
-  <script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
-  <script type="text/javascript">var site_root_path = '/';</script>
-
-<!--lightbox-->
-<script type="text/javascript" src="assets/js/prototype.js"></script>
-<script type="text/javascript" src="assets/js/scriptaculous.js?load=effects,builder"></script>
-<script type="text/javascript" src="assets/js/lightbox.js"></script>
-<link rel="stylesheet" href="assets/css/lightbox.css" type="text/css" media="screen" />
-
-  <!-- custom css -->
-  <style>
-  .line { background:url('assets/img/border-line-470.gif') no-repeat center bottom;
-  margin: 8px auto;
-  height: 1px;
-  }
-.thinkup-canvas h1 { padding-bottom:5px;padding-left:20px;}
-.thinkup-canvas h4 { padding-bottom:20px;}
- p { padding-left:35px;padding-bottom:15px;padding-top:15px; }
-  </style>
-
+		$(function() {
+			$("#promo").jCarouselLite({
+				btnNext: ".next",
+				btnPrev: ".prev",
+				auto: 4000,
+				speed: 800,
+				visible: 1
+			});
+		});
+		
+	</script>
+	
+  
 </head>
 <body>
+                
 
+<div id="header" class="container_12 clearfix">
 
-
-<div id="status-bar" class="clearfix">
-
-  <div class="status-bar-left">
-          <!-- the user has not selected an instance -->
-            </div> <!-- .status-bar-left -->
-
-  <div class="status-bar-right text-right">
-    <ul>
-              <li>&nbsp;</li>
-          </ul>
-  </div> <!-- .status-bar-right -->
-
-</div> <!-- #status-bar -->
-
-<div id="page-bkgd">
-
-<div class="container clearfix">
-
-  <div id="app-title"><a href="http://thinkupapp.com">
-    <h1><span class="bold">Think</span><span class="gray">Up</span></h1>
-    <h2>New ideas</h2>
-  </a></div> <!-- end #app-title -->
-
-  <div id="menu-bar">
-    <ul>
-              <li class="round-tr round-br round-tl round-bl"><a href="http://github.com/ginatrapani/thinkup/downloads">Download ThinkUp</a></li>
-          </ul>
-  </div> <!-- end #menu-bar -->
-</div> <!-- end .container -->
-
-<div class="thinkup-canvas round-all container_24">
-    <div class="clearfix prepend_20 append_20">
-
-<h1>New ideas come from conversations.</h1>
-<h4>ThinkUp lets you get insights from the time you spend on social networks like Twitter and Facebook.</h4>
-
-<table>
-<tr>
-<td width="50%" valign="top">
-	<p>ThinkUp captures your posts, replies, retweets, friends, followers, and links on social networks like Twitter and Facebook. We'll be adding more networks in the future. ThinkUp stores your social data in a database you control, and makes it easy to search, sort, filter, export, and visualize in useful ways.</p>
-
-	<p>ThinkUp is an open source software project licensed under the <a href="http://www.opensource.org/licenses/gpl-2.0.php">GNU GPL</a>, founded by <a href="http://ginatrapani.org">Gina Trapani</a>, sponsored by <a href="http://expertlabs.org">Expert Labs</a>, used to help <a href="http://expertlabs.org/2010/02/in-support-of-grand-challenges.html">the White House</a>, and built by an enthusiastic community of contributors like you. <a href="http://groups.google.com/group/thinkupapp">Join us.</a></p>
-
-<div ><a href="http://github.com/ginatrapani/thinkup/downloads/"><img src="assets/img/zip.png" style="padding-left:15px;float:left"></a><h2 style="font-weight:bold;font-size:150%"><a href="http://github.com/ginatrapani/thinkup/downloads/">Download ThinkUp &raquo;</a></h2><small>You'll need a web server running PHP 5.2 and MySQL 5. <a href="http://github.com/ginatrapani/ThinkUp/blob/master/README.md">See the full list of system requirements.</a></small><br /><br /></div>
-</td>
-<td width="50%" valign="top"><br />
-	<a href="assets/img/dashboard-screenshot.png" rel="lightbox"><img width="450" src="assets/img/dashboard-screenshot.png"></a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top"><br />
-	<h1>Features:</h1>
-	<p>Setting up ThinkUp takes a couple of minutes if you know how to install a web app. Once you're running, there's lots you can do!</p>
-	<ul style="margin-left:50px">
-		<li><strong>Archive all of your social data</strong> for your Twitter and Facebook accounts in your own database and make it easy to search, sort and filter.</li>
-		<li><strong>Export some or all of your data</strong> including tweets and status updates into a simple format you can open in any spreadsheet.</li>
-		<li><strong>View all of your friends' replies</strong> to your messages, in a simple searchable list or displayed on a Google Map.</li>
-		<li>Check out <strong>insightful charts</strong> of key stats like your number of followers, posting behaviors, and more.</li>
-		<li>Get a stream of all photos or links your friends have posted, all in one place. ThinkUp even automatically expands shortened URLs!</li>
-		<li>Sort replies to your tweets or Facebook status updates by the location of your friends who respond.</li>
-		<li>Find out <strong>insights about your followers</strong> and friends, like who's most popular or who updates least often.</li>
-		<li>Publish a <strong>complete list of replies</strong> to one of your questions, including integration with blogging tools like WordPress.</li>
-		<li>Even more new features every day.</li>
-		</ul>
-</td>
-<td width="50%" valign="top">
-		<h1>Screenshots:</h1>
-		<p>&nbsp;
-			<a href="assets/img/screenshots/04publicdashboard.png" rel="lightbox[thinkup]" title="ThinkUp's public dashboard displays an overview of a user's interactions."><img src="assets/img/screenshots/thumbs/04publicdashboard.png" width="120" height="100" /></a>
-			<a href="assets/img/screenshots/06postreplies.png" rel="lightbox[thinkup]" title="See a list of replies to a particular post, sorted by relationship (friends come first), follower count, or published date."><img src="assets/img/screenshots/thumbs/06postreplies.png" width="120" height="100" /></a>
-			<a href="assets/img/screenshots/03plugins.png" rel="lightbox[thinkup]" title="All of ThinkUp's functionality is available in the form of modular plugins, which make it easy for users to enable and disable different features and for developers to make ThinkUp even more useful."><img src="assets/img/screenshots/thumbs/03plugins.png" width="120" height="100" /></a>
-</p>
-
-		<p>&nbsp;
-			<a href="assets/img/screenshots/07mapofreplies.png" rel="lightbox[thinkup]" title="Get a Google Map of replies and retweets to a particular post, and see a list of responses sorted by location--that is, how near they are to the original post."><img src="assets/img/screenshots/thumbs/07mapofreplies.png" width="120" height="100" /></a>
-			<a href="assets/img/screenshots/05allposts.png" rel="lightbox[thinkup]" title="Click on any link in the sidebar to view lists of information, like all of a user's posts."><img src="assets/img/screenshots/thumbs/05allposts.png" width="120" height="100" /></a>
-			<a href="assets/img/screenshots/02connecttwitter.png" rel="lightbox[thinkup]" title="Connect ThinkUp to your Twitter account so it can start gathering your social data."><img src="assets/img/screenshots/thumbs/02connecttwitter.png" width="120" height="100" /></a>
-</p>
-
-		<p>&nbsp;
-			<a href="assets/img/screenshots/09searchexport.png" rel="lightbox[thinkup]" title="Search any list of posts and export the results to a CSV file."><img src="assets/img/screenshots/thumbs/09searchexport.png" width="120" height="100" /></a>
-			<a href="assets/img/screenshots/01installation.png" rel="lightbox[thinkup]" title="ThinkUp offers a three-step, web-based installer so you can get started in minutes."><img src="assets/img/screenshots/thumbs/01installation.png" width="120" height="100" /></a>
-			<a href="assets/img/screenshots/08addingfacebookaccount.png" rel="lightbox[thinkup]" title="Connect your Facebook account to ThinkUp to gather posts and replies for your user profile, or a Facebook page."><img src="assets/img/screenshots/thumbs/08addingfacebookaccount.png" width="120" height="100" /></a>
-</p>
-
-		<p>&nbsp;
-			<a href="assets/img/screenshots/10photosfromfriends.png" rel="lightbox[thinkup]" title="See all the photos your friends have posted on Twitter."><img src="assets/img/screenshots/thumbs/10photosfromfriends.png" width="120" height="100" /></a>
-			<a href="assets/img/screenshots/11leastlikelyfollowers.png" rel="lightbox[thinkup]" title="See a list of all of your 'least likely followers'."><img src="assets/img/screenshots/thumbs/11leastlikelyfollowers.png" width="120" height="100" /></a>
-			<a href="assets/img/screenshots/12conversations.png" rel="lightbox[thinkup]" title="Easily track back-and-forth conversations on Twitter."><img src="assets/img/screenshots/thumbs/12conversations.png" width="120" height="100" /></a>
-</p>
-
-</td>
-</tr>
-</table>
-
-<br /><br />
-<h1>Join the Conversation</h1>
-<p>We want you to use ThinkUp and give the community your feedback. And we're also looking for developers and testers who can help us make ThinkUp even better. Everybody is welcome to contribute!</p>
-<p>If you're a <strong>user, blogger, Twitterer or Facebooker</strong>:</p>
-<ul style="margin-left:75px">
-<li><a href="http://github.com/ginatrapani/thinkup/downloads">Download ThinkUp</a> and start using it.</li>
-<li><a href="http://twitter.com/thinkupapp">Follow @thinkupapp</a> on Twitter.</li>
-<li>Check out the <a href="http://wiki.github.com/ginatrapani/thinkup/">ThinkUp documentation wiki</a>, and make improvements to it if you see something that needs fixing.</li>
-<li>Subscribe to <a href="http://expertlabs.org/blog_index.html">the Expert Labs blog</a> to find out the latest news on our projects.</li>
-<li><a href="http://groups.google.com/group/thinkupapp">Join the mailing list</a> and be part of the conversation about ThinkUp's future.</li>
-<li><a href="https://github.com/ginatrapani/ThinkUp/wiki/IRC">Chat directly</a> with other ThinkUp users and developers.</li>
-<li><strong>Tell your friends about ThinkUp!</strong></li>
-</ul>
-
-<p>If you're a <strong>programmer, developer, or designer</strong>:</p>
-<ul style="margin-left:75px">
-<li>Fork <a href="http://github.com/ginatrapani/thinkup">the source code on GitHub</a>.</li>
-<li>Read our <a href="http://github.com/ginatrapani/ThinkUp/wiki/Developer-Guide">Developer's Guide</a>.</li>
-<li>Browse our <a href="http://thinkupapp.com/docs/">source code documentation</a>.</li>
-<li>Check out <a href="http://github.com/ginatrapani/thinkup/issues">our bug tracker and to-do list.</a></li>
-<li>Let us know what you think on the <a href="http://groups.google.com/group/thinkupapp">ThinkUp mailing list</a>.</li>
-<li>Collaborate real-time with the <a href="https://github.com/ginatrapani/ThinkUp/wiki/IRC">ThinkUp community on IRC</a>.</li>
-</ul>
-
-
-
+<div id="identity" class="grid_6 ">
+	<h1>ThinkUp</h1>
+	<h2>New ideas from your online conversations</h2>
 </div>
-    </div>
-  </div> <!-- end .thinkup-canvas -->
 
-  <div class="container small center">
-
-    <div id="ft" role="contentinfo">
-
-	 <a href="http://thinkupapp.com">ThinkUp</a> design by <a href="http://dash30.com/">Dash30</a><br /> The ThinkUp project is sponsored by <a href="http://expertlabs.org">Expert Labs</a><br /><a href="http://twitter.com/thinkupapp">@thinkupapp</a> | <a href="http://github.com/ginatrapani/ThinkUp/wiki">Documentation</a> | <a href="http://groups.google.com/group/thinkupapp">Mailing List</a><br>
-	        It is nice to be nice.
-      </p>
-    </div> <!-- #ft -->
-
-  </div> <!-- .content -->
-
-<div id="screen"></div>
-
+<div id="promo" class="grid_6 ">
+	
+	<ul id="promoitems">
+		<li id="promo-codeconf">
+	
+			<img src="assets/img/promo-codeconf.png" width="136" height="85" alt="CodeConf 2011" style="float : left; padding-top : 20px;" />
+	
+			<h3><a href="http://codeconf.com/">Gina Trapani @ CodeConf!</a></h3>
+			<p>ThinkUp's creator keynotes at GitHub's very first conference! <a href="http://codeconf.com/">April 9 &amp; 10 &raquo;</a></p>
+		</li>
+		
+		<li id="promo-ipad" style="overflow : display;">
+			<img src="assets/img/promo-ipad.png" width="163" height="197" alt="iPad 2 Bounty" style="float : left; margin-top : -70px;" />
+			<h3><a href="http://expertlabs.org/2011/03/announcing-the-thinkup-ipad-2-bounty.html">Nab the iPad 2 Bounty!</a></h3>
+			<p>Find out how to win an iPad2 for helping ThinkUp before <a href="http://expertlabs.org/2011/03/announcing-the-thinkup-ipad-2-bounty.html">April 6 &raquo;</a></p>
+		</li>
+		
+	</ul>
+	
+</div>
 
 </div>
 
-<script type="text/javascript">
-var _sf_async_config={uid:2383,domain:"thinkupapp.com"};
-(function(){
-  function loadChartbeat() {
-    window._sf_endpt=(new Date()).getTime();
-    var e = document.createElement('script');
-    e.setAttribute('language', 'javascript');
-    e.setAttribute('type', 'text/javascript');
-    e.setAttribute('src',
-       (("https:" == document.location.protocol) ? "https://s3.amazonaws.com/" : "http://") +
-       "static.chartbeat.com/js/chartbeat.js");
-    document.body.appendChild(e);
-  }
-  var oldonload = window.onload;
-  window.onload = (typeof window.onload != 'function') ?
-     loadChartbeat : function() { oldonload(); loadChartbeat(); };
-})();
+                
 
-</script>
-</body></html>
+<div id="content" class="container_12">
+
+	<div id="intro" class="clearfix" >
+	
+		<div id="introtext" class="grid_6 ">
+			<p>ThinkUp is a <strong>free</strong>, <strong>open source</strong> web application that captures your posts, tweets, replies, retweets, friends, followers and links on social networks like Twitter and Facebook.</p>
+			<p>With ThinkUp, you can store your social activity in a database
+			that <strong>you control</strong>, making it easy to search, sort, analyze, publish and display activity from your network. All you need is a web server that can run a PHP application.</p>
+			<a id="download" href="http://github.com/ginatrapani/thinkup/downloads"><h3>Download ThinkUp &raquo;</h3><h4>Beta 0.9 (939kb .zip)</h4></a>
+		</div>
+		
+		<div id="screencast" class="grid_6">
+			<iframe title="YouTube video player" style="width: 460px; height: 375px; border: 0;" src="http://www.youtube.com/embed/LtlCpvM-xeE?rel=0"></iframe>
+		</div>
+	
+	</div>
+
+	<div id="fundamentals">
+	
+		<div id="community" class="grid_4 featurebox">
+			<h3>Join the Community.</h3>
+			<p><img src="assets/img/nice-people.png" alt="100% Nice People" width="65" height="65" style="float : right; padding : 10px 20px 5px 10px;" />Our vibrant community connects on a mailing list, wiki, blog and Twitter &mdash; and we sincerely	 welcome newbies!</p>
+			<ul>
+				<li><a href="http://wiki.github.com/ginatrapani/thinkup/">ThinkUp Documentation</a> (Wiki)</li>
+				<li><a href="http://groups.google.com/group/thinkupapp">ThinkUp Mailing List</a></li>
+				<li><a href="https://github.com/ginatrapani/ThinkUp/wiki/IRC">ThinkUp Chat</a> (IRC)</li>
+				<li><a href="http://expertlabs.org/blog_index.html">Read the Blog</a></li>
+				<li>Like <a href="http://www.facebook.com/pages/ThinkUp/162504567094163">ThinkUp on Facebook</a></li>
+				<li>Follow @<a href="http://twitter.com/thinkupapp">ThinkUpApp</a> on Twitter </li>
+
+			</ul>
+			
+		</div>
+		
+		<div id="developers" class="grid_4 featurebox">
+			<h3>Welcoming All Developers.</h3>
+			<p><img src="assets/img/gina-trapani.jpg" alt="Gina Trapani" width="70" height="70" style="float : right; padding : 10px 10px 0px 10px;" /><a href="http://ginatrapani.org/">Gina Trapani</a> began building ThinkUp in 2009 as a personal project. Today, our developer community powers one of the most inclusive &amp; innovative open source projects in the world.</p>
+			<ul>
+				<li><a href="http://github.com/ginatrapani/thinkup">ThinkUp Source Code</a> (GitHub)</li>
+				<li><a href="http://groups.google.com/a/expertlabs.org/group/thinkup-dev">Developer Mailing List</a></li>
+				<li><a href="https://github.com/ginatrapani/ThinkUp/wiki/Developer-Guide">Developer's Guide</a></li>
+				<li><a href="http://github.com/ginatrapani/thinkup/issues">Issues, Bug Tracker &amp; To-Do List</a></li>
+			</ul>	
+		</div>
+		
+		<div id="expertlabs" class="grid_4 featurebox">
+			<h3>Software with a Purpose.</h3>
+			<p><img src="assets/img/expert-labs-logo.png" alt="Expert Labs" width="62" height="62" style="float : right; padding : 10px;" />Development of ThinkUp is led by <a href="http://expertlabs.org/">Expert Labs</a>, a non-profit startup that helps government be more effective by tapping in to the power of social networks.</p>
+		
+			<p>From the White House to an ordinary citizens, anyone can use ThinkUp to gain insights through crowdsourcing. <a href="http://expertlabs.org/">Find out more &raquo;</a></p>
+		</div>
+	
+	</div>
+
+	<div id="featuresheader" class="grid_12 clearfix">
+	
+		<h2>Features! <em>Lots</em> of features.</h2>
+	
+	</div>
+
+	<div id="features">
+
+		<div id="analyze" class="grid_4 featurebox">
+			<h3>Analyze</h3>
+			<p>ThinkUp gives you insightful graphs &amp; charts in a single simple dashboard to help you make sense of your social network activity.</p>
+			<img src="assets/img/feature-analyze.jpg" alt="analyze follower data" width="300" height="110" />
+		</div>
+		
+		<div id="search" class="grid_4 featurebox">
+			<h3>Search</h3>
+			<p>Ever get frustrated that Twitter doesn't let you simply search for your own Tweet from a year ago? ThinkUp's got you covered.</p>
+			<img src="assets/img/feature-search.jpg" alt="search tweets" width="300" height="135" />
+		</div>
+		
+		<div id="visualize" class="grid_4 featurebox">
+			<h3>Visualize</h3>
+			<p>Need to see your conversations in a new way? ThinkUp's rich visualizations let you see your replies mapped across the globe.</p>
+			<img src="assets/img/feature-visualize.jpg" alt="map visualization" width="300" height="147" />
+		</div>
+	
+	<div>
+		<div id="publish" class="grid_4 featurebox">
+			<h3>Publish</h3>
+			<p>ThinkUp lets you publish &amp; embed conversations on a blog or website. Everyone can benefit from the wisdom of your social network.</p>
+			<img src="assets/img/feature-publish.jpg" alt="publish replies" width="300" height="175" />
+		</div>
+		
+		<div id="connect" class="grid_4 featurebox">
+			<h3>Connect</h3>
+			<p>Browse through all the links &amp; photos shared on your social network, in one click, or easily review any tweets you've favorited.</p>
+			<img src="assets/img/feature-connect.jpg" alt="photo stream" width="300" height="175" />
+		</div>
+		
+		<div id="export" class="grid_4 featurebox">
+			<h3>Export</h3>
+			<p>Export your tweets at any time and open them as a spreadsheet in Excel for further analysis. Or just save them for recordkeeping.</p>
+			<img src="assets/img/feature-export.jpg" alt="export" width="300" height="175" />
+		</div>
+	</div>
+
+	<div id="elsewhereheader" class="grid_12 clearfix">
+	
+		<h2>Elsewhere around the web:</h2>
+	
+	</div>
+	
+	<div id="elsewhere">
+		<div id="ontwitter" class="grid_4 featurebox">
+			<h3>ThinkUp Talk on Twitter</h3>
+			<p>These are just the latest mentions of "ThinkUpApp" on Twitter:</p>
+			<script src="http://widgets.twimg.com/j/2/widget.js" type="text/javascript"></script>
+			<script>
+			new TWTR.Widget({
+			  version: 2,
+			  type: 'search',
+			  search: 'thinkupapp',
+			  interval: 4000,
+			  title: 'ThinkUp Tweets',
+			  subject: '',
+			  width: 300,
+			  height: 225,
+			  theme: {
+				shell: {
+				  background: '#ffffff',
+				  color: '#000000'
+				},
+				tweets: {
+				  background: '#ffffff',
+				  color: '#666666',
+				  links: '#514b9e'
+				}
+			  },
+			  features: {
+				scrollbar: false,
+				loop: true,
+				live: true,
+				hashtags: true,
+				timestamp: true,
+				avatars: true,
+				toptweets: true,
+				behavior: 'default'
+			  }
+			}).render().start();
+			</script>			
+					</div>
+		
+		<div id="reviews" class="grid_4 featurebox">
+			<h3>You'll Love It Too.</h3>
+			<p>The <a href="http://chronicle.com/blogs/profhacker/putting-twitter-to-work-with-thinkup/28161">Chronicle of Higher Education says</a> ThinkUp is a "dazzling application", and <a href="https://oneforty.com/item/thinkup">oneforty</a> users give ThinkUp 4.5 stars:</p>
+			<!-- Begin oneforty widget -->
+			<div id="oneforty_thinkup_widget" style="width:150px;border:1px solid #C0DEED;padding:0px;font-family:'Lucida Grande',Arial,san-serif;font-size:12px; margin-left : auto; margin-right : auto;"> <div style="width:100%;background-color:#e3edf7;"><h3 class="oneforty_widget_title" style="margin:0px;font-size:12px;text-align:center;padding:3px 0px;font-weight:bold;"><a href="http://oneforty.com/item/thinkup?utm_source=widget&utm_campaign=review_app" style="color:black;text-decoration:none;">thinkup</a></h3></div> <div id="oneforty_thinkup_widget_content" style="margin-top:5px;display:none;"></div> <div style="text-align:center;padding:4px 0px 2px 0px;"><a href="http://oneforty.com/item/thinkup?utm_source=widget&utm_campaign=review_app" title="Review on oneforty"><img src="https://d1qjmhqkx2f6xm.cloudfront.net/ext/images/v1/review_widget.png" height=28 width=140 alt="Review thinkup on oneforty" style="border:0px;" /></a></div> <script type="text/javascript">var elm=document.getElementById("oneforty_thinkup_widget_content");elm.style.minHeight="50px";elm.style.display="";var _oneforty = _oneforty || {};_oneforty.protocol = ('https:' == document.location.protocol ? 'https' : 'http');_oneforty.widget_urls = _oneforty.widget_urls || [];_oneforty.widget_urls.push(_oneforty.protocol+"://widgets.oneforty.com/widgets/v2/review_app/thinkup.js");(function() {var of=document.createElement('script');of.type='text/javascript';of.async = true;of.src=_oneforty.protocol+'://d1qjmhqkx2f6xm.cloudfront.net/ext/javascripts/v3/loader.js';var of_s=document.getElementsByTagName('script')[0]; of_s.parentNode.insertBefore(of, of_s);})();</script> </div>
+			<!-- End oneforty widget -->
+		</div>
+
+		
+		<div id="livedemo" class="grid_4 featurebox">
+			<h3>A Live Demo of ThinkUp</h3>
+			<p>See a real, <a href="http://thinktank01.aaas.org/thinkup01/index.php?u=whitehouse&n=twitter">working instance of ThinkUp</a> collecting conversations from @<a href="http://twitter.com/whitehouse">whitehouse</a> on Twitter:</p>
+			<a href="http://thinktank01.aaas.org/thinkup01/index.php?u=whitehouse&n=twitter"><img src="assets/img/feature-whthinkup.jpg" alt="White House ThinkUp" width="300" height="185" /></a>
+			
+		</div>
+	</div>
+	
+	</div>
+
+</div>
+
+                
+
+<div id="footer" class="container_12 clearfix">
+	<div id="footertext" class="grid_12">
+		<p><a href="http://expertlabs.org/">Expert Labs</a> &bull; <a href="http://github.com/ginatrapani/thinkup/downloads">Download ThinkUp</a> &bull; It's nice to be nice.</p>
+	</div>
+</div>
+
+            
+</body>
+</html>
