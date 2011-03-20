@@ -43,8 +43,7 @@ class MutexMySQLDAO extends PDODAO implements MutexDAO {
          );
          $ps = $this->execute($q, $vars);
          */
-        $q = "SELECT GET_LOCK('".mysql_real_escape_string($lock_name)."', ".mysql_real_escape_string($timeout).
-        ") AS result";
+        $q = "SELECT GET_LOCK('".$lock_name."', ".$timeout. ") AS result";
         $ps = $this->execute($q);
         $row = $this->getDataRowAsArray($ps);
         return $row['result'] === '1';
@@ -62,7 +61,7 @@ class MutexMySQLDAO extends PDODAO implements MutexDAO {
          );
          $ps = $this->execute($q, $vars);
          */
-        $q = "SELECT RELEASE_LOCK('".mysql_real_escape_string($lock_name)."') AS result";
+        $q = "SELECT RELEASE_LOCK('".$lock_name."') AS result";
         $ps = $this->execute($q);
         $row = $this->getDataRowAsArray($ps);
         return $row['result'] === '1';
@@ -73,7 +72,7 @@ class MutexMySQLDAO extends PDODAO implements MutexDAO {
      */
     public function isMutexFree($name) {
         $lock_name = $this->config->getValue('db_name').'.'.$name;
-        $q = "SELECT IS_FREE_LOCK('".mysql_real_escape_string($lock_name)."') AS result";
+        $q = "SELECT IS_FREE_LOCK('".$lock_name."') AS result";
         $ps = $this->execute($q);
         $row = $this->getDataRowAsArray($ps);
         return $row['result'] === '1';
@@ -84,7 +83,7 @@ class MutexMySQLDAO extends PDODAO implements MutexDAO {
      */
     public function isMutexUsed($name) {
         $lock_name = $this->config->getValue('db_name').'.'.$name;
-        $q = "SELECT IS_USED_LOCK('".mysql_real_escape_string($lock_name)."') AS result";
+        $q = "SELECT IS_USED_LOCK('".$lock_name."') AS result";
         $ps = $this->execute($q);
         $row = $this->getDataRowAsArray($ps);
         return $row['result'] != null;
