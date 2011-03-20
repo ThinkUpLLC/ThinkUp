@@ -31,6 +31,12 @@
  */
 class BackupController extends ThinkUpAdminController {
 
+    /**
+     *
+     * @var string Zip Class we check for a backup dependency
+     */
+    static public $zip_class_req = 'ZipArchive';
+
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $this->setViewTemplate('install.backup.tpl');
@@ -40,6 +46,10 @@ class BackupController extends ThinkUpAdminController {
 
     public function adminControl() {
         $this->disableCaching();
+
+        if(! self::checkForZipSupport()) {
+            $this->addToView('no_zip_support', true);
+        }
         try {
             $backup_dao = DAOFactory::getDAO('BackupDAO');
             if(isset($_GET['backup'])) {
@@ -91,6 +101,19 @@ class BackupController extends ThinkUpAdminController {
             $this->addErrorMessage($e->getMessage());
             return $this->generateView();
         }
+    }
+
+    /**
+     * Checks to see if we have zip support
+     * @returns boolean - true if we have zip support else false
+     */
+    public static function checkForZipSupport() {
+        //check for zip support
+        $zipsupport = false;
+        if (class_exists(self::$zip_class_req)) {
+            $zipsupport = true;
+        }
+        return $zipsupport;
     }
 
     /**
