@@ -52,6 +52,9 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         if(file_exists($this->backup_dir)) {
             unlink($this->backup_dir);
         }
+
+        //set zip class requirement class name back
+        BackupController::$zip_class_req = 'ZipArchive';
     }
 
     public function __construct() {
@@ -77,6 +80,14 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $controller = new BackupController(true);
         $this->expectException('Exception', 'You must be a ThinkUp admin to do this');
         $results = $controller->control();
+    }
+
+    public function testNoZipSupport() {
+        BackupController::$zip_class_req = 'NoSuchZipArchiveClass';
+        $this->simulateLogin('me@example.com', true);
+        $controller = new BackupController(true);
+        $results = $controller->control();
+        $this->assertPattern('/setup does not support a library/', $results);
     }
 
     public function testLoadBackupView() {
