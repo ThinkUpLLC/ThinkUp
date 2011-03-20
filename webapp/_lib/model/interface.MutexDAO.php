@@ -42,4 +42,17 @@ interface MutexDAO {
      */
     public function releaseMutex($name);
 
+    /**
+     * Determine if a mutex is free
+     * @param str $name
+     * @return bool
+     */
+    public function isMutexFree($name);
+
+    /**
+     * Determine if a mutex is in use.
+     * @param str $name
+     * @return bool
+     */
+    public function isMutexUsed($name);
 }

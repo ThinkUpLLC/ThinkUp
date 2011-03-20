@@ -19,39 +19,27 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
  * Test of MutexDAO
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
- *
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfMutexMySQLDAO extends ThinkUpUnitTestCase {
 
-    /**
-     * Constructor
-     * @return TestOfMutexMySQLDAO
-     */
     public function __construct() {
         $this->UnitTestCase('MutexMySQLDAO class test');
     }
 
-    /**
-     * Set Up
-     */
     public function setUp() {
         parent::setUp();
     }
 
-    /**
-     * Tear down
-     */
     public function tearDown() {
         parent::tearDown();
     }
@@ -71,14 +59,28 @@ class TestOfMutexMySQLDAO extends ThinkUpUnitTestCase {
         $mdao = DAOFactory::getDAO('MutexDAO');
         $lock_obtained = $mdao->getMutex('something');
         $this->assertTrue($lock_obtained);
+        $this->assertFalse($mdao->isMutexFree('something'));
+        $this->assertTrue($mdao->isMutexUsed('something'));
+
         $lock_obtained = $mdao->getMutex('something_else');
         $this->assertTrue($lock_obtained);
+        $this->assertFalse($mdao->isMutexFree('something_else'));
+        $this->assertTrue($mdao->isMutexUsed('something_else'));
+
         $lock_released = $mdao->releaseMutex('something_else');
         $this->assertTrue($lock_released);
+        $this->assertTrue($mdao->isMutexFree('something_else'));
+        $this->assertFalse($mdao->isMutexUsed('something_else'));
+
         // Lock for something is gone, since we locked something_else
+        $this->assertTrue($mdao->isMutexFree('something'));
+        $this->assertFalse($mdao->isMutexUsed('something'));
         $lock_released = $mdao->releaseMutex('something');
         $this->assertFalse($lock_released);
+
         // Lock for something_else was already released
+        $this->assertTrue($mdao->isMutexFree('something_else'));
+        $this->assertFalse($mdao->isMutexUsed('something_else'));
         $lock_released = $mdao->releaseMutex('something_else');
         $this->assertFalse($lock_released);
     }
