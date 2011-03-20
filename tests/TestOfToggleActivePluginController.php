@@ -101,4 +101,31 @@ class TestOfToggleActivePluginController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $this->assertEqual($results, 1);
     }
+
+    public function testBothParamsExistentInstanceDeactivateCallback() {
+        $webapp = Webapp::getInstance();
+        $webapp->registerPlugin('twitter', "TwitterPlugin");
+
+        //set up 2 active Twitter instances
+        $instance_builder_1 = FixtureBuilder::build('instances', array('network_username'=>'julie',
+        'network'=>'twitter', 'crawler_last_run'=>'-1d', 'is_activated'=>'1', 'is_public'=>'1'));
+        $instance_builder_2 = FixtureBuilder::build('instances', array('network_username'=>'john',
+        'network'=>'twitter', 'crawler_last_run'=>'-1d', 'is_activated'=>'1', 'is_public'=>'1'));
+
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $active_instances = $instance_dao->getAllInstances("DESC", true, "twitter");
+        $this->assertEqual(sizeof($active_instances), 2);
+
+        $this->simulateLogin('me@example.com', true);
+        $_GET['pid'] = '1';
+        $_GET['a'] = '0';
+        $controller = new ToggleActivePluginController(true);
+        $results = $controller->go();
+        $this->assertEqual($results, 1);
+        $this->debug($results);
+
+        //make sure the 2 active Twitter instances got deactivated
+        $active_instances = $instance_dao->getAllInstances("DESC", true, "twitter");
+        $this->assertEqual(sizeof($active_instances), 0);
+    }
 }

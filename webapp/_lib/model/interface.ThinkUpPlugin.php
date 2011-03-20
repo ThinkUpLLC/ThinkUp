@@ -34,4 +34,12 @@ interface ThinkUpPlugin {
      * @return str HTML markup of configuration panel
      */
     public function renderConfiguration($owner);
+    /**
+     * Activation callback, triggered when user deactivates plugin.
+     */
+    public function activate();
+    /**
+     * Deactivation callback, triggered when user deactivates plugin.
+     */
+    public function deactivate();
 }

@@ -82,7 +82,7 @@ class SmartyThinkUp extends Smarty {
 
         $this->assign('app_title', $app_title);
         $this->assign('site_root_path', $site_root_path);
-        $this->assign('logo_link', 'index.php');
+        $this->assign('logo_link', '');
     }
 
     /**

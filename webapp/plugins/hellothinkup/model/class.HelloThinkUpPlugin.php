@@ -29,6 +29,12 @@
  */
 class HelloThinkUpPlugin implements CrawlerPlugin, PostDetailPlugin {
 
+    public function activate() {
+    }
+
+    public function deactivate() {
+    }
+
     public function renderConfiguration($owner) {
         $controller = new HelloThinkUpPluginConfigurationController($owner, 'hellothinkup');
         return $controller->go();

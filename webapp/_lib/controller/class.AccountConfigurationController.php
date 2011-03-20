@@ -47,6 +47,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
         $this->addToView('owner', $owner);
+        $this->addToView('logo_link', '');
 
         //proces password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])

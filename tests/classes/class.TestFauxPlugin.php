@@ -28,6 +28,12 @@
  *
  */
 class TestFauxPlugin implements TestAppPlugin {
+    public function activate() {
+    }
+
+    public function deactivate() {
+    }
+
     /**
      * For testing purposes
      */

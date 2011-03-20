@@ -85,13 +85,12 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
     }
 
     public function getFreshestByOwnerId($owner_id) {
-        $q  = " SELECT i.* , ".$this->getAverageReplyCount();
-        $q .= " FROM #prefix#instances AS i ";
-        $q .= " INNER JOIN #prefix#owner_instances AS oi ";
-        $q .= " ON i.id = oi.instance_id ";
-        $q .= " WHERE oi.owner_id = :owner ";
-        $q .= " ORDER BY crawler_last_run DESC";
-        $q .= " LIMIT 1";
+        $q  = "SELECT i.* , ".$this->getAverageReplyCount()." ";
+        $q .= "FROM #prefix#instances AS i ";
+        $q .= "INNER JOIN #prefix#owner_instances AS oi ";
+        $q .= "ON i.id = oi.instance_id ";
+        $q .= "WHERE oi.owner_id = :owner AND i.is_active = 1 ";
+        $q .= "ORDER BY crawler_last_run DESC LIMIT 1";
         $vars = array(
             ':owner'=>$owner_id
         );

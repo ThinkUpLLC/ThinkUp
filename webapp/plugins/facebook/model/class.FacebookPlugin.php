@@ -27,6 +27,23 @@
  * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  */
 class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
+
+    public function activate() {
+    }
+
+    public function deactivate() {
+        //Pause all active Facebook user profile and page instances
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $facebook_instances = $instance_dao->getAllInstances("DESC", true, "facebook");
+        foreach ($facebook_instances as $ti) {
+            $instance_dao->setActive($ti->id, false);
+        }
+        $facebook_instances = $instance_dao->getAllInstances("DESC", true, "facebook page");
+        foreach ($facebook_instances as $ti) {
+            $instance_dao->setActive($ti->id, false);
+        }
+    }
+
     public function crawl() {
         $logger = Logger::getInstance();
         $config = Config::getInstance();

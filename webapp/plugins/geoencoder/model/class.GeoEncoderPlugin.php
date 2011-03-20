@@ -34,6 +34,13 @@
  */
 class GeoEncoderPlugin implements CrawlerPlugin, PostDetailPlugin {
 
+    public function activate() {
+    }
+
+    public function deactivate() {
+    }
+
+
     public function crawl() {
         $logger = Logger::getInstance();
         $logger->setUsername(null);

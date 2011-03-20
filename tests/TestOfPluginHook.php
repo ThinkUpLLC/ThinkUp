@@ -19,31 +19,29 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ * Test of PluginHook class
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2011 Gina Trapani
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
-/**
- * Test of PluginHook class
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfPluginHook extends ThinkUpBasicUnitTestCase {
 
     /**
      * Constructor
      */
-    function __construct() {
+    public function __construct() {
         $this->UnitTestCase('PluginHook class test');
     }
 
     /**
      * Test registerPlugin
      */
-    function testRegisterAndGetPlugin() {
+    public function testRegisterAndGetPlugin() {
         $test_ph = new TestFauxHookableApp();
         $test_ph->registerPlugin('facebook', "FacebookPlugin");
         $test_ph->registerPlugin('twitter', "TwitterPlugin");
@@ -56,7 +54,7 @@ class TestOfPluginHook extends ThinkUpBasicUnitTestCase {
     /**
      * Test getPluginObject
      */
-    function testGetPluginObjectDoesntExist() {
+    public function testGetPluginObjectDoesntExist() {
         $test_ph = new TestFauxHookableApp();
         $this->expectException( new Exception("No plugin object defined for: notregistered") );
         $plugin_obj = $test_ph->getPluginObject("notregistered");
@@ -66,7 +64,7 @@ class TestOfPluginHook extends ThinkUpBasicUnitTestCase {
      * Test registerPerformAppFunction and emit
      * @TODO Test for registering an object which does not exist; currently this causes a PHP fatal error
      */
-    function testRegisterPerformAppFunction() {
+    public function testRegisterPerformAppFunction() {
         //register first, should work
         $test_ph = new TestFauxHookableApp();
         $test_ph->registerPerformAppFunction('TestFauxPlugin');

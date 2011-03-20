@@ -25,6 +25,13 @@
  * @copyright 2009-2011 Gina Trapani
  */
 class EmbedThreadPlugin implements PostDetailPlugin {
+
+    public function activate() {
+    }
+
+    public function deactivate() {
+    }
+
     public function getPostDetailMenuItems($post){
         $data_tpl = Utils::getPluginViewDirectory('embedthread').'embedthread.inline.view.tpl';
         $menus = array();

@@ -110,7 +110,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'User Details: someuser1');
-        $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), 'index.php');
+        $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
 
         $this->assertEqual($controller->getCacheKeyString(),
         'user.index.tpl-me@example.com-someuser1-twitter-instancetestuser');

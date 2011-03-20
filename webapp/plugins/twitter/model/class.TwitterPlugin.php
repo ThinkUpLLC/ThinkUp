@@ -32,6 +32,18 @@
  */
 class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
 
+    public function activate() {
+    }
+
+    public function deactivate() {
+        //Pause all active Twitter instances
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $twitter_instances = $instance_dao->getAllInstances("DESC", true, "twitter");
+        foreach ($twitter_instances as $ti) {
+            $instance_dao->setActive($ti->id, false);
+        }
+    }
+
     public function crawl() {
         $config = Config::getInstance();
         $logger = Logger::getInstance();

@@ -7,7 +7,7 @@
         <ul id="top-level-sidenav"><br />
         {if $post}
           <ul class="side-subnav">
-          <li><a href="{$site_root_path}index.php?u={$selected_instance_username}&n={$selected_instance_network}">Dashboard</a></li>
+          <li><a href="{$site_root_path}index.php?u={$selected_instance_username}&n={$selected_instance_network|urlencode}">Dashboard</a></li>
           <li{if $smarty.get.v eq ''} class="currentview"{/if}><a href="index.php?t={$post->post_id}&n={$post->network}">Post Replies&nbsp;&nbsp;&nbsp;</a></li>
           {if $logged_in_user && $post->reply_count_cache && $post->reply_count_cache > 1}
             <li id="grid_search_icon"><a href="#" class="grid_search" title="Search" onclick="return false;"><span>Search & Filter Replies</span></a></li>

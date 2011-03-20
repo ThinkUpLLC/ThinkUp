@@ -29,6 +29,13 @@
  *
  */
 class ExpandURLsPlugin implements CrawlerPlugin {
+
+    public function activate() {
+    }
+
+    public function deactivate() {
+    }
+
     /**
      * Run when the crawler does
      */

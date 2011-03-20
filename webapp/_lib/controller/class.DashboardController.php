@@ -61,8 +61,8 @@ class DashboardController extends ThinkUpController {
                 ' should appear to users who are not logged in.');
             } else  {
                 $config = Config::getInstance();
-                $this->addInfoMessage('You have no accounts configured. <a href="'.$config->getValue('site_root_path').
-                'account/?p=twitter">Set up an account now&rarr;</a>');
+                $this->addInfoMessage('You have no services configured. <a href="'.$config->getValue('site_root_path').
+                'account/">Set up a service like Twitter or Facebook now&rarr;</a>');
             }
         }
         return $this->generateView();

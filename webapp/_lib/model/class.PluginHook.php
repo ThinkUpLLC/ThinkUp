@@ -71,12 +71,12 @@ abstract class PluginHook {
     }
 
     /**
-     * Register an object plugin name
+     * Register an object plugin name.
      * @param str $shortname Short name for plugin, corresponds to plugin folder name (like "twitter")
      * @param str $objectname Object name (like "TwitterPlugin")
      */
-    public function registerPlugin($shortname, $objectname) {
-        $this->plugins[$shortname] = $objectname;
+    public function registerPlugin($short_name, $object_name) {
+        $this->plugins[$short_name] = $object_name;
     }
 
     /**
@@ -91,4 +91,3 @@ abstract class PluginHook {
         return $this->plugins[$shortname];
     }
 }
-

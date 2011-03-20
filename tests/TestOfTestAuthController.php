@@ -19,12 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
  * Test TestAuthController class
  *
  * TestController isn't a real ThinkUp controller, this is just a template for all Controller tests.
@@ -32,6 +27,10 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfTestAuthController extends ThinkUpUnitTestCase {
     /**
      * Constructor
@@ -93,7 +92,7 @@ class TestOfTestAuthController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'ThinkUp');
 
         $this->assertEqual($results,
-        '<a href="/my/path/to/thinkup/index.php">ThinkUp</a>: Testing, testing, 123 | Logged in as me@example.com', 
+        '<a href="/my/path/to/thinkup/">ThinkUp</a>: Testing, testing, 123 | Logged in as me@example.com', 
         "auth controller output when logged in");
     }
 
