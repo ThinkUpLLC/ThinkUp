@@ -232,6 +232,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $pdao = DAOFactory::getDAO('PostDAO');
         $post = $pdao->getPost('13708601491193856', 'twitter');
+        // the xml <retweeted_status> for the original post (that 'amygdala' retweeted) includes a native
+        // <retweet_count> of 8. In our database we only have 1 of those RTs stored/processed.
+        $this->assertEqual($post->retweet_count_api, 8);
+        $this->assertEqual($post->retweet_count_cache, 1);        
+        $this->assertEqual($post->old_retweet_count_cache, 0);
         $retweets = $pdao->getRetweetsOfPost('13708601491193856', 'twitter', true);
         $this->assertEqual(sizeof($retweets), 1);
         $this->assertEqual($post->link->url, "http://is.gd/izUl5");
@@ -242,12 +247,14 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->link->url, "http://is.gd/izUl5");
 
         $tc->fetchInstanceUserMentions();
+        // old-style RT
         $post = $pdao->getPost('8957053141778432', 'twitter');
         $this->assertEqual($post->in_rt_of_user_id, 2768241);
         $this->assertEqual($post->in_retweet_of_post_id, '8927196122972160');
         $post_orig = $pdao->getPost('8927196122972160', 'twitter');
         $this->assertEqual($post_orig->old_retweet_count_cache, 1);
         $this->assertEqual($post_orig->retweet_count_cache, 0);
+        $this->assertEqual($post_orig->retweet_count_api, 0);
     }
 
     public function testFetchSearchResults() {
@@ -336,12 +343,19 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $builder = FixtureBuilder::build('posts', array('post_id'=>14947487415, 'author_user_id'=>930061,
         'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani', 'post_text'=>
         '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'pub_date'=>'-1d',
-        'reply_count_cache'=>1, 'old_retweet_count_cache'=>0, 'retweet_count_cache'=>3));
+        // start w/ the RT counts zeroed out, let the processing populate them
+        'reply_count_cache'=>1, 'old_retweet_count_cache'=>0, 'retweet_count_cache'=>0, 'retweet_count_api' => 0));
 
         $pdao = DAOFactory::getDAO('PostDAO');
         $tc->fetchRetweetsOfInstanceUser();
         $post = $pdao->getPost(14947487415, 'twitter');
-        $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets detected');
+        $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets from cache count');
+        // in processing the retweets of the post, if they contain a <retweeted_status> element pointing
+        // to the original post, and that original post information includes a retweet count, we will update the 
+        // original post in the db with that count.  In this test data that count is 2, 'behind' the database info.
+        $this->assertEqual($post->retweet_count_api, 2, '2 new-style retweets count from API');
+        // should not have processed any old-style retweets here
+        $this->assertEqual($post->old_retweet_count_cache, 0, '0 old-style retweets count from API');
         $retweets = $pdao->getRetweetsOfPost(14947487415, 'twitter', true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
 
@@ -353,6 +367,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchRetweetsOfInstanceUser();
         $post = $pdao->getPost(14947487415, 'twitter');
         $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets detected');
+        $this->assertEqual($post->retweet_count_api, 2, '2 new-style retweets count from API');
         $retweets = $pdao->getRetweetsOfPost(14947487415, 'twitter', true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
 
