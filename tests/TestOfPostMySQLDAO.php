@@ -109,11 +109,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             } else {
                 $source = 'web';
             }
+            // issue #813 -build more of a range of retweet_count_cache and old_retweet_count_cache values for the
+            // retweet testing.
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
             'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.
-            $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5, 'network'=>'twitter',
-            'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+            $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4),
+            'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
+            'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
             'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
             $counter++;
         }
@@ -409,21 +412,22 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetMostRetweetedPosts() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getMostRetweetedPosts(13, 'twitter', 10);
-        $prev_count = $posts[0]->retweet_count_cache;
+        // track the sum of retweet_count_cache and old_retweet_count_cache, which is the criteria
+        // by which this query should have been sorted.
+        // flip the logic in this first test clause as per issue #813.
+        $prev_count = $posts[0]->retweet_count_cache + $posts[0]->old_retweet_count_cache;
         foreach ($posts as $post) {
-            $this->assertTrue($post->retweet_count_cache >= $prev_count, "previous count ".$prev_count.
-            " should be less than or equal to this post's count of ".$post->retweet_count_cache);
-            $prev_count = $post->retweet_count_cache;
+            $this->assertTrue($post->retweet_count_cache + $post->old_retweet_count_cache <= $prev_count);
+            $prev_count = $post->retweet_count_cache + $post->old_retweet_count_cache;
         }
 
         // test paging
         $posts = $dao->getMostRetweetedPosts(13, 'twitter', $count = 1, $page = 1);
-        $prev_count = $posts[0]->retweet_count_cache;
+        $prev_count = $posts[0]->retweet_count_cache + $posts[0]->old_retweet_count_cache;
         for ($i = 2; $i <= 10; $i++) {
             $posts = $dao->getMostRetweetedPosts(13, 'twitter', $count = 1, $page = $i);
-            $this->assertTrue($posts[0]->retweet_count_cache <= $prev_count, "previous count ".$prev_count.
-            " should be less than or equal to this post's count of ".$posts[0]->retweet_count_cache);
-            $prev_count = $posts[0]->retweet_count_cache;
+            $this->assertTrue($posts[0]->retweet_count_cache + $posts[0]->old_retweet_count_cache <= $prev_count);
+            $prev_count = $posts[0]->retweet_count_cache + $posts[0]->old_retweet_count_cache;
         }
 
         // test count
@@ -1325,6 +1329,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->network, 'twitter');
         $this->assertEqual($post->reply_count_cache, 0);
         $this->assertEqual($post->retweet_count_cache, 0);
+        $this->assertEqual($post->retweet_count_api, 0);
+        $this->assertEqual($post->old_retweet_count_cache, 0);
         $this->assertEqual($post->in_reply_to_post_id, null);
         $this->assertFalse($post->is_reply_by_friend);
         $this->assertEqual($post->is_geo_encoded, 0);
@@ -1348,6 +1354,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($dao->addPost($vals), 1, "Retweet inserted");
         $post = $dao->getPost(128, 'twitter');
         $this->assertEqual($post->old_retweet_count_cache, 1, "old-style retweet count got updated");
+        $this->assertEqual($post->retweet_count_cache, 0);
+        $this->assertEqual($post->retweet_count_api, 0);
     }
 
     public function testAddPostNotProtected() {
@@ -1448,6 +1456,257 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $stmt = PostMySQLDAO::$PDO->query( "select * from " . $this->prefix . 'posts where post_id=1000' );
         $data = $stmt->fetch();
         $this->assertEqual($data['is_retweet_by_friend'], 1);
+    }
+
+    /**
+     * Test RT and RT count processing.  This test builds native RTs only, with the actual number in the database
+     * higher than the twitter max reporting threshold of 100.
+     * The $vals array is what would be generated from the xml parsing (or JSON parsing in the case of the streaming
+     * plugin). For a native RT it includes the original post as a sub-array.
+     * In processing a native RT'd post, the original should be added to the db if it is not there
+     * already.
+     */
+    public function testAddManyNativeRetweetsOfPost() {
+
+        $counter = 0;
+        $postbase = 100000;
+        $userbase = 1000;
+        $dao = new PostMySQLDAO();
+        while ($counter < 105) {
+            $vals = array();
+            $vals['post_id'] = $postbase + $counter;
+            $vals['author_user_id'] = $userbase + $counter;
+            $vals['user_id'] = $userbase + $counter;
+            $vals['author_username'] = "user" . $userbase + $counter;
+            $vals['user_name'] = "user" . $userbase + $counter;
+            $vals['author_fullname'] = "User " . $userbase + $counter;
+            $vals['full_name'] = "User " . $userbase + $counter;
+            $vals['author_avatar'] = 'http://a2.twimg.com/profile_images/1146326394/ears_crosshatch_normal.jpg';
+            $vals['avatar'] = 'http://a2.twimg.com/profile_images/1146326394/ears_crosshatch_normal.jpg';
+            $vals['location'] = 'Austin, TX';
+            $vals['description'] = 'this is a bio';
+            $vals['url'] = '';
+            $vals['is_protected'] = 0;
+            $vals['follower_count'] = 1000;
+            $vals['friend_count'] = 1000;
+            $vals['post_count'] = 2000;
+            $vals['joined'] = '2007-03-29 02:13:08';
+            $vals['post_text'] = "RT @user100: People in non-gender typical jobs judged " .
+              "more harshly for their mistakes. http://is.gd/izUl5";
+            $vals['pub_date'] = '2010-12-12 14:15:27';
+            $vals['favorites_count'] = 1500;
+            $vals['in_reply_to_post_id'] = '';
+            $vals['in_reply_to_user_id'] = '';
+            $vals['source'] = '<a href="http://twitter.com/" rel="nofollow">Twitter for iPhone</a>';
+            $vals['geo'] = '';
+            $vals['place'] = '';
+            $vals['network'] = 'twitter';
+            $vals['in_retweet_of_post_id'] = 13708601491193856;
+            $vals['in_rt_of_user_id'] = 20542737;
+
+            // for a native RT, the RT'd post info includes the original post
+            $retweeted_post = array();
+            $rtp = array();
+            $rtp['post_id'] = 13708601491193856;
+            $rtp['author_user_id'] = 20542737;
+            $rtp['user_id'] = 20542737;
+            $rtp['author_username']= 'user100';
+            $rtp['user_name']= 'user100';
+            $rtp['author_fullname'] = 'User 100';
+            $rtp['full_name'] = 'User 100';
+            $rtp['author_avatar'] = 'http://a3.twimg.com/profile_images/86835447/10947_normal.jpg';
+            $rtp['avatar']= 'http://a3.twimg.com/profile_images/86835447/10947_normal.jpg';
+            $rtp['location'] = 'San Jose, CA';
+            $rtp['description'] = '';
+            $rtp['url'] = '';
+            $rtp['is_protected'] = 0;
+            $rtp['follower_count'] = 3376;
+            $rtp['friend_count'] =248;
+            $rtp['post_count'] = 3681;
+            $rtp['joined'] = '2009-02-10 20:30:11';
+            $rtp['post_text'] = "People in non-gender typical jobs judged " .
+              "more harshly for their mistakes. http://is.gd/izUl5";
+            $rtp['pub_date'] = '2010-12-11 21:35:59';
+            $rtp['favorites_count'] = 2;
+            $rtp['in_reply_to_post_id'] = '';
+            $rtp['in_reply_to_user_id'] = '';
+            $rtp['source'] = '<a href="http://www.tweetdeck.com" rel="nofollow">TweetDeck</a>';
+            $rtp['geo'] = '';
+            $rtp['place'] = '';
+            $rtp['network'] = 'twitter';
+            $rtp['retweet_count_api'] = 100;
+
+            $retweeted_post['content'] = $rtp;
+            $vals['retweeted_post'] = $retweeted_post;
+            $dao->addPost($vals);
+            $counter++;
+        }
+        $post = $dao->getPost(13708601491193856, 'twitter');
+        $this->assertEqual($post->retweet_count_cache, 105);
+        $this->assertEqual($post->old_retweet_count_cache, 0);
+        $this->assertEqual($post->retweet_count_api, 100);
+        // this is the value displayed in the UI
+        $this->assertEqual($post->all_retweets, 105);
+        $this->assertEqual($post->rt_threshold, 0);
+
+    }
+
+    /**
+     * Test RT and RT count processing.
+     * in this test the API RT count is higher than the cached database count, and is maxed out at threshold.
+     * This test includes 2 old-style RTs as well as native RTs.
+     */
+    public function testAddManyNativeRetweetsOfPost2() {
+
+        $counter = 0;
+        $postbase = 100000;
+        $userbase = 1000;
+        $dao = new PostMySQLDAO();
+        while ($counter < 10) {
+            $vals = array();
+            $vals['post_id'] = $postbase + $counter;
+            $vals['author_user_id'] = $userbase + $counter;
+            $vals['user_id'] = $userbase + $counter;
+            $vals['author_username'] = "user" . $userbase + $counter;
+            $vals['user_name'] = "user" . $userbase + $counter;
+            $vals['author_fullname'] = "User " . $userbase + $counter;
+            $vals['full_name'] = "User " . $userbase + $counter;
+            $vals['author_avatar'] = 'http://a2.twimg.com/profile_images/1146326394/ears_crosshatch_normal.jpg';
+            $vals['avatar'] = 'http://a2.twimg.com/profile_images/1146326394/ears_crosshatch_normal.jpg';
+            $vals['location'] = 'Austin, TX';
+            $vals['description'] = 'this is a bio';
+            $vals['url'] = '';
+            $vals['is_protected'] = 0;
+            $vals['follower_count'] = 1000;
+            $vals['friend_count'] = 1000;
+            $vals['post_count'] = 2000;
+            $vals['joined'] = '2007-03-29 02:13:08';
+            $vals['post_text'] = "RT @user100: People in non-gender typical jobs judged " .
+              "more harshly for their mistakes. http://is.gd/izUl5";
+            $vals['pub_date'] = '2010-12-12 14:15:27';
+            $vals['favorites_count'] = 1500;
+            $vals['in_reply_to_post_id'] = '';
+            $vals['in_reply_to_user_id'] = '';
+            $vals['source'] = '<a href="http://twitter.com/" rel="nofollow">Twitter for iPhone</a>';
+            $vals['geo'] = '';
+            $vals['place'] = '';
+            $vals['network'] = 'twitter';
+            $vals['in_retweet_of_post_id'] = 13708601491193856;
+            $vals['in_rt_of_user_id'] = 20542737;
+
+            // for a native RT, the RT'd post info includes the original post
+            $retweeted_post = array();
+            $rtp = array();
+            $rtp['post_id'] = 13708601491193856;
+            $rtp['author_user_id'] = 20542737;
+            $rtp['user_id'] = 20542737;
+            $rtp['author_username']= 'user100';
+            $rtp['user_name']= 'user100';
+            $rtp['author_fullname'] = 'User 100';
+            $rtp['full_name'] = 'User 100';
+            $rtp['author_avatar'] = 'http://a3.twimg.com/profile_images/86835447/10947_normal.jpg';
+            $rtp['avatar']= 'http://a3.twimg.com/profile_images/86835447/10947_normal.jpg';
+            $rtp['location'] = 'San Jose, CA';
+            $rtp['description'] = '';
+            $rtp['url'] = '';
+            $rtp['is_protected'] = 0;
+            $rtp['follower_count'] = 3376;
+            $rtp['friend_count'] =248;
+            $rtp['post_count'] = 3681;
+            $rtp['joined'] = '2009-02-10 20:30:11';
+            $rtp['post_text'] = "People in non-gender typical jobs judged " .
+              "more harshly for their mistakes. http://is.gd/izUl5";
+            $rtp['pub_date'] = '2010-12-11 21:35:59';
+            $rtp['favorites_count'] = 2;
+            $rtp['in_reply_to_post_id'] = '';
+            $rtp['in_reply_to_user_id'] = '';
+            $rtp['source'] = '<a href="http://www.tweetdeck.com" rel="nofollow">TweetDeck</a>';
+            $rtp['geo'] = '';
+            $rtp['place'] = '';
+            $rtp['network'] = 'twitter';
+            $rtp['retweet_count_api'] = 100;
+
+            $retweeted_post['content'] = $rtp;
+            $vals['retweeted_post'] = $retweeted_post;
+            $dao->addPost($vals);
+            $counter++;
+        }
+        // now add a couple of non-native RTs.
+        $vals = array();
+        $vals['post_id'] = $postbase + $counter;
+        $vals['author_user_id'] = $userbase + $counter;
+        $vals['user_id'] = $userbase + $counter;
+        $vals['author_username'] = "user" . $userbase + $counter;
+        $vals['user_name'] = "user" . $userbase + $counter;
+        $vals['author_fullname'] = "User " . $userbase + $counter;
+        $vals['full_name'] = "User " . $userbase + $counter;
+        $vals['author_avatar'] = 'http://a2.twimg.com/profile_images/1146326394/ears_crosshatch_normal.jpg';
+        $vals['avatar'] = 'http://a2.twimg.com/profile_images/1146326394/ears_crosshatch_normal.jpg';
+        $vals['location'] = 'Austin, TX';
+        $vals['description'] = 'this is a bio';
+        $vals['url'] = '';
+        $vals['is_protected'] = 0;
+        $vals['follower_count'] = 1000;
+        $vals['friend_count'] = 1000;
+        $vals['post_count'] = 2000;
+        $vals['joined'] = '2007-03-29 02:13:08';
+        $vals['post_text'] = "RT @user100: People in non-gender typical jobs judged " .
+          "more harshly for their mistakes. http://is.gd/izUl5";
+        $vals['pub_date'] = '2010-12-12 14:15:27';
+        $vals['favorites_count'] = 1500;
+        $vals['in_reply_to_post_id'] = '';
+        $vals['in_reply_to_user_id'] = '';
+        $vals['source'] = '<a href="http://twitter.com/" rel="nofollow">Twitter for iPhone</a>';
+        $vals['geo'] = '';
+        $vals['place'] = '';
+        $vals['network'] = 'twitter';
+        $vals['in_retweet_of_post_id'] = 13708601491193856;
+        $vals['in_rt_of_user_id'] = 20542737;
+        $dao->addPost($vals);
+        $counter++;
+
+        $vals = array();
+        $vals['post_id'] = $postbase + $counter;
+        $vals['author_user_id'] = $userbase + $counter;
+        $vals['user_id'] = $userbase + $counter;
+        $vals['author_username'] = "user" . $userbase + $counter;
+        $vals['user_name'] = "user" . $userbase + $counter;
+        $vals['author_fullname'] = "User " . $userbase + $counter;
+        $vals['full_name'] = "User " . $userbase + $counter;
+        $vals['author_avatar'] = 'http://a2.twimg.com/profile_images/1146326394/ears_crosshatch_normal.jpg';
+        $vals['avatar'] = 'http://a2.twimg.com/profile_images/1146326394/ears_crosshatch_normal.jpg';
+        $vals['location'] = 'Austin, TX';
+        $vals['description'] = 'this is a bio';
+        $vals['url'] = '';
+        $vals['is_protected'] = 0;
+        $vals['follower_count'] = 1000;
+        $vals['friend_count'] = 1000;
+        $vals['post_count'] = 2000;
+        $vals['joined'] = '2007-03-29 02:13:08';
+        $vals['post_text'] = "RT @user100: People in non-gender typical jobs judged " .
+          "more harshly for their mistakes. http://is.gd/izUl5";
+        $vals['pub_date'] = '2010-12-12 14:15:27';
+        $vals['favorites_count'] = 1500;
+        $vals['in_reply_to_post_id'] = '';
+        $vals['in_reply_to_user_id'] = '';
+        $vals['source'] = '<a href="http://twitter.com/" rel="nofollow">Twitter for iPhone</a>';
+        $vals['geo'] = '';
+        $vals['place'] = '';
+        $vals['network'] = 'twitter';
+        $vals['in_retweet_of_post_id'] = 13708601491193856;
+        $vals['in_rt_of_user_id'] = 20542737;
+        $dao->addPost($vals);
+        $counter++;
+
+        $post = $dao->getPost(13708601491193856, 'twitter');
+        $this->assertEqual($post->retweet_count_cache, 10);
+        $this->assertEqual($post->old_retweet_count_cache, 2);
+        $this->assertEqual($post->retweet_count_api, 100);
+        // this is the value displayed in the UI-- the sum should be the higher reported value from twitter
+        // for the native RTs, plus the old-style rt count.
+        $this->assertEqual($post->all_retweets, 102);
+        $this->assertEqual($post->rt_threshold, 1);
+
     }
 
     /**
@@ -1600,7 +1859,9 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'author_user_id'=>23,
             'author_username'=>'user3',
             'pub_date'=>'-'.$counter.'d',
-            'retweet_count_cache'=>$counter));
+            'retweet_count_cache'=>$counter,
+            'old_retweet_count_cache' => floor($counter/2)
+            ));
             $counter++;
         }
         $pdao = new PostMySQLDAO();
@@ -1608,9 +1869,60 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($posts), 5);
         $this->assertEqual($posts[0]->retweet_count_cache, 7);
         $this->assertEqual($posts[1]->retweet_count_cache, 6);
+        $this->assertTrue(($posts[0]->retweet_count_cache + $posts[0]->old_retweet_count_cache) >=
+        ($posts[1]->retweet_count_cache + $posts[1]->old_retweet_count_cache));
 
         $posts = $pdao->getMostRetweetedPostsInLastWeek('user2', 'twitter', 5);
         $this->assertEqual(sizeof($posts), 0);
+    }
+
+    /**
+     * test that the non-persistent RT-related fields are getting populated properly as the
+     * Post objects are constructed.
+     */
+    public function testPostRetweetFields() {
+        $counter = 0;
+        $id = 1500;
+        $builders = array();
+        $pdao = new PostMySQLDAO();
+
+        $builders[] = FixtureBuilder::build('posts', array(
+        'id'=>$id,
+        'post_id'=>$id++,
+        'author_user_id'=>23,
+        'author_username'=>'user3',
+        'retweet_count_cache'=>150,
+        'retweet_count_api' => 100,
+        'old_retweet_count_cache' => 5
+        ));
+        $builders[] = FixtureBuilder::build('posts', array(
+        'id'=>$id,
+        'post_id'=>$id++,
+        'author_user_id'=>23,
+        'author_username'=>'user3',
+        'retweet_count_cache'=>90,
+        'retweet_count_api' => 92,
+        'old_retweet_count_cache' => 5
+        ));
+        $builders[] = FixtureBuilder::build('posts', array(
+        'id'=>$id,
+        'post_id'=>$id++,
+        'author_user_id'=>23,
+        'author_username'=>'user3',
+        'retweet_count_cache'=>90,
+        'retweet_count_api' => 100,
+        'old_retweet_count_cache' => 5
+        ));
+
+        $post = $pdao->getPost(1500, 'twitter');
+        $this->assertEqual($post->rt_threshold, 0);
+        $this->assertEqual($post->all_retweets, 155);
+        $post = $pdao->getPost(1501, 'twitter');
+        $this->assertEqual($post->rt_threshold, 0);
+        $this->assertEqual($post->all_retweets, 97);
+        $post = $pdao->getPost(1502, 'twitter');
+        $this->assertEqual($post->rt_threshold, 1);
+        $this->assertEqual($post->all_retweets, 105);
     }
 
     /**

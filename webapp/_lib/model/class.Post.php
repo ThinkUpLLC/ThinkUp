@@ -136,8 +136,14 @@ class Post {
     /**
      *
      * @var int
+     * The retweet count from the database
      */
     var $retweet_count_cache;
+    /**
+     * @var int
+     * the retweet count reported from twitter.com
+     */
+    var $retweet_count_api;
     /**
      * @var int
      */
@@ -213,6 +219,7 @@ class Post {
         $this->in_retweet_of_post_id = $val["in_retweet_of_post_id"];
         $this->in_rt_of_user_id = $val["in_rt_of_user_id"];
         $this->retweet_count_cache = $val["retweet_count_cache"];
+        $this->retweet_count_api = $val["retweet_count_api"];
         $this->old_retweet_count_cache = $val["old_retweet_count_cache"];
         $this->reply_retweet_distance = $val["reply_retweet_distance"];
         $this->is_geo_encoded = $val["is_geo_encoded"];
@@ -228,17 +235,22 @@ class Post {
         if (isset($val["favorited"])) {
             $this->favorited = $val["favorited"];
         }
-        // non-persistent, sum of two persistent values, used for UI information display
-        $this->all_retweets = $val['old_retweet_count_cache'] + $val['retweet_count_cache'];
-        if ($val['retweet_count_cache'] >= self::TWITTER_RT_THRESHOLD) {
-            // if the new RT count, obtained from twitter, has maxed out, set a non-persistent flag field
-            // to indicate this. The templates will make use of this info to add a '+' after the sum if the
-            // flag is set.
-            $this->rt_threshold = 1;
+        // For the retweet count display, we will use the larger of retweet_count_cache and retweet_count_api,
+        // and add it to old_retweet_count_cache.
+        $largest_native_RT_count = $val['retweet_count_cache'];
+        $this->rt_threshold = 0;
+        // if twitter's reported count is larger, use that
+        if ($val['retweet_count_api'] > $val['retweet_count_cache']) {
+            $largest_native_RT_count = $val['retweet_count_api'];
+            if ($largest_native_RT_count >= self::TWITTER_RT_THRESHOLD ) {
+                // if the new RT count, obtained from twitter, has maxed out, set a non-persistent flag field
+                // to indicate this. The templates will make use of this info to add a '+' after the sum if the
+                // flag is set.
+                $this->rt_threshold = 1;
+            }
         }
-        else {
-            $this->rt_threshold = 0;
-        }
+        // non-persistent, used for UI information display
+        $this->all_retweets = $val['old_retweet_count_cache'] + $largest_native_RT_count;
     }
 
     /**

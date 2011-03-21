@@ -653,6 +653,7 @@ class PostAPIController extends ThinkUpController {
          */
         $post->thinkup = new stdClass();
         $post->thinkup->retweet_count_cache = $post->retweet_count_cache;
+        $post->thinkup->retweet_count_api = $post->retweet_count_api;
         $post->thinkup->reply_count_cache = $post->reply_count_cache;
         $post->thinkup->old_retweet_count_cache = $post->old_retweet_count_cache;
         $post->thinkup->is_geo_encoded = $post->is_geo_encoded;
