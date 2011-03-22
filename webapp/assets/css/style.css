@@ -1,13 +1,17 @@
+/* RESETS 
+==============================*/
 html {background: #E6E6E6;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
 a, a:link, a:visited {text-decoration: none;color: #416A93;outline: none;}
-a:hover {text-decoration : none;color : red;}
+a:hover {text-decoration: none;color: #6eac2c;}
 /*a:visited {color : black;text-decoration: underline;}*/
 
-.bt {border-top: 1px solid #333;}
-.br {border-right: 1px solid #333;}
-.bb {border-bottom: 1px solid #333;}
-.bl {border-left: 1px solid #333;}
-.border-all {border: 1px solid #333;}
+/* BORDERS
+==============================*/
+.bt {border-top: 1px solid #CCC;}
+.br {border-right: 1px solid #CCC;}
+.bb {border-bottom: 1px solid #CCC;}
+.bl {border-left: 1px solid #CCC;}
+.border-all {border: 1px solid #CCC;}
 
 .round-tl {-moz-border-radius-topleft: 10px;-webkit-border-top-left-radius: 10px;}
 .round-tr {-moz-border-radius-topright: 10px;-webkit-border-top-right-radius: 10px;}
@@ -15,8 +19,25 @@ a:hover {text-decoration : none;color : red;}
 .round-bl {-moz-border-radius-bottomleft: 10px;-webkit-border-bottom-left-radius: 10px;}
 .round-all {-moz-border-radius: 10px;-webkit-border-radius: 10px}
 
-.padding {padding:1em;}
+/* SPACING, PADDING
+==============================*/
+.padding {padding:1em}
+.pt {padding-top:1em}
+.pr {padding-right:1em}
+.pb {padding-bottom:1em}
+.pl {padding-left:1em}
+.mt_10 {margin-top:10px}
+.mr_10 {margin-right:10px}
+.mb_10 {margin-bottom:10px}
+.ml_10 {margin-left:10px}
 
+.append {padding-bottom:10px}
+.prepend {padding-top:10px}
+.append_20 {padding-bottom:20px}
+.prepend_20 {padding-top:20px}
+
+/* WEIGHTS, COLORS, SIZES
+==============================*/
 .bold {font-weight:700}
 .gray {color: #666;}
 
@@ -25,8 +46,71 @@ a:hover {text-decoration : none;color : red;}
 .x-large {font-size: 3em;}
 .underline {text-decoration:underline;}
 
+.lh_1 {line-height:1em;}
+
+
+/* GRAPHICS AND ICONS 
+==============================*/
+.ui-icon, .sprite {display: inline-block !important;}
+
+/* LISTS
+==============================*/
 ul.user-accounts li {padding-bottom:.5em;list-style-position: inside;}
 ul.user-accounts li ul li {margin-left:2em;}
+
+/* WIREFRAME, POSITIONING ELEMENTS
+======================= */
+#content {margin:0;padding:0;}
+.container {padding:0px;width:960px;margin: 0 auto;}
+.top {position:relative;top-20px;}
+.thinkup-canvas {background-color: #FFF;}
+#tweets_content, #mentions_content, #followers_content, #friends_content, #favorites_content, #links_content {position:relative;top:-40px;}
+
+#hd, #ft {padding : 20px 20px 20px 0px;}
+#yui-main .yui-g {/*margin-left : 50px;width : 600px;*/width:960px;margin:0 auto;}
+#bd {text-align:left;width:960px;margin:0 auto;}
+
+.left {text-align:left}
+.right {text-align:right}
+.center {text-align:center}
+.float-l {float:left;}
+.float-r {float:right;}
+.inline {display:inline;}
+
+
+h4.trigger {position:relative; margin:0 auto !important; width:65px; margin-top:-45px !important; margin-bottom:50px !important; padding:0 !important;}
+h4.trigger a:link, h4.trigger a:visited {font-size:.8em;color:#9D9C9C;font-weight:500;text-decoration:underline;}
+h4.trigger a:hover {color:#222}
+h4.trigger a:active {border:none}
+
+/* TOOLTIPS
+==============================*/
+/* tooltip styling */
+.tooltip {
+	display:none;
+	/*background-color: #000;*/
+	height:140px;
+	padding:70px 30px 10px 30px;
+	width:310px;
+	font-size:14px;
+	color:#FFF;
+	z-index:999;
+	font-weight:bold;
+}
+
+/* a .label element inside tooltip */
+.tooltip .label {
+	color:#FFF;
+	width:35px;
+	text-align:right;
+	padding-right:4px;
+	font-weight:normal;
+}
+
+.tooltip a {
+	color:#6eac2c;
+	font-size:14px;
+}
 
 /* TABS, MENUS, NAVIGATION, STATUS BAR, ETC 
 ==============================*/
@@ -154,7 +238,7 @@ text-align: center;
 
 /* Sidebar */
 
-#nav-sidebar {background-color:white; padding-left: 8px;}
+#nav-sidebar {background-color:#e6e6e6; padding-left: 8px;}
 #nav-sidebar h2 {padding-bottom: 10px; padding-top:20px; color: black;font-size: medium;}
 #nav-sidebar h2 a {color : black;}
 #nav-sidebar {font-size: small; color: #999;}
@@ -170,19 +254,22 @@ text-align: center;
 }
 #nav-sidebar ul.side-subnav li a:hover {
 	background-color: #6184B5;
-	-moz-border-radius: 3px;-webkit-border-radius: 3px;
 	border: 0px solid #ddd;
+-moz-border-radius-topleft: 5px;
+-webkit-border-top-left-radius: 5px;
+-moz-border-radius-bottomleft: 5px;
+-webkit-border-bottom-left-radius: 5px;
 }
 #nav-sidebar ul.side-subnav li a:hover {color: white;}
 #top-level-sidenav {margin-top:7px}
 #nav-sidebar ul.side-subnav .currentview a, #nav-sidebar ul.side-subnav .currentview a:hover {
   color: #6184B5;
-  background-color: #E6E6E6;
-  -moz-border-radius: 3px;-webkit-border-radius: 3px;
-  background-color: #e6e6e6;
-  background: -moz-linear-gradient(top, #FFFFFF, #E6E6E6);  
-  background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#E6E6E6));  
+  background-color: #FFF;
   border: 0px solid #ddd;
+-moz-border-radius-topleft: 5px;
+-webkit-border-top-left-radius: 5px;
+-moz-border-radius-bottomleft: 5px;
+-webkit-border-bottom-left-radius: 5px;
 }
 
 ,post-replies-div {
@@ -193,6 +280,7 @@ text-align: center;
 
 .word-frequency-div {
 	clear : both;
+	margin-top:20px;
 }
 
 .word-frequency-div div {

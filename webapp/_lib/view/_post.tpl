@@ -1,8 +1,8 @@
 {if $smarty.foreach.foo.first}
   <div class="header clearfix">
-    <div class="grid_1 alpha">&#160;</div>
-    <div class="grid_3 right">name</div>
-    <div class="grid_12">post</div>
+    <div class="grid_2 alpha">&#160;</div>
+    <div class="grid_3">&#160;</div>
+    <div class="grid_9">&#160;</div>
     <div class="grid_2 center">
       {if $t->network eq 'twitter'}retweets{/if}
     </div>
@@ -14,13 +14,15 @@
 
 <div class="clearfix">
 <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
-    <div class="grid_1 alpha">
-      <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
-      {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
-         <div class="small gray">Friend</div>
-      {/if}
+    <div class="grid_2 alpha">
+      <div class="avatar-container">
+        <a href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+        {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
+           <div class="small gray">Friend</div>
+        {/if}
+      </div>
     </div>
-    <div class="grid_3 right small">
+    <div class="grid_3 small">
       {if $t->network == 'twitter' && $username_link != 'internal'}
       <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
       href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
@@ -33,7 +35,7 @@
         <div class="small gray">{$t->author->follower_count|number_format} followers</div>
       {/if}
         </div>
-    <div class="grid_12">
+    <div class="grid_9">
       {if $t->link->is_image}
         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
       {/if}
@@ -52,32 +54,36 @@
           <span class="no-post-text">No post text</span>
         {/if}
         {if !$post && $t->in_reply_to_post_id }
-          <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}">&larr;</a>
+          <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
       {if $t->link->expanded_url and !$t->link->is_image and ($t->link->expanded_url != $t->link->url)}
-        <small>
+        <span class="small">
           <a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a>
-        </small>
+        </span><br>
+      {else}
+        <br>
       {/if}
-      <div class="small gray">
+      <span class="small gray">
        <span class="metaroll">
-        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
-        {if $t->is_geo_encoded < 2}
-        {if $show_distance}
-            {if $unit eq 'km'}
-              {$t->reply_retweet_distance|number_format} kms away
-              {else}
-              {$t->reply_retweet_distance|number_format} miles away in 
+          <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
+          {if $t->is_geo_encoded < 2}
+            {if $show_distance}
+                {if $unit eq 'km'}
+                  {$t->reply_retweet_distance|number_format} kms away
+                  {else}
+                  {$t->reply_retweet_distance|number_format} miles away in 
+                {/if}
             {/if}
-        {/if}
-        {$t->location|truncate:60:' ...'}
-       {/if}
-        {if $t->network == 'twitter'}
-         - <a href="http://twitter.com/intent/tweet?in_reply_to={$t->post_id}">Reply</a>
-         - <a href="http://twitter.com/intent/retweet?tweet_id={$t->post_id}">Retweet</a>
-         - <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}">Favorite</a>
-        {/if}
-       </span>&nbsp;</div>
+           from {$t->location|truncate:60:' ...'}
+          {/if}
+          {if $t->network == 'twitter'}
+          <a href="http://twitter.com/intent/tweet?in_reply_to={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
+          <a href="http://twitter.com/intent/retweet?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
+          <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
+          {/if}
+       </span><br>&nbsp;
+      </span>
+ 
       </div>
     </div>
     <div class="grid_2 center">

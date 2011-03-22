@@ -2,7 +2,7 @@
 
 {if $smarty.foreach.foo.first}
   <div class="header clearfix">
-    <div class="grid_14">post</div>
+    <div class="grid_14 alpha">&#160;</div>
     <div class="grid_2 center">
       {if $t->network eq 'twitter'}retweets{/if}
     </div>
@@ -30,23 +30,23 @@
           <span class="no-post-text">No post text</span>
         {/if}
         {if !$post && $t->in_reply_to_post_id }
-          <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}">&larr;</a>
+          <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
       {if $t->link->expanded_url and !$t->link->is_image and ($t->link->expanded_url != $t->link->url)}
-        <small>
+        <span class="small">
           <a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a>
-        </small>
+        </span>
       {/if}
       <div class="small gray">
         <span class="metaroll">
         <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
         {if $t->is_geo_encoded < 2}
-        {$t->location|truncate:60:' ...'}
+        from {$t->location|truncate:60:' ...'}
        {/if}
         {if $t->network == 'twitter'}
-         - <a href="http://twitter.com/intent/tweet?in_reply_to={$t->post_id}">Reply</a>
-         - <a href="http://twitter.com/intent/retweet?tweet_id={$t->post_id}">Retweet</a>
-         - <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}">Favorite</a>
+        <a href="http://twitter.com/intent/tweet?in_reply_to={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
+        <a href="http://twitter.com/intent/retweet?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
+        <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
         {/if}
       </span>&nbsp;</div>
       </div><!--end post-->

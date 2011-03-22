@@ -168,7 +168,7 @@ class DashboardController extends ThinkUpController {
             //follows
             $follow_dao = DAOFactory::getDAO('FollowDAO');
             $least_likely_followers = $follow_dao->getLeastLikelyFollowers($this->instance->network_user_id, 'twitter',
-            14);
+            12);
             $this->addToView('least_likely_followers', $least_likely_followers);
 
             //follower count history

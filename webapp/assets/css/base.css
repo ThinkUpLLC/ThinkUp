@@ -259,16 +259,16 @@ are in place to stop long URLs or words from overflowing. */
 
 /* --- CONTENT -------------------------------- */
 
-.post {padding:5px 0;padding-top:5px;} /* border-top:1px solid #CCC; */
+.post {} /* border-top:1px solid #CCC; */
 .tweet {font-size:1.6em;line-height:1.1em;}
-.individual-tweet {padding:0; solid #CCC;} /* border-top:1px */
-.individual-tweet a:link, .individual-tweet a:visited {color:#0060E0;text-decoration:none;}
-.individual-tweet a:hover {color:#F00;text-decoration:underline;}
+.individual-tweet {padding:0; line-height:1.2em;} /* border-top:1px solid #CCC;*/
+.individual-tweet a:link, .individual-tweet a:visited {text-decoration:none;}
+.individual-tweet a:hover {text-decoration:underline;}
 .individual-tweet p {}
 .individual-tweet ul {margin:10px 0 0 5px;padding-left:10px;}
 .individual-tweet li {font-size:0.8em;}
 .reply {border-top:1px dashed #CCC;}
-.private {background-color:#eee;}
+.private {background-color:#FFF;}
 .person-info {float:left;margin-right:10px;width:80px;text-align:center;font-size:1.2em;}
 .no-post-text {font-style: italic;color: #666;}
 
@@ -318,9 +318,15 @@ img.service-icon2 {left: 32px;}
 #loading_friends,
 #loading_links {visibility:hidden;position:relative;top:-5px;}
 
+.icon-friend {background-position: -144px -96px;}
+.icon-locked {background-position: -192px -96px;}
+.icon-unlocked {background-position: -208px -96px;}
+.sprite {background-image: url("../img/ui-icons_222222_256x240.png");height: 16px;width: 16px;}
+.sprite {background-repeat: no-repeat;display: block;overflow: hidden;text-indent: -99999px;}
+
 /* --- NUMBERS -------------------------------- */
 
-#keystats {padding:5px;font-size:medium;display:none;}
+#keystats {padding:5px;font-size:medium;}
 .big-number {color:#000;font-size:1.7em;line-height:1.8em;}
 .big-number h1 {font-size:2.7em;font-weight:700;letter-spacing:-4px;padding:0;margin:0;}
 .big-number h3 {color:#666;font-size:0.8em;}
@@ -350,11 +356,13 @@ line-height:1.8em;
 }
 
 .dashboard-header {
-	-moz-border-radius: 3px;-webkit-border-radius: 3px;
-	/* background-color: #e6e6e6; */
+	/* 
+	-moz-border-radius: 5px;-webkit-border-radius: 5px;
+	background-color: #e6e6e6; 
+	border: 1px solid #ddd;
+	*/
 	background: -moz-linear-gradient(top, #FFFFFF, #E6E6E6);  
 	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#E6E6E6));  
-	border: 1px solid #ddd;
 	padding : 10px 10px 14px 20px;
 	margin-bottom : 20px;
 }

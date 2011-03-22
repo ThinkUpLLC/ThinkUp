@@ -4,8 +4,8 @@
 var TUGridSearch = function() {
 
     /**
-     * @var boolean Enable for console logging
-     */
+	 * @var boolean Enable for console logging
+	 */
     this.DEBUG = false;
 
     this.searchString = "";
@@ -19,8 +19,8 @@ var TUGridSearch = function() {
     };
 
     /**
-     * Init grid search
-     */
+	 * Init grid search
+	 */
     this.init = function() {
         // register on submit event on our form
         $(document).ready(function() {
@@ -34,13 +34,13 @@ var TUGridSearch = function() {
                 tu_grid_search.close_iframe();
             });
         });
-        //tu_grid_search.load_iframe();
+        // tu_grid_search.load_iframe();
     }
 
     /**
-     * @param Object
-     *            {success: true|false, posts: [a posts array]};
-     */
+	 * @param Object
+	 *            {success: true|false, posts: [a posts array]};
+	 */
     this.populate_grid = function(obj) {
         if (tu_grid_search.DEBUG) { console.debug(obj.posts.length + ' posts'); }
         $('#grid_search_icon').show();
@@ -127,8 +127,8 @@ var TUGridSearch = function() {
     }
 
     /**
-     * search filter
-     */
+	 * search filter
+	 */
     this.myFilter = function (item) {
         if(item['id'] == -1 || item['text'] == null) { return false; }
         if (tu_grid_search.searchString != "" && item["text"].toLowerCase().indexOf(tu_grid_search.searchString.toLowerCase()) == -1) {
@@ -139,8 +139,8 @@ var TUGridSearch = function() {
     }
 
     /**
-     * 
-     */
+	 * 
+	 */
     this.load_iframe = function() {
 
         // close grid search with escape key
@@ -154,7 +154,8 @@ var TUGridSearch = function() {
             window.scroll(0,0);
             $('#screen').css({ opacity: 0.7, "width":$(document).width(),"height":$(document).height()});
         } else {
-            $('#post_replies').hide();
+            $('#post-replies-div').hide();
+            $('#word-frequency-div').hide();
         }
         var fade = (GRID_TYPE==1) ? 500 : 1;
         $('#screen').fadeIn(fade, function() {
@@ -176,8 +177,8 @@ var TUGridSearch = function() {
         });
     }
     /**
-     * 
-     */
+	 * 
+	 */
     this.close_iframe = function() {
         var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
         $('#grid_iframe').attr('src', path + '/assets/img/ui-bg_glass_65_ffffff_1x400.png');
@@ -186,14 +187,15 @@ var TUGridSearch = function() {
         if(GRID_TYPE==1) {
             $('#screen').fadeOut(500);
         } else {
-            $('#post_replies').show();
+            $('#post-replies-div').show();
+            $('#word-frequency-div').show();
         }
         $(document).unbind('keyup', this.keyup);
     }
     
     /**
-     * load xss script ewith post data callback
-     */
+	 * load xss script ewith post data callback
+	 */
     this.get_data = function() {
         $('#myGrid').hide();
         var url = '../../post/grid.php' + document.location.search;

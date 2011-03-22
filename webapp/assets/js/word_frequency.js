@@ -126,7 +126,7 @@ var TUWordFrequency = function() {
      */
     this.close = function() {
         $('#word-frequency-posts-div').hide();
-        $('#post_replies').show();
+        $('#post-replies-div').show();
         $('#word-frequency-close').hide();
     }
 
@@ -196,7 +196,7 @@ var TUWordFrequency = function() {
                     $('#word-frequency-posts').append(post);
                 }
                 $('#word-frequency-posts-div').show();
-                $('#post_replies').hide();
+                $('#post-replies-div').hide();
                 $('#word-frequency-close').show();
             });
         });
