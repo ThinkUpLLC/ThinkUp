@@ -259,11 +259,11 @@ are in place to stop long URLs or words from overflowing. */
 
 /* --- CONTENT -------------------------------- */
 
-.post {padding:5px 0;padding-top:5px;} /* border-top:1px solid #CCC; */
+.post {} /* border-top:1px solid #CCC; */
 .tweet {font-size:1.6em;line-height:1.1em;}
 .individual-tweet {padding:0; solid #CCC;} /* border-top:1px */
-.individual-tweet a:link, .individual-tweet a:visited {color:#0060E0;text-decoration:none;}
-.individual-tweet a:hover {color:#F00;text-decoration:underline;}
+.individual-tweet a:link, .individual-tweet a:visited {text-decoration:none;}
+.individual-tweet a:hover {text-decoration:underline;}
 .individual-tweet p {}
 .individual-tweet ul {margin:10px 0 0 5px;padding-left:10px;}
 .individual-tweet li {font-size:0.8em;}
@@ -320,7 +320,7 @@ img.service-icon2 {left: 32px;}
 
 /* --- NUMBERS -------------------------------- */
 
-#keystats {padding:5px;font-size:medium;display:none;}
+#keystats {padding:5px;font-size:medium;}
 .big-number {color:#000;font-size:1.7em;line-height:1.8em;}
 .big-number h1 {font-size:2.7em;font-weight:700;letter-spacing:-4px;padding:0;margin:0;}
 .big-number h3 {color:#666;font-size:0.8em;}
