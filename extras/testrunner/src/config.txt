@@ -1,0 +1,1 @@
+thinkup_root_dir=/home/sam/Dropbox/LocalServer/projects/ThinkUp/

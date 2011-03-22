@@ -28,7 +28,7 @@
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */
-require_once 'tests/init.tests.php';
+require_once dirname(__FILE__).'/../../../../tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
@@ -159,7 +159,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
 
         //Unsuccessful Geoencoding due to location field resulting in INVALID_REQUEST
         $post = $pdao->getPost(15244973830, 'twitter');
-        $this->assertEqual($post->location, 'Ü');
+        $this->assertEqual($post->location, 'ï¿½');
         $this->assertEqual($post->is_geo_encoded, 5);
 
         //Unsuccessful Geoencoding due to all three fields being empty
@@ -270,7 +270,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
         $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (7, 15244973830, 127567137, 'ekanshpreet', ";
-        $q .= "'hmmm....', 'Ü', NULL, NULL, 0)";
+        $q .= "'hmmm....', 'ï¿½', NULL, NULL, 0)";
         $this->testdb_helper->runSQL($q);
 
         $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";

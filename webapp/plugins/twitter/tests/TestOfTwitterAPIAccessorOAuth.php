@@ -25,7 +25,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  */
-require_once 'tests/init.tests.php';
+require_once dirname(__FILE__).'/../../../../tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/classes/mock.TwitterOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterAPIAccessorOAuth.php';
