@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="http://960ls.atomidata.com/static/cssserve/2011/3/20/5dd9fb3d4d4944d58a41a1b9eff0fdf2.css"/>
 	<link rel="shortcut icon" href="assets/img/favicon.png" type="image/png" />
 	<link href='http://fonts.googleapis.com/css?family=Cabin:regular,bold' rel='stylesheet' type='text/css' />
+	<link href='http://fonts.googleapis.com/css?family=Lato:light' rel='stylesheet' type='text/css'>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 	<script src="assets/js/jcarousellite_1.0.1.min.js"></script>
 	
@@ -15,10 +16,15 @@
 		
 		body {
 			font-family : 'Helvetica Neue', Helvetica, arial, serif;
-			background-color : silver;
+			/*background-color : silver;*/
+			background-image: url('assets/img/bg.gif');
+			background-repeat: repeat-x;
 			margin-top : 0px;
 		}
-		
+		ul { 
+			padding-left: 0;
+			list-style-image: url('assets/img/list-circle.gif');
+		}
 		h1, h2, h3 { font-family: 'Cabin', 'Helvetica Neue', Helvetica, arial, serif; }
 		
 		h1, a {
@@ -68,12 +74,9 @@
 		
 		.twtr-hd, .twtr-ft { display : none; }
 		
-		#header, #content, #footer { background-color : white; }
+		/*#header, #content, #footer { background-color : white; }*/
 		
 		#header {
-			background-image: url('assets/img/header-gradient.jpg');
-			background-repeat: repeat;
-			background-position: left bottom;
 			padding-bottom : 20px;
 		}
 
@@ -92,9 +95,13 @@
 			padding-top : 0px;
 			font-size : x-large;
 		}
-		
 		#promo {
-			text-align : right;
+			text-align : right;			
+			background-color: white;
+			margin-top: 10px;			
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			border-radius: 10px;			
 		}
 		
 		#promo p { font-size : 14px; }
@@ -112,6 +119,13 @@
 		#intro, #introtext {
 			margin-top : 0px;
 			padding-top : 0px;
+			color: #444;
+			font-family: 'Lato', 'Cabin', 'Helvetica Neue', Helvetica, arial, serif;
+			
+		}
+		#introtext p {
+			font-size: 20px;
+			text-shadow: 0 1px 0px #DDDDDD;			
 		}
 		
 		#download, #download h3 {
@@ -150,9 +164,13 @@
 		
 		#promo h3, #promo h3 a, #fundamentals .featurebox h3 { color : #504B9E; }
 		
-		#fundamentals { padding-top : 20px; }
-		
-		#publish { clear : left; }
+		#fundamentals { 
+			background-image: url('assets/img/gradient-seperator.gif');
+			background-repeat: repeat-x;		
+			padding-top : 20px; 
+			margin-top: 10px;	
+		}
+		#publish { clear : left; }		
 		
 		#footertext {
 			padding-top : 20px;
@@ -168,7 +186,12 @@
 		
 		#footer a { font-weight : normal; }
 		
-
+		.motto { text-shadow: 0 2px 0px white; }
+		
+		#featuresheader, #elsewhereheader { 
+			border-top: 1px solid #d6d6d6;
+			border-bottom: 1px solid #d6d6d6;
+		}
 	</style> 
 	
 	<script type="text/javascript">
@@ -203,7 +226,7 @@
 
 <div id="identity" class="grid_6 ">
 	<h1>ThinkUp</h1>
-	<h2>New ideas from your online conversations</h2>
+	<h2 class="motto">New ideas from your online conversations</h2>
 </div>
 
 <div id="promo" class="grid_6 ">
@@ -227,6 +250,7 @@
 	
 </div>
 
+
 </div>
 
 <div id="content" class="container_12">
@@ -234,7 +258,7 @@
 	<div id="intro" class="clearfix" >
 	
 		<div id="introtext" class="grid_6 ">
-			<p>ThinkUp is a <strong>free</strong>, <strong>open source</strong> web application that captures your posts, tweets, replies, retweets, friends, followers and links on social networks like Twitter and Facebook.</p>
+			<p style="margin-top: 0px;">ThinkUp is a <strong>free</strong>, <strong>open source</strong> web application that captures your posts, tweets, replies, retweets, friends, followers and links on social networks like Twitter and Facebook.</p>
 			<p>With ThinkUp, you can store your social activity in a database
 			that <strong>you control</strong>, making it easy to search, sort, analyze, publish and display activity from your network. All you need is a web server that can run a PHP application.</p>
 			<a id="download" href="http://github.com/ginatrapani/thinkup/downloads"><h3>Download ThinkUp &raquo;</h3><h4>Beta 0.9 (939kb .zip)</h4></a>
