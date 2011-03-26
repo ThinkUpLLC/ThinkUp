@@ -24,7 +24,7 @@
  * AccountConfiguration Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -47,6 +47,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
         $this->addToView('owner', $owner);
+        $this->addToView('logo_link', '');
 
         //proces password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])

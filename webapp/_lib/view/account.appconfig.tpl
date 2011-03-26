@@ -48,7 +48,7 @@
       </div>
       <div style="clear:both;"></div>
       <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
-        Select to enable reCAPTCHA, and <a href="https://recaptcha.com">get your reCAPTCHA keys here</a>.
+        Select to enable reCAPTCHA, and <a href="https://www.google.com/recaptcha">get your reCAPTCHA keys here</a>.
       </div>
 
       <div id="recaptcha_enable_deps" style="display: none; width: 450px; margin: 10px 0px 60px 20px;">

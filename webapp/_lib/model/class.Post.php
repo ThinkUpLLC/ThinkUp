@@ -24,10 +24,17 @@
  * Post
  * A post, tweet, or status update on a ThinkUp source network or service (like Twitter or Facebook)
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class Post {
+
+    /**
+     * @const int
+     * twitter currently maxes out on returning a RT count at 100.
+     */
+    const TWITTER_RT_THRESHOLD = 100;
+
     /**
      *
      * @var int
@@ -176,6 +183,11 @@ class Post {
     var $all_retweets;
 
     /**
+     * @var int, non-persistent, used for UI, indicates whether twitter rt count threshold was reached.
+     */
+    var $rt_threshold;
+
+    /**
      * Constructor
      * @param array $val Array of key/value pairs
      * @return Post
@@ -218,6 +230,15 @@ class Post {
         }
         // non-persistent, sum of two persistent values, used for UI information display
         $this->all_retweets = $val['old_retweet_count_cache'] + $val['retweet_count_cache'];
+        if ($val['retweet_count_cache'] >= self::TWITTER_RT_THRESHOLD) {
+            // if the new RT count, obtained from twitter, has maxed out, set a non-persistent flag field
+            // to indicate this. The templates will make use of this info to add a '+' after the sum if the
+            // flag is set.
+            $this->rt_threshold = 1;
+        }
+        else {
+            $this->rt_threshold = 0;
+        }
     }
 
     /**

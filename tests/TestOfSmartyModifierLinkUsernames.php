@@ -22,7 +22,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010
+ * @copyright 2009-2011
  */
 
 require_once dirname(__FILE__).'/init.tests.php';

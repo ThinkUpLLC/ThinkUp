@@ -26,7 +26,7 @@
  * The data access object for retrieving and saving posts in the ThinkUp database
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class PostMySQLDAO extends PDODAO implements PostDAO  {
@@ -485,6 +485,15 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $retweeted_post_data = $vals['retweeted_post']['content'];
             // $this->logger->logInfo("this is a retweet- first processing original " .
             // $retweeted_post_data['post_id'] . ".", __METHOD__.','.__LINE__);
+            // it turns out that for a native retweet, Twitter may not reliably update the count stored in the
+            // original-- there may be a lag.  So, if there is a first retweet, the original post still
+            // may show 0 rts. This is less common w/ the REST API than the streaming API, but does not hurt to
+            // address it anyway. So, if we know there was a retweet, but the rt count is showing 0, set it to 1.
+            // We know it is at least 1.
+            if (isset($retweeted_post_data['retweet_count_cache']) &&
+            ($retweeted_post_data['retweet_count_cache'] == 0 )) {
+                $retweeted_post_data['retweet_count_cache'] = 1;
+            }
             // if so, process the original post first.
             $this->addPostAndEntities($retweeted_post_data, null);
         }
@@ -585,7 +594,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllPostsIterator($author_id, $network, $count, $include_replies=true) {
-        return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $iterator = true);
+        return $this->getAllPostsByUserID($author_id, $network, $count, "pub_date", "DESC", $include_replies, $page = 1,
+        $iterator = true);
     }
 
     public function getAllQuestionPosts($author_id, $network, $count, $page=1) {
@@ -655,7 +665,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>$count,
             ':start_on_record'=>(int)$start_on_record
         );
+
         $ps = $this->execute($q, $vars);
+
         if($iterator) {
             return (new PostIterator($ps));
         }

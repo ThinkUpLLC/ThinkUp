@@ -2,59 +2,78 @@
   <div class="header clearfix">
     <div class="grid_1 alpha">&#160;</div>
     <div class="grid_3 right">name</div>
-    <div class="grid_3 right">followers</div>
-    <div class="grid_3 right">date</div>
-    <div class="grid_10 omega">post</div>
+    <div class="grid_12">post</div>
   </div>
 {/if}
 
 <div class="individual-tweet post clearfix"{if $smarty.foreach.foo.index % 2 == 1} style="background-color:#EEE"{/if}>
-  <div class="grid_1 alpha">
-    <a href="{$site_root_path}user/?u={$r.questioner_username}&n={$r.network}&i={$logged_in_user}"><img src="{$r.questioner_avatar}" class="avatar" alt="{$logged_in_user}"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
-  </div>
-  <div class="grid_3 right small">
-    <a href="{$site_root_path}user/?u={$r.questioner_username}&n={$r.network}&i={$logged_in_user}">{if $r.questioner_username eq $i->network_username}You{else}{$r.questioner_username}{/if}</a>
-  </div>
-  <div class="grid_3 right small">
-    {$r.questioner_follower_count|number_format}
-  </div>
-  <div class="grid_3 right small">
-    <a href="{$site_root_path}post/?t={$r.question_post_id}&n={$r.network}">{$r.question_adj_pub_date|relative_datetime}</a>
-  </div>
-  <div class="grid_10 omega">
-    <p>{$r.question|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}</p>
-    {if $r.network == 'twitter'}
-    <a class="small" href="http://twitter.com/?status=@{$r.questioner_username}%20&in_reply_to_status_id={$r.question_post_id}&in_reply_to={$r.questioner_username}" target="_blank">Reply</a>
-    {/if}
-    {if $r.location}
-      <div class="small gray">{$r.location}</div>
-    {/if}
-    {if $r.description}
-      <div class="small gray">{$r.description}</div>
-    {/if}
-  </div>
+
+    <div class="grid_1 alpha">
+      <img src="{$r.questioner_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
+    </div>
+    <div class="grid_3 right small">
+      {if $r.network == 'twitter'}
+      <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
+      href="http://twitter.com/{$r.questioner_username}">{$r.questioner_username}</a>
+      {else}
+      <a href="{$site_root_path}public.php?u={$r.questioner_username|urlencode}&n={$r.network|urlencode}">
+        {$r.questioner_username}
+      </a>
+      {/if}
+      {if $r.questioner_follower_count|number_format > 0}
+        <div class="small gray">{$r.questioner_follower_count|number_format} followers</div>
+      {/if}
+    </div>
+    <div class="grid_12">
+      <div class="post">
+        {if $r.question}
+           {$r.question|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}
+        {else}
+          <span class="no-post-text">No post text</span>
+        {/if}
+      <div class="small gray">
+       <span class="metaroll">
+        <a href="{$site_root_path}post/?t={$r.question_post_id}&n={$r.network}">{$r.question_adj_pub_date|relative_datetime} ago</a>
+        {if $r.network == 'twitter'}
+         - <a href="http://twitter.com/?status=@{$r.questioner_username}%20&in_reply_to_status_id={$r.question_post_id}&in_reply_to={$r.questioner_username}" target="_blank">Reply</a>
+        {/if}
+       </span>&nbsp;</div>
+      </div>
+    </div>
 </div>
 
 <div class="individual-tweet reply clearfix"{if $smarty.foreach.foo.index % 2 == 1} style="background-color:#EEE"{/if}>
   <div class="grid_1 alpha">
-    <a href="{$site_root_path}user/?u={$r.answerer_username}&n={$r.network}&i={$logged_in_user}"><img src="{$r.answerer_avatar}" class="avatar" alt="{$logged_in_user}"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
-  </div>
-  <div class="grid_3 right small">
-    <a href="{$site_root_path}user/?u={$r.answerer_username}&n={$r.network}&i={$logged_in_user}">{if $r.answerer_username eq $i->network_username}You{else}{$r.answerer_username}{/if}</a>
-  </div>
-  <div class="grid_3 right small">
-    {$r.answerer_follower_count|number_format}
-  </div>
-  <div class="grid_3 right small">
-     <a href="{$site_root_path}post/?t={$r.answer_post_id}&n={$r.network}">{$r.answer_adj_pub_date|relative_datetime}</a>
-  </div>
-  <div class="grid_10 omega">
-    <p>{$r.answer|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}</p>
-    {if $r.network == 'twitter'}
-    <a class="small" href="http://twitter.com/?status=@{$r.answerer_username}%20&in_reply_to_status_id={$r.answer_post_id}&in_reply_to={$r.answerer_username}" target="_blank">Reply</a>
-    {/if}
-    {if $r.location}
-      <div class="small gray">{$r.location}</div>
-    {/if}
-  </div>
+      <img src="{$r.answerer_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
+    </div>
+    <div class="grid_3 right small">
+      {if $r.network == 'twitter'}
+      <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
+      href="http://twitter.com/{$r.answerer_username}">{$r.answerer_username}</a>
+      {else}
+      <a href="{$site_root_path}public.php?u={$r.questioner_username|urlencode}&n={$r.network|urlencode}">
+        {$r.answerer_username}
+      </a>
+      {/if}
+      {if $r.answerer_follower_count|number_format > 0}
+        <div class="small gray">{$r.answerer_follower_count|number_format} followers</div>
+      {/if}
+    </div>
+    <div class="grid_12">
+      <div class="post">
+        {if $r.answer}
+          {$r.answer|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}
+        {else}
+          <span class="no-post-text">No post text</span>
+        {/if}
+      <div class="small gray">
+       <span class="metaroll">
+        <a href="{$site_root_path}post/?t={$r.answer_post_id}&n={$r.network}">{$r.answer_adj_pub_date|relative_datetime} ago</a>
+        {if $r.network == 'twitter'}
+         - <a href="http://twitter.com/?status=@{$r.answerer_username}%20&in_reply_to_status_id={$r.answer_post_id}&in_reply_to={$r.answerer_username}" target="_blank">Reply</a>
+        {/if}
+       </span>&nbsp;</div>
+      </div>
+    </div>
 </div>
+

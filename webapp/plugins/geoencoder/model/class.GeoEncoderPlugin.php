@@ -27,12 +27,19 @@
  * for Geolocation visualization later.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Ekansh Preet Singh, Mark Wilkie
+ * @copyright 2009-2011 Ekansh Preet Singh, Mark Wilkie
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */
 class GeoEncoderPlugin implements CrawlerPlugin, PostDetailPlugin {
+
+    public function activate() {
+    }
+
+    public function deactivate() {
+    }
+
 
     public function crawl() {
         $logger = Logger::getInstance();

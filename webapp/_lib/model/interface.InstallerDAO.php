@@ -24,7 +24,7 @@
  * Installer Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Dwi Widiastuti, Gina Trapani
+ * @copyright 2009-2011 Dwi Widiastuti, Gina Trapani
  * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  *
  */

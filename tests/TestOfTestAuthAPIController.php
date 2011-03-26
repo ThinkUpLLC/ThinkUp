@@ -28,7 +28,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * Test of TestAuthAPIController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  *
  */
@@ -85,7 +85,7 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         $this->assertPattern('/{"result":"success"}/', $results);
 
         $config = Config::getInstance();
-        $this->assertEqual($_SESSION[$config->getValue('source_root_path')]['user'], 'me@example.com');
+        $this->assertEqual(SessionCache::get('user'), 'me@example.com');
 
         // Now that _SESSION['user'] is set, we shouldn't need to provide un/as to use this controller
         // Also, the result will be returned as HTML, not JSON

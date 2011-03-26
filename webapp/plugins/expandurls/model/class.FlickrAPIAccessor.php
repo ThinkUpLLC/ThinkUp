@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/flickrthumbnails/tests/classes/mock.FlickrAPIAccessor.php
+ * ThinkUp/webapp/plugins/flickrthumbnails/model/class.FlickrAPIAccessor.php
  *
  * Copyright (c) 2009-2011 Gina Trapani
  *
@@ -23,7 +23,7 @@
 /**
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 class FlickrAPIAccessor {
     var $api_url = "http://api.flickr.com/services/rest/?";
@@ -38,8 +38,6 @@ class FlickrAPIAccessor {
     }
 
     public function getFlickrPhotoSource($u) {
-        $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/flickrthumbnails/tests/testdata/';
-
         if ($this->api_key != '') {
             $this->logger->logInfo("Flickr API key set", __METHOD__.','.__LINE__);
             $photo_short_id = substr($u, strlen('http://flic.kr/p/'));
@@ -57,26 +55,16 @@ class FlickrAPIAccessor {
 
             $this->logger->logInfo("Flickr API call: $api_call", __METHOD__.','.__LINE__);
 
-            //$resp = Utils::getURLContents($api_call);
-
-            $api_call = str_replace('http://', '', $api_call);
-            $api_call = str_replace('/', '_', $api_call);
-            $api_call = str_replace('?', '-', $api_call);
-            $api_call = str_replace('&', '-', $api_call);
-            // echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$api_call . "\n";
-            $resp = file_get_contents($FAUX_DATA_PATH.$api_call);
-
-            if ($resp === "NONRESPONSE") {
-                $resp = false;
-            }
-
+            $resp = Utils::getURLContents($api_call);
             if ($resp != false) {
                 $fphoto = unserialize($resp);
 
                 if ($fphoto['stat'] == 'ok') {
+                    $src = '';
                     foreach ($fphoto['sizes']['size'] as $s) {
-                        if ($s['label'] == 'Small')
-                        $src = $s['source'];
+                        if ($s['label'] == 'Small') {
+                            $src = $s['source'];
+                        }
                     }
                     return array("expanded_url"=>$src, "error"=>'');
                 } else {
@@ -93,7 +81,6 @@ class FlickrAPIAccessor {
             return array("expanded_url"=>'', "error"=>'');
         }
     }
-
 
     public function base_decode($num, $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ") {
         $decoded = 0;

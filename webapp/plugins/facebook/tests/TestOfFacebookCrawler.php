@@ -25,7 +25,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -58,8 +58,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
         'total_follows_in_system'=>'0', 'total_users_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
-        'api_calls_to_leave_unmade_per_minute'=>2, 'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 
-        'network'=>'facebook',
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'favorites_profile' => '0', 
         'owner_favs_in_system' => '0'

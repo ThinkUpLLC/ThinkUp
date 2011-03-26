@@ -60,7 +60,7 @@
  *   </code>
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie
+ * @copyright 2009-2011 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 class FixtureBuilder {
@@ -186,10 +186,18 @@ class FixtureBuilder {
                 continue;
             }
             if(isset($field_value)) {
-                if(preg_match('/^(times|date)/', $column['Type'])) {
-                    $column['value'] = $this->genDate($field_value);
+                if(gettype($field_value) == 'array') {
+                    if(! isset($field_value['function'])) {
+                        throw new FixtureBuilderException("Column value array/hash must have a function defined");
+                    } else {
+                        $column['value'] = $field_value;
+                    }
                 } else {
-                    $column['value'] = $field_value;
+                    if(preg_match('/^(times|date)/', $column['Type'])) {
+                        $column['value'] = $this->genDate($field_value);
+                    } else {
+                        $column['value'] = $field_value;
+                    }
                 }
             } else if(isset($args) && array_search($column['Field'], array_keys($args)) !== false) {
                 // Column value was specified, but is null; we just don't want to specify a value for that column
@@ -215,11 +223,24 @@ class FixtureBuilder {
             $this->columns[ $column['Field'] ] = $column['value'];
         }
         $sql .= sprintf(" (%s) VALUES", join(',', array_keys($this->columns) ));
-        $values = array_values($this->columns);
-        array_shift($values);
-        $sql .= sprintf(" (?%s)", str_repeat(",?", count($values)));
+        $values = array();
+        $values_string = '';
+        foreach(array_values($this->columns) as $value) {
+            if($values_string == '') {
+                $values_string = ' (';
+            } else {
+                $values_string .= ',';
+            }
+            if(gettype($value) == 'array') {
+                $values_string .= $value['function'];
+            } else {
+                array_push($values, $value);
+                $values_string .= '?';
+            }
+        }
+        $sql .= $values_string . ')';
         $stmt = self::$pdo->prepare($sql);
-        $stmt->execute(array_values($this->columns));
+        $stmt->execute($values);
         $last_insert_id = self::$pdo->lastInsertId();
         if(isset($last_insert_id)) {
             $this->columns['last_insert_id'] = $last_insert_id;

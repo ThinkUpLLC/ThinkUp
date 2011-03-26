@@ -24,7 +24,7 @@
  * Test of TestOfGeoEncoderPluginConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie, Ekansh Preet Singh
+ * @copyright 2009-2011 Mark Wilkie, Ekansh Preet Singh
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */

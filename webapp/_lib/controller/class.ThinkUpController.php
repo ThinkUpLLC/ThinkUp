@@ -26,7 +26,7 @@
  * The parent class of all ThinkUp webapp controllers.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 
@@ -99,6 +99,14 @@ abstract class ThinkUpController {
             }
             $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
+
+            if (SessionCache::isKeySet('selected_instance_network') &&
+            SessionCache::isKeySet('selected_instance_username')) {
+                $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));
+                $this->addToView('selected_instance_username', SessionCache::get('selected_instance_username'));
+                $this->addToView('logo_link', 'index.php?u='. SessionCache::get('selected_instance_username')
+                .'&n='. urlencode(SessionCache::get('selected_instance_network')));
+            }
         } catch (Exception $e) {
             Utils::defineConstants();
             $cfg_array =  array(
@@ -360,7 +368,11 @@ abstract class ThinkUpController {
                     Loader::addPath(THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name.
                     "/controller/");
                     //require the main plugin registration file here
-                    require_once THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.".php";
+                    if ( file_exists(
+                    THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.".php")) {
+                        require_once THINKUP_WEBAPP_PATH.'plugins/'.$ap->folder_name."/controller/".$ap->folder_name.
+                        ".php";
+                    }
                 }
             }
         }

@@ -22,8 +22,9 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
+putenv("MODE=TESTS");
 require_once 'config.tests.inc.php';
 
 //set up 3 required constants

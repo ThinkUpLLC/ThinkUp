@@ -19,6 +19,12 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ * Test of DashboardController
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -27,14 +33,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
-/**
- * Test of DashboardController
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfDashboardController extends ThinkUpUnitTestCase {
 
     public function __construct() {
@@ -75,8 +73,8 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertPattern("/You have no accounts configured./", $v_mgr->getTemplateDataItem('infomsg'));
-        $this->assertPattern("/Set up an account now/", $v_mgr->getTemplateDataItem('infomsg'));
+        $this->assertPattern("/You have no services configured./", $v_mgr->getTemplateDataItem('infomsg'));
+        $this->assertPattern("/Set up a service/", $v_mgr->getTemplateDataItem('infomsg'));
     }
 
     public function testNotLoggedInNoUserOrViewSpecified() {
@@ -217,6 +215,19 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $this->assertEqual($controller->getCacheKeyString(),
         'dashboard.tpl-me@example.com-ev-twitter-friends-mostactive', 'Cache key');
+    }
+
+    public function testNonexistentPluginIsActive() {
+        $builders = $this->buildData();
+        //add a plugin which is activatd, but doesn't exist on the file system
+        $plugin_builder = FixtureBuilder::build('plugins', array(
+                'name'=>'Flickr Thumbnails',
+                'folder_name'=>'flickrthumbnails',
+                'is_active'=>1)
+        );
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+        //make sure there's no fatal error because the plugin files don't exist
     }
 
     private function buildData() {

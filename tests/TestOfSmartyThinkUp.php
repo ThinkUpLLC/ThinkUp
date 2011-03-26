@@ -28,7 +28,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * Test of SmartyThinkUp class
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
@@ -77,7 +77,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($smtt->getTemplateDataItem('test_var_1'), "Testing, testing, 123");
 
         $this->assertEqual($smtt->getTemplateDataItem('app_title'), 'Testy ThinkUp Custom Application Name');
-        $this->assertEqual($smtt->getTemplateDataItem('logo_link'), 'index.php');
+        $this->assertEqual($smtt->getTemplateDataItem('logo_link'), '');
         $this->assertEqual($smtt->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/');
     }
 
@@ -107,7 +107,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $smtt = new SmartyThinkUp($cfg_array);
 
         $this->assertEqual($smtt->getTemplateDataItem('app_title'), 'My ThinkUp');
-        $this->assertEqual($smtt->getTemplateDataItem('logo_link'), 'index.php');
+        $this->assertEqual($smtt->getTemplateDataItem('logo_link'), '');
         $this->assertEqual($smtt->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/test');
     }
 }

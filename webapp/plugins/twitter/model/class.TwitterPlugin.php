@@ -26,11 +26,23 @@
  * Twitter crawler and webapp plugin retrieves data from Twitter and displays it.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
 class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+
+    public function activate() {
+    }
+
+    public function deactivate() {
+        //Pause all active Twitter instances
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $twitter_instances = $instance_dao->getAllInstances("DESC", true, "twitter");
+        foreach ($twitter_instances as $ti) {
+            $instance_dao->setActive($ti->id, false);
+        }
+    }
 
     public function crawl() {
         $config = Config::getInstance();
@@ -64,18 +76,20 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             && isset($tokens['oauth_access_token_secret']) && $tokens['oauth_access_token_secret'] != '') {
                 $noauth = false;
             }
+            $api_calls_to_leave_unmade_per_minute =  isset($options['api_calls_to_leave_unmade_per_minute']) ?
+            $options['api_calls_to_leave_unmade_per_minute']->option_value : 2.0;
 
             if ($noauth) {
                 $api = new CrawlerTwitterAPIAccessorOAuth('NOAUTH', 'NOAUTH',
                 $options['oauth_consumer_key']->option_value,
                 $options['oauth_consumer_secret']->option_value,
-                $instance, $options['archive_limit']->option_value,
+                $api_calls_to_leave_unmade_per_minute, $options['archive_limit']->option_value,
                 $num_twitter_errors, $max_api_calls_per_crawl);
             } else {
                 $api = new CrawlerTwitterAPIAccessorOAuth($tokens['oauth_access_token'],
                 $tokens['oauth_access_token_secret'], $options['oauth_consumer_key']->option_value,
                 $options['oauth_consumer_secret']->option_value,
-                $instance, $options['archive_limit']->option_value,
+                $api_calls_to_leave_unmade_per_minute, $options['archive_limit']->option_value,
                 $num_twitter_errors, $max_api_calls_per_crawl);
             }
 
@@ -261,14 +275,14 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $follower_history_tpl = Utils::getPluginViewDirectory('twitter').'twitter.followercount.tpl';
         $trendtab = new MenuItem('Follower Count', 'Your follower count over time',
         $follower_history_tpl, 'Followers');
-        $trendtabds = new Dataset("historybyday", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'DAY', 20));
+        $trendtabds = new Dataset("follower_count_history_by_day", 'FollowerCountDAO', 'getHistory',
+        array($instance->network_user_id, 'twitter', 'DAY', 15));
         $trendtab->addDataset($trendtabds);
-        $trendtabweekds = new Dataset("historybyweek", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'WEEK', 20));
+        $trendtabweekds = new Dataset("follower_count_history_by_week", 'FollowerCountDAO', 'getHistory',
+        array($instance->network_user_id, 'twitter', 'WEEK', 15));
         $trendtab->addDataset($trendtabweekds);
-        $trendtabmonthds = new Dataset("historybymonth", 'FollowerCountDAO', 'getHistory',
-        array($instance->network_user_id, 'twitter', 'MONTH', 20));
+        $trendtabmonthds = new Dataset("follower_count_history_by_month", 'FollowerCountDAO', 'getHistory',
+        array($instance->network_user_id, 'twitter', 'MONTH', 11));
         $trendtab->addDataset($trendtabmonthds);
         $menus['followers-history'] = $trendtab;
 

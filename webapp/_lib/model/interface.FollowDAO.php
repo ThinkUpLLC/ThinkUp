@@ -24,7 +24,7 @@
  * Follow Data Access Object Interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Christoffer Viken
+ * @copyright 2009-2011 Gina Trapani, Christoffer Viken
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Christoffer Viken <christoffer[at]viken[dot]me>
  */

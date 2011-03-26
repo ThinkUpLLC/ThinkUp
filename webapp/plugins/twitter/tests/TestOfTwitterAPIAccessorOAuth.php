@@ -19,12 +19,11 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  */
 require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -38,37 +37,6 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $this->UnitTestCase('Test of TwitterAPIAccessorOAuth');
     }
 
-    private function getTestInstance() {
-        $r = array();
-        $r["id"] = 0;
-        $r['network_username'] = 'user';
-        $r['network_user_id'] = 0;
-        $r['network_viewer_id'] = 0;
-        $r['last_post_id'] = 0;
-        $r['last_page_fetched_replies'] = 0;
-        $r['last_page_fetched_tweets'] = 0;
-        $r['total_posts_in_system'] = 0;
-        $r['total_replies_in_system'] = 0;
-        $r['total_follows_in_system'] = 0;
-        $r['total_users_in_system'] = 0;
-        $r['is_archive_loaded_replies'] = 0;
-        $r['is_archive_loaded_follows'] = 0;
-        $r['crawler_last_run'] = '1/1/2007';
-        $r['earliest_reply_in_system'] = 0;
-        $r['api_calls_to_leave_unmade_per_minute'] = 5;
-        $r['avg_replies_per_day'] = 0;
-        $r['is_public'] = 1;
-        $r['is_active'] = 1;
-        $r['network'] = 'twitter';
-        $r['last_favorite_id'] = 0;
-        $r['last_unfav_page_checked'] = 0;
-        $r['last_page_fetched_favorites'] = 0;
-        $r['favorites_profile'] = 0;
-        $r['owner_favs_in_system'] = 0;
-
-        return new Instance($r);
-    }
-
     public function testFriendsList() {
         global $THINKUP_CFG;
 
@@ -76,7 +44,7 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', 'GET', array());
         $this->assertWantedPattern('/A or B/', $result);
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, $this->getTestInstance(), 3200, 5, 350);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
         //echo 'Next cursor is ' . $next_cursor;
@@ -89,7 +57,7 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/followers/ids.xml', 'GET', array());
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, $this->getTestInstance(), 3200, 5, 350);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
         //echo 'Next cursor is ' . $next_cursor;
@@ -102,7 +70,7 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $to = new TwitterOAuth('', '', '', '');
         $twitter_data = $to->http('http://search.twitter.com/search.json?q=%40whitehouse&result_type=recent');
 
-        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, $this->getTestInstance(), 3200, 5, 350);
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
 
         $results = $api->parseJSON($twitter_data);
 

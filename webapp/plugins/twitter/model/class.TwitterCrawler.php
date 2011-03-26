@@ -26,7 +26,7 @@
  *
  * @TODO Complete docblocks
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -167,9 +167,11 @@ class TwitterCrawler {
                 $recent_tweets = str_replace("[id]", $this->user->username,
                 $this->api->cURL_source['user_timeline']);
                 $args = array();
-                $args["count"] = 200;
+                $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+                $this->twitter_options['tweet_count_per_call']->option_value:100;
+                $args["count"] = $count_arg;
                 $args["include_rts"] = "true";
-                $last_page_of_tweets = round($this->api->archive_limit / 200) + 1;
+                $last_page_of_tweets = round($this->api->archive_limit / $count_arg) + 1;
 
                 //set page and since_id params for API call
                 if ($got_latest_page_of_tweets
@@ -285,7 +287,9 @@ class TwitterCrawler {
                 $continue_fetching) {
                     $mentions = $this->api->cURL_source['mentions'];
                     $args = array();
-                    $args['count'] = 200;
+                    $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+                    $this->twitter_options['tweet_count_per_call']->option_value:100;
+                    $args["count"] = $count_arg;
                     $args['include_rts']='true';
 
                     if ($got_newest_mentions) {
@@ -424,7 +428,9 @@ class TwitterCrawler {
             $stream_with_retweet = str_replace("[id]", $user_with_retweet->username,
             $this->api->cURL_source['user_timeline']);
             $args = array();
-            $args["count"] = 200;
+            $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+            $this->twitter_options['tweet_count_per_call']->option_value:100;
+            $args['count'] = $count_arg;
             $args["include_rts"]="true";
 
             list($cURL_status, $twitter_data) = $this->api->apiRequest($stream_with_retweet, $args);
@@ -436,22 +442,42 @@ class TwitterCrawler {
                 if (count($tweets) > 0) {
                     $pd = DAOFactory::getDAO('PostDAO');
                     foreach ($tweets as $tweet) {
-                        if (RetweetDetector::isRetweet($tweet['post_text'], $this->user->username)) {
-                            $this->logger->logInfo("Retweet by ".$tweet['user_name']. " found, ".
-                            substr($tweet['post_text'], 0, 50)."... ", __METHOD__.','.__LINE__);
-                            if ( RetweetDetector::isRetweetOfTweet($tweet["post_text"],
-                            $retweeted_status["post_text"]) ){
-                                $tweet['in_retweet_of_post_id'] = $retweeted_status_id;
-                                $this->logger->logInfo("Retweet by ".$tweet['user_name']." of ".
-                                $this->user->username." original status ID found: ".$retweeted_status_id,
-                                __METHOD__.','.__LINE__);
-                            } else {
-                                $this->logger->logInfo("Retweet by ".$tweet['user_name']." of ".
-                                $this->user->username." original status ID NOT found: ".
-                                $retweeted_status["post_text"]." NOT a RT of: ". $tweet["post_text"],
-                                __METHOD__.','.__LINE__);
+                        // The parser now processes native retweet information for posts (and includes the
+                        // orig post in the parsed data if there was a RT). This method can now take advantage
+                        // of this additional processing.
+                        // If it was detected that this tweet was a native RT during parsing of the xml, the
+                        // 'in_retweet_of_post_id' value should already be set. If it is not set, go through the
+                        // usual procedure to try to find it.
+                        // This is just an efficiency fix, since if 'in_retweet_of_post_id' *is* set, it's not
+                        // going to be unset if the retweet detector doesn't pick up on anything.
+                        if (!isset($tweet['in_retweet_of_post_id']) || !$tweet['in_retweet_of_post_id']) {
+                            // then try to find rt -- otherwise, information already there
+                            if (RetweetDetector::isRetweet($tweet['post_text'], $this->user->username)) {
+                                $this->logger->logInfo("Retweet by ".$tweet['user_name']. " found, ".
+                                substr($tweet['post_text'], 0, 50)."... ", __METHOD__.','.__LINE__);
+                                if ( RetweetDetector::isRetweetOfTweet($tweet["post_text"],
+                                $retweeted_status["post_text"]) ){
+                                    $tweet['in_retweet_of_post_id'] = $retweeted_status_id;
+                                    $this->logger->logInfo("Retweet by ".$tweet['user_name']." of ".
+                                    $this->user->username." original status ID found: ".$retweeted_status_id,
+                                    __METHOD__.','.__LINE__);
+                                } else {
+                                    $this->logger->logInfo("Retweet by ".$tweet['user_name']." of ".
+                                    $this->user->username." original status ID NOT found: ".
+                                    $retweeted_status["post_text"]." NOT a RT of: ". $tweet["post_text"],
+                                    __METHOD__.','.__LINE__);
+                                }
                             }
                         }
+                        // an 'else' clause (if 'in_retweet_of_post_id' WAS set) can be used to log
+                        // diagnostic information. Leaving in as example for now.
+                        // else {
+                        //     // $rtp = $tweet['retweeted_post']['content'];
+                        //     $this->logger->logDebug("Post " . $tweet['post_id'] . //", " . $tweet['post_text'] .
+                        //     " from " . $tweet['user_name'] .
+                        //     " is rt of " . $tweet['in_retweet_of_post_id'],// . ", ". $rtp['post_text'],
+                        //     __METHOD__.','.__LINE__);
+                        // }
                         if ($pd->addPost($tweet, $user_with_retweet, $this->logger) > 0) {
                             $count++;
                             //expand and insert links contained in tweet
@@ -724,7 +750,9 @@ class TwitterCrawler {
                     $stale_friend_tweets = str_replace("[id]", $stale_friend->username,
                     $this->api->cURL_source['user_timeline']);
                     $args = array();
-                    $args["count"] = 200;
+                    $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+                    $this->twitter_options['tweet_count_per_call']->option_value:100;
+                    $args['count'] = $count_arg;
 
                     if ($stale_friend->last_post_id > 0) {
                         $args['since_id'] = $stale_friend->last_post_id;
@@ -775,7 +803,8 @@ class TwitterCrawler {
                     } elseif ($cURL_status == 401 || $cURL_status == 404) {
                         $e = $this->api->parseError($twitter_data);
                         $ued = DAOFactory::getDAO('UserErrorDAO');
-                        $ued->insertError($stale_friend->user_id, $cURL_status, $e['error'],
+                        $ued->insertError($stale_friend->user_id, $cURL_status,
+                        (isset($e['error']))?$e['error']:$twitter_data,
                         $this->user->user_id, 'twitter');
                         $this->logger->logInfo('User error saved', __METHOD__.','.__LINE__);
                     }

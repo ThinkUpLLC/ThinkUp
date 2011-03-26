@@ -24,7 +24,7 @@
  *
  * Base test case for tests without the need for database availability.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -126,10 +126,9 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
      * @param bool $is_admin Default to false
      */
     protected function simulateLogin($email, $is_admin = false) {
-        $config = Config::getInstance();
-        $_SESSION[$config->getValue('source_root_path')]['user'] = $email;
+        SessionCache::put('user', $email);
         if ($is_admin) {
-            $_SESSION[$config->getValue('source_root_path')]['user_is_admin'] = true;
+            SessionCache::put('user_is_admin', true);
         }
     }
 
@@ -161,6 +160,19 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         } else if (!is_writable($THINKUP_CFG['log_location'])) {
             $message = "In order to test your ThinkUp installation with your current settings, ".
             $THINKUP_CFG['log_location']. " must be a writable file.";
+        }
+
+        global $TEST_DATABASE;
+
+        if ($THINKUP_CFG['db_name'] != $TEST_DATABASE) {
+            $message = "The database name in webapp/config.inc.php does not match \$TEST_DATABASE in ".
+            "tests/config.tests.inc.php. 
+In order to test your ThinkUp installation without losing data, these database names must both point to the same ".
+"empty test database.";
+        }
+
+        if ($THINKUP_CFG['cache_pages']) {
+            $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['cache_pages'] must be set to false.";
         }
 
         if (isset($message)) {

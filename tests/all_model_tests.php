@@ -23,7 +23,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 require_once 'init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -57,6 +57,7 @@ $model_tests->addTestCase(new TestOfPostMySQLDAO());
 $model_tests->addTestCase(new TestOfPostErrorMySQLDAO());
 $model_tests->addTestCase(new TestOfProfiler());
 $model_tests->addTestCase(new TestOfSession());
+$model_tests->addTestCase(new TestOfSessionCache());
 $model_tests->addTestCase(new TestOfSmartyThinkUp());
 $model_tests->addTestCase(new TestOfUserMySQLDAO());
 $model_tests->addTestCase(new TestOfUserErrorMySQLDAO());

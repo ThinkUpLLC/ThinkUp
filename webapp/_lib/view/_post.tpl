@@ -30,7 +30,7 @@
       </a>
       {/if}
       {if $t->author->follower_count > 0}
-        <br>{$t->author->follower_count|number_format} followers
+        <div class="small gray">{$t->author->follower_count|number_format} followers</div>
       {/if}
         </div>
     <div class="grid_12">
@@ -81,7 +81,7 @@
     <div class="grid_2 center">
     {if $t->network eq 'twitter'}
       {if $t->all_retweets > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}&v=fwds">{$t->all_retweets}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
+        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}&v=fwds">{$t->all_retweets|number_format}{if $t->rt_threshold}+{/if}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
       {else}
         &#160;
       {/if}

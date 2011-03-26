@@ -1,1 +1,0 @@
-<input type="checkbox" value="{$t.post_id}" name="oid[]"}">{include file="_post.other.tpl" t=$t}

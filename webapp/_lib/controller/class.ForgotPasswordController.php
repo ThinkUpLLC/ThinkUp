@@ -25,7 +25,7 @@
  * Handles requests for ThinkUp user password reset links.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Michael Louis Thaler <michael.louis.thaler[at]gmail[dot]com>
  */
 

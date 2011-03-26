@@ -23,7 +23,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -71,4 +71,36 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         "Test first post tab's first dataset fetching method");
         $logger->close();
     }
+
+    public function testDeactivate() {
+        //all facebook and facebook page accounts should be set to inactive on plugin deactivation
+        $webapp = Webapp::getInstance();
+        $logger = Logger::getInstance();
+        $pd = DAOFactory::getDAO('PostDAO');
+        $instance = new Instance();
+        $instance->network_user_id = 1;
+
+        $instance_builder_1 = FixtureBuilder::build('instances', array('network_username'=>'julie',
+        'network'=>'facebook', 'crawler_last_run'=>'-1d', 'is_activated'=>'1', 'is_public'=>'1'));
+
+        $instance_builder_2 = FixtureBuilder::build('instances', array('network_username'=>'julie',
+        'network'=>'facebook page', 'crawler_last_run'=>'-1d', 'is_activated'=>'1', 'is_public'=>'1'));
+
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $fb_active_instances = $instance_dao->getAllInstances("DESC", true, "facebook");
+        $this->assertEqual(sizeof($fb_active_instances), 1);
+        $fb_active_instances = $instance_dao->getAllInstances("DESC", true, "facebook page");
+        $this->assertEqual(sizeof($fb_active_instances), 1);
+
+        $fb_plugin = new FacebookPlugin();
+        $fb_plugin->deactivate();
+
+        $fb_active_instances = $instance_dao->getAllInstances("DESC", true, "facebook");
+        $this->assertEqual(sizeof($fb_active_instances), 0);
+        $fb_active_instances = $instance_dao->getAllInstances("DESC", true, "facebook page");
+        $this->assertEqual(sizeof($fb_active_instances), 0);
+
+        $logger->close();
+    }
+
 }

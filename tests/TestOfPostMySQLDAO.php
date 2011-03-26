@@ -23,7 +23,7 @@
  *
  * Test of PostMySQL DAO implementation
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -534,6 +534,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PostMySQLDAO();
         $posts_it = $dao->getAllPostsIterator(18, 'twitter', 10);
         $cnt = 0;
+        $this->assertIsA($posts_it,'PostIterator');
         foreach($posts_it as $key => $value) {
             $cnt++;
         }

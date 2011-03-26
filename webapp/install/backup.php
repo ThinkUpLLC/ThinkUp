@@ -23,7 +23,7 @@
  *
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie
+ * @copyright 2009-2011 Mark Wilkie
  */
 chdir('..');
 require_once 'init.php';

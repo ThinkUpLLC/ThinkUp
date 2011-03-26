@@ -26,7 +26,7 @@
  * Handles plugin configuration requests.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -146,17 +146,17 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $archive_limit = array('name' => 'archive_limit','label' => $archive_limit_label, 'default_value' => '3200',
         'advanced'=> true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $archive_limit);
-        
+
         $num_twitter_errors_label = 'Total API Errors to Tolerate';
         $num_twitter_errors = array('name' => 'num_twitter_errors', 'label' => $num_twitter_errors_label,
         'default_value' => '5', 'advanced'=>true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $num_twitter_errors);
-        
+
         $favs_older_pages_label = 'Number of Pages to Check for Older Favorites';
         $favs_older_pages = array('name' => 'favs_older_pages', 'label' => $favs_older_pages_label,
         'default_value' => '2', 'advanced'=>true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $favs_older_pages);
-        
+
         $favs_cleanup_pages_label = 'Number of Pages to Search each Crawl for Missed Favorites';
         $favs_cleanup_pages = array('name' => 'favs_cleanup_pages', 'label' => $favs_cleanup_pages_label,
         'default_value' => '1', 'advanced'=>true);
@@ -166,5 +166,15 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
         $max_api_calls_per_crawl = array('name' => 'max_api_calls_per_crawl', 'label' => $max_api_calls_per_crawl_label,
         'default_value' => '350', 'advanced'=> true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_api_calls_per_crawl);
+
+        $api_calls_to_leave_unmade_per_minute_label = 'API Calls to Leave Unmade Per Minute Remaining in the Hour';
+        $api_calls_to_leave_unmade_per_minute = array('name' => 'api_calls_to_leave_unmade_per_minute', 'label' =>
+        $api_calls_to_leave_unmade_per_minute_label, 'default_value' => '2.0', 'advanced'=> true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $api_calls_to_leave_unmade_per_minute);
+
+        $tweet_count_per_call_label = 'Tweet Count to Return Per API Call';
+        $tweet_count_per_call = array('name' => 'tweet_count_per_call', 'label' => $tweet_count_per_call_label,
+        'default_value' => '100', 'advanced'=> true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $tweet_count_per_call);
     }
 }

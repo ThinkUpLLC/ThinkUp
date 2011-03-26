@@ -24,7 +24,7 @@
  * Mutex Data Access Object interface
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Guillaume Boudreau
+ * @copyright 2009-2011 Guillaume Boudreau
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  *
  */
@@ -42,4 +42,17 @@ interface MutexDAO {
      */
     public function releaseMutex($name);
 
+    /**
+     * Determine if a mutex is free
+     * @param str $name
+     * @return bool
+     */
+    public function isMutexFree($name);
+
+    /**
+     * Determine if a mutex is in use.
+     * @param str $name
+     * @return bool
+     */
+    public function isMutexUsed($name);
 }

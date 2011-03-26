@@ -23,7 +23,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -110,7 +110,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'User Details: someuser1');
-        $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), 'index.php');
+        $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
 
         $this->assertEqual($controller->getCacheKeyString(),
         'user.index.tpl-me@example.com-someuser1-twitter-instancetestuser');

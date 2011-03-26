@@ -14,7 +14,7 @@
         <ul>
             <li>
                 <ul class="side-subnav">
-                    <li{if $smarty.get.v eq ''} class="currentview"{/if}><br /><a href="index.php?u={$instance->network_username|urlencode}&n={$instance->network}">Main Dashboard</a></li>
+                    <li{if $smarty.get.v eq ''} class="currentview"{/if}><br /><a href="index.php?u={$instance->network_username|urlencode}&n={$instance->network}">Dashboard</a></li>
 {/if}
 {if $sidebar_menu}
 {foreach from=$sidebar_menu key=smkey item=sidebar_menu_item name=smenuloop}
@@ -76,19 +76,19 @@
             {/foreach}
         {/if}
 
-        {if $follower_count_history_by_day.history and $follower_count_history_by_week.history}
-
-		<div style="float : left; padding-right : 20px;">
-        <h2>Follower Count By Day{if $follower_count_history_by_day.history|@count < 2}<br /><i>Not enough data yet</i>{else} {if $follower_count_by_day_trend != 0}({if $follower_count_by_day_trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_by_day_trend|round|number_format}</span> per day){/if}</h2>
-        <img src="http://chart.apis.google.com/chart?chs=360x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_day.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
+        <div style="float : left; padding-right : 20px;">
+        <h2>Follower Count By Day{if !$follower_count_history_by_day.history OR $follower_count_history_by_day.history|@count < 2}<br /><i>Not enough data to display chart</i>{else} {if $follower_count_history_by_day.trend}({if $follower_count_history_by_day.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_day.trend|number_format}</span>/day){/if}</h2>
+        <img width="360" height="200" src="http://chart.apis.google.com/chart?chs=360x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$tid}{if $t eq "no data"} (no data){/if}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_day.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
         {/if}
         </div>
         
-        <h2>Follower Count By Week{if $follower_count_history_by_week.history|@count < 2}<br /><i>Not enough data yet</i><br clear="all"/>{else} {if $follower_count_by_week_trend != 0}({if $follower_count_by_week_trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_by_week_trend|round|number_format}</span> per week){/if}</h2>
-        <img src="http://chart.apis.google.com/chart?chs=360x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$t.date}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
+        <h2>Follower Count By Week{if !$follower_count_history_by_week.history OR $follower_count_history_by_week.history|@count < 2}<br /><i>Not enough data to display chart</i><br clear="all"/>{else} {if $follower_count_history_by_week.trend != 0}({if $follower_count_history_by_week.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_week.trend|number_format}</span>/week){/if}</h2>
+        <img width="360" height="200" src="http://chart.apis.google.com/chart?chs=360x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{if $t eq "no data"}no data{else}{$tid}{/if}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
+{if $follower_count_history_by_week.milestone}
+<br /><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} weeks</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate. 
+<a href="{$site_root_path}index.php?v=followers-history&u={$instance->network_username}&n={$instance->network}">More...</a></small>
+{/if}
         {/if}
-
-		{/if}
 
         <br />
         {if $least_likely_followers}
@@ -96,9 +96,14 @@
             <h2 >Most Discerning Followers</h2>
             {foreach from=$least_likely_followers key=uid item=u name=foo}
             <div class="avatar-container" style="float:left;margin:7px;">  
+            {if !$smarty.foreach.foo.last}
                <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.ico" class="service-icon2"/></a> 
-            </div>
+            {else}
+            <br /><a href="{$site_root_path}index.php?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More...</a>
+            {/if}
+        </div>
             {/foreach}
+
             <div style="clear:all;"><br /><br /><br /></div>
         {/if}
 
@@ -117,12 +122,12 @@
                 <div class="public_user_stats">
                 {$instance->percentage_replies|round}% posts are replies<br />
                 {$instance->percentage_links|round}% posts contain links<br />
-                <img src="http://chart.apis.google.com/chart?chxt=x,y&cht=bhg&chd=t:{$instance->percentage_replies|round},{$instance->percentage_links|round}&chco=6184B5&chls=2.0&chs=250x175&chxl=1:|Broadcaster|Conversationalist|0:||20%||60%||100%|&chbh=50" />
+                <img width="250" height="175" src="http://chart.apis.google.com/chart?chxt=x,y&cht=bhg&chd=t:{$instance->percentage_replies|round},{$instance->percentage_links|round}&chco=6184B5&chls=2.0&chs=250x175&chxl=1:|Broadcaster|Conversationalist|0:||20%||60%||100%|&chbh=50" />
                 </div>
             </div>
             <div class="grid_10 omega">
               <h2>Client Usage <span class="detail">(all posts)</span></h2>
-              <img src="http://chart.apis.google.com/chart?cht=p&chd=t:{foreach from=$all_time_clients_usage key=name item=num_posts name=foo}{if $num_posts>0}{math equation="round(x/y*100,2)" x=$num_posts y=$all_time_clients_usage|@array_sum}{else}0{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chs=400x200&chl={foreach from=$all_time_clients_usage key=name item=num_posts name=foo}{$name}+({$num_posts}){if !$smarty.foreach.foo.last}|{/if}{/foreach}&chco=6184B5,E6E6E6"><br /><br />
+              <img width="400" height="200" src="http://chart.apis.google.com/chart?cht=p&chd=t:{foreach from=$all_time_clients_usage key=name item=num_posts name=foo}{if $num_posts>0}{math equation="round(x/y*100,2)" x=$num_posts y=$all_time_clients_usage|@array_sum}{else}0{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chs=400x200&chl={foreach from=$all_time_clients_usage key=name item=num_posts name=foo}{$name}+({$num_posts}){if !$smarty.foreach.foo.last}|{/if}{/foreach}&chco=6184B5,E6E6E6"><br /><br />
             </div>
         {/if}
 

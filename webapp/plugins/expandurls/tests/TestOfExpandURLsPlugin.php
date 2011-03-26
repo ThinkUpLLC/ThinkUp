@@ -19,22 +19,20 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
+ *
+ * Test of ExpandURLs Crawler plugin
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau, Christoffer Viken
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
 
+require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/classes/mock.FlickrAPIAccessor.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/model/class.ExpandURLsPlugin.php';
 
-/**
- * Test of ExpandURLs Crawler plugin
- *
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau, Christoffer Viken
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
 class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
     public function __construct() {
@@ -115,7 +113,116 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'is_image' => 0,
             'error' => null
         ));
-
         return array($owner_builder, $link1_builder, $link2_builder, $link3_builder);
     }
+
+    public function  testFlickrCrawl() {
+        $builders = $this->buildFlickrData();
+
+        $crawler = Crawler::getInstance();
+        $config = Config::getInstance();
+
+        //use fake Flickr API key
+        $plugin_builder = FixtureBuilder::build('plugins', array('id'=>'2', 'folder_name'=>'expandurls'));
+        $option_builder = FixtureBuilder::build('options', array(
+            'namespace' => OptionDAO::PLUGIN_OPTIONS . '-2',
+            'option_name' => 'flickr_api_key',
+            'option_value' => 'dummykey') );
+
+        $this->simulateLogin('admin@example.com', true);
+        $crawler->crawl();
+
+        $ldao = DAOFactory::getDAO('LinkDAO');
+
+        $link = $ldao->getLinkById(43);
+        $this->assertEqual($link->expanded_url, 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
+        $this->assertEqual($link->error, '');
+
+        $link = $ldao->getLinkById(42);
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->error, 'No response from Flickr API');
+
+        $link = $ldao->getLinkById(41);
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->error, 'No response from Flickr API');
+    }
+
+    private function buildFlickrData() {
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('owners', array(
+            'id' => 1, 
+            'email' => 'admin@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1,
+            'is_admin' => 1 
+        ));
+
+        //Insert test links (not images, not expanded)
+        $counter = 0;
+        while ($counter < 40) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://example.com/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'is_image' => 0,
+                'error' => null
+            ));
+            $counter++;
+        }
+
+        //Insert test links (images on Flickr that don't exist, not expanded)
+        $counter = 40;
+        while ($counter < 42) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://flic.kr/p/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'is_image' => 1,
+                'error' => null
+            ));
+            $counter++;
+        }
+
+        // Insert legit Flickr shortened link, not expanded
+        $builders[] = FixtureBuilder::build('links', array(
+            'url' => "http://flic.kr/p/7QQBy7",
+            'expanded_url' => null,
+            'title' => "Link 0",
+            'clicks' => 0,
+            'post_id' => 200,
+            'is_image' => 1,
+            'error' => null
+        ));
+
+        //Insert test links with errors (images from Flickr, not expanded)
+        $counter = 0;
+        while ($counter < 5) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://flic.kr/p/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'is_image' => 1,
+                'error' => 'Photo not found'
+                ));
+                $counter++;
+        }
+        return $builders;
+    }
+
 }

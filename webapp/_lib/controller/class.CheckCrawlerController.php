@@ -24,7 +24,7 @@
  * CheckCrawler Controller
  * Outputs a message if crawler hasn't run in over 3 hours.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -42,7 +42,7 @@ class CheckCrawlerController extends ThinkUpController {
         $this->disableCaching();
         $this->profiler_enabled = false;
 
-        $this->threshold = isset($argv[0]) ? floatval($argv[0]) : 3.0;
+        $this->threshold = isset($argv[1]) ? floatval($argv[1]) : 3.0;
     }
 
     public function control() {

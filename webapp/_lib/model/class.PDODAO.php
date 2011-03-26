@@ -24,7 +24,7 @@
  * PDO DAO
  * Parent class for PDO DAOs
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie, Christoffer Viken, Gina Trapani
+ * @copyright 2009-2011 Mark Wilkie, Christoffer Viken, Gina Trapani
  * @author Christoffer Viken <christoffer@viken.me>
  * @author Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>

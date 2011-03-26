@@ -23,7 +23,7 @@
  *
  * Expand URLs Plugin Configuration controller
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Sam Rose
+ * @copyright 2009-2011 Sam Rose
  * @author Sam Rose
  */
 class ExpandURLsPluginConfigurationController extends PluginConfigurationController {
@@ -33,10 +33,14 @@ class ExpandURLsPluginConfigurationController extends PluginConfigurationControl
         $this->setViewTemplate( THINKUP_WEBAPP_PATH. 'plugins/expandurls/view/expandurls.account.index.tpl');
 
         $links_to_expand = array( 'name' => 'links_to_expand', 'label' => 'Links to expand per crawl',
-        'default_value' => 1500
-        );
+        'default_value' => 1500);
 
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $links_to_expand);
+
+        /** set option fields **/
+        // API key text field
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'flickr_api_key',
+        'label'=>'Flickr API key (<a href="http://www.flickr.com/services/api/keys/">Get it here</a>)')); // add element
 
         return $this->generateView();
     }

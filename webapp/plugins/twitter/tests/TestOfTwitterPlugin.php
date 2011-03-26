@@ -24,7 +24,7 @@
  * Test of TwitterPlugin class
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -121,5 +121,30 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual(TwitterPlugin::repliesOrdering('location'),
         'geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count DESC');
         $this->assertEqual(TwitterPlugin::repliesOrdering(''), 'is_reply_by_friend DESC, follower_count DESC');
+    }
+
+    public function testDeactivate() {
+        //all facebook and facebook page accounts should be set to inactive on plugin deactivation
+        $webapp = Webapp::getInstance();
+        $logger = Logger::getInstance();
+        $pd = DAOFactory::getDAO('PostDAO');
+        $instance = new Instance();
+        $instance->network_user_id = 1;
+
+        $instance_builder_1 = FixtureBuilder::build('instances', array('network_username'=>'julie',
+        'network'=>'twitter', 'crawler_last_run'=>'-1d', 'is_activated'=>'1', 'is_public'=>'1'));
+
+        $instance_builder_2 = FixtureBuilder::build('instances', array('network_username'=>'john',
+        'network'=>'twitter', 'crawler_last_run'=>'-1d', 'is_activated'=>'1', 'is_public'=>'1'));
+
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $active_instances = $instance_dao->getAllInstances("DESC", true, "twitter");
+        $this->assertEqual(sizeof($active_instances), 2);
+
+        $tw_plugin = new TwitterPlugin();
+        $tw_plugin->deactivate();
+
+        $active_instances = $instance_dao->getAllInstances("DESC", true, "twitter");
+        $this->assertEqual(sizeof($active_instances), 0);
     }
 }

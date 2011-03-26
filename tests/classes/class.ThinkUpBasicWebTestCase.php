@@ -23,7 +23,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 class ThinkUpBasicWebTestCase extends WebTestCase {
     /**
@@ -42,6 +42,9 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
         $this->url = $TEST_SERVER_DOMAIN;
         $this->DEBUG = (getenv('TEST_DEBUG')!==false) ? true : false;
 
+        putenv("MODE=TESTS");
+        $this->get($this->url.'/install/setmode.php?m=tests');
+
         self::isWebTestEnvironmentReady();
 
         require THINKUP_ROOT_PATH.'tests/config.tests.inc.php';
@@ -49,6 +52,8 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
     }
 
     public function tearDown() {
+        putenv("MODE=PROD");
+        $this->get($this->url.'/install/setmode.php?m=prod');
     }
 
     public function debug($message) {
@@ -64,27 +69,5 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
      */
     public static function isWebTestEnvironmentReady() {
         ThinkUpBasicUnitTestCase::isTestEnvironmentReady();
-
-        require THINKUP_WEBAPP_PATH.'config.inc.php';
-        global $TEST_DATABASE;
-
-        if ($THINKUP_CFG['db_name'] != $TEST_DATABASE) {
-            $message = "The database name in webapp/config.inc.php does not match \$TEST_DATABASE in ".
-            "tests/config.tests.inc.php. 
-In order to test your ThinkUp installation without losing data, these database names must both point to the same ".
-"empty test database.";
-        }
-
-        if ($THINKUP_CFG['cache_pages']) {
-            $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['cache_pages'] must be set to false.";
-        }
-
-        if (isset($message)) {
-            die("Stopping tests...Integration test environment isn't ready.
-".$message."
-Please try again.
-");
-        }
     }
-
 }

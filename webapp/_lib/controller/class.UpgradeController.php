@@ -24,7 +24,7 @@
  * Upgrade Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie
+ * @copyright 2009-2011 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  * Upgrade Controller
@@ -77,6 +77,7 @@ class UpgradeController extends ThinkUpAuthController {
     }
 
     public function authControl() {
+
         $this->disableCaching();
         Utils::defineConstants();
         $config = Config::getInstance();
@@ -235,9 +236,14 @@ class UpgradeController extends ThinkUpAuthController {
         $migrations = array();
         $config = Config::getInstance();
         for ($i = 0; $i < count($dir_list); $i++) {
-            if(preg_match('/_v(\d+\.\d+)\.sql\.migration/', $dir_list[$i], $matches)) {
+            if(preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql\.migration/', $dir_list[$i], $matches)) {
                 $migration_version = $matches[1];
-                if($migration_version > $version && $migration_version <= $config->getValue('THINKUP_VERSION')) {
+                // skip early pre beta 1 versions...
+                if(preg_match('/^0\.00/', $migration_version)) {
+                    continue;
+                }
+                if(version_compare($migration_version, $version) > 0 &&
+                version_compare($migration_version, $config->getValue('THINKUP_VERSION')) < 1 ) {
                     if($migration_version == 0.3) {
                         $install_dao = DAOFactory::getDAO('InstallerDAO');
                         if(! $install_dao->needsSnowflakeUpgrade() && ! $this->snowflakeSession(false) ) {

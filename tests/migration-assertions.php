@@ -24,12 +24,12 @@
  * Upgrade Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie
+ * @copyright 2009-2011 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '0.8';
+$LATEST_VERSION = '0.9';
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -240,13 +240,13 @@ $MIGRATIONS = array(
                     'match' => "/plugin_options-2345/",
                     'column' => 'namespace', 
                 )
-           )
+            )
         )
     ),
 
     /* beta 0.8 */
     '0.8' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup-0.8.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -259,7 +259,48 @@ $MIGRATIONS = array(
                     'match' => "/varchar\(420\)/",
                     'column' => 'Type',
                 )
-           )
+            )
+        )
+    ),
+
+    /* beta 0.9 */
+    '0.9' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    // plugin row was deletedd
+                    'query' => "SELECT id FROM tu_plugins WHERE folder_name = 'flickrthumbnails'; ", 
+                    'no_match' => true,
+                ),
+                array(
+                    // Modified user_id index
+                    'query' => "SHOW INDEX FROM tu_follows WHERE Key_name = 'user_id' and Column_name = ".
+                    "'network' and Non_unique = 0;",
+                    'match' => "/user_id/",
+                    'column' => 'Key_name', 
+                 ),
+                array(
+                    // Added active index
+                    'query' => "SHOW INDEX FROM tu_follows WHERE Key_name = 'active' and Column_name = ".
+                    "'network' and Non_unique = 1;",
+                    'match' => "/active/",
+                    'column' => 'Key_name', 
+                 ),
+                array(
+                    // Added last_seen index
+                    'query' => "SHOW INDEX FROM tu_follows WHERE Key_name = 'network' and Column_name = ".
+                    "'network' and Non_unique = 1;",
+                    'match' => "/network/",
+                    'column' => 'Key_name', 
+                 ),
+                array(
+                    // Dropped column from tu_instance
+                    'query' => 'DESCRIBE tu_instances api_calls_to_leave_unmade_per_minute',
+                    'no_match' => true 
+                 )
+            )
         )
     ),
 );

@@ -36,7 +36,7 @@
  * Input:    status id
  * Example:  {$tweet->in_reply_to_id|tweet_from_id}
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author   Thomas Woodham
  * @version 1.0
  * @param integer

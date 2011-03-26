@@ -1,0 +1,46 @@
+--
+-- 2011-03-06
+-- Remove the Flickr Thumbnails plugin and move all of its options (the Flickr API key) to the Expand URLs plugin
+--
+
+-- Get the Flickr Thumbnails plugin ID
+SELECT @ftid :=id FROM tu_plugins WHERE folder_name='flickrthumbnails';
+
+-- Set the plugin option namespace
+SET @ftnspace = CONCAT("plugin_options-", @ftid);
+
+-- Deactivate the Flickr Thumbnails plugin
+UPDATE tu_plugins SET is_active = 0 WHERE id = @ftid;
+
+-- Get the Expand URLs plugin ID
+SELECT @euid :=id FROM tu_plugins WHERE folder_name='expandurls';
+
+-- Set the plugin option namespace
+SET @eunspace = CONCAT("plugin_options-", @euid);
+
+-- Delete the Flickr Thumbnails plugin
+DELETE FROM tu_plugins WHERE id = @ftid;
+
+-- Transfer its options (the Flickr API key) to the Expand URLs plugin
+UPDATE tu_options SET namespace=@eunspace WHERE namespace=@ftnspace;
+
+
+
+--
+-- 2011-03-07
+-- Speed up queries on the follows table with better indexes
+--
+
+ALTER TABLE  tu_follows DROP INDEX  user_id, ADD UNIQUE  user_id (network, follower_id, user_id);
+
+ALTER TABLE  tu_follows DROP INDEX  active, ADD INDEX  active (network,  active);
+
+ALTER TABLE  tu_follows ADD INDEX (network, last_seen);
+
+
+--
+-- 2011-03-15
+-- Move API setting to tu_options table
+--
+
+ALTER TABLE  tu_instances DROP  api_calls_to_leave_unmade_per_minute;

@@ -25,7 +25,7 @@
  *
  * Generic, reusable, common utility methods
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -199,9 +199,10 @@ class Utils {
     }
 
     /**
-     * utility function to generate var dump to string
+     * Generate var dump to string.
+     * @return str
      */
-    public static function var_dump_ret($mixed = null) {
+    public static function varDumpToString($mixed = null) {
         ob_start();
         var_dump($mixed);
         $content = ob_get_contents();

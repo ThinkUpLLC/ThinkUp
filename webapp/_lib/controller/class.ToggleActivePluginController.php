@@ -24,7 +24,7 @@
  * Toggle Active Plugin Controller
  * Activate or deactivat a plugin.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class ToggleActivePluginController extends ThinkUpAdminController {
@@ -55,7 +55,24 @@ class ToggleActivePluginController extends ThinkUpAdminController {
         if (!$this->is_missing_param) {
             $is_active = ($_GET["a"] != 1)?false:true;
             $plugin_dao = DAOFactory::getDAO('PluginDAO');
-            $this->addToView('result', $plugin_dao->setActive($_GET["pid"], $is_active));
+            $result = $plugin_dao->setActive($_GET["pid"], $is_active);
+            if ($result > 0 ) {
+                $plugin_folder = $plugin_dao->getPluginFolder($_GET["pid"]);
+                $webapp = Webapp::getInstance();
+                try {
+                    $plugin_class_name = $webapp->getPluginObject($plugin_folder);
+                    $p = new $plugin_class_name;
+                    if ($is_active) {
+                        $p->activate();
+                    } else {
+                        $p->deactivate();
+                    }
+                } catch (Exception $e) {
+                    //plugin object isn't registered, do nothing
+                    //echo $e->getMessage();
+                }
+            }
+            $this->addToView('result', $result);
             $this->view_mgr->clear_all_cache();
         }
         return $this->generateView();

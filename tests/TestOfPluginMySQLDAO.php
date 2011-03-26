@@ -24,7 +24,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author Mark Wilkie <mark[at]bitterpill[dot]org>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -66,7 +66,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
 
         $plugins = $dao->getInstalledPlugins($this->config->getValue("source_root_path"));
-        $this->assertEqual(count($plugins), 7);
+        $this->assertEqual(count($plugins), 6);
 
         usort($plugins, 'TestOfPluginMySQLDAO::pluginSort');
         $this->assertEqual($plugins[0]->name,"Embed Thread", "Embed Thread 'name' Test");
@@ -78,17 +78,14 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($plugins[2]->name,"Facebook", "Facebook 'name' Test");
         $this->assertEqual($plugins[2]->folder_name,"facebook", "Facebook 'folder_name' test");
 
-        $this->assertEqual($plugins[3]->name,"Flickr Thumbnails", "Flickr 'name' Test");
-        $this->assertEqual($plugins[3]->folder_name,"flickrthumbnails", "Flickr 'folder_name' test");
+        $this->assertEqual($plugins[3]->name, "GeoEncoder", "GeoEncoder 'name' Test");
+        $this->assertEqual($plugins[3]->folder_name, "geoencoder", "GeoEncoder 'folder_name' test");
 
-        $this->assertEqual($plugins[4]->name, "GeoEncoder", "GeoEncoder 'name' Test");
-        $this->assertEqual($plugins[4]->folder_name, "geoencoder", "GeoEncoder 'folder_name' test");
+        $this->assertEqual($plugins[4]->name,"Hello ThinkUp", "Hello 'name' Test");
+        $this->assertEqual($plugins[4]->folder_name,"hellothinkup", "Hello 'folder_name' test");
 
-        $this->assertEqual($plugins[5]->name,"Hello ThinkUp", "Hello 'name' Test");
-        $this->assertEqual($plugins[5]->folder_name,"hellothinkup", "Hello 'folder_name' test");
-
-        $this->assertEqual($plugins[6]->name,"Twitter", "Twitter 'name' Test");
-        $this->assertEqual($plugins[6]->folder_name,"twitter", "Twitter 'folder_name' test");
+        $this->assertEqual($plugins[5]->name,"Twitter", "Twitter 'name' Test");
+        $this->assertEqual($plugins[5]->folder_name,"twitter", "Twitter 'folder_name' test");
     }
 
     public function testInsertPugin() {

@@ -23,7 +23,7 @@
  *
  * ThinkUp Plugin interface
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -34,4 +34,12 @@ interface ThinkUpPlugin {
      * @return str HTML markup of configuration panel
      */
     public function renderConfiguration($owner);
+    /**
+     * Activation callback, triggered when user deactivates plugin.
+     */
+    public function activate();
+    /**
+     * Deactivation callback, triggered when user deactivates plugin.
+     */
+    public function deactivate();
 }

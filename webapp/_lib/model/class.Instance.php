@@ -27,7 +27,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 class Instance {
     /**
@@ -102,10 +102,6 @@ class Instance {
     /**
      * @var int
      */
-    var $api_calls_to_leave_unmade_per_minute;
-    /**
-     * @var int
-     */
     var $avg_replies_per_day;
     /**
      * @var bool
@@ -165,7 +161,6 @@ class Instance {
 
             $this->crawler_last_run = $r['crawler_last_run'];
             $this->earliest_reply_in_system = $r['earliest_reply_in_system'];
-            $this->api_calls_to_leave_unmade_per_minute = $r['api_calls_to_leave_unmade_per_minute'];
             $this->avg_replies_per_day = $r['avg_replies_per_day'];
             $this->network = $r['network'];
             $this->last_favorite_id = $r['last_favorite_id'];

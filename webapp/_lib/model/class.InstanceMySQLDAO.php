@@ -24,7 +24,7 @@
  * Instance MySQL Data Access Object Implementation
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
@@ -85,13 +85,12 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
     }
 
     public function getFreshestByOwnerId($owner_id) {
-        $q  = " SELECT i.* , ".$this->getAverageReplyCount();
-        $q .= " FROM #prefix#instances AS i ";
-        $q .= " INNER JOIN #prefix#owner_instances AS oi ";
-        $q .= " ON i.id = oi.instance_id ";
-        $q .= " WHERE oi.owner_id = :owner ";
-        $q .= " ORDER BY crawler_last_run DESC";
-        $q .= " LIMIT 1";
+        $q  = "SELECT i.* , ".$this->getAverageReplyCount()." ";
+        $q .= "FROM #prefix#instances AS i ";
+        $q .= "INNER JOIN #prefix#owner_instances AS oi ";
+        $q .= "ON i.id = oi.instance_id ";
+        $q .= "WHERE oi.owner_id = :owner AND i.is_active = 1 ";
+        $q .= "ORDER BY crawler_last_run DESC LIMIT 1";
         $vars = array(
             ':owner'=>$owner_id
         );

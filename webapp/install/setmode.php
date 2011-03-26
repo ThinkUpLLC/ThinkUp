@@ -1,18 +1,9 @@
 <?php
-/*
- Plugin Name: Flickr Thumbnails
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/flickr/
- Icon: assets/img/flickr_icon.png
- Description: Expands shortened Flickr photo links to thumbnail locations.
- Version: 0.01
- Author: Gina Trapani
- */
-
 /**
  *
- * ThinkUp/webapp/plugins/flickrthumbnails/controller/flickrthumbnails.php
+ * ThinkUp/webapp/install/setmode.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2011 Gina Trapani
  *
  * LICENSE:
  *
@@ -28,15 +19,27 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
+ *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2011 Gina Trapani
  */
-
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('flickrthumbnails', 'FlickrThumbnailsPlugin');
-
-$crawler = Crawler::getInstance();
-$crawler->registerCrawlerPlugin('FlickrThumbnailsPlugin');
+session_start();
+if (strtolower($_GET['m']) == "tests") {
+    putenv("MODE=TESTS");
+    $_SESSION["MODE"] = "TESTS";
+    echo "Set to tests mode";
+} elseif (strtolower($_GET['m']) == "prod") {
+    putenv("MODE=PROD");
+    $_SESSION["MODE"] = "PROD";
+    echo "Set to prod mode";
+} else {
+    echo "Currently in ";
+    if (isset($_SESSION["MODE"])) {
+        echo strtolower($_SESSION["MODE"]);
+    } else {
+        echo " prod ";
+    }
+    echo " mode";
+}

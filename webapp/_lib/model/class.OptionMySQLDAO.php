@@ -26,7 +26,7 @@
  * The data access object for retrieving and saving generic ThinkUp options and their values.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie, Gina Trapani
+ * @copyright 2009-2011 Mark Wilkie, Gina Trapani
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 class OptionMySQLDAO extends PDODAO implements OptionDAO {

@@ -23,7 +23,7 @@
  * Test of CheckCrawlerController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 require_once dirname(__FILE__).'/init.tests.php';
@@ -84,7 +84,7 @@ class TestOfCheckCrawlerController extends ThinkUpUnitTestCase {
         $instance_builders[] = FixtureBuilder::build('instances', array('crawler_last_run'=>'-2h', 'is_active'=>1));
 
         // 2nd argument is $argc, third argument is $argv
-        $controller = new CheckCrawlerController(true, 1, array(1.0));
+        $controller = new CheckCrawlerController(true, 1, array('scriptname', 1.0));
 
         $results = $controller->go();
         $this->assertEqual("Crawler hasn't run in 2 hours", $results);

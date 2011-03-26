@@ -23,7 +23,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -127,7 +127,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->setField('email', 'user@example.com');
         $this->setField('pwd', 'secret');
         $this->click("Log In");
-        $this->assertText('You have no accounts configured. Set up an account now');
+        $this->assertText('You have no services configured. Set up a service');
 
         //Visit Settings page and assert content there
         $this->click("Settings");

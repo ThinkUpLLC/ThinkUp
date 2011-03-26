@@ -23,7 +23,7 @@
  * Test of GeoEncoder ThinkUp plugin
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
+ * @copyright 2009-2011 Gina Trapani, Ekansh Preet Singh, Guillaume Boudreau
  * @author Ekansh Preet Singh <ekanshpreet[at]gmail[dot]com>
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *

@@ -26,7 +26,7 @@
  * Configures and initalizes Smarty per ThinkUp's configuration.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -82,7 +82,7 @@ class SmartyThinkUp extends Smarty {
 
         $this->assign('app_title', $app_title);
         $this->assign('site_root_path', $site_root_path);
-        $this->assign('logo_link', 'index.php');
+        $this->assign('logo_link', '');
     }
 
     /**

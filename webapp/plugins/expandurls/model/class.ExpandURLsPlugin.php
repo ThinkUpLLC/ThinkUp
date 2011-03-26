@@ -24,26 +24,94 @@
  * ExpandURLs Crawler Plugin
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Christoffer Viken, Guillaume Boudreau, Mark Wilkie
+ * @copyright 2009-2011 Gina Trapani, Christoffer Viken, Guillaume Boudreau, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
 class ExpandURLsPlugin implements CrawlerPlugin {
+
+    public function activate() {
+    }
+
+    public function deactivate() {
+    }
+
     /**
      * Run when the crawler does
-     * @TODO Set limit on total number of links to expand per crawler run in the plugin settings, for now 1500
      */
     public function crawl() {
         $logger = Logger::getInstance();
         $logger->setUsername(null);
-        $ldao = DAOFactory::getDAO('LinkDAO');
 
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('expandurls', true);
 
-        $total_links_to_expand = isset($options['links_to_expand']->option_value) ? 
+        //Flickr image thumbnails
+
+        if (isset($options['flickr_api_key']->option_value)) {
+            self::expandFlickrThumbnails($options['flickr_api_key']->option_value);
+        }
+
+        //@TODO: Bit.ly URLs
+        //@TODO: Instagr.am URLs
+
+        //Remaining URLs
+        $link_limit = isset($options['links_to_expand']->option_value) ?
         (int)$options['links_to_expand']->option_value : 1500;
-        $linkstoexpand = $ldao->getLinksToExpand($total_links_to_expand);
+
+        self::expandRemainingURLs($link_limit);
+    }
+
+    /**
+     * Render the config page.
+     */
+    public function renderConfiguration($owner) {
+        $controller = new ExpandURLsPluginConfigurationController($owner, 'expandurls');
+        return $controller->go();
+    }
+
+    /**
+     * Expand shortened Flickr links to image thumbnails if Flickr API key is set
+     * @param $api_key Flickr API key
+     */
+    public function expandFlickrThumbnails($api_key) {
+        $logger = Logger::getInstance();
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        //Flickr thumbnails
+        $logger->setUsername(null);
+        $fa = new FlickrAPIAccessor($api_key);
+
+        $flickrlinkstoexpand = $link_dao->getLinksToExpandByURL('http://flic.kr/');
+        if (count($flickrlinkstoexpand) > 0) {
+            $logger->logUserInfo(count($flickrlinkstoexpand)." Flickr links to expand.",  __METHOD__.','.__LINE__);
+        } else {
+            $logger->logUserInfo("There are no Flickr thumbnails to expand.",  __METHOD__.','.__LINE__);
+        }
+
+        $total_thumbnails = 0;
+        $total_errors = 0;
+        foreach ($flickrlinkstoexpand as $fl) {
+            $eurl = $fa->getFlickrPhotoSource($fl);
+            if ($eurl["expanded_url"] != '') {
+                $link_dao->saveExpandedUrl($fl, $eurl["expanded_url"], '', 1);
+                $total_thumbnails = $total_thumbnails + 1;
+            } elseif ($eurl["error"] != '') {
+                $link_dao->saveExpansionError($fl, $eurl["error"]);
+                $total_errors = $total_errors + 1;
+            }
+            $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
+            __METHOD__.','.__LINE__);
+        }
+    }
+
+    /**
+     * Expand all unexpanded URLs
+     * @param $total_links_to_expand The number of links to expand
+     */
+    public function expandRemainingURLs($total_links_to_expand) {
+        $logger = Logger::getInstance();
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        $linkstoexpand = $link_dao->getLinksToExpand($total_links_to_expand);
 
         $logger->logUserInfo(count($linkstoexpand)." links to expand. Please wait. Working...",
         __METHOD__.','.__LINE__);
@@ -55,9 +123,9 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                 $logger->logInfo("Expanding ".($total_expanded+1). " of ".count($linkstoexpand)." (".$l.")",
                 __METHOD__.','.__LINE__);
 
-                $eurl = self::untinyurl($l, $ldao);
+                $eurl = self::untinyurl($l, $link_dao);
                 if ($eurl != '') {
-                    $ldao->saveExpandedUrl($l, $eurl);
+                    $link_dao->saveExpandedUrl($l, $eurl);
                     $total_expanded = $total_expanded + 1;
                 } else {
                     $total_errors = $total_errors + 1;
@@ -69,14 +137,6 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         }
         $logger->logUserSuccess($total_expanded." URLs successfully expanded (".$total_errors." errors).",
         __METHOD__.','.__LINE__);
-    }
-
-    /**
-     * Render the config page.
-     */
-    public function renderConfiguration($owner) {
-        $controller = new ExpandURLsPluginConfigurationController($owner, 'expandurls');
-        return $controller->go();
     }
 
     /**

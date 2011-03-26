@@ -80,7 +80,7 @@
 
 {if $all_replies}
   {foreach from=$all_replies key=tid item=t name=foo}
-    {include file="_post.other.tpl" t=$t}
+    {include file="_post.tpl" t=$t}
   {/foreach}
 {/if}
 

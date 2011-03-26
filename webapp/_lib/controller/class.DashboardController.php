@@ -26,7 +26,7 @@
  * The main controller which displays a given view for a give instance user.
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani, Mark Wilkie
+ * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -61,8 +61,8 @@ class DashboardController extends ThinkUpController {
                 ' should appear to users who are not logged in.');
             } else  {
                 $config = Config::getInstance();
-                $this->addInfoMessage('You have no accounts configured. <a href="'.$config->getValue('site_root_path').
-                'account/?p=twitter">Set up an account now&rarr;</a>');
+                $this->addInfoMessage('You have no services configured. <a href="'.$config->getValue('site_root_path').
+                'account/">Set up a service like Twitter or Facebook now&rarr;</a>');
             }
         }
         return $this->generateView();
@@ -139,6 +139,9 @@ class DashboardController extends ThinkUpController {
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user = $user_dao->getDetails($this->instance->network_user_id, $this->instance->network);
             $this->addToView('user_details', $user);
+
+            SessionCache::put('selected_instance_network', $this->instance->network);
+            SessionCache::put('selected_instance_username', $this->instance->network_username);
         }
     }
 
@@ -169,23 +172,17 @@ class DashboardController extends ThinkUpController {
             $this->addToView('least_likely_followers', $least_likely_followers);
 
             //follower count history
+            //by day
             $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
             $follower_count_history_by_day = $follower_count_dao->getHistory($this->instance->network_user_id,
-            'twitter', 'DAY');
+            'twitter', 'DAY', 5);
+            //print_r($follower_count_history_by_day);
             $this->addToView('follower_count_history_by_day', $follower_count_history_by_day);
-            $first_follower_count = $follower_count_history_by_day['history'][0]['count'];
-            $last_follower_count = $follower_count_history_by_day['history']
-            [sizeof($follower_count_history_by_day['history'])-1]['count'];
-            $this->addToView('follower_count_by_day_trend',
-            ($last_follower_count - $first_follower_count)/sizeof($follower_count_history_by_day['history']));
+
+            //by week
             $follower_count_history_by_week = $follower_count_dao->getHistory($this->instance->network_user_id,
-            'twitter', 'WEEK');
+            'twitter', 'WEEK', 5);
             $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
-            $first_follower_count = $follower_count_history_by_week['history'][0]['count'];
-            $last_follower_count = $follower_count_history_by_week['history']
-            [sizeof($follower_count_history_by_week['history'])-1]['count'];
-            $this->addToView('follower_count_by_week_trend',
-            ($last_follower_count - $first_follower_count)/sizeof($follower_count_history_by_week['history']));
 
             $post_dao = DAOFactory::getDAO('PostDAO');
             list($all_time_clients_usage, $latest_clients_usage) =

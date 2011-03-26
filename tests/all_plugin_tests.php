@@ -23,7 +23,7 @@
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani
  */
 require_once 'init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
@@ -39,6 +39,8 @@ THINKUP_ROOT_PATH . 'tests/fixtures/'
 ));
 
 /* PLUGIN TESTS */
+require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfFlickrAPIAccessor.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfExpandURLsPluginConfigurationController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/TestOfExpandURLsPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/embedthread/tests/TestOfThinkUpEmbedController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/embedthread/tests/TestOfThreadJSController.php';
@@ -53,10 +55,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterOAuth.
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPluginConfigurationController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfURLProcessor.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrAPIAccessor.php';
-require_once THINKUP_ROOT_PATH.
-'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPluginConfigurationController.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/flickrthumbnails/tests/TestOfFlickrThumbnailsPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfGeoEncoderPluginConfigurationController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/TestOfMapController.php';
@@ -65,14 +63,13 @@ require_once THINKUP_ROOT_PATH.'tests/TestOfSmartyModifierLinkUsernames.php';
 
 $plugin_tests = & new GroupTest('Plugin tests');
 $plugin_tests->addTestCase(new TestOfExpandURLsPlugin());
+$plugin_tests->addTestCase(new TestOfExpandURLsPluginConfigurationController());
+$plugin_tests->addTestCase(new TestOfFlickrAPIAccessor());
 $plugin_tests->addTestCase(new TestOfThinkUpEmbedController());
 $plugin_tests->addTestCase(new TestOfThreadJSController());
 $plugin_tests->addTestCase(new TestOfFacebookCrawler());
 $plugin_tests->addTestCase(new TestOfFacebookPlugin());
 $plugin_tests->addTestCase(new TestOfFacebookPluginConfigurationController());
-$plugin_tests->addTestCase(new TestOfFlickrAPIAccessor());
-$plugin_tests->addTestCase(new TestOfFlickrThumbnailsPluginConfigurationController());
-$plugin_tests->addTestCase(new TestOfFlickrThumbnailsPlugin());
 $plugin_tests->addTestCase(new TestOfGeoEncoderPlugin());
 $plugin_tests->addTestCase(new TestOfGeoEncoderPluginConfigurationController());
 $plugin_tests->addTestCase(new TestOfMapController());

@@ -24,7 +24,7 @@
  * Link MySQL Data Access Object
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2010 Mark Wilkie
+ * @copyright 2009-2011 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
 class BackupMySQLDAO extends PDODAO implements BackupDAO {
@@ -117,9 +117,15 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
             throw new Exception("Unable to open backup file for exporting: $zip_file");
         }
 
-        // lock tables for writes...
-        $stmt = $this->execute("flush tables with read lock");
-
+        // write lock tables...
+        $table_locks_list = '';
+        foreach($data as $table) {
+            foreach($table as $key => $value) {
+                if($table_locks_list != '') { $table_locks_list .= ', '; }
+                $table_locks_list .= $value . ' WRITE';
+            }
+        }
+        $stmt = $this->execute("LOCK TABLES " . $table_locks_list);
         $tmp_table_files = array();
         foreach($data as $table) {
             foreach($table as $key => $value) {
