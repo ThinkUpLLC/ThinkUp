@@ -143,7 +143,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         } catch (Exception $e) {
             return false;
         }
-	}
+    }
 
     public function runMigrationSQL($sql) {
         $ps = $this->execute($sql);
@@ -250,6 +250,12 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
                             //echo "{$cfields[strtolower($table_field['Field'])]}<br>";
                             if (preg_match("| DEFAULT '(.*)'|i", $cfields[strtolower($table_field['Field'])],
                             $matches)) {
+                                //Account for comments
+                                //@TODO Do this in the regex above, not using strpos
+                                if (strpos($matches[1], "' COMMENT") !== false) {
+                                    $matches[1] = substr($matches[1], 0, strpos($matches[1], "' COMMENT"));
+                                }
+
                                 $default_value = $matches[1];
                                 if ($table_field['Default'] != $default_value) {
                                     // Add a query to change the column's default value
