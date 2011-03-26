@@ -30,6 +30,7 @@
 {/if}
 <link rel="stylesheet" type="text/css" href="{$site_root_path}plugins/geoencoder/assets/css/maps.css" />
 </head>
+
 <body {if $errormsg}>
         {include file="_usermessage.tpl"}
       {else}
@@ -40,10 +41,11 @@
       </div>
       <div id="userpanel">
         <h3>All Post Locations</h3>
-        <div id="markerlist"></div>
+        <div class="columns" id="markerlist0"></div>
+        <div class="columns" id="markerlist1"></div>
+        <div class="columns" id="markerlist2"></div>
       </div>
       {/if}
      </div>
-<div style="clear:both">&nbsp;</div>
 </body>
 </html>

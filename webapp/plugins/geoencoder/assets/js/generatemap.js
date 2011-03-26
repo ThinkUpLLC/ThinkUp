@@ -41,8 +41,11 @@
        markerClusterer.clearMarkers();
      }
 
-     var panel = $('markerlist');
+     var panel;
+     var listname;
      for (var i = 0; i < locations.length; i++) {
+        listname = 'markerlist'+i%3;
+        panel = $(listname)
         if (locations[i].includes_main_post == 1) {
           var selectedicon = new GIcon(G_DEFAULT_ICON);
           selectedicon.image = "http://gmaps-samples.googlecode.com/svn/trunk/demo/bluemarker.png";
@@ -73,7 +76,7 @@
         var item = document.createElement("div");
         var tit = document.createElement("div");
         tit.innerHTML = title;
-        item.style.cssText = 'padding:2px 0;width:243px;border-bottom:1px solid #E0ECFF;cursor:pointer;overflow:hidden;';
+        item.style.cssText = 'padding:2px 0;width:243px;max-height:52px;overflow:hidden;border-bottom:1px solid #E0ECFF;cursor:pointer;overflow:hidden;';
         panel.appendChild(item);
         item.appendChild(tit);
         GEvent.addDomListener(item, "mouseover", function() {
