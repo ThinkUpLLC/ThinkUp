@@ -65,6 +65,27 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $logger->close();
     }
 
+    public function testErrorVerbosity() {
+        $config = Config::getInstance();
+        $logger_file = $config->getValue('log_location');
+        $logger = Logger::getInstance();
+        $this->assertIsA($logger, 'Logger');
+
+        $logger = Logger::getInstance();
+        $logger->setVerbosity(Logger::ERROR_MSGS);
+        $logger->logInfo("Should not write this because it is not error level", __METHOD__.','.__LINE__);
+        $logger->logUserInfo("Should not write this because it is not error level", __METHOD__.','.__LINE__);
+        $logger->logUserError("Should write this because it is error level", __METHOD__.','.__LINE__);
+        $logger->logError("Should write this because it is error level", __METHOD__.','.__LINE__);
+
+        $messages = null;
+        $messages = file($config->getValue('log_location'));
+        $this->assertPattern('/Should write this because it is error level/', $messages[sizeof($messages) - 2]);
+        $this->assertNoPattern('/Should not write this because it is not user level/',
+        $messages[sizeof($messages) - 2]);
+        $logger->close();
+    }
+
     public function testLimitedVerbosity() {
         $config = Config::getInstance();
         $logger_file = $config->getValue('log_location');
@@ -128,18 +149,20 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $logger->logUserInfo("This is a user info message", __METHOD__.','.__LINE__);
         $logger->logInfo("This is an info message", __METHOD__.','.__LINE__);
         $logger->logUserError("This is a user error message", __METHOD__.','.__LINE__);
-        $logger->logError("This is an info message", __METHOD__.','.__LINE__);
+        $logger->logError("This is an error message", __METHOD__.','.__LINE__);
         $logger->logUserSuccess("This is a user success message", __METHOD__.','.__LINE__);
         $logger->logSuccess("This is an info message", __METHOD__.','.__LINE__);
         $logger->logDebug("This is a debug message", __METHOD__.','.__LINE__);
 
         $messages = null;
         $messages = file($config->getValue('log_location'));
-        $this->assertPattern('/INFO | TestOfLogger::testMessageTypes,123 | This is a user info message/',
+        $this->assertPattern('/INFO | TestOfLogger::testMessageTypes,149 | This is a user info message/',
+        $messages[sizeof($messages) - 4]);
+        $this->assertPattern('/ERRO | TestOfLogger::testMessageTypes,151 | This is a user error message/',
         $messages[sizeof($messages) - 3]);
-        $this->assertPattern('/ERRO | TestOfLogger::testMessageTypes,125 | This is a user error message/',
+        $this->assertPattern('/ERRO | TestOfLogger::testMessageTypes,152 | This is an error message/',
         $messages[sizeof($messages) - 2]);
-        $this->assertPattern('/SUCC | TestOfLogger::testMessageTypes,127 | This is a user success message/',
+        $this->assertPattern('/SUCC | TestOfLogger::testMessageTypes,153 | This is a user success message/',
         $messages[sizeof($messages) - 1]);
         $logger->close();
     }
@@ -189,7 +212,7 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $logger->logUserInfo("This is a user info message", __METHOD__.','.__LINE__);
         $logger->logInfo("This is an info message", __METHOD__.','.__LINE__);
         $logger->logUserError("This is a user error message", __METHOD__.','.__LINE__);
-        $logger->logError("This is an info message", __METHOD__.','.__LINE__);
+        $logger->logError("This is an error message", __METHOD__.','.__LINE__);
         $logger->logUserSuccess("This is a user success message", __METHOD__.','.__LINE__);
         $logger->logSuccess("This is an info message", __METHOD__.','.__LINE__);
         $logger->logDebug("This is a debugging message", __METHOD__.','.__LINE__);
@@ -197,8 +220,10 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $messages = null;
         $messages = file($config->getValue('log_location'));
         $this->assertPattern('/TestOfLogger: <span style="color:black">This is a user info message<\/span><br >/',
-        $messages[sizeof($messages) - 3]);
+        $messages[sizeof($messages) - 4]);
         $this->assertPattern('/TestOfLogger: <span style="color:red">This is a user error message<\/span><br >/',
+        $messages[sizeof($messages) - 3]);
+        $this->assertPattern('/TestOfLogger: <span style="color:red">This is an error message<\/span><br >/',
         $messages[sizeof($messages) - 2]);
         $this->assertPattern('/TestOfLogger: <span style="color:green">This is a user success message<\/span><br >/',
         $messages[sizeof($messages) - 1]);

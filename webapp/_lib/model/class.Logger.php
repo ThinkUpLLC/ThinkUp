@@ -234,7 +234,7 @@ class Logger {
      * @param str $classname
      */
     public function logError($status_message, $classname) {
-        $this->logStatus($status_message, $classname, self::ALL_MSGS, self::ERROR);
+        $this->logStatus($status_message, $classname, self::ERROR_MSGS, self::ERROR);
     }
 
     /**
