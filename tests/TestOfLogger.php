@@ -46,6 +46,7 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
         $config = Config::getInstance();
         $logger_file = $config->getValue('log_location');
         $logger = Logger::getInstance();
+        $logger->setVerbosity(Logger::ALL_MSGS); // make sure we're at full verbosity
         $this->assertIsA($logger, 'Logger');
 
         //no username

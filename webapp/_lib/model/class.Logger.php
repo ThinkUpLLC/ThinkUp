@@ -119,7 +119,7 @@ class Logger {
             if (!$verbosity && $verbosity !== 0) {
                 $verbosity = Logger::ALL_MSGS; // default to everything if config was not set
             }
-            
+
             self::$instance = new Logger($config->getValue('log_location'), $debug, $verbosity);
             
         }
