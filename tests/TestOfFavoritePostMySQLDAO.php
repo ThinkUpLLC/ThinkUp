@@ -234,6 +234,24 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertIsA($res, "array");
         $this->assertEqual(count($res), 6);
         $this->assertEqual($res[0]->post_text, 'This is link post 19');
+        $i = 0;
+        while ($i < 6) {
+            $this->debug( $res[$i]->post_text );
+            $i++;
+        }
+
+        //iterator
+        $res = $dao->getAllFavoritePostsIterator(20, 'twitter', 6);
+        $this->assertIsA($res, "PostIterator");
+        $i = 0;
+        while ($i < 6) {
+            $this->assertTrue($res->valid());
+            $seeme = $res->current();
+            $this->debug( $seeme->post_text );
+            $res->next();
+            $i++;
+        }
+        $this->assertFalse($res->valid());
     }
 
     /**
@@ -244,6 +262,17 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $res = $dao->getAllFavoritePostsByUsername('user1', 'twitter', 100);
         $this->assertIsA($res, "array");
         $this->assertEqual(count($res), 40);
+
+        //iterator
+        $res = $dao->getAllFavoritePostsByUsernameIterator('user1', 'twitter', 100);
+        $this->assertIsA($res, "PostIterator");
+        $i = 0;
+        while ($i < 40) {
+            $this->assertTrue($res->valid());
+            $res->next();
+            $i++;
+        }
+        $this->assertFalse($res->valid());
     }
 
     /**
