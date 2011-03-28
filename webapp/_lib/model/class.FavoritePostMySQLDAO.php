@@ -189,6 +189,6 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
     }
     public function getAllFavoritePostsIterator($user_id, $network, $count) {
         return $this->getAllFavoritePostsByUserID($user_id, $network, $count, "pub_date",
-        "DESC", null, $iterator = true);
+        "DESC", null, $page = 1, $iterator = true);
     }
 }
