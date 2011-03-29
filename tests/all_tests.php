@@ -33,6 +33,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 $RUNNING_ALL_TESTS = true;
 $TOTAL_PASSES = 0;
 $TOTAL_FAILURES = 0;
+$start_time = microtime(true);
 
 require_once THINKUP_ROOT_PATH.'tests/all_model_tests.php';
 
@@ -44,7 +45,11 @@ require_once THINKUP_ROOT_PATH.'tests/all_install_tests.php';
 
 require_once THINKUP_ROOT_PATH.'tests/all_controller_tests.php';
 
+$end_time = microtime(true);
+$total_time = ($end_time - $start_time) / 60;
+
 echo "
 Total ThinkUp test passes: ".$TOTAL_PASSES."
 Total ThinkUp test failures: ".$TOTAL_FAILURES."
+Time elapsed: ".round($total_time)." minute(s)
 ";
