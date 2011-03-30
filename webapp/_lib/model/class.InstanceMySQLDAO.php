@@ -375,7 +375,6 @@ class InstanceMySQLDAO extends PDODAO implements InstanceDAO {
         }
         $q .= " total_replies_in_system = (SELECT count(id) FROM #prefix#posts WHERE MATCH(`post_text`) AGAINST(:username)), ";
         $q .= " total_follows_in_system = (SELECT count(*) FROM #prefix#follows WHERE user_id=:uid AND active=1), ";
-        $q .= " total_users_in_system = (SELECT count(*) FROM #prefix#users), ";
         $q .= " is_archive_loaded_follows = :ialf, ";
         $q .= " is_archive_loaded_replies = :ialr, ";
         $q .= " earliest_reply_in_system = (SELECT pub_date ";

@@ -42,7 +42,7 @@ class CheckCrawlerController extends ThinkUpController {
         $this->disableCaching();
         $this->profiler_enabled = false;
 
-        $this->threshold = isset($argv[0]) ? floatval($argv[0]) : 3.0;
+        $this->threshold = isset($argv[1]) ? floatval($argv[1]) : 3.0;
     }
 
     public function control() {

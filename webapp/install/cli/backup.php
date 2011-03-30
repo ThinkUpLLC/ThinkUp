@@ -38,6 +38,12 @@ if(isset($_SERVER['SERVER_NAME'])) {
     die("This script should only be run via the command line.");
 }
 
+// we need zip support
+if(! BackupController::checkForZipSupport()) {
+    print "\nError: ThinkUp backups require Zip support\n\n";
+    exit(1);
+}
+
 try {
     array_shift($argv);
     if($argv[0] && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {

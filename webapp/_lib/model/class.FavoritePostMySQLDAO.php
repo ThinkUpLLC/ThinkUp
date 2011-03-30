@@ -34,7 +34,7 @@
  *
  */
 class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
-    
+
     public function addFavorite($favoriter_id, $vals) {
         if (!$favoriter_id) {
             throw new Exception("error: favoriter/owner id not set");
@@ -107,10 +107,8 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         }
         $q .= " ORDER BY ".$order_by." ".$direction." ";
         if ($count > 0) {
-            // $q .= " LIMIT :limit ";
             $q .= "LIMIT :start_on_record, :limit";
         }
-
         $vars = array(
           ':owner_id'=>$owner_id,
           ':network'=>$network,
@@ -133,7 +131,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
     }
 
     /**
-     * get favorited posts by the given username.
+     * Get favorited posts by the given username.
      * Returns either an iterator or an array, as specified by $iterator.
      * @param str $author_username
      * @param str $network
@@ -184,11 +182,9 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         return $posts;
     }
     public function getAllFavoritePostsByUsernameIterator($username, $network, $count = 0) {
-        return $this->getAllFavoritePostsByUsernameOrderedBy($username, $network="twitter", $count, null, null,
-        $iterator = true);
+        return $this->getAllFavoritePostsByUsernameOrderedBy($username, $network, $count, null, null, true);
     }
     public function getAllFavoritePostsIterator($user_id, $network, $count) {
-        return $this->getAllFavoritePostsByUserID($user_id, $network, $count, "pub_date",
-        "DESC", null, $iterator = true);
+        return $this->getAllFavoritePostsByUserID($user_id, $network, $count, "pub_date", "DESC", null, 1, true);
     }
 }

@@ -585,7 +585,6 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->total_replies_in_system, $mentions);
         $this->assertEqual($result->total_follows_in_system, $follows);
         $this->assertEqual($result->total_posts_in_system, $posts);
-        $this->assertEqual($result->total_users_in_system, 5);
         $this->assertTrue($result->is_archive_loaded_follows);
         $this->assertTrue($result->is_archive_loaded_replies);
 

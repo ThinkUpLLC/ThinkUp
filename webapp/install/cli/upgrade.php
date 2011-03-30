@@ -64,6 +64,11 @@ try {
         $handle = fopen ("php://stdin","r");
         $line = fgets($handle);
         if(trim($line) == 'y'){
+            // we need zip support
+            if(! BackupController::checkForZipSupport()) {
+                print "\n    Error: ThinkUp backups require Zip support\n\n";
+                exit(1);
+            }
             print "\nEnter a .zip filename (/path/tp/backup.zip) => ";
             $handle = fopen ("php://stdin","r");
             $line = fgets($handle);
