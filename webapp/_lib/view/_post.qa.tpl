@@ -35,7 +35,9 @@
        <span class="metaroll">
         <a href="{$site_root_path}post/?t={$r.question_post_id}&n={$r.network}">{$r.question_adj_pub_date|relative_datetime} ago</a>
         {if $r.network == 'twitter'}
-         - <a href="http://twitter.com/?status=@{$r.questioner_username}%20&in_reply_to_status_id={$r.question_post_id}&in_reply_to={$r.questioner_username}" target="_blank">Reply</a>
+         - <a href="http://twitter.com/intent/tweet?in_reply_to={$r.question_post_id}">Reply</a>
+         - <a href="http://twitter.com/intent/retweet?tweet_id={$r.question_post_id}">Retweet</a>
+         - <a href="http://twitter.com/intent/favorite?tweet_id={$r.question_post_id}">Favorite</a>
         {/if}
        </span>&nbsp;</div>
       </div>
@@ -70,7 +72,9 @@
        <span class="metaroll">
         <a href="{$site_root_path}post/?t={$r.answer_post_id}&n={$r.network}">{$r.answer_adj_pub_date|relative_datetime} ago</a>
         {if $r.network == 'twitter'}
-         - <a href="http://twitter.com/?status=@{$r.answerer_username}%20&in_reply_to_status_id={$r.answer_post_id}&in_reply_to={$r.answerer_username}" target="_blank">Reply</a>
+         - <a href="http://twitter.com/intent/tweet?in_reply_to={$r.answer_post_id}">Reply</a>
+         - <a href="http://twitter.com/intent/retweet?tweet_id={$r.answer_post_id}">Retweet</a>
+         - <a href="http://twitter.com/intent/favorite?tweet_id={$r.answer_post_id}">Favorite</a>
         {/if}
        </span>&nbsp;</div>
       </div>
