@@ -41,6 +41,8 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterCrawle
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetector.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterInstance.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterInstanceMySQLDAO.php';
 
 class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     /**
@@ -98,7 +100,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
         'earliest_post_in_system'=>'01-01-2009'
         );
-        $this->instance = new Instance($r);
+        $this->instance = new TwitterInstance($r);
 
         $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', 2,
         1234, 5, 350);
@@ -121,7 +123,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
         'earliest_post_in_system'=>'01-01-2009'
         );
-        $this->instance = new Instance($r);
+        $this->instance = new TwitterInstance($r);
 
         $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', 2, 1234, 5, 350);
         $this->api->available = true;
@@ -131,7 +133,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     private function setUpInstanceUserAmygdala() {
         global $THINKUP_CFG;
-        $instd = DAOFactory::getDAO('InstanceDAO');
+        $instd = DAOFactory::getDAO('TwitterInstanceDAO');
         $iid = $instd->insert('2768241', 'amygdala', 'twitter');
         $this->instance = $instd->getByUsernameOnNetwork("amygdala", "twitter");
 
@@ -349,7 +351,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
         $tc->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('InstanceDAO');
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
@@ -417,7 +419,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
         $retval = $tc->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('InstanceDAO');
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
@@ -436,7 +438,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
         $retval = $tc->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('InstanceDAO');
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
@@ -471,7 +473,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
         $retval = $tc->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('InstanceDAO');
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
@@ -493,7 +495,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
         $retval = $tc->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('InstanceDAO');
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
@@ -525,7 +527,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
         $retval = $tc->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('InstanceDAO');
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
@@ -538,7 +540,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     public function testCleanupMissedFavs() {
         $this->logger->logInfo("in testCleanupMissedFavs", __METHOD__.','.__LINE__);
-        $id = DAOFactory::getDAO('InstanceDAO');
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
 
         self::setUpInstanceUserAmygdala();
         $this->instance->last_unfav_page_checked = 3;
@@ -573,7 +575,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $builder3 = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name'=>'favs_cleanup_pages','option_value'=>3));
 
-        $id = DAOFactory::getDAO('InstanceDAO');
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
 
         self::setUpInstanceUserAmygdala();
         $this->api->available_api_calls_for_crawler = 3;

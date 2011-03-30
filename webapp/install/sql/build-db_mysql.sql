@@ -71,8 +71,6 @@ CREATE TABLE tu_instances (
   network_username varchar(255) NOT NULL COMMENT 'Username on a given network, like a user''s Twitter username or Facebook user name.',
   last_post_id bigint(20) unsigned NOT NULL COMMENT 'Last network post ID fetched for this instance.',
   crawler_last_run timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'The last time the crawler completed a run for this instance.',
-  last_page_fetched_replies int(11) NOT NULL DEFAULT '1' COMMENT 'Last page of replies fetched for this instance [Twitter-specific].',
-  last_page_fetched_tweets int(11) NOT NULL DEFAULT '1' COMMENT 'Last page of tweets fetched for this instance [Twitter-specific].',
   total_posts_by_owner int(11) DEFAULT '0' COMMENT 'Total posts by this instance as reported by service API.',
   total_posts_in_system int(11) DEFAULT '0' COMMENT 'Total posts in datastore authored by this instance.',
   total_replies_in_system int(11) DEFAULT NULL COMMENT 'Total replies in datastore authored by this instance.',
@@ -88,14 +86,25 @@ CREATE TABLE tu_instances (
   is_public int(1) NOT NULL DEFAULT '0' COMMENT 'Whether or not instance is public in ThinkUp, that is, viewable when no ThinkUp user is logged in.',
   is_active int(1) NOT NULL DEFAULT '1' COMMENT 'Whether or not the instance user is being actively crawled (0 if it is paused).',
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'The lowercase name of the source network, i.e., twitter or facebook.',
-  last_favorite_id bigint(20) unsigned DEFAULT NULL COMMENT 'Last favorite post ID of the instance saved [Twitter-specific].',
-  last_unfav_page_checked int(11) DEFAULT '0' COMMENT 'Last page of older favorites checked for backfilling [Twitter-specific].',
-  last_page_fetched_favorites int(11) DEFAULT NULL COMMENT 'Last page of favorites fetched [Twitter-specific].',
   favorites_profile int(11) DEFAULT '0' COMMENT 'Total instance favorites as reported by the service API.',
   owner_favs_in_system int(11) DEFAULT '0' COMMENT 'Total instance favorites saved in the datastore.',
   PRIMARY KEY (id),
   KEY network_user_id (network_user_id,network)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Authed network user for which ThinkUp archives data.';
+
+--
+-- Table structure for table tu_instances_twitter
+--
+
+CREATE TABLE tu_instances_twitter (
+  id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
+  last_page_fetched_replies int(11) NOT NULL DEFAULT '1' COMMENT 'Last page of replies fetched for this instance.',
+  last_page_fetched_tweets int(11) NOT NULL DEFAULT '1' COMMENT 'Last page of tweets fetched for this instance.',
+  last_favorite_id bigint(20) unsigned DEFAULT NULL COMMENT 'Last favorite post ID of the instance saved.',
+  last_unfav_page_checked int(11) DEFAULT '0' COMMENT 'Last page of older favorites checked for backfilling.',
+  last_page_fetched_favorites int(11) DEFAULT NULL COMMENT 'Last page of favorites fetched.',
+  PRIMARY KEY (id)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Twitter-specific instance metadata.';
 
 --
 -- Table structure for table tu_links
@@ -287,7 +296,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- Dump completed on 2011-03-29 15:39:27
+-- Dump completed on 2011-03-29 21:43:11
 
 --
 -- Insert DB Version
