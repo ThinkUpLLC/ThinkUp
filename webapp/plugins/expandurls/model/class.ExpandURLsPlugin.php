@@ -127,7 +127,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                 preg_match('/<meta property="og:image" content="[^"]+"\/>/i', $html, $matches);
                 if (isset($matches[0])) {
                     $eurl = substr($matches[0], 35, -3);
-                    $logger->logDebug("got instagram eurl: $eurl", __METHOD__.','.__LINE__);
+                    $logger->logDebug("Got instagr.am expanded URL: $eurl", __METHOD__.','.__LINE__);
                 }
                 if ($eurl != '') {
                     $link_dao->saveExpandedUrl($il, $eurl, '', 1);
@@ -136,9 +136,9 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                     $total_errors = $total_errors + 1;
                 }
             }
-            $logger->logUserSuccess($total_thumbnails." Instagr.am thumbnails expanded (".$total_errors." errors)",
-            __METHOD__.','.__LINE__);
         }
+        $logger->logUserSuccess($total_thumbnails." Instagr.am thumbnails expanded (".$total_errors." errors)",
+        __METHOD__.','.__LINE__);
     }
 
     /**

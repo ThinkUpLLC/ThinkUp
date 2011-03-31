@@ -58,13 +58,13 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
         //the crawler closes the log so we have to re-open it
         $logger = Logger::getInstance();
-        $ldao = DAOFactory::getDAO('LinkDAO');
+        $link_dao = DAOFactory::getDAO('LinkDAO');
 
-        $link = $ldao->getLinkById(1);
+        $link = $link_dao->getLinkById(1);
         $this->assertEqual($link->expanded_url, 'http://www.thewashingtonnote.com/archives/2010/04/communications/');
         $this->assertEqual($link->error, '');
 
-        $link = $ldao->getLinkById(2);
+        $link = $link_dao->getLinkById(2);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, 'Error expanding URL');
     }
@@ -132,17 +132,17 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->simulateLogin('admin@example.com', true);
         $crawler->crawl();
 
-        $ldao = DAOFactory::getDAO('LinkDAO');
+        $link_dao = DAOFactory::getDAO('LinkDAO');
 
-        $link = $ldao->getLinkById(43);
+        $link = $link_dao->getLinkById(43);
         $this->assertEqual($link->expanded_url, 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
         $this->assertEqual($link->error, '');
 
-        $link = $ldao->getLinkById(42);
+        $link = $link_dao->getLinkById(42);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, 'No response from Flickr API');
 
-        $link = $ldao->getLinkById(41);
+        $link = $link_dao->getLinkById(41);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, 'No response from Flickr API');
     }
@@ -317,17 +317,17 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->simulateLogin('admin@example.com', true);
         $crawler->crawl();
 
-        $ldao = DAOFactory::getDAO('LinkDAO');
+        $link_dao = DAOFactory::getDAO('LinkDAO');
 
-        $link = $ldao->getLinkById(43);
+        $link = $link_dao->getLinkById(43);
         $this->assertEqual($link->expanded_url,
         'http://images.instagram.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
         $this->assertEqual($link->error, '');
 
-        $link = $ldao->getLinkById(42);
-        $this->assertEqual($link->expanded_url, '');
+        $link = $link_dao->getLinkById(42);
+        $this->assertEqual($link->expanded_url, 'http://instagr.am/41');
 
-        $link = $ldao->getLinkById(41);
-        $this->assertEqual($link->expanded_url, '');
+        $link = $link_dao->getLinkById(41);
+        $this->assertEqual($link->expanded_url, 'http://instagr.am/40');
     }
 }
