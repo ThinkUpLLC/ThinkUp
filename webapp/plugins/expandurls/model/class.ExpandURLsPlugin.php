@@ -52,8 +52,8 @@ class ExpandURLsPlugin implements CrawlerPlugin {
             self::expandFlickrThumbnails($options['flickr_api_key']->option_value);
         }
 
+        self::expandInstagramImageURLs();
         //@TODO: Bit.ly URLs
-        //@TODO: Instagr.am URLs
 
         //Remaining URLs
         $link_limit = isset($options['links_to_expand']->option_value) ?
@@ -100,6 +100,43 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                 $total_errors = $total_errors + 1;
             }
             $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
+            __METHOD__.','.__LINE__);
+        }
+    }
+
+    /**
+     * Save direct link to Instagr.am images in data store.
+     */
+    public function expandInstagramImageURLs() {
+        $logger = Logger::getInstance();
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        $insta_links_to_expand = $link_dao->getLinksToExpandByURL('http://instagr.am/');
+        if (count($insta_links_to_expand) > 0) {
+            $logger->logUserInfo(count($insta_links_to_expand)." Instagr.am links to expand.",
+            __METHOD__.','.__LINE__);
+        } else {
+            $logger->logUserInfo("There are no Instagr.am thumbnails to expand.",  __METHOD__.','.__LINE__);
+        }
+
+        $total_thumbnails = 0;
+        $total_errors = 0;
+        $eurl = '';
+        foreach ($insta_links_to_expand as $il) {
+            $html = (string) Utils::getURLContents($il);
+            if ($html) {
+                preg_match('/<meta property="og:image" content="[^"]+"\/>/i', $html, $matches);
+                if (isset($matches[0])) {
+                    $eurl = substr($matches[0], 35, -3);
+                    $logger->logDebug("got instagram eurl: $eurl", __METHOD__.','.__LINE__);
+                }
+                if ($eurl != '') {
+                    $link_dao->saveExpandedUrl($il, $eurl, '', 1);
+                    $total_thumbnails = $total_thumbnails + 1;
+                } else {
+                    $total_errors = $total_errors + 1;
+                }
+            }
+            $logger->logUserSuccess($total_thumbnails." Instagr.am thumbnails expanded (".$total_errors." errors)",
             __METHOD__.','.__LINE__);
         }
     }
