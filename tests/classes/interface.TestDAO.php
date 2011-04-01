@@ -27,12 +27,6 @@
  * @copyright 2009-2011 Christoffer Viken, Mark Wilkie
  */
 
-class TestData {
-    var $id;
-    var $test_name;
-    var $test_id;
-}
-
 interface TestDAO {
 
     // test select query using $stmt directly...
@@ -82,6 +76,4 @@ interface TestDAO {
 
     //test BoolToDB
     public function testBoolToDB($val);
-
 }
-?>

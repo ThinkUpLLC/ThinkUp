@@ -69,13 +69,15 @@ abstract class PDOCorePluginDAO extends PDODAO{
     }
     /**
      * Get string listing all the fields to select from both core and plugin table.
-     * @TODO Use reflection on the object to iterate through the fields one by one instead of using .*.
      * @return str
      */
     protected function getFieldList() {
-        $field_list = $this->getTableName().".* ";
-        if (isset($this->meta_table_name)) {
-            $field_list .= ", ".$this->getMetaTableName().".* ";
+        $field_list = "";
+        $obj = new $this->object_name;
+        $fields = get_object_vars($obj);
+        foreach ($fields as $field=>$value) {
+            //preface id field with table name to avoid ambiguity
+            $field_list .= ($field == 'id')? $this->getTableName().".id": ", ".$field;
         }
         return $field_list;
     }
@@ -108,5 +110,21 @@ abstract class PDOCorePluginDAO extends PDODAO{
             $this->getMetaTableName().".id ";
         }
         return $join;
+    }
+
+    /**
+     * Check whether or not a row in the metadata table exists.
+     * @param int $id
+     * @return bool
+     */
+    public function doesMetaDataExist($id) {
+        $q  = "SELECT id ";
+        $q .= "FROM ".$this->getMetaTableName()." ";
+        $q .= "WHERE id=:id";
+        $vars = array(
+            ':id'=>$id
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getDataIsReturned($ps);
     }
 }

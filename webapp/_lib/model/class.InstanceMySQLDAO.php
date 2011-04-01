@@ -37,11 +37,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
      * @return str
      */
     protected function getFieldList() {
-        $field_list = $this->getTableName().".* , ".$this->getAverageReplyCount()." ";
-        if (isset($this->meta_table_name)) {
-            $field_list .= ", ".$this->getMetaTableName().".* ";
-        }
-        return $field_list;
+        return parent::getFieldList().", ".$this->getAverageReplyCount()." ";
     }
 
     public function getInstanceStalestOne() {

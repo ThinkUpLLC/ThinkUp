@@ -34,6 +34,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 $model_tests = & new GroupTest('Model tests');
 $model_tests->addTestCase(new TestOfLogger());
 $model_tests->addTestCase(new TestOfPDODAO());
+$model_tests->addTestCase(new TestOfPDOCorePluginDAO());
 $model_tests->addTestCase(new TestOfDAOFactory());
 $model_tests->addTestCase(new TestOfConfig());
 $model_tests->addTestCase(new TestOfCrawler());

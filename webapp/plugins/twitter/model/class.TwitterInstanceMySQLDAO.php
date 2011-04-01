@@ -60,7 +60,67 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
     }
 
     public function save($instance_object, $user_xml_total_posts_by_owner, $logger = false) {
-        parent::save($instance_object, $user_xml_total_posts_by_owner, $logger = false);
+        parent::save($instance_object, $user_xml_total_posts_by_owner, $logger);
+        if ($this->doesMetaDataExist($instance_object->id)) {
+            if ($logger){
+                $status_message = "Updated ".$instance_object->network_username."'s Twitter instance status.";
+                $logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+            }
+            return $this->updateMetaData($instance_object);
+        } else {
+            if ($logger){
+                $status_message = "Updated ".$instance_object->network_username.
+                "'s Twitter instance status (meta inserted).";
+                $logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+            }
+            $this->insertMetaData($instance_object);
+            return 1;
+        }
+    }
+
+    /**
+     * Insert row into metatable given a populated instance.
+     * @param TwitterInstance $instance_object
+     * @return int Insert id
+     */
+    private function insertMetaData($instance_object) {
+        $q  = "INSERT INTO ".$this->getMetaTableName()." ";
+        $q .= "(id, ";
+        $lfi = ($instance_object->last_favorite_id != "" ? true : false);
+        if ($lfi){
+            $q .= "last_favorite_id, ";
+        }
+        $q .= "last_page_fetched_replies, last_page_fetched_tweets, last_unfav_page_checked, ";
+        $q .= "last_page_fetched_favorites)";
+        $q .= "VALUES (:instance_id, ";
+        if ($lfi){
+            $q .= ":last_favorite_id, ";
+        }
+        $q .= ":last_page_fetched_replies, :last_page_fetched_tweets, :last_unfav_page_checked, ";
+        $q .= ":last_page_fetched_favorites)";
+        $vars = array(
+            ':instance_id'                  => $instance_object->id,
+            ':last_favorite_id'             => $instance_object->last_favorite_id,
+            ':last_unfav_page_checked'      => $instance_object->last_unfav_page_checked,
+            ':last_page_fetched_favorites'  => $instance_object->last_page_fetched_favorites,
+            ':last_page_fetched_replies'    => isset($instance_object->last_page_fetched_replies)?
+        $instance_object->last_page_fetched_replies:1,
+            ':last_page_fetched_tweets'     => isset($instance_object->last_page_fetched_tweets)?
+        $instance_object->last_page_fetched_tweets:1,
+        );
+        if (!$lfi){
+            unset ($vars[':last_favorite_id']);;
+        }
+        $ps = $this->execute($q, $vars);
+        return $this->getInsertId($ps);
+    }
+
+    /**
+     * Update row into metatable given a populated instance.
+     * @param TwitterInstance $instance_object
+     * @return int Number of affected rows
+     */
+    private function updateMetaData($instance_object) {
         $lfi = ($instance_object->last_favorite_id != "" ? true : false);
         $q  = "UPDATE ".$this->getMetaTableName()." SET ";
         if ($lfi){
@@ -84,11 +144,6 @@ class TwitterInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO {
             unset ($vars[':lastfavid']);;
         }
         $ps = $this->execute($q, $vars);
-
-        $status_message = "Updated ".$instance_object->network_username."'s Twitter instance status.";
-        if($logger){
-            $logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
-        }
         return $this->getUpdateCount($ps);
     }
 }

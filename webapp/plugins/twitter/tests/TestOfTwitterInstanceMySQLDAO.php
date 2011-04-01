@@ -220,8 +220,85 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertNull($result);
     }
 
+    public function testGetAllInstancesNoMetaData(){
+        //test get instances when there's no metadata
+        $instance_builder = FixtureBuilder::build('instances', array('network_username'=>'susie',
+        'network_user_id'=>59, 'network'=>'twitter', 'crawler_last_run'=>'-8d', 'is_activated'=>'1', 'is_public'=>'1',
+        'network_viewer_id'=>47));
+        $result = $this->DAO->getAllInstances("ASC", true, "twitter");
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 3);
+        $users = array('jack','jill','susie');
+        $uID = array(10,12,59);
+        $vID = array(10,12,47);
+        $last_page_replies = array(10, 11, 0);
+        foreach($result as $id=>$i){
+            $this->assertIsA($i, "Instance");
+            $this->assertIsA($i, "TwitterInstance");
+            $this->assertEqual($i->network_username, $users[$id]);
+            $this->assertEqual($i->network_user_id, $uID[$id]);
+            $this->assertEqual($i->network_viewer_id, $vID[$id]);
+            $this->assertEqual($i->last_page_fetched_replies, $last_page_replies[$id]);
+        }
+    }
 
-    public function testGetAllInstances(){
+    public function testSaveInstanceNoMetaData(){
+        //test get instances when there's no metadata
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>101, 'network_username'=>'susie',
+        'network_user_id'=>59, 'network'=>'twitter', 'crawler_last_run'=>'-8d', 'is_activated'=>'1', 'is_public'=>'1',
+        'network_viewer_id'=>47));
+        $result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
+        $this->assertIsA($result, "TwitterInstance");
+        $this->assertNull($result->last_favorite_id);
+        $this->assertFalse($this->DAO->doesMetaDataExist(101));
+
+        $logger = Logger::getInstance();
+        $this->DAO->save($result, 500, $logger);
+        $updated_result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
+        $this->assertIsA($updated_result, "TwitterInstance");
+        $this->assertNull($updated_result->last_favorite_id);
+        $this->assertEqual($updated_result->last_page_fetched_replies, 1);
+        $this->assertEqual($updated_result->last_page_fetched_tweets, 1);
+        $this->assertNull($updated_result->last_unfav_page_checked);
+
+        $result->last_favorite_id = 101;
+        $this->DAO->save($result, 500, $logger);
+
+        $updated_result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
+        $this->assertIsA($updated_result, "TwitterInstance");
+        $this->assertEqual($updated_result->last_favorite_id, 101);
+        $this->assertEqual($updated_result->last_page_fetched_replies, 0);
+        $this->assertEqual($updated_result->last_page_fetched_tweets, 0);
+        $this->assertNull($updated_result->last_unfav_page_checked);
+
+        $result->last_page_fetched_replies = 13;
+        $this->DAO->save($result, 500, $logger);
+        $updated_result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
+        $this->assertIsA($updated_result, "TwitterInstance");
+        $this->assertEqual($updated_result->last_favorite_id, 101);
+        $this->assertEqual($updated_result->last_page_fetched_replies, 13);
+        $this->assertEqual($updated_result->last_page_fetched_tweets, 0);
+        $this->assertNull($updated_result->last_unfav_page_checked);
+
+        $result->last_page_fetched_tweets = 27;
+        $this->DAO->save($result, 500, $logger);
+        $updated_result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
+        $this->assertIsA($updated_result, "TwitterInstance");
+        $this->assertEqual($updated_result->last_favorite_id, 101);
+        $this->assertEqual($updated_result->last_page_fetched_replies, 13);
+        $this->assertEqual($updated_result->last_page_fetched_tweets, 27);
+        $this->assertNull($updated_result->last_unfav_page_checked);
+
+        $result->last_page_fetched_tweets = 27;
+        $this->DAO->save($result, 500, $logger);
+        $updated_result = $this->DAO->getByUserIdOnNetwork(59, 'twitter');
+        $this->assertIsA($updated_result, "TwitterInstance");
+        $this->assertEqual($updated_result->last_favorite_id, 101);
+        $this->assertEqual($updated_result->last_page_fetched_replies, 13);
+        $this->assertEqual($updated_result->last_page_fetched_tweets, 27);
+    }
+
+    public function testGetAllInstances() {
         //getAllInstances($order = "DESC", $only_active = false, $network = "twitter")
         // Test, default settings
         $result = $this->DAO->getAllInstances();
