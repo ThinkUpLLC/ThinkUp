@@ -27,16 +27,10 @@
 
 var TUWordFrequency = function() {
 
-    this.keyup = function(e) {
-        if (e.keyCode == 27) { 
-            tu_word_freq.close();
-        }
-    };
-
     /* our word temnplates... */
-    this.word_template = '<div class="word-frequency-word" id="${id}"><span class="word-frequency-count">' +
-        '${count}</span>&nbsp;${word}</div>';
-    this.post_template = '<div style="padding: 10px;">${post} <a href="http://twitter.com/${author}">${author}</a>';
+    this.word_template = '<div class="word-frequency-word" id="${id}">${word}&nbsp;<span class="word-frequency-count">' +
+        '${count}</span></div>';
+    this.post_template = '<div class="top-word-result individual-tweet"><a href="http://twitter.com/${author}">${author}</a> ${post} ';
 
     /* our stop words... */
     this.stop_words = new Array('i', 'a', '-', "a's", "able", "about", "above", "according", "accordingly", "across", 
@@ -115,30 +109,25 @@ var TUWordFrequency = function() {
                 if(typeof(tu_grid_search) != 'undefined') {
                     tu_grid_search.close_iframe();
                 }
-                $('#word-frequency-spinner').show();
                 $('#word-frequency-div').show();
                 setTimeout(function() { tu_word_freq.find_words(); } , 300);
             });
         });
-        
-        // close word freq div...
-        $('#word-frequency-close').click( function() { tu_word_freq.close(); } );
 
         if(document.location.search.match(/wordf=true/)) {
             this.find_words();
         }
     }
 
+    $('#word-frequency-close').click( function() { tu_word_freq.close(); } );
+
     /**
      * close word frequency 
      */
     this.close = function() {
-        $('#word-frequency-div').hide();
-        $('#word-frequency-list').hide();
-        $('#word-frequency-spinner').show();
-        $('#post_replies').show();
         $('#word-frequency-posts-div').hide();
-        $(document).unbind('keyup', this.keyup);
+        $('#post_replies').show();
+        $('#word-frequency-close').hide();
     }
 
     /**
@@ -153,9 +142,6 @@ var TUWordFrequency = function() {
 
         // show frequency div
         $('#word-frequency-div').show();
-
-        // close on esc
-        $(document).keyup( this.keyup );
 
         //pull in and clean post texts...
         var posts = $('.reply_text');
@@ -177,7 +163,7 @@ var TUWordFrequency = function() {
             }
             var sorted_word = this.sorted_words[i];
             var litext = this.word_template.replace(/\${count}/, sorted_word['count']);
-            var litext = litext.replace(/\${word}/, sorted_word['default']);
+            var litext = litext.replace(/\${word}/, sorted_word['unmodified']);
             var litext = litext.replace(/\${id}/, 'sorted_word' + i);
             $('#word-frequency-words').append(litext);
         }
@@ -197,25 +183,26 @@ var TUWordFrequency = function() {
                     var post = tu_word_freq.post_template.replace(/\${post}/, post);
                     if(author) {
                         post = post.replace(/\${author}/, author);
-                        post = post.replace(/\${author}/, ' - @' + author);
+                        post = post.replace(/\${author}/, ' @' + author);
                     } else {
                         post = post.replace(/\${author}/g, '');
                     }
                     var regex = new RegExp(sorted_word['word'], 'ig');
-                    post = post.toString().replace(regex, '<strong><i>' + sorted_word['word']  + '</i></strong>');
+                    post = post.toString().replace(regex, '<span class="top-word-highlight">' + sorted_word['word']  + '</span>');
                     for(var unstemmed in sorted_word['unstemmed'][key]) {
                         var regex = new RegExp(unstemmed, 'ig');
-                        post = post.toString().replace(regex, '<strong><i>' + unstemmed  + '</i></strong>');
+                        post = post.toString().replace(regex, '<span class="top-word-highlight">' + unstemmed  + '</span>');
                     }
                     $('#word-frequency-posts').append(post);
                 }
                 $('#word-frequency-posts-div').show();
                 $('#post_replies').hide();
+                $('#word-frequency-close').show();
             });
         });
-        // hide spinner and show words...
-        $('#word-frequency-spinner').hide();
+        // show words...
         $('#word-frequency-list').show();
+        $('#word-frequency-close').hide();
 
     }
 
@@ -258,7 +245,7 @@ var TUWordFrequency = function() {
                 if(! this.words[stemmer_word]['reply_ids']) {
                     this.words[stemmer_word]['reply_ids'] = new Object();
                     this.words[stemmer_word]['unstemmed'] = new Object();
-                    this.words[stemmer_word]['default'] = tmp_word;
+                    this.words[stemmer_word]['unmodified'] = tmp_word;
                 }
                 if(! this.words[stemmer_word]['reply_ids'][reply_id]) {
                     this.words[stemmer_word]['reply_ids'][reply_id] = reply_id;
@@ -284,7 +271,7 @@ var TUWordFrequency = function() {
             }
             wordlist[wordlist.length] = {
                     word: key, count: this.words[key]['count'], 
-                    default: this.words[key]['default'],
+                    unmodified: this.words[key]['unmodified'],
                     unstemmed: this.words[key]['unstemmed']
             };
         }
@@ -315,8 +302,8 @@ var TUWordFrequency = function() {
                     break;
         return r.length > p && (r.length = p), r.join("") + (new Array(p - r.length + 1)).join("0");
     }
-
 }
 
 var tu_word_freq = new TUWordFrequency();
 tu_word_freq.init();
+tu_word_freq.find_words();

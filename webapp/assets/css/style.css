@@ -160,7 +160,7 @@ text-align: center;
 #nav-sidebar {font-size: small; color: #999;}
 #nav-sidebar ul {list-style-type: none; padding-bottom : 10px;}
 #nav-sidebar li {list-style-type: none;}
-#nav-sidebar a {
+#nav-sidebar a, .word-frequency-div div {
 	display: block;
 	color: #666;
 	padding-top: 2px;
@@ -185,13 +185,49 @@ text-align: center;
   border: 0px solid #ddd;
 }
 
-/* word frequency list */
-.word-frequency-div div {
-  float: left;
-  list-style-type: none;
-  background-color: #2a98de;
-  padding: 1px 4px 1px 4px;
-  margin: 10px 5px 0px 5px;
+,post-replies-div {
+	clear : both;
 }
-.word-frequency-count { font-weight: bold; }
+
+/* word frequency list */
+
+.word-frequency-div {
+	clear : both;
+}
+
+.word-frequency-div div {
+	font-size : large;
+	background-color: #eee;
+	-moz-border-radius: 3px;-webkit-border-radius: 3px;
+	border: 0px solid #ddd;
+	float: left;
+	list-style-type: none;
+    margin-right : 20px;
+    margin-bottom : 20px;
+}
+
+.word-frequency-div div:hover {
+  background-color: #6184B5;
+  color: white;
+  -moz-border-radius: 3px;-webkit-border-radius: 3px;
+  border: 0px solid #ddd;
+}
+
+.word-frequency-count {
+	border-left : 1px dotted #999;
+	padding-left : 6px;
+	margin-left : 4px;
+}
 .word-frequency-word { cursor: pointer; }
+
+.top-word-result {
+	padding-bottom : 10px;
+}
+.top-word-highlight {
+	padding-top: 2px;
+	padding-bottom: 4px;
+	background-color: #ff0;
+	-moz-border-radius: 3px;-webkit-border-radius: 3px;
+    margin-bottom : 20px;
+}
+ 

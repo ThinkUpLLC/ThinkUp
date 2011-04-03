@@ -13,9 +13,6 @@
             <li id="grid_search_icon"><a href="#" class="grid_search" title="Search" onclick="return false;"><span>Search & Filter Replies</span></a></li>
           {/if}
           <li><a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">Export Replies (CSV)</a></li>
-          {if $post->reply_count_cache > $top_20_post_min}
-            <li class="word_frequency"><a href="#" title="Top 20 Words" onclick="return false;"><span>Top 20 Words</span></a></li>
-          {/if}
           </ul></li>
         {/if}
         {if $sidebar_menu}
@@ -99,9 +96,7 @@
           </div> <!-- end .clearfix -->
           {if $replies}
             <div class="append_20 clearfix"><br />
-              {if $post->reply_count_cache > $top_20_post_min}
-                 {include file="_post.word-frequency.tpl"}
-              {/if}
+              {include file="_post.word-frequency.tpl"}
               {if $replies && $logged_in_user}
                   {include file="_grid.search.tpl" version2=true}
               {/if}
@@ -112,11 +107,8 @@
                 {/foreach}
                 </div>
               </div>
-              {if $post->reply_count_cache > $top_20_post_min}
-              {include file="_post.word-frequency.tpl"}
               <script src="{$site_root_path}assets/js/extlib/Snowball.stemmer.min.js" type="text/javascript"></script>
               <script src="{$site_root_path}assets/js/word_frequency.js" type="text/javascript"></script>
-              {/if}
               {if !$logged_in_user && $private_reply_count > 0}
               <span style="font-size:12px">Not showing {$private_reply_count} private repl{if $private_reply_count == 1}y{else}ies{/if}.</span>
               {/if}
