@@ -27,12 +27,6 @@
 
 var TUWordFrequency = function() {
 
-    this.keyup = function(e) {
-        if (e.keyCode == 27) { 
-            tu_word_freq.close();
-        }
-    };
-
     /* our word temnplates... */
     this.word_template = '<div class="word-frequency-word" id="${id}">${word}&nbsp;<span class="word-frequency-count">' +
         '${count}</span></div>';
@@ -115,14 +109,10 @@ var TUWordFrequency = function() {
                 if(typeof(tu_grid_search) != 'undefined') {
                     tu_grid_search.close_iframe();
                 }
-                $('#word-frequency-spinner').show();
                 $('#word-frequency-div').show();
                 setTimeout(function() { tu_word_freq.find_words(); } , 300);
             });
         });
-        
-        // close word freq div...
-        $('#word-frequency-close').click( function() { tu_word_freq.close(); } );
 
         if(document.location.search.match(/wordf=true/)) {
             this.find_words();
@@ -135,10 +125,8 @@ var TUWordFrequency = function() {
     this.close = function() {
         $('#word-frequency-div').hide();
         $('#word-frequency-list').hide();
-        $('#word-frequency-spinner').show();
         $('#post_replies').show();
         $('#word-frequency-posts-div').hide();
-        $(document).unbind('keyup', this.keyup);
     }
 
     /**
