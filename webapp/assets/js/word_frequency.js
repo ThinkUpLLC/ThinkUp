@@ -34,9 +34,9 @@ var TUWordFrequency = function() {
     };
 
     /* our word temnplates... */
-    this.word_template = '<div class="word-frequency-word" id="${id}"><span class="word-frequency-count">' +
-        '${count}</span>&nbsp;${word}</div>';
-    this.post_template = '<div style="padding: 10px;">${post} <a href="http://twitter.com/${author}">${author}</a>';
+    this.word_template = '<div class="word-frequency-word" id="${id}">${word}&nbsp;<span class="word-frequency-count">' +
+        '${count}</span></div>';
+    this.post_template = '<div class="top-word-result individual-tweet"><a href="http://twitter.com/${author}">${author}</a> ${post} ';
 
     /* our stop words... */
     this.stop_words = new Array('i', 'a', '-', "a's", "able", "about", "above", "according", "accordingly", "across", 
@@ -197,15 +197,15 @@ var TUWordFrequency = function() {
                     var post = tu_word_freq.post_template.replace(/\${post}/, post);
                     if(author) {
                         post = post.replace(/\${author}/, author);
-                        post = post.replace(/\${author}/, ' - @' + author);
+                        post = post.replace(/\${author}/, ' @' + author);
                     } else {
                         post = post.replace(/\${author}/g, '');
                     }
                     var regex = new RegExp(sorted_word['word'], 'ig');
-                    post = post.toString().replace(regex, '<strong><i>' + sorted_word['word']  + '</i></strong>');
+                    post = post.toString().replace(regex, '<span class="top-word-highlight">' + sorted_word['word']  + '</span>');
                     for(var unstemmed in sorted_word['unstemmed'][key]) {
                         var regex = new RegExp(unstemmed, 'ig');
-                        post = post.toString().replace(regex, '<strong><i>' + unstemmed  + '</i></strong>');
+                        post = post.toString().replace(regex, '<span class="top-word-highlight">' + unstemmed  + '</span>');
                     }
                     $('#word-frequency-posts').append(post);
                 }
