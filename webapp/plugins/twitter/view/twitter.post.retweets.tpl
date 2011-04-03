@@ -14,7 +14,7 @@
             <div class="grid_12">
               <div class="br">
                 <div class="clearfix pr">
-                  <div id="post_detail" class="float-r"><span class="ui-icon ui-icon-search"></span></div>
+                  <div id="post_detail" class="float-r"><span class="ui-icon ui-icon-squaresmall-plus"></span></div>
                 </div>
                 <span class="tweet pr">
                   {if $post->post_text}
