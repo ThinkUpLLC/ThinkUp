@@ -32,6 +32,8 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterInstanceMySQLDAO.php';
+
 
 class TestOfDAOFactory extends ThinkUpUnitTestCase {
 
@@ -270,6 +272,14 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'FavoritePostMySQLDAO');
     }
     /**
+     * Test get TwitterInstanceDAO
+     */
+    public function testGetTwitterInstanceDAO() {
+        $dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'TwitterInstanceMySQLDAO');
+    }
+    /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
     public function testGetInstallerDAONoConfigFile(){
@@ -281,7 +291,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 15);
+        $this->assertEqual(sizeof($result), 16);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
     }

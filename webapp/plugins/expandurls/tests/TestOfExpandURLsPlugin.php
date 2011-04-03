@@ -58,13 +58,13 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
         //the crawler closes the log so we have to re-open it
         $logger = Logger::getInstance();
-        $ldao = DAOFactory::getDAO('LinkDAO');
+        $link_dao = DAOFactory::getDAO('LinkDAO');
 
-        $link = $ldao->getLinkById(1);
+        $link = $link_dao->getLinkById(1);
         $this->assertEqual($link->expanded_url, 'http://www.thewashingtonnote.com/archives/2010/04/communications/');
         $this->assertEqual($link->error, '');
 
-        $link = $ldao->getLinkById(2);
+        $link = $link_dao->getLinkById(2);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, 'Error expanding URL');
     }
@@ -132,17 +132,17 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->simulateLogin('admin@example.com', true);
         $crawler->crawl();
 
-        $ldao = DAOFactory::getDAO('LinkDAO');
+        $link_dao = DAOFactory::getDAO('LinkDAO');
 
-        $link = $ldao->getLinkById(43);
+        $link = $link_dao->getLinkById(43);
         $this->assertEqual($link->expanded_url, 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
         $this->assertEqual($link->error, '');
 
-        $link = $ldao->getLinkById(42);
+        $link = $link_dao->getLinkById(42);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, 'No response from Flickr API');
 
-        $link = $ldao->getLinkById(41);
+        $link = $link_dao->getLinkById(41);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, 'No response from Flickr API');
     }
@@ -225,4 +225,109 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         return $builders;
     }
 
+    private function buildInstagramData() {
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('owners', array(
+            'id' => 1, 
+            'email' => 'admin@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1,
+            'is_admin' => 1 
+        ));
+
+        //Insert test links (not images, not expanded)
+        $counter = 0;
+        while ($counter < 40) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://example.com/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'is_image' => 0,
+                'error' => null
+            ));
+            $counter++;
+        }
+
+        //Insert test links (images on Instagram that don't exist, not expanded)
+        $counter = 40;
+        while ($counter < 42) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://instagr.am/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'is_image' => 1,
+                'error' => null
+            ));
+            $counter++;
+        }
+
+        // Insert legit Instagram shortened link, not expanded
+        $builders[] = FixtureBuilder::build('links', array(
+            'url' => "http://instagr.am/p/oyQ6/",
+            'expanded_url' => null,
+            'title' => "Link 0",
+            'clicks' => 0,
+            'post_id' => 200,
+            'is_image' => 1,
+            'error' => null
+        ));
+
+        //Insert test links with errors (images from Instagram, not expanded)
+        $counter = 0;
+        while ($counter < 5) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://instagr.am/p/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'is_image' => 1,
+                'error' => 'Photo not found'
+                ));
+                $counter++;
+        }
+        return $builders;
+    }
+
+    public function testExpandInstagramImageURLs() {
+        $builders = $this->buildInstagramData();
+        $crawler = Crawler::getInstance();
+        $config = Config::getInstance();
+
+        $plugin_builder = FixtureBuilder::build('plugins', array('id'=>'2', 'folder_name'=>'expandurls'));
+        $option_builder = FixtureBuilder::build('options', array(
+            'namespace' => OptionDAO::PLUGIN_OPTIONS . '-2',
+            'option_name' => 'flickr_api_key',
+            'option_value' => 'dummykey') );
+
+        $this->simulateLogin('admin@example.com', true);
+        $crawler->crawl();
+
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+
+        $link = $link_dao->getLinkById(43);
+        $this->assertEqual($link->expanded_url,
+        'http://images.instagram.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
+        $this->assertEqual($link->error, '');
+
+        $link = $link_dao->getLinkById(42);
+        $this->assertEqual($link->expanded_url, 'http://instagr.am/41');
+
+        $link = $link_dao->getLinkById(41);
+        $this->assertEqual($link->expanded_url, 'http://instagr.am/40');
+    }
 }

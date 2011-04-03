@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- * Instance - a service and user account
+ * Instance - Authorized network user for which ThinkUp archives data.
  *
  * An instance is a service and user account, i.e., @thinkupapp on Twitter is an instance. The ThinkUp Facebook Page
  * is also an instance.
@@ -31,7 +31,7 @@
  */
 class Instance {
     /**
-     * @var int ThinkUp's internal unique post ID.
+     * @var int Internal unique ID.
      */
     var $id;
     /**
@@ -43,7 +43,7 @@ class Instance {
      */
     var $network_viewer_id;
     /**
-     * @var str Username on a given network, like a user''s Twitter username or Facebook user name.
+     * @var str Username on a given network, like a user's Twitter username or Facebook user name.
      */
     var $network_username;
     /**
@@ -54,14 +54,6 @@ class Instance {
      * @var str The last time the crawler completed a run for this instance.
      */
     var $crawler_last_run;
-    /**
-     * @var int Last page of replies fetched for this instance [Twitter-specific].
-     */
-    var $last_page_fetched_replies;
-    /**
-     * @var int Last page of tweets fetched for this instance [Twitter-specific].
-     */
-    var $last_page_fetched_tweets;
     /**
      * @var int Total posts by this instance as reported by service API.
      */
@@ -91,7 +83,7 @@ class Instance {
      */
     var $percentage_replies;
     /**
-     * @var float Percent of an instance''s posts which contain links.
+     * @var float Percent of an instance's posts which contain links.
      */
     var $percentage_links;
     /**
@@ -123,18 +115,6 @@ class Instance {
      */
     var $network;
     /**
-     * @var int Last favorite post ID of the instance saved [Twitter-specific].
-     */
-    var $last_favorite_id;
-    /**
-     * @var int Last page of older favorites checked for backfilling [Twitter-specific].
-     */
-    var $last_unfav_page_checked;
-    /**
-     * @var int Last page of favorites fetched [Twitter-specific].
-     */
-    var $last_page_fetched_favorites;
-    /**
      * @var int Total instance favorites as reported by the service API.
      */
     var $favorites_profile;
@@ -150,8 +130,6 @@ class Instance {
             $this->network_username = $row['network_username'];
             $this->last_post_id = $row['last_post_id'];
             $this->crawler_last_run = $row['crawler_last_run'];
-            $this->last_page_fetched_replies = $row['last_page_fetched_replies'];
-            $this->last_page_fetched_tweets = $row['last_page_fetched_tweets'];
             $this->total_posts_by_owner = $row['total_posts_by_owner'];
             $this->total_posts_in_system = $row['total_posts_in_system'];
             $this->total_replies_in_system = $row['total_replies_in_system'];
@@ -167,9 +145,6 @@ class Instance {
             $this->is_public = PDODAO::convertDBToBool($row['is_public']);
             $this->is_active = PDODAO::convertDBToBool($row['is_active']);
             $this->network = $row['network'];
-            $this->last_favorite_id = $row['last_favorite_id'];
-            $this->last_unfav_page_checked = $row['last_unfav_page_checked'];
-            $this->last_page_fetched_favorites = $row['last_page_fetched_favorites'];
             $this->favorites_profile = $row['favorites_profile'];
             $this->owner_favs_in_system = $row['owner_favs_in_system'];
         }

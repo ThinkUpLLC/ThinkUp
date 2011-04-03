@@ -19,19 +19,19 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
  * Test Of Installer
  *
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Dwi Widiastuti, Gina Trapani
  * @author Dwi Widiastuti <admin[at]diazuwi[dot]web[dot]id>
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfInstaller extends ThinkUpUnitTestCase {
     public function __construct() {
         $this->UnitTestCase('Installer class test');
@@ -140,7 +140,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         "instances, ".$config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix').
         "owners, ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
         $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."favorites, ".$config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."users,".$config->getValue('table_prefix')."options";
         PDODAO::$PDO->exec($q);
 
@@ -195,7 +195,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         "instances, ".$config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix').
         "owners, ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
         $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."favorites, ".$config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."users," . $config->getValue('table_prefix')."options";
 
         PDODAO::$PDO->exec($q);
@@ -289,7 +289,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."post_errors, ". $config->getValue('table_prefix')."posts, " .
         $config->getValue('table_prefix')."user_errors, ". $config->getValue('table_prefix')."users, ".
         $config->getValue('table_prefix')."follows, ".$config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."links," . $config->getValue('table_prefix')."options";
+        $config->getValue('table_prefix')."links," . $config->getValue('table_prefix')."options, ".
+        $config->getValue('table_prefix')."instances_twitter";
 
         PDODAO::$PDO->exec($q);
 
@@ -312,7 +313,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."user_errors, ".$config->getValue('table_prefix')."users, ".
         $config->getValue('table_prefix')."follows, ".$config->getValue('table_prefix')."favorites, ".
         $config->getValue('table_prefix')."links, ".$config->getValue('table_prefix')."owners," .
-        $config->getValue('table_prefix')."options";
+        $config->getValue('table_prefix')."options, ".
+        $config->getValue('table_prefix')."instances_twitter";
 
         PDODAO::$PDO->exec($q);
 
@@ -334,7 +336,9 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $config->getValue('table_prefix')."posts, ". $config->getValue('table_prefix')."user_errors, ".
         $config->getValue('table_prefix')."users, ".$config->getValue('table_prefix')."favorites, ".
         $config->getValue('table_prefix')."follows, ".$config->getValue('table_prefix')."links," .
-        $config->getValue('table_prefix')."options";
+        $config->getValue('table_prefix')."options, ".
+        $config->getValue('table_prefix')."instances_twitter";
+
         PDODAO::$PDO->exec($q);
         $q = "CREATE TABLE weird_random_table(id INT);";
         PDODAO::$PDO->exec($q);
@@ -382,9 +386,9 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     public function testGetTablesToInstall(){
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
-        $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'instances', 'links',
-        'options', 'owner_instances', 'owners', 'plugins', 'post_errors', 'posts', 'user_errors', 
-        'users');
+        $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'instances',
+        'instances_twitter', 'links', 'options', 'owner_instances', 'owners', 'plugins', 'post_errors', 'posts',
+        'user_errors', 'users');
         $this->assertIdentical($tables, $expected_tables);
     }
 }

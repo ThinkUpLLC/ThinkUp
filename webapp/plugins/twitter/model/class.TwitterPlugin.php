@@ -47,26 +47,26 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
     public function crawl() {
         $config = Config::getInstance();
         $logger = Logger::getInstance();
-        $id = DAOFactory::getDAO('InstanceDAO');
-        $oid = DAOFactory::getDAO('OwnerInstanceDAO');
-        $od = DAOFactory::getDAO('OwnerDAO');
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
 
         // get oauth values
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('twitter', true);
 
-        $current_owner = $od->getByEmail(Session::getLoggedInUser());
+        $current_owner = $owner_dao->getByEmail(Session::getLoggedInUser());
 
-        $instances = $id->getAllActiveInstancesStalestFirstByNetwork('twitter');
+        $instances = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('twitter');
         foreach ($instances as $instance) {
-            if (!$oid->doesOwnerHaveAccess($current_owner, $instance)) {
+            if (!$owner_instance_dao->doesOwnerHaveAccess($current_owner, $instance)) {
                 // Owner doesn't have access to this instance; let's not crawl it.
                 continue;
             }
             $logger->setUsername($instance->network_username);
             $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Twitter.",
             __METHOD__.','.__LINE__);
-            $tokens = $oid->getOAuthTokens($instance->id);
+            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
             $noauth = true;
             $num_twitter_errors =
             isset($options['num_twitter_errors']) ? $options['num_twitter_errors']->option_value : null;
@@ -99,7 +99,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
 
             if ($api->available_api_calls_for_crawler > 0) {
 
-                $id->updateLastRun($instance->id);
+                $instance_dao->updateLastRun($instance->id);
 
                 // No auth req'd
                 //$crawler->fetchInstanceUserInfo();
@@ -130,7 +130,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
 
                 // Save instance
                 if (isset($crawler->user)) {
-                    $id->save($instance, $crawler->user->post_count, $logger);
+                    $instance_dao->save($instance, $crawler->user->post_count, $logger);
                 }
                 $logger->logUserSuccess("Finished collecting data for ".$instance->network_username." on Twitter.",
                 __METHOD__.','.__LINE__);

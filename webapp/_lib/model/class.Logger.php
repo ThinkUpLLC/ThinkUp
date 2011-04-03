@@ -57,6 +57,11 @@ class Logger {
     const USER_MSGS = 1;
     /**
      *
+     * @var int Just error messages
+     */
+    const ERROR_MSGS = 2;
+    /**
+     *
      * @var int Information-type messages
      */
     const INFO = 0;
@@ -76,7 +81,7 @@ class Logger {
     const DEBUG = 3;
     /**
      *
-     * @var int Log verbosity level (either self::ALL_MSGS or self::USER_MSGS)
+     * @var int Log verbosity level (self::ALL_MSGS, self::USER_MSGS or self::ERROR_MSGS)
      */
     var $verbosity = 0;
     /**
@@ -90,12 +95,15 @@ class Logger {
     /**
      * Open the log file; Append to any prior file
      * @param str $location
+     * @param boolean $debug default false
+     * @param int $verbosity default 0; should be value of Logger::ALL_MSGS, Logger::USER_MSGS or Logger::ERROR_MSGS
      */
-    private function __construct($location, $debug = false) {
+    private function __construct($location, $debug = false, $verbosity = 0) {
         if ( $location != false ) {
             $this->log = $this->openFile($location, 'a');
         }
         $this->debug = $debug;
+        $this->verbosity = (int)$verbosity;
     }
 
     /**
@@ -105,7 +113,15 @@ class Logger {
         if (!isset(self::$instance)) {
             $config = Config::getInstance();
             $debug = $config->getValue('debug') ? true : false;
-            self::$instance = new Logger($config->getValue('log_location'), $debug);
+
+            // check config for log_level
+            $verbosity = $config->getValue('log_verbosity');
+            if (!$verbosity && $verbosity !== 0) {
+                $verbosity = Logger::ALL_MSGS; // default to everything if config was not set
+            }
+
+            self::$instance = new Logger($config->getValue('log_location'), $debug, $verbosity);
+
         }
         return self::$instance;
     }
@@ -218,7 +234,7 @@ class Logger {
      * @param str $classname
      */
     public function logError($status_message, $classname) {
-        $this->logStatus($status_message, $classname, self::ALL_MSGS, self::ERROR);
+        $this->logStatus($status_message, $classname, self::ERROR_MSGS, self::ERROR);
     }
 
     /**
@@ -246,7 +262,7 @@ class Logger {
      * @param str $classname
      */
     public function logUserError($status_message, $classname) {
-        $this->logStatus($status_message, $classname, self::USER_MSGS, self::ERROR);
+        $this->logStatus($status_message, $classname, self::ERROR_MSGS, self::ERROR);
     }
 
     /**

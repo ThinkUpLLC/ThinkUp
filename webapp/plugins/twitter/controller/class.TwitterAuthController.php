@@ -68,7 +68,8 @@ class TwitterAuthController extends ThinkUpAuthController {
             if (isset($tok['oauth_token']) && isset($tok['oauth_token_secret'])) {
                 $api = new TwitterAPIAccessorOAuth($tok['oauth_token'], $tok['oauth_token_secret'],
                 $options['oauth_consumer_key']->option_value, $options['oauth_consumer_secret']->option_value,
-                $options['num_twitter_errors']->option_value, $options['max_api_calls_per_crawl']->option_value, false);
+                $options['num_twitter_errors']->option_value, $options['max_api_calls_per_crawl']->option_value,
+                false);
 
                 $u = $api->verifyCredentials();
 
@@ -83,9 +84,9 @@ class TwitterAuthController extends ThinkUpAuthController {
                 if ($twitter_id > 0) {
                     $msg = "<h2 class=\"subhead\">Twitter authentication successful!</h2>";
 
-                    $id = DAOFactory::getDAO('InstanceDAO');
-                    $i = $id->getByUsername($tu);
-                    $oid = DAOFactory::getDAO('OwnerInstanceDAO');
+                    $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+                    $i = $instance_dao->getByUsername($tu);
+                    $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
 
                     if (isset($i)) {
                         $msg .= "Instance already exists.<br />";
@@ -100,7 +101,8 @@ class TwitterAuthController extends ThinkUpAuthController {
                                 $msg .= "OAuth Tokens NOT updated.";
                             }
                         } else {
-                            if ($oid->insert($owner->id, $i->id, $tok['oauth_token'], $tok['oauth_token_secret'])) {
+                            if ($owner_instance_dao->insert($owner->id, $i->id, $tok['oauth_token'],
+                            $tok['oauth_token_secret'])) {
                                 $msg .= "Added owner instance.<br />";
                             } else {
                                 $msg .= "PROBLEM Did not add owner instance.<br />";
@@ -110,11 +112,11 @@ class TwitterAuthController extends ThinkUpAuthController {
                     } else {
                         $msg .= "Instance does not exist.<br />";
 
-                        $id->insert($twitter_id, $tu);
+                        $instance_dao->insert($twitter_id, $tu);
                         $msg .= "Created instance.<br />";
 
-                        $i = $id->getByUsername($tu);
-                        if ($oid->insert(
+                        $i = $instance_dao->getByUsername($tu);
+                        if ($owner_instance_dao->insert(
                         $owner->id,
                         $i->id,
                         $tok['oauth_token'],

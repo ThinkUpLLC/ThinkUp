@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/tests/all_tests.php
+ * ThinkUp/tests/TestOfPDOCorePluginDAO.php
  *
  * Copyright (c) 2009-2011 Gina Trapani
  *
@@ -20,36 +20,29 @@
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
  *
- *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani
  */
-require_once 'init.tests.php';
+require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterInstance.php';
 
-$RUNNING_ALL_TESTS = true;
-$TOTAL_PASSES = 0;
-$TOTAL_FAILURES = 0;
-$start_time = microtime(true);
+class TestOfPDOCorePluginDAO extends ThinkUpUnitTestCase {
 
-require_once THINKUP_ROOT_PATH.'tests/all_model_tests.php';
+    public function TestOfPDOCorePluginDAO() {
+        $this->UnitTestCase('TestCorePluginDAO class test');
+    }
 
-require_once THINKUP_ROOT_PATH.'tests/all_plugin_tests.php';
+    public function testInitDAO() {
+        $test_dao = new TestCorePluginMySQLDAO();
+        $this->assertNotNull(TestCorePluginMySQLDAO::$PDO);
+    }
 
-require_once THINKUP_ROOT_PATH.'tests/all_integration_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_install_tests.php';
-
-require_once THINKUP_ROOT_PATH.'tests/all_controller_tests.php';
-
-$end_time = microtime(true);
-$total_time = ($end_time - $start_time) / 60;
-
-echo "
-Total ThinkUp test passes: ".$TOTAL_PASSES."
-Total ThinkUp test failures: ".$TOTAL_FAILURES."
-Time elapsed: ".round($total_time)." minute(s)
-";
+    public function testGetFields() {
+        $test_dao = new TestCorePluginMySQLDAO();
+        $fields = $test_dao->getFieldListForTesting();
+        $this->assertEqual($fields, "#prefix#test_data.id, test_name, test_id");
+    }
+}

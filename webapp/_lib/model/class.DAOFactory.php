@@ -55,6 +55,11 @@ class DAOFactory {
         'InstanceDAO' => array(
     //MySQL Version
             'mysql' => 'InstanceMySQLDAO' ),
+    //@TODO Figure out a way to let a plugin define its DAOs in the plugin code
+    //Twitter Instance DAO
+        'TwitterInstanceDAO' => array(
+    //MySQL Version
+            'mysql' => 'TwitterInstanceMySQLDAO' ),
     //Follow DAO
         'FollowDAO' => array(
     //MySQL Version

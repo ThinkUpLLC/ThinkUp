@@ -51,6 +51,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfRetweetDetect
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterAPIAccessorOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterAuthController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterCrawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterInstanceMySQLDAO.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterOAuth.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/tests/TestOfTwitterPluginConfigurationController.php';
@@ -76,6 +77,7 @@ $plugin_tests->addTestCase(new TestOfMapController());
 $plugin_tests->addTestCase(new TestOfTwitterAPIAccessorOAuth());
 $plugin_tests->addTestCase(new TestOfTwitterAuthController());
 $plugin_tests->addTestCase(new TestOfTwitterCrawler());
+$plugin_tests->addTestCase(new TestOfTwitterInstanceMySQLDAO());
 $plugin_tests->addTestCase(new TestOfTwitterOAuth());
 $plugin_tests->addTestCase(new TestOfTwitterPlugin());
 $plugin_tests->addTestCase(new TestOfTwitterPluginConfigurationController());
