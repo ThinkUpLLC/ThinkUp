@@ -17,19 +17,23 @@
     <div class="grid_4 small">
       
       {if $t->network == 'twitter' && $username_link != 'internal'}
-        <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}      href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
+        <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}      href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}">{$t->author_username}</a>
       {else}
         <a href="{$site_root_path}public.php?u={$t->author_username|urlencode}&n={$t->network|urlencode}">{$t->author_username}</a>
       {/if}
-      <span class="ui-icon ui-icon-newwin"></span>
+      {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
+         <span class="ui-icon ui-icon-person"></span>
+      {/if}
       {if $t->author->follower_count > 0}
         <div class="gray">{$t->author->follower_count|number_format} followers</div>
       {/if}
-      {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
-         <div class="gray">Friend</div>
+      {if $t->is_protected}
+        <span class="ui-icon ui-icon-locked"></span>
+      {else}
+        <span class="ui-icon ui-icon-unlocked"></span>
       {/if}
     </div>
-    <div class="grid_14 omega">
+    <div class="grid_13 omega">
       {if $t->link->is_image}
         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
       {/if}
