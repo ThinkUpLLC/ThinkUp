@@ -1,11 +1,11 @@
 {include file="_header.tpl"}
 {include file="_statusbar.tpl"}
 
-<div class="thinkup-canvas round-all container_24">
+<div class="container_24">
   <div class="clearfix">
     
     <!-- begin left nav -->
-    <div class="grid_4 alpha">
+    <div class="grid_4 alpha omega" style="background-color:#e6e6e6">
       <div id="nav-sidebar">
         <ul id="top-level-sidenav"><br />
         {if $post}
@@ -40,7 +40,9 @@
     </div>
     <!-- end left nav -->
     
-    <div class="grid_20 omega prepend_20 append_20">
+    <div class="thinkup-canvas round-all grid_20 alpha omega prepend_20 append_20">
+      <div class="prefix_1">
+        
       {include file="_usermessage.tpl"}
       
       {if $data_template}
@@ -57,8 +59,7 @@
       {else}
     
         {if $post}
-                
-          <div class="clearfix append_20">
+          <div class="clearfix">
             <div class="grid_2 alpha">
               <div class="avatar-container">
                 <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
@@ -67,9 +68,6 @@
             
             <div class="grid_12">
               <div class="br">
-                <div class="clearfix pr">
-                  <div id="post_detail" class="float-r"><span class="ui-icon ui-icon-search"></span></div>
-                </div>
                 <div class="tweet pr">
                   {if $post->post_text}
                     {$post->post_text|link_usernames_to_twitter}
@@ -86,57 +84,8 @@
                   <div class="pic"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" alt=""></a></div>
                 {/if}
                             
-                <!-- tooltip element -->
-                <div class="tooltip">
-                	<img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" style="float:left;margin:0 15px 20px 0" />
-                	<table style="margin:0">
-                		<tr>
-                			<td class="label">Posted:</td>
-                			<td>{$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}</td>
-                		</tr>
-                		{if $post->location}
-                		<tr>
-                			<td class="label">From:</td>
-                			<td>{$post->location}</td>
-                		</tr>
-                		{/if}
-                		{if $post->source}
-                		<tr>
-                			<td class="label">Via:</td>
-                			<td>
-                			  {if $post->source eq 'web'}
-                			    the web
-                			  {else}
-              			      {$post->source}<span class="ui-icon ui-icon-newwin"></span>
-                			  {/if}
-                			</td>
-                		</tr>
-                		{/if}
-            			  {if $post->network eq 'twitter'}
-                		<tr>
-                			<td class="label">Link:</td>
-                			<td>
-                        <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
-                			</td>
-                		</tr>		
-                    {/if}
-                	</table>
-                </div> <!-- /.tooltip -->
               	
-                {literal}
-                <script>
-                  $("#post_detail").tooltip({ 
-                    tip: '.tooltip',
-                    effect: 'fade',
-                    offset: [0, 0],
-                    position: 'bottom center',
-                    relative: true,
-                    opacity: 1,
-                    delay: 30,
-                  });
-                </script>
-                {/literal}
-                <!--{if $post->is_geo_encoded eq 1}
+              <!--{if $post->is_geo_encoded eq 1}
                 <div>
                 <a href="{$site_root_path}post/map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
                   <img src="{$site_root_path}assets/img/map_icon.png" class="map-icon map-icon-public">
@@ -155,6 +104,55 @@
           </div> <!-- /.clearfix -->
           {/if} <!-- end if post -->
           
+          {literal}
+          <script>
+          $(function() {
+            
+            $('#button').click(function() {
+              $('#more-detail').toggle('slow', function() {
+                // Animation complete.
+                if ($('#button').hasClass('ui-icon-circle-arrow-s')) {
+                    $('#button').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');
+                } else if ($('#button').hasClass('ui-icon-circle-arrow-n')) {
+                    $('#button').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s');
+                } else {
+                    $('#button').addClass('ui-icon-circle-arrow-s');
+                }
+              });
+            });
+ 
+      	  });
+          </script>
+          {/literal}
+          
+          <!-- more-detail element -->
+          <div class="clearfix append">
+            <span id="button" class="float-l ui-icon ui-icon-circle-arrow-s"></span>
+          </div>
+          
+          <div class="small clearfix" id="more-detail" style="display:none;width:760px;">
+            <div class="grid_2 alpha">
+          	  <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" />
+          	</div>
+            <div class="grid_6">
+          	  Posted: {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
+          		{if $post->location}From: {$post->location}{/if}
+          	</div>
+            <div class="grid_6 omega">
+          		{if $post->source}
+          		Via:
+          			  {if $post->source eq 'web'}
+          			    the web
+          			  {else}
+        			      {$post->source}<span class="ui-icon ui-icon-newwin"></span>
+          			  {/if}
+          		{/if}<br>
+      			  {if $post->network eq 'twitter'}
+          		  Link:<a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
+              {/if}
+            </div>
+          </div> <!-- /#more-detail -->
+          
           {if $replies}
             <div class="append_20 clearfix bt">
               {if $post->reply_count_cache > $top_20_post_min}
@@ -168,6 +166,7 @@
                 {foreach from=$replies key=tid item=t name=foo}
                   {include file="_post.clean.tpl" t=$t sort='no' scrub_reply_username=true reply_count=$post->reply_count_cache}
                 {/foreach}
+                
                 </div>
               </div>
               {if $post->reply_count_cache > $top_20_post_min}
@@ -195,6 +194,7 @@
       </div>
 
     </div> <!-- /.clearfix -->
+</div>
 </div> <!-- /.thinkup-canvas -->
 
 <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
