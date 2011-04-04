@@ -65,7 +65,13 @@ var TUGridSearch = function() {
             id : "date",
             name : "Date",
             field : "date",
-            width: 150
+            width: 150,
+            formatter: function(row, cell, value, columnDef, dataContext) {
+                var url_match = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/g;
+                return '<a href="http://twitter.com/' + dataContext['author'] + 
+                '/status/' + dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) 
+                + '" target="_blank">' + value + '</a>';
+            }
         }, {
             id : "text",
             name : "",
@@ -75,9 +81,7 @@ var TUGridSearch = function() {
                 var url_match = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/g;
                 value = value.replace(url_match, '<a href="$1" target="_blank">$1</a> ');
                 value = value.replace(/@(\w+)/g, '');
-                return '<a href="http://twitter.com/' + dataContext['author'] + 
-                '/status/' + dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) 
-                + '" target="_blank">#</a>&nbsp; ' + value;
+                return value;
             }
         } ];
         if( parent.GRID_TYPE == 2) {
