@@ -117,6 +117,10 @@ li {
 
 }
 
+.slick-header {
+	display : none;
+}
+
 
 #grid_search_form {
 	text-align : center;
