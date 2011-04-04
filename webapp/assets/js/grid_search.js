@@ -57,6 +57,7 @@ var TUGridSearch = function() {
             id : "author",
             name : "Author",
             field : "author",
+            width : 140,
             formatter: function(row, cell, value, columnDef, dataContext) { 
                     return '<a href="http://twitter.com/' + value + '" target="_blank">' + value  + '</a>'; 
                 }
@@ -64,16 +65,16 @@ var TUGridSearch = function() {
             id : "date",
             name : "Date",
             field : "date",
-            width: 110
+            width: 140
         }, {
             id : "text",
-            name : "Text",
+            name : "",
             field : "text",
-            width : 625,
+            width : 660,
             formatter: function(row, cell, value, columnDef, dataContext) {
                 var url_match = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/g;
                 value = value.replace(url_match, '<a href="$1" target="_blank">$1</a> ');
-                value = value.replace(/@(\w+)/g, '<a href="http://twitter.com/$1" target="_blank">@$1</a>');
+                value = value.replace(/@(\w+)/g, '');
                 return '<a href="http://twitter.com/' + dataContext['author'] + 
                 '/status/' + dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) 
                 + '" target="_blank">#</a>&nbsp; ' + value;

@@ -1,17 +1,14 @@
 @import url('slick-default-theme.css');
 
 * {
-    font-family: arial;
-    font-size: 8pt;
 }
 
 body {
-    //background: beige;
+	font-size : 12px;
 }
 
 h2 {
     font-size: 10pt;
-    border-bottom: 1px dotted gray;
 }
 
 ul {
@@ -29,16 +26,14 @@ li {
 } 
 
 #myGrid {
-    background: gray;
+    background: transparent;
     outline: 0;
-    border: 1px solid gray;
+    height : 600px;
 }
 
 .grid-header {
-	border: 1px solid gray;
 	border-bottom: 0;
 	border-top: 0;
-	//background: url('../images/header-bg.gif') repeat-x center top;
 	color: black;
 	height: 14px;
 	line-height: 14px;
@@ -78,6 +73,61 @@ li {
 }
 
  
+ 
+
+.slick-cell {
+	float: left;
+
+	border: none;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	z-index: 1;
+	padding: 1px 2px 2px 1px;
+    margin: 0;
+    
+	white-space: nowrap;
+
+	cursor: default;
+} 
+
+.slick-cell a {
+    text-decoration : none;
+}
+
+.slick-cell a:hover {
+    text-decoration : underline;
+}
+
+.slick-cell .c0, div.ui-widget-content.slick-row .c0 {
+	color : #ccc;
+}
+
+.slick-row {
+	padding-bottom : 6px;
+}
+
+
+.slick-viewport {
+
+	overflow : scroll;
+	height : 600px;
+
+}
+
+
+#grid_search_form {
+	text-align : center;
+	margin-left : auto;
+	margin-right : auto;
+}
+
+#grid_search_input {
+	font-size : x-large;
+}
+ 
 
 /* Individual cell styles */
 .slick-cell.task-name {
@@ -94,7 +144,6 @@ li {
 .slick-cell.cell-move-handle {
 	font-weight: bold;
 	text-align: right;
-    border-right: solid gray;
 
     background: #efefef;
 	cursor: move;
@@ -124,110 +173,5 @@ li {
 	-webkit-border-radius: 3px;
 }
 
-
-/* TextCellEditor, DateCellEditor */
-input.editor-text {
-	width: 100%;
-	height: 100%;
-	border: 0;
-	margin: 0;
-	background: transparent;
-	outline: 0;
-    padding: 0;
-
-}
-
-.slick-cell .ui-datepicker-trigger {
-	margin-top: 2px;
-	padding: 0;
-	vertical-align: top;
-}
-
-/* PercentCompleteCellEditor */
-input.editor-percentcomplete {
-	width: 100%;
-	height: 100%;
-	border: 0;
-	margin: 0;
-	background: transparent;
-	outline: 0;
-    padding: 0;
-
-    float: left;
-}
-
-.editor-percentcomplete-picker {
-	position: relative;
-    display: inline-block;
-    width: 16px;
-    height: 100%;
-    background: url("../images/pencil.gif") no-repeat center center;	
-	overflow: visible;
-	z-index: 1000;
-	float: right;
-}
-	
-.editor-percentcomplete-helper {
-    border: 0 solid gray;
-    position: absolute;
-    top: -2px;
-    left: -9px;
-    background: url("../images/editor-helper-bg.gif") no-repeat top left;
-    padding-left: 9px;
-
-    width: 120px;
-    height: 140px;
-    display: none;	
-	overflow: visible;
-}
-
-
-.editor-percentcomplete-wrapper {
-	background:beige;
-    padding: 20px 8px;
-
-    width:100%;
-	height:98px;
-	border:1px solid gray;
-	border-left:0;
-}
-
-.editor-percentcomplete-buttons {
-	float: right;	
-}
-
-.editor-percentcomplete-buttons button {
-	width: 80px;	
-}
-
-
-.editor-percentcomplete-slider {
-	float: left;	
-}
-
- .editor-percentcomplete-picker:hover .editor-percentcomplete-helper {
-	display: block;
-}
-
-.editor-percentcomplete-helper:hover {
-	display: block;
-}
-
-
-
-/* YesNoSelectCellEditor */
-select.editor-yesno {
-	width: 100%;
-	margin: 0;
-	vertical-align: middle;		
-}
-
-/* YesNoCheckboxCellEditor */
-input.editor-checkbox {
-	margin: 0;
-	height: 100%;
-	padding: 0;
-	border: 0;
-}
 
 
