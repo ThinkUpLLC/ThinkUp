@@ -28,17 +28,13 @@ $(document).keyup(function(e) {
 <body>
 <form onsubmit="return false;"  id="grid_search_form">
 
-	<input type=text id="grid_search_input" style="width:400px;"><input type="submit" value="search">
-	<div id="grid_search_results_count"><span id="grid_search_count">0</span> results <input type="button" value="export" id="grid_export"></div>
+	<input type=text id="grid_search_input" style="width:400px;"><input id="grid_search_input" type="submit" value="search">
+	<div id="grid_search_results_count"><span id="grid_search_count">0</span> replies</div>
 
 </form>
-<img src="../img/loading.gif" id="grid_search_spinner" style="margin: 250px 0px 0px 430px;">
 <div id="myGrid" style="width:860px;height:100%; display: none; margin: 20px 0px 0px 20px;"></div>
 <script type="text/javascript">
     tu_grid_search.get_data();
 </script>
-<form onsubmit="return false;"  action="../../post/grid-export.php" method="post" id="grid_export_form" target="_blank">
-<input type="hidden" name="grid_export_data" value="" id="grid_export_data"/>
-</form>
 </body>
 </html>

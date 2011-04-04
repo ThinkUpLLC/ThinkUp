@@ -105,6 +105,10 @@ li {
 	color : #ccc;
 }
 
+.slick-cell .c3, div.ui-widget-content.slick-row .c3 {
+	width : 420px;
+}
+
 .slick-row {
 	padding-bottom : 6px;
 }
@@ -126,6 +130,17 @@ li {
 
 #grid_search_input {
 	font-size : x-large;
+}
+
+#grid_search_input_button {
+	font-size : x-large;
+	background : #ccc;
+	border : 1px solid #999;
+}
+
+#grid_search_results_count {
+	font-size : small;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
  
 

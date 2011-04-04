@@ -65,12 +65,12 @@ var TUGridSearch = function() {
             id : "date",
             name : "Date",
             field : "date",
-            width: 140
+            width: 150
         }, {
             id : "text",
             name : "",
             field : "text",
-            width : 660,
+            width : 400,
             formatter: function(row, cell, value, columnDef, dataContext) {
                 var url_match = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/g;
                 value = value.replace(url_match, '<a href="$1" target="_blank">$1</a> ');
