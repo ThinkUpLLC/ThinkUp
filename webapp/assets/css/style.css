@@ -48,7 +48,7 @@ a:hover {text-decoration: none;color: #6eac2c;}
 
 /* GRAPHICS AND ICONS 
 ==============================*/
-.ui-icon{display: inline-block !important;}
+.ui-icon, .sprite {display: inline-block !important;}
 
 /* LISTS
 ==============================*/

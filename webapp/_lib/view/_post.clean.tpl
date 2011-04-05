@@ -22,15 +22,15 @@
         <a href="{$site_root_path}public.php?u={$t->author_username|urlencode}&n={$t->network|urlencode}">{$t->author_username}</a>
       {/if}
       {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
-         <span class="ui-icon ui-icon-person"></span>
+         <span class="sprite icon-friend"></span>
       {/if}
       {if $t->author->follower_count > 0}
         <div class="gray">{$t->author->follower_count|number_format} followers</div>
       {/if}
       {if $t->is_protected}
-        <span class="ui-icon ui-icon-locked"></span>
+        <span class="sprite icon-locked"></span>
       {else}
-        <span class="ui-icon ui-icon-unlocked"></span>
+        <span class="sprite icon-unlocked"></span>
       {/if}
     </div>
     <div class="grid_13 omega">

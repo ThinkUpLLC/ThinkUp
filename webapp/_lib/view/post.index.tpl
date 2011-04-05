@@ -37,7 +37,7 @@
     </div>
     <!-- end left nav -->
     
-    <div class="thinkup-canvas round-all grid_20 alpha omega prepend_20 append_20">
+    <div class="thinkup-canvas round-all grid_20 alpha omega prepend_20 append_20" style="min-height:340px">
       <div class="prefix_1">
         
       {include file="_usermessage.tpl"}
@@ -64,7 +64,7 @@
             </div>
             
             <div class="grid_12">
-              <div class="br">
+              <div class="br" style="min-height:110px">
                 <div class="tweet pr">
                   {if $post->post_text}
                     {$post->post_text|link_usernames_to_twitter}
@@ -80,6 +80,55 @@
                 {if $post->link->expanded_url and $post->link->is_image}<br ><br >
                   <div class="pic"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" alt=""></a></div>
                 {/if}
+ 
+                {literal}
+                <script>
+                $(function() {
+
+                  $('#button').click(function() {
+                    $('#more-detail').toggle('slow', function() {
+                      // Animation complete.
+                      if ($('#button').hasClass('ui-icon-circle-arrow-s')) {
+                          $('#button').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');
+                      } else if ($('#button').hasClass('ui-icon-circle-arrow-n')) {
+                          $('#button').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s');
+                      } else {
+                          $('#button').addClass('ui-icon-circle-arrow-s');
+                      }
+                    });
+                  });
+
+            	  });
+                </script>
+                {/literal}
+
+                <!-- more-detail element -->
+                <div class="clearfix prepend append">
+                  <span id="button" class="float-l ui-icon ui-icon-circle-arrow-s"></span>
+                </div>
+
+                <div class="small clearfix" id="more-detail" style="display:none;width:760px;">
+                  <div class="grid_2 alpha">
+                	  <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" />
+                	</div>
+                  <div class="grid_6">
+                	  Posted: {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
+                		{if $post->location}From: {$post->location}{/if}
+                	</div>
+                  <div class="grid_6 omega">
+                		{if $post->source}
+                		Via:
+                			  {if $post->source eq 'web'}
+                			    the web
+                			  {else}
+              			      {$post->source}<span class="ui-icon ui-icon-newwin"></span>
+                			  {/if}
+                		{/if}<br>
+            			  {if $post->network eq 'twitter'}
+                		  Link:<a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
+                    {/if}
+                  </div>
+                </div> <!-- /#more-detail -->
                             
               	
               <!--{if $post->is_geo_encoded eq 1}
@@ -101,56 +150,9 @@
           </div> <!-- /.clearfix -->
           {/if} <!-- end if post -->
           
-          {literal}
-          <script>
-          $(function() {
-            
-            $('#button').click(function() {
-              $('#more-detail').toggle('slow', function() {
-                // Animation complete.
-                if ($('#button').hasClass('ui-icon-circle-arrow-s')) {
-                    $('#button').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');
-                } else if ($('#button').hasClass('ui-icon-circle-arrow-n')) {
-                    $('#button').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s');
-                } else {
-                    $('#button').addClass('ui-icon-circle-arrow-s');
-                }
-              });
-            });
- 
-      	  });
-          </script>
-          {/literal}
-          
-          <!-- more-detail element -->
-          <div class="clearfix append">
-            <span id="button" class="float-l ui-icon ui-icon-circle-arrow-s"></span>
-          </div>
-          
-          <div class="small clearfix" id="more-detail" style="display:none;width:760px;">
-            <div class="grid_2 alpha">
-          	  <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" />
-          	</div>
-            <div class="grid_6">
-          	  Posted: {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
-          		{if $post->location}From: {$post->location}{/if}
-          	</div>
-            <div class="grid_6 omega">
-          		{if $post->source}
-          		Via:
-          			  {if $post->source eq 'web'}
-          			    the web
-          			  {else}
-        			      {$post->source}<span class="ui-icon ui-icon-newwin"></span>
-          			  {/if}
-          		{/if}<br>
-      			  {if $post->network eq 'twitter'}
-          		  Link:<a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
-              {/if}
-            </div>
-          </div> <!-- /#more-detail -->
           
           {if $replies}
+          <div class="prepend">
             <div class="append_20 clearfix bt">
               {if $post->reply_count_cache > $top_20_post_min}
                  {include file="_post.word-frequency.tpl"}
@@ -175,6 +177,7 @@
                 <span style="font-size:12px">Not showing {$private_reply_count} private repl{if $private_reply_count == 1}y{else}ies{/if}.</span>
               {/if}
             </div>
+          </div>
           {/if}
     {/if}
 
