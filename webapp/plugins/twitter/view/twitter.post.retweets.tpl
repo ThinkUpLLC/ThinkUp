@@ -7,15 +7,12 @@
        {if $post}
           <div class="clearfix">
             <div class="grid_2 alpha">
-            <div class="avatar-container">
-              <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
+              <div class="avatar-container">
+                <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
              </div>
             </div>
             <div class="grid_12">
-              <div class="br">
-                <div class="clearfix pr">
-                  <div id="post_detail" class="float-r"><span class="ui-icon ui-icon-squaresmall-plus"></span></div>
-                </div>
+              <div class="br" style="min-height:110px">
                 <span class="tweet pr">
                   {if $post->post_text}
                     {$post->post_text|link_usernames_to_twitter}
@@ -28,58 +25,62 @@
                     {$post->link->expanded_url}
                   </a>
                 {/if}
-                
-                <!-- tooltip element -->
-                <div class="tooltip">
-                	<img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" style="float:left;margin:0 15px 20px 0" />
-                	<table style="margin:0">
-                		<tr>
-                			<td class="label">Posted:</td>
-                			<td>{$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}</td>
-                		</tr>
-                		{if $post->location}
-                		<tr>
-                			<td class="label">From:</td>
-                			<td>{$post->location}</td>
-                		</tr>
-                		{/if}
-                		{if $post->source}
-                		<tr>
-                			<td class="label">Via:</td>
-                			<td>
-                			  {if $post->source eq 'web'}
-                			    the web
-                			  {else}
-                			    {$post->source}<span class="ui-icon ui-icon-newwin"></span>
-                			  {/if}
-                			</td>
-                		</tr>
-                		{/if}
-            			  {if $post->network eq 'twitter'}
-                		<tr>
-                			<td class="label">Link:</td>
-                			<td>
-                          <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
-                			</td>
-                		</tr>		
-                    {/if}
-                	</table>
-                </div> <!-- /.tooltip -->
-
+ 
                 {literal}
                 <script>
-                  $("#post_detail").tooltip({ 
-                    tip: '.tooltip',
-                    effect: 'fade',
-                    offset: [0, 0],
-                    position: 'bottom center',
-                    relative: true,
-                    opacity: 1,
-                    delay: 30,
+                $(function() {
+
+                  $('#button').click(function() {
+                    $('#more-detail').toggle('slow', function() {
+                      // Animation complete.
+                      if ($('#button').hasClass('ui-icon-circle-arrow-s')) {
+                          $('#button').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');
+                      } else if ($('#button').hasClass('ui-icon-circle-arrow-n')) {
+                          $('#button').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s');
+                      } else {
+                          $('#button').addClass('ui-icon-circle-arrow-s');
+                      }
+                    });
                   });
+
+            	  });
                 </script>
                 {/literal}
 
+                <!-- more-detail element -->
+                <div class="clearfix append">
+                  <span id="button" class="float-l ui-icon ui-icon-circle-arrow-s"></span>
+                </div>
+                <div class="small clearfix" id="more-detail" style="display:none;width:760px;">
+                  <div class="grid_2 alpha">
+                    <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png">
+                 	</div>
+                  <div class="grid_6">
+                	  Posted: {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
+                		{if $post->location}From: {$post->location}{/if}
+                	</div>
+                  <div class="grid_6 omega">
+                		{if $post->source}
+                		Via:
+                			  {if $post->source eq 'web'}
+                			    the web
+                			  {else}
+              			      {$post->source}<span class="ui-icon ui-icon-newwin"></span>
+                			  {/if}
+                		{/if}<br>
+            			  {if $post->network eq 'twitter'}
+                		  Link:<a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
+                    {/if}
+                  </div>
+                </div> <!-- /#more-detail -->
+ 
+ 
+ 
+ 
+              </div>
+                
+ 
+ 
                 <!--{if $post->is_geo_encoded eq 1}
                 <div>
                 <a href="{$site_root_path}post/map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
@@ -88,7 +89,6 @@
                 </div>
                 {/if}-->
 
-              </div>
             </div>
             <div class="grid_5 center keystats omega">
               <div class="big-number">
@@ -104,14 +104,17 @@
               
           </div> <!-- end .clearfix -->
 
+
+
 {if $retweets}
+<div class="prepend">
   <div class="append_20 clearfix bt"><br />
     {foreach from=$retweets key=tid item=t name=foo}
       {include file="_post.clean.tpl" t=$t sort='no' scrub_reply_username=false}
     {/foreach}
   </div>
+</div>
 {/if}
-
 
 <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
 
