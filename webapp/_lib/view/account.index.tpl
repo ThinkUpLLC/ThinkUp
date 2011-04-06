@@ -12,6 +12,7 @@
       {/if}
       <li><a href="#instances">Your ThinkUp Password</a></li>
       {if $user_is_admin}<li><a href="#ttusers">All ThinkUp Accounts</a></li>{/if}
+      {if $user_is_admin}<li><a href="#invite">Invite A User</a></li>{/if}
     </ul>
     
     <div class="section thinkup-canvas clearfix" id="plugins">
@@ -159,6 +160,35 @@
         </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #ttusers -->
     {/if} <!-- end is_admin -->
+
+    {if $user_is_admin}
+    <div class="sections" id="invite">
+      <div class="thinkup-canvas clearfix">
+        <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
+        {include file="_usermessage.tpl"}
+          <form name="invite" method="post" action="index.php?m=manage#invite" class="prepend_20 append_20">
+            <div class="clearfix">
+              <div class="grid_9 prefix_1 right"><label for="full_name">Name Of User To Invite:</label></div>
+              <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
+                <input name="full_name" type="text" id="full_name">
+              </div>
+            </div>
+            <div class="clearfix">
+              <div class="grid_9 prefix_1 right"><label for="email">Email Of User To Invite:</label></div>
+              <div class="grid_9 left">
+                <input name="email" type="text" id="email">
+              </div>
+              <div class="prefix_10 grid_9 left">
+                <input type="submit" id="login-save" name="invite" value="Invite" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div> <!-- end #invite -->
+    {/if} <!-- end is_admin -->
+
+
     
   </div>
 </div>

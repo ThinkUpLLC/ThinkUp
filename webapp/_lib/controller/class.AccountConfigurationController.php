@@ -66,6 +66,41 @@ class AccountConfigurationController extends ThinkUpAuthController {
             }
         }
 
+        //process invite
+	if (isset($_POST['invite']) && ( $_POST['invite'] == 'Invite' ) && isset($_POST['full_name']) && isset($_POST['email']) ) {
+		if (!Utils::validateEmail($_POST['email'])) {
+			$this->addErrorMessage("Incorrect email. Please enter valid email address.");
+		} else { 
+			if ($owner_dao->doesOwnerExist($_POST['email'])) {
+				$this->addErrorMessage("User account already exists.");
+			} else {
+			        $config = Config::getInstance() ;
+				$es = new SmartyThinkUp();
+				$es->caching=false;
+				$session = new Session();
+				$activ_code = rand(1000, 9999);
+				// Generate a temporary password
+				$password =  substr(md5(uniqid(rand(), true)), 0, 10) ;
+				$cryptpass = $session->pwdcrypt($password);
+				$server = $_SERVER['HTTP_HOST'];
+				$owner_dao->create($_POST['email'], $cryptpass, $activ_code, $_POST['full_name']) ;
+
+				$es->assign('server', $server );
+				$es->assign('email', urlencode($_POST['email']) );
+				$es->assign('activ_code', $activ_code );
+				$es->assign('password', $password ) ;
+				$message = $es->fetch('_email.invite.tpl');
+
+				// Check if mail button is clicked
+				Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
+				." Account", $message);
+
+				unset($_SESSION['ckey']);
+				$this->addSuccessMessage("Success! Invitation Sent.");
+			}
+		}
+	}
+
         //process account deletion
         if (isset($_POST['action']) && $_POST['action'] == 'delete' && isset($_POST['instance_id']) &&
         is_numeric($_POST['instance_id'])) {
