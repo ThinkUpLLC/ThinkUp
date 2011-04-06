@@ -10,7 +10,7 @@
 
   <!-- jquery -->
   <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
-  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.8.11.custom.css">
+  <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/jquery-ui-1.7.1.custom.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
   <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
@@ -62,7 +62,6 @@
   <!-- custom css -->
   {literal}
   <style>
-  .tooltip { background:url({/literal}{$site_root_path}{literal}assets/img/tooltip/black_arrow_up_big.png);
   .line { background:url('{/literal}{$site_root_path}{literal}assets/img/border-line-470.gif') no-repeat center bottom;
   margin: 8px auto;
   height: 1px;
