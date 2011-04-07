@@ -45,7 +45,36 @@ To run a single test, set the TEST_METHOD environment variable. For example:
 
     $ TEST_METHOD=testIsPluginActive php tests/TestOfPluginMySQLDAO.php
 
-The webapp tests contained in `tests/all_integration_tests.php` make three assumptions:
+## Intermittent Testing Bugs
+
+Unfortunately, the ThinkUp testing framework is currently subject to intermittent bugs (affectionately referred to on
+the mailing list as "[heisenbugs](http://en.wikipedia.org/wiki/Uncertainty_principle)").
+
+This means that occasionally some tests will "just fail". It appears to happen most commonly in tests that require
+data to be returned from a database query in a specific order.
+
+[Example](https://groups.google.com/a/expertlabs.org/group/thinkup-dev/browse_thread/thread/e15a110499bb19ba#) of
+tests that are known to fail intermittently. These 8 pop up every so often and it has been observed that occasionally
+the data that the failing test relies on is returned in a different order than what is expected.
+
+Related mailing list threads on this topic:
+
+[Test Heisenbugs](https://groups.google.com/forum/#!searchin/thinkupapp/heisenbug/thinkupapp/i0CTDqB9auQ/wP2o59MLgE4J)
+
+## I'm getting lots of test failures... Help!
+
+There are a couple of common reasons for getting a high number of test failures:
+
+* An incorrect $TEST_SERVER_DOMAIN in tests/config.tests.inc.php. Please make sure that this points to the web root
+of your ThinkUp installation.
+[Relevant thread](https://groups.google.com/a/expertlabs.org/group/thinkup-dev/browse_thread/thread/755ac5a5f32666fc/)
+* Incorrect folder permissions in your installation. Make sure that the webapp/_lib/view/compiled_view directory is
+writable to from the web server and that no other folders have had their permissions edited inadvertently.
+* An incorrect value for any of the test database values. Please make sure that in both config.inc.php and
+config.tests.inc.php you are point to an existing, empty database.
+
+If you have checked all of these and everything appears to be in tact, send an email to the mailing list or pop into
+the IRC channel and we'll see what we can do to help you out.
 
 ## Writing Tests
 
