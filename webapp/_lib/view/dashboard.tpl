@@ -122,7 +122,7 @@
                 <div class="public_user_stats">
                 {$instance->percentage_replies|round}% posts are replies<br />
                 {$instance->percentage_links|round}% posts contain links<br />
-                <img width="250" height="175" src="http://chart.apis.google.com/chart?chxt=x,y&cht=bhg&chd=t:{$instance->percentage_replies|round},{$instance->percentage_links|round}&chco=6184B5&chls=2.0&chs=250x175&chxl=1:|Broadcaster|Conversationalist|0:||20%||60%||100%|&chbh=50" />
+                <img width="250" height="175" src="http://chart.apis.google.com/chart?chxt=x,y&cht=bhg&chd=t:{$instance->percentage_replies|round},{$instance->percentage_links|round}&chco=6184B5&chls=2.0&chs=250x175&chxl=0:|20%|60%|100%|1:|Broadcaster|Conversationalist&chxp=0,20,60,100&chbh=50" />
                 </div>
             </div>
             <div class="grid_10 omega">
