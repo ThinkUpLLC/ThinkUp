@@ -73,7 +73,7 @@
   <div class="status-bar-right text-right">
     <ul> 
       {if $logged_in_user}
-        <li>Logged in as: {$logged_in_user} | <a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
+        <li>Logged in as: <a href="mailto:{$logged_in_user}">{$logged_in_user}</a> | <a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
       {else}
       
         <li><a href="http://thinkupapp.com/">Get ThinkUp</a> | <a href="{$site_root_path}session/login.php">Log In</a></li>
