@@ -27,9 +27,14 @@
  */
 class Mailer {
     public static function mail($to, $subject, $message) {
+        $config = Config::getInstance();
+
+        $app_title = $config->getValue('app_title');
         $host = self::getHost();
-        $mailheader = "From: \"Auto-Response\" <notifications@{$host}>\r\n";
+
+        $mailheader = "From: \"{$app_title}\" <notifications@{$host}>\r\n";
         $mailheader .= "X-Mailer: PHP/".phpversion();
+
         mail($to, $subject, $message, $mailheader);
     }
 
