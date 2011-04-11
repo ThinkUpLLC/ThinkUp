@@ -185,9 +185,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $token = file_get_contents($this->token_file);
         $this->assertPattern('/^[\da-f]{32}$/', $token);
 
-        // NOTE: see the mock Mailer class at the bottom of this test source to see how
-        // we generate the email file
-        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . self::TEST_EMAIL;
+        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . Mailer::EMAIL;
         $email_file = file_get_contents($test_email);
 
         $this->assertPattern('/to\: m@w\.nz\s/', $email_file);
@@ -207,7 +205,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $token = file_get_contents($this->token_file);
         $this->assertPattern('/^[\da-f]{32}$/', $token);
 
-        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . self::TEST_EMAIL;
+        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . Mailer::EMAIL;
         $email_file = file_get_contents($test_email);
 
         $this->assertPattern('/to\: m@w\.nz,m4@w\.nz\s/', $email_file);

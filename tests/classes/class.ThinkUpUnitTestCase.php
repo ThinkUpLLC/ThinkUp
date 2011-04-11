@@ -30,10 +30,6 @@
  */
 class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
     /**
-     * @var str
-     */
-    const TEST_EMAIL = '/upgrade_test_email';
-    /**
      * @var ThinkUpTestDatabaseHelper
      */
     var $testdb_helper;
@@ -68,11 +64,6 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
             $this->testdb_helper->drop($this->test_database_name);
         }
         parent::tearDown();
-        // delete test email file if it exists
-        $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . self::TEST_EMAIL;
-        if(file_exists($test_email)) {
-            unlink($test_email);
-        }
     }
 
     /**
@@ -84,24 +75,5 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
     public function getElementById($doc, $id) {
         $xpath = new DOMXPath($doc);
         return $xpath->query("//*[@id='$id']")->item(0);
-    }
-}
-
-/**
- * Mock Mailer for test use
- */
-class Mailer {
-    public static function mail($to, $subject, $message) {
-        $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . ThinkUpUnitTestCase::TEST_EMAIL;
-        $fp = fopen($test_email, 'w');
-        fwrite($fp, "to: $to\n");
-        fwrite($fp, "subject: $subject\n");
-        fwrite($fp, "message: $message");
-        fclose($fp);
-        return $message;
-    }
-
-    public static function getLastMail() {
-        return file_get_contents(THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . ThinkUpUnitTestCase::TEST_EMAIL);
     }
 }
