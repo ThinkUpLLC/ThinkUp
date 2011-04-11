@@ -43,6 +43,12 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->builders = self::buildData();
+    }
+
+    protected function buildData() {
+        $builders = array();
+         
         // test table for our test dao
         $test_table_sql = 'CREATE TABLE tu_test_table(' .
             'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
@@ -51,15 +57,16 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
             'unique key test_id_idx (test_id)' .
             ')';
         $this->testdb_helper->runSQL($test_table_sql);
+
         //some test data as well
-        $q = sprintf("INSERT INTO tu_test_table (test_name, test_id) VALUES ('name%s', %d)", 1, 1);
-        for($i = 2; $i <= 20; $i++) {
-            $q .= sprintf(",('name%s', %d)", $i, $i);
+        for($i = 1; $i <= 20; $i++) {
+            $builders[] = FixtureBuilder::build('test_table', array('test_name'=>'name'.$i, 'test_id'=>$i));
         }
-        $this->testdb_helper->runSQL($q);
+        return $builders;
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
         //make sure our db_type is set to the default...
         Config::getInstance()->setValue('db_type', 'mysql');
