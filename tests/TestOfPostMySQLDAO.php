@@ -1240,18 +1240,16 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 1002;
         $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
         $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
-        ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
-        'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
-        $res = PDODAO::$PDO->exec($q);
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
+        'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
+        'post_text'=>'This is post'.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.$pseudo_minute.':00', 
+        'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5, 'network'=>'twitter'));
 
-        $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-        post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES 
-        ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg', 
-        'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
         try {
-            $res = PDODAO::$PDO->exec($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
+            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
+            'post_text'=>'This is post'.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.$pseudo_minute.':00', 
+            'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5, 'network'=>'twitter'));
         } catch(PDOException $e) {
             $this->assertPattern('/Integrity constraint violation/', $e->getMessage());
         }
