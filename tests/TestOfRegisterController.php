@@ -169,6 +169,30 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         $this->debug("Email contents: " . $email);
         $this->assertPattern('/test%20url%20with%20spaces/', $email, 'Spaces found in activation URL.');
     }
+
+    public function testSlashesInHostName() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
+        $_SERVER['HTTP_HOST'] = "mytestthinkup/";
+        $_POST['Submit'] = 'Register';
+        $_POST['full_name'] = "Angelina Jolie";
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $config = Config::getInstance();
+        $config->setValue('site_root_path', 'test url with spaces/and/a few/slashes/too/');
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $email = Mailer::getLastMail();
+        $this->debug("Email contents: " . $email);
+        $this->assertPattern('/test%20url%20with%20spaces\/and\/a%20few\/slashes\/too/', $email,
+        'Spaces properly escaped;slashes are not');
+    }
 }
 
 
