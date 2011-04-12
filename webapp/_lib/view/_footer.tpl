@@ -1,5 +1,7 @@
   <div class="container small center">
   
+  <script type="text/javascript" src="{$site_root_path}/assets/js/linkify.js"></script>
+  
     <div id="ft" role="contentinfo">
       <p>
        <a href="http://thinkupapp.com">ThinkUp</a>{if $thinkup_version} beta {$thinkup_version}{/if}<br /> 
