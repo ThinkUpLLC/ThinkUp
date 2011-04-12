@@ -165,7 +165,7 @@ var TUWordFrequency = function() {
             }
             var sorted_word = this.sorted_words[i];
             var litext = this.word_template.replace(/\${count}/, sorted_word['count']);
-            var litext = litext.replace(/\${word}/, sorted_word['default']);
+            var litext = litext.replace(/\${word}/, sorted_word['unmodified']);
             var litext = litext.replace(/\${id}/, 'sorted_word' + i);
             $('#word-frequency-words').append(litext);
         }
@@ -246,7 +246,7 @@ var TUWordFrequency = function() {
                 if(! this.words[stemmer_word]['reply_ids']) {
                     this.words[stemmer_word]['reply_ids'] = new Object();
                     this.words[stemmer_word]['unstemmed'] = new Object();
-                    this.words[stemmer_word]['default'] = tmp_word;
+                    this.words[stemmer_word]['unmodified'] = tmp_word;
                 }
                 if(! this.words[stemmer_word]['reply_ids'][reply_id]) {
                     this.words[stemmer_word]['reply_ids'][reply_id] = reply_id;
@@ -272,7 +272,7 @@ var TUWordFrequency = function() {
             }
             wordlist[wordlist.length] = {
                     word: key, count: this.words[key]['count'], 
-                    default: this.words[key]['default'],
+                    unmodified: this.words[key]['unmodified'],
                     unstemmed: this.words[key]['unstemmed']
             };
         }
