@@ -1,10 +1,6 @@
   <div class="container small center">
   
-<<<<<<< HEAD
- <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
-=======
- <script type="text/javascript" src="{$site_root_path}/assets/js/linkify.js"></script>
->>>>>>> Issue #383: Added linkify.js to _footer.tpl
+  <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   
     <div id="ft" role="contentinfo">
       <p>
