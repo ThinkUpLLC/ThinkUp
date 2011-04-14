@@ -169,14 +169,22 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         $q .= ' ORDER BY ' . $ordering;
 
-        $q .= " LIMIT :start_on_record, :limit;";
+        if ($count > 0) {
+            $q .= " LIMIT :start_on_record, :limit;";
+        } else {
+            $q .= ';';
+        }
+
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network,
-            ':limit'=>(int)$count,
-            ':user_network'=>($network=='facebook page')?'facebook':$network,
-            ':start_on_record'=>(int)$start_on_record
+            ':user_network'=>($network == 'facebook page') ? 'facebook' : $network
         );
+
+        if ($count > 0) {
+            $vars[':limit'] = (int)$count;
+            $vars['start_on_record'] = (int)$start_on_record;
+        }
 
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);

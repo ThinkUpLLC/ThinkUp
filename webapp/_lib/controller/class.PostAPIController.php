@@ -31,6 +31,24 @@
  */
 class PostAPIController extends ThinkUpController {
 
+    public $network = 'twitter';
+    public $user_id;
+    public $username;
+    public $post_id;
+    public $type = 'post';
+    public $count = 20;
+    public $page = 1;
+    public $order_by = 'default';
+    public $direction = 'DESC';
+    public $from = 0;
+    public $until;
+    public $unit = 'km';
+    public $include_replies = false;
+    public $include_entities = false;
+    public $trim_user = false;
+    public $include_rts = false;
+    private $user;
+
     /**
      *
      * @var PostDAO
@@ -49,22 +67,75 @@ class PostAPIController extends ThinkUpController {
      */
     public function __construct($session_started=false) {
         parent::__construct($session_started);
+        $this->setContentType('application/json');
         $this->view_mgr->cache_lifetime = 60;
-    }
 
-    /**
-     * This is an override of the normal getCacheKeyString function. It is overridden to use only the variables
-     * from the $_GET array that are used in the ThinkUp Post API to avoid people doing a sort of pseudo cache
-     * reset by introducing a random new variable into the $_GET array.
-     * 
-     * @return string
-     */
-    public function getCacheKeyString() {
-        $cache_key = '';
-        foreach ($this->parseQueryString() as $key => $value) {
-            $cache_key .= $value.'-';
+        /*
+         * START READ IN OF QUERY STRING VARS
+         */
+        if (isset($_GET['network'])) {
+            $this->network = $_GET['network'];
         }
-        return $cache_key;
+        if (isset($_GET['post_id'])) {
+            if (is_numeric($_GET['post_id'])) {
+                $this->post_id = $_GET['post_id'];
+            }
+        }
+        if (isset($_GET['user_id'])) {
+            if (is_numeric($_GET['user_id'])) {
+                $this->user_id = $_GET['user_id'];
+            }
+        }
+        if (isset($_GET['type'])) {
+            $this->type = $_GET['type'];
+        }
+        if (isset($_GET['username'])) {
+            $this->username = $_GET['username'];
+        }
+        if (isset($_GET['count'])) {
+            if (is_numeric($_GET['count'])) {
+                $this->count = (int) $_GET['count'];
+            }
+        }
+        if (isset($_GET['page'])) {
+            if (is_numeric($_GET['page'])) {
+                $this->page = (int) $_GET['page'];
+            }
+        }
+        if (isset($_GET['order_by'])) {
+            $this->order_by = $this->parseOrderBy($_GET['order_by']);
+        }
+        if (isset($_GET['direction'])) {
+            $this->direction = $_GET['direction'] == 'DESC' ? 'DESC' : 'ASC';
+        }
+        if (isset($_GET['from'])) {
+            $this->from = $_GET['from'];
+        }
+        if (isset($_GET['until'])) {
+            $this->until = $_GET['until'];
+        }
+        if (isset($_GET['unit'])) {
+            $this->unit = $_GET['unit'];
+        }
+        if (isset($_GET['include_replies'])) {
+            $this->include_replies = $this->isTrue($_GET['include_replies']);
+        }
+        if (isset($_GET['include_entities'])) {
+            $this->include_entities = $this->isTrue($_GET['include_entities']);
+        }
+        if (isset($_GET['trim_user'])) {
+            $this->trim_user = $this->isTrue($_GET['trim_user']);
+        }
+        if (isset($_GET['include_rts'])) {
+            $this->include_rts = $this->isTrue($_GET['include_rts']);
+        }
+
+        /*
+         * END READ IN OF QUERY STRING VARS
+         */
+
+        // perhaps extend this in future to allow auth to see private posts
+        $this->is_public = true;
     }
 
     /**
@@ -92,7 +163,7 @@ class PostAPIController extends ThinkUpController {
             case 'author_username': $order_by = 'author_username';
                 break;
 
-            default: $order_by = 'default';
+            default: $order_by = $this->order_by;
                 break;
         }
 
@@ -114,45 +185,6 @@ class PostAPIController extends ThinkUpController {
         }
     }
 
-    public function parseQueryString() {
-        /*
-         * START READ IN OF QUERY STRING VARS
-         */
-        $network = isset($_GET['network']) ? $_GET['network'] : 'twitter';
-
-        $user_id = isset($_GET['user_id']) ? (is_numeric($_GET['user_id']) ? $_GET['user_id'] : null) : null;
-        $username = isset($_GET['username']) ? $_GET['username'] : null;
-
-        $post_id = isset($_GET['post_id']) ? (is_numeric($_GET['post_id']) ? $_GET['post_id'] : null) : null;
-
-        $type = isset($_GET['type']) ? $_GET['type'] : 'post';
-
-        $count = isset($_GET['count']) ? (is_numeric($_GET['count']) ? (int) $_GET['count'] : 20) : 20;
-        $page = isset($_GET['page']) ? (is_numeric($_GET['page']) ? (int) $_GET['page'] : 1) : 1;
-
-        $order_by = isset($_GET['order_by']) ? $this->parseOrderBy($_GET['order_by']) : 'default';
-        $direction = isset($_GET['direction']) ? ($_GET['direction'] == 'DESC' ? 'DESC' : 'ASC') : 'DESC';
-
-        $from = isset($_GET['from']) ? $_GET['from'] : 0;
-        $until = isset($_GET['until']) ? $_GET['until'] : null;
-
-        $unit = isset($_GET['unit']) ? $_GET['unit'] : 'km';
-
-        $include_replies = isset($_GET['include_replies']) ? $this->isTrue($_GET['include_replies']) : false;
-        $include_entities = isset($_GET['include_entities']) ? $this->isTrue($_GET['include_entities']) : false;
-        $trim_user = isset($_GET['trim_user']) ? $this->isTrue($_GET['trim_user']) : false;
-        $include_rts = isset($_GET['include_rts']) ? $this->isTrue($_GET['include_rts']) : false;
-
-        /*
-         * END READ IN OF QUERY STRING VARS
-         */
-
-        // perhaps extend this in future to allow auth to see private posts
-        $is_public = true;
-
-        return get_defined_vars();
-    }
-
     public function control() {
         if ($this->view_mgr->isViewCached()) {
             if ($this->view_mgr->is_cached('json.tpl', $this->getCacheKeyString())) {
@@ -165,21 +197,18 @@ class PostAPIController extends ThinkUpController {
         // fetch the correct PostDAO and UserDAO from the DAOFactory
         $this->post_dao = DAOFactory::getDAO('PostDAO');
         $this->user_dao = DAOFactory::getDAO('UserDAO');
-
-        // get parsed query string values
-        extract($this->parseQueryString());
         
         /*
          * Use the information gathered from the query string to retrieve a
          * User object. This will be the standard object with which to get
          * User information from in API calls.
          */
-        if ($user_id != null) {
-            $user = $this->user_dao->getDetails($user_id, $network);
-        } else if ($username != null) {
-            $user = $this->user_dao->getUserByName($username, $network);
+        if ($this->user_id != null) {
+            $this->user = $this->user_dao->getDetails($this->user_id, $this->network);
+        } else if ($this->username != null) {
+            $this->user = $this->user_dao->getUserByName($this->username, $this->network);
         } else {
-            $user = null;
+            $this->user = null;
         }
 
         /**
@@ -191,7 +220,7 @@ class PostAPIController extends ThinkUpController {
          * If a required field is missing it will create an error field to
          * output in JSON.
          */
-        switch ($type) {
+        switch ($this->type) {
             /**
              * Gets a post.
              *
@@ -200,13 +229,11 @@ class PostAPIController extends ThinkUpController {
              * Optional arguments: network, include_entities, include_replies, trim_user
              */
             case 'post':
-                if (is_null($post_id)) {
-                    $data = new stdClass();
-                    $data->error->type = 'RequiredArgumentMissingException';
-                    $data->error->message = 'A request of type "' . $type . '" requires a post_id
-to be specified.';
+                if (is_null($this->post_id)) {
+                    $m = 'A request of type "' . $this->type . '" requires a post_id to be specified.';
+                    throw new RequiredArgumentMissingException($m);
                 } else {
-                    $data = $this->post_dao->getPost($post_id, $network, $is_public);
+                    $data = $this->post_dao->getPost($this->post_id, $this->network, $this->is_public);
                 }
                 break;
 
@@ -218,14 +245,12 @@ to be specified.';
              * Optional arguments: network, order_by, unit, count, page, include_entities, include_replies, trim_user
              */
             case 'post_retweets':
-                if (is_null($post_id)) {
-                    $data = new stdClass();
-                    $data->error->type = 'RequiredArgumentMissingException';
-                    $data->error->message = 'A request of type "' . $type . '" requires a post_id
-to be specified.';
+                if (is_null($this->post_id)) {
+                    $m = 'A request of type "' . $this->type . '" requires a post_id to be specified.';
+                    throw new RequiredArgumentMissingException($m);
                 } else {
-                    $data = $this->post_dao->getRetweetsOfPost($post_id, $network, $order_by, $unit, $is_public,
-                                    $count, $page);
+                    $data = $this->post_dao->getRetweetsOfPost($this->post_id, $this->network, $this->order_by,
+                            $this->unit, $this->is_public, $this->count, $this->page);
                 }
                 break;
 
@@ -239,14 +264,12 @@ to be specified.';
              * Ordering can only be done by either location or follower count.
              */
             case 'post_replies':
-                if (is_null($post_id)) {
-                    $data = new stdClass();
-                    $data->error->type = 'RequiredArgumentMissingException';
-                    $data->error->message = 'A request of type "' . $type . '" requires a post_id
-to be specified.';
+                if (is_null($this->post_id)) {
+                    $m = 'A request of type "' . $this->type . '" requires a post_id to be specified.';
+                    throw new RequiredArgumentMissingException($m);
                 } else {
-                    $data = $this->post_dao->getRepliesToPost($post_id, $network, $order_by, $unit, $is_public,
-                                    $count, $page);
+                    $data = $this->post_dao->getRepliesToPost($this->post_id, $this->network, $this->order_by,
+                            $this->unit, $this->is_public, $this->count, $this->page);
                 }
                 break;
 
@@ -259,14 +282,12 @@ to be specified.';
              * include_replies, trim_user
              */
             case 'related_posts':
-                if (is_null($post_id)) {
-                    $data = new stdClass();
-                    $data->error->type = 'RequiredArgumentMissingException';
-                    $data->error->message = 'A request of type "' . $type . '" requires a post_id
-to be specified.';
+                if (is_null($this->post_id)) {
+                    $m = 'A request of type "' . $this->type . '" requires a post_id to be specified.';
+                    throw new RequiredArgumentMissingException($m);
                 } else {
-                    $data = $this->post_dao->getRelatedPosts($post_id, $network, $is_public, $count, $page,
-                                    $geo_encoded_only = false, $include_original_post = false);
+                    $data = $this->post_dao->getRelatedPosts($this->post_id, $this->network, $this->is_public,
+                            $this->count, $this->page, $geo_encoded_only = false, $include_original_post = false);
                 }
                 break;
 
@@ -278,20 +299,17 @@ to be specified.';
              * Optional arguments: network, count, page, include_entities, include_replies, trim_user
              */
             case 'user_posts_most_replied_to':
-                if (is_null($user)) {
+                if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
-                    if (is_null($user_id) && is_null($username)) {
-                        $data = new stdClass();
-                        $data->error->type = 'RequiredArgumentMissingException';
-                        $data->error->message = 'A request of type "' . $type . '" requires a user_id ';
-                        $data->error->message .= 'or username to be specified.';
+                    if (is_null($this->user_id) && is_null($this->username)) {
+                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        throw new RequiredArgumentMissingException($m);
                     } else {
-                        $data = new stdClass();
-                        $data->error->type = 'UserNotFoundException';
-                        $data->error->message = 'The user that you specified could not be found in our database.';
+                        throw new UserNotFoundException();
                     }
                 } else {
-                    $data = $this->post_dao->getMostRepliedToPosts($user->user_id, $network, $count, $page, $is_public);
+                    $data = $this->post_dao->getMostRepliedToPosts($this->user->user_id, $this->network, $this->count,
+                            $this->page, $this->is_public);
                 }
                 break;
 
@@ -303,20 +321,17 @@ to be specified.';
              * Optional arguments: network, count, page, include_entities, include_replies, trim_user
              */
             case 'user_posts_most_retweeted':
-                if (is_null($user)) {
+                if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
-                    if (is_null($user_id) && is_null($username)) {
-                        $data = new stdClass();
-                        $data->error->type = 'RequiredArgumentMissingException';
-                        $data->error->message = 'A request of type "' . $type . '" requires a user_id ';
-                        $data->error->message .= 'or username to be specified.';
+                    if (is_null($this->user_id) && is_null($this->username)) {
+                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        throw new RequiredArgumentMissingException($m);
                     } else {
-                        $data = new stdClass();
-                        $data->error->type = 'UserNotFoundException';
-                        $data->error->message = 'The user that you specified could not be found in our database.';
+                        throw new UserNotFoundException();
                     }
                 } else {
-                    $data = $this->post_dao->getMostRetweetedPosts($user->user_id, $network, $count, $page, $is_public);
+                    $data = $this->post_dao->getMostRetweetedPosts($this->user->user_id, $this->network, $this->count,
+                            $this->page, $this->is_public);
                 }
                 break;
 
@@ -329,21 +344,17 @@ to be specified.';
              * trim_user
              */
             case 'user_posts':
-                if (is_null($user)) {
+                if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
-                    if (is_null($user_id) && is_null($username)) {
-                        $data = new stdClass();
-                        $data->error->type = 'RequiredArgumentMissingException';
-                        $data->error->message = 'A request of type "' . $type . '" requires a user_id ';
-                        $data->error->message .= 'or username to be specified.';
+                    if (is_null($this->user_id) && is_null($this->username)) {
+                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        throw new RequiredArgumentMissingException($m);
                     } else {
-                        $data = new stdClass();
-                        $data->error->type = 'UserNotFoundException';
-                        $data->error->message = 'The user that you specified could not be found in our database.';
+                        throw new UserNotFoundException();
                     }
                 } else {
-                    $data = $this->post_dao->getAllPosts($user->user_id, $network, $count, $page, false, $order_by,
-                                    $direction, $is_public);
+                    $data = $this->post_dao->getAllPosts($this->user->user_id, $this->network, $this->count,
+                            $this->page, false, $this->order_by, $this->direction, $this->is_public);
                 }
                 break;
 
@@ -356,26 +367,21 @@ to be specified.';
              * trim_user
              */
             case 'user_posts_in_range':
-                if (is_null($user) || is_null($from) || is_null($until)) {
+                if (is_null($this->user) || is_null($this->from) || is_null($this->until)) {
                     // Check why the User object is null. Could be missing required fields or not found.
-                    if (is_null($user_id) && is_null($username)) {
-                        $data = new stdClass();
-                        $data->error->type = 'RequiredArgumentMissingException';
-                        $data->error->message = 'A request of type "' . $type . '" requires a user_id ';
-                        $data->error->message .= 'or username to be specified.';
-                    } else if (is_null($from) || is_null($until)) {
-                        $data = new stdClass();
-                        $data->error->type = 'RequiredArgumentMissingException';
-                        $data->error->message = 'A request of type "' . $type . '" requires valid from and until ';
-                        $data->error->message .= 'parameters to be specified.';
+                    if (is_null($this->user_id) && is_null($this->username)) {
+                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        throw new RequiredArgumentMissingException($m);
+                    } else if (is_null($this->from) || is_null($this->until)) {
+                        $m = 'A request of type "' . $this->type . '" requires valid from and until parameters to be ';
+                        $m .= 'specified.';
+                        throw new RequiredArgumentMissingException($m);
                     } else {
-                        $data = new stdClass();
-                        $data->error->type = 'UserNotFoundException';
-                        $data->error->message = 'The user that you specified could not be found in our database.';
+                        throw new UserNotFoundException();
                     }
                 } else {
-                    $data = $this->post_dao->getPostsByUserInRange($user->user_id, $network, $from, $until,
-                            $order_by, $direction, $iterator=false, $is_public);
+                    $data = $this->post_dao->getPostsByUserInRange($this->user->user_id, $this->network, $this->from,
+                            $this->until, $this->order_by, $this->direction, $iterator=false, $this->is_public);
                 }
                 break;
 
@@ -387,21 +393,17 @@ to be specified.';
              * Optional arguments: network, count, page, include_rts, include_entities, include_replies, trim_user
              */
             case 'user_mentions':
-                if (is_null($user)) {
+                if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
-                    if (is_null($user_id) && is_null($username)) {
-                        $data = new stdClass();
-                        $data->error->type = 'RequiredArgumentMissingException';
-                        $data->error->message = 'A request of type "' . $type . '" requires a user_id ';
-                        $data->error->message .= 'or username to be specified.';
+                    if (is_null($this->user_id) && is_null($this->username)) {
+                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        throw new RequiredArgumentMissingException($m);
                     } else {
-                        $data = new stdClass();
-                        $data->error->type = 'UserNotFoundException';
-                        $data->error->message = 'The user that you specified could not be found in our database.';
+                        throw new UserNotFoundException();
                     }
                 } else {
-                    $data = $this->post_dao->getAllMentions($user->username, $count, $network, $page, $is_public,
-                                    $include_rts, $order_by, $direction);
+                    $data = $this->post_dao->getAllMentions($this->user->username, $this->count, $this->network,
+                            $this->page, $this->is_public, $this->include_rts, $this->order_by, $this->direction);
                 }
                 break;
 
@@ -414,21 +416,17 @@ to be specified.';
              * trim_user
              */
             case 'user_questions':
-                if (is_null($user)) {
+                if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
-                    if (is_null($user_id) && is_null($username)) {
-                        $data = new stdClass();
-                        $data->error->type = 'RequiredArgumentMissingException';
-                        $data->error->message = 'A request of type "' . $type . '" requires a user_id ';
-                        $data->error->message .= 'or username to be specified.';
+                    if (is_null($this->user_id) && is_null($this->username)) {
+                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        throw new RequiredArgumentMissingException($m);
                     } else {
-                        $data = new stdClass();
-                        $data->error->type = 'UserNotFoundException';
-                        $data->error->message = 'The user that you specified could not be found in our database.';
+                        throw new UserNotFoundException();
                     }
                 } else {
-                    $data = $this->post_dao->getAllQuestionPosts($user->user_id, $network, $count, $page, $order_by,
-                                    $direction, $is_public);
+                    $data = $this->post_dao->getAllQuestionPosts($this->user->user_id, $this->network, $this->count,
+                            $this->page, $this->order_by, $this->direction, $this->is_public);
                 }
                 break;
 
@@ -441,82 +439,50 @@ to be specified.';
              * trim_user
              */
             case 'user_replies':
-                if (is_null($user)) {
+                if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
-                    if (is_null($user_id) && is_null($username)) {
-                        $data = new stdClass();
-                        $data->error->type = 'RequiredArgumentMissingException';
-                        $data->error->message = 'A request of type "' . $type . '" requires a user_id ';
-                        $data->error->message .= 'or username to be specified.';
+                    if (is_null($this->user_id) && is_null($this->username)) {
+                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        throw new RequiredArgumentMissingException($m);
                     } else {
-                        $data = new stdClass();
-                        $data->error->type = 'UserNotFoundException';
-                        $data->error->message = 'The user that you specified could not be found in our database.';
+                        throw new UserNotFoundException();
                     }
                 } else {
-                    $data = $this->post_dao->getAllReplies($user->user_id, $network, $count, $page, $order_by,
-                                    $direction, $is_public);
+                    $data = $this->post_dao->getAllReplies($this->user->user_id, $this->network, $this->count,
+                            $this->page, $this->order_by, $this->direction, $this->is_public);
                 }
                 break;
 
 
             /*
-             * Generate an error because the API call type was not recognised.
+             * Generate an error because the API call type was not recognized.
              */
             default:
-                $data = new stdClass();
-                $data->error->type = 'APICallTypeNotRecognised';
-                $data->error->message = 'Your API call type "' . $type . '" was not recognised.';
+                throw new APICallTypeNotRecognizedException($this->type);
                 break;
         }
 
-        /**
-         * If the $data variable is null, issue an appropriate error.
-         */
-        if (is_null($data) || empty($data)) {
-            $data = new stdClass();
-            $data->error->type = 'NotFoundException';
-            $data->error->message = 'No posts could be found for your request.';
-        } else if (isset($data->error)) {
-            /*
-             * If the $data variable has an error inside it, the posts will not
-             * need to be parsed into a Twitter style format so just enter
-             * this block and pass over it, ignoring the else clause to this
-             * if block.
-             */
-        } else {
-            /**
-             * The $data variable can contain either an array of posts or a
-             * single post. This section of code handles that appropriately.
-             *
-             * Posts get run through a method of this class that converts them
-             * to a Twitter-like API format. It also gives you the option to
-             * include replies to each tweet. The replies function is recursive
-             * so all replies to all replies will be fetched.
-             *
-             * If you are going to extend this API to other services, this part here
-             * is where you should use a method to convert the look of the original
-             * posts to whatever service you're implementing.
-             */
-            switch ($network) {
-                case 'twitter':
-                    if (is_array($data)) {
-                        foreach ($data as $key => $post) {
-                            $data[$key] = $this->convertPostToTweet($post, $include_replies, $include_entities,
-                                            $trim_user, $order_by, $unit, $is_public);
-                        }
-                    } else {
-                        $data = $this->convertPostToTweet($data, $include_replies, $include_entities, $trim_user,
-                                        $order_by, $unit, $is_public);
+        switch ($this->network) {
+            case 'twitter':
+                if (is_array($data)) {
+                    foreach ($data as $key => $post) {
+                        $data[$key] = $this->convertPostToTweet($post);
                     }
-                    break;
+                } else {
+                    $data = $this->convertPostToTweet($data);
+                }
+                break;
 
-                case 'facebook':
-                    // write a function here to convert to Facebook API style
-                    break;
+            case 'facebook':
+                // write a function here to convert to Facebook API style
+                break;
 
-                default: break;
-            }
+            default: break;
+        }
+
+        // if no posts were found, $data is null. Set it to an empty array.
+        if (is_null($data)) {
+            $data = array();
         }
 
         $this->setJsonData($data);
@@ -539,30 +505,24 @@ to be specified.';
      * @param bool $is_public Whether or not the data is public.
      * @return stdObject The post formatted to look like the Twitter API.
      */
-    private function convertPostToTweet($post, $include_replies = false, $include_entities = false, $trim_user = false,
-            $order_by = 'default', $unit = 'km', $is_public = true) {
-
+    private function convertPostToTweet($post) {
         if (!is_a($post, 'Post')) {
             return null;
         }
 
-        if ($include_replies) {
+        if ($this->include_replies) {
             /*
-             * Get all replies to the post. The limit is set to ten
-             * million as a kind of "no limit" argument. If there is a no
-             * limit argument, please change this.
-             *
-             * TODO: Implement a "no limit" argument for getRepliesToPost()
+             * Get all replies to the post. The limit is set to 0 because if the count is not greater than 0,
+             * the method returns all replies.
              */
             $replies = $this->post_dao->getRepliesToPost($post->post_id, $post->network,
-                            $order_by, $unit, $is_public, 10000000);
+                            $this->order_by, $this->unit, $this->is_public, 0);
 
             // if replies exist for this post
             if ($replies) {
                 // recursively scan through the post replies, converting them
                 foreach ($replies as $reply) {
-                    $reply = $this->convertPostToTweet($reply, $include_replies, $include_entities, $trim_user,
-                                    $order_by, $unit, $is_public);
+                    $reply = $this->convertPostToTweet($reply);
                 }
 
                 // add the replies to the post
@@ -607,7 +567,7 @@ to be specified.';
          * if you find one of them. 
          */
         if ($user != null) {
-            if (!$trim_user) {
+            if (!$this->trim_user) {
                 $post->user = $this->convertUserToStdClass($user);
 
                 $post->user->id = $post->user->user_id;
@@ -640,7 +600,7 @@ to be specified.';
         }
 
 
-        if ($include_entities) {
+        if ($this->include_entities) {
             /*
              * Gather the links and format them into a Tweet entity.
              *
@@ -724,8 +684,7 @@ to be specified.';
 
         if ($post->in_retweet_of_post_id != null) {
             $post->retweeted_status = $this->post_dao->getPost($post->in_retweet_of_post_id, $user->network);
-            $post->retweeted_status = $this->convertPostToTweet($post->retweeted_status,
-                            $include_replies, $include_entities, $trim_user, $order_by, $unit, $is_public);
+            $post->retweeted_status = $this->convertPostToTweet($post->retweeted_status);
         }
 
         /*

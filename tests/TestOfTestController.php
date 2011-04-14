@@ -97,6 +97,7 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $this->assertIsA($obj, 'stdClass');
         $this->assertEqual($obj->aname, 'a value');
         $this->assertIsA($obj->alist, 'Array');
+        $this->assertEqual($obj->alink, 'http://thinkupapp.com');
         $this->assertEqual( $controller->getContentType(),'application/json');
     }
 

@@ -835,6 +835,11 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                 $count = 3, $page = 1);
         $this->assertEqual(sizeof($posts), 3);
 
+        // test get all
+        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+                $count = 0, $page = 1);
+        $this->assertEqual(sizeof($posts), 3);
+
         // test default order_by
         $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
                 $count = 3, $page = 1, "';-- SELECT");

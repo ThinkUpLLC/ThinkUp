@@ -213,30 +213,45 @@ abstract class ThinkUpController {
                 }
             }
         } else if(isset($this->json_data) ) {
-            $this->setContentType('application/json');
             if ($this->view_mgr->isViewCached()) {
                 if ($this->view_mgr->is_cached('json.tpl', $this->getCacheKeyString())) {
                     return $this->view_mgr->fetch('json.tpl', $this->getCacheKeyString());
                 } else {
-                    $json = json_encode($this->json_data);
-                    // strip escaped forwardslashes
-                    $json = preg_replace("/\\\\\//", '/', $json);
-                    $json = Utils::convertNumericStrings($json);
-                    $json = Utils::indentJSON($json);
-                    $this->addToView('json', $json);
+                    $this->prepareJSON();
                     return $this->view_mgr->fetch('json.tpl', $this->getCacheKeyString());
                 }
             } else {
-                $json = json_encode($this->json_data);
-                // strip escaped forwardslashes
-                $json = preg_replace("/\\\\\//", '/', $json);
-                $json = Utils::convertNumericStrings($json);
-                $json = Utils::indentJSON($json);
-                $this->addToView('json', $json);
+                $this->prepareJSON();
                 return $this->view_mgr->fetch('json.tpl');
             }
         } else {
             throw new Exception(get_class($this).': No view template specified');
+        }
+    }
+
+    /**
+     * Prepares the JSON data in $this->json_data and adds it to the current view under the key "json".
+     *
+     * @param bool $indent Whether or not to indent the JSON string. Defaults to true.
+     * @param bool $stripslashes Whether or not to strip escaped slashes. Default to true.
+     * @param bool $convert_numeric_strings Whether or not to convert numeric strings to numbers. Defaults to true.
+     */
+    private function prepareJSON($indent = true, $stripslashes = true, $convert_numeric_strings = true) {
+        if (isset($this->json_data)) {
+            $json = json_encode($this->json_data);
+            if ($stripslashes) {
+                // strip escaped forwardslashes
+                $json = preg_replace("/\\\\\//", '/', $json);
+            }
+            if ($convert_numeric_strings) {
+                // converts numeric strings to numbers
+                $json = Utils::convertNumericStrings($json);
+            }
+            if ($indent) {
+                // indents JSON strings so they are human readable
+                $json = Utils::indentJSON($json);
+            }
+            $this->addToView('json', $json);
         }
     }
 
@@ -255,6 +270,10 @@ abstract class ThinkUpController {
      * @param array json data
      */
     protected function setJsonData($data) {
+        if ($data != null) {
+            $this->setContentType('application/json');
+        }
+        
         $this->json_data = $data;
     }
 

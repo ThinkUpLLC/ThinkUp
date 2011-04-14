@@ -822,6 +822,7 @@ when it should be 2.");
 
         // test trim user
         $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
 
@@ -830,9 +831,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'post');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -858,6 +860,8 @@ when it should be 2.");
 
         // test order_by
         $_GET['order_by'] = 'location';
+        $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
 
         $distance = $output[0]->reply_retweet_distance;
@@ -869,6 +873,7 @@ when it should be 2.");
 
         // test order_by
         $_GET['order_by'] = 'date';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
 
         $pub_date = strtotime($output[0]->created_at);
@@ -879,8 +884,10 @@ when it should be 2.");
 
         // test unit (lol?)
         $_GET['unit'] = 'mi';
+        $controller = new PostAPIController(true);
         $output_mi = json_decode($controller->go());
         $_GET['unit'] = 'km';
+        $controller = new PostAPIController(true);
         $output_km = json_decode($controller->go());
 
         foreach ($output_km as $key=>$post) {
@@ -890,30 +897,36 @@ when it should be 2.");
 
         // test count
         $_GET['count'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
 
         $_GET['count'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
         $_GET['count'] = 3;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 3);
 
         // test page
         $_GET['count'] = 1;
         $_GET['page'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 135);
 
         $_GET['page'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 136);
 
         $_GET['page'] = 3;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 137);
@@ -921,6 +934,7 @@ when it should be 2.");
         // test trim user
         unset($_GET['count'], $_GET['page']);
         $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 3);
 
@@ -931,9 +945,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'post_retweets');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -960,28 +975,33 @@ when it should be 2.");
 
         // test count
         $_GET['count'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
 
         $_GET['count'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
         // test paging
         $_GET['count'] = 1;
         $_GET['page'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 131);
 
         $_GET['count'] = 1;
         $_GET['page'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 133);
 
         // test order_by
         $_GET['order_by'] = 'location';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
 
         $distance = $output[0]->reply_retweet_distance;
@@ -993,8 +1013,10 @@ when it should be 2.");
         // test unit
         $_GET['post_id'] = 41;
         $_GET['unit'] = 'mi';
+        $controller = new PostAPIController(true);
         $output_mi = json_decode($controller->go());
         $_GET['unit'] = 'km';
+        $controller = new PostAPIController(true);
         $output_km = json_decode($controller->go());
 
         foreach ($output_km as $key=>$post) {
@@ -1005,6 +1027,7 @@ when it should be 2.");
         // test trim user
         unset($_GET['count'], $_GET['page']);
         $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
@@ -1015,9 +1038,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'post_replies');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -1045,6 +1069,7 @@ when it should be 2.");
         }
 
         $_GET['post_id'] = 134;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
 
         $this->assertEqual(sizeof($output), 3);
@@ -1056,14 +1081,17 @@ when it should be 2.");
         // test count
         $_GET['post_id'] = 134;
         $_GET['count'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
 
         $_GET['count'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
         $_GET['count'] = 3;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 3);
 
@@ -1071,18 +1099,21 @@ when it should be 2.");
         // test paging
         $_GET['count'] = 1;
         $_GET['page'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 136);
 
         $_GET['count'] = 1;
         $_GET['page'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 137);
 
         $_GET['count'] = 1;
         $_GET['page'] = 3;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 135);
@@ -1090,6 +1121,7 @@ when it should be 2.");
         // test order_by
         unset($_GET['count'], $_GET['page']);
         $_GET['order_by'] = 'location';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
 
         $distance = $output[0]->reply_retweet_distance;
@@ -1100,6 +1132,7 @@ when it should be 2.");
 
         // test trim user
         $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 3);
 
@@ -1110,9 +1143,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'related_posts');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -1143,26 +1177,31 @@ when it should be 2.");
 
         // test count
         $_GET['count'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
 
         $_GET['count'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
         //test paging
         $_GET['count'] = 1;
         $_GET['page'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 134);
 
         $_GET['page'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 148);
 
         $_GET['page'] = 3;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 146);
@@ -1170,6 +1209,7 @@ when it should be 2.");
         // test trim user
         unset($_GET['count'], $_GET['page']);
         $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 3);
 
@@ -1180,9 +1220,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'user_posts_most_replied_to');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -1218,21 +1259,25 @@ when it should be 2.");
 
         // test count
         $_GET['count'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
 
         $_GET['count'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
         //test paging
         $_GET['count'] = 1;
         $_GET['page'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 134);
 
         $_GET['page'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 148);
@@ -1240,6 +1285,7 @@ when it should be 2.");
         // test trim user
         unset($_GET['order_by'], $_GET['direction'], $_GET['count'], $_GET['page']);
         $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
@@ -1250,9 +1296,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'user_posts_most_retweeted');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -1282,6 +1329,7 @@ when it should be 2.");
         // test count
         for ($count = 1; $count <= 20; $count++) {
             $_GET['count'] = $count;
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             $this->assertEqual(sizeof($output), $count);
         }
@@ -1291,6 +1339,7 @@ when it should be 2.");
         // test order_by
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1300,6 +1349,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1309,6 +1359,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1318,6 +1369,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1327,6 +1379,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1336,6 +1389,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1345,6 +1399,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -1354,6 +1409,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -1363,6 +1419,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -1372,6 +1429,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -1381,6 +1439,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -1390,6 +1449,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -1400,6 +1460,7 @@ when it should be 2.");
         // test trim user
         unset($_GET['order_by'], $_GET['direction']);
         $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 20);
 
@@ -1408,9 +1469,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'user_posts');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -1434,21 +1496,25 @@ when it should be 2.");
 
         // test count
         $_GET['count'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
 
         $_GET['count'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
         //test paging
         $_GET['count'] = 1;
         $_GET['page'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 131);
 
         $_GET['page'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 133);
@@ -1458,6 +1524,7 @@ when it should be 2.");
         // test order_by
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1467,6 +1534,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1476,6 +1544,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1485,6 +1554,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1494,6 +1564,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1503,6 +1574,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1512,6 +1584,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -1521,6 +1594,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -1530,6 +1604,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -1539,6 +1614,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -1548,6 +1624,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -1557,6 +1634,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -1566,6 +1644,7 @@ when it should be 2.");
 
         // test tweet entities
         $_GET['include_entities'] = true;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
@@ -1576,6 +1655,7 @@ when it should be 2.");
         // test trim user
         unset($_GET['include_entities']);
         $_GET['trim_user'] = true;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
         
@@ -1584,9 +1664,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'user_mentions');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -1612,21 +1693,25 @@ when it should be 2.");
 
         // test count
         $_GET['count'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
 
         $_GET['count'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
         //test paging
         $_GET['count'] = 1;
         $_GET['page'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 131);
 
         $_GET['page'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 133);
@@ -1636,6 +1721,7 @@ when it should be 2.");
         // test order_by
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1645,6 +1731,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1654,6 +1741,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1663,6 +1751,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1672,6 +1761,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1681,6 +1771,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1690,6 +1781,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -1699,6 +1791,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -1708,6 +1801,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -1717,6 +1811,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -1726,6 +1821,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -1735,6 +1831,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -1745,9 +1842,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'user_replies');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -1771,21 +1869,25 @@ when it should be 2.");
 
          // test count
         $_GET['count'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
 
         $_GET['count'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 2);
 
         //test paging
         $_GET['count'] = 1;
         $_GET['page'] = 1;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 151);
 
         $_GET['page'] = 2;
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $this->assertEqual(sizeof($output), 1);
         $this->assertEqual($output[0]->id, 150);
@@ -1795,6 +1897,7 @@ when it should be 2.");
         // test order_by
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1804,6 +1907,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1813,6 +1917,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1822,6 +1927,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1831,6 +1937,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1840,6 +1947,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1849,6 +1957,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -1858,6 +1967,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -1867,6 +1977,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -1876,6 +1987,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -1885,6 +1997,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -1894,6 +2007,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -1904,9 +2018,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'user_questions');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
@@ -1934,6 +2049,7 @@ when it should be 2.");
         // test order_by
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1943,6 +2059,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'date';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $date = strtotime($output[0]->created_at);
         foreach ($output as $post) {
@@ -1952,6 +2069,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1961,6 +2079,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_id';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $id = $output[0]->id;
         foreach ($output as $post) {
@@ -1970,6 +2089,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1979,6 +2099,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'source';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->source;
         foreach ($output as $post) {
@@ -1988,6 +2109,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -1997,6 +2119,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'follower_count';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $count = $output[0]->user->followers_count;
         foreach ($output as $post) {
@@ -2006,6 +2129,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -2015,6 +2139,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'post_text';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->text;
         foreach ($output as $post) {
@@ -2024,6 +2149,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'DESC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -2033,6 +2159,7 @@ when it should be 2.");
 
         $_GET['order_by'] = 'author_username';
         $_GET['direction'] = 'ASC';
+        $controller = new PostAPIController(true);
         $output = json_decode($controller->go());
         $str = $output[0]->user->screen_name;
         foreach ($output as $post) {
@@ -2043,9 +2170,10 @@ when it should be 2.");
         // test sql injection
         $_GET = array('type' => 'user_posts_in_range');
         $prefix = Config::getInstance()->getValue('table_prefix');
-        foreach($controller->parseQueryString() as $key => $value) {
-            if ($key == 'type') continue;
+        foreach(get_object_vars($controller) as $key => $value) {
+            if ($key == 'type' || $key == 'app_session') continue;
             $_GET[$key] = "'; DROP TABLE " . $prefix . "posts--";
+            $controller = new PostAPIController(true);
             $output = json_decode($controller->go());
             unset($_GET[$key]);
         }
