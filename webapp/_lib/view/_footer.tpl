@@ -8,7 +8,7 @@
         
        <a href="http://github.com/ginatrapani/ThinkUp/wiki">Documentation</a> | <a href="http://groups.google.com/group/thinkupapp">Mailing List</a> | <a href="http://webchat.freenode.net/?channels=thinkup">IRC Channel</a><br>
         It is nice to be nice.
-        <br /> <br /><a href="http://twitter.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_twitter.png"></a> <a href="http://www.facebook.com/pages/ThinkUp/162504567094163"><img src="{$site_root_path}assets/img/favicon_facebook.png"></a>
+        <br /> <br /><a href="http://twitter.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_twitter.png"></a> <a href="http://facebook.com/thinkupapp"><img src="{$site_root_path}assets/img/favicon_facebook.png"></a>
       </p>
     </div> <!-- #ft -->
   
