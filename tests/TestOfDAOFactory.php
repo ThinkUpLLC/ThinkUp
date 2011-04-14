@@ -34,12 +34,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterInstanceMySQLDAO.php';
 
-
 class TestOfDAOFactory extends ThinkUpUnitTestCase {
-
-    public function __construct() {
-        $this->UnitTestCase('DAOFactory test');
-    }
 
     public function setUp() {
         parent::setUp();

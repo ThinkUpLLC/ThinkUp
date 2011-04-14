@@ -34,10 +34,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterInstan
 class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
     protected $DAO;
 
-    public function __construct() {
-        $this->UnitTestCase('TwitterInstanceMySQLDAO class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->DAO = new TwitterInstanceMySQLDAO();

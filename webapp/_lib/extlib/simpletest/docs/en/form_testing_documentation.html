@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Simple Test documentation for testing HTML forms</title>
+<title>SimpleTest documentation for testing HTML forms</title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
@@ -50,7 +50,8 @@
         </li>
 </ul>
 <div class="content">
-        <p><a class="target" name="submit"><h2>Submitting a simple form</h2></a></p>
+        <h2>
+<a class="target" name="submit"></a>Submitting a simple form</h2>
             <p>
                 When a page is fetched by the <span class="new_code">WebTestCase</span>
                 using <span class="new_code">get()</span> or
@@ -78,8 +79,7 @@
                 <a href="http://www.lastcraft.com/form_testing_documentation.php">LastCraft</a>
                 site, with the following test...
 <pre>
-class SimpleFormTests extends WebTestCase {
-    <strong>
+class SimpleFormTests extends WebTestCase {<strong>
     function testDefaultValue() {
         $this-&gt;get('http://www.lastcraft.com/form_testing_documentation.php');
         $this-&gt;assertField('a', 'A default');
@@ -91,15 +91,20 @@ class SimpleFormTests extends WebTestCase {
                 The assertion tests that a HTML widget exists in the page with the
                 name "a" and that it is currently set to the value
                 "A default".
-                As usual, we could use a pattern expectation instead if a fixed
+                As usual, we could use a pattern expectation instead of a fixed
                 string.
-            </p>
-            <p>
+<pre>
+class SimpleFormTests extends WebTestCase {
+    function testDefaultValue() {
+        $this-&gt;get('http://www.lastcraft.com/form_testing_documentation.php');
+        $this-&gt;assertField('a', <strong>new PatternExpectation('/default/')</strong>);
+    }
+}
+</pre>
                 We could submit the form straight away, but first we'll change
                 the value of the text field and only then submit it...
 <pre>
 class SimpleFormTests extends WebTestCase {
-
     function testDefaultValue() {
         $this-&gt;get('http://www.my-site.com/');
         $this-&gt;assertField('a', 'A default');<strong>
@@ -112,12 +117,13 @@ class SimpleFormTests extends WebTestCase {
                 didn't specify an action either, the test case will follow
                 the usual browser behaviour of submitting the form data as a <em>GET</em>
                 request back to the same location.
-                SimpleTest tries to emulate typical browser behaviour as much as possible,
-                rather than attempting to catch missing attributes on tags.
+                In general SimpleTest tries to emulate typical browser behaviour as much as possible,
+                rather than attempting to catch any form of HTML omission.
                 This is because the target of the testing framework is the PHP application
                 logic, not syntax or other errors in the HTML code.
                 For HTML errors, other tools such as
-                <a href="http://www.w3.org/People/Raggett/tidy/">HTMLTidy</a> should be used.
+                <a href="http://www.w3.org/People/Raggett/tidy/">HTMLTidy</a> should be used,
+                or any of the HTML and CSS validators already out there.
             </p>
             <p>
                 If a field is not present in any form, or if an option is unavailable,
@@ -156,8 +162,7 @@ class SimpleFormTests extends WebTestCase {
     }
 }
 </pre>
-                The selection will not be changed on a failure to set
-                a widget value.
+                The current selection will not be changed if the new value is not an option.
             </p>
             <p>
                 Here is the full list of widgets currently supported...
@@ -185,7 +190,8 @@ class SimpleFormTests extends WebTestCase {
                 commands. See below for a way to test such forms.
             </p>
         
-        <p><a class="target" name="multiple"><h2>Fields with multiple values</h2></a></p>
+        <h2>
+<a class="target" name="multiple"></a>Fields with multiple values</h2>
             <p>
                 SimpleTest can cope with two types of multivalue controls: Multiple
                 selection drop downs, and multiple checkboxes with the same name
@@ -242,14 +248,15 @@ class SimpleFormTests extends WebTestCase {
                 by logging in as that user and attempting an update.
             </p>
         
-        <p><a class="target" name="hidden-field"><h2>Forms which use javascript to set a hidden field</h2></a></p>
+        <h2>
+<a class="target" name="hidden-field"></a>Forms which use javascript to set a hidden field</h2>
             <p>
                 If you want to test a form which relies on javascript to set a hidden
                 field, you can't just call setField().
                 The following code will <em>not</em> work:
 <pre>
 class SimpleFormTests extends WebTestCase {
-    function testMyJavascriptForm() {
+    function testEmulateMyJavascriptForm() {
         <strong>// This does *not* work</strong>
         $this-&gt;setField('a_hidden_field', '123');
         $this-&gt;clickSubmit('OK');
@@ -261,22 +268,20 @@ class SimpleFormTests extends WebTestCase {
 <pre>
 class SimpleFormTests extends WebTestCase {
     function testMyJavascriptForm() {
-        // Pass the hidden field value as an additional POST variable
         <strong>$this-&gt;clickSubmit('OK', array('a_hidden_field'=&gt;'123'));</strong>
     }
 
 }
 </pre>
-            </p>
-            <p>
                 Bear in mind that in doing this you're effectively stubbing out a
                 part of your software (the javascript code in the form), and
                 perhaps you might be better off using something like 
                 <a href="http://selenium.openqa.org/">Selenium</a> to ensure a complete
-                acceptance test.
+                test.
             </p>
         
-        <p><a class="target" name="raw"><h2>Raw posting</h2></a></p>
+        <h2>
+<a class="target" name="raw"></a>Raw posting</h2>
             <p>
                 If you want to test a form handler, but have not yet written
                 or do not have access to the form itself, you can create a
@@ -293,7 +298,11 @@ class SimpleFormTests extends WebTestCase {
 }
 </pre>
                 By adding data to the <span class="new_code">WebTestCase::post()</span>
-                method, we are attempting to fetch the page as a form submission.
+                method, we are emulating a form submission.
+                You would normally only do this as a temporary expedient, or where
+                you are expecting a 3rd party to submit to a form.
+                The exception is when you want tests to protect you from
+                attempts to spoof your pages.
             </p>
         
     </div>

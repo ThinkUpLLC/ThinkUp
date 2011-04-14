@@ -35,10 +35,6 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
     const TEST_TABLE = 'options';
     const TEST_TABLE_PLUGIN = 'plugins';
 
-    public function __construct() {
-        $this->UnitTestCase('PluginMySQLDAO class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();

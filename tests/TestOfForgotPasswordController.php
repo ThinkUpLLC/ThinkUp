@@ -33,10 +33,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfForgotPasswordController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('ForgotPasswordController class test');
-    }
-
     public function setUp() {
         parent::setUp();
 

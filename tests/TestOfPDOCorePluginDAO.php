@@ -31,10 +31,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterInstan
 
 class TestOfPDOCorePluginDAO extends ThinkUpUnitTestCase {
 
-    public function TestOfPDOCorePluginDAO() {
-        $this->UnitTestCase('TestCorePluginDAO class test');
-    }
-
     public function testInitDAO() {
         $test_dao = new TestCorePluginMySQLDAO();
         $this->assertNotNull(TestCorePluginMySQLDAO::$PDO);

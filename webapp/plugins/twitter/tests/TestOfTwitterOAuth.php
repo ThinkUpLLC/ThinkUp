@@ -32,15 +32,10 @@ if (!class_exists('twitterOAuth')) {
 }
 
 class TestOfTwitterOAuth extends UnitTestCase {
-    function TestOfTwitterOAuth() {
-        $this->UnitTestCase('Mock Twitter OAuth test');
-    }
 
-    function testMakingAPICall() {
+    public function testMakingAPICall() {
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/users/show/anildash.xml', 'GET', array());
-        $this->assertWantedPattern('/Anil Dash/', $result);
-
+        $this->assertPattern('/Anil Dash/', $result);
     }
 }
-?>

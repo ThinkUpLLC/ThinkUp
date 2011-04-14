@@ -19,39 +19,24 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/model/class.HelloThinkUpPlugin.php';
-
-/**
+ *
  * Test Crawler object
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/model/class.HelloThinkUpPlugin.php';
+
 class TestOfCrawler extends ThinkUpUnitTestCase {
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('Crawler class test');
-    }
-
-    /**
-     * Set up test
-     */
     public function setUp() {
         parent::setUp();
     }
 
-    /**
-     * Tear down test
-     */
     public function tearDown() {
         parent::tearDown();
     }
@@ -92,16 +77,13 @@ class TestOfCrawler extends ThinkUpUnitTestCase {
         $builders = $this->buildData();
         $this->simulateLogin('admin@example.com', true);
         $crawler->crawl();
-        $this->assertNoErrors();
 
         $this->simulateLogin('me@example.com');
         $crawler->crawl();
-        $this->assertNoErrors();
 
         Session::logout();
         $this->expectException(new UnauthorizedUserException('You need a valid session to launch the crawler.'));
         $crawler->crawl();
-        $this->assertNoErrors();
     }
 
     public function testCrawlUnauthorized() {
@@ -111,7 +93,6 @@ class TestOfCrawler extends ThinkUpUnitTestCase {
         $crawler->registerCrawlerPlugin('HelloThinkUpPlugin');
         $this->expectException(new UnauthorizedUserException('You need a valid session to launch the crawler.'));
         $crawler->crawl();
-        $this->assertNoErrors();
     }
 
     public function testCrawlUpgrading() {
@@ -128,11 +109,10 @@ class TestOfCrawler extends ThinkUpUnitTestCase {
         $this->expectException(
         new InstallerException('ThinkUp needs a database migration, so we are unable to run the crawler.'));
         $crawler->crawl();
-        $this->assertNoErrors();
         // reset version
         $config->setValue('THINKUP_VERSION', $init_db_version);
     }
-    
+
     private function buildData() {
         $admin_owner_builder = FixtureBuilder::build('owners', array(
             'id' => 1, 

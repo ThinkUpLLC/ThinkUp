@@ -19,12 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
+ *
  * Test PostErrorMySQLDAO
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -32,11 +28,11 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfPostErrorMySQLDAO extends ThinkUpUnitTestCase {
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
-    public function _construct() {
-        $this->UnitTestCase('PostErrorMySQLDAO class test');
-    }
+class TestOfPostErrorMySQLDAO extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();

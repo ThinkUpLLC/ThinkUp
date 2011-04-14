@@ -32,20 +32,8 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
-
 class TestOfUserErrorMySQLDAO extends ThinkUpUnitTestCase {
 
-    /**
-     * Constructor
-     * @return TestOfUserDAO
-     */
-    public function __construct() {
-        $this->UnitTestCase('UserErrorMySQLDAO class test');
-    }
-
-    /**
-     * Set Up
-     */
     public function setUp() {
         parent::setUp();
         $this->builders = self::buildData();
@@ -60,9 +48,6 @@ class TestOfUserErrorMySQLDAO extends ThinkUpUnitTestCase {
         return $builders;
     }
 
-    /**
-     * Tear down
-     */
     public function tearDown() {
         $this->builders = null;
         parent::tearDown();

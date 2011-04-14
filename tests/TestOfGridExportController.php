@@ -32,10 +32,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfGridExportController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('GridExportController class test');
-    }
-
     public function testConstructor() {
         $controller = new GridExportController(true);
         $this->assertTrue(isset($controller));

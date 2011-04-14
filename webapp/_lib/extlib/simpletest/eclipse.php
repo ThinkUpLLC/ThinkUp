@@ -3,9 +3,9 @@
  *  base include file for eclipse plugin  
  *  @package    SimpleTest
  *  @subpackage Eclipse
- *  @version    $Id: eclipse.php 1723 2008-04-08 00:34:10Z lastcraft $
- *
- *
+ *  @version    $Id: eclipse.php 1787 2008-04-26 20:35:39Z pp11 $
+ */
+/**#@+
  * simpletest include files
  */
 include_once 'unit_tester.php';
@@ -27,15 +27,15 @@ class EclipseReporter extends SimpleScorer {
      *    @param object $listener   Eclipse listener (?).
      *    @param boolean $cc        Whether to include test coverage.
      */
-    function EclipseReporter(&$listener, $cc=false){
-        $this->_listener = &$listener;
+    function __construct(&$listener, $cc=false){
+        $this->listener = &$listener;
         $this->SimpleScorer();
-        $this->_case = "";
-        $this->_group = "";
-        $this->_method = "";
-        $this->_cc = $cc;
-        $this->_error = false;
-        $this->_fail = false;
+        $this->case = "";
+        $this->group = "";
+        $this->method = "";
+        $this->cc = $cc;
+        $this->error = false;
+        $this->fail = false;
     }
     
     /**
@@ -64,7 +64,7 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function &createInvoker(&$invoker){
-        $eclinvoker = &new EclipseInvoker($invoker, $this->_listener);
+        $eclinvoker = &new EclipseInvoker($invoker, $this->listener);
         return $eclinvoker;
     }
     
@@ -86,10 +86,10 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function paintPass($message){
-        if (! $this->_pass){
-            $this->_message = $this->escapeVal($message);
+        if (! $this->pass){
+            $this->message = $this->escapeVal($message);
         }
-        $this->_pass = true;
+        $this->pass = true;
     }
     
     /**
@@ -100,10 +100,10 @@ class EclipseReporter extends SimpleScorer {
      */
     function paintFail($message){
         //only get the first failure or error
-        if (! $this->_fail && ! $this->_error){
-            $this->_fail = true;
-            $this->_message = $this->escapeVal($message);
-            $this->_listener->write('{status:"fail",message:"'.$this->_message.'",group:"'.$this->_group.'",case:"'.$this->_case.'",method:"'.$this->_method.'"}');
+        if (! $this->fail && ! $this->error){
+            $this->fail = true;
+            $this->message = $this->escapeVal($message);
+            $this->listener->write('{status:"fail",message:"'.$this->message.'",group:"'.$this->group.'",case:"'.$this->case.'",method:"'.$this->method.'"}');
         }
     }
     
@@ -114,10 +114,10 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function paintError($message){
-        if (! $this->_fail && ! $this->_error){
-            $this->_error = true;
-            $this->_message = $this->escapeVal($message);
-            $this->_listener->write('{status:"error",message:"'.$this->_message.'",group:"'.$this->_group.'",case:"'.$this->_case.'",method:"'.$this->_method.'"}');
+        if (! $this->fail && ! $this->error){
+            $this->error = true;
+            $this->message = $this->escapeVal($message);
+            $this->listener->write('{status:"error",message:"'.$this->message.'",group:"'.$this->group.'",case:"'.$this->case.'",method:"'.$this->method.'"}');
         }
     }
     
@@ -129,15 +129,15 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function paintException($exception){
-        if (! $this->_fail && ! $this->_error){
-            $this->_error = true;
+        if (! $this->fail && ! $this->error){
+            $this->error = true;
             $message = 'Unexpected exception of type[' . get_class($exception) .
                     '] with message [' . $exception->getMessage() . '] in [' .
                     $exception->getFile() .' line '. $exception->getLine() . ']';
-            $this->_message = $this->escapeVal($message);
-            $this->_listener->write(
-                    '{status:"error",message:"' . $this->_message . '",group:"' .
-                    $this->_group . '",case:"' . $this->_case . '",method:"' . $this->_method
+            $this->message = $this->escapeVal($message);
+            $this->listener->write(
+                    '{status:"error",message:"' . $this->message . '",group:"' .
+                    $this->group . '",case:"' . $this->case . '",method:"' . $this->method
                     . '"}');
         }
     }
@@ -167,10 +167,10 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function paintMethodStart($method) {
-        $this->_pass = false;
-        $this->_fail = false;
-        $this->_error = false;
-        $this->_method = $this->escapeVal($method);
+        $this->pass = false;
+        $this->fail = false;
+        $this->error = false;
+        $this->method = $this->escapeVal($method);
     }
         
     /**
@@ -180,12 +180,12 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function paintMethodEnd($method){   
-        if ($this->_fail || $this->_error || ! $this->_pass){
+        if ($this->fail || $this->error || ! $this->pass){
         } else {
-            $this->_listener->write(
-                        '{status:"pass",message:"' . $this->_message . '",group:"' .
-                        $this->_group . '",case:"' . $this->_case . '",method:"' .
-                        $this->_method . '"}');
+            $this->listener->write(
+                        '{status:"pass",message:"' . $this->message . '",group:"' .
+                        $this->group . '",case:"' . $this->case . '",method:"' .
+                        $this->method . '"}');
         }
     }
     
@@ -195,7 +195,7 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function paintCaseStart($case){
-        $this->_case = $this->escapeVal($case);
+        $this->case = $this->escapeVal($case);
     }
     
     /**
@@ -204,7 +204,7 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function paintCaseEnd($case){
-        $this->_case = "";
+        $this->case = "";
     }
     
     /**
@@ -215,8 +215,8 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function paintGroupStart($group, $size){
-        $this->_group = $this->escapeVal($group);
-        if ($this->_cc){
+        $this->group = $this->escapeVal($group);
+        if ($this->cc){
             if (extension_loaded('xdebug')){
                 xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE); 
             }
@@ -229,9 +229,9 @@ class EclipseReporter extends SimpleScorer {
      *    @access public
      */
     function paintGroupEnd($group){
-        $this->_group = "";
+        $this->group = "";
         $cc = "";
-        if ($this->_cc){
+        if ($this->cc){
             if (extension_loaded('xdebug')){
                 $arrfiles = xdebug_get_code_coverage();
                 xdebug_stop_code_coverage();
@@ -261,7 +261,7 @@ class EclipseReporter extends SimpleScorer {
                 }
             }
         }
-        $this->_listener->write('{status:"coverage",message:"' .
+        $this->listener->write('{status:"coverage",message:"' .
                                 EclipseReporter::escapeVal($cc) . '"}');
     }
 }
@@ -273,8 +273,8 @@ class EclipseReporter extends SimpleScorer {
  *  @subpackage Eclipse
  */
 class EclipseInvoker extends SimpleInvokerDecorator{
-    function EclipseInvoker(&$invoker, &$listener) {
-        $this->_listener = &$listener;
+    function __construct(&$invoker, &$listener) {
+        $this->listener = &$listener;
         $this->SimpleInvokerDecorator($invoker);
     }
     
@@ -285,7 +285,7 @@ class EclipseInvoker extends SimpleInvokerDecorator{
      */
     function before($method){
         ob_start();
-        $this->_invoker->before($method);
+        $this->invoker->before($method);
     }
 
     /**
@@ -295,11 +295,11 @@ class EclipseInvoker extends SimpleInvokerDecorator{
      *    @access public
      */
     function after($method) {
-        $this->_invoker->after($method);
+        $this->invoker->after($method);
         $output = ob_get_contents();
         ob_end_clean();
         if ($output !== ""){
-            $result = $this->_listener->write('{status:"info",message:"' .
+            $result = $this->listener->write('{status:"info",message:"' .
                                               EclipseReporter::escapeVal($output) . '"}');
         }
     }

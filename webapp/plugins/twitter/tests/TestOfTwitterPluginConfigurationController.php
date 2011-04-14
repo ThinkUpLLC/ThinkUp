@@ -38,16 +38,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/controller/class.TwitterP
 
 class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('TwitterPluginConfigurationController class test');
-    }
-
-    /**
-     * Setup
-     */
     public function setUp(){
         parent::setUp();
         $webapp = Webapp::getInstance();

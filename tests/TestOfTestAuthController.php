@@ -32,12 +32,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfTestAuthController extends ThinkUpUnitTestCase {
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('TestController class test');
-    }
 
     public function setUp(){
         parent::setUp();

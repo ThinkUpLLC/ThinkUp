@@ -1,14 +1,14 @@
 <?php
-// $Id: shell_tester_test.php 1505 2007-04-30 23:39:59Z lastcraft $
+// $Id: shell_tester_test.php 1787 2008-04-26 20:35:39Z pp11 $
 require_once(dirname(__FILE__) . '/../autorun.php');
 require_once(dirname(__FILE__) . '/../shell_tester.php');
 Mock::generate('SimpleShell');
 
 class TestOfShellTestCase extends ShellTestCase {
-    var $_mock_shell = false;
+    private $mock_shell = false;
     
-    function &_getShell() {
-        return $this->_mock_shell;
+    function getShell() {
+        return $this->mock_shell;
     }
     
     function testGenericEquality() {
@@ -17,24 +17,24 @@ class TestOfShellTestCase extends ShellTestCase {
     }
     
     function testExitCode() {
-        $this->_mock_shell = &new MockSimpleShell();
-        $this->_mock_shell->setReturnValue('execute', 0);
-        $this->_mock_shell->expectOnce('execute', array('ls'));
+        $this->mock_shell = new MockSimpleShell();
+        $this->mock_shell->setReturnValue('execute', 0);
+        $this->mock_shell->expectOnce('execute', array('ls'));
         $this->assertTrue($this->execute('ls'));
         $this->assertExitCode(0);
     }
     
     function testOutput() {
-        $this->_mock_shell = &new MockSimpleShell();
-        $this->_mock_shell->setReturnValue('execute', 0);
-        $this->_mock_shell->setReturnValue('getOutput', "Line 1\nLine 2\n");
+        $this->mock_shell = new MockSimpleShell();
+        $this->mock_shell->setReturnValue('execute', 0);
+        $this->mock_shell->setReturnValue('getOutput', "Line 1\nLine 2\n");
         $this->assertOutput("Line 1\nLine 2\n");
     }
     
     function testOutputPatterns() {
-        $this->_mock_shell = &new MockSimpleShell();
-        $this->_mock_shell->setReturnValue('execute', 0);
-        $this->_mock_shell->setReturnValue('getOutput', "Line 1\nLine 2\n");
+        $this->mock_shell = new MockSimpleShell();
+        $this->mock_shell->setReturnValue('execute', 0);
+        $this->mock_shell->setReturnValue('getOutput', "Line 1\nLine 2\n");
         $this->assertOutputPattern('/line/i');
         $this->assertNoOutputPattern('/line 2/');
     }

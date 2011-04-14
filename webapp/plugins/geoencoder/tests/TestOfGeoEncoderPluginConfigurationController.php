@@ -34,10 +34,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.GeoEn
 
 class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('TestOfGeoEncoderPluginConfigurationController class test');
-    }
-
     public function setUp(){
         parent::setUp();
         $webapp = Webapp::getInstance();

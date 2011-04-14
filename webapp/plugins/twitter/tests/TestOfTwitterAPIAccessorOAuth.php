@@ -33,16 +33,13 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.CrawlerTwitte
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
 
 class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
-    public function __construct() {
-        $this->UnitTestCase('Test of TwitterAPIAccessorOAuth');
-    }
 
     public function testFriendsList() {
         global $THINKUP_CFG;
 
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', 'GET', array());
-        $this->assertWantedPattern('/A or B/', $result);
+        $this->assertPattern('/A or B/', $result);
 
         $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
         $users = $api->parseXML($result);

@@ -38,10 +38,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/classes/mock.Geo
 class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
     var $webapp;
 
-    public function __construct() {
-        $this->UnitTestCase('GeoEncoder plugin class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->webapp = Webapp::getInstance();

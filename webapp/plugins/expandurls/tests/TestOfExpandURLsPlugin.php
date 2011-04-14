@@ -35,10 +35,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/model/class.ExpandURLs
 
 class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('ExpandURLs plugin class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $crawler = Crawler::getInstance();

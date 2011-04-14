@@ -33,10 +33,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfGridController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('GridController class test');
-    }
-
     public function setUp(){
         parent::setUp();
         $webapp = Webapp::getInstance();
@@ -135,7 +131,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $this->assertEqual(count($ob->posts), 2);
         $this->assertEqual($ob->posts[0]->text, 'Reply to a post');
         $this->assertEqual($ob->posts[0]->post_id_str, '10765432100123456783_str');
-        
+
     }
 
     public function testNoProfilerOutput() {

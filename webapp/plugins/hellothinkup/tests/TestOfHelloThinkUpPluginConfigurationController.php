@@ -38,10 +38,6 @@ require_once THINKUP_ROOT_PATH.
 
 class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('TestOfHelloThinkUpPluginConfigurationController class test');
-    }
-
     public function setUp(){
         parent::setUp();
         $webapp = Webapp::getInstance();

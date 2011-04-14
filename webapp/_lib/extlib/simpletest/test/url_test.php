@@ -1,5 +1,5 @@
 <?php
-// $Id: url_test.php 1598 2007-12-24 10:44:09Z pp11 $
+// $Id: url_test.php 1998 2010-07-27 09:55:55Z pp11 $
 require_once(dirname(__FILE__) . '/../autorun.php');
 require_once(dirname(__FILE__) . '/../url.php');
 
@@ -85,17 +85,17 @@ class TestOfUrl extends UnitTestCase {
     
     function testEncodingParameters() {
         $url = new SimpleUrl('');
-        $url->addRequestParameter('a', '?!"\'#~@[]{}:;<>,./|£$%^&*()_+-=');
+        $url->addRequestParameter('a', '?!"\'#~@[]{}:;<>,./|$%^&*()_+-=');
         $this->assertIdentical(
                 $request = $url->getEncodedRequest(),
-                '?a=%3F%21%22%27%23%7E%40%5B%5D%7B%7D%3A%3B%3C%3E%2C.%2F%7C%A3%24%25%5E%26%2A%28%29_%2B-%3D');
+                '?a=%3F%21%22%27%23%7E%40%5B%5D%7B%7D%3A%3B%3C%3E%2C.%2F%7C%24%25%5E%26%2A%28%29_%2B-%3D');
     }
     
     function testDecodingParameters() {            
-        $url = new SimpleUrl('?a=%3F%21%22%27%23%7E%40%5B%5D%7B%7D%3A%3B%3C%3E%2C.%2F%7C%A3%24%25%5E%26%2A%28%29_%2B-%3D');
+        $url = new SimpleUrl('?a=%3F%21%22%27%23%7E%40%5B%5D%7B%7D%3A%3B%3C%3E%2C.%2F%7C%24%25%5E%26%2A%28%29_%2B-%3D');
         $this->assertEqual(
                 $url->getEncodedRequest(),
-                '?a=' . urlencode('?!"\'#~@[]{}:;<>,./|£$%^&*()_+-='));
+                '?a=' . urlencode('?!"\'#~@[]{}:;<>,./|$%^&*()_+-='));
     }
     
     function testUrlInQueryDoesNotConfuseParsing() {
@@ -163,15 +163,17 @@ class TestOfUrl extends UnitTestCase {
     }
     
     function testPathNormalisation() {
+        $url = new SimpleUrl();
         $this->assertEqual(
-                SimpleUrl::normalisePath('https://host.com/I/am/here/../there/somewhere.php'),
+                $url->normalisePath('https://host.com/I/am/here/../there/somewhere.php'),
                 'https://host.com/I/am/there/somewhere.php');
     }
 
     // regression test for #1535407
     function testPathNormalisationWithSinglePeriod() {
+        $url = new SimpleUrl();
         $this->assertEqual(
-            SimpleUrl::normalisePath('https://host.com/I/am/here/./../there/somewhere.php'),
+            $url->normalisePath('https://host.com/I/am/here/./../there/somewhere.php'),
             'https://host.com/I/am/there/somewhere.php');
     }
     
@@ -196,9 +198,9 @@ class TestOfUrl extends UnitTestCase {
 
     function testUsernameAndPasswordAreUrlDecoded() {
         $url = new SimpleUrl('http://' . urlencode('test@test') .
-                ':' . urlencode('$!£@*&%') . '@www.lastcraft.com');
+                ':' . urlencode('$!ï¿½@*&%') . '@www.lastcraft.com');
         $this->assertEqual($url->getUsername(), 'test@test');
-        $this->assertEqual($url->getPassword(), '$!£@*&%');
+        $this->assertEqual($url->getPassword(), '$!ï¿½@*&%');
     }
     
     function testBlitz() {
@@ -264,8 +266,33 @@ class TestOfUrl extends UnitTestCase {
         $this->assertPreserved('http://host#stuff');
         $this->assertPreserved('http://me:secret@www.here.com/a/b/c/here.html?a=A?7,6');
         $this->assertPreserved('http://www.here.com/?a=A__b=B');
+        $this->assertPreserved('http://www.example.com:8080/');
     }
     
+    function testUrlWithTwoSlashesInPath() {
+        $url = new SimpleUrl('/article/categoryedit/insert//');
+        $this->assertEqual($url->getPath(), '/article/categoryedit/insert//');
+    }
+    
+    function testUrlWithRequestKeyEncoded() {
+        $url = new SimpleUrl('/?foo%5B1%5D=bar');
+        $this->assertEqual($url->getEncodedRequest(), '?foo%5B1%5D=bar');
+        $url->addRequestParameter('a[1]', 'b[]');
+        $this->assertEqual($url->getEncodedRequest(), '?foo%5B1%5D=bar&a%5B1%5D=b%5B%5D');
+
+        $url = new SimpleUrl('/');
+        $url->addRequestParameter('a[1]', 'b[]');
+        $this->assertEqual($url->getEncodedRequest(), '?a%5B1%5D=b%5B%5D');
+    }
+
+    function testUrlWithRequestKeyEncodedAndParamNamLookingLikePair() {
+        $url = new SimpleUrl('/');
+        $url->addRequestParameter('foo[]=bar', '');
+        $this->assertEqual($url->getEncodedRequest(), '?foo%5B%5D%3Dbar=');
+        $url = new SimpleUrl('/?foo%5B%5D%3Dbar=');
+        $this->assertEqual($url->getEncodedRequest(), '?foo%5B%5D%3Dbar=');
+    }
+
     function assertUrl($raw, $parts, $params = false, $coords = false) {
         if (! is_array($params)) {
             $params = array();
@@ -284,11 +311,6 @@ class TestOfUrl extends UnitTestCase {
             $this->assertIdentical($url->getX(), $coords[0], "[$raw] x -> %s");
             $this->assertIdentical($url->getY(), $coords[1], "[$raw] y -> %s");
         }
-    }
-    
-    function testUrlWithTwoSlashesInPath() {
-        $url = new SimpleUrl('/article/categoryedit/insert//');
-        $this->assertEqual($url->getPath(), '/article/categoryedit/insert//');
     }
     
     function assertPreserved($string) {
@@ -440,4 +462,54 @@ class TestOfFrameUrl extends UnitTestCase {
         $this->assertIdentical($url->getTarget(), 'A frame');
     }
 }
+
+/**
+ * @note Based off of http://www.mozilla.org/quality/networking/testing/filetests.html
+ */
+class TestOfFileUrl extends UnitTestCase {
+    
+    function testMinimalUrl() {
+        $url = new SimpleUrl('file:///');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/');
+    }
+    
+    function testUnixUrl() {
+        $url = new SimpleUrl('file:///fileInRoot');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/fileInRoot');
+    }
+    
+    function testDOSVolumeUrl() {
+        $url = new SimpleUrl('file:///C:/config.sys');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/C:/config.sys');
+    }
+    
+    function testDOSVolumePromotion() {
+        $url = new SimpleUrl('file://C:/config.sys');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/C:/config.sys');
+    }
+    
+    function testDOSBackslashes() {
+        $url = new SimpleUrl('file:///C:\config.sys');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/C:/config.sys');
+    }
+    
+    function testDOSDirnameAfterFile() {
+        $url = new SimpleUrl('file://C:\config.sys');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/C:/config.sys');
+    }
+    
+}
+
 ?>

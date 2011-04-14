@@ -46,7 +46,8 @@
         </li>
 </ul>
 <div class="content">
-        <p><a class="target" name="unit"><h2>Unit test cases</h2></a></p>
+        <h2>
+<a class="target" name="unit"></a>Unit test cases</h2>
             <p>
                 The core system is a regression testing framework built around
                 test cases.
@@ -71,15 +72,15 @@ class FileTestCase extends UnitTestCase {
     function FileTestCase() {
         $this-&gt;UnitTestCase('File test');
     }<strong>
-    
+
     function setUp() {
         @unlink('../temp/test.txt');
     }
-    
+
     function tearDown() {
         @unlink('../temp/test.txt');
     }
-    
+
     function testCreation() {
         $writer = &amp;new FileWriter('../temp/test.txt');
         $writer-&gt;write('Hello');
@@ -109,7 +110,7 @@ class FileTestCase extends UnitTestCase {
             <p>
                 You can place some test case set up into the constructor to
                 be run once for all the methods in the test case, but
-                you risk test inteference that way.
+                you risk test interference that way.
                 This way is slightly slower, but it is safer.
                 Note that if you come from a JUnit background this will not
                 be the behaviour you are used to.
@@ -192,7 +193,15 @@ class FileTestCase extends UnitTestCase {
 </tr>
                     <tr>
 <td><span class="new_code">expectError($x)</span></td>
-<td>Swallows any upcoming matching error</td>
+<td>Fail if matching error does not occour</td>
+</tr>
+                    <tr>
+<td><span class="new_code">expectException($x)</span></td>
+<td>Fail if matching exception is not thrown</td>
+</tr>
+                    <tr>
+<td><span class="new_code">ignoreException($x)</span></td>
+<td>Swallows any upcoming matching exception</td>
 </tr>
                     <tr>
 <td><span class="new_code">assert($e)</span></td>
@@ -291,7 +300,8 @@ trigger_error('Catastrophe');
                 </tbody></table>
             </p>
         
-        <p><a class="target" name="extending_unit"><h2>Extending test cases</h2></a></p>
+        <h2>
+<a class="target" name="extending_unit"></a>Extending test cases</h2>
             <p>
                 Of course additional test methods can be added to create
                 specific types of test case, so as to extend framework...
@@ -302,7 +312,7 @@ class FileTester extends UnitTestCase {
     function FileTester($name = false) {
         $this-&gt;UnitTestCase($name);
     }
-    
+
     function assertFileExists($filename, $message = '%s') {
         $this-&gt;assertTrue(
                 file_exists($filename),
@@ -328,15 +338,15 @@ class FileTester extends UnitTestCase {
                 a normal test case...
 <pre>
 class FileTestCase extends <strong>FileTester</strong> {
-    
+
     function setUp() {
         @unlink('../temp/test.txt');
     }
-    
+
     function tearDown() {
         @unlink('../temp/test.txt');
     }
-    
+
     function testCreation() {
         $writer = &amp;new FileWriter('../temp/test.txt');
         $writer-&gt;write('Hello');<strong>
@@ -358,7 +368,8 @@ class FileTestCase extends <strong>FileTester</strong> {
                 test cases in your test suites.
             </p>
         
-        <p><a class="target" name="running_unit"><h2>Running a single test case</h2></a></p>
+        <h2>
+<a class="target" name="running_unit"></a>Running a single test case</h2>
             <p>
                 You won't often run single test cases except when bashing
                 away at a module that is having difficulty, and you don't

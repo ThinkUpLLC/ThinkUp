@@ -34,13 +34,6 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
 
     const TEST_TABLE = 'options';
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('AppConfigController class test');
-    }
-
     public function setUp(){
         parent::setUp();
         $this->config = Config::getInstance();

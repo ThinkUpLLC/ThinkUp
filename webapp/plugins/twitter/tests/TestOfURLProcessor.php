@@ -41,10 +41,6 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
      */
     var $faux_data_path;
 
-    public function __construct() {
-        $this->UnitTestCase('URLProcessor class test');
-    }
-
     public function setUp() {
         $this->logger = Logger::getInstance();
         $this->faux_data_path = THINKUP_ROOT_PATH. 'webapp/plugins/twitter/tests/testdata/URLProcessor';

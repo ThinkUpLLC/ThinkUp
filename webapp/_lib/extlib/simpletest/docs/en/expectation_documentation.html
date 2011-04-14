@@ -50,7 +50,8 @@
         </li>
 </ul>
 <div class="content">
-        <p><a class="target" name="mock"><h2>More control over mock objects</h2></a></p>
+        <h2>
+<a class="target" name="mock"></a>More control over mock objects</h2>
             <p>
                 The default behaviour of the
                 <a href="mock_objects_documentation.html">mock objects</a>
@@ -76,7 +77,7 @@
 <pre>
 <strong>class NewsService {
     ...
-    function publish(&amp;$writer) {
+    function publish($writer) {
         if (! $this-&gt;isConnected()) {
             $writer-&gt;write('Cannot connect to news service "' .
                     $this-&gt;_name . '" at this time. ' .
@@ -94,13 +95,13 @@
 class TestOfNewsService extends UnitTestCase {
     ...
     function testConnectionFailure() {<strong>
-        $writer = &amp;new MockWriter();
+        $writer = new MockWriter();
         $writer-&gt;expectOnce('write', array(
                 'Cannot connect to news service ' .
                 '"BBC News" at this time. ' .
                 'Please try again later.'));
         
-        $service = &amp;new NewsService('BBC News');
+        $service = new NewsService('BBC News');
         $service-&gt;publish($writer);</strong>
     }
 }
@@ -119,12 +120,12 @@ class TestOfNewsService extends UnitTestCase {
 class TestOfNewsService extends UnitTestCase {
     ...
     function testConnectionFailure() {
-        $writer = &amp;new MockWriter();<strong>
+        $writer = new MockWriter();<strong>
         $writer-&gt;expectOnce(
                 'write',
                 array(new PatternExpectation('/cannot connect/i')));</strong>
         
-        $service = &amp;new NewsService('BBC News');
+        $service = new NewsService('BBC News');
         $service-&gt;publish($writer);
     }
 }
@@ -132,7 +133,7 @@ class TestOfNewsService extends UnitTestCase {
                 Instead of passing in the expected parameter to the
                 <span class="new_code">MockWriter</span> we pass an
                 expectation class called
-                <span class="new_code">WantedPatternExpectation</span>.
+                <span class="new_code">PatternExpectation</span>.
                 The mock object is smart enough to recognise this as special
                 and to treat it differently.
                 Rather than simply comparing the incoming argument to this
@@ -140,7 +141,7 @@ class TestOfNewsService extends UnitTestCase {
                 perform the test.
             </p>
             <p>
-                The <span class="new_code">WantedPatternExpectation</span> takes
+                The <span class="new_code">PatternExpectation</span> takes
                 the regular expression to match in its constructor.
                 Whenever a comparison is made by the <span class="new_code">MockWriter</span>
                 against this expectation class, it will do a
@@ -202,6 +203,14 @@ class TestOfNewsService extends UnitTestCase {
 <td><span class="new_code">MethodExistsExpectation</span></td>
 <td>Checks a method is available on an object</td>
 </tr>
+                    <tr>
+<td><span class="new_code">TrueExpectation</span></td>
+<td>Accepts any PHP variable that evaluates to true</td>
+</tr>
+                    <tr>
+<td><span class="new_code">FalseExpectation</span></td>
+<td>Accepts any PHP variable that evaluates to false</td>
+</tr>
                 </tbody></table>
                 Most take the expected value in the constructor.
                 The exceptions are the pattern matchers, which take a regular expression,
@@ -241,7 +250,8 @@ new WithinMarginExpectation(14.0, 0.001)
                 This will accept any value from 13.999 to 14.001 inclusive.
             </p>
         
-        <p><a class="target" name="behaviour"><h2>Using expectations to control stubs</h2></a></p>
+        <h2>
+<a class="target" name="behaviour"></a>Using expectations to control stubs</h2>
             <p>
                 The expectation classes can be used not just for sending assertions
                 from mock objects, but also for selecting behaviour for the
@@ -257,11 +267,11 @@ new WithinMarginExpectation(14.0, 0.001)
 Mock::generate('Authorisation');
 <strong>
 $authorisation = new MockAuthorisation();
-$authorisation-&gt;setReturnValue(
+$authorisation-&gt;returns(
         'isAllowed',
         true,
         array(new IsAExpectation('Session', 'Must be a session')));
-$authorisation-&gt;setReturnValue('isAllowed', false);</strong>
+$authorisation-&gt;returns('isAllowed', false);</strong>
 </pre>
                 We have set the default mock behaviour to return false when
                 <span class="new_code">isAllowed</span> is called.
@@ -277,7 +287,8 @@ $authorisation-&gt;setReturnValue('isAllowed', false);</strong>
                 completeness.
             </p>
         
-        <p><a class="target" name="extending"><h2>Creating your own expectations</h2></a></p>
+        <h2>
+<a class="target" name="extending"></a>Creating your own expectations</h2>
             <p>
                 The expectation classes have a very simple structure.
                 So simple that it is easy to create your own versions for
@@ -288,7 +299,7 @@ $authorisation-&gt;setReturnValue('isAllowed', false);</strong>
                 valid IP addresses.
                 In order to work correctly with the stubs and mocks the new
                 expectation class should extend
-                <span class="new_code">SimpleExpectation</span>...
+                <span class="new_code">SimpleExpectation</span> or further extend a subclass...
 <pre>
 <strong>class ValidIp extends SimpleExpectation {
     
@@ -313,8 +324,50 @@ $authorisation-&gt;setReturnValue('isAllowed', false);</strong>
                 This class can now be used in place of the earlier expectation
                 classes.
             </p>
+            <p>
+                Here is a more typical example, matching part of a hash...
+<pre>
+<strong>class JustField extends EqualExpectation {
+    private $key;
+    
+    function __construct($key, $expected) {
+        parent::__construct($expected);
+        $this-&gt;key = $key;
+    }
+    
+    function test($compare) {
+        if (! isset($compare[$this-&gt;key])) {
+            return false;
+        }
+        return parent::test($compare[$this-&gt;key]);
+    }
+    
+    function testMessage($compare) {
+        if (! isset($compare[$this-&gt;key])) {
+            return 'Key [' . $this-&gt;key . '] does not exist';
+        }
+        return 'Key [' . $this-&gt;key . '] -&gt; ' .
+                parent::testMessage($compare[$this-&gt;key]);
+    }
+}</strong>
+</pre>
+                We tend to seperate message clauses with
+                "&amp;nbsp;-&gt;&amp;nbsp;".
+                This allows derivative tools to reformat the output.
+            </p>
+            <p>
+                Suppose some authenticator is expecting to be given
+                a database row corresponding to the user, and we
+                only need to confirm the username is correct.
+                We can assert just their username with...
+<pre>
+$mock-&gt;expectOnce('authenticate',
+                  array(new JustKey('username', 'marcus')));
+</pre>
+            </p>
         
-        <p><a class="target" name="unit"><h2>Under the bonnet of the unit tester</h2></a></p>
+        <h2>
+<a class="target" name="unit"></a>Under the bonnet of the unit tester</h2>
             <p>
                 The <a href="http://sourceforge.net/projects/simpletest/">SimpleTest unit testing framework</a>
                 also uses the expectation classes internally for the
@@ -323,7 +376,7 @@ $authorisation-&gt;setReturnValue('isAllowed', false);</strong>
                 homebrew expectation classes within the test suites directly.
             </p>
             <p>
-                The most crude way of doing this is to use the
+                The most crude way of doing this is to use the generic
                 <span class="new_code">SimpleTest::assert()</span> method to
                 test against it directly...
 <pre>
@@ -338,6 +391,9 @@ $authorisation-&gt;setReturnValue('isAllowed', false);</strong>
     }
 }</strong>
 </pre>
+                <span class="new_code">assert()</span> will test any expectation class directly.
+            </p>
+            <p>
                 This is a little untidy compared with our usual
                 <span class="new_code">assert...()</span> syntax.
             </p>
@@ -363,14 +419,12 @@ class TestOfNetworking extends UnitTestCase {
     }
 }
 </pre>
-                It is unlikely we would ever need this degree of control
-                over the testing machinery.
                 It is rare to need the expectations for more than pattern
-                matching.
+                matching, but these facilities do allow testers to build
+                some sort of domain language for testing their application.
                 Also, complex expectation classes could make the tests
                 harder to read and debug.
-                These mechanisms are really of most use to authors of systems
-                that will extend the test framework to create their own tool set.
+                In effect extending the test framework to create their own tool set.
             </p>
         
     </div>

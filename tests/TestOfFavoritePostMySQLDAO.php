@@ -37,12 +37,6 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
      * @var FavoritePostMySQLDAO
      */
     protected $dao;
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('FavoritePostMySQLDAO class test');
-    }
 
     public function setUp() {
         parent::setUp();

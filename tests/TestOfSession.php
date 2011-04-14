@@ -37,10 +37,6 @@ class TestOfSession extends ThinkUpUnitTestCase {
     var $builder2;
     var $builder3;
 
-    public function __construct() {
-        $this->UnitTestCase('Session class test');
-    }
-
     public function setUp(){
         parent::setUp();
     }

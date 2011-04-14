@@ -35,10 +35,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfUserMySQLDAO extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('UserMySQLDAO class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->builders = self::buildData();

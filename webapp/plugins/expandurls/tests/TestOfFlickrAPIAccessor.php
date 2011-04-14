@@ -32,10 +32,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/classes/mock.Fli
 
 class TestOfFlickrAPIAccessor extends UnitTestCase {
 
-    public function TestOfFlickrAPIAccessor() {
-        $this->UnitTestCase('FlickrAPIAccessor class test');
-    }
-
     public function testGetFlickrPhotoSourceFlickrAPINonResponsive() {
         $logger = Logger::getInstance();
         $fa = new FlickrAPIAccessor('dummykey', $logger);

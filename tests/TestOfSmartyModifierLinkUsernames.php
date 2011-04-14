@@ -30,7 +30,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/view/plugins/modifier.link_usernames.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/view/plugins/modifier.link_usernames_to_twitter.php';
 
-class TestOfSmartyModiferLinkUsernames extends ThinkUpBasicUnitTestCase {
+class TestOfSmartyModifierLinkUsernames extends ThinkUpBasicUnitTestCase {
     /**
      *
      * @var array string
@@ -48,7 +48,6 @@ class TestOfSmartyModiferLinkUsernames extends ThinkUpBasicUnitTestCase {
     var $externally_linked_tweets;
 
     public function __construct() {
-        $this->UnitTestCase('Link Twitter usernames Smarty modifier test');
         $config = Config::getInstance();
         $this->test_tweets = array(
         "Hey @anildash think this up!", 

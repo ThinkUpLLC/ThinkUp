@@ -1,5 +1,5 @@
 <?php
-// $Id: unit_tester_test.php 1509 2007-05-08 22:11:49Z lastcraft $
+// $Id: unit_tester_test.php 1748 2008-04-14 01:50:41Z lastcraft $
 require_once(dirname(__FILE__) . '/../autorun.php');
 
 class ReferenceForTesting {
@@ -29,9 +29,9 @@ class TestOfUnitTester extends UnitTestCase {
     }
     
     function testReferenceAssertionOnObjects() {
-        $a = &new ReferenceForTesting();
-        $b = &$a;
-        $this->assertReference($a, $b);
+        $a = new ReferenceForTesting();
+        $b = $a;
+        $this->assertSame($a, $b);
     }
     
     function testReferenceAssertionOnScalars() {
@@ -41,15 +41,21 @@ class TestOfUnitTester extends UnitTestCase {
     }
     
     function testCloneOnObjects() {
-        $a = &new ReferenceForTesting();
-        $b = &new ReferenceForTesting();
+        $a = new ReferenceForTesting();
+        $b = new ReferenceForTesting();
         $this->assertClone($a, $b);
     }
-    
-    function testCloneOnScalars() {
+
+    function TODO_testCloneOnScalars() {
         $a = 25;
         $b = 25;
         $this->assertClone($a, $b);
+    }
+
+    function testCopyOnScalars() {
+        $a = 25;
+        $b = 25;
+        $this->assertCopy($a, $b);
     }
 }
 ?>

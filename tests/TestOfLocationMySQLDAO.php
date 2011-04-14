@@ -33,9 +33,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 class TestOfLocationMySQLDAO extends ThinkUpUnitTestCase {
     protected $DAO;
     protected $logger;
-    public function __construct() {
-        $this->UnitTestCase('LocationMySQLDAO class test');
-    }
 
     public function setUp() {
         parent::setUp();

@@ -3,35 +3,56 @@
  *  Autorunner which runs all tests cases found in a file
  *  that includes this module.
  *  @package    SimpleTest
- *  @version    $Id: autorun.php 1721 2008-04-07 19:27:10Z lastcraft $
+ *  @version    $Id: autorun.php 1885 2009-07-02 10:25:52Z dgheath $
+ */
+
+/**#@+
+ * include simpletest files
  */
 require_once dirname(__FILE__) . '/unit_tester.php';
 require_once dirname(__FILE__) . '/mock_objects.php';
 require_once dirname(__FILE__) . '/collector.php';
 require_once dirname(__FILE__) . '/default_reporter.php';
+/**#@-*/
 
 $GLOBALS['SIMPLETEST_AUTORUNNER_INITIAL_CLASSES'] = get_declared_classes();
 register_shutdown_function('simpletest_autorun');
 
 /**
- *    Exit handler to run all recent test cases if no test has
- *    so far been run. Uses the DefaultReporter which can have
- *    it's output controlled with SimpleTest::prefer().
+ *    Exit handler to run all recent test cases and exit system if in CLI
  */
 function simpletest_autorun() {
     if (tests_have_run()) {
         return;
     }
-    $candidates = array_intersect(
-            capture_new_classes(),
-            classes_defined_in_initial_file());
-    $loader = new SimpleFileLoader();
-    $suite = $loader->createSuiteFromClasses(
-            basename(initial_file()),
-            $loader->selectRunnableTests($candidates));
-    $result = $suite->run(new DefaultReporter());
-    if (SimpleReporter::inCli()) {
+    $result = run_local_tests();
+    if (SimpleReporter::inCli()) {        
         exit($result ? 0 : 1);
+    }
+}
+
+/**
+ *    run all recent test cases if no test has
+ *    so far been run. Uses the DefaultReporter which can have
+ *    it's output controlled with SimpleTest::prefer().
+ *    @return boolean/null false if there were test failures, true if
+ *                         there were no failures, null if tests are
+ *                         already running
+ */
+function run_local_tests() {
+    try {
+        if (tests_have_run()) {
+            return;
+        }
+        $candidates = capture_new_classes();
+        $loader = new SimpleFileLoader();
+        $suite = $loader->createSuiteFromClasses(
+                basename(initial_file()),
+                $loader->selectRunnableTests($candidates));
+        return $suite->run(new DefaultReporter());
+    } catch (Exception $stack_frame_fix) {
+        print $stack_frame_fix->getMessage();
+        return false;
     }
 }
 
@@ -54,28 +75,19 @@ function tests_have_run() {
 function initial_file() {
     static $file = false;
     if (! $file) {
-        $file = reset(get_included_files());
+        if (isset($_SERVER, $_SERVER['SCRIPT_FILENAME'])) {
+            $file = $_SERVER['SCRIPT_FILENAME'];
+        } else {
+            $included_files = get_included_files();
+            $file = reset($included_files);
+        }
     }
     return $file;
 }
 
 /**
- *    Just the classes from the first autorun script. May
- *    get a few false positives, as it just does a regex based
- *    on following the word "class".
- *    @return array        List of all possible classes in first
- *                         autorun script.
- */
-function classes_defined_in_initial_file() {
-    if (preg_match_all('/\bclass\s+(\w+)/i', file_get_contents(initial_file()), $matches)) {
-        return array_map('strtolower', $matches[1]);
-    }
-    return array();
-}
-
-/**
  *    Every class since the first autorun include. This
- *    is safe enough if require_once() is alwyas used.
+ *    is safe enough if require_once() is always used.
  *    @return array        Class names.
  */
 function capture_new_classes() {

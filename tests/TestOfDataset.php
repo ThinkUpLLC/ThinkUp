@@ -19,37 +19,24 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
  * Test of Dataset
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
+
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfDataset extends ThinkUpUnitTestCase {
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('Dataset class test');
-    }
-
-    /**
-     * Set up test
-     */
     public function setUp() {
         parent::setUp();
     }
 
-    /**
-     * Tear down test
-     */
     public function tearDown() {
         parent::tearDown();
     }

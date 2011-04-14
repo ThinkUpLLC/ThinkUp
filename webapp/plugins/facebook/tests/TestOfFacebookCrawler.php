@@ -46,10 +46,6 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
      */
     var $logger;
 
-    public function __construct() {
-        $this->UnitTestCase('FacebookCrawler test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();

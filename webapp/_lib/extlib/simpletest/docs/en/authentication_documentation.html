@@ -52,7 +52,8 @@
                 the SimpleTest web tester.
             </p>
         
-        <p><a class="target" name="basic"><h2>Basic HTTP authentication</h2></a></p>
+        <h2>
+<a class="target" name="basic"></a>Basic HTTP authentication</h2>
             <p>
                 If you fetch a page protected by basic authentication then
                 rather than receiving content, you will instead get a 401
@@ -69,7 +70,7 @@ class AuthenticationTest extends WebTestCase {<strong>
                 This allows us to see the challenge header...
                 <div class="demo">
                     <h1>File test</h1>
-<pre style="background-color: lightgray; color: black">
+<pre>
 HTTP/1.1 401 Authorization Required
 Date: Sat, 18 Sep 2004 19:25:18 GMT
 Server: Apache/1.3.29 (Unix) PHP/4.3.4
@@ -110,6 +111,9 @@ class AuthenticationTest extends WebTestCase {
     }
 }
 </pre>
+                This type of test, testing HTTP responses, is not typical.
+            </p>
+            <p>
                 Most of the time we are not interested in testing the
                 authentication itself, but want to get past it to test
                 the pages underneath.
@@ -131,8 +135,8 @@ class AuthenticationTest extends WebTestCase {
                 to merge subdirectories into a common realm.
             </p>
             <p>
-                You can shortcut this step further by encoding the log in
-                details straight into the URL...
+                If you want, you can shortcut this step further by encoding
+                the log in details straight into the URL...
 <pre>
 class AuthenticationTest extends WebTestCase {
     function testCanReadAuthenticatedPages() {
@@ -144,26 +148,35 @@ class AuthenticationTest extends WebTestCase {
                 If your username or password has special characters, then you
                 will have to URL encode them or the request will not be parsed
                 correctly.
-                Also this header will not be sent on subsequent requests if
-                you request a page with a fully qualified URL.
-                If you navigate with relative URLs though, the authentication
-                information will be preserved.
+                I'm afraid we leave this up to you.
             </p>
             <p>
-                Only basic authentication is currently supported and this is
-                only really secure in tandem with HTTPS connections.
-                This is usually enough to protect test server from prying eyes,
+                A problem with encoding the login details directly in the URL is
+                the authentication header will not be sent on subsequent requests.
+                If you navigate with relative URLs though, the authentication
+                information will be preserved along with the domain name.
+            </p>
+            <p>
+                Normally though, you use the <span class="new_code">authenticate()</span> call.
+                SimpleTest will then remember your login information on each request.
+            </p>
+            <p>
+                Only testing with basic authentication is currently supported, and
+                this is only really secure in tandem with HTTPS connections.
+                This is usually good enough to protect test server from prying eyes,
                 however.
                 Digest authentication and NTLM authentication may be added
-                in the future.
+                in the future if enough people request this feature.
             </p>
         
-        <p><a class="target" name="cookies"><h2>Cookies</h2></a></p>
+        <h2>
+<a class="target" name="cookies"></a>Cookies</h2>
             <p>
                 Basic authentication doesn't give enough control over the
                 user interface for web developers.
                 More likely this functionality will be coded directly into
-                the web architecture using cookies and complicated timeouts.
+                the web architecture using cookies with complicated timeouts.
+                We need to be able to test this too.
             </p>
             <p>
                 Starting with a simple log-in form...
@@ -212,7 +225,16 @@ class LogInTest extends WebTestCase {
     }
 }
 </pre>
-                The rest of the test would be the same as any other form,
+                If you are using PHP to handle sessions for you then
+                this test is even more useless, as we are just testing PHP itself.
+            </p>
+            <p>
+                The simplest test of logging in is to visually inspect the
+                next page to see if you are really logged in.
+                Just test the next page with <span class="new_code">WebTestCase::assertText()</span>.
+            </p>
+            <p>
+                The test is similar to any other form test,
                 but we might want to confirm that we still have the same
                 cookie after log-in as before we entered.
                 We wouldn't want to lose track of this after all.
@@ -232,10 +254,10 @@ class LogInTest extends WebTestCase {
 }
 </pre>
                 This confirms that the session identifier is maintained
-                afer log-in.
+                afer log-in and we haven't accidently reset it.
             </p>
             <p>
-                We could even attempt to spoof our own system by setting
+                We could even attempt to hack our own system by setting
                 arbitrary cookies to gain access...
 <pre>
 class LogInTest extends WebTestCase {
@@ -251,7 +273,8 @@ class LogInTest extends WebTestCase {
                 Is your site protected from this attack?
             </p>
         
-        <p><a class="target" name="session"><h2>Browser sessions</h2></a></p>
+        <h2>
+<a class="target" name="session"></a>Browser sessions</h2>
             <p>
                 If you are testing an authentication system a critical piece
                 of behaviour is what happens when a user logs back in.
@@ -281,8 +304,8 @@ class LogInTest extends WebTestCase {
             <p>
                 Expiring cookies can be a problem.
                 After all, if you have a cookie that expires after an hour,
-                you don't want to stall the test for an hour while the
-                cookie passes it's timeout.
+                you don't want to stall the test for an hour while waiting
+                for the cookie to pass it's timeout.
             </p>
             <p>
                 To push the cookies over the hour limit you can age them
@@ -305,7 +328,7 @@ class LogInTest extends WebTestCase {
 }
 </pre>
                 After the restart it will appear that cookies are an
-                hour older and any that pass their expiry will have
+                hour older, and any that pass their expiry will have
                 disappeared.
             </p>
         

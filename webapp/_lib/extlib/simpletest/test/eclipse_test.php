@@ -1,5 +1,5 @@
 <?php
-// $Id: eclipse_test.php 1505 2007-04-30 23:39:59Z lastcraft $
+// $Id: eclipse_test.php 1739 2008-04-09 20:48:37Z edwardzyang $
 
 //To run this from the eclipse plugin...you need to make sure that the 
 //SimpleTest path in the preferences is the same as the location of the 
@@ -25,7 +25,7 @@ class TestOfEclipse extends UnitTestCase {
 		$filename = $pathparts['basename'];
 		$test= &new TestSuite($filename);
 		$test->addTestFile($fullpath);
-		$test->run(new EclipseReporter(&$listener));
+		$test->run(new EclipseReporter($listener));
 		$this->assertEqual($expected,$listener->output);
 	}
 }

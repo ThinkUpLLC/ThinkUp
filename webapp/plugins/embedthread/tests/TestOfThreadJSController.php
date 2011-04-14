@@ -31,10 +31,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/embedthread/controller/class.Thre
 
 class TestOfThreadJSController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('ThreadJSController class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $webapp = Webapp::getInstance();

@@ -1,18 +1,18 @@
 <?php
-// $Id: shell_test.php 1529 2007-06-04 18:33:09Z lastcraft $
+// $Id: shell_test.php 1748 2008-04-14 01:50:41Z lastcraft $
 require_once(dirname(__FILE__) . '/../autorun.php');
 require_once(dirname(__FILE__) . '/../shell_tester.php');
 
 class TestOfShell extends UnitTestCase {
     
     function testEcho() {
-        $shell = &new SimpleShell();
+        $shell = new SimpleShell();
         $this->assertIdentical($shell->execute('echo Hello'), 0);
         $this->assertPattern('/Hello/', $shell->getOutput());
     }
     
     function testBadCommand() {
-        $shell = &new SimpleShell();
+        $shell = new SimpleShell();
         $this->assertNotEqual($ret = $shell->execute('blurgh! 2>&1'), 0);
     }
 }

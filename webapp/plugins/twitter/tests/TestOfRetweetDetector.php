@@ -34,10 +34,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetect
 class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
     var $logger;
 
-    public function __construct() {
-        $this->UnitTestCase('RetweetDetector class test');
-    }
-
     public function setUp() {
         $this->logger = Logger::getInstance();
     }

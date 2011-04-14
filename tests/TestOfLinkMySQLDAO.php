@@ -32,16 +32,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('LinkMySQLDAO class test');
-    }
 
-    /**
-     * Constructs a database and populates it.
-     */
     public function setUp() {
         parent::setUp();
         $this->DAO = new LinkMySQLDAO();

@@ -46,5 +46,11 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
 Loader::register(array(
 THINKUP_ROOT_PATH . 'tests/',
 THINKUP_ROOT_PATH . 'tests/classes/',
-THINKUP_ROOT_PATH . 'tests/fixtures/'
+THINKUP_ROOT_PATH . 'tests/fixtures/',
+THINKUP_ROOT_PATH . 'webapp/plugins/expandurls/tests/',
+THINKUP_ROOT_PATH . 'webapp/plugins/embedthread/tests/',
+THINKUP_ROOT_PATH . 'webapp/plugins/facebook/tests/',
+THINKUP_ROOT_PATH . 'webapp/plugins/twitter/tests/',
+THINKUP_ROOT_PATH . 'webapp/plugins/geoencoder/tests/',
+THINKUP_ROOT_PATH . 'webapp/plugins/hellothinkup/tests/'
 ));

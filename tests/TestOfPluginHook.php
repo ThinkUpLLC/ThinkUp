@@ -32,13 +32,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 class TestOfPluginHook extends ThinkUpBasicUnitTestCase {
 
     /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('PluginHook class test');
-    }
-
-    /**
      * Test registerPlugin
      */
     public function testRegisterAndGetPlugin() {

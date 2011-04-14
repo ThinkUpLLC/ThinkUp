@@ -34,10 +34,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfPDODAO extends ThinkUpUnitTestCase {
 
-    public function TestOfPDODAO() {
-        $this->UnitTestCase('TestDAO class test');
-    }
-
     public function setUp() {
         parent::setUp();
 

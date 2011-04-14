@@ -42,16 +42,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
      * @var array
      */
     var $builders;
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('FacebookPluginConfigurationController class test');
-    }
 
-    /**
-     * Setup
-     */
     public function setUp(){
         parent::setUp();
         $this->builders = array();

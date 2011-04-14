@@ -31,10 +31,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfUserController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('UserController class test');
-    }
-
     public function testConstructor() {
         $controller = new UserController(true);
         $this->assertTrue(isset($controller));

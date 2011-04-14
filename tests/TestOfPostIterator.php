@@ -35,10 +35,6 @@ class TestOfPostIterator extends ThinkUpUnitTestCase {
     const TEST_TABLE = 'posts';
     const TEST_TABLE_LINKS = 'links';
 
-    public function __construct() {
-        $this->UnitTestCase('TestOfPostIterator class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();

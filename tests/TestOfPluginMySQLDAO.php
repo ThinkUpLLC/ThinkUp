@@ -34,10 +34,6 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
 
     const TEST_TABLE = 'plugins';
 
-    public function __construct() {
-        $this->UnitTestCase('PluginMySQLDAO class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();
@@ -51,7 +47,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
-     * For PHP 5.2 compatibility, this method must be public so that we can call usort($plugins, 
+     * For PHP 5.2 compatibility, this method must be public so that we can call usort($plugins,
      * 'TestOfPluginMySQLDAO::pluginSort')
      * private/self::pluginSort doesn't work in PHP 5.2
      */

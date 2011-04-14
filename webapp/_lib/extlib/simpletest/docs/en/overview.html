@@ -43,26 +43,32 @@
             <a href="#features">List of features</a>,
             both current ones and those planned.
         </li>
-<li>
-            There are plenty of <a href="#resources">unit testing resources</a>
-            on the web.
-        </li>
 </ul>
 <div class="content">
-        <p><a class="target" name="summary"><h2>What is SimpleTest?</h2></a></p>
+        <h2>
+<a class="target" name="summary"></a>What is SimpleTest?</h2>
             <p>
                 The heart of SimpleTest is a testing framework built around
                 test case classes.
                 These are written as extensions of base test case classes,
                 each extended with methods that actually contain test code.
-                Top level test scripts then invoke the <span class="new_code">run()</span>
-                methods on every one of these test cases in order.
-                Each test method is written to invoke various assertions that
-                the developer expects to be true such as
+                Each test method of a test case class is written to invoke
+                various assertions that the developer expects to be true such as
                 <span class="new_code">assertEqual()</span>.
-                If the expectation is correct, then a successful result is dispatched to the
-                observing test reporter, but any failure triggers an alert
-                and a description of the mismatch.
+                If the expectation is correct, then a successful result is
+                dispatched to the observing test reporter, but any failure
+                or unexpected exception triggers an alert and a description
+                of the mismatch.
+                These test case declarations are transformed into executable
+                test scripts by including a SimpleTest aurorun.php file.
+            </p>
+            <p>
+                These documents apply to SimpleTest version 1.1, although we
+                try hard to maintain compatibility between versions.
+                If you get a test failure after an upgrade, check out the
+                file "HELP_MY_TESTS_DONT_WORK_ANYMORE" in the
+                simpletest directory to see if a feature you are using
+                has since been deprecated and later removed.
             </p>
             <p>
                 A <a href="unit_test_documentation.html">test case</a> looks like this...
@@ -70,26 +76,81 @@
 &lt;?php
 require_once('simpletest/autorun.php');
 
-class <strong>MyTestCase</strong> extends UnitTestCase {
-    <strong>
-    function testCreatedLogFile() {
-        $log = &amp;new Log('my.log');
+class <strong>CanAddUp</strong> extends UnitTestCase {<strong>
+    function testOneAndOneMakesTwo() {
+        $this-&gt;assertEqual(1 + 1, 2);
+    }</strong>
+}
+?&gt;
+</pre>
+                Tests are grouped into test cases, which are just
+                PHP classes that extend <span class="new_code">UnitTestCase</span>
+                or <span class="new_code">WebTestCase</span>.
+                The tests themselves are just normal methods that start
+                their name with the letters "test".
+                You can have as many test cases as you want in a test
+                script and each test case can have as many test methods
+                as it wants too.
+            </p>
+            <p>
+                This test script is immediately runnable.
+                You just invoke it on the command line like so...
+<pre class="shell">
+php adding_test.php
+</pre>
+            </p>
+            <p>
+                When run on the command line you should see something like...
+<pre class="shell">
+adding_test.php
+OK
+Test cases run: 1/1, Passes: 1, Failures: 0, Exceptions: 0
+</pre>
+            </p>
+            <p>
+                If you place it on a web server and point your
+                web browser at it...
+                <div class="demo">
+                    <h1>adding_test.php</h1>
+                    <div style="padding: 8px; margin-top: 1em; background-color: green; color: white;">1/1 test cases complete.
+                    <strong>6</strong> passes, <strong>0</strong> fails and <strong>0</strong> exceptions.</div>
+                </div>
+            </p>
+            <p>
+                Of course this is a silly example.
+                A more realistic example might be...
+<pre>
+&lt;?php
+require_once('simpletest/autorun.php');
+require_once('log.php');
+
+class <strong>TestOfLogging</strong> extends UnitTestCase {
+    function testWillCreateLogFileOnFirstMessage() {
+        $log = new Log('my.log');
+        $this-&gt;assertFalse(file_exists('my.log'));
         $log-&gt;message('Hello');
         $this-&gt;assertTrue(file_exists('my.log'));
-    }</strong>
+    }&lt;/strong&gt;
 }
 ?&gt;
 </pre>
             </p>
             <p>
-                These tools are designed for the developer.
+                This tool is designed for the developer.
+                The target audience of this tool is anyone developing a small
+                to medium PHP application, including developers new to
+                unit and web regression testing.
+                The core principles are ease of use first, with extendibility and
+                essential features.
+            </p>
+            <p>
                 Tests are written in the PHP language itself more or less
                 as the application itself is built.
-                The advantage of using PHP itself as the testing language is that
+                The advantage of using PHP as the testing language is that
                 there are no new languages to learn, testing can start straight away,
                 and the developer can test any part of the code.
                 Basically, all parts that can be accessed by the application code can also be
-                accessed by the test code, if they are in the same programming language.
+                accessed by the test code when they are in the same programming language.
             </p>
             <p>
                 The simplest type of test case is the
@@ -123,24 +184,27 @@ require_once('simpletest/web_tester.php');
 
 class <strong>MySiteTest</strong> extends WebTestCase {
     <strong>
-    function testHomePage() {
+    function testHomePageHasContactDetailsLink() {
         $this-&gt;get('http://www.my-site.com/index.php');
         $this-&gt;assertTitle('My Home Page');
         $this-&gt;clickLink('Contact');
         $this-&gt;assertTitle('Contact me');
-        $this-&gt;assertPattern('/Email me at/');
+        $this-&gt;assertText('/Email me at/');
     }</strong>
 }
 ?&gt;
 </pre>
             </p>
         
-        <p><a class="target" name="features"><h2>Feature list</h2></a></p>
+        <h2>
+<a class="target" name="features"></a>Feature list</h2>
             <p>
                 The following is a very rough outline of past and future features
                 and their expected point of release.
                 I am afraid it is liable to change without warning, as meeting the
                 milestones rather depends on time available.
+            </p>
+            <p>
                 Green stuff has been coded, but not necessarily released yet.
                 If you have a pressing need for a green but unreleased feature
                 then you should check-out the code from Sourceforge SVN directly.
@@ -287,11 +351,26 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                     <tr>
                         <td>PHP 5 E_STRICT compliant</td>
                         <td>PHP 5 only version that works with the E_STRICT error level</td>
-                        <td style="color: red;">1.1</td>
+                        <td style="color: green;">1.1</td>
+                    </tr>
+                    <tr>
+                        <td>Alternate HTML parsers</td>
+                        <td>Can detect compiled parsers for performance improvements</td>
+                        <td style="color: green;">1.1</td>
+                    </tr>
+                    <tr>
+                        <td>REST support</td>
+                        <td>Support for REST verbs as put(), delete(), etc.</td>
+                        <td style="color: green;">1.1</td>
                     </tr>
                     <tr>
                         <td>BDD style fixtures</td>
                         <td>Can import fixtures using a mixin like given() method</td>
+                        <td style="color: red;">1.5</td>
+                    </tr>
+                    <tr>
+                        <td>Plug-in architecture</td>
+                        <td>Automatic import of extensions including command line options</td>
                         <td style="color: red;">1.5</td>
                     </tr>
                     <tr>
@@ -306,7 +385,7 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                     </tr>
                     <tr>
                         <td>Localisation</td>
-                        <td>Messages abstracted and code generated</td>
+                        <td>Messages abstracted and code generated as well as UTF support</td>
                         <td style="color: red;">1.6</td>
                     </tr>
                     <tr>
@@ -316,7 +395,7 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                     </tr>
                     <tr>
                         <td>HTML table assertions</td>
-                        <td>Can match HTML or table elements to expectations</td>
+                        <td>Can match HTML or other table elements to expectations</td>
                         <td style="color: red;">1.7</td>
                     </tr>
                     <tr>
@@ -335,13 +414,8 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                         <td style="color: red;">1.8</td>
                     </tr>
                     <tr>
-                        <td>Alternate HTML parsers</td>
-                        <td>Can detect compiled parsers for performance improvements</td>
-                        <td style="color: red;">1.8</td>
-                    </tr>
-                    <tr>
                         <td>Integrated Selenium support</td>
-                        <td>Easy to use built in Selenium driver and tutorial</td>
+                        <td>Easy to use built in Selenium driver and tutorial or similar browser automation</td>
                         <td style="color: red;">1.9</td>
                     </tr>
                     <tr>
@@ -361,83 +435,10 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                     </tr>
                 </tbody>
 </table>
-                PHP5 migraton will start straight after the version 1.0.1 series,
-                whereupon only PHP 5.1+ will be supported.
-                SimpleTest is currently compatible with PHP 5, but will not
-                make use of all of the new features until version 1.1.
-            </p>
-        
-        <p><a class="target" name="resources"><h2>Web resources for testing</h2></a></p>
-            <p>
-                Process is at least as important as tools.
-                The type of process that makes the heaviest use of a developer's
-                testing tool is of course
-                <a href="http://www.extremeprogramming.org/">Extreme Programming</a>.
-                This is one of the
-                <a href="http://www.agilealliance.com/articles/index">Agile Methodologies</a>
-                which combine various practices to "flatten the cost curve" of software development.
-                More extreme still is <a href="http://www.testdriven.com/modules/news/">Test Driven Development</a>,
-                where you very strictly adhere to the rule of no coding until you have a test.
-                If you're more of a planner, or believe that experience trumps evolution,
-                you may prefer the
-                <a href="http://www.therationaledge.com/content/dec_01/f_spiritOfTheRUP_pk.html">RUP</a> approach.
-                I haven't tried it, but even I can see that you will need test tools (see figure 9).
-            </p>
-            <p>
-                Most unit testers clone <a href="http://www.junit.org/">JUnit</a> to some degree,
-                as far as the interface at least. There is a wealth of information on the
-                JUnit site including the
-                <a href="http://junit.sourceforge.net/doc/faq/faq.htm">FAQ</a>
-                which contains plenty of general advice on testing.
-                Once you get bitten by the bug you will certainly appreciate the phrase
-                <a href="http://junit.sourceforge.net/doc/testinfected/testing.htm">test infected</a>
-                coined by Eric Gamma.
-                If you are still reviewing which unit tester to use you can find pretty complete
-                lists from
-                <a href="http://en.wikipedia.org/wiki/List_of_unit_testing_frameworks">Wikipedia</a>,
-                <a href="http://www.testingfaqs.org/t-unit.html">Software testing FAQ</a>,
-                and <a href="http://www.opensourcetesting.org/functional.php">Open source testing</a>.
-            </p>
-            <p>
-                There is still very little material on using mock objects, which is a shame
-                as unit testing without them is a lot more work.
-                The <a href="http://www.sidewize.com/company/mockobjects.pdf">original mock objects paper</a>
-                is very Java focused, but still worth a read.
-                The most authoritive sources are probably
-                <a href="http://mockobjects.com">the original mock objects site</a> and
-                <a href="http://jmock.org/">JMock</a>.
-                Java centric, but tucked away in PDFs they contain some deep knowledge on using mocks from the
-                extended experience of the concept inventors.
-                As a new technology there are plenty of discussions and debate on how to use mocks,
-                often on Wikis such as
-                <a href="http://xpdeveloper.com/cgi-bin/oldwiki.cgi?MockObjects">Extreme Tuesday</a>
-                or <a href="http://www.mockobjects.com/MocksObjectsPaper.html">www.mockobjects.com</a>
-                or <a href="http://c2.com/cgi/wiki?MockObject">the original C2 Wiki</a>.
-                Injecting mocks into a class is the main area of debate for which this
-                <a href="http://www-106.ibm.com/developerworks/java/library/j-mocktest.html">paper on IBM</a>
-                makes a good starting point.
-            </p>
-            <p>
-                There are plenty of web testing tools, but the scriptable ones
-                are mostly are written in Java and
-                tutorials and advice are rather thin on the ground.
-                The only hope is to look at the documentation for
-                <a href="http://httpunit.sourceforge.net/">HTTPUnit</a>,
-                <a href="http://htmlunit.sourceforge.net/">HTMLUnit</a>
-                or <a href="http://jwebunit.sourceforge.net/">JWebUnit</a> and hope for clues.
-                There are some XML driven test frameworks, but again most
-                require Java to run.
-            </p>
-            <p>
-                Most significant is a new generation of tools that run directly in the web browser
-                are now available.
-                These include
-                <a href="http://www.openqa.org/selenium/">Selenium</a> and
-                <a href="http://wtr.rubyforge.org/">Watir</a>.
-                They are non-trivial to set up and slow to run, but can essentially test anything.
-                As SimpleTest does not support JavaScript you would probably
-                have to look at these tools anyway if you have highly dynamic
-                pages.
+                PHP 5 migration is complete, which means that only PHP 5.0.3+
+                will be supported in SimpleTest version 1.1+.
+                Earlier versions of SimpleTest are compatible with PHP 4.2 up to
+                PHP 5 (non E_STRICT).
             </p>
         
     </div>

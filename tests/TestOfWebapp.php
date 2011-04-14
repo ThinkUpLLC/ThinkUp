@@ -36,10 +36,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin
 
 class TestOfWebapp extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('Webapp class test');
-    }
-
     /**
      * Test Webapp singleton instantiation
      */

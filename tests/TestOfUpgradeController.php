@@ -37,10 +37,6 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
     const TEST_TABLE = 'options';
 
-    public function __construct() {
-        $this->UnitTestCase('UpgradeController class test');
-    }
-
     public function setUp(){
         parent::setUp();
 

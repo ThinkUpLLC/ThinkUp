@@ -31,10 +31,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfCrawlerAuthController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('CrawlerAuthController class test');
-    }
-
     public function testInvalidLogin() {
         $controller = new CrawlerAuthController(1, array('you@example.com', 'password'));
         $this->assertTrue(isset($controller));

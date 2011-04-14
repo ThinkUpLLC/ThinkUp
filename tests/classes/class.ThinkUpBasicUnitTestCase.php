@@ -32,15 +32,14 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
 
 class ThinkUpBasicUnitTestCase extends UnitTestCase {
     /**
-     * Set up
-     * Initializes Config and Webapp objects, clears $_SESSION, $_POST, $_REQUEST
+     * Initialize Config and Webapp objects, clear $_SESSION, $_POST, $_GET, $_REQUEST
      */
     public function setUp() {
         parent::setUp();
         Loader::register(array(
         THINKUP_ROOT_PATH . 'tests/',
         THINKUP_ROOT_PATH . 'tests/classes/',
-        THINKUP_ROOT_PATH . 'tests/fixtures/'
+        THINKUP_ROOT_PATH . 'tests/fixtures/',
         ));
 
         $config = Config::getInstance();
@@ -60,8 +59,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     }
 
     /**
-     * Tear down
-     * Destroys Config, Webapp, $_SESSION, $_POST, $_GET, $_REQUEST
+     * Destroy Config, Webapp, $_SESSION, $_POST, $_GET, $_REQUEST
      */
     public function tearDown() {
         Config::destroyInstance();
@@ -182,5 +180,4 @@ Please try again.
 ");
         }
     }
-
 }

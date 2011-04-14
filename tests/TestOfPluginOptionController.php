@@ -36,13 +36,6 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
     const TEST_TABLE = 'options';
     const TEST_TABLE_PLUGIN = 'plugins';
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('PluginOptionController class test');
-    }
-
     public function setUp(){
         parent::setUp();
         $config = Config::getInstance();

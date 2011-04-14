@@ -31,10 +31,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('BackupMySQLDAO class test');
-    }
-
     public function setUp() {
         parent::setUp();
         new BackupMySQLDAO();

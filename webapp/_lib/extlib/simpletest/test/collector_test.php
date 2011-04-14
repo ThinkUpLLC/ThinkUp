@@ -1,13 +1,13 @@
 <?php
-// $Id: collector_test.php 1505 2007-04-30 23:39:59Z lastcraft $
+// $Id: collector_test.php 1769 2008-04-19 14:39:00Z pp11 $
 require_once(dirname(__FILE__) . '/../autorun.php');
 require_once(dirname(__FILE__) . '/../collector.php');
 SimpleTest::ignore('MockTestSuite');
 Mock::generate('TestSuite');
 
 class PathEqualExpectation extends EqualExpectation {
-	function PathEqualExpectation($value, $message = '%s') {
-    	$this->EqualExpectation(str_replace("\\", '/', $value), $message);
+	function __construct($value, $message = '%s') {
+    	parent::__construct(str_replace("\\", '/', $value), $message);
 	}
 
     function test($compare) {
@@ -16,14 +16,13 @@ class PathEqualExpectation extends EqualExpectation {
 }
 
 class TestOfCollector extends UnitTestCase {
-
     function testCollectionIsAddedToGroup() {
-        $suite = &new MockTestSuite();
-        $suite->expectMinimumCallCount('addTestFile', 2);
-        $suite->expectArguments(
-                'addTestFile',
+        $suite = new MockTestSuite();
+        $suite->expectMinimumCallCount('addFile', 2);
+        $suite->expect(
+                'addFile',
                 array(new PatternExpectation('/collectable\\.(1|2)$/')));
-        $collector = &new SimpleCollector();
+        $collector = new SimpleCollector();
         $collector->collect($suite, dirname(__FILE__) . '/support/collector/');
     }
 }
@@ -31,20 +30,20 @@ class TestOfCollector extends UnitTestCase {
 class TestOfPatternCollector extends UnitTestCase {
 
     function testAddingEverythingToGroup() {
-        $suite = &new MockTestSuite();
-        $suite->expectCallCount('addTestFile', 2);
-        $suite->expectArguments(
-                'addTestFile',
+        $suite = new MockTestSuite();
+        $suite->expectCallCount('addFile', 2);
+        $suite->expect(
+                'addFile',
                 array(new PatternExpectation('/collectable\\.(1|2)$/')));
-        $collector = &new SimplePatternCollector('/.*/');
+        $collector = new SimplePatternCollector('/.*/');
         $collector->collect($suite, dirname(__FILE__) . '/support/collector/');
     }
 
     function testOnlyMatchedFilesAreAddedToGroup() {
-        $suite = &new MockTestSuite();
-        $suite->expectOnce('addTestFile', array(new PathEqualExpectation(
+        $suite = new MockTestSuite();
+        $suite->expectOnce('addFile', array(new PathEqualExpectation(
         		dirname(__FILE__) . '/support/collector/collectable.1')));
-        $collector = &new SimplePatternCollector('/1$/');
+        $collector = new SimplePatternCollector('/1$/');
         $collector->collect($suite, dirname(__FILE__) . '/support/collector/');
     }
 }

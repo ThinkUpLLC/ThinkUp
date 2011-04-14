@@ -1,8 +1,7 @@
 <?php
-// $Id: adapter_test.php 1505 2007-04-30 23:39:59Z lastcraft $
+// $Id: adapter_test.php 1748 2008-04-14 01:50:41Z lastcraft $
 require_once(dirname(__FILE__) . '/../autorun.php');
 require_once(dirname(__FILE__) . '/../extensions/pear_test_case.php');
-require_once(dirname(__FILE__) . '/../extensions/phpunit_test_case.php');
 
 class SameTestClass {
 }
@@ -40,38 +39,12 @@ class TestOfPearAdapter extends PHPUnit_TestCase {
     }
     
     function testSame() {
-        $same = &new SameTestClass();
+        $same = new SameTestClass();
         $this->assertSame($same, $same, "PEAR same");
     }
     
     function testRegExp() {
         $this->assertRegExp('/hello/', "A big hello from me", "PEAR regex");
-    }
-}
-
-class TestOfPhpUnitAdapter extends TestCase {
-    function TestOfPhpUnitAdapter() {
-        $this->TestCase('TestOfPhpUnitAdapter');
-    }
-    
-    function testBoolean() {
-        $this->assert(true, 'PHP Unit true');
-    }
-    
-    function testName() {
-        $this->assert($this->name() == 'TestOfPhpUnitAdapter');
-    }
-    
-    function testEquals() {
-        $this->assertEquals(12, 12, 'PHP Unit equality');
-    }
-    
-    function testMultilineEquals() {
-        $this->assertEquals("a\nb\n", "a\nb\n", 'PHP Unit equality');
-    }
-    
-    function testRegExp() {
-        $this->assertRegexp('/hello/', 'A big hello from me', 'PHPUnit regex');
     }
 }
 ?>

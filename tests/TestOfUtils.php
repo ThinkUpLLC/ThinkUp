@@ -32,10 +32,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfUtils extends ThinkUpBasicUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('Utils class test');
-    }
-
     public function testRootPathConstant() {
         Utils::defineConstantRootPath();
 

@@ -40,10 +40,6 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
     var $webapp;
     var $crawler;
 
-    public function __construct() {
-        $this->UnitTestCase('TwitterPlugin class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->webapp = Webapp::getInstance();

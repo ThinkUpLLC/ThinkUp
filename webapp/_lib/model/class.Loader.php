@@ -113,7 +113,7 @@ class Loader {
      * Get lookup path
      * @return array of lookup paths
      */
-    public function getLookupPath() {
+    public static function getLookupPath() {
         return self::$lookup_path;
     }
 
@@ -122,7 +122,7 @@ class Loader {
      * @return array of special classes path files
      * @access public
      */
-    public function getSpecialClasses() {
+    public static function getSpecialClasses() {
         return self::$special_classes;
     }
 

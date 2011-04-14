@@ -57,10 +57,6 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         BackupController::$zip_class_req = 'ZipArchive';
     }
 
-    public function __construct() {
-        $this->UnitTestCase('BackupController class test');
-    }
-
     public function testConstructor() {
         $controller = new BackupController(true);
         $this->assertTrue(isset($controller));

@@ -19,12 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require_once dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ *
  * Test of TestAuthAPIController
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -32,10 +27,11 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Guillaume Boudreau <gboudreau@pommepause.com>
  *
  */
+require_once dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
 class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
-    public function __construct() {
-        $this->UnitTestCase('TestAuthAPIController class test');
-    }
 
     public function setUp() {
         parent::setUp();

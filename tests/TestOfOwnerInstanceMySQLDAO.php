@@ -35,10 +35,6 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     const TEST_TABLE_OI = 'owner_instances';
     const TEST_TABLE_I = 'instances';
 
-    public function __construct() {
-        $this->UnitTestCase('OwnerInstanceMySQLDAO class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();

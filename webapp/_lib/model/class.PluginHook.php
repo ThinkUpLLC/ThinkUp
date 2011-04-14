@@ -63,7 +63,9 @@ abstract class PluginHook {
     protected function emitObjectMethod($trigger, $params = array()) {
         foreach ($this->object_method_callbacks[$trigger] as $callback) {
             if (method_exists($callback[0], $callback[1] )) {
-                call_user_func($callback, $params);
+                $o = new $callback[0];
+                //call_user_func($callback, $params);
+                call_user_func(array($o, $callback[1]), $params);
             } else {
                 throw new Exception("The ".$callback[0]." object does not have a ".$callback[1]." method.");
             }

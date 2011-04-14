@@ -31,10 +31,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/embedthread/controller/class.Thin
 
 class TestOfThinkUpEmbedController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('ThinkUpEmbedController class test');
-    }
-
     public function setUp(){
         parent::setUp();
     }

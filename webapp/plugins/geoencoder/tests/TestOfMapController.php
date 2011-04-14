@@ -36,10 +36,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/controller/class.MapCo
 
 class TestOfMapController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('MapController class test');
-    }
-
     public function testConstructor() {
         $controller = new MapController(true);
         $this->assertTrue(isset($controller), 'constructor test');

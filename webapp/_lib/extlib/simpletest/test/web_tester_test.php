@@ -1,5 +1,5 @@
 <?php
-// $Id: web_tester_test.php 1509 2007-05-08 22:11:49Z lastcraft $
+// $Id: web_tester_test.php 1748 2008-04-14 01:50:41Z lastcraft $
 require_once(dirname(__FILE__) . '/../autorun.php');
 require_once(dirname(__FILE__) . '/../web_tester.php');
 
@@ -147,7 +147,6 @@ class TestOfTextExpectations extends UnitTestCase {
 }
 
 class TestOfGenericAssertionsInWebTester extends WebTestCase {
-    
     function testEquality() {
         $this->assertEqual('a', 'a');
         $this->assertNotEqual('a', 'A');

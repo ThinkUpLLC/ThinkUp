@@ -19,12 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-require dirname(__FILE__).'/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
-/**
+ * 
  * Test of ActivateAccountController
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -32,11 +27,12 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TestOfActivateAccountController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('ActivateAccountController class test');
-    }
+require dirname(__FILE__).'/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+
+class TestOfActivateAccountController extends ThinkUpUnitTestCase {
 
     public function testNoParams() {
         $controller = new ActivateAccountController(true);

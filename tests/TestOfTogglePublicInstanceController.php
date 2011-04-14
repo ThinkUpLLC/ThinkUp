@@ -31,10 +31,6 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfTogglePublicInstanceController extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('TogglePublicInstanceController class test');
-    }
-
     public function setUp() {
         parent::setUp();
     }

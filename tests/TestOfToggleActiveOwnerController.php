@@ -4,7 +4,7 @@
  * ThinkUp/tests/TestOfToggleActiveOwnerController.php
  *
  * Copyright (c) 2009-2011 Gina Trapani
- * 
+ *
  * @author Randi Miller <techrandy[at]gmail[dot]com>
  *
  * LICENSE:
@@ -32,10 +32,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfToggleActiveOwnerController extends ThinkUpUnitTestCase {
-
-    public function __construct() {
-        $this->UnitTestCase('ToggleActiveOwnerController class test');
-    }
 
     public function setUp() {
         parent::setUp();

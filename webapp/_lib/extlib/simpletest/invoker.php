@@ -3,7 +3,7 @@
  *  Base include file for SimpleTest
  *  @package    SimpleTest
  *  @subpackage UnitTester
- *  @version    $Id: invoker.php 1722 2008-04-07 19:30:56Z lastcraft $
+ *  @version    $Id: invoker.php 1785 2008-04-26 13:56:41Z pp11 $
  */
 
 /**#@+
@@ -28,14 +28,14 @@ if (! defined('SIMPLE_TEST')) {
  *    @subpackage UnitTester
  */
 class SimpleInvoker {
-    var $_test_case;
+    private $test_case;
 
     /**
      *    Stashes the test case for later.
      *    @param SimpleTestCase $test_case  Test case to run.
      */
-    function SimpleInvoker(&$test_case) {
-        $this->_test_case = &$test_case;
+    function __construct($test_case) {
+        $this->test_case = $test_case;
     }
 
     /**
@@ -43,8 +43,8 @@ class SimpleInvoker {
      *    @return SimpleTestCase    Test case.
      *    @access public
      */
-    function &getTestCase() {
-        return $this->_test_case;
+    function getTestCase() {
+        return $this->test_case;
     }
 
     /**
@@ -54,7 +54,7 @@ class SimpleInvoker {
      *    @access public
      */
     function before($method) {
-        $this->_test_case->before($method);
+        $this->test_case->before($method);
     }
 
     /**
@@ -64,9 +64,9 @@ class SimpleInvoker {
      *    @access public
      */
     function invoke($method) {
-        $this->_test_case->setUp();
-        $this->_test_case->$method();
-        $this->_test_case->tearDown();
+        $this->test_case->setUp();
+        $this->test_case->$method();
+        $this->test_case->tearDown();
     }
 
     /**
@@ -76,7 +76,7 @@ class SimpleInvoker {
      *    @access public
      */
     function after($method) {
-        $this->_test_case->after($method);
+        $this->test_case->after($method);
     }
 }
 
@@ -87,14 +87,14 @@ class SimpleInvoker {
  *    @subpackage UnitTester
  */
 class SimpleInvokerDecorator {
-    var $_invoker;
+    private $invoker;
 
     /**
      *    Stores the invoker to wrap.
      *    @param SimpleInvoker $invoker  Test method runner.
      */
-    function SimpleInvokerDecorator(&$invoker) {
-        $this->_invoker = &$invoker;
+    function __construct($invoker) {
+        $this->invoker = $invoker;
     }
 
     /**
@@ -102,8 +102,8 @@ class SimpleInvokerDecorator {
      *    @return SimpleTestCase    Test case.
      *    @access public
      */
-    function &getTestCase() {
-        return $this->_invoker->getTestCase();
+    function getTestCase() {
+        return $this->invoker->getTestCase();
     }
 
     /**
@@ -113,7 +113,7 @@ class SimpleInvokerDecorator {
      *    @access public
      */
     function before($method) {
-        $this->_invoker->before($method);
+        $this->invoker->before($method);
     }
 
     /**
@@ -123,7 +123,7 @@ class SimpleInvokerDecorator {
      *    @access public
      */
     function invoke($method) {
-        $this->_invoker->invoke($method);
+        $this->invoker->invoke($method);
     }
 
     /**
@@ -133,7 +133,7 @@ class SimpleInvokerDecorator {
      *    @access public
      */
     function after($method) {
-        $this->_invoker->after($method);
+        $this->invoker->after($method);
     }
 }
 ?>

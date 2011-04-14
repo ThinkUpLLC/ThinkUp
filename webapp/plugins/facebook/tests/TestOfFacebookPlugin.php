@@ -32,9 +32,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
 
 class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
-    public function __construct() {
-        $this->UnitTestCase('FacebookPlugin class test');
-    }
 
     public function setUp() {
         parent::setUp();

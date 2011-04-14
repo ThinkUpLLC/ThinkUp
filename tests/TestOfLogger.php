@@ -28,11 +28,7 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-
 class TestOfLogger extends ThinkUpBasicUnitTestCase {
-    public function __construct() {
-        $this->UnitTestCase('Logger class test');
-    }
 
     public function setUp() {
         parent::setUp();

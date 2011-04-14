@@ -25,27 +25,21 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani
  */
-require_once 'init.tests.php';
+include 'init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
-Loader::register(array(
-THINKUP_ROOT_PATH . 'tests/',
-THINKUP_ROOT_PATH . 'tests/classes/',
-THINKUP_ROOT_PATH . 'tests/fixtures/'
-));
-
 /* INTEGRATION TESTS */
-$web_tests = & new GroupTest('Integration tests');
-$web_tests->addTestCase(new WebTestOfChangePassword());
-$web_tests->addTestCase(new WebTestOfCrawlerRun());
-$web_tests->addTestCase(new WebTestOfDashboard());
-$web_tests->addTestCase(new WebTestOfDeleteInstance());
-$web_tests->addTestCase(new WebTestOfLogin());
-$web_tests->addTestCase(new WebTestOfCaptchaImage());
-$web_tests->addTestCase(new WebTestOfTwitterDashboard());
-$web_tests->addTestCase(new WebTestOfPostDetailPage());
+$web_tests = & new TestSuite('Integration tests');
+$web_tests->add(new WebTestOfChangePassword());
+$web_tests->add(new WebTestOfCrawlerRun());
+$web_tests->add(new WebTestOfDashboard());
+$web_tests->add(new WebTestOfDeleteInstance());
+$web_tests->add(new WebTestOfLogin());
+$web_tests->add(new WebTestOfCaptchaImage());
+$web_tests->add(new WebTestOfTwitterDashboard());
+$web_tests->add(new WebTestOfPostDetailPage());
 
 $tr = new TextReporter();
 $web_tests->run( $tr );

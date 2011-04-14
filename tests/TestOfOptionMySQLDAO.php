@@ -33,10 +33,6 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
 
     const TEST_TABLE = 'options';
 
-    public function __construct() {
-        $this->UnitTestCase('OptionMySQLDAO class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->logger = Logger::getInstance();

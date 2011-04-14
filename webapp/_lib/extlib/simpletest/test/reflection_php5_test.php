@@ -1,5 +1,5 @@
 <?php
-// $Id: reflection_php5_test.php 1541 2007-06-10 02:27:59Z tswicegood $
+// $Id: reflection_php5_test.php 1778 2008-04-21 16:13:08Z edwardzyang $
 require_once(dirname(__FILE__) . '/../autorun.php');
 require_once(dirname(__FILE__) . '/../reflection_php5.php');
 
@@ -164,9 +164,9 @@ class TestOfReflection extends UnitTestCase {
 		$reflection = new SimpleReflection('AnyOldArgumentClass');
 		$function = $reflection->getSignature('aMethod');
 		if (version_compare(phpversion(), '5.0.2', '<=')) {
-			$this->assertEqual('function amethod()', strtolower($function));
+			$this->assertEqual('function amethod($argument)', strtolower($function));
 		} else {
-			$this->assertEqual('function aMethod()', $function);
+			$this->assertEqual('function aMethod($argument)', $function);
 		}
 	}
 
@@ -193,21 +193,13 @@ class TestOfReflection extends UnitTestCase {
 	function testIssetFunctionSignature() {
 		$reflection = new SimpleReflection('AnyOldOverloadedClass');
 		$function = $reflection->getSignature('__isset');
-		if (version_compare(phpversion(), '5.1.0', '>=')) {
-			$this->assertEqual('function __isset($key)', $function);
-		} else {
-			$this->assertEqual('function __isset()', $function);
-		}
+		$this->assertEqual('function __isset($key)', $function);
 	}
 	
 	function testUnsetFunctionSignature() {
 		$reflection = new SimpleReflection('AnyOldOverloadedClass');
 		$function = $reflection->getSignature('__unset');
-		if (version_compare(phpversion(), '5.1.0', '>=')) {
-			$this->assertEqual('function __unset($key)', $function);
-		} else {
-			$this->assertEqual('function __unset()', $function);
-		}
+		$this->assertEqual('function __unset($key)', $function);
 	}
 
 	function testProperlyReflectsTheFinalInterfaceWhenObjectImplementsAnExtendedInterface() {

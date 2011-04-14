@@ -36,10 +36,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.
 
 class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
-    public function __construct() {
-        $this->UnitTestCase('PostMySQLDAO class test');
-    }
-
     public function setUp() {
         parent::setUp();
         $config = Config::getInstance();

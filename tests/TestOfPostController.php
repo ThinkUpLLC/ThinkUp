@@ -37,10 +37,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthT
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
 class TestOfPostController extends ThinkUpUnitTestCase {
-    public function __construct() {
-        $this->UnitTestCase('PostController class test');
-    }
-
     public function setUp(){
         parent::setUp();
         $webapp = Webapp::getInstance();

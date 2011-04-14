@@ -39,10 +39,6 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
     var $builder2;
     var $builder3;
 
-    public function __construct() {
-        $this->UnitTestCase('LoginController class test');
-    }
-
     public function setUp(){
         parent::setUp();
         $webapp = Webapp::getInstance();

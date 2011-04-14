@@ -31,9 +31,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfPost extends ThinkUpBasicUnitTestCase {
-    public function __construct() {
-        $this->UnitTestCase('Post class test');
-    }
 
     public function testExtractURLs() {
         $testme= "Introducing the ThinkUp developers mailing list http://bit.ly/gXpdUZ";

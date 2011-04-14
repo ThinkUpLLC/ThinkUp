@@ -36,12 +36,6 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      * @var OwnerMySQLDAO
      */
     protected $dao;
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->UnitTestCase('OwnerMySQLDAO class test');
-    }
 
     public function setUp() {
         parent::setUp();
