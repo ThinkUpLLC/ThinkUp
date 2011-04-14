@@ -106,52 +106,54 @@ class ThinkUpWordPressPlugin {
                 'thinkup_twitter_username' =>
             array(
                     'key' => 'thinkup_twitter_username',
-                    'label' => 'Default Twitter username:',
-                    'description' => '(Required) Override this by using the "username" parameter in the shortcodes.',
+                    'label' => __('Default Twitter username:', 'thinkup-wp-plugin'),
+                    'description' => __('(Required) Override this by using the "username" parameter in the shortcodes.',
+                    'thinkup-wp-plugin'), 
                     'type' => 'text',
                     'value' => get_option('thinkup_twitter_username')
             ),
                 'thinkup_table_prefix' =>
             array(
                     'key' => 'thinkup_table_prefix',
-                    'label' => 'ThinkUp table prefix:',
-                    'description' => '(Optional) The prefix on your ThinkUp database tables, e.g. <i>tu_</i>',
+                    'label' => __('ThinkUp table prefix:', 'thinkup-wp-plugin'),
+                    'description' => __('(Optional) The prefix on your ThinkUp database tables, e.g. <i>tu_</i>',
+                    'thinkup-wp-plugin'),
                     'type' => 'text',
                     'value' => get_option('thinkup_table_prefix')
             ),
                 'thinkup_server' =>
             array(
                     'key' => 'thinkup_server',
-                    'label' => 'ThinkUp database server:',
-                    'description' => 'Required only if the ThinkUp database tables are located in a different database '.
-                    'than the WordPress tables.',
+                    'label' => __('ThinkUp database server:', 'thinkup-wp-plugin'),
+                    'description' => __('Required only if the ThinkUp database tables are located in a different '.
+                    'databasethan the WordPress tables.', 'thinkup-wp-plugin'),
                     'type' => 'text',
                     'value' => get_option('thinkup_server')
             ),
                 'thinkup_db' =>
             array(
                     'key' => 'thinkup_db',
-                    'label' => 'ThinkUp database name:',
-                    'description' => 'Required only if the ThinkUp database tables are located in a different database '.
-                    'than the WordPress tables.',
+                    'label' => __('ThinkUp database name:', 'thinkup-wp-plugin'),
+                    'description' => __('Required only if the ThinkUp database tables are located in a different '.
+                    'database than the WordPress tables.', 'thinkup-wp-plugin'),
                     'type' => 'text',
                     'value' => get_option('thinkup_db')
             ),
                 'thinkup_dbusername' =>
             array(
                     'key' => 'thinkup_dbusername',
-                    'label' => 'ThinkUp database username:',
-                    'description' => 'Required only if the ThinkUp database tables are located in a different database '.
-                    'than the WordPress tables.',
+                    'label' => __('ThinkUp database username:', 'thinkup-wp-plugin'),
+                    'description' => __('Required only if the ThinkUp database tables are located in a different '.
+                    'database than the WordPress tables.', 'thinkup-wp-plugin'),
                     'type' => 'text',
                     'value' => get_option('thinkup_dbusername')
             ),
                 'thinkup_dbpw' =>
             array(
                     'key' => 'thinkup_dbpw',
-                    'label' => 'ThinkUp database password:',
-                    'description' => 'Required only if the ThinkUp database tables are located in a different database '.
-                    'than the WordPress tables.',
+                    'label' => __('ThinkUp database password:', 'thinkup-wp-plugin'),
+                    'description' => __('Required only if the ThinkUp database tables are located in a different '.
+                    'database than the WordPress tables.', 'thinkup-wp-plugin'),
                     'type' => 'password',
                     'value' => ThinkUpWordPressPlugin::unscramblePassword( (get_option('thinkup_dbpw')))) );
         }

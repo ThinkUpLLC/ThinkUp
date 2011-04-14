@@ -43,7 +43,7 @@ class ThinkUpAdminPages {
         // div class wrap for display purposes
         echo '<div class="wrap">';
         // header
-        echo '<h2 id="top">'.__('ThinkUp Plugin Options', ThinkUpWordPressPlugin::uniqueIdentifier()).'</h2>';
+        echo '<h2 id="top">'.__('ThinkUp Plugin Options', 'thinkup-wp-plugin').'</h2>';
 
         // menu buttons
         if (current_user_can(ThinkUpWordPressPlugin::settingsAccessLevel())) {
@@ -111,7 +111,7 @@ class ThinkUpAdminPages {
             ?>
 <div class="updated">
 <p><strong> <?php _e('Options saved.',
-ThinkUpWordPressPlugin::uniqueIdentifier()); ?> </strong></p>
+'thinkup-wp-plugin'); ?> </strong></p>
 </div>
 <?php
 
@@ -124,7 +124,7 @@ $options_array = ThinkUpWordPressPlugin::getOptionsArray('force-update');
 <div id="poststuff" class="ui-sortable meta-box-sortable">
 <div class="postbox" id="thinkup_settings">
 <h3><?php _e('ThinkUp Plugin Settings',
-ThinkUpWordPressPlugin::uniqueIdentifier()); ?></h3>
+'thinkup-wp-plugin'); ?></h3>
 <div class="inside" style="line-height: 2;">
 <form name="thinkup_settings_form" method="post" action=""><?php
 //Add the nonce field for added security.
@@ -146,8 +146,7 @@ foreach ($options_array as $opt) {
 
     ?>
 	<tr>
-		<td align="right" valign="top"><?php _e($opt['label'], 
-		ThinkUpWordPressPlugin::uniqueIdentifier()); ?></td>
+		<td align="right" valign="top"><?php echo $opt['label']; ?></td>
 		<td><input type="<?php echo $opt['type']; ?>"
 			name="<?php echo $opt['key'] ?>" value="<?php echo $field_value ?>"
 			size="20"> <br />
@@ -158,7 +157,7 @@ foreach ($options_array as $opt) {
 
 <p class="submit"><input type="submit" name="Submit"
 	value="<?php _e('Update Options',
-                               ThinkUpWordPressPlugin::uniqueIdentifier()); ?>" />
+                               'thinkup-wp-plugin'); ?>" />
 </p>
 </form>
 </div>
@@ -173,7 +172,7 @@ foreach ($options_array as $opt) {
      */
     public static function help() {
         $topics = self::fetchTxtFiles( ThinkUpWordPressPlugin::pluginDirectory().'/help');
-        $title = __('Help Topics', ThinkUpWordPressPlugin::uniqueIdentifier());
+        $title = __('Help Topics', 'thinkup-wp-plugin');
 
         self::displayHelpFaqContents($title, $topics);
         self::displayTxtFiles($topics);
@@ -186,7 +185,7 @@ foreach ($options_array as $opt) {
     public static function faq() {
         $questions = self::fetchTxtFiles( ThinkUpWordPressPlugin::pluginDirectory().'/faq');
 
-        $title = __('Frequently Asked Questions', ThinkUpWordPressPlugin::uniqueIdentifier());
+        $title = __('Frequently Asked Questions', 'thinkup-wp-plugin');
 
         self::displayHelpFaqContents($title, $questions);
         self::displayTxtFiles($questions, $question = true);
@@ -231,8 +230,6 @@ foreach ($options_array as $opt) {
         }
 
         foreach ($files as $title => $content) {
-            $title = __($title, ThinkUpWordPressPlugin::uniqueIdentifier());
-            $content = __($content, ThinkUpWordPressPlugin::uniqueIdentifier());
             ?>
 <div id="poststuff" class="ui-sortable meta-box-sortable"
 	style="max-width: 700px">
@@ -249,8 +246,6 @@ foreach ($options_array as $opt) {
     }
 
     public static function displayHelpFaqContents($title, $files) {
-        $title = __($title, ThinkUpWordPressPlugin::uniqueIdentifier());
-
         ?>
 <div id="poststuff" class="ui-sortable meta-box-sortable"
 	style="max-width: 700px">
@@ -258,7 +253,6 @@ foreach ($options_array as $opt) {
 <h3><?php echo $title; ?></h3>
 <div class="inside" style="line-height: 1.5"><?php
 foreach ($files as $name => $contents) {
-    $name = __($name, ThinkUpWordPressPlugin::uniqueIdentifier());
     echo '<a href="#'.$name.'">'.$name.'</a><br />';
 }
 ?></div>
