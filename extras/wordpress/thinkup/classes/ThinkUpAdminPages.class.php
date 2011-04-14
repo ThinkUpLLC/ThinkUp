@@ -58,7 +58,8 @@ class ThinkUpAdminPages {
         echo '<br /><br />';
 
         // decide which page to load based on a 'step' GET variable
-        switch ($_GET['step']) {
+        $step = isset( $_GET['step'] ) ? $_GET['step'] : '';
+        switch ($step) {
             case 'help':
                 ThinkUpAdminPages::help();
                 break;
