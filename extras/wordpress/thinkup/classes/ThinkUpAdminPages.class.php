@@ -149,7 +149,7 @@ foreach ($options_array as $opt) {
 		<td align="right" valign="top"><?php _e($opt['label'], 
 		ThinkUpWordPressPlugin::uniqueIdentifier()); ?></td>
 		<td><input type="<?php echo $opt['type']; ?>"
-			name="<?php echo $opt['key'] ?>" value="<?php echo $field_value ?>"
+			name="<?php echo $opt['key'] ?>" value="<?php echo esc_attr($field_value) ?>"
 			size="20"> <br />
 		<small> <?php echo $opt['description']; ?> </small></td>
 	</tr>
