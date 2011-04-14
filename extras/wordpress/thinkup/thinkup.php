@@ -248,7 +248,7 @@ class ThinkUpWordPressPlugin {
      * @return str The absolute file path to this plugin's root directory.
      */
     public static function pluginDirectory() {
-        return WP_PLUGIN_DIR. '/'. basename(dirname(__FILE__));
+        return dirname(__FILE__);
     }
 }
 
