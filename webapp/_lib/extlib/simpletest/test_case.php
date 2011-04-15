@@ -130,6 +130,11 @@ class SimpleTestCase {
         $this->reporter = $reporter;
         $started = false;
         foreach ($this->getTests() as $method) {
+            if (getenv('TEST_METHOD') != '' && $method != getenv('TEST_METHOD')) {
+                continue;
+            } else if (getenv('TEST_METHOD') != '') {
+                echo "Running Single Test: $method\n";
+            }
             if ($reporter->shouldInvoke($this->getLabel(), $method)) {
                 $this->skip();
                 if ($this->should_skip) {
