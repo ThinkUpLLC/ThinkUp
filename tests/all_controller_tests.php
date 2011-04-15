@@ -62,7 +62,7 @@ $controller_test->add(new TestOfPluginOptionController());
 $controller_test->add(new TestOfTestAuthAPIController());
 $controller_test->add(new TestOfRSSController());
 $controller_test->add(new TestOfUpgradeController());
-$controller_test->addTestCase(new TestOfPostAPIController());
+$controller_test->add(new TestOfPostAPIController());
 
 
 
