@@ -57,7 +57,7 @@ class RegisterController extends ThinkUpController {
             if (!$config->getValue('is_registration_open')) {
                 $this->addToView('closed', true);
                 $this->addErrorMessage('<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
-                '<p><a href="http://github.com/ginatrapani/thinkup/tree/master">Install ThinkUp on your own '.
+                '<p><a href="https://github.com/ginatrapani/ThinkUp/wiki/Installing-ThinkUp">Install ThinkUp on your own '.
                 'server.</a></p>');
             } else {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
