@@ -36,6 +36,10 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
+    }
+
+    protected function buildData() {
+        $builders = array();
 
         $test_table_sql = 'CREATE TABLE tu_test_table(' .
             'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
@@ -45,22 +49,20 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
             ')';
         $this->testdb_helper->runSQL($test_table_sql);
 
-        $q = sprintf("INSERT INTO tu_test_table (test_name, test_id) VALUES ('name%s', %d)", 1, 1);
-        for($i = 2; $i <= 20; $i++) {
-            $q .= sprintf(",('name%s', %d)", $i, $i);
+        for($i = 1; $i <= 20; $i++) {
+            $builders[] = FixtureBuilder::build('test_table', array('test_name'=>'name'.$i, 'test_id'=>$i));
         }
-        $this->testdb_helper->runSQL($q);
 
         // Insert test data into test user table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (12, 'mary', 'Mary Jane',
-        'avatar.jpg');";
-        $this->testdb_helper->runSQL($q);
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar) VALUES (13, 'sweetmary', 'Sweet Mary Jane',
-        'avatar.jpg');";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>12, 'user_name'=>'mary',
+        'full_name'=>'Mary Jane', 'avatar'=>'avatar.jpg'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'sweetmary',
+        'full_name'=>'Sweet Mary Jane', 'avatar'=>'avatar.jpg'));
+        return $builders;
     }
 
     public function tearDown() {
+        $this->builders = null;
         parent::tearDown();
     }
 
@@ -95,6 +97,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testBasicSelectUsingStatementHandleDirectly() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
         $users = $testdao->getUserCount(0, 'mary');
         $this->assertIsA($users, "array");
@@ -123,6 +126,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testInsertData() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
 
         // ad a test_user with a test_id get insert count
@@ -147,6 +151,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testUpdateData() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
 
         // update a with a bad test_id get 0 insert count
@@ -163,6 +168,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testSelectSingleRecord() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
 
         $data_obj = $testdao->selectRecord(999);
@@ -175,8 +181,8 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testSelectSingleRecordAsArray() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
-
         $data_obj = $testdao->selectRecordAsArray(999);
         $this->assertNull($data_obj);
 
@@ -187,12 +193,14 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testSelectRecordsAsArrayWithLimit() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
         $data_obj = $testdao->selectRecordsWithLimit(2);
         $this->assertEqual(count($data_obj), 2, 'should have limited to two records');
     }
 
     public function testSelectRecords() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
 
         //this should return no records
@@ -213,6 +221,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testSelectRecodsAsArray() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
 
         //this should return no records
@@ -233,6 +242,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testDeleteData() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
 
         // nothing deleted
@@ -249,6 +259,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testIsPattern() {
+        $this->builders = self::buildData();
         $testdao = DAOFactory::getDAO('TestDAO');
 
         // nothing deleted
@@ -261,6 +272,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testInstantiateDaoWithoutConfigFile() {
+        $this->builders = self::buildData();
         $this->removeConfigFile();
         Config::destroyInstance();
         $cfg_values = array("table_prefix"=>"tu_", "db_host"=>"localhost");
