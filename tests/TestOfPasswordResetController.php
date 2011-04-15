@@ -39,26 +39,28 @@ class TestOfPasswordResetController extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->builder = self::buildData();
         $config = Config::getInstance();
         $config->setValue('debug', true);
+        }
 
+    protected function buildData() {
         $session = new Session();
         $cryptpass = $session->pwdcrypt("oldpassword");
-        $q = <<<SQL
-INSERT INTO #prefix#owners SET
-    id = 1,
-    full_name = 'ThinkUp J. User',
-    email = 'me@example.com',
-    pwd = '$cryptpass',
-    activation_code='8888',
-    is_activated =1
-SQL;
-        $this->testdb_helper->runSQL($q);
-
+        $builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'me@example.com', 'pwd'=>$cryptpass, 'activation_code'=>'8888', 'is_activated'=>1));
         $dao = DAOFactory::getDAO('OwnerDAO');
         $this->owner = $dao->getByEmail('me@example.com');
         $this->token = $this->owner->setPasswordRecoveryToken();
+        
+        return $builder;
     }
+    
+    public function tearDown() {
+        $this->builder = null;
+        parent::tearDown();
+    }
+
 
     public function testOfControllerNoToken() {
         unset($_GET['token']);
