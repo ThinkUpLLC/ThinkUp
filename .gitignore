@@ -15,3 +15,4 @@ extras/scripts/migratedb-conf
 extras/scripts/lic_header.py
 webapp/test_installer/*
 build/*
+docs/build/*
