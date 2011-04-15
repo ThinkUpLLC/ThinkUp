@@ -1,0 +1,4 @@
+CREATE TABLE tu_invitations (
+invite_code text DEFAULT NULL,
+time_stamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=MYISAM DEFAULT CHARSET=utf8;

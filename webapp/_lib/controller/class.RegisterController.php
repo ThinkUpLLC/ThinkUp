@@ -43,7 +43,7 @@ class RegisterController extends ThinkUpController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $this->setViewTemplate('session.register.tpl');
-        $this->setPageTitle('Register');
+        $this->setPageTitle('Register');     
     }
 
     public function control(){
@@ -53,17 +53,24 @@ class RegisterController extends ThinkUpController {
         } else {
             $this->disableCaching();
             $config = Config::getInstance();
+            $invite_dao = DAOFactory::getDAO('InviteDAO') ;
+            if ( isset( $_GET['code'] ) ) {
+                $code = $_GET['code'] ;
+            } else {
+                $code = NULL ;
+            }
+            $validInvite = $invite_dao->validateInviteCode( $code ) ;
 
-            if (!$config->getValue('is_registration_open')) {
+            if ( !$config->getValue('is_registration_open') && $validInvite == 0 ){
                 $this->addToView('closed', true);
                 $this->addErrorMessage('<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
                 '<p><a href="http://github.com/ginatrapani/thinkup/tree/master">Install ThinkUp on your own '.
                 'server.</a></p>');
-            } else {
+            } else  {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $this->addToView('closed', false);
                 $captcha = new Captcha();
-                if (isset($_POST['Submit']) && $_POST['Submit'] == 'Register') {
+                if (isset($_POST['Submit']) && $_POST['Submit'] == 'Register' && $validInvite == 1) {
                     foreach ($this->REQUIRED_PARAMS as $param) {
                         if (!isset($_POST[$param]) || $_POST[$param] == '' ) {
                             $this->addErrorMessage('Please fill out all required fields.');
@@ -99,6 +106,9 @@ class RegisterController extends ThinkUpController {
 
                                 unset($_SESSION['ckey']);
                                 $this->addSuccessMessage("Success! Check your email for an activation link.");
+                                //if ( isset($_GET(code) ) && InviteDAO::validateInviteCode( $_GET(code) )  ) { 
+                                //    InviteDAO::deleteInviteCode($_GET(code) ) ;
+                                //}
                             }
                         }
                     }

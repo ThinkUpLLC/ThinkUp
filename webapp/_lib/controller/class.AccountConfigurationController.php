@@ -45,6 +45,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
     public function authControl() {
         $webapp = Webapp::getInstance();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $invite_dao = DAOFactory::getDAO('InviteDAO');
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
         $this->addToView('owner', $owner);
         $this->addToView('logo_link', '');
@@ -66,6 +67,42 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $this->addSuccessMessage("Your password has been updated.");
             }
         }
+
+        //process invite
+	if (isset($_POST['invite']) && ( $_POST['invite'] == 'Invite' )  && isset($_POST['email']) ) {
+		if (!Utils::validateEmail($_POST['email'])) {
+			$this->addErrorMessage("Incorrect email. Please enter valid email address.");
+		} else { 
+			if ($owner_dao->doesOwnerExist($_POST['email'])) {
+				$this->addErrorMessage("User account already exists.");
+			} else {
+			        $config = Config::getInstance() ;
+				$es = new SmartyThinkUp();
+				$es->caching=false;
+				$session = new Session();
+				// Generate a Invite code
+                $did_invite_work = 0 ;
+                while ( $did_invite_work == 0 ) {
+    				$invite_code =  substr(md5(uniqid(rand(), true)), 0, 10) ;
+	    			$server = $_SERVER['HTTP_HOST'];
+		    		$did_invite_work = $invite_dao->addInviteCode( $invite_code ) ;
+
+                }
+
+				$es->assign('server', $server );
+				$es->assign('email', urlencode($_POST['email']) );
+				$es->assign('invite_code', $invite_code );
+				$message = $es->fetch('_email.invite.tpl');
+
+				// Check if mail button is clicked
+				Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
+				." Account", $message);
+
+				unset($_SESSION['ckey']);
+				$this->addSuccessMessage("Success! Invitation Sent.");
+			}
+		}
+	}
 
         //process account deletion
         if (isset($_POST['action']) && $_POST['action'] == 'delete' && isset($_POST['instance_id']) &&

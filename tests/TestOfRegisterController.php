@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfRegisterController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2011 Terrance Shepherd, Gina Trapani
  *
  * LICENSE:
  *
@@ -23,8 +23,9 @@
  * Test of RegisterController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2011 Terrance, Shepherd, Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Terrance Shepherd
  *
  */
 require_once dirname(__FILE__).'/init.tests.php';
@@ -35,9 +36,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthT
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
 class TestOfRegisterController extends ThinkUpUnitTestCase {
-    public function __construct() {
-        $this->UnitTestCase('RegisterController class test');
-    }
 
     public function setUp() {
         parent::setUp();
@@ -169,8 +167,112 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         $this->debug("Email contents: " . $email);
         $this->assertPattern('/test%20url%20with%20spaces/', $email, 'Spaces found in activation URL.');
     }
-}
 
+    public function testSlashesInHostName() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
+        $_SERVER['HTTP_HOST'] = "mytestthinkup/";
+        $_POST['Submit'] = 'Register';
+        $_POST['full_name'] = "Angelina Jolie";
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $config = Config::getInstance();
+        $config->setValue('site_root_path', 'test url with spaces/and/a few/slashes/too/');
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $email = Mailer::getLastMail();
+        $this->debug("Email contents: " . $email);
+        $this->assertPattern('/test%20url%20with%20spaces\/and\/a%20few\/slashes\/too/', $email,
+        'Spaces properly escaped;slashes are not');
+    }
+    public function testInviteUser() {
+        // make sure registration is closed
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        $bvalues = array( 'invite_code' => '01234567889',
+        'time_stamp' => '-3s');
+        $bdata = FixtureBuilder::build('invitations', $bvalues);
+
+        $_SERVER['HTTP_HOST'] = "mythinkup/" ;
+        $_GET['code'] = '0123456789' ;
+        $_POST['Submit'] = 'Register';
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
+        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'),
+        'Success! Check your email for an activation link.');
+    }
+
+    public function testInviteExpiredCode() {
+        // make sure registration is closed
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        $bvalues = array( 'invite_code' => '01234567889',
+        'time_stamp' => '-8d');
+        $bdata = FixtureBuilder::build('invitations', $bvalues);
+                                            
+        $_SERVER['HTTP_HOST'] = "mythinkup/" ;
+        $_GET['code'] = '0123456789' ;
+        $_POST['Submit'] = 'Register';
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+                                                                                                                    
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        '<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
+        '<p><a href="http://github.com/ginatrapani/thinkup/tree/master">Install ThinkUp on your own '.
+        'server.</a></p>');
+
+    }
+
+    public function testInviteInvalidCode() {
+        // make sure registration is closed
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        $bvalues = array( 'invite_code' => '01234567889',
+        'time_stamp' => '-8d');
+        $bdata = FixtureBuilder::build('invitations', $bvalues);
+
+        $_SERVER['HTTP_HOST'] = "mythinkup/" ;
+        $_GET['code'] = '9876543210' ;
+        $_POST['Submit'] = 'Register';
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        '<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
+        '<p><a href="http://github.com/ginatrapani/thinkup/tree/master">Install ThinkUp on your own '.
+        'server.</a></p>');
+
+    }
+}
+      
 
 /**
  * Mock Captcha for test use

@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfAccountConfigurationController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2011 Gina Trapani, Terrance Shepherd
  *
  * LICENSE:
  *
@@ -24,8 +24,9 @@
  * Test of AccountConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani, Terrance Shepherd
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Terrance Shepherd
  *
  */
 require_once dirname(__FILE__).'/init.tests.php';
@@ -41,10 +42,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/controller/class.TwitterP
 
 
 class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
-
-    public function __construct() {
-        $this->UnitTestCase('AccountConfigurationController class test');
-    }
 
     public function setUp(){
         parent::setUp();
@@ -532,5 +529,20 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
+    }
+    public function testAuthControlInviteUser() {
+	    $this->simulateLogin('me@example.com');
+
+	    $_SERVER['HTTP_HOST'] = "mytestthinkup/";
+	    $_POST['invite'] = 'Invite' ;
+	    $_POST['email'] = 'metoo@example.com' ;
+	    $_POST['full_name'] = 'John Smith';
+
+        $controller = new AccountConfigurationController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+
+        $this->assertTrue($v_mgr->getTemplateDataItem('successmsg'));
     }
 }
