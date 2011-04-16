@@ -56,7 +56,12 @@ class TwitterOAuth {
         //        echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
         //        ';
         if (!file_exists($FAUX_DATA_PATH.$url)) {
-            $this->last_status_code = 404;
+            if (is_numeric($url) && strlen($url) == 3) {
+                // if the URL is a 3 character, numeric string, set the last error code to it. For testing errors.
+                $this->last_status_code = (int)$url;
+            } else {
+                $this->last_status_code = 404;
+            }
             return "";
         } else {
             return file_get_contents($FAUX_DATA_PATH.$url);

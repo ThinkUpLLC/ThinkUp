@@ -622,4 +622,17 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->cleanUpFollows();
         $this->assertFalse($follow_dao->followExists(930061, 36823, 'twitter', true), 'Follow marked inactive');
     }
+
+    public function testLoggingErrorOutput() {
+        self::setUpInstanceUserGinaTrapani();
+        foreach ($this->api->getTwitterErrorCodes() as $error_code => $explanation) {
+            $this->api->apiRequest($error_code, array(), true);
+        }
+
+        $logfile = file_get_contents(Config::getInstance()->getValue('log_location'));
+
+        foreach ($this->api->getTwitterErrorCodes() as $error_code => $explanation) {
+            $this->assertPattern("/{$explanation}/", $logfile);
+        }
+    }
 }

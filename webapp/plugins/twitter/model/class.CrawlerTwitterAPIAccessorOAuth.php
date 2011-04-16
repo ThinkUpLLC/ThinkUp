@@ -64,6 +64,24 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
      * @var int
      */
     var $num_retries = 2;
+
+    /**
+     * A list of Twitter API error codes and their explanations.
+     * @var array
+     */
+    private $error_codes = array(
+         '304' => 'There was no new data to return.',
+         '400' => 'The request was invalid.',
+         '401' => 'Authentication credentials were missing or incorrect.',
+         '403' => 'The request is understood, but it has been refused.',
+         '404' => 'The URI requested is invalid or the resource requested, such as a user, does not exists.',
+         '406' => 'Invalid format specified in the request.',
+         '420' => 'You are being rate limited.',
+         '500' => 'Something is broken on Twitter\'s end.',
+         '502' => 'Twitter is down or being upgraded.',
+         '503' => 'The Twitter servers are up, but overloaded with requests. Try again later.'
+    );
+
     /**
      * Constructor
      * @param str $oauth_token
@@ -157,7 +175,8 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                     foreach ($args as $key=>$value) {
                         $status_message .= $key."=".$value."&";
                     }
-                    $status_message .= " | API ERROR: $status";
+                    $translated_status_code = $this->translateErrorCode($status);
+                    $status_message .= " | API ERROR: $translated_status_code";
                     //$status_message .= "\n\n$content\n\n";
                     $logger->logUserError($status_message, __METHOD__.','.__LINE__);
                     $status_message = "";
@@ -201,5 +220,35 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
         return $this->available_api_calls_for_twitter." of ".$this->api_hourly_limit." Twitter API calls ".
         "left this hour; ". round($this->available_api_calls_for_crawler)." budgeted for ThinkUp until ".
         date('H:i', (int) $this->next_api_reset).".";
+    }
+
+    /**
+     * Translates a Twitter API code to its corresponding explanation, as described in this link:
+     * http://dev.twitter.com/pages/responses_errors
+     *
+     * @param <type> $error_code The error code.
+     * @param <type> $include_code Whether or not to include the code in the output.
+     * @return string Translated error code.
+     */
+    public function translateErrorCode($error_code, $include_code = true) {
+        $translation = '';
+        $error_code = strval($error_code);
+        if (array_key_exists($error_code, $this->error_codes)) {
+            $translation = $this->error_codes[$error_code];
+        }
+        // if the $include_code flag is set, append the error code to the explanation
+        if ($include_code) {
+            $translation = $error_code . ' ' . $translation;
+        }
+        return $translation;
+    }
+
+    /**
+     * Returns an associative array of error_code => explanation pairs.
+     *
+     * @return array key => pairs of error codes that can be returned from the Twitter API.
+     */
+    public function getTwitterErrorCodes() {
+        return $this->error_codes;
     }
 }
