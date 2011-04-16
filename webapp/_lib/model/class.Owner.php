@@ -79,6 +79,11 @@ class Owner {
      * @var str
      */
     var $account_status;
+    /**
+     * String containing the owner's timezone.
+     * @var str 
+     */
+    var $timezone;
 
     /**
      * Constructor
@@ -95,6 +100,7 @@ class Owner {
             $this->is_activated = PDODAO::convertDBToBool($val["is_activated"]);
             $this->account_status = $val["account_status"];
             $this->failed_logins = $val["failed_logins"];
+            $this->timezone = $val['timezone'];
         }
     }
 

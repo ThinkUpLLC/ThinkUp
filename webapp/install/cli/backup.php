@@ -30,8 +30,8 @@
 chdir('../..');
 require_once 'init.php';
 //Avoid "Error: DateTime::__construct(): It is not safe to rely on the system's timezone settings" error
-require_once 'config.inc.php';
-date_default_timezone_set($THINKUP_CFG['timezone']);
+$config = Config::getInstance();
+date_default_timezone_set($config->getValue('timezone'));
 
 // don't run via the web...
 if(isset($_SERVER['SERVER_NAME'])) {

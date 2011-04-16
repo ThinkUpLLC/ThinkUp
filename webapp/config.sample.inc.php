@@ -13,9 +13,6 @@ $THINKUP_CFG['site_root_path']            = '/';
 // Full server path to /thinkup/ folder.
 $THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
 
-// Your timezone
-$THINKUP_CFG['timezone']                  = 'America/Los_Angeles';
-
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
 $THINKUP_CFG['cache_pages']               = true;
 
