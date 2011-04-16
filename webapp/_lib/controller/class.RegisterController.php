@@ -62,8 +62,10 @@ class RegisterController extends ThinkUpController {
             } else {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $this->addToView('closed', false);
+                $this->addToView('current_tz', $config->getValue('timezone'));
                 $captcha = new Captcha();
                 if (isset($_POST['Submit']) && $_POST['Submit'] == 'Register') {
+                    $this->addToView('current_tz', $_POST['timezone']);
                     foreach ($this->REQUIRED_PARAMS as $param) {
                         if (!isset($_POST[$param]) || $_POST[$param] == '' ) {
                             $this->addErrorMessage('Please fill out all required fields.');
@@ -87,7 +89,8 @@ class RegisterController extends ThinkUpController {
                                 $activ_code = rand(1000, 9999);
                                 $cryptpass = $session->pwdcrypt($_POST['pass2']);
                                 $server = $_SERVER['HTTP_HOST'];
-                                $owner_dao->create($_POST['email'], $cryptpass, $activ_code, $_POST['full_name']);
+                                $owner_dao->create($_POST['email'], $cryptpass, $activ_code, $_POST['full_name'],
+                                        $_POST['timezone']);
 
                                 $es->assign('server', $server );
                                 $es->assign('email', urlencode($_POST['email']) );
@@ -111,6 +114,7 @@ class RegisterController extends ThinkUpController {
                 }
                 $challenge = $captcha->generate();
                 $this->addToView('captcha', $challenge);
+                $this->addToView('tz_list', InstallerController::getTimeZoneList());
             }
             return $this->generateView();
         }

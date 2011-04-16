@@ -128,6 +128,7 @@ class Installer {
                 'php' => $THINKUP_VERSION_REQUIRED['php'],
                 'mysql' => $THINKUP_VERSION_REQUIRED['mysql']
             );
+            
             self::$current_version = $THINKUP_VERSION;
         }
 
@@ -147,6 +148,7 @@ class Installer {
         } else {
             $version = PHP_VERSION;
         }
+        
         return version_compare( $version, self::$required_version['php'], '>=' );
     }
 
@@ -636,8 +638,7 @@ class Installer {
             'db_socket' => $db_config['db_socket'],
             'db_port' => $db_config['db_port'],
             'table_prefix' => $db_config['table_prefix'],
-            'GMT_offset' => $db_config['GMT_offset'],
-            'timezone' => $db_config['timezone']
+            'GMT_offset' => $db_config['GMT_offset']
         );
 
         // read sample configuration file and replace some lines

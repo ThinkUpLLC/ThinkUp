@@ -175,7 +175,7 @@ class InstallerController extends ThinkUpController {
         $this->addToView('db_prefix', 'tu_');
         $this->addToView('db_socket', '');
         $this->addToView('db_port', '');
-        $this->addToView('tz_list', $this->getTimeZoneList());
+        $this->addToView('tz_list', self::getTimeZoneList());
         $this->addToView('current_tz', $current_tz);
         $this->addToView('site_email', 'you@example.com');
     }
@@ -210,7 +210,6 @@ class InstallerController extends ThinkUpController {
             $db_config['db_port']      = $THINKUP_CFG['db_port'];
             $db_config['table_prefix'] = $THINKUP_CFG['table_prefix'];
             $db_config['GMT_offset']   = $THINKUP_CFG['GMT_offset'];
-            $db_config['timezone']     = $THINKUP_CFG['timezone'];
             $email                     = trim($_POST['site_email']);
         } else {
             // make sure we're not from error of couldn't write config.inc.php
@@ -230,7 +229,6 @@ class InstallerController extends ThinkUpController {
             $db_config['db_socket']    = trim($_POST['db_socket']);
             $db_config['db_port']      = trim($_POST['db_port']);
             $db_config['table_prefix'] = trim($_POST['db_prefix']);
-            $db_config['timezone']     = trim($_POST['timezone']);
             $email                     = trim($_POST['site_email']);
 
             // get GMT offset in hours
@@ -283,7 +281,7 @@ class InstallerController extends ThinkUpController {
             $this->addToView('db_port', $db_config['db_port']);
             $this->addToView('db_type', $db_config['db_type']);
             $this->addToView('current_tz', $_POST['timezone']);
-            $this->addToView('tz_list', $this->getTimeZoneList());
+            $this->addToView('tz_list', self::getTimeZoneList());
             $this->addToView('site_email', $email);
             $this->addToView('full_name', $full_name);
             return;
@@ -331,8 +329,9 @@ class InstallerController extends ThinkUpController {
             $session = new Session();
             $activation_code = rand(1000, 9999);
             $crypt_pass = $session->pwdcrypt($password);
+            $timezone = trim($_POST['timezone']);
             //$owner_dao->insertActivatedAdmin($email, $crypt_pass, $full_name);
-            $owner_dao->createAdmin($email, $crypt_pass, $activation_code, $full_name);
+            $owner_dao->createAdmin($email, $crypt_pass, $activation_code, $full_name, $timezone);
 
             // view for email
             $cfg_array =  array(
@@ -442,7 +441,7 @@ class InstallerController extends ThinkUpController {
      *
      * @return array An associative array of options, ready for optgrouping.
      */
-    protected function getTimeZoneList() {
+    public static function getTimeZoneList() {
         $tz_options = timezone_identifiers_list();
         $view_tzs = array();
 

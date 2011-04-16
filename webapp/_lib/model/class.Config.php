@@ -84,6 +84,16 @@ class Config {
     public static function getInstance($vals = null) {
         if (!isset(self::$instance)) {
             self::$instance = new Config($vals);
+            if (is_null($vals)) {
+                $user = SessionCache::get('user');
+                if ($user != null) {
+                    $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                    $current_user = $owner_dao->getByEmail($user);
+                    self::$instance->config['timezone'] = $current_user->timezone;
+                } else {
+                    self::$instance->config['timezone'] = date_default_timezone_get();
+                }
+            }
         }
         return self::$instance;
     }
@@ -93,6 +103,7 @@ class Config {
      * @return   mixed    value of the configuration key/value pair
      */
     public function getValue($key) {
+        
         // is this config value stored in the db?
         $db_value_config = AppConfig::getConfigValue($key);
         $value = null;
@@ -110,6 +121,7 @@ class Config {
             // if not a db config value, get from config file
             $value = isset($this->config[$key]) ? $this->config[$key] : null;
         }
+        
         return $value;
     }
     /**

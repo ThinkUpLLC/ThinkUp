@@ -48,6 +48,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
         $this->addToView('owner', $owner);
         $this->addToView('logo_link', '');
+        $this->addToView('current_tz', Config::getInstance()->getValue('timezone'));
+        $this->addToView('tz_list', InstallerController::getTimeZoneList());
 
         //proces password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
@@ -64,6 +66,16 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $cryptpass = $this->app_session->pwdcrypt($_POST['pass1']);
                 $owner_dao->updatePassword($this->getLoggedInUser(), $cryptpass);
                 $this->addSuccessMessage("Your password has been updated.");
+            }
+        }
+
+        //proces timezone change
+        if (isset($_POST['changetimezone']) && $_POST['changetimezone'] == 'Change timezone') {
+            if ($owner_dao->updateTimezone($this->getLoggedInUser(), $_POST['timezone']) == 1) {
+                $this->addSuccessMessage('Timezone successfully updated!');
+                $this->addToView('current_tz', $_POST['timezone']);
+            } else {
+                $this->addErrorMessage('There was a problem while updating your timezone.');
             }
         }
 

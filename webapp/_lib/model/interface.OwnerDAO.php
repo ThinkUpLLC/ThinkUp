@@ -85,14 +85,23 @@ interface OwnerDAO {
     public function updatePassword($email, $pwd);
 
     /**
+     * Set owner timezone
+     * @param str $email
+     * @param str $timezone
+     * @return int Affected rows
+     */
+    public function updateTimezone($email, $timezone);
+
+    /**
      * Insert owner
      * @param str $email
      * @param str $pass
      * @param str $acode
      * @param str $full_name
+     * @param str $timezone
      * @return int Affected rows
      */
-    public function create($email, $pass, $acode, $full_name);
+    public function create($email, $pass, $acode, $full_name, $timezone);
 
     /**
      * Update last_login field for given owner
@@ -130,9 +139,10 @@ interface OwnerDAO {
      * @param str $pwd
      * @param str $activation_code
      * @param str $full_name
+     * @param str $timezone
      * @return int Update count
      */
-    public function createAdmin($email, $pwd, $activation_code, $full_name);
+    public function createAdmin($email, $pwd, $activation_code, $full_name, $timezone);
 
     /**
      * Promote an owner to admin status.

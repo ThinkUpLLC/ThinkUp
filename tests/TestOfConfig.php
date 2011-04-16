@@ -66,6 +66,8 @@ class TestOfConfig extends ThinkUpUnitTestCase {
         $THINKUP_CFG['THINKUP_VERSION_REQUIRED'] =
         array('php' => $THINKUP_VERSION_REQUIRED['php'], 'mysql' => $THINKUP_VERSION_REQUIRED['mysql']);
         $THINKUP_CFG['enable_profiler']=false;
+        // timezone moved to database, msut re-add here to assure test passes
+        $THINKUP_CFG['timezone'] = 'Europe/London';
         $values_array = $config->getValuesArray();
         $this->assertIdentical($THINKUP_CFG, $values_array);
     }
@@ -98,6 +100,36 @@ class TestOfConfig extends ThinkUpUnitTestCase {
             $this->assertPattern("/ThinkUp's configuration file does not exist!/", $e->getMessage());
         }
         $this->restoreConfigFile();
+    }
+    
+    public function testUserSpecificTimezone() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('owners', array(
+            'full_name' => 'Sam Rose',
+            'pwd' => 'You just lost the game.',
+            'email'=>'ttuser1@example.com', 
+            'is_activated'=>1,
+            'account_status'=>'',
+            'timezone' => 'Europe/London'
+        ));
+        $builders[] = FixtureBuilder::build('owners', array(
+            'full_name' => 'John Doe',
+            'pwd' => 'Over 9000',
+            'email'=>'ttuser2@example.com', 
+            'is_activated'=>1,
+            'account_status'=>'',
+            'timezone' => 'Europe/Berlin'
+        ));
+        
+        $this->simulateLogin('ttuser1@example.com');
+        Config::destroyInstance();
+        $config = Config::getInstance();
+        $this->assertEqual($config->getValue('timezone'), 'Europe/London');
+
+        $this->simulateLogin('ttuser2@example.com');
+        Config::destroyInstance();
+        $config = Config::getInstance();
+        $this->assertEqual($config->getValue('timezone'), 'Europe/Berlin');
     }
 
     public function testDBConfigValues() {

@@ -178,13 +178,23 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test updateTimezone
+     */
+    public function testUpdateTimezone() {
+        $this->assertEqual($this->DAO->updatePassword('ttuser@example.com', 'Europe/London'), 1);
+        $this->assertEqual($this->DAO->updatePassword('dontexist@example.com', 'Europe/London'), 0);
+    }
+
+    /**
      * Test create
      */
     public function testCreate() {
         //Create new owner who does not exist
-        $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 1);
+        $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2',
+                'Europe/London'), 1);
         //Create new owner who does exist
-        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 0);
+        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2',
+                'Europe/London'), 0);
     }
 
     /**
@@ -223,7 +233,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new OwnerMySQLDAO($config_array);
 
         $this->assertFalse($dao->doesAdminExist());
-        $dao->createAdmin('test@example.com', 'password', 'adfadfad', 'My Full Name');
+        $dao->createAdmin('test@example.com', 'password', 'adfadfad', 'My Full Name', 'Europe/London');
         $this->assertTrue($dao->doesAdminExist());
     }
 

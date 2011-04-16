@@ -10,7 +10,7 @@
       {if $user_is_admin}
       <li><a id="app-settings-tab" href="#app_settings">Settings</a></li>
       {/if}
-      <li><a href="#instances">Your ThinkUp Password</a></li>
+      <li><a href="#instances">Your ThinkUp Account</a></li>
       {if $user_is_admin}<li><a href="#ttusers">All ThinkUp Accounts</a></li>{/if}
     </ul>
     
@@ -86,6 +86,26 @@
       <div class="thinkup-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
         {include file="_usermessage.tpl"}
+          <form name="changetimezone" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
+            <div class="clearfix">
+              <div class="grid_9 prefix_1 right"><label for="timezone">New timezone:</label></div>
+              <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
+                <select name="timezone" id="timezone">
+                  {foreach from=$tz_list key=group_name item=group}
+                    <optgroup label='{$group_name}'>
+                      {foreach from=$group item=tz}
+                        <option value='{$tz.val}'{if $current_tz eq $tz.val} selected{/if}>{$tz.display}</option>
+                      {/foreach}
+                    </optgroup>
+                  {/foreach}
+                </select>
+              </div>
+              <div class="prefix_10 grid_9 left">
+                <input type="submit" id="changetimezone" name="changetimezone" value="Change timezone"
+                       class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+              </div>
+            </div>
+          </form>
           <form name="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
             <div class="clearfix">
               <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>
@@ -114,7 +134,8 @@
                 </div>
               </div>
               <div class="prefix_10 grid_9 left">
-                <input type="submit" id="login-save" name="changepass" value="Change password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+                <input type="submit" id="login-save" name="changepass" value="Change password"
+                       class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
               </div>
             </div>
           </form>
