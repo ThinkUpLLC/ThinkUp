@@ -41,6 +41,25 @@
       </div>
       <div class="clearfix">
         <div class="grid_4 prefix_5 right">
+          <label for="timezone">
+            Timezone:
+          </label>
+        </div>
+        <div class="grid_10 left">
+          <select name="timezone" id="timezone" style="margin-top:1.25em">
+            {foreach from=$tz_list key=group_name item=group}
+              <optgroup label='{$group_name}'>
+                {foreach from=$group item=tz}
+                  <option value='{$tz.val}'{if $current_tz eq $tz.val} selected{/if}>{$tz.display}</option>
+                {/foreach}
+              </optgroup>
+            {/foreach}
+          </select>
+          <span class="input_information">Choose the location closest to you.</span>
+        </div>
+      </div>
+      <div class="clearfix">
+        <div class="grid_4 prefix_5 right">
           <label for="pass1">
             Password:
           </label>

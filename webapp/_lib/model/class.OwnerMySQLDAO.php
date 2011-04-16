@@ -40,7 +40,8 @@ SELECT
     is_activated,
     password_token,
     account_status,
-    failed_logins
+    failed_logins,
+    timezone
 FROM #prefix#owners AS o
 WHERE email = :email;
 SQL;
@@ -53,14 +54,14 @@ SQL;
     }
 
     public function getAllOwners() {
-        $q = " SELECT id, full_name, email, is_admin, is_activated, last_login ";
+        $q = " SELECT id, full_name, email, is_admin, is_activated, last_login, timezone ";
         $q .= "FROM #prefix#owners ORDER BY last_login DESC;";
         $ps = $this->execute($q);
         return $this->getDataRowsAsObjects($ps, 'Owner');
     }
 
     public function getAdmins() {
-        $q = " SELECT id, full_name, email, is_admin, is_activated, last_login ";
+        $q = " SELECT id, full_name, email, is_admin, is_activated, last_login, timezone ";
         $q .= "FROM #prefix#owners WHERE is_admin = 1 AND is_activated = 1 ORDER BY id";
         $ps = $this->execute($q);
         $admins = $this->getDataRowsAsObjects($ps, 'Owner');
@@ -134,18 +135,18 @@ SQL;
         return $this->getUpdateCount($ps);
     }
 
-    public function create($email, $pass, $acode, $full_name) {
-        return $this->createOwner($email, $pass, $acode, $full_name, false);
+    public function create($email, $pass, $acode, $full_name, $timezone) {
+        return $this->createOwner($email, $pass, $acode, $full_name, false, $timezone);
     }
 
-    public function createAdmin($email, $pwd, $activation_code, $full_name) {
-        return $this->createOwner($email, $pwd, $activation_code, $full_name, true);
+    public function createAdmin($email, $pwd, $activation_code, $full_name, $timezone) {
+        return $this->createOwner($email, $pwd, $activation_code, $full_name, true, $timezone);
     }
 
-    private function createOwner($email, $pass, $acode, $full_name, $is_admin) {
+    private function createOwner($email, $pass, $acode, $full_name, $is_admin, $timezone) {
         if (!$this->doesOwnerExist($email)) {
             $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, joined=NOW(), activation_code=:acode, ";
-            $q .= "full_name=:full_name";
+            $q .= "full_name=:full_name, timezone=:timezone";
             if ($is_admin) {
                 $q .= ", is_admin=1";
             }
@@ -153,7 +154,8 @@ SQL;
                 ':email'=>$email,
                 ':pass'=>$pass,
                 ':acode'=>$acode,
-                ':full_name'=>$full_name
+                ':full_name'=>$full_name,
+                ':timezone' => $timezone
             );
             $ps = $this->execute($q, $vars);
             return $this->getUpdateCount($ps);

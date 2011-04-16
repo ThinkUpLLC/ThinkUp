@@ -66,6 +66,8 @@ class TestOfConfig extends ThinkUpUnitTestCase {
         $THINKUP_CFG['THINKUP_VERSION_REQUIRED'] =
         array('php' => $THINKUP_VERSION_REQUIRED['php'], 'mysql' => $THINKUP_VERSION_REQUIRED['mysql']);
         $THINKUP_CFG['enable_profiler']=false;
+        // timezone moved to database, msut re-add here to assure test passes
+        $THINKUP_CFG['timezone'] = 'Europe/London';
         $values_array = $config->getValuesArray();
         $this->assertIdentical($THINKUP_CFG, $values_array);
     }
