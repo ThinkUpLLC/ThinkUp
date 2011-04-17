@@ -358,7 +358,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " WHERE p.in_reply_to_post_id is not null AND p.network=:network AND ";
         $q .= " (p.author_user_id = :author_id AND p1.author_user_id = :other_user_id) ";
         $q .= " OR (p1.author_user_id = :author_id AND p.author_user_id = :other_user_id) ";
-        $q .= " ORDER BY p.pub_date DESC ";
+        $q .= " ORDER BY answer_adj_pub_date DESC, question_adj_pub_date ASC ";
         $vars = array(
             ':author_id'=>$author_id,
             ':other_user_id'=>$other_user_id,

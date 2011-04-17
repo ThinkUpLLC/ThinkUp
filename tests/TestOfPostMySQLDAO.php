@@ -816,6 +816,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts_replied_to[1]["answerer_username"], "shutterbug");
         $this->assertEqual($posts_replied_to[1]["answer"], "@user2 Thanks!");
 
+        $this->debug(Utils::varDumpToString($posts_replied_to));
+
         $posts_replied_to = $dao->getExchangesBetweenUsers(13, 20, 'twitter');
         $this->assertEqual(sizeof($posts_replied_to), 1);
 

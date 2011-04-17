@@ -50,7 +50,7 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         'full_name'=>'Jack Dorsey', 'avatar'=>'avatar.jpg', 'follower_count'=>150210, 'friend_count'=>124));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>1324567890, 'user_name'=>'ev',
-        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'1/1/2005'));
+        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'1/1/2005', 'follower_count'=>36000));
 
         $builders[] = FixtureBuilder::build('users', array('user_id'=>1623457890, 'user_name'=>'private',
         'full_name'=>'Private Poster', 'avatar'=>'avatar.jpg', 'is_protected'=>1, 'follower_count'=>35342, 
@@ -266,7 +266,7 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetMostFollowedFollowees(){
         $result = $this->DAO->getMostFollowedFollowees(1234567890, 'twitter');
-
+        $this->debug(Utils::varDumpToString($result));
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 2);
         $this->assertEqual($result[1]['user_id'], 1623457890);

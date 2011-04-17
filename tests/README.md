@@ -2,21 +2,14 @@
 
 All code submitted to the repository should have corresponding tests that pass. Here's how to run and write tests. 
 
-# WARNING
-
-**Do *not* run tests on your live ThinkUp database.** If you run tests without properly configuring a separate database,
-you will DESTROY ALL DATA IN YOUR THINKUP INSTANCE. That would be so sad!
-
-To avoid data loss, make sure both your `tests/config.tests.inc.php` and `webapp/config.inc.php` files point to a 
-clean, empty tests database.
-
 ## Running Tests
 
 First, configure your test environment. 
 
-Copy `tests/config.tests.sample.inc.php` to `tests/config.tests.inc.php` and 
-set the appropriate values. You will need a clean, empty database to run your tests. By default, name it 
-`thinkup_tests` and set the `$TEST_DATABASE` config variable to that name.
+Copy `tests/config.tests.sample.inc.php` to `tests/config.tests.inc.php` and set the appropriate values. You will 
+need a clean, empty database to run your tests. By default, name it `thinkup_tests` and set the `$TEST_DATABASE`
+config variable to that name. You will also need a local installation of ThinkUp; set the `$TEST_SERVER_DOMAIN` 
+config variable equal to its URL--for example, `http://localhost`.
 
 In `webapp/config.inc.php`, in the DEVELOPER CONFIG section, set the name of your tests database, and the username and
 password to access it. This database name should match the one you just set in `tests/config.tests.inc.php`.
@@ -33,48 +26,17 @@ In order for the tests to pass, you must:
 * Have a local installation of ThinkUp using your test database
 * Have a working internet connection
 
-To run a particular test case, like the UserDAO test, in the ThinkUp source code root folder, use this command: 
+To run a particular test suite, like the UserDAO suite, in the ThinkUp source code root folder, use this command: 
 
     $ php tests/TestOfUserDAO.php
 
-To run all the test cases, use:
+To run all the test suites, use:
 
     $ php tests/all_tests.php
 
 To run a single test, set the TEST_METHOD environment variable. For example:
 
     $ TEST_METHOD=testIsPluginActive php tests/TestOfPluginMySQLDAO.php
-
-## Intermittent Testing Bugs
-
-Unfortunately, the ThinkUp testing framework is currently subject to intermittent bugs (affectionately referred to on
-the mailing list as "[heisenbugs](http://en.wikipedia.org/wiki/Uncertainty_principle)").
-
-This means that occasionally some tests will "just fail". It appears to happen most commonly in tests that require
-data to be returned from a database query in a specific order.
-
-[Example](https://groups.google.com/a/expertlabs.org/group/thinkup-dev/browse_thread/thread/e15a110499bb19ba#) of
-tests that are known to fail intermittently. These 8 pop up every so often and it has been observed that occasionally
-the data that the failing test relies on is returned in a different order than what is expected.
-
-Related mailing list threads on this topic:
-
-[Test Heisenbugs](https://groups.google.com/forum/#!searchin/thinkupapp/heisenbug/thinkupapp/i0CTDqB9auQ/wP2o59MLgE4J)
-
-## I'm getting lots of test failures... Help!
-
-There are a couple of common reasons for getting a high number of test failures:
-
-* An incorrect $TEST_SERVER_DOMAIN in tests/config.tests.inc.php. Please make sure that this points to the web root
-of your ThinkUp installation.
-[Relevant thread](https://groups.google.com/a/expertlabs.org/group/thinkup-dev/browse_thread/thread/755ac5a5f32666fc/)
-* Incorrect folder permissions in your installation. Make sure that the webapp/_lib/view/compiled_view directory is
-writable to from the web server and that no other folders have had their permissions edited inadvertently.
-* An incorrect value for any of the test database values. Please make sure that in both config.inc.php and
-config.tests.inc.php you are point to an existing, empty database.
-
-If you have checked all of these and everything appears to be in tact, send an email to the mailing list or pop into
-the IRC channel and we'll see what we can do to help you out.
 
 ## Writing Tests
 
@@ -98,7 +60,7 @@ See `TestOfDashboardController.php` as an example of a set of controller test ca
 ### Plugin Tests (`all_plugin_tests.php`)
 
 All plugin-specific tests should live in the `thinkup/webapp/plugins/plugin-name/tests/` directory. Write tests
-for the plugin's model objects and controller methods. 
+for the plugin's model and controller objects. 
 
 To test consumption of data from web services, mock up the appropriate classes and store test data to local files in 
 the format the API would return them in. For example, the `classes/mock.TwitterOAuth.php` class reads Twitter data 
@@ -111,15 +73,33 @@ See `/thinkup/webapp/plugins/twitter/tests/` for examples of Twitter crawler plu
 Add tests for particular pages inside the webapp to an appropriately-named class. See `WebTestOfChangePassword.php` 
 for an example. 
 
-Once your tests work, add them to the `all_tests.php` file to run along with the existing tests. 
+Once your tests pass, add them to the appropriate `all_tests.php` file to run with the existing suites. For example,
+new model tests should go in `all_model_tests.php`, new controller tests should go in `all_controller_tests.php`, etc.
 
-## Debugging during testing
+## How to Debug Tests
 
-If you want to print variable valies to the terminal while running tests, there is a ThinkUpWebTestCase::debug method
-and a ThinkUpBasicTestCase::debug method. To use it, add a line like this to your test:
+To print variable values to the terminal while running tests, use the ThinkUpWebTestCase::debug method or
+ThinkUpBasicTestCase::debug method. For example, you can add a line like this to your test:
 
-`$this->debug("This is my debugging statement which will print during my test run.")`
+`$this->debug("This is my debugging statement which will print during my test run.");`
+
+To print something other than a string in a debug statement, use the Utils::varDumpToString method, like this:
+
+`$this->debug(Utils::varDumpToString($my_nonstring_object));`
 
 To see your debug statements, run your test like so:
 
 `TEST_DEBUG=1 php tests/yourtest.php`
+
+## I'm getting lots of test failures. Help!
+
+Possible reasons for getting a high number of test failures include:
+
+* An incorrect $TEST_SERVER_DOMAIN in tests/config.tests.inc.php. Please make sure that this points to the web root
+of your ThinkUp installation.
+[Relevant thread](https://groups.google.com/a/expertlabs.org/group/thinkup-dev/browse_thread/thread/755ac5a5f32666fc/)
+* An incorrect value for any of the test database values. Please make sure that both config.inc.php and 
+config.tests.inc.php point to an existing, empty database.
+
+If you have double-checked these and everything appears to be intact, send an email to the mailing list or pop into
+the IRC channel and we'll see what we can do to help you out.
