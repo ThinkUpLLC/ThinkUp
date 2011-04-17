@@ -46,6 +46,9 @@ a:hover {text-decoration: none;color: #6eac2c;}
 .x-large {font-size: 3em;}
 .underline {text-decoration:underline;}
 
+.lh_1 {line-height:1em;}
+
+
 /* GRAPHICS AND ICONS 
 ==============================*/
 .ui-icon, .sprite {display: inline-block !important;}

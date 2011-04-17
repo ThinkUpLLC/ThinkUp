@@ -32,5 +32,5 @@
         {/if}
 
 <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>
-<iframe width="800" frameborder=0 src="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n={$post->network}&t=post" name="childframe" id="childframe" >
+<iframe width="710" frameborder=0 src="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n={$post->network}&t=post" name="childframe" id="childframe" >
 </iframe>

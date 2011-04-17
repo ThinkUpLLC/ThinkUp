@@ -1,12 +1,14 @@
-<div class="">
-<h2>{$header}</h2>
+<div class="clearfix">
+  <h2>{$header}</h2>
   {if $description}
-     <i>{$description} {if $is_searchable}
+    <i>{$description}
+      {if $is_searchable}
         [<a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a>]
-    {/if}</i>
-     
+      {/if}
+    </i>
   {/if}
 </div>
+
     {if $error}
     <p class="error">
         {$error}

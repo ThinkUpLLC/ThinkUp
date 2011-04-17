@@ -15,25 +15,28 @@
       </div>
     </div>
     <div class="grid_4 small">
-      
       {if $t->network == 'twitter' && $username_link != 'internal'}
         <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}      href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}">{$t->author_username}</a>
       {else}
         <a href="{$site_root_path}public.php?u={$t->author_username|urlencode}&n={$t->network|urlencode}">{$t->author_username}</a>
       {/if}
+
       {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
          <span class="sprite icon-friend"></span>
       {/if}
+
       {if $t->author->follower_count > 0}
         <div class="gray">{$t->author->follower_count|number_format} followers</div>
       {/if}
-      {if $t->is_protected}
-        <span class="sprite icon-locked"></span>
-      {else}
-        <span class="sprite icon-unlocked"></span>
+      
+      {if $t->network == 'twitter'}
+      <a href="http://twitter.com/intent/tweet?in_reply_to={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
+      <a href="http://twitter.com/intent/retweet?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
+      <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
       {/if}
+      
     </div>
-    <div class="grid_13 omega">
+    <div class="grid_12 omega">
       {if $t->link->is_image}
         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
       {/if}
@@ -59,13 +62,21 @@
           <a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a>
         </small>
       {/if}
+      
+      {if $t->is_protected}
+        <span class="sprite icon-locked"></span>
+      {else}
+        <span class="sprite icon-unlocked"></span>
+      {/if}
+      
       <div class="small gray">
        <span class="metaroll">
         <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
-        {if $t->network == 'twitter'}
+        <!--{if $t->network == 'twitter'}
          - <a href="http://twitter.com/?status=@{$t->author_username}%20&in_reply_to_status_id={$t->post_id}&in_reply_to={$t->author_username}" target="_blank">Reply on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
-        {/if}
+        {/if}-->
         {if $t->is_geo_encoded < 2}
+        from 
         {if $show_distance}
             {if $unit eq 'km'}
               {$t->reply_retweet_distance|number_format} kms away
@@ -75,6 +86,7 @@
         {/if}
         {$t->location|truncate:60:' ...'}
        {/if}
+       
        </span>&nbsp;</div>
       </div>
     </div>

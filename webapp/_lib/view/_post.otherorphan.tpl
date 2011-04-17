@@ -6,15 +6,17 @@
   </div>-->
 {/if}
 
-<div class="individual-tweet clearfix{if $t->is_protected} private{/if}">
-  <div class="grid_1 alpha">
-    <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+<div class="individual-tweet clearfix{if $t->is_protected} private{/if} prepend_20">
+  <div class="grid_2 alpha">
+    <div class="avatar-container">
+      <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+    </div>
   </div>
-  <div class="grid_3 right small">
+  <div class="grid_4 small">
     <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}">{$t->author_username}</a><br>
     <span class="small gray">{$t->author->follower_count|number_format} followers</span>
   </div>
-  <div class="grid_16 omega">
+  <div class="grid_12 omega">
       {if $t->link->is_image}
         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" alt=""></a></div>
       {/if}
@@ -26,25 +28,27 @@
           <span class="no-post-text">No post text</span>
         {/if}
         {if $t->in_reply_to_post_id}
-          <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>
+          <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
       {if $t->link->expanded_url}
         <a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->title}</a>
       {/if}
         <div class="small gray">
           <span class="metaroll"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
-          {$t->author->location}
+          from {$t->author->location}
           {if $t->network == 'twitter'}
-           - <a href="http://twitter.com/intent/tweet?in_reply_to={$t->post_id}">Reply</a>
-           - <a href="http://twitter.com/intent/retweet?tweet_id={$t->post_id}">Retweet</a>
-           - <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}">Favorite</a>
+            <a href="http://twitter.com/intent/tweet?in_reply_to={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
+            <a href="http://twitter.com/intent/retweet?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
+            <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
           {/if}
           </span>&nbsp;
         </div>
+        <!--
         <div class="small gray">
           <span class="metaroll"> {$t->author->description|truncate:100}</span>&nbsp;
         </div>
-          
+        -->
+        
       {if $logged_in_user}
       <div id="div{$t->post_id}">
         <form action="" class="post-setparent">
@@ -59,6 +63,7 @@
         </form>
       </div>
       {/if}
+      
     </div>
   </div>
 </div>

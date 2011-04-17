@@ -356,11 +356,13 @@ line-height:1.8em;
 }
 
 .dashboard-header {
-	-moz-border-radius: 3px;-webkit-border-radius: 3px;
-	/* background-color: #e6e6e6; */
+	/* 
+	-moz-border-radius: 5px;-webkit-border-radius: 5px;
+	background-color: #e6e6e6; 
+	border: 1px solid #ddd;
+	*/
 	background: -moz-linear-gradient(top, #FFFFFF, #E6E6E6);  
 	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#E6E6E6));  
-	border: 1px solid #ddd;
 	padding : 10px 10px 14px 20px;
 	margin-bottom : 20px;
 }

@@ -51,17 +51,21 @@
                 <div class="clearfix append">
                   <span id="button" class="float-l ui-icon ui-icon-circle-arrow-s"></span>
                 </div>
-                <div class="small clearfix" id="more-detail" style="display:none;width:760px;">
+                <div class="clearfix gray" id="more-detail" style="display:none;width:460px;">
                   <div class="grid_2 alpha">
                     <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png">
                  	</div>
-                  <div class="grid_6">
-                	  Posted: {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
-                		{if $post->location}From: {$post->location}{/if}
+                  <div class="grid_5">
+                	  {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
+                		{if $post->location}{$post->location}{/if}
+                		<!--
+                 		{if $post->in_reply_to_post_id}<a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">In reply to</a>{/if}
+                  	{if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
+                	  -->
                 	</div>
-                  <div class="grid_6 omega">
+                  <div class="grid_4 omega">
                 		{if $post->source}
-                		Via:
+                		
                 			  {if $post->source eq 'web'}
                 			    the web
                 			  {else}
@@ -69,7 +73,7 @@
                 			  {/if}
                 		{/if}<br>
             			  {if $post->network eq 'twitter'}
-                		  Link:<a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
+                		  <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
                     {/if}
                   </div>
                 </div> <!-- /#more-detail -->
