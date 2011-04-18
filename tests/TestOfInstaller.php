@@ -79,6 +79,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     }
 
     public function testInstallerCheckVersion() {
+        $this->debug("Running testInstallerCheckVersion");
+        $installer = Installer::getInstance();
         $this->assertTrue(Installer::checkVersion());
         $this->assertFalse(Installer::checkVersion('4'));
 
@@ -251,22 +253,39 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     }
 
     public function testInstallerIsThinkUpInstalled() {
+        $this->debug("Running testInstallerIsThinkUpInstalled");
         $config = Config::getInstance();
         $config_array = $config->getValuesArray();
 
         $installer = Installer::getInstance();
 
+        //drop some tables so is_installed will be false
+        $this->DAO = new InstallerMySQLDAO($config_array);
+        $q = "DROP TABLE ".$config->getValue('table_prefix')."encoded_locations, ".
+        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix').
+        "instances, ".$config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix').
+        "owners, ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
+        $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."users," . $config->getValue('table_prefix')."options";
+        PDODAO::$PDO->exec($q);
+
         if ( file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php') ) {
             // test when config file exists
+            $this->debug("config file exists");
             $version_met = $installer->checkStep1();
+            $this->debug("version met ".Utils::varDumpToString($version_met));
             $db_check = $installer->checkDb($config_array);
+            $this->debug("db check ".Utils::varDumpToString($db_check));
             $table_present = $installer->doThinkUpTablesExist($config_array);
+            $this->debug("table present ".Utils::varDumpToString($table_present));
             $is_installed = $installer->isThinkUpInstalled($config_array);
+            $this->debug("is installed ".Utils::varDumpToString($is_installed));
             $expected = ($version_met && $db_check && $table_present);
             $this->assertEqual($is_installed, $expected);
             $this->assertFalse($is_installed);
         } else {
             // test when config doesn't exist
+            $this->debug("config file does not exist");
             $this->assertFalse( $installer->isThinkUpInstalled($this->config) );
             $expected = $installer->getErrorMessages();
             $this->assertEqual( $expected['config_file'], "Config file doesn't exist.");
