@@ -230,7 +230,7 @@ class PostAPIController extends ThinkUpController {
              */
             case 'post':
                 if (is_null($this->post_id)) {
-                    $m = 'A request of type "' . $this->type . '" requires a post_id to be specified.';
+                    $m = 'A request of type ' . $this->type . ' requires a post_id to be specified.';
                     throw new RequiredArgumentMissingException($m);
                 } else {
                     $data = $this->post_dao->getPost($this->post_id, $this->network, $this->is_public);
@@ -246,7 +246,7 @@ class PostAPIController extends ThinkUpController {
              */
             case 'post_retweets':
                 if (is_null($this->post_id)) {
-                    $m = 'A request of type "' . $this->type . '" requires a post_id to be specified.';
+                    $m = 'A request of type ' . $this->type . ' requires a post_id to be specified.';
                     throw new RequiredArgumentMissingException($m);
                 } else {
                     $data = $this->post_dao->getRetweetsOfPost($this->post_id, $this->network, $this->order_by,
@@ -265,7 +265,7 @@ class PostAPIController extends ThinkUpController {
              */
             case 'post_replies':
                 if (is_null($this->post_id)) {
-                    $m = 'A request of type "' . $this->type . '" requires a post_id to be specified.';
+                    $m = 'A request of type ' . $this->type . ' requires a post_id to be specified.';
                     throw new RequiredArgumentMissingException($m);
                 } else {
                     $data = $this->post_dao->getRepliesToPost($this->post_id, $this->network, $this->order_by,
@@ -283,7 +283,7 @@ class PostAPIController extends ThinkUpController {
              */
             case 'related_posts':
                 if (is_null($this->post_id)) {
-                    $m = 'A request of type "' . $this->type . '" requires a post_id to be specified.';
+                    $m = 'A request of type ' . $this->type . ' requires a post_id to be specified.';
                     throw new RequiredArgumentMissingException($m);
                 } else {
                     $data = $this->post_dao->getRelatedPosts($this->post_id, $this->network, $this->is_public,
@@ -302,7 +302,7 @@ class PostAPIController extends ThinkUpController {
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
                     if (is_null($this->user_id) && is_null($this->username)) {
-                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        $m = 'A request of type ' . $this->type . ' requires a user_id or username to be specified.';
                         throw new RequiredArgumentMissingException($m);
                     } else {
                         throw new UserNotFoundException();
@@ -324,7 +324,7 @@ class PostAPIController extends ThinkUpController {
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
                     if (is_null($this->user_id) && is_null($this->username)) {
-                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        $m = 'A request of type ' . $this->type . ' requires a user_id or username to be specified.';
                         throw new RequiredArgumentMissingException($m);
                     } else {
                         throw new UserNotFoundException();
@@ -347,14 +347,14 @@ class PostAPIController extends ThinkUpController {
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
                     if (is_null($this->user_id) && is_null($this->username)) {
-                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        $m = 'A request of type ' . $this->type . ' requires a user_id or username to be specified.';
                         throw new RequiredArgumentMissingException($m);
                     } else {
                         throw new UserNotFoundException();
                     }
                 } else {
                     $data = $this->post_dao->getAllPosts($this->user->user_id, $this->network, $this->count,
-                            $this->page, false, $this->order_by, $this->direction, $this->is_public);
+                            $this->page, true, $this->order_by, $this->direction, $this->is_public);
                 }
                 break;
 
@@ -370,10 +370,10 @@ class PostAPIController extends ThinkUpController {
                 if (is_null($this->user) || is_null($this->from) || is_null($this->until)) {
                     // Check why the User object is null. Could be missing required fields or not found.
                     if (is_null($this->user_id) && is_null($this->username)) {
-                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        $m = 'A request of type ' . $this->type . ' requires a user_id or username to be specified.';
                         throw new RequiredArgumentMissingException($m);
                     } else if (is_null($this->from) || is_null($this->until)) {
-                        $m = 'A request of type "' . $this->type . '" requires valid from and until parameters to be ';
+                        $m = 'A request of type ' . $this->type . ' requires valid from and until parameters to be ';
                         $m .= 'specified.';
                         throw new RequiredArgumentMissingException($m);
                     } else {
@@ -396,7 +396,7 @@ class PostAPIController extends ThinkUpController {
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
                     if (is_null($this->user_id) && is_null($this->username)) {
-                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        $m = 'A request of type ' . $this->type . ' requires a user_id or username to be specified.';
                         throw new RequiredArgumentMissingException($m);
                     } else {
                         throw new UserNotFoundException();
@@ -419,7 +419,7 @@ class PostAPIController extends ThinkUpController {
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
                     if (is_null($this->user_id) && is_null($this->username)) {
-                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        $m = 'A request of type ' . $this->type . ' requires a user_id or username to be specified.';
                         throw new RequiredArgumentMissingException($m);
                     } else {
                         throw new UserNotFoundException();
@@ -442,7 +442,7 @@ class PostAPIController extends ThinkUpController {
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
                     if (is_null($this->user_id) && is_null($this->username)) {
-                        $m = 'A request of type "' . $this->type . '" requires a user_id or username to be specified.';
+                        $m = 'A request of type ' . $this->type . ' requires a user_id or username to be specified.';
                         throw new RequiredArgumentMissingException($m);
                     } else {
                         throw new UserNotFoundException();
