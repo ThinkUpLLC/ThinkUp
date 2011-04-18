@@ -3,7 +3,7 @@
 *
 * ThinkUp/webapp/_lib/model/interface.InviteDAO.php
 *
-* Copyright (c) 2009-2011 Gina Trapani
+* Copyright (c) 2009-2011 Terrance Shepehrd, Gina Trapani
 *
 * LICENSE:
 *
@@ -24,8 +24,8 @@
 * Invite Data Access Object interface
 *
 * @license http://www.gnu.org/licenses/gpl.html
-* @copyright 2009-2011 Gina Trapani
-* @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+* @copyright 2009-2011 Terrance Shepehrd, Gina Trapani
+* @author Terrance Shepherd
 *
 */
 interface InviteDAO {
@@ -49,7 +49,19 @@ interface InviteDAO {
     * @return bool
     */
     public function doesInviteExist($invite_code);
+
+    /**
+    * Checks if the Invitation is valid
+    * @param str $invite_code
+    * @return bool
+    */ 
     public function validateInviteCode( $invite_code ) ;
    
+    /**
+    * Deletes an invitation code after it has been used
+    * @paran str $invite_code
+    * @return bool
+    */
+    public function deleteInviteCode( $invite_code ) ;
 }
 
