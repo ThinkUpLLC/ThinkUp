@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.RegisterController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2011 Terrance Shepherd, Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,8 @@
  * Register Controller
  * Registers new ThinkUp users.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2011 Terrance Shepherd, Gina Trapani
+ * @author Terrance Shepherd
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -53,17 +54,23 @@ class RegisterController extends ThinkUpController {
         } else {
             $this->disableCaching();
             $config = Config::getInstance();
+            $invite_dao = DAOFactory::getDAO('InviteDAO') ;
+            if ( isset( $_GET['code'] ) ) {
+                $invite_code = $_GET['code'] ;
+            } else {
+                $invite_code = NULL ;
+            }
+            $is_invite_code_valid = $invite_dao->isInviteValid($invite_code) ;
 
-            if (!$config->getValue('is_registration_open')) {
+            if ( !$config->getValue('is_registration_open') && !$is_invite_code_valid ){
                 $this->addToView('closed', true);
                 $this->addErrorMessage('<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
-                '<p><a href="http://github.com/ginatrapani/thinkup/tree/master">Install ThinkUp on your own '.
-                'server.</a></p>');
+                '<p><a href="http://thinkupapp.com">Install ThinkUp on your own server.</a></p>');
             } else {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $this->addToView('closed', false);
                 $captcha = new Captcha();
-                if (isset($_POST['Submit']) && $_POST['Submit'] == 'Register') {
+                if (isset($_POST['Submit']) && $_POST['Submit'] == 'Register' ) {
                     foreach ($this->REQUIRED_PARAMS as $param) {
                         if (!isset($_POST[$param]) || $_POST[$param] == '' ) {
                             $this->addErrorMessage('Please fill out all required fields.');
@@ -99,6 +106,10 @@ class RegisterController extends ThinkUpController {
 
                                 SessionCache::unsetKey('ckey');
                                 $this->addSuccessMessage("Success! Check your email for an activation link.");
+                                //delete invite code
+                                if ( $is_invite_code_valid ) {
+                                    $invite_dao->deleteInviteCode($invite_code);
+                                }
                             }
                         }
                     }

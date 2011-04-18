@@ -167,7 +167,7 @@ class UpgradeController extends ThinkUpAuthController {
             } else if ( !$is_admin && !isset($_GET['upgrade_token']) ) {
                 $status = true;
             }
-            if($status == true) {
+            if ($status == true) {
                 self::generateUpgradeToken();
             }
         }
@@ -216,9 +216,9 @@ class UpgradeController extends ThinkUpAuthController {
         $option_dao = DAOFactory::getDAO('OptionDAO');
         $db_version = self::RUNNABLE_MIGRATION_MIN;
         $has_options_table = $option_dao->isOptionsTable();
-        if($has_options_table) {
+        if ($has_options_table) {
             $db_version = $option_dao->getOptionValue(OptionDAO::APP_OPTIONS, 'database_version', $cached);
-            if(! $db_version) {
+            if( !$db_version) {
                 $db_version = self::RUNNABLE_MIGRATION_MIN;
             }
         }

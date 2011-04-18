@@ -60,6 +60,10 @@ class DAOFactory {
         'TwitterInstanceDAO' => array(
     //MySQL Version
             'mysql' => 'TwitterInstanceMySQLDAO' ),
+    //Invite DAO
+        'InviteDAO' => array(
+    //MySQL Version
+            'mysql' => 'InviteMySQLDAO' ),
     //Follow DAO
         'FollowDAO' => array(
     //MySQL Version

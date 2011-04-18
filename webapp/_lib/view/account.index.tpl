@@ -6,12 +6,10 @@
   <div role="application" id="tabs">
     
     <ul>
-      <li><a href="#plugins">Plug-ins</a></li>
-      {if $user_is_admin}
-      <li><a id="app-settings-tab" href="#app_settings">Application</a></li>
-      {/if}
+      <li><a href="#plugins">Plugins</a></li>
+      {if $user_is_admin}<li><a id="app-settings-tab" href="#app_settings">Application</a></li>{/if}
       <li><a href="#instances">Account</a></li>
-      {if $user_is_admin}<li><a href="#ttusers">All Accounts</a></li>{/if}
+      {if $user_is_admin}<li><a href="#ttusers">Users</a></li>{/if}
     </ul>
     
     <div class="section thinkup-canvas clearfix" id="plugins">
@@ -118,7 +116,8 @@
       <div class="section" id="ttusers">
         <div class="thinkup-canvas clearfix">
           <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-            <h2 class="subhead">User accounts in this ThinkUp installation</h2>
+          <div style="float:right;margin:20px">{insert name="help_link" id='users'}</div>
+            <h1>All Users</h1><br />
             <ul class="user-accounts">
               {foreach from=$owners key=oid item=o}
                 <li>
@@ -142,10 +141,23 @@
               {/foreach}
             </ul>
           </div>
+          
+         <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
+        <h1>Invite User</h1>
+        {include file="_usermessage.tpl"}
+          <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
+                <input type="submit" id="login-save" name="invite" value="Create Invitation" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+          </form>
+        </div>
+          
+          
         </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #ttusers -->
     {/if} <!-- end is_admin -->
-    
+
+
+
+   
   </div>
 </div>
 

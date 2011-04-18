@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.AccountConfigurationController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2011 Terrance Shepherd, Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,8 @@
  * AccountConfiguration Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2011 Terrance Shepherd, Gina Trapani
+ * @author Terrance Shepehrd
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -45,13 +46,15 @@ class AccountConfigurationController extends ThinkUpAuthController {
     public function authControl() {
         $webapp = Webapp::getInstance();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $invite_dao = DAOFactory::getDAO('InviteDAO');
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
         $this->addToView('owner', $owner);
         $this->addToView('logo_link', '');
         $this->view_mgr->addHelp('api', 'userguide/api/posts/index');
         $this->view_mgr->addHelp('application_settings', 'userguide/settings/application');
+        $this->view_mgr->addHelp('users', 'userguide/settings/allaccounts');
 
-        //proces password change
+        //process password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
         && isset($_POST['pass1']) && isset($_POST['pass2'])) {
             $origpass = $owner_dao->getPass($this->getLoggedInUser());
@@ -66,6 +69,23 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $cryptpass = $this->app_session->pwdcrypt($_POST['pass1']);
                 $owner_dao->updatePassword($this->getLoggedInUser(), $cryptpass);
                 $this->addSuccessMessage("Your password has been updated.");
+            }
+        }
+
+        // process invite
+        if (isset($_POST['invite']) && ( $_POST['invite'] == 'Create Invitation' ) ) {
+            $invite_code =  substr(md5(uniqid(rand(), true)), 0, 10) ;
+            $invite_added = $invite_dao->addInviteCode( $invite_code ) ;
+
+            if ($invite_added == 1) { //invite generated and inserted
+                $server = $_SERVER['HTTP_HOST'];
+                $invite_link = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$server.THINKUP_BASE_URL.
+                'session/register.php?code='. $invite_code;
+                $this->addSuccessMessage("Invitation created!<br />Copy this link and send it to someone you want to ".
+                'invite to register on your ThinkUp installation.<br /><a href="'.$invite_link.'">'.
+                $invite_link.'</a><br /> Good for one new registration. Expires in 7 days.');
+            } else {
+                $this->addErrorMessage("There was an error creating a new invite. Please try again.");
             }
         }
 

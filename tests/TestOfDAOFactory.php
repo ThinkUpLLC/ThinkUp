@@ -274,6 +274,14 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'FavoritePostMySQLDAO');
     }
     /**
+     * Test get InviteDAO
+     */
+    public function testGetInviteDAO() {
+        $dao = DAOFactory::getDAO('InviteDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'InviteMySQLDAO');
+    }
+    /**
      * Test get TwitterInstanceDAO
      */
     public function testGetTwitterInstanceDAO() {
@@ -293,7 +301,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 16);
+        $this->assertEqual(sizeof($result), 17);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
     }

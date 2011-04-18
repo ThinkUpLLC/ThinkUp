@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfAccountConfigurationController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2011 Gina Trapani, Terrance Shepherd
  *
  * LICENSE:
  *
@@ -24,8 +24,9 @@
  * Test of AccountConfigurationController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2011 Gina Trapani, Terrance Shepherd
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Terrance Shepherd
  *
  */
 require_once dirname(__FILE__).'/init.tests.php';
@@ -528,5 +529,38 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
+    }
+
+    public function testAuthControlInviteUser() {
+        $this->simulateLogin('me@example.com');
+
+        $_SERVER['HTTP_HOST'] = "mytestthinkup/";
+        $_SERVER['HTTPS'] = null;
+        $_POST['invite'] = 'Create Invitation' ;
+
+        $controller = new AccountConfigurationController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+
+        $result = $v_mgr->getTemplateDataItem('successmsg');
+        $this->debug($result);
+        $this->assertPattern('/Invitation created!/', $result);
+        $this->assertPattern('/http:\/\/mytestthinkup\/tests\/session\/register.php\?code=/', $result);
+
+        //test HTTPS
+        $_SERVER['HTTPS'] = 1;
+        $_SERVER['HTTP_HOST'] = "myotherwtestthinkup/";
+        $_POST['invite'] = 'Create Invitation' ;
+
+        $controller = new AccountConfigurationController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+
+        $result = $v_mgr->getTemplateDataItem('successmsg');
+        $this->debug($result);
+        $this->assertPattern('/Invitation created!/', $result);
+        $this->assertPattern('/https:\/\/myotherwtestthinkup\/tests\/session\/register.php\?code=/', $result);
     }
 }
