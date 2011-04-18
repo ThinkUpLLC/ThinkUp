@@ -3,16 +3,16 @@
  Plugin Name: ThinkUp WP Plugin
  Plugin URI: http://thinkupapp.com
  Description: Displays ThinkUp data on your WordPress blog.
- Version: 0.7
- Author: Gina Trapani
- Author URI: http://ginatrapani.org
+ Version: 0.8
+ Author: Gina Trapani and the ThinkUp community
+ Author URI: http://thinkupapp.com
  */
 
 /**
  *
  * ThinkUp/extras/wordpress/thinkup/thinkup.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Sam Rose
+ * Copyright (c) 2009-2011 Gina Trapani, Sam Rose, Mark Jaquith
  *
  * LICENSE:
  *

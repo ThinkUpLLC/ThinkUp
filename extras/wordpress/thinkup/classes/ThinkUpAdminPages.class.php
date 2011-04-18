@@ -188,7 +188,7 @@ foreach ($options_array as $opt) {
 
         $title = __('Frequently Asked Questions', 'thinkup-wp-plugin');
 
-        self::displayHelpFaqContents($title, $questions);
+        self::displayHelpFaqContents($title, $questions, true);
         self::displayTxtFiles($questions, $question = true);
     }
 
@@ -246,15 +246,16 @@ foreach ($options_array as $opt) {
         return true;
     }
 
-    public static function displayHelpFaqContents($title, $files) {
+    public static function displayHelpFaqContents($title, $files, $show_question_marks=false) {
         ?>
 <div id="poststuff" class="ui-sortable meta-box-sortable"
 	style="max-width: 700px">
 <div class="postbox" id="contents">
 <h3><?php echo $title; ?></h3>
 <div class="inside" style="line-height: 1.5"><?php
+$qmark = ($show_question_marks)?'?':'';
 foreach ($files as $name => $contents) {
-    echo '<a href="#'.$name.'">'.$name.'</a><br />';
+    echo '<a href="#'.$name.'">'.$name.$qmark.'</a><br />';
 }
 ?></div>
 </div>
