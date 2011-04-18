@@ -531,12 +531,12 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
     }
     public function testAuthControlInviteUser() {
-	    $this->simulateLogin('me@example.com');
+        $this->simulateLogin('me@example.com');
 
-	    $_SERVER['HTTP_HOST'] = "mytestthinkup/";
-	    $_POST['invite'] = 'Invite' ;
-	    $_POST['email'] = 'metoo@example.com' ;
-	    $_POST['full_name'] = 'John Smith';
+        $_SERVER['HTTP_HOST'] = "mytestthinkup/";
+        $_POST['invite'] = 'Invite' ;
+        $_POST['email'] = 'metoo@example.com' ;
+        $_POST['full_name'] = 'John Smith';
 
         $controller = new AccountConfigurationController(true);
         $results = $controller->go();

@@ -79,17 +79,17 @@ class AccountConfigurationController extends ThinkUpAuthController {
 		    // Validate email address if it is not valid show error message.
             if (!Utils::validateEmail($_POST['email'])) {
 			    $this->addErrorMessage("Incorrect email. Please enter valid email address.");
-    		} else { 
+            } else { 
                 // Checks to see if a user with that email address exists if so show error message
-    			if ($owner_dao->doesOwnerExist($_POST['email'])) {
+    		    if ($owner_dao->doesOwnerExist($_POST['email'])) {
 	    			$this->addErrorMessage("User account already exists.");
-		    	} else {
+		        } else {
                     // Everything is valid, so set up for the email and invite
 			        $config = Config::getInstance() ;
 		    		$es = new SmartyThinkUp();
 			    	$es->caching=false;
 			    	$session = new Session();
-			    	/*
+			        /*
                      * The following block of code creates a a checking system for the invite processors.
                      * a  bool variable is first set to see if the creating invite_code worked.
                      * it then generates a random code and tries to add the code into the system.
@@ -98,8 +98,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
                      */
                     $did_invite_work = 0 ;
                     while ( $did_invite_work == 0 ) {
-    			    	$invite_code =  substr(md5(uniqid(rand(), true)), 0, 10) ;
-            	    	$did_invite_work = $invite_dao->addInviteCode( $invite_code ) ;
+    			        $invite_code =  substr(md5(uniqid(rand(), true)), 0, 10) ;
+            	        $did_invite_work = $invite_dao->addInviteCode( $invite_code ) ;
                     }   
                     
                     /*
@@ -115,16 +115,16 @@ class AccountConfigurationController extends ThinkUpAuthController {
 				    $es->assign('invite_code', $invite_code );
 				    $message = $es->fetch('_email.invite.tpl');
 
-				    // Check if mail button is clicked and if it is sends the email
-				    Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
-				    ." Account", $message);
+                    // Check if mail button is clicked and if it is sends the email
+                    Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
+                    ." Account", $message);
 
                     // if everything worked add the sucess banner
-				    unset($_SESSION['ckey']);
-				    $this->addSuccessMessage("Success! Invitation Sent.");
-		    	}   
-	    	}
-    	}   
+                    unset($_SESSION['ckey']);
+                    $this->addSuccessMessage("Success! Invitation Sent.");
+                }   
+            }
+        }   
 
         //process account deletion
         if (isset($_POST['action']) && $_POST['action'] == 'delete' && isset($_POST['instance_id']) &&
