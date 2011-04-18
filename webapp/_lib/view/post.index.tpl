@@ -7,10 +7,12 @@
     <div class="grid_4 alpha omega" style="background-color:#e6e6e6"> <!-- begin left nav -->
       <div id="nav-sidebar">
         <ul id="top-level-sidenav"><br />
+        
         {if $post}
           <ul class="side-subnav">
-          <li><a href="{insert name=dashboard_link}">Dashboard</a></li>
+            <li><br><a href="{insert name=dashboard_link}">Dashboard</a></li>
           </ul>
+          
           <li>
           Replies
           <ul class="side-subnav">
@@ -22,7 +24,6 @@
           </ul></li>
         {/if}
         
-        
         {if $sidebar_menu}
           {foreach from=$sidebar_menu key=smkey item=sidebar_menu_item name=smenuloop}
             {if $sidebar_menu_item->header}</li></ul> <li>{$sidebar_menu_item->header}<ul class="side-subnav">{/if}
@@ -31,6 +32,7 @@
               </li>
             </ul>
         {/if}
+
         </ul>
       </div>
     </div> <!-- end left nav -->
