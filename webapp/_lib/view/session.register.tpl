@@ -10,7 +10,7 @@
     </div>
   </div>
   {if !$closed and !$successmsg}
-    <form name="form1" method="post" action="register.php" class="login append_20">
+    <form name="form1" method="post" action="{php}print $_SERVER['REQUEST_URI'] ; {/php}" class="login append_20">
       <div class="clearfix">
         <div class="grid_4 prefix_5 right">
           <label for="full_name">

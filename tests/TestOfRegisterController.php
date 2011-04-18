@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfRegisterController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2011 Terrance Shepherd, Gina Trapani
  *
  * LICENSE:
  *
@@ -23,8 +23,9 @@
  * Test of RegisterController
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2011 Terrance, Shepherd, Gina Trapani
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @author Terrance Shepherd
  *
  */
 require_once dirname(__FILE__).'/init.tests.php';
@@ -190,8 +191,88 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         $this->assertPattern('/test%20url%20with%20spaces\/and\/a%20few\/slashes\/too/', $email,
         'Spaces properly escaped;slashes are not');
     }
-}
+    public function testInviteUser() {
+        // make sure registration is closed
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        $bvalues = array( 'invite_code' => '01234567889',
+        'time_stamp' => '-3s');
+        $bdata = FixtureBuilder::build('invitations', $bvalues);
 
+        $_SERVER['HTTP_HOST'] = "mythinkup/" ;
+        $_GET['code'] = '0123456789' ;
+        $_POST['Submit'] = 'Register';
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
+        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'),
+        'Success! Check your email for an activation link.');
+    }
+
+    public function testInviteExpiredCode() {
+        // make sure registration is closed
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        $bvalues = array( 'invite_code' => '01234567889',
+        'time_stamp' => '-8d');
+        $bdata = FixtureBuilder::build('invitations', $bvalues);
+                                            
+        $_SERVER['HTTP_HOST'] = "mythinkup/" ;
+        $_GET['code'] = '0123456789' ;
+        $_POST['Submit'] = 'Register';
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+                                                                                                                    
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        '<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
+        '<p><a href="http://github.com/ginatrapani/thinkup/tree/master">Install ThinkUp on your own '.
+        'server.</a></p>');
+
+    }
+
+    public function testInviteInvalidCode() {
+        // make sure registration is closed
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'false');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+        $bvalues = array( 'invite_code' => '01234567889',
+        'time_stamp' => '-8d');
+        $bdata = FixtureBuilder::build('invitations', $bvalues);
+
+        $_SERVER['HTTP_HOST'] = "mythinkup/" ;
+        $_GET['code'] = '9876543210' ;
+        $_POST['Submit'] = 'Register';
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
+        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        '<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
+        '<p><a href="http://github.com/ginatrapani/thinkup/tree/master">Install ThinkUp on your own '.
+        'server.</a></p>');
+
+    }
+}
+      
 
 /**
  * Mock Captcha for test use

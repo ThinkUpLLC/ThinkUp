@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/_lib/controller/class.RegisterController.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2011 Terrance Shepherd, Gina Trapani
  *
  * LICENSE:
  *
@@ -24,7 +24,8 @@
  * Register Controller
  * Registers new ThinkUp users.
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2009-2011 Terrance Shepherd, Gina Trapani
+ * @author Terrance Shepherd
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
@@ -43,7 +44,7 @@ class RegisterController extends ThinkUpController {
     public function __construct($session_started=false) {
         parent::__construct($session_started);
         $this->setViewTemplate('session.register.tpl');
-        $this->setPageTitle('Register');
+        $this->setPageTitle('Register');     
     }
 
     public function control(){
@@ -53,8 +54,31 @@ class RegisterController extends ThinkUpController {
         } else {
             $this->disableCaching();
             $config = Config::getInstance();
+            /*
+             * Start of new code block
+             * The following block of code creates a new invite_dao
+             * it then checks if there is a code atached to the url
+             * by checking $_GET. If there is no code attached to 
+             * url is sets the variable to NULL. validateIniviteCode()
+             * takes a variable code and returns 0 if is not valid
+             * and 1 of the code is valid.
+             */ 
+            $invite_dao = DAOFactory::getDAO('InviteDAO') ;
+            if ( isset( $_GET['code'] ) ) {
+                $code = $_GET['code'] ;
+            } else {
+                $code = NULL ;
+            }
+            $validInvite = $invite_dao->validateInviteCode( $code ) ;
+            /*
+             * end of block
+             */
 
-            if (!$config->getValue('is_registration_open')) {
+            /*
+             * There is an addition in the following line to allow for
+             * is_registration_open to be bypassed is the user has a valid code
+             */
+            if ( !$config->getValue('is_registration_open') && $validInvite == 0 ){
                 $this->addToView('closed', true);
                 $this->addErrorMessage('<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
                 '<p><a href="http://github.com/ginatrapani/thinkup/tree/master">Install ThinkUp on your own '.
@@ -63,7 +87,7 @@ class RegisterController extends ThinkUpController {
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
                 $this->addToView('closed', false);
                 $captcha = new Captcha();
-                if (isset($_POST['Submit']) && $_POST['Submit'] == 'Register') {
+                if (isset($_POST['Submit']) && $_POST['Submit'] == 'Register' ) {
                     foreach ($this->REQUIRED_PARAMS as $param) {
                         if (!isset($_POST[$param]) || $_POST[$param] == '' ) {
                             $this->addErrorMessage('Please fill out all required fields.');
@@ -99,6 +123,13 @@ class RegisterController extends ThinkUpController {
 
                                 unset($_SESSION['ckey']);
                                 $this->addSuccessMessage("Success! Check your email for an activation link.");
+                                /*
+                                 * The following if statement calls deleteInviteCode after the
+                                 * code has been used so it may not be used again
+                                 */
+                                if ( $validInvite  ) { 
+                                    $invite_dao->deleteInviteCode($_GET['code'] ) ;
+                                }
                             }
                         }
                     }
