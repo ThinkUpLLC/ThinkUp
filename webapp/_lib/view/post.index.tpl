@@ -160,9 +160,7 @@
           {if $replies}
             <div class="prepend">
               <div class="append_20 clearfix bt">
-                {if $post->reply_count_cache > $top_20_post_min}
-                   {include file="_post.word-frequency.tpl"}
-                {/if}
+                {include file="_post.word-frequency.tpl"}
                 {if $replies && $logged_in_user}
                     {include file="_grid.search.tpl" version2=true}
                 {/if}
@@ -174,11 +172,8 @@
                 
                   </div>
                 </div>
-                {if $post->reply_count_cache > $top_20_post_min}
-                  {include file="_post.word-frequency.tpl"}
-                  <script src="{$site_root_path}assets/js/extlib/Snowball.stemmer.min.js" type="text/javascript"></script>
-                  <script src="{$site_root_path}assets/js/word_frequency.js" type="text/javascript"></script>
-                {/if}
+                <script src="{$site_root_path}assets/js/extlib/Snowball.stemmer.min.js" type="text/javascript"></script>
+                <script src="{$site_root_path}assets/js/word_frequency.js" type="text/javascript"></script>
                 {if !$logged_in_user && $private_reply_count > 0}
                   <span style="font-size:12px">Not showing {$private_reply_count} private repl{if $private_reply_count == 1}y{else}ies{/if}.</span>
                 {/if}
