@@ -152,19 +152,19 @@ class UpgradeController extends ThinkUpAuthController {
     }
 
     /**
-     * Do we need to show the upgrading page?
-     * @param boolean Are we an admin?
-     * @param str Our classname, so we can filter out the UpgradeController from the upgrade status check
-     * @return bool
+     * Determin if ThinkUp needs to show the upgrading page.
+     * @param bool Is the current user an admin
+     * @param str The calling classname
+     * @return bool Whether or not we need to show the upgrade page
      */
-    public static function isUpgrading($isadmin, $classname) {
+    public static function isUpgrading($is_admin, $class_name) {
         $config = Config::getInstance();
         $status = false;
         $db_version = UpgradeController::getCurrentDBVersion($config->getValue( 'cache_pages' ));
-        if($db_version < $config->getValue('THINKUP_VERSION') ) {
-            if( $classname != 'UpgradeController' ) {
+        if (version_compare($db_version, $config->getValue('THINKUP_VERSION'), '<') ) {
+            if( $class_name != 'UpgradeController' ) {
                 $status = true;
-            } else if( ! $isadmin && ! isset($_GET['upgrade_token']) ) {
+            } else if ( !$is_admin && !isset($_GET['upgrade_token']) ) {
                 $status = true;
             }
             if($status == true) {
