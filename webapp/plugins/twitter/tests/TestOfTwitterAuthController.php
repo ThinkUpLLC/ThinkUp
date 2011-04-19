@@ -71,7 +71,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
     //Test Session param but no Get param
     public function testLoggedInMissingToken() {
         $this->simulateLogin('me@example.com');
-        $_SESSION['oauth_request_token_secret'] = 'XXX';
+        SessionCache::put('oauth_request_token_secret', 'XXX');
         $controller = new TwitterAuthController(true);
         $results = $controller->go();
 
@@ -93,7 +93,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
     public function testLoggedInAllParams() {
         $this->simulateLogin('me@example.com');
         $_GET['oauth_token'] = 'XXX';
-        $_SESSION['oauth_request_token_secret'] = 'XXX';
+        SessionCache::put('oauth_request_token_secret', 'XXX');
 
         $owner_builder = FixtureBuilder::build('owners', array('id'=>'10', 'email'=>'me@example.com'));
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';

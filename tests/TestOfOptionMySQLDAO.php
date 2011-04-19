@@ -295,17 +295,17 @@ class TestOfOptionMySQLDAO extends ThinkUpUnitTestCase {
         // set session data
         $optiondao->setSessionData('bla', array('name' => 'value'));
         $key = 'options_data:bla';
-        $this->assertIdentical(array('name' => 'value'), $_SESSION[$app_path][$key]);
+        $this->assertIdentical(array('name' => 'value'), SessionCache::get($key) );
 
         // clear session data
         $optiondao->clearSessionData('bla');
-        $this->assertFalse(isset($_SESSION[$app_path][$key]));
+        $this->assertFalse(SessionCache::isKeySet($key));
 
         // get session data
         $this->assertFalse($optiondao->getSessionData('bla')); // no data
 
         // with data
-        $_SESSION[$app_path][$key] = array('name' => 'value');
+        SessionCache::put($key, array('name' => 'value') );
         $this->assertIdentical(array('name' => 'value'), $optiondao->getSessionData('bla'));
 
         // test updates

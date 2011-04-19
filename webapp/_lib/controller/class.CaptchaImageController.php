@@ -39,7 +39,7 @@ class CaptchaImageController extends ThinkUpController {
         $config = Config::getInstance();
 
         $random_num = rand(1000,99999);
-        $_SESSION['ckey'] = md5($random_num);
+        SessionCache::put('ckey', md5($random_num));
 
         $img = rand(1,4);
         Utils::defineConstants();

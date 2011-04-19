@@ -104,7 +104,7 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
             $tok = $to->getRequestToken();
             if (isset($tok['oauth_token'])) {
                 $token = $tok['oauth_token'];
-                $_SESSION['oauth_request_token_secret'] = $tok['oauth_token_secret'];
+                SessionCache::put('oauth_request_token_secret', $tok['oauth_token_secret']);
 
                 /* Build the authorization URL */
                 $oauthorize_link = $to->getAuthorizeURL($token);

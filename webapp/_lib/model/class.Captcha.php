@@ -79,7 +79,7 @@ class Captcha {
                 }
                 break;
             default:
-                if (strcmp(md5($_POST['user_code']), $_SESSION['ckey'])) {
+                if (strcmp(md5($_POST['user_code']), SessionCache::get('ckey'))) {
                     $this->msg = "Wrong text, try again";
                     return false;
                 } else {

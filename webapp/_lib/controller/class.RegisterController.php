@@ -97,7 +97,7 @@ class RegisterController extends ThinkUpController {
                                 Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
                                 ." Account", $message);
 
-                                unset($_SESSION['ckey']);
+                                SessionCache::unsetKey('ckey');
                                 $this->addSuccessMessage("Success! Check your email for an activation link.");
                             }
                         }

@@ -44,7 +44,8 @@ class TwitterAuthController extends ThinkUpAuthController {
             $this->addInfoMessage('No OAuth token specified.');
             $this->is_missing_param = true;
         }
-        if (!isset($_SESSION['oauth_request_token_secret']) || $_SESSION['oauth_request_token_secret'] == '' ) {
+        if ( !SessionCache::isKeySet('oauth_request_token_secret') ||
+        SessionCache::get('oauth_request_token_secret') == '' ) {
             $this->addInfoMessage('Secret token not set.');
             $this->is_missing_param = true;
         }
@@ -54,7 +55,7 @@ class TwitterAuthController extends ThinkUpAuthController {
         $msg = "";
         if (!$this->is_missing_param) {
             $request_token = $_GET['oauth_token'];
-            $request_token_secret = $_SESSION['oauth_request_token_secret'];
+            $request_token_secret = SessionCache::get('oauth_request_token_secret');
 
             // get oauth values
             $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');

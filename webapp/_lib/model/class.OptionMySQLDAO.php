@@ -155,11 +155,9 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
      * @retrun $array Hash of option data
      */
     public function getSessionData($namespace) {
-        $config = Config::getInstance();
-        $app_path = $config->getValue('source_root_path');
         $key = 'options_data:' . $namespace;
-        if(isset( $_SESSION[$app_path][$key] )) {
-            return $_SESSION[$app_path][$key];
+        if(SessionCache::isKeySet($key) ) {
+            return SessionCache::get($key);
         } else {
             return null;
         }
@@ -172,10 +170,8 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
      * @retrun $array Hash of option data
      */
     public function setSessionData($namespace, $data) {
-        $config = Config::getInstance();
-        $app_path = $config->getValue('source_root_path');
         $key = 'options_data:' . $namespace;
-        $_SESSION[$app_path][$key] = $data;
+        SessionCache::put($key, $data);
     }
 
     /**
@@ -183,11 +179,9 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
      * @param $namespace
      */
     public function clearSessionData($namespace) {
-        $config = Config::getInstance();
-        $app_path = $config->getValue('source_root_path');
         $key = 'options_data:' . $namespace;
-        if(isset( $_SESSION[$app_path][$key] )) {
-            unset($_SESSION[$app_path][$key]);
+        if( SessionCache::isKeySet($key)) {
+            SessionCache::unsetKey($key);
         }
     }
 

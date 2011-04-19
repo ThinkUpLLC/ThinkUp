@@ -316,19 +316,17 @@ class UpgradeController extends ThinkUpAuthController {
      * @param boolean Delete the seeion if defined
      */
     public function snowflakeSession($value = false, $delete = false) {
-        $config = Config::getInstance();
-        $app_path = $config->getValue('source_root_path');
         $key = 'runnig_snowflake_uprade';
         if($delete) {
-            if(isset( $_SESSION[$app_path][$key] )) {
-                unset($_SESSION[$app_path][$key]);
+            if( SessionCache::isKeySet($key) ) {
+                SessionCache::unsetKey($key);
             }
         } else {
             if($value) {
-                $_SESSION[$app_path][$key] = $value;
+                SessionCache::put($key, $value);
             } else {
-                if(isset($_SESSION[$app_path]) && isset($_SESSION[$app_path][$key]) ) {
-                    return $_SESSION[$app_path][$key];
+                if( SessionCache::isKeySet($key) ) {
+                    return SessionCache::get($key);
                 } else {
                     return false;
                 }
