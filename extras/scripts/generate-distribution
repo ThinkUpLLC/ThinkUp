@@ -21,6 +21,8 @@ cp -R README.md build/thinkup/.
 # Clean out stuff we don't need (tests, test_installer, compiled templates, config file)
 rm -rf build/thinkup/test_installer/
 rm -rf build/thinkup/_lib/view/compiled_view/*.tpl.php
+rm -rf build/thinkup/_lib/view/compiled_view/upgrade_token
+rm -rf build/thinkup/_lib/view/compiled_view/latest_email
 rm -rf build/thinkup/_lib/view/compiled_view/cache/*.tpl
 rm -rf build/thinkup/_lib/extlib/simpletest/
 rm -rf build/thinkup/plugins/*/tests/
