@@ -31,5 +31,5 @@ rm build/thinkup/config.inc.php
 # Zip it up
 cd build/
 zip -r thinkup.zip thinkup 
-zip -d thinkup.zip __MACOSX* *.DS_Store 
+zip -d thinkup.zip __MACOSX* *.DS_Store *.ecoder_permissions_check.txt
 rm -rf thinkup 
