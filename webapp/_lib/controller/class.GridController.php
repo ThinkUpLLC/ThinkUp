@@ -112,7 +112,7 @@ class GridController extends ThinkUpAuthController {
                         $cnt++;
                         $data = array('id' => $cnt, 'text' => $value->post_text,
                         'post_id_str' => $value->post_id . '_str', 'author' => $value->author_username, 
-                        'date' => $value->adj_pub_date);
+                        'date' => $value->adj_pub_date, 'network' => $value->network);
                         echo json_encode($data) . ",\n";
                         flush();
                     }

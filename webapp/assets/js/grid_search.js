@@ -4,8 +4,8 @@
 var TUGridSearch = function() {
 
     /**
-     * @var boolean Enable for console logging
-     */
+	 * @var boolean Enable for console logging
+	 */
     this.DEBUG = false;
 
     this.searchString = "";
@@ -19,8 +19,8 @@ var TUGridSearch = function() {
     };
 
     /**
-     * Init grid search
-     */
+	 * Init grid search
+	 */
     this.init = function() {
         // register on submit event on our form
         $(document).ready(function() {
@@ -38,9 +38,9 @@ var TUGridSearch = function() {
     }
 
     /**
-     * @param Object
-     *            {success: true|false, posts: [a posts array]};
-     */
+	 * @param Object
+	 *            {success: true|false, posts: [a posts array]};
+	 */
     this.populate_grid = function(obj) {
         if (tu_grid_search.DEBUG) { console.debug(obj.posts.length + ' posts'); }
         $('#grid_search_icon').show();
@@ -58,7 +58,11 @@ var TUGridSearch = function() {
             name : "Author",
             field : "author",
             formatter: function(row, cell, value, columnDef, dataContext) {
-                    return '<a href="http://twitter.com/' + value + '" target="_blank">' + value  + '</a>';
+        if (dataContext['network'] == 'twitter') {
+        return '<a href="http://twitter.com/' + value + '" target="_blank">' + value  + '</a>';
+        } else {
+        return value;
+        }
                 }
         }, {
             id : "date",
@@ -67,11 +71,17 @@ var TUGridSearch = function() {
             width: 125,
             formatter: function(row, cell, value, columnDef, dataContext) { 
                 var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
-                return '<a href="' + path + '../../post/?t=' + 
+                output = '<a href="' + path + '../../post/?t=' + 
                 dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) +
-                '&n=twitter" target="_blank">#</a>&nbsp; ' + '<a href="http://twitter.com/' + dataContext['author'] + 
-                '/status/' + dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) 
-                + '" target="_blank">' + value + '</a>';
+                '&n='+ dataContext['network'] +'" target="_blank">#</a>&nbsp; ';
+                if (dataContext['network'] == 'twitter') {
+                 output = output + '<a href="http://twitter.com/' + dataContext['author'] + '/status/' + 
+                 dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) + 
+                 '" target="_blank">' + value + '</a>';
+                } else {
+                output = output + value;
+                }
+                return output;
             }
         }, {
             id : "text",
@@ -133,8 +143,8 @@ var TUGridSearch = function() {
     }
 
     /**
-     * search filter
-     */
+	 * search filter
+	 */
     this.myFilter = function (item) {
         if(item['id'] == -1 || item['text'] == null) { return false; }
         if (tu_grid_search.searchString != "" && 
@@ -146,8 +156,8 @@ var TUGridSearch = function() {
     }
 
     /**
-     * 
-     */
+	 * 
+	 */
     this.load_iframe = function() {
 
         // close grid search with escape key
@@ -184,8 +194,8 @@ var TUGridSearch = function() {
         });
     }
     /**
-     * 
-     */
+	 * 
+	 */
     this.close_iframe = function() {
         var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
         $('#grid_iframe').attr('src', path + '/assets/img/ui-bg_glass_65_ffffff_1x400.png');
@@ -201,8 +211,8 @@ var TUGridSearch = function() {
     }
     
     /**
-     * load xss script ewith post data callback
-     */
+	 * load xss script ewith post data callback
+	 */
     this.get_data = function() {
         $('#myGrid').hide();
         var url = '../../post/grid.php' + document.location.search;
