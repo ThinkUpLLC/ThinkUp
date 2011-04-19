@@ -82,6 +82,7 @@
                 {/foreach}
               {/if}
 
+              {if $follower_count_history_by_day.history && $follower_count_history_by_week.history}
               <div class="clearfix">
                 <div class="grid_9 alpha">
                   <h2>Follower Count By Day{if !$follower_count_history_by_day.history OR $follower_count_history_by_day.history|@count < 2}<br /><i>Not enough data to display chart</i>{else} {if $follower_count_history_by_day.trend}({if $follower_count_history_by_day.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_day.trend|number_format}</span>/day){/if}</h2>
@@ -92,6 +93,7 @@
                   <img width="350" height="200" src="http://chart.apis.google.com/chart?chs=350x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{if $t eq "no data"}no data{else}{$tid}{/if}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=ls&chco=007733&chd=t:{foreach from=$follower_count_history_by_week.percentages key=tid item=t name=foo}{$t}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chm=B,cccccc,0,0,0" />
                 </div>
               </div>
+              {/if}
 
               {if $follower_count_history_by_week.milestone}
                 <div class="small gray">
