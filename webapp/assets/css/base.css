@@ -318,7 +318,6 @@ img.service-icon2 {left: 32px;}
 #loading_friends,
 #loading_links {visibility:hidden;position:relative;top:-5px;}
 
-.icon-friend {background-position: -144px -96px;}
 .icon-locked {background-position: -192px -96px;}
 .icon-unlocked {background-position: -208px -96px;}
 .sprite {background-image: url("../img/ui-icons_222222_256x240.png");height: 16px;width: 16px;}

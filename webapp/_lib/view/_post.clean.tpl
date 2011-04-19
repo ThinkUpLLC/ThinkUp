@@ -21,19 +21,16 @@
         <a href="{$site_root_path}public.php?u={$t->author_username|urlencode}&n={$t->network|urlencode}">{$t->author_username}</a>
       {/if}
 
-      {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
-         <span class="sprite icon-friend"></span>
-      {/if}
-
       {if $t->author->follower_count > 0}
         <div class="gray">{$t->author->follower_count|number_format} followers</div>
       {/if}
-      
-      {if $t->network == 'twitter'}
-      <a href="http://twitter.com/intent/tweet?in_reply_to={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
-      <a href="http://twitter.com/intent/retweet?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
-      <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
-      {/if}
+        {if $t->network == 'twitter'}
+            {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
+                <a href="http://twitter.com/{$t->author_username}" title="Friend"><span class="sprite ui-icon-contact"></span></a>
+            {else}
+                <a href="http://twitter.com/{$t->author_username}" title="{$t->author_username} on Twitter"><span class="sprite ui-icon-person"></span></a>
+            {/if}
+        {/if}
       
     </div>
     <div class="grid_12 omega">
@@ -83,6 +80,11 @@
         {/if}
         {$t->location|truncate:60:' ...'}
        {/if}
+      {if $t->network == 'twitter'}
+      <a href="http://twitter.com/intent/tweet?in_reply_to={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
+      <a href="http://twitter.com/intent/retweet?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
+      <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
+      {/if}
        
        </span>&nbsp;</div>
       </div>

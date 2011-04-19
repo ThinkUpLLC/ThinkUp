@@ -1,12 +1,3 @@
-<!--
-{if $smarty.foreach.foo.first}
-  <div class="header clearfix">
-    <div class="grid_2 alpha">&#160;</div>
-    <div class="grid_4">&#160;</div>
-    <div class="grid_12 omega">detail</div>
-  </div>
-{/if}
--->
 <div class="individual-tweet prepend_20 clearfix{if $t.is_protected} private{/if}">
   <div class="grid_2 alpha">
     <div class="avatar-container">    
@@ -16,8 +7,8 @@
   <div class="grid_4 small">
     <a href="{$site_root_path}user/?u={$f.user_name}&n={$instance->network}&i={$instance->network_username}">{$f.user_name}</a>
     <div class="small gray">
-      {$f.follower_count} followers<br>
-      {$f.friend_count} friends<br>
+      {$f.follower_count} followers, {$f.friend_count} friends<br>
+      <a href="http://twitter.com/{$f.user_name}" title="{$f.user_name} on Twitter"><span class="sprite ui-icon-person"></span></a>
     </div>
   </div>
   <div class="grid_12 omega">
