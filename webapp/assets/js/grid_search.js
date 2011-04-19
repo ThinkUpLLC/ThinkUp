@@ -4,8 +4,8 @@
 var TUGridSearch = function() {
 
     /**
-	 * @var boolean Enable for console logging
-	 */
+     * @var boolean Enable for console logging
+     */
     this.DEBUG = false;
 
     this.searchString = "";
@@ -19,8 +19,8 @@ var TUGridSearch = function() {
     };
 
     /**
-	 * Init grid search
-	 */
+     * Init grid search
+     */
     this.init = function() {
         // register on submit event on our form
         $(document).ready(function() {
@@ -38,9 +38,9 @@ var TUGridSearch = function() {
     }
 
     /**
-	 * @param Object
-	 *            {success: true|false, posts: [a posts array]};
-	 */
+     * @param Object
+     *            {success: true|false, posts: [a posts array]};
+     */
     this.populate_grid = function(obj) {
         if (tu_grid_search.DEBUG) { console.debug(obj.posts.length + ' posts'); }
         $('#grid_search_icon').show();
@@ -57,26 +57,32 @@ var TUGridSearch = function() {
             id : "author",
             name : "Author",
             field : "author",
-            formatter: function(row, cell, value, columnDef, dataContext) { 
-                    return '<a href="http://twitter.com/' + value + '" target="_blank">' + value  + '</a>'; 
+            formatter: function(row, cell, value, columnDef, dataContext) {
+                    return '<a href="http://twitter.com/' + value + '" target="_blank">' + value  + '</a>';
                 }
         }, {
             id : "date",
             name : "Date",
             field : "date",
-            width: 110
+            width: 125,
+            formatter: function(row, cell, value, columnDef, dataContext) { 
+                var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
+                return '<a href="' + path + '../../post/?t=' + 
+                dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) +
+                '&n=twitter" target="_blank">#</a>&nbsp; ' + '<a href="http://twitter.com/' + dataContext['author'] + 
+                '/status/' + dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) 
+                + '" target="_blank">' + value + '</a>';
+            }
         }, {
             id : "text",
             name : "Text",
             field : "text",
-            width : 625,
+            width : 615,
             formatter: function(row, cell, value, columnDef, dataContext) {
                 var url_match = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/g;
                 value = value.replace(url_match, '<a href="$1" target="_blank">$1</a> ');
                 value = value.replace(/@(\w+)/g, '<a href="http://twitter.com/$1" target="_blank">@$1</a>');
-                return '<a href="http://twitter.com/' + dataContext['author'] + 
-                '/status/' + dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) 
-                + '" target="_blank">#</a>&nbsp; ' + value;
+                return value;
             }
         } ];
         if( parent.GRID_TYPE == 2) {
@@ -127,11 +133,12 @@ var TUGridSearch = function() {
     }
 
     /**
-	 * search filter
-	 */
+     * search filter
+     */
     this.myFilter = function (item) {
         if(item['id'] == -1 || item['text'] == null) { return false; }
-        if (tu_grid_search.searchString != "" && item["text"].toLowerCase().indexOf(tu_grid_search.searchString.toLowerCase()) == -1) {
+        if (tu_grid_search.searchString != "" && 
+        item["text"].toLowerCase().indexOf(tu_grid_search.searchString.toLowerCase()) == -1) {
             return false;
         } else {
             return true;
@@ -139,8 +146,8 @@ var TUGridSearch = function() {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     this.load_iframe = function() {
 
         // close grid search with escape key
@@ -177,8 +184,8 @@ var TUGridSearch = function() {
         });
     }
     /**
-	 * 
-	 */
+     * 
+     */
     this.close_iframe = function() {
         var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
         $('#grid_iframe').attr('src', path + '/assets/img/ui-bg_glass_65_ffffff_1x400.png');
@@ -194,8 +201,8 @@ var TUGridSearch = function() {
     }
     
     /**
-	 * load xss script ewith post data callback
-	 */
+     * load xss script ewith post data callback
+     */
     this.get_data = function() {
         $('#myGrid').hide();
         var url = '../../post/grid.php' + document.location.search;
