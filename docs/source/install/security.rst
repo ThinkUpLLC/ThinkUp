@@ -1,7 +1,7 @@
 Security and Privacy
 ====================
 
-Our security statement.
+TODO: Our security statement.
 
 ThinkUp Usernames and Passwords
 -------------------------------

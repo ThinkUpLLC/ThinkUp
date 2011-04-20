@@ -4,14 +4,8 @@ Detailed Installation Guide
 TODO: Port this document from https://github.com/ginatrapani/ThinkUp/wiki/Installing-ThinkUp
 
 
-System Requirements
--------------------
-
-Download
---------
-
-Create Database
----------------
+Optional: Pre-create Database
+-----------------------------
 
 Run the Installer
 -----------------

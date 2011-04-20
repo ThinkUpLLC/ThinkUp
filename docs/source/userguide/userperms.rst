@@ -1,7 +1,7 @@
 User Permissions
 ================
 
-Admininstrators
+Administrators
 ---------------
 
 Non-administrators
