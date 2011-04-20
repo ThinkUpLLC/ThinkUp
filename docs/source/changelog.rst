@@ -1,7 +1,37 @@
 Changes in ThinkUp
 ==================
 
-TODO: Port Changelogs from each release into the text of this page.
+TODO: Port changelogs from pre-beta 10 releases into the text of this page.
+
+Beta 0.10 - 20 April 2011
+-------------------------
+**New:**
+
+* Dashboard, post, and user page redesign: Lefthand menu has a new active tab style; users include links to both their profile on the originating service (i.e., Twitter.com) and internal ThinkUp page. The user page is now in the app-wide ThinkUp template.
+* Post API: ThinkUp's posts, replies, and retweets are now available in a JSON-based API. See the complete :doc:`complete Post API documentation </userguide/api/index>`.
+* Top 20 words redesign: On a given post's page, the top 20 most-frequently mentioned words display by default (you no longer have to click on "Top 20 words" in the menu, which has been removed). The Top 20 words have been redesigned to be more "tappable."
+* Twitter Web Intents: Easily reply, retweet, or favorite any tweet you see in ThinkUp, directly from ThinkUp's interface. More info: http://expertlabs.org/2011/04/twitters-web-intents.html
+* Sticky dashboard navigation: On multi-account installations, when viewing an individual post, clicking on the Dashboard link you will return you to the current instance (not the most recently updated instance).
+* Application documentation: Launched official application documentation which developers will submit along with each patch to the project. Eventually these docs will be hosted on thinkupapp.com, but the initial version is available at http://readthedocs.org/docs/thinkup/en/latest/. Background information: http://groups.google.com/group/thinkupapp/browse_thread/thread/aee02b16d968c8ed/656b0849117acd0b
+* (Developers) Error-level only logging: New config file value, ``$THINKUP_CFG['log_verbosity']``, lets you set the log to only log errors.
+
+**Fixed:**
+
+* Broken link in ThinkUp user activation email.
+* Inaccurate rendering of the Broadcaster/Conversationalist bar chart on the Dashboard.
+* Favorites search via SlickGrid.
+* Google Map display of post replies and retweets: Replies and retweets are no longer cut off on the page.
+* SlickGrid's export button: This mostly works; but it's still an open issue which needs a better solution. You can export posts from SlickGrid's search results. Currently it opens a new tab; we're working on making it work within the current tab/window.
+* Missing Zip library error message in Backup controller: The Backup controller now gracefully handles a server setup without the Zip library installed.
+* Follows table indexes optimized for faster retrieval.
+* CrawlerLockedException on a server with multiple installs but different mutexes: Multiple crawls can now run side-by-side on a server with multiple installations if they talk to different databases.
+* Fixed "No plugin object defined" error when deactivating a plugin.
+* SlickGrid search results for Facebook; also added permalinks to both Twitter.com and inside ThinkUp to SlickGrid Twitter results.
+* Several potential security issues in ThinkUp's WordPress plugin: Download the latest version at https://github.com/downloads/ginatrapani/ThinkUp/thinkup_for_wordpress_0.8.zip
+* Renamed Windows-hostile filenames.
+* Developers: Fixed several test failures; upgraded the testing framework to SimpleTest 1.1 alpha, which lets developers turn on E_STRICT error level reporting for bulletproof coding and testing.
+* Developers: More tests are now using the FixtureBuilder library instead of raw SQL inserts.
+
 
 Beta 0.9 - 17 Mar 2011
 ----------------------

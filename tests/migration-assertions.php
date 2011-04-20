@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '0.9';
+$LATEST_VERSION = '0.10';
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -265,15 +265,30 @@ $MIGRATIONS = array(
 
     /* beta 0.9 */
     '0.9' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.9.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
                 array(
-                    // plugin row was deletedd
+                    // Deleted plugin row
                     'query' => "SELECT id FROM tu_plugins WHERE folder_name = 'flickrthumbnails'; ", 
                     'no_match' => true,
                 ),
+                array(
+                    // Dropped column from tu_instance
+                    'query' => 'DESCRIBE tu_instances api_calls_to_leave_unmade_per_minute',
+                    'no_match' => true 
+                 )
+            )
+        )
+    ),
+
+    /* beta 0.10 */
+    '0.10' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
                 array(
                     // Modified user_id index
                     'query' => "SHOW INDEX FROM tu_follows WHERE Key_name = 'user_id' and Column_name = ".
@@ -296,10 +311,33 @@ $MIGRATIONS = array(
                     'column' => 'Key_name', 
                  ),
                 array(
-                    // Dropped column from tu_instance
-                    'query' => 'DESCRIBE tu_instances api_calls_to_leave_unmade_per_minute',
+                    // Modified field definition
+                    'query' => "DESCRIBE tu_instances is_archive_loaded_replies",
+                    'match' => "/int\(1\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Modified field definition
+                    'query' => "DESCRIBE tu_instances is_archive_loaded_follows", 
+                    'match' => "/int\(1\)/",
+                    'column' => 'Type',
+                ),
+                array(
+                    // Removed column
+                    'query' => 'DESCRIBE tu_instances total_users_in_system',
                     'no_match' => true 
-                 )
+                 ),
+                array(
+                    // Moved this column out of this table...
+                    'query' => "DESCRIBE tu_instances last_page_fetched_replies", 
+                    'no_match' => true 
+                ),
+                 array(
+                    // ...and into this table.
+                    'query' => "DESCRIBE tu_instances_twitter last_page_fetched_replies", 
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type',
+                ),
             )
         )
     ),
