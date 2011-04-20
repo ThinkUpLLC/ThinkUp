@@ -275,7 +275,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 $version_file = $this->install_dir . '/thinkup/install/version.php';
                 $version_php = file_get_contents($version_file);
                 $version_php =
-                preg_replace("/THINKUP_VERSION =.*;/", "THINKUP_VERSION = $LATEST_VERSION;", $version_php);
+                preg_replace("/THINKUP_VERSION =.*;/", "THINKUP_VERSION = '$LATEST_VERSION';", $version_php);
                 $fp = fopen($version_file, 'w');
                 fwrite($fp, $version_php);
                 fclose($fp);
@@ -287,7 +287,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $token_url = $this->url.'/test_installer/thinkup/install/upgrade.php?upgrade_token=' . $file_token;
             $this->get($token_url);
             $content = $this->getBrowser()->getContent();
-            preg_match("/sql_array = (\[.*?])/", $content, $matches);
+            preg_match("/sql_array = (\[.*?}])/", $content, $matches);
             $json_array = json_decode($matches[1]);
             $cnt = 0;
 
