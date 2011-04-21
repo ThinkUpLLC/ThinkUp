@@ -165,4 +165,36 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $converted = Utils::convertNumericStrings($test_str);
         $this->assertEqual($converted, $number);
     }
+
+    public function testNewVersionAvailable() {
+        $config = Config::getInstance();
+
+        $config->setValue('THINKUP_VERSION', '0.9');
+        $version_test_result = Utils::checkForNewVersion('0.10');
+        $this->assertTrue($version_test_result);
+
+        $config->setValue('THINKUP_VERSION', '1.12.657');
+        $version_test_result = Utils::checkForNewVersion('0.9');
+        $this->assertFalse($version_test_result);
+
+        $config->setValue('THINKUP_VERSION', '0.9a');
+        $version_test_result = Utils::checkForNewVersion('0.9b');
+        $this->assertTrue($version_test_result);
+
+        $config->setValue('THINKUP_VERSION', '0.9');
+        $version_test_result = Utils::checkForNewVersion('1.0');
+        $this->assertTrue($version_test_result);
+         
+        $config->setValue('THINKUP_VERSION', '0.9r56');
+        $version_test_result =  Utils::checkForNewVersion('0.9r57');
+        $this->assertTrue($version_test_result);
+
+        // what happens if version.txt is missing or unreachable
+        $not_found_test = Utils::getURLContents('http://thinkupapp.com/this/path/will/defiantly/404/index.php');
+        $this->assertPattern('/404 Not Found/', $not_found_test);
+
+        $config->setValue('THINKUP_VERSION', '0.9');
+        $version_test_result = Utils::checkForNewVersion($not_found_test);
+        $this->assertFalse($version_test_result);
+    }
 }

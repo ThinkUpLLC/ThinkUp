@@ -144,6 +144,25 @@ class Utils {
     }
 
     /**
+     * Compare installed version against latest stable release
+     * @param str $latest_version Set for testing purposes only. 
+     * @return mixed Version number when new version available, False if installed version is latest
+     */
+    public static function checkForNewVersion($latest_version = null) {
+        $config = Config::getInstance();
+        $THINKUP_VERSION = $config->getValue("THINKUP_VERSION");
+        if (is_null($latest_version)) {
+            $latest_version = Utils::getURLContents("http://thinkupapp.com/version.txt");
+        }
+        if (version_compare($THINKUP_VERSION, $latest_version, "<") == false) {
+            return false;
+        }
+        else {
+            return $latest_version;
+        }
+    }
+
+    /**
      * Get plugins that exist in the ThinkUp plugins directory
      * @param str $dir
      * @return array Plugins

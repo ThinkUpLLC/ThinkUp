@@ -73,7 +73,9 @@
   <div class="status-bar-right text-right">
     <ul> 
       {if $logged_in_user}
-        <li>Logged in as: {$logged_in_user} | <a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
+        <li>Logged in as: {$logged_in_user} | {if $user_is_admin && $new_version_available} 
+        <a href="https://github.com/ginatrapani/ThinkUp/downloads">Version {$new_version_available} Available</a> | {/if}
+        <a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
       {else}
       
         <li><a href="http://thinkupapp.com/">Get ThinkUp</a> | <a href="{$site_root_path}session/login.php">Log In</a></li>

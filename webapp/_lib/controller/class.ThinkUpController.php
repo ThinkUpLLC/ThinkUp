@@ -96,6 +96,7 @@ abstract class ThinkUpController {
             }
             if ($this->isAdmin()) {
                 $this->addToView('user_is_admin', true);
+                $this->addToView('new_version_available', Utils::checkForNewVersion());
             }
             $THINKUP_VERSION = $config->getValue('THINKUP_VERSION');
             $this->addToView('thinkup_version', $THINKUP_VERSION);
