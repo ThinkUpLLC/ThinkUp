@@ -231,6 +231,15 @@ class TwitterAPIAccessorOAuth {
     }
 
     /**
+     * Convert a SimpleXMLElement whose value is 'true' to 1, else 0.
+     * @param SimpleXMLElement $bool_val
+     * @return int 1 or 0
+     */
+    private static function boolXMLToInt($bool_val) {
+        return ((string)$bool_val === 'true') ?1:0;
+    }
+
+    /**
      * Parse XML data returned from Twitter.
      * @param str $data
      * @return array Mixed data types, users, IDs, tweets, etc
@@ -245,7 +254,8 @@ class TwitterAPIAccessorOAuth {
                     case 'user':
                         $parsed_payload[] = array('user_id'=>$xml->id, 'user_name'=>$xml->screen_name,
                             'full_name'=>$xml->name, 'avatar'=>$xml->profile_image_url, 'location'=>$xml->location, 
-                            'description'=>$xml->description, 'url'=>$xml->url, 'is_protected'=>$xml->protected , 
+                            'description'=>$xml->description, 'url'=>$xml->url, 
+                            'is_protected'=>self::boolXMLToInt($xml->protected),
                             'follower_count'=>$xml->followers_count, 'friend_count'=>$xml->friends_count, 
                             'post_count'=>$xml->statuses_count, 'favorites_count'=>$xml->favourites_count, 
                             'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 'network'=>'twitter');
@@ -274,7 +284,8 @@ class TwitterAPIAccessorOAuth {
                             'author_avatar'=>$xml->user->profile_image_url, 'avatar'=>$xml->user->profile_image_url, 
                             'location'=>$xml->user->location, 
                             'description'=>$xml->user->description, 'url'=>$xml->user->url, 
-                            'is_protected'=>$xml->user->protected , 'followers'=>$xml->user->followers_count, 
+                            'is_protected'=>self::boolXMLToInt($xml->user->protected), 
+                            'followers'=>$xml->user->followers_count, 
                             'following'=>$xml->user->friends_count, 'tweets'=>$xml->user->statuses_count, 
                             'joined'=>gmdate("Y-m-d H:i:s", strToTime($xml->user->created_at)), 
                             'post_text'=>$xml->text, 'pub_date'=>gmdate("Y-m-d H:i:s", strToTime($xml->created_at)), 
@@ -290,8 +301,10 @@ class TwitterAPIAccessorOAuth {
                             $parsed_payload[] = array('post_id'=>$item->status->id, 'user_id'=>$item->id,
                                 'user_name'=>$item->screen_name, 'full_name'=>$item->name, 
                                 'avatar'=>$item->profile_image_url, 'location'=>$item->location, 
-                                'description'=>$item->description, 'url'=>$item->url, 'is_protected'=>$item->protected,
-                                'friend_count'=>$item->friends_count, 'follower_count'=>$item->followers_count, 
+                                'description'=>$item->description, 'url'=>$item->url, 
+                                'is_protected'=>self::boolXMLToInt($item->protected),
+                                'friend_count'=>$item->friends_count, 
+                                'follower_count'=>$item->followers_count, 
                                 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 
                                 'post_text'=>$item->status->text, 
                                 'last_post'=>gmdate("Y-m-d H:i:s", strToTime($item->status->created_at)), 
@@ -305,7 +318,8 @@ class TwitterAPIAccessorOAuth {
                             $parsed_payload[] = array('post_id'=>$item->status->id, 'user_id'=>$item->id,
                                 'user_name'=>$item->screen_name, 'full_name'=>$item->name, 
                                 'avatar'=>$item->profile_image_url, 'location'=>$item->location, 
-                                'description'=>$item->description, 'url'=>$item->url, 'is_protected'=>$item->protected,
+                                'description'=>$item->description, 'url'=>$item->url, 
+                                'is_protected'=>self::boolXMLToInt($item->protected),
                                 'friend_count'=>$item->friends_count, 'follower_count'=>$item->followers_count, 
                                 'joined'=>gmdate("Y-m-d H:i:s", strToTime($item->created_at)), 
                                 'post_text'=>$item->status->text, 
@@ -340,9 +354,7 @@ class TwitterAPIAccessorOAuth {
         return $parsed_payload;
     }
 
-
     private function parsePostXML($post) {
-
         $logger = Logger::getInstance();
         // $logger->logInfo("In parsePostXML for post " . $post->id . ", " . $post->text, __METHOD__.','.__LINE__);
 
@@ -359,7 +371,7 @@ class TwitterAPIAccessorOAuth {
             'avatar'=>$post->user->profile_image_url, 
             'location'=>$post->user->location, 
             'description'=>$post->user->description, 'url'=>$post->user->url, 
-            'is_protected'=>$post->user->protected , 'follower_count'=>$post->user->followers_count,
+            'is_protected'=>self::boolXMLToInt($post->user->protected), 'follower_count'=>$post->user->followers_count,
             'friend_count'=>$post->user->friends_count, 'post_count'=>$post->user->statuses_count,
             'joined'=>gmdate("Y-m-d H:i:s", strToTime($post->user->created_at)), 
             'post_text'=>$post->text, 

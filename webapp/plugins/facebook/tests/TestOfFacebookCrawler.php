@@ -87,6 +87,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->description,
         'Blogger and software developer. Project Director at Expert Labs. Co-host of This Week in Google.');
         $this->assertEqual($user->url, '');
+        $this->assertTrue($user->is_protected);
     }
 
     public function testFetchUserPostsAndReplies() {
@@ -98,16 +99,19 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $post = $pd->getPost('158944054123704', 'facebook');
         $this->assertEqual($post->post_text, 'that movie made me want to build things');
         $this->assertEqual($post->reply_count_cache, 0);
+        $this->assertTrue($post->is_protected);
 
         $post = $pd->getPost('153956564638648', 'facebook');
         $this->assertEqual($post->post_text,
         'Britney Glee episode tonight. I may explode into a million pieces, splattered all over my living room walls.');
         $this->assertEqual($post->reply_count_cache, 19);
+        $this->assertTrue($post->is_protected);
 
         $post = $pd->getPost('1546020', 'facebook');
         $this->assertPattern('/not the target demographic/', $post->post_text);
         $this->assertEqual($post->reply_count_cache, 0);
         $this->assertEqual($post->in_reply_to_post_id, '153956564638648');
+        $this->assertTrue($post->is_protected);
 
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
@@ -116,11 +120,13 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->full_name, 'Gina Trapani');
         $this->assertEqual($user->user_id, 606837591);
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/606837591/picture');
+        $this->assertTrue($user->is_protected);
 
         $user = $user_dao->getUserByName('Mitch Wagner', 'facebook');
         $this->assertTrue(isset($user));
         $this->assertEqual($user->user_id, 697015835);
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/697015835/picture');
+        $this->assertTrue($user->is_protected);
     }
 
     public function testFetchPageStream() {
@@ -131,6 +137,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $pd = new PostMySQLDAO();
         $post = $pd->getPost('437900891355', 'facebook page');
         $this->assertEqual($post->post_text, 'Top 10 iOS Jailbreak Hacks');
+        $this->assertFalse($post->is_protected);
         $this->assertEqual($post->reply_count_cache, 8);
 
         //assert user network is set to Facebook, not Facebook Page
@@ -138,6 +145,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $user = $ud->getUserByName('Matthew Fleisher', 'facebook');
         $this->assertEqual($user->full_name, 'Matthew Fleisher');
         $this->assertEqual($user->network, 'facebook');
+        $this->assertTrue($user->is_protected);
 
         $user = $ud->getUserByName('Matthew Fleisher', 'facebook page');
         $this->assertEqual($user, null);

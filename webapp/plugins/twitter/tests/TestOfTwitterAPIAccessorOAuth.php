@@ -35,8 +35,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthT
 class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
 
     public function testFriendsList() {
-        global $THINKUP_CFG;
-
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/statuses/friends.xml', 'GET', array());
         $this->assertPattern('/A or B/', $result);
@@ -44,34 +42,26 @@ class TestOfTwitterAPIAccessorOAuth extends ThinkUpBasicUnitTestCase {
         $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
-        //echo 'Next cursor is ' . $next_cursor;
         $this->assertTrue($next_cursor == '1305768756249357127');
     }
 
     public function testIDsList() {
-        global $THINKUP_CFG;
-
         $to = new TwitterOAuth('', '', '', '');
         $result = $to->oAuthRequest('https://twitter.com/followers/ids.xml', 'GET', array());
 
         $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
         $users = $api->parseXML($result);
         $next_cursor = $api->getNextCursor();
-        //echo 'Next cursor is ' . $next_cursor;
         $this->assertTrue($next_cursor == '1326272872342936860');
     }
 
     public function testSearchResults() {
-        global $THINKUP_CFG;
-
         $to = new TwitterOAuth('', '', '', '');
         $twitter_data = $to->http('http://search.twitter.com/search.json?q=%40whitehouse&result_type=recent');
 
         $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
 
         $results = $api->parseJSON($twitter_data);
-
-        //print_r($results);
 
         $this->assertEqual($results[0]['post_id'], 11837318124);
     }
@@ -93,4 +83,52 @@ XML;
 
         $this->assertFalse($api->createParserFromString(utf8_encode($data)));
     }
+
+    public function testParseXMLUser() {
+        $to = new TwitterOAuth('', '', '', '');
+        $twitter_data = $to->http('https://twitter.com/users/show/mcprivate.xml');
+
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
+
+        $results = $api->parseXML($twitter_data);
+
+        $this->assertEqual($results[0]['user_name'], 'mcprivate');
+        $this->assertIsA($results[0]['is_protected'], 'int');
+        $this->assertEqual($results[0]['is_protected'], 1);
+    }
+
+    public function testParseXMLStatusesPrivate() {
+        $to = new TwitterOAuth('', '', '', '');
+        //Private statuses
+        $twitter_data = $to->http(
+        'https://twitter.com/statuses/user_timeline/mcprivate.xml?count=100&include_rts=true');
+
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
+
+        $results = $api->parseXML($twitter_data);
+
+        $this->debug(Utils::varDumpToString($results));
+
+        $this->assertEqual($results[0]['post_id'], '14846078418');
+        $this->assertIsa($results[0]['is_protected'], 'int');
+        $this->assertEqual($results[0]['is_protected'], 1);
+    }
+
+    public function testParseXMLStatusesPublic() {
+        $to = new TwitterOAuth('', '', '', '');
+        //Public statuses
+        $twitter_data = $to->http(
+        'https://twitter.com/statuses/user_timeline/ginatrapani.xml?count=100');
+
+        $api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 1234, 1234, 5, 3200, 5, 350);
+
+        $results = $api->parseXML($twitter_data);
+
+        $this->debug(Utils::varDumpToString($results));
+
+        $this->assertEqual($results[0]['post_id'], '14846078418');
+        $this->assertIsa($results[0]['is_protected'], 'int');
+        $this->assertEqual($results[0]['is_protected'], 0);
+    }
+
 }

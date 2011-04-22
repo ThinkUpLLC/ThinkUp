@@ -112,7 +112,7 @@ class FacebookCrawler {
             $ua["follower_count"] = 0;
             $ua["location"] = isset($details->location->name)?$details->location->name:'';
             $ua["description"] = isset($details->about)?$details->about:'';
-            $ua["is_protected"] = '';
+            $ua["is_protected"] = 1; //for now, assume a Facebook user is private
             $ua["post_count"] = 0;
             $ua["joined"] = null;
             $ua["network"] = $details->network;
@@ -267,7 +267,7 @@ class FacebookCrawler {
                                 //Get users
                                 $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
                                 "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->from->id.
-                                '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true',
+                                '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
                                 "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments",
                                 "network"=>'facebook'); //Users are always set to network=facebook
                                 array_push($thinkup_users, $ttu);
@@ -298,7 +298,7 @@ class FacebookCrawler {
                                     //Get users
                                     $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
                                     "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->from->id.
-                                    '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>'true',
+                                    '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
                                     "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments",
                                     "network"=>'facebook'); //Users are always set to network=facebook
                                     array_push($thinkup_users, $ttu);

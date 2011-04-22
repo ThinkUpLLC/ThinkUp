@@ -1222,9 +1222,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue(!$dao->isReplyInDB(250, 'twitter'));
     }
 
-    /**
-     * Test addPost
-     */
     public function testAddPost() {
         $dao = new PostMySQLDAO();
         $vals = array();
@@ -1242,7 +1239,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['pub_date']='3/1/2010';
         $vals['source']='web';
         $vals['network']= 'twitter';
-        $vals['is_protected'] = 0;
+        $vals['is_protected'] = 1;
 
         //add post with insufficient location data
         $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
@@ -1279,6 +1276,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->in_reply_to_post_id, null);
         $this->assertFalse($post->is_reply_by_friend);
         $this->assertEqual($post->is_geo_encoded, 0);
+        $this->assertTrue($post->is_protected);
 
         //test add post that does exist
         $vals['post_id']=129;
@@ -1298,6 +1296,56 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($dao->addPost($vals), 1, "Retweet inserted");
         $post = $dao->getPost(128, 'twitter');
         $this->assertEqual($post->old_retweet_count_cache, 1, "old-style retweet count got updated");
+    }
+
+    public function testAddPostNotProtected() {
+        $dao = new PostMySQLDAO();
+        $vals = array();
+
+        $vals['post_id']=2904;
+        $vals['author_username']='quoter';
+        $vals['author_fullname']="Quoter of Quotables";
+        $vals['author_avatar']='avatar.jpg';
+        $vals['author_user_id']= 22;
+        $vals['post_text']="Go confidently in the direction of your dreams! Live the life you've imagined.";
+        $vals['pub_date']='3/1/2010';
+        $vals['source']='web';
+        $vals['network']= 'twitter';
+        $vals['is_protected'] = 0;
+
+        $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
+        $post = $dao->getPost(2904, 'twitter');
+        $this->assertEqual($post->post_id, 2904);
+        $this->assertEqual($post->location, NULL);
+        $this->assertEqual($post->place, NULL);
+        $this->assertEqual($post->geo, NULL);
+        $this->assertEqual($post->is_geo_encoded, 6);
+        $this->assertFalse($post->is_protected);
+    }
+
+    public function testAddPostProtected() {
+        $dao = new PostMySQLDAO();
+        $vals = array();
+
+        $vals['post_id']=2904;
+        $vals['author_username']='quoter';
+        $vals['author_fullname']="Quoter of Quotables";
+        $vals['author_avatar']='avatar.jpg';
+        $vals['author_user_id']= 22;
+        $vals['post_text']="Go confidently in the direction of your dreams! Live the life you've imagined.";
+        $vals['pub_date']='3/1/2010';
+        $vals['source']='web';
+        $vals['network']= 'twitter';
+        $vals['is_protected'] = 1;
+
+        $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
+        $post = $dao->getPost(2904, 'twitter');
+        $this->assertEqual($post->post_id, 2904);
+        $this->assertEqual($post->location, NULL);
+        $this->assertEqual($post->place, NULL);
+        $this->assertEqual($post->geo, NULL);
+        $this->assertEqual($post->is_geo_encoded, 6);
+        $this->assertTrue($post->is_protected);
     }
 
     public function testAddReplyToPostByFriend() {

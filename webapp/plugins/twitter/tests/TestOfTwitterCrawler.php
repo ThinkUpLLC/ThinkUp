@@ -85,7 +85,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     }
 
     private function setUpInstanceUserAnilDash() {
-        global $THINKUP_CFG;
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36823', 'network_viewer_id'=>'36823',
         'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
         'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
@@ -106,8 +105,33 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->instance->is_archive_loaded_follows = true;
     }
 
+    private function setUpInstanceUserPrivateMcprivate() {
+        $this->builders[] = FixtureBuilder::build('users', array('user_id'=>'123456', 'user_name'=>'mcprivate',
+        'full_name'=>'Private McPrivate', 'last_updated'=>'2007-01-01 20:34:13', 'network'=>'twitter',
+        'is_protected'=>1, 'last_post_id'=>''));
+
+        $r = array('id'=>1, 'network_username'=>'mcprivate', 'network_user_id'=>'123456', 'network_viewer_id'=>'123456',
+        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
+        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
+        'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
+        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0', 
+        'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
+        'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
+        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+        'earliest_post_in_system'=>'01-01-2009'
+        );
+        $this->instance = new TwitterInstance($r);
+
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', 2,
+        1234, 5, 350);
+
+        $this->api->available = true;
+        $this->api->available_api_calls_for_crawler = 20;
+        $this->instance->is_archive_loaded_follows = true;
+    }
+
+
     private function setUpInstanceUserGinaTrapani() {
-        global $THINKUP_CFG;
         $r = array('id'=>1, 'network_username'=>'ginatrapani', 'network_user_id'=>'930061',
         'network_viewer_id'=>'930061', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
@@ -128,7 +152,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     }
 
     private function setUpInstanceUserAmygdala() {
-        global $THINKUP_CFG;
         $instd = DAOFactory::getDAO('TwitterInstanceDAO');
         $iid = $instd->insert('2768241', 'amygdala', 'twitter');
         $this->instance = $instd->getByUsernameOnNetwork("amygdala", "twitter");
@@ -182,6 +205,21 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->location, "NYC: 40.739069,-73.987082");
         $this->assertEqual($post->place, "");
         $this->assertEqual($post->geo, "");
+    }
+
+    public function testFetchPrivateInstanceUserTweets() {
+        self::setUpInstanceUserPrivateMcPrivate();
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserTweets();
+
+        //Test post is set as protected
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($pdao->isPostInDB(14846078418, 'twitter'));
+
+        $post = $pdao->getPost(14846078418, 'twitter');
+        $this->debug(Utils::varDumpToString($post));
+        $this->assertTrue($post->is_protected);
     }
 
     public function testFetchInstanceUserTweetsRetweets() {

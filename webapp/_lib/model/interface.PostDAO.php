@@ -103,7 +103,7 @@ interface PostDAO {
      * @return array Array of replies, retweets, and original post
      */
     public function getRelatedPostsArray($post_id, $network = 'twitter', $is_public = false, $count = 350, $page =1,
-            $geo_encoded_only = true, $include_original_post = true);
+    $geo_encoded_only = true, $include_original_post = true);
 
     /**
      * Get all related posts (retweets and replies)
@@ -116,7 +116,7 @@ interface PostDAO {
      * @return array Array of post objects
      */
     public function getRelatedPosts($post_id, $network = 'twitter', $is_public = false, $count = 350, $page = 1,
-            $geo_encoded_only = true, $include_original_post = true);
+    $geo_encoded_only = true, $include_original_post = true);
 
     /**
      * Get posts that author has replied to (for question/answer exchanges)
@@ -167,7 +167,11 @@ interface PostDAO {
      *  $vals['pub_date']
      *  $vals['source']
      *  $vals['network']
+     *  $vals['is_protected']
+     *  $vals['is_reply_by_friend']
      * </code>
+     * Note: All fields which represent boolean values--fields whose names start with is_--should be an
+     * int equal to either 1 or 0.
      *
      * @param array $vals see above
      * @return int number of posts inserted
@@ -210,7 +214,7 @@ interface PostDAO {
      * @return array Posts by author with link set
      */
     public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true,
-            $order_by = 'pub_date', $direction = 'DESC', $is_public = false);
+    $order_by = 'pub_date', $direction = 'DESC', $is_public = false);
 
     /**
      * Get all posts by an author given an author ID that contain a question mark
@@ -225,7 +229,7 @@ interface PostDAO {
      * @return array Posts by author with a question mark in them with link set
      */
     public function getAllQuestionPosts($author_id, $network, $count, $page=1, $order_by = 'pub_date',
-            $direction = 'DESC', $is_public = false);
+    $direction = 'DESC', $is_public = false);
 
     /**
      * Get all posts by a given user based on a given time frame.
@@ -242,7 +246,7 @@ interface PostDAO {
      * @return array Posts with link object set
      */
     public function getPostsByUserInRange($author_id, $network, $from, $until, $order_by="pub_date", $direction="DESC",
-            $iterator=false, $is_public = false);
+    $iterator=false, $is_public = false);
 
     /**
      * Get all posts by an author given an author ID
@@ -257,7 +261,7 @@ interface PostDAO {
      * @return Iterator Posts Iterator
      */
     public function getAllPostsIterator($author_id, $network, $count, $include_replies=true,
-            $order_by = 'pub_date', $direction = 'DESC', $is_public = false);
+    $order_by = 'pub_date', $direction = 'DESC', $is_public = false);
 
     /**
      * Get all posts by author given the author's username
@@ -305,7 +309,7 @@ interface PostDAO {
      * @return Iterator PostIterator object
      */
     public function getAllMentionsIterator($author_username, $count, $network = "twitter", $page=1, $public=false,
-            $include_rts = true, $order_by = 'pub_date', $direction = 'DESC');
+    $include_rts = true, $order_by = 'pub_date', $direction = 'DESC');
 
     /**
      * Get a certain number of mentions of a username on a given network
@@ -321,7 +325,7 @@ interface PostDAO {
      * @return array of Post objects with author and link set
      */
     public function getAllMentions($author_username, $count, $network = "twitter", $page=1, $public=false,
-            $include_rts = true, $order_by = 'pub_date', $direction = 'DESC');
+    $include_rts = true, $order_by = 'pub_date', $direction = 'DESC');
 
     /**
      * Get all replies to a given user ID
@@ -337,7 +341,7 @@ interface PostDAO {
      * @return array Posts with author and link set
      */
     public function getAllReplies($user_id, $network, $count, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
-            $is_public = false);
+    $is_public = false);
 
     /**
      * Get posts by a user ordered by reply count desc
