@@ -1,13 +1,23 @@
 Upgrade ThinkUp
 ===============
 
-If you're already running ThinkUp beta 0.1 or higher, all you have to do to upgrade to the latest version is overwrite
-your existing files with the newest ones and use ThinkUp's automatic backup and upgrader. Here's how.
+If you're already running ThinkUp beta 0.1 or higher, to upgrade to the latest version you simply replace
+your ThinkUp folder with the new one while preserving your existing configuration file. Then, use ThinkUp's
+automatic database backup and upgrader. Here's how.
 
-First, `download ThinkUp's latest version <http://thinkupapp.com>`_, extract the zip archive, and overwrite 
-your existing ThinkUp folder with the new ones on your web server using your favorite FTP program. 
+Install ThinkUp's Newest Application Code
+-----------------------------------------
 
-Next, back up your database and upgrade it to the latest version. The best method depends on how large your 
+First, `download ThinkUp's latest version <http://thinkupapp.com>`_ and extract the zip archive.
+
+Using your favorite FTP program, rename your existing ThinkUp folder to something like ``thinkup.old``. Then, upload
+the new ThinkUp folder you just extracted.
+
+Then, copy your existing configuration file--i.e., ``thinkup.old/config.inc.php``--into the new ThinkUp folder.
+
+Your ThinkUp application code is now up-to-date. Great!
+
+Next, you will back up your database and upgrade it to the latest version. The best method depends on how large your 
 ThinkUp installation's database has grown.
 
 Small Databases: Web-Based Backup and Upgrade
@@ -59,4 +69,4 @@ If you're updating to a new release of ThinkUp and you've run all the database m
 have to do is update ThinkUp's version number in the database. Do this by running the following query on your ThinkUp
 database (first replace x.xx with the current version you're upgrading to):
 
-``UPDATE tu_options SET option_value='x.xx' WHERE namespace='application_options' AND option_name='database_version';`` 
+``UPDATE tu_options SET option_value='x.xx' WHERE namespace='application_options' AND option_name='database_version';``
