@@ -90,7 +90,6 @@ ALTER TABLE  `tu_posts` CHANGE  `post_text`  `post_text` VARCHAR( 420 ) CHARACTE
 ALTER TABLE  `tu_posts` CHANGE  `is_protected`  `is_protected` TINYINT( 4 ) NOT NULL DEFAULT  '1' COMMENT  'Whether or not this post is protected, e.g. not publicly visible.';
 ALTER TABLE  `tu_posts` CHANGE  `source`  `source` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT  'Where the post was posted from. e.g. if you post from the Twitter web interface, this will be "web".';
 ALTER TABLE  `tu_posts` CHANGE  `place`  `place` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT  'Name of a place from which a post was published, ie, Woodland Hills, Los Angeles.';
--- I don't think this field needs to be a varchar 255... Maybe varchar 32?
 ALTER TABLE  `tu_posts` CHANGE  `geo`  `geo` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT  'The post''s latitude and longitude coordinates.';
 ALTER TABLE  `tu_posts` CHANGE  `pub_date`  `pub_date` TIMESTAMP NOT NULL DEFAULT  '0000-00-00 00:00:00' COMMENT  'The timestamp of when this post was published.';
 ALTER TABLE  `tu_posts` CHANGE  `in_reply_to_user_id`  `in_reply_to_user_id` BIGINT( 11 ) NULL DEFAULT NULL COMMENT  'The ID of the user that this post is in reply to.';
