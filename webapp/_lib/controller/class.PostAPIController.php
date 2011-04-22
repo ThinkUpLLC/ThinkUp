@@ -30,7 +30,6 @@
  *
  */
 class PostAPIController extends ThinkUpController {
-
     /**
      * The network to query. Defaults to twitter.
      * @var str
@@ -121,7 +120,6 @@ class PostAPIController extends ThinkUpController {
      * @var User
      */
     private $user;
-
     /**
      *
      * @var PostDAO
@@ -132,7 +130,6 @@ class PostAPIController extends ThinkUpController {
      * @var UserDAO
      */
     private $user_dao;
-
     /**
      * Constructor
      *
@@ -526,7 +523,6 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-
                 /*
                  * Generate an error because the API call type was not recognized.
                  */
@@ -642,13 +638,14 @@ class PostAPIController extends ThinkUpController {
                 $post->user->favorites_count = $post->user->favorites_count;
                 $post->user->utc_offset = Config::getInstance()->getGMTOffset() * 3600;
 
-                if (isset($post->user->other->avg_tweets_per_day)) {
-                    $post->user->avg_tweets_per_day = $post->user->other->avg_tweets_per_day;
+                if (isset($post->user->other)) {
+                    if (isset($post->user->other['avg_tweets_per_day'])) {
+                        $post->user->avg_tweets_per_day = $post->user->other['avg_tweets_per_day'];
+                    }
+                    if (isset($post->user->other['last_updated'])) {
+                        $post->user->last_updated = $post->user->other['last_updated'];
+                    }
                 }
-
-                //                if (isset($post->user->other)) {
-                //                    $post->user->last_updated = $post->user->other->last_updated;
-                //                }
 
                 $post->user->thinkup = new stdClass();
 
@@ -749,9 +746,7 @@ class PostAPIController extends ThinkUpController {
         }
 
         /*
-         * Unset no longer used variabled in this post.
-         *
-         * This is mostly variables that have been moved to more
+         * Unset no-longer-used variables in this post; mostly variables that have been moved to more
          * Twtter like locations / naming conventions.
          */
         unset(
@@ -789,7 +784,6 @@ class PostAPIController extends ThinkUpController {
         $post->user->last_post_id,
         $post->user->found_in
         );
-
         return $post;
     }
 
@@ -800,7 +794,7 @@ class PostAPIController extends ThinkUpController {
      * @param User $user A User object.
      * @return stdClass A stdClass object with all of the same vars as the User object that was passed in.
      */
-    private function convertUserToStdClass($user) {
+    private function convertUserToStdClass(User $user) {
         if (is_object($user)) {
             $return = new stdClass();
             foreach (get_object_vars($user) as $key => $val) {

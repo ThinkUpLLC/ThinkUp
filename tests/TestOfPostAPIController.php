@@ -77,7 +77,8 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'avatar' => 'avatar.jpg',
                             'is_protected' => 0,
                             'follower_count' => 15,
-                            'network' => 'twitter'));
+                            'network' => 'twitter',
+                            'last_updated' => '2010-04-02 13:45:55'));
 
         $builders[] = FixtureBuilder::build( 'users', array(
                             'user_id' => 20,
@@ -721,12 +722,14 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $this->assertEqual($output->id, 137, "Incorrect post fetched.");
 
         $this->assertEqual(sizeof($output->coordinates->coordinates), 2,
-        "Size of coordinates is too big or two small. Is " . sizeof($output->coordinates->coordinates) . 
+        "Size of coordinates is too big or too small. Is " . sizeof($output->coordinates->coordinates) .
         " when it should be 2.");
 
         $this->assertEqual($output->thinkup->is_geo_encoded, 1);
         $this->assertEqual($output->coordinates, $output->geo,
                 "Geo and coordinates are meant to be exactly the same.");
+
+        $this->assertEqual($output->user->last_updated, '2010-04-02 13:45:55');
 
         // test trim user
         $_GET['trim_user'] = true;

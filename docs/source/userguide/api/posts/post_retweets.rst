@@ -34,7 +34,9 @@ Optional Arguments
 
 * **count**
 
-    The number of results to display from this API call. Defaults to 20.
+    The number of results to display from this API call. Defaults to 20. If you supply something that is
+    not a valid number, this argument will revert to its default value of 20. For performance reasons, the maximum
+    number of posts the ThinkUp API returns per call is 200.
 
 * **page**
 
@@ -66,39 +68,27 @@ Example output
         {
             "id":17438947407831040,
             "source":"web",
-            "location":"Liverpool, Merseyside, UK",
+            "location":"Liverpool.",
             "place":null,
-            "geo":{
-                "coordinates":[
-                    53.4107766,
-                    -2.9778383
-                ]
-            },
+            "geo":null,
             "in_reply_to_user_id":null,
             "is_reply_by_friend":false,
             "in_reply_to_post_id":null,
             "in_rt_of_user_id":69410725,
-            "reply_retweet_distance":119,
+            "reply_retweet_distance":0,
             "is_retweet_by_friend":true,
             "favorited":false,
             "all_retweets":0,
-            "short_location":"Liverpool, Merseyside, UK",
             "text":"RT @samwhoo: Comic Sans is trending? A bit late aren't you, Twitter?",
             "created_at":"Wed Dec 22 04:39:03 +0000 2010",
             "annotations":null,
             "truncated":false,
             "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    53.4107766,
-                    -2.9778383
-                ]
-            },
             "thinkup":{
                 "retweet_count_cache":0,
                 "reply_count_cache":0,
                 "old_retweet_count_cache":0,
-                "is_geo_encoded":1
+                "is_geo_encoded":0
             },
             "user":{
                 "id":92529373,
@@ -106,31 +96,27 @@ Example output
                 "description":"Online and pissed off.",
                 "url":"",
                 "friend_count":38,
-                "followers_count":40,
+                "followers_count":42,
                 "profile_image_url":"http://a0.twimg.com/profile_images/1249376120/Photo_1_normal.jpg",
                 "name":"David Parry",
                 "screen_name":"buildthewall",
-                "statuses_count":514,
+                "statuses_count":515,
                 "created_at":"Wed Nov 25 14:11:37 +0000 2009",
-                "favourites_count":0,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.00,
+                "last_updated":"2011-04-22 03:05:21",
                 "thinkup":{
-                    "last_post":"2011-03-27 22:11:31",
-                    "last_post_id":52130655026417664,
+                    "last_post":"2011-04-12 03:46:18",
+                    "last_post_id":57650725152493569,
                     "found_in":"Friends"
                 }
             },
             "retweeted_status":{
                 "id":17393678888738816,
                 "source":"web",
-                "location":"Wales, United Kingdom",
+                "location":"Wales, UK",
                 "place":null,
-                "geo":{
-                    "coordinates":[
-                        52.4699784,
-                        -3.8303771
-                    ]
-                },
+                "geo":null,
                 "in_reply_to_user_id":null,
                 "is_reply_by_friend":false,
                 "in_reply_to_post_id":null,
@@ -144,32 +130,27 @@ Example output
                 "annotations":null,
                 "truncated":false,
                 "protected":false,
-                "coordinates":{
-                    "coordinates":[
-                        52.4699784,
-                        -3.8303771
-                    ]
-                },
                 "thinkup":{
                     "retweet_count_cache":1,
                     "reply_count_cache":0,
                     "old_retweet_count_cache":0,
-                    "is_geo_encoded":1
+                    "is_geo_encoded":0
                 },
                 "user":{
                     "id":69410725,
                     "location":"Wales, UK",
                     "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                     "url":"http://lbak.co.uk",
-                    "friend_count":225,
-                    "followers_count":83,
+                    "friend_count":234,
+                    "followers_count":103,
                     "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                     "name":"Sam Rose",
                     "screen_name":"samwhoo",
-                    "statuses_count":775,
+                    "statuses_count":921,
                     "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                    "favourites_count":36,
                     "utc_offset":3600,
+                    "avg_tweets_per_day":1.53,
+                    "last_updated":"2011-04-22 13:00:10",
                     "thinkup":{
                         "last_post":"0000-00-00 00:00:00",
                         "last_post_id":0,

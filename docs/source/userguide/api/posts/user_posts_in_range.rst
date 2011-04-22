@@ -56,6 +56,11 @@ Optional Arguments
     If set to true, this flag strips the user part of the output to just the user's ID and nothing else. Defaults to
     false. This argument can be set to true by making it equal to either **1**, **t** or **true**.
 
+.. warning::
+    This is the only ThinkUp Post API method which does not enforce a cap of 200 post results returned per call. 
+    As such, when querying time ranges which contain more than 200 posts, keep in mind that processing that amount of
+    data may exceed your server's memory limits.
+
 ==============
 Example output
 ==============
@@ -65,21 +70,345 @@ Example output
 
     [
         {
+            "id":54682603856474112,
+            "source":"web",
+            "location":"Wales, UK",
+            "place":null,
+            "geo":null,
+            "in_reply_to_user_id":null,
+            "is_reply_by_friend":false,
+            "in_reply_to_post_id":null,
+            "in_rt_of_user_id":null,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
+            "favorited":false,
+            "all_retweets":0,
+            "text":"That was absolutely terrifying. #westboro",
+            "created_at":"Sun Apr 03 23:12:03 +0100 2011",
+            "annotations":null,
+            "truncated":false,
+            "protected":false,
+            "thinkup":{
+                "retweet_count_cache":0,
+                "reply_count_cache":0,
+                "old_retweet_count_cache":0,
+                "is_geo_encoded":0
+            },
+            "user":{
+                "id":69410725,
+                "location":"Wales, UK",
+                "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
+                "url":"http://lbak.co.uk",
+                "friend_count":234,
+                "followers_count":103,
+                "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
+                "name":"Sam Rose",
+                "screen_name":"samwhoo",
+                "statuses_count":921,
+                "created_at":"Thu Aug 27 21:32:42 +0100 2009",
+                "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
+                "thinkup":{
+                    "last_post":"0000-00-00 00:00:00",
+                    "last_post_id":0,
+                    "found_in":"Owner Status"
+                }
+            }
+        },
+        {
+            "id":54651076317687809,
+            "source":"web",
+            "location":"Wales, UK",
+            "place":null,
+            "geo":null,
+            "in_reply_to_user_id":null,
+            "is_reply_by_friend":false,
+            "in_reply_to_post_id":null,
+            "in_rt_of_user_id":19228261,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
+            "favorited":false,
+            "all_retweets":0,
+            "text":"RT @RayPeacock: There is no \"heaven\" up in the sky.  That is called \"space\".  We have been up there and checked.  The bible people were  ...",
+            "created_at":"Sun Apr 03 21:06:46 +0100 2011",
+            "annotations":null,
+            "truncated":false,
+            "protected":false,
+            "thinkup":{
+                "retweet_count_cache":0,
+                "reply_count_cache":0,
+                "old_retweet_count_cache":0,
+                "is_geo_encoded":0
+            },
+            "user":{
+                "id":69410725,
+                "location":"Wales, UK",
+                "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
+                "url":"http://lbak.co.uk",
+                "friend_count":234,
+                "followers_count":103,
+                "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
+                "name":"Sam Rose",
+                "screen_name":"samwhoo",
+                "statuses_count":921,
+                "created_at":"Thu Aug 27 21:32:42 +0100 2009",
+                "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
+                "thinkup":{
+                    "last_post":"0000-00-00 00:00:00",
+                    "last_post_id":0,
+                    "found_in":"Owner Status"
+                }
+            },
+            "retweeted_status":{
+                "id":54650142262964224,
+                "source":"web",
+                "location":"UK",
+                "place":null,
+                "geo":null,
+                "in_reply_to_user_id":null,
+                "is_reply_by_friend":false,
+                "in_reply_to_post_id":null,
+                "in_rt_of_user_id":null,
+                "reply_retweet_distance":0,
+                "is_retweet_by_friend":false,
+                "favorited":false,
+                "all_retweets":20,
+                "text":"There is no \"heaven\" up in the sky.  That is called \"space\".  We have been up there and checked.  The bible people were making it up.",
+                "created_at":"Sun Apr 03 21:03:03 +0100 2011",
+                "annotations":null,
+                "truncated":false,
+                "protected":false,
+                "thinkup":{
+                    "retweet_count_cache":20,
+                    "reply_count_cache":0,
+                    "old_retweet_count_cache":0,
+                    "is_geo_encoded":0
+                },
+                "user":{
+                    "id":19228261,
+                    "location":"UK",
+                    "description":"Comedian, actor, writer, warm-up, prick. I do that Peacock & Gamble Podcast that's free on iTunes that you pretend not to like.",
+                    "url":"http://www.peacockandgamble.com",
+                    "friend_count":178,
+                    "followers_count":1957,
+                    "profile_image_url":"http://a2.twimg.com/profile_images/1316595931/Photo_on_2010-09-07_at_01.02__3_2_normal.jpg",
+                    "name":"Ray Peacock",
+                    "screen_name":"RayPeacock",
+                    "statuses_count":2515,
+                    "created_at":"Tue Jan 20 10:36:13 +0000 2009",
+                    "utc_offset":3600,
+                    "avg_tweets_per_day":3.06,
+                    "last_updated":"2011-04-22 02:02:06",
+                    "thinkup":{
+                        "last_post":"2011-04-20 23:57:31",
+                        "last_post_id":61226639987720193,
+                        "found_in":"Friends"
+                    }
+                }
+            }
+        },
+        {
+            "id":54631742396579840,
+            "source":"web",
+            "location":"Wales, UK",
+            "place":null,
+            "geo":null,
+            "in_reply_to_user_id":null,
+            "is_reply_by_friend":false,
+            "in_reply_to_post_id":null,
+            "in_rt_of_user_id":20474878,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
+            "favorited":false,
+            "all_retweets":0,
+            "text":"RT @garwboy: Thanks to Channel 4 news, I now know what the respected philosopher Liam Gallagher thinks of the devastation in Japan. \"... ...",
+            "created_at":"Sun Apr 03 19:49:57 +0100 2011",
+            "annotations":null,
+            "truncated":false,
+            "protected":false,
+            "thinkup":{
+                "retweet_count_cache":0,
+                "reply_count_cache":0,
+                "old_retweet_count_cache":0,
+                "is_geo_encoded":0
+            },
+            "user":{
+                "id":69410725,
+                "location":"Wales, UK",
+                "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
+                "url":"http://lbak.co.uk",
+                "friend_count":234,
+                "followers_count":103,
+                "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
+                "name":"Sam Rose",
+                "screen_name":"samwhoo",
+                "statuses_count":921,
+                "created_at":"Thu Aug 27 21:32:42 +0100 2009",
+                "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
+                "thinkup":{
+                    "last_post":"0000-00-00 00:00:00",
+                    "last_post_id":0,
+                    "found_in":"Owner Status"
+                }
+            },
+            "retweeted_status":{
+                "id":54630960607657984,
+                "source":"web",
+                "location":"Cardiff",
+                "place":null,
+                "geo":null,
+                "in_reply_to_user_id":null,
+                "is_reply_by_friend":false,
+                "in_reply_to_post_id":null,
+                "in_rt_of_user_id":null,
+                "reply_retweet_distance":0,
+                "is_retweet_by_friend":false,
+                "favorited":false,
+                "all_retweets":4,
+                "text":"Thanks to Channel 4 news, I now know what the respected philosopher Liam Gallagher thinks of the devastation in Japan. \"... ... Big, innit!\"",
+                "created_at":"Sun Apr 03 19:46:50 +0100 2011",
+                "annotations":null,
+                "truncated":false,
+                "protected":false,
+                "thinkup":{
+                    "retweet_count_cache":4,
+                    "reply_count_cache":0,
+                    "old_retweet_count_cache":0,
+                    "is_geo_encoded":0
+                },
+                "user":{
+                    "id":20474878,
+                    "location":"Cardiff",
+                    "description":"Neuroscience Doctor (on paper), sort of\ncomedian, skeptic, human, writer of Science Digestive. Applied to be a homeopath once, not heard back yet.",
+                    "url":"http://sciencedigestive.blogspot.com",
+                    "friend_count":423,
+                    "followers_count":1735,
+                    "profile_image_url":"http://a2.twimg.com/profile_images/1195827475/Dean_headshot_normal.JPG",
+                    "name":"Dean Burnett",
+                    "screen_name":"garwboy",
+                    "statuses_count":11322,
+                    "created_at":"Mon Feb 09 22:45:43 +0000 2009",
+                    "utc_offset":3600,
+                    "avg_tweets_per_day":14.12,
+                    "last_updated":"2011-04-22 01:09:22",
+                    "thinkup":{
+                        "last_post":"2011-04-20 15:42:32",
+                        "last_post_id":61076030407966720,
+                        "found_in":"Friends"
+                    }
+                }
+            }
+        },
+        {
+            "id":54390296020135936,
+            "source":"web",
+            "location":"Wales, UK",
+            "place":null,
+            "geo":null,
+            "in_reply_to_user_id":10697232,
+            "is_reply_by_friend":false,
+            "in_reply_to_post_id":54368439489413120,
+            "in_rt_of_user_id":null,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
+            "favorited":false,
+            "all_retweets":0,
+            "text":"@drdrang Woot :D Thanks for the feedback!",
+            "created_at":"Sun Apr 03 03:50:31 +0100 2011",
+            "annotations":null,
+            "truncated":false,
+            "protected":false,
+            "thinkup":{
+                "retweet_count_cache":0,
+                "reply_count_cache":0,
+                "old_retweet_count_cache":0,
+                "is_geo_encoded":0
+            },
+            "user":{
+                "id":69410725,
+                "location":"Wales, UK",
+                "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
+                "url":"http://lbak.co.uk",
+                "friend_count":234,
+                "followers_count":103,
+                "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
+                "name":"Sam Rose",
+                "screen_name":"samwhoo",
+                "statuses_count":921,
+                "created_at":"Thu Aug 27 21:32:42 +0100 2009",
+                "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
+                "thinkup":{
+                    "last_post":"0000-00-00 00:00:00",
+                    "last_post_id":0,
+                    "found_in":"Owner Status"
+                }
+            }
+        },
+        {
+            "id":54383212843106304,
+            "source":"web",
+            "location":"Wales, UK",
+            "place":null,
+            "geo":null,
+            "in_reply_to_user_id":null,
+            "is_reply_by_friend":false,
+            "in_reply_to_post_id":null,
+            "in_rt_of_user_id":null,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
+            "favorited":false,
+            "all_retweets":0,
+            "text":"OH: I mean the 20 words; it does nothing, just silently mocks me when I click - @chartier",
+            "created_at":"Sun Apr 03 03:22:22 +0100 2011",
+            "annotations":null,
+            "truncated":false,
+            "protected":false,
+            "thinkup":{
+                "retweet_count_cache":0,
+                "reply_count_cache":0,
+                "old_retweet_count_cache":0,
+                "is_geo_encoded":0
+            },
+            "user":{
+                "id":69410725,
+                "location":"Wales, UK",
+                "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
+                "url":"http://lbak.co.uk",
+                "friend_count":234,
+                "followers_count":103,
+                "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
+                "name":"Sam Rose",
+                "screen_name":"samwhoo",
+                "statuses_count":921,
+                "created_at":"Thu Aug 27 21:32:42 +0100 2009",
+                "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
+                "thinkup":{
+                    "last_post":"0000-00-00 00:00:00",
+                    "last_post_id":0,
+                    "found_in":"Owner Status"
+                }
+            }
+        },
+        {
             "id":54365021995663360,
             "source":"web",
-            "location":"Wales, United Kingdom",
+            "location":"Wales, UK",
             "place":null,
-            "geo":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
+            "geo":null,
             "in_reply_to_user_id":10697232,
             "is_reply_by_friend":false,
             "in_reply_to_post_id":54361082340458498,
             "in_rt_of_user_id":null,
-            "reply_retweet_distance":6117,
+            "reply_retweet_distance":0,
             "is_retweet_by_friend":false,
             "favorited":false,
             "all_retweets":0,
@@ -88,32 +417,27 @@ Example output
             "annotations":null,
             "truncated":false,
             "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
             "thinkup":{
                 "retweet_count_cache":0,
                 "reply_count_cache":1,
                 "old_retweet_count_cache":0,
-                "is_geo_encoded":1
+                "is_geo_encoded":0
             },
             "user":{
                 "id":69410725,
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -124,14 +448,9 @@ Example output
         {
             "id":54356409298587648,
             "source":"web",
-            "location":"Wales, United Kingdom",
+            "location":"Wales, UK",
             "place":null,
-            "geo":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
+            "geo":null,
             "in_reply_to_user_id":930061,
             "is_reply_by_friend":false,
             "in_reply_to_post_id":null,
@@ -145,32 +464,27 @@ Example output
             "annotations":null,
             "truncated":false,
             "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
             "thinkup":{
                 "retweet_count_cache":0,
                 "reply_count_cache":0,
                 "old_retweet_count_cache":0,
-                "is_geo_encoded":1
+                "is_geo_encoded":0
             },
             "user":{
                 "id":69410725,
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -181,19 +495,14 @@ Example output
         {
             "id":54355802038878208,
             "source":"web",
-            "location":"Wales, United Kingdom",
+            "location":"Wales, UK",
             "place":null,
-            "geo":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
+            "geo":null,
             "in_reply_to_user_id":10697232,
             "is_reply_by_friend":false,
             "in_reply_to_post_id":54316403053969408,
             "in_rt_of_user_id":null,
-            "reply_retweet_distance":6117,
+            "reply_retweet_distance":0,
             "is_retweet_by_friend":false,
             "favorited":false,
             "all_retweets":0,
@@ -202,32 +511,27 @@ Example output
             "annotations":null,
             "truncated":false,
             "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
             "thinkup":{
                 "retweet_count_cache":0,
-                "reply_count_cache":1,
+                "reply_count_cache":2,
                 "old_retweet_count_cache":0,
-                "is_geo_encoded":1
+                "is_geo_encoded":0
             },
             "user":{
                 "id":69410725,
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -265,15 +569,16 @@ Example output
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -284,14 +589,9 @@ Example output
         {
             "id":54351245707722752,
             "source":"web",
-            "location":"Wales, United Kingdom",
+            "location":"Wales, UK",
             "place":null,
-            "geo":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
+            "geo":null,
             "in_reply_to_user_id":null,
             "is_reply_by_friend":false,
             "in_reply_to_post_id":null,
@@ -305,32 +605,27 @@ Example output
             "annotations":null,
             "truncated":false,
             "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
             "thinkup":{
                 "retweet_count_cache":1,
                 "reply_count_cache":1,
                 "old_retweet_count_cache":0,
-                "is_geo_encoded":1
+                "is_geo_encoded":0
             },
             "user":{
                 "id":69410725,
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -341,20 +636,15 @@ Example output
         {
             "id":54346303643189248,
             "source":"web",
-            "location":"Wales, United Kingdom",
+            "location":"Wales, UK",
             "place":null,
-            "geo":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
+            "geo":null,
             "in_reply_to_user_id":null,
             "is_reply_by_friend":false,
             "in_reply_to_post_id":null,
             "in_rt_of_user_id":838211,
-            "reply_retweet_distance":5760,
-            "is_retweet_by_friend":true,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
             "favorited":false,
             "all_retweets":0,
             "text":"RT @digitalvision: \"Oh my God, Becky. Look at that pizza. It's so.. Big. So round. Like one of those rap guy's pizzas or something.\"",
@@ -362,32 +652,27 @@ Example output
             "annotations":null,
             "truncated":false,
             "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
             "thinkup":{
                 "retweet_count_cache":0,
                 "reply_count_cache":0,
                 "old_retweet_count_cache":0,
-                "is_geo_encoded":1
+                "is_geo_encoded":0
             },
             "user":{
                 "id":69410725,
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -397,14 +682,9 @@ Example output
             "retweeted_status":{
                 "id":54345143683264513,
                 "source":"<a href=\"http://twitter.com/\" rel=\"nofollow\">Twitter for iPhone</a>",
-                "location":"Detroit, MI, USA",
+                "location":"Detroit, MI",
                 "place":null,
-                "geo":{
-                    "coordinates":[
-                        42.331427,
-                        -83.0457538
-                    ]
-                },
+                "geo":null,
                 "in_reply_to_user_id":null,
                 "is_reply_by_friend":false,
                 "in_reply_to_post_id":null,
@@ -418,35 +698,30 @@ Example output
                 "annotations":null,
                 "truncated":false,
                 "protected":false,
-                "coordinates":{
-                    "coordinates":[
-                        42.331427,
-                        -83.0457538
-                    ]
-                },
                 "thinkup":{
                     "retweet_count_cache":1,
                     "reply_count_cache":0,
                     "old_retweet_count_cache":0,
-                    "is_geo_encoded":1
+                    "is_geo_encoded":0
                 },
                 "user":{
                     "id":838211,
                     "location":"Detroit, MI",
                     "description":"1/2 cup Urbanist, 3/4 cup Digital Marketing Pro, 1/2 cup Geek Culture, dash of baseball fan with a tablespoon of awesome. First Detroit #techkaraoke champ.",
                     "url":"http://www.portagemedia.com",
-                    "friend_count":2001,
-                    "followers_count":2194,
+                    "friend_count":2019,
+                    "followers_count":2229,
                     "profile_image_url":"http://a2.twimg.com/profile_images/1297333462/twitter-export_normal.jpg",
                     "name":"Jeremiah Staes",
                     "screen_name":"digitalvision",
-                    "statuses_count":15570,
+                    "statuses_count":16044,
                     "created_at":"Fri Mar 09 17:13:01 +0000 2007",
-                    "favourites_count":103,
                     "utc_offset":3600,
+                    "avg_tweets_per_day":10.66,
+                    "last_updated":"2011-04-22 01:02:06",
                     "thinkup":{
-                        "last_post":"2011-03-30 18:00:01",
-                        "last_post_id":54240564530528257,
+                        "last_post":"2011-04-20 22:14:55",
+                        "last_post_id":61217238421733376,
                         "found_in":"Friends"
                     }
                 }
@@ -459,7 +734,7 @@ Example output
             "place":null,
             "geo":null,
             "in_reply_to_user_id":221187763,
-            "is_reply_by_friend":true,
+            "is_reply_by_friend":false,
             "in_reply_to_post_id":54189744225124352,
             "in_rt_of_user_id":null,
             "reply_retweet_distance":0,
@@ -482,15 +757,16 @@ Example output
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -501,19 +777,14 @@ Example output
         {
             "id":54199405577904128,
             "source":"web",
-            "location":"Wales, United Kingdom",
+            "location":"Wales, UK",
             "place":null,
-            "geo":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
+            "geo":null,
             "in_reply_to_user_id":15040935,
-            "is_reply_by_friend":true,
+            "is_reply_by_friend":false,
             "in_reply_to_post_id":54193366124085249,
             "in_rt_of_user_id":null,
-            "reply_retweet_distance":119,
+            "reply_retweet_distance":0,
             "is_retweet_by_friend":false,
             "favorited":false,
             "all_retweets":0,
@@ -522,32 +793,27 @@ Example output
             "annotations":null,
             "truncated":false,
             "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
             "thinkup":{
                 "retweet_count_cache":0,
                 "reply_count_cache":1,
                 "old_retweet_count_cache":0,
-                "is_geo_encoded":1
+                "is_geo_encoded":0
             },
             "user":{
                 "id":69410725,
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -585,15 +851,16 @@ Example output
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -613,14 +880,14 @@ Example output
                 "reply_retweet_distance":0,
                 "is_retweet_by_friend":false,
                 "favorited":false,
-                "all_retweets":8,
+                "all_retweets":10,
                 "text":"If this audiobook doesn't download properly I'll never hear the end of it.",
                 "created_at":"Sat Apr 02 13:07:14 +0100 2011",
                 "annotations":null,
                 "truncated":false,
                 "protected":false,
                 "thinkup":{
-                    "retweet_count_cache":8,
+                    "retweet_count_cache":10,
                     "reply_count_cache":0,
                     "old_retweet_count_cache":0,
                     "is_geo_encoded":0
@@ -631,19 +898,14 @@ Example output
         {
             "id":54025293215711232,
             "source":"web",
-            "location":"Wales, United Kingdom",
+            "location":"Wales, UK",
             "place":null,
-            "geo":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
+            "geo":null,
             "in_reply_to_user_id":32372003,
             "is_reply_by_friend":false,
             "in_reply_to_post_id":54023437231980544,
             "in_rt_of_user_id":null,
-            "reply_retweet_distance":5415,
+            "reply_retweet_distance":0,
             "is_retweet_by_friend":false,
             "favorited":false,
             "all_retweets":0,
@@ -652,32 +914,27 @@ Example output
             "annotations":null,
             "truncated":false,
             "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
             "thinkup":{
                 "retweet_count_cache":0,
                 "reply_count_cache":1,
                 "old_retweet_count_cache":0,
-                "is_geo_encoded":1
+                "is_geo_encoded":0
             },
             "user":{
                 "id":69410725,
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
@@ -688,14 +945,9 @@ Example output
         {
             "id":54001484991430656,
             "source":"web",
-            "location":"Wales, United Kingdom",
+            "location":"Wales, UK",
             "place":null,
-            "geo":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
+            "geo":null,
             "in_reply_to_user_id":null,
             "is_reply_by_friend":false,
             "in_reply_to_post_id":null,
@@ -709,32 +961,27 @@ Example output
             "annotations":null,
             "truncated":false,
             "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    52.4699784,
-                    -3.8303771
-                ]
-            },
             "thinkup":{
                 "retweet_count_cache":0,
                 "reply_count_cache":1,
                 "old_retweet_count_cache":0,
-                "is_geo_encoded":1
+                "is_geo_encoded":0
             },
             "user":{
                 "id":69410725,
                 "location":"Wales, UK",
                 "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
                 "url":"http://lbak.co.uk",
-                "friend_count":225,
-                "followers_count":83,
+                "friend_count":234,
+                "followers_count":103,
                 "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
                 "name":"Sam Rose",
                 "screen_name":"samwhoo",
-                "statuses_count":780,
+                "statuses_count":921,
                 "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-                "favourites_count":36,
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.53,
+                "last_updated":"2011-04-22 13:00:10",
                 "thinkup":{
                     "last_post":"0000-00-00 00:00:00",
                     "last_post_id":0,
