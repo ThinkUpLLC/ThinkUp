@@ -47,19 +47,14 @@ Example output
     {
         "id":18152896965124096,
         "source":"web",
-        "location":"Wales, United Kingdom",
+        "location":"Wales, UK",
         "place":null,
-        "geo":{
-            "coordinates":[
-                52.4699784,
-                -3.8303771
-            ]
-        },
+        "geo":null,
         "in_reply_to_user_id":20636385,
         "is_reply_by_friend":false,
         "in_reply_to_post_id":17764087211491328,
         "in_rt_of_user_id":null,
-        "reply_retweet_distance":324,
+        "reply_retweet_distance":0,
         "is_retweet_by_friend":false,
         "favorited":false,
         "all_retweets":0,
@@ -68,32 +63,27 @@ Example output
         "annotations":null,
         "truncated":false,
         "protected":false,
-        "coordinates":{
-            "coordinates":[
-                52.4699784,
-                -3.8303771
-            ]
-        },
         "thinkup":{
             "retweet_count_cache":0,
             "reply_count_cache":2,
             "old_retweet_count_cache":0,
-            "is_geo_encoded":1
+            "is_geo_encoded":0
         },
         "user":{
             "id":69410725,
             "location":"Wales, UK",
             "description":"20 years old. Born and raised in Wales, UK. Programmer, British Mensa member, grapefruit, terrible at writing tag lines.",
             "url":"http://lbak.co.uk",
-            "friend_count":225,
-            "followers_count":83,
+            "friend_count":234,
+            "followers_count":103,
             "profile_image_url":"http://a1.twimg.com/profile_images/1140823002/28567_10150158194220371_544780370_11863380_6914499_n_normal.jpg",
             "name":"Sam Rose",
             "screen_name":"samwhoo",
-            "statuses_count":775,
+            "statuses_count":921,
             "created_at":"Thu Aug 27 21:32:42 +0100 2009",
-            "favourites_count":36,
             "utc_offset":3600,
+            "avg_tweets_per_day":1.53,
+            "last_updated":"2011-04-22 13:00:10",
             "thinkup":{
                 "last_post":"0000-00-00 00:00:00",
                 "last_post_id":0,

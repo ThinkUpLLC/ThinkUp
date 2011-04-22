@@ -37,7 +37,8 @@ Optional Arguments
 
 * **count**
 
-    The number of results to display from this API call. Defaults to 20.
+    The number of results to display from this API call. Defaults to 20.  Max is 200. If you supply something that is
+    not a valid number, this argument will revert to its default value of 20.
 
 * **page**
 
@@ -67,216 +68,68 @@ Example output
 
     [
         {
-            "id":54361082340458498,
-            "source":"<a href=\"http://github.com/drdrang/drtwoot\" rel=\"nofollow\">Dr. Twoot</a>",
-            "location":"Naperville, Illinois",
+            "id":61263346028122114,
+            "source":"web",
+            "location":"Canada",
+            "place":null,
+            "geo":null,
+            "in_reply_to_user_id":69410725,
+            "is_reply_by_friend":true,
+            "in_reply_to_post_id":61257731159490560,
+            "in_rt_of_user_id":null,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
+            "favorited":false,
+            "all_retweets":0,
+            "text":"@samwhoo Passionate",
+            "created_at":"Fri Apr 22 03:01:34 +0100 2011",
+            "annotations":null,
+            "truncated":false,
+            "protected":false,
+            "thinkup":{
+                "retweet_count_cache":0,
+                "reply_count_cache":0,
+                "old_retweet_count_cache":0,
+                "is_geo_encoded":0
+            },
+            "user":{
+                "id":85760550,
+                "location":"Canada",
+                "description":"Hah!",
+                "url":"",
+                "friend_count":18,
+                "followers_count":18,
+                "profile_image_url":"http://a3.twimg.com/profile_images/855291577/twitterProfilePhoto_normal.jpg",
+                "name":"Benoit Landry",
+                "screen_name":"Salvidrim",
+                "statuses_count":837,
+                "created_at":"Wed Oct 28 06:50:42 +0000 2009",
+                "utc_offset":3600,
+                "avg_tweets_per_day":1.55,
+                "last_updated":"2011-04-22 07:00:53",
+                "thinkup":{
+                    "last_post":"0000-00-00 00:00:00",
+                    "last_post_id":0,
+                    "found_in":"retweets"
+                }
+            }
+        },
+        {
+            "id":61263078871937024,
+            "source":"web",
+            "location":"Lehi, Utah",
             "place":null,
             "geo":null,
             "in_reply_to_user_id":69410725,
             "is_reply_by_friend":false,
-            "in_reply_to_post_id":54355802038878208,
+            "in_reply_to_post_id":61238661223682048,
             "in_rt_of_user_id":null,
             "reply_retweet_distance":0,
             "is_retweet_by_friend":false,
             "favorited":false,
             "all_retweets":0,
-            "text":"@samwhoo Well, the export button for search results doesn\u2019t seem to do anything. Am I missing something obvious?",
-            "created_at":"Sun Apr 03 01:54:26 +0100 2011",
-            "annotations":null,
-            "truncated":false,
-            "protected":false,
-            "thinkup":{
-                "retweet_count_cache":0,
-                "reply_count_cache":0,
-                "old_retweet_count_cache":0,
-                "is_geo_encoded":0
-            },
-            "user":{
-                "id":10697232,
-                "location":"Naperville, Illinois",
-                "description":"Retired snowman from Santa's Village.",
-                "url":"http://www.leancrew.com/all-this",
-                "friend_count":79,
-                "followers_count":373,
-                "profile_image_url":"http://a3.twimg.com/profile_images/74036670/snowman2_normal.jpg",
-                "name":"Dr. Drang",
-                "screen_name":"drdrang",
-                "statuses_count":4337,
-                "created_at":"Thu Nov 29 03:56:42 +0000 2007",
-                "favourites_count":134,
-                "utc_offset":3600,
-                "thinkup":{
-                    "last_post":"0000-00-00 00:00:00",
-                    "last_post_id":0,
-                    "found_in":"mentions"
-                }
-            }
-        },
-        {
-            "id":54351904683200513,
-            "source":"web",
-            "location":"Milky Way Galaxy",
-            "place":null,
-            "geo":null,
-            "in_reply_to_user_id":69410725,
-            "is_reply_by_friend":true,
-            "in_reply_to_post_id":54351245707722752,
-            "in_rt_of_user_id":null,
-            "reply_retweet_distance":0,
-            "is_retweet_by_friend":false,
-            "favorited":false,
-            "all_retweets":0,
-            "text":"@samwhoo Degrees from the University of Open Sauce are more common I'm afraid . . .",
-            "created_at":"Sun Apr 03 01:17:58 +0100 2011",
-            "annotations":null,
-            "truncated":false,
-            "protected":false,
-            "thinkup":{
-                "retweet_count_cache":0,
-                "reply_count_cache":0,
-                "old_retweet_count_cache":0,
-                "is_geo_encoded":2
-            },
-            "user":{
-                "id":20635230,
-                "location":"Milky Way Galaxy",
-                "description":"Moderator of Galaxy Zoo & co-founder of Skeptics in the Pub in Wales; citizen science & astronomy enthusiast; humanist & skeptic who writes too much",
-                "url":"http://www.aliceingalaxyland.blogspot.com",
-                "friend_count":473,
-                "followers_count":1377,
-                "profile_image_url":"http://a2.twimg.com/profile_images/1207391142/penguin_shrunk_SDSS_wise_normal.jpg",
-                "name":"Alice Sheppard",
-                "screen_name":"PenguinGalaxy",
-                "statuses_count":26562,
-                "created_at":"Wed Feb 11 22:27:37 +0000 2009",
-                "favourites_count":264,
-                "utc_offset":3600,
-                "thinkup":{
-                    "last_post":"2011-04-03 01:34:06",
-                    "last_post_id":53902343061778432,
-                    "found_in":"retweets"
-                }
-            }
-        },
-        {
-            "id":54319541915881472,
-            "source":"web",
-            "location":"Wales",
-            "place":null,
-            "geo":null,
-            "in_reply_to_user_id":69410725,
-            "is_reply_by_friend":true,
-            "in_reply_to_post_id":54212753145069568,
-            "in_rt_of_user_id":null,
-            "reply_retweet_distance":0,
-            "is_retweet_by_friend":false,
-            "favorited":false,
-            "all_retweets":0,
-            "text":"@samwhoo Your broke think up with 11 characters. that's impressive",
-            "created_at":"Sat Apr 02 23:09:22 +0100 2011",
-            "annotations":null,
-            "truncated":false,
-            "protected":false,
-            "thinkup":{
-                "retweet_count_cache":0,
-                "reply_count_cache":0,
-                "old_retweet_count_cache":0,
-                "is_geo_encoded":0
-            },
-            "user":{
-                "id":221187763,
-                "location":"Wales",
-                "description":"Second year computer forensics student, promoter for flirt and all round drunk guy. ",
-                "url":"",
-                "friend_count":36,
-                "followers_count":9,
-                "profile_image_url":"http://a1.twimg.com/profile_images/1178797185/60388_10150291371470193_585435192_15028818_5822008_n_normal.jpg",
-                "name":"Carl Lewis",
-                "screen_name":"Carlos13th",
-                "statuses_count":19,
-                "created_at":"Tue Nov 30 00:02:26 +0000 2010",
-                "favourites_count":0,
-                "utc_offset":3600,
-                "thinkup":{
-                    "last_post":"2011-03-10 02:04:41",
-                    "last_post_id":53460536481955840,
-                    "found_in":"mentions"
-                }
-            }
-        },
-        {
-            "id":54200520822374400,
-            "source":"<a href=\"http://itunes.apple.com/app/twitter/id333903271?mt=8\" rel=\"nofollow\">Twitter for iPad</a>",
-            "location":"Cardiff",
-            "place":null,
-            "geo":{
-                "coordinates":[
-                    51.4813069,
-                    -3.1804979
-                ]
-            },
-            "in_reply_to_user_id":69410725,
-            "is_reply_by_friend":true,
-            "in_reply_to_post_id":54199405577904128,
-            "in_rt_of_user_id":null,
-            "reply_retweet_distance":119,
-            "is_retweet_by_friend":false,
-            "favorited":false,
-            "all_retweets":0,
-            "text":"@samwhoo That much is true.",
-            "created_at":"Sat Apr 02 15:16:25 +0100 2011",
-            "annotations":null,
-            "truncated":false,
-            "protected":false,
-            "coordinates":{
-                "coordinates":[
-                    51.4813069,
-                    -3.1804979
-                ]
-            },
-            "thinkup":{
-                "retweet_count_cache":0,
-                "reply_count_cache":0,
-                "old_retweet_count_cache":0,
-                "is_geo_encoded":1
-            },
-            "user":{
-                "id":15040935,
-                "location":"Cardiff",
-                "description":"16 year old. I do a podcast, SDWFD(w/c!) http://v.gd/superwooduo. Skeptic.",
-                "url":"http://thewelshboyo.co.uk",
-                "friend_count":304,
-                "followers_count":1367,
-                "profile_image_url":"http://a3.twimg.com/profile_images/1295858459/4aed4901-d81b-490d-a35a-8babff8a4d48_normal.png",
-                "name":"Rhys Morgan",
-                "screen_name":"rhysmorgan",
-                "statuses_count":31551,
-                "created_at":"Sat Jun 07 19:42:58 +0100 2008",
-                "favourites_count":23,
-                "utc_offset":3600,
-                "thinkup":{
-                    "last_post":"2011-04-03 00:16:41",
-                    "last_post_id":53932036381089792,
-                    "found_in":"retweets"
-                }
-            }
-        },
-        {
-            "id":54189744225124352,
-            "source":"web",
-            "location":"Wales",
-            "place":null,
-            "geo":null,
-            "in_reply_to_user_id":69410725,
-            "is_reply_by_friend":true,
-            "in_reply_to_post_id":54001484991430656,
-            "in_rt_of_user_id":null,
-            "reply_retweet_distance":0,
-            "is_retweet_by_friend":false,
-            "favorited":false,
-            "all_retweets":0,
-            "text":"@samwhoo what happened?",
-            "created_at":"Sat Apr 02 14:33:36 +0100 2011",
+            "text":"@samwhoo I'm glad i got my degree, but the every day skills came from open source and other in-the-trenches stuff.  Congrats again!",
+            "created_at":"Fri Apr 22 03:00:30 +0100 2011",
             "annotations":null,
             "truncated":false,
             "protected":false,
@@ -287,22 +140,164 @@ Example output
                 "is_geo_encoded":0
             },
             "user":{
-                "id":221187763,
-                "location":"Wales",
-                "description":"Second year computer forensics student, promoter for flirt and all round drunk guy. ",
-                "url":"",
-                "friend_count":36,
-                "followers_count":9,
-                "profile_image_url":"http://a1.twimg.com/profile_images/1178797185/60388_10150291371470193_585435192_15028818_5822008_n_normal.jpg",
-                "name":"Carl Lewis",
-                "screen_name":"Carlos13th",
-                "statuses_count":19,
-                "created_at":"Tue Nov 30 00:02:26 +0000 2010",
-                "favourites_count":0,
+                "id":9905392,
+                "location":"Lehi, Utah",
+                "description":"A software toolsmith that creates, customizes, and masters great software tools.",
+                "url":"http://findme.travishartwell.net/",
+                "friend_count":805,
+                "followers_count":1620,
+                "profile_image_url":"http://a3.twimg.com/profile_images/35267502/n882175547_27194_normal.jpg",
+                "name":"Travis B. Hartwell",
+                "screen_name":"travisbhartwell",
+                "statuses_count":1744,
+                "created_at":"Sat Nov 03 02:50:41 +0000 2007",
                 "utc_offset":3600,
+                "avg_tweets_per_day":1.38,
+                "last_updated":"2011-04-22 04:01:12",
                 "thinkup":{
-                    "last_post":"2011-03-10 02:04:41",
-                    "last_post_id":53460536481955840,
+                    "last_post":"0000-00-00 00:00:00",
+                    "last_post_id":0,
+                    "found_in":"mentions"
+                }
+            }
+        },
+        {
+            "id":61214633675067392,
+            "source":"<a href=\"http://mobile.twitter.com\" rel=\"nofollow\">Twitter for Android</a>",
+            "location":"",
+            "place":null,
+            "geo":null,
+            "in_reply_to_user_id":69410725,
+            "is_reply_by_friend":false,
+            "in_reply_to_post_id":61136478058708992,
+            "in_rt_of_user_id":null,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
+            "favorited":false,
+            "all_retweets":0,
+            "text":"@samwhoo l kicked off quite a thread. Sorry! :)",
+            "created_at":"Thu Apr 21 23:48:00 +0100 2011",
+            "annotations":null,
+            "truncated":false,
+            "protected":false,
+            "thinkup":{
+                "retweet_count_cache":0,
+                "reply_count_cache":1,
+                "old_retweet_count_cache":0,
+                "is_geo_encoded":0
+            },
+            "user":{
+                "id":18326200,
+                "location":"",
+                "description":"",
+                "url":"http://pdurbin.freeshell.org",
+                "friend_count":100,
+                "followers_count":51,
+                "profile_image_url":"http://a0.twimg.com/profile_images/68449525/6b686fe7f07115890ca63099d088948d-2_normal.jpg",
+                "name":"Philip Durbin",
+                "screen_name":"philipdurbin",
+                "statuses_count":364,
+                "created_at":"Tue Dec 23 04:17:49 +0000 2008",
+                "utc_offset":3600,
+                "avg_tweets_per_day":0.43,
+                "last_updated":"2011-04-22 01:00:21",
+                "thinkup":{
+                    "last_post":"0000-00-00 00:00:00",
+                    "last_post_id":0,
+                    "found_in":"mentions"
+                }
+            }
+        },
+        {
+            "id":61185698706886657,
+            "source":"web",
+            "location":"Seattle, WA, USA",
+            "place":null,
+            "geo":null,
+            "in_reply_to_user_id":69410725,
+            "is_reply_by_friend":true,
+            "in_reply_to_post_id":61179112676528128,
+            "in_rt_of_user_id":null,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
+            "favorited":false,
+            "all_retweets":0,
+            "text":"@samwhoo Perhaps you can soothe your wounded heart with the warm microprocessors of a brand new, free, iPad 2? ;^)",
+            "created_at":"Thu Apr 21 21:53:02 +0100 2011",
+            "annotations":null,
+            "truncated":false,
+            "protected":false,
+            "thinkup":{
+                "retweet_count_cache":0,
+                "reply_count_cache":1,
+                "old_retweet_count_cache":0,
+                "is_geo_encoded":0
+            },
+            "user":{
+                "id":13205432,
+                "location":"Seattle, WA, USA",
+                "description":"Habitual edge case",
+                "url":"http://trevorbramble.com/",
+                "friend_count":187,
+                "followers_count":270,
+                "profile_image_url":"http://a1.twimg.com/profile_images/1304895448/trevor_nyc_bw_normal.png",
+                "name":"Trevor Bramble",
+                "screen_name":"TrevorBramble",
+                "statuses_count":5374,
+                "created_at":"Thu Feb 07 14:32:32 +0000 2008",
+                "utc_offset":3600,
+                "avg_tweets_per_day":4.59,
+                "last_updated":"2011-04-22 05:01:49",
+                "thinkup":{
+                    "last_post":"0000-00-00 00:00:00",
+                    "last_post_id":60224776932835328,
+                    "found_in":"retweets"
+                }
+            }
+        },
+        {
+            "id":61134153202151424,
+            "source":"<a href=\"http://www.tweetdeck.com\" rel=\"nofollow\">TweetDeck</a>",
+            "location":"Montreal, Canada",
+            "place":null,
+            "geo":null,
+            "in_reply_to_user_id":69410725,
+            "is_reply_by_friend":true,
+            "in_reply_to_post_id":61133719125237760,
+            "in_rt_of_user_id":null,
+            "reply_retweet_distance":0,
+            "is_retweet_by_friend":false,
+            "favorited":false,
+            "all_retweets":0,
+            "text":"@samwhoo I know, same here! You should hear us speak component part codes out loud here at work, sounds even sillier. OH-Pa-Five-Five-One!",
+            "created_at":"Thu Apr 21 18:28:12 +0100 2011",
+            "annotations":null,
+            "truncated":false,
+            "protected":false,
+            "thinkup":{
+                "retweet_count_cache":0,
+                "reply_count_cache":0,
+                "old_retweet_count_cache":0,
+                "is_geo_encoded":0
+            },
+            "user":{
+                "id":15496351,
+                "location":"Montreal, Canada",
+                "description":"Prefer to enjoy the big picture than examine the individual pictures; take photos because I'm rubbish with a paintbrush and canvas.",
+                "url":"http://angelostavrow.com",
+                "friend_count":1122,
+                "followers_count":774,
+                "profile_image_url":"http://a0.twimg.com/profile_images/1177837673/bluemountains_normal.jpg",
+                "name":"Angelo Stavrow",
+                "screen_name":"AngeloStavrow",
+                "statuses_count":8859,
+                "created_at":"Sat Jul 19 23:01:16 +0100 2008",
+                "utc_offset":3600,
+                "avg_tweets_per_day":8.80,
+                "last_updated":"2011-04-21 20:00:41",
+                "thinkup":{
+                    "last_post":"2011-04-20 20:29:01",
+                    "last_post_id":60338425013878784,
                     "found_in":"mentions"
                 }
             }

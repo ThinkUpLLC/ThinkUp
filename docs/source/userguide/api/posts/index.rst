@@ -40,7 +40,17 @@ Facebook Support
 ----------------
 
 As of this moment, you **can** use the API to search for Facebook posts but it is untested and experimental. The aim of
-this first iteration of the API was to nail Twitter support. 
+this first iteration of the API was to nail Twitter support.
+
+Max Posts Returned Capped at 200
+--------------------------------
+
+We decided to cap the maximum number of posts to return at 200 because this is something that the Twitter API also
+does. Requests for over 200 posts tend to take quite a long time anyway. If you do want to enable your installation
+to return more than 200 posts at a time, look at line 170 in ``webapp/_lib/controller/class.PostAPIController.php``.
+
+The API call type ``user_posts_in_range`` does not adhere to this count upper limit. Be careful when querying large
+time ranges.
 
 Post API Call Reference
 -----------------------

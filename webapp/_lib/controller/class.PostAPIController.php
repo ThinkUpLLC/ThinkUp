@@ -641,14 +641,15 @@ class PostAPIController extends ThinkUpController {
                 $post->user->created_at = strftime('%a %b %d %T %z %Y', strtotime($post->user->joined));
                 $post->user->favorites_count = $post->user->favorites_count;
                 $post->user->utc_offset = Config::getInstance()->getGMTOffset() * 3600;
-
-                if (isset($post->user->other->avg_tweets_per_day)) {
-                    $post->user->avg_tweets_per_day = $post->user->other->avg_tweets_per_day;
+                
+                if (isset($post->user->other)) {
+                    if (isset($post->user->other['avg_tweets_per_day'])) {
+                        $post->user->avg_tweets_per_day = $post->user->other['avg_tweets_per_day'];
+                    }
+                    if (isset($post->user->other['last_updated'])) {
+                        $post->user->last_updated = $post->user->other['last_updated'];
+                    }
                 }
-
-                //                if (isset($post->user->other)) {
-                //                    $post->user->last_updated = $post->user->other->last_updated;
-                //                }
 
                 $post->user->thinkup = new stdClass();
 
@@ -800,7 +801,7 @@ class PostAPIController extends ThinkUpController {
      * @param User $user A User object.
      * @return stdClass A stdClass object with all of the same vars as the User object that was passed in.
      */
-    private function convertUserToStdClass($user) {
+    private function convertUserToStdClass(User $user) {
         if (is_object($user)) {
             $return = new stdClass();
             foreach (get_object_vars($user) as $key => $val) {
