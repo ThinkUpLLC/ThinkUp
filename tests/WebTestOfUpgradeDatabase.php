@@ -200,13 +200,8 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->setField('email', 'user@example.com');
         $this->setField('pwd', 'secret');
         $this->click("Log In");
-        if (version_compare($version, '0.9', '<')) {
-            $this->debug('Version '. $version .' was before calling it services in 0.9');
-            $this->assertText('You have no accounts configured. Set up an account now');
-        } else {
-            $this->debug('As of beta 9, started calling it services');
-            $this->assertText('You have no services configured. Set up a service like Twitter or Facebook now');
-        }
+        $this->assertText('You have no'); //accounts/services configured. Set up an account now');
+        $this->assertText('Set up'); //an account/a service like Twitter or Facebook now
         //Visit Configuration/Settings page and assert content there
         if (floatval($version) >= 0.6) {
             $this->click("Settings"); //link name changed in beta 6
