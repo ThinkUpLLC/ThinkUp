@@ -203,10 +203,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->assertText('You have no'); //accounts/services configured. Set up an account now');
         $this->assertText('Set up'); //an account/a service like Twitter or Facebook now
         //Visit Configuration/Settings page and assert content there
-        if (floatval($version) >= 0.6) {
+        if (version_compare($version, '0.6', '>=')) {
             $this->click("Settings"); //link name changed in beta 6
+            $this->debug("Clicked Settings");
         } else {
             $this->click("Configuration");
+            $this->debug("Clicked Configuration");
         }
         $this->assertTitle('Configure Your Account | ThinkUp');
         $this->assertText('As an administrator you can configure all installed plugins.');

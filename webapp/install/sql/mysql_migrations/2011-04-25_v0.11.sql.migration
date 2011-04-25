@@ -1,5 +1,7 @@
+-- 2011-04-25
+
 -- Due to a Twitter crawler bug, there are cases where a private users's posts were not marked as such.
--- This SQL back-protects posts by protected users.
+-- This migration back-protects posts by protected users.
 
 UPDATE tu_posts, tu_users SET tu_posts.is_protected=1 WHERE tu_posts.author_user_id = tu_users.user_id AND tu_posts.network=tu_users.network AND tu_users.is_protected=1;
 

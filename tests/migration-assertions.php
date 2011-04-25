@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '0.10';
+$LATEST_VERSION = '0.11';
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -285,7 +285,7 @@ $MIGRATIONS = array(
 
     /* beta 0.10 */
     '0.10' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.10.1.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -338,6 +338,23 @@ $MIGRATIONS = array(
                     'match' => "/int\(11\)/",
                     'column' => 'Type',
                 ),
+            )
+        )
+    ),
+    
+    /* beta 0.11 */
+    '0.11' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    // Back-protect private posts
+                    'query' => "SELECT a.user_name, p.post_id, p.post_text, p.is_protected, a.is_protected FROM ".
+                    "tu_posts p INNER JOIN tu_users a ON p.author_user_id=a.user_id AND p.network=a.network WHERE ".
+                    "a.is_protected=1 AND p.is_protected=0; ", 
+                    'no_match' => true,
+                )
             )
         )
     ),

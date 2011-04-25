@@ -1,7 +1,18 @@
 Changes in ThinkUp
 ==================
 
-TODO: Port changelogs from pre-beta 10 releases into the text of this page.
+Beta 0.11 - 25 April 2011
+-------------------------
+
+**Bugfix Release**
+
+Beta 11 is a **REQUIRED UPDATE** for all installations of ThinkUp prior to April 25.
+
+* Fixes a potential information vulnerability in older versions of ThinkUp that could reveal private posts that are stored by the application.
+* Fixes a PHP Notice on ThinkUp API calls in some server environments and updates API documentation.
+* Adds Security and Data Privacy documentation.
+* Fixes bug where Dashboard menu links are incorrect after logout.
+
 
 Beta 0.10 - 20 April 2011
 -------------------------
@@ -32,6 +43,8 @@ Beta 0.10 - 20 April 2011
 * Developers: Fixed several test failures; upgraded the testing framework to SimpleTest 1.1 alpha, which lets developers turn on E_STRICT error level reporting for bulletproof coding and testing.
 * Developers: More tests are now using the FixtureBuilder library instead of raw SQL inserts.
 
+TODO: Port changelogs from pre-beta 10 releases into the text of this page
+--------------------------------------------------------------------------
 
 Beta 0.9 - 17 Mar 2011
 ----------------------
