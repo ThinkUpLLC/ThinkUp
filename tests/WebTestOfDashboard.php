@@ -54,6 +54,31 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->assertText('thinkupapp');
     }
 
+    /**
+     * Assert menu nav links don't send you to the login screen after logging out.
+     */
+    public function testDashboardMenuNavLinksOnLogout() {
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+
+        $this->click("Log In");
+        $this->click("Log Out");
+
+        //assert you're logged out
+        $this->assertNoText('Logged in as: me@example.com');
+
+        //click on a nav link
+        $this->click("All Tweets");
+
+        //make sure it takes you to posts view
+        $this->assertText('All tweets');
+        $this->assertTitle("thinkupapp on Twitter | ThinkUp");
+
+        //not the login screen
+        $this->assertNoText("Password");
+    }
+
     public function testUserPage() {
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');

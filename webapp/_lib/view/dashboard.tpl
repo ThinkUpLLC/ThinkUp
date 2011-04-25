@@ -14,7 +14,7 @@
           <li>
             <ul class="side-subnav">
               <li{if $smarty.get.v eq ''} class="currentview"{/if}><br />
-                <a href="index.php?u={$instance->network_username|urlencode}&n={$instance->network}">Dashboard</a>
+                <a href="{$site_root_path}index.php?u={$instance->network_username|urlencode}&n={$instance->network}">Dashboard</a>
               </li>
         {/if}
         {if $sidebar_menu}
@@ -25,7 +25,7 @@
         <li>{$sidebar_menu_item->header}
         <ul class="side-subnav">
         {/if}
-        <li{if $smarty.get.v eq $smkey} class="currentview"{/if}><a href="index.php?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$sidebar_menu_item->name}</a></li>
+        <li{if $smarty.get.v eq $smkey} class="currentview"{/if}><a href="{$site_root_path}index.php?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$sidebar_menu_item->name}</a></li>
         {/foreach}
         </ul>
         </li>
