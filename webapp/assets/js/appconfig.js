@@ -179,12 +179,23 @@ var TUApplicationSettings = function() {
             var setting = data.app_config_settings[key];
             var id = '#' + key
             if(data.values[key]) {
+                if (this.DEBUG) { console.debug("loading %s with value %s", key, data.values[key]['option_value']); }
                 if(setting.type == 'checkbox') {
+                    if (this.DEBUG) { console.debug("%s is a checkbox with value %s", key,
+                        data.values[key]['option_value']) }
                     $(id).attr('checked', true);
                 } else {
                     $(id).val(data.values[key]['option_value']);
                 }
-            }
+            } else {
+                if (this.DEBUG) { console.debug("loading default %s with value %s", key, setting['default']); }
+                if(setting.type == 'checkbox' && setting['default'] == 'true') {
+                    if (this.DEBUG) { console.debug("Checking checkbox for key %s", key, setting['default']); }
+                    $(id).attr('checked', true);
+                } else {
+                    $(id).val(setting['default']);
+                }
+             }
             if(setting.dependencies && data.values[key] && data.values[key] != '') {
                 var id = '#' + key + '_deps';
                 if($(id)) { $(id).show(); }

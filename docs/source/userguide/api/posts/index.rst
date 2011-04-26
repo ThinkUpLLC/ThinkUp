@@ -45,6 +45,8 @@ Refer to each API method's definition below to see its parameters and example re
    user_mentions
    user_posts
    user_posts_in_range
+   user_posts_most_replied_to
+   user_posts_most_retweeted
    user_questions
    user_replies
    ../errors/index

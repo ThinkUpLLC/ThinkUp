@@ -2093,4 +2093,31 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
         $installer_dao = DAOFactory::getDAO('InstallerDAO');
         $this->assertTrue(array_search($prefix . "posts", $installer_dao->getTables()) !== false);
     }
+
+    public function testAPIDisabled() {
+        // test option does not exist (option is true by default)
+        $_GET['type'] = 'user_posts_in_range';
+        $_GET['user_id'] = 18;
+        $_GET['from'] = '2006-01-02 00:00:00';
+        $_GET['until'] = '2006-01-02 00:59:59';
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+
+        $this->assertFalse(isset($output->error));
+
+        $option_dao->insertOption(OptionDAO::APP_OPTIONS, 'is_api_enabled', false);
+
+        // test option false
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+
+        $this->assertEqual($output->error->type, 'APIDisabledException');
+
+        // test option true
+        $option_dao->updateOptionByName(OptionDAO::APP_OPTIONS, 'is_api_enabled', true);
+        $controller = new PostAPIController(true);
+        $output = json_decode($controller->go());
+
+        $this->assertFalse(isset($output->error));
+    }
 }

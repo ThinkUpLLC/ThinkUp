@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/view/plugins/modifier.tweet_from_id.php
+ * ThinkUp/webapp/_lib/model/exceptions/class.APIDisabledException.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2009-2011 Sam Rose
  *
  * LICENSE:
  *
@@ -19,34 +19,15 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
- * Smarty plugin
- * @package Smarty
- * @subpackage plugins
- */
-
-/**
- * Help Link
  *
- * Type:     insert<br>
- * Name:     help_link
- * Date:     April 26, 2011
- * Purpose:  Renders a help link.
- * Input:    key
- * Example:  {insert name="help_link" id="api"}
+ *
+ *
+ * @author Sam Rose <samwho@lbak.co.uk>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2011 Gina Trapani
- * @version 1.0
- * @param string
+ * @copyright 2009-2011 Sam Rose
  */
-function smarty_insert_help_link($params, &$smarty) {
-    if (defined('THINKUP_BASE_URL')) {
-        $base_url = THINKUP_BASE_URL;
-    } else {
-        $base_url = '';
+class APIDisabledException extends Exception {
+    public function __construct() {
+        parent::__construct("Access to ThinkUp's API has been disabled.");
     }
-
-    return '<a href="http://thinkupapp.com/docs/'.$smarty->_tpl_vars['help'][$params['id']].
-    '.html" title="Learn more"><img src="'.$base_url.'assets/img/help.png"></a>';
 }
