@@ -36,8 +36,8 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
      * Test constructor
      */
     public function testNewSmartyThinkUp() {
-        $smtt = new SmartyThinkUp();
-        $this->assertTrue(isset($smtt));
+        $v_mgr = new SmartyThinkUp();
+        $this->assertTrue(isset($v_mgr));
     }
 
     /**
@@ -47,15 +47,15 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $cfg = Config::getInstance();
         $cfg->setValue('source_root_path', '/path/to/thinkup/');
         $cfg->setValue('cache_pages', true);
-        $smtt = new SmartyThinkUp();
+        $v_mgr = new SmartyThinkUp();
 
-        $this->assertTrue(sizeof($smtt->template_dir), 2);
-        $this->assertEqual($smtt->template_dir[1], '/path/to/thinkup/tests/view');
-        $this->assertTrue(sizeof($smtt->plugins_dir), 2);
-        $this->assertEqual($smtt->plugins_dir[0], 'plugins');
-        $this->assertEqual($smtt->cache_dir, THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache');
-        $this->assertEqual($smtt->cache_lifetime, 300);
-        $this->assertTrue($smtt->caching);
+        $this->assertTrue(sizeof($v_mgr->template_dir), 2);
+        $this->assertEqual($v_mgr->template_dir[1], '/path/to/thinkup/tests/view');
+        $this->assertTrue(sizeof($v_mgr->plugins_dir), 2);
+        $this->assertEqual($v_mgr->plugins_dir[0], 'plugins');
+        $this->assertEqual($v_mgr->cache_dir, THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache');
+        $this->assertEqual($v_mgr->cache_lifetime, 300);
+        $this->assertTrue($v_mgr->caching);
     }
 
     /**
@@ -66,14 +66,14 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $cfg->setValue('debug', true);
         $cfg->setValue('app_title', 'Testy ThinkUp Custom Application Name');
         $cfg->setValue('site_root_path', '/my/thinkup/folder/');
-        $smtt = new SmartyThinkUp();
+        $v_mgr = new SmartyThinkUp();
 
-        $smtt->assign('test_var_1', "Testing, testing, 123");
-        $this->assertEqual($smtt->getTemplateDataItem('test_var_1'), "Testing, testing, 123");
+        $v_mgr->assign('test_var_1', "Testing, testing, 123");
+        $this->assertEqual($v_mgr->getTemplateDataItem('test_var_1'), "Testing, testing, 123");
 
-        $this->assertEqual($smtt->getTemplateDataItem('app_title'), 'Testy ThinkUp Custom Application Name');
-        $this->assertEqual($smtt->getTemplateDataItem('logo_link'), '');
-        $this->assertEqual($smtt->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/');
+        $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'Testy ThinkUp Custom Application Name');
+        $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
+        $this->assertEqual($v_mgr->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/');
     }
 
     /**
@@ -82,11 +82,11 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     public function testSmartyThinkUpAssignedValuesDebugOff() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', false);
-        $smtt = new SmartyThinkUp();
+        $v_mgr = new SmartyThinkUp();
 
-        $smtt->assign('test_var_1', "Testing, testing, 123");
-        $this->assertEqual($smtt->getTemplateDataItem('test_var_1'), null);
-        $test_var_1 = $smtt->getTemplateDataItem('test_var_1');
+        $v_mgr->assign('test_var_1', "Testing, testing, 123");
+        $this->assertEqual($v_mgr->getTemplateDataItem('test_var_1'), null);
+        $test_var_1 = $v_mgr->getTemplateDataItem('test_var_1');
         $this->assertTrue(!isset($test_var_1));
     }
 
@@ -99,10 +99,28 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         'source_root_path'=>'/Users/gina/Sites/thinkup', 
         'app_title'=>"My ThinkUp", 
         'cache_pages'=>true);
-        $smtt = new SmartyThinkUp($cfg_array);
+        $v_mgr = new SmartyThinkUp($cfg_array);
 
-        $this->assertEqual($smtt->getTemplateDataItem('app_title'), 'My ThinkUp');
-        $this->assertEqual($smtt->getTemplateDataItem('logo_link'), '');
-        $this->assertEqual($smtt->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/test');
+        $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'My ThinkUp');
+        $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
+        $this->assertEqual($v_mgr->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/test');
+    }
+
+    public function testAddHelp() {
+        $cfg_array = array('debug'=>true,
+        'site_root_path'=>'/my/thinkup/folder/test',
+        'source_root_path'=>'/Users/gina/Sites/thinkup', 
+        'app_title'=>"My ThinkUp", 
+        'cache_pages'=>true);
+        $v_mgr = new SmartyThinkUp($cfg_array);
+
+        $v_mgr->addHelp('api', 'userguide/api/posts/index');
+        $v_mgr->addHelp('user_guide', 'userguide/index');
+
+        $help_array = array('api'=>'userguide/api/posts/index', 'user_guide'=>'userguide/index');
+        $this->assertEqual($v_mgr->getTemplateDataItem('help'), $help_array);
+        $debug_arr = $v_mgr->getTemplateDataItem('help');
+        $this->debug(Utils::varDumpToString($debug_arr));
+        $this->debug($debug_arr['api']);
     }
 }

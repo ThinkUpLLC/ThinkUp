@@ -41,6 +41,11 @@ class SmartyThinkUp extends Smarty {
      * @var array
      */
     private $template_data = array();
+
+    /**
+     * @var array
+     */
+    private $contextual_help = array();
     /**
      * Constructor
      *
@@ -96,6 +101,16 @@ class SmartyThinkUp extends Smarty {
         if ($this->debug) {
             $this->template_data[$key] = $value;
         }
+    }
+
+    /**
+     * Assign contextual help to the template.
+     * @param $key Unique help item key.
+     * @param $link_slug Documentation page slug, ie, 'userguide/api/posts/index'
+     */
+    public function addHelp($id, $link_slug) {
+        $this->contextual_help[$id] = $link_slug;
+        $this->assign('help', $this->contextual_help);
     }
 
     /**
