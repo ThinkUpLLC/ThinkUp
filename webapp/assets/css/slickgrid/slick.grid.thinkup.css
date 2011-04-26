@@ -1,17 +1,18 @@
 @import url('slick-default-theme.css');
 
 * {
-    font-family: arial;
-    font-size: 8pt;
 }
 
 body {
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     //background: beige;
 }
 
+a, a:link, a:visited {text-decoration: none;color: #416A93;outline: none;}
+a:hover {text-decoration: none;color: #6eac2c;}
+
 h2 {
     font-size: 10pt;
-    border-bottom: 1px dotted gray;
 }
 
 ul {
@@ -29,19 +30,34 @@ li {
 } 
 
 #myGrid {
-    background: gray;
+    background: transparent;
     outline: 0;
-    border: 1px solid gray;
 }
 
+
+#grid_search_form { text-align : center; margin-left : auto; margin-right : auto; }
+#grid_search_input {
+	width : 350px;
+	font-size : large;
+}
+#grid_search_results_count {
+    color : #848884;
+}
+
+
+.ui-widget-content {
+    border : none;
+    }
+
+
 .grid-header {
-	border: 1px solid gray;
 	border-bottom: 0;
 	border-top: 0;
 	//background: url('../images/header-bg.gif') repeat-x center top;
 	color: black;
 	height: 14px;
 	line-height: 14px;
+	display : none;
 }	
 
 .grid-header label {
@@ -65,13 +81,11 @@ li {
 	padding: 2px 2px;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
-	border: 1px solid silver;
 }
 
 .options-panel {
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
-	border: 1px solid silver;
 	background: #f0f0f0;	
 	padding: 4px;		
 	margin-bottom: 20px;
@@ -80,6 +94,12 @@ li {
  
 
 /* Individual cell styles */
+
+.slick-cell {
+    border : none;
+    font-size : small;
+}
+
 .slick-cell.task-name {
 	font-weight: bold;
 	text-align: right;
@@ -115,6 +135,10 @@ li {
 .slick-row.complete {
 	background-color: #DFD;
 	color: #555;
+}
+
+.slick-header {
+    display : none;
 }
 
 .percent-complete-bar {
