@@ -9,3 +9,4 @@ Contents:
    apicalltypenotrecognised
    requiredargumentmissing
    usernotfound
+   apidisabled

@@ -43,7 +43,7 @@ class AppConfig {
             'default' => 'false',
             'match' => '/^(true|false)$/',
             'match_message' => 'Must be true or false'
-    ),
+        ),
         'recaptcha_enable' => array(
             'type' => 'checkbox',
             'title' => 'Enable ReCAPTCHA',
@@ -52,7 +52,7 @@ class AppConfig {
             'match' => '/^true$/',
             'match_message' => 'Must be true',
             'dependencies' => array('recaptcha_public_key','recaptcha_private_key')
-    ),
+        ),
         'recaptcha_public_key' => array(
             'type' => 'text',
             'title' => 'ReCAPTCHA Public Key',
@@ -60,7 +60,7 @@ class AppConfig {
             'match' => '/\w/',
             'match_message' => '',
             'default' => '',
-    ),
+        ),
         'recaptcha_private_key' => array(
             'type' => 'text',
             'title' => 'ReCAPTCHA Private Key',
@@ -68,7 +68,15 @@ class AppConfig {
             'match' => '/\w/',
             'match_message' => '',
             'default' => '',
-    )
+        ),
+        'api_enabled' => array(
+            'type' => 'checkbox',
+            'title' => 'Enable JSON API',
+            'required' => false,
+            'default' => 'false',
+            'match' => '/^(true|false)$/',
+            'match_message' => 'Must be true or false'
+        )
     );
 
     /**
