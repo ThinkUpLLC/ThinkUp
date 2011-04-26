@@ -129,17 +129,11 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         try {
             //Create a temporary PDO object for creating the database.
             $tempPDO = new PDO($db_string, $config->getValue('db_user'), $config->getValue('db_password'));
-
-            $q =  sprintf("CREATE DATABASE IF NOT EXISTS `%s`;",
-            mysql_real_escape_string($config->getValue('db_name')));
-            $success = $tempPDO->query($q);
-
-            //Check to see if the database was created.
-            if ($success === false) {
-                return false;
-            } else {
-                return true;
-            }
+            $sql =  "CREATE DATABASE IF NOT EXISTS `".$config->getValue('db_name')."`;";
+            $stmt = $tempPDO->prepare($sql);
+            $stmt->execute();
+            $row_count = $stmt->rowCount();
+            return ($row_count > 0)?true:false;
         } catch (Exception $e) {
             return false;
         }

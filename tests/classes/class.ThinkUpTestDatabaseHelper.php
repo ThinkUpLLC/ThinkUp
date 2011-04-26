@@ -69,32 +69,63 @@ class ThinkUpTestDatabaseHelper extends PDODAO {
         return self::execute($sql);
     }
 
+    /**
+     * Check if a database exists
+     * @param str $db_name
+     * @return bool
+     */
     public function databaseExists($db_name) {
         $config = Config::getInstance();
-        $server = $config->getValue('db_host');
-        if ($config->getValue('db_port')) {
-            $server .= ':'.$config->getValue('db_port');
-        }
-        $con = mysql_connect($server, $config->getValue('db_user'), $config->getValue('db_password'));
-        $return = mysql_select_db($db_name, $con);
-        //Set the db back to what it was.
-        mysql_select_db($config->getValue('db_name'), $con);
-        //Shouldn't close the connection, it's needed for other tests.
-        //mysql_close($con);
-        return $return;
+        $db_string = $this->getDBString();
+
+        $tempPDO = new PDO($db_string, $config->getValue('db_user'), $config->getValue('db_password'));
+        $sql =  "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '".$db_name."';";
+        $stmt = $tempPDO->prepare($sql);
+        $stmt->execute();
+        $row_count = $stmt->rowCount();
+        return ($row_count > 0)?true:false;
     }
 
+    /**
+     * Drop a database.
+     * @param str $db_name
+     */
     public function deleteDatabase($db_name) {
+        $config = Config::getInstance();
+        $db_string = $this->getDBString();
+
+        $tempPDO = new PDO($db_string, $config->getValue('db_user'), $config->getValue('db_password'));
+        $stmt = $tempPDO->prepare('DROP DATABASE `'.$db_name.'`;');
+        $stmt->execute();
+    }
+    /**
+     * Get PDO connection string.
+     * @return str
+     */
+    private function getDBString() {
         $config = Config::getInstance();
         $server = $config->getValue('db_host');
         if ($config->getValue('db_port')) {
             $server .= ':'.$config->getValue('db_port');
         }
-        $con = mysql_connect($server, $config->getValue('db_user'), $config->getValue('db_password'));
-        $db_name = mysql_real_escape_string($db_name);
-        $return = mysql_query("DROP DATABASE `".$db_name."`");
-        //Shouldn't close the connection, it's needed for other tests.
-        //mysql_close($con);
-        return $return;
+        $db_type = $config->getValue('db_type');
+
+        if(!$db_type) {
+            $db_type = 'mysql';
+        }
+        $db_socket = $config->getValue('db_socket');
+
+        if (!$db_socket) {
+            $db_port = $config->getValue('db_port');
+            if (!$db_port) {
+                $db_socket = '';
+            } else {
+                $db_socket = ";port=".$config->getValue('db_port');
+            }
+        } else {
+            $db_socket=";unix_socket=".$db_socket;
+        }
+        $db_string = sprintf( "%s:host=%s%s", $db_type, $config->getValue('db_host'), $db_socket );
+        return $db_string;
     }
 }
