@@ -473,9 +473,10 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
         $updated_file = file_get_contents($this->test_migrations[0]);
-        $updated_file = preg_replace("/\s`tu_/", " `new_prefix_", $updated_file);
-        $updated_file = preg_replace("/\stu_/", " new_prefix_", $updated_file);
+        $updated_file = str_replace('tu_', 'new_prefix_', $updated_file);
+        $this->debug($obj->sql);
         $this->assertEqual($obj->sql, $updated_file);
+        $this->assertFalse(strrpos($obj->sql, 'tu_'));
         $sql = "show tables like 'new_prefix_test1'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();

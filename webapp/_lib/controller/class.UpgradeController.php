@@ -260,8 +260,7 @@ class UpgradeController extends ThinkUpAuthController {
                         // check for modified prefix
                         $table_prefix = $config->getValue('table_prefix');
                         if($table_prefix != 'tu_') {
-                            $migration_string = preg_replace("/\s`tu_/", " `$table_prefix", $migration_string);
-                            $migration_string = preg_replace("/\stu_/", " $table_prefix", $migration_string);
+                            $migration_string = str_replace('tu_', $table_prefix, $migration_string);
                         }
                         $migration = array("version" =>  $migration_version, 'sql'  => $migration_string);
                         array_push($migrations, $migration);
