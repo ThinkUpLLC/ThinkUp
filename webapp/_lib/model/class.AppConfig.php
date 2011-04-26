@@ -43,7 +43,7 @@ class AppConfig {
             'default' => 'false',
             'match' => '/^(true|false)$/',
             'match_message' => 'Must be true or false'
-    ),
+            ),
         'recaptcha_enable' => array(
             'type' => 'checkbox',
             'title' => 'Enable ReCAPTCHA',
@@ -52,7 +52,7 @@ class AppConfig {
             'match' => '/^true$/',
             'match_message' => 'Must be true',
             'dependencies' => array('recaptcha_public_key','recaptcha_private_key')
-    ),
+            ),
         'recaptcha_public_key' => array(
             'type' => 'text',
             'title' => 'ReCAPTCHA Public Key',
@@ -60,7 +60,7 @@ class AppConfig {
             'match' => '/\w/',
             'match_message' => '',
             'default' => '',
-    ),
+            ),
         'recaptcha_private_key' => array(
             'type' => 'text',
             'title' => 'ReCAPTCHA Private Key',
@@ -68,24 +68,40 @@ class AppConfig {
             'match' => '/\w/',
             'match_message' => '',
             'default' => '',
-    )
-    );
+            ),
+             
+            /**
+             * Currently there's a bug with checkboxes which have a default value of true. When you uncheck the box,
+             * and save the form, no value gets submitted for the checkbox, so the false value doesn't get saved.
+             * As such, right now, checkbox default values must be false.
+             * Therefore, for now, making this option 'is_api_disabled' instead of 'is_api_enabled.'
+             * @TODO: Once that bug is fixed, change this to Enable JSON API with default value true.
+             */
+        'is_api_disabled' => array(
+            'type' => 'checkbox',
+            'title' => 'Disable JSON API',
+            'required' => false,
+            'default' => 'false',
+            'match' => '/^true$/',
+            'match_message' => 'Must be true'
+            )
+            );
 
-    /**
-     * Getter for db config data array
-     * @return array Application settings configuration and validation data array/hash
-     */
-    public static function getConfigData() {
-        return self::$config_data;
-    }
+            /**
+             * Getter for db config data array
+             * @return array Application settings configuration and validation data array/hash
+             */
+            public static function getConfigData() {
+                return self::$config_data;
+            }
 
-    /**
-     * Getter for db config data value
-     * @param str Key for apllication value
-     * @return array Application settings configuration and validation data array/hash
-     */
-    public static function getConfigValue($key) {
-        $value = isset(self::$config_data[$key] ) ? self::$config_data[$key] : false;
-        return $value;
-    }
+            /**
+             * Getter for db config data value
+             * @param str Key for apllication value
+             * @return array Application settings configuration and validation data array/hash
+             */
+            public static function getConfigValue($key) {
+                $value = isset(self::$config_data[$key] ) ? self::$config_data[$key] : false;
+                return $value;
+            }
 }

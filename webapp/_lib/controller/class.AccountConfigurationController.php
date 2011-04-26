@@ -48,6 +48,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $owner = $owner_dao->getByEmail($this->getLoggedInUser());
         $this->addToView('owner', $owner);
         $this->addToView('logo_link', '');
+        $this->view_mgr->addHelp('api', 'userguide/api/posts/index');
+        $this->view_mgr->addHelp('application_settings', 'userguide/settings/application');
 
         //proces password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])

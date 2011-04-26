@@ -1,2 +1,4 @@
-Your ThinkUp Account
-====================
+Account
+=======
+
+Change your password

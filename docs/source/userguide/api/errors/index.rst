@@ -6,6 +6,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   apicalltypenotrecognised
+   apicalltypenotrecognized
    requiredargumentmissing
    usernotfound
+   apidisabled

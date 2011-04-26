@@ -37,7 +37,7 @@
       <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
         Set whether or not your site's registration page is available and accepts new user registrations.
       </div>
-      
+
       <div style="float: left;">
         <label for="recaptcha_enable">
           Enable reCAPTCHA:
@@ -48,7 +48,7 @@
       </div>
       <div style="clear:both;"></div>
       <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
-        Select to enable reCAPTCHA, and <a href="https://www.google.com/recaptcha">get your reCAPTCHA keys here</a>.
+        Select to enable reCAPTCHA, and <a href="https://www.google.com/recaptcha">get your reCAPTCHA keys here</a>. {insert name="help_link" id="application_settings"}
       </div>
 
       <div id="recaptcha_enable_deps" style="display: none; width: 450px; margin: 10px 0px 60px 20px;">
@@ -71,6 +71,20 @@
             <input type="text" name="recaptcha_private_key" id="recaptcha_private_key" value="">
           </div>
        </div>
+
+      <div style="float: left;">
+        <label for="is_api_disabled">
+          Disable the JSON API:
+          <br />
+        </label>
+      </div>
+      <div style="float: left;">
+        <input type="checkbox" name="is_api_disabled" id="is_api_disabled" value="true">
+      </div>
+      <div style="clear:both;"></div>
+      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+        Set whether or not your site's data is available via ThinkUp's JSON API. {insert name="help_link" id="api"}
+      </div>
 
    </div>
 

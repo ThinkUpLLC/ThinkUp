@@ -256,12 +256,26 @@ class PostAPIController extends ThinkUpController {
     }
 
     public function control() {
+        /*
+         * Check if the view is cached and, if it is, return the cached version before any of the application login
+         * is executed.
+         */
         if ($this->view_mgr->isViewCached()) {
             if ($this->view_mgr->is_cached('json.tpl', $this->getCacheKeyString())) {
                 // set the json data to keep the ThinkUpController happy.
                 $this->setJsonData(array());
                 return $this->generateView();
             }
+        }
+
+        /*
+         * Check if the API is disabled and, if it is, throw the appropriate exception.
+         *
+         * Docs: http://thinkupapp.com/docs/userguide/api/errors/apidisabled.html
+         */
+        $is_api_disabled = Config::getInstance()->getValue('is_api_disabled');
+        if ($is_api_disabled) {
+            throw new APIDisabledException();
         }
 
         // fetch the correct PostDAO and UserDAO from the DAOFactory
@@ -281,7 +295,7 @@ class PostAPIController extends ThinkUpController {
             $this->user = null;
         }
 
-        /**
+        /*
          * This switch statement is the main part of this function. It decides
          * what type of posts will be fetched depending on the "type" GET
          * variable and use the PostDAO to fetch the appropriate posts from
@@ -291,12 +305,14 @@ class PostAPIController extends ThinkUpController {
          * output in JSON.
          */
         switch ($this->type) {
-            /**
+            /*
              * Gets a post.
              *
              * Required arguments: post_id
              *
              * Optional arguments: network, include_entities, include_replies, trim_user
+             *
+             * Docs: http://thinkupapp.com/docs/userguide/api/posts/post.html
              */
             case 'post':
                 if (is_null($this->post_id)) {
@@ -307,12 +323,14 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /**
+                /*
                  * Gets all retweets to a post.
                  *
                  * Required arguments: post_id
                  *
                  * Optional arguments: network, order_by, unit, count, page, include_entities, include_replies, trim_user
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/posts/post_retweets.html
                  */
             case 'post_retweets':
                 if (is_null($this->post_id)) {
@@ -332,6 +350,8 @@ class PostAPIController extends ThinkUpController {
                  * Optional arguments: network, order_by, unit, count, page, include_entities, include_replies, trim_user
                  *
                  * Ordering can only be done by either location or follower count.
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/posts/post_replies.html
                  */
             case 'post_replies':
                 if (is_null($this->post_id)) {
@@ -350,6 +370,8 @@ class PostAPIController extends ThinkUpController {
                  *
                  * Optional arguments: network, count, page, geo_encoded_only, include_original_post, include_entities,
                  * include_replies, trim_user
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/posts/related_posts.html
                  */
             case 'related_posts':
                 if (is_null($this->post_id)) {
@@ -367,6 +389,8 @@ class PostAPIController extends ThinkUpController {
                  * Required arguments: user_id or username
                  *
                  * Optional arguments: network, count, page, include_entities, include_replies, trim_user
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/posts/user_posts_most_replied_to.html
                  */
             case 'user_posts_most_replied_to':
                 if (is_null($this->user)) {
@@ -389,6 +413,8 @@ class PostAPIController extends ThinkUpController {
                  * Required arguments: user_id or username
                  *
                  * Optional arguments: network, count, page, include_entities, include_replies, trim_user
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/posts/user_posts_most_retweeted.html
                  */
             case 'user_posts_most_retweeted':
                 if (is_null($this->user)) {
@@ -412,6 +438,8 @@ class PostAPIController extends ThinkUpController {
                  *
                  * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
                  * trim_user
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/posts/user_posts.html
                  */
             case 'user_posts':
                 if (is_null($this->user)) {
@@ -435,6 +463,8 @@ class PostAPIController extends ThinkUpController {
                  *
                  * Optional arguments: network, order_by, direction, include_entities, include_replies,
                  * trim_user
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/posts/user_posts_in_range.html
                  */
             case 'user_posts_in_range':
                 if (is_null($this->user) || is_null($this->from) || is_null($this->until)) {
@@ -461,6 +491,8 @@ class PostAPIController extends ThinkUpController {
                  * Required arguments: user_id or username
                  *
                  * Optional arguments: network, count, page, include_rts, include_entities, include_replies, trim_user
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/posts/user_mentions.html
                  */
             case 'user_mentions':
                 if (is_null($this->user)) {
@@ -484,6 +516,8 @@ class PostAPIController extends ThinkUpController {
                  *
                  * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
                  * trim_user
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/posts/user_questions.html
                  */
             case 'user_questions':
                 if (is_null($this->user)) {
@@ -507,6 +541,8 @@ class PostAPIController extends ThinkUpController {
                  *
                  * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
                  * trim_user
+                 *
+                 * http://thinkupapp.com/docs/userguide/api/posts/user_replies.html
                  */
             case 'user_replies':
                 if (is_null($this->user)) {
@@ -525,6 +561,8 @@ class PostAPIController extends ThinkUpController {
 
                 /*
                  * Generate an error because the API call type was not recognized.
+                 *
+                 * Docs: http://thinkupapp.com/docs/userguide/api/errors/apicalltypenotrecognised.html
                  */
             default:
                 throw new APICallTypeNotRecognizedException($this->type);

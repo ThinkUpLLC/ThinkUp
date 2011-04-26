@@ -51,7 +51,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Settings");
-        $this->assertText('Your ThinkUp Password');
+        $this->assertText('Account');
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
@@ -78,7 +78,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Settings");
-        $this->assertText('Your ThinkUp Password');
+        $this->assertText('Account');
         $this->setField('oldpass', 'secretpassworddd');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
@@ -96,7 +96,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Settings");
-        $this->assertText('Your ThinkUp Password');
+        $this->assertText('Account');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword1');
         $this->click('Change password');
@@ -113,7 +113,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Settings");
-        $this->assertText('Your ThinkUp Password');
+        $this->assertText('Account');
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'secretpassword1');
         $this->setField('pass2', 'secretpassword2');
@@ -131,7 +131,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->assertText('Logged in as: me@example.com');
 
         $this->click("Settings");
-        $this->assertText('Your ThinkUp Password');
+        $this->assertText('Account');
         $this->setField('oldpass', 'secretpassword');
         $this->setField('pass1', 'dd');
         $this->setField('pass2', 'dd');

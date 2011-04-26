@@ -16,15 +16,10 @@ The output from the API is modelled after the
 `Twitter Mentions API  <http://dev.twitter.com/doc/get/statuses/mentions>`_ and it's overloaded with ThinkUp data. 
 ThinkUp- specific data can be found in a "thinkup" namespace in each post and user JSON object.
 
-**Important:** The ThinkUp API currently does not support authentication. Therefore, you cannot retrieve private
-posts via the API. The API will only return posts that are public on Twitter or published on a Facebook Page. 
-(ThinkUp automatically marks Facebook user profile posts private.)
-
 How do I use it?
 ----------------
 
-Using the API is quite simple. Let's say you wanted to make an API call of type "user_posts" for the user "samwhoo",
-your request would look like this:
+To make an API call of type "user_posts" for the user "samwhoo", your request would look like this:
 
 `http://example.com/your_thinkup_install/api/v1/post.php?type=user_posts&username=samwhoo`
 
@@ -45,6 +40,7 @@ Refer to each API method's definition below to see its parameters and example re
    user_mentions
    user_posts
    user_posts_in_range
+   user_posts_most_replied_to
+   user_posts_most_retweeted
    user_questions
    user_replies
-   ../errors/index

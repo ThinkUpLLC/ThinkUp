@@ -8,10 +8,10 @@
     <ul>
       <li><a href="#plugins">Plug-ins</a></li>
       {if $user_is_admin}
-      <li><a id="app-settings-tab" href="#app_settings">Settings</a></li>
+      <li><a id="app-settings-tab" href="#app_settings">Application</a></li>
       {/if}
-      <li><a href="#instances">Your ThinkUp Password</a></li>
-      {if $user_is_admin}<li><a href="#ttusers">All ThinkUp Accounts</a></li>{/if}
+      <li><a href="#instances">Account</a></li>
+      {if $user_is_admin}<li><a href="#ttusers">All Accounts</a></li>{/if}
     </ul>
     
     <div class="section thinkup-canvas clearfix" id="plugins">

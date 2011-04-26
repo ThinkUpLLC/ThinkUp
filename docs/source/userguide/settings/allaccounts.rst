@@ -1,2 +1,2 @@
-All ThinkUp Accounts (Administrator only)
-=========================================
+All Accounts (Administrator only)
+=================================
