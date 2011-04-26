@@ -91,7 +91,7 @@ var TUGridSearch = function() {
             formatter: function(row, cell, value, columnDef, dataContext) {
                 var url_match = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/g;
                 value = value.replace(url_match, '<a href="$1" target="_blank">$1</a> ');
-                value = value.replace(/@(\w+)/g, '<a href="http://twitter.com/$1" target="_blank">@$1</a>');
+                value = value.replace(/@(\w+)/g, '');
                 return value;
             }
         } ];

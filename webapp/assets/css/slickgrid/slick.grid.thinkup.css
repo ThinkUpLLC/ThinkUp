@@ -9,7 +9,7 @@ font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 a, a:link, a:visited {text-decoration: none;color: #416A93;outline: none;}
-a:hover {text-decoration: none;color: #6eac2c;}
+a:hover {text-decoration: underline;}
 
 h2 {
     font-size: 10pt;
@@ -44,6 +44,25 @@ li {
     color : #848884;
 }
 
+#grid_search_button {
+	display: inline-block;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font-size: medium;
+	padding: .5em 2em .55em;
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+}
+#grid_search_button:hover {
+	text-decoration: none;
+}
+#grid_search_button:active {
+	position: relative;
+	top: 1px;
+}
 
 .ui-widget-content {
     border : none;
@@ -105,6 +124,9 @@ li {
 	text-align: right;
 }
 
+.c2 {
+    font-size : xx-small;
+}
 
 .slick-cell.task-percent {
 	text-align: right;

@@ -17,7 +17,7 @@
           Replies
           <ul class="side-subnav">
           <li{if $smarty.get.v eq ''} class="currentview"{/if}><a href="index.php?t={$post->post_id}&n={$post->network}">Post Replies&nbsp;&nbsp;&nbsp;</a></li>
-          {if $logged_in_user && $post->reply_count_cache && $post->reply_count_cache > 1}
+          {if $post->reply_count_cache && $post->reply_count_cache > 1}
             <li id="grid_search_icon"><a href="#" class="grid_search" title="Search" onclick="return false;"><span>Search & Filter Replies</span></a></li>
           {/if}
           <li><a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">Export Replies (CSV)</a></li>
@@ -168,7 +168,7 @@
             <div class="prepend">
               <div class="append_20 clearfix bt">
                 {include file="_post.word-frequency.tpl"}
-                {if $replies && $logged_in_user}
+                {if $replies}
                     {include file="_grid.search.tpl" version2=true}
                 {/if}
                 <div id="post-replies-div"><br>
@@ -206,7 +206,7 @@
 
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-  {if $replies && $logged_in_user}
+  {if $replies}
     <script type="text/javascript">post_username = '{$post->author_username}';</script>
     <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
   {/if}
