@@ -43,7 +43,8 @@ Optional Arguments
 
 * **page**
 
-    The page of results to display for this API call. Defaults to 1.
+    The page of results to display for this API call. Defaults to 1. When you get to the end of the pages of results,
+    API calls will just return empty JSON. No error is generated.
 
 * **include_entities**
 

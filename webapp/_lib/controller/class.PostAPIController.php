@@ -131,6 +131,12 @@ class PostAPIController extends ThinkUpController {
      */
     private $user_dao;
     /**
+     *
+     * @var OptionDAO 
+     */
+    private $option_dao;
+    
+    /**
      * Constructor
      *
      * @param boolean $session_started
@@ -256,12 +262,27 @@ class PostAPIController extends ThinkUpController {
     }
 
     public function control() {
+        /*
+         * Check if the view is cached and, if it is, return the cached version before any of the application login
+         * is executed.
+         */
         if ($this->view_mgr->isViewCached()) {
             if ($this->view_mgr->is_cached('json.tpl', $this->getCacheKeyString())) {
                 // set the json data to keep the ThinkUpController happy.
                 $this->setJsonData(array());
                 return $this->generateView();
             }
+        }
+
+        /*
+         * Check if the API is disabled and, if it is, throw the appropriate exception.
+         *
+         * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/errors/apidisabled.html
+         */
+        $this->option_dao = DAOFactory::getDAO('OptionDAO');
+        $api_enabled = $this->option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'api_enabled');
+        if (!isset($api_enabled->option_value) || $api_enabled->option_value == false) {
+            throw new APIDisabledException();
         }
 
         // fetch the correct PostDAO and UserDAO from the DAOFactory
@@ -281,7 +302,7 @@ class PostAPIController extends ThinkUpController {
             $this->user = null;
         }
 
-        /**
+        /*
          * This switch statement is the main part of this function. It decides
          * what type of posts will be fetched depending on the "type" GET
          * variable and use the PostDAO to fetch the appropriate posts from
@@ -291,12 +312,14 @@ class PostAPIController extends ThinkUpController {
          * output in JSON.
          */
         switch ($this->type) {
-            /**
+            /*
              * Gets a post.
              *
              * Required arguments: post_id
              *
              * Optional arguments: network, include_entities, include_replies, trim_user
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/post.html
              */
             case 'post':
                 if (is_null($this->post_id)) {
@@ -307,13 +330,15 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /**
-                 * Gets all retweets to a post.
-                 *
-                 * Required arguments: post_id
-                 *
-                 * Optional arguments: network, order_by, unit, count, page, include_entities, include_replies, trim_user
-                 */
+            /*
+             * Gets all retweets to a post.
+             *
+             * Required arguments: post_id
+             *
+             * Optional arguments: network, order_by, unit, count, page, include_entities, include_replies, trim_user
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/post_retweets.html
+             */
             case 'post_retweets':
                 if (is_null($this->post_id)) {
                     $m = 'A request of type ' . $this->type . ' requires a post_id to be specified.';
@@ -324,15 +349,17 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /**
-                 * Gets replies to a post.
-                 *
-                 * Required arguments: post_id
-                 *
-                 * Optional arguments: network, order_by, unit, count, page, include_entities, include_replies, trim_user
-                 *
-                 * Ordering can only be done by either location or follower count.
-                 */
+            /**
+             * Gets replies to a post.
+             *
+             * Required arguments: post_id
+             *
+             * Optional arguments: network, order_by, unit, count, page, include_entities, include_replies, trim_user
+             *
+             * Ordering can only be done by either location or follower count.
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/post_replies.html
+             */
             case 'post_replies':
                 if (is_null($this->post_id)) {
                     $m = 'A request of type ' . $this->type . ' requires a post_id to be specified.';
@@ -343,14 +370,16 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /*
-                 * Get posts related to a post (replies to it, retweets of it).
-                 *
-                 * Required arguments: post_id
-                 *
-                 * Optional arguments: network, count, page, geo_encoded_only, include_original_post, include_entities,
-                 * include_replies, trim_user
-                 */
+            /*
+             * Get posts related to a post (replies to it, retweets of it).
+             *
+             * Required arguments: post_id
+             *
+             * Optional arguments: network, count, page, geo_encoded_only, include_original_post, include_entities,
+             * include_replies, trim_user
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/related_posts.html
+             */
             case 'related_posts':
                 if (is_null($this->post_id)) {
                     $m = 'A request of type ' . $this->type . ' requires a post_id to be specified.';
@@ -361,13 +390,15 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /*
-                 * Gets the user's most replied to posts.
-                 *
-                 * Required arguments: user_id or username
-                 *
-                 * Optional arguments: network, count, page, include_entities, include_replies, trim_user
-                 */
+            /*
+             * Gets the user's most replied to posts.
+             *
+             * Required arguments: user_id or username
+             *
+             * Optional arguments: network, count, page, include_entities, include_replies, trim_user
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/user_posts_most_replied_to.html
+             */
             case 'user_posts_most_replied_to':
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
@@ -383,13 +414,15 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /*
-                 * Gets the user's most retweeted posts.
-                 *
-                 * Required arguments: user_id or username
-                 *
-                 * Optional arguments: network, count, page, include_entities, include_replies, trim_user
-                 */
+            /*
+             * Gets the user's most retweeted posts.
+             *
+             * Required arguments: user_id or username
+             *
+             * Optional arguments: network, count, page, include_entities, include_replies, trim_user
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/user_posts_most_retweeted.html
+             */
             case 'user_posts_most_retweeted':
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
@@ -405,14 +438,16 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /*
-                 * Gets posts a user has made.
-                 *
-                 * Required arguments: user_id or username
-                 *
-                 * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
-                 * trim_user
-                 */
+            /*
+             * Gets posts a user has made.
+             *
+             * Required arguments: user_id or username
+             *
+             * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
+             * trim_user
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/user_posts.html
+             */
             case 'user_posts':
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
@@ -428,14 +463,16 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /*
-                 * Gets posts a user has made.
-                 *
-                 * Required arguments: user_id or username, from and until
-                 *
-                 * Optional arguments: network, order_by, direction, include_entities, include_replies,
-                 * trim_user
-                 */
+            /*
+             * Gets posts a user has made.
+             *
+             * Required arguments: user_id or username, from and until
+             *
+             * Optional arguments: network, order_by, direction, include_entities, include_replies,
+             * trim_user
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/user_posts_in_range.html
+             */
             case 'user_posts_in_range':
                 if (is_null($this->user) || is_null($this->from) || is_null($this->until)) {
                     // Check why the User object is null. Could be missing required fields or not found.
@@ -455,13 +492,15 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /*
-                 * Gets posts a user is mentioned in.
-                 *
-                 * Required arguments: user_id or username
-                 *
-                 * Optional arguments: network, count, page, include_rts, include_entities, include_replies, trim_user
-                 */
+            /*
+             * Gets posts a user is mentioned in.
+             *
+             * Required arguments: user_id or username
+             *
+             * Optional arguments: network, count, page, include_rts, include_entities, include_replies, trim_user
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/user_mentions.html
+             */
             case 'user_mentions':
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
@@ -477,14 +516,16 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /*
-                 * Gets question posts a user has made.
-                 *
-                 * Required arguments: user_id or username
-                 *
-                 * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
-                 * trim_user
-                 */
+            /*
+             * Gets question posts a user has made.
+             *
+             * Required arguments: user_id or username
+             *
+             * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
+             * trim_user
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/user_questions.html
+             */
             case 'user_questions':
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
@@ -500,14 +541,16 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /*
-                 * Gets replies to a user.
-                 *
-                 * Required arguments: user_id or username
-                 *
-                 * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
-                 * trim_user
-                 */
+            /*
+             * Gets replies to a user.
+             *
+             * Required arguments: user_id or username
+             *
+             * Optional arguments: network, count, page, order_by, direction, include_entities, include_replies,
+             * trim_user
+             *
+             * http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/user_replies.html
+             */
             case 'user_replies':
                 if (is_null($this->user)) {
                     // Check why the User object is null. Could be missing required fields or not found.
@@ -523,9 +566,11 @@ class PostAPIController extends ThinkUpController {
                 }
                 break;
 
-                /*
-                 * Generate an error because the API call type was not recognized.
-                 */
+            /*
+             * Generate an error because the API call type was not recognized.
+             *
+             * Docs: http://readthedocs.org/docs/thinkup/en/latest/userguide/api/errors/apicalltypenotrecognised.html
+             */
             default:
                 throw new APICallTypeNotRecognizedException($this->type);
                 break;

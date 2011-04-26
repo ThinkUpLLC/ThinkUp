@@ -37,6 +37,21 @@
       <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
         Set whether or not your site's registration page is available and accepts new user registrations.
       </div>
+
+      <div style="float: left;">
+        <label for="api_enabled">
+          Enable the JSON API:
+          <br />
+        </label>
+      </div>
+      <div style="float: left;">
+        <input type="checkbox" name="api_enabled" id="api_enabled" value="true">
+      </div>
+      <div style="clear:both;"></div>
+      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+        Set whether or not your site's data is available via ThinkUp's JSON API.
+        <a href="http://readthedocs.org/docs/thinkup/en/latest/userguide/api/posts/index.html">Learn more.</a>
+      </div>
       
       <div style="float: left;">
         <label for="recaptcha_enable">
