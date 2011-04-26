@@ -103,7 +103,7 @@ abstract class PDODAO {
      * @param Config $config
      * @return string PDO connect string
      */
-    public static function getConnectString($config) {
+    public static function getConnectString($config, $include_db = true) {
         //set default db type to mysql if not set
         $db_type = $config->getValue('db_type');
         if(! $db_type) { $db_type = 'mysql'; }
@@ -118,13 +118,22 @@ abstract class PDODAO {
         } else {
             $db_socket=";unix_socket=".$db_socket;
         }
-        $db_string = sprintf(
-            "%s:dbname=%s;host=%s%s", 
-        $db_type,
-        $config->getValue('db_name'),
-        $config->getValue('db_host'),
-        $db_socket
-        );
+        if ($include_db) {
+            $db_string = sprintf(
+                "%s:dbname=%s;host=%s%s",
+            $db_type,
+            $config->getValue('db_name'),
+            $config->getValue('db_host'),
+            $db_socket
+            );
+        } else {
+            $db_string = sprintf(
+                "%s:host=%s%s",
+            $db_type,
+            $config->getValue('db_host'),
+            $db_socket
+            );
+        }
         return $db_string;
     }
 

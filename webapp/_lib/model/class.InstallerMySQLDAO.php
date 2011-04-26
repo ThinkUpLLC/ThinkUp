@@ -38,27 +38,13 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
      */
     public function  __construct($cfg_vals = null) {
         try {
-            /*
-             * If the database that the user is trying to install to does not
-             * exist, the parent constructor will throw an exception. If it
-             * does exist, installation will continue. This is so that users
-             * who are trying to install to an already existing database won't
-             * get caught by the CREATE TABLE IF NOT EXISTS statement in the
-             * createInstallDatabase() function (even if the database exists,
-             * the function will return false if you do not have the correct
-             * privileges).
-             */
-            parent::__construct($cfg_vals);
-        } catch (Exception $e) {
-            //if the database does not exist, create it then continue.
-            if ($this->createInstallDatabase($cfg_vals) === false) {
-                //if something fails in creating the database, throw exception
-                throw new InstallerException($e->getMessage());
-            }
-
-            //call the parent constructor to continue the installation.
-            parent::__construct($cfg_vals);
+            $this->createInstallDatabase($cfg_vals);
         }
+        catch (Exception $e) {
+            // could not connect to database
+        }
+        
+        parent::__construct($cfg_vals);
     }
 
     public function getTables() {
@@ -98,50 +84,22 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
 
     public function createInstallDatabase($cfg_vals = null) {
         $config = Config::getInstance($cfg_vals);
+        
+        // get the connection string but strip the dbname from it
+        $connection_string = PDODAO::getConnectString($config, $include_db = false);
 
-        /*
-         * This connection string code is copy pasted from the PDODAO class but changed to not require a database
-         * name so that we can connect to the server and _then_ create the database.
-         */
-        $db_type = $config->getValue('db_type');
+        //Create a temporary PDO object for creating the database.
+        $tempPDO = new PDO($connection_string, $config->getValue('db_user'), $config->getValue('db_password'));
 
-        if(!$db_type) { $db_type = 'mysql'; }
-        $db_socket = $config->getValue('db_socket');
-
-        if (!$db_socket) {
-            $db_port = $config->getValue('db_port');
-            if (!$db_port) {
-                $db_socket = '';
-            } else {
-                $db_socket = ";port=".$config->getValue('db_port');
-            }
-        } else {
-            $db_socket=";unix_socket=".$db_socket;
-        }
-        $db_string = sprintf(
-        "%s:host=%s%s",
-        $db_type,
-        $config->getValue('db_host'),
-        $db_socket
-        );
-        //end copy pasted code
-
-        try {
-            //Create a temporary PDO object for creating the database.
-            $tempPDO = new PDO($db_string, $config->getValue('db_user'), $config->getValue('db_password'));
-
-            $q =  sprintf("CREATE DATABASE IF NOT EXISTS `%s`;",
-            mysql_real_escape_string($config->getValue('db_name')));
-            $success = $tempPDO->query($q);
-
-            //Check to see if the database was created.
-            if ($success === false) {
-                return false;
-            } else {
-                return true;
-            }
-        } catch (Exception $e) {
+        // Build database creation query.
+        $q = "CREATE DATABASE IF NOT EXISTS `" . str_replace("'", '', $config->getValue('db_name')) . "`;";
+        $success = $tempPDO->query($q);
+        
+        // return success or failure
+        if ($success === false) {
             return false;
+        } else {
+            return true;
         }
     }
 
