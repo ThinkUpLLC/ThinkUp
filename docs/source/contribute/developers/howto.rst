@@ -7,4 +7,6 @@ Contents:
    :maxdepth: 2
 
    modifydb
-   buildplugin
+   plugins/buildplugin
+   tests
+   devfromsource
