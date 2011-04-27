@@ -255,22 +255,6 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $poptab->addDataset($poptabds);
         $menus["friends-mostfollowed"] = $poptab;
 
-        if (Session::isLoggedIn()) {
-            //Former Friends
-            $fftab = new MenuItem("Former", '', $twitter_data_tpl);
-            $fftabds = new Dataset("people", 'FollowDAO', "getFormerFollowees", array( $instance->network_user_id,
-            'twitter', 15));
-            $fftab->addDataset($fftabds);
-            $menus["friends-former"] = $fftab;
-
-            //Not Mutual Friends
-            $nmtab = new MenuItem("Not Mutual", '', $twitter_data_tpl);
-            $nmtabds = new Dataset("people", 'FollowDAO', "getFriendsNotFollowingBack", array( 'twitter',
-            $instance->network_user_id));
-            $nmtab->addDataset($nmtabds);
-            $menus["friends-notmutual"] = $nmtab;
-        }
-
         //Follower count history
         $follower_history_tpl = Utils::getPluginViewDirectory('twitter').'twitter.followercount.tpl';
         $trendtab = new MenuItem('Follower Count', 'Your follower count over time',
@@ -301,15 +285,6 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $instance->network_user_id, 'twitter', 15));
         $lltab->addDataset($lltabds);
         $menus["followers-leastlikely"] = $lltab;
-
-        if (Session::isLoggedIn()) {
-            //Former followers
-            $fftab = new MenuItem("Former", '', $twitter_data_tpl);
-            $fftabds = new Dataset("people", 'FollowDAO', "getFormerFollowers", array(
-            $instance->network_user_id, 'twitter', 15));
-            $fftab->addDataset($fftabds);
-            $menus["followers-former"] = $fftab;
-        }
 
         //Earliest
         $eftab = new MenuItem("Earliest Joiners", '', $twitter_data_tpl);
