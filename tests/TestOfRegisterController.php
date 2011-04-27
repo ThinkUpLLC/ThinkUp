@@ -128,7 +128,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         'option_value' => 'true');
         $bdata = FixtureBuilder::build('options', $bvalues);
 
-        $_SERVER['HTTP_HOST'] = "mytestthinkup/";
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
         $_POST['Submit'] = 'Register';
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
@@ -142,6 +142,49 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
         $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'),
         'Success! Check your email for an activation link.');
+
+        $expected_reg_email_pattern = '/to: angie@example.com
+subject: Activate Your ThinkUp Account
+message: Click on the link below to activate your new ThinkUp account:
+
+http:\/\/mytestthinkup\/session\/activate.php\?usr=angie%40example.com/';
+
+        $actual_reg_email = Mailer::getLastMail();
+        $this->debug($actual_reg_email);
+        $this->assertPattern($expected_reg_email_pattern, $actual_reg_email);
+    }
+
+    public function testSuccessfulRegistrationWithSSL() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
+        $_SERVER['HTTPS'] = true;
+        $_POST['Submit'] = 'Register';
+        $_POST['full_name'] = "Angelina Jolie";
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
+        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'),
+        'Success! Check your email for an activation link.');
+
+        $expected_reg_email_pattern = '/to: angie@example.com
+subject: Activate Your ThinkUp Account
+message: Click on the link below to activate your new ThinkUp account:
+
+https:\/\/mytestthinkup\/session\/activate.php\?usr=angie%40example.com/';
+
+        $actual_reg_email = Mailer::getLastMail();
+        $this->debug($actual_reg_email);
+        $this->assertPattern($expected_reg_email_pattern, $actual_reg_email);
     }
 
     public function testSpaceInHostName() {

@@ -67,12 +67,31 @@ class TestOfThinkUpEmbedController extends ThinkUpUnitTestCase {
     }
 
     public function testGivenAllParameters() {
+        $_SERVER['SERVER_NAME'] = 'mytestthinkup';
         $_GET['p'] = '1001';
         $_GET['n'] = 'twitter';
         $controller = new ThinkUpEmbedController(true);
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
-        $config = Config::getInstance();
         $this->assertPattern('/ThinkUp1001 = new function()/', $results, "Javascript embed code returned");
+        $this->debug($results);
+
+        $expected_pattern = '/var BASE_URL = \'http:\/\/mytestthinkup\/plugins\/embedthread/';
+        $this->assertPattern($expected_pattern, $results);
+    }
+
+    public function testGivenAllParametersWithSSL() {
+        $_SERVER['SERVER_NAME'] = 'mytestthinkup';
+        $_SERVER['HTTPS'] = true;
+        $_GET['p'] = '1001';
+        $_GET['n'] = 'twitter';
+        $controller = new ThinkUpEmbedController(true);
+        $results = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertPattern('/ThinkUp1001 = new function()/', $results, "Javascript embed code returned");
+        $this->debug($results);
+
+        $expected_pattern = '/var BASE_URL = \'https:\/\/mytestthinkup\/plugins\/embedthread/';
+        $this->assertPattern($expected_pattern, $results);
     }
 }

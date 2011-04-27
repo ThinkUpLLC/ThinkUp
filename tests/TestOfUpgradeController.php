@@ -173,6 +173,8 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $builder2 = FixtureBuilder::build('owners', array('is_admin' => 0, 'is_activated' => 1, 'email' => 'm2@w.nz'));
         $builder3 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 0, 'email' => 'm3@w.nz'));
 
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
+
         $controller = new UpgradeController(true);
         $results = $controller->go();
         $this->assertTrue( file_exists($this->token_file) );
@@ -181,15 +183,16 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $token = file_get_contents($this->token_file);
         $this->assertPattern('/^[\da-f]{32}$/', $token);
 
-        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . Mailer::EMAIL;
-        $email_file = file_get_contents($test_email);
+        $email_file = Mailer::getLastMail();
+        $this->debug($email_file);
 
         $this->assertPattern('/to\: m@w\.nz\s/', $email_file);
         $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
-        $token_regex = '/\/install\/upgrade.php\?upgrade_token=' . $token . '/';
+        $token_regex = '/http:\/\/mytestthinkup\/install\/upgrade.php\?upgrade_token=' . $token . '/';
         $this->assertPattern($token_regex, $email_file);
 
         // build 1 more valid admin, should have two to emails
+        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . Mailer::EMAIL;
         unlink($test_email);
         unlink($this->token_file);
         $builder4 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 1, 'email' => 'm4@w.nz'));
@@ -201,8 +204,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $token = file_get_contents($this->token_file);
         $this->assertPattern('/^[\da-f]{32}$/', $token);
 
-        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . Mailer::EMAIL;
-        $email_file = file_get_contents($test_email);
+        $email_file = Mailer::getLastMail();
 
         $this->assertPattern('/to\: m@w\.nz,m4@w\.nz\s/', $email_file);
         $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
@@ -210,6 +212,59 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertPattern($token_regex, $email_file);
 
         // should not send email if a token file exists
+        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . Mailer::EMAIL;
+        unlink($test_email);
+        $results = $controller->go();
+        $this->assertFalse( file_exists($test_email) );
+    }
+
+    public function testTokenEmailWithSSL() {
+        // build 1 valid admin and two invalid admins
+        $builder1 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 1, 'email' => 'm@w.nz'));
+        $builder2 = FixtureBuilder::build('owners', array('is_admin' => 0, 'is_activated' => 1, 'email' => 'm2@w.nz'));
+        $builder3 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 0, 'email' => 'm3@w.nz'));
+
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
+        $_SERVER['HTTPS'] = "mytestthinkup";
+
+        $controller = new UpgradeController(true);
+        $results = $controller->go();
+        $this->assertTrue( file_exists($this->token_file) );
+        $this->assertPattern('/<!--  we are upgrading -->/', $results);
+        $this->assertTrue( file_exists($this->token_file) );
+        $token = file_get_contents($this->token_file);
+        $this->assertPattern('/^[\da-f]{32}$/', $token);
+
+        $email_file = Mailer::getLastMail();
+        $this->debug($email_file);
+
+        $this->assertPattern('/to\: m@w\.nz\s/', $email_file);
+        $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
+        $token_regex = '/https:\/\/mytestthinkup\/install\/upgrade.php\?upgrade_token=' . $token . '/';
+        $this->assertPattern($token_regex, $email_file);
+
+        // build 1 more valid admin, should have two to emails
+        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . Mailer::EMAIL;
+        unlink($test_email);
+        unlink($this->token_file);
+        $builder4 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 1, 'email' => 'm4@w.nz'));
+
+        $results = $controller->go();
+        $this->assertTrue( file_exists($this->token_file) );
+        $this->assertPattern('/<!--  we are upgrading -->/', $results);
+        $this->assertTrue( file_exists($this->token_file) );
+        $token = file_get_contents($this->token_file);
+        $this->assertPattern('/^[\da-f]{32}$/', $token);
+
+        $email_file = Mailer::getLastMail();
+
+        $this->assertPattern('/to\: m@w\.nz,m4@w\.nz\s/', $email_file);
+        $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
+        $token_regex = '/\/install\/upgrade.php\?upgrade_token=' . $token . '/';
+        $this->assertPattern($token_regex, $email_file);
+
+        // should not send email if a token file exists
+        $test_email = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . Mailer::EMAIL;
         unlink($test_email);
         $results = $controller->go();
         $this->assertFalse( file_exists($test_email) );

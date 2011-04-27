@@ -142,7 +142,6 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
      * Test config not admin
      */
     public function testConfigOptionsNotAdmin() {
-
         // build some options data
         $options_arry = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com');
@@ -156,18 +155,13 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/plugin_options_archive_limit/', $output); // should have no limit option
         $this->assertNoPattern('/plugin_options_oauth_consumer_key/', $output); // should have no key option
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
-
-        //app not configured
-        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
-        $output = $controller->go();
-        $this->assertPattern('/var required_values_set = false/', $output); // is not configured
     }
 
     /**
-     * Test config isa admin
+     * Test config is a admin
      */
     public function testConfigOptionsIsAdmin() {
-
+        $_SERVER['SERVER_NAME'] = 'mytestthinkup';
         // build some options data
         $options_arry = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
@@ -182,10 +176,52 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern('/plugin_options_oauth_consumer_key/', $output); // should have key option
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
 
-        //app not configured
-        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        //not SSL by default
+        $this->assertNoPattern('/https:\/\/mytestthinkup/', $output);
+    }
+
+    /**
+     * Test SSL
+     */
+    public function testConfigOptionsIsAdminWithSSL() {
+        $_SERVER['HTTPS'] = true;
+        $_SERVER['SERVER_NAME'] = 'mytestthinkup';
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $output = $controller->go();
+
+        $expected_pattern = '/Set the callback URL to <pre>https:\/\//';
+        $this->assertPattern($expected_pattern, $output);
+
+        $this->assertNoPattern('/http:\/\/mytestthinkup/', $output);
+    }
+
+    /*
+     * Test required settings not set
+     */
+    public function testConfigOptionsMissingRequiredValues() {
+        $_SERVER['SERVER_NAME'] = 'mytestthinkup';
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
+        $output = $controller->go();
+        // we have a text form element with proper data
+        $this->assertPattern('/save options/', $output); // should have no submit option
+        $this->assertPattern('/plugin_options_oauth_consumer_secret/', $output); // should have secret option
+        $this->assertPattern('/plugin_options_archive_limit/', $output); // should have limit option
+        $this->assertPattern('/plugin_options_oauth_consumer_key/', $output); // should have key option
+        $this->assertPattern('/var is_admin = true/', $output); // is a js admin
+
+        //app not configured
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+
+        //not SSL by default
+        $this->assertNoPattern('/https:\/\/mytestthinkup/', $output);
     }
 
     /**

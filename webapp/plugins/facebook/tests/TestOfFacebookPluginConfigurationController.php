@@ -164,7 +164,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Test config isa admin
+     * Test config is a admin
      */
     public function testConfigOptionsIsAdmin() {
         // build some options data
@@ -174,6 +174,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
+
+        $this->debug($output);
+
         // we have a text form element with proper data
         $this->assertPattern('/save options/', $output); // should have submit option
         $this->assertPattern('/plugin_options_error_facebook_api_key/', $output); // should have api key option
@@ -188,6 +191,25 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $this->assertPattern('/var required_values_set = false/', $output); // is not configured
+    }
+
+    /**
+     * Test SSL links
+     */
+    public function testConfigOptionsIsAdminWithSSL() {
+        // build some options data
+        $_SERVER['HTTPS'] = true;
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        $this->debug($output);
+
+        $expected_pattern = '/Set the Web Site &gt; Site URL to <pre>https:\/\//';
+        $this->assertPattern($expected_pattern, $output);
     }
 
     public function testConfiguredPluginWithOneFacebookUserWithSeveralLikedPages() {

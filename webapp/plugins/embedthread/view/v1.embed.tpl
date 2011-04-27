@@ -1,5 +1,5 @@
 ThinkUp{$post_id} = new function() {literal} {
-  var BASE_URL = {/literal}'http://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/embedthread/';{literal}
+  var BASE_URL = {/literal}'http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/embedthread/';{literal}
   var STYLESHEET = BASE_URL + "assets/css/thinkupembedthread.css"
   var CONTENT_URL = BASE_URL + 'v1/thread_js.php?p={/literal}{$post_id}&n={$network|urlencode}{literal}';
   var ROOT = 'my_xss_magic';

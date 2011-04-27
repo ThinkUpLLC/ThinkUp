@@ -73,10 +73,41 @@ class TestOfForgotPasswordController extends ThinkUpUnitTestCase {
     public function testOfControllerWithValidEmailAddress() {
         $_POST['email'] = 'me@example.com';
         $_POST['Submit'] = "Send Reset";
-
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
         $controller = new ForgotPasswordController(true);
         $result = $controller->go();
 
         $this->assertTrue(strpos($result, 'Password recovery information has been sent to your email address.') > 0);
+
+        $actual_forgot_email = Mailer::getLastMail();
+        $this->debug($actual_forgot_email);
+        $expected_forgot_email_pattern = '/to: me@example.com
+subject: ThinkUp Password Recovery
+message: Hi there!
+
+Looks like you forgot your ThinkUp password. Go to this URL to reset it:
+http:\/\/mytestthinkup\/session\/reset.php/';
+        $this->assertPattern($expected_forgot_email_pattern, $actual_forgot_email);
+    }
+
+    public function testOfControllerWithValidEmailAddressAndSSL() {
+        $_POST['email'] = 'me@example.com';
+        $_POST['Submit'] = "Send Reset";
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
+        $_SERVER['HTTPS'] = true;
+        $controller = new ForgotPasswordController(true);
+        $result = $controller->go();
+
+        $this->assertTrue(strpos($result, 'Password recovery information has been sent to your email address.') > 0);
+
+        $actual_forgot_email = Mailer::getLastMail();
+        $this->debug($actual_forgot_email);
+        $expected_forgot_email_pattern = '/to: me@example.com
+subject: ThinkUp Password Recovery
+message: Hi there!
+
+Looks like you forgot your ThinkUp password. Go to this URL to reset it:
+https:\/\/mytestthinkup\/session\/reset.php/';
+        $this->assertPattern($expected_forgot_email_pattern, $actual_forgot_email);
     }
 }
