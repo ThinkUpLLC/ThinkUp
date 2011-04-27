@@ -8,3 +8,4 @@ Write Code
    styleguide/index
    newfeature
    bugfix
+   unittests
