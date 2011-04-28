@@ -3,7 +3,7 @@
 * {
 }
 
-body {
+body, .ui-widget {
 font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     //background: beige;
 }
@@ -131,12 +131,38 @@ li {
 
 .c0 {
     color : #ccc;
-}
- 
-.c1, .c2 {
-    font-size : xx-small;
+    clear : left;
 }
 
+.c1 {
+	clear : right;
+/*
+	font-size : medium;
+	overflow : visible;
+*/
+}
+
+.c1 a {
+	color : #ccc;
+}
+ 
+.c2 {
+    font-size : x-small;
+/*
+    clear : left;
+    padding-left : 30px;
+*/
+}
+ 
+.c3 {
+    font-size : x-small;
+}
+
+.slick-row, .slick-row.ui-widget-content, .slick-row.ui-state-active {
+/*
+	position : relative;
+*/
+}
 
 .slick-cell.cell-move-handle {
 	font-weight: bold;
