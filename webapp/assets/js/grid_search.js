@@ -52,10 +52,11 @@ var TUGridSearch = function() {
             id : "cnt",
             name : "#",
             field : "id",
-            width: 30
+            width: 25
         }, {
             id : "author",
             name : "Author",
+            width : 85,
             field : "author",
             formatter: function(row, cell, value, columnDef, dataContext) {
         if (dataContext['network'] == 'twitter') {
