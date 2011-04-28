@@ -69,16 +69,16 @@ var TUGridSearch = function() {
             id : "date",
             name : "Date",
             field : "date",
-            width: 125,
+            width: 140,
             formatter: function(row, cell, value, columnDef, dataContext) { 
                 var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
                 output = '<a href="' + path + '../../post/?t=' + 
                 dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) +
-                '&n='+ dataContext['network'] +'" target="_blank">#</a>&nbsp; ';
+                '&n='+ dataContext['network'] +'" target="_top">' + value + '</a>&nbsp; ';
                 if (dataContext['network'] == 'twitter') {
                  output = output + '<a href="http://twitter.com/' + dataContext['author'] + '/status/' + 
                  dataContext['post_id_str'].substr(0, (dataContext['post_id_str'].length - 4) ) + 
-                 '" target="_blank">' + value + '</a>';
+                 '" target="_top">' + value + '</a>';
                 } else {
                 output = output + value;
                 }
@@ -92,7 +92,7 @@ var TUGridSearch = function() {
             formatter: function(row, cell, value, columnDef, dataContext) {
                 var url_match = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/g;
                 value = value.replace(url_match, '<a href="$1" target="_blank">$1</a> ');
-                value = value.replace(/@(\w+)/g, '<a href="http://twitter.com/$1" target="_blank">@$1</a>');
+                value = value.replace(/@(\w+)/g, '<a href="http://twitter.com/$1" target="_top" class="authormentionlink">@$1</a>');
                 return value;
             }
         } ];

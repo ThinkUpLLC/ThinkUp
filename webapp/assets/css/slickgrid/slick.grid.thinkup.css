@@ -114,14 +114,6 @@ li {
 
 /* Individual cell styles */
 
-.c0 {
-    color : #ccc;
-}
- 
-.c1, .c2 {
-    font-size : xx-small;
-}
-
 .slick-cell {
     border : none;
     font-size : small;
@@ -135,6 +127,14 @@ li {
 
 .slick-cell.task-percent {
 	text-align: right;
+}
+
+.c0 {
+    color : #ccc;
+}
+ 
+.c1, .c2 {
+    font-size : xx-small;
 }
 
 
