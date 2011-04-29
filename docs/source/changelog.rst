@@ -43,8 +43,7 @@ Beta 0.10 - 20 April 2011
 * Developers: Fixed several test failures; upgraded the testing framework to SimpleTest 1.1 alpha, which lets developers turn on E_STRICT error level reporting for bulletproof coding and testing.
 * Developers: More tests are now using the FixtureBuilder library instead of raw SQL inserts.
 
-TODO: Port changelogs from pre-beta 10 releases into the text of this page
---------------------------------------------------------------------------
+**TODO: Port changelogs from pre-beta 10 releases into the text of this page**
 
 Beta 0.9 - 17 Mar 2011
 ----------------------

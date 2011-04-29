@@ -13,7 +13,6 @@
       </div>
     </div>
     <div class="grid_4 small">
-      
       {if $r.network == 'twitter'}
         <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
           href="http://twitter.com/{$r.questioner_username}">{$r.questioner_username}</a><span class="ui-icon ui-icon-newwin"></span>
@@ -38,11 +37,14 @@
         {/if}
       <div class="small gray">
        <span class="metaroll">
+         {if $r.question_is_protected}
+           <span class="sprite icon-locked"></span>
+         {/if}
         <a href="{$site_root_path}post/?t={$r.question_post_id}&n={$r.network}">{$r.question_adj_pub_date|relative_datetime} ago</a>
         {if $r.network == 'twitter'}
-         - <a href="http://twitter.com/intent/tweet?in_reply_to={$r.question_post_id}">Reply</a>
-         - <a href="http://twitter.com/intent/retweet?tweet_id={$r.question_post_id}">Retweet</a>
-         - <a href="http://twitter.com/intent/favorite?tweet_id={$r.question_post_id}">Favorite</a>
+          <a href="http://twitter.com/intent/tweet?in_reply_to={$r.question_post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
+          <a href="http://twitter.com/intent/retweet?tweet_id={$r.question_post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
+          <a href="http://twitter.com/intent/favorite?tweet_id={$r.question_post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
         {/if}
        </span>&nbsp;</div>
       </div>
@@ -78,6 +80,9 @@
         {/if}
       <div class="small gray">
        <span class="metaroll">
+          {if $r.answer_is_protected}
+           <span class="sprite icon-locked"></span>
+         {/if}
         <a href="{$site_root_path}post/?t={$r.answer_post_id}&n={$r.network}">{$r.answer_adj_pub_date|relative_datetime} ago</a>
         {if $r.network == 'twitter'}
           <a href="http://twitter.com/intent/tweet?in_reply_to={$r.answer_post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>

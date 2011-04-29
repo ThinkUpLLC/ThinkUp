@@ -1,14 +1,15 @@
 User Guide
 ==========
 
-Contents:
+ThinkUp is an extensible platform with core features, and features added by plugins. This user guide runs down all the
+ThinkUp features offered by both the core application and the default plugins which are distributed with it.
 
 .. toctree::
    :maxdepth: 2
-   
+
    login
    userperms
    datacapture
-   views
-   plugins
+   listings/index
+   plugins/index
    api/index

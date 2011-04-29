@@ -7,6 +7,7 @@
       {/if}
     </i>
   {/if}
+  {insert name="help_link" id=$display}
 </div>
 
     {if $error}

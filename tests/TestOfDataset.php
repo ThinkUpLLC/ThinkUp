@@ -150,6 +150,13 @@ class TestOfDataset extends ThinkUpUnitTestCase {
         $data = $dataset->retrieveDataset();
     }
 
+    public function testAddGetHelp() {
+        $dataset = new Dataset('all-posts', 'PostDAO', 'getAllPostsIDontExist', array(930061, 'twitter', 15));
+        $this->assertNull($dataset->getHelp());
+        $dataset->addHelp('userguide/twitter/allposts');
+        $this->assertEqual($dataset->getHelp(), 'userguide/twitter/allposts');
+    }
+
     private function buildData() {
         $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com'));
         $user_builder = FixtureBuilder::build('users', array('user_id'=>123, 'user_name'=>'someuser2',

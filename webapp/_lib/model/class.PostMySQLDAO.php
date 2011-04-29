@@ -364,19 +364,23 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     /**
      * @TODO: Figure out a better way to do this, only returns 1-1 exchanges, not back-and-forth threads
      */
-    public function getPostsAuthorHasRepliedTo($author_id, $count, $network = 'twitter', $page=1) {
+    public function getPostsAuthorHasRepliedTo($author_id, $count, $network = 'twitter', $public_only=true, $page=1) {
         $start_on_record = ($page - 1) * $count;
 
         $q = "SELECT p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, ";
         $q .= "p2.follower_count as answerer_follower_count, p1.post_id as question_post_id, ";
         $q .= "p1.post_text as question, p1.pub_date + interval #gmt_offset# hour as question_adj_pub_date, ";
         $q .= "p.post_id as answer_post_id, p.author_username as answerer_username, ";
+        $q .= "p1.is_protected as question_is_protected, p.is_protected as answer_is_protected, ";
         $q .= "p.author_avatar as answerer_avatar, p3.follower_count as questioner_follower_count, ";
         $q .= "p.post_text as answer, p.network, p.pub_date + interval #gmt_offset# hour as answer_adj_pub_date ";
         $q .= "FROM #prefix#posts p INNER JOIN #prefix#posts p1 on p1.post_id = p.in_reply_to_post_id ";
         $q .= "JOIN #prefix#users p2 on p2.user_id = :author_id ";
         $q .= "JOIN #prefix#users p3 on p3.user_id = p.in_reply_to_user_id ";
         $q .= "WHERE p.author_user_id = :author_id AND p.network=:network AND p.in_reply_to_post_id IS NOT null ";
+        if ($public_only) {
+            $q .= "AND p.is_protected = 0 AND p1.is_protected = 0 ";
+        }
         $q .= "ORDER BY p.pub_date desc LIMIT :start_on_record, :limit;";
         $vars = array(
             ':author_id'=>$author_id,

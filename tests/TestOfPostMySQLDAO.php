@@ -183,14 +183,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
         'post_text'=>'@shutterbug Nice shot!', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_post_id'=>41, 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'location'=>'New Delhi, Delhi, India', 'reply_retweet_distance'=>0, 'is_geo_encoded'=>1));
 
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>132, 'author_user_id'=>21,
         'author_username'=>'user2', 'author_fullname'=>'User 2', 'network'=>'twitter', 
         'post_text'=>'@shutterbug Nice shot!', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_post_id'=>41, 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'location'=>'Chennai, Tamil Nadu, India', 'reply_retweet_distance'=>2000, 'is_geo_encoded'=>1));
 
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>133, 'author_user_id'=>19,
@@ -242,7 +242,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>138, 'author_user_id'=>18,
         'author_username'=>'shutterbug', 'author_fullname'=>'Shutterbug', 'network'=>'twitter', 
         'post_text'=>'@user2 Thanks!', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>21, 'in_reply_to_post_id'=>132));
 
         //Add user exchange
@@ -251,12 +251,12 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'post_text'=>'@ev When will Twitter have a business model?', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
-        'in_reply_to_post_id'=>null, 'in_reply_to_user_id'=>13 ));
+        'in_reply_to_post_id'=>null, 'in_reply_to_user_id'=>13, 'is_protected'=>0 ));
 
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>140, 'author_user_id'=>13,
         'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'network'=>'twitter', 
         'post_text'=>'@user1 Soon...', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>139));
 
         //Add posts replying to post not in the system
@@ -1154,21 +1154,61 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      * Test function getPostsAuthorHasRepliedTo
      */
     public function testGetPostsAuthorHasRepliedTo(){
+        //Public exchanges only
         $dao = new PostMySQLDAO();
-        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(18, 10, 'twitter');
+        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(18, 10, 'twitter', true);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user2");
         $this->assertEqual($posts_replied_to[0]["question"], "@shutterbug Nice shot!");
         $this->assertEqual($posts_replied_to[0]["answerer_username"], "shutterbug");
         $this->assertEqual($posts_replied_to[0]["answer"], "@user2 Thanks!");
 
-        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10, 'twitter');
+
+        //set up a private exchange
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>1000, 'author_user_id'=>20,
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
+        'post_text'=>'@ev Privately, when will Twitter have a business model?', 'source'=>'web', 
+        'pub_date'=>'2010-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'in_reply_to_post_id'=>null, 'in_reply_to_user_id'=>13, 'is_protected'=>1 ));
+
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>1001, 'author_user_id'=>13,
+        'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'network'=>'twitter', 
+        'post_text'=>'@user1 Privately? Soon...', 'source'=>'web', 'pub_date'=>'2010-03-01 01:00:00', 
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>1,
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>1000));
+
+        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10, 'twitter', true);
         $this->assertEqual(sizeof($posts_replied_to), 1);
         $this->assertEqual($posts_replied_to[0]["question_post_id"], 139);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user1");
         $this->assertEqual($posts_replied_to[0]["question"], "@ev When will Twitter have a business model?");
+        $this->assertFalse($posts_replied_to[0]["question_is_protected"]);
         $this->assertEqual($posts_replied_to[0]['answer_post_id'], 140);
         $this->assertEqual($posts_replied_to[0]["answerer_username"], "ev");
         $this->assertEqual($posts_replied_to[0]["answer"], "@user1 Soon...");
+        $this->assertFalse($posts_replied_to[0]["answer_is_protected"]);
+
+        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10, 'twitter', false);
+        $this->assertEqual(sizeof($posts_replied_to), 2);
+        $this->debug(Utils::varDumpToString($posts_replied_to));
+
+        $this->assertEqual($posts_replied_to[0]["question_post_id"], 1000);
+        $this->assertEqual($posts_replied_to[0]["questioner_username"], "user1");
+        $this->assertEqual($posts_replied_to[0]["question"], "@ev Privately, when will Twitter have a business model?");
+        $this->assertTrue($posts_replied_to[0]["question_is_protected"]);
+        $this->assertEqual($posts_replied_to[0]['answer_post_id'], 1001);
+        $this->assertEqual($posts_replied_to[0]["answerer_username"], "ev");
+        $this->assertEqual($posts_replied_to[0]["answer"], "@user1 Privately? Soon...");
+        $this->assertTrue($posts_replied_to[0]["answer_is_protected"]);
+
+        $this->assertEqual($posts_replied_to[1]["question_post_id"], 139);
+        $this->assertEqual($posts_replied_to[1]["questioner_username"], "user1");
+        $this->assertEqual($posts_replied_to[1]["question"], "@ev When will Twitter have a business model?");
+        $this->assertEqual($posts_replied_to[1]['answer_post_id'], 140);
+        $this->assertEqual($posts_replied_to[1]["answerer_username"], "ev");
+        $this->assertEqual($posts_replied_to[1]["answer"], "@user1 Soon...");
+
+
     }
 
     /**

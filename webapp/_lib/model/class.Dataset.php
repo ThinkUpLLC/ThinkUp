@@ -65,6 +65,12 @@ class Dataset {
     'PluginOptionDAO');
 
     /**
+     *
+     * @var str Help link slug which links to the corresponding documentation for this Dataset.
+     */
+    var $help_slug = null;
+
+    /**
      * Constructor
      * @param str $name
      * @param str $dao_name
@@ -135,4 +141,19 @@ class Dataset {
         return $iterator;
     }
 
+    /**
+     * Add a slug which points to the documentation that corresponds to this dataset.
+     * @param str $slug
+     */
+    public function addHelp($slug) {
+        $this->help_slug = $slug;
+    }
+
+    /**
+     * Get the slug which points to documentation that corresponds to this dataset.
+     * @return str slug
+     */
+    public function getHelp() {
+        return $this->help_slug;
+    }
 }

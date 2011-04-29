@@ -94,6 +94,7 @@ class DashboardController extends ThinkUpController {
                     $view_name = 'is_searchable';
                     $this->addToView($view_name, true);
                 }
+                $this->view_mgr->addHelp($this->view_name, $dataset->getHelp());
             }
         }
     }
