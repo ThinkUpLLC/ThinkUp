@@ -41,6 +41,10 @@
  * @param string
  */
 function smarty_insert_help_link($params, &$smarty) {
-    return '<a href="http://thinkupapp.com/docs/'.$smarty->_tpl_vars['help'][$params['id']].
-    '.html" title="Learn more"><img src="'.$smarty->_tpl_vars['site_root_path'].'assets/img/help.png"></a>';
+    if (isset($smarty->_tpl_vars['help'][$params['id']])){
+        return '<a href="http://thinkupapp.com/docs/'.$smarty->_tpl_vars['help'][$params['id']].
+        '.html" title="Learn more"><img src="'.$smarty->_tpl_vars['site_root_path'].'assets/img/help.png"></a>';
+    } else {
+        return '';
+    }
 }
