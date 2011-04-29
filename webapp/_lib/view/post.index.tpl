@@ -18,7 +18,7 @@
           <ul class="side-subnav">
           <li{if $smarty.get.v eq ''} class="currentview"{/if}><a href="index.php?t={$post->post_id}&n={$post->network}">Post Replies&nbsp;&nbsp;&nbsp;</a></li>
           {if $logged_in_user && $post->reply_count_cache && $post->reply_count_cache > 1}
-            <li id="grid_search_icon"><a href="#" class="grid_search" title="Search" onclick="return false;"><span>Search & Filter Replies</span></a></li>
+            <li id="grid_search_icon"><a href="#" class="grid_search" title="Search" onclick="return false;"><span>Search  Replies</span></a></li>
           {/if}
           <li><a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">Export Replies (CSV)</a></li>
           </ul></li>
@@ -166,7 +166,7 @@
           
           {if $replies}
             <div class="prepend">
-              <div class="append_20 clearfix bt">
+              <div class="append_20 clearfix">
                 {include file="_post.word-frequency.tpl"}
                 {if $replies && $logged_in_user}
                     {include file="_grid.search.tpl" version2=true}

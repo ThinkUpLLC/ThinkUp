@@ -27,12 +27,11 @@ $(document).keyup(function(e) {
 
 <body>
 <form onsubmit="return false;"  id="grid_search_form">
-<p style="padding-left: 20px">
-<label style="font-size: 20px;">Search:&nbsp;</label><input type=text id="grid_search_input" style="width:100px;">
-<input type="submit" value="search">
-<input type="button" value="export" id="grid_export">
-&nbsp; <span style="font-size: 20px;"><b><span id="grid_search_count" style="font-size: 20px;">0</span></b> results</span>
-&nbsp; &nbsp; <span style="font-size: 10px;"><em>hint: esc key closes search</em></span>
+<p>
+<input type=text id="grid_search_input">
+<input type="submit" value="search" id="grid_search_button">
+<h3 id="grid_search_results_count"><span id="grid_search_count">0</span></b> results <input type="button" value="export" id="grid_export"></h3>
+
 </p>
 </form>
 <img src="../img/loading.gif" id="grid_search_spinner" style="margin: 250px 0px 0px 430px;">
