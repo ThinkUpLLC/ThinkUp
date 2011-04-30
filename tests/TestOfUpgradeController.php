@@ -168,6 +168,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
      * Test generating and emailing a token to admin(s)
      */
     public function testTokenEmail() {
+        $config = Config::getInstance();
+        $site_root_path = $config->getValue('site_root_path');
+
         // build 1 valid admin and two invalid admins
         $builder1 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 1, 'email' => 'm@w.nz'));
         $builder2 = FixtureBuilder::build('owners', array('is_admin' => 0, 'is_activated' => 1, 'email' => 'm2@w.nz'));
@@ -188,7 +191,8 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         $this->assertPattern('/to\: m@w\.nz\s/', $email_file);
         $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
-        $token_regex = '/http:\/\/mytestthinkup\/install\/upgrade.php\?upgrade_token=' . $token . '/';
+        $token_regex = '/http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).
+        'install\/upgrade.php\?upgrade_token=' . $token . '/';
         $this->assertPattern($token_regex, $email_file);
 
         // build 1 more valid admin, should have two to emails
@@ -219,6 +223,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
     }
 
     public function testTokenEmailWithSSL() {
+        $config = Config::getInstance();
+        $site_root_path = $config->getValue('site_root_path');
+
         // build 1 valid admin and two invalid admins
         $builder1 = FixtureBuilder::build('owners', array('is_admin' => 1, 'is_activated' => 1, 'email' => 'm@w.nz'));
         $builder2 = FixtureBuilder::build('owners', array('is_admin' => 0, 'is_activated' => 1, 'email' => 'm2@w.nz'));
@@ -240,7 +247,8 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         $this->assertPattern('/to\: m@w\.nz\s/', $email_file);
         $this->assertPattern('/subject\: Upgrade Your ThinkUp Database/', $email_file);
-        $token_regex = '/https:\/\/mytestthinkup\/install\/upgrade.php\?upgrade_token=' . $token . '/';
+        $token_regex = '/https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).
+        'install\/upgrade.php\?upgrade_token=' . $token . '/';
         $this->assertPattern($token_regex, $email_file);
 
         // build 1 more valid admin, should have two to emails

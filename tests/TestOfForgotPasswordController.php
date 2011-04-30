@@ -71,6 +71,8 @@ class TestOfForgotPasswordController extends ThinkUpUnitTestCase {
     }
 
     public function testOfControllerWithValidEmailAddress() {
+        $config = Config::getInstance();
+        $site_root_path = $config->getValue('site_root_path');
         $_POST['email'] = 'me@example.com';
         $_POST['Submit'] = "Send Reset";
         $_SERVER['HTTP_HOST'] = "mytestthinkup";
@@ -86,11 +88,13 @@ subject: ThinkUp Password Recovery
 message: Hi there!
 
 Looks like you forgot your ThinkUp password. Go to this URL to reset it:
-http:\/\/mytestthinkup\/session\/reset.php/';
+http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/reset.php/';
         $this->assertPattern($expected_forgot_email_pattern, $actual_forgot_email);
     }
 
     public function testOfControllerWithValidEmailAddressAndSSL() {
+        $config = Config::getInstance();
+        $site_root_path = $config->getValue('site_root_path');
         $_POST['email'] = 'me@example.com';
         $_POST['Submit'] = "Send Reset";
         $_SERVER['HTTP_HOST'] = "mytestthinkup";
@@ -107,7 +111,7 @@ subject: ThinkUp Password Recovery
 message: Hi there!
 
 Looks like you forgot your ThinkUp password. Go to this URL to reset it:
-https:\/\/mytestthinkup\/session\/reset.php/';
+https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/reset.php/';
         $this->assertPattern($expected_forgot_email_pattern, $actual_forgot_email);
     }
 }

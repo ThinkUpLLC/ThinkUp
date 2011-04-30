@@ -123,6 +123,9 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testSuccessfulRegistration() {
+        $config = Config::getInstance();
+        $site_root_path = $config->getValue('site_root_path');
+
         // make sure registration is on...
         $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
         'option_value' => 'true');
@@ -147,7 +150,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 subject: Activate Your ThinkUp Account
 message: Click on the link below to activate your new ThinkUp account:
 
-http:\/\/mytestthinkup\/session\/activate.php\?usr=angie%40example.com/';
+http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?usr=angie%40example.com/';
 
         $actual_reg_email = Mailer::getLastMail();
         $this->debug($actual_reg_email);
@@ -155,6 +158,9 @@ http:\/\/mytestthinkup\/session\/activate.php\?usr=angie%40example.com/';
     }
 
     public function testSuccessfulRegistrationWithSSL() {
+        $config = Config::getInstance();
+        $site_root_path = $config->getValue('site_root_path');
+
         // make sure registration is on...
         $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
         'option_value' => 'true');
@@ -180,7 +186,7 @@ http:\/\/mytestthinkup\/session\/activate.php\?usr=angie%40example.com/';
 subject: Activate Your ThinkUp Account
 message: Click on the link below to activate your new ThinkUp account:
 
-https:\/\/mytestthinkup\/session\/activate.php\?usr=angie%40example.com/';
+https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.php\?usr=angie%40example.com/';
 
         $actual_reg_email = Mailer::getLastMail();
         $this->debug($actual_reg_email);

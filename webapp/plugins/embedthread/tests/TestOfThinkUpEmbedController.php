@@ -76,7 +76,7 @@ class TestOfThinkUpEmbedController extends ThinkUpUnitTestCase {
         $this->assertPattern('/ThinkUp1001 = new function()/', $results, "Javascript embed code returned");
         $this->debug($results);
 
-        $expected_pattern = '/var BASE_URL = \'http:\/\/mytestthinkup\/plugins\/embedthread/';
+        $expected_pattern = '/var BASE_URL = \'http:\/\/mytestthinkup/';
         $this->assertPattern($expected_pattern, $results);
     }
 
@@ -91,7 +91,7 @@ class TestOfThinkUpEmbedController extends ThinkUpUnitTestCase {
         $this->assertPattern('/ThinkUp1001 = new function()/', $results, "Javascript embed code returned");
         $this->debug($results);
 
-        $expected_pattern = '/var BASE_URL = \'https:\/\/mytestthinkup\/plugins\/embedthread/';
+        $expected_pattern = '/var BASE_URL = \'https:\/\/mytestthinkup/';
         $this->assertPattern($expected_pattern, $results);
     }
 }
