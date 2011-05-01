@@ -1,2 +1,0 @@
-Login and Registration
-======================

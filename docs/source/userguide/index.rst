@@ -7,9 +7,8 @@ ThinkUp features offered by both the core application and the default plugins wh
 .. toctree::
    :maxdepth: 2
 
-   login
-   userperms
+   accounts/index
+   settings/index
    datacapture
    listings/index
-   plugins/index
    api/index
