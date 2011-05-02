@@ -83,7 +83,15 @@ class AppConfig {
             'required' => false,
             'default' => 'false',
             'match' => '/^true$/',
-            'match_message' => 'Must be true'
+            'match_message' => ' be true'
+            ),
+        'is_embed_disabled' => array(
+            'type' => 'checkbox',
+            'title' => 'Disable ability to embed threads on external web pages',
+            'required' => false,
+            'default' => 'false',
+            'match' => '/^true$/',
+            'match_message' => ' be true'
             )
             );
 

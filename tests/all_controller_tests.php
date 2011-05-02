@@ -39,6 +39,8 @@ $controller_test->add(new TestOfBackupController());
 $controller_test->add(new TestOfCheckCrawlerController());
 $controller_test->add(new TestOfCrawlerAuthController());
 $controller_test->add(new TestOfDashboardController());
+$controller_test->add(new TestOfThinkUpEmbedController());
+$controller_test->add(new TestOfThreadJSController());
 $controller_test->add(new TestOfExportController());
 $controller_test->add(new TestOfForgotPasswordController());
 $controller_test->add(new TestOfGridController());

@@ -36,8 +36,6 @@ $plugin_tests = & new TestSuite('Plugin tests');
 $plugin_tests->add(new TestOfExpandURLsPlugin());
 $plugin_tests->add(new TestOfExpandURLsPluginConfigurationController());
 $plugin_tests->add(new TestOfFlickrAPIAccessor());
-$plugin_tests->add(new TestOfThinkUpEmbedController());
-$plugin_tests->add(new TestOfThreadJSController());
 $plugin_tests->add(new TestOfFacebookCrawler());
 $plugin_tests->add(new TestOfFacebookPlugin());
 $plugin_tests->add(new TestOfFacebookPluginConfigurationController());

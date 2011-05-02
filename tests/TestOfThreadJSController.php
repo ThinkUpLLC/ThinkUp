@@ -27,7 +27,6 @@
 require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/embedthread/controller/class.ThreadJSController.php';
 
 class TestOfThreadJSController extends ThinkUpUnitTestCase {
 
@@ -39,10 +38,13 @@ class TestOfThreadJSController extends ThinkUpUnitTestCase {
 
     //test plugin not enabled
     public function testPluginDisabled() {
+        $fixture = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'is_embed_disabled', 'option_value'=>'true'));
+
         $controller = new ThreadJSController(true);
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
-        $config = Config::getInstance();
+
         $this->assertPattern('/ThinkUp embedding is not enabled./', $results);
         $this->debug($results);
     }

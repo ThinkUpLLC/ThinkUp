@@ -106,6 +106,7 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $controller = new PostController(true);
         $results = $controller->go();
         $this->assertPattern( "/This is a test post/", $results);
+        $this->assertTrue($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
     }
 
     public function testPublicPostWithMixedAccessRepliesNotLoggedIn() {
@@ -117,6 +118,18 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertPattern( "/This is a public reply to 1001/", $results);
         $this->assertPattern( "/Not showing 1 private reply./", $results);
         $this->assertNoPattern("/This is a private reply to 1001/", $results);
+        $this->assertFalse($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
+    }
+
+    public function testPublicPostWithEmbedDisabled() {
+        $builders = $this->buildPublicPostWithMixedAccessResponses();
+        $builders[]  = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'is_embed_disabled', 'option_value'=>'true'));
+
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertTrue($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
     }
 
     public function testPublicPostWithMixedAccessRepliesLoggedIn() {
@@ -128,6 +141,7 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertPattern( "/This is a test post/", $results);
         $this->assertPattern( "/This is a public reply to 1001/", $results);
         $this->assertPattern("/This is a private reply to 1001/", $results);
+        $this->assertFalse($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
     }
 
     public function testNotLoggedInPostWithViewsSpecified() {

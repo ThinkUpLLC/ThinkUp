@@ -54,7 +54,7 @@ class ThreadJSController extends ThinkUpController {
             }
         }
         Utils::defineConstants();
-        $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/embedthread/view/v1.thread_js.tpl');
+        $this->setViewTemplate(THINKUP_WEBAPP_PATH.'_lib/view/api.embed.v1.thread_js.tpl');
     }
     /**
      * Echoes thread JavaScript object
@@ -76,11 +76,8 @@ class ThreadJSController extends ThinkUpController {
      */
     private function getJavaScript() {
         $result = 'ThinkUp'.(isset($_GET['p'])?$_GET['p']:'').'.serverResponse([{' . "\n";
-        $plugin_dao = DAOFactory::getDAO('PluginDAO');
-        $plugin_id = $plugin_dao->getPluginId('embedthread');
-        if ($plugin_dao->isPluginActive($plugin_id)) {
-            $this->enabled = true;
-        }
+        $config = Config::getInstance();
+        $this->enabled = !$config->getValue('is_embed_disabled');
         if ($this->enabled) {
             if (!$this->is_missing_param) {
                 $post_dao = DAOFactory::getDAO('PostDAO');

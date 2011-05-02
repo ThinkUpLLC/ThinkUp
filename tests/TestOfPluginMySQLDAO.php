@@ -62,26 +62,23 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
 
         $plugins = $dao->getInstalledPlugins($this->config->getValue("source_root_path"));
-        $this->assertEqual(count($plugins), 6);
+        $this->assertEqual(count($plugins), 5);
 
         usort($plugins, 'TestOfPluginMySQLDAO::pluginSort');
-        $this->assertEqual($plugins[0]->name,"Embed Thread", "Embed Thread 'name' Test");
-        $this->assertEqual($plugins[0]->folder_name,"embedthread", "Embed Thread 'folder_name' test");
+        $this->assertEqual($plugins[0]->name,"Expand URLs", "Ex-url 'name' Test");
+        $this->assertEqual($plugins[0]->folder_name,"expandurls", "Ex-url 'folder_name' test");
 
-        $this->assertEqual($plugins[1]->name,"Expand URLs", "Ex-url 'name' Test");
-        $this->assertEqual($plugins[1]->folder_name,"expandurls", "Ex-url 'folder_name' test");
+        $this->assertEqual($plugins[1]->name,"Facebook", "Facebook 'name' Test");
+        $this->assertEqual($plugins[1]->folder_name,"facebook", "Facebook 'folder_name' test");
 
-        $this->assertEqual($plugins[2]->name,"Facebook", "Facebook 'name' Test");
-        $this->assertEqual($plugins[2]->folder_name,"facebook", "Facebook 'folder_name' test");
+        $this->assertEqual($plugins[2]->name, "GeoEncoder", "GeoEncoder 'name' Test");
+        $this->assertEqual($plugins[2]->folder_name, "geoencoder", "GeoEncoder 'folder_name' test");
 
-        $this->assertEqual($plugins[3]->name, "GeoEncoder", "GeoEncoder 'name' Test");
-        $this->assertEqual($plugins[3]->folder_name, "geoencoder", "GeoEncoder 'folder_name' test");
+        $this->assertEqual($plugins[3]->name,"Hello ThinkUp", "Hello 'name' Test");
+        $this->assertEqual($plugins[3]->folder_name,"hellothinkup", "Hello 'folder_name' test");
 
-        $this->assertEqual($plugins[4]->name,"Hello ThinkUp", "Hello 'name' Test");
-        $this->assertEqual($plugins[4]->folder_name,"hellothinkup", "Hello 'folder_name' test");
-
-        $this->assertEqual($plugins[5]->name,"Twitter", "Twitter 'name' Test");
-        $this->assertEqual($plugins[5]->folder_name,"twitter", "Twitter 'folder_name' test");
+        $this->assertEqual($plugins[4]->name,"Twitter", "Twitter 'name' Test");
+        $this->assertEqual($plugins[4]->folder_name,"twitter", "Twitter 'folder_name' test");
     }
 
     public function testInsertPugin() {
@@ -253,12 +250,12 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testSetActive() {
-        # build our data
+        // build our data
         $builders_array = $this->buildData();
-        # init our dao
+        // init our dao
         $dao = new PluginMySQLDAO();
 
-        // flip form flase to true
+        // flip form false to true
         $test_plugin_records = $builders_array[0]->columns;
         $id = $test_plugin_records['last_insert_id'];
         $this->assertTrue($dao->setActive($id, true));
@@ -285,7 +282,6 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data['is_active'], 0);
-
     }
 
     public function testIsPluginActive() {

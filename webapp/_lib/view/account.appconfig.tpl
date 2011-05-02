@@ -86,6 +86,21 @@
         Set whether or not your site's data is available via ThinkUp's JSON API. {insert name="help_link" id="api"}
       </div>
 
+      <div style="float: left;">
+        <label for="is_embed_disabled">
+          Disable thread embeds:
+          <br />
+        </label>
+      </div>
+      <div style="float: left;">
+        <input type="checkbox" name="is_embed_disabled" id="is_embed_disabled" value="true">
+      </div>
+      <div style="clear:both;"></div>
+      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+        Set whether or not a user can embed a ThinkUp thread onto another web site. {insert name="help_link" id="embed"}
+      </div>
+
+
    </div>
 
     <div style="text-align: center" id="save_setting_image">

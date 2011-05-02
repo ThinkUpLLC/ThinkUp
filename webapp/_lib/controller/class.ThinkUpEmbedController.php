@@ -55,7 +55,7 @@ class ThinkUpEmbedController extends ThinkUpController {
      */
     public function control() {
         Utils::defineConstants();
-        $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/embedthread/view/v1.embed.tpl');
+        $this->setViewTemplate(THINKUP_WEBAPP_PATH.'_lib/view/api.embed.v1.embed.tpl');
         $this->setContentType('text/javascript');
         if (!$this->is_missing_param) {
             $this->addToView('post_id', $_GET['p']);

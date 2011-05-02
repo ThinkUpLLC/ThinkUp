@@ -1,16 +1,7 @@
 <?php
-/*
- Plugin Name: Embed Thread
- Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/embedthread/
- Description: Provides JavaScript to embed a ThinkUp thread on any web page.
- Icon: assets/img/plugin_icon.png
- Version: 0.01
- Author: Gina Trapani
- */
-
 /**
  *
- * ThinkUp/webapp/plugins/expandurls/controller/embedthread.php
+ * ThinkUp/webapp/plugins/embedthread/thread_js.php
  *
  * Copyright (c) 2009-2011 Gina Trapani
  *
@@ -33,6 +24,10 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani
  */
+chdir("..");
+chdir("..");
+chdir("..");
+require_once 'init.php';
 
-$webapp = Webapp::getInstance();
-$webapp->registerPlugin('embedthread', 'EmbedThreadPlugin');
+$controller = new ThreadJSController();
+echo $controller->go();

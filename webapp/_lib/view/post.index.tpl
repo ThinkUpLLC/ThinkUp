@@ -36,13 +36,12 @@
         </ul>
       </div>
     </div> <!-- end left nav -->
-    
-    
+
     <div class="thinkup-canvas round-all grid_20 alpha omega prepend_20 append_20" style="min-height:340px">
       <div class="prefix_1">
-        
+
         {include file="_usermessage.tpl"}
-      
+
         {if $data_template}
             {include file=$data_template}
             <div class="float-l">
@@ -54,7 +53,7 @@
               {/if}-->
             </div>
         {else}
-    
+
           {if $post}
             <div class="clearfix">
               <div class="grid_2 alpha">
@@ -62,7 +61,7 @@
                   <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
                 </div>
               </div>
-            
+
               <div class="grid_12">
                 <div class="br" style="min-height:110px">
                   <div class="tweet pr">
@@ -74,24 +73,28 @@
                           <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
                         {else}
                           {$post->post_text}
+                          {if $post->is_protected}
+                                <span class="sprite icon-locked"></span>
+                          {/if}
+                          
                         {/if}
                     {else}
                       <span class="no-post-text">No post text</span>
                     {/if}
                   </div>
-              
+
                   {if $post->link->expanded_url and !$post->link->is_image and $post->link->expanded_url != $post->link->url}
                     <div class="clearfix">
                       <a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">{$post->link->expanded_url}</a><span class="ui-icon ui-icon-newwin">
                     </div>
                   {/if}
-              
+
                   {if $post->link->expanded_url and $post->link->is_image}<br ><br >
                     <div class="pic clearfix">
                       <a href="{$post->link->url}"><img src="{$post->link->expanded_url}" alt=""></a><span class="ui-icon ui-icon-newwin">
-                    </div>                    
+                    </div>
                   {/if}
-                  
+
                   {literal}
                   <script>
                   $(function() {
@@ -131,7 +134,6 @@
                       </div>
                     <div class="grid_4 omega">
                           {if $post->source}
-                          
                                 {if $post->source eq 'web'}
                                   Web
                                 {else}
@@ -142,9 +144,15 @@
                             <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
                       {/if}
                     </div>
+                    {if $disable_embed_code != true}
+                    <div class="grid_15 omega">
+                    Embed this thread:<br>
+                    <textarea cols="55" rows="3">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
+                    </div>
+                    {/if}
+                    
                   </div> <!-- /#more-detail -->
-                            
-                  
+
                   <!--{if $post->is_geo_encoded eq 1}
                   <div>
                   <a href="{$site_root_path}post/map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">

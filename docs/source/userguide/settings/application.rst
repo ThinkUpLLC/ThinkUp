@@ -29,3 +29,9 @@ Check this box if you don't want to allow users or third-party applications acce
 :doc:`ThinkUp API </userguide/api/index>`. When this box is checked, every API request will get 
 an :doc:`APIDisabledException </userguide/api/errors/apidisabled>`.
 
+Disable Thread Embeds
+---------------------
+
+Check this box if you don't want to allow users to 
+:doc:`embed ThinkUp threads on third-party web sites </userguide/listings/all/post_listings>` using a JavaScript
+embed code. When this box is checked, the code will not be available for use.

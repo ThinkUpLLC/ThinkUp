@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/embedthread/thread_js.php
+ * ThinkUp/webapp/plugins/embedthread/thinkup_embed.php
  *
  * Copyright (c) 2009-2011 Gina Trapani
  *
@@ -28,7 +28,6 @@ chdir("..");
 chdir("..");
 chdir("..");
 require_once 'init.php';
-require_once 'plugins/embedthread/controller/class.ThreadJSController.php';
 
-$controller = new ThreadJSController();
+$controller = new ThinkUpEmbedController();
 echo $controller->go();
