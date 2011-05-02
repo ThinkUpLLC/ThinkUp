@@ -78,6 +78,8 @@ class TestOfThinkUpEmbedController extends ThinkUpUnitTestCase {
 
         $expected_pattern = '/var BASE_URL = \'http:\/\/mytestthinkup/';
         $this->assertPattern($expected_pattern, $results);
+
+        $this->assertPattern('/thinkup_embed_1001/', $results, "Unique div name returned");
     }
 
     public function testGivenAllParametersWithSSL() {
@@ -93,5 +95,7 @@ class TestOfThinkUpEmbedController extends ThinkUpUnitTestCase {
 
         $expected_pattern = '/var BASE_URL = \'https:\/\/mytestthinkup/';
         $this->assertPattern($expected_pattern, $results);
+
+        $this->assertPattern('/thinkup_embed_1001/', $results, "Unique div name returned");
     }
 }

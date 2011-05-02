@@ -1,8 +1,8 @@
 ThinkUp{$post_id} = new function() {literal} {
   var BASE_URL = {/literal}'http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/embedthread/';{literal}
   var STYLESHEET = BASE_URL + "assets/css/thinkupembedthread.css"
-  var CONTENT_URL = BASE_URL + 'v1/thread_js.php?p={/literal}{$post_id}&n={$network|urlencode}{literal}';
-  var ROOT = 'my_xss_magic';
+  var CONTENT_URL = BASE_URL + 'v1/thread_js.php?p={/literal}{$post_id}&n={$network|urlencode}';
+  var ROOT = 'thinkup_embed_{$post_id}{literal}';
 
   function requestStylesheet(stylesheet_url) {
     stylesheet = document.createElement("link");
@@ -38,13 +38,13 @@ ThinkUp{$post_id} = new function() {literal} {
         if (data[0].author_link != 'null') {
           txt += '<a href="'+data[0].author_link+'">';
         }
-        txt += '<img src="' + data[0].author_avatar + '"  style="margin-right:10px"/>';
+        txt += '<img src="' + data[0].author_avatar + '" class="thinkup_avatar"/>';
         if (data[0].author_link != 'null') {
           txt += '</a">';
         }
         txt += '</div><div class="thinkup_post">';
-        if (data[0].author_link != 'null') {
-          txt += '<a href="'+data[0].author_link+'">';
+        if (data[0].post_link != 'null') {
+          txt += '<a href="'+data[0].post_link+'">';
         }
         txt += data[0].author;
         if (data[0].author_link != 'null') {
@@ -59,11 +59,18 @@ ThinkUp{$post_id} = new function() {literal} {
             txt += '<a href="'+data[0].replies[i].author_link+'">';
           }
           txt += '<img src="' + 
-          data[0].replies[i].author_avatar + '" style="margin-right:10px"/></div>' + data[0].replies[i].author;
+          data[0].replies[i].author_avatar + '"  class="thinkup_avatar"/>';
           if (data[0].replies[i].author_link != 'null') {
             txt += '</a>';
           }
-          
+          txt += '</div>';
+          if (data[0].replies[i].post_link != 'null') {
+            txt += '<a href="' + data[0].replies[i].post_link + '">';
+          }
+          txt += data[0].replies[i].author;
+          if (data[0].replies[i].post_link != 'null') {
+            txt += '</a>';
+          }
           txt += ": " + data[0].replies[i].text + '</div><br clear="all">';
         }
     }

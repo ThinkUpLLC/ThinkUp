@@ -91,21 +91,28 @@ class ThreadJSController extends ThinkUpController {
                         true);
                         $cnt = 0;
                         $author_link = ($post->network=='twitter')?'http://twitter.com/'.$post->author_username:'null';
+                        $post_link = ($post->network=='twitter')?'http://twitter.com/'.$post->author_username.
+                        '/status/'.$post->post_id.'/':'null';
+
                         $result .='"status":"success",
 "post":'.json_encode($post->post_text).', "author_avatar":'.json_encode($post->author_avatar).', 
 "author":'.json_encode($post->author_username).', 
-"author_link":'.json_encode($author_link).', 
+"author_link":'.json_encode($author_link).',
+"post_link":'.json_encode($post_link).', 
 "replies": [
 ';
+
                         foreach($replies_it as $key => $value) {
                             $cnt++;
                             $author_link = ($value->network=='twitter')?'http://twitter.com/'.$value->author_username:
                             'null';
-
+                            $post_link = ($value->network=='twitter')?'http://twitter.com/'.$value->author_username.
+                            '/status/'.$value->post_id.'/':'null';
                             $data = array('id' => $cnt, 'text' => trim(preg_replace('/^@[a-zA-Z0-9_]+/', '',
                             $value->post_text)), 'post_id_str' => $value->post_id . '_str',
                             'author' => $value->author_username, 'author_avatar'=> $value->author_avatar,
-                             'date' => $value->adj_pub_date, 'author_link' => $author_link );
+                             'date' => $value->adj_pub_date, 'author_link' => $author_link, 'post_link' =>
+                            $post_link );
                             $result .=json_encode($data) . ",\n";
                             flush();
                         }
