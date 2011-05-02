@@ -200,7 +200,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                                 'author_username' => 'shutterbug',
                                 'author_fullname' => 'Shutter Bug',
                                 'author_avatar' => 'avatar.jpg',
-                                'post_text' => 'This is image post ' . $counter,
+                                'post_text' => 'This is image post ' . $counter . ':\\',
                                 'source' => $source,
                                 'in_reply_to_post_id' => null,
                                 'in_retweet_of_post_id' => null,
@@ -208,6 +208,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                                 'in_rt_of_user_id' => null,
                                 'pub_date' => '2006-01-02 00:' . $pseudo_minute . ':00',
                                 'network' => 'twitter',
+                                'location' => "Gramercy Park,\nNew York,\nNY,\nUSA",
                                 'is_geo_encoded' => 0,
                                 'is_protected' => $protected));
 
@@ -244,7 +245,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
 
             $builders[] = FixtureBuilder::build( 'links', array(
                                 'url' => 'http://example.com/' . $counter,
-                                'explanded_url' => 'http://example.com/' . $counter . '.html',
+                                'expanded_url' => 'http://example.com/' . $counter . '.html',
                                 'title' => 'Link $counter',
                                 'clicks' => 0,
                                 'post_id' => $post_id,
