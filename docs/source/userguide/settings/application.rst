@@ -1,5 +1,7 @@
-Application
-===========
+Application (Administrators only)
+=================================
+
+Administrators can change application-level settings in ThinkUp. 
 
 Open registration
 -----------------

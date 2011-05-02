@@ -15,7 +15,6 @@ ThinkUp does store:
 * Social network authorization (OAuth) keys
 * Public and private posts on social networks
 * Public and private user data on social networks
-* List of users who have registered with your ThinkUp installation
 
 ThinkUp does not store:
 
@@ -25,13 +24,17 @@ ThinkUp does not store:
 How ThinkUp Handles Private Data
 --------------------------------
 
-**Passwords.** The only password that ThinkUp stores in its database is each users's ThinkUp account password. This
-password is not stored in plain text. It is encrypted, so that even someone with direct access to your ThinkUp
-database would not be able to read the password.
+ThinkUp's official distribution adheres to a set of rules and standards for handling sensitive data, such as:
 
-**Social network credentials.** ThinkUp does not store passwords to social networks like Facebook or Twitter. Instead,
-ThinkUp stores OAuth credentials to access these networks. This gives users the ability to easily revoke ThinkUp's
-access to their data on the originating network's settings.
+**Passwords.** The only password that ThinkUp stores in its database is each users's ThinkUp account password. This
+password is not stored in clear text; ThinkUp stores a salted `SHA-1 <http://en.wikipedia.org/wiki/SHA1>`_ hash
+of the password. To prevent brute force attacks which attempt to guess this password, ThinkUp enforces a failed login
+attempt cap. After 10 failed login attempts, ThinkUp deactivates the user account, and an administrator must reactivate
+it.
+
+**Social network credentials.** ThinkUp and its core plugins do not store passwords to social networks like Facebook
+or Twitter. Instead, ThinkUp stores OAuth credentials to access these networks. This gives users the ability to easily
+revoke ThinkUp's access to their data on the originating network's settings.
 
 **Private post and user details.** While ThinkUp collects private posts and data its authorized users have access to on
 the originating network, ThinkUp does not make those posts available to anyone not logged into ThinkUp.
@@ -39,6 +42,10 @@ the originating network, ThinkUp does not make those posts available to anyone n
 **Facebook data assumptions.** ThinkUp's current Facebook support is a work in progress and Facebook's access
 permissions system is complex. As such, ThinkUp marks all posts to a Facebook user's profile private; ThinkUp marks
 all posts to a Facebook page as public. ThinkUp assumes all Facebook users are private.
+
+.. warning::
+    Only plugins which adhere to these standards will be accepted into the official ThinkUp distribution. If you install
+    third-party, non-approved plugins, you are taking the risk that they don't adhere to these guidelines.
 
 How to Secure Your ThinkUp Installation
 ---------------------------------------

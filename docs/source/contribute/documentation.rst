@@ -1,9 +1,11 @@
 Documentation Writers
 ======================
 
-**Help Wanted!** Currently we are porting ThinkUp's documentation from the `GitHub wiki 
-<https://github.com/ginatrapani/ThinkUp/wiki>`_ into the main repository. Please help with this tedious and 
-time-consuming effort.
+.. admonition:: Help Wanted
+
+    Currently we are porting ThinkUp's documentation from the `GitHub wiki 
+    <https://github.com/ginatrapani/ThinkUp/wiki>`_ into the main repository. Please help with this tedious and 
+    time-consuming effort.
 
 Not only does the ThinkUp community want to create a great software platform, we want to make it accessible to everyone
 with clear and thorough documentation. You're reading the very beginning of that effort, but we've got
@@ -19,15 +21,12 @@ plain text files using a format called reStructuredText. We store those source f
 repository's docs folder <https://github.com/ginatrapani/ThinkUp/tree/master/docs/source>`_. 
 
 To contribute new documentation, `fork ThinkUp's source code and issue a pull request for your changes 
-<https://github.com/ginatrapani/ThinkUp/wiki/Developer-Guide%3A-Get-the-Source-Code-from-GitHub-and-Keep-It-Updated>`_.
-
-Alternately, to edit an existing page, fork the ThinkUp repository, navigate to that documentation's source file, and
-click on the edit link. Make your change, and then send a pull request for the update.
-
-Currently we're working on ways to make contributing documentation easier. :doc:`Get in touch </contact>` with your
-ideas.
+<https://github.com/ginatrapani/ThinkUp/wiki/Developer-Guide%3A-Get-the-Source-Code-from-GitHub-and-Keep-It-Updated>`_. 
+Alternately, edit an existing page without leaving your browser using `GitHub's new "Fork and edit this file"
+feature <https://github.com/blog/844-forking-with-the-edit-button>`_.
 
 .. seealso::
-    The `reStructuredText primer <http://sphinx.pocoo.org/rest.html>`_ is a good referene while you write rST. Also,
+    The `reStructuredText primer <http://sphinx.pocoo.org/rest.html>`_ is a good reference while you write rST. Also,
     this `reStructuredText online editor <http://rst.ninjs.org/>`_ lets you preview your work live on the web.
 
+We want to make contributing documentation as easy as possible. :doc:`Get in touch </contact>` with your ideas.

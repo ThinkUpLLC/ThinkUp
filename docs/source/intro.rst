@@ -1,8 +1,13 @@
 Introduction
 ============
 
-Meet ThinkUp
-------------
+.. sidebar:: Nice to Meet You
+
+    We're an open source community of developers, writers, designers, bloggers, journalists, data nerds,
+    and social media enthusiasts whose goal is to make meaningful software with first-class documentation.
+    
+    You're reading the very beginning of that effort. This documentation is an incomplete, work-in-progress. Please 
+    join us and help :doc:`fill in the gaps </contribute/documentation>`.
 
 `ThinkUp <http://thinkupapp.com>`_ is a free, open source web application that captures your posts, tweets, replies,
 retweets, friends, followers and links on social networks like Twitter and Facebook. With ThinkUp, you can store your
@@ -35,8 +40,8 @@ feedback from fans and followers.
 **Publishers** like bloggers or broadcasters who want easy ways to measure reach and analyze content performance
 on social networks with readers, subscribers, and followers.
 
-Use Cases
----------
+What ThinkUp Can Do
+-------------------
 
 At its heart, ThinkUp is a conversation analysis tool. ThinkUp helps you pose questions to your followers on social
 networks, and compile and share the responses, whether you're The White House asking U.S. citizens what our country's
