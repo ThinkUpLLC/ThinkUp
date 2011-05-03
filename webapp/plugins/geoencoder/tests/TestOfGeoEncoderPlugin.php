@@ -34,6 +34,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/model/class.GeoEncoderPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/geoencoder/tests/classes/mock.GeoEncoderCrawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 
 class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
     var $webapp;
@@ -45,14 +46,15 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         $this->webapp->registerPlugin('twitter', 'TwitterPlugin');
         $crawler = Crawler::getInstance();
         $crawler->registerCrawlerPlugin('GeoEncoderPlugin');
+        $this->builders = self::buildData();
     }
 
     public function tearDown() {
+    	$this->builders = null;
         parent::tearDown();
     }
 
     public function testGeoEncoderCrawl() {
-        $builders = $this->buildData();
 
         $this->simulateLogin('admin@example.com', true);
         $crawler = Crawler::getInstance();
@@ -199,7 +201,6 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
     }
 
     public function testMenuItemRegistrationOnPostPage() {
-        $builders = $this->buildData();
         //Test post page menu items
         $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
@@ -219,117 +220,91 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
     private function buildData() {
         $builders = array();
 
-        $builders[] = FixtureBuilder::build('owners', array(
-            'id' => 1, 
-            'email' => 'admin@example.com', 
-            'pwd' => 'XXX', 
-            'is_activated' => 1,
-            'is_admin' => 1 
-        ));
+        $builders[] = FixtureBuilder::build('owners', array('id' => 1, 'email' => 'admin@example.com', 
+        'pwd' => 'XXX', 'is_activated' => 1, 'is_admin' => 1));
 
         $builders[] = FixtureBuilder::build('plugins', array('name'=>'Geoencoder', 'folder_name'=>'geoencoder',
         'is_active'=>1));
 
-        // @TODO Convert the inserts below to use FixtureBuilder
-
         //Insert test posts
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (1, 15645300636, 127567137, 'ekanshpreet', ";
-        $q .= "'thinking....', 'New Delhi', NULL, '28.602815 77.049136', 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>15645300636,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_test'=>'thinking....',
+        'location'=>'New Delhi', 'place'=>NULL, 'geo'=>'28.602815 77.049136', 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (2, 15435434230, 127567137, 'ekanshpreet', ";
-        $q .= "'i think its working now :D...', NULL, NULL, NULL, 6)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>15435434230,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'i think its working now :D...',
+        'location'=>NULL, 'place'=>NULL, 'geo'=>NULL, 'is_geo_encoded'=>6));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_retweet_by_friend, in_retweet_of_post_id, is_geo_encoded) ";
-        $q .= "VALUES (3, 15344199472, 127567137, 'ekanshpreet', 'lets try again ...', 'New Delhi', NULL, NULL, ";
-        $q .= "1, 15645300636, 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>3, 'post_id'=>15344199472,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'lets try again ...',
+        'location'=>'New Delhi', 'place'=>NULL, 'geo'=>NULL, 'is_retweet_by_friend'=>1,
+        'in_retweet_of_post_id'=>15645300636, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (4, 15338041815, 127567137, 'ekanshpreet', ";
-        $q .= "'howdy ???', 'Mumbai', NULL, NULL, 3)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>4, 'post_id'=>15338041815, 
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'howdy ???',
+        'location'=>'Mumbai', 'place'=>NULL, 'geo'=>NULL, 'is_geo_encoded'=>3));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (5, 15331235880, 127567137, 'ekanshpreet', ";
-        $q .= "':)', 'New Delhi', NULL, '28.60abc2815 77.049136', 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>5, 'post_id'=>15331235880,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>':)', 'location'=>'New Delhi',
+        'place'=>NULL, 'geo'=>'28.60abc2815 77.049136', 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (6, 15268690400, 127567137, 'ekanshpreet', ";
-        $q .= "'hmm... lets c...', 'abc', NULL, NULL, 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>6, 'post_id'=>15268690400,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'hmm... lets c...',
+        'location'=>'abc', 'place'=>NULL, 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (7, 15244973830, 127567137, 'ekanshpreet', ";
-        $q .= "'hmmm....', 'Ü', NULL, NULL, 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>7, 'post_id'=>15244973830,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'hmmm....',
+        'location'=>'Ü', 'place'=>NULL, 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (8, 15219161227, 127567137, 'ekanshpreet', ";
-        $q .= "'RT @jerrybrito: New Podcast: Gina Trapani and Anil Dash on Expert Labs and ThinkUp ow.ly/17zfrX', ";
-        $q .= "'New Delhi', NULL, '28.56213 77.165297', 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>8, 'post_id'=>15219161227,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet',
+        'post_text'=>'RT @jerrybrito: New Podcast: Gina Trapani and Anil Dash on Expert Labs and ThinkUp ow.ly/17zfrX',
+        'location'=>'New Delhi', 'place'=>NULL, 'geo'=>'28.56213 77.165297', 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
-        $q .= "(12, 15052338902, 127567137, 'ekanshpreet', '@imnishantg thats the problem.... :P', 'New Delhi', ";
-        $q .= "'Sector 8, R.K. Puram, New Delhi', NULL, 1, '15338041815', 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>12, 'post_id'=>15052338902,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet',
+        'post_text'=>'@imnishantg thats the problem.... :P', 'location'=>'New Delhi',
+        'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>NULL, 'is_reply_by_friend'=>1,
+        'in_reply_to_post_id'=>15338041815, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
-        $q .= "(13, 14914043658, 127567137, 'ekanshpreet', 'is done with exams !!!', 'New Delhi', ";
-        $q .= "'Sector 8, R.K. Puram, New Delhi', NULL, 1, 999999, 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>13, 'post_id'=>14914043658,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'is done with exams !!!', 
+        'location'=>'New Delhi', 'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (14, 14913946516, 127567137, 'ekanshpreet', ";
-        $q .= "'is done with exams !!! :-)', 'New Delhi', 'abc', NULL, 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>14, 'post_id'=>14913946516,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'is done with exams !!! :-)',
+        'location'=>'New Delhi', 'place'=>'abc', 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
-        $q .= "(15, 11259110570, 127567137, 'ekanshpreet', 'im here finally ;)....', 'New Delhi', ";
-        $q .= "'Sector 8, R.K. Puram, New Delhi', '28.56213 77.165297', 1, 14914043658, 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>15, 'post_id'=>11259110570,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'im here finally ;)....',
+        'location'=>'New Delhi', 'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>'28.56213 77.165297',
+        'is_reply_by_friend'=>1, 'in_reply_to_post_id'=>14914043658, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (16, 12259110570, 127567137, 'ekanshpreet', ";
-        $q .= "'im here finally ;)....', 'New Delhi', 'request_denied', NULL, 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>16, 'post_id'=>12259110570,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'im here finally ;)....',
+        'location'=>'New Delhi', 'place'=>'request_denied', 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_retweet_by_friend, in_retweet_of_post_id, is_geo_encoded) ";
-        $q .= "VALUES (18, 13212618909, 772673, 'mwilkie', 'Just watched chris corn cob a sheep.',
-        'iPhone: 40.681839,-73.983734', ";
-        $q .= "NULL, NULL, 1, '11259110570', 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>18, 'post_id'=>13212618909,
+        'author_user_id'=>772673, 'author_username'=>'mwilkie', 'post_text'=>'Just watched chris corn cob a sheep.',
+        'location'=>'iPhone: 40.681839,-73.983734', 'place'=>NULL, 'geo'=>NULL, 'is_retweet_by_friend'=>1,
+        'in_retweet_of_post_id'=>11259110570, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_reply_by_friend, in_reply_to_post_id, is_geo_encoded) VALUES ";
-        $q .= "(19, 1231210570, 127567137, 'ekanshpreet', 'im here finally ;)....', 'New Delhi', ";
-        $q .= "'Sector 8, R.K. Puram, New Delhi', '28.56213 77.165297', 1, 14914043658, 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>19, 'post_id'=>1231210570,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'im here finally ;)....',
+        'location'=>'New Delhi', 'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>'28.56213 77.165297',
+        'is_reply_by_friend'=>1, 'in_reply_to_post_id'=>14914043658, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (20, 13259110570, 127567137, 'ekanshpreet', ";
-        $q .= "'im here finally ;)....', 'New Delhi', 'over_query_limit', NULL, 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>20, 'post_id'=>13259110570,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'im here finally ;)....',
+        'location'=>'New Delhi', 'place'=>'over_query_limit', 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (21, 15645301636, 127567137, 'ekanshpreet', ";
-        $q .= "'thinking....', 'New Delhi', NULL, '28.602815 77.049136', 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>21, 'post_id'=>15645301636, 
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'thinking....',
+        'location'=>'New Delhi', 'place'=>NULL, 'geo'=>'28.602815 77.049136', 'is_geo_encoded'=>0));
 
-        $q = "INSERT INTO tu_posts (id, post_id, author_user_id, author_username, ";
-        $q .= "post_text, location, place, geo, is_geo_encoded) VALUES (22, 11331235880, 127567137, 'ekanshpreet', ";
-        $q .= "':)', 'New Delhi', NULL, '28.60abc2815 77.049136', 0)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('posts', array('id'=>22, 'post_id'=>11331235880,
+        'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>':)', 'location'=>'New Delhi',
+        'location'=>NULL, 'geo'=>'28.60abc2815 77.049136', 'is_geo_encoded'=>0));
 
         return $builders;
     }
