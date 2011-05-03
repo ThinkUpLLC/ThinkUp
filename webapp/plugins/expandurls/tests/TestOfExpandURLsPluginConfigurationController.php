@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/flickrthumbnails/tests/TestOfExpandURLsPluginConfigurationController.php
+ * ThinkUp/webapp/plugins/expandurls/tests/TestOfExpandURLsPluginConfigurationController.php
  *
  * Copyright (c) 2009-2011 Gina Trapani
  *
@@ -34,42 +34,48 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.
 'webapp/plugins/expandurls/controller/class.ExpandURLsPluginConfigurationController.php';
 
-
 class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase {
     public function setUp(){
         parent::setUp();
         $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('flickr', 'ExpandURLsPlugin');
+        $webapp->registerPlugin('expandurls', 'ExpandURLsPlugin');
+        $this->builders = self::buildData();
+    }
+
+    protected function buildData(){
+        $builders = array();
 
         //Add owner
-        $q = "INSERT INTO tu_owners SET id=1, full_name='ThinkUp J. User', email='me@example.com',
-        is_activated=1, pwd='XXX', activation_code='8888'";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>'XXX', 'activation_code'=>8888));
 
         //Add instance_owner
-        $q = "INSERT INTO tu_owner_instances (owner_id, instance_id) VALUES (1, 1)";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
 
         //Insert test data into test table
-        $q = "INSERT INTO tu_users (user_id, user_name, full_name, avatar, last_updated) VALUES (13, 'ev',
-        'Ev Williams', 'avatar.jpg', '1/1/2005');";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'ev',
+        'full_name'=>'Ev Williams', 'avatar'=>'avatar.jpg', 'last_updated'=>'1/1/2005'));
 
         //Make public
-        $q = "INSERT INTO tu_instances (id, network_user_id, network_username, is_public) VALUES (1, 13, 'ev', 1);";
-        $this->testdb_helper->runSQL($q);
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>13,
+        'network_username'=>'ev', 'is_public'=>1));
 
         //Add a bunch of posts
         $counter = 0;
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $q = "INSERT INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
-            post_text, source, pub_date, reply_count_cache, retweet_count_cache) VALUES ($counter, 13, 'ev', 
-            'Ev Williams', 'avatar.jpg', 'This is post $counter', 'web', '2006-01-01 00:$pseudo_minute:00', ".
-            rand(0, 4).", 5);";
-            $this->testdb_helper->runSQL($q);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
+            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'avatar'=>'avatar.jpg',
+            'post_text'=>'This is post'.$counter, 'source'=>'web', 'pub_date'=>'2006-01-01 00:'.$pseudo_minute.':00',
+            'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5));
             $counter++;
         }
+        return $builders;
+    }
+
+    public function tearDown(){
+        $this->builders = null;
+        parent::tearDown();
     }
 
     public function testConstructor() {
@@ -78,7 +84,6 @@ class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase 
     }
 
     public function testOutputNoParams() {
-
         //not logged in, no owner set
         $controller = new ExpandURLsPluginConfigurationController(null, 'flickrthumbnails');
         $output = $controller->go();
