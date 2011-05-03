@@ -237,13 +237,13 @@ abstract class ThinkUpController {
      * @param bool $stripslashes Whether or not to strip escaped slashes. Default to true.
      * @param bool $convert_numeric_strings Whether or not to convert numeric strings to numbers. Defaults to true.
      */
-    private function prepareJSON($indent = true, $stripslashes = true, $convert_numeric_strings = true) {
+    private function prepareJSON($indent = true, $convert_numeric_strings = true) {
         if (isset($this->json_data)) {
             $json = json_encode($this->json_data);
-            if ($stripslashes) {
-                // strip escaped forwardslashes
-                $json = preg_replace("/\\\\\//", '/', $json);
-            }
+            
+            // strip escaped forwardslashes
+            $json = preg_replace("/\\\\\//", '/', $json);
+
             if ($convert_numeric_strings) {
                 // converts numeric strings to numbers
                 $json = Utils::convertNumericStrings($json);

@@ -39,7 +39,6 @@ class Utils {
      * @return string Indented version of the original JSON string.
      */
     public static function indentJSON($json) {
-
         $result = '';
         $pos = 0;
         $str_len = strlen($json);
@@ -54,7 +53,7 @@ class Utils {
             $char = substr($json, $i, 1);
 
             // Are we inside a quoted string?
-            if ($char == '"' && $prev_char != '\\') {
+            if ($char == '"') {
                 $out_of_quotes = !$out_of_quotes;
 
                 // If this character is the end of an element,
