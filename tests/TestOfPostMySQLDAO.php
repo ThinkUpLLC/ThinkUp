@@ -1156,7 +1156,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetPostsAuthorHasRepliedTo(){
         //Public exchanges only
         $dao = new PostMySQLDAO();
-        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(18, 10, 'twitter', true);
+        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(18, 10, 'twitter', 1, true);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user2");
         $this->assertEqual($posts_replied_to[0]["question"], "@shutterbug Nice shot!");
         $this->assertEqual($posts_replied_to[0]["answerer_username"], "shutterbug");
@@ -1177,7 +1177,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>1,
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>1000));
 
-        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10, 'twitter', true);
+        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10, 'twitter', 1, true);
         $this->assertEqual(sizeof($posts_replied_to), 1);
         $this->assertEqual($posts_replied_to[0]["question_post_id"], 139);
         $this->assertEqual($posts_replied_to[0]["questioner_username"], "user1");
@@ -1188,7 +1188,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts_replied_to[0]["answer"], "@user1 Soon...");
         $this->assertFalse($posts_replied_to[0]["answer_is_protected"]);
 
-        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10, 'twitter', false);
+        $posts_replied_to = $dao->getPostsAuthorHasRepliedTo(13, 10, 'twitter', 1, false);
         $this->assertEqual(sizeof($posts_replied_to), 2);
         $this->debug(Utils::varDumpToString($posts_replied_to));
 
@@ -1207,8 +1207,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts_replied_to[1]['answer_post_id'], 140);
         $this->assertEqual($posts_replied_to[1]["answerer_username"], "ev");
         $this->assertEqual($posts_replied_to[1]["answer"], "@user1 Soon...");
-
-
     }
 
     /**

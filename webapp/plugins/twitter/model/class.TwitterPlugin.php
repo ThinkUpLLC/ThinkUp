@@ -230,7 +230,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         // Conversations
         $convotab = new MenuItem("Conversations", "Exchanges between you and other users", $twitter_data_tpl);
         $convotabds = new Dataset("author_replies", 'PostDAO', "getPostsAuthorHasRepliedTo",
-        array($instance->network_user_id, 15, 'twitter', !Session::isLoggedIn(), '#page_number#'));
+        array($instance->network_user_id, 15, 'twitter', '#page_number#', !Session::isLoggedIn()));
         $convotabds->addHelp('userguide/listings/twitter/dashboard_tweets-convo');
         $convotab->addDataset($convotabds);
         $menus["tweets-convo"] = $convotab;

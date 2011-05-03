@@ -76,4 +76,19 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
         $this->assertTitle("ev on Twitter | ThinkUp");
         $this->assertText('This is image post 25');
     }
+
+    public function testConversations() {
+        //not logged in
+        $this->get($this->url.'/index.php?v=tweets-convo&u=ev&n=twitter');
+        $this->assertText('No tweets to display.');
+
+        //logged in
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+
+        $this->click("Log In");
+        $this->get($this->url.'/index.php?v=tweets-convo&u=ev&n=twitter');
+        $this->assertText('No tweets to display.');
+    }
 }

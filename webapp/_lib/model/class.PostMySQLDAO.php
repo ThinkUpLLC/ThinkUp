@@ -364,7 +364,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     /**
      * @TODO: Figure out a better way to do this, only returns 1-1 exchanges, not back-and-forth threads
      */
-    public function getPostsAuthorHasRepliedTo($author_id, $count, $network = 'twitter', $public_only=true, $page=1) {
+    public function getPostsAuthorHasRepliedTo($author_id, $count, $network = 'twitter', $page=1, $public_only=true) {
         $start_on_record = ($page - 1) * $count;
 
         $q = "SELECT p1.author_username as questioner_username, p1.author_avatar as questioner_avatar, ";

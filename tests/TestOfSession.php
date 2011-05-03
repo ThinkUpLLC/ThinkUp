@@ -52,6 +52,9 @@ class TestOfSession extends ThinkUpUnitTestCase {
 
     public function testIsNotLoggedIn() {
         $this->assertFalse(Session::isLoggedIn());
+        $is = Session::isLoggedIn();
+        $this->assertIsA($is, 'boolean');
+        $this->assertTrue($is === false);
     }
 
     public function testIsLoggedIn() {

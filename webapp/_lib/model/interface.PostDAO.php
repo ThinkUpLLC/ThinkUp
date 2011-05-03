@@ -123,11 +123,11 @@ interface PostDAO {
      * @param int $author_id
      * @param int $count
      * @param str $network Defaults to 'twitter'
-     * @param bool $public_only Defaults to true
      * @param int $page Page number, defaults to 1
+     * @param bool $public_only Defaults to true
      * @return array Question and answer values
      */
-    public function getPostsAuthorHasRepliedTo($author_id, $count, $network = 'twitter', $public_only=true, $page=1);
+    public function getPostsAuthorHasRepliedTo($author_id, $count, $network = 'twitter', $page=1, $public_only=true);
 
     /**
      * Get all the back-and-forth posts between two users.
