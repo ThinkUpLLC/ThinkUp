@@ -132,6 +132,21 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $indented_json_data = Utils::indentJSON($json_data);
         $this->assertEqual($test_str, $indented_json_data);
         $this->assertNotEqual($json_data, $indented_json_data);
+
+        $data = new stdClass();
+        $data->test1 = 'This text element should totally not wrap "just because" it ends with a :\\';
+        $data->test2 = 'What if I end with double slashes!? \\\\';
+        $data->test3 = 'Oh, "just because :\ ", she said';
+
+        $test_str = '{
+    "test1":"This text element should totally not wrap \"just because\" it ends with a :\\\\",
+    "test2":"What if I end with double slashes!? \\\\\\\\",
+    "test3":"Oh, \"just because :\\\\ \", she said"
+}';
+        $json_data = json_encode($data);
+        $indented_json_data = Utils::indentJSON($json_data);
+        $this->debug($indented_json_data);
+        $this->assertEqual($test_str, $indented_json_data);
     }
 
     public function testConvertNumericStrings() {

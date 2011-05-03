@@ -46,6 +46,7 @@ class Utils {
         $indent_str = '    ';
         $new_line = "\n";
         $prev_char = '';
+        $prev_prev_char = '';
         $out_of_quotes = true;
 
         for ($i = 0; $i <= $str_len; $i++) {
@@ -54,9 +55,12 @@ class Utils {
             $char = substr($json, $i, 1);
 
             // Are we inside a quoted string?
-            if ($char == '"' && $prev_char != '\\') {
-                $out_of_quotes = !$out_of_quotes;
-
+            if ($char == '"') {
+                if ( $prev_char != "\\") {
+                    $out_of_quotes = !$out_of_quotes;
+                } elseif ($prev_prev_char == "\\") {
+                    $out_of_quotes = !$out_of_quotes;
+                }
                 // If this character is the end of an element,
                 // output a new line and indent the next line.
             } else if (($char == '}' || $char == ']') && $out_of_quotes) {
@@ -83,6 +87,7 @@ class Utils {
                 }
             }
 
+            $prev_prev_char = $prev_char;
             $prev_char = $char;
         }
 
