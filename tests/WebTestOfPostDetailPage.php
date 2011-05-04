@@ -47,7 +47,7 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->assertTitle("Post Details | ThinkUp");
         $this->assertText('This is post 10');
         //must be logged in to search
-        $this->assertNoText('Search & Filter');
+        $this->assertNoText('Search Replies');
         $this->assertText('Export Replies (CSV)');
         $this->assertText('Retweets');
         $this->assertNoText('GeoEncoder');

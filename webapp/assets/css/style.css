@@ -218,8 +218,10 @@ text-align: center;
     z-index: 100; margin-left: -536px; position: absolute; background-color: #fff;
 }
 .grid_overlay_div2 { 
-    width: 720px; height: 700px; border: solid gray 1px;  display: none; top: 150px; left: 50%; background-color: #fff;
+    width: 720px; height: 700px; border: none;  display: none; top: 150px; left: 50%; background-color: #fff;
 }
+
+
 /* body overlay div (backround grayout for slick grid search unit */
 #screen {position: absolute; left: 0; top: 0; background: #000; z-index: 99; color: red; display: none;}
 
