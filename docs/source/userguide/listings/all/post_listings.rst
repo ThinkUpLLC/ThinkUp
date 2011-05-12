@@ -28,5 +28,5 @@ embed code will not be displayed on the post page.
 Search and Filter
 -----------------
 
-Export Replies (CSV)
----------------------
+Export Replies (CSV) (Logged-in Users Only)
+-------------------------------------------

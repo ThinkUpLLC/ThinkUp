@@ -1,6 +1,7 @@
 
  <div class="">
   {if $description}<i>{$description}</i>{/if}
+  {insert name="help_link" id=$display}
 </div>
     {if $error}
     <p class="error">

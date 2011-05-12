@@ -204,7 +204,8 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'Chatterboxes', 'Header');
-        $this->assertEqual($v_mgr->getTemplateDataItem('description'), '', 'Description');
+        $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'People you follow who tweet the most',
+        'Description');
         $this->assertIsA($v_mgr->getTemplateDataItem('people'), 'array', 'Array of users');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('people')), 2, '2 users in listing');
 

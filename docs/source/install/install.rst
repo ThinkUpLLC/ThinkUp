@@ -10,6 +10,8 @@ Optional: Pre-create Database
 Run the Installer
 -----------------
 
+TODO Specify that the timezone is the server's time zone.
+
 Set File Permissions
 --------------------
 

@@ -1,10 +1,9 @@
 Tweets
 ======
 
-ThinkUp offers several listings for the data related to a given tweet.
-
-TODO: Fill in the entire menu navbar for single tweet page.
+ThinkUp's Twitter plugin offers listings for the data related to a given tweet.
 
 Retweets
 --------
 
+All the retweets of this tweet.

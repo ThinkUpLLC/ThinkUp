@@ -152,6 +152,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $all_mi_ds = new Dataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
         'twitter', 15, "#page_number#"), 'getAllPostsIterator', array($instance->network_user_id, 'twitter', 
         GridController::MAX_ROWS) );
+        $all_mi_ds->addHelp('userguide/listings/twitter/dashboard_tweets-all');
         $all_mi->addDataset($all_mi_ds);
         $menus['tweets-all'] = $all_mi;
 
@@ -160,6 +161,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $twitter_data_tpl);
         $q_mi_ds = new Dataset("all_tweets", 'PostDAO', "getAllQuestionPosts",
         array($instance->network_user_id, 'twitter', 15, "#page_number#"));
+        $q_mi_ds->addHelp( 'userguide/listings/twitter/dashboard_tweets-questions');
         $q_mi->addDataset($q_mi_ds);
         $menus['tweets-questions'] = $q_mi;
 
@@ -167,6 +169,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $mrt_mi = new MenuItem("Most replied-to", "Tweets with most replies", $twitter_data_tpl);
         $mrt_mi_ds = new Dataset("most_replied_to_tweets", 'PostDAO', "getMostRepliedToPosts",
         array($instance->network_user_id, 'twitter', 15, '#page_number#'));
+        $mrt_mi_ds->addHelp('userguide/listings/twitter/dashboard_tweets-mostreplies');
         $mrt_mi->addDataset($mrt_mi_ds);
         $menus['tweets-mostreplies'] = $mrt_mi;
 
@@ -174,6 +177,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $mstab = new MenuItem("Most retweeted", "Most retweeted tweets", $twitter_data_tpl);
         $mstabds = new Dataset("most_retweeted", 'PostDAO', "getMostRetweetedPosts",
         array($instance->network_user_id, 'twitter', 15, '#page_number#'));
+        $mstabds->addHelp('userguide/listings/twitter/dashboard_tweets-mostretweeted');
         $mstab->addDataset($mstabds);
         $menus["tweets-mostretweeted"] = $mstab;
 
@@ -185,6 +189,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
            'twitter'));
             $amtabds2 = new Dataset("all_mentions", 'PostDAO', "getAllMentions",
             array($instance->network_username, 15, $instance->network, '#page_number#'));
+            $amtabds2->addHelp('userguide/listings/twitter/dashboard_mentions-all');
             $amtab->addDataset($amtabds1);
             $amtab->addDataset($amtabds2);
             $menus["mentions-all"] = $amtab;
@@ -194,6 +199,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
            "Posts that directly reply to you (i.e., start with your name)", $twitter_data_tpl);
             $artabds = new Dataset("all_replies", 'PostDAO', "getAllReplies",
             array($instance->network_user_id, 'twitter', 15));
+            $artabds->addHelp('userguide/listings/twitter/dashboard_mentions-allreplies');
             $artab->addDataset($artabds);
             $menus["mentions-allreplies"] = $artab;
 
@@ -204,6 +210,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             "getAllPosts", array($instance->network_user_id, 'twitter', 15));
             $omtabds2 = new Dataset("orphan_replies", 'PostDAO', "getOrphanReplies",
             array($instance->network_username, 5, $instance->network));
+            $omtabds2->addHelp('userguide/listings/twitter/dashboard_mentions-orphan');
             $omtab->addDataset($omtabds1);
             $omtab->addDataset($omtabds2);
             $menus["mentions-orphan"] = $omtab;
@@ -215,6 +222,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             array($instance->network_username, 'twitter', 15));
             $sttabds2 = new Dataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
             'twitter', 15));
+            $sttabds2->addHelp('userguide/listings/twitter/dashboard_mentions-standalone');
             $sttab->addDataset($sttabds1);
             $sttab->addDataset($sttabds2);
             $menus["mentions-standalone"] = $sttab;
@@ -223,6 +231,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             $amtab = new MenuItem("All Mentions", "Any post that mentions you", $twitter_data_tpl, 'Replies');
             $amtabds2 = new Dataset("all_mentions", 'PostDAO', "getAllMentions",
             array($instance->network_username, 15, $instance->network, '#page_number#', true));
+            $amtabds2->addHelp('userguide/listings/twitter/dashboard_mentions-all');
             $amtab->addDataset($amtabds2);
             $menus["mentions-all"] = $amtab;
         }
@@ -236,23 +245,27 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $menus["tweets-convo"] = $convotab;
 
         //Most Active Friends
-        $motab = new MenuItem('Chatterboxes', '', $twitter_data_tpl, 'Who You Follow');
+        $motab = new MenuItem('Chatterboxes', 'People you follow who tweet the most',
+        $twitter_data_tpl, 'Who You Follow');
         $motabds = new Dataset('people', 'FollowDAO', "getMostActiveFollowees", array(
         $instance->network_user_id, 'twitter', 15));
+        $motabds->addHelp('userguide/listings/twitter/dashboard_friends-mostactive');
         $motab->addDataset($motabds);
         $menus["friends-mostactive"] = $motab;
 
         //Least Active Friends
-        $latab = new MenuItem('Deadbeats', '', $twitter_data_tpl);
+        $latab = new MenuItem('Deadbeats', 'People you follow who tweet the least', $twitter_data_tpl);
         $latabds = new Dataset("people", 'FollowDAO', "getLeastActiveFollowees", array(
         $instance->network_user_id, 'twitter', 15));
+        $latabds->addHelp('userguide/listings/twitter/dashboard_friends-leastactive');
         $latab->addDataset($latabds);
         $menus["friends-leastactive"] = $latab;
 
         //Popular friends
-        $poptab = new MenuItem('Popular', '', $twitter_data_tpl);
+        $poptab = new MenuItem('Popular', 'Most-followed people you follow', $twitter_data_tpl);
         $poptabds = new Dataset("people", 'FollowDAO', "getMostFollowedFollowees", array(
         $instance->network_user_id, 'twitter', 15));
+        $poptabds->addHelp('userguide/listings/twitter/dashboard_followers-mostfollowed');
         $poptab->addDataset($poptabds);
         $menus["friends-mostfollowed"] = $poptab;
 
@@ -268,6 +281,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $trendtab->addDataset($trendtabweekds);
         $trendtabmonthds = new Dataset("follower_count_history_by_month", 'FollowerCountDAO', 'getHistory',
         array($instance->network_user_id, 'twitter', 'MONTH', 11));
+        $trendtabmonthds->addHelp('userguide/listings/twitter/dashboard_followers-history');
         $trendtab->addDataset($trendtabmonthds);
         $menus['followers-history'] = $trendtab;
 
@@ -276,6 +290,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $twitter_data_tpl);
         $mftabds = new Dataset("people", 'FollowDAO', "getMostFollowedFollowers", array(
         $instance->network_user_id, 'twitter', 15));
+        $mftabds->addHelp('userguide/listings/twitter/dashboard_followers-mostfollowed');
         $mftab->addDataset($mftabds);
         $menus["followers-mostfollowed"] =  $mftab;
 
@@ -284,13 +299,16 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $twitter_data_tpl);
         $lltabds = new Dataset("people", 'FollowDAO', "getLeastLikelyFollowers", array(
         $instance->network_user_id, 'twitter', 15));
+        $lltabds->addHelp('userguide/listings/twitter/dashboard_followers-leastlikely');
         $lltab->addDataset($lltabds);
         $menus["followers-leastlikely"] = $lltab;
 
         //Earliest
-        $eftab = new MenuItem("Earliest Joiners", '', $twitter_data_tpl);
+        $eftab = new MenuItem("Earliest Joiners", 'Followers ordered by what date they created their Twitter '.
+        'account', $twitter_data_tpl);
         $eftabds = new Dataset("people", 'FollowDAO', "getEarliestJoinerFollowers", array(
         $instance->network_user_id, 'twitter', 15));
+        $eftabds->addHelp('userguide/listings/twitter/dashboard_followers-earliest');
         $eftab->addDataset($eftabds);
         $menus["followers-earliest"] = $eftab;
 
@@ -298,6 +316,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $fvalltabds = new Dataset("all_tweets", 'FavoritePostDAO', "getAllFavoritePosts",
         array($instance->network_user_id, 'twitter', 20, "#page_number#"), 'getAllFavoritePostsIterator',
         array($instance->network_user_id, 'twitter', GridController::MAX_ROWS) );
+        $fvalltabds->addHelp('userguide/listings/twitter/dashboard_ftweets-all');
         $fvalltab->addDataset($fvalltabds);
         $menus["ftweets-all"] = $fvalltab;
 
@@ -305,6 +324,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $fltab = new MenuItem('Links from People You Follow', 'Links your friends posted', $twitter_data_tpl, 'Links');
         $fltabds = new Dataset("links", 'LinkDAO', "getLinksByFriends",
         array($instance->network_user_id, 'twitter', 15, '#page_number#'));
+        $fltabds->addHelp('userguide/listings/twitter/dashboard_links-friends');
         $fltab->addDataset($fltabds);
         $menus["links-friends"] = $fltab;
 
@@ -312,6 +332,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $lftab = new MenuItem('Links From Favorites', 'Links in posts you favorited', $twitter_data_tpl);
         $lftabds = new Dataset("links", 'LinkDAO', "getLinksByFavorites",
         array($instance->network_user_id, 'twitter', 15, '#page_number#'));
+        $lftabds->addHelp('userguide/listings/twitter/dashboard_links-favorites');
         $lftab->addDataset($lftabds);
         $menus["links-favorites"] = $lftab;
 
@@ -319,6 +340,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $ptab = new MenuItem("Photos from People You Follow", 'Photos your friends have posted', $twitter_data_tpl);
         $ptabds = new Dataset("links", 'LinkDAO', "getPhotosByFriends",
         array($instance->network_user_id, 'twitter', 15, '#page_number#'));
+        $ptabds->addHelp('userguide/listings/twitter/dashboard_links-photos');
         $ptab->addDataset($ptabds);
         $menus["links-photos"] = $ptab;
 

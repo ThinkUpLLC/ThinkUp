@@ -1,5 +1,5 @@
 <div class="">
-  {if $description}<i>{$description}</i>{/if}
+  {if $description}<i>{$description}</i>{/if} {insert name="help_link" id=$display}
     {if $is_searchable}
         <a href="#" class="grid_search" title="Search" onclick="return false;">
         <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>

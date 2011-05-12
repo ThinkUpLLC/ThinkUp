@@ -118,10 +118,11 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
         $menus = array();
 
         //All tab
-        $alltab = new MenuItem("All", '', $fb_data_tpl, 'Posts');
+        $alltab = new MenuItem("All", 'All status updates', $fb_data_tpl, 'Posts');
         $alltabds = new Dataset("all_facebook_posts", 'PostDAO', "getAllPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"),
         'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::MAX_ROWS), false );
+        $alltabds->addHelp('userguide/listings/facebook/dashboard_all_facebook_posts');
         $alltab->addDataset($alltabds);
         $menus["all_facebook_posts"] = $alltab;
 
@@ -129,6 +130,7 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
         $mrttab = new MenuItem("Most replied-to", "Posts with most replies", $fb_data_tpl);
         $mrttabds = new Dataset("most_replied_to_posts", 'PostDAO', "getMostRepliedToPosts",
         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
+        $mrttabds->addHelp('userguide/listings/facebook/dashboard_mostreplies');
         $mrttab->addDataset($mrttabds);
         $menus["mostreplies"] = $mrttab;
 
@@ -137,6 +139,7 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
         $fb_data_tpl);
         $qtabds = new Dataset("all_facebook_posts", 'PostDAO', "getAllQuestionPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"));
+        $qtabds->addHelp('userguide/listings/facebook/dashboard_questions');
         $qtab->addDataset($qtabds);
         $menus["questions"] = $qtab;
 
