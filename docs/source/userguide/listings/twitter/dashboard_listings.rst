@@ -3,6 +3,11 @@ Twitter
 
 ThinkUp offers several listings for a registered Twitter user's data.
 
+.. toctree::
+   :maxdepth: 1
+
+   dashboard.rst
+
 Tweets
 ------
 
