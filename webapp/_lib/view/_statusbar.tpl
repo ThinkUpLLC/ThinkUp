@@ -58,8 +58,6 @@
         </select>
         <span id="cancel-instance">Cancel</span>
       </span>
-    {else}
-        {$instance->network_username} ({$instance->network|capitalize})
     {/if}
     {else}
       <!-- the user has not selected an instance -->

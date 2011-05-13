@@ -50,7 +50,6 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $this->addToView('logo_link', '');
         $this->view_mgr->addHelp('api', 'userguide/api/posts/index');
         $this->view_mgr->addHelp('application_settings', 'userguide/settings/application');
-        $this->view_mgr->addHelp('embed', 'userguide/settings/application');
 
         //proces password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
@@ -135,6 +134,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $o->setInstances($instances);
             }
             $this->addToView('owners', $owners);
+            $this->addToView('public_instances', $instance_dao->getPublicInstances());
         }
 
         return $this->generateView();

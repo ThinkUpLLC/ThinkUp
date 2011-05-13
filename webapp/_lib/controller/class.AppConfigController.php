@@ -107,6 +107,8 @@ class AppConfigController extends ThinkUpAdminController {
                     }
                 }
                 $this->setJsonData( array( 'status' => 'success', 'saved' => $saved, 'deleted' => $deleted));
+                SessionCache::unsetKey('selected_instance_network');
+                SessionCache::unsetKey('selected_instance_username');
             }
         } else {
             $config_values = $option_dao->getOptions(OptionDAO::APP_OPTIONS);

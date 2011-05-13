@@ -35,3 +35,13 @@ Disable Thread Embeds
 Check this box if you don't want to allow users to 
 :doc:`embed ThinkUp threads on third-party web sites </userguide/listings/all/post_listings>` using a JavaScript
 embed code. When this box is checked, the code will not be available for use.
+
+Default service user
+--------------------
+
+Choose the public service user which will appear by default when a non-logged in user visits the ThinkUp dashboard.
+By default, this is set to the last updated service user, that is, the service user which was last crawled 
+successfully.
+
+If you set this to a public service user which becomes private, this setting will fall back to its default, the last
+updated service user.

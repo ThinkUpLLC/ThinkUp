@@ -54,7 +54,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('infomsg'),
         'There are no public accounts set up in this ThinkUp installation.<br /><br />'.
-        'To make a current account public, log in and click on "Configuration." Click on one of the plugins '.
+        'To make a current account public, log in and click on "Settings." Click on one of the plugins '.
         'that contain accounts (like Twitter or Facebook) and click "Set Public" next to the account that '.
         ' should appear to users who are not logged in.');
     }
@@ -73,19 +73,43 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertPattern("/Set up a service/", $v_mgr->getTemplateDataItem('infomsg'));
     }
 
-    public function testNotLoggedInNoUserOrViewSpecified() {
+    public function testNotLoggedInNoUserOrViewSpecifiedDefaultServiceUserSet() {
         $builders = $this->buildData();
+        //Add another public instance
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>14,
+        'network_username'=>'jack', 'is_public'=>1, 'crawler_last_run'=>'-2d'));
+        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+        //Set the default service user to jack, who is not last updated
+        $app_option_builder = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'default_instance', 'option_value'=>'2'));
+
         $controller = new DashboardController(true);
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $config = Config::getInstance();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), "jack's Dashboard");
+        $instance = $v_mgr->getTemplateDataItem('instance');
+        $this->assertEqual($instance->network_username, 'jack');
+
+        $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-', $controller->getCacheKeyString());
+        $this->assertFalse($v_mgr->getTemplateDataItem('is_searchable'));
+    }
+
+    public function testNotLoggedInNoUserOrViewSpecifiedNoDefaultServiceUserSet() {
+        $builders = $this->buildData();
+        //Add another public instance
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>14,
+        'network_username'=>'jack', 'is_public'=>1, 'crawler_last_run'=>'-2d'));
+        $instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>2));
+
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), "ev's Dashboard");
         $instance = $v_mgr->getTemplateDataItem('instance');
         $this->assertEqual($instance->network_username, 'ev');
 
-        $config = Config::getInstance();
         $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-', $controller->getCacheKeyString());
         $this->assertFalse($v_mgr->getTemplateDataItem('is_searchable'));
     }
@@ -106,9 +130,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $instance = $v_mgr->getTemplateDataItem('instance');
         $this->assertEqual($instance->network_username, 'ev');
 
-        $config = Config::getInstance();
-        $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-me@example.com-ev-twitter',
-        'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-me@example.com-ev-twitter', 'Cache key');
     }
 
     public function testNotLoggedInPosts() {
@@ -244,7 +266,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
 
         //Make public
         $instance_builder = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>13,
-        'network_username'=>'ev', 'is_public'=>1));
+        'network_username'=>'ev', 'is_public'=>1, 'crawler_last_run'=>'-1d'));
 
         $post_builders = array();
         //Add a bunch of posts

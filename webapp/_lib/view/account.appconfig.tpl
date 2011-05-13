@@ -1,4 +1,5 @@
   <div class="prepend_20">
+    <div style="float:right;margin:20px">{insert name="help_link" id='application_settings'}</div>
     <h1>Application Settings</h1>
   </div>
   <div class="clearfix prepend_20">
@@ -48,7 +49,7 @@
       </div>
       <div style="clear:both;"></div>
       <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
-        Select to enable reCAPTCHA, and <a href="https://www.google.com/recaptcha">get your reCAPTCHA keys here</a>. {insert name="help_link" id="application_settings"}
+        Select to enable reCAPTCHA, and <a href="https://www.google.com/recaptcha">get your reCAPTCHA keys here</a>.
       </div>
 
       <div id="recaptcha_enable_deps" style="display: none; width: 450px; margin: 10px 0px 60px 20px;">
@@ -97,9 +98,27 @@
       </div>
       <div style="clear:both;"></div>
       <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
-        Set whether or not a user can embed a ThinkUp thread onto another web site. {insert name="help_link" id="embed"}
+        Set whether or not a user can embed a ThinkUp thread onto another web site.
       </div>
 
+      <div style="float: left;">
+        <label for="default_instance">
+          Default service user:
+          <br />
+        </label>
+      </div>
+      <div style="float: left;">
+        <select name="default_instance" id="default_instance">
+        <option value="0">Last updated</option>
+        {foreach from=$public_instances item=pi}
+            <option value="{$pi->id}">{$pi->network_username} - {$pi->network|capitalize}</option>
+        {/foreach}
+        </select>
+      </div>
+      <div style="clear:both;"></div>
+      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+        Set the service user to display by default. {insert name="help_link" id="default_service_user"}
+      </div>
 
    </div>
 

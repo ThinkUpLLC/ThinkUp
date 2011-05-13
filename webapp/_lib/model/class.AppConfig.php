@@ -92,6 +92,14 @@ class AppConfig {
             'default' => 'false',
             'match' => '/^true$/',
             'match_message' => ' be true'
+            ),
+        'default_instance' => array(
+            'type' => 'text',
+            'title' => 'The service user to display by default',
+            'required' => false,
+            'default' => '0',
+            'match' => '/^[0-9]$/',
+            'match_message' => ' be numeric'
             )
             );
 

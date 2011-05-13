@@ -56,7 +56,7 @@ class DashboardController extends ThinkUpController {
         } else {
             if (!Session::isLoggedIn()) {
                 $this->addInfoMessage('There are no public accounts set up in this ThinkUp installation.<br /><br />'.
-                'To make a current account public, log in and click on "Configuration." Click on one of the plugins '.
+                'To make a current account public, log in and click on "Settings." Click on one of the plugins '.
                 'that contain accounts (like Twitter or Facebook) and click "Set Public" next to the account that '.
                 ' should appear to users who are not logged in.');
             } else  {
@@ -105,6 +105,15 @@ class DashboardController extends ThinkUpController {
      */
     private function setInstance() {
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $config = Config::getInstance();
+        $instance_id_to_display = $config->getValue('default_instance');
+        $instance_id_to_display = intval($instance_id_to_display);
+        if ( $instance_id_to_display != 0) {
+            $this->instance = $instance_dao->get($instance_id_to_display);
+        }
+        if (!isset($this->instance) || !$this->instance->is_public) {
+            $this->instance = $instance_dao->getInstanceFreshestPublicOne();
+        }
         if ($this->isLoggedIn()) {
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
             $owner = $owner_dao->getByEmail($this->getLoggedInUser());
@@ -129,12 +138,9 @@ class DashboardController extends ThinkUpController {
                 } else {
                     $this->addErrorMessage("Insufficient privileges");
                 }
-            } else {
-                $this->instance = $instance_dao->getInstanceFreshestPublicOne();
             }
             $this->addToView('instances', $instance_dao->getPublicInstances());
         }
-        $this->addToView('instance', $this->instance);
         if (isset($this->instance)) {
             //user
             $user_dao = DAOFactory::getDAO('UserDAO');
@@ -143,6 +149,7 @@ class DashboardController extends ThinkUpController {
 
             SessionCache::put('selected_instance_network', $this->instance->network);
             SessionCache::put('selected_instance_username', $this->instance->network_username);
+            $this->addToView('instance', $this->instance);
         }
     }
 
