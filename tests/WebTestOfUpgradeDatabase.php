@@ -311,8 +311,8 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 $this->assertText('{ "processed":true,');
 
                 $this->debug("Running migration assertion test for " . $json_migration->version);
+                if(! isset($MIGRATIONS[ $json_migration->version ])) { continue; } // no assertions, so skip
                 $assertions = $MIGRATIONS[ $json_migration->version ];
-
                 foreach($assertions['migration_assertions']['sql'] as $assertion_sql) {
                     // don't run the database_version assertion if it exists, this will get run below...
                     if(preg_match("/database_version/i", $assertion_sql['query'])) {
@@ -326,7 +326,21 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                     } else {
                         $this->assertEqual(preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ]), 1,
                         $assertion_sql['match'] . ' should match ' .  $data[ $assertion_sql['column'] ]);
-                        $stmt->closeCursor();
+                        if( ! preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ])) {
+                            error_log("TEST FAIL DEBUGGING:");
+                            error_log('Query for assertion ' . $assertion_sql['query'] . " with match "
+                            . $assertion_sql['match'] . " failed");
+                            $debug_stmt = $this->pdo->query("select * from tu_options");
+                            $debug_data = $debug_stmt->fetchAll(PDO::FETCH_ASSOC);
+                            error_log("Contents of tu_options table:");
+                            var_dump($debug_data);
+                            $debug_stmt->closeCursor();
+                            error_log("Contents of tu_plugin_options table:");
+                            $debug_stmt = $this->pdo->query("select * from tu_plugin_options");
+                            $debug_data = $debug_stmt->fetchAll(PDO::FETCH_ASSOC);
+                            $debug_stmt->closeCursor();
+                            var_dump($debug_data);
+                        }
                     }
                     $stmt->closeCursor();
                 }
@@ -334,8 +348,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $this->get($token_url . '&migration_done=true');
             $this->assertText('{ "migration_complete":true }');
             $this->get($this->url.'/test_installer/thinkup/');
-            $this->assertText('Logged in as admin: user@example.com');
-             
+            $this->assertText('Logged in');
+            $this->assertText('user@example.com');
+
             // run db migration tests
             $this->debug("Running final migration assertion test for $version");
             foreach($migration_data['migration_assertions'] as $assertions) {
