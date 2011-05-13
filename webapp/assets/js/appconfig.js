@@ -31,7 +31,7 @@ var TUApplicationSettings = function() {
 	/**
 	 * @var boolean Enable for console logging
 	 */
-	this.DEBUG = true;
+	this.DEBUG = false;
 
 	/**
 	 * @var boolean tab view for setting has been loaded
@@ -106,7 +106,8 @@ var TUApplicationSettings = function() {
 					id = '#' + key;
 					params[key] = $(id).val();
 					if (this.DEBUG) {
-						console.debug("saving checkbox value %s for %s", params[key], key);
+						console.debug("saving checkbox value %s for %s",
+								params[key], key);
 					}
 				}
 			} else {
@@ -207,9 +208,10 @@ var TUApplicationSettings = function() {
 			if (data.values[key]) {
 				if (this.DEBUG) {
 					console.debug("loading %s with value %s", key,
-							typeof(data.values[key]['option_value']));
+							typeof (data.values[key]['option_value']));
 				}
-				if (setting.type == 'checkbox' && data.values[key]['option_value'] != 'false') {
+				if (setting.type == 'checkbox'
+						&& data.values[key]['option_value'] != 'false') {
 					if (this.DEBUG) {
 						console.debug("%s is a checkbox with value %s", key,
 								data.values[key]['option_value'])
@@ -229,7 +231,7 @@ var TUApplicationSettings = function() {
 								setting['default']);
 					}
 					$(id).attr('checked', true);
-				} else if( setting.type != 'checkbox') {
+				} else if (setting.type != 'checkbox') {
 					$(id).val(setting['default']);
 				}
 			}
