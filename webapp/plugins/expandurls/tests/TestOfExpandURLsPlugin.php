@@ -317,7 +317,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
         $link = $link_dao->getLinkById(43);
         $this->assertEqual($link->expanded_url,
-        'http://distillery.s3.amazonaws.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
+        'http://images.instagram.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(42);
