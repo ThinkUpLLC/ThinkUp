@@ -17,14 +17,6 @@
     <div class="section thinkup-canvas clearfix" id="plugins">
       <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
         <div class="append_20 clearfix">
-        {if $user_is_admin}
-        <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
-              <p>
-                <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                As an administrator you can configure all installed plugins.
-              </p>
-            </div>
-        {/if}
         {include file="_usermessage.tpl"}
           {if $installed_plugins}
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
@@ -127,12 +119,6 @@
         <div class="thinkup-canvas clearfix">
           <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
             <h2 class="subhead">User accounts in this ThinkUp installation</h2>
-            <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;">
-              <p>
-                <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                As an administrator you can see all accounts in the system.
-              </p>
-            </div>
             <ul class="user-accounts">
               {foreach from=$owners key=oid item=o}
                 <li>

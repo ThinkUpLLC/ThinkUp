@@ -7,4 +7,4 @@ Run into trouble using ThinkUp? Check out these lists of application messages an
    :maxdepth: 2
 
    messages/index
-   common
+   common/index

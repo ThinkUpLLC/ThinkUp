@@ -1,14 +1,21 @@
-Common Problems and Solutions
-=============================
+Common Problems
+===============
 
 ThinkUp is a work in progress, and certain known problems which can occur on different server setups have simple 
 solutions. Here's a list. If you've got one which doesn't appear here, please add it to this page.
 
-Account data always out of date
--------------------------------
+.. toctree::
+   :maxdepth: 2
+
+   emaildisabled
+   admindeactivated
+
+
+My service user data is always out of date
+------------------------------------------
 
 ThinkUp won't update itself unless you have a scheduled task running on the server or are requesting the crawler's RSS
-feed. Instructions for setting up both appear on the crawler update page. Click on the last updated date in ThinkUp's
+feed. Instructions for setting up both appear on the crawler update page. Click on the "Update now" link in ThinkUp's
 status bar and see the instructions at the bottom of the page.
 
 Crawler constantly encounters Twitter API errors (ERROR 502)

@@ -47,7 +47,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
 
-        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1, 'is_admin'=>1);
         $this->builder1 = FixtureBuilder::build('owners', $owner);
 
         $instance = array('id'=>1);
@@ -151,16 +151,16 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $controller = new LoginController(true);
         $results = $controller->go();
 
-        $this->assertPattern("/Logged in as: me@example.com/", $results);
+        $this->assertPattern("/Logged in as admin: me@example.com/", $results);
     }
 
     public function testAlreadyLoggedIn() {
-        $this->simulateLogin('me@example.com');
+        $this->simulateLogin('me@example.com', true);
 
         $controller = new LoginController(true);
         $results = $controller->go();
 
-        $this->assertPattern('/Logged in as: me@example.com/', $results);
+        $this->assertPattern('/Logged in as admin: me@example.com/', $results);
     }
 
     public function testFailedLoginIncrements() {

@@ -1,12 +1,5 @@
 <div class="append_20">
 
-    {if $owner->is_admin}
-	<div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
-		<p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-		As an administrator you can see all accounts in the system.</p>
-	</div>
-    {/if}
-    
     {include file="_usermessage.tpl"}
 
     {if count($owner_instances) > 0 }
@@ -31,12 +24,6 @@
     <br />
 
     <h2 class="subhead">Facebook Pages</h2>
-    {if $owner->is_admin}
-    <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
-        <p><span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-        As an administrator you can see all accounts in the system.</p>
-    </div>
-    {/if}
     {if count($owner_instance_pages) > 0 }
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
     <div class="clearfix">

@@ -211,7 +211,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $this->debug("Clicked Configuration");
         }
         $this->assertTitle('Configure Your Account | ThinkUp');
-        $this->assertText('As an administrator you can configure all installed plugins.');
+        $this->assertText('admin');
 
         // run updates and migrations
         require 'tests/migration-assertions.php';
@@ -334,7 +334,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $this->get($token_url . '&migration_done=true');
             $this->assertText('{ "migration_complete":true }');
             $this->get($this->url.'/test_installer/thinkup/');
-            $this->assertText('Logged in as: user@example.com');
+            $this->assertText('Logged in as admin: user@example.com');
              
             // run db migration tests
             $this->debug("Running final migration assertion test for $version");

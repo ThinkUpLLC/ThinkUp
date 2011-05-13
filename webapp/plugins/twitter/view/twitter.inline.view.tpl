@@ -1,13 +1,13 @@
 <div class="clearfix">
   <h2>{$header}</h2>
   {if $description}
-    <i>{$description}
+    <i>{$description} {insert name="help_link" id=$display}
       {if $is_searchable}
-        [<a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a>]
+        <br /><a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a> 
       {/if}
+      {if $logged_in_user and $display eq 'tweets-all'} | <a href="{$site_root_path}post/export.php?u={$instance->network_username}&n={$instance->network}">Export</a>{/if}
     </i>
   {/if}
-  {insert name="help_link" id=$display}
 </div>
 
     {if $error}

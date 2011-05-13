@@ -1,9 +1,11 @@
 <div class="">
-  {if $description}<i>{$description}</i>{/if} {insert name="help_link" id=$display}
-    {if $is_searchable}
-        <a href="#" class="grid_search" title="Search" onclick="return false;">
-        <img src="{$site_root_path}assets/img/search-icon.gif" id="grid_search_icon"></a>
-        {include file="_grid.search.tpl"}
+  {if $description}
+    <i>{$description} {insert name="help_link" id=$display}
+      {if $is_searchable}
+        <br /><a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a> 
+      {/if}
+      {if $logged_in_user and $display eq 'all_facebook_posts'} | <a href="{$site_root_path}post/export.php?u={$instance->network_username}&n={$instance->network|urlencode}">Export</a>{/if}
+    </i>
     {/if}
 </div>
 

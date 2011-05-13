@@ -34,6 +34,7 @@ class LoginController extends ThinkUpController {
     public function control() {
         $this->setPageTitle('Log in');
         $this->setViewTemplate('session.login.tpl');
+        $this->view_mgr->addHelp('login', 'userguide/accounts/index');
         $this->disableCaching();
         //don't show login form if already logged in
         if ($this->isLoggedIn()) {

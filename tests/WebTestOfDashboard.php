@@ -50,7 +50,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         //        $this->showSource();
 
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('Logged in as admin: me@example.com');
         $this->assertText('thinkupapp');
     }
 
@@ -66,7 +66,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->click("Log Out");
 
         //assert you're logged out
-        $this->assertNoText('Logged in as: me@example.com');
+        $this->assertNoText('Logged in as admin: me@example.com');
 
         //click on a nav link
         $this->click("All Tweets");
@@ -89,7 +89,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
 
         $this->get($this->url.'/user/index.php?i=thinkupapp&u=ev&n=twitter');
         $this->assertTitle('User Details: ev | ThinkUp');
-        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('Logged in as admin: me@example.com');
         $this->assertText('ev');
 
         $this->get($this->url.'/user/index.php?i=thinkupapp&u=usernotinsystem');
@@ -106,7 +106,6 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
 
         $this->click("Settings");
         $this->assertTitle('Configure Your Account | ThinkUp');
-        $this->assertText('configure');
         $this->assertText('Expand URLs');
 
         $this->click("Twitter");
@@ -120,10 +119,12 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
 
         $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        //        $this->showSource();
-        $this->assertText('CSV');
 
-        $this->click("CSV");
+        $this->get($this->url.'/index.php?v=tweets-all&u=thinkupapp&n=twitter');
+        //        $this->showSource();
+        $this->assertText('Export');
+
+        $this->click("Export");
         $this->assertText('This is test post');
     }
 }

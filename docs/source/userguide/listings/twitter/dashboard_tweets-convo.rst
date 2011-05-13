@@ -5,9 +5,7 @@ See back-and-forth tweet exchanges between you and other users in the Conversati
 
 If you are signed into ThinkUp, you'll see replies to private replies; if not, you'll only see public exchanges.
 
-Currently, conversation view only displays exchanges in pairs, a single tweet and a single reply. 
+.. admonition:: On the Roadmap
 
-Roadmap
--------
-
-We hope to support multi-tweet exchanges that exceed a tweet and a single reply soon.
+    Currently, conversation view only displays exchanges in pairs, a single tweet and a single reply. We hope to
+    support multi-tweet exchanges that exceed a tweet and a single reply soon.

@@ -2,6 +2,7 @@
 {include file="_statusbar.tpl"}
 
 <div class="container_24 thinkup-canvas round-all">
+  <div style="float:right;margin:20px">{insert name="help_link" id='forgot'}</div>
   <div class="prepend_20">
     <h1>Reset Your Password</h1>
   </div>

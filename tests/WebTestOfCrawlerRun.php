@@ -50,7 +50,7 @@ class WebTestOfCrawlerRun extends ThinkUpWebTestCase {
         $this->click("Log In");
 
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('Logged in as admin: me@example.com');
         $this->assertText('thinkupapp');
 
         $this->assertText('1 month ago');

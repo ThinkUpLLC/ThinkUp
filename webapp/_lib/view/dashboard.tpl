@@ -35,12 +35,12 @@
         </ul>
       </div>
     </div>
-        
+
     <div class="thinkup-canvas round-all grid_20 alpha omega prepend_20 append_20" style="min-height:340px">
       <div class="prefix_1">
-          
+
         {include file="_usermessage.tpl"}
-        
+
         {if $instance}
             <!--begin public user dashboard-->
             {if $user_details}
@@ -54,8 +54,7 @@
                 <div class="grid_15 omega">
                   <span class="tweet">{$user_details->username} <span style="color:#ccc">{$user_details->network|capitalize}</span></span><br />
                   <div class="small">
-                    Recently posting about {$instance->posts_per_day|round} times a day{if $latest_clients_usage}, mostly using {foreach from=$latest_clients_usage key=name item=num_posts name=foo}{$name}{if !$smarty.foreach.foo.last} and {/if}{/foreach}{/if} 
-                    (<a href="{$site_root_path}post/export.php?u={$instance->network_username}&n={$instance->network}">CSV</a>)
+                    Updated {$instance->crawler_last_run|relative_datetime} ago
                   </div>
                 </div>
               </div>
@@ -63,7 +62,6 @@
             {/if}
 
             {if $data_template}
-         
               {include file=$data_template}
               <div class="float-l">
                 {if $next_page}
@@ -73,9 +71,9 @@
                   | <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n}&{/if}page={$last_page}" id="last_page">Newer Posts  &#62;</a>
                 {/if}
               </div>
-        
+
             {else} <!-- else if $data_template -->
-    
+
               {if $recent_posts}
                 {foreach from=$recent_posts key=tid item=t name=foo}
                   {include file="_post.lite.tpl" t=$t headings="NONE"}
@@ -144,8 +142,8 @@
              </div>
            </div>
         </div>
+        <small>Recently posting about {$instance->posts_per_day|round} times a day{if $latest_clients_usage}, mostly using {foreach from=$latest_clients_usage key=name item=num_posts name=foo}{$name}{if !$smarty.foreach.foo.last} and {/if}{/foreach}{/if}</small>
         {/if}
-
             {if $most_retweeted_1wk}
               <div class="clearfix">
                 <h2>This Week's Most Retweeted</h2>

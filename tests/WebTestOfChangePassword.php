@@ -48,7 +48,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
 
         $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('Logged in as admin: me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');
@@ -65,7 +65,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
 
         $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('Logged in as admin: me@example.com');
     }
 
     public function testChangePasswordWrongExistingPassword() {
@@ -75,7 +75,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
 
         $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('Logged in as admin: me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');
@@ -93,7 +93,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
 
         $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('Logged in as admin: me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');
@@ -110,7 +110,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
 
         $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('Logged in as admin: me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');
@@ -128,7 +128,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
 
         $this->click("Log In");
         $this->assertTitle("thinkupapp's Dashboard | ThinkUp");
-        $this->assertText('Logged in as: me@example.com');
+        $this->assertText('Logged in as admin: me@example.com');
 
         $this->click("Settings");
         $this->assertText('Account');

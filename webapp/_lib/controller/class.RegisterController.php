@@ -112,6 +112,7 @@ class RegisterController extends ThinkUpController {
                 $challenge = $captcha->generate();
                 $this->addToView('captcha', $challenge);
             }
+            $this->view_mgr->addHelp('register', 'userguide/accounts/index');
             return $this->generateView();
         }
     }

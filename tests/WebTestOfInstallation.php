@@ -132,6 +132,6 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         //Visit Settings page and assert content there
         $this->click("Settings");
         $this->assertTitle('Configure Your Account | ThinkUp');
-        $this->assertText('As an administrator you can configure all installed plugins.');
+        $this->assertText('admin');
     }
 }

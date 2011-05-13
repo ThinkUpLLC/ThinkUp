@@ -28,9 +28,8 @@ ThinkUp's official distribution adheres to a set of rules and standards for hand
 
 **Passwords.** The only password that ThinkUp stores in its database is each users's ThinkUp account password. This
 password is not stored in clear text; ThinkUp stores a salted `SHA-1 <http://en.wikipedia.org/wiki/SHA1>`_ hash
-of the password. To prevent brute force attacks which attempt to guess this password, ThinkUp enforces a failed login
-attempt cap. After 10 failed login attempts, ThinkUp deactivates the user account, and an administrator must reactivate
-it.
+of the password. To prevent brute force attacks which attempt to guess this password, ThinkUp enforces a 
+:doc:`failed login attempt cap </userguide/accounts/index>`.
 
 **Social network credentials.** ThinkUp and its core plugins do not store passwords to social networks like Facebook
 or Twitter. Instead, ThinkUp stores OAuth credentials to access these networks. This gives users the ability to easily
@@ -43,9 +42,11 @@ the originating network, ThinkUp does not make those posts available to anyone n
 permissions system is complex. As such, ThinkUp marks all posts to a Facebook user's profile private; ThinkUp marks
 all posts to a Facebook page as public. ThinkUp assumes all Facebook users are private.
 
+Only plugins which adhere to these standards will be accepted into the official ThinkUp distribution.
+
 .. warning::
-    Only plugins which adhere to these standards will be accepted into the official ThinkUp distribution. If you install
-    third-party, non-approved plugins, you are taking the risk that they don't adhere to these guidelines.
+    If you install third-party plugins which are not included in the ThinkUp distribution, you are taking the risk
+    that they don't adhere to these guidelines.
 
 How to Secure Your ThinkUp Installation
 ---------------------------------------

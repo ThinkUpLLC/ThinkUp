@@ -8,7 +8,8 @@ ThinkUp features offered by both the core application and the default plugins wh
    :maxdepth: 2
 
    accounts/index
-   settings/index
+   accounts/serviceusers
    datacapture
    listings/index
+   settings/index
    api/index

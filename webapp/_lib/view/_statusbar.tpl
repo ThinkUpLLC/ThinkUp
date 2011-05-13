@@ -46,10 +46,10 @@
       {/literal}
       
       {if $instances|@count > 1 }
-      <span id="choose-instance"><span class="underline">{$instance->network_username} - {$instance->network|capitalize}</span></span>
+      <span id="choose-instance"><span class="underline">Switch service user</span></span>
       <span id="instance-selector" style="display:none;">
         <select id="instance-select" onchange="changeMe();">
-          <option value="">-- Switch user --</option>
+          <option value="">-- Switch service user --</option>
           {foreach from=$instances key=tid item=i}
             {if $i->network_user_id != $instance->network_user_id}
               <option value="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username} - {$i->network|capitalize} (updated {$i->crawler_last_run|relative_datetime} ago{if !$i->is_active} (paused){/if})</option>
@@ -67,13 +67,13 @@
       Last update: {$crawler_last_run|relative_datetime} ago
       {/if}
     {/if}
-    {if $instance} updated {if $logged_in_user} <a href="{$site_root_path}crawler/updatenow.php">{/if}{$instance->crawler_last_run|relative_datetime} ago{if $logged_in_user}</a>{/if}{/if}
+    {if $instance} {if $logged_in_user} | <a href="{$site_root_path}crawler/updatenow.php">Update now</a>{/if}{/if}
   </div> <!-- .status-bar-left -->
   
   <div class="status-bar-right text-right">
     <ul> 
       {if $logged_in_user}
-        <li>Logged in as: {$logged_in_user} | <a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
+        <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} | <a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
       {else}
       
         <li><a href="http://thinkupapp.com/">Get ThinkUp</a> | <a href="{$site_root_path}session/login.php">Log In</a></li>

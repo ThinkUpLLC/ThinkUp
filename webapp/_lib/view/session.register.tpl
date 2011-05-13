@@ -1,6 +1,7 @@
 {include file="_header.tpl"}
 {include file="_statusbar.tpl"}
 <div class="container_24 thinkup-canvas round-all">
+  <div style="float:right;margin:20px">{insert name="help_link" id='register'}</div>
   <div class="prepend_20">
     <h1>Register</h1>
   </div>

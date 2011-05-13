@@ -1,5 +1,5 @@
-Application Messages (and What To Do About Them)
-================================================
+Application Messages
+====================
 
 This is a working list of ThinkUp's error, information, and success messages, and what they mean.
 

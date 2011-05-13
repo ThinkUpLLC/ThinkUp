@@ -57,6 +57,7 @@ class ForgotPasswordController extends ThinkUpController {
                 $this->addErrorMessage('Error: account does not exist.');
             }
         }
+        $this->view_mgr->addHelp('forgot', 'userguide/accounts/index');
         $this->setViewTemplate('session.forgot.tpl');
         return $this->generateView();
     }
