@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '0.11';
+$LATEST_VERSION = '0.12';
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -267,6 +267,8 @@ $MIGRATIONS = array(
     '0.9' => array(
         'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.9.zip',
         'migrations' => 1,
+        'setup_sql' => array(
+                      "INSERT INTO tu_plugins (name, folder_name) VALUES ('Flickr Thumbnails', 'flickthumbnails');"),
         'migration_assertions' => array(
             'sql' => array(
                 array(
@@ -341,10 +343,10 @@ $MIGRATIONS = array(
             )
         )
     ),
-    
+
     /* beta 0.11 */
     '0.11' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.11.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -353,6 +355,34 @@ $MIGRATIONS = array(
                     'query' => "SELECT a.user_name, p.post_id, p.post_text, p.is_protected, a.is_protected FROM ".
                     "tu_posts p INNER JOIN tu_users a ON p.author_user_id=a.user_id AND p.network=a.network WHERE ".
                     "a.is_protected=1 AND p.is_protected=0; ", 
+                    'no_match' => true,
+                )
+            )
+        )
+    ),
+
+    /* beta 0.12 */
+    '0.12' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'setup_sql' => array("INSERT INTO tu_plugins (name, folder_name) VALUES ('Embed Thread', 'embedthread');"),
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    // Created invites table
+                    'query' => 'DESCRIBE tu_invites invite_code',
+                    'match' => "/varchar\(10\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created invites table
+                    'query' => 'DESCRIBE tu_invites created_time',
+                    'match' => "/timestamp/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Deleted Embed Thread plugin
+                    'query' => "SELECT * FROM tu_plugins WHERE folder_name='embedthread'",
                     'no_match' => true,
                 )
             )

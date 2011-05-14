@@ -1,6 +1,33 @@
 Changes in ThinkUp
 ==================
 
+Beta 0.12 - 17 May 2011
+-----------------------
+
+**New:**
+
+* User invitation system: If registration is closed to the public, an admin can :doc:`generate a user invitation link good for one user registration <userguide/settings/allaccounts>`
+* When there's a new version of ThinkUp available, a :doc:`notification will appear in the status bar <install/upgrade>` for a logged-in admin
+* Application setting to :doc:`disable JSON API access <userguide/settings/application>` (admins only)
+* Application setting to :doc:`set default service user to display <userguide/settings/application>` when visiting ThinkUp (admin-only)
+* Full support for servers running https://
+* Improved interface for switching service user, running the crawler, and reorganized the settings tabs to make it easier/clearer what does what
+* Added links to help documentation throughout the application
+
+**Fixed:**
+
+* Invalid JSON returned by the Post API
+* SlickGrid export button no longer opens a new tab
+* Doesn't show :doc:`follower count history milestones <userguide/listings/twitter/dashboard_followers-history>` unless they're within 10 days, weeks, or months (i.e., no more "You will reach 1,000 followers in 954 weeks")
+* Deprecated the Embed Thread plugin and made it core functionality, with the option to disable it in :doc:`Settings > Application <userguide/settings/application>`
+* Multiple embedded ThinkUp threads on a given web page no longer overwrite each other; Added permalinks to embedded threads
+* Removed Twitter plugin former friends/followers and not mutual data listings (which didn't work anyway)
+
+**IMPORTANT BACKWARD-COMPATIBILITY API CHANGE NOTICE**
+
+Beta 12 will break any embedded ThinkUp threads from earlier versions. Please update any embed code you've published
+on the web from earlier versions of ThinkUp.
+
 Beta 0.11 - 25 April 2011
 -------------------------
 

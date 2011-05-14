@@ -1,0 +1,10 @@
+-- 2011-05-02
+-- Delete the Embed Thread plugin and make it core
+DELETE FROM tu_plugins WHERE folder_name='embedthread';
+
+-- 2011-05-13
+-- Add invites table
+CREATE TABLE tu_invites (
+invite_code varchar(10) DEFAULT NULL,
+created_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT='User invitation codes.';

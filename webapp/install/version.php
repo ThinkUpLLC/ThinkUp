@@ -26,6 +26,6 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Dwi Widiastuti, Gina Trapani, Guillaume Boudreau
  */
-$THINKUP_VERSION = '0.11';
+$THINKUP_VERSION = '0.12';
 $THINKUP_VERSION_REQUIRED['php'] = '5.2';
 $THINKUP_VERSION_REQUIRED['mysql'] = '5';
