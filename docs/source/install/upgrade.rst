@@ -8,6 +8,15 @@ automatic database backup and upgrader. Here's how.
 Install ThinkUp's Newest Application Code
 -----------------------------------------
 
+.. sidebar:: Update Notifications as of Beta 12
+
+    From ThinkUp beta 12 on, you can find out if there's a new version of the application available by logging in as an
+    administrator. If there's a newer version than the one you're currently running available for download, you'll 
+    see a message on the right side of ThinkUp's status bar, between "Logged in as admin" and the "Settings" link. 
+    
+    For example, If you're running beta 12 and beta 13 is available, the message will read "Version 0.13 available." 
+    Click on it to download beta 13.
+
 First, `download ThinkUp's latest version <http://thinkupapp.com>`_ and extract the zip archive.
 
 Using your favorite FTP program, rename your existing ThinkUp folder to something like ``thinkup.old``. Then, upload

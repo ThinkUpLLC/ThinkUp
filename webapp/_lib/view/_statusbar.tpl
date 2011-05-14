@@ -71,7 +71,7 @@
   <div class="status-bar-right text-right">
     <ul> 
       {if $logged_in_user}
-        <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} | <a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
+        <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} | {if $user_is_admin}<script src="{$site_root_path}install/checkversion.php"></script>{/if}<a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
       {else}
       
         <li><a href="http://thinkupapp.com/">Get ThinkUp</a> | <a href="{$site_root_path}session/login.php">Log In</a></li>
