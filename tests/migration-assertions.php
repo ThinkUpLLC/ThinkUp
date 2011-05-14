@@ -236,7 +236,7 @@ $MIGRATIONS = array(
                     'column' => 'Type', 
                 ),
                 array(
-                    'query' => "SELECT namespace FROM tu_options WHERE namespace LIKE 'plugin_options-2345' ",
+                    'query' => "SELECT namespace FROM tu_options WHERE namespace = 'plugin_options-2345'",
                     'match' => "/plugin_options-2345/",
                     'column' => 'namespace', 
                 )
