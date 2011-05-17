@@ -8,3 +8,4 @@ Run into trouble using ThinkUp? Check out these lists of application messages an
 
    messages/index
    common/index
+   report

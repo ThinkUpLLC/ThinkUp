@@ -1,0 +1,11 @@
+Beta 0.11 - 25 April 2011
+=========================
+
+**Bugfix Release**
+
+Beta 11 is a **REQUIRED UPDATE** for all installations of ThinkUp prior to April 25.
+
+* Fixes a potential information vulnerability in older versions of ThinkUp that could reveal private posts that are stored by the application.
+* Fixes a PHP Notice on ThinkUp API calls in some server environments and updates API documentation.
+* Adds Security and Data Privacy documentation.
+* Fixes bug where Dashboard menu links are incorrect after logout.

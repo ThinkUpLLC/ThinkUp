@@ -19,5 +19,3 @@ engine.
    contact
    contribute/index
    changelog
-   inspirations
-   roadmap

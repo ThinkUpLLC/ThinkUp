@@ -12,4 +12,3 @@ everything you need to know to get ThinkUp up and running on your web server.
    install
    upgrade
    security
-   specific/index

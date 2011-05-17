@@ -1,16 +1,14 @@
-Applies to ThinkUp 0.9 (Beta 9)
--------------------------------
-
-Last revised: 03/24/11
+Detailed Installation Guide
+============================
 
 The following is a general tutorial for how to install ThinkUp on
 an arbitrary web host. This document assumes some familiar with
 basic web hosting concepts; you may need to refer to your hosting
 company's documentation for specifics, or find an
-environment-specific tutorial to assist you (see the appendix).
+environment-specific tutorial in the `Community Wiki <https://github.com/ginatrapani/ThinkUp/wiki/Installing-ThinkUp>`_.
 
 Pre-Requisites
-==============
+--------------
 
 
 -  File-system access to a web host, preferably over FTP or SFTP.
@@ -21,9 +19,6 @@ Pre-Requisites
    a public callback URL, so you'll need to expose non-public servers
    to the internet for initial authorization; after that, the server
    no longer needs to be publicly available.)
-
-Installation
-============
 
 Download
 --------
@@ -203,35 +198,25 @@ found within the email and your account will be activated - and
 you'll be ready to use ThinkUp!
 
 You're Done!
-============
+------------
 
 Congratulations! (That wasn't so bad, was it?)
 
 At this point you're probably interested in actually using ThinkUp
 - and there's still some more configuration to do - but for those
-details, you should visit the :doc:`User Guide </userguide/index>`
+details, you should visit the :doc:`User Guide </userguide/index>`.
 
 If You Get Stuck
-================
+----------------
 
 Installing web software is always difficult - every host is a
 little different, and small things can cause large problems.
 Luckily, help is here!
 
 
--  :doc:`Troubleshooting ThinkUp: Common Problems and Solutions </troubleshoot/common>`
+-  :doc:`Troubleshooting ThinkUp: Common Problems and Solutions </troubleshoot/common/index>`
    contains answers to the most common installation issues.
 -  Live help is available around the clock from the ThinkUp
    community on :doc:`IRC </contact>`.
 -  Non-live (but still pretty snappy!) help is available on the
    `ThinkUp mailing list <http://groups.google.com/group/thinkupapp>`_.
-
-Appendix: Environment-Specific Tutorials
-========================================
-
-
--  :doc:`Installing ThinkUp on Amazon EC2 </install/specific/amazonec2>`
--  :doc:`Installation: Dreamhost </install/specific/dreamhost>`
--  :doc:`Installation: Local Computer </install/specific/local>`
--  :doc:`Installation: Mac OS X </install/specific/mac>`
--  :doc:`Installation: Windows </install/specific/pc>`

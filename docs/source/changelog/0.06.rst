@@ -1,0 +1,62 @@
+Beta 0.6 - 13 Dec 2010
+======================
+
+**New:**
+
+*   Favorite tweets: Thanks to an incredible show of perseverance
+    by Amy who has been shepherding along this branch since April, ThinkUp
+    now captures your favorite tweets (the ones you have starred) and
+    lists them under a new Favorites menu on the main dashboard. If you
+    like to star tweets with links in them for reading later, you can
+    filter your favorites list that way, too. Screenshot:
+    https://skitch.com/ginatrapani/rrs81/ginatrapani-on-twitter-thinkup
+
+*   Design refresh: Anil made a few design improvements in this
+    release which consolidate the header and status bar, make the sidebar
+    menu easier to see and use, remove lots of borders and other clutter,
+    and make the replies and retweets buttons more button-like. See the
+    new design in action:
+    http://smarterware.org/thinkup/
+
+    Note: there are rough spots and CSS/markup mistakes here; I modified
+    several of Anil's tweaks so anything that's broken/weird is probably
+    my fault. As always, we'll be polishing as we go. CSS mavens, send me
+    pull requests with fixes, please. (Please.)
+
+*   Reorganized post page: The post detail page now has a sidebar
+    menu just like the dashboard does, a one-stop shop for everything you
+    can do with a post, like export replies, search and filter replies,
+    list retweets, and see responses on a map. Like the dashboard, plugins
+    generate this menu dynamically, which opens the door to
+    conversation-specific visualizations and reply listings. Now that the
+    stage is set for those kinds of plugins, expect to see more items
+    appear in that menu in future releases. Screenshot:
+    https://skitch.com/ginatrapani/rrs85/post-details-thinkup
+
+*   Expand/collapse advanced plugin options: A ThinkUp plugin can
+    potentially have several settings, and many of them could have default
+    values that most users don't need to ever see or change. That's why
+    we've set up the ability to hide "advanced" plugin options to simplify
+    setup. For example, the only options an admin sees by default for the
+    Twitter plugin are the two required values, the rest are nestled away
+    comfortably in a hidden div. Just click "Show Advanced Options" to
+    reveal them. Screenshot:
+    https://skitch.com/ginatrapani/rrs8b/configure-your-account-thinkup
+
+**Fixed:**
+
+*   Twitter inquiries: Thanks to Andy, tweets which contain URLs
+    that have question marks in them no longer show up in the Inquires
+    list, because they're not questions.
+
+*   New developers tools! Developers can now output custom debugging
+    lines while running tests, run an individual test in a given TestCase,
+    and see details of a database access error when they set debug = true
+    in the config.inc.php file.
+
+*   More little things: Fixed a bug where under certain
+    conditions, a user may not get saved to the database correctly. Fixed
+    a bug where the web-based crawler page's content-type was not set
+    correctly. Fixed a bug where an instance may not get updated correctly
+    after a crawl completes. Added a link to the IRC channel to the
+    application footer.

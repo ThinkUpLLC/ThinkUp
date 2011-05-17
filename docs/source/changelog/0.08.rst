@@ -1,0 +1,100 @@
+Beta 0.8 - 28 Jan 2011
+======================
+
+**New:**
+
+*   Top 20 words
+    My absolute favorite new ThinkUp feature is courtesy of Mark Wilkie:
+    on any post that has more than 20 replies, click on the "Top 20 words"
+    link in the sidebar menu. ThinkUp will display a summary of most
+    frequently-used words in a reply set. Click on one to see all the
+    replies which contain the word. Here's an example of Top 20 words in
+    action:
+    http://smarterware.org/thinkup/post/?t=25077429986&n=twitter
+
+    Fun fact: This feature includes word stemming capabilities, so words
+    like reply, replies, and replied all get grouped together. It uses the
+    Snowball JavaScript library to do this. Fantastic work, Mark. Next up:
+    phrase frequency, so the reply "Big Bang Theory" gets listed as one
+    item in the example above.
+
+*   Embed Thread plugin
+    Copy and paste a bit of JavaScript into any web page to embed a post
+    and set of replies sourced from ThinkUp. Activate the Embed Thread
+    plugin in the Settings > Plugins area. Then click on "Embed Thread" on
+    any post page to get the embed code. This plugin is a work in
+    progress, so give it a try and let us know how it goes. A screenshot:
+    https://skitch.com/ginatrapani/rmkpm/post-details-thinkup
+
+*   Web-based application-wide settings
+    We're continuing to move as many ThinkUp settings out of the
+    config.inc.php file and into the database as possible. In ThinkUp's
+    Settings area, an admin can now click on the Settings tab to open or
+    close the installation's registration page, and set reCAPTCHA keys as
+    well. Screenshot:
+    https://skitch.com/ginatrapani/rm2tb/configure-your-account-thinkup
+
+    IMPORTANT NOTE: This setting has registration closed by default on all
+    new installations and upgraded installations. It overrides anything
+    that is currently listed in your config.inc.php file, meaning, it
+    deprecates the $THINKUP_CFG['is_registration_open'] variable and
+    reCAPTCHA keys set there. If registration is open on your ThinkUp
+    installation right now, after you upgrade to beta 8, you MUST log in
+    as an admin and check this box to explicitly reopen it and transfer
+    your reCAPTCHA keys into the text fields there and save. Apologies for
+    the aggressive change here, but we want everyone's installation to be
+    closed/more secure by default.
+
+*   Instagr.am support
+    Thanks to Amy, all new Instagr.am images that the crawler encounters
+    in beta 8 show up as thumbnails inline in ThinkUp's post listings.
+
+*   Activate accounts from the web interface
+    Thanks to Randi, if your installation's new account activation email
+    is getting spammed, you can now log in as an admin and activate new
+    user account by pressing an "Activate" button in the web interface.
+    (You can also deactivate accounts as well.) In Settings, you'll see
+    this button listed in the "All ThinkUp Accounts" tab.
+
+*   Command line interface to backups and migrations
+    Thanks to Mark, advanced users with large databases can now back up
+    their ThinkUp installation and run potentially large/slow database
+    migrations at the command line. (For example, one of beta 8's
+    migrations changes the width of the tu_posts.post_text field; on my
+    12M row table, this took over an hour.) To use the command line tools,
+    SSH in your server and CD to ThinkUp's install/cli/ folder. There you
+    can run php backup.php or php upgrade.php. The Upgrade script will
+    show you the total time elapsed at the end of the migration. If the
+    crawler is running when you attempt the migration, the upgrade process
+    will let you know and tell you to try again later when the crawl
+    process is complete.
+
+**Fixed:**
+
+*   Facebook posts no longer cut off
+    Speaking of database migrations, Facebook posts, which can be up to
+    420 characters in length, are no longer cut off due to the too-small
+    size of ThinkUp's post_text field.
+
+*   Twitter usernames linked correctly
+    Thanks to suth's ninja regex skills, ThinkUp more accurately links
+    Twitter user names, and doesn't do things like link a lone @ symbol
+    mid-tweet.
+
+*   Notification emails less likely to get spammed
+    Thanks to Sam, email notifications from ThinkUp have the correct From:
+    address set (using your web server's domain name), which makes those
+    messages less likely to get shuttled into the spam folder.
+
+*   Invalid Google Maps key error
+    When a post is not geoencoded, you will no longer see a JavaScript
+    alert about an invalid Google Maps key error when you click on the
+    Response Map item in the GeoEncoder plugin menu.
+
+*   Several more little things
+    "ThinkUp is in the process of an upgrade" page no longer gets "stuck"
+    in cache, JavaScript errors in the switch user dropdown have been
+    resolved, the "Your ThinkUp Password" text fields no longer scroll, no
+    more error messages when authorizing a Twitter account, the Copyright
+    notice is now 2011, lists of links (your own and your friends)
+    included the expanded version and now paginate.

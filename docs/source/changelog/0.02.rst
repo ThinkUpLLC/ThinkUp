@@ -1,0 +1,31 @@
+Beta 0.2 - 4 Oct 2010
+=====================
+
+*   Facebook Plugin: I gutted all the old Facebook Connect code and
+    replaced it with shiny new Open Graph code. The account connection
+    experience should be much less bewildering. Give it a try and let me
+    know how it goes, especially all of you who have had trouble in beta
+    1. Important note for those of you who actually did manage to set up
+    Facebook users and pages successfully: the new plugin requires that
+    you enter the Facebook Application ID, as shown here:
+    http://skitch.com/ginatrapani/d3wu7/configure-your-account-thinkup
+
+*   Twitter plugin: The Twitter API throws a lot of 500 errors (fail
+    whales). Amy added a plugin option that lets you set how many whales
+    the crawler should tolerate during a given crawl. Also, the crawler
+    will now retry a failed API call instead of just moving onto the next
+    one. Hopefully this will result in more successful Twitter crawls
+    faster. Here's what the new option looks like:
+    http://skitch.com/ginatrapani/d34x9/configure-your-account-thinkup
+
+*   Inquiries: See only posts that you've asked an actual question in,
+    which often prompts more replies. There's no fancy natural language
+    processing going on here, so it's not always perfect, but the new
+    "Inquiries" post listing only displays posts that contain question
+    marks. An example in action:
+    http://smarterware.org/thinkup/index.php%3Fv%3Dtweets-questions%26u%3Dginatrapani%26n%3Dtwitter
+
+Beta 2 also contains several minor bugfixes that restore broken links,
+tweak the design consistency, and remove a significant amount of code
+that was no longer being used. (This is why the .zip file is smaller
+than beta 1's was.)

@@ -4,7 +4,7 @@ ThinkUp's Model View Controller Implementation
 ThinkUp does not use an MVC framework, but it does employ the
 `Model-View-Controller design
 pattern <http://en.wikipedia.org/wiki/Model–view–controller>`_. The
-Wikipedia page makes the idea sound confusing to new comers so here’s a
+Wikipedia page makes the idea sound confusing to new comers so here's a
 basic run down of what the MVC design pattern is and how ThinkUp uses
 it.
 
@@ -21,17 +21,17 @@ gets processed by which model and which view is used to display it.
 
 In our case:
 
--  **Model** - ThinkUp’s model objects live in
+-  **Model** - ThinkUp's model objects live in
    /thinkup/webapp/\_lib/model/. Model object filenames start with the
    prefix class.. For example, the Post object is located in the
    class.Post.php file.
 
--  **View** - ThinkUp’s views are Smarty templates, files with the .tpl
+-  **View** - ThinkUp's views are Smarty templates, files with the .tpl
    extension, located in the /thinkup/webapp/\_lib/view/ directory. As a
    general rule, HTML markup should never appear in a PHP file, only in
    a template file.
 
--  **Controller** - ThinkUp’s controllers live in
+-  **Controller** - ThinkUp's controllers live in
    /thinkup/webapp/\_lib/controller/. Each controller should extend
    either ThinkUpController or ThinkUpAuthController. Extend
    ThinkUpAuthController only if the user should be logged in to perform
@@ -47,7 +47,7 @@ As mentioned before, all controllers in the ThinkUp application extend
 either ThinkUpController or ThinkUpAuthController. The reason for this
 is that both of those classes provide a lot of the nitty gritty code
 that goes into keeping the user interface consistent and secure so that
-you don’t have to. They also have a few cool tricks up their sleeves.
+you don't have to. They also have a few cool tricks up their sleeves.
 
 If you extend the ThinkUpAuthController, for example, your user will
 need to be logged in to access the page. If they are not logged in, the
@@ -85,13 +85,13 @@ ThinkUp uses a templating engine called
 `Smarty <http://www.smarty.net/>`_. Smarty is a very versatile and very
 easy to use templating engine that allows a developer to send key=value
 pairs to a .tpl file that contains HTML code (and possibly some Smarty
-syntax that you can read about on their site). Let’s take a look at the
+syntax that you can read about on their site). Let's take a look at the
 UpdateNowController class.
 
 The UpdateNowController class is quite small and will tell you just
 about everything you need to know about the basics of how controllers
 send data to views. You will see a line in this controller that looks
-like this: $this->setViewTemplate (‘crawler.updatenow.tpl’);. This is an
+like this: $this->setViewTemplate (‘crawler.updatenow.tpl');. This is an
 important line of code and needs to be present in all of the controllers
 you write; it tells the controller which view to use. You will notice in
 the views folder that there is a file called crawler.updatenow.tpl. This
@@ -104,12 +104,12 @@ line of code
 
   <iframe width="850" height="500" src="run.php{if $log == 'full'}?log=full{/if}" style="border:solid black 1px">
 
-Notice the strange “if” statement in {curly braces}? That’s Smarty
-syntax. It’s telling the page that if the $log variable equals the
+Notice the strange “if” statement in {curly braces}? That's Smarty
+syntax. It's telling the page that if the $log variable equals the
 string “full”, print ?log=full to the page. But where did the $log
 variable come from? Near the bottom of UpdateNowController you will see
-this line of code: $this->addToView (‘log’, ‘full’);. This is how
+this line of code: $this->addToView (‘log', ‘full');. This is how
 controllers pass key=value pairs to Smarty templates.
 
 That just about covers the basics. If you have any further questions
-don’t hesitate to ping the :doc:`mailing list </contact>` or ask in the :doc:`IRC channel </contact>`.
+don't hesitate to ping the :doc:`mailing list </contact>` or ask in the :doc:`IRC channel </contact>`.

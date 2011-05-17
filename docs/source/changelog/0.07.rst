@@ -1,0 +1,66 @@
+Beta 0.7 - 27 Dec 2010
+======================
+
+**New:**
+
+*   Improved login security: To avoid the potential for brute-force
+    password cracking attempts on ThinkUp's login page, there is now a cap
+    on the number of failed logins. After 10 failed login attempts, a
+    ThinkUp users's account gets deactivated. To reactivate, the user
+    resets his/her password via email. (Look for more security-focused
+    updates to the system in future releases.)
+
+*   Better retweet crawling: Thanks to Amy, ThinkUp now captures
+    the total of new-style retweets more accurately, and displays that
+    number plus the number of old-style quoted retweets that ThinkUp
+    detects.
+
+*   Tweet reply links: Thanks to Sam, you can now easily reply to a
+    given tweet from inside ThinkUp. Rollover any tweet and click on the
+    "Reply" link to autofill Twitter's update form with the user name and
+    status ID. Screenshot:
+    https://skitch.com/ginatrapani/rga5j/ginatrapani-on-twitter-thinkup
+
+*   Picplz support: Thanks to Kyle, photos posted on Twitter from
+    http://picplz.com now show up as inline thumbnails in ThinkUp.
+
+*   Tweet photo thumbnails appear on post page: Speaking of image
+    thumbnails, they now appear on individual post pages like this one:
+    http://smarterware.org/thinkup/post/?t=13426333958807552&n=twitter
+
+*   Configure number of links to expand per crawler run: Thanks to
+    Sam, you can now set the number of links the Expand URLs plugin
+    attempts per crawler run. This number is 1500 by default and normally
+    won't need to be changed. But, if your crawls are taking too long or
+    if you've got too many links to expand that aren't happening fast
+    enough, you can now dial it up or down in the web interface.
+    Screenshot:
+    https://skitch.com/ginatrapani/rga5t/configure-your-account-thinkup
+
+*   Followers/Who You Follow lists updated: Twitter's Followers/Who
+    You Follow lists have been simplified, and now display some
+    interesting stats like how many multiples of followers a user has
+    versus friends, and the average number of posts that user has
+    published per day since they joined Twitter. Screenshot:
+    https://skitch.com/ginatrapani/rga5a/ginatrapani-on-twitter-thinkup
+
+*   New (for developers)! Logger debug mode: Thanks to Amy, developers
+    who have debug=true in their config file can write debug statements to
+    the log while developing the crawler.
+
+**Fixed:**
+
+*   Gradients in design refresh: Thanks to Andy, everyone on
+    every browser sees the new gradients in beta 6's design refresh as we
+    intended.
+
+*   Upgrader: Mark fixed a bug that potentially caused problems
+    upgrading to ThinkUp's latest version from beta 2. We now have
+    automated upgrade tests which run through every single possible
+    upgrade path from beta 1 to beta 7 passing.
+
+*   Several more little things: Application options
+    have been moved to the generic options table to consolidate our data
+    structure; Update your data links no longer throw a 404; Links to
+    retweet listings from the Dashboard have been corrected; Plugin
+    external libraries are now located in their own extlib folders.

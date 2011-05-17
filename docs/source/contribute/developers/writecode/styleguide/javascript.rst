@@ -5,17 +5,17 @@ This is the Code Style guide for JavaScript. See the main
 :doc:`main page </contribute/developers/writecode/styleguide/index>` page for other languages.
 
 Indentation
-~~~~~~~~~~~
+-----------
 
 Use an indent of 2 spaces, with no tabs.
 
 Names
-~~~~~
+-----
 
 Functions and variables should be named using lowerCamelCase.
 
 Braces
-~~~~~~
+------
 
 Always use curly braces, even in situations where they are technically
 optional. Having them increases readability and decreases the likelihood
@@ -26,14 +26,14 @@ Opening curly braces should never be on their own new line.
 Closing curly braces should always be on their own new line.
 
 Semicolons
-~~~~~~~~~~
+----------
 
-To avoid semicolon insertion (Q: What’s that? A: `See
+To avoid semicolon insertion (Q: What's that? A: `See
 Wikipedia <http://en.wikipedia.org/wiki/JavaScript_syntax#Whitespace_and_semicolons)>`_,
 end all statements with a semicolon, except for for, function, if,
 switch, try, and while.
 
-For the same reason, a function’s return value expression must start on
+For the same reason, a function's return value expression must start on
 the same line as the return keyword.
 
 Semicolons must also follow functions declared in this manner:
@@ -53,11 +53,11 @@ and do-while control statements:
     } while (condition);
 
 Comments
-~~~~~~~~
+--------
 
 Non-documentation comments [STRIKEOUT:- that is, explanatory “what does
 this block of code do?”]type comments — are strongly encouraged.
-Concerned about performance? Don’t worry, comments can be removed by
+Concerned about performance? Don't worry, comments can be removed by
 Javascript compression utilities for use on production servers.
 
 Comments should use capitalized sentences with punctuation. Comments
@@ -83,7 +83,7 @@ C style comments (/\* Comment goes here. \*/) and C++ style comments (//
 Comment goes here.) are both fine.
 
 Operators
-~~~~~~~~~
+---------
 
 All binary operators (operators that come between two values), such as
 +, -, =, !=, ==, >, &&, \|\|, etc. should have a space before and after
@@ -117,7 +117,7 @@ have a space on either side of the ? and the :.
     condition ? result1 : result2;
 
 Control Statements
-~~~~~~~~~~~~~~~~~~
+------------------
 
 Control statements should be made with:
 \* one space between the control keyword and opening parenthesis (to
@@ -174,7 +174,7 @@ An example try statement:
     }
 
 Functions
-~~~~~~~~~
+---------
 
 Functions should be called with:
 \* no spaces between the function name, the opening parenthesis, and the
@@ -200,7 +200,7 @@ anonymous functions (function (e) {}).
     }
 
 Arrays
-~~~~~~
+------
 
 Arrays should be formatted with a space separating each element and
 assignment operator, if applicable. If the line spans longer than 80
@@ -219,7 +219,7 @@ indented one level.
     ];
 
 jQuery Snippet Formatting
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 TODO (some of the above style rules for straight Javascript might not
 make sense for jQuery snippets.)

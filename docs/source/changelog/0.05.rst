@@ -1,0 +1,43 @@
+Beta 0.5 - 22 Nov 2010
+======================
+
+**New:**
+
+*   Human readable crawler log: When you click on the "Update now"
+    link to run the ThinkUp crawler, the activity log you'll see has been
+    totally revamped. You'll have an easier time seeing errors, successes,
+    and information about what's working and what's not.
+
+*   Better data integrity: The latest database migration enforces
+    some unique indexes which will make sure your datastore is cleaner and
+    free of duplicate links and posts. (Related mailing list thread:
+    http://groups.google.com/group/thinkupapp/browse_thread/thread/eac7e97f4f81265e)
+
+**Fixed:**
+
+*   Reduced number of Twitter API errors: The order the ThinkUp
+    crawler gathers your data from the Twitter API has been adjusted in a
+    way that should result in fewer errors and faster data capture. In
+    practice, your friends and followers lists will not stay empty for as
+    long as they have been anymore. (One of several related mailing list
+    threads: http://groups.google.com/group/thinkupapp/browse_thread/thread/cfb9735d6e2ada39/8902e1903b0974ac)
+
+*   The database upgrader: The upgrader now supports custom table
+    prefixes (Guillaume, you will be the true test of this fix), and it
+    has more understandable messaging about what to do regarding the
+    completion email and after the upgrade is complete. (Related mailing
+    list messages: http://groups.google.com/group/thinkupapp/msg/021fb00f8f51881e
+    http://groups.google.com/group/thinkupapp/msg/9d26ae8574a1b851)
+
+*   Expand URLs hanging bug: The ExpandURLsPlugin used to hang
+    indefinitely when it hit a URL that didn't respond quickly enough,
+    causing some people to have to deactivate the plugin entirely. The
+    timeout has been set so the plugin will move on after a set amount of
+    time correctly now.
+
+*   A few more little things: The grid search now works with
+    posts which contain Unicode characters, and plugin option errors no
+    longer have the endearing but completely uninformative "Sorry, but we
+    are unable to process your request at this time" message--instead, you
+    get specific details about what's wrong. (Related mailing list thread:
+    http://groups.google.com/group/thinkupapp/browse_thread/thread/d4455d0344c8dedd)

@@ -1,0 +1,35 @@
+Beta 0.4 - 14 Nov 2010
+======================
+
+**New:**
+
+*   Web-based database upgrader: When you install the new version,
+    you'll experience the biggest new ThinkUp feature, our web-based
+    database upgrader. Instead of running SQL by hand to update your
+    ThinkUp datastore, the app will walk you through the process step by
+    step, show you what changes it made, and even give you an option to
+    back up your data first. Screenshots here:
+    http://www.flickr.com/photos/ginatrapani/sets/72157625383770504/
+    This new feature is big and complicated and while we tried our best to
+    test every possible scenario, we're depending on you to let us know
+    how it goes and report any problems you may have or make any UX
+    suggestions. (Thanks in advance for that.)
+
+*   Configurable Twitter API error tolerance: The Twitter API
+    serves many fail whales. You can now configure the crawler to tolerate
+    up to a certain number of whales--5 by default, but you can increase
+    or reduce it now in the plugin settings.
+    https://skitch.com/ginatrapani/ryj2n/configure-your-account-thinkup
+
+**Fixed:**
+
+*   Crawler log updates as-it-runs: The "Update now" page updates
+    in real-time, instead of spinning and spinning until an entire crawler
+    run is complete.
+
+*   Lots of little things: no more exec() PHP warning, the
+    WordPress plugin instructions and DB calls are fixed, long URLs now
+    wrap correctly, no more bug with deleted accounts because of caching,
+    restored missing cache directory causing permissions error, added
+    automatic tests for installation and upgrade process, ported several
+    tests to the FixtureBuilder library.

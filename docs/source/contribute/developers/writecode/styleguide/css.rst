@@ -5,12 +5,12 @@ This is the Code Style guide for CSS. See the :doc:`main page </contribute/devel
 other languages.
 
 Indentation
-~~~~~~~~~~~
+-----------
 
 Use an indent of 2 spaces, with no tabs.
 
 Names & Capitalization
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 ID names should be in lowerCamelCase.
 
@@ -31,13 +31,13 @@ HTML elements should be in lowercase.
     body, div {
 
 Use External Stylesheets
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 Do not write inline styles or embedded styles unless unavoidable.
 Inlining or embedding styles is most likely avoidable — ask the ThinkUp
-mailing list if you’re not sure.
+mailing list if you're not sure.
 
-For performance reasons (see `Steve Souder’s
+For performance reasons (see `Steve Souder's
 blog <http://www.stevesouders.com/blog/2009/04/09/dont-use-import/)>`_,
 always link to external stylesheets using the ``<link>`` syntax rather
 than the ``import`` syntax.
@@ -48,9 +48,9 @@ than the ``import`` syntax.
     <style type="text/css">@import url("a.css");</style> <!-- Not Okay -->
 
 Write Valid CSS
-~~~~~~~~~~~~~~~
+---------------
 
-ThinkUp’s CSS should be valid to the `CSS 2.1
+ThinkUp's CSS should be valid to the `CSS 2.1
 specification <http://www.w3.org/TR/CSS2/>`_. CSS 3.0 rules are
 acceptable as long as they degrade gracefully.
 
@@ -59,9 +59,9 @@ validator <http://jigsaw.w3.org/css-validator/>`_ and ensure it passes
 before submitting a pull request.
 
 Comments
-~~~~~~~~
+--------
 
-Comments are strongly encouraged. Concerned about performance? Don’t
+Comments are strongly encouraged. Concerned about performance? Don't
 worry, comments can be removed by CSS minification utilities for use on
 production servers.
 
@@ -80,7 +80,7 @@ Only C style comments (/\* Comment goes here. \*/) are valid for CSS
 code. Do not use C++ style comments (// Comment goes here.).
 
 Selectors
-~~~~~~~~~
+---------
 
 Selectors should be on a single line, with a space after the last
 selector, followed by an opening brace. A selector block should end with
@@ -115,7 +115,7 @@ When selecting HTML elements, write the selector in lowercase.
     DIV { /* Not okay */
 
 Property-Value Pairs
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 Property-value pairs should be listed starting on the line after the
 opening curly brace. Each pair should:
@@ -166,12 +166,12 @@ within double quotation marks.
       font-family: "Lucida Grande", Helvetica, sans-serif;
 
 Colors
-~~~~~~
+------
 
 When denoting color using hexadecimal notation, use all capital letters.
 Both three-digit and six-digit hexadecimal notation are acceptable; if
-it’s possible to specify the desired color using three-digit hexadecimal
-notation, do so as you’ll save the end-user a few bytes of download
+it's possible to specify the desired color using three-digit hexadecimal
+notation, do so as you'll save the end-user a few bytes of download
 time.
 
 ::
@@ -181,7 +181,7 @@ time.
       color: #fff;    /* Not okay */
 
 Dimensions
-~~~~~~~~~~
+----------
 
 When denoting the dimensions - that is, the width or height -
 of an element or its margins, borders, or padding, specify the units in

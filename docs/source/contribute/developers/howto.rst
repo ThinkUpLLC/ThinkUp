@@ -8,5 +8,3 @@ Contents:
 
    modifydb
    plugins/buildplugin
-   tests
-   devfromsource

@@ -1,0 +1,44 @@
+Beta 0.3 - 19 Oct 2010
+======================
+
+**New:**
+
+*   Delete network accounts: If you've added a Twitter or Facebook
+    account you want to delete, there's now a handy "Delete" button to do
+    so, as shown here:
+    http://skitch.com/ginatrapani/dh8na/delete-accounts
+
+*   User-selected timezone: When you install ThinkUp fresh, a
+    dropdown of timezones is available for you to choose from, instead of
+    the app just defaulting to America/Los_Angeles. This will fix the
+    infamous "updated thousands of negative seconds ago" bug that appears
+    in the status bar on new installations not located in Southern
+    California. Existing users: you should enter your timezone correctly
+    by hand into your config.inc.php.
+    Warning: the timezone select in the installer is long and scary right
+    now. There is an issue filed (#369) to simplify it.
+
+*   Installer attempts to create database: When you install ThinkUp
+    fresh, if you enter the name of a database which does not already
+    exist, the installer will attempt to create it with the credentials
+    you enter. Previously it required that the database already existed.
+
+**Fixed:**
+
+*   Facebook Plugin: Fixed major bugs with new Facebook
+    application setup; you can now authorize your FB account and add pages
+    you like to ThinkUp with the correct permissions.
+
+*   E_STRICT warnings: If you've got PHP warning set to E_STRICT,
+    ThinkUp no longer triggers warnings while developing.
+
+**Refactored:**
+
+*   In preparation for Twitter's new 64-bit "Snowflake" post
+    IDs, we've expanded the capacity of ThinkUp's post ID fields.
+
+*   Ported several tests to use our FixtureBuilder library
+    instead of raw SQL. The FixtureBuilder lets you create test data very
+    easily and using it throughout our tests instead of straight SQL will
+    enable us to swap in different DB types and test with custom table
+    prefixes later.

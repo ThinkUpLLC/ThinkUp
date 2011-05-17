@@ -3,7 +3,7 @@ ThinkUp and PHPDoc
 
 ThinkUp uses `PHPdocumentor <http://phpdoc.org>`_ to keep track of the
 documentation for our code. Though it creates fairly clean documentation
-without any special intervention, it’s possible to create even better
+without any special intervention, it's possible to create even better
 docs using some of the special features of PHPDoc.
 
 Basic commenting
@@ -23,9 +23,9 @@ be enclosed in C-style comments with two leading asteriks, like so:
 
 Any other user comments are ignored by PHPDoc.
 
-Secondly, your user comments must precede the code you’re adding
+Secondly, your user comments must precede the code you're adding
 comments to. For example, if you wanted to add some general comments to
-a class declaration, here’s what you’d do:
+a class declaration, here's what you'd do:
 
 ::
 
@@ -55,23 +55,23 @@ symbol, like this:
 Here are a few useful tags:
 
 @package packagename
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 The package that your code belongs to. In almost every case in our project, this will be ThinkUp
 
 @param datatype $paramname description
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------
 
-As you’ve probably guessed, this tag allows you to document the
+As you've probably guessed, this tag allows you to document the
 parameters of your function. Say you have a string parameter named
-myParam in your function. Here’s what you’d enter in your documentation:
+myParam in your function. Here's what you'd enter in your documentation:
 
 ::
 
     @param string myParam This is the description of my parameter
 
 @return datatype description
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
 
 No surprise, the @return tag is used to document the return value of
 functions or methods.
@@ -94,7 +94,7 @@ tag, if you want to obscure it use gperson[at]fakedomain[dot]com
 Example
 -------
 
-Here’s a file that Gina’s already added PHPDocumentor comments to:
+Here's a file that Gina's already added PHPDocumentor comments to:
 http://github.com/ginatrapani/thinkup/blob/master/webapp/controller/class.PublicTimelineController.php
 
 This is what the documentation page that PHPDoc created looks like:

@@ -1,16 +1,11 @@
 Run ThinkUp's Test Suite
 ========================
 
-ThinkUp Tests
-=============
-
 All code submitted to the repository should have corresponding tests
 that pass. Here's how to run and write tests.
 
-Running Tests
--------------
-
-First, configure your test environment.
+Configure Your Test Environment
+-------------------------------
 
 Copy ``tests/config.tests.sample.inc.php`` to
 ``tests/config.tests.inc.php`` and set the appropriate values. You will
@@ -26,7 +21,7 @@ This database name should match the one you just set in
 ``tests/config.tests.inc.php``.
 
 Test Assumptions
-~~~~~~~~~~~~~~~~
+----------------
 
 In order for the tests to pass, you must:
 
@@ -79,20 +74,20 @@ Best practices for writing tests are still getting developed. In the
 meantime, use existing tests as examples.
 
 Model Tests (``all_model_tests.php``)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------
 
 See ``TestOfOwnerInstanceMySQLDAO.php`` as an example of a set of DAO
 tests. Use the FixtureBuilder class to create test data fixtures to test
 against.
 
 Controller Tests (``all_controller_tests.php``)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------------
 
 See ``TestOfDashboardController.php`` as an example of a set of
 controller test cases.
 
 Plugin Tests (``all_plugin_tests.php``)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------
 
 All plugin-specific tests should live in the
 ``thinkup/webapp/plugins/plugin-name/tests/`` directory. Write tests for
@@ -107,7 +102,7 @@ See ``/thinkup/webapp/plugins/twitter/tests/`` for examples of Twitter
 crawler plugin tests.
 
 Integration Tests (``all_integration_tests.php``)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------
 
 Add tests for particular pages inside the webapp to an
 appropriately-named class. See ``WebTestOfChangePassword.php`` for an

@@ -1,0 +1,16 @@
+Beta 0.1 - 27 Sept 2010
+=======================
+
+This is the last "drop tables and reinstall" release. From now on, you
+will be able to upgrade your database smoothly from version to
+version.
+
+The major difference between the last alpha and first beta is the UI
+interface overhaul discussed here:
+http://groups.google.com/group/thinkupapp/browse_thread/thread/9f12e013ee2c4751
+
+Otherwise, compared to the 0.008 alpha, beta 0.1 includes a very long
+laundry list of bugfixes and updates. You can see the complete
+changelog here:
+http://github.com/ginatrapani/thinkup/compare/v0.008...v0.1
+

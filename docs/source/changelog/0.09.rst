@@ -1,0 +1,99 @@
+Beta 0.9 - 17 Mar 2011
+======================
+
+Twitter plugin:
+---------------
+
+*   Reduced Twitter API 502 errors
+    When you run beta 9, you'll see a greatly reduced number of red
+    Twitter API 502 errors in your crawler log. Turns out that if you
+    request 200 tweets per Twitter API call, it often times out and issues
+    a 502. Beta 9 only requests 100 tweets per call--which requires more
+    calls, but results in fewer errors. The number of tweets your ThinkUp
+    installation retrieves per API call is now configurable in the Twitter
+    plugin's Advanced Settings area (though it's not something you should
+    have to change unless you're troubleshooting or developing). More
+    info:
+    https://groups.google.com/forum/?pli=1#!topic/twitter-development-talk/_0mDiNCbZ0o
+
+*   Fixed Follower Count charts where there is missing data
+    If there's a gap in the follower count data (meaning, your crawler
+    hasn't run every day the chart represents), those gaps are now
+    reflected properly on the X-axis of the follower count graphs on the
+    Main Dashboard as well as on the Follower Count page. Screenshot:
+    https://skitch.com/ginatrapani/rigsh/ginatrapani-on-twitter-thinkup
+
+*   Added Follower Count milestones
+    Wondering how long it will take to reach 1,000 followers? 5,000
+    followers? 100,0000 followers? Beta 9 adds a Follower count "next
+    milestone" message that calculates how long it will take to reach the
+    next level. Here's a screenshot of that in action:
+    https://skitch.com/ginatrapani/rigar/mathowies-dashboard-thinkup
+
+*   Corrected Retweet count ceiling at 100 RTs
+    Thanks to Amy, retweet counts are no longer capped at 100; if there
+    are more than 100 retweets for a post, that's reflected in the UI.
+
+*   Resolved Twitter favorites crawler problem
+    If you have no favorites or Twitter is reporting an inaccurate number,
+    the crawler handles that more gracefully.
+
+*   Fixed follower deactivation bug
+    If a follower account has been deactivated, ThinkUp's crawler doesn't
+    count that as an error; rather it deactivates the relationship and
+    moves on.
+
+
+Facebook plugin:
+----------------
+
+*   Fixed broken Facebook avatar images
+*   Facebook plugin now pages back to capture all comments on a status
+    update, doesn't just get 25
+
+
+Expand URLs plugin:
+-------------------
+
+*   Folded the Flickr Thumbnails plugin into the Expand URLs plugin
+    You now set your Flickr API key in the Expand URLs settings; the
+    database migration for beta 9 takes care of that for you.
+    https://skitch.com/ginatrapani/rig2n/configure-your-account-thinkup
+
+
+ThinkUp application:
+--------------------
+
+*   Simplified the plugins listing
+    Before:
+    https://skitch.com/ginatrapani/rig2a/configure-your-account-thinkup
+    After:
+    https://skitch.com/ginatrapani/rig2c/configure-your-account-thinkup
+
+*   Improved indexes on tu_follows table to speed up queries
+    Related mailing list thread:
+    http://groups.google.com/group/thinkupapp/browse_thread/thread/78bbafc3e0efb754/738e61a3ad9f6833?hl=en&lnk=gst&q=tu_follows#738e61a3ad9f6833%20%20
+
+*   Fixed several broken/out-of-date links and bad markup throughout the app
+*   Fixed base URL calculation logic which generated undefined index errors
+*   Fixed Export to CSV file errors
+*   Improved email and URL validation
+*   Improved installation checks for the PHP and MySQL versions ThinkUp requires
+*   Password reset bugfix
+*   Corrected CSS file source order
+*   SlickGrid reply search is now embedded in-page on a post page
+*   Top 20 words now displays yes/no/maybe for polls. Screenshot:
+    http://www.flickr.com/photos/ginatrapani/5413706109/
+
+
+Developer goodies:
+------------------
+
+*   The FixtureBuilder library now supports MySQL functions
+*   Tests are now completely PHP 5.2 compatible
+*   Fully deprecated and removed the Database class from tests,
+    everything is PDO/FixtureBuilder-based
+*   Added test environment check which prevents devs from accidentally
+    wiping their TU data
+*   Added nightly test runs to thinkupapp.com server with results
+    emailed to the dev list

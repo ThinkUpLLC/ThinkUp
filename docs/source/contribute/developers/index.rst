@@ -17,7 +17,6 @@ ready to write your tests and docs first.
    plugins/index
    reviewcode
    howto
-   beginners
    pullrequestchecklist
    documentation
    mvc
