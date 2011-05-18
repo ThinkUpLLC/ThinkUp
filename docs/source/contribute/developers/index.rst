@@ -11,8 +11,13 @@ ready to write your tests and docs first.
    :maxdepth: 2
 
    setup
-   install
+   devfromsource
    tests
    writecode/index
+   plugins/index
    reviewcode
    howto
+   beginners
+   pullrequestchecklist
+   documentation
+   mvc

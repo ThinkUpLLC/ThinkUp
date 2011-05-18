@@ -10,6 +10,6 @@ Here are some ways you can contribute your skills to a great open source softwar
    :maxdepth: 3
 
    documentation
-   developers/index.rst
+   developers/index
    nondevs
    sharing
