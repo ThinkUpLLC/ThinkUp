@@ -16,6 +16,7 @@ engine.
    install/index
    userguide/index
    troubleshoot/index
+   community/index
    contact
    contribute/index
    changelog

@@ -4,7 +4,7 @@ Introduction
 .. sidebar:: Nice to Meet You
 
     We're an open source community of developers, writers, designers, bloggers, journalists, data nerds,
-    and social media enthusiasts whose goal is to make meaningful software with first-class documentation.
+    and social media enthusiasts whose goal is to make meaningful software with world-class documentation.
     
     You're reading the very beginning of that effort. This documentation is an incomplete, work-in-progress. Please 
     join us and help :doc:`fill in the gaps </contribute/documentation>`.

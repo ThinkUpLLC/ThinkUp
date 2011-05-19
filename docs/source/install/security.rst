@@ -26,7 +26,7 @@ How ThinkUp Handles Private Data
 
 ThinkUp's official distribution adheres to a set of rules and standards for handling sensitive data, such as:
 
-**Passwords.** The only password that ThinkUp stores in its database is each users's ThinkUp account password. This
+**Passwords.** The only password that ThinkUp stores in its database is each user's ThinkUp account password. This
 password is not stored in clear text; ThinkUp stores a salted `SHA-1 <http://en.wikipedia.org/wiki/SHA1>`_ hash
 of the password. To prevent brute force attacks which attempt to guess this password, ThinkUp enforces a 
 :doc:`failed login attempt cap </userguide/accounts/index>`.
@@ -65,8 +65,7 @@ through a VPN or secure proxy, so that no one can "sniff" your ThinkUp password 
 access permissions to all your MySQL databases. Set up a ThinkUp-specific database user which can only access your
 ThinkUp database, not any others.
 
-**Make sure no ThinkUp files are writable** except the ones required by the application, currently 
-``thinkup/_lib/view/compiled_view`` and ``thinkup/_lib/view/compiled_view/cache``.
+**Make sure no ThinkUp files are writable** except the ones :doc:`required by the application </install/perms>`.
 
 How to Report a Security Bug
 ----------------------------

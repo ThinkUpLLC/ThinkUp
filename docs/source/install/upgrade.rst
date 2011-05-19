@@ -22,7 +22,8 @@ First, `download ThinkUp's latest version <http://thinkupapp.com>`_ and extract 
 Using your favorite FTP program, rename your existing ThinkUp folder to something like ``thinkup.old``. Then, upload
 the new ThinkUp folder you just extracted.
 
-Then, copy your existing configuration file--i.e., ``thinkup.old/config.inc.php``--into the new ThinkUp folder.
+Then, copy your existing configuration file--i.e., ``thinkup.old/config.inc.php``--into the new ThinkUp folder. Finally,
+set :doc:`ThinkUp's required folder permissions </install/perms>` in your fresh installation.
 
 Your ThinkUp application code is now up-to-date. Great!
 
@@ -69,10 +70,10 @@ you the option to back up your current data first.
 Developers Running Nightly Code
 -------------------------------
 
-If you're a developer running nightly code from ThinkUp's git repository, after you update ThinkUp's files from git,
-make sure you run any necessary database migrations by hand. Look for those in the 
-``thinkup/install/sql/mysql_migrations/`` folder. It's up to you to keep track of which migrations you've run by hand,
-and which you need to run.
+If you're a developer :doc:`running nightly code from ThinkUp's git repository </contribute/developers/devfromsource>`,
+after you update ThinkUp's files from git, make sure you run any necessary database migrations by hand. Look for
+those in the ``thinkup/install/sql/mysql_migrations/`` folder. It's up to you to keep track of which migrations you've
+run by hand, and which you need to run.
 
 If you're updating to a new release of ThinkUp and you've run all the database migrations manually already, all you
 have to do is update ThinkUp's version number in the database. Do this by running the following query on your ThinkUp

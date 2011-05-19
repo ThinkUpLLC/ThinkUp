@@ -9,7 +9,7 @@ Quickfire Do's and Don't's
 --------------------------
 
 If you aren't familiar with git and GitHub, try reading the 
-:doc:`ThinkUp Beginner's Guide <https://github.com/ginatrapani/ThinkUp/wiki/Developer-Guide%3A-ThinkUp-for-Beginners-by-a-Beginner>`_
+`ThinkUp Beginner's Guide <https://github.com/ginatrapani/ThinkUp/wiki/Developer-Guide%3A-ThinkUp-for-Beginners-by-a-Beginner>`_
 and the `GitHub bootcamp documentation <http://help.github.com/#github_bootcamp>`_. If you're
 familiar with git and GitHub, here's the short version of what you need
 to know. Once you fork and download the ThinkUp code:
