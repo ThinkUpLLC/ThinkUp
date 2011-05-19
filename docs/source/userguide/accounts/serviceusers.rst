@@ -17,4 +17,4 @@ TODO: write or link to instructions for adding a new Twitter or Facebook user he
 Switch Service User
 -------------------
 
-To switch between service userse, click on the "Switch service user" link on the left side of ThinkUp's status bar.
+To switch between service users, click on the "Switch service user" link on the left side of ThinkUp's status bar.
