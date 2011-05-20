@@ -20,7 +20,7 @@ Prerequisites
 Download
 --------
 
-.. image:: http://vjarmy.com/images/thinkup/download.png
+.. image:: imgs/download.png
 
 You can download the
 `latest distribution <http://github.com/ginatrapani/ThinkUp/downloads>`_ of ThinkUp from GitHub. The most recent
@@ -29,7 +29,7 @@ packages are located at the top of the page.
 Extract
 -------
 
-.. image:: http://vjarmy.com/images/thinkup/extract.png
+.. image:: imgs/extract.png
 
 Once the download has completed, you should extract the contents using whatever tools your operating system provides.
 When completed, you should be left with a folder named "thinkup".
@@ -39,7 +39,7 @@ If your operating system does not automatically remove the .zip installation arc
 Upload
 ------
 
-.. image:: http://vjarmy.com/images/thinkup/upload.png
+.. image:: imgs/upload.png
 
 With the installation extracted, connect to your web host using your usual FTP/SFTP client. Navigate to the root folder
 of your website and upload the "thinkup" folder into it.
@@ -72,7 +72,7 @@ Before proceeding to the next step, make sure you have:
 Launch the Installer
 --------------------
 
-.. image:: http://vjarmy.com/images/thinkup/launchinstaller.png
+.. image:: imgs/launchinstaller.png
 
 You're ready to begin the installation process. If you put the ThinkUp installation in the root document folder of your
 web site, then visit the following URL (replacing yoursite.com with the appropriate domain name):
@@ -86,7 +86,7 @@ Seeing a Permissions Error Message?
 
 At this point, you may see a permissions error message like this one:
 
-.. image:: http://vjarmy.com/images/thinkup/permissionserror2.png
+.. image:: imgs/permissionserror2.png
 
 If you're not seeing this error, congrats! You can move on to the next step.
 
@@ -105,14 +105,14 @@ Find out more about :doc:`ThinkUp's folder permissions requirements </install/pe
 Create The Configuration File
 -----------------------------
 
-.. image:: http://vjarmy.com/images/thinkup/startinstall.png
+.. image:: imgs/startinstall.png
 
 ThinkUp will now prompt you to create a configuration file. Click the "installing ThinkUp" link to begin.
 
 Requirements Check
 ------------------
 
-.. image:: http://vjarmy.com/images/thinkup/reqcheck.png
+.. image:: imgs/reqcheck.png
 
 The first screen in the install process is a requirements check, to ensure your environment matches the requirements
 listed above. If you see any "No" items here, you will probably need to speak to your web hosting company about
@@ -123,7 +123,7 @@ Configuration Details
 
 The second screen asks you for some information to help configure ThinkUp.
 
-.. image:: http://vjarmy.com/images/thinkup/createaccount.png
+.. image:: imgs/createaccount.png
 
 The opening section creates your administrative account for the system:
 
@@ -133,7 +133,7 @@ The opening section creates your administrative account for the system:
 -  Enter your preferred password twice, once in *Choose Password* and again into *Confirm Password*.
 -  Select the nearest city to you in "Your Time Zone".
 
-.. image:: http://vjarmy.com/images/thinkup/configdb.png
+.. image:: imgs/configdb.png
 
 The second section is where ThinkUp need the details about your database:
 
@@ -144,7 +144,7 @@ The second section is where ThinkUp need the details about your database:
 -  Under *User Name*, type the MySQL user name you have been given to access the database.
 -  Under *Password*, type the MySQL password you have been given to access the database.
 
-.. image:: http://vjarmy.com/images/thinkup/configadvanced.png
+.. image:: imgs/configadvanced.png
 
 A third section is available, entitled "Advanced Options", which  may be necessary for some hosting environments where
 you are given a specific MySQL socket or port to connect against. This section also allows you to set a *table prefix*,
@@ -153,7 +153,7 @@ which can be very useful if you're reusing an existing database. Most people can
 Activate Your Account
 ---------------------
 
-.. image:: http://vjarmy.com/images/thinkup/activate.png
+.. image:: imgs/activate.png
 
 You're in the home stretch! If your :doc:`web server is able to send email </troubleshoot/common/emaildisabled>`,
 you will receive an email message with the subject line "Activate Your New ThinkUp Account." (Make sure you check your

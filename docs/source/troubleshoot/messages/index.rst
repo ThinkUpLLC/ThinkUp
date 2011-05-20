@@ -9,3 +9,4 @@ This is a working list of ThinkUp's error, information, and success messages, an
    mustlogin
    regclosed
    upgrading
+   crawlinprogress
