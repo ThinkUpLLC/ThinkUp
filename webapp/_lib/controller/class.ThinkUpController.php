@@ -70,7 +70,7 @@ abstract class ThinkUpController {
      *
      * @var str
      */
-    protected $content_type = 'text/html';
+    protected $content_type = 'text/html; charset=UTF-8'; //default
 
     /**
      * Constructs ThinkUpController
@@ -181,6 +181,7 @@ abstract class ThinkUpController {
         if( count($this->header_scripts) > 0) {
             $this->addToView('header_scripts', $this->header_scripts);
         }
+        $this->sendHeader();
         if (isset($this->view_template)) {
             if ($this->view_mgr->isViewCached()) {
                 $cache_key = $this->getCacheKeyString();
@@ -257,6 +258,14 @@ abstract class ThinkUpController {
     }
 
     /**
+     * Send content type header
+     */
+    protected function sendHeader() {
+        if( ! headers_sent() ) { // suppress 'headers already sent' error while testing
+            header('Content-Type: ' . $this->content_type, true);
+        }
+    }
+    /**
      * Sets the view template filename
      *
      * @param str $tpl_filename
@@ -284,10 +293,10 @@ abstract class ThinkUpController {
      * @param string Content Type
      */
     protected function setContentType($content_type) {
-        $this->content_type = $content_type;
-        // if is to suppress 'headers already sent' error while testing, etc.
-        if( ! headers_sent() ) {
-            header('Content-Type: ' . $this->content_type, true);
+        if ($content_type != 'image/png') {
+            $this->content_type = $content_type.'; charset=UTF-8';
+        } else {
+            $this->content_type = $content_type;
         }
     }
 

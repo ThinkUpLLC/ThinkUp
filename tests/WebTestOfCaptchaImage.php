@@ -43,6 +43,8 @@ class WebTestOfCaptchaImage extends ThinkUpWebTestCase {
     public function testCaptchaImage() {
         $this->get($this->url.'/session/captcha-img.php');
         $this->assertResponse('200');
+        //        $this->showHeaders();
+        //        $this->showSource();
         $this->assertHeader('Content-Type', 'image/png');
         $this->assertNoText('CAPTCHA image could not be created');
     }

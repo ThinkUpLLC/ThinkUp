@@ -35,6 +35,8 @@ class TestController extends ThinkUpController {
                     'http://thinkupapp.com'));
         } else if(isset($_GET['text'])) {
             $this->setContentType('text/plain');
+        } else if (isset($_GET['png'])) {
+            $this->setContentType('image/png');
         }
         if (isset($_GET['throwexception'])) {
             throw new Exception("Testing exception handling!");

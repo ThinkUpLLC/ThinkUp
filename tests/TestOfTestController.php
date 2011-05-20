@@ -61,7 +61,7 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $controller = new TestController(true);
         $results = $controller->go();
 
-        $this->assertEqual('text/html', $controller->getContentType());
+        $this->assertEqual('text/html; charset=UTF-8', $controller->getContentType());
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('test'), 'Testing, testing, 123');
@@ -98,7 +98,7 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $this->assertEqual($obj->aname, 'a value');
         $this->assertIsA($obj->alist, 'Array');
         $this->assertEqual($obj->alink, 'http://thinkupapp.com');
-        $this->assertEqual( $controller->getContentType(),'application/json');
+        $this->assertEqual( $controller->getContentType(),'application/json; charset=UTF-8');
     }
 
     /**
@@ -125,7 +125,19 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $_GET['text'] = true;
 
         $results = $controller->go();
-        $this->assertEqual( $controller->getContentType(),'text/plain');
+        $this->assertEqual( $controller->getContentType(),'text/plain; charset=UTF-8');
+    }
+
+    /**
+     * Test setting content type header
+     */
+    public function testAddImageContentTypeHeader() {
+        $config = Config::getInstance();
+        $controller = new TestController(true);
+        $_GET['png'] = true;
+
+        $results = $controller->go();
+        $this->assertEqual( $controller->getContentType(),'image/png');
     }
 
     /**

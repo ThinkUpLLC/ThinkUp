@@ -49,6 +49,7 @@ class CaptchaImageController extends ThinkUpController {
             echo 'CAPTCHA image could not be created from '.$captcha_bg_image_path;
         } else {
             $this->setContentType('image/png');
+            $this->sendHeader();
             $color = ImageColorAllocate ($img_handle, 0, 0, 0);
             ImageString ($img_handle, 5, 20, 13, $random_num, $color);
             ImagePng ($img_handle);
