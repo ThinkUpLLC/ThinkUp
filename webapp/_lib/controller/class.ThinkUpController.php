@@ -287,7 +287,7 @@ abstract class ThinkUpController {
         $this->content_type = $content_type;
         // if is to suppress 'headers already sent' error while testing, etc.
         if( ! headers_sent() ) {
-            header('Content-Type: ' . $this->content_type, true);
+            header('Content-Type: ' . $this->content_type . '; charset=utf-8', true);
         }
     }
 
