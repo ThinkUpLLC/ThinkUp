@@ -80,11 +80,11 @@ class Loader {
         }
 
         if ( !defined('THINKUP_COMPILED_VIEW_PATH') ) {
-            define('THINKUP_COMPILED_VIEW_PATH', str_replace("\\",'/', sys_get_temp_dir() .'ThinkUp-compiled_views/');
+            define('THINKUP_COMPILED_VIEW_PATH', str_replace("\\",'/', sys_get_temp_dir() .'ThinkUp-compiled_views/'));
         }
 
         if ( !defined('THINKUP_CACHE_PATH') ) {
-            define('THINKUP_CACHE_PATH', str_replace("\\",'/', sys_get_temp_dir() .'ThinkUp-cache/');
+            define('THINKUP_CACHE_PATH', str_replace("\\",'/', sys_get_temp_dir() .'ThinkUp-cache/'));
         }
 
         // set default lookup path for classes
