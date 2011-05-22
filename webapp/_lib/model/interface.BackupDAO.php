@@ -34,7 +34,7 @@ interface BackupDAO {
      *
      * @var const db export dir
      */
-    const CACHE_DIR = THINKUP_COMPILED_DIR_PATH;
+    const CACHE_DIR = THINKUP_COMPILED_VIEW_PATH;
 
     /**
      * Export database to tmp dir
