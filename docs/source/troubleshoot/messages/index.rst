@@ -10,3 +10,4 @@ This is a working list of ThinkUp's error, information, and success messages, an
    regclosed
    upgrading
    crawlinprogress
+   slickgridonlyshowing

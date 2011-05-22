@@ -33,8 +33,11 @@ var TUGridSearch = function() {
             $('#close_grid_search').click(function() {
                 tu_grid_search.close_iframe();
             });
+            if(document.location.search.match(/search=/)) {
+                tu_grid_search.load_iframe();
+            }
         });
-        // tu_grid_search.load_iframe();
+        //tu_grid_search.load_iframe();
     }
 
     /**
@@ -43,6 +46,13 @@ var TUGridSearch = function() {
 	 */
     this.populate_grid = function(obj) {
         if (tu_grid_search.DEBUG) { console.debug(obj.posts.length + ' posts'); }
+        if (tu_grid_search.DEBUG) { console.debug(obj.limit + ' limit'); }
+        if((obj.posts.length - obj.limit) == 1) {
+            $('#max_rows').html(obj.limit);
+            $('#overlimit').show();
+        } else {
+            $('#overlimit').hide();
+        }
         $('#grid_search_icon').show();
         $('#grid_search_spinner').hide();
 
@@ -87,7 +97,7 @@ var TUGridSearch = function() {
             id : "text",
             name : "Text",
             field : "text",
-            width : 615,
+            width : 550,
             formatter: function(row, cell, value, columnDef, dataContext) {
                 var url_match = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/g;
                 value = value.replace(url_match, '<a href="$1" target="_blank">$1</a> ');
@@ -95,13 +105,13 @@ var TUGridSearch = function() {
                 return value;
             }
         } ];
-        if( parent.GRID_TYPE == 2) {
-            columns[3].width = 455;
-        }
+        //if( parent.GRID_TYPE == 2) {
+        columns[3].width = 400;
+        //}
 
         var options = {
             enableCellNavigation : false,
-            enableColumnReorder : true
+            enableColumnReorder : false
         };
 
         this.dataView.beginUpdate();
@@ -140,6 +150,16 @@ var TUGridSearch = function() {
             $('#grid_search_form').show();
         });
 
+        //if search arg, filter...
+        if(match_array = document.location.search.match(/search=(.*?)&/)) {
+            search_query = decodeURIComponent(unescape(match_array[1])).replace(/\+/g, ' ');
+            if (tu_grid_search.DEBUG) { console.debug("search param defined: %s", search_query); }
+            $('#grid_search_input').val(search_query);
+            $('#grid_search_input').focus();
+            this.value = search_query;
+            tu_grid_search.searchString = this.value;
+            tu_grid_search.dataView.refresh();
+        }
     }
 
     /**
@@ -158,8 +178,8 @@ var TUGridSearch = function() {
     /**
 	 * 
 	 */
-    this.load_iframe = function() {
-
+    this.load_iframe = function(nolimit) {
+        nolimit = nolimit ? true : false;
         // close grid search with escape key
         $(document).keyup( this.keyup );
 
@@ -167,14 +187,16 @@ var TUGridSearch = function() {
         // close top 20 words if needed
         if(typeof(tu_word_freq) != 'undefined') { tu_word_freq.close(); };
         tu_grid_search.loading = true;
-        if(GRID_TYPE==1) {
+        if(window.GRID_TYPE && GRID_TYPE==1) {
             window.scroll(0,0);
             $('#screen').css({ opacity: 0.7, "width":$(document).width(),"height":$(document).height()});
         } else {
             $('#post-replies-div').hide();
+            $('#all-posts-div').hide();
             $('#word-frequency-div').hide();
+            $('#older-posts-div').hide();
         }
-        var fade = (GRID_TYPE==1) ? 500 : 1;
+        var fade = (typeof(GRID_TYPE) != 'undefined' && GRID_TYPE==1) ? 500 : 1;
         $('#screen').fadeIn(fade, function() {
             $('#grid_overlay_div').show();
             $('#grid_iframe').show();
@@ -186,9 +208,10 @@ var TUGridSearch = function() {
             }
             if(typeof(post_username) != 'undefined') { query_string+= '&u=' + escape(post_username); } 
             $('#grid_iframe').attr('src',
-                    path + 'assets/html/grid.html?' + query_string + '&cb=' + (new Date()).getTime());
+                    path + 'assets/html/grid.html?' + query_string + '&nolimit=' + nolimit
+                    + '&cb=' + (new Date()).getTime());
             if (tu_grid_search.DEBUG) {
-                console.debug("loading grid search iframe %s",  $('#grid_iframe').attr('src') );
+                console.debug("loading grid search iframes %s",  $('#grid_iframe').attr('src') );
             }
             tu_grid_search.loading = false;
         });
@@ -201,11 +224,13 @@ var TUGridSearch = function() {
         $('#grid_iframe').attr('src', path + '/assets/img/ui-bg_glass_65_ffffff_1x400.png');
         $('#grid_overlay_div').hide();
         $('#grid_iframe').hide();
-        if(GRID_TYPE==1) {
+        if(typeof(GRID_TYPE) != 'undefined' && GRID_TYPE == 1) {
             $('#screen').fadeOut(500);
         } else {
             $('#post-replies-div').show();
             $('#word-frequency-div').show();
+            $('#all-posts-div').show();
+            $('#older-posts-div').show();
         }
         $(document).unbind('keyup', this.keyup);
     }

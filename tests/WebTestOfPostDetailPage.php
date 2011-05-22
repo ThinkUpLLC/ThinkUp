@@ -47,8 +47,8 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->assertTitle("Post Details | ThinkUp");
         $this->assertText('This is post 10');
         //must be logged in to search
-        $this->assertNoText('Search & Filter');
-        $this->assertText('Export Replies (CSV)');
+        //$this->assertNoField('Search', 'Must be logged in to search');
+        $this->assertNoPattern('/Search/');
         $this->assertText('Retweets');
         $this->assertNoText('GeoEncoder');
 
@@ -69,8 +69,7 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->assertTitle("Post Details | ThinkUp");
         $this->assertText('This is post 10');
         //must be logged in to search
-        $this->assertText('Search & Filter');
-        $this->assertText('Export Replies (CSV)');
+        $this->assertField('Search', 'Search');
         $this->assertText('Retweets');
         $this->assertNoText('GeoEncoder');
 
@@ -89,8 +88,7 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->assertTitle("Post Details | ThinkUp");
         $this->assertText('This is post 10');
         //must be logged in to search
-        $this->assertNoText('Search & Filter');
-        $this->assertText('Export Replies (CSV)');
+        $this->assertNoPattern('/Search/');
         $this->assertText('Retweets');
         $this->assertText('Geoencoder');
         $this->assertText('Response Map');
