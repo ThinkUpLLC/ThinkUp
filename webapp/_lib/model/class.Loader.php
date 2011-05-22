@@ -82,14 +82,14 @@ class Loader {
         if ( !defined('THINKUP_COMPILED_VIEW_PATH') ) {
             define('THINKUP_COMPILED_VIEW_PATH', str_replace("\\",'/', sys_get_temp_dir() .'/ThinkUp-compiled_views/'));
             if ( !file_exists(THINKUP_COMPILED_VIEW_PATH) ) {
-              mkdir(THINKUP_COMPILED_VIEW_PATH);
+              mkdir(THINKUP_COMPILED_VIEW_PATH, 0700, true);
             }
         }
 
         if ( !defined('THINKUP_CACHE_PATH') ) {
             define('THINKUP_CACHE_PATH', str_replace("\\",'/', sys_get_temp_dir() .'/ThinkUp-cache/'));
             if ( !file_exists(THINKUP_CACHE_PATH) ) {
-              mkdir(THINKUP_CACHE_PATH);
+              mkdir(THINKUP_CACHE_PATH, 0700, true);
             }
         }
 
