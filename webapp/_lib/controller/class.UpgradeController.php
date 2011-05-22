@@ -58,7 +58,7 @@ class UpgradeController extends ThinkUpAuthController {
     /**
      * cache dir. We will write an upgrade auth token here if needed.
      */
-    const CACHE_DIR = '_lib/view/compiled_view';
+    const CACHE_DIR = THINKUP_COMPILED_VIEW_PATH;
 
     /**
      * token key

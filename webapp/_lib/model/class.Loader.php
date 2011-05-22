@@ -79,6 +79,14 @@ class Loader {
             define('THINKUP_WEBAPP_PATH', str_replace("\\",'/', dirname(dirname(dirname(__FILE__)))) .'/');
         }
 
+        if ( !defined('THINKUP_COMPILED_VIEW_PATH') ) {
+            define('THINKUP_COMPILED_VIEW_PATH', str_replace("\\",'/', sys_get_temp_dir() .'ThinkUp-compiled_views/');
+        }
+
+        if ( !defined('THINKUP_CACHE_PATH') ) {
+            define('THINKUP_CACHE_PATH', str_replace("\\",'/', sys_get_temp_dir() .'ThinkUp-cache/');
+        }
+
         // set default lookup path for classes
         self::$lookup_path = array(
         THINKUP_WEBAPP_PATH . '_lib/model/',
