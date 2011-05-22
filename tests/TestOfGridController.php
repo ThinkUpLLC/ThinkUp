@@ -39,6 +39,11 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
     }
 
+    public function tearDown() {
+        parent::tearDown();
+        GridController::$MAX_ROWS = 5000;
+    }
+
     public function testConstructor() {
         $controller = new GridController(true);
         $this->assertTrue(isset($controller));
@@ -113,6 +118,45 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $this->assertEqual(count($ob->posts), 3);
     }
 
+    public function testOwnerWithAccessTweetsAllMaxLimit() {
+        $builders = $this->buildData();
+        GridController::$MAX_ROWS = 1;
+        $this->simulateLogin('me@example.com');
+        $_GET['u'] = 'someuser1';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = 'tweets-all';
+        $controller = new GridController(true);
+        $this->assertTrue(isset($controller));
+        ob_start();
+        $controller->control();
+        $results = ob_get_contents();
+        ob_end_clean();
+        $json = substr($results, 29, strrpos($results, ';') - 30);
+        $ob = json_decode( $json );
+        $this->assertEqual($ob->status, 'success');
+        $this->assertEqual(count($ob->posts), 2);
+    }
+
+    public function testOwnerWithAccessTweetsAllMaxNoLimit() {
+        $builders = $this->buildData();
+        GridController::$MAX_ROWS = 0;
+        $this->simulateLogin('me@example.com');
+        $_GET['u'] = 'someuser1';
+        $_GET['n'] = 'twitter';
+        $_GET['d'] = 'tweets-all';
+        $_GET['nolimit'] = '1';
+        $controller = new GridController(true);
+        $this->assertTrue(isset($controller));
+        ob_start();
+        $controller->control();
+        $results = ob_get_contents();
+        ob_end_clean();
+        $json = substr($results, 29, strrpos($results, ';') - 30);
+        $ob = json_decode( $json );
+        $this->assertEqual($ob->status, 'success');
+        $this->assertEqual(count($ob->posts), 3);
+    }
+    
     public function testReplyToSearch() {
         $builders = $this->buildData();
         $this->simulateLogin('me@example.com');

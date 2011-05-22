@@ -53,6 +53,9 @@ class PostController extends ThinkUpController {
                     $config = Config::getInstance();
                     $this->addToView('disable_embed_code', ($config->getValue('is_embed_disabled') ||
                     $post->is_protected ));
+                    if(isset($_GET['search'])) {
+                        $this->addToView('search_on', true);
+                    }
                     if ( !$post->is_protected || $this->isLoggedIn()) {
                         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
                         $options = $plugin_option_dao->getOptionsHash('geoencoder', true);

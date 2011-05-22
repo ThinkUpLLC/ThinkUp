@@ -15,13 +15,24 @@
           
           <li>
           Replies
+          <form id="grid_search_form" action="{$site_root_path}post">
+          <input type="hidden" name="t" value="{$post->post_id}" />
+          <input type="hidden" name="n" value="{$post->network}" />
           <ul class="side-subnav">
-          <li{if $smarty.get.v eq ''} class="currentview"{/if}><a href="index.php?t={$post->post_id}&n={$post->network}">Post Replies&nbsp;&nbsp;&nbsp;</a></li>
+          <li{if $smarty.get.v eq ''} class="currentview"{/if}>
+          <a href="index.php?t={$post->post_id}&n={$post->network}">Post Replies&nbsp;&nbsp;&nbsp;</a>
+          </li>
           {if $logged_in_user && $post->reply_count_cache && $post->reply_count_cache > 1}
-            <li id="grid_search_icon"><a href="#" class="grid_search" title="Search" onclick="return false;"><span>Search & Filter Replies</span></a></li>
+            <li><input type="text" name="search" id="grid_search_sidebar_input" value="" style="margin-top: 3px;"/></li>
+            <li id="grid_search_input">
+                <a href="#" class="grid_search" 
+                onclick="$('#grid_search_form').submit(); return false;" title="Search">
+                <span>Search & Filter Replies</span></a></li>
           {/if}
           <li><a href="{$site_root_path}post/export.php?u={$post->author_username}&n={$post->network}&post_id={$post->post_id}&type=replies">Export Replies (CSV)</a></li>
-          </ul></li>
+          </ul>
+          </form>
+          </li>
         {/if}
         
         {if $sidebar_menu}
@@ -179,7 +190,7 @@
                 {if $replies && $logged_in_user}
                     {include file="_grid.search.tpl" version2=true}
                 {/if}
-                <div id="post-replies-div"><br>
+                <div id="post-replies-div"{if $search_on} style="display: none;"{/if}><br />
                   <div id="post_replies clearfix">
                   {foreach from=$replies key=tid item=t name=foo}
                     {include file="_post.clean.tpl" t=$t sort='no' scrub_reply_username=true reply_count=$post->reply_count_cache}
@@ -188,6 +199,7 @@
                   </div>
                 </div>
                 <script src="{$site_root_path}assets/js/extlib/Snowball.stemmer.min.js" type="text/javascript"></script>
+                {if $search_on}<script type="text/javascript">grid_search_on = true</script>{/if}
                 <script src="{$site_root_path}assets/js/word_frequency.js" type="text/javascript"></script>
                 {if !$logged_in_user && $private_reply_count > 0}
                   <span style="font-size:12px">Not showing {$private_reply_count} private repl{if $private_reply_count == 1}y{else}ies{/if}.</span>

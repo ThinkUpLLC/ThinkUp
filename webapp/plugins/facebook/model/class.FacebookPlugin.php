@@ -121,7 +121,7 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
         $alltab = new MenuItem("All", 'All status updates', $fb_data_tpl, 'Posts');
         $alltabds = new Dataset("all_facebook_posts", 'PostDAO', "getAllPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"),
-        'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::MAX_ROWS), false );
+        'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()), false );
         $alltabds->addHelp('userguide/listings/facebook/dashboard_all_facebook_posts');
         $alltab->addDataset($alltabds);
         $menus["all_facebook_posts"] = $alltab;
