@@ -149,8 +149,8 @@ class SmartyThinkUp extends Smarty {
             if (empty($whoami)) {
                 $whoami = 'nobody';
             }
-            return str_replace(array('#THINKUP_BASE_URL#', '#WHOAMI#', '#COMPILE_DIR#'),
-            array(THINKUP_BASE_URL, $whoami, $this->compile_dir),
+            return str_replace(array('#THINKUP_BASE_URL#', '#WHOAMI#', '#COMPILE_DIR#', '#CACHE_DIR#'),
+            array(THINKUP_BASE_URL, $whoami, $this->compile_dir, $this->cache_dir),
             file_get_contents(THINKUP_WEBAPP_PATH.'_lib/view/500-perm.html'));
         } else {
             return parent::fetch($template, $cache_key, $compile_id, $display);
