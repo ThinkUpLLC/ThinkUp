@@ -101,10 +101,10 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
     public function testInstallerCheckPermission() {
         $perms = Installer::checkPermission();
-        $this->assertTrue($perms['compiled_view'], THINKUP_ROOT_PATH .
-                'webapp/view/compiled_view is writeable by the webserver');
-        $this->assertTrue($perms['cache'], THINKUP_ROOT_PATH .
-                'webapp/view/compiled_view/cache is writeable by the webserver');
+        $this->assertTrue($perms['compiled_view'], THINKUP_COMPILED_VIEW_PATH .
+                ' is writeable by the webserver');
+        $this->assertTrue($perms['cache'], THINKUP_CACHE_PATH .
+                ' is writeable by the webserver');
     }
 
     public function testInstallerCheckPath() {

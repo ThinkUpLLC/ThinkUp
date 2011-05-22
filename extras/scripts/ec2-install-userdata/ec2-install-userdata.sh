@@ -45,7 +45,6 @@ sudo unzip -d /var/www/ thinkup-0.8.zip
 
 # config thinkup installer
 sudo ln -s /usr/sbin/sendmail /usr/bin/sendmail
-sudo chown -R www-data /var/www/thinkup/_lib/view/compiled_view/
 sudo touch /var/www/thinkup/config.inc.php
 sudo chown www-data /var/www/thinkup/config.inc.php
 
