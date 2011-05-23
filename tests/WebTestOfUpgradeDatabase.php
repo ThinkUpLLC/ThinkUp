@@ -309,7 +309,10 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 $cnt++;
                 $this->get($token_url . "&migration_index=" . $cnt);
                 $this->assertText('{ "processed":true,');
-
+                $content = $this->getBrowser()->getContent();
+                if(! preg_match('/"processed":true/', $content)) {
+                    error_log($content);
+                }
                 $this->debug("Running migration assertion test for " . $json_migration->version);
                 if(! isset($MIGRATIONS[ $json_migration->version ])) { continue; } // no assertions, so skip
                 $assertions = $MIGRATIONS[ $json_migration->version ];
@@ -340,6 +343,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                             $debug_data = $debug_stmt->fetchAll(PDO::FETCH_ASSOC);
                             $debug_stmt->closeCursor();
                             var_dump($debug_data);
+                            error_log("json return data: " . $content);
                         }
                     }
                     $stmt->closeCursor();
