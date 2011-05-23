@@ -53,7 +53,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($v_mgr->template_dir[1], '/path/to/thinkup/tests/view');
         $this->assertTrue(sizeof($v_mgr->plugins_dir), 2);
         $this->assertEqual($v_mgr->plugins_dir[0], 'plugins');
-        $this->assertEqual($v_mgr->cache_dir, THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache');
+        $this->assertEqual($v_mgr->cache_dir, THINKUP_CACHE_PATH);
         $this->assertEqual($v_mgr->cache_lifetime, 300);
         $this->assertTrue($v_mgr->caching);
     }

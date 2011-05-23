@@ -78,9 +78,9 @@ class SmartyThinkUp extends Smarty {
 
         $this->Smarty();
         $this->template_dir = array( THINKUP_WEBAPP_PATH.'_lib/view', $src_root_path.'tests/view');
-        $this->compile_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/';
+        $this->compile_dir = THINKUP_COMPILED_VIEW_PATH;
         $this->plugins_dir = array('plugins', THINKUP_WEBAPP_PATH.'_lib/view/plugins/');
-        $this->cache_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache';
+        $this->cache_dir = THINKUP_CACHE_PATH;
         $this->caching = ($cache_pages)?1:0;
         $this->cache_lifetime = 300;
         $this->debug = $debug;
@@ -143,14 +143,14 @@ class SmartyThinkUp extends Smarty {
      * @param str Results
      */
     public function fetch($template, $cache_key=null, $compile_id=null, $display=false) {
-        if (! is_writable($this->compile_dir) || ! is_writable($this->compile_dir.'/cache') ) {
+        if (! is_writable(THINKUP_COMPILED_VIEW_PATH) || ! is_writable(THINKUP_CACHE_PATH) ) {
             Utils::defineConstants();
             $whoami = @exec('whoami');
             if (empty($whoami)) {
                 $whoami = 'nobody';
             }
-            return str_replace(array('#THINKUP_BASE_URL#', '#WHOAMI#', '#COMPILE_DIR#'),
-            array(THINKUP_BASE_URL, $whoami, $this->compile_dir),
+            return str_replace(array('#THINKUP_BASE_URL#', '#WHOAMI#', '#COMPILE_DIR#', '#CACHE_DIR#'),
+            array(THINKUP_BASE_URL, $whoami, $this->compile_dir, $this->cache_dir),
             file_get_contents(THINKUP_WEBAPP_PATH.'_lib/view/500-perm.html'));
         } else {
             return parent::fetch($template, $cache_key, $compile_id, $display);
