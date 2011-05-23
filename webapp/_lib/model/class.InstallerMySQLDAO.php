@@ -141,7 +141,10 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
 
     public function runMigrationSQL($sql) {
         $ps = $this->execute($sql);
-        $result = $this->getUpdateCount($ps);
+        $error_array = $ps->errorInfo();
+        if($error_array[0] > 0) {
+            throw new Exception("migration sql error for $sql: " . $error_array[2]);
+        }
     }
 
     public function diffDataStructure($desired_structure_sql_string = '', $existing_tables = array()) {
