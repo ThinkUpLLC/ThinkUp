@@ -96,6 +96,9 @@ class UpgradeController extends ThinkUpAuthController {
             $migrations = $this->getMigrationList($db_version);
             $processed = false;
             $sql = $migrations[$migration_index]['sql'];
+            // remove comments...
+            $sql = preg_replace('/\-\-.*/','', $sql);
+
             try {
                 $install_dao->runMigrationSQL($sql);
                 $processed = true;
