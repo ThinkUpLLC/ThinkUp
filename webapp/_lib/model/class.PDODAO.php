@@ -61,8 +61,7 @@ abstract class PDODAO {
      *
      * @var bool
      */
-    private $profiler_enabled = false;
-
+    protected $profiler_enabled = false;
     /**
      * Constructor
      * @param array $cfg_vals Optionally override config.inc.php vals; needs 'table_prefix', 'GMT_offset', 'db_type',
@@ -144,10 +143,11 @@ abstract class PDODAO {
      */
     protected final function execute($sql, $binds = array()) {
         if ($this->profiler_enabled) {
-            $start_time = microtime(true);;
+            $start_time = microtime(true);
         }
         $sql = preg_replace("/#prefix#/", self::$prefix, $sql);
         $sql = preg_replace("/#gmt_offset#/", self::$gmt_offset, $sql);
+
         $stmt = self::$PDO->prepare($sql);
         if(is_array($binds) and count($binds) >= 1) {
             foreach ($binds as $key => $value) {
@@ -176,7 +176,8 @@ abstract class PDODAO {
             $end_time = microtime(true);
             $total_time = $end_time - $start_time;
             $profiler = Profiler::getInstance();
-            $profiler->add($total_time, $stmt->queryString, true, $stmt->rowCount());
+            $sql_with_params = Utils::mergeSQLVars($stmt->queryString, $binds);
+            $profiler->add($total_time, $sql_with_params, true, $stmt->rowCount());
         }
         return $stmt;
     }

@@ -38,6 +38,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
             ':network'=>$network,
             ':count'=>$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getInsertCount($ps);
     }
@@ -67,6 +68,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
             ':network'=>$network,
             ':limit'=>(int)$limit
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $history_rows = $this->getDataRowsAsArrays($ps);
 

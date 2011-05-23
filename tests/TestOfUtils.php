@@ -180,4 +180,26 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $converted = Utils::convertNumericStrings($test_str);
         $this->assertEqual($converted, $number);
     }
+
+    public function testMergeSQLVars() {
+        $sql = "SELECT u.*, ROUND(100*friend_count/follower_count,4) AS LikelihoodOfFollow, ".
+        "round(post_count/(datediff(curdate(), joined)), 2) AS avg_tweets_per_day FROM tu_users AS u INNER JOIN ".
+        "tu_follows AS f ON u.user_id = f.follower_id WHERE f.user_id = :userid AND f.network=:network AND ".
+        "f.network=u.network AND active=1 AND follower_count > 10000 AND friend_count > 0 ORDER BY ".
+        "LikelihoodOfFollow ASC, u.follower_count DESC LIMIT :count ;";
+        $vars = array(
+            ':userid'=>1001, 
+            ':network'=>'some_network',
+            ':count'=>123
+        );
+
+        $merged_sql = Utils::mergeSQLVars($sql, $vars);
+        $this->debug($merged_sql);
+        $expected_merged_sql = "SELECT u.*, ROUND(100*friend_count/follower_count,4) AS LikelihoodOfFollow, ".
+        "round(post_count/(datediff(curdate(), joined)), 2) AS avg_tweets_per_day FROM tu_users AS u INNER JOIN ".
+        "tu_follows AS f ON u.user_id = f.follower_id WHERE f.user_id = 1001 AND f.network='some_network' AND ".
+        "f.network=u.network AND active=1 AND follower_count > 10000 AND friend_count > 0 ORDER BY ".
+        "LikelihoodOfFollow ASC, u.follower_count DESC LIMIT 123 ;";
+        $this->assertEqual($merged_sql, $expected_merged_sql);
+    }
 }

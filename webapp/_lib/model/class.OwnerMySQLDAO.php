@@ -48,6 +48,7 @@ SQL;
         $vars = array(
             ':email'=>$email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, 'Owner');
     }
@@ -55,6 +56,8 @@ SQL;
     public function getAllOwners() {
         $q = " SELECT id, full_name, email, is_admin, is_activated, last_login ";
         $q .= "FROM #prefix#owners ORDER BY last_login DESC;";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q);
         return $this->getDataRowsAsObjects($ps, 'Owner');
     }
@@ -62,6 +65,7 @@ SQL;
     public function getAdmins() {
         $q = " SELECT id, full_name, email, is_admin, is_activated, last_login ";
         $q .= "FROM #prefix#owners WHERE is_admin = 1 AND is_activated = 1 ORDER BY id";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q);
         $admins = $this->getDataRowsAsObjects($ps, 'Owner');
         if(count($admins) == 0) { $admins = null; }
@@ -73,6 +77,7 @@ SQL;
         $vars = array(
             ':email'=>$email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
     }
@@ -82,6 +87,7 @@ SQL;
         $vars = array(
             ':email'=>$email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $result = $this->getDataRowAsArray($ps);
         if (isset($result['pwd'])) {
@@ -96,6 +102,7 @@ SQL;
         $vars = array(
             ':email'=>$email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsArray($ps);
     }
@@ -120,6 +127,7 @@ SQL;
             ':email'=>$email,
             ':is_activated'=>(($is_activated)?1:0)
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -130,6 +138,7 @@ SQL;
             ':email'=>$email,
             ':pwd'=>$pwd
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -155,6 +164,7 @@ SQL;
                 ':acode'=>$acode,
                 ':full_name'=>$full_name
             );
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $ps = $this->execute($q, $vars);
             return $this->getUpdateCount($ps);
         } else {
@@ -167,6 +177,7 @@ SQL;
         $vars = array(
             ':email'=>$email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -179,6 +190,7 @@ SQL;
             ":token" => $token, 
             ":email" => $email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -186,12 +198,14 @@ SQL;
     public function getByPasswordToken($token) {
         $q = "SELECT * FROM #prefix#owners WHERE password_token LIKE :token";
         $vars = array(':token' => $token . '_%');
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, 'Owner');
     }
 
     public function doesAdminExist() {
         $q = "SELECT id FROM #prefix#owners WHERE is_admin = 1";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q);
         return $this->getDataIsReturned($ps);
     }
@@ -203,6 +217,7 @@ SQL;
         $vars = array(
             ":email" => $email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -214,6 +229,7 @@ SQL;
         $vars = array(
             ":email" => $email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return ( $this->getUpdateCount($ps) > 0 )? true : false;
     }
@@ -225,6 +241,7 @@ SQL;
         $vars = array(
             ":email" => $email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return ( $this->getUpdateCount($ps) > 0 )? true : false;
     }
@@ -237,6 +254,7 @@ SQL;
             ":account_status" => $status,
             ":email" => $email
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return ( $this->getUpdateCount($ps) > 0 )? true : false;
     }
@@ -249,6 +267,7 @@ SQL;
         $q = "UPDATE #prefix#owners
              SET is_activated=:is_activated
              WHERE id=:id";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, array(':is_activated' => $is_activated, ':id' => $id));
         return $this->getUpdateCount($stmt);
     }

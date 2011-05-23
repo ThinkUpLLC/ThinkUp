@@ -81,6 +81,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':post_id'=>$post_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $row = $this->getDataRowAsArray($ps);
         if ($row) {
@@ -154,6 +155,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>(int)$limit
         );
 
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $replies = array();
@@ -201,7 +203,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $vars[':limit'] = (int)$count;
             $vars['start_on_record'] = (int)$start_on_record;
         }
-
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $replies = array();
@@ -245,7 +247,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':user_network'=>($network=='facebook page')?'facebook':$network,
             ':start_on_record'=>(int)$start_on_record
         );
-
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return new PostIterator($ps);
     }
@@ -282,7 +284,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $vars[':limit'] = (int)$count;
             $vars[':start_on_record'] = (int)$start_on_record;
         }
-
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $retweets = array();
@@ -342,6 +344,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
     }
@@ -388,6 +391,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':start_on_record'=>(int)$start_on_record,
             ':limit'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $posts_replied_to = array();
@@ -416,6 +420,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':other_user_id'=>$other_user_id,
             ':network'=>$network
         );
+
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -433,6 +439,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':post_id'=>$post_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
     }
@@ -466,6 +473,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':network'=>$network,
             ':count' => $retweet_count_cache
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -495,6 +503,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':post_id'=>$post_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -610,6 +619,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             }
             //Trim off that last comma and space
             $q = substr($q, 0, (strlen($q)-2));
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $ps = $this->execute($q, $vars);
             $res = $this->getUpdateCount($ps);
 
@@ -681,6 +691,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':limit'=>(int)$count,
             ':start_on_record'=>(int)$start_on_record
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
@@ -736,6 +747,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':start_on_record'=>(int)$start_on_record
         );
 
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         if($iterator) {
@@ -785,6 +797,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':until' => $until
         );
 
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         if($iterator) {
@@ -837,6 +850,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $q .= " LIMIT :limit";
             $vars[':limit'] = (int)$count;
         }
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         if($iterator) {
             return (new PostIterator($ps));
@@ -878,6 +892,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':user_id'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $result = $this->getDataRowAsArray($ps);
         return $result["total"];
@@ -892,6 +907,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':author_id'=>$author_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
     }
@@ -943,6 +959,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':start_on_record'=>(int)$start_on_record,
             ':limit'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         if($iterator) {
             return (new PostIterator($ps));
@@ -977,6 +994,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':start_on_record'=>(int)$start_on_record,
             ':limit'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $all_posts = array();
@@ -1017,6 +1035,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':network'=>$network,
             ':limit'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $all_posts = array();
@@ -1043,6 +1062,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':orphan_id'=>$orphan_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         if ($parent_id > 0) {
@@ -1067,6 +1087,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':post_id'=>$post_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -1080,6 +1101,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':author_id'=>$author_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
     }
@@ -1114,6 +1136,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= "ORDER BY p.".$order_by." DESC ";
         $q .= "LIMIT :start_on_record, :limit";
 
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $all_posts = array();
@@ -1136,6 +1159,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':count'=>(int)$count
         );
 
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsArray($ps);
     }
@@ -1150,6 +1174,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $vars = array(
             ':limit'=>(int)$limit
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         return $all_rows;
@@ -1174,6 +1199,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 ':post_id'=>$post_id
             );
         }
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         if ($this->getUpdateCount($ps) > 0) {
             $logstatus = "Geolocation for post $post_id IS_GEO_ENCODED: $is_geo_encoded";
@@ -1228,6 +1254,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':author_id'=>$author_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $rows = $this->getDataRowsAsArrays($this->execute($q, $vars));
         $all_time_clients_usage = self::cleanClientsNames($rows);
 
@@ -1243,6 +1270,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':author_id'=>$author_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $rows = $this->getDataRowsAsArrays($this->execute($q, $vars));
         $latest_clients_usage = self::cleanClientsNames($rows);
 

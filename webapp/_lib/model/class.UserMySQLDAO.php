@@ -46,6 +46,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':user_id'=>$user_id, 
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
     }
@@ -58,6 +59,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':username'=>$username,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataIsReturned($ps);
     }
@@ -107,7 +109,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         if (!$this->isUserInDB($user->user_id, $user->network)) {
             $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, location, description, url, ";
             $q .= "is_protected, follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")." ".
-            ($has_favorites_count ? "favorites_count, " : "")." ".            
+            ($has_favorites_count ? "favorites_count, " : "")." ".
             ($has_last_post ? "last_post, " : "")." found_in, joined, network  ".
             ($has_last_post_id ? ", last_post_id" : "").") ";
             $q .= "VALUES ( :user_id, :username, :full_name, :avatar, :location, :description, :url, :is_protected, ";
@@ -120,7 +122,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             $q .= "user_name = :username, description = :description, url = :url, is_protected = :is_protected, ";
             $q .= "follower_count = :follower_count, post_count = :post_count,  ".
             ($has_friend_count ? "friend_count= :friend_count, " : "")." ".
-            ($has_favorites_count ? "favorites_count= :favorites_count, " : "")." ".            
+            ($has_favorites_count ? "favorites_count= :favorites_count, " : "")." ".
             ($has_last_post ? "last_post= :last_post, " : "")." last_updated = NOW(), found_in = :found_in, ";
             $q .= "joined = :joined,  network = :network ".
             ($has_last_post_id ? ", last_post_id = :last_post_id" : "")." ";
@@ -140,6 +142,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         if ($has_last_post_id) {
             $vars[':last_post_id'] = $user->last_post_id;
         }
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $results = $this->getUpdateCount($ps);
         if ($results > 0) {
@@ -156,6 +159,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':user_id'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, "User");
     }
@@ -168,6 +172,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':user_name'=>$user_name,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsObject($ps, "User");
     }

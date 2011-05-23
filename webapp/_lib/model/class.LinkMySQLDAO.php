@@ -44,6 +44,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':network'=>$network,
             ':is_image'=>(int)$is_image
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getInsertId($ps);
@@ -61,6 +62,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':title'=>$title,
             ':isimage'=>$is_image
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         $ret = $this->getUpdateCount($ps);
@@ -80,6 +82,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':url'=>$url,
             ':error'=>$error_text
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         $ret = $this->getUpdateCount($ps);
@@ -104,6 +107,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':is_image'=>$is_image,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -127,6 +131,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':limit'=>$count,
             ':start_on_record'=>(int)$start_on_record
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $links = array();
@@ -163,6 +168,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':limit'=>$count,
             ':start_on_record'=>(int)$start_on_record
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, "Link");
     }
@@ -185,6 +191,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':limit'=>$count,
             ':start_on_record'=>(int)$start_on_record
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);
         $links = array();
@@ -206,6 +213,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $vars = array(
             ':limit'=>$limit
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         $rows = $this->getDataRowsAsArrays($ps);
@@ -225,6 +233,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $vars = array(
             ':url'=>$url."%"
             );
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $ps = $this->execute($q, $vars);
 
             $rows = $this->getDataRowsAsArrays($ps);
@@ -242,6 +251,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $vars = array(
             ':id'=>$id
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowAsObject($ps, "Link");
@@ -254,6 +264,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $vars = array(
             ':url'=>$url
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowAsObject($ps, "Link");

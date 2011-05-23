@@ -53,6 +53,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':followerid'=>$follower_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataIsReturned($ps);
@@ -68,6 +69,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':debug'=>$debug_api_call
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getUpdateCount($ps);
@@ -83,6 +85,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':debug'=>$debug_api_call
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getUpdateCount($ps);
@@ -98,6 +101,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':debug'=>$debug_api_call
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getInsertCount($ps);
@@ -114,6 +118,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':userid'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -130,6 +135,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':user_id'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataCountResult($ps);
@@ -148,6 +154,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':user_id'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataCountResult($ps);
@@ -162,6 +169,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':user_id'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataCountResult($ps);
@@ -175,6 +183,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':user_id'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataCountResult($ps);
@@ -187,6 +196,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':userid'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataCountResult($ps);
@@ -200,6 +210,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':userid'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataCountResult($ps);
@@ -217,6 +228,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':userid'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowAsObject($ps, "User");
@@ -227,6 +239,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= " FROM #prefix#follows AS f ";
         $q .= " WHERE network=:network AND active = 1 ORDER BY f.last_seen ASC LIMIT 1;";
         $vars = array( ':network'=>$network );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowAsArray($ps);
     }
@@ -243,6 +256,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':count'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -263,6 +277,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':count'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
     }
@@ -278,6 +293,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':count'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -294,6 +310,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':count'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -309,6 +326,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':count'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -323,6 +341,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':count'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -340,6 +359,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':count'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -356,6 +376,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':count'=>(int)$count
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -375,6 +396,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':network'=>$network,
             ':instanceuserid'=>$instance_uid
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);
@@ -393,6 +415,7 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
             ':userid'=>$user_id,
             ':network'=>$network
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         return $this->getDataRowsAsArrays($ps);

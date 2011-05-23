@@ -296,4 +296,18 @@ class Utils {
         ob_end_clean();
         return $content;
     }
+    
+    /**
+     * Given a PDO SQL statement with parameters to bind, replaces the :param tokens with the parameters and return
+     * a string for display/debugging purposes.
+     * @param str $sql
+     * @param arr $vars
+     * @return str
+     */
+    public static function mergeSQLVars($sql, $vars) {
+        foreach ($vars as $k => $v) {
+            $sql = str_replace($k, (is_int($v))?$v:"'".$v."'", $sql);
+        }
+        return $sql;
+    }
 }

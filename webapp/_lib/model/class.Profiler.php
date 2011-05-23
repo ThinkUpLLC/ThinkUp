@@ -43,6 +43,11 @@ class Profiler {
      */
     public $total_queries = 0;
     /**
+     * Name of class and function about to call Profiler
+     * @var str
+     */
+    public static $dao_method = "";
+    /**
      * Get singleton instance
      * @return Profiler
      */
@@ -63,7 +68,15 @@ class Profiler {
         }
         $rounded_time = round($time, 3);
         $this->logged_actions[] =  array('time'=>number_format($rounded_time,3), 'action'=> trim($action),
-        'num_rows'=>$num_rows, 'is_query'=>$is_query);
+        'num_rows'=>$num_rows, 'is_query'=>$is_query, 'dao_method'=>self::$dao_method);
+        self::$dao_method = ''; //now that it's logged, set the dao_method to empty string
+    }
+    /**
+     * Set DAO method member variable to display in log.
+     * @param $dao_method
+     */
+    public static function setDAOMethod($dao_method) {
+        self::$dao_method = $dao_method;
     }
 
     /**

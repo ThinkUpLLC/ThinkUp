@@ -40,6 +40,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
                 (namespace, option_name, option_value, created, last_updated)
             VALUES
                 (:namespace, :option_name, :option_value, now(), now())';
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q,
         array(':namespace' => $namespace, ':option_name' => $name, ':option_value' => $value) );
         $this->clearSessionData($namespace);
@@ -58,6 +59,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
             if($name) {
                 $data[':option_name'] = $name;
             }
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $stmt = $this->execute($q, $data);
             $this->clearSessionData($option->namespace);
             return $this->getUpdateCount($stmt);
@@ -70,6 +72,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
         $q = 'UPDATE #prefix#options set option_value = :option_value, last_updated = now()
             WHERE namespace = :namespace AND option_name = :option_name';
         $binds = array(':namespace' => $namespace, ':option_name' => $name, 'option_value' => $value);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, $binds);
         $this->clearSessionData($namespace);
         return $this->getUpdateCount($stmt);
@@ -78,6 +81,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
     public function getOptionByName($namespace, $name){
         $q = 'SELECT option_id, namespace, option_name, option_value FROM #prefix#options
             WHERE namespace = :namespace AND option_name = :option_name';
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, array(':namespace' => $namespace, ':option_name' => $name));
         $option = $this->getDataRowAsObject($stmt, 'Option');
         return $option;
@@ -86,6 +90,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
     public function getOption($option_id){
         $q = 'SELECT option_id, namespace, option_name, option_value FROM #prefix#options
             WHERE option_id = :option_id';
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, array(':option_id' => $option_id));
         $option = $this->getDataRowAsObject($stmt, 'Option');
         return $option;
@@ -95,6 +100,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
         $option = $this->getOption($option_id);
         if($option) {
             $q = 'DELETE FROM #prefix#options WHERE option_id = :option_id';
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $stmt = $this->execute($q, array(':option_id' => $option_id));
             $this->clearSessionData($option->namespace);
             return $this->getUpdateCount($stmt);
@@ -106,6 +112,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
 
     public function deleteOptionByName($namespace, $name){
         $q = 'DELETE FROM #prefix#options WHERE namespace = :namespace AND option_name = :name';
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, array(':namespace' => $namespace, ':name' => $name));
         $this->clearSessionData($namespace);
         return $this->getUpdateCount($stmt);
@@ -120,7 +127,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
             $q = 'SELECT option_id, namespace,  option_name, option_value
                     FROM #prefix#options 
                     WHERE namespace = :namespace';
-
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $stmt = $this->execute($q, array(':namespace' => $namespace));
             $res = $this->getDataRowsAsArrays($stmt);
             if(count($res ) == 0) {
@@ -187,6 +194,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
 
     public function isOptionsTable() {
         $q = "show tables like '#prefix#options'";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q);
         $data = $this->getDataRowAsArray($stmt);
         if($data) {
