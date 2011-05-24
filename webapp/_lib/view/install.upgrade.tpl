@@ -23,8 +23,8 @@
         <div id="migration-info">
         <p>
         <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
-        Your ThinkUp installation needs {$migrations|@count} database update{if $migrations|@count gt 1}s{/if}. Before you proceed, 
-        <a href="{$site_root_path}install/backup.php">back up your current ThinkUp database</a>.
+        Your ThinkUp installation needs {$migrations|@count} database update{if $migrations|@count gt 1}s{/if}. {if $user_is_admin}Before you proceed, 
+        <a href="{$site_root_path}install/backup.php">back up your current ThinkUp database</a>.{else}<br />If you haven't already, <a href="http://thinkupapp.com/docs/install/backup.html">back up your current installation's data first</a>.{/if}
         </p>
         </div>
         <script type="text/javascript">

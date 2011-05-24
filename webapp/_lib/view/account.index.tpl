@@ -69,6 +69,17 @@
         </div>
         <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
         <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
+        
+        
+   <div class="prepend_20">
+    <div style="float:right;margin:20px">{insert name="help_link" id='backup'}</div>
+    <h1>Back Up</h1>
+
+    <p>
+    <a href="{$site_root_path}install/backup.php">Back up ThinkUp's database</a> (highly recommended before upgrading ThinkUp)
+    </p>
+  </div>
+        
     </div> <!-- end #app_setting -->
     {/if}
 

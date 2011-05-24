@@ -1,12 +1,11 @@
 Upgrade ThinkUp
 ===============
 
-If you're already running ThinkUp beta 0.1 or higher, to upgrade to the latest version you simply replace
-your ThinkUp folder with the new one while preserving your existing configuration file. Then, use ThinkUp's
-automatic database backup and upgrader. Here's how.
+If you're already running ThinkUp beta 0.1 or higher, to upgrade to the latest version, simply replace
+your ThinkUp folder with the new one while preserving your existing configuration file. Here's how.
 
-Install ThinkUp's Newest Application Code
------------------------------------------
+First Things First: Back Up ThinkUp's Data
+------------------------------------------
 
 .. sidebar:: Update Notifications as of Beta 12
 
@@ -17,7 +16,13 @@ Install ThinkUp's Newest Application Code
     For example, If you're running beta 12 and beta 13 is available, the message will read "Version 0.13 available." 
     Click on it to download beta 13.
 
-First, `download ThinkUp's latest version <http://thinkupapp.com>`_ and extract the zip archive.
+Before you begin, :doc:`back up your current ThinkUp installation's data </install/backup>`. 
+
+Install ThinkUp's Newest Application Code
+-----------------------------------------
+
+Log into your ThinkUp installation as an administrator. Then, `download ThinkUp's latest version
+<http://thinkupapp.com>`_ and extract the zip archive.
 
 Using your favorite FTP program, rename your existing ThinkUp folder to something like ``thinkup.old``. Then, upload
 the new ThinkUp folder you just extracted.
@@ -25,47 +30,43 @@ the new ThinkUp folder you just extracted.
 Then, copy your existing configuration file--i.e., ``thinkup.old/config.inc.php``--into the new ThinkUp folder. Finally,
 set :doc:`ThinkUp's required folder permissions </install/perms>` in your fresh installation.
 
-Your ThinkUp application code is now up-to-date. Great!
+Upgrade ThinkUp's Database Structure
+------------------------------------
 
-Next, you will back up your database and upgrade it to the latest version. The best method depends on how large your 
-ThinkUp installation's database has grown.
+Now that your installation has the most up-to-date code, that code may have to update your database structure to match
+it. Visit your ThinkUp installation and if you see the message "ThinkUp's database needs an update" click on the 
+"Update Now" link.
 
-Small Databases: Web-Based Backup and Upgrade
----------------------------------------------
+If the message reads "ThinkUp is currently in the process of upgrading. Please try back again in a little while", here's
+:doc:`how to continue the upgrade process </troubleshoot/messages/upgrading>`.
+
+**Small Databases: Web-Based Upgrade**
+
+The Upgrade page will let you know how many database migrations have to run to get up-to-date. 
 
 If your ThinkUp installation only has 1 or 2 moderately active social media accounts set up in it, and none of your
-database tables have more than 1 million rows, then you should use the easy web-based backup and upgrade tool. (Hint:
+database tables have more than 1 million rows, then you should use the easy web-based upgrader. (Hint:
 you can see the sizes of your tables using a tool like phpMyAdmin or the ``mysql`` command line tool.)
 
-To use the web-based backup and upgrader, visit your newly-updated ThinkUp installation in your web browser. 
-It will prompt you to run any necessary database upgrades, with the option to back up your existing database first. 
-(To do that, click on the "Backup Now" button.)
+Click on the "Update now" page to update ThinkUp's database structure.
 
-The web based backup tool has two permissions requirements. 
-
-1. Your ThinkUp installation's database user must have "GRANT FILE ON" permissions
-2. The MySQL user must have write permissions to the ``thinkup/_lib/view/compiled_view`` directory.
-
-If you don't have those permissions, you can use `mysqldump` or a tool like phpMyAdmin to back up your database
-manually.
-
-Large Databases: Command Line Backup and Upgrade
-------------------------------------------------
+**Large Databases: Command Line Upgrade**
 
 If your ThinkUp installation has more than 2 very active social media accounts set up, chances are your database tables
 are large. (We consider a ThinkUp database with any table over 1 million rows large.)
 
 Depending on your server speed and utilization, it can take a very long time for database structure updates to 
-complete on very large installations; so the web-based upgrade and backup tool can time out. To be on the safe side,
-large installation administrators should use the command line backup and upgrader to avoid potential time-outs..
+complete on very large installations; so the web-based upgrader can time out. To be on the safe side,
+large installation administrators should use the command line upgrader to avoid potential time-outs..
 
-To use the CLI backup and upgrader, SSH into your web server and ``cd`` into the ``thinkup/install/cli/`` folder.
+To use the CLI upgrader, SSH into your web server and ``cd`` into the ``thinkup/install/cli/`` folder.
 Then, run:
 
 ``$ php upgrade.php``
 
-This command will tell you whether or not you need a database update, and should you choose to proceed with it, give
-you the option to back up your current data first.
+This command will upgrade your database structure (and give you the option to back it up first as well).
+
+Your ThinkUp application code and database is now up-to-date. Great!
 
 Developers Running Nightly Code
 -------------------------------

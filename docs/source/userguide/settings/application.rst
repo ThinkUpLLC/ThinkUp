@@ -45,3 +45,9 @@ successfully.
 
 If you set this to a public service user which becomes private, this setting will fall back to its default, the last
 updated service user.
+
+Back Up
+-------
+
+Click on the "Back up ThinkUp's database" link to run a :doc:`web-based backup of your installation's
+data </install/backup>`.

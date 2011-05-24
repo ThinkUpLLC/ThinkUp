@@ -46,7 +46,7 @@ class BackupController extends ThinkUpAdminController {
 
     public function adminControl() {
         $this->disableCaching();
-
+        $this->view_mgr->addHelp('backup', 'install/backup');
         if(! self::checkForZipSupport()) {
             $this->addToView('no_zip_support', true);
         }

@@ -53,6 +53,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $this->view_mgr->addHelp('api', 'userguide/api/posts/index');
         $this->view_mgr->addHelp('application_settings', 'userguide/settings/application');
         $this->view_mgr->addHelp('users', 'userguide/settings/allaccounts');
+        $this->view_mgr->addHelp('backup', 'install/backup');
 
         //process password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])

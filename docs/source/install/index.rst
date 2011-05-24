@@ -11,5 +11,6 @@ everything you need to know to get ThinkUp up and running on your web server.
    quickstart
    install
    upgrade
+   backup
    perms
    security

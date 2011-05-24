@@ -5,6 +5,7 @@
       <div class="grid_22 push_1 clearfix">
         {include file="_usermessage.tpl"}
 
+<div style="float:right;margin:20px">{insert name="help_link" id='backup'}</div>
 <h1>Back Up Your ThinkUp Data</h1>
 
 {if $no_zip_support}
@@ -34,7 +35,7 @@ onclick="document.location.href='?backup=true'"
 class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Backup Now">
 
 <br /><br />
-<p><a href="{$site_root_path}install/upgrade.php">&larr;Go back to the database upgrader</a></p>
+<p><a href="javascript: history.go(-1)">&larr;Back</a></p>
 
 <br /><br />
 

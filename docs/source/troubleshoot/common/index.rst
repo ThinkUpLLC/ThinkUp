@@ -18,6 +18,7 @@ solutions.
    exportgibberish
    apc
    changeemail
+   backupcannotwrite
 
 Advanced Troubleshooting
 ------------------------
