@@ -1,6 +1,7 @@
 webapp/config.inc.php
 webapp/config.inc.bak.php
 webapp/_lib/view/compiled_view/*.php
+webapp/_lib/view/compiled_view/*.tmp
 webapp/_lib/view/compiled_view/cache/*.tpl
 webapp/_lib/view/compiled_view/upgrade_token
 logs/archive/*.bz2
@@ -13,6 +14,7 @@ extras/cron/config
 extras/scripts/autodeploy-conf
 extras/scripts/migratedb-conf
 extras/scripts/lic_header.py
+extras/scripts/test-pull-postback-conf
 webapp/test_installer/*
 build/*
 docs/build/*

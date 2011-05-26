@@ -1,0 +1,54 @@
+#! /bin/bash
+
+# Given a username, branchname, and pull request ID, this script pulls a branch, runs the ThinkUp test suite, and 
+# given a valid GitHub OAuth token, posts the test results to the pull request's comments automatically. Without GH
+# credentials, it simply lists the contents of the test results message.
+# Requires: test-pull-postback-conf (see test-pull-postback-conf-sample for instructions on getting GitHub credentials)
+# Author: Gina Trapani
+
+cd `dirname $0`/../..
+source ./extras/scripts/test-pull-postback-conf
+
+output_file="webapp/_lib/view/compiled_view/test_results.tmp"
+
+if test -z "$3"; then
+    echo "Usage: $0 [user_name] [branch_name] [pull_request_id]"
+else
+    user_name=$1
+    branch_name=$2
+    pull_request_id=$3
+    
+    git remote add -f $user_name git://github.com/$user_name/ThinkUp.git
+    
+    git pull $user_name
+    
+    git checkout --track -b $user_name/$branch_name $user_name/$branch_name
+    
+    touch $output_file
+    echo '' > $output_file
+    echo '[AUTOMATED TEST RUN NOTIFICATION]
+Hi! Thanks for submitting a pull request to ThinkUp.
+This is an automated test run of the code in your pull request branch. If there are test failures, please close the request, resolve the failures, and re-submit.
+If you need help debugging the test failures, get in touch on the ThinkUp developer mailing list:
+
+http://groups.google.com/a/expertlabs.org/group/thinkup-dev
+
+Thanks for your contribution and help maintaining ThinkUp,
+Gina
+
+
+TEST RESULTS:
+-------------
+' >> $output_file
+    
+    php tests/all_tests.php >> $output_file
+    
+    if [ "$gh_auth_token" = '' ]; then
+        cat $output_file
+    else
+        echo "[DEBUG] This command should post the test results to GitHub's pull request comments:
+curl -sL -w -F 'login=$gh_repo_owner_name' -F 'access_token=$gh_auth_token' -F 'comment=<$output_file' https://github.com/api/v2/json/issues/comment/$gh_repo_owner_name/$gh_repo_name/$pull_request_id
+"
+        curl -sL -w -F 'login=$gh_repo_owner_name' -F 'access_token=$gh_auth_token' -F 'comment=<$output_file' https://github.com/api/v2/json/issues/comment/$gh_repo_owner_name/$gh_repo_name/$pull_request_id
+    fi
+fi

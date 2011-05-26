@@ -1,0 +1,31 @@
+#!/bin/bash
+
+gh_repo_owner_name='ginatrapani'
+gh_repo_name='ThinkUp'
+
+gh_auth_token='' #leave this equal to '' to NOT post results to the pull request's comments
+
+# HOW TO GET A VALID GITHUB OAUTH TOKEN FOR USE WITH THIS SCRIPT
+# ==============================================================
+
+# To get a valid OAuth token which gives this script the credentials to post back to the GitHub pull request comments,
+# register your GitHub application and set your_redirect_url to an arbitrary URL you own. Do so at this URL:
+
+# https://github.com/account/applications/new
+
+# Once you create the application, GitHub will provide its client_id and client_secret. You will need these values.
+
+# You also need a GitHub-provided code. To get your code, visit the following URL in your web browser, first replacing
+# the appropriate parameters with the information in the previous step:
+
+# https://github.com/login/oauth/authorize?client_id=your_client_id&redirect_uri=http://your_redirect_url/&scope=public_repo
+
+# GitHub will prompt you to grant your app the permissions it asks for. Once you do, GitHub will redirect your browser
+# back to that URL you own with a code= parameter. Copy the code's value to your clipboard.
+
+# Finally, then run the following cURL command, replacing the appropriate parameters with the parameters you have
+# from the previous steps:
+
+# curl -F 'client_id=your_client_id' -F 'redirect_uri=http://your_redirect_url/' -F 'client_secret=your_client_secret' -F 'code=your_code' https://github.com/login/oauth/access_token
+
+# GitHub will return an access token from this request. It is your new gh_auth_token.

@@ -67,3 +67,21 @@ How to test:
 
   Windows/Cygwin troubleshooting: If you get a "fatal error - unable to remap same address as parent", here's how to fix:
   http://www.mylifestartingup.com/2009/04/fatal-error-unable-to-remap-to-same.html
+  
+## test-pull-postback (post test results for a particular pull request back to that pull's comments on GitHub)
+
+Given a username, branchname, and pull request ID, this script pulls a branch, runs the ThinkUp test suite, and given
+a valid GitHub OAuth token, posts the test results to the pull request's comments automatically.
+Without a GitHub OAuth token set, the script simply outputs the contents of the test results message.
+
+Example output: https://github.com/ginatrapani/ThinkUp/pull/795
+
+Requires: test-pull-postback-conf (see test-pull-postback-conf-sample for instructions on getting GitHub credentials)
+
+### Set up and run test-pull-postback
+
+* Copy `test-pull-postback-conf.sample` to `test-pull-postback-conf`
+* Edit `test-pull-postback-conf` to match your settings
+* Run `test-pull-postback` script from thinkup root directory
+
+Example: `./extras/scripts/test-pull-postback`
