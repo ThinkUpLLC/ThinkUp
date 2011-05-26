@@ -33,26 +33,36 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 class TestOfPost extends ThinkUpBasicUnitTestCase {
 
     public function testExtractURLs() {
-        $testme= "Introducing the ThinkUp developers mailing list http://bit.ly/gXpdUZ";
-        $urls = Post::extractURLs($testme);
-        $expected = array ('http://bit.ly/gXpdUZ');
-        $this->assertIdentical($expected, $urls);
+        $test_patterns = array (
+        "Introducing the ThinkUp developers mailing list http://bit.ly/gXpdUZ"=> array ('http://bit.ly/gXpdUZ'),
+        "http://j.mp/g2F037 good advice (Mad Men-illustrated) for women in tech"=> array ('http://j.mp/g2F037') ,
+        "blah blah blah http:///badurl.com d http://bit.ly and http://example.org"=> array ('http://bit.ly', 
+        'http://example.org'),
+        "blah blah blah http:///badurl.com d HTTP://yo.com/exi.xml?hi=yes and http://example.org/blah/yoiadsf/934324/"
+        => array ('HTTP://yo.com/exi.xml?hi=yes', 'http://example.org/blah/yoiadsf/934324/'),
+        "I bought the book at http://amazon.com. You should read it, too"=> array ('http://amazon.com'),
+        "So, Who's on first? check “http://culturalwormhole.blogspot.com/” for more."=> 
+        array ('http://culturalwormhole.blogspot.com/'),
+        "We know all about that (http://friendoflou.com), but we're not impressed." => 
+        array ('http://friendoflou.com'),
+        "A more terse, yet still friendly introduction notme.com norme.com/ bit.ly/gXpdUZ and blah yo.com/exi".
+        ".xml?hi=yes blah" => array ('http://bit.ly/gXpdUZ', 'http://yo.com/exi.xml?hi=yes'),
+        "tersely www.google.com notme.google.com www.nytimes.com"=> array ('http://www.google.com', 
+        'http://www.nytimes.com'),
+        "would you believe this url?  http://foo.com/more_(than)_one_(parens)   " => 
+        array('http://foo.com/more_(than)_one_(parens)'),
+        "detects embedding <http://foo.com/blah_blah/> nicely <tag>http://example.com</tag>" 
+        => array('http://foo.com/blah_blah/', 'http://example.com') );
 
-        $testme= "http://j.mp/g2F037 good advice (Mad Men-illustrated) for women in tech";
-        $urls = Post::extractURLs($testme);
-        $expected = array ('http://j.mp/g2F037');
-        $this->assertIdentical($expected, $urls);
+        foreach ($test_patterns as $test_text=>$expected_urls) {
+            $urls = Post::extractURLs($test_text);
+            $this->assertIdentical($expected_urls, $urls, $test_text.' %s');
+            $this->assertTrue(array_reduce(array_map('Utils::validateURL', $urls), 'TestOfPost::isAllTrue', true));
+        }
+    }
 
-        $testme= "blah blah blah http:///badurl.com d http://bit.ly and http://example.org";
-        $urls = Post::extractURLs($testme);
-        $expected = array ('http://bit.ly', 'http://example.org');
-        $this->assertIdentical($expected, $urls);
-
-        $testme= "blah blah blah http:///badurl.com d http://yo.com/exi.xml?hi=yes and ".
-        "http://example.org/blah/yoiadsf/934324/";
-        $urls = Post::extractURLs($testme);
-        $expected = array ('http://yo.com/exi.xml?hi=yes', 'http://example.org/blah/yoiadsf/934324/');
-        $this->assertIdentical($expected, $urls);
+    private function isAllTrue($a, $b) {
+        return $a && $b;
     }
 
     public function testExtractMentions() {

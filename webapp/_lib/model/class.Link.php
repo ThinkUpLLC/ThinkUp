@@ -163,4 +163,13 @@ class Link {
                 $this->other[$key] = $val;
         }
     }
+
+    /**
+     * If http:// is missing from the beginning of a string which represents a URL, add it.
+     * @param str $url
+     * @return str
+     */
+    public static function addMissingHttp($url) {
+        return ((0===stripos($url, 'http')) ? $url : 'http://'.$url);
+    }
 }

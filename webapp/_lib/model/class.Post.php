@@ -254,13 +254,23 @@ class Post {
     }
 
     /**
-     * Extract URLs from post text
+     * Extract URLs from post text.
+     * Find syntactically correct URLs such as http://foobar.com/data.php and some plausible URL fragments, e.g.
+     * bit.ly/asb12 www.google.com, and fix URL fragments to be valid URLs.
+     * Only return valid URLs
+     * Regex pattern based on http://daringfireball.net/2010/07/improved_regex_for_matching_urls
+     * with a modification in the third group to ensure that https?:/// (third slash) doesn't match.
      * @param string $post_text
      * @return array $matches
      */
     public static function extractURLs($post_text) {
-        preg_match_all('!https?://[\w][\S]+!', $post_text, $matches);
-        return $matches[0];
+        $url_pattern = '(?i)\b'.
+        '((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)'. 
+        '(?:[^\s()<>/][^\s()<>]*|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+'.
+        '(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))';
+        preg_match_all('#'.$url_pattern.'#', $post_text, $matches);
+        $corrected_urls = array_map( 'Link::addMissingHttp', $matches[0]);
+        return array_filter($corrected_urls,'Utils::validateURL');
     }
 
     /**
