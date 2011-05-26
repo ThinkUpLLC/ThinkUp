@@ -79,6 +79,40 @@ class Loader {
             define('THINKUP_WEBAPP_PATH', str_replace("\\",'/', dirname(dirname(dirname(__FILE__)))) .'/');
         }
 
+        if ( !defined('THINKUP_DEFAULT_COMPILED_VIEW_PATH') ) {
+            define('THINKUP_DEFAULT_COMPILED_VIEW_PATH', THINKUP_WEBAPP_PATH . '_lib/view/compiled_view/');
+        }
+
+        if ( !defined('THINKUP_DEFAULT_CACHE_PATH') ) {
+            define('THINKUP_DEFAULT_CACHE_PATH', THINKUP_WEBAPP_PATH . '_lib/view/compiled_view/cache/');
+        }
+
+        if ( !defined('THINKUP_COMPILED_VIEW_PATH') ) {
+            if ( is_writeable(THINKUP_DEFAULT_COMPILED_VIEW_PATH) ) {
+                define('THINKUP_COMPILED_VIEW_PATH', THINKUP_DEFAULT_COMPILED_VIEW_PATH);
+            }
+            else
+            {
+                define('THINKUP_COMPILED_VIEW_PATH', str_replace("\\",'/', sys_get_temp_dir() .'/ThinkUp-compiled_views/'));
+                if ( !file_exists(THINKUP_COMPILED_VIEW_PATH) ) {
+                    mkdir(THINKUP_COMPILED_VIEW_PATH, 0700, true);
+                }
+            }
+        }
+
+        if ( !defined('THINKUP_CACHE_PATH') ) {
+            if ( is_writeable(THINKUP_DEFAULT_CACHE_PATH) ) {
+                define('THINKUP_CACHE_PATH', THINKUP_DEFAULT_CACHE_PATH);
+            }
+            else
+            {
+                define('THINKUP_CACHE_PATH', str_replace("\\",'/', sys_get_temp_dir() .'/ThinkUp-cache/'));
+                if ( !file_exists(THINKUP_CACHE_PATH) ) {
+                    mkdir(THINKUP_CACHE_PATH, 0700, true);
+                }
+            }
+        }
+
         // set default lookup path for classes
         self::$lookup_path = array(
         THINKUP_WEBAPP_PATH . '_lib/model/',
