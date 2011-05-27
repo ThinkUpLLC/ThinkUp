@@ -739,13 +739,15 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $q .= 'AND p.is_protected = 0 ';
         }
         $q .= "ORDER BY $order_by $direction ";
-        $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':author_id'=>$author_id,
             ':network'=>$network,
-            ':limit'=>(int)$count,
-            ':start_on_record'=>(int)$start_on_record
         );
+        if(isset($count) && $count > 0) {
+            $q .= "LIMIT :start_on_record, :limit";
+            $vars[':limit'] = (int)$count;
+            $vars[':start_on_record'] = (int)$start_on_record;
+        }
 
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
