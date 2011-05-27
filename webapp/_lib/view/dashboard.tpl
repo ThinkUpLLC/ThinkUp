@@ -63,7 +63,7 @@
 
             {if $data_template}
               {include file=$data_template}
-              <div class="float-l">
+              <div class="float-l" id="older-posts-div">
                 {if $next_page}
                   <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n}&{/if}page={$next_page}" id="next_page">&#60; Older Posts</a>
                 {/if}

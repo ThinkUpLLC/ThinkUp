@@ -26,16 +26,25 @@
     </p>
   </div>
 {/if}
+{if $is_searchable}
+    {include file="_grid.search.tpl"}
+    <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
+{/if}
+
 {if $all_tweets and ($display eq 'tweets-all' or $display eq 'tweets-questions')}
+<div id="all-posts-div">
   {foreach from=$all_tweets key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}
   {/foreach}
+</div>
 {/if}
 
 {if $all_tweets and $display eq 'ftweets-all'}
+<div id="all-posts-div">
   {foreach from=$all_tweets key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}
   {/foreach}
+</div>
 {/if}
 
 {if $most_replied_to_tweets}
@@ -76,9 +85,11 @@
 {/if} 
 
 {if $all_mentions}
+<div id="all-posts-div">
   {foreach from=$all_mentions key=tid item=t name=foo}
     {include file="_post.otherorphan.tpl" t=$t}
   {/foreach}
+</div>
 {/if}
 
 {if $all_replies}
@@ -157,9 +168,5 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
   {/literal}
 </script>
 
-{if $is_searchable}
-    {include file="_grid.search.tpl"}
-    <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
-    
-{/if}
+
 

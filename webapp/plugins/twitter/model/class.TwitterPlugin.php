@@ -146,12 +146,11 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
     public function getDashboardMenuItems($instance) {
         $twitter_data_tpl = Utils::getPluginViewDirectory('twitter').'twitter.inline.view.tpl';
         $menus = array();
-
         //All tab
         $all_mi = new MenuItem("All Tweets", "All tweets", $twitter_data_tpl, "Tweets");
         $all_mi_ds = new Dataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
         'twitter', 15, "#page_number#"), 'getAllPostsIterator', array($instance->network_user_id, 'twitter', 
-        GridController::MAX_ROWS) );
+        GridController::getMaxRows()) );
         $all_mi_ds->addHelp('userguide/listings/twitter/dashboard_tweets-all');
         $all_mi->addDataset($all_mi_ds);
         $menus['tweets-all'] = $all_mi;
@@ -185,7 +184,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             //All Mentions
             $amtab = new MenuItem("All Mentions", "Any post that mentions you", $twitter_data_tpl, 'Replies');
             $amtabds1 = new Dataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
-           'twitter', 15), "getAllMentionsIterator", array($instance->network_username, GridController::MAX_ROWS, 
+           'twitter', 15), "getAllMentionsIterator", array($instance->network_username, GridController::getMaxRows(), 
            'twitter'));
             $amtabds2 = new Dataset("all_mentions", 'PostDAO', "getAllMentions",
             array($instance->network_username, 15, $instance->network, '#page_number#'));
@@ -315,7 +314,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $fvalltab = new MenuItem("All", "All favorites", $twitter_data_tpl, 'Favorites');
         $fvalltabds = new Dataset("all_tweets", 'FavoritePostDAO', "getAllFavoritePosts",
         array($instance->network_user_id, 'twitter', 20, "#page_number#"), 'getAllFavoritePostsIterator',
-        array($instance->network_user_id, 'twitter', GridController::MAX_ROWS) );
+        array($instance->network_user_id, 'twitter', GridController::getMaxRows()) );
         $fvalltabds->addHelp('userguide/listings/twitter/dashboard_ftweets-all');
         $fvalltab->addDataset($fvalltabds);
         $menus["ftweets-all"] = $fvalltab;

@@ -719,6 +719,20 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test setting count to 0 to set no post row return limit
+     */
+    public function testGetAllPostIteratorsNoLimit() {
+        $dao = new PostMySQLDAO();
+        $posts_it = $dao->getAllPostsIterator(18, 'twitter', 0);
+        $cnt = 0;
+        $this->assertIsA($posts_it,'PostIterator');
+        foreach($posts_it as $key => $value) {
+            $cnt++;
+        }
+        $this->assertEqual($cnt, 41);
+    }
+
+    /**
      * Test getPost on a post that exists
      */
     public function testGetPostExists() {
