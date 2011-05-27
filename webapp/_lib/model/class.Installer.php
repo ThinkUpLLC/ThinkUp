@@ -226,8 +226,8 @@ class Installer {
      * @return array 'compiled_view'=>true/false, 'cache'=>true/false
      */
     public function checkPermission($perms = array()) {
-        $compile_dir = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view';
-        $cache_dir = "$compile_dir/cache";
+        $compile_dir = THINKUP_COMPILED_VIEW_PATH;
+        $cache_dir = THINKUP_CACHE_PATH;
         $ret = array('compiled_view' => false, 'cache' => false);
         if ( is_writable($compile_dir) ) {
             $ret['compiled_view'] = true;
