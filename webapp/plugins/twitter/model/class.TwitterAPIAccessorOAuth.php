@@ -384,19 +384,21 @@ class TwitterAPIAccessorOAuth {
             'network'=>'twitter');
         if (isset($post->retweet_count) && !isset($post->retweeted_status)) {
             // do this only for the original post (rt will have rt count too)
-            $retweet_count_cache = $post->retweet_count;
+            $retweet_count_api = $post->retweet_count;
             $pos = strrpos($post->retweet_count, '+');
             if ($pos != false) {
                 // remove '+', e.g. '100+' -- so currently 100 is max that can be indicated
-                $retweet_count_cache = substr($post->retweet_count, 0, $pos) ;
+                $retweet_count_api = substr($post->retweet_count, 0, $pos) ;
             }
-            $parsed_data['retweet_count_cache'] = $retweet_count_cache;
+            // this field holds the reported native rt count from twitter
+            $parsed_data['retweet_count_api'] = $retweet_count_api;
+            // $logger->logInfo("retweet_count_api for post " . $post->id . ": " . $retweet_count_api, __METHOD__.','.__LINE__);
         }
         if (isset($post->retweeted_status)) {
             // then this is a retweet.
             // Process its original too.
-            // $logger->logInfo("this is a retweet, will process original post " . $post_retweeted_status->id .
-            // "from user " . $post_retweeted_status->user->id, __METHOD__.','.__LINE__);
+            // $logger->logInfo("this is a retweet, will process original post " . $post->retweeted_status->id .
+            // "from user " . $post->retweeted_status->user->id, __METHOD__.','.__LINE__);
             $rtp = array();
             $rtp['content']= $this->parsePostXML($post->retweeted_status);
             $parsed_data['retweeted_post'] = $rtp;

@@ -48,7 +48,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @var array
      */
     var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id',
-    'in_rt_of_user_id', 'location', 'place', 'geo', 'retweet_count_cache', 'old_retweet_count_cache', 
+    'in_rt_of_user_id', 'location', 'place', 'geo', 'retweet_count_cache',
+    'retweet_count_api', 'old_retweet_count_cache',
     'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend',
     'reply_retweet_distance', 'is_geo_encoded', 'author_follower_count');
 
@@ -61,6 +62,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         // some order_by clauses have a table attached to the front of them, remove this for checking.
         $sans_table = preg_replace('/^[A-Za-z]\./', '', $order_by);
 
+        // 'retweets' is a add'l query term (it represents a sum of two fields) that is not in the posts table and 
+        // is used in retweet queries for fetching and ordering the retweets. 
+        // If this is the term, just return it, otherwise process normally by checking the fields lists.
+        if ($order_by == "retweets") {
+            return $order_by;
+        }
         if ( !in_array($sans_table, $this->REQUIRED_FIELDS) && !in_array($sans_table, $this->OPTIONAL_FIELDS  )) {
             $order_by="pub_date";
         }
@@ -459,19 +466,19 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     /**
-     * Update retweet count value for 'new-style' retweets.
+     * Update retweet count value from the Twitter API for 'new-style' retweets.
      * @param int $post_id
-     * @param int $retweet_count_cache
+     * @param int $retweet_count_api
      * @param str $network
      * @return int Number of affected rows
      */
-    private function updateRetweetCount($post_id, $retweet_count_cache, $network) {
-        $q = " UPDATE  #prefix#posts SET retweet_count_cache = :count ";
+    private function updateAPIRetweetCount($post_id, $retweet_count_api, $network) {
+        $q = " UPDATE  #prefix#posts SET retweet_count_api = :count ";
         $q .= " WHERE post_id = :post_id AND network=:network";
         $vars = array(
             ':post_id'=>$post_id,
             ':network'=>$network,
-            ':count' => $retweet_count_cache
+            ':count' => $retweet_count_api
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -487,25 +494,52 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     private function incrementRepostCountCache($post_id, $network) {
         return $this->incrementCacheCount($post_id, $network, "old_retweet");
     }
-
+    
     /**
-     * Increment either reply_count_cache or old_retweet_count_cache
+     * Increment retweet cache count, for new-style/native retweets.
      * @param int $post_id
      * @param str $network
-     * @param str $fieldname either "reply" or "old_retweet"
+     * @return int number of updated rows (1 if successful, 0 if not)
+     */
+    private function incrementNativeRTCountCache($post_id, $network) {
+        return $this->incrementCacheCount($post_id, $network, "native_retweet");
+    }
+    
+
+    /**
+     * Increment either reply_count_cache, old_retweet_count_cache, or retweet_count_cache
+     * @param int $post_id
+     * @param str $network
+     * @param str $fieldname either "reply" , "old_retweet" (old-style retweets), or "native_retweet"
      * @return int Number of updated rows
      */
-    private function incrementCacheCount($post_id, $network, $fieldname) {
-        $fieldname = $fieldname=="reply"?"reply":"old_retweet";
-        $q = " UPDATE  #prefix#posts SET ".$fieldname."_count_cache = ".$fieldname."_count_cache + 1 ";
-        $q .= "WHERE post_id = :post_id AND network=:network";
-        $vars = array(
-            ':post_id'=>$post_id,
-            ':network'=>$network
-        );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $ps = $this->execute($q, $vars);
-        return $this->getUpdateCount($ps);
+    private function incrementCacheCount($post_id, $network, $post_type) {
+        $fieldname = null;
+        if ($post_type == "reply") {
+            $fieldname = "reply";
+        }
+        elseif ($post_type == "native_retweet") {
+            $fieldname = "retweet";
+        }
+        elseif ($post_type == "old_retweet") {
+            $fieldname = "old_retweet";
+        }
+        if ($fieldname) {
+            $q = " UPDATE  #prefix#posts SET ".$fieldname."_count_cache = ".$fieldname."_count_cache + 1 ";
+            $q .= "WHERE post_id = :post_id AND network=:network";
+            $vars = array(
+                ':post_id'=>$post_id,
+                ':network'=>$network
+                );
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q, $vars);
+            return $this->getUpdateCount($ps);
+        }
+        else {
+            // log error -- unknown field name
+            $this->logger->logError("unknown field name in incrementCacheCount with $post_id, $post_type", __METHOD__.','.__LINE__);
+            return null;
+        }
     }
 
     /**
@@ -551,11 +585,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             // may show 0 rts. This is less common w/ the REST API than the streaming API, but does not hurt to
             // address it anyway. So, if we know there was a retweet, but the rt count is showing 0, set it to 1.
             // We know it is at least 1.
-            if (isset($retweeted_post_data['retweet_count_cache']) &&
-            ($retweeted_post_data['retweet_count_cache'] == 0 )) {
-                $retweeted_post_data['retweet_count_cache'] = 1;
+            if (isset($retweeted_post_data['retweet_count_api']) &&
+            ($retweeted_post_data['retweet_count_api'] == 0 )) {
+                $retweeted_post_data['retweet_count_api'] = 1;
             }
-            // if so, process the original post first.
+            // since this was a retweet, process the original post first.
             $this->addPostAndEntities($retweeted_post_data, null);
         }
         if ($this->hasAllRequiredFields($vals)) {
@@ -577,12 +611,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 }
             }
             //process retweet
-            // @TODO -- if 'in_rt_of_user_id' is set even though 'in_retweet_of_post_id' is not, we can
-            // infer the 'is_retweet_by_friend' information from that instead.
-            // [This functionality will be added in the succeeding branch that builds on this work.]
             if (isset($vals['in_retweet_of_post_id']) && $vals['in_retweet_of_post_id'] != '') {
                 if (isset($retweeted_post_data)) {
                     // don't need database retrieval to get the necessary data-- use attached orig post info
+                    $retweeted_post = $retweeted_post_data;
                     $orig_author_id = $retweeted_post_data['author_user_id'];
                     $orig_network = $retweeted_post_data['network'];
                 } else {
@@ -623,9 +655,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $ps = $this->execute($q, $vars);
             $res = $this->getUpdateCount($ps);
 
-            if (isset($vals['retweet_count_cache']) && ($vals['retweet_count_cache'] > 0 ) && !$res) {
+            if (isset($vals['retweet_count_api']) && ($vals['retweet_count_api'] > 0 ) && !$res) {
                 // then the post already existed in database & has RT count > 0, so just update the retweet count.
-                $this->updateRetweetCount($vals['post_id'], $vals['retweet_count_cache'], $vals['network']);
+                $this->updateAPIRetweetCount($vals['post_id'], $vals['retweet_count_api'], $vals['network']);
             }
             //only update the other post records if insert went through.
             //This avoids incorrect counts in case of attempt to insert dup.
@@ -636,12 +668,20 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                     "; updating reply cache count";
                     $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
                 }
-                // if this is a retweet, but not a new-style retweet, increment the old-style retweet count cache.
-                if (isset($retweeted_post) && !(isset($retweeted_post_data))) {
-                    $this->incrementRepostCountCache($vals['in_retweet_of_post_id'], $vals['network']);
-                    $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
-                    " ID: ".$vals["post_id"]."; updating old-style retweet cache count";
-                    $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+                if (isset($retweeted_post)) {
+                    if (!isset($retweeted_post_data)) { // if not a native retweet
+                        $this->incrementRepostCountCache($vals['in_retweet_of_post_id'], $vals['network']);
+                        $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
+                        " ID: ".$vals["post_id"]."; updating old-style retweet cache count";
+                        $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+                    }
+                    else { // native retweet
+                        $this->incrementNativeRTCountCache($vals['in_retweet_of_post_id'], $vals['network']);
+                        $status_message = "Retweet of ".$vals['in_retweet_of_post_id']." by ".
+                        $vals["author_username"].
+                        " ID: ".$vals["post_id"]."; updating native retweet cache count";
+                        $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+                    }
                 }
             }
             return $res;
@@ -721,7 +761,15 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $start_on_record = ($page - 1) * $count;
         $order_by = $this->sanitiseOrderBy($order_by);
 
-        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        // if the 'order_by' string is 'retweets', add an add'l aggregate (sum of two fields) var to the select, 
+        // which we can then sort on.
+        if ($order_by == 'retweets') {
+            $q = "SELECT l.*, p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, " . 
+            "pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        }
+        else {
+            $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        }
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
@@ -732,8 +780,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($order_by == 'reply_count_cache') {
             $q .= "AND reply_count_cache > 0 ";
         }
-        if ($order_by == 'retweet_count_cache') {
-            $q .= "AND retweet_count_cache > 0 ";
+        if ($order_by == 'retweets') {
+            $q .= "AND (p.retweet_count_cache + p.old_retweet_count_cache) > 0 ";
         }
         if ($is_public) {
             $q .= 'AND p.is_protected = 0 ';
@@ -828,7 +876,15 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':author_username'=>$author_username,
             ':network'=>$network
         );
-        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        // if the 'order_by' string is 'retweets', add an add'l aggregate (sum of two fields) var to the select, 
+        // which we can then sort on.
+        if ($order_by == 'retweets') {
+            $q = "SELECT l.*, p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, " . 
+            "pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        }
+        else {
+            $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        }
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
@@ -841,8 +897,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($order_by == 'reply_count_cache') {
             $q .= "AND reply_count_cache > 0 ";
         }
-        if ($order_by == 'retweet_count_cache') {
-            $q .= "AND retweet_count_cache > 0 ";
+        if ($order_by == 'retweets') {
+            $q .= "AND (p.retweet_count_cache + p.old_retweet_count_cache) > 0 ";
         }
         if ($is_public) {
             $q .= 'AND p.is_protected = 0 ';
@@ -881,7 +937,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getMostRetweetedPostsInLastWeek($username, $network, $count, $is_public = false) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'retweet_count_cache', 7,
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'retweets', 7,
         $iterator = false, $is_public);
     }
 
@@ -1012,7 +1068,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getMostRetweetedPosts($user_id, $network, $count, $page=1, $is_public = false) {
-        return $this->getAllPostsByUserID($user_id, $network, $count, "retweet_count_cache", "DESC", true, $page,
+        return $this->getAllPostsByUserID($user_id, $network, $count, "retweets", "DESC", true, $page,
         $iterator = false, $is_public);
     }
 

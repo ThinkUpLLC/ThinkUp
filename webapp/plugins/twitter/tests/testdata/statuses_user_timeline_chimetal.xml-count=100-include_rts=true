@@ -154,6 +154,7 @@
     <in_reply_to_user_id></in_reply_to_user_id> 
     <favorited>false</favorited> 
     <in_reply_to_screen_name></in_reply_to_screen_name> 
+    <retweet_count>2</retweet_count>
     <user> 
       <id>930061</id> 
       <name>Gina Trapani</name> 
