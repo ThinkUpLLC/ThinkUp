@@ -370,8 +370,9 @@ abstract class ThinkUpController {
             //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings
             date_default_timezone_set('America/Los_Angeles');
             $content_type = $this->content_type;
-            if (strpos($content_type, ';') !== FALSE) {
-                $content_type = array_shift(explode(';', $content_type));
+            if (strpos($content_type, ';') !== false) {
+                $exploded = explode(';', $content_type);
+                $content_type = array_shift($exploded);
             }
             switch ($content_type) {
                 case 'application/json':
