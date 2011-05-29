@@ -31,7 +31,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
 /* INSTALLER AND UPGRADER TESTS */
-$installer_tests = & new TestSuite('Installer tests');
+$installer_tests = new TestSuite('Installer tests');
 $installer_tests->add(new WebTestOfInstallation());
 $installer_tests->add(new WebTestOfUpgradeDatabase());
 

@@ -31,7 +31,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
 /* CONTROLLER TESTS */
-$controller_test = & new TestSuite('Controller tests');
+$controller_test = new TestSuite('Controller tests');
 $controller_test->add(new TestOfAccountConfigurationController());
 $controller_test->add(new TestOfActivateAccountController());
 $controller_test->add(new TestOfAppConfigController());

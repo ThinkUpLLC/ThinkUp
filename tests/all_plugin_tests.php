@@ -32,7 +32,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
 $RUNNING_ALL_TESTS = true;
 
-$plugin_tests = & new TestSuite('Plugin tests');
+$plugin_tests = new TestSuite('Plugin tests');
 $plugin_tests->add(new TestOfExpandURLsPlugin());
 $plugin_tests->add(new TestOfExpandURLsPluginConfigurationController());
 $plugin_tests->add(new TestOfFlickrAPIAccessor());

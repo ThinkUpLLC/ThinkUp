@@ -31,7 +31,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
 /* MODEL TESTS */
-$model_tests = & new TestSuite('Model tests');
+$model_tests = new TestSuite('Model tests');
 $model_tests->add(new TestOfLogger());
 $model_tests->add(new TestOfPDODAO());
 $model_tests->add(new TestOfPDOCorePluginDAO());
