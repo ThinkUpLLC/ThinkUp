@@ -54,11 +54,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     'reply_retweet_distance', 'is_geo_encoded', 'author_follower_count');
 
     /**
-     * Sanitises an order_by argument to avoid SQL injection and ensure that the table you're ordering by is valid.
+     * Sanitizes an order_by argument to avoid SQL injection and ensure that the table you're ordering by is valid.
      * @param string $order_by Column to order on.
-     * @return string Sanitised column name. If the column was invalid, "pub_date" is returned.
+     * @return string Sanitized column name. If the column was invalid, "pub_date" is returned.
      */
-    public function sanitiseOrderBy($order_by) {
+    public function sanitizeOrderBy($order_by) {
         // some order_by clauses have a table attached to the front of them, remove this for checking.
         $sans_table = preg_replace('/^[A-Za-z]\./', '', $order_by);
 
@@ -274,7 +274,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($order_by == 'location') {
             $q .= " ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
         } else if ($order_by != 'default') {
-            $order_by = $this->sanitiseOrderBy($order_by);
+            $order_by = $this->sanitizeOrderBy($order_by);
             $q .= " ORDER BY $order_by DESC ";
         } else {
             $q .= " ORDER BY is_reply_by_friend DESC, follower_count desc ";
@@ -704,7 +704,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $direction = 'DESC', $is_public = false) {
         $start_on_record = ($page - 1) * $count;
 
-        $order_by = $this->sanitiseOrderBy($order_by);
+        $order_by = $this->sanitizeOrderBy($order_by);
 
         $direction = $direction == 'DESC' ? 'DESC' : 'ASC';
 
@@ -756,7 +756,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $include_replies=true, $page=1, $iterator=false, $is_public = false) {
         $direction = $direction=="DESC" ? "DESC": "ASC";
         $start_on_record = ($page - 1) * $count;
-        $order_by = $this->sanitiseOrderBy($order_by);
+        $order_by = $this->sanitizeOrderBy($order_by);
 
         // if the 'order_by' string is 'retweets', add an add'l aggregate (sum of two fields) var to the select,
         // which we can then sort on.
@@ -818,7 +818,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $until = strtotime($until);
         }
 
-        $order_by = $this->sanitiseOrderBy($order_by);
+        $order_by = $this->sanitizeOrderBy($order_by);
 
         $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
@@ -867,7 +867,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      */
     private function getAllPostsByUsernameOrderedBy($author_username, $network="twitter", $count=0,
     $order_by="pub_date", $in_last_x_days = 0, $iterator = false, $is_public = false) {
-        $order_by = $this->sanitiseOrderBy($order_by);
+        $order_by = $this->sanitizeOrderBy($order_by);
         $vars = array(
             ':author_username'=>$author_username,
             ':network'=>$network
@@ -981,7 +981,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $include_rts = true, $order_by = 'pub_date', $direction = 'DESC') {
         $start_on_record = ($page - 1) * $count;
 
-        $order_by = $this->sanitiseOrderBy($order_by);
+        $order_by = $this->sanitizeOrderBy($order_by);
 
         $direction = ($direction == 'DESC') ? 'DESC' : 'ASC';
 
@@ -1029,7 +1029,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $is_public = false) {
         $start_on_record = ($page - 1) * $count;
 
-        $order_by = $this->sanitiseOrderBy($order_by);
+        $order_by = $this->sanitizeOrderBy($order_by);
 
         $direction = $direction == 'DESC' ? 'DESC' : 'ASC';
 
@@ -1157,64 +1157,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
-    }
-
-    /**
-     * Get posts by public instances with custom sort order
-     * @param int $page
-     * @param int $count
-     * @param string $order_by field name
-     * @return array Posts with link set
-     */
-    private function getPostsByPublicInstancesOrderedBy($page, $count, $order_by, $in_last_x_days = 0) {
-        $start_on_record = ($page - 1) * $count;
-        //make sure order_by var is set to a valid column name, else default to pub_date
-        $order_by = $this->sanitiseOrderBy($order_by);
-
-        $vars = array(
-            ':limit'=>(int)$count,
-            ':start_on_record'=>(int)$start_on_record
-        );
-
-        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
-        $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ";
-        $q .= "ON p.author_user_id = i.network_user_id ";
-        $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id AND l.network = p.network ";
-        $q .= "WHERE i.is_public = 1 and (p.reply_count_cache > 0 or p.retweet_count_cache > 0) AND ";
-        $q .= " (in_reply_to_post_id = 0 OR in_reply_to_post_id IS null) ";
-        if ($in_last_x_days > 0) {
-            $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
-            $vars[':in_last_x_days'] = (int)$in_last_x_days;
-        }
-        $q .= "ORDER BY p.".$order_by." DESC ";
-        $q .= "LIMIT :start_on_record, :limit";
-
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $ps = $this->execute($q, $vars);
-        $all_rows = $this->getDataRowsAsArrays($ps);
-        $all_posts = array();
-        foreach ($all_rows as $row) {
-            $all_posts[] = $this->setPostWithLink($row);
-        }
-        return $all_posts;
-    }
-
-    public function getPostsByPublicInstances($page, $count) {
-        return $this->getPostsByPublicInstancesOrderedBy($page, $count, "pub_date");
-    }
-
-    public function getTotalPhotoPagesAndPostsByPublicInstances($count) {
-        $q = "SELECT count(*) as total_posts, ceil(count(*) / :count) as total_pages ";
-        $q .= "FROM #prefix#posts p INNER JOIN #prefix#instances i ON p.author_user_id = i.network_user_id ";
-        $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id AND p.network = l.network ";
-        $q .= "WHERE i.is_public = 1 and l.is_image = 1 ";
-        $vars = array(
-            ':count'=>(int)$count
-        );
-
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $ps = $this->execute($q, $vars);
-        return $this->getDataRowAsArray($ps);
     }
 
     public function getPostsToGeoencode($limit = 5000) {

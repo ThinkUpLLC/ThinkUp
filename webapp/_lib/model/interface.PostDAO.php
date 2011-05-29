@@ -369,21 +369,6 @@ interface PostDAO {
     public function getMostRetweetedPosts($user_id, $network, $count, $page=1, $is_public = false);
 
     /**
-     * Get a page of posts by public instances ordered by pub_date desc
-     * @param int $page
-     * @param int $count
-     * @return array Posts with link set
-     */
-    public function getPostsByPublicInstances($page, $count);
-
-    /**
-     * Get total photo posts and pages by public instances
-     * @param int $count number of photo posts per page
-     * @return array Posts with link set
-     */
-    public function getTotalPhotoPagesAndPostsByPublicInstances($count);
-
-    /**
      * Assign parent replied-to post ID to a given post, and increment/decrement reply count cache totals as needed
      * @param int $parent_id
      * @param int $orphan_id

@@ -114,7 +114,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
             'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.
-            $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4),
+            $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4), 'is_protected'=>0,
             'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
             'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
             'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
@@ -129,7 +129,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>18,
             'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is image post '.$counter, 'source'=>'Flickr', 'in_reply_to_post_id'=>null,
-            'in_retweet_of_post_id'=>null,
+            'in_retweet_of_post_id'=>null, 'is_protected'=>0,
             'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
             'pub_date'=>'2006-01-02 00:'.$pseudo_minute.':00', 'network'=>'twitter', 'is_geo_encoded'=>0));
 
@@ -147,7 +147,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>19,
             'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
-            'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+            'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
             $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
 
@@ -167,14 +167,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
                 $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>20,
                 'author_username'=>'user1', 'author_fullname'=>'User 1', 'in_reply_to_post_id'=>null, 
                 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'network'=>'twitter',
-                'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+                'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
                 'post_text'=>'Hey @ev and @jack thanks for founding Twitter post '.$counter, 
                 'pub_date'=>'2006-03-01 00:'.$pseudo_minute.':00', 'location'=>'New Delhi'));
             } else {
                 $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>21,
                 'author_username'=>'user2', 'author_fullname'=>'User 2', 'in_reply_to_post_id'=>null, 
                 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'network'=>'twitter',
-                'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+                'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
                 'post_text'=>'Hey @ev and @jack should fix Twitter - post '.$counter,
                 'pub_date'=>'2006-03-01 00:'.$pseudo_minute.':00', 'place'=>'New Delhi'));
             }
@@ -1078,24 +1078,24 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Test the sanitiseORderBy() method.
+     * Test the sanitizeOrderBy() method.
      */
-    public function testSanitiseOrderBy() {
+    public function testSanitizeOrderBy() {
         $dao = new PostMySQLDAO();
         $order_by = "p.post_id";
-        $order_by = $dao->sanitiseOrderBy($order_by);
+        $order_by = $dao->sanitizeOrderBy($order_by);
         $this->assertEqual($order_by, "p.post_id");
 
         $order_by = "post_id";
-        $order_by = $dao->sanitiseOrderBy($order_by);
+        $order_by = $dao->sanitizeOrderBy($order_by);
         $this->assertEqual($order_by, "post_id");
 
         $order_by = "non-existent-table-name";
-        $order_by = $dao->sanitiseOrderBy($order_by);
+        $order_by = $dao->sanitizeOrderBy($order_by);
         $this->assertEqual($order_by, "pub_date");
 
         $order_by = "'; DROP TABLE tu_posts;--";
-        $order_by = $dao->sanitiseOrderBy($order_by);
+        $order_by = $dao->sanitizeOrderBy($order_by);
         $this->assertEqual($order_by, "pub_date");
     }
 
@@ -1707,66 +1707,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->all_retweets, 102);
         $this->assertEqual($post->rt_threshold, 1);
 
-    }
-
-    /**
-     * Test get pages 1 of posts by public instances
-     */
-    public function testGetPageOneOfPublicPosts() {
-        //Instantiate DAO
-        $pdao = new PostMySQLDAO();
-
-        //Get page 1 containing 15 public posts
-        $page_of_posts = $pdao->getPostsByPublicInstances(1, 15);
-
-        //Assert DAO returns 15 posts
-        $this->assertTrue(sizeof($page_of_posts) == 15);
-
-        //Assert first post 1 contains the right text
-        $this->assertTrue($page_of_posts[0]->post_text == "This is post 39");
-
-        //Asert last post 15 contains the right text
-        $this->assertTrue($page_of_posts[14]->post_text == "This is post 25");
-    }
-
-    /**
-     * Test get page 2 of posts by public instances
-     */
-    public function testGetPageTwoOfPublicPosts() {
-        $pdao = new PostMySQLDAO();
-
-        $page_of_posts = $pdao->getPostsByPublicInstances(2, 15);
-
-        $this->assertTrue(sizeof($page_of_posts) == 15);
-        $this->assertTrue($page_of_posts[0]->post_text == "This is post 24");
-        $this->assertTrue($page_of_posts[14]->post_text == "This is post 10");
-    }
-
-    /**
-     * Test get pages 3 of posts by public instances
-     */
-    public function testGetPageThreeOfPublicPosts() {
-        $pdao = new PostMySQLDAO();
-
-        $page_of_posts = $pdao->getPostsByPublicInstances(3, 15);
-
-        //Assert DAO returns 10 posts on page 3 (with 15 posts per page)
-        //We have 40 posts, so that's 15+15+10
-        $this->assertEqual(sizeof($page_of_posts), 10);
-
-        $this->assertTrue($page_of_posts[0]->post_text == "This is post 9");
-        $this->assertTrue($page_of_posts[9]->post_text == "This is post 0");
-    }
-
-    /**
-     * Test getTotalPhotoPagesAndPostsByPublicInstances
-     */
-    public function testGetTotalPhotoPagesAndPostsByPublicInstances() {
-        $pdao = new PostMySQLDAO();
-        $totals = $pdao->getTotalPhotoPagesAndPostsByPublicInstances(15);
-
-        $this->assertTrue($totals["total_posts"] == 40);
-        $this->assertTrue($totals["total_pages"] == 3);
     }
 
     /**
