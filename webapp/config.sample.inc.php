@@ -65,4 +65,5 @@ if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")
     $THINKUP_CFG['db_user']                   = 'your_test_database_username';
     $THINKUP_CFG['db_password']               = 'your_test_database_password';
     $THINKUP_CFG['db_name']                   = 'your_test_database_name'; //by default, thinkup_tests
+    ini_set('error_reporting', E_STRICT);
 }
