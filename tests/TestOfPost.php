@@ -61,7 +61,7 @@ class TestOfPost extends ThinkUpBasicUnitTestCase {
         }
     }
 
-    private function isAllTrue($a, $b) {
+    public static function isAllTrue($a, $b) {
         return $a && $b;
     }
 
