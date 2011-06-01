@@ -609,11 +609,11 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetAllPostsByUser() {
         $dao = new PostMySQLDAO();
-        $total = $dao->getTotalPostsByUser(18, 'twitter');
+        $total = $dao->getTotalPostsByUser('shutterbug', 'twitter');
         $this->assertEqual($total, 41);
 
         //non-existent author
-        $total = $dao->getTotalPostsByUser(51, 'twitter');
+        $total = $dao->getTotalPostsByUser('nonexistentusername', 'twitter');
         $this->assertEqual($total, 0);
     }
 
@@ -1714,7 +1714,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetTotalPostsByUser() {
         $pdao = new PostMySQLDAO();
-        $total_posts = $pdao->getTotalPostsByUser(13, 'twitter');
+        $total_posts = $pdao->getTotalPostsByUser('ev', 'twitter');
 
         $this->assertTrue($total_posts == 41);
     }

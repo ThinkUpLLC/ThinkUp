@@ -1,11 +1,15 @@
-Back Up ThinkUp's Data
-======================
+Back Up and Export
+==================
+
+ThinkUp provides two tools for exporting and restoring your data: Backup and Export.
+
+Back Up and Restore ThinkUp's Entire Database
+---------------------------------------------
 
 ThinkUp provides both a web-based and command line tool for backing up your installation's data. The best method
 depends on how large your ThinkUp installation's database has grown.
 
-Small Databases: Web-Based Backup (Logged-in admin only)
---------------------------------------------------------
+**Small Databases: Web-Based Backup (Logged-in admin only)** 
 
 If your ThinkUp installation only has 1 or 2 moderately active social media accounts set up in it, and none of your
 database tables have more than 1 million rows, then you should use the easy web-based backup tool. (Hint:
@@ -26,8 +30,7 @@ manually.
 When running a web-based backup, here's what to do if you see the error :doc:`Can't create/write to file
 </troubleshoot/common/backupcannotwrite>`.
 
-Large Databases: Command Line Backup
-------------------------------------
+**Large Databases: Command Line Backup** 
 
 If your ThinkUp installation has more than 2 very active social media accounts set up, chances are your database tables
 are large. (We consider a ThinkUp database with any table over 1 million rows large.)
@@ -42,3 +45,37 @@ Then, run:
 ``$ php backup.php``
 
 This command will back up your current database.
+
+**Restore Your ThinkUp Backup**
+
+In :doc:`Settings>Application
+</userguide/settings/application>`,you can upload a ThinkUp backup file under the "Restore Your Thinkup Database."
+Click on the "Choose File" button to upload your ThinkUp backup file and restore it. This restore operation will
+overwrite your entire existing database; use with caution.
+
+Export a Single Service User's Data
+-----------------------------------
+
+If you want to move a single service user's ThinkUp archive to another ThinkUp installation--if, say, your database
+has become too big and unwieldy, or a user has set up a new ThinkUp installation and want to import their 
+existing archive--you can do that.
+
+Under :doc:`Settings>Application
+</userguide/settings/application>`, click on the "Export a single service user's data" link. Choose a service user
+to export and click on the "Export User Data" button.
+
+You will download a zip file. Extract it, and refer to the README.txt contained inside that zip file for how to import
+the data into another ThinkUp installation.
+
+When to Back Up and When to Export
+----------------------------------
+
+ThinkUp's Backup tool exports the entire database, including internal database ID's, to file. Use the backup
+tool when you are starting with a completely fresh, new database and want to restore everything: including ThinkUp
+users, passwords, and plugin settings.
+
+ThinkUp's Service User Export tool only exports the data associated with a particular service user, without internal
+ID's: posts, friends, followers, links, mentions, replies, retweets, and favorites. This export file can be imported
+into an existing ThinkUp installation with established ThinkUp users and existing service users. Because the export
+file doesn't include internal ID's, the data will be appended to existing data rather than replacing the entire 
+database. Use the Export tool when you only want to transfer a single service user to another ThinkUp installation.

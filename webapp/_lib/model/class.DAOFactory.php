@@ -76,6 +76,10 @@ class DAOFactory {
         'PostDAO' => array(
     //MySQL Version
             'mysql' => 'PostMySQLDAO' ),
+    //Export DAO
+        'ExportDAO' => array(
+    //MySQL Version
+            'mysql' => 'ExportMySQLDAO' ),
     //FavoritePost DAO
         'FavoritePostDAO' => array(
     //MySQL Version

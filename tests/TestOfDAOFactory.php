@@ -290,6 +290,14 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'TwitterInstanceMySQLDAO');
     }
     /**
+     * Test get PostExportDAO
+     */
+    public function testGetPostExportDAO() {
+        $dao = DAOFactory::getDAO('ExportDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'ExportMySQLDAO');
+    }
+    /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
     public function testGetInstallerDAONoConfigFile(){

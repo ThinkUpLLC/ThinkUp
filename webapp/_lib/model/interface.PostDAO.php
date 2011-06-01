@@ -281,12 +281,12 @@ interface PostDAO {
     public function getAllPostsByUsernameIterator($username, $network);
 
     /**
-     * Get count of posts by author user ID
-     * @param int $user_id
+     * Get count of posts by author username
+     * @param str $username
      * @param str $network
      * @return int total posts
      */
-    public function getTotalPostsByUser($user_id, $network);
+    public function getTotalPostsByUser($author_username, $network);
 
     /**
      * Get all the sources of an author's posts and their count

@@ -19,6 +19,7 @@ solutions.
    apc
    changeemail
    backupcannotwrite
+   slowbigdb
 
 Advanced Troubleshooting
 ------------------------

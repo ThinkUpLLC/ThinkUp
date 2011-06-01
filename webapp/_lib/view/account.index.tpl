@@ -73,10 +73,11 @@
         
    <div class="prepend_20">
     <div style="float:right;margin:20px">{insert name="help_link" id='backup'}</div>
-    <h1>Back Up</h1>
+    <h1>Back Up and Export Data</h1>
 
-    <p>
-    <a href="{$site_root_path}install/backup.php">Back up ThinkUp's database</a> (highly recommended before upgrading ThinkUp)
+    <p><br />
+    <a href="{$site_root_path}install/backup.php">Back up ThinkUp's entire database</a> (highly recommended before upgrading ThinkUp)<br /><br />
+    <a href="{$site_root_path}install/exportuserdata.php">Export a single service user's data</a> (for transfer into another existing ThinkUp database)
     </p>
   </div>
         

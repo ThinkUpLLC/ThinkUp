@@ -384,7 +384,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $zipfile = $path . '/' . $version . '.zip';
 
         // if zip file is not there or is older than 8 hours old
-        if(! file_exists($zipfile) || ( time() - filemtime($zipfile) > (60 * 60 * 8) ) ) {
+        if(! file_exists($zipfile) || ( time() - filemtime($zipfile) > (60 * 60 * 24 * 7) ) ) {
             if( file_exists($zipfile) ) {
                 $this->debug("zip file for $version is old, refreshing");
                 unlink($zipfile);

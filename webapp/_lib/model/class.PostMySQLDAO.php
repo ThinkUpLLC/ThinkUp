@@ -936,13 +936,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $iterator = false, $is_public);
     }
 
-    public function getTotalPostsByUser($user_id, $network) {
+    public function getTotalPostsByUser($author_username, $network) {
         $q = "SELECT  COUNT(*) as total ";
         $q .= "FROM #prefix#posts p ";
-        $q .= "WHERE author_user_id = :user_id AND network=:network ";
+        $q .= "WHERE author_username = :author_username AND network=:network ";
         $q .= "ORDER BY pub_date ASC";
         $vars = array(
-            ':user_id'=>$user_id,
+            ':author_username'=>$author_username,
             ':network'=>$network
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);

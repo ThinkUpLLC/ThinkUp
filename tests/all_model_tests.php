@@ -57,6 +57,7 @@ $model_tests->add(new TestOfPluginOptionMySQLDAO());
 $model_tests->add(new TestOfPluginHook());
 $model_tests->add(new TestOfPost());
 $model_tests->add(new TestOfPostMySQLDAO());
+$model_tests->add(new TestOfExportMySQLDAO());
 $model_tests->add(new TestOfPostErrorMySQLDAO());
 $model_tests->add(new TestOfProfiler());
 $model_tests->add(new TestOfSession());

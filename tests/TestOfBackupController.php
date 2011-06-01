@@ -94,7 +94,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
     }
 
     public function XtestBackupCrawlerHasMutex() {
-        // mutex needs to be on another db handle, so can't use doa framework to test to test
+        // mutex needs to be on another db handle, so can't use doa framework to test
         $mutex_name = $this->config->getValue('db_name') . '.' . 'crawler';
         $result = $this->testdb_helper->runSQL("SELECT GET_LOCK('$mutex_name', 1)");
         var_dump(mysql_fetch_assoc($result));
@@ -190,7 +190,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $this->assertPattern("/Unable to open import file, corrupted zip file/is", $results);
     }
 
-    public function testResore() {
+    public function testRestore() {
         // create export
         $dao = new BackupMySQLDAO();
         $export_file = $dao->export();

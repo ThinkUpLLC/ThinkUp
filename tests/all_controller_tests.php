@@ -42,6 +42,7 @@ $controller_test->add(new TestOfDashboardController());
 $controller_test->add(new TestOfThinkUpEmbedController());
 $controller_test->add(new TestOfThreadJSController());
 $controller_test->add(new TestOfExportController());
+$controller_test->add(new TestOfExportServiceUserDataController());
 $controller_test->add(new TestOfForgotPasswordController());
 $controller_test->add(new TestOfGridController());
 $controller_test->add(new TestOfGridExportController());

@@ -86,7 +86,7 @@ class FacebookCrawler {
         $user = $this->parseUserDetails($user_details);
         if (isset($user)) {
             $post_dao = DAOFactory::getDAO('PostDAO');
-            $user["post_count"] = $post_dao->getTotalPostsByUser($uid, 'facebook');
+            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
             $user_object = new User($user, $found_in);
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user_dao->updateUser($user_object);
@@ -153,7 +153,7 @@ class FacebookCrawler {
             $users = $thinkup_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
-                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_id'], 'facebook');
+                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
                     $found_in = 'Facebook user profile stream';
                     $user_object = new User($user, $found_in);
                     $user_dao = DAOFactory::getDAO('UserDAO');
@@ -202,7 +202,7 @@ class FacebookCrawler {
             $users = $thinkup_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
-                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_id'], $user['network']);
+                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], $user['network']);
                     $found_in = 'Facebook page stream';
                     $user_object = new User($user, $found_in);
                     $user_dao = DAOFactory::getDAO('UserDAO');
