@@ -95,7 +95,7 @@
 
               {if $follower_count_history_by_week.milestone}
                 <div class="small gray">
-                  Next milestone: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} weeks</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate. <a href="{$site_root_path}index.php?v=followers-history&u={$instance->network_username}&n={$instance->network}">More...</a>
+                  Next milestone: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} week{if $follower_count_history_by_week.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate. <a href="{$site_root_path}index.php?v=followers-history&u={$instance->network_username}&n={$instance->network}">More...</a>
                 </div>
               {/if}
 
