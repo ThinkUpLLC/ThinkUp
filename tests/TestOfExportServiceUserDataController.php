@@ -27,7 +27,7 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-//require_once THINKUP_ROOT_PATH.'webapp/_lib/controller/class.BackupController.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/controller/class.BackupController.php';
 
 class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
 
@@ -36,9 +36,7 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
         new ExportMySQLDAO();
         $this->config = Config::getInstance();
         $this->pdo = ExportMySQLDAO::$PDO;
-        //$this->backup_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_db_backup.zip';
-        $this->export_test = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_db_backup_test.zip';
-        //$this->backup_dir = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/backup';
+        $this->export_test = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_user_export_test.zip';
 
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
@@ -59,14 +57,29 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
     public function tearDown() {
         parent::tearDown();
 
-        if(file_exists($this->export_test)) {
+        if (file_exists($this->export_test)) {
             unlink($this->export_test);
         }
-
+        self::deleteFile('posts.tmp');
+        self::deleteFile('links.tmp');
+        self::deleteFile('encoded_locations.tmp');
+        self::deleteFile('favorites.tmp');
+        self::deleteFile('follows.tmp');
+        self::deleteFile('follower_count.tmp');
+        self::deleteFile('users_from_posts.tmp');
+        self::deleteFile('users_followees.tmp');
+        self::deleteFile('users_followers.tmp');
         //set zip class requirement class name back
         BackupController::$zip_class_req = 'ZipArchive';
 
         $this->builders[] = null;
+    }
+
+    private function deleteFile($file) {
+        $file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . "/" . $file;
+        if (file_exists($file)) {
+            unlink($file);
+        }
     }
 
     public function testConstructor() {
@@ -134,6 +147,8 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
         $this->assertTrue($zip_files["/links.tmp"]);
         $this->assertTrue($zip_files["/users_from_posts.tmp"]);
         $this->assertTrue($zip_files["/follows.tmp"]);
+        $this->assertTrue($zip_files["/encoded_locations.tmp"]);
+        $this->assertTrue($zip_files["/favorites.tmp"]);
         $za->close();
     }
 }

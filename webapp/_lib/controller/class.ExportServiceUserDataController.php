@@ -74,7 +74,7 @@ class ExportServiceUserDataController extends ThinkUpAdminController {
                     str_replace(' ', '_', $instance->network).'_user_data.zip';
                     $this->zip_file_full_name =  THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/'.
                     $this->zip_file_short_name;
-                    $this->readme_file =  THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/README.txt';
+                    $this->readme_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/README.txt';
                     $this->files_to_zip[] = array('path'=>$this->readme_file, 'name'=>'README.txt');
                     self::appendToReadme(
 'THINKUP EXPORTED USER DATA
@@ -202,8 +202,16 @@ Commands to run:
         $total_replied_to_posts_exported = $export_dao->exportPostsServiceUserRepliedTo($username, $service);
 
         //export favorites
-        $total_favorite_posts_exported = $export_dao->exportFavoritesOfServiceUser($user_id, $service);
+        $favorites_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/favorites.tmp';
+        $total_favorite_posts_exported = $export_dao->exportFavoritesOfServiceUser($user_id, $service,
+        $favorites_table_file);
+        $this->files_to_zip[] = array('path'=>$favorites_table_file, 'name'=>'favorites.tmp');
 
+        $import_instructions = "LOAD DATA INFILE '/your/path/to/favorites.tmp' IGNORE INTO TABLE tu_favorites;
+
+";
+
+        //export posts, links, users
         $posts_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/posts.tmp';
         $links_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/links.tmp';
         $users_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/users_from_posts.tmp';
@@ -213,10 +221,19 @@ Commands to run:
         $this->files_to_zip[] = array('path'=>$links_table_file, 'name'=>'links.tmp');
         $this->files_to_zip[] = array('path'=>$users_table_file, 'name'=>'users_from_posts.tmp');
 
+        //export geodata
+        $geo_table_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/encoded_locations.tmp';
+        $export_dao->exportGeoToFile($geo_table_file);
+        $this->files_to_zip[] = array('path'=>$geo_table_file, 'name'=>'encoded_locations.tmp');
+        $import_instructions .= "LOAD DATA INFILE '/your/path/to/encoded_locations.tmp' IGNORE INTO TABLE ".
+        "tu_encoded_locations;
+
+";
+
         //clean up
         $export_dao->dropExportedPostsTable();
 
-        $import_instructions = "LOAD DATA INFILE '/your/path/to/posts.tmp' IGNORE INTO TABLE tu_posts (".
+        $import_instructions .= "LOAD DATA INFILE '/your/path/to/posts.tmp' IGNORE INTO TABLE tu_posts (".
         $export_dao->getExportFields('posts') .");
 
 ";

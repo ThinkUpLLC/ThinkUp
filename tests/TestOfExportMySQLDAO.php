@@ -232,7 +232,6 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
         'old_retweet_count_cache' =>0, 'in_rt_of_user_id' => null,
         'in_reply_to_post_id'=>45, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
 
-
         $replied_to_posts_exported = $this->dao->exportPostsServiceUserRepliedTo('ev', 'twitter');
         //1 replied-to posts exported
         $this->assertEqual($replied_to_posts_exported, 1);
@@ -243,9 +242,25 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
         $more_data[] = FixtureBuilder::build('favorites', array('post_id'=>44, 'fav_of_user_id'=>13,
         'author_user_id'=>8, 'network'=>'twitter'));
 
-        $favorite_posts_exported = $this->dao->exportFavoritesOfServiceUser(13, 'twitter');
+        $favorites_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/favorites.tmp';
+        if (file_exists($favorites_file)) {
+            unlink($favorites_file);
+        }
+        $this->assertFalse(file_exists($favorites_file));
+        $favorite_posts_exported = $this->dao->exportFavoritesOfServiceUser(13, 'twitter', $favorites_file);
         //1 favorite posts exported
         $this->assertEqual($favorite_posts_exported, 1);
+        $this->assertTrue(file_exists($favorites_file));
+    }
+
+    public function testExportGeoToFile() {
+        $file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/encoded_locations.tmp';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        $this->assertFalse(file_exists($file));
+        $this->dao->exportGeoToFile($file);
+        $this->assertTrue(file_exists($file));
     }
 
     public function testExportToFile() {

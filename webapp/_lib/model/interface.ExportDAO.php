@@ -87,12 +87,14 @@ interface ExportDAO {
      */
     public function exportPostsServiceUserRepliedTo($username, $service);
     /**
-     * Copy the posts which the service user favorited from the core posts table to the temporary export table.
+     * Copy the posts which the service user favorited from the core posts table to the temporary export table;
+     * also export the favorites table data to file.
      * @param str $username
      * @param str $service
+     * @param str $favorites_file
      * @return int Number of posts exported
      */
-    public function exportFavoritesOfServiceUser($user_id, $service);
+    public function exportFavoritesOfServiceUser($user_id, $service, $favorites_file);
     /**
      * Select all the posts in the export table and their links into specified files.
      * @param str $posts_file
@@ -123,4 +125,10 @@ interface ExportDAO {
      */
     public function exportFollowsUsersToFile($user_id, $network, $follows_file, $users_followers_file,
     $users_followees_file);
+
+    /**
+     * Export the entire encoded_locations table to file.
+     * @param str $file
+     */
+    public function exportGeoToFile($file);
 }

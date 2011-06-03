@@ -211,15 +211,19 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         return $this->getDataRowsAsArrays($stmt);
     }
 
-    public function exportFavoritesOfServiceUser($user_id, $service) {
+    public function exportFavoritesOfServiceUser($user_id, $service, $favorites_file) {
         if ( !self::doesExportedPostsTableExist() ) {
             self::createExportedPostsTable();
         }
-        $q = "SELECT post_id FROM #prefix#favorites WHERE fav_of_user_id = :user_id AND network = :network;";
+        $q = "SELECT * INTO OUTFILE '$favorites_file' FROM #prefix#favorites WHERE fav_of_user_id = :user_id ".
+        "AND network = :network;";
         $vars = array(
             ':user_id'=>$user_id,
             ':network'=>$service
         );
+        $stmt = $this->execute($q, $vars);
+
+        $q = "SELECT post_id FROM #prefix#favorites WHERE fav_of_user_id = :user_id AND network = :network;";
         $stmt = $this->execute($q, $vars);
         $fav_ids = $this->getDataRowsAsArrays($stmt);
         $total_favs_exported = 0;
@@ -258,8 +262,8 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         $q .= "INNER JOIN ".self::$exported_posts_table_name." p ON l.post_id = p.post_id AND l.network = p.network;";
         $stmt = $this->execute($q);
 
-        $q = "SELECT DISTINCT ".$this->getExportFields('users', 'u')." INTO OUTFILE '$users_file' FROM #prefix#users u ";
-        $q .= "INNER JOIN ".self::$exported_posts_table_name.
+        $q = "SELECT DISTINCT ".$this->getExportFields('users', 'u')." INTO OUTFILE '$users_file' ";
+        $q .= "FROM #prefix#users u INNER JOIN ".self::$exported_posts_table_name.
         " p ON p.author_user_id = u.user_id AND p.network = u.network;";
         $stmt = $this->execute($q);
 
@@ -337,6 +341,14 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
             ':network'=>$network
         );
         $stmt = $this->execute($q, $vars);
+    }
+
+    public function exportGeoToFile($file) {
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        $q = "SELECT * INTO OUTFILE '$file' FROM #prefix#encoded_locations;";
+        $stmt = $this->execute($q);
     }
 
     public function getExportFields($table_name, $prefix='') {
