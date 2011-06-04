@@ -27,7 +27,6 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
-require_once THINKUP_ROOT_PATH.'webapp/_lib/controller/class.BackupController.php';
 
 class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
 
@@ -55,8 +54,6 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
     }
 
     public function tearDown() {
-        parent::tearDown();
-
         if (file_exists($this->export_test)) {
             unlink($this->export_test);
         }
@@ -72,7 +69,9 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
         //set zip class requirement class name back
         BackupController::$zip_class_req = 'ZipArchive';
 
-        $this->builders[] = null;
+        $this->builders = null;
+
+        parent::tearDown();
     }
 
     private function deleteFile($file) {
