@@ -32,6 +32,11 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.Loader.php';
 
 class ThinkUpBasicUnitTestCase extends UnitTestCase {
     /**
+     * Test CSRF Token
+     */
+    const CSRF_TOKEN = 'test_csrf_token_123';
+
+    /**
      * Initialize Config and Webapp objects, clear $_SESSION, $_POST, $_GET, $_REQUEST
      */
     public function setUp() {
@@ -122,11 +127,15 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
      * Wrapper for logging in a ThinkUp user in a test
      * @param str $email
      * @param bool $is_admin Default to false
+     * @param bool $use_csrf_token Whether or not to put down valid CSRF token, default to false
      */
-    protected function simulateLogin($email, $is_admin = false) {
+    protected function simulateLogin($email, $is_admin = false, $use_csrf_token = false) {
         SessionCache::put('user', $email);
         if ($is_admin) {
             SessionCache::put('user_is_admin', true);
+        }
+        if ($use_csrf_token) {
+            SessionCache::put('csrf_token', self::CSRF_TOKEN);
         }
     }
 

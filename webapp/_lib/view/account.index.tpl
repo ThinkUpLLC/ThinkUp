@@ -93,6 +93,7 @@
               <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>
               <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
                 <input name="oldpass" type="password" id="oldpass">
+                {insert name="csrf_token"}
               </div>
             </div>
             <div class="clearfix">
@@ -158,7 +159,8 @@
         <h1>Invite User</h1>
         {include file="_usermessage.tpl"}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
-                <input type="submit" id="login-save" name="invite" value="Create Invitation" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+                {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
+                class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
           </form>
         </div>
           
@@ -179,7 +181,7 @@ $(function() {
     $(".btnPub").click(function() {
       var element = $(this);
       var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=1";
+      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token;
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
@@ -197,7 +199,7 @@ $(function() {
     $(".btnPriv").click(function() {
       var element = $(this);
       var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=0";
+      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token;
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
@@ -217,7 +219,7 @@ $(function() {
     $(".btnPlay").click(function() {
       var element = $(this);
       var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=1";
+      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token;
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
@@ -235,7 +237,7 @@ $(function() {
     $(".btnPause").click(function() {
       var element = $(this);
       var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=0";
+      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token;
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
@@ -253,7 +255,7 @@ $(function() {
 
   $(function() {
     var activate = function(u) {
-      var dataString = 'pid=' + u + "&a=1";
+      var dataString = 'pid=' + u + "&a=1&csrf_token=" + window.csrf_token;
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
@@ -280,7 +282,7 @@ $(function() {
     };
 
     var deactivate = function(u) {
-      var dataString = 'pid=' + u + "&a=0";
+      var dataString = 'pid=' + u + "&a=0&csrf_token=" + window.csrf_token;
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
@@ -319,7 +321,7 @@ $(function() {
     var activateOwner = function(u) {
       //removing the "user" from id here to stop conflict with plugin    
       u = u.substr(4);
-      var dataString = 'oid=' + u + "&a=1";
+      var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token;
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
@@ -348,7 +350,7 @@ $(function() {
     var deactivateOwner = function(u) {
       //removing the "user" from id here to stop conflict with plugin
       u = u.substr(4);
-      var dataString = 'oid=' + u + "&a=0";
+      var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token;
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",

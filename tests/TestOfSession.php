@@ -101,6 +101,27 @@ class TestOfSession extends ThinkUpUnitTestCase {
         //
         //        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
         //        $this->builder1 = FixtureBuilder::build('owners', $owner);
+
+        // we should have a CSRF token
+        $this->assertNotNull($_SESSION[$config->getValue('source_root_path')]['csrf_token']);
+    }
+
+    public function testGetCSRFToken() {
+        $val = array();
+        $val["id"] = 10;
+        $val["user_name"] = 'testuser';
+        $val["full_name"] = 'Test User';
+        $val['email'] = 'me@example.com';
+        $val['last_login'] = '1/1/2006';
+        $val["is_admin"] = 0;
+        $val["is_activated"] = 1;
+        $val["failed_logins"] = 0;
+        $val["account_status"] = '';
+        $owner = new Owner($val);
+        $session = new Session();
+        $this->assertNull($session->getCSRFToken());
+        $session->completeLogin($owner);
+        $this->assertNotNull($session->getCSRFToken());
     }
 
     public function testCompleteLoginAndIsLoggedInIsAdmin() {

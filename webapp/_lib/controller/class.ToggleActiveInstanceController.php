@@ -53,6 +53,8 @@ class ToggleActiveInstanceController extends ThinkUpAdminController {
 
     public function adminControl(){
         if (!$this->is_missing_param) {
+            // verify CSRF token
+            $this->validateCSRFToken();
             $is_active = ($_GET["p"] != 1)?false:true;
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             $this->addToView('result', $instance_dao->setActive($_GET["u"], $is_active));

@@ -73,6 +73,12 @@ abstract class ThinkUpController {
     protected $content_type = 'text/html; charset=UTF-8'; //default
 
     /**
+     *
+     * @var boolean if true we will pass a CSRF token to the view
+     */
+    protected $view_csrf_token = false; //default
+
+    /**
      * Constructs ThinkUpController
      *
      *  Adds email address of currently logged in ThinkUp user, '' if not logged in, to view
@@ -181,6 +187,13 @@ abstract class ThinkUpController {
         if ( count($this->header_scripts) > 0) {
             $this->addToView('header_scripts', $this->header_scripts);
         }
+
+        // add CSRF token if enabled and defined
+        if ($this->view_csrf_token) {
+            $csrf_token = Session::getCSRFToken();
+            if (isset($csrf_token)) { $this->addToView('csrf_token', $csrf_token); }
+        }
+
         $this->sendHeader();
         if (isset($this->view_template)) {
             if ($this->view_mgr->isViewCached()) {
@@ -490,5 +503,39 @@ abstract class ThinkUpController {
     public function addInfoMessage($msg) {
         $this->disableCaching();
         $this->addToView('infomsg', $msg );
+    }
+
+    /**
+     * Will enable a CSRF token in the view
+     */
+    public function enableCSRFToken() {
+        $this->view_csrf_token = true;
+    }
+
+    /**
+     * Get the view CSRF token enabled status
+     */
+    public function isEnableCSRFToken() {
+        return $this->view_csrf_token;
+    }
+
+    /**
+     * Validate the CSRF token passed in the request data.
+     * @throws invalid InvalidCSRFTokenException
+     * @return bool True if $_POST['csrf_token'] or $_GET['csrf_token'] is valid
+     */
+    public function validateCSRFToken() {
+        $token = 'no token passed';
+        if (isset($_POST['csrf_token'])) {
+            $token = $_POST['csrf_token'];
+        } else if (isset($_GET['csrf_token'])) {
+            $token = $_GET['csrf_token'];
+        }
+        $session_token = Session::getCSRFToken();
+        if ($session_token && $session_token == $token) {
+            return true;
+        } else {
+            throw new InvalidCSRFTokenException($token);
+        }
     }
 }

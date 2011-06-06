@@ -90,12 +90,28 @@ class TestOfToggleActivePluginController extends ThinkUpUnitTestCase {
 
     public function testBothParamsExistentInstance() {
         $builder = FixtureBuilder::build('plugins', array('id'=>51, 'is_active'=>0));
-        $this->simulateLogin('me@example.com', true);
+        $this->simulateLogin('me@example.com', true, true);
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
         $_GET['pid'] = '51';
         $_GET['a'] = '1';
         $controller = new ToggleActivePluginController(true);
         $results = $controller->go();
         $this->assertEqual($results, 1);
+    }
+
+    public function testBothParamsExistentInstanceNoCSRFToken() {
+        $builder = FixtureBuilder::build('plugins', array('id'=>51, 'is_active'=>0));
+        $this->simulateLogin('me@example.com', true, true);
+        //$_GET['csrf_token'] = parent::CSRF_TOKEN;
+        $_GET['pid'] = '51';
+        $_GET['a'] = '1';
+        $controller = new ToggleActivePluginController(true);
+        try {
+            $results = $controller->control();
+            $this->fail("Should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException', "threw a InvalidCSRFTokenException");
+        }
     }
 
     public function testBothParamsExistentInstanceDeactivateCallback() {
@@ -112,9 +128,11 @@ class TestOfToggleActivePluginController extends ThinkUpUnitTestCase {
         $active_instances = $instance_dao->getAllInstances("DESC", true, "twitter");
         $this->assertEqual(sizeof($active_instances), 2);
 
-        $this->simulateLogin('me@example.com', true);
+        $this->simulateLogin('me@example.com', true, true);
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
         $_GET['pid'] = '1';
         $_GET['a'] = '0';
+
         $controller = new ToggleActivePluginController(true);
         $results = $controller->go();
         $this->assertEqual($results, 1);

@@ -91,14 +91,47 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Configure Your Account');
     }
 
+    public function testCSRFEndabled() {
+        $controller = new AccountConfigurationController(true);
+        $this->assertTrue(isset($controller), 'constructor test');
+        $this->assertTrue($controller->isEnableCSRFToken());
+    }
+
+    public function testDeleteExistingInstanceNoCSRFToken() {
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+
+        //Admin: should delete all owner instances and instance
+        $this->simulateLogin('admin@example.com', true, true);
+        $_POST['action'] = "delete";
+        $_POST["instance_id"] = 1;
+        $controller = new AccountConfigurationController(true);
+
+        //before
+        $instance = $instance_dao->get(1);
+        $this->assertNotNull($instance);
+
+        $owner_instances = $owner_instance_dao->getByInstance(1);
+        $this->assertNotNull($owner_instances);
+        $this->assertIsA($owner_instances, 'Array');
+        $this->assertEqual(sizeof($owner_instances), 2);
+        try {
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
+    }
+
     public function testDeleteExistingInstanceAsAdmin() {
         $instance_dao = new InstanceMySQLDAO();
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
 
         //Admin: should delete all owner instances and instance
-        $this->simulateLogin('admin@example.com', true);
+        $this->simulateLogin('admin@example.com', true, true);
         $_POST['action'] = "delete";
         $_POST["instance_id"] = 1;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
         $controller = new AccountConfigurationController(true);
 
         //before
@@ -141,9 +174,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
 
         //Should delete the owner instance, and since there's no other owner, the instance itself
-        $this->simulateLogin('me@example.com');
+        $this->simulateLogin('me@example.com', false, true);
         $_POST['action'] = "delete";
         $_POST["instance_id"] = 2;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
         $controller = new AccountConfigurationController(true);
 
         //before
@@ -189,9 +223,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
 
         //Should delete the owner instance but leave the instance alone
-        $this->simulateLogin('me@example.com');
+        $this->simulateLogin('me@example.com', false, true);
         $_POST['action'] = "delete";
         $_POST["instance_id"] = 2;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
         $controller = new AccountConfigurationController(true);
 
         //before
@@ -234,9 +269,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
 
         //Should delete the owner instance but leave the instance alone
-        $this->simulateLogin('me@example.com');
+        $this->simulateLogin('me@example.com', false, true);
         $_POST['action'] = "delete";
         $_POST["instance_id"] = 2;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
         $controller = new AccountConfigurationController(true);
 
         //before
@@ -389,12 +425,30 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$v_mgr->getTemplateDataItem('installed_plugins'));
     }
 
-    public function testAuthControlLoggedInChangePasswordSuccess() {
-        $this->simulateLogin('me@example.com');
+    public function testAuthControlLoggedInChangePasswordNoCSRFToken() {
+        $this->simulateLogin('me@example.com', false, true);
         $_POST['changepass'] = 'Change password';
         $_POST['oldpass'] = 'oldpassword';
         $_POST['pass1'] = 'newpassword';
         $_POST['pass2'] = 'newpassword';
+
+        $controller = new AccountConfigurationController(true);
+        try {
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
+
+    }
+
+    public function testAuthControlLoggedInChangePasswordSuccess() {
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['changepass'] = 'Change password';
+        $_POST['oldpass'] = 'oldpassword';
+        $_POST['pass1'] = 'newpassword';
+        $_POST['pass2'] = 'newpassword';
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
 
         $controller = new AccountConfigurationController(true);
         $results = $controller->go();
@@ -531,12 +585,28 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
     }
 
+    public function testAuthControlInviteUserNoCSRFToken() {
+        $this->simulateLogin('me@example.com', false, true);
+        $_SERVER['HTTP_HOST'] = "mytestthinkup/";
+        $_SERVER['HTTPS'] = null;
+        $_POST['invite'] = 'Create Invitation' ;
+
+        $controller = new AccountConfigurationController(true);
+        try {
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
+    }
+
     public function testAuthControlInviteUser() {
-        $this->simulateLogin('me@example.com');
+        $this->simulateLogin('me@example.com', false, true);
 
         $_SERVER['HTTP_HOST'] = "mytestthinkup/";
         $_SERVER['HTTPS'] = null;
         $_POST['invite'] = 'Create Invitation' ;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
 
         $controller = new AccountConfigurationController(true);
         $results = $controller->go();

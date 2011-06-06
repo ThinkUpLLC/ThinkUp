@@ -90,9 +90,24 @@ class TestOfToggleActiveOwnerController extends ThinkUpUnitTestCase {
         $this->assertEqual($results, 0, $results);
     }
 
+    public function testBothParamsExistentInstanceNoCSRFToken() {
+        $builder = FixtureBuilder::build('owners', array('id'=>51, 'email'=>'me123@example.com', 'is_active'=>0));
+        $this->simulateLogin('me@example.com', true, true);
+        $_GET['oid'] = '51';
+        $_GET['a'] = '1';
+        $controller = new ToggleActiveOwnerController(true);
+        try {
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
+    }
+
     public function testBothParamsExistentInstance() {
         $builder = FixtureBuilder::build('owners', array('id'=>51, 'email'=>'me123@example.com', 'is_active'=>0));
-        $this->simulateLogin('me@example.com', true);
+        $this->simulateLogin('me@example.com', true, true);
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
         $_GET['oid'] = '51';
         $_GET['a'] = '1';
         $controller = new ToggleActiveOwnerController(true);

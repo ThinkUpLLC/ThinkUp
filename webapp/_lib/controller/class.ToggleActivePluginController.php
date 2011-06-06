@@ -53,6 +53,8 @@ class ToggleActivePluginController extends ThinkUpAdminController {
 
     public function adminControl(){
         if (!$this->is_missing_param) {
+            // verify CSRF token
+            $this->validateCSRFToken();
             $is_active = ($_GET["a"] != 1)?false:true;
             $plugin_dao = DAOFactory::getDAO('PluginDAO');
             $result = $plugin_dao->setActive($_GET["pid"], $is_active);

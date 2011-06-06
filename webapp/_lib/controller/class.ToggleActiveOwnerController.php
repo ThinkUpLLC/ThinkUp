@@ -53,6 +53,8 @@ class ToggleActiveOwnerController extends ThinkUpAdminController {
 
     public function adminControl(){
         if (!$this->is_missing_param) {
+            // verify CSRF token
+            $this->validateCSRFToken();
             $is_activated = ($_GET["a"] != 1)?false:true;
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
             $this->addToView('result', $owner_dao->setOwnerActive($_GET["oid"], $is_activated));

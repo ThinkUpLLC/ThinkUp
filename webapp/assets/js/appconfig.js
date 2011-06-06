@@ -114,6 +114,8 @@ var TUApplicationSettings = function() {
 				params[key] = $(id).val();
 			}
 		}
+		// add CSRF token
+		params['csrf_token'] = window.csrf_token;
 		if (this.DEBUG) {
 			console.debug("saving app settings");
 			console.dir( {

@@ -88,11 +88,26 @@ class TestOfToggleActiveInstanceController extends ThinkUpUnitTestCase {
         $this->assertEqual($results, 0, $results);
     }
 
-    public function testBothParamsExistentInstance() {
+    public function testBothParamsExistentInstanceNoCSRFToken() {
         $builder = FixtureBuilder::build('instances', array('id'=>12, 'is_active'=>1));
-        $this->simulateLogin('me@example.com', true);
+        $this->simulateLogin('me@example.com', true, true);
         $_GET['u'] = '12';
         $_GET['p'] = '0';
+        $controller = new ToggleActiveInstanceController(true);
+        try {
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
+    }
+
+    public function testBothParamsExistentInstance() {
+        $builder = FixtureBuilder::build('instances', array('id'=>12, 'is_active'=>1));
+        $this->simulateLogin('me@example.com', true, true);
+        $_GET['u'] = '12';
+        $_GET['p'] = '0';
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
         $controller = new ToggleActiveInstanceController(true);
         $results = $controller->go();
         $this->assertEqual($results, 1);

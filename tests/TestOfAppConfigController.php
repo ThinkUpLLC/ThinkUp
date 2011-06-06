@@ -99,9 +99,27 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_obj->values->default_instance->option_value, '123');
     }
 
-    public function testSaveConfigViewData() {
-        $this->simulateLogin('me@example.com', true);
+    public function testSaveConfigViewDataNoCSRFTokenPassed() {
+        // create a session with a session token
+        $this->simulateLogin('me@example.com', true, true);
         $_POST['save'] = true;
+
+        // bad session token set
+        //SessionCache::setKey('csrf_token', '1234567');
+
+        $controller = new AppConfigController(true);
+        try {
+            $results = $controller->control();
+            $this->fail("Should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException', "threw a InvalidCSRFTokenException");
+        }
+    }
+
+    public function testSaveConfigViewData() {
+        $this->simulateLogin('me@example.com', true, true);
+        $_POST['save'] = true;
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
 
         // no values
         $controller = new AppConfigController(true);

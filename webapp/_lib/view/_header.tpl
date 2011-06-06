@@ -15,6 +15,7 @@
   <script type="text/javascript" src="{$site_root_path}assets/js/jquery-ui.min-1.8.js"></script>
   <script type="text/javascript" src="{$site_root_path}plugins/twitter/assets/js/widgets.js"></script>
   <script type="text/javascript">var site_root_path = '{$site_root_path}';</script>
+  {if $csrf_token}<script type="text/javascript">var csrf_token = '{$csrf_token}';</script>{/if}
   {foreach from=$header_scripts item=script}
     <script type="text/javascript" src="{$site_root_path}{$script}"></script>
   {/foreach}

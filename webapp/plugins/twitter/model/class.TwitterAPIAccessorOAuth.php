@@ -360,7 +360,7 @@ class TwitterAPIAccessorOAuth {
 
         $georss = null;
         $namespaces = $post->getNameSpaces(true);
-        if(isset($namespaces['georss'])) {
+        if (isset($namespaces['georss'])) {
             $georss = $post->geo->children($namespaces['georss']);
         }
         $parsed_data = array('post_id'=>$post->id,

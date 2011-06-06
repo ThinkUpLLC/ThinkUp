@@ -53,6 +53,8 @@ class TogglePublicInstanceController extends ThinkUpAuthController {
 
     public function authControl(){
         if (!$this->is_missing_param) {
+            // verify CSRF token
+            $this->validateCSRFToken();
             $is_public = ($_GET["p"] != 1)?false:true;
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             $this->addToView('result', $instance_dao->setPublic($_GET["u"], $is_public));

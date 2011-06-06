@@ -59,7 +59,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
      */
     public function testBadAction() {
         $controller = $this->getController();
-
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
         // no actions defined
         $results = $controller->go();
         // var_dump($results);
@@ -79,6 +79,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
 
     public function testNoProfilerOutput() {
         // Enable profiler
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
         $config = Config::getInstance();
         $config->setValue('enable_profiler', true);
         $_SERVER['HTTP_HOST'] = 'something';
@@ -98,7 +99,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
      */
     public function testBadPluginId() {
         $controller = $this->getController();
-
+        $_POST['csrf_token'] = parent::CSRF_TOKEN;
         // no plugin id defined
         $_GET['action'] = 'set_options';
         $results = $controller->go();
@@ -140,6 +141,24 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
     /**
      * test add plugin options
      */
+    public function testSavePluginOptionNoCSRFToken() {
+        // add one option
+        $controller = $this->getController();
+        $builder = $this->buildPlugin();
+        $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
+        $_GET['action'] = 'set_options';
+        $_GET['option_test0'] = 'value0';
+        try {
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
+    }
+
+    /**
+     * test add plugin options
+     */
     public function testSavePluginOption() {
         // add one option
         $controller = $this->getController();
@@ -147,6 +166,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
         $_GET['action'] = 'set_options';
         $_GET['option_test0'] = 'value0';
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
         $results = $controller->go();
         $json_response = json_decode($results);
         $this->assertIsA($json_response, 'stdClass');
@@ -183,12 +203,36 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
     /**
      * test update plugin option
      */
+    public function testUpdatePluginOptionNoCSRFToken() {
+        // update two options out of three, third has same data
+        $controller = $this->getController();
+        $builder = $this->buildPlugin();
+        $builder_pos = $this->buildPluginOptions($builder->columns[ 'last_insert_id' ]);
+        $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
+        $_GET['action'] = 'set_options';
+        $_GET['option_' . $builder_pos[0]->columns['option_name']] = 'value0';
+        $_GET['option_' . $builder_pos[1]->columns['option_name']] = 'value1';
+        $_GET['option_' . $builder_pos[2]->columns['option_name']] = $builder_pos[2]->columns['option_value'];
+        $_GET['id_option_' . $builder_pos[0]->columns['option_name']] = $builder_pos[0]->columns['last_insert_id'];
+        $_GET['id_option_' . $builder_pos[1]->columns['option_name']] = $builder_pos[1]->columns['last_insert_id'];
+        $_GET['id_option_' . $builder_pos[2]->columns['option_name']] = $builder_pos[2]->columns['last_insert_id'];
+        try {
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
+    }
+    /**
+     * test update plugin option
+     */
     public function testUpdatePluginOption() {
         // update two options out of three, third has same data
         $controller = $this->getController();
         $builder = $this->buildPlugin();
         $builder_pos = $this->buildPluginOptions($builder->columns[ 'last_insert_id' ]);
         $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
         $_GET['action'] = 'set_options';
         $_GET['option_' . $builder_pos[0]->columns['option_name']] = 'value0';
         $_GET['option_' . $builder_pos[1]->columns['option_name']] = 'value1';
@@ -219,6 +263,29 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
             }
         }
     }
+    /**
+     * test update/delete plugin options no csrf
+     */
+    public function testUpdateDeletePluginOptionNoCSRFToken() {
+        // update two options out of three, third has same data
+        $controller = $this->getController();
+        $builder = $this->buildPlugin();
+        $builder_pos = $this->buildPluginOptions($builder->columns[ 'last_insert_id' ]);
+        $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
+        $_GET['action'] = 'set_options';
+        $_GET['option_' . $builder_pos[0]->columns['option_name']] = '';
+        $_GET['option_' . $builder_pos[1]->columns['option_name']] = 'value1';
+        $_GET['option_' . $builder_pos[2]->columns['option_name']] = $builder_pos[2]->columns['option_value'];
+        $_GET['id_option_' . $builder_pos[0]->columns['option_name']] = $builder_pos[0]->columns['last_insert_id'];
+        $_GET['id_option_' . $builder_pos[1]->columns['option_name']] = $builder_pos[1]->columns['last_insert_id'];
+        $_GET['id_option_' . $builder_pos[2]->columns['option_name']] = $builder_pos[2]->columns['last_insert_id'];
+        try {
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
+    }
 
     /**
      * test update/delete plugin options
@@ -229,6 +296,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $builder = $this->buildPlugin();
         $builder_pos = $this->buildPluginOptions($builder->columns[ 'last_insert_id' ]);
         $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
         $_GET['action'] = 'set_options';
         $_GET['option_' . $builder_pos[0]->columns['option_name']] = '';
         $_GET['option_' . $builder_pos[1]->columns['option_name']] = 'value1';
@@ -282,7 +350,7 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
      * get a plugin option controller
      */
     public function getController() {
-        $this->simulateLogin('me@example.com', true);
+        $this->simulateLogin('me@example.com', true, true);
         $config = Config::getInstance();
         $config->setValue('site_root_path', '/my/path/to/thinktank/');
         return new PluginOptionController(true);

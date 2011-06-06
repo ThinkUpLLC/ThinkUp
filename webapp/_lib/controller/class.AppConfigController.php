@@ -39,6 +39,8 @@ class AppConfigController extends ThinkUpAdminController {
         $option_dao = DAOFactory::getDAO("OptionDAO");
 
         if (isset($_POST['save'])) {
+            // verify CSRF token
+            $this->validateCSRFToken();
             $required = array();
             $config_values = array();
             $parent_config_values = array();

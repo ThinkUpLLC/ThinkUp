@@ -39,6 +39,9 @@ class PluginOptionController extends ThinkUpAdminController {
         $this->setContentType('application/json');
         $this->json = array('status' => 'failed');
 
+        // validate CSRF token
+        $this->validateCSRFToken();
+
         // verify we have a proper action and plugin id
         if (isset($_GET['action']) && $_GET['action'] == 'set_options') {
             if (isset($_GET['plugin_id'])

@@ -95,6 +95,7 @@ var PluginOptions = function() {
         } else {
             plugin_options.submitting = true;
             controller_uri = site_root_path + 'account/plugin-options.php';
+            form_data['csrf_token'] = window.csrf_token;
             $.ajax({
                 url: controller_uri,
                 data: form_data,

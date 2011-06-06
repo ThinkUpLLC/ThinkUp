@@ -132,6 +132,11 @@ class Session {
     public static function completeLogin($owner) {
         SessionCache::put('user', $owner->email);
         SessionCache::put('user_is_admin', $owner->is_admin);
+        // set a CSRF token
+        SessionCache::put('csrf_token', uniqid(mt_rand(), true));
+        if (isset($_SESSION["MODE"]) && $_SESSION["MODE"] == 'TESTS') {
+            SessionCache::put('csrf_token', 'TEST_CSRF_TOKEN');
+        }
     }
 
     /**
@@ -162,5 +167,17 @@ class Session {
      */
     public static function getAPISecretFromPassword($pwd_from_db) {
         return sha1(sha1($pwd_from_db.self::$api_salt).self::$api_salt);
+    }
+
+    /**
+     * Returns a CSRF token that should be used whith _GETs and _POSTs requests.
+     * @return str CSRF token
+     */
+    public static function getCSRFToken() {
+        if (self::isLoggedIn()) {
+            return SessionCache::get('csrf_token');
+        } else {
+            return null;
+        }
     }
 }

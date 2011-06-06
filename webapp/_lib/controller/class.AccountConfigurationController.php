@@ -41,9 +41,12 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $this->disableCaching();
         $this->setViewTemplate('account.index.tpl');
         $this->setPageTitle('Configure Your Account');
+        $this->enableCSRFToken();
     }
 
     public function authControl() {
+        $this->disableCaching();
+
         $webapp = Webapp::getInstance();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $invite_dao = DAOFactory::getDAO('InviteDAO');
@@ -67,6 +70,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $this->addErrorMessage("New password must be at least 5 characters. ".
                 "Your password has not been changed." );
             } else {
+                // verify CSRF token
+                $this->validateCSRFToken();
                 $cryptpass = $this->app_session->pwdcrypt($_POST['pass1']);
                 $owner_dao->updatePassword($this->getLoggedInUser(), $cryptpass);
                 $this->addSuccessMessage("Your password has been updated.");
@@ -75,6 +80,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
 
         // process invite
         if (isset($_POST['invite']) && ( $_POST['invite'] == 'Create Invitation' ) ) {
+            // verify CSRF token
+            $this->validateCSRFToken();
             $invite_code =  substr(md5(uniqid(rand(), true)), 0, 10) ;
             $invite_added = $invite_dao->addInviteCode( $invite_code ) ;
 
@@ -97,6 +104,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             $instance = $instance_dao->get($_POST['instance_id']);
             if ( isset($instance) ) {
+                // verify CSRF token
+                $this->validateCSRFToken();
                 if ($this->isAdmin()) {
                     //delete all owner_instances
                     $owner_instance_dao->deleteByInstance($instance->id);
