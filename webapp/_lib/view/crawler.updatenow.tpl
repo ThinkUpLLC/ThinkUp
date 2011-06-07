@@ -9,7 +9,7 @@
 <h1>Update ThinkUp</h1>
 <p class="success">
 ThinkUp is updating your data. To see the technical details of what's going on, check out the log below.
-This could take awhile. Leave this page open until it's complete.
+This could take a while. Leave this page open until it's complete.
 </p>
 <br />
 <iframe width="850" height="500" src="run.php{if $log == 'full'}?log=full{/if}" style="border:solid black 1px">
