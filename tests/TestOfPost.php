@@ -52,7 +52,9 @@ class TestOfPost extends ThinkUpBasicUnitTestCase {
         "would you believe this url?  http://foo.com/more_(than)_one_(parens)   " => 
         array('http://foo.com/more_(than)_one_(parens)'),
         "detects embedding <http://foo.com/blah_blah/> nicely <tag>http://example.com</tag>" 
-        => array('http://foo.com/blah_blah/', 'http://example.com') );
+        => array('http://foo.com/blah_blah/', 'http://example.com'),
+        '"RT @someone doesnt screw up RTs with quotes that bookend a link like http://example.com"'
+        => array('http://example.com') );
 
         foreach ($test_patterns as $test_text=>$expected_urls) {
             $urls = Post::extractURLs($test_text);
