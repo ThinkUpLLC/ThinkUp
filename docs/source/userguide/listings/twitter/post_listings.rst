@@ -35,6 +35,10 @@ Therefore, ThinkUp captures retweets in two ways:
 ThinkUp displays the sum of the total number of old-style retweets it has counted as well as the number of native
 retweets Twitter has reported. 
 
+The number of retweets ThinkUp displays is the sum of two numbers: the number of old-style retweets it has counted and
+either the number of native retweets Twitter has reported or the number of native retweets it has in its database
+(whichever is larger).
+
 .. admonition:: Note on Retweet Counts Prior to Beta 13
 
     Prior to beta 13, some tweets' retweet counts got set at Twitter's max of 100. As of beta 13, retweet counts are
