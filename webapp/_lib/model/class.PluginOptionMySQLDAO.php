@@ -41,7 +41,7 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
 
     public function deleteOption($id) {
         $count = $this->option_dao->deleteOption($id);
-        if($count == 1) {
+        if ($count == 1) {
             return true;
         } else {
             return false;
@@ -56,7 +56,7 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
     public function updateOption($id, $name, $value) {
 
         $cnt = $this->option_dao->updateOption($id, $value, $name);
-        if($cnt > 0) {
+        if ($cnt > 0) {
             return true;
         } else {
             return false;
@@ -66,11 +66,11 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
     public function getOptions($plugin_folder, $cached = false) {
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $plugin_id = $plugin_dao->getPluginId($plugin_folder);
-        if($plugin_id) {
+        if ($plugin_id) {
             $namespace = $this->namespace . '-' . $plugin_id;
             $options =  $this->option_dao->getOptions($namespace, $cached);
             $plugin_opts = array();
-            if($options) {
+            if ($options) {
                 foreach($options as $option) {
                     $plugin_opt = new PluginOption();
                     $plugin_opt->id = $option->option_id;

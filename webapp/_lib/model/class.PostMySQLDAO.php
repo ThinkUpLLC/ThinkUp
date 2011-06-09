@@ -787,7 +787,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':author_id'=>$author_id,
             ':network'=>$network,
         );
-        if(isset($count) && $count > 0) {
+        if (isset($count) && $count > 0) {
             $q .= "LIMIT :start_on_record, :limit";
             $vars[':limit'] = (int)$count;
             $vars[':start_on_record'] = (int)$start_on_record;
@@ -796,7 +796,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
-        if($iterator) {
+        if ($iterator) {
             return (new PostIterator($ps));
         }
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -846,7 +846,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
-        if($iterator) {
+        if ($iterator) {
             return (new PostIterator($ps));
         }
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -905,7 +905,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        if($iterator) {
+        if ($iterator) {
             return (new PostIterator($ps));
         }
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -1014,7 +1014,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        if($iterator) {
+        if ($iterator) {
             return (new PostIterator($ps));
         }
         $all_rows = $this->getDataRowsAsArrays($ps);

@@ -165,7 +165,7 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
     protected function generateView() {
         // if we have some p[lugin option elements defined
         // render them and add to the parent view...
-        if(count($this->option_elements) > 0) {
+        if (count($this->option_elements) > 0) {
             $this->setValues();
             $view_mgr = new SmartyThinkUp();
             $view_mgr->disableCaching();
@@ -229,7 +229,7 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
      */
     public function addPluginOption($option_type, $args) {
 
-        if(isset($args['name'])) {
+        if (isset($args['name'])) {
 
             $element = array('name' => $args['name'], 'type' => $option_type);
             switch($option_type) {
@@ -241,24 +241,24 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
                     break;
                 default:
                     // text field, do nothing...
-                    if(isset($args['validation_regex'])) {
+                    if (isset($args['validation_regex'])) {
                         $element['validation_regex'] = $args['validation_regex'];
                     }
 
             }
-            if(isset($args['default_value'])) {
+            if (isset($args['default_value'])) {
                 $element['default_value'] = $args['default_value'];
             }
-            if(isset($args['label'])) {
+            if (isset($args['label'])) {
                 $element['label'] = $args['label'];
             }
-            if(isset($args['id'])) {
+            if (isset($args['id'])) {
                 $element['id'] = $args['id'];
             }
-            if(isset($args['value'])) {
+            if (isset($args['value'])) {
                 $element['value'] = $args['value'];
             }
-            if(isset($args['advanced'])) {
+            if (isset($args['advanced'])) {
                 $element['advanced'] = true;
                 // advanced options should not be required
                 $this->setPluginOptionNotRequired($args['name']);
@@ -274,11 +274,11 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
     public function setValues() {
         $options_hash = $this->optionList2HashByOptionName();
         foreach( $this->option_elements as $key => $value) {
-            if(isset($options_hash[$key])) {
+            if (isset($options_hash[$key])) {
                 $this->option_elements[$key]['id'] = $options_hash[$key]->id;
                 $this->option_elements[$key]['value'] = $options_hash[$key]->option_value;
             } else {
-                if(isset($this->option_elements[$key]['default_value'])) {
+                if (isset($this->option_elements[$key]['default_value'])) {
                     $this->option_elements[$key]['value'] = $this->option_elements[$key]['default_value'];
                 }
             }
@@ -309,7 +309,7 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
      * @return array A hash table op Options with option_name as the key
      */
     public function optionList2HashByOptionName() {
-        if(count($this->options_values) > 0 && count($this->options_hash) == 0) {
+        if (count($this->options_values) > 0 && count($this->options_hash) == 0) {
             foreach ($this->options_values as $option) {
                 $this->options_hash[ $option->option_name ] = $option;
             }

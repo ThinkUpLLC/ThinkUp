@@ -53,7 +53,7 @@ class PostController extends ThinkUpController {
                     $config = Config::getInstance();
                     $this->addToView('disable_embed_code', ($config->getValue('is_embed_disabled') ||
                     $post->is_protected ));
-                    if(isset($_GET['search'])) {
+                    if (isset($_GET['search'])) {
                         $this->addToView('search_on', true);
                     }
                     if ( !$post->is_protected || $this->isLoggedIn()) {
@@ -124,7 +124,7 @@ class PostController extends ThinkUpController {
                         $this->addToView('last_page', $page-1);
                     }
                     $this->addToView($dataset->name, $dataset->retrieveDataset($page));
-                    if(Session::isLoggedIn() && $dataset->isSearchable()) {
+                    if (Session::isLoggedIn() && $dataset->isSearchable()) {
                         $view_name = 'is_searchable';
                         $this->addToView($view_name, true);
                     }

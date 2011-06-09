@@ -70,7 +70,7 @@ class Plugin {
     var $icon;
 
     public function __construct($val = null) {
-        if(! $val) {
+        if (! $val) {
             return;
         }
         if (isset($val["id"])) {

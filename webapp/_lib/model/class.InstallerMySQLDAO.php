@@ -105,7 +105,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
          */
         $db_type = $config->getValue('db_type');
 
-        if(!$db_type) { $db_type = 'mysql'; }
+        if (!$db_type) { $db_type = 'mysql'; }
         $db_socket = $config->getValue('db_socket');
 
         if (!$db_socket) {
@@ -142,7 +142,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
     public function runMigrationSQL($sql) {
         $ps = $this->execute($sql);
         $error_array = $ps->errorInfo();
-        if($error_array[0] > 0) {
+        if ($error_array[0] > 0) {
             throw new Exception("migration sql error for $sql: " . $error_array[2]);
         }
     }
@@ -325,7 +325,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
 
                             // Add the column list to the index create string
                             $index_string .= ' ('.$index_columns.')';
-                            if( !(($aindex = array_search($index_string, $indices)) === false) ) {
+                            if ( !(($aindex = array_search($index_string, $indices)) === false) ) {
                                 unset($indices[$aindex]);
                             }
                         }

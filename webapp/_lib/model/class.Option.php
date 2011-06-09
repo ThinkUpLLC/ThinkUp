@@ -52,17 +52,17 @@ class Option {
     var $option_value;
 
     public function __construct($args = null) {
-        if(! is_null($args)) {
-            if(isset($args['option_id'])) {
+        if (! is_null($args)) {
+            if (isset($args['option_id'])) {
                 $this->option_id = $args['option_id'];
             }
-            if(isset($args['namespace'])) {
+            if (isset($args['namespace'])) {
                 $this->namespace = $args['namespace'];
             }
-            if(isset($args['option_name'])) {
+            if (isset($args['option_name'])) {
                 $this->option_name = $args['option_name'];
             }
-            if(isset($args['option_value'])) {
+            if (isset($args['option_value'])) {
                 $this->option_value = $args['option_value'];
             }
         }

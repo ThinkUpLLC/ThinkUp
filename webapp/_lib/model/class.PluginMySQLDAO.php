@@ -57,7 +57,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
     }
 
     public function insertPlugin($plugin) {
-        if(! is_object($plugin) || get_class($plugin) != 'Plugin'
+        if (! is_object($plugin) || get_class($plugin) != 'Plugin'
         || ! isset($plugin->name) || ! isset($plugin->folder_name)
         || ! isset($plugin->is_active) ) {
             throw new BadArgumentException("insertPlugin() requires a valid plugin data object");
@@ -85,7 +85,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
     }
 
     public function updatePlugin($plugin) {
-        if(! is_object($plugin) || get_class($plugin) != 'Plugin'
+        if (! is_object($plugin) || get_class($plugin) != 'Plugin'
         || ! isset($plugin->name) || ! isset($plugin->folder_name)
         || ! isset($plugin->is_active) || ! isset($plugin->id) )
         {

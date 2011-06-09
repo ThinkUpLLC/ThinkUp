@@ -178,7 +178,7 @@ abstract class ThinkUpController {
      */
     protected function generateView() {
         // add header javascript if defined
-        if( count($this->header_scripts) > 0) {
+        if ( count($this->header_scripts) > 0) {
             $this->addToView('header_scripts', $this->header_scripts);
         }
         $this->sendHeader();
@@ -213,7 +213,7 @@ abstract class ThinkUpController {
                     return $this->view_mgr->fetch($this->view_template);
                 }
             }
-        } else if(isset($this->json_data) ) {
+        } else if (isset($this->json_data) ) {
             $this->setContentType('application/json');
             if ($this->view_mgr->isViewCached()) {
                 if ($this->view_mgr->is_cached('json.tpl', $this->getCacheKeyString())) {
@@ -261,7 +261,7 @@ abstract class ThinkUpController {
      * Send content type header
      */
     protected function sendHeader() {
-        if( ! headers_sent() ) { // suppress 'headers already sent' error while testing
+        if ( ! headers_sent() ) { // suppress 'headers already sent' error while testing
             header('Content-Type: ' . $this->content_type, true);
         }
     }
@@ -407,7 +407,7 @@ abstract class ThinkUpController {
                 ini_set("display_errors", 1);
                 ini_set("error_reporting", E_ALL);
             }
-            if($classname != "BackupController") {
+            if ($classname != "BackupController") {
                 //Init plugins
                 $pdao = DAOFactory::getDAO('PluginDAO');
                 $active_plugins = $pdao->getActivePlugins();

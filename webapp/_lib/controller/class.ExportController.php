@@ -140,7 +140,7 @@ class ExportController extends ThinkUpAuthController {
         // make sure the file name does not contain spaces.
         $filename = str_replace(' ', '_', $filename);
 
-        if( ! headers_sent() ) { // this is so our test don't barf on us
+        if ( ! headers_sent() ) { // this is so our test don't barf on us
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="'.$filename.'"');
             header('Pragma: no-cache');

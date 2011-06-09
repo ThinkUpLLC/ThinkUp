@@ -71,7 +71,7 @@ abstract class PDODAO {
     public function __construct($cfg_vals=null){
         $this->logger = Logger::getInstance();
         $this->config = Config::getInstance($cfg_vals);
-        if(is_null(self::$PDO)) {
+        if (is_null(self::$PDO)) {
             $this->connect();
         }
         self::$prefix = $this->config->getValue('table_prefix');
@@ -83,7 +83,7 @@ abstract class PDODAO {
      * Connection initiator
      */
     public final function connect(){
-        if(is_null(self::$PDO)) {
+        if (is_null(self::$PDO)) {
             self::$PDO = new PDO(
             self::getConnectString($this->config),
             $this->config->getValue('db_user'),
@@ -105,7 +105,7 @@ abstract class PDODAO {
     public static function getConnectString($config) {
         //set default db type to mysql if not set
         $db_type = $config->getValue('db_type');
-        if(! $db_type) { $db_type = 'mysql'; }
+        if (! $db_type) { $db_type = 'mysql'; }
         $db_socket = $config->getValue('db_socket');
         if ( !$db_socket) {
             $db_port = $config->getValue('db_port');
@@ -149,9 +149,9 @@ abstract class PDODAO {
         $sql = preg_replace("/#gmt_offset#/", self::$gmt_offset, $sql);
 
         $stmt = self::$PDO->prepare($sql);
-        if(is_array($binds) and count($binds) >= 1) {
+        if (is_array($binds) and count($binds) >= 1) {
             foreach ($binds as $key => $value) {
-                if(is_int($value)) {
+                if (is_int($value)) {
                     $stmt->bindValue($key, $value, PDO::PARAM_INT);
                 } else {
                     $stmt->bindValue($key, $value, PDO::PARAM_STR);
@@ -220,7 +220,7 @@ abstract class PDODAO {
     protected final function getDataRowAsObject($ps, $obj){
         $ps->setFetchMode(PDO::FETCH_CLASS,$obj);
         $row = $this->fetchAndClose($ps);
-        if(!$row){
+        if (!$row){
             $row = null;
         }
         return $row;
@@ -234,7 +234,7 @@ abstract class PDODAO {
     protected final function getDataRowAsArray($ps){
         $ps->setFetchMode(PDO::FETCH_ASSOC);
         $row = $this->fetchAndClose($ps);
-        if(!$row){
+        if (!$row){
             $row = null;
         }
         return $row;
@@ -272,7 +272,7 @@ abstract class PDODAO {
     protected final function getDataCountResult($ps){
         $ps->setFetchMode(PDO::FETCH_ASSOC);
         $row = $this->fetchAndClose($ps);
-        if(!$row or !isset($row['count'])){
+        if (!$row or !isset($row['count'])){
             $count = 0;
         } else {
             $count = (int) $row['count'];

@@ -137,7 +137,7 @@ class User {
      * @return User New user
      */
     public function __construct($val = false, $found_in = false) {
-        if($val){
+        if ($val){
             if (isset($val['id'])) {
                 $this->id = $val['id'];
             }

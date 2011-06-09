@@ -88,9 +88,9 @@ class PostIterator implements Iterator {
      */
     public function valid() {
         $this->valid = false;
-        if(! is_null($this->stmt)) {
+        if (! is_null($this->stmt)) {
             $row = $this->stmt->fetch(PDO::FETCH_ASSOC);
-            if($row) {
+            if ($row) {
                 $post = new Post($row);
                 $this->row = $post;
                 $this->valid = true;
@@ -116,7 +116,7 @@ class PostIterator implements Iterator {
      */
     public function __destruct() {
         // make sure our cursor is closed...
-        if(! $this->closed_cursor && isset($this->stmt)) {
+        if (! $this->closed_cursor && isset($this->stmt)) {
             $this->stmt->closeCursor();
         }
     }

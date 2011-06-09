@@ -30,26 +30,26 @@
 class BackupMySQLDAO extends PDODAO implements BackupDAO {
 
     public function import($zipfile) {
-        if(file_exists($zipfile)) {
+        if (file_exists($zipfile)) {
             $zip = new ZipArchive();
             if ($zip->open($zipfile) !==TRUE) {
                 throw new Exception("Unable to open import file, corrupted zip file?: " . $zipfile);
             } else {
                 // validate zip file
                 $num_files = $zip->numFiles;
-                if($num_files < 1) {
+                if ($num_files < 1) {
                     throw new Exception("Unable to open import file, corrupted zip file?: " . $zipfile);
                 }
                 $num_files--;
                 $last_file = $zip->statIndex($num_files);
-                if($last_file['name'] != 'create_tables.sql') {
+                if ($last_file['name'] != 'create_tables.sql') {
                     throw new Exception("Unable to open import file, corrupted zip file?: " . $zipfile);
                 }
 
                 // extract zipfile
                 // create backip dir
                 $bkdir = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/backup';
-                if(! file_exists($bkdir)) {
+                if (! file_exists($bkdir)) {
                     mkdir($bkdir);
                 }
                 $zip->extractTo($bkdir);
@@ -58,7 +58,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
 
                 // rebuild db
                 $sql = file_get_contents($create_table);
-                if(getenv('BACKUP_VERBOSE')!==false) {
+                if (getenv('BACKUP_VERBOSE')!==false) {
                     print "  Creating tables...\n\n";
                 }
                 $stmt = $this->execute($sql);
@@ -70,14 +70,14 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                 foreach($infiles as $infile) {
                     $table = $infile;
                     $matches = array();
-                    if(preg_match('#.*/(\w+).txt$#', $table, $matches)) {
+                    if (preg_match('#.*/(\w+).txt$#', $table, $matches)) {
                         $table = $matches[1];
-                        if(getenv('BACKUP_VERBOSE')!==false) {
+                        if (getenv('BACKUP_VERBOSE')!==false) {
                             print "  Restoring data for table: $table\n";
                         }
                         $q = "LOAD DATA INFILE '$infile' INTO TABLE $table";
                         $stmt = $this->execute($q);
-                        if(! $stmt) {
+                        if (! $stmt) {
                             throw new Exception("unbale to load data file: " . $infile);
                         }
                         $stmt->closeCursor();
@@ -100,17 +100,17 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         $data = $this->getDataRowsAsArrays($stmt);
         $create_tables = '';
         $zip_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/thinkup_db_backup.zip';
-        if($backup_file) {
+        if ($backup_file) {
             $zip_file = $backup_file;
         }
         $zip = new ZipArchive();
-        if(file_exists($zip_file)) {
+        if (file_exists($zip_file)) {
             unlink($zip_file);
         }
         // make sure w can create this zip file, ZipArchive is a little funky and wont let us know its status
         // until we call close
         $zip_create_status = @touch($zip_file);
-        if($zip_create_status) {
+        if ($zip_create_status) {
             unlink($zip_file);
         }
         if (! $zip_create_status || $zip->open($zip_file, ZIPARCHIVE::CREATE)!==TRUE) {
@@ -121,7 +121,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         $table_locks_list = '';
         foreach($data as $table) {
             foreach($table as $key => $value) {
-                if($table_locks_list != '') { $table_locks_list .= ', '; }
+                if ($table_locks_list != '') { $table_locks_list .= ', '; }
                 $table_locks_list .= $value . ' WRITE';
             }
         }
@@ -129,7 +129,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         $tmp_table_files = array();
         foreach($data as $table) {
             foreach($table as $key => $value) {
-                if(getenv('BACKUP_VERBOSE')!==false) {
+                if (getenv('BACKUP_VERBOSE')!==false) {
                     print "  Backing up data for table: $value\n";
                 }
                 $stmt = $this->execute($q2 . $value);
@@ -141,7 +141,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
 
                 // export table data
                 $table_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/' . $value . '.txt';
-                if(file_exists($table_file)) {
+                if (file_exists($table_file)) {
                     unlink($table_file);
                 }
                 $q3 = "select * INTO OUTFILE '$table_file' from $value";
@@ -153,7 +153,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
 
         // unlock tables...
         $stmt = $this->execute("unlock tables");
-        if(getenv('BACKUP_VERBOSE')!==false) {
+        if (getenv('BACKUP_VERBOSE')!==false) {
             print "\n  Backing up create table statments\n";
         }
         $zip->addFromString("create_tables.sql", $create_tables);
@@ -162,7 +162,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         foreach($tmp_table_files as $tmp_file) {
             unlink($tmp_file);
         }
-        if($zip_close_status == false) {
+        if ($zip_close_status == false) {
             throw new Exception("Unable to create backup file for exporting, bad file path?: $zip_file");
         }
         return $zip_file;

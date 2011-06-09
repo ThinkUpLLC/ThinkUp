@@ -460,7 +460,7 @@ class InstallerController extends ThinkUpController {
             }
 
             //avoid undefined offset error
-            if(!isset($option_data[1])) {
+            if (!isset($option_data[1])) {
                 $option_data[1] = $option_data[0];
             }
 

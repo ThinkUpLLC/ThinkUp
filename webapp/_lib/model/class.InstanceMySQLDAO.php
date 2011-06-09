@@ -203,7 +203,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q  = "SELECT ".$this->getFieldList();
         $q .= "FROM ".$this->getTableName()." ";
         $q .= $this->getMetaTableJoin();
-        if(!$admin_status){
+        if (!$admin_status){
             $q .= "INNER JOIN #prefix#owner_instances AS oi ";
             $q .= "ON ".$this->getTableName().".id = oi.instance_id ";
             $q .= "WHERE oi.owner_id = :ownerid ";
@@ -410,7 +410,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $ps = $this->execute($q, $vars);
 
         $status_message = "Updated ".$i->network_username."'s system status.";
-        if($logger){
+        if ($logger){
             $logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
         }
         return $this->getUpdateCount($ps);

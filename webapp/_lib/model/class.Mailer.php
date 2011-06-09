@@ -79,7 +79,7 @@ class Mailer {
      */
     public static function getLastMail() {
         $test_email_file = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . Mailer::EMAIL;
-        if(file_exists($test_email_file)) {
+        if (file_exists($test_email_file)) {
             return file_get_contents($test_email_file);
         } else {
             return '';

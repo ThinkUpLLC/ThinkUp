@@ -33,7 +33,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
 
     public function insertOption($namespace, $name, $value) {
         $option = $this->getOptionByName($namespace, $name);
-        if($option) {
+        if ($option) {
             throw new DuplicateOptionException("An option with the namespace $namespace and name $name exists");
         }
         $q = 'INSERT INTO #prefix#options
@@ -49,14 +49,14 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
 
     public function updateOption($id, $value, $name = null) {
         $option = $this->getOption($id);
-        if($option) {
+        if ($option) {
             $q = 'UPDATE #prefix#options set option_value = :option_value, last_updated = now() ';
-            if($name) {
+            if ($name) {
                 $q .= ', option_name  = :option_name';
             }
             $q .= ' WHERE option_id = :option_id';
             $data = array(':option_id' => $id, ':option_value' => $value);
-            if($name) {
+            if ($name) {
                 $data[':option_name'] = $name;
             }
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
@@ -98,7 +98,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
 
     public function deleteOption($option_id){
         $option = $this->getOption($option_id);
-        if($option) {
+        if ($option) {
             $q = 'DELETE FROM #prefix#options WHERE option_id = :option_id';
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $stmt = $this->execute($q, array(':option_id' => $option_id));
@@ -120,17 +120,17 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
 
     public function getOptions($namespace, $cached = false) {
         $data = null;
-        if($cached) {
+        if ($cached) {
             $data = $this->getSessionData($namespace);
         }
-        if(is_null($data)) {
+        if (is_null($data)) {
             $q = 'SELECT option_id, namespace,  option_name, option_value
                     FROM #prefix#options 
                     WHERE namespace = :namespace';
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $stmt = $this->execute($q, array(':namespace' => $namespace));
             $res = $this->getDataRowsAsArrays($stmt);
-            if(count($res ) == 0) {
+            if (count($res ) == 0) {
                 $data = null;
             } else {
                 $data = array();
@@ -140,7 +140,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
                 }
             }
         }
-        if($cached) {
+        if ($cached) {
             $this->setSessionData($namespace, $data);
         }
         return $data;
@@ -148,7 +148,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
 
     public function getOptionValue($namespace, $name, $cached = false) {
         $options = $this->getOptions($namespace, $cached);
-        if($options && isset($options[$name])) {
+        if ($options && isset($options[$name])) {
             return $options[$name]->option_value;
         } else {
             return null;
@@ -163,7 +163,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
      */
     public function getSessionData($namespace) {
         $key = 'options_data:' . $namespace;
-        if(SessionCache::isKeySet($key) ) {
+        if (SessionCache::isKeySet($key) ) {
             return SessionCache::get($key);
         } else {
             return null;
@@ -187,7 +187,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
      */
     public function clearSessionData($namespace) {
         $key = 'options_data:' . $namespace;
-        if( SessionCache::isKeySet($key)) {
+        if ( SessionCache::isKeySet($key)) {
             SessionCache::unsetKey($key);
         }
     }
@@ -197,7 +197,7 @@ class OptionMySQLDAO extends PDODAO implements OptionDAO {
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q);
         $data = $this->getDataRowAsArray($stmt);
-        if($data) {
+        if ($data) {
             return true;
         } else {
             return false;

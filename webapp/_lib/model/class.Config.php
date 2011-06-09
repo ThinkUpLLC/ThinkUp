@@ -96,12 +96,12 @@ class Config {
         // is this config value stored in the db?
         $db_value_config = AppConfig::getConfigValue($key);
         $value = null;
-        if($db_value_config) {
+        if ($db_value_config) {
             $option_dao = DAOFactory::getDAO("OptionDAO");
             $db_value = $option_dao->getOptionValue(OptionDAO::APP_OPTIONS, $key, true);
             $value =  $db_value ? $db_value : $db_value_config['default'];
             // convert db text booleans if needed
-            if($value == 'false') {
+            if ($value == 'false') {
                 $value = false;
             } else if ($value == 'true') {
                 $value = true;

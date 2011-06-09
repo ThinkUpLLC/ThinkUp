@@ -95,7 +95,7 @@ class Link {
      * @param array $val
      */
     public function __construct($val = false) {
-        if($val){
+        if ($val){
             $this->constructValIncluded($val);
         }
         else {

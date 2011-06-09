@@ -71,7 +71,7 @@ class UpgradeController extends ThinkUpAuthController {
      * @return UpgradeController
      */
     public function __construct($session_started=false) {
-        if(! getenv('CLI_BACKUP')) {
+        if (! getenv('CLI_BACKUP')) {
             parent::__construct($session_started);
         }
     }
@@ -90,7 +90,7 @@ class UpgradeController extends ThinkUpAuthController {
         // clear options session data
         $option_dao->clearSessionData(OptionDAO::APP_OPTIONS);
 
-        if(isset($_GET['migration_index'])) {
+        if (isset($_GET['migration_index'])) {
             $migrations = $this->getMigrationList($db_version);
             $migration_index = $_GET['migration_index'] - 1;
             $migrations = $this->getMigrationList($db_version);
@@ -108,7 +108,7 @@ class UpgradeController extends ThinkUpAuthController {
             }
         } else if (isset($_GET['migration_done'])) {
             $option = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'database_version');
-            if($option) {
+            if ($option) {
                 $option_dao->updateOptionByName(OptionDAO::APP_OPTIONS, 'database_version', $thinkup_db_version);
             } else {
                 $option_dao->insertOption(OptionDAO::APP_OPTIONS, 'database_version', $thinkup_db_version);
@@ -120,18 +120,18 @@ class UpgradeController extends ThinkUpAuthController {
         } else {
             $this->setPageTitle('Upgrade the ThinkUp Database Structure');
             $this->setViewTemplate('install.upgrade.tpl');
-            if(version_compare($db_version, $thinkup_db_version, '<')) {
+            if (version_compare($db_version, $thinkup_db_version, '<')) {
                 ## get migrations we need to run...
                 $migrations = $this->getMigrationList($db_version);
                 $this->addToView('migrations',$migrations);
                 $this->addToView('migrations_json', json_encode($migrations));
-                if(isset($_GET['upgrade_token'])) {
+                if (isset($_GET['upgrade_token'])) {
                     $this->addToView('upgrade_token', $_GET['upgrade_token']);
                 }
                 # no migrations needed, just update the application db version option to reflect
-                if(count($migrations) == 0) {
+                if (count($migrations) == 0) {
                     $option = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, 'database_version');
-                    if($option) {
+                    if ($option) {
                         $option_dao->updateOptionByName(OptionDAO::APP_OPTIONS, 'database_version',
                         $thinkup_db_version);
                     } else {
@@ -149,7 +149,7 @@ class UpgradeController extends ThinkUpAuthController {
      * Delete token file if it exists
      */
     public function deleteTokenFile() {
-        if(file_exists(THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/upgrade_token')) {
+        if (file_exists(THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/upgrade_token')) {
             unlink(THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/upgrade_token');
         }
     }
@@ -165,7 +165,7 @@ class UpgradeController extends ThinkUpAuthController {
         $status = false;
         $db_version = UpgradeController::getCurrentDBVersion($config->getValue( 'cache_pages' ));
         if (version_compare($db_version, $config->getValue('THINKUP_VERSION'), '<') ) {
-            if( $class_name != 'UpgradeController' ) {
+            if ( $class_name != 'UpgradeController' ) {
                 $status = true;
             } else if ( !$is_admin && !isset($_GET['upgrade_token']) ) {
                 $status = true;
@@ -183,8 +183,8 @@ class UpgradeController extends ThinkUpAuthController {
     public function control() {
         if ($this->isAdmin()) {
             return $this->authControl();
-        } else if(isset($_GET['upgrade_token'])) {
-            if($this->isTokenAuth($_GET['upgrade_token'])) {
+        } else if (isset($_GET['upgrade_token'])) {
+            if ($this->isTokenAuth($_GET['upgrade_token'])) {
                 return $this->authControl();
             } else {
                 throw new Exception("This update has already been completed.");
@@ -202,9 +202,9 @@ class UpgradeController extends ThinkUpAuthController {
     public static function isTokenAuth($query_token) {
         $token_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/upgrade_token';
         $status = false;
-        if(file_exists($token_file)) {
+        if (file_exists($token_file)) {
             $file_token = file_get_contents($token_file);
-            if($file_token == $query_token) {
+            if ($file_token == $query_token) {
                 $status = true;
             }
         }
@@ -221,7 +221,7 @@ class UpgradeController extends ThinkUpAuthController {
         $has_options_table = $option_dao->isOptionsTable();
         if ($has_options_table) {
             $db_version = $option_dao->getOptionValue(OptionDAO::APP_OPTIONS, 'database_version', $cached);
-            if( !$db_version) {
+            if ( !$db_version) {
                 $db_version = self::RUNNABLE_MIGRATION_MIN;
             }
         }
@@ -239,17 +239,17 @@ class UpgradeController extends ThinkUpAuthController {
         $migrations = array();
         $config = Config::getInstance();
         for ($i = 0; $i < count($dir_list); $i++) {
-            if(preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql\.migration/', $dir_list[$i], $matches)) {
+            if (preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql\.migration/', $dir_list[$i], $matches)) {
                 $migration_version = $matches[1];
                 // skip early pre beta 1 versions...
-                if(preg_match('/^0\.00/', $migration_version)) {
+                if (preg_match('/^0\.00/', $migration_version)) {
                     continue;
                 }
-                if(version_compare($migration_version, $version) > 0 &&
+                if (version_compare($migration_version, $version) > 0 &&
                 version_compare($migration_version, $config->getValue('THINKUP_VERSION')) < 1 ) {
-                    if($migration_version == 0.3) {
+                    if ($migration_version == 0.3) {
                         $install_dao = DAOFactory::getDAO('InstallerDAO');
-                        if(! $install_dao->needsSnowflakeUpgrade() && ! $this->snowflakeSession(false) ) {
+                        if (! $install_dao->needsSnowflakeUpgrade() && ! $this->snowflakeSession(false) ) {
                             continue;
                         } else {
                             // set snowflake in progress session
@@ -257,12 +257,12 @@ class UpgradeController extends ThinkUpAuthController {
                         }
                     }
                     $migration_string = file_get_contents($dir_list[$i]);
-                    if(! $migration_string) {
+                    if (! $migration_string) {
                         throw new OpenFileException("Unable to open file: " + $dir_list[$i]);
                     } else {
                         // check for modified prefix
                         $table_prefix = $config->getValue('table_prefix');
-                        if($table_prefix != 'tu_') {
+                        if ($table_prefix != 'tu_') {
                             $migration_string = str_replace('tu_', $table_prefix, $migration_string);
                         }
                         $migration = array("version" =>  $migration_version, 'sql'  => $migration_string);
@@ -280,12 +280,12 @@ class UpgradeController extends ThinkUpAuthController {
     public function generateUpgradeToken() {
         $token_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/upgrade_token';
         $md5_token = '';
-        if(! file_exists($token_file)) {
+        if (! file_exists($token_file)) {
             $fp = fopen($token_file, 'w');
-            if($fp) {
+            if ($fp) {
                 $token = self::TOKEN_KEY . rand(0, time());
                 $md5_token = md5($token);
-                if(! fwrite($fp, $md5_token)) {
+                if (! fwrite($fp, $md5_token)) {
                     throw new OpenFileException("Unable to write upgrade token file: " + $token_file);
                 }
                 fclose($fp);
@@ -295,7 +295,7 @@ class UpgradeController extends ThinkUpAuthController {
             // email our admin with this token.
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
             $admins = $owner_dao->getAdmins();
-            if($admins) {
+            if ($admins) {
                 $tos = array();
                 foreach($admins as $admin) {
                     $tos[] = $admin->email;
@@ -319,15 +319,15 @@ class UpgradeController extends ThinkUpAuthController {
      */
     public function snowflakeSession($value = false, $delete = false) {
         $key = 'runnig_snowflake_uprade';
-        if($delete) {
-            if( SessionCache::isKeySet($key) ) {
+        if ($delete) {
+            if ( SessionCache::isKeySet($key) ) {
                 SessionCache::unsetKey($key);
             }
         } else {
-            if($value) {
+            if ($value) {
                 SessionCache::put($key, $value);
             } else {
-                if( SessionCache::isKeySet($key) ) {
+                if ( SessionCache::isKeySet($key) ) {
                     return SessionCache::get($key);
                 } else {
                     return false;

@@ -64,7 +64,7 @@ class GridController extends ThinkUpAuthController {
                 $this->setViewTemplate('inline.view.tpl');
             }
             // or replies?
-            if($this->is_missing_param) {
+            if ($this->is_missing_param) {
                 if (isset($_GET['t'])) {
                     $this->is_missing_param = false;
                 }
@@ -93,12 +93,12 @@ class GridController extends ThinkUpAuthController {
                 } else {
                     echo "tu_grid_search.populate_grid(";
                     $posts_it;
-                    if(isset($_GET['t'])) {
+                    if (isset($_GET['t'])) {
                         // replies?
                         $post_dao = DAOFactory::getDAO('PostDAO');
                         $posts_it = $post_dao->getRepliesToPostIterator($_GET['t'], $_GET['n']);
                     } else {
-                        if(isset($_GET['nolimit']) && $_GET['nolimit'] == 'true') {
+                        if (isset($_GET['nolimit']) && $_GET['nolimit'] == 'true') {
                             self::$MAX_ROWS = 0;
                         }
                         $webapp = Webapp::getInstance();
@@ -109,7 +109,7 @@ class GridController extends ThinkUpAuthController {
                     echo '{"status":"success","limit":' . self::$MAX_ROWS . ',"posts": [' . "\n";
                     $cnt = 0;
                     // lets make sure we have a post iterator, and not just a list of posts
-                    if( get_class($posts_it) != 'PostIterator' ) {
+                    if ( get_class($posts_it) != 'PostIterator' ) {
                         throw Exception("Grid Search should use a PostIterator to conserve memory");
                     }
                     foreach($posts_it as $key => $value) {

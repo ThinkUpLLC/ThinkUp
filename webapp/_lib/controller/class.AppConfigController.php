@@ -38,7 +38,7 @@ class AppConfigController extends ThinkUpAdminController {
         $this->disableCaching();
         $option_dao = DAOFactory::getDAO("OptionDAO");
 
-        if(isset($_POST['save'])) {
+        if (isset($_POST['save'])) {
             $required = array();
             $config_values = array();
             $parent_config_values = array();
@@ -49,26 +49,26 @@ class AppConfigController extends ThinkUpAdminController {
                 $app_config[$key]['title'] =
                 isset($app_config[$key]['title']) ? $app_config[$key]['title'] : $key;
 
-                if((isset($_POST[$key])  && $_POST[$key] != '') || $app_config[$key]['required'] &&
+                if ((isset($_POST[$key])  && $_POST[$key] != '') || $app_config[$key]['required'] &&
                 ( (! isset($app_config[$key]['value']) || $app_config[$key]['value'] == '')
                 && ! isset($required[$key]) ) ) {
                     $config_values[$key] = $app_config[$key];
-                    if(isset($_POST[$key])) {
+                    if (isset($_POST[$key])) {
                         $config_values[$key]['value'] = $_POST[$key];
                         $values++;
                     }
                     $config_values[$key]['value'] = isset($_POST[$key]) ? $_POST[$key] : '';
-                    if( isset($app_config[$key]['match'])
+                    if ( isset($app_config[$key]['match'])
                     && ! preg_match($app_config[$key]['match'], $config_values[$key]['value']) ) {
                         $required[$key] = $app_config[$key]['title'] .
                         ' should ' . $app_config[$key]['match_message'];
                     }
 
-                    if(isset($app_config[$key]['dependencies'])) {
+                    if (isset($app_config[$key]['dependencies'])) {
                         foreach( $config_values[$key]['dependencies'] as $dep_key ) {
                             $config_values[$dep_key]['value'] = isset($_POST[$dep_key]) ? $_POST[$dep_key] : '';
                             $value = $config_values[$dep_key]['value'];
-                            if( isset($app_config[$dep_key]['match'])
+                            if ( isset($app_config[$dep_key]['match'])
                             && ! preg_match($app_config[$dep_key]['match'], $value) ) {
                                 $required[$dep_key] = $app_config[$dep_key]['title'] .
                                 ' is required if ' . $app_config[$key]['title'] . 
@@ -79,7 +79,7 @@ class AppConfigController extends ThinkUpAdminController {
                 }
             }
 
-            if(count($required) > 0) {
+            if (count($required) > 0) {
                 $this->setJsonData( array( 'status' => 'failed', 'required' => $required));
             } else {
                 // save our data
@@ -87,8 +87,8 @@ class AppConfigController extends ThinkUpAdminController {
                 $deleted = 0;
                 foreach($config_values as $key => $config_value) {
                     $config = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, $key);
-                    if($config_value['value'] != '') {
-                        if($config) {
+                    if ($config_value['value'] != '') {
+                        if ($config) {
                             $option_dao->updateOption($config->option_id, $config_value['value']);
                         } else {
                             $option_dao->insertOption(OptionDAO::APP_OPTIONS, $key, $config_value['value']);
@@ -98,9 +98,9 @@ class AppConfigController extends ThinkUpAdminController {
                 }
                 foreach($app_config as $key => $value) {
                     // delete the record if it exists and is empty in the post request
-                    if(! isset($config_values[$key]['value']) || $config_values[$key]['value'] == '') {
+                    if (! isset($config_values[$key]['value']) || $config_values[$key]['value'] == '') {
                         $config = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, $key);
-                        if($config) {
+                        if ($config) {
                             $option_dao->deleteOption($config->option_id);
                             $deleted++;
                         }
@@ -115,7 +115,7 @@ class AppConfigController extends ThinkUpAdminController {
             $app_config = AppConfig::getConfigData();
             $filtered_config_values = array();
             foreach($app_config as $key => $value) {
-                if(isset($config_values[$key])) {
+                if (isset($config_values[$key])) {
                     $filtered_config_values[$key] = $config_values[$key];
                 }
             }

@@ -68,7 +68,7 @@ SQL;
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q);
         $admins = $this->getDataRowsAsObjects($ps, 'Owner');
-        if(count($admins) == 0) { $admins = null; }
+        if (count($admins) == 0) { $admins = null; }
         return $admins;
     }
 

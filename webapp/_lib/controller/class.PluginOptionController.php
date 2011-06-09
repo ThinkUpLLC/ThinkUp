@@ -71,16 +71,16 @@ class PluginOptionController extends ThinkUpAdminController {
         $inserted = array();
         $deleted = 0;
         foreach($_GET as $key => $value ) {
-            if( preg_match('/^option_/', $key) ) {
+            if ( preg_match('/^option_/', $key) ) {
                 $name = preg_replace('/^option_/', '', $key);
                 $id_name = "id_option_" . $name;
-                if(isset($_GET[$id_name])) {
+                if (isset($_GET[$id_name])) {
                     foreach($options as $option) {
                         //error_log($option->option_name . ' '  . $name);
-                        if($option->option_name == $name) {
-                            if( $option->option_value != $value ) {
+                        if ($option->option_name == $name) {
+                            if ( $option->option_value != $value ) {
                                 $id = preg_replace('/^id_option_/', '', $_GET[$id_name]);
-                                if($value == '') {
+                                if ($value == '') {
                                     $plugin_option_dao->deleteOption($id);
                                     $deleted++;
                                 } else {
@@ -92,7 +92,7 @@ class PluginOptionController extends ThinkUpAdminController {
                     }
                 } else {
                     $insert_id = $plugin_option_dao->insertOption($plugin_id, $name, $value);
-                    if(!  $insert_id) {
+                    if (!  $insert_id) {
                         $this->json_data['message'] = "Unable to add plugin option: $name";
                         return;
                     } else {

@@ -119,7 +119,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             $vars[':ubound'] = $ubound;
         }
         $ps = $this->execute($q, $vars);
-        if($iterator) {
+        if ($iterator) {
             return (new PostIterator($ps));
         }
         $all_rows = $this->getDataRowsAsArrays($ps);
@@ -171,7 +171,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             $vars[':limit'] = (int)$count;
         }
         $ps = $this->execute($q, $vars);
-        if($iterator) {
+        if ($iterator) {
             return (new PostIterator($ps));
         }
         $all_rows = $this->getDataRowsAsArrays($ps);

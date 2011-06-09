@@ -47,8 +47,8 @@ class OwnerInstance {
      * @param int instance id - optional
      */
     public function __construct($oid = null, $iid = null) {
-        if($oid) { $this->owner_id = $oid; }
-        if($iid) { $this->instance_id = $iid; }
+        if ($oid) { $this->owner_id = $oid; }
+        if ($iid) { $this->instance_id = $iid; }
     }
 }
 
