@@ -1,0 +1,130 @@
+AppConfigController
+===================
+Inherits from `ThinkUpAdminController <./ThinkUpAdminController.html>`_.
+
+ThinkUp/webapp/_lib/controller/class.AppConfigController.php
+
+Copyright (c) 2009-2011 Mark Wilkie
+
+App Config Controller
+Saves/Updates application-wide options/settings.
+
+
+
+Methods
+-------
+
+__construct
+~~~~~~~~~~~
+
+
+
+.. code-block:: php5
+
+    <?php
+        public function __construct($session_started=false) {
+            parent::__construct($session_started);
+        }
+
+
+adminControl
+~~~~~~~~~~~~
+
+
+
+.. code-block:: php5
+
+    <?php
+        public function adminControl() {
+            $this->disableCaching();
+            $option_dao = DAOFactory::getDAO("OptionDAO");
+    
+            if(isset($_POST['save'])) {
+                $required = array();
+                $config_values = array();
+                $parent_config_values = array();
+                $app_config = AppConfig::getConfigData();
+                $values = 0;
+    
+                foreach($app_config as $key => $value) {
+                    $app_config[$key]['title'] =
+                    isset($app_config[$key]['title']) ? $app_config[$key]['title'] : $key;
+    
+                    if((isset($_POST[$key])  && $_POST[$key] != '') || $app_config[$key]['required'] &&
+                    ( (! isset($app_config[$key]['value']) || $app_config[$key]['value'] == '')
+                    && ! isset($required[$key]) ) ) {
+                        $config_values[$key] = $app_config[$key];
+                        if(isset($_POST[$key])) {
+                            $config_values[$key]['value'] = $_POST[$key];
+                            $values++;
+                        }
+                        $config_values[$key]['value'] = isset($_POST[$key]) ? $_POST[$key] : '';
+                        if( isset($app_config[$key]['match'])
+                        && ! preg_match($app_config[$key]['match'], $config_values[$key]['value']) ) {
+                            $required[$key] = $app_config[$key]['title'] .
+                            ' should ' . $app_config[$key]['match_message'];
+                        }
+    
+                        if(isset($app_config[$key]['dependencies'])) {
+                            foreach( $config_values[$key]['dependencies'] as $dep_key ) {
+                                $config_values[$dep_key]['value'] = isset($_POST[$dep_key]) ? $_POST[$dep_key] : '';
+                                $value = $config_values[$dep_key]['value'];
+                                if( isset($app_config[$dep_key]['match'])
+                                && ! preg_match($app_config[$dep_key]['match'], $value) ) {
+                                    $required[$dep_key] = $app_config[$dep_key]['title'] .
+                                    ' is required if ' . $app_config[$key]['title'] . 
+                                    ' is set ' . $app_config[$dep_key]['match_message'];
+                                }
+                            }
+                        }
+                    }
+                }
+    
+                if(count($required) > 0) {
+                    $this->setJsonData( array( 'status' => 'failed', 'required' => $required));
+                } else {
+                    // save our data
+                    $saved = 0;
+                    $deleted = 0;
+                    foreach($config_values as $key => $config_value) {
+                        $config = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, $key);
+                        if($config_value['value'] != '') {
+                            if($config) {
+                                $option_dao->updateOption($config->option_id, $config_value['value']);
+                            } else {
+                                $option_dao->insertOption(OptionDAO::APP_OPTIONS, $key, $config_value['value']);
+                            }
+                            $saved++;
+                        }
+                    }
+                    foreach($app_config as $key => $value) {
+                        // delete the record if it exists and is empty in the post request
+                        if(! isset($config_values[$key]['value']) || $config_values[$key]['value'] == '') {
+                            $config = $option_dao->getOptionByName(OptionDAO::APP_OPTIONS, $key);
+                            if($config) {
+                                $option_dao->deleteOption($config->option_id);
+                                $deleted++;
+                            }
+                        }
+                    }
+                    $this->setJsonData( array( 'status' => 'success', 'saved' => $saved, 'deleted' => $deleted));
+                    SessionCache::unsetKey('selected_instance_network');
+                    SessionCache::unsetKey('selected_instance_username');
+                }
+            } else {
+                $config_values = $option_dao->getOptions(OptionDAO::APP_OPTIONS);
+                $app_config = AppConfig::getConfigData();
+                $filtered_config_values = array();
+                foreach($app_config as $key => $value) {
+                    if(isset($config_values[$key])) {
+                        $filtered_config_values[$key] = $config_values[$key];
+                    }
+                }
+                $this->setJsonData( array( 'values' => $filtered_config_values, 'app_config_settings' => $app_config ));
+            }
+            return $this->generateView();
+        }
+
+
+
+

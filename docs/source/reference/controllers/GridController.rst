@@ -1,0 +1,149 @@
+GridController
+==============
+Inherits from `ThinkUpAuthController <./ThinkUpAuthController.html>`_.
+
+ThinkUp/webapp/_lib/controller/class.GridController.php
+
+Copyright (c) 2009-2011 Mark Wilkie, Guillaume Boudreau
+
+Grid Controller
+
+Returns Unbuffered JS XSS callback/JSON list of posts for javascript grid search view
+
+
+Properties
+----------
+
+MAX_ROWS
+~~~~~~~~
+
+const max rows for grid
+
+REQUIRED_PARAMS
+~~~~~~~~~~~~~~~
+
+Required query string parameters
+
+is_missing_param
+~~~~~~~~~~~~~~~~
+
+
+
+
+
+Methods
+-------
+
+__construct
+~~~~~~~~~~~
+* **@param** bool $session_started
+* **@return** GridController
+
+
+Constructor
+
+.. code-block:: php5
+
+    <?php
+        public function __construct($session_started=false) {
+            parent::__construct($session_started);
+            foreach ($this->REQUIRED_PARAMS as $param) {
+                if (!isset($_GET[$param]) || $_GET[$param] == '' ) {
+                    $this->addInfoMessage('No user data to retrieve.');
+                    $this->is_missing_param = true;
+                    $this->setViewTemplate('inline.view.tpl');
+                }
+                // or replies?
+                if($this->is_missing_param) {
+                    if (isset($_GET['t'])) {
+                        $this->is_missing_param = false;
+                    }
+                }
+            }
+            if (!isset($_GET['d'])) {
+                $_GET['d'] = "tweets-all";
+            }
+        }
+
+
+authControl
+~~~~~~~~~~~
+
+Outputs JavaScript callback string with json array/list of post as an argument
+
+.. code-block:: php5
+
+    <?php
+        public function authControl() {
+            $this->setContentType('text/javascript');
+            if (!$this->is_missing_param) {
+                $instance_dao = DAOFactory::getDAO('InstanceDAO');
+                if ( $instance_dao->isUserConfigured($_GET['u'], $_GET['n'])) {
+                    $username = $_GET['u'];
+                    $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                    $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                    $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+                    $instance = $instance_dao->getByUsername($username, $_GET['n']);
+                    if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $instance)) {
+                        echo '{"status":"failed","message":"Insufficient privileges."}';
+                    } else {
+                        echo "tu_grid_search.populate_grid(";
+                        $posts_it;
+                        if(isset($_GET['t'])) {
+                            // replies?
+                            $post_dao = DAOFactory::getDAO('PostDAO');
+                            $posts_it = $post_dao->getRepliesToPostIterator($_GET['t'], $_GET['n']);
+                        } else {
+                            if(isset($_GET['nolimit']) && $_GET['nolimit'] == 'true') {
+                                self::$MAX_ROWS = 0;
+                            }
+                            $webapp = Webapp::getInstance();
+                            $webapp->setActivePlugin($instance->network);
+                            $tab = $webapp->getDashboardMenuItem($_GET['d'], $instance);
+                            $posts_it = $tab->datasets[0]->retrieveIterator();
+                        }
+                        echo '{"status":"success","limit":' . self::$MAX_ROWS . ',"posts": [' . "\n";
+                        $cnt = 0;
+                        // lets make sure we have a post iterator, and not just a list of posts
+                        if( get_class($posts_it) != 'PostIterator' ) {
+                            throw Exception("Grid Search should use a PostIterator to conserve memory");
+                        }
+                        foreach($posts_it as $key => $value) {
+                            $cnt++;
+                            $data = array('id' => $cnt, 'text' => $value->post_text,
+                            'post_id_str' => $value->post_id . '_str', 'author' => $value->author_username, 
+                            'date' => $value->adj_pub_date, 'network' => $value->network);
+                            echo json_encode($data) . ",\n";
+                            flush();
+                        }
+                        $data = array('id' => -1, 'text' => 'Last Post',
+                            'author' => 'nobody');
+                        echo json_encode($data);
+                        echo ']});';
+                    }
+                } else {
+                    echo '{"status":"failed","message":"' . $_GET['u'] . 'is not configured."}';
+                }
+            } else {
+                echo '{"status":"failed","message":"Missing Parameters"}';
+            }
+        }
+
+
+getMaxRows
+~~~~~~~~~~
+* **@return** int $MAX_ROWS
+
+
+return max rows
+
+.. code-block:: php5
+
+    <?php
+        public static function getMaxRows() {
+            return self::$MAX_ROWS;
+        }
+
+
+
+
