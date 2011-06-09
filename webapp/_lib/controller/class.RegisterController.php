@@ -52,17 +52,20 @@ class RegisterController extends ThinkUpController {
             $controller = new DashboardController(true);
             return $controller->go();
         } else {
-            $this->disableCaching();
             $config = Config::getInstance();
+            $is_registration_open = $config->getValue('is_registration_open');
+
+            $this->disableCaching();
             $invite_dao = DAOFactory::getDAO('InviteDAO') ;
             if ( isset( $_GET['code'] ) ) {
-                $invite_code = $_GET['code'] ;
+                $invite_code = $_GET['code'];
             } else {
-                $invite_code = NULL ;
+                $invite_code = null;
             }
-            $is_invite_code_valid = $invite_dao->isInviteValid($invite_code) ;
+            $this->addToView('invite_code', $invite_code);
+            $is_invite_code_valid = $invite_dao->isInviteValid($invite_code);
 
-            if ( !$config->getValue('is_registration_open') && !$is_invite_code_valid ){
+            if ( !$is_registration_open && !$is_invite_code_valid ){
                 $this->addToView('closed', true);
                 $this->addErrorMessage('<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
                 '<p><a href="http://thinkupapp.com">Install ThinkUp on your own server.</a></p>');
