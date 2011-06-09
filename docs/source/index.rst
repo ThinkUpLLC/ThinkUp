@@ -20,3 +20,4 @@ engine.
    contact
    contribute/index
    changelog
+   reference/index
