@@ -151,16 +151,21 @@ class FacebookCrawler {
             }
 
             $users = $thinkup_data["users"];
+            $users_added = array();
+
             if (count($users) > 0) {
                 foreach ($users as $user) {
-                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
-                    $found_in = 'Facebook user profile stream';
-                    $user_object = new User($user, $found_in);
-                    $user_dao = DAOFactory::getDAO('UserDAO');
-                    $user_dao->updateUser($user_object);
+                    if (!in_array($user['full_name'], $users_added )){
+                        $users_added[] = $user['full_name'];
+                        $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
+                        $found_in = 'Facebook user profile stream';
+                        $user_object = new User($user, $found_in);
+                        $user_dao = DAOFactory::getDAO('UserDAO');
+                        $user_dao->updateUser($user_object);
+                    }
                 }
             }
-            $this->logger->logUserSuccess("Updated or inserted ".count($users)." user(s).", __METHOD__.','.__LINE__);
+            $this->logger->logUserSuccess("Updated or inserted ".count($users_added)." user(s).", __METHOD__.','.__LINE__);
         } else {
             $this->logger->logInfo("No Facebook posts found for user ID $uid", __METHOD__.','.__LINE__);
         }
