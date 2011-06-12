@@ -178,7 +178,7 @@ class FacebookCrawler {
     }
 
     /**
-     * Fetch a save the posts and replies on a Facebook page.
+     * Fetch and save the posts and replies on a Facebook page.
      * @param int $pid Page ID
      */
     public function fetchPagePostsAndReplies($pid) {
