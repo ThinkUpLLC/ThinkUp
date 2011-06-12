@@ -129,7 +129,7 @@ class FacebookCrawler {
     }
 
     /**
-     * Fetch a save the posts and replies on a user's profile.
+     * Fetch and save the posts and replies on a user's profile.
      * @param int $uid
      */
     public function fetchUserPostsAndReplies($uid) {
