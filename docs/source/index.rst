@@ -9,6 +9,14 @@ ThinkUp: A Social Media Insights Engine
 Welcome! This is the official documentation for `ThinkUp <http://thinkupapp.com>`_, a social media insights
 engine. 
 
+.. sidebar:: ThinkUp Screencast
+
+    .. raw:: html
+
+        <iframe title="YouTube video player" style="width: 300px;height: 250px; border: 0;" src="http://www.youtube.com/embed/LtlCpvM-xeE?rel=0"></iframe>
+
+    Find out more at the `ThinkUp project page <http://thinkupapp.com>`_. 
+
 .. toctree::
    :maxdepth: 2
 
