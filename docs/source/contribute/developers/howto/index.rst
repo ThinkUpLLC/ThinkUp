@@ -7,4 +7,4 @@ Contents:
    :maxdepth: 2
 
    modifydb
-   plugins/buildplugin
+   addcsrfprotection

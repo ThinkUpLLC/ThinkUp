@@ -2,8 +2,9 @@ ThinkUp Security and Data Privacy
 =================================
 
 The ThinkUp development team takes security and data privacy very seriously. This document describes what data ThinkUp
-stores, what security measures the application puts in place to protect that data, what you can do to keep your ThinkUp
-installation secure, and how to report potential security and privacy bugs in the software.
+stores, how it handles sensitive data, what security measures the application puts in place to protect that data,
+what you can do to keep your ThinkUp installation secure, and how to report potential security and privacy bugs in the
+software.
 
 What Data ThinkUp Stores
 ------------------------
@@ -21,8 +22,8 @@ ThinkUp does not store:
 * Passwords to log into social networks
 * Direct messages or private messages on social networks
 
-How ThinkUp Handles Private Data
---------------------------------
+How ThinkUp Handles Sensitive Data
+----------------------------------
 
 ThinkUp's official distribution adheres to a set of rules and standards for handling sensitive data, such as:
 
@@ -47,6 +48,19 @@ Only plugins which adhere to these standards will be accepted into the official 
 .. warning::
     If you install third-party plugins which are not included in the ThinkUp distribution, you are taking the risk
     that they don't adhere to these guidelines.
+
+Security Measure ThinkUp's Application Code Puts in Place
+---------------------------------------------------------
+
+Currently ThinkUp's application code enforces:
+
+*   One-way password hashing which obscures plaintext passwords from anyone with direct access to the ThinkUp database.
+*   :doc:`A failed login attempt cap</userguide/accounts/index>` to stave off brute force password-guessing attacks.
+*   The use of OAuth credentials instead of storing third-party usernames and passwords.
+*   Protection against `cross-site request forgery <http://en.wikipedia.org/wiki/CSRF>`_ attacks per 
+    `The Open Web Application Security Project's recommendation 
+    <https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet>`_. (:doc:`More info
+    </contribute/developers/howto/addcsrfprotection>`)
 
 How to Secure Your ThinkUp Installation
 ---------------------------------------

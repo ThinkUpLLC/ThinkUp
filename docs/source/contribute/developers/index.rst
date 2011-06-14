@@ -16,7 +16,7 @@ ready to write your tests and docs first.
    writecode/index
    plugins/index
    reviewcode
-   howto
+   howto/index
    pullrequestchecklist
    documentation
    mvc
