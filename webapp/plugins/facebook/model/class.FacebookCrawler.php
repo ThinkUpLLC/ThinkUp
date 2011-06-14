@@ -78,15 +78,21 @@ class FacebookCrawler {
      */
     public function fetchUserInfo($uid, $network, $found_in) {
         // Get owner user details and save them to DB
-        $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
-        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token,
-        $fields);
+        $fields = $network!='facebook page'?'id,name,about,location,website,friends':'id,name,location,website';
+        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token,$fields);
         $user_details->network = $network;
 
         $user = $this->parseUserDetails($user_details);
         if (isset($user)) {
             $post_dao = DAOFactory::getDAO('PostDAO');
             $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
+
+            // Update Friend & Follower Count
+            $user["friend_count"] = count($user_details->friends->data);
+            $user["follower_count"] = $user["friend_count"];
+            $fcount_dao = DAOFactory::getDAO('FollowerCountDAO');
+            $fcount_dao->insert($uid, $network, $user["friend_count"]);
+
             $user_object = new User($user, $found_in);
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user_dao->updateUser($user_object);
@@ -123,7 +129,7 @@ class FacebookCrawler {
     }
 
     /**
-     * Fetch a save the posts and replies on a user's profile.
+     * Fetch and save the posts and replies on a user's profile.
      * @param int $uid
      */
     public function fetchUserPostsAndReplies($uid) {
@@ -151,23 +157,28 @@ class FacebookCrawler {
             }
 
             $users = $thinkup_data["users"];
+            $users_added = array();
+
             if (count($users) > 0) {
                 foreach ($users as $user) {
-                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
-                    $found_in = 'Facebook user profile stream';
-                    $user_object = new User($user, $found_in);
-                    $user_dao = DAOFactory::getDAO('UserDAO');
-                    $user_dao->updateUser($user_object);
+                    if (!in_array($user['full_name'], $users_added )){
+                        $users_added[] = $user['full_name'];
+                        $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
+                        $found_in = 'Facebook user profile stream';
+                        $user_object = new User($user, $found_in);
+                        $user_dao = DAOFactory::getDAO('UserDAO');
+                        $user_dao->updateUser($user_object);
+                    }
                 }
             }
-            $this->logger->logUserSuccess("Updated or inserted ".count($users)." user(s).", __METHOD__.','.__LINE__);
+            $this->logger->logUserSuccess("Updated or inserted ".count($users_added)." user(s).", __METHOD__.','.__LINE__);
         } else {
             $this->logger->logInfo("No Facebook posts found for user ID $uid", __METHOD__.','.__LINE__);
         }
     }
 
     /**
-     * Fetch a save the posts and replies on a Facebook page.
+     * Fetch and save the posts and replies on a Facebook page.
      * @param int $pid Page ID
      */
     public function fetchPagePostsAndReplies($pid) {
