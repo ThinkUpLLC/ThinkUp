@@ -316,8 +316,9 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link_dao = DAOFactory::getDAO('LinkDAO');
 
         $link = $link_dao->getLinkById(43);
-        $this->assertEqual($link->expanded_url,
-        'http://images.instagram.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
+        //Instagr.am constantly changes the location of their images so it's an unpredictable assertion
+        //        $this->assertEqual($link->expanded_url,
+        //        'http://images.instagram.com/media/2010/12/20/f0f411210cc54353be07cf74ceb79f3b_7.jpg');
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(42);
