@@ -32,6 +32,7 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
 /* INTEGRATION TESTS */
 $web_tests = new TestSuite('Integration tests');
+$web_tests->add(new WebTestOfApplicationSettings());
 $web_tests->add(new WebTestOfChangePassword());
 $web_tests->add(new WebTestOfCrawlerRun());
 $web_tests->add(new WebTestOfDashboard());

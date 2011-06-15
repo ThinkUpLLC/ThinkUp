@@ -98,7 +98,7 @@ class Config {
         $value = null;
         if ($db_value_config) {
             $option_dao = DAOFactory::getDAO("OptionDAO");
-            $db_value = $option_dao->getOptionValue(OptionDAO::APP_OPTIONS, $key, true);
+            $db_value = $option_dao->getOptionValue(OptionDAO::APP_OPTIONS, $key, false );
             $value =  $db_value ? $db_value : $db_value_config['default'];
             // convert db text booleans if needed
             if ($value == 'false') {
