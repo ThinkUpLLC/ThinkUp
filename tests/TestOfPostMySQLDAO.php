@@ -956,9 +956,9 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $cnt = 0;
         foreach ($posts_it as $post) {
             $cnt++;
-            if($cnt == 1) { $post1 = $post; }
-            if($cnt == 2) { $post2 = $post; }
-            if($cnt == 3) { $post3 = $post; }
+            if ($cnt == 1) { $post1 = $post; }
+            if ($cnt == 2) { $post2 = $post; }
+            if ($cnt == 3) { $post3 = $post; }
         }
         $this->assertEqual($cnt, 3);
         $this->assertEqual($post1->post_text, '@shutterbug Nice shot!', "post reply");

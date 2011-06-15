@@ -41,10 +41,10 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
         parent::tearDown();
         $zipfile = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_db_backup.zip';
         $backup_dir = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/backup';
-        if(file_exists($zipfile)) {
+        if (file_exists($zipfile)) {
             unlink($zipfile);
         }
-        if(file_exists($backup_dir)) {
+        if (file_exists($backup_dir)) {
             $this->recursiveDelete($backup_dir);
         }
     }
@@ -139,14 +139,14 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function recursiveDelete($str){
-        if(is_file($str)){
-            if(! preg_match("MAKETHISDIRWRITABLE", $str)) {
+        if (is_file($str)){
+            if (! preg_match("MAKETHISDIRWRITABLE", $str)) {
                 return @unlink($str);
             } else {
                 return true;
             }
         }
-        elseif(is_dir($str)){
+        elseif (is_dir($str)){
             $scan = glob(rtrim($str,'/').'/*');
             foreach($scan as $index=>$path){
                 $this->recursiveDelete($path);

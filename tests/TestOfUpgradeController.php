@@ -66,13 +66,13 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
 
         /** delete files if needed **/
         // delete token
-        if(file_exists($this->token_file)) {
+        if (file_exists($this->token_file)) {
             unlink($this->token_file);
         }
         // delete migration test files
-        if(isset($this->test_migrations) && count($this->test_migrations) > 0) {
+        if (isset($this->test_migrations) && count($this->test_migrations) > 0) {
             foreach($this->test_migrations as $file) {
-                if(file_exists($file)) {
+                if (file_exists($file)) {
                     unlink($file);
                 }
             }
@@ -559,7 +559,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         . '2010-09-17_v' . $migration_version . '.sql.migration';
         copy($migration_test1, $migration1);
         $this->test_migrations[] = $migration1;
-        if($count == 2) {
+        if ($count == 2) {
             $migration_test2 = $this->migrations_test_dir . $this->migrations_file2;
             $migration_version--;
             $migration_version += 0.12;

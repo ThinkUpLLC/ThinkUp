@@ -43,13 +43,13 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
 
     public function tearDown() {
         parent::tearDown();
-        if(file_exists($this->backup_file)) {
+        if (file_exists($this->backup_file)) {
             unlink($this->backup_file);
         }
-        if(file_exists($this->backup_test)) {
+        if (file_exists($this->backup_test)) {
             unlink($this->backup_test);
         }
-        if(file_exists($this->backup_dir)) {
+        if (file_exists($this->backup_dir)) {
             unlink($this->backup_dir);
         }
 

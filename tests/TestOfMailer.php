@@ -39,7 +39,7 @@ class TestOfMailer extends ThinkUpBasicUnitTestCase {
         parent::tearDown();
         // delete test email file if it exists
         $test_email = THINKUP_WEBAPP_PATH . '_lib/view/compiled_view' . Mailer::EMAIL;
-        if(file_exists($test_email)) {
+        if (file_exists($test_email)) {
             unlink($test_email);
         }
     }

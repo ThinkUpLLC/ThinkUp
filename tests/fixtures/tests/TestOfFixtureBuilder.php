@@ -215,65 +215,65 @@ class TestOfixtureBuilder extends UnitTestCase {
         $fail = 0;
         for($i = 0; $i < 1000; $i++) {
             $int = $this->builder->genInt();
-            if( $int > $this->builder->DATA_DEFAULTS['int'] ) { $fail++; }
+            if ( $int > $this->builder->DATA_DEFAULTS['int'] ) { $fail++; }
         }
-        if($fail > 0) { $this->fail("failed genInt()"); }
+        if ($fail > 0) { $this->fail("failed genInt()"); }
 
         $fail = 0;
         for($i = 0; $i < 1000; $i++) {
             $int = $this->builder->genInt(2);
-            if( $int > 2 ) { $fail++; }
+            if ( $int > 2 ) { $fail++; }
         }
-        if($fail > 0) { $this->fail("failed genInt(2) $fail"); }
+        if ($fail > 0) { $this->fail("failed genInt(2) $fail"); }
 
         //test
         //  bigint gen
         $fail = 0;
         for($i = 0; $i < 1000; $i++) {
             $int = $this->builder->genBigInt();
-            if( $int > $this->builder->DATA_DEFAULTS['bigint']) { $fail++; }
+            if ( $int > $this->builder->DATA_DEFAULTS['bigint']) { $fail++; }
         }
-        if($fail > 0) { $this->fail("failed genBigInt() $fail"); }
+        if ($fail > 0) { $this->fail("failed genBigInt() $fail"); }
 
         $fail = 0;
         for($i = 0; $i < 1000; $i++) {
             $int = $this->builder->genBigInt(3);
-            if( $int > 3) { $fail++; }
+            if ( $int > 3) { $fail++; }
         }
-        if($fail > 0) { $this->fail("failed genBigInt(3) $fail"); }
+        if ($fail > 0) { $this->fail("failed genBigInt(3) $fail"); }
 
         //test tiny int gen
         $fail = 0;
         for($i = 0; $i < 1000; $i++) {
             $int = $this->builder->genTinyInt();
-            if( $int > $this->builder->DATA_DEFAULTS['tinyint']) { $fail++; }
+            if ( $int > $this->builder->DATA_DEFAULTS['tinyint']) { $fail++; }
         }
-        if($fail > 0) { $this->fail("failed genTinyInt() $fail"); }
+        if ($fail > 0) { $this->fail("failed genTinyInt() $fail"); }
 
         $fail = 0;
         for($i = 0; $i < 1000; $i++) {
             $int = $this->builder->genTinyInt(3);
-            if( $int > 3) { $fail++; }
+            if ( $int > 3) { $fail++; }
         }
-        if($fail > 0) { $this->fail("failed genTinyInt(3) $fail"); }
+        if ($fail > 0) { $this->fail("failed genTinyInt(3) $fail"); }
 
 
         //test varchars
         $fail = 0;
         for($i = 0; $i < 1000; $i++) {
             $text = $this->builder->genVarchar();
-            if(strlen($text) > $this->builder->DATA_DEFAULTS['varchar']) {
+            if (strlen($text) > $this->builder->DATA_DEFAULTS['varchar']) {
                 $fail++;
             }
         }
         $fail = 0;
         for($i = 0; $i < 1000; $i++) {
             $text = $this->builder->genVarchar(2);
-            if(strlen($text) > 2) {
+            if (strlen($text) > 2) {
                 $fail++;
             }
         }
-        if($fail > 0) { $this->fail("failed $fail genVarchar(2) tests"); }
+        if ($fail > 0) { $this->fail("failed $fail genVarchar(2) tests"); }
 
         // test dates  3 days
         $date_text = $this->builder->genDate('+3d');
@@ -327,10 +327,10 @@ class TestOfixtureBuilder extends UnitTestCase {
         for($i = 0; $i < 1000; $i++) {
             $dec = $this->builder->genDecimal('decimal(3,2)');
             $values = preg_split('/\./', $dec);
-            if($values[0] >= 1000) { $fail =  "left value is not less than 1000 - " . $values[0]; break;}
-            if($values[1] >= 100) { $fail = "right value is not less than 100 - " . $values[1]; break; }
+            if ($values[0] >= 1000) { $fail =  "left value is not less than 1000 - " . $values[0]; break;}
+            if ($values[1] >= 100) { $fail = "right value is not less than 100 - " . $values[1]; break; }
         }
-        if($fail) {
+        if ($fail) {
             $this->fail($fail);
         }
     }
@@ -343,7 +343,7 @@ class TestOfixtureBuilder extends UnitTestCase {
     public function _testEnum($enum_array, $value) {
         $pass = false;
         for($i = 0; $i < count($enum_array); $i++) {
-            if( $value == $enum_array[$i] ) { $pass = true; }
+            if ( $value == $enum_array[$i] ) { $pass = true; }
         }
         return $pass;
     }

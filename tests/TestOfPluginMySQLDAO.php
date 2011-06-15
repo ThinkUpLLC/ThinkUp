@@ -350,7 +350,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     protected function verifyPluginData($data, $object) {
-        if(isset( $object->id )) {
+        if (isset( $object->id )) {
             $this->assertEqual($data['id'], $object->id);
         }
         $this->assertEqual($data['name'], $object->name);

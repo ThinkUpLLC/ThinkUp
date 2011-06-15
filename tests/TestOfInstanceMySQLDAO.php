@@ -501,7 +501,7 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
             }
             if ($number % 2 == 0) {
                 $reply_to = '11';
-                if($sender == 10){
+                if ($sender == 10){
                     $replies++;
                 }
             } else {
@@ -509,13 +509,13 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
             }
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$postid, 'author_user_id'=>$sender,
             'post_text'=>$data, 'pub_date'=>'-'.$number.'h', 'in_reply_to_user_id'=>$reply_to));
-            if($sender == 10){
+            if ($sender == 10){
                 $posts++;
             }
 
             if ($number % 2 == 1) {
                 $builders[] = FixtureBuilder::build('links', array('url'=>$data, 'post_id'=>$postid));
-                if($sender == 10){
+                if ($sender == 10){
                     $links++;
                 }
             }
@@ -525,11 +525,11 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $follows = 0;
         for($i=0; $i<= 150; $i++){
             $follow = array("follower"=>rand(5,25), "following"=>rand(5,25));
-            if(!isset($fd[$follow['following']."-".$follow['follower']])){
+            if (!isset($fd[$follow['following']."-".$follow['follower']])){
                 $fd[$follow['following']."-".$follow['follower']] = true;
                 $builders[] = FixtureBuilder::build('follows', array('user_id'=>$follow['following'],
                 'follower_id'=>$follow['follower']));
-                if($follow['following'] == 10){
+                if ($follow['following'] == 10){
                     $follows++;
                 }
             }
