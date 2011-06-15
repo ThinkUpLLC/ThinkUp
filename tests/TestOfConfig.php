@@ -108,7 +108,9 @@ class TestOfConfig extends ThinkUpUnitTestCase {
         $this->assertEqual($config->getValue('recaptcha_private_key'), '', "uses default app config value");
         $this->assertEqual($config->getValue('recaptcha_public_key'), '', "uses default app config value");
 
-        $this->unsetArray($_SESSION);
+        if (isset($_SESSION)) {
+            $this->unsetArray($_SESSION);
+        }
 
         $bvalue = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'recaptcha_enable',
         'option_value' => 'false');
@@ -118,7 +120,9 @@ class TestOfConfig extends ThinkUpUnitTestCase {
         $this->assertEqual($config->getValue('recaptcha_private_key'), '', "uses default app config value");
         $this->assertEqual($config->getValue('recaptcha_public_key'), '', "uses default app config value");
 
-        $this->unsetArray($_SESSION);
+        if (isset($_SESSION)) {
+            $this->unsetArray($_SESSION);
+        }
         FixtureBuilder::truncateTable('options');
         $bvalue['option_value'] = 'true';
         $bvalue2 = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'recaptcha_private_key',

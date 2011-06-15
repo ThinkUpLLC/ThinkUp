@@ -86,7 +86,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
      * Unset all the values for every key in an array
      * @param array $array
      */
-    protected function unsetArray(&$array) {
+    protected function unsetArray(array &$array) {
         $keys = array_keys($array);
         foreach ($keys as $key) {
             unset($array[$key]);
