@@ -109,10 +109,40 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $controller = new TwitterAuthController(true);
         $results = $controller->go();
 
+        //sleep(100);
         $v_mgr = $controller->getViewManager();
-        $results = $v_mgr->getTemplateDataItem('infomsg');
-        $this->assertTrue(strpos($results, 'Twitter authentication successful!')>0);
-        $this->assertTrue(strpos($results, 'Instance does not exist.')>0);
-        $this->assertTrue(strpos($results, 'Created instance.')>0);
+        $results = $v_mgr->getTemplateDataItem('successmsg');
+        $this->debug($results);
+        $this->assertEqual('Success! dougw on Twitter has been added to ThinkUp!', $results);
+    }
+
+    public function testLoggedInAllParamsServiceUserExists() {
+        $this->simulateLogin('me@example.com');
+        $_GET['oauth_token'] = 'XXX';
+        SessionCache::put('oauth_request_token_secret', 'XXX');
+
+        $builders[] = FixtureBuilder::build('owners', array('id'=>'10', 'email'=>'me@example.com'));
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'oauth_consumer_key', 'option_value'=>'XXX'));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'oauth_consumer_secret', 'option_value'=>'YYY'));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'num_twitter_errors', 'option_value'=>'5'));
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>$namespace,
+        'option_name'=>'max_api_calls_per_crawl', 'option_value'=>'350'));
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>'1401881',
+        'network_username'=>'dougw', 'network'=>'twitter'));
+        $builders[] = FixtureBuilder::build('instances_twitter', array('last_page_fetched_replies'=>1));
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id'=>1, 'owner_id'=>10));
+
+        $controller = new TwitterAuthController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $results = $v_mgr->getTemplateDataItem('successmsg');
+        $this->debug($results);
+        $this->assertEqual('dougw on Twitter is already set up in ThinkUp! To add a different Twitter account, log '.
+        'out of Twitter.com in your browser and authorize ThinkUp again.', $results);
     }
 }

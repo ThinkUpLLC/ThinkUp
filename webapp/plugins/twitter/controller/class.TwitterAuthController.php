@@ -52,7 +52,6 @@ class TwitterAuthController extends ThinkUpAuthController {
     }
 
     public function authControl() {
-        $msg = "";
         if (!$this->is_missing_param) {
             $request_token = $_GET['oauth_token'];
             $request_token_secret = SessionCache::get('oauth_request_token_secret');
@@ -72,75 +71,53 @@ class TwitterAuthController extends ThinkUpAuthController {
                 $options['num_twitter_errors']->option_value, $options['max_api_calls_per_crawl']->option_value,
                 false);
 
-                $u = $api->verifyCredentials();
+                $authed_twitter_user = $api->verifyCredentials();
+                //                echo "User ID: ". $authed_twitter_user['user_id'];
+                //                echo "User name: ". $authed_twitter_user['user_name'];
 
-                //echo "User ID: ". $u['user_id'];
-                //echo "User name: ". $u['user_name'];
-                $twitter_id = $u['user_id'];
-                $tu = $u['user_name'];
+                $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                $owner = $owner_dao->getByEmail($this->getLoggedInUser());
 
-                $od = DAOFactory::getDAO('OwnerDAO');
-                $owner = $od->getByEmail($this->getLoggedInUser());
-
-                if ($twitter_id > 0) {
-                    $msg = "<h2 class=\"subhead\">Twitter authentication successful!</h2>";
-
+                if ((int) $authed_twitter_user['user_id'] > 0) {
                     $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
-                    $i = $instance_dao->getByUsername($tu);
+                    $instance = $instance_dao->getByUsername($authed_twitter_user['user_name'], 'twitter');
                     $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-
-                    if (isset($i)) {
-                        $msg .= "Instance already exists.<br />";
-
-                        $oi = $oid->get($owner->id, $i->id);
-                        if ($oi != null) {
-                            $msg .= "Owner already has this instance, no insert  required.<br />";
-                            if ($oid->updateTokens($owner->id, $i->id, $tok['oauth_token'],
-                            $tok['oauth_token_secret'])) {
-                                $msg .= "OAuth Tokens updated.";
-                            } else {
-                                $msg .= "OAuth Tokens NOT updated.";
-                            }
+                    if (isset($instance)) {
+                        $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
+                        if ($owner_instance != null) {
+                            $owner_instance_dao->updateTokens($owner->id, $instance->id, $tok['oauth_token'],
+                            $tok['oauth_token_secret']);
+                            $this->addSuccessMessage($authed_twitter_user['user_name'].
+                            " on Twitter is already set up in ThinkUp! To add a different Twitter account, ".
+                            "log out of Twitter.com in your browser and authorize ThinkUp again.");
                         } else {
-                            if ($owner_instance_dao->insert($owner->id, $i->id, $tok['oauth_token'],
+                            if ($owner_instance_dao->insert($owner->id, $instance->id, $tok['oauth_token'],
                             $tok['oauth_token_secret'])) {
-                                $msg .= "Added owner instance.<br />";
+                                $this->addSuccessMessage("Success! ".$authed_twitter_user['user_name'].
+                                " on Twitter has been added to ThinkUp!");
                             } else {
-                                $msg .= "PROBLEM Did not add owner instance.<br />";
+                                $this->addErrorMessage("Error: Could not create an owner instance.");
                             }
                         }
-
                     } else {
-                        $msg .= "Instance does not exist.<br />";
-
-                        $instance_dao->insert($twitter_id, $tu);
-                        $msg .= "Created instance.<br />";
-
-                        $i = $instance_dao->getByUsername($tu);
-                        if ($owner_instance_dao->insert(
-                        $owner->id,
-                        $i->id,
-                        $tok['oauth_token'],
+                        $instance_dao->insert($authed_twitter_user['user_id'], $authed_twitter_user['user_name']);
+                        $instance = $instance_dao->getByUsername($authed_twitter_user['user_name']);
+                        if ($owner_instance_dao->insert( $owner->id, $instance->id, $tok['oauth_token'],
                         $tok['oauth_token_secret'])) {
-                            $msg .= "Created an owner instance.<br />";
+                            $this->addSuccessMessage("Success! ".$authed_twitter_user['user_name'].
+                            " on Twitter has been added to ThinkUp!");
                         } else {
-                            $msg .= "Did NOT create an owner instance.<br />";
+                            $this->addErrorMessage("Error: Could not create an owner instance.");
                         }
                     }
                 }
             } else {
-                $msg = "PROBLEM! Twitter authorization did not complete successfully. Check if your account already ".
+                $msg = "Error: Twitter authorization did not complete successfully. Check if your account already ".
                 " exists. If not, please try again.";
+                $this->addErrorMessage($msg);
             }
             $this->view_mgr->clear_all_cache();
-
-            $config = Config::getInstance();
-            $msg .= '<br /><br /><a href="'.$config->getValue('site_root_path').
-        'account/index.php?p=twitter" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span 
-        class="ui-icon ui-icon-circle-arrow-e"></span>Back to your account</a>';
-            $this->addInfoMessage($msg);
         }
         return $this->generateView();
     }
-
 }
