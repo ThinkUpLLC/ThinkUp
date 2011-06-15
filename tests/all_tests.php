@@ -52,4 +52,10 @@ echo "
 Total ThinkUp test passes: ".$TOTAL_PASSES."
 Total ThinkUp test failures: ".$TOTAL_FAILURES."
 Time elapsed: ".round($total_time)." minute(s)
+
+";
+
+echo trim(exec("cd ".THINKUP_ROOT_PATH."docs/source/; wc -w `find ./ -type f -name \*.rst` | tail -n 1")) .
+" words of application documentation
+
 ";
