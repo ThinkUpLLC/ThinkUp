@@ -338,18 +338,3 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         'server.</a></p>');
     }
 }
-
-/**
- * Mock Captcha for test use
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
- *
- */
-class Captcha {
-    public function generate() {
-        return '';
-    }
-
-    public function check() {
-        return true;
-    }
-}

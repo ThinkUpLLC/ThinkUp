@@ -50,6 +50,10 @@ class Captcha {
         }
     }
     public function generate() {
+        //if in test mode, return empty string
+        if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
+            return '';
+        }
         switch ($this->type) {
             case 1:
                 $code = recaptcha_get_html($this->pubkey, $this->msg);
@@ -67,6 +71,11 @@ class Captcha {
         }
     }
     public function check() {
+        //if in test mode, assume check is good
+        if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
+            return true;
+        }
+
         switch ($this->type) {
             case 1:
                 $resp = recaptcha_check_answer($this->prikey, $_SERVER["REMOTE_ADDR"],
