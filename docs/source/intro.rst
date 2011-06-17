@@ -47,7 +47,7 @@ What ThinkUp Can Do
 
     .. raw:: html
 
-        <iframe title="YouTube video player" style="width: 300px;height: 250px; border: 0;" src="http://www.youtube.com/embed/LtlCpvM-xeE?rel=0"></iframe> 
+        <iframe title="YouTube video player" style="width: 100%; height:250px; border: 0;" src="http://www.youtube.com/embed/LtlCpvM-xeE?rel=0"></iframe> 
 
 At its heart, ThinkUp is a conversation analysis tool. ThinkUp helps you pose questions to your followers on social
 networks, and compile and share the responses, whether you're The White House asking U.S. citizens what our country's

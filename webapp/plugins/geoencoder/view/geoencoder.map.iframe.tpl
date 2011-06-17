@@ -31,7 +31,7 @@
 <link rel="stylesheet" type="text/css" href="{$site_root_path}plugins/geoencoder/assets/css/maps.css" />
 </head>
 
-<body {if $errormsg}>
+<body {if $error_msg}>
         {include file="_usermessage.tpl"}
       {else}
        onload="initializeMap()" onunload="GUnload()">

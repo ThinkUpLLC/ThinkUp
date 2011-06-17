@@ -19,8 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
  * GeoEncoder Plugin configuration controller
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Ekansh Preet Singh, Mark Wilkie

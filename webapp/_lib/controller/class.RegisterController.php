@@ -81,15 +81,29 @@ class RegisterController extends ThinkUpController {
                         }
                     }
                     if (!$this->is_missing_param) {
+                        $valid_input = true;
                         if (!Utils::validateEmail($_POST['email'])) {
-                            $this->addErrorMessage("Incorrect email. Please enter valid email address.");
-                        } elseif (strcmp($_POST['pass1'], $_POST['pass2']) || empty($_POST['pass1'])) {
-                            $this->addErrorMessage("Passwords do not match.");
-                        } elseif (!$captcha->check()) {
-                            // Captcha not valid, captcha handles message...
-                        } else {
+                            $this->addErrorMessage("Incorrect email. Please enter valid email address.", 'email');
+                            $valid_input = false;
+                        }
+
+                        if (strcmp($_POST['pass1'], $_POST['pass2']) || empty($_POST['pass1'])) {
+                            $this->addErrorMessage("Passwords do not match.", 'password');
+                            $valid_input = false;
+                        } else if (strlen($_POST['pass1']) < 5) {
+                            $this->addErrorMessage("Password must be at least 5 characters.", 'password');
+                            $valid_input = false;
+                        }
+
+                        if (!$captcha->doesTextMatchImage()) {
+                            $this->addErrorMessage("Entered text didn't match the image. Please try again.",
+                            'captcha');
+                            $valid_input = false;
+                        }
+
+                        if ($valid_input) {
                             if ($owner_dao->doesOwnerExist($_POST['email'])) {
-                                $this->addErrorMessage("User account already exists.");
+                                $this->addErrorMessage("User account already exists.", 'email');
                             } else {
                                 $es = new SmartyThinkUp();
                                 $es->caching=false;

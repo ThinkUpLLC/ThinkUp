@@ -52,7 +52,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('infomsg'),
+        $this->assertEqual($v_mgr->getTemplateDataItem('info_msg'),
         'There are no public accounts set up in this ThinkUp installation.<br /><br />'.
         'To make a current account public, log in and click on "Settings." Click on one of the plugins '.
         'that contain accounts (like Twitter or Facebook) and click "Set Public" next to the account that '.
@@ -69,8 +69,8 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertPattern("/You have no services configured./", $v_mgr->getTemplateDataItem('infomsg'));
-        $this->assertPattern("/Set up a service/", $v_mgr->getTemplateDataItem('infomsg'));
+        $this->assertPattern("/You have no services configured./", $v_mgr->getTemplateDataItem('info_msg'));
+        $this->assertPattern("/Set up a service/", $v_mgr->getTemplateDataItem('info_msg'));
     }
 
     public function testNotLoggedInNoUserOrViewSpecifiedDefaultServiceUserSet() {

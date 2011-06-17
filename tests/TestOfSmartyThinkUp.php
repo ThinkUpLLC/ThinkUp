@@ -107,12 +107,9 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     }
 
     public function testAddHelp() {
-        $cfg_array = array('debug'=>true,
-        'site_root_path'=>'/my/thinkup/folder/test',
-        'source_root_path'=>'/Users/gina/Sites/thinkup', 
-        'app_title'=>"My ThinkUp", 
-        'cache_pages'=>true);
-        $v_mgr = new SmartyThinkUp($cfg_array);
+        $cfg = Config::getInstance();
+        $cfg->setValue('debug', true);
+        $v_mgr = new SmartyThinkUp();
 
         $v_mgr->addHelp('api', 'userguide/api/posts/index');
         $v_mgr->addHelp('user_guide', 'userguide/index');
@@ -122,5 +119,49 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $debug_arr = $v_mgr->getTemplateDataItem('help');
         $this->debug(Utils::varDumpToString($debug_arr));
         $this->debug($debug_arr['api']);
+    }
+
+    public function testAddErrorMessage() {
+        $cfg = Config::getInstance();
+        $cfg->setValue('debug', true);
+        $v_mgr = new SmartyThinkUp();
+
+        $v_mgr->addErrorMessage('Page level error');
+        $v_mgr->addErrorMessage('Field level error', 'fieldname');
+
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Page level error');
+        $debug_arr = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($debug_arr['fieldname'], 'Field level error');
+        $this->debug(Utils::varDumpToString($debug_arr));
+    }
+
+    public function testAddInfoMessage() {
+        $cfg = Config::getInstance();
+        $cfg->setValue('debug', true);
+        $v_mgr = new SmartyThinkUp();
+
+        $v_mgr->addInfoMessage('Field level info', 'fieldname');
+        $v_mgr->addInfoMessage('Page level info');
+
+        $this->assertEqual($v_mgr->getTemplateDataItem('info_msg'), 'Page level info');
+        $debug_arr = $v_mgr->getTemplateDataItem('info_msgs');
+        $this->assertEqual($debug_arr['fieldname'], 'Field level info');
+        $this->debug(Utils::varDumpToString($debug_arr));
+    }
+
+    public function testAddSuccessMessage() {
+        $cfg = Config::getInstance();
+        $cfg->setValue('debug', true);
+        $v_mgr = new SmartyThinkUp();
+
+        $v_mgr->addSuccessMessage('Field level info 1', 'fieldname1');
+        $v_mgr->addSuccessMessage('Page level info');
+        $v_mgr->addSuccessMessage('Field level info 2', 'fieldname2');
+
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), 'Page level info');
+        $debug_arr = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual($debug_arr['fieldname1'], 'Field level info 1');
+        $this->assertEqual($debug_arr['fieldname2'], 'Field level info 2');
+        $this->debug(Utils::varDumpToString($debug_arr));
     }
 }

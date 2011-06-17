@@ -106,7 +106,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
         $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
 
         //logged in
         $this->simulateLogin('me@example.com');
@@ -134,7 +134,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $_GET["p"]="twitter";
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), "Added anildash to ThinkUp.");
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), "Added anildash to ThinkUp.");
         $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'array', 'Owner instances set');
         $this->assertTrue($v_mgr->getTemplateDataItem('oauthorize_link') != '', 'Authorization link set');
     }

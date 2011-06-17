@@ -63,18 +63,18 @@ class AccountConfigurationController extends ThinkUpAuthController {
         && isset($_POST['pass1']) && isset($_POST['pass2'])) {
             $origpass = $owner_dao->getPass($this->getLoggedInUser());
             if (!$this->app_session->pwdCheck($_POST['oldpass'], $origpass)) {
-                $this->addErrorMessage("Old password does not match or empty.");
+                $this->addErrorMessage("Old password does not match or empty.", 'password');
             } elseif ($_POST['pass1'] != $_POST['pass2']) {
-                $this->addErrorMessage("New passwords did not match. Your password has not been changed.");
+                $this->addErrorMessage("New passwords did not match. Your password has not been changed.", 'password');
             } elseif (strlen($_POST['pass1']) < 5) {
                 $this->addErrorMessage("New password must be at least 5 characters. ".
-                "Your password has not been changed." );
+                "Your password has not been changed.", 'password' );
             } else {
                 // verify CSRF token
                 $this->validateCSRFToken();
                 $cryptpass = $this->app_session->pwdcrypt($_POST['pass1']);
                 $owner_dao->updatePassword($this->getLoggedInUser(), $cryptpass);
-                $this->addSuccessMessage("Your password has been updated.");
+                $this->addSuccessMessage("Your password has been updated.", 'password');
             }
         }
 
@@ -91,13 +91,13 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 'session/register.php?code='. $invite_code;
                 $this->addSuccessMessage("Invitation created!<br />Copy this link and send it to someone you want to ".
                 'invite to register on your ThinkUp installation.<br /><a href="'.$invite_link.'">'.
-                $invite_link.'</a><br /> Good for one new registration. Expires in 7 days.');
+                $invite_link.'</a><br /> Good for one new registration. Expires in 7 days.', 'invite');
             } else {
-                $this->addErrorMessage("There was an error creating a new invite. Please try again.");
+                $this->addErrorMessage("There was an error creating a new invite. Please try again.", 'invite');
             }
         }
 
-        //process account deletion
+        //process service user deletion
         if (isset($_POST['action']) && $_POST['action'] == 'delete' && isset($_POST['instance_id']) &&
         is_numeric($_POST['instance_id'])) {
             $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
@@ -111,7 +111,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                     $owner_instance_dao->deleteByInstance($instance->id);
                     //delete instance
                     $instance_dao->delete($instance->network_username, $instance->network);
-                    $this->addSuccessMessage('Account deleted.');
+                    $this->addSuccessMessage('Account deleted.', 'account');
                 } else  {
                     if ( $owner_instance_dao->doesOwnerHaveAccess($owner, $instance) ) {
                         //delete owner instance
@@ -122,14 +122,14 @@ class AccountConfigurationController extends ThinkUpAuthController {
                             if (sizeof($remaining_owner_instances) == 0 ) {
                                 $instance_dao->delete($instance->network_username, $instance->network);
                             }
-                            $this->addSuccessMessage('Account deleted.');
+                            $this->addSuccessMessage('Account deleted.', 'account');
                         }
                     } else {
-                        $this->addErrorMessage('Insufficient privileges.');
+                        $this->addErrorMessage('Insufficient privileges.', 'account');
                     }
                 }
             } else {
-                $this->addErrorMessage('Instance doesn\'t exist.');
+                $this->addErrorMessage('Instance doesn\'t exist.', 'account');
             }
         }
         $this->view_mgr->clear_all_cache();

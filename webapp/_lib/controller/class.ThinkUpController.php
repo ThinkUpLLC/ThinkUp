@@ -479,30 +479,39 @@ abstract class ThinkUpController {
     }
 
     /**
-     * Add error message to view
+     * Add error message to view.
+     * Include field if the message goes on a specific place on the page; otherwise leave it null for the message
+     * to be page-level.
      * @param str $msg
+     * @param str $field Defaults to null for page-level messages.
      */
-    public function addErrorMessage($msg) {
+    public function addErrorMessage($msg, $field=null) {
         $this->disableCaching();
-        $this->addToView('errormsg', $msg );
+        $this->view_mgr->addErrorMessage($msg, $field);
     }
 
     /**
      * Add success message to view
+     * Include field if the message goes on a specific place on the page; otherwise leave it null for the message
+     * to be page-level.
      * @param str $msg
+     * @param str $field Defaults to null for page-level messages.
      */
-    public function addSuccessMessage($msg) {
+    public function addSuccessMessage($msg, $field=null) {
         $this->disableCaching();
-        $this->addToView('successmsg', $msg );
+        $this->view_mgr->addSuccessMessage($msg, $field);
     }
 
     /**
      * Add informational message to view
+     * Include field if the message goes on a specific place on the page; otherwise leave it null for the message
+     * to be page-level.
      * @param str $msg
+     * @param str $field Defaults to null for page-level messages.
      */
-    public function addInfoMessage($msg) {
+    public function addInfoMessage($msg, $field=null) {
         $this->disableCaching();
-        $this->addToView('infomsg', $msg );
+        $this->view_mgr->addInfoMessage($msg, $field);
     }
 
     /**

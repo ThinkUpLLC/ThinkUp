@@ -31,21 +31,45 @@
  *
  */
 class SmartyThinkUp extends Smarty {
-
     /**
      * @var boolean
      */
     private $debug = false;
-
     /**
      * @var array
      */
     private $template_data = array();
-
     /**
      * @var array
      */
     private $contextual_help = array();
+    /**
+     * @var array
+     */
+    private $error_msgs = array();
+    /**
+     * @var array
+     */
+    private $success_msgs = array();
+    /**
+     * @var array
+     */
+    private $info_msgs = array();
+    /**
+     * Success-type messages.
+     * @var int
+     */
+    const SUCCESS_MESSAGE = 1;
+    /**
+     * Informational-type messages.
+     * @var unknown_type
+     */
+    const INFO_MESSAGE = 2;
+    /**
+     * Error-type messages.
+     * @var unknown_type
+     */
+    const ERROR_MESSAGE = 3;
     /**
      * Constructor
      *
@@ -111,6 +135,73 @@ class SmartyThinkUp extends Smarty {
     public function addHelp($id, $link_slug) {
         $this->contextual_help[$id] = $link_slug;
         $this->assign('help', $this->contextual_help);
+    }
+
+    /**
+     * Add page-level or field-level error message to view.
+     * To add a page-level message, leave $field null. To add a field-level message, specify $field name.
+     * @param str $msg
+     * @param str $field Defaults to null
+     */
+    public function addErrorMessage($msg, $field=null) {
+        $this->addMessage(self::ERROR_MESSAGE, $msg, $field);
+    }
+
+    /**
+     * Add page-level or field-level info message to view
+     * To add a page-level message, leave $field null. To add a field-level message, specify $field name.
+     * @param str $msg
+     * @param str $field Defaults to null
+     */
+    public function addInfoMessage($msg, $field=null) {
+        $this->addMessage(self::INFO_MESSAGE, $msg, $field);
+    }
+
+    /**
+     * Add page-level or field-level success message to view
+     * To add a page-level message, leave $field null. To add a field-level message, specify $field name.
+     * @param str $msg
+     * @param str $field Defaults to null
+     */
+    public function addSuccessMessage($msg, $field=null) {
+        $this->addMessage(self::SUCCESS_MESSAGE, $msg, $field);
+    }
+
+    /**
+     * Add a field or page-level message to the view.
+     * @param int $msg_type Should equal self::SUCCESS_MSG, self::INFO_MSG, self::ERROR_MSG
+     * @param string $msg
+     * @param string $field
+     */
+    private function addMessage($msg_type, $msg, $field=null) {
+        switch ($msg_type) {
+            case self::SUCCESS_MESSAGE:
+                if (isset($field)) {
+                    $this->success_msgs[$field] = $msg;
+                    $this->assign('success_msgs', $this->success_msgs );
+                } else {
+                    $this->assign('success_msg', $msg);
+                }
+                break;
+            case self::INFO_MESSAGE:
+                if (isset($field)) {
+                    $this->info_msgs[$field] = $msg;
+                    $this->assign('info_msgs', $this->info_msgs );
+                } else {
+                    $this->assign('info_msg', $msg);
+                }
+                break;
+            case self::ERROR_MESSAGE:
+                if (isset($field)) {
+                    $this->error_msgs[$field] = $msg;
+                    $this->assign('error_msgs', $this->error_msgs );
+                } else {
+                    $this->assign('error_msg', $msg);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     /**

@@ -15,7 +15,7 @@
     <div class="section thinkup-canvas clearfix" id="plugins">
       <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
         <div class="append_20 clearfix">
-        {include file="_usermessage.tpl"}
+        {include file="_usermessage.tpl" field="account"}
           {if $installed_plugins}
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
               {if $smarty.foreach.foo.first}
@@ -87,7 +87,7 @@
     <div class="sections" id="instances">
       <div class="thinkup-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
-        {include file="_usermessage.tpl"}
+        {include file="_usermessage.tpl" field='password'}
           <form name="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
             <div class="clearfix">
               <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>
@@ -157,7 +157,7 @@
           
          <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
         <h1>Invite User</h1>
-        {include file="_usermessage.tpl"}
+        {include file="_usermessage.tpl" field='invite'}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
                 {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
                 class="tt-button ui-state-default ui-priority-secondary ui-corner-all">

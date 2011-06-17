@@ -55,7 +55,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
         $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
     }
 
     //Test no params
@@ -65,7 +65,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual('Secret token not set.', $v_mgr->getTemplateDataItem('infomsg'), "Info msg set");
+        $this->assertEqual('Secret token not set.', $v_mgr->getTemplateDataItem('info_msg'), "Info msg set");
     }
 
     //Test Session param but no Get param
@@ -76,7 +76,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual('No OAuth token specified.', $v_mgr->getTemplateDataItem('infomsg'), "Info msg set");
+        $this->assertEqual('No OAuth token specified.', $v_mgr->getTemplateDataItem('info_msg'), "Info msg set");
     }
 
     //Test Session param but no Get param
@@ -87,7 +87,7 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual('Secret token not set.', $v_mgr->getTemplateDataItem('infomsg'), "Info msg set");
+        $this->assertEqual('Secret token not set.', $v_mgr->getTemplateDataItem('info_msg'), "Info msg set");
     }
 
     public function testLoggedInAllParams() {
@@ -111,9 +111,8 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
 
         //sleep(100);
         $v_mgr = $controller->getViewManager();
-        $results = $v_mgr->getTemplateDataItem('successmsg');
-        $this->debug($results);
-        $this->assertEqual('Success! dougw on Twitter has been added to ThinkUp!', $results);
+        $this->assertEqual('Success! dougw on Twitter has been added to ThinkUp!',
+        $v_mgr->getTemplateDataItem('success_msg'));
     }
 
     public function testLoggedInAllParamsServiceUserExists() {
@@ -140,9 +139,8 @@ class TestOfTwitterAuthController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $results = $v_mgr->getTemplateDataItem('successmsg');
         $this->debug($results);
         $this->assertEqual('dougw on Twitter is already set up in ThinkUp! To add a different Twitter account, log '.
-        'out of Twitter.com in your browser and authorize ThinkUp again.', $results);
+        'out of Twitter.com in your browser and authorize ThinkUp again.', $v_mgr->getTemplateDataItem('success_msg'));
     }
 }

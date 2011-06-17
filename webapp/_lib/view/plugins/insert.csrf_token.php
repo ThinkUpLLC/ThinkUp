@@ -41,7 +41,7 @@
  */
 function smarty_insert_csrf_token($params, &$smarty) {
     $csrf_token = Session::getCSRFToken();
-    if(isset($csrf_token)) {
+    if (isset($csrf_token)) {
         return sprintf('<input type="hidden" name="csrf_token" value="%s" />', $csrf_token);
     } else {
         return '<!-- Error: no csrf token found in session -->';

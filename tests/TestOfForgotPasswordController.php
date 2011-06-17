@@ -67,7 +67,7 @@ class TestOfForgotPasswordController extends ThinkUpUnitTestCase {
         $result = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Error: account does not exist.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Error: account does not exist.');
     }
 
     public function testOfControllerWithValidEmailAddress() {

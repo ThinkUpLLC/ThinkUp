@@ -84,7 +84,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Please fill out all required fields.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Please fill out all required fields.');
     }
 
     public function testSomeMissingFields() {
@@ -101,7 +101,7 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Please fill out all required fields.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Please fill out all required fields.');
         $this->assertEqual($v_mgr->getTemplateDataItem('name'), 'Angelina Jolie');
         $this->assertEqual($v_mgr->getTemplateDataItem('mail'), 'angie@example.com');
     }
@@ -123,7 +123,8 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Passwords do not match.');
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($error_msgs['password'], 'Passwords do not match.');
         $this->assertEqual($v_mgr->getTemplateDataItem('name'), 'Angelina Jolie');
         $this->assertEqual($v_mgr->getTemplateDataItem('mail'), 'angie@example.com');
     }
@@ -149,7 +150,10 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'),
+        $this->debug($v_mgr->getTemplateDataItem('success_msg'));
+        $this->debug($v_mgr->getTemplateDataItem('error_msg'));
+        $this->debug(Utils::varDumpToString($v_mgr->getTemplateDataItem('error_msgs')));
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'),
         'Success! Check your email for an activation link.');
 
         $expected_reg_email_pattern = '/to: angie@example.com
@@ -185,7 +189,7 @@ http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activa
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'),
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'),
         'Success! Check your email for an activation link.');
 
         $expected_reg_email_pattern = '/to: angie@example.com
@@ -270,7 +274,7 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
         $this->debug($results);
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'),
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'),
         'Success! Check your email for an activation link.');
 
         $expected_reg_email_pattern = '/to: angie@example.com
@@ -305,7 +309,7 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
         '<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
         '<p><a href="http://thinkupapp.com">Install ThinkUp on your own '.
         'server.</a></p>');
@@ -332,7 +336,7 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
         '<p>Sorry, registration is closed on this ThinkUp installation.</p>'.
         '<p><a href="http://thinkupapp.com">Install ThinkUp on your own '.
         'server.</a></p>');

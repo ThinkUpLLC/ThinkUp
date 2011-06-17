@@ -1,1 +1,1 @@
-{$infomsg}{$result}
+{$info_msg}{$result}

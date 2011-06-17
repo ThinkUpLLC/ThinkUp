@@ -60,7 +60,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
         $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
 
         // logged in
         // build a user

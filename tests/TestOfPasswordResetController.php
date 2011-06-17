@@ -65,7 +65,7 @@ class TestOfPasswordResetController extends ThinkUpUnitTestCase {
         $result = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'You have reached this page in error.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'You have reached this page in error.');
     }
 
     public function testOfControllerExpiredToken() {
@@ -82,7 +82,7 @@ SQL;
         $result = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Your token is expired.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Your token is expired.');
     }
 
     public function testOfControllerGoodToken() {
@@ -99,8 +99,8 @@ SQL;
         $result = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertFalse($v_mgr->getTemplateDataItem('errormsg'));
-        $this->assertFalse($v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertFalse($v_mgr->getTemplateDataItem('error_msg'));
+        $this->assertFalse($v_mgr->getTemplateDataItem('success_msg'));
     }
 
     public function testOfControllerGoodTokenMismatchedPassword() {
@@ -119,7 +119,7 @@ SQL;
         $result = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), "Passwords didn't match.");
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), "Passwords didn't match.");
     }
 
     public function testOfControllerGoodTokenMatchedNewPassword() {

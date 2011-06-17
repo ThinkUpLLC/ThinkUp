@@ -156,9 +156,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($owner_instances), 0);
 
         $v_mgr = $controller->getViewManager();
-        $this->assertNotNull($v_mgr->getTemplateDataItem('successmsg'));
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Account deleted.');
-        $this->assertNull($v_mgr->getTemplateDataItem('errormsg'));
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testDeleteExistingInstanceWithPrivilegesNoOtherOwners() {
@@ -202,9 +203,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($owner_instances), 0);
 
         $v_mgr = $controller->getViewManager();
-        $this->assertNotNull($v_mgr->getTemplateDataItem('successmsg'));
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Account deleted.');
-        $this->assertNull($v_mgr->getTemplateDataItem('errormsg'));
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testDeleteExistingInstanceWithPrivilegesWithOtherOwners() {
@@ -251,9 +253,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($owner_instances), 1);
 
         $v_mgr = $controller->getViewManager();
-        $this->assertNotNull($v_mgr->getTemplateDataItem('successmsg'));
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Account deleted.');
-        $this->assertNull($v_mgr->getTemplateDataItem('errormsg'));
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertNotNull($success_msgs);
+        $this->assertEqual($success_msgs['account'], 'Account deleted.');
+        $this->assertNull($v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testDeleteExistingInstanceNoPrivileges() {
@@ -297,9 +300,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($owner_instances), 1);
 
         $v_mgr = $controller->getViewManager();
-        $this->assertNull($v_mgr->getTemplateDataItem('successmsg'));
-        $this->assertNotNull($v_mgr->getTemplateDataItem('errormsg'));
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Insufficient privileges.');
+        $this->assertNull($v_mgr->getTemplateDataItem('success_msgs'));
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertNotNull($error_msgs);
+        $this->assertEqual($error_msgs['account'], 'Insufficient privileges.');
     }
 
     public function testDeleteNonExistentInstance() {
@@ -319,9 +323,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         //set error msg
         $v_mgr = $controller->getViewManager();
-        $this->assertNull($v_mgr->getTemplateDataItem('successmsg'));
-        $this->assertNotNull($v_mgr->getTemplateDataItem('errormsg'));
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Instance doesn\'t exist.');
+        $this->assertNull($v_mgr->getTemplateDataItem('success_msg'));
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertNotNull($error_msgs);
+        $this->assertEqual($error_msgs['account'], 'Instance doesn\'t exist.');
     }
 
     public function testControlNotLoggedIn() {
@@ -331,7 +336,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
         $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testAuthControlLoggedInNotAdmin() {
@@ -350,11 +355,11 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
 
-        //not set: owners, body, successmsg, errormsg
+        //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testAuthControlLoggedInAdmin() {
@@ -375,10 +380,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertIsA($v_mgr->getTemplateDataItem('owners'), 'array');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owners')), 2);
 
-        //not set: owners, body, successmsg, errormsg
+        //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testAuthControlLoggedInSpecificPluginExists() {
@@ -397,10 +402,10 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner->email, 'me@example.com');
         $this->assertTrue($v_mgr->getTemplateDataItem('body'));
 
-        //not set: owners, body, successmsg, errormsg
+        //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('error_msg'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('installed_plugins'));
     }
 
@@ -412,16 +417,16 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
-        $this->assertEqual('No plugin object defined for: idontexist', $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual('No plugin object defined for: idontexist', $v_mgr->getTemplateDataItem('error_msg'));
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
 
-        //not set: owners, body, successmsg, errormsg
+        //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('installed_plugins'));
     }
 
@@ -463,12 +468,13 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$owner->is_admin);
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Your password has been updated.');
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual($success_msgs['password'], 'Your password has been updated.');
 
-        //not set: owners, body, successmsg, errormsg
+        //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testAuthControlLoggedInChangePasswordOldPwdDoesntMatch() {
@@ -491,12 +497,13 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$owner->is_admin);
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Old password does not match or empty.');
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($error_msgs['password'], 'Old password does not match or empty.');
 
-        //not set: owners, body, successmsg, errormsg
+        //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
     }
 
     public function testAuthControlLoggedInChangePasswordOldPwdEmpty() {
@@ -519,12 +526,13 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$owner->is_admin);
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Old password does not match or empty.');
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($error_msgs['password'], 'Old password does not match or empty.');
 
-        //not set: owners, body, successmsg, errormsg
+        //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
     }
 
     public function testAuthControlLoggedInChangePasswordNewPwdsDontMatch() {
@@ -547,13 +555,14 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$owner->is_admin);
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($error_msgs['password'],
         'New passwords did not match. Your password has not been changed.');
 
-        //not set: owners, body, successmsg, errormsg
+        //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
     }
 
     public function testAuthControlLoggedInChangePasswordNewPwdTooShort() {
@@ -576,13 +585,14 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(!$owner->is_admin);
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($error_msgs['password'],
         'New password must be at least 5 characters. Your password has not been changed.');
 
-        //not set: owners, body, successmsg, errormsg
+        //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
         $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
-        $this->assertTrue(!$v_mgr->getTemplateDataItem('successmsg'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
     }
 
     public function testAuthControlInviteUserNoCSRFToken() {
@@ -613,10 +623,9 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
 
-        $result = $v_mgr->getTemplateDataItem('successmsg');
-        $this->debug($result);
-        $this->assertPattern('/Invitation created!/', $result);
-        $this->assertPattern('/http:\/\/mytestthinkup\/tests\/session\/register.php\?code=/', $result);
+        $msgs_array = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertPattern('/Invitation created!/', $msgs_array['invite']);
+        $this->assertPattern('/http:\/\/mytestthinkup\/tests\/session\/register.php\?code=/', $msgs_array['invite']);
 
         //test HTTPS
         $_SERVER['HTTPS'] = 1;
@@ -628,9 +637,9 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
 
-        $result = $v_mgr->getTemplateDataItem('successmsg');
-        $this->debug($result);
-        $this->assertPattern('/Invitation created!/', $result);
-        $this->assertPattern('/https:\/\/myotherwtestthinkup\/tests\/session\/register.php\?code=/', $result);
+        $msgs_array = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertPattern('/Invitation created!/', $msgs_array['invite']);
+        $this->assertPattern('/https:\/\/myotherwtestthinkup\/tests\/session\/register.php\?code=/',
+        $msgs_array['invite']);
     }
 }

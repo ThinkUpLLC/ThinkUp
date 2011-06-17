@@ -45,7 +45,7 @@ class TestOfThinkUpEmbedController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
-        $this->assertEqual('No ThinkUp thread specified.', $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual('No ThinkUp thread specified.', $v_mgr->getTemplateDataItem('error_msg'));
 
         //missing n
         $_GET['p'] = '1001';
@@ -53,7 +53,7 @@ class TestOfThinkUpEmbedController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
-        $this->assertEqual('No ThinkUp thread specified.', $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual('No ThinkUp thread specified.', $v_mgr->getTemplateDataItem('error_msg'));
 
         //missing p
         $_GET['p'] = null;
@@ -62,7 +62,7 @@ class TestOfThinkUpEmbedController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
-        $this->assertEqual('No ThinkUp thread specified.', $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual('No ThinkUp thread specified.', $v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testGivenAllParameters() {

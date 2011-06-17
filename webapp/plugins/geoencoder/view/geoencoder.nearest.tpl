@@ -39,7 +39,7 @@
      {/foreach}
    </div>
 {else}
-    {assign var='errormsg' value="This post has not been geoencoded yet; cannot display posts by location."}
+    {assign var='error_msg' value="This post has not been geoencoded yet; cannot display posts by location."}
     {include file="_usermessage.tpl"}
 {/if}
 

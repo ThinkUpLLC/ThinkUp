@@ -150,7 +150,7 @@ class TestOfTestController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
-        $this->assertEqual('Testing exception handling!', $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual('Testing exception handling!', $v_mgr->getTemplateDataItem('error_msg'));
         $this->assertPattern('/<html/', $results);
 
         $_GET['json'] = true;

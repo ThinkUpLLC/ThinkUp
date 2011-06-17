@@ -8,14 +8,14 @@
   </div>
   <div class="clearfix prepend_20">
     <div class="grid_17 prefix_3 left">
-      {if isset($errormsg)}
+      {if isset($error_msgs)}
         <div class="error">
-          {$errormsg}
+          {$error_msg}
         </div>
       {/if}
-      {if isset($successmsg)}
+      {if isset($success_msg)}
         <div class="success">
-          {$successmsg}
+          {$success_msg}
         </div>
       {/if}
     </div>

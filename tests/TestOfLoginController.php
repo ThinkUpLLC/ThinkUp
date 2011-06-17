@@ -82,7 +82,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Email must not be empty');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Email must not be empty');
         $this->assertPattern("/Log In/", $results);
     }
 
@@ -95,7 +95,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Password must not be empty');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Password must not be empty');
         $this->assertPattern("/Log In/", $results);
     }
 
@@ -108,7 +108,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Incorrect email');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Incorrect email');
         $this->assertPattern("/Log In/", $results);
     }
 
@@ -121,7 +121,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'Incorrect password');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Incorrect password');
         $this->assertPattern("/Log In/", $results);
     }
 
@@ -140,7 +140,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-        $this->assertPattern("/Inactive account/", $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertPattern("/Inactive account/", $v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testCorrectUserPassword() {
@@ -181,7 +181,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
             $v_mgr = $controller->getViewManager();
             $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-            $this->assertPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('errormsg'));
+            $this->assertPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('error_msg'));
             $owner_dao = new OwnerMySQLDAO();
             $owner = $owner_dao->getByEmail('me2@example.com');
             $this->assertEqual($owner->failed_logins, $i);
@@ -196,7 +196,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-        $this->assertNoPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertNoPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('error_msg'));
         $owner_dao = new OwnerMySQLDAO();
         $owner = $owner_dao->getByEmail('me2@example.com');
         $this->assertEqual($owner->failed_logins, 0);
@@ -221,13 +221,13 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
             $v_mgr = $controller->getViewManager();
             $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
             if ($i <= 11) {
-                $this->assertPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('errormsg'));
+                $this->assertPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('error_msg'));
                 $owner_dao = new OwnerMySQLDAO();
                 $owner = $owner_dao->getByEmail('me2@example.com');
                 $this->assertEqual($owner->failed_logins, $i);
             } else {
                 $this->assertEqual("Inactive account. Account deactivated due to too many failed logins. ".
-                '<a href="forgot.php">Reset your password.</a>', $v_mgr->getTemplateDataItem('errormsg'));
+                '<a href="forgot.php">Reset your password.</a>', $v_mgr->getTemplateDataItem('error_msg'));
                 $owner_dao = new OwnerMySQLDAO();
                 $owner = $owner_dao->getByEmail('me2@example.com');
                 $this->assertEqual($owner->account_status, "Account deactivated due to too many failed logins");

@@ -29,59 +29,76 @@
  *
  */
 class Captcha {
+    /**
+     * ReCAPTCHA type
+     * @var int
+     */
+    const RECAPTCHA_CAPTCHA = 1;
+    /**
+     * ThinkUp-powered CAPTCHA
+     * @var int
+     */
+    const THINKUP_CAPTCHA = 2;
+    /**
+     * Type of CAPTCHA being used; should be equal to either self::RECAPTCHA_CAPTCHA or THINKUP_CAPTCHA.
+     * @var int
+     */
     var $type;
-    var $msg = false;
-    private $pubkey;
-    private $prikey;
-    private $site_root;
 
     public function __construct() {
         $config = Config::getInstance();
-        $this->site_root = $config->getValue('site_root_path');
 
         if ($config->getValue('recaptcha_enable')) {
-            $this->type = 1;
+            $this->type = self::RECAPTCHA_CAPTCHA;
             Utils::defineConstants();
             require_once THINKUP_WEBAPP_PATH.'_lib/extlib/recaptcha-php-1.10/recaptchalib.php';
-            $this->pubkey = $config->getValue('recaptcha_public_key');
-            $this->prikey = $config->getValue('recaptcha_private_key');
         } else {
-            $this->type = 0;
+            $this->type = self::THINKUP_CAPTCHA;
         }
     }
+
+    /**
+     * Generate CAPTCHA HTML code
+     * @return str CAPTCHA HTML
+     */
     public function generate() {
-        //if in test mode, return empty string
-        if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
-            return '';
-        }
         switch ($this->type) {
-            case 1:
-                $code = recaptcha_get_html($this->pubkey, $this->msg);
+            case self::RECAPTCHA_CAPTCHA:
+                $config = Config::getInstance();
+                $pub_key = $config->getValue('recaptcha_public_key');
+                $priv_key = $config->getValue('recaptcha_private_key');
+                $code = recaptcha_get_html($pub_key);
                 return $code;
                 break;
             default:
-                if (isset($this->msg)) {
-                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"".$this->site_root.
-                    "session/captcha-img.php\" align=\"middle\"><span style=\"color: #FF0000\">".$this->msg."</span>";
-                } else {
-                    return "<input name=\"user_code\" type=\"text\" size=\"10\"><img src=\"".$this->site_root.
-                    "session/captcha-img.php\" align=\"middle\">&nbsp;";
-                }
+                $config = Config::getInstance();
+                return "<input name=\"user_code\" id=\"user_code\" type=\"text\" size=\"10\"><img src=\"".
+                $config->getValue('site_root_path'). "session/captcha-img.php\" align=\"middle\">&nbsp;";
                 break;
         }
     }
-    public function check() {
-        //if in test mode, assume check is good
+
+    /**
+     * Check the $_POST'ed CAPTCHA inputs match the contents of the CAPTCHA.
+     * @return bool
+     */
+    public function doesTextMatchImage() {
+        //if in test mode, assume check is good if user_code is set to 123456
         if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
-            return true;
+            if (isset($_POST['user_code']) && $_POST['user_code'] == '123456') {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         switch ($this->type) {
-            case 1:
-                $resp = recaptcha_check_answer($this->prikey, $_SERVER["REMOTE_ADDR"],
+            case self::RECAPTCHA_CAPTCHA:
+                $config = Config::getInstance();
+                $priv_key = $config->getValue('recaptcha_private_key');
+                $resp = recaptcha_check_answer($priv_key, $_SERVER["REMOTE_ADDR"],
                 $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
                 if (!$resp->is_valid) {
-                    $this->msg = $resp->error;
                     return false;
                 } else {
                     return true;
@@ -89,7 +106,6 @@ class Captcha {
                 break;
             default:
                 if (strcmp(md5($_POST['user_code']), SessionCache::get('ckey'))) {
-                    $this->msg = "Wrong text, try again";
                     return false;
                 } else {
                     return true;

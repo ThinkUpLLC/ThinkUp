@@ -37,5 +37,6 @@
  * -------------------------------------------------------------
  */
 function smarty_insert_dashboard_link($params, &$smarty) {
-    return $smarty->_tpl_vars['site_root_path'].'?u='.$smarty->_tpl_vars['selected_instance_username'].'&n='.$smarty->_tpl_vars['selected_instance_network'];
+    return $smarty->_tpl_vars['site_root_path'].'?u='.$smarty->_tpl_vars['selected_instance_username'].
+    '&n='.$smarty->_tpl_vars['selected_instance_network'];
 }

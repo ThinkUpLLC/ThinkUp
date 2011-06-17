@@ -52,6 +52,49 @@ class WebTestOfRegistration extends ThinkUpWebTestCase {
         $this->assertText('Sorry, registration is closed on this ThinkUp installation.');
     }
 
+    public function testSuccessfulRegistration() {
+        //Open registration
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'is_registration_open', 'option_value'=>'true'));
+
+        $this->get($this->url.'/session/register.php');
+        $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');
+
+        $this->setFieldById('full_name', 'Test User');
+        $this->setFieldById('email', 'TestUser@example.com');
+        $this->setFieldById('pass1', 'p4sswd');
+        $this->setFieldById('pass2', 'p4sswd');
+        $this->setFieldById('user_code', '123456');
+        $this->clickSubmitById('login-save');
+
+        $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');
+        //$this->showSource();
+        $this->assertText('Success! Check your email for an activation link.');
+    }
+
+    public function testInvalidInputsRegistration() {
+        //Open registration
+        $builders[] = FixtureBuilder::build('options', array('namespace'=>'application_options',
+        'option_name'=>'is_registration_open', 'option_value'=>'true'));
+
+        $this->get($this->url.'/session/register.php');
+        $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');
+
+        $this->setFieldById('full_name', 'Test User');
+        $this->setFieldById('email', 'TestUsernotavalidemailexample.com');
+        $this->setFieldById('pass1', 'p4asdfwd');
+        $this->setFieldById('pass2', 'p4sasdfasdswd');
+        $this->setFieldById('user_code', 'badinput');
+        $this->clickSubmitById('login-save');
+
+        $this->assertNoText('Success! Check your email for an activation link.');
+        $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');
+        //$this->showSource();
+        $this->assertText('Entered text didn\'t match the image. Please try again.');
+        $this->assertText('Passwords do not match.');
+        $this->assertText('Incorrect email. Please enter valid email address.');
+    }
+
     public function testInvalidInvitationCode() {
         $this->get($this->url.'/session/register.php?code=invalidcode');
         $this->assertText('Sorry, registration is closed on this ThinkUp installation.');
@@ -67,7 +110,7 @@ class WebTestOfRegistration extends ThinkUpWebTestCase {
         $this->setFieldById('email', 'TestUser@example.com');
         $this->setFieldById('pass1', 'p4sswd');
         $this->setFieldById('pass2', 'p4sswd');
-        $this->setFieldById('captcha', '123456');
+        $this->setFieldById('user_code', '123456');
         $this->clickSubmitById('login-save');
 
         $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');

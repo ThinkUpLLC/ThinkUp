@@ -7,9 +7,9 @@
   </div>
   <div class="clearfix prepend_20">
     <div class="grid_17 prefix_3 left">
-      {if isset($errormsg)}
+      {if isset($error_msg)}
         <div class="error">
-          {$errormsg}
+          {$error_msg}
         </div>
       {/if}
     </div>

@@ -1,2 +1,2 @@
-{$error_type}: {$errormsg}
+{$error_type}: {$error_msg}
 

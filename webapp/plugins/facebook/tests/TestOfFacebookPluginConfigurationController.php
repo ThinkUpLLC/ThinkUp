@@ -108,7 +108,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'),
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
         'Please set your Facebook API key, application ID and secret.');
     }
 
@@ -123,7 +123,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
         $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
-        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('errormsg'));
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
 
         //logged in
         $this->simulateLogin('me@example.com');
@@ -292,8 +292,8 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'array', 'Owner instances set');
         $this->assertTrue($v_mgr->getTemplateDataItem('fbconnect_link') != '', 'Authorization link set');
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), 'Success! Your Facebook page has been added.');
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), null, $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), 'Success! Your Facebook page has been added.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), null, $v_mgr->getTemplateDataItem('error_msg'));
         $instance = $instance_dao->getByUserIdOnNetwork('162504567094163', 'facebook page');
         $this->assertTrue(isset($instance));
         $this->assertEqual($instance->id, 3);
@@ -304,9 +304,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), null);
-        $this->assertEqual($v_mgr->getTemplateDataItem('errormsg'), 'This Facebook Page is already in ThinkUp.',
-        $v_mgr->getTemplateDataItem('errormsg'));
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), null);
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'This Facebook Page is already in ThinkUp.',
+        $v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testReconnectAccount()  {
@@ -327,7 +327,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $output = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('successmsg'), "Success! You've reconnected your Facebook ".
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), "Success! You've reconnected your Facebook ".
         "account.");
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');

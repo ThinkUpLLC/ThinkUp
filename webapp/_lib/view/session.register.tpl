@@ -10,7 +10,7 @@
 {include file="_usermessage.tpl"}
     </div>
   </div>
-  {if !$closed and !$successmsg}
+  {if !$closed and !$success_msg}
     <form name="form1" method="post" action="register.php{if $invite_code}?code={$invite_code}{/if}" class="login append_20">
       <div class="clearfix">
         <div class="grid_4 prefix_5 right">
@@ -27,6 +27,9 @@
         </div>
       </div>
       <div class="clearfix">
+        <div class="grid_17 prefix_3 left">
+          {include file="_usermessage.tpl" field="email"}
+        </div>
         <div class="grid_4 prefix_5 right">
           <label for="email">
             Email:
@@ -41,6 +44,9 @@
         </div>
       </div>
       <div class="clearfix">
+        <div class="grid_17 prefix_3 left">
+            {include file="_usermessage.tpl" field="password"}
+        </div>
         <div class="grid_4 prefix_5 right">
           <label for="pass1">
             Password:
@@ -68,6 +74,9 @@
         </div>
       </div>
       <div class="clearfix">
+        <div class="grid_17 prefix_3 left">
+            {include file="_usermessage.tpl" field="captcha"}
+        </div>
         <div class="grid_6 prefix_3 right">
           <label for="user_code">
             Prove you&rsquo;re human:
@@ -87,7 +96,7 @@
     </form>
   {/if}
   <div class="center prepend_20 append_20">
-  {if !$successmsg}
+  {if !$success_msg}
     <a href="login.php">Log In</a> |
     <a href="forgot.php">Forgot password</a>
   {/if}
