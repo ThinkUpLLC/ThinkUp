@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '0.12';
+$LATEST_VERSION = '0.13';
 
 $MIGRATIONS = array(
     /* beta 0.1 */

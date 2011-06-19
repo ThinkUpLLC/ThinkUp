@@ -32,6 +32,11 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
+    /**
+     * Timeout for downloading old thinkup version .zip files from GitHub
+     */
+    const FILE_DOWNLOAD_TIMEOUT = 60;
+
     public function setUp() {
         date_default_timezone_set('America/Los_Angeles');
 
@@ -88,7 +93,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             . $migration_versions[$migration_max_index] );
             $data = $this->setUpApp($migration_versions[$i], $MIGRATIONS);
             $this->runMigrations($run_migrations, $migration_versions[$i]);
-            if($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {
+            if ($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {
                 unlink( $data['latest_migration_file'] );
             }
             $this->tearDown();
@@ -107,7 +112,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->pdo->query('ALTER TABLE ' . $this->prefix .
         'instances CHANGE last_post_id last_status_id bigint(11) NOT NULL');
         $this->runMigrations($run_migrations, $migration_versions[$i]);
-        if($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {
+        if ($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {
             unlink( $data['latest_migration_file'] );
         }
         $this->debug("Done Testing snowflake migration/update");
@@ -125,7 +130,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         require THINKUP_WEBAPP_PATH.'config.inc.php';
         //install beta 1
         $zipfile = $this->getInstall($zip_url, $version, $this->installs_dir);
-
         //Extract into test_installer directory and set necessary folder permissions
         exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
         'cd webapp/test_installer/;'.
@@ -223,12 +227,12 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $current_version = $config->getValue('THINKUP_VERSION');
         $latest_migration = glob($migration_sql_dir . '*_v' . $LATEST_VERSION .'.sql.migration');
-        if($LATEST_VERSION == $current_version) {
+        if ($LATEST_VERSION == $current_version) {
             $this->debug("Building zip for latest version: $LATEST_VERSION");
             $sql_files = glob($migration_sql_dir . '*.sql');
             if (sizeof($sql_files) > 0) {
                 $this->debug("found sql update for latest version $LATEST_VERSION: $sql_files[0]");
-                if(! isset($latest_migration[0])) {
+                if ( !isset($latest_migration[0])) {
                     $date_stamp = date("Y-m-d");
                     $latest_migration_file = $migration_sql_dir . $date_stamp . '_v' . $LATEST_VERSION .
                     '.sql.migration';
@@ -244,7 +248,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             }
             exec('extras/scripts/generate-distribution');
             exec('cp build/thinkup.zip build/' . $LATEST_VERSION . '.zip');
-            if(file_exists($latest_migration_file)) {
+            if (file_exists($latest_migration_file)) {
                 unlink( $latest_migration_file );
             }
         }
@@ -260,10 +264,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $this->debug("Running migration test for version: $version");
             $url = $migration_data['zip_url'];
             $zipfile = $this->getInstall($url, $version, $this->installs_dir);
-            if(! $zipfile) {
-                error_log("Warn: $zipfile not found...");
-                continue;
-            }
             $this->debug("unzipping $zipfile");
             //Extract into test_installer directory and set necessary folder permissions
             exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
@@ -273,7 +273,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             require 'tests/migration-assertions.php';
 
             // update version php file
-            if($version == $LATEST_VERSION) {
+            if ($version == $LATEST_VERSION) {
                 $version_file = $this->install_dir . '/thinkup/install/version.php';
                 $version_php = file_get_contents($version_file);
                 $version_php =
@@ -298,7 +298,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 $this->debug("running migration: " . $json_migration->version);
 
                 // if there is setup_sql run it
-                if(isset($MIGRATIONS[$json_migration->version ]['setup_sql'])) {
+                if (isset($MIGRATIONS[$json_migration->version ]['setup_sql'])) {
                     $this->debug('running setup_sql scripts');
                     $install_dao = DAOFactory::getDAO('InstallerDAO');
                     foreach($MIGRATIONS[$json_migration->version ]['setup_sql'] as $sql) {
@@ -310,26 +310,26 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 $this->get($token_url . "&migration_index=" . $cnt);
                 $this->assertText('{ "processed":true,');
                 $content = $this->getBrowser()->getContent();
-                if(! preg_match('/"processed":true/', $content)) {
+                if ( !preg_match('/"processed":true/', $content)) {
                     error_log($content);
                 }
                 $this->debug("Running migration assertion test for " . $json_migration->version);
-                if(! isset($MIGRATIONS[ $json_migration->version ])) { continue; } // no assertions, so skip
+                if ( !isset($MIGRATIONS[ $json_migration->version ])) { continue; } // no assertions, so skip
                 $assertions = $MIGRATIONS[ $json_migration->version ];
                 foreach($assertions['migration_assertions']['sql'] as $assertion_sql) {
                     // don't run the database_version assertion if it exists, this will get run below...
-                    if(preg_match("/database_version/i", $assertion_sql['query'])) {
+                    if (preg_match("/database_version/i", $assertion_sql['query'])) {
                         continue;
                     }
                     $this->debug("Running assertion sql: " . $assertion_sql['query']);
                     $stmt = $this->pdo->query($assertion_sql['query']);
                     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-                    if(isset($assertion_sql['no_match'])) {
+                    if (isset($assertion_sql['no_match'])) {
                         $this->assertFalse($data, 'no results for query'); // a table or column deleted?
                     } else {
                         $this->assertEqual(preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ]), 1,
                         $assertion_sql['match'] . ' should match ' .  $data[ $assertion_sql['column'] ]);
-                        if( ! preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ])) {
+                        if ( ! preg_match($assertion_sql['match'], $data[ $assertion_sql['column'] ])) {
                             error_log("TEST FAIL DEBUGGING:");
                             error_log('Query for assertion ' . $assertion_sql['query'] . " with match "
                             . $assertion_sql['match'] . " failed");
@@ -362,7 +362,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                     $this->debug("Running assertion sql: " . $assertion['query']);
                     $stmt = $this->pdo->query($assertion['query']);
                     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-                    if(isset($assertion['no_match'])) {
+                    if (isset($assertion['no_match'])) {
                         $this->assertFalse($data, 'no results for query'); // a table or column deleted?
                     } else {
                         $this->assertEqual(preg_match($assertion['match'], $data[ $assertion['column'] ]), 1,
@@ -383,17 +383,18 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $ch = curl_init();
         $zipfile = $path . '/' . $version . '.zip';
 
-        if(! file_exists($zipfile) ) {
-            if( file_exists($zipfile) ) {
-                $this->debug("zip file for $version is old, refreshing");
-                unlink($zipfile);
-            }
+        if ( !file_exists($zipfile) ) {
             $this->debug("Fetching zip file $url");
             $ch = curl_init($url);//Here is the file we are downloading
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, self::FILE_DOWNLOAD_TIMEOUT);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $data = curl_exec($ch);
+            if ( !$data) {
+                $zipfile = false;
+                $this->fail("Unable to download zipfile: $url " . curl_error($ch) );
+                return false;
+            }
             file_put_contents($zipfile, $data);
         }
         return $zipfile;
