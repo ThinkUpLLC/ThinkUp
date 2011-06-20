@@ -94,6 +94,10 @@ abstract class PDODAO {
             if ($this->config->getValue('set_pdo_charset')) {
                 self::$PDO->exec('SET CHARACTER SET utf8');
             }
+            $timezone = $this->config->getValue('timezone');
+            $time = new DateTime("now", new DateTimeZone($timezone) );
+            $tz_offset = $time->format('P');
+            self::$PDO->exec("SET time_zone = '$tz_offset'");
         }
     }
 
