@@ -12,5 +12,5 @@ ThinkUp stores this timezone in the ``config.inc.php`` file in this line:
 
 As of beta 14, on every connection to the database, ThinkUp explicitly sets the database timezone to that value. Any
 date/times information for a given table should be stored in UTC as a 
-`MySQL DATETIME field <http://dev.mysql.com/doc/refman/5.1/en/datetime.html>`_. When MySQL retrieves a date/time field
-value, it automatically converts it to the local time in that timezone
+`MySQL DATETIME field <http://dev.mysql.com/doc/refman/5.1/en/datetime.html>`_. ThinkUp adjusts for the users's
+timezone by using the #gmt_offset# token in SQL queries on select statements.
