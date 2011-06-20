@@ -152,4 +152,11 @@ class TestMySQLDAO extends PDODAO implements TestDAO {
     public function testBoolToDB($val) {
         return $this->convertBoolToDB($val);
     }
+    
+    public function getTimezoneOffset() {
+        $sql = "SELECT @@session.time_zone AS tz_offset";
+        $stmt = $this->execute($sql);
+        return $this->getDataRowAsArray($stmt);
+    }
+
 }
