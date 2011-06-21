@@ -363,7 +363,7 @@ $MIGRATIONS = array(
 
     /* beta 0.12 */
     '0.12' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.12.1.zip',
         'migrations' => 1,
         'setup_sql' => array("INSERT INTO tu_plugins (name, folder_name) VALUES ('Embed Thread', 'embedthread');"),
         'migration_assertions' => array(
@@ -384,6 +384,29 @@ $MIGRATIONS = array(
                     // Deleted Embed Thread plugin
                     'query' => "SELECT * FROM tu_plugins WHERE folder_name='embedthread'",
                     'no_match' => true,
+                )
+            )
+        )
+    ),
+
+    /* beta 0.13 */
+    '0.13' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    // Added retweet_count_api field
+                    'query' => 'DESCRIBE tu_posts retweet_count_api',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Added unique user_id/network key to tu_users
+                    'query' => 'show index from tu_users where Key_name = \'user_id\' and Column_name = '.
+                    '\'user_id\' and Non_unique = 0;',
+                    'match' => "/user_id/",
+                    'column' => 'Key_name', 
                 )
             )
         )

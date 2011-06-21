@@ -1,0 +1,26 @@
+Beta 0.13 - 21 June 2011
+========================
+
+**New features:**
+
+*   In Settings > Application, added ability for an admin to :doc:`export a given service user's data for transfer to
+    another ThinkUp installation</install/backup>` 
+*   SlickGrid: Add notice if search limit of 5000 is reached and ability to override search limit
+*   Added sidebar search input box on post replies page
+
+**Bugfixes:**
+
+*   Valid invitation codes no longer result in "registration is closed" error
+*   Display more accurate retweet counts (don't get stuck at 100 ceiling)
+*   Expand URLs plugin: Extract URLs terminated by commas, periods, or smart-quotes
+*   Prevent not-logged-in dead end during upgrade backup prompt
+*   Fixed offline jQuery external request 404
+*   SlickGrid: Load all-tweets, all mentions and favorites search grid inline on page instead of popping lightbox
+*   Fixed "Notice: Undefined variable: oid" error when re-adding an authorized Twitter account
+*   Added support for field-level error, info, and success messages on any application page. App no longer displays
+    invitation code success message / changed password success message on every Settings tab.
+
+**Security hardening:**
+
+*   Added protection against :doc:`Cross-site request forgery attacks</contribute/developers/howto/addcsrfprotection>`
+    throughout the application.
