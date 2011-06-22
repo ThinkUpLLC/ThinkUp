@@ -95,7 +95,7 @@ function show_advanced() {
     {if $option_obj.type eq 'text_element'}
 
         <input type="text" 
-        value="{if isset($option_obj.value)}{$option_obj.value|escape:'html'}{/if}"
+        value="{if isset($option_obj.value)}{$option_obj.value|filter_xss}{/if}"
             name="plugin_options_{$option_obj.name}" id="plugin_options_{$option_obj.name}" 
             {if ! $user_is_admin} disabled="true"{/if} />
     {/if}

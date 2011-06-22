@@ -22,9 +22,9 @@
       <div class="post">
         {if $t->post_text}
           {if $scrub_reply_username}
-            {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
+            {$t->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
           {else}
-            {$t->post_text|link_usernames_to_twitter}
+            {$t->post_text|filter_xss|link_usernames_to_twitter}
           {/if}
         {else}
           <span class="no-post-text">No post text</span>
@@ -55,7 +55,9 @@
     <div class="grid_2 center">
     {if $t->network eq 'twitter'}
       {if $t->all_retweets > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}&v=fwds">{$t->all_retweets|number_format}{if $t->rt_threshold}+{/if}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
+        <span class="reply-count">
+        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}&v=fwds">{$t->all_retweets|number_format}{if $t->rt_threshold}+{/if}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a>
+        </span>
       {else}
         &#160;
       {/if}
@@ -63,7 +65,9 @@
     </div>
     <div class="grid_2 center omega">
       {if $t->reply_count_cache > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
+        <span class="reply-count">
+        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a>
+        </span>
       {else}
         &#160;
       {/if}

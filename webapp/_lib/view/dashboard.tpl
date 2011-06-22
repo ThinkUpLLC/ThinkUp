@@ -25,7 +25,8 @@
         <li>{$sidebar_menu_item->header}
         <ul class="side-subnav">
         {/if}
-        <li{if $smarty.get.v eq $smkey} class="currentview"{/if}><a href="{$site_root_path}index.php?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$sidebar_menu_item->name}</a></li>
+        <li{if $smarty.get.v eq $smkey} class="currentview"{/if}>
+        <a href="{$site_root_path}index.php?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$sidebar_menu_item->name}</a></li>
         {/foreach}
         </ul>
         </li>
@@ -48,7 +49,8 @@
               <div class="clearfix dashboard-header round-all">
                 <div class="grid_2 alpha">
                   <div class="avatar-container">
-                    <img src="{$user_details->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$user_details->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
+                    <img src="{$user_details->avatar}" class="avatar2"/>
+                    <img src="{$site_root_path}plugins/{$user_details->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
                   </div>
                 </div>
                 <div class="grid_15 omega">

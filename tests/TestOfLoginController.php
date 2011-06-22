@@ -125,6 +125,15 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $this->assertPattern("/Log In/", $results);
     }
 
+    public function testCleanXSS() {
+        $_POST['Submit'] = 'Log In';
+        $_POST['email'] = "me@example.com <script>alert('wa');</script>";
+        $_POST['pwd'] = 'notherightpassword';
+        $controller = new LoginController(true);
+        $results = $controller->go();
+        $this->assertPattern("/me@example.com &#60;script&#62;alert\(&#39;wa&#39;\);&#60;\/script&#62;/", $results);
+    }
+
     public function testDeactivatedUser() {
         $session = new Session();
         $cryptpass = $session->pwdcrypt("blah");

@@ -249,7 +249,21 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         //make sure there's no fatal error because the plugin files don't exist
     }
 
-    private function buildData() {
+    public function testCleanXSS() {
+        $with_xss = true;
+        $builders = $this->buildData($with_xss);
+        $this->simulateLogin('me@example.com');
+        //required params
+        $_GET['u'] = 'ev';
+        $_GET['n'] = 'twitter';
+        $_GET['v'] = 'tweets-all';
+        $controller = new DashboardController(true);
+        $results = $controller->go();
+        $this->assertNoPattern("/This is post <script>alert\('wa'\);<\/script>\d+/", $results);
+        $this->assertPattern("/This is post &#60;script&#62;alert\(&#39;wa&#39;\);&#60;\/script&#62;\d+/", $results);
+    }
+
+    private function buildData($with_xss = false) {
         //Add owner
         $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
         'email'=>'me@example.com', 'is_activated'=>1) );
@@ -271,10 +285,12 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $post_builders = array();
         //Add a bunch of posts
         $counter = 0;
+        $post_data = 'This is post ';
+        if($with_xss) { $post_data .= "<script>alert('wa');</script>"; }
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             $post_builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
-            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'post_text'=>'This is post '.$counter,
+            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'post_text'=>$post_data.$counter,
             'pub_date'=>'2006-01-01 00:'.$pseudo_minute.':00'));
             $counter++;
         }

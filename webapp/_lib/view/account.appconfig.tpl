@@ -52,7 +52,7 @@
         Select to enable reCAPTCHA, and <a href="https://www.google.com/recaptcha">get your reCAPTCHA keys here</a>.
       </div>
 
-      <div id="recaptcha_enable_deps" style="display: none; width: 450px; margin: 10px 0px 60px 20px;">
+      <div id="recaptcha_enable_deps" style="display: none; width: 470px; margin: 10px 0px 60px 20px;">
           <div style="float: left;">
             <label for="recaptcha_public_key">
               reCAPTCHA Public Key:
@@ -61,7 +61,6 @@
           <div style="float: right;">
             <input type="text" name="recaptcha_public_key" id="recaptcha_public_key" value="">
           </div>
-
           <div style="clear:both;"></div>
           <div style="float: left;">
             <label for="recaptcha_private_key">

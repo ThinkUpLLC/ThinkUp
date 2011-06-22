@@ -11,12 +11,15 @@
 <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
     <div class="grid_2 alpha">
       <div class="avatar-container">
-        <a href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}"><img src="{$t->author_avatar}" class="avatar2"/></a><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
+        <a href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}">
+        <img src="{$t->author_avatar}" class="avatar2"/></a><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
       </div>
     </div>
     <div class="grid_4 small">
       {if $t->network == 'twitter' && $username_link != 'internal'}
-        <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}      href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}">{$t->author_username}</a>
+        <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
+        href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}">
+        {$t->author_username}</a>
       {else}
         <a href="{$site_root_path}public.php?u={$t->author_username|urlencode}&n={$t->network|urlencode}">{$t->author_username}</a>
       {/if}
@@ -43,10 +46,10 @@
             {if $reply_count && $reply_count > $top_20_post_min}
                 <div class="reply_text" id="reply_text-{$smarty.foreach.foo.iteration}">
             {/if} 
-            {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
+            {$t->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
             {if $reply_count && $reply_count > $top_20_post_min}</div>{/if}
           {else}
-            {$t->post_text|link_usernames_to_twitter}
+            {$t->post_text|filter_xss|link_usernames_to_twitter}
           {/if}
         {else}
           <span class="no-post-text">No post text</span>
