@@ -16,7 +16,8 @@
 <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
     <div class="grid_2 alpha">
       <div class="avatar-container">
-        <a href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+        <a href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}">
+        <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
         {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
            <div class="small gray">Friend</div>
         {/if}
@@ -47,10 +48,10 @@
             {if $reply_count && $reply_count > $top_20_post_min}
                 <div class="reply_text" id="reply_text-{$smarty.foreach.foo.iteration}">
             {/if} 
-            {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
+            {$t->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
             {if $reply_count && $reply_count > $top_20_post_min}</div>{/if}
           {else}
-            {$t->post_text|link_usernames_to_twitter}
+            {$t->post_text|filter_xss|link_usernames_to_twitter}
           {/if}
         {else}
           <span class="no-post-text">No post text</span>
@@ -104,7 +105,8 @@
     </div>
     <div class="grid_2 center omega">
       {if $t->reply_count_cache > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
+        <span class="reply-count">
+        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
       {else}
         &#160;
       {/if}

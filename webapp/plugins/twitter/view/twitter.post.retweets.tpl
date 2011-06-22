@@ -15,7 +15,7 @@
               <div class="br" style="min-height:110px">
                 <span class="tweet pr">
                   {if $post->post_text}
-                    {$post->post_text|link_usernames_to_twitter}
+                    {$post->post_text|filter_xss|link_usernames_to_twitter}
                   {else}
                     <span class="no-post-text">No post text</span>
                   {/if}

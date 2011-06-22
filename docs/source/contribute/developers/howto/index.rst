@@ -8,4 +8,5 @@ Contents:
 
    modifydb
    addcsrfprotection
+   filterxss
    displayusermessages

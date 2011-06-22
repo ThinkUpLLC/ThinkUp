@@ -79,6 +79,10 @@ class AppConfigController extends ThinkUpAdminController {
                         }
                     }
                 }
+                // strip magic quotes if enabled...
+                if (get_magic_quotes_gpc() && isset( $config_values[$key]['value'] )) {
+                    $config_values[$key]['value'] = stripslashes($config_values[$key]['value']);
+                }
             }
 
             if (count($required) > 0) {

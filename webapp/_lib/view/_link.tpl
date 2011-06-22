@@ -8,7 +8,8 @@
 
 <div class="individual-tweet post clearfix">
   <div class="grid_1 alpha">
-    <a href="http://twitter.com/{$l->container_post->author_username}"><img src="{$l->container_post->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$l->container_post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+    <a href="http://twitter.com/{$l->container_post->author_username}">
+    <img src="{$l->container_post->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$l->container_post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
   </div>
   <div class="grid_3 right small">
     <a href="http://twitter.com/{$l->container_post->author_username}">{$l->container_post->author_username}</a>
@@ -27,7 +28,7 @@
     {/if}
     <div class="post">
       {if $l->container_post->post_text}
-        {$l->container_post->post_text|link_usernames:$i->network_username:$t->network}
+        {$l->container_post->post_text|filter_xss|link_usernames:$i->network_username:$t->network}
       {else}
         <span class="no-post-text">No post text</span>
       {/if}
@@ -35,7 +36,8 @@
         [<a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network}">in reply to</a>]
       {/if}
       <div class="small gray">
-      <span class="metaroll"><a href="http://twitter.com/{$l->container_post->author_username}/status/{$l->container_post->post_id}">{$l->container_post->adj_pub_date|relative_datetime}</a>
+      <span class="metaroll">
+      <a href="http://twitter.com/{$l->container_post->author_username}/status/{$l->container_post->post_id}">{$l->container_post->adj_pub_date|relative_datetime}</a>
        {$l->container_post->location}</span>&nbsp;</div>
   </div>
   </div>

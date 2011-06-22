@@ -160,6 +160,10 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         // valid save for recaptcha
         $_POST['recaptcha_enable'] = 'true';
         $_POST['recaptcha_public_key'] = '1234';
+        // test magic quotes if enabled...
+        if (get_magic_quotes_gpc()) {
+            $_POST['recaptcha_public_key'] = "1\\'23\\\"4";
+        }
         $_POST['recaptcha_private_key'] = '1234abc';
         $controller = new AppConfigController(true);
         $results = $controller->control();
@@ -233,7 +237,11 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($data[1]['option_value'], 'true');
         $this->assertEqual($data[2]['namespace'], OptionDAO::APP_OPTIONS);
         $this->assertEqual($data[2]['option_name'], 'recaptcha_public_key');
-        $this->assertEqual($data[2]['option_value'], '1234');
+        $value = '1234';
+        if (get_magic_quotes_gpc()) {
+            $value = '1\'23"4';
+        }
+        $this->assertEqual($data[2]['option_value'], $value);
         $this->assertEqual($data[3]['namespace'], OptionDAO::APP_OPTIONS);
         $this->assertEqual($data[3]['option_name'], 'recaptcha_private_key');
         $this->assertEqual($data[3]['option_value'], '1234abc');
@@ -245,6 +253,10 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $_POST['is_registration_open'] = 'true';
         $_POST['recaptcha_enable'] = 'true';
         $_POST['recaptcha_public_key'] = '12345';
+        // test magic quotes if enabled...
+        if (get_magic_quotes_gpc()) {
+            $_POST['recaptcha_public_key'] = "1\\'23\\\"45";
+        }
         $_POST['recaptcha_private_key'] = '12345abc';
         $_POST['default_instance'] = '12345';
         $controller = new AppConfigController(true);
@@ -271,7 +283,11 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($data[1]['option_value'], 'true');
         $this->assertEqual($data[2]['namespace'], OptionDAO::APP_OPTIONS);
         $this->assertEqual($data[2]['option_name'], 'recaptcha_public_key');
-        $this->assertEqual($data[2]['option_value'], '12345');
+        $value = '12345';
+        if (get_magic_quotes_gpc()) {
+            $value = '1\'23"45';
+        }
+        $this->assertEqual($data[2]['option_value'], $value);
         $this->assertEqual($data[3]['namespace'], OptionDAO::APP_OPTIONS);
         $this->assertEqual($data[3]['option_name'], 'recaptcha_private_key');
         $this->assertEqual($data[3]['option_value'], '12345abc');

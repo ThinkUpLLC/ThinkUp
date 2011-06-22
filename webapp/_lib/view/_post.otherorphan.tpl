@@ -9,7 +9,8 @@
 <div class="individual-tweet clearfix{if $t->is_protected} private{/if} prepend_20">
   <div class="grid_2 alpha">
     <div class="avatar-container">
-      <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}"><img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+      <a href="{$site_root_path}user/?u={$t->author_username}&n={$t->network}&i={$logged_in_user}">
+      <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
     </div>
   </div>
   <div class="grid_4 small">
@@ -25,7 +26,7 @@
       
       <div class="post">
         {if $t->post_text}
-          {$t->post_text|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$t->network}
+          {$t->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$t->network}
         {else}
           <span class="no-post-text">No post text</span>
         {/if}
