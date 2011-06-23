@@ -52,7 +52,20 @@ class PasswordResetController extends ThinkUpController {
         if (isset($_POST['password'])) {
             if ($_POST['password'] == $_POST['password_confirm']) {
                 $login_controller = new LoginController(true);
-                if ($owner_dao->updatePassword($user->email, $session->pwdcrypt($_POST['password'])) < 1 ) {
+                //check if they already have a unique salt
+                // if they dont have a unqiue salt generate one and store it in the database
+                if(!$owner_dao->checkIfUserHasAUniqueSalt($user->email)){
+                    $salt = $owner_dao->generateSalt($user->email);
+                    $owner_dao->updateSalt($user->email, $salt);
+                }
+                // if they do already have a unique salt get it
+                else{
+                    $salt =  $owner_dao->getSaltByEmail($user->email);
+                }
+                // Combine the password and salt
+                $newpass = $owner_dao->generatePassword($_POST['password'], $salt);
+            
+                if ($owner_dao->updatePassword($user->email, $newpass ) < 1 ) {
                     $login_controller->addErrorMessage('Problem changing your password!');
                 } else {
                     $owner_dao->activateOwner($user->email);

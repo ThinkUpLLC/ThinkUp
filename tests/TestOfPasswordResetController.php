@@ -140,9 +140,13 @@ SQL;
         $controller = new PasswordResetController(true);
         $result = $controller->go();
 
-        $session = new Session();
-
-        $this->assertTrue($session->pwdCheck($_POST['password'], $dao->getPass('me@example.com')));
+        //$session = new Session();
+        // Get the users salt
+        $salt = $dao->getSaltByEmail('me@example.com');
+        // Combine the salt and password 
+        $cryptpass = $dao->generatePassword($_POST['password'], $salt);
+        // Check it matches 
+        $this->assertTrue($dao->checkSaltedPassword('me@example.com', $cryptpass));
         $owner = $dao->getByEmail('me@example.com');
         $this->assertEqual($owner->account_status, '');
     }

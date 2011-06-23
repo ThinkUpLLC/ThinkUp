@@ -101,6 +101,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $testdao = DAOFactory::getDAO('TestDAO');
         $users = $testdao->getUserCount(0, 'mary');
         $this->assertIsA($users, "array");
+        
         $this->assertEqual(count($users), 2);
         $this->assertEqual($users[0]['user_name'], 'mary');
         $this->assertEqual($users[1]['user_name'], 'sweetmary');
