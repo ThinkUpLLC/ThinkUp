@@ -32,6 +32,11 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
+    /**
+     * timeout for downloading old thinkup version .zip files from gitup
+     */
+    const FILE_DOWNLOAD_TIMEOUT = 60;
+
     public function setUp() {
         date_default_timezone_set('America/Los_Angeles');
 
@@ -125,7 +130,10 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         require THINKUP_WEBAPP_PATH.'config.inc.php';
         //install beta 1
         $zipfile = $this->getInstall($zip_url, $version, $this->installs_dir);
-
+        if(! $zipfile) {
+            $this->fail("unable to download zipfile: $zip_url");
+            return;
+        }
         //Extract into test_installer directory and set necessary folder permissions
         exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
         'cd webapp/test_installer/;'.
@@ -261,8 +269,8 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             $url = $migration_data['zip_url'];
             $zipfile = $this->getInstall($url, $version, $this->installs_dir);
             if(! $zipfile) {
-                error_log("Warn: $zipfile not found...");
-                continue;
+                $this->fail("unable to download zipfile: $zip_url");
+                return;
             }
             $this->debug("unzipping $zipfile");
             //Extract into test_installer directory and set necessary folder permissions
@@ -384,16 +392,16 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $zipfile = $path . '/' . $version . '.zip';
 
         if(! file_exists($zipfile) ) {
-            if( file_exists($zipfile) ) {
-                $this->debug("zip file for $version is old, refreshing");
-                unlink($zipfile);
-            }
             $this->debug("Fetching zip file $url");
             $ch = curl_init($url);//Here is the file we are downloading
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, self::FILE_DOWNLOAD_TIMEOUT);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $data = curl_exec($ch);
+            if(! $data) {
+                $zipfile = false;
+                error_log("\nERROR: unable to download zip file $url - " . curl_error($ch) . "\n");
+            }
             file_put_contents($zipfile, $data);
         }
         return $zipfile;
