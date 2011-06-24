@@ -17,6 +17,7 @@
         </div>
         <div class="grid_8 right">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
+            {insert name="csrf_token"}
             <input onClick="return confirm('Do you really want to delete this Facebook account?');"  type="submit" name="action" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="delete" /></form></span>
         </div>
     </div>
