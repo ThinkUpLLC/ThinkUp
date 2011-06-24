@@ -11,6 +11,5 @@ several ThinkUp functions are affected:
 * You won't receive the authorization link to upgrade your ThinkUp installation when updating the application
 * Users won't receive an email to reset their password when using the "Forgot Password" link
 
-You can manuallly activate user accounts by setting the is_activated field equal to 1 in ThinkUp's owners table.
-
-TODO Fill in how to manually access the MySQL database via the terminal or phpMyAdmin
+You can manually activate user accounts by setting the is_activated field equal to 1 in ThinkUp's owners table. Here's
+how to :doc:`directly access your ThinkUp database to make changes to it </troubleshoot/common/advanced/directdb>`.
