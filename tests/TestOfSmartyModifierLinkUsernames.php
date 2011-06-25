@@ -47,7 +47,7 @@ class TestOfSmartyModifierLinkUsernames extends ThinkUpBasicUnitTestCase {
      */
     var $externally_linked_tweets;
 
-    public function __construct() {
+    public function setUp() {
         $config = Config::getInstance();
         $this->test_tweets = array(
         "Hey @anildash think this up!", 
