@@ -100,6 +100,26 @@ class DAOFactory {
         'LinkDAO' => array(
     //MySQL Version
             'mysql' => 'LinkMySQLDAO' ),
+    //Hashtag DAO
+        'HashtagDAO' => array(
+    //MySQL Version
+            'mysql' => 'HashtagMySQLDAO' ),
+    //Mention DAO
+        'MentionDAO' => array(
+    //MySQL Version
+            'mysql' => 'MentionMySQLDAO' ),
+    //Place DAO
+        'PlaceDAO' => array(
+    //MySQL Version
+            'mysql' => 'PlaceMySQLDAO' ),
+    //StreamData DAO
+        'StreamDataDAO' => array(
+    //MySQL Version
+            'mysql' => 'StreamDataMySQLDAO' ),      
+    //StreamProc DAO
+        'StreamProcDAO' => array(
+    //MySQL Version
+            'mysql' => 'StreamProcMySQLDAO' ),
     //Owner MySQL DAO
         'OwnerDAO' => array(
     //MySQL Version

@@ -73,6 +73,11 @@ $model_tests->add(new TestOfPostIterator());
 $model_tests->add(new TestOfMutexMySQLDAO());
 $model_tests->add(new TestOfBackupMySQLDAO());
 $model_tests->add(new TestOfFavoritePostMySQLDAO());
+$model_tests->add(new TestOfStreamDataMySQLDAO());
+$model_tests->add(new TestOfStreamProcMySQLDAO());
+$model_tests->add(new TestOfHashtagMySQLDAO());
+$model_tests->add(new TestOfMentionMySQLDAO());
+$model_tests->add(new TestOfPlaceMySQLDAO());
 
 $tr = new TextReporter();
 $model_tests->run( $tr );

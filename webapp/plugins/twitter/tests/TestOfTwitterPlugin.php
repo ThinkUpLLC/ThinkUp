@@ -102,7 +102,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'', 'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
         'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
         'retweet_count_api' => '', 'old_retweet_count_cache' => '', 'in_rt_of_user_id' =>'',
-        'post_id'=>9021481076, 'is_protected'=>0,
+        'post_id'=>9021481076, 'is_protected'=>0, 'place_id' => 'ece7b97d252718cc',
         'post_text'=>'I look cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 
         'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
 

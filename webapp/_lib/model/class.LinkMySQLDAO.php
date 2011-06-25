@@ -269,4 +269,16 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
         return $this->getDataRowAsObject($ps, "Link");
     }
+
+    public function getLinksForPost($post_id, $network = 'twitter') {
+        $q  = "SELECT l.* ";
+        $q .= "FROM #prefix#links AS l ";
+        $q .= "WHERE l.post_id=:post_id  and network = :network ";
+        $vars = array(
+            ':post_id'=>$post_id,
+            ':network' => $network
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsObjects($ps, "Link");
+    }
 }

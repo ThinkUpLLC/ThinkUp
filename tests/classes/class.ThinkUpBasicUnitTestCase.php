@@ -168,6 +168,13 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
             $message = "In order to test your ThinkUp installation with your current settings, ".
             $THINKUP_CFG['log_location']. " must be a writable file.";
         }
+        if ( !isset($THINKUP_CFG['stream_log_location']) || $THINKUP_CFG['stream_log_location'] === false) {
+            $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['stream_log_location'] must be set to a ".
+            "writable file.";
+        } else if (!is_writable($THINKUP_CFG['stream_log_location'])) {
+            $message = "In order to test your ThinkUp installation with your current settings, ".
+            $THINKUP_CFG['stream_log_location']. " must be a writable file.";
+        }
 
         global $TEST_DATABASE;
 

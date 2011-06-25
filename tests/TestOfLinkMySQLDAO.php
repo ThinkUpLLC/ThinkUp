@@ -426,4 +426,17 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
 
         $lbuilders = null;
     }
+
+    public function testGetLinksForPost() {
+        $result = $this->DAO->getLinksForPost(80, 'twitter');
+        $this->debug(Utils::varDumpToString($result));
+        $this->assertEqual(4, sizeof($result)); //should be 4 links for this post
+        $this->assertEqual($result[0]->url, "http://example.com/0");
+        $this->assertEqual($result[1]->url, "http://flic.kr/p/0");
+        $this->assertEqual($result[2]->url, "http://flic.kr/p/0e");
+        $this->assertEqual($result[3]->url, "http://bit.ly/beEEfs");
+
+        $result = $this->DAO->getLinksForPost(800, 'twitter');
+        $this->assertEqual(0, sizeof($result)); //should be no links for this post
+    }
 }

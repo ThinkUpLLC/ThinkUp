@@ -32,9 +32,9 @@
 class Logger {
     /**
      *
-     * @var Logger singleton instance
+     * @var array of Logger singleton instances
      */
-    private static $instance;
+    private static $loggers = array();
     /**
      *
      * @var resource Open file pointer
@@ -89,6 +89,10 @@ class Logger {
      */
     var $debug = false;
     /**
+     * @var string the name of the location, e.g. as in the config file.
+     */
+    var $loc_name = null;
+    /**
      * @var bool Whether or not output should be HTML
      */
     var $html_output = false;
@@ -98,19 +102,25 @@ class Logger {
      * @param boolean $debug default false
      * @param int $verbosity default 0; should be value of Logger::ALL_MSGS, Logger::USER_MSGS or Logger::ERROR_MSGS
      */
-    private function __construct($location, $debug = false, $verbosity = 0) {
+    private function __construct($location, $loc_name, $debug = false, $verbosity = 0) {
         if ( $location != false ) {
             $this->log = $this->openFile($location, 'a');
         }
         $this->debug = $debug;
+        $this->loc_name = $loc_name;
         $this->verbosity = (int)$verbosity;
     }
 
     /**
      * The singleton constructor
      */
-    public static function getInstance() {
-        if (!isset(self::$instance)) {
+    public static function getInstance($log_location = null) {
+        if (!$log_location) {
+            $log_location = 'log_location'; // the default log location
+        }
+
+        if (!isset(self::$loggers[$log_location])) {
+
             $config = Config::getInstance();
             $debug = $config->getValue('debug') ? true : false;
 
@@ -119,11 +129,11 @@ class Logger {
             if (!$verbosity && $verbosity !== 0) {
                 $verbosity = Logger::ALL_MSGS; // default to everything if config was not set
             }
-
-            self::$instance = new Logger($config->getValue('log_location'), $debug, $verbosity);
-
+            $logfile = $config->getValue($log_location);
+            $log = new Logger($logfile, $log_location, $debug, $verbosity);
+            self::$loggers[$log_location] = $log;
         }
-        return self::$instance;
+        return self::$loggers[$log_location];
     }
 
     /**
@@ -287,7 +297,7 @@ class Logger {
     public function close() {
         $this->addBreaks();
         $this->closeFile($this->log);
-        self::$instance = null;
+        unset(self::$loggers[$this->loc_name]);
     }
 
     /**
@@ -302,6 +312,8 @@ class Logger {
         $filehandle = null;
         if (is_writable($filename)) {
             $filehandle = fopen($filename, $type);// or die("can't open file $filename");
+        } else {
+            error_log("Unable to write log file: " . $filename);
         }
         return $filehandle;
     }

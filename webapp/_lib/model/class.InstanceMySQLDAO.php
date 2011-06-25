@@ -225,7 +225,8 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         return $this->getDataRowsAsObjects($ps, $this->object_name);
     }
 
-    public function getByOwnerAndNetwork($owner, $network, $disregard_admin_status = false) {
+
+    public function getByOwnerAndNetwork($owner, $network, $disregard_admin_status = false, $active_only = false) {
         $admin_status = (!$disregard_admin_status && $owner->is_admin ? true : false);
         $q  = "SELECT ".$this->getFieldList();
         $q .= "FROM ".$this->getTableName()." ";
@@ -237,6 +238,9 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= "WHERE network=:network ";
         if (!$admin_status){
             $q .= "AND oi.owner_id = :ownerid ";
+        }
+        if ($active_only){
+            $q .= "AND is_active = 1 ";
         }
         $q .= "ORDER BY crawler_last_run DESC; ";
         $vars = array(

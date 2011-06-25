@@ -233,5 +233,17 @@ class TestOfLogger extends ThinkUpBasicUnitTestCase {
 
         $logger = Logger::getInstance();
         //        $logger->logInfo('Singleton logger should echo this', __METHOD__.','.__LINE__);
+        $logger->close();
+    }
+
+    public function testStreamLogger() {
+        $config = Config::getInstance();
+        $config->setValue('log_location', false);
+
+        $logger = Logger::getInstance('stream_log_location');
+        $logger->logInfo('Streaming test log info message', __METHOD__.','.__LINE__);
+        $logger->close();
+        $messages = file($config->getValue('stream_log_location'));
+        $this->assertPattern('/Streaming test log info message/', $messages[sizeof($messages) - 2]);
     }
 }

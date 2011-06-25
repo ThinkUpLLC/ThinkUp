@@ -196,10 +196,11 @@ interface PostDAO {
      * </code>
      *
      * @param array $vals see above
-     * @param array $entities ['urls']
+     * @param array $entities Indices may be set for 'urls', 'mentions', 'hashtags', and 'place'.
+     * @param array $user_array user to be updated/created-- if set, array will be passed to User constructor.
      * @return int number of posts inserted
      */
-    public function addPostAndEntities($vals, $entities);
+    public function addPostAndAssociatedInfo(array $vals, $entities = null, $user_array = null);
 
     /**
      * Get all posts by an author given an author ID

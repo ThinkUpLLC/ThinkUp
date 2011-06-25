@@ -80,6 +80,32 @@ abstract class PDODAO {
     }
 
     /**
+     * Instantiate singleton instance of the logger pointing at the specified file.
+     * @param str $log_location
+     * @return void
+     */
+    public function setLogger($log_location) {
+        $this->logger = Logger::getInstance($log_location);
+    }
+
+    /**
+     * Set the logger instance used by the DAO.
+     * @param Logger $logger
+     * @return void
+     */
+    public function setLoggerInstance($logger) {
+        $this->logger = $logger;
+    }
+
+    /**
+     * Return the singleton Logger instance.
+     * @return Logger
+     */
+    public function getLogger() {
+        return $this->logger;
+    }
+
+    /**
      * Connection initiator
      */
     public final function connect(){

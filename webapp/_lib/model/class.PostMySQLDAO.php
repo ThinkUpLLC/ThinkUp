@@ -30,6 +30,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class PostMySQLDAO extends PDODAO implements PostDAO  {
+
     /**
      * The minimum number of characters required for fulltext queries.
      * @var int
@@ -48,9 +49,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      * @var array
      */
     var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id',
-    'in_rt_of_user_id', 'location', 'place', 'geo', 'retweet_count_cache',
-    'retweet_count_api', 'old_retweet_count_cache',
-    'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend',
+    'in_rt_of_user_id', 'location', 'place', 'place_id', 'geo', 'retweet_count_cache', 
+    'retweet_count_api', 'old_retweet_count_cache', 
+    'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend', 
     'reply_retweet_distance', 'is_geo_encoded', 'author_follower_count');
 
     /**
@@ -485,6 +486,30 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getUpdateCount($ps);
     }
 
+
+    /**
+     * Update the 'in_retweet_of_post_id' field for an existing post. This will be done only if
+     * this field is not already set, which could be the case if the post was originally processed via
+     * the stream processing scripts.
+     * @param int $post_id
+     * @param int $in_retweet_of_post_id
+     * @param str $network
+     * @return int Number of affected rows
+     */
+    private function updateInRetweetOfPostID($post_id, $in_retweet_of_post_id, $network) {
+        $q = " UPDATE  #prefix#posts SET in_retweet_of_post_id = :rpid ";
+        $q .= " WHERE post_id = :post_id AND network=:network";
+        $q .= ' AND in_retweet_of_post_id IS NULL ';
+        $vars = array(
+            ':post_id'=>$post_id,
+            ':network'=>$network,
+            ':rpid' => $in_retweet_of_post_id
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+
     /**
      * Increment retweet cache count, for 'old-style' retweets.
      * @param int $post_id
@@ -555,18 +580,47 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $result;
     }
 
-    public function addPostAndEntities($vals, $entities) {
+    public function addPostAndAssociatedInfo(array $vals, $entities = null, $user_array = null) {
         $urls = null;
         // first add post
         $retval = $this->addPost($vals);
         // if post did not already exist
         if ($retval) {
-            // then process entity information as available.
-            if (isset($entities) && isset($entities['urls'])) {
+            if ($user_array) {
+                $u = new User($user_array);
+                $user_dao = DAOFactory::getDAO('UserDAO');
+                $user_dao->setLoggerInstance($this->logger);
+                $user_dao->updateUser($u);
+            }
+
+            if ($entities && isset($entities['urls'])) {
                 $urls = $entities['urls'];
             }
             // if $urls is null, will extract from tweet content.
             URLProcessor::processTweetURLs($this->logger, $vals, $urls);
+
+            if (isset($entities)) {
+                if (isset($entities['mentions'])) {
+                    $mdao = DAOFactory::getDAO('MentionDAO');
+                    $mdao->setLoggerInstance($this->logger);
+                    $mdao->insertMentions($entities['mentions'], $vals['post_id'], $vals['author_user_id'],
+                    $vals['network']);
+                }
+                if (isset($entities['hashtags'])) {
+                    $hdao = DAOFactory::getDAO('HashtagDAO');
+                    $hdao->setLoggerInstance($this->logger);
+                    $hdao->insertHashtags($entities['hashtags'], $vals['post_id'], $vals['network']);
+                }
+
+                if (isset($entities['place'])) {
+                    $place = $entities['place'];
+                    if ($place) {
+                        $place_dao = DAOFactory::getDAO('PlaceDAO');
+                        $place_dao->setLoggerInstance($this->logger);
+                        $place_dao->insertPlace($place, $vals['post_id'], $vals['network']);
+                    }
+                }
+            }
         }
         return $retval;
     }
@@ -575,9 +629,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $retweeted_post_data = null;
         // first, check to see if this is a retweet, with the original post available.
         if (isset($vals['retweeted_post'])) {
+            // $this->logger->logDebug("this is a retweet- first processing original.", __METHOD__.','.__LINE__);
             $retweeted_post_data = $vals['retweeted_post']['content'];
-            // $this->logger->logInfo("this is a retweet- first processing original " .
-            // $retweeted_post_data['post_id'] . ".", __METHOD__.','.__LINE__);
             // it turns out that for a native retweet, Twitter may not reliably update the count stored in the
             // original-- there may be a lag.  So, if there is a first retweet, the original post still
             // may show 0 rts. This is less common w/ the REST API than the streaming API, but does not hurt to
@@ -588,8 +641,20 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 $retweeted_post_data['retweet_count_api'] = 1;
             }
             // since this was a retweet, process the original post first.
-            $this->addPostAndEntities($retweeted_post_data, null);
+            if (isset($vals['retweeted_post']['entities'])) {// REST API won't set this
+                $retweeted_post_entities = $vals['retweeted_post']['entities'];
+            } else {
+                $retweeted_post_entities = null;
+            }
+            if (isset($vals['retweeted_post']['user_array'])) {// REST API won't set this
+                $retweeted_post_user_array = $vals['retweeted_post']['user_array'];
+            } else {
+                $retweeted_post_user_array = null;
+            }
+            $this->addPostAndAssociatedInfo($retweeted_post_data, $retweeted_post_entities,
+            $retweeted_post_user_array);
         }
+
         if ($this->hasAllRequiredFields($vals)) {
             //process location information
             if (!isset($vals['location']) && !isset($vals['geo']) && !isset($vals['place'])) {
@@ -657,7 +722,20 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                 // then the post already existed in database & has RT count > 0, so just update the retweet count.
                 $this->updateAPIRetweetCount($vals['post_id'], $vals['retweet_count_api'], $vals['network']);
             }
-            //only update the other post records if insert went through.
+            // if the post was already in the database, but its 'in_retweet_of_post_id' field was not set in the
+            // earlier insert, then we need to update the existing post to set that info, then increment the old-style
+            // retweet cache count for the original post it references as well.  This situation can arise if the
+            // stream processor has already seen and saved the old-style retweet (the stream processor won't have
+            // the in_retweet_of_post_id information for old-style RTs, so a post may first just be treated as a
+            // mention, but the crawler may later ID it as a RT.).
+            if (!$res && !isset($retweeted_post_data) && isset($vals['in_retweet_of_post_id']) &&
+            $this->updateInRetweetOfPostID($vals['post_id'], $vals['in_retweet_of_post_id'], $vals['network'])) {
+                $this->incrementRepostCountCache($vals['in_retweet_of_post_id'], $vals['network']);
+                $status_message = "Repost of ".$vals['in_retweet_of_post_id']." by ".$vals["author_username"].
+                " ID: ".$vals["post_id"]."; updating old-style retweet cache count";
+                $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+            }
+            //otherwise, only update the other post records if insert went through.
             //This avoids incorrect counts in case of attempt to insert dup.
             if ($res) {
                 if (isset($replied_to_post)) {

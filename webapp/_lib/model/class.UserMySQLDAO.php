@@ -107,6 +107,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         );
 
         if (!$this->isUserInDB($user->user_id, $user->network)) {
+            $this->logger->logDebug("adding new user: ".$user->username." to system.", __METHOD__.','.__LINE__);
             $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, location, description, url, ";
             $q .= "is_protected, follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")." ".
             ($has_favorites_count ? "favorites_count, " : "")." ".

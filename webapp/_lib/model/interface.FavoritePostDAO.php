@@ -35,9 +35,11 @@ interface FavoritePostDAO extends PostDAO {
      * to store information about the 'favorited' relationship. $vals holds the parsed post information.
      * @param int $favoriter_id
      * @param array $vals
+     * @param array $entities Defaults to null
+     * @param array $user_array Defaults to null
      * @return int
      */
-    public function addFavorite($favoriter_id, $vals);
+    public function addFavorite($favoriter_id, array $vals, $entities = null, $user_array = null);
     /**
      * 'Unfavorites' a post with respect to a given user, by removing the relevant entry from
      * the favorites table.
@@ -67,7 +69,7 @@ interface FavoritePostDAO extends PostDAO {
      */
     public function getAllFavoritePostsUpperBound($owner_id, $network, $count, $ub);
     /**
-     * wrapper function for getAllFavoritePostsByUsernameOrderedBy
+     * Wrapper function for getAllFavoritePostsByUsernameOrderedBy
      * @param str $username
      * @param str $network
      * @param int $count
@@ -75,7 +77,7 @@ interface FavoritePostDAO extends PostDAO {
      */
     public function getAllFavoritePostsByUsername($username, $network, $count);
     /**
-     * iterator wrapper for getAllFavoritePostsByUsernameOrderedBy
+     * Iterator wrapper for getAllFavoritePostsByUsernameOrderedBy
      * @param str $username
      * @param str $network
      * @param int $count
@@ -83,11 +85,29 @@ interface FavoritePostDAO extends PostDAO {
      */
     public function getAllFavoritePostsByUsernameIterator($username, $network, $count=0);
     /**
-     * iterator wrapper for getAllFavoritePostsByUserID
+     * Iterator wrapper for getAllFavoritePostsByUserID
      * @param int $user_id
      * @param str $network
      * @param int $count
      * @return PostIterator
      */
     public function getAllFavoritePostsIterator($user_id, $network, $count);
+    /**
+     * Get all the favorited posts of a user.
+     * @param int $author_user_id
+     * @param str $network
+     * @param int $count
+     * @param int $page
+     * @returns array Post objects
+     */
+    public function getAllFavoritedPosts($author_user_id, $network, $count, $page=1);
+    /**
+     * Get all the users who have favorited a post.
+     * @TODO Return User objects, not array of db table rows.
+     * @param int $post_id
+     * @param str $network
+     * @param bool $is_public
+     * @return array users table array of rows who have favorited a post
+     */
+    public function getUsersWhoFavedPost($post_id, $network='twitter', $is_public = false);
 }

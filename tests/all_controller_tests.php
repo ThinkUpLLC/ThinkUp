@@ -66,6 +66,7 @@ $controller_test->add(new TestOfTestAuthAPIController());
 $controller_test->add(new TestOfRSSController());
 $controller_test->add(new TestOfUpgradeController());
 $controller_test->add(new TestOfPostAPIController());
+$controller_test->add(new TestOfStreamerAuthController());
 
 $tr = new TextReporter();
 $controller_test->run( $tr );

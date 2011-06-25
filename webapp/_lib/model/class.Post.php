@@ -28,13 +28,11 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class Post {
-
     /**
      * @const int
-     * twitter currently maxes out on returning a RT count at 100.
+     * Twitter currently maxes out on returning a RT count at 100.
      */
     const TWITTER_RT_THRESHOLD = 100;
-
     /**
      *
      * @var int
@@ -89,6 +87,11 @@ class Post {
      * @var str
      */
     var $place;
+    /**
+     *
+     * @var int
+     */
+    var $place_id;
     /**
      *
      * @var str
@@ -184,6 +187,11 @@ class Post {
      */
     var $link;
     /**
+     *
+     * @var int $favd_count Optionally set
+     */
+    var $favd_count;
+    /**
      * @var int, non-persistent, used for UI
      */
     var $all_retweets;
@@ -210,6 +218,7 @@ class Post {
         $this->source = $val["source"];
         $this->location = $val["location"];
         $this->place = $val["place"];
+        $this->place_id = $val["place_id"];
         $this->geo = $val["geo"];
         $this->pub_date = $val["pub_date"];
         $this->adj_pub_date = $val["adj_pub_date"];
@@ -235,6 +244,10 @@ class Post {
         if (isset($val["favorited"])) {
             $this->favorited = $val["favorited"];
         }
+        if (isset($val['favd_count'])) {
+            $this->favd_count = $val['favd_count'];
+        }
+
         // For the retweet count display, we will use the larger of retweet_count_cache and retweet_count_api,
         // and add it to old_retweet_count_cache.
         $largest_native_RT_count = $val['retweet_count_cache'];
@@ -249,6 +262,7 @@ class Post {
                 $this->rt_threshold = 1;
             }
         }
+
         // non-persistent, used for UI information display
         $this->all_retweets = $val['old_retweet_count_cache'] + $largest_native_RT_count;
     }

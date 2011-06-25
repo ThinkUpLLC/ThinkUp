@@ -362,80 +362,94 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testGetByOwnerAndNetwork(){
         $data = array(
-            'id'=>2,
-            'user_name'=>'steven',
-            'full_name'=>'Steven Warren',
-            'email'=>'me@example.com',
-            'last_login'=>'Yesterday',
-            'is_admin'=>1,
-            'is_activated'=>1,
-            'failed_logins'=>0,
-            'account_status'=>''
-            );
-            $owner = new Owner($data);
+        'id'=>2,
+        'user_name'=>'steven',
+        'full_name'=>'Steven Warren',
+        'email'=>'me@example.com',
+        'last_login'=>'Yesterday',
+        'is_admin'=>1,
+        'is_activated'=>1,
+        'failed_logins'=>0,
+        'account_status'=>''
+        );
+        $owner = new Owner($data);
 
-            // Test is-admin twitter
-            $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');
-            $this->assertIsA($result, "array");
-            $this->assertEqual(count($result), 3);
-            $users = array('jill','stuart','jack');
-            $uID = array(12,13,10);
-            $vID = array(12,13,10);
-            foreach($result as $id=>$i){
-                $this->assertIsA($i, "Instance");
-                $this->assertEqual($i->network_username, $users[$id]);
-                $this->assertEqual($i->network_user_id, $uID[$id]);
-                $this->assertEqual($i->network_viewer_id, $vID[$id]);
-            }
+        // Test is-admin twitter
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 3);
+        $users = array('jill','stuart','jack');
+        $uID = array(12,13,10);
+        $vID = array(12,13,10);
+        foreach($result as $id=>$i){
+            $this->assertIsA($i, "Instance");
+            $this->assertEqual($i->network_username, $users[$id]);
+            $this->assertEqual($i->network_user_id, $uID[$id]);
+            $this->assertEqual($i->network_viewer_id, $vID[$id]);
+        }
 
-            // Test is-admin facebook
-            $result = $this->DAO->getByOwnerAndNetwork($owner, 'facebook');
-            $this->assertIsA($result, "array");
-            $this->assertEqual(count($result), 2);
-            $users = array('Paul Clark','Jillian Dickerson');
-            $uID = array(16,15);
-            $vID = array(16,15);
-            foreach($result as $id=>$i){
-                $this->assertIsA($i, "Instance");
-                $this->assertEqual($i->network_username, $users[$id]);
-                $this->assertEqual($i->network_user_id, $uID[$id]);
-                $this->assertEqual($i->network_viewer_id, $vID[$id]);
-            }
+        // Test is-admin twitter, active only
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter', true, true);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 2); //jill and jack active, stuart is not
+        $users = array('jill','jack');
+        $uID = array(12,10);
+        $vID = array(12,10);
+        foreach($result as $id=>$i){
+            $this->assertIsA($i, "Instance");
+            $this->assertEqual($i->network_username, $users[$id]);
+            $this->assertEqual($i->network_user_id, $uID[$id]);
+            $this->assertEqual($i->network_viewer_id, $vID[$id]);
+        }
 
-            // Test is-admin Twitter, forced not
-            $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter', true);
-            $this->assertIsA($result, "array");
-            $this->assertEqual(count($result), 2);
-            $users = array('jill','jack');
-            $uID = array(12,10);
-            $vID = array(12,10);
-            foreach($result as $id=>$i){
-                $this->assertIsA($i, "Instance");
-                $this->assertEqual($i->network_username, $users[$id]);
-                $this->assertEqual($i->network_user_id, $uID[$id]);
-                $this->assertEqual($i->network_viewer_id, $vID[$id]);
-            }
+        // Test is-admin facebook
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'facebook');
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 2);
+        $users = array('Paul Clark','Jillian Dickerson');
+        $uID = array(16,15);
+        $vID = array(16,15);
+        foreach($result as $id=>$i){
+            $this->assertIsA($i, "Instance");
+            $this->assertEqual($i->network_username, $users[$id]);
+            $this->assertEqual($i->network_user_id, $uID[$id]);
+            $this->assertEqual($i->network_viewer_id, $vID[$id]);
+        }
 
-            // Test not admin twitter
-            $owner->is_admin = false;
-            $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');
-            $this->assertIsA($result, "array");
-            $this->assertEqual(count($result), 2);
-            $users = array('jill','jack');
-            $uID = array(12,10);
-            $vID = array(12,10);
-            foreach($result as $id=>$i){
-                $this->assertIsA($i, "Instance");
-                $this->assertEqual($i->network_username, $users[$id]);
-                $this->assertEqual($i->network_user_id, $uID[$id]);
-                $this->assertEqual($i->network_viewer_id, $vID[$id]);
-            }
+        // Test is-admin Twitter, forced not
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter', true);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 2);
+        $users = array('jill','jack');
+        $uID = array(12,10);
+        $vID = array(12,10);
+        foreach($result as $id=>$i){
+            $this->assertIsA($i, "Instance");
+            $this->assertEqual($i->network_username, $users[$id]);
+            $this->assertEqual($i->network_user_id, $uID[$id]);
+            $this->assertEqual($i->network_viewer_id, $vID[$id]);
+        }
 
-            $owner->id = 3;
-            //Try empty
-            $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');;
-            $this->assertIsA($result, "array");
-            $this->assertEqual(count($result), 0);
+        // Test not admin twitter
+        $owner->is_admin = false;
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 2);
+        $users = array('jill','jack');
+        $uID = array(12,10);
+        $vID = array(12,10);
+        foreach($result as $id=>$i){
+            $this->assertIsA($i, "Instance");
+            $this->assertEqual($i->network_username, $users[$id]);
+            $this->assertEqual($i->network_user_id, $uID[$id]);
+            $this->assertEqual($i->network_viewer_id, $vID[$id]);
+        }
+
+        $owner->id = 3;
+        //Try empty
+        $result = $this->DAO->getByOwnerAndNetwork($owner, 'twitter');;
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 0);
     }
 
     public function testSetPublic(){

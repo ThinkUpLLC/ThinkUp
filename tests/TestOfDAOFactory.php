@@ -205,6 +205,42 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test get HashtagDAO
+     */
+    public function testGetHashtagDAO(){
+        $dao = DAOFactory::getDAO('HashtagDAO');
+        $this->assertTrue(isset($dao));
+        $this->assertIsA($dao, 'HashtagMySQLDAO');
+    }
+
+    /**
+     * Test get MentionDAO
+     */
+    public function testGetMentionDAO(){
+        $dao = DAOFactory::getDAO('MentionDAO');
+        $this->assertTrue(isset($dao));
+        $this->assertIsA($dao, 'MentionMySQLDAO');
+    }
+
+    /**
+     * Test get PlaceDAO
+     */
+    public function testGetPlaceDAO(){
+        $dao = DAOFactory::getDAO('PlaceDAO');
+        $this->assertTrue(isset($dao));
+        $this->assertIsA($dao, 'PlaceMySQLDAO');
+    }
+
+    /**
+     * Test get StreamDataDAO
+     */
+    public function testGetStreamDataDAO(){
+        $dao = DAOFactory::getDAO('StreamDataDAO');
+        $this->assertTrue(isset($dao));
+        $this->assertIsA($dao, 'StreamDataMySQLDAO');
+    }
+
+    /**
      * Test get OwnerInstanceDAO
      */
     public function testGetOwnerInstanceDAO() {
@@ -297,6 +333,15 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertNotNull($dao);
         $this->assertIsA($dao, 'ExportMySQLDAO');
     }
+    
+    /**
+     * Test get StreamProcDAO
+     */
+    public function testGetStreamProcsDAO() {
+        $dao = DAOFactory::getDAO('StreamProcDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'StreamProcMySQLDAO');
+    }
     /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
@@ -309,7 +354,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 17);
+        $this->assertEqual(sizeof($result), 25);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
     }

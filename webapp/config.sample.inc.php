@@ -46,6 +46,9 @@ $THINKUP_CFG['log_location']              = false;
 // Verbosity of log. 0 is everything, 1 is user messages, 2 is errors only
 $THINKUP_CFG['log_verbosity']             = 0;
 
+// Full server path to stream processor log.
+$THINKUP_CFG['stream_log_location']       = false;
+
 // Full server path to sql.log. To not log queries, set to null.
 $THINKUP_CFG['sql_log_location']          = null;
 

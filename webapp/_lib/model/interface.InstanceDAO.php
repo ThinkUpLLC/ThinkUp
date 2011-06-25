@@ -146,9 +146,10 @@ interface InstanceDAO {
      * @param Owner $owner
      * @param string $network
      * @param boolean $disregard_admin_status
+     * @param bool $active_only Return active instances only
      * @return array Instances for the owner (all if admin and !$disregard_admin_status)
      */
-    public function getByOwnerAndNetwork($owner, $network, $disregard_admin_status = false);
+    public function getByOwnerAndNetwork($owner, $network, $disregard_admin_status = false, $active_only = false);
 
     /**
      * Set whether or not an instance is public, i.e., should be included on the public timeline
