@@ -51,22 +51,58 @@ class WebTestOfApplicationSettings extends ThinkUpWebTestCase {
         $this->setField('email', 'me@example.com');
         $this->setField('pwd', 'secretpassword');
         $this->click("Log In");
-        //        $this->showSource();
 
         //Open registration
         $this->click("Settings");
         $this->assertTitle("Configure Your Account | ThinkUp");
         $this->assertText('Logged in as admin: me@example.com');
 
-        $this->clickLinkById('app-settings-tab');
-        $this->setFieldById('is_registration_open', 'true');
-        $this->submitFormById('app-settings-form');
+        // NOTE: this uses an ajax call, so we need to set up the post ourselves
+        $response = $this->post($this->url . '/account/appconfig.php',
+        array('csrf_token' => self::TEST_CSRF_TOKEN,'is_registration_open' => 'true',
+        'save' => 'true'));
+        $response_object = json_decode($response);
+        $this->assertEqual($response_object->status, 'success');
+        $this->assertEqual($response_object->saved, 1);
 
         //Log out
-        $this->click("Log out");
+        $this->get($this->url.'/session/logout.php');
 
-        //Assert registration is now open
+        //Assert registration is open
         $this->get($this->url.'/session/register.php');
+        $this->assertText('Register Name:');
         $this->assertNoText('Sorry, registration is closed on this ThinkUp installation.');
+    }
+
+    public function testCSRFToken() {
+
+        //Log in as admin
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+        $this->click("Log In");
+
+
+        //Open registration bad token
+        $this->click("Settings");
+        $this->assertTitle("Configure Your Account | ThinkUp");
+        $this->assertText('Logged in as admin: me@example.com');
+
+        // we should have a global js token
+        $this->assertPattern("/var csrf_token = '" . self::TEST_CSRF_TOKEN . "';/");
+
+        // bad token
+        $this->post($this->url . '/account/appconfig.php',
+        array('csrf_token' => self::TEST_CSRF_TOKEN . '-bad','is_registration_open' => 'true',
+        'save' => 'true'));
+        $this->assertText('Invalid CSRF token passed: ' . self::TEST_CSRF_TOKEN . '-bad');
+
+        // good token
+        $response = $this->post($this->url . '/account/appconfig.php',
+        array('csrf_token' => self::TEST_CSRF_TOKEN,'is_registration_open' => 'true',
+        'save' => 'true'));
+        $response_object = json_decode($response);
+        $this->assertEqual($response_object->status, 'success');
+        $this->assertEqual($response_object->saved, 1);
     }
 }

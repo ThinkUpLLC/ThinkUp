@@ -142,7 +142,9 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $this->addToView('user_pages', $user_pages);
 
         $owner_instance_pages = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook page');
-        $this->addToView('owner_instance_pages', $owner_instance_pages);
+        if(count($owner_instance_pages) > 0) {
+            $this->addToView('owner_instance_pages', $owner_instance_pages);
+        }
 
         $this->addToView('owner_instances', $owner_instances);
         if (isset($options['facebook_api_key'])) {

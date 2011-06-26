@@ -226,6 +226,21 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test csrf token
+     */
+    public function testForDeleteCSRFToken() {
+        $_SERVER['SERVER_NAME'] = 'mytestthinkup';
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true, true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new TwitterPluginConfigurationController($owner, 'twitter');
+        $output = $controller->go();
+        $this->assertPattern('/name="csrf_token" value="'. self::CSRF_TOKEN . '"/', $output);
+    }
+
+    /**
      * build plugin option values
      */
     private function buildPluginOptions() {
