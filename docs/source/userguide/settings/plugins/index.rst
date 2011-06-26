@@ -10,3 +10,4 @@ The official ThinkUp distribution comes with a set of approved plugins. Click on
    facebook
    geoencoder
    twitter
+   twitterrealtime

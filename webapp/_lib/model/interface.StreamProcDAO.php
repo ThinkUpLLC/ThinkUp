@@ -50,6 +50,12 @@ interface StreamProcDAO {
      */
     public function getProcessInfoForOwner($email, $instance_id);
     /**
+     * Get the process details for a given instance.
+     * @param int $instance_id
+     * @return array stream_data table row array
+     */
+    public function getProcessInfoForInstance($instance_id);
+    /**
      * Update the report time to now.
      * @param int $process_id
      * @return int Number of rows updated

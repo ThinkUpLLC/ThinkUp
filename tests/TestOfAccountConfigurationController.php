@@ -347,7 +347,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertIsA($v_mgr->getTemplateDataItem('installed_plugins'), 'array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 5);
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 6);
 
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
@@ -370,7 +370,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertIsA($v_mgr->getTemplateDataItem('installed_plugins'), 'array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 5);
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 6);
 
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
@@ -461,7 +461,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertIsA($v_mgr->getTemplateDataItem('installed_plugins'), 'array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 5);
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 6);
 
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
@@ -490,7 +490,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertIsA($v_mgr->getTemplateDataItem('installed_plugins'), 'array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 5);
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 6);
 
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
@@ -519,7 +519,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertIsA($v_mgr->getTemplateDataItem('installed_plugins'), 'array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 5);
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 6);
 
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
@@ -548,7 +548,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertIsA($v_mgr->getTemplateDataItem('installed_plugins'), 'array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 5);
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 6);
 
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
@@ -578,7 +578,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
         $this->assertIsA($v_mgr->getTemplateDataItem('installed_plugins'), 'array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 5);
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 6);
 
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');

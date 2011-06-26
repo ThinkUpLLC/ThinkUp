@@ -28,8 +28,9 @@ rm -rf build/thinkup/_lib/extlib/simpletest/
 rm -rf build/thinkup/plugins/*/tests/
 rm build/thinkup/config.inc.php
 
-# Clean out plugins which shouldn't go to users
+# Clean out dev/alpha plugins which shouldn't go to users
 rm -rf build/thinkup/plugins/hellothinkup/
+rm -rf build/thinkup/plugins/twitterrealtime/
 
 # Zip it up
 cd build/

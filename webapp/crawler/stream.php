@@ -24,6 +24,7 @@
  */
 chdir("..");
 require_once 'init.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.ConsumerUserStream.php';
 
 $controller = new StreamerAuthController($argc, $argv);
 echo $controller->go();

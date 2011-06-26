@@ -83,7 +83,7 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
 
         $menus_array = $webapp->getDashboardMenu($instance);
         $this->assertIsA($menus_array, 'Array');
-        $this->assertEqual(sizeof($menus_array), 17);
+        $this->assertEqual(sizeof($menus_array), 18);
         $this->assertIsA($menus_array['tweets-all'], 'MenuItem');
     }
 
@@ -125,7 +125,7 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
 
         $menus_array = $webapp->getPostDetailMenu($post);
         $this->assertIsA($menus_array, 'Array');
-        $this->assertEqual(sizeof($menus_array), 1);
+        $this->assertEqual(sizeof($menus_array), 2);
         $this->assertIsA($menus_array['fwds'], 'MenuItem');
     }
 

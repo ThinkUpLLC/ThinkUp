@@ -16,5 +16,6 @@ extras/scripts/migratedb-conf
 extras/scripts/lic_header.py
 extras/scripts/test-pull-postback-conf
 webapp/test_installer/*
+webapp/plugins/twitterrealtime/streaming/*.pid
 build/*
 docs/build/*

@@ -52,14 +52,15 @@ class TestOfStreamProcMySQLDAO extends ThinkUpUnitTestCase {
     protected function buildData() {
         //Insert test data into test table
         for ($i = 1; $i < 4; $i++) {
-            $pid = 4000 + $i; $email = "bob$i@example.com";
+            $pid = 4000 + $i;
+            $email = "bob$i@example.com";
             $builders[] = FixtureBuilder::build('stream_procs', array('process_id'=>$pid, 'email'=>$email,
-            'instance_id' => $i, 'last_report' => null)); // these will all have current timestamp
+            'instance_id'=>$i, 'last_report'=>null)); // these will all have current timestamp
         }
         // now build one with an older date that will register as 'inactive'.
         $last_report = '2011-02-18 00:15:00';
         $builders[] = FixtureBuilder::build('stream_procs', array('process_id'=>3000, 'email'=>'ted@example.com',
-        'instance_id' => 4, 'last_report' => $last_report));
+        'instance_id'=>4, 'last_report'=>$last_report));
         return $builders;
     }
 
@@ -102,6 +103,14 @@ class TestOfStreamProcMySQLDAO extends ThinkUpUnitTestCase {
         $res = $this->dao->getProcessInfoForOwner('bob2@example.com', 4);
         $this->assertEqual($res, null);
         $res = $this->dao->getProcessInfoForOwner('bob2@example.com', 2);
+        $this->assertEqual($res['process_id'], 4002);
+        $this->assertEqual($res['email'], 'bob2@example.com');
+    }
+
+    public function testGetProcInfoByInstance() {
+        $res = $this->dao->getProcessInfoForInstance(5);
+        $this->assertEqual($res, null);
+        $res = $this->dao->getProcessInfoForInstance(2);
         $this->assertEqual($res['process_id'], 4002);
         $this->assertEqual($res['email'], 'bob2@example.com');
     }

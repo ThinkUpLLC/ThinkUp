@@ -53,6 +53,16 @@ $plugin_tests->add(new TestOfURLProcessor());
 $plugin_tests->add(new TestOfRetweetDetector());
 $plugin_tests->add(new TestOfHelloThinkUpPluginConfigurationController());
 $plugin_tests->add(new TestOfSmartyModifierLinkUsernames());
+$plugin_tests->add(new TestOfTwitterJSONStreamParser());
+$plugin_tests->add(new TestOfTwitterRealtimePluginConfigurationController());
+$plugin_tests->add(new TestOfStreamMessageQueueMySQL());
+$plugin_tests->add(new TestOfConsumerUserStream());
+$plugin_tests->add(new TestOfConsumerStreamProcess());
+$plugin_tests->add(new TestOfStreamMessageQueueFactory());
+$version = explode('.', PHP_VERSION); //dont run redis test for php less than 5.3
+if ($version[0] >= 5 && $version[1] >= 3) { //only run Redis tests if PHP 5.3
+    $plugin_tests->add(new TestOfStreamMessageQueueRedis());
+}
 
 $tr = new TextReporter();
 $plugin_tests->run( $tr );

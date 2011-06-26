@@ -63,7 +63,18 @@
       {else}
         <br>
       {/if}
+        {if $t->favd_count}
+          <small>&nbsp;<a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}&v=favs">Fav'd: {$t->favd_count}</a></small>
+        {/if}
+        {if $t->link->expanded_url and !$t->link->is_image and ($t->link->expanded_url != $t->link->url)}
+          <br>
+          <small>
+            <a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a>
+          </small>
+        {/if}
+
       <span class="small gray">
+
        <span class="metaroll">
           <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
           {if $t->is_geo_encoded < 2}

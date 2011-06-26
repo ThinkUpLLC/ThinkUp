@@ -149,6 +149,15 @@ class DashboardController extends ThinkUpController {
 
             SessionCache::put('selected_instance_network', $this->instance->network);
             SessionCache::put('selected_instance_username', $this->instance->network_username);
+
+            //check Realtime last update and overwrite instance->last_update
+            $stream_proc_dao = DAOFactory::getDAO('StreamProcDAO');
+            $process = $stream_proc_dao->getProcessInfoForInstance($this->instance->id);
+            if (isset($process)) {
+                //$this->instance->crawler_last_run = $process['last_report'];
+                $this->instance->crawler_last_run = 'realtime';
+            }
+
             $this->addToView('instance', $this->instance);
         }
     }

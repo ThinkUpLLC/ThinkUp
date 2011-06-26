@@ -47,6 +47,12 @@
 </div>
 {/if}
 
+{if $all_favd and $display eq 'favd-all'}
+  {foreach from=$all_favd key=tid item=t name=foo}
+    {include file="_post.tpl" t=$t}
+  {/foreach}
+{/if}
+
 {if $most_replied_to_tweets}
   {foreach from=$most_replied_to_tweets key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}

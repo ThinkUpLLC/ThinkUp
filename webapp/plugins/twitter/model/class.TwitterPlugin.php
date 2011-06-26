@@ -311,13 +311,19 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $eftab->addDataset($eftabds);
         $menus["followers-earliest"] = $eftab;
 
-        $fvalltab = new MenuItem("All", "All favorites", $twitter_data_tpl, 'Favorites');
+        $fvalltab = new MenuItem("Your Favorites", "All your favorites", $twitter_data_tpl, 'Favorites');
         $fvalltabds = new Dataset("all_tweets", 'FavoritePostDAO', "getAllFavoritePosts",
         array($instance->network_user_id, 'twitter', 20, "#page_number#"), 'getAllFavoritePostsIterator',
         array($instance->network_user_id, 'twitter', GridController::getMaxRows()) );
         $fvalltabds->addHelp('userguide/listings/twitter/dashboard_ftweets-all');
         $fvalltab->addDataset($fvalltabds);
         $menus["ftweets-all"] = $fvalltab;
+
+        $fvdtab = new MenuItem("Favorited by Others", "Favorited by Others", $twitter_data_tpl);
+        $ftab2 = new Dataset("all_favd", 'FavoritePostDAO', "getAllFavoritedPosts",
+        array($instance->network_user_id, $instance->network, 20, '#page_number#'));
+        $fvdtab->addDataset($ftab2);
+        $menus["favd-all"] = $fvdtab;
 
         //Links from friends
         $fltab = new MenuItem('Links from People You Follow', 'Links your friends posted', $twitter_data_tpl, 'Links');
@@ -375,6 +381,13 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             'twitter', 'default', 'km', !Session::isLoggedIn()) );
             $retweets_menu_item->addDataset($retweets_dataset);
             $menus['fwds'] = $retweets_menu_item;
+            // aju
+            $favd_menu_item = new MenuItem("Favorited", "Those who favorited this tweet", $twitter_data_tpl);
+            //if not logged in, show only public fav'd info
+            $favd_dataset = new Dataset("favds", 'FavoritePostDAO', "getFavdsOfPost", array($post->post_id,
+            'twitter', !Session::isLoggedIn()) );
+            $favd_menu_item->addDataset($favd_dataset);
+            $menus['favs'] = $favd_menu_item;
         }
         return $menus;
     }

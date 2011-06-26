@@ -54,7 +54,7 @@
                 <div class="grid_15 omega">
                   <span class="tweet">{$user_details->username} <span style="color:#ccc">{$user_details->network|capitalize}</span></span><br />
                   <div class="small">
-                    Updated {$instance->crawler_last_run|relative_datetime} ago
+                    {if $instance->crawler_last_run eq 'realtime'}<span style="color:green;">&#9679;</span> Updated in realtime{else}Updated {$instance->crawler_last_run|relative_datetime} ago{/if}
                   </div>
                 </div>
               </div>

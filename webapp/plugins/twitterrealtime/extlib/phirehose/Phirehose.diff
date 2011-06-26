@@ -1,0 +1,21 @@
+--- C:/Users/Jonathon/AppData/Local/Temp/Phirehose.-revBASE.svn003.tmp.php	Fri Oct  1 17:11:56 2010
++++ C:/www/vhosts/fiftytwo_rainmakerapp/app/objects/Phirehose.php	Fri Oct  1 17:11:53 2010
+@@ -66,7 +66,8 @@
+   protected $readTimeout = 5;
+   protected $idleReconnectTimeout = 90;
+   protected $avgPeriod = 60;
+-
++  protected $status_length_base = 10;
++  
+   /**
+    * Create a new Phirehose object attached to the appropriate twitter stream method.
+    * Methods are: METHOD_FIREHOSE, METHOD_RETWEET, METHOD_SAMPLE, METHOD_FILTER
+@@ -315,7 +316,7 @@
+         // Read status length delimiter
+         $delimiter = substr($this->buff, 0, $eol);
+         $this->buff = substr($this->buff, $eol + 2); // consume off buffer, + 2 = "\r\n"
+-        $statusLength = intval($delimiter);
++        $statusLength = intval($delimiter, $this->status_length_base);
+         if ($statusLength > 0) {
+           // Read status bytes and enqueue
+           $bytesLeft = $statusLength - strlen($this->buff);

@@ -946,6 +946,9 @@ class TwitterCrawler {
         $num_allowed_errors = 5;
         $num_errors = 0;
 
+        $num_allowed_errors = 5;
+        $num_errors = 0;
+
         $fd = DAOFactory::getDAO('FollowDAO');
         $continue_fetching = true;
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching &&
@@ -1179,7 +1182,7 @@ class TwitterCrawler {
                     if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
                         $this->logger->logInfo("found new fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
                         $fcount++;
-                        // the following no longer necessary -- is done within addFavorite via addPostAndEntities.
+                        // the following no longer necessary-- is done w/in addFavorite via addPostAndAssociatedInfo.
                         // $this->processTweetURLs($tweet);
                         $this->logger->logInfo("fcount: $fcount", __METHOD__.','.__LINE__);
                         $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
@@ -1261,6 +1264,8 @@ class TwitterCrawler {
     private function archivingFavsFetch ($fcount, $last_fav_id, $last_page_fetched_favorites, $continue) {
         $status_message = "";
 
+        // $this->logger->logInfo("in archivingFavsFetch- last_page_fetched_favorites: $last_page_fetched_favorites",
+        // __METHOD__.','.__LINE__);
         list($tweets, $cURL_status, $twitter_data) = $this->getFavsPage($last_page_fetched_favorites - 1);
 
         if ($cURL_status == 200) {
@@ -1287,7 +1292,7 @@ class TwitterCrawler {
 
                 if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
                     $fcount++;
-                    // the following no longer necessary -- is done within addFavorite via addPostAndEntities.
+                    // the following no longer necessary -- is done within addFavorite via addPostAndAssociatedInfo.
                     // $this->processTweetURLs($tweet);
                     $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
                 } else {
@@ -1415,7 +1420,7 @@ class TwitterCrawler {
                 $fav['network'] = 'twitter';
                 // check whether the tweet is in the db-- if not, add it.
                 if ($fpd->addFavorite($this->user->user_id, $fav) > 0) {
-                    // the following no longer necessary -- is done within addFavorite via addPostAndEntities.
+                    // the following no longer necessary -- is done within addFavorite via addPostAndAssociatedInfo.
                     // $this->processTweetURLs($fav);
                     $this->logger->logInfo("added fav " . $fav['post_id'], __METHOD__.','.__LINE__);
                     $fcount++;

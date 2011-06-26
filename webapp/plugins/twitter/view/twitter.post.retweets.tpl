@@ -96,18 +96,26 @@
             </div>
             <div class="grid_5 center keystats omega">
               <div class="big-number">
+               {if $retweets}
                   {assign var=reach value=0}
                   {foreach from=$retweets key=tid item=t name=foo}
                    {assign var=reach value=$reach+$t->author->follower_count}
                   {/foreach}
                   <h1>{$post->all_retweets|number_format}{if $post->rt_threshold}+{/if}</h1>
                   <h3>Forward{if $post->all_retweets > 1}s{/if} to {$reach|number_format}</h3>
+               {/if} <!-- end if retweets -->
+               {if $favds}
+                  <h2>Users who favorited this post.</h2>
+               {/if} <!-- end if favds -->
                 {/if}
               </div>
             </div>
+
               
           </div> <!-- end .clearfix -->
 
+          </div> <!-- end .clearfix -->
+   
 
 
 {if $retweets}
@@ -119,6 +127,17 @@
   </div>
 </div>
 {/if}
+
+{if $favds}
+  <div class="prepend">
+  <div class="append_20 clearfix bt"><br />
+    {foreach from=$favds key=fid item=f name=foo}
+        {include file="_userf.tpl" f=$f}
+    {/foreach}
+  </div>
+  </div>
+{/if}
+
 
 <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
 

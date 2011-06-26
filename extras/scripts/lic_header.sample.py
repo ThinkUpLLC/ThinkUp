@@ -20,7 +20,8 @@ import shutil
 # "C:/yourpathto/ThinkUp"
 THINKUP_HOME = None
 
-excludedir = ["/webapp/_lib/extlib", "/.git", "/webapp/_lib/view/compiled_view"]
+excludedir = ["/webapp/_lib/extlib", "/.git", "/webapp/_lib/view/compiled_view", 
+  "/webapp/plugins/twitter/extlib", "/webapp/plugins/facebook/extlib", "/webapp/plugins/twitterrealtime/extlib"]
 ignorefns = ["config.sample.inc.php", "config.inc.php"]
 license_line = "http://www.gnu.org/licenses/gpl.html"
 header_fname = "/extras/scripts/header_content.txt"

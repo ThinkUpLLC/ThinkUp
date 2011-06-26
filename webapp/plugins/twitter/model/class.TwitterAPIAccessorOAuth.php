@@ -387,7 +387,7 @@ class TwitterAPIAccessorOAuth {
             $retweet_count_api = $post->retweet_count;
             $pos = strrpos($post->retweet_count, '+');
             if ($pos != false) {
-                // remove '+', e.g. '100+' -- so currently 100 is max that can be indicated
+                // remove '+', e.g. '100+' --  currently 100 is the max count that will be reported
                 $retweet_count_api = substr($post->retweet_count, 0, $pos) ;
             }
             // this field holds the reported native rt count from twitter

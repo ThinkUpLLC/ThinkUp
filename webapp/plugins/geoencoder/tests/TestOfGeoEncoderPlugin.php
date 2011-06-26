@@ -211,7 +211,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
 
         $post_menus_array = $this->webapp->getPostDetailMenu($post);
         $this->assertIsA($post_menus_array, 'Array');
-        $this->assertEqual(sizeof($post_menus_array), 3); //1 from Twitter plugin 2, from Geoencoder
+        $this->assertEqual(sizeof($post_menus_array), 4); //2 from Twitter plugin 2, from Geoencoder
         $this->assertIsA($post_menus_array['geoencoder_map'], 'MenuItem');
         $this->assertIsA($post_menus_array['geoencoder_nearest'], 'MenuItem');
     }

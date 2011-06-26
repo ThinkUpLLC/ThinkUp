@@ -1,0 +1,38 @@
+See: http://code.google.com/p/phirehose/
+
+0.2.4 (2010-04-07)
+------------------
+ - Fixed bug where filter predicates got "stuck" as blank/null (reported by Toby P)
+ - Fixed bug where hang could occur after reconnect to quiet streams (reported by Toby P)
+ - Cleaned up connect() state initialization to reliably reconnect
+
+
+0.2.3 (2010-02-26)
+------------------
+ - Implemented stream idle timeouts (reconnects if streams die)
+ - Implemented per-connection DNS lookups
+ - Fixed bug where you could get caught in reconnect loop if invalid filter predicates specified
+ - Added getLastErrorMsg() and getLastErrorNo() methods (to deal with above)
+ - Improved logging
+
+0.2.2 (2010-02-10)
+------------------
+ - Fixed @version tag
+ - Improved error logging
+ - Improved connection validity check
+ - Added ghetto-queue-consume example
+
+0.2.1 (2010-01-19)
+------------------
+ - Fixed UserAgent string
+ - Removed per-entry log prefixes and moved to common log() method
+ - Added "ghetto queue" example
+
+0.2.0 (2010-01-14)
+------------------
+ - Added changelog :)
+ - Added locations functionality for use with the Twitter Geotagging API
+
+0.1.0 (2009-09-30) 
+------------------
+ - Initial public release

@@ -75,6 +75,21 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
         }
     }
 
+    public function getProcessInfoForInstance($instance_id) {
+        $q = "SELECT * from #prefix#stream_procs ";
+        $q .= "WHERE instance_id = :instance_id";
+        $vars = array(
+            ':instance_id' => $instance_id
+        );
+        $ps = $this->execute($q, $vars);
+        $row = $this->getDataRowAsArray($ps);
+        if (!$row) {
+            return null;
+        } else {
+            return $row;
+        }
+    }
+
     public function reportProcessActive($process_id) {
         $q = "UPDATE #prefix#stream_procs ";
         $q .= "SET last_report = now() WHERE process_id = :process_id";
@@ -84,7 +99,7 @@ class StreamProcMySQLDAO extends PDODAO implements StreamProcDAO {
         $ps = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
-            throw new StreamingException("Record for process ID $pid not found.");
+            throw new StreamingException("Record for process ID $process_id not found.");
         }
         return $res;
     }
