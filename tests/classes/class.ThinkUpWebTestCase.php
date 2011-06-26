@@ -27,6 +27,11 @@
  */
 class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
     /**
+     * @var our test csrf token
+     */
+    const TEST_CSRF_TOKEN = 'TEST_CSRF_TOKEN';
+
+    /**
      * @var ThinkUpTestDatabaseHelper
      */
     var $testdb_helper;

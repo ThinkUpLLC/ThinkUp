@@ -226,8 +226,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $liked_pages = $v_mgr->getTemplateDataItem('user_pages');
         $this->assertIsA($liked_pages, 'Array');
         $this->assertEqual($liked_pages[606837591][0]->name, 'jenny o.');
-        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instance_pages'), 'Array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instance_pages')), 0);
+        $this->assertNull($v_mgr->getTemplateDataItem('owner_instance_pages'));
         $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'Array');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instances')), 1);
         $this->assertPattern("/The Wire/", $output);
@@ -249,8 +248,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $liked_pages = $v_mgr->getTemplateDataItem('user_pages');
         $this->assertIsA($liked_pages, 'Array');
         $this->assertEqual(sizeof($liked_pages), 0);
-        $this->assertIsA($v_mgr->getTemplateDataItem('owner_instance_pages'), 'Array');
-        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instance_pages')), 0);
+        $this->assertNull($v_mgr->getTemplateDataItem('owner_instance_pages'), 'Array');
         $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'Array');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instances')), 1);
     }
@@ -337,4 +335,38 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($oinstance));
         $this->assertEqual($oinstance->oauth_access_token, 'new-faux-access-token');
     }
+
+    /**
+     * Test csrf token
+     */
+    public function testForDeleteCSRFToken() {
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_dao = new OwnerMySQLDAO();
+
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true, true);
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+
+        // add mock page data to view
+        $owner_instance_pages = array(
+            '123456' => 
+                array(
+                'id' => '123456',
+                'network_username' => 'test_username',
+                'network' => 'facebook',
+                )
+        );
+        $view = $controller->getViewManager();
+        $view->assign('owner_instance_pages', $owner_instance_pages);
+
+        $output = $controller->go();
+        // looks for account delete token
+        $this->assertPattern('/name="csrf_token" value="'. self::CSRF_TOKEN . '" \/><!\-\- delete account csrf token \-\->/', $output);
+
+        // looks for page delete token
+        $this->assertPattern('/name="csrf_token" value="'. self::CSRF_TOKEN . '" \/><!\-\- delete page csrf token \-\->/', $output);
+    }
+
 }
