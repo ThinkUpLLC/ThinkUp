@@ -50,7 +50,6 @@ $controller_test->add(new TestOfInstallerController());
 $controller_test->add(new TestOfLoginController());
 $controller_test->add(new TestOfLogoutController());
 $controller_test->add(new TestOfPasswordResetController());
-$controller_test->add(new TestOfMarkParentController());
 $controller_test->add(new TestOfPostController());
 $controller_test->add(new TestOfRegisterController());
 $controller_test->add(new TestOfTestController());

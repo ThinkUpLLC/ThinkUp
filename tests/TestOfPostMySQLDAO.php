@@ -767,35 +767,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Test getStandaloneReplies
-     */
-    public function testGetStandaloneReplies() {
-        $dao = new PostMySQLDAO();
-        $posts = $dao->getStandaloneReplies('jack', 'twitter', 15);
-
-        $this->assertEqual(sizeof($posts), 10);
-        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9',
-        "Standalone mention");
-        $this->assertEqual($posts[0]->author->username, 'user2', "Post author");
-
-        $posts = $dao->getStandaloneReplies('ev', 'twitter', 15);
-
-        $this->assertEqual(sizeof($posts), 11);
-        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9',
-        "Standalone mention");
-        $this->assertEqual($posts[0]->author->username, 'user2', "Post author");
-
-        //test paging
-        $posts = $dao->getStandaloneReplies('jack', 'twitter', 1, $page = 1);
-        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9',
-        "Standalone mention");
-
-        $posts = $dao->getStandaloneReplies('jack', 'twitter', 1, $page = 2);
-        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 8',
-        "Standalone mention");
-    }
-
-    /**
      * Test getRepliesToPost
      */
     public function testGetRepliesToPost() {
@@ -1733,47 +1704,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $total_posts = $pdao->getTotalPostsByUser('ev', 'twitter');
 
         $this->assertTrue($total_posts == 41);
-    }
-
-    /**
-     * Test assignParent
-     */
-    public function testAssignParent() {
-        //Add two "parent" posts
-        $builders = array();
-        $builders[] = FixtureBuilder::build('posts', array('post_id'=>550, 'author_user_id'=>19,
-        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'post_text'=>'This is parent post 1',
-        'reply_count_cache'=>1, 'retweet_count_cache'=>0));
-
-        $builders[] = FixtureBuilder::build('posts', array('post_id'=>551, 'author_user_id'=>19,
-        'author_fullname'=>'Link Baiter', 'post_text'=>'This is parent post 2', 'reply_count_cache'=>0,
-        'retweet_count_cache'=>0));
-
-        //Add a post with the parent post 550
-        $builders[] = FixtureBuilder::build('posts', array('post_id'=>552, 'author_user_id'=>19,
-        'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter',
-        'post_text'=>'This is a reply with the wrong parent', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
-        'in_reply_to_post_id'=>550));
-
-        $pdao = new PostMySQLDAO();
-
-        $post = $pdao->getPost(552, 'twitter');
-        //Assert parent post is 550
-        $this->assertEqual($post->in_reply_to_post_id, 550);
-
-        //Change parent post to 551
-        $pdao->assignParent(551, 552, 'twitter');
-        $child_post = $pdao->getPost(552, 'twitter');
-        //Assert parent post is now 551
-        $this->assertEqual($child_post->in_reply_to_post_id, 551);
-
-        //Assert old parent post has one fewer reply total
-        $old_parent = $pdao->getPost(550, 'twitter');
-        $this->assertEqual($old_parent->reply_count_cache, 0);
-
-        //Assert new parent post has one more reply total
-        $new_parent = $pdao->getPost(551, 'twitter');
-        $this->assertEqual($new_parent->reply_count_cache, 1);
     }
 
     public function testGetMostRepliedToPostsInLastWeek() {

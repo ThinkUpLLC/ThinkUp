@@ -38,15 +38,6 @@ interface PostDAO {
     public function getPost($post_id, $network);
 
     /**
-     * Get replies to a username that aren't linked to a specific post by that user
-     * @param str $username
-     * @param str $network
-     * @param int $limit
-     * @return array Array of Post objects with author member variable set
-     */
-    public function getStandaloneReplies($username, $network, $limit, $page = 1);
-
-    /**
      * Get replies to a post
      * @param int $post_id
      * @param str $network
@@ -370,16 +361,6 @@ interface PostDAO {
      * @return array Posts with link object set
      */
     public function getMostRetweetedPosts($user_id, $network, $count, $page=1, $is_public = false);
-
-    /**
-     * Assign parent replied-to post ID to a given post, and increment/decrement reply count cache totals as needed
-     * @param int $parent_id
-     * @param int $orphan_id
-     * @param str $network
-     * @param int $former_parent_id
-     * @return int total affected rows
-     */
-    public function assignParent($parent_id, $orphan_id, $network, $former_parent_id = -1);
 
     /**
      * Get orphan replies--mentions that are not associated with a particular post (not a reply or retweet).

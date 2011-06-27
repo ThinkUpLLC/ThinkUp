@@ -140,42 +140,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $post;
     }
 
-    public function getStandaloneReplies($username, $network, $limit, $page = 1) {
-        $start_on_record = ($page - 1) * $limit;
-
-        $username = '@'.$username;
-        $q = " SELECT p.*, u.*, pub_date + INTERVAL #gmt_offset# hour AS adj_pub_date ";
-        $q .= " FROM #prefix#posts AS p ";
-        $q .= " INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id WHERE ";
-
-        //fulltext search only works for words longer than 4 chars
-        if ( strlen($username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
-            $q .= " MATCH (`post_text`) AGAINST(:username IN BOOLEAN MODE) ";
-        } else {
-            $username = '%'.$username .'%';
-            $q .= " post_text LIKE :username ";
-        }
-
-        $q .= " AND p.network=:network AND in_reply_to_post_id is null ";
-        $q .= " ORDER BY adj_pub_date DESC ";
-        $q .= " LIMIT :start_on_record, :limit";
-        $vars = array(
-            ':username'=>$username,
-            ':network'=>$network,
-            ':limit'=>(int)$limit,
-            ':start_on_record'=>(int)$start_on_record
-        );
-
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $ps = $this->execute($q, $vars);
-        $all_rows = $this->getDataRowsAsArrays($ps);
-        $replies = array();
-        foreach ($all_rows as $row) {
-            $replies[] = $this->setPostWithAuthor($row);
-        }
-        return $replies;
-    }
-
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
     $count= 350, $page = 1) {
         $start_on_record = ($page - 1) * $count;
@@ -1180,35 +1144,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $all_posts[] = $this->setPostWithAuthor($row);
         }
         return $all_posts;
-    }
-
-    public function assignParent($parent_id, $orphan_id, $network, $former_parent_id = -1) {
-        $post = $this->getPost($orphan_id, $network);
-
-        // Check for former_parent_id. The current webfront doesn't send this to us
-        // We may even want to remove $former_parent_id as a parameter and just look it up here always -FL
-        if ($former_parent_id < 0 && isset($post->in_reply_to_post_id)
-        && $this->isPostInDB($post->in_reply_to_post_id, $network)) {
-            $former_parent_id = $post->in_reply_to_post_id;
-        }
-
-        $q = " UPDATE #prefix#posts SET in_reply_to_post_id = :parent_id ";
-        $q .= "WHERE post_id = :orphan_id AND network=:network ";
-        $vars = array(
-            ':parent_id'=>$parent_id,
-            ':orphan_id'=>$orphan_id,
-            ':network'=>$network
-        );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $ps = $this->execute($q, $vars);
-
-        if ($parent_id > 0) {
-            $this->incrementReplyCountCache($parent_id, $network);
-        }
-        if ($former_parent_id > 0) {
-            $this->decrementReplyCountCache($former_parent_id, $network);
-        }
-        return $this->getUpdateCount($ps);
     }
 
     /**
