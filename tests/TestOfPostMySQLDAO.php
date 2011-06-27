@@ -760,26 +760,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
-     * Test getStandaloneReplies
-     */
-    public function testGetStandaloneReplies() {
-        $dao = new PostMySQLDAO();
-        $posts = $dao->getStandaloneReplies('jack', 'twitter', 15);
-
-        $this->assertEqual(sizeof($posts), 10);
-        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9',
-        "Standalone mention");
-        $this->assertEqual($posts[0]->author->username, 'user2', "Post author");
-
-        $posts = $dao->getStandaloneReplies('ev', 'twitter', 15);
-
-        $this->assertEqual(sizeof($posts), 11);
-        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9',
-        "Standalone mention");
-        $this->assertEqual($posts[0]->author->username, 'user2', "Post author");
-    }
-
-    /**
      * Test getRepliesToPost
      */
     public function testGetRepliesToPost() {

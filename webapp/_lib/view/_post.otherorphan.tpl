@@ -42,28 +42,7 @@
             <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
           {/if}
           </span>&nbsp;
-        </div>
-        <!--
-        <div class="small gray">
-          <span class="metaroll"> {$t->author->description|truncate:100}</span>&nbsp;
-        </div>
-        -->
-        
-      {if $logged_in_user}
-      <div id="div{$t->post_id}">
-        <form action="" class="post-setparent">
-          <select name="pid{$t->post_id}" id="pid{$t->post_id}" onselect> <!-- what is this onselect? -->
-            <option disabled="disabled">Is in reply to...</option>
-            <option value="0">No particular post (standalone)</option>
-            {foreach from=$all_tweets key=aid item=a}
-              <option value="{$a->post_id}">{$a->post_text|truncate_for_select}</option>
-            {/foreach}
-          </select>
-          <input type="submit" name="submit" class="button" id="{$t->post_id}" value="Save">
-        </form>
-      </div>
-      {/if}
-      
+        </div>      
     </div>
   </div>
 </div>

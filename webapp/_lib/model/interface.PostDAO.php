@@ -38,15 +38,6 @@ interface PostDAO {
     public function getPost($post_id, $network);
 
     /**
-     * Get replies to a username that aren't linked to a specific post by that user
-     * @param str $username
-     * @param str $network
-     * @param int $limit
-     * @return array Array of Post objects with author member variable set
-     */
-    public function getStandaloneReplies($username, $network, $limit);
-
-    /**
      * Get replies to a post
      * @param int $post_id
      * @param str $network
