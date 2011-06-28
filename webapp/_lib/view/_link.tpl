@@ -15,7 +15,9 @@
   </div>
   <div class="grid_14">
     {if $l->is_image}
+     {if $l->expanded_url}
       <a href="{$l->url}"><div class="pic"><img src="{$l->expanded_url}" /></div></a>
+     {/if}
     {else}
       {if $l->expanded_url}
       <small>
