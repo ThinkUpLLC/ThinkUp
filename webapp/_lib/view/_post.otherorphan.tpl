@@ -42,7 +42,7 @@
             <a href="http://twitter.com/intent/favorite?tweet_id={$t->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
           {/if}
           </span>&nbsp;
-        </div>      
+        </div>
     </div>
   </div>
 </div>

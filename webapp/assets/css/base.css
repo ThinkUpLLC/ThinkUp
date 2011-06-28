@@ -279,8 +279,6 @@ ul.list-plugins li {list-style:none;}
 
 /* --- FORMS ---------------------------------- */
 
-form.post-setparent select {width:350px;}
-form.post-setparent {font-size:0.8em;margin:5px 0;}
 form.login label {font-size:24px;line-height:2.2em;}
 form.login input {margin:0.5em 0 0 0;font-size:1.4em;width:345px;}
 form.login input#login-save {width:230px;}
