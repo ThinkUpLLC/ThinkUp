@@ -35,7 +35,9 @@
     </div>
     <div class="grid_12 omega">
       {if $t->link->is_image}
-        <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
+        {if $t->link->expanded_url}
+         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
+        {/if}
       {/if}
       <div class="post">
         {if $t->post_text}
