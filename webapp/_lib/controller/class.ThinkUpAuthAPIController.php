@@ -31,8 +31,16 @@
  *
  */
 abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
+
+    /**
+     *
+     * @var Owner - owner for all sub classes, mainly so we only make the db call once
+     */
+    static $owner = false;
+
     public function __construct($session_started=false) {
         parent::__construct($session_started);
+        self::$owner = false;
     }
 
     /**
@@ -40,9 +48,8 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
      * If there are no authorization tokens, the request could be allowed if a valid session is found.
      */
     public function control() {
-        if ($this->isAPICallValid()) {
-            $owner_dao = DAOFactory::getDAO('OwnerDAO');
-            $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+        $owner = $this->isAPICallValid();
+        if ($owner) {
             Session::completeLogin($owner);
             return $this->authControl();
         }
@@ -82,25 +89,32 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
     }
 
     /**
-     * Checks the username and API secret from the request, and returns true if they match, and are both valid.
-     * @return boolean Are the provided username and API secret parameters valid?
+     * Checks the owner api_key and API secret from the request, and returns true if they match, and are both valid.
+     * @return boolean Are the provided owner fetched by email and API secret parameters valid?
      */
     private function isAPICallValid() {
-        $logged_in_username = $this->getLoggedInUser();
+        $email = $this->getLoggedInUser();
+        $owner = self::getOwner($email);
         $api_secret = self::getAPISecretFromRequest();
-        return Session::isAPICallAuthorized($logged_in_username, $api_secret);
+        if(isset($owner) && $owner->api_key == $api_secret) {
+            return $owner;
+        } else {
+            return (false);
+        }
     }
 
     /**
      * Returns URL-encoded parameters needed to make an API call.
-     * @param str $username
+     * @param str $email
      * @return str Parameters to use in a URL to make an API call
      */
-    public static function getAuthParameters($username) {
-        $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $pwd_from_db = $owner_dao->getPass($username);
-        $api_secret = Session::getAPISecretFromPassword($pwd_from_db);
-        return 'un='.urlencode($username).'&as='.urlencode($api_secret);
+    public static function getAuthParameters($email) {
+        $owner = self::getOwner($email);
+        if(isset($owner)) {
+            return 'un='.urlencode($email).'&as='.urlencode($owner->api_key);
+        } else {
+            throw new Exception("Invalid email passed to ThinkUpAuthAPIController->getAuthParameters()");
+        }
     }
 
     /**
@@ -110,5 +124,20 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
     protected function isAPICall() {
         $as = $this->getAPISecretFromRequest();
         return !empty($as);
+    }
+
+    /**
+     * Gets an owner by email address
+     * @param str Email address
+     * @return Owner
+     */
+    protected static function getOwner($email) {
+        if(self::$owner) {
+            return self::$owner;
+        } else {
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            self::$owner = $owner_dao->getByEmail($email);
+            return self::$owner;
+        }
     }
 }

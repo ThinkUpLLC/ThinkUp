@@ -19,10 +19,15 @@ Automatically via RSS
 ---------------------
 
 Use your RSS newsreader to capture social media data on a regular basis. At the bottom of the "Update now" page, you'll
-see a Hint which reads "You can automate ThinkUp crawls by subscribing to this RSS feed in your favorite RSS reader."
+see a Hint which reads "You can automate ThinkUp crawls by subscribing to this secret RSS feed in your favorite
+newsreader."
 
 Copy and paste the "this RSS feed" link into your favorite newsreader, and refresh the subscription in order to kick
 off a ThinkUp update.
+
+Anyone who knows your ThinkUp RSS URL can kick off a data update. If you've shared the URL with someone who should not
+have it, you can reset it in :doc:`Settings > Account </userguide/settings/account>`. Resetting your API key will
+disable any future updates from URLs which contain the old API key.
 
 Automatically via Cron
 ----------------------

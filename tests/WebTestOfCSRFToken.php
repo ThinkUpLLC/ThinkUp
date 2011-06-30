@@ -30,7 +30,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 class WebTestOfCSRFToken extends ThinkUpWebTestCase {
-
     public function setUp() {
         parent::setUp();
         $this->builders = self::buildData();
@@ -55,7 +54,6 @@ class WebTestOfCSRFToken extends ThinkUpWebTestCase {
     }
 
     public function testJSToken() {
-
         //Log in as admin
         $this->get($this->url.'/session/login.php');
         $this->setField('email', 'me@example.com');

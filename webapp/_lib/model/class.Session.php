@@ -148,28 +148,6 @@ class Session {
     }
 
     /**
-     * Checks the username and API secret from the request, and returns true if they match, and are both valid.
-     * @return boolean Are the provided username and API secret parameters valid?
-     */
-    public static function isAPICallAuthorized($username, $api_secret) {
-        $owner_dao = DAOFactory::getDAO('OwnerDAO');
-        $pwd_from_db = $owner_dao->getPass($username);
-        if ($pwd_from_db !== false && $api_secret == self::getAPISecretFromPassword($pwd_from_db)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Returns a secret API token that should be used when doing API calls.
-     * @param str $pwd_from_db (hash)
-     * @return str Secret API token
-     */
-    public static function getAPISecretFromPassword($pwd_from_db) {
-        return sha1(sha1($pwd_from_db.self::$api_salt).self::$api_salt);
-    }
-
-    /**
      * Returns a CSRF token that should be used whith _GETs and _POSTs requests.
      * @return str CSRF token
      */

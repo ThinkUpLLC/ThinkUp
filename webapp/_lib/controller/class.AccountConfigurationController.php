@@ -57,6 +57,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         $this->view_mgr->addHelp('application_settings', 'userguide/settings/application');
         $this->view_mgr->addHelp('users', 'userguide/settings/allaccounts');
         $this->view_mgr->addHelp('backup', 'install/backup');
+        $this->view_mgr->addHelp('account', 'userguide/settings/account');
 
         //process password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
@@ -76,6 +77,17 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $owner_dao->updatePassword($this->getLoggedInUser(), $cryptpass);
                 $this->addSuccessMessage("Your password has been updated.", 'password');
             }
+        }
+
+        //reset api_key
+        if (isset($_POST['reset_api_key']) && $_POST['reset_api_key'] == 'Reset API Key') {
+            $this->validateCSRFToken();
+            $api_key = $owner_dao->resetAPIKey($owner->id);
+            if(! $api_key) {
+                throw new Exception("Unbale to update user's api_key, something bad must have happened");
+            }
+            $this->addSuccessMessage("Your API Key has been reset to <strong>" . $api_key . '</strong>', 'api_key');
+            $owner->api_key = $api_key;
         }
 
         // process invite

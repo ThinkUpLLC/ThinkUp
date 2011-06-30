@@ -47,7 +47,7 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
         $builders = $this->buildData();
         $controller = new RSSController(true);
         $_GET['un'] = 'me@example.com';
-        $_GET['as'] = Session::getAPISecretFromPassword('XXX');
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
         $logger = Logger::getInstance();
         $logger->close();
         $config = Config::getInstance();
@@ -64,7 +64,7 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
         $config->setValue('log_location', '/something/that/doesnt/exits');
         $_GET['un'] = 'me@example.com';
-        $_GET['as'] = Session::getAPISecretFromPassword('XXX');
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
         $_SERVER['HTTP_HOST'] = 'http://localhost';
         $results = $controller->go();
         $this->assertPattern("/Error: crawler log is not writable/", $results);
@@ -75,7 +75,8 @@ class TestOfRSSController extends ThinkUpUnitTestCase {
             'id' => 1, 
             'email' => 'me@example.com', 
             'pwd' => 'XXX', 
-            'is_activated' => 1
+            'is_activated' => 1,
+            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
         ));
 
         $instance_builder = FixtureBuilder::build('instances', array(

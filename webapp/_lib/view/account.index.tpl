@@ -88,12 +88,14 @@
       <div class="thinkup-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
         {include file="_usermessage.tpl" field='password'}
+        <div style="float:right;margin:20px">{insert name="help_link" id='account'}</div>
+        <h1>Password</h1><br />
           <form name="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
             <div class="clearfix">
               <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>
               <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
                 <input name="oldpass" type="password" id="oldpass">
-                {insert name="csrf_token"}
+                {insert name="csrf_token"}<!-- reset password -->
               </div>
             </div>
             <div class="clearfix">
@@ -120,6 +122,41 @@
                 <input type="submit" id="login-save" name="changepass" value="Change password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
               </div>
             </div>
+          </form>
+
+        <h1>API Key</h1><br />
+          {include file="_usermessage.tpl" field='api_key'}
+
+<p>
+External applications use your ThinkUp API key for authentication. For example, 
+RSS news readers can update your ThinkUp
+data using a special URL which contains this key. You can reset your key to something new here. 
+<a href="http://thinkupapp.com/docs/userguide/settings/account.html">Learn more.</a><br /><br />
+</p>
+
+          <div style="text-align: center; border-top: solid gray 1px; padding: 20px 0px 20px 0px;">
+             <strong>Your Current ThinkUp API Key:</strong>
+             <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
+             <span id="show_api_key">
+             <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();">
+             Click to view</a>
+             </span>
+          </div> 
+
+          <form method="post" action="index.php?m=manage#instances" class="prepend_20 append_20" 
+          style="border-top: solid gray 1px; padding: 20px 0px 0px 0px;" id="api-key-form">
+      <div class="grid_10 prefix_9 left">
+                <input type="hidden" name="reset_api_key" value="Reset API Key" />
+                <span id="apikey_conf" style="display: none;">
+                Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
+                </span>
+                <input type="button" value="Reset Your API Key" 
+                class="tt-button ui-state-default ui-priority-secondary ui-corner-all"
+                {literal}
+                onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
+                {/literal}
+              </div>
+              {insert name="csrf_token"}<!-- reset api_key -->
           </form>
         </div>
       </div>

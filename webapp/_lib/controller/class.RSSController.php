@@ -55,8 +55,9 @@ class RSSController extends ThinkUpAuthAPIController {
         $freshest_instance = $instance_dao->getInstanceFreshestOne();
         $crawler_last_run = strtotime($freshest_instance->crawler_last_run);
         if ($crawler_last_run < time() - $rss_crawler_refresh_rate*60) {
-            $crawler_run_url = $base_url.'run.php?'.ThinkUpAuthAPIController::getAuthParameters(
-            $this->getLoggedInUser());
+            $email = $this->getLoggedInUser();
+            $owner = parent::getOwner($email);
+            $crawler_run_url = $base_url.'run.php?'.sprintf('un=%s&as=%s', $email, $owner->api_key);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $crawler_run_url);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // seconds
