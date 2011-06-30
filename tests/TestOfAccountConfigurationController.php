@@ -62,7 +62,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $session = new Session();
         $cryptpass = $session->pwdcrypt("oldpassword");
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>$cryptpass));
+        'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>$cryptpass, 
+        'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
 
         $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp J. Admin',
         'email'=>'admin@example.com', 'is_activated'=>1, 'is_admin'=>1));
@@ -445,6 +446,53 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
             $this->assertIsA($e, 'InvalidCSRFTokenException');
         }
 
+    }
+
+
+    public function testResetAPIKey() {
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['reset_api_key'] = 'Reset API Key';
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
+
+        $controller = new AccountConfigurationController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertIsA($v_mgr->getTemplateDataItem('installed_plugins'), 'array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 6);
+
+        $owner = $v_mgr->getTemplateDataItem('owner');
+        $this->assertIsA($owner, 'Owner');
+        $this->assertTrue(!$owner->is_admin);
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
+        $this->assertEqual($owner->email, 'me@example.com');
+        $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual($success_msgs['api_key'], 'Your API Key has been reset to <strong>' . $owner->api_key .
+        '</strong>');
+
+        // Has API Key actually changed
+        $this->assertNotEqual('c9089f3c9adaf0186f6ffb1ee8d6501c', $owner->api_key);
+        
+        //not set: owners, body, success_msg, error_msg
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('error_msg'));
+    }
+
+    public function testResetAPIKeyBadCSRFToken() {
+        $this->simulateLogin('me@example.com', false, true);
+        $_POST['reset_api_key'] = 'Reset API Key';
+        $_GET['csrf_token'] = parent::CSRF_TOKEN . 'lalla';
+
+        $controller = new AccountConfigurationController(true);
+        $results = $controller->go();
+            try {
+            $results = $controller->control();
+            $this->fail("should throw InvalidCSRFTokenException");
+        } catch(InvalidCSRFTokenException $e) {
+            $this->assertIsA($e, 'InvalidCSRFTokenException');
+        }
     }
 
     public function testAuthControlLoggedInChangePasswordSuccess() {

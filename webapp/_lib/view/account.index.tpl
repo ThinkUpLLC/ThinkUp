@@ -93,7 +93,7 @@
               <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>
               <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
                 <input name="oldpass" type="password" id="oldpass">
-                {insert name="csrf_token"}
+                {insert name="csrf_token"}<!-- reset password -->
               </div>
             </div>
             <div class="clearfix">
@@ -120,6 +120,40 @@
                 <input type="submit" id="login-save" name="changepass" value="Change password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
               </div>
             </div>
+          </form>
+
+          {include file="_usermessage.tpl" field='api_key'}
+
+          <div style="text-align: center; border-top: solid gray 1px; padding: 20px 0px 20px 0px;">
+             <strong>Current API Key:</strong>
+             <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
+             <span id="show_api_key">
+             <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();">
+             Click here to view API Key</a>
+             </span>
+          </div> 
+
+          <form method="post" action="index.php?m=manage#instances" class="prepend_20 append_20" 
+          style="border-top: solid gray 1px; padding: 20px 0px 0px 0px;" id="api-key-form">
+              <div class="grid_9 prefix_1 left">
+                <strong>Generate a new API Key</strong><br />
+                This key is used by external applications for authentication. Currently, the 
+                updating data <a href="http://thinkupapp.com/docs/userguide/datacapture.html">Automatically via RSS</a> 
+                functionality relies on this key, so if you update the API Key you will need to update
+                any RSS clients that use the RSS feed.
+              </div>
+              <div class="prefix_10 left">
+                <input type="hidden" name="reset_api_key" value="Reset API Key" />
+                <span id="apikey_conf" style="display: none;">
+                Note: You will need to update any crawling (Automatically via RSS) feeds you have configured if you reset your API Key.
+                </span>
+                <input type="button" value="Reset API Key" 
+                class="tt-button ui-state-default ui-priority-secondary ui-corner-all"
+                {literal}
+                onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
+                {/literal}
+              </div>
+              {insert name="csrf_token"}<!-- reset api_key -->
           </form>
         </div>
       </div>
@@ -159,7 +193,8 @@
         <h1>Invite User</h1>
         {include file="_usermessage.tpl" field='invite'}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
-                {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
+                {insert name="csrf_token"}<!-- invite token -->
+                <input type="submit" id="login-save" name="invite" value="Create Invitation" 
                 class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
           </form>
         </div>

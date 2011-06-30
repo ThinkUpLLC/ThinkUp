@@ -78,6 +78,17 @@ class AccountConfigurationController extends ThinkUpAuthController {
             }
         }
 
+        //reset api_key
+        if (isset($_POST['reset_api_key']) && $_POST['reset_api_key'] == 'Reset API Key') {
+            $this->validateCSRFToken();
+            $api_key = $owner_dao->resetAPIKey($owner->id);
+            if(! $api_key) {
+                throw new Exception("Unbale to update user's api_key, something bad must have happened");
+            }
+            $this->addSuccessMessage("Your API Key has been reset to <strong>" . $api_key . '</strong>', 'api_key');
+            $owner->api_key = $api_key;
+        }
+
         // process invite
         if (isset($_POST['invite']) && ( $_POST['invite'] == 'Create Invitation' ) ) {
             // verify CSRF token

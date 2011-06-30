@@ -30,20 +30,27 @@
  */
 class UpdateNowController extends ThinkUpAuthAPIController {
     public function authControl() {
+        $this->disableCaching(); // we don't want to cache the rss link with api key as it can get updated
         Utils::defineConstants();
         $this->setContentType('text/html; charset=UTF-8');
         $this->setPageTitle("ThinkUp Crawler");
         $this->setViewTemplate('crawler.updatenow.tpl');
         $whichphp = @exec('which php');
         $php_path =  (!empty($whichphp))?$whichphp:'php';
-        $rss_url = THINKUP_BASE_URL.'rss.php?'.ThinkUpAuthAPIController::getAuthParameters($this->getLoggedInUser());
+        $email = $this->getLoggedInUser();
+        $owner = parent::getOwner($email);
+        $rss_url = THINKUP_BASE_URL . sprintf('rss.php?un=%s&as=%s', $email, $owner->api_key);
+        $config = Config::getInstance();
+        $site_root_path = $config->getValue('site_root_path');
         $this->addInfoMessage('<b>Hint</b><br />You can automate ThinkUp crawls by subscribing to '.
             '<strong><a href="'.$rss_url.'" target="_blank">this RSS feed</a></strong> '.
-            'in your favorite RSS reader.<br /><br /> Alternately, use the command below to set up a cron job that '.
+            'in your favorite RSS reader.' .
+            '<br /><br />Alternately, use the command below to set up a cron job that '.
             'runs hourly to update your posts. (Be sure to change yourpassword to your real password!)<br /><br />'.
             '<code style="font-family:Courier">cd '.THINKUP_WEBAPP_PATH.
             'crawler/;export THINKUP_PASSWORD=yourpassword; '.$php_path.' crawl.php '.$this->getLoggedInUser().
-            '</code>');
+            '</code><br /><br />' . 'You can reset the API key for the RSS feed ' .
+            '<a href="' . $site_root_path . 'account/index.php?m=manage#instances"><strong>Here</strong></a>.');
         if (isset($_GET['log']) && $_GET['log'] == 'full') {
             $this->addToView('log', 'full');
         }

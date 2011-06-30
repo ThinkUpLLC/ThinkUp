@@ -36,6 +36,7 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $_SERVER['HTTP_HOST'] = 'http://localhost';
+        ThinkUpAuthAPIController::$owner = false;
     }
 
     public function testConstructor() {
@@ -63,20 +64,23 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         $this->assertPattern('/You must <a href="'.$escaped_site_root_path.
         'session\/login.php">log in<\/a> to do this./', $results);
 
+
         // Wrong API secret provided
         $_GET['as'] = 'fail_me';
         $results = $controller->go();
         $this->assertPattern("/UnauthorizedUserException: Unauthorized API call/", $results);
 
+        $controller = new TestAuthAPIController(true);
+
         // Wrong username provided
-        $_GET['as'] = Session::getAPISecretFromPassword('XXX');
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
         $_GET['un'] = 'fail_me';
         $results = $controller->go();
         $this->assertPattern("/UnauthorizedUserException: Unauthorized API call/", $results);
 
         // Working request
         $_GET['un'] = 'me@example.com';
-        $_GET['as'] = Session::getAPISecretFromPassword('XXX');
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
         $results = $controller->go();
         $this->assertPattern('/{"result":"success"}/', $results);
 
@@ -87,7 +91,7 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         // Also, the result will be returned as HTML, not JSON
         unset($_GET['as']);
         $results = $controller->go();
-        $this->assertPattern('/<html/', $results);
+        $this->assertPattern('/<html><body>Success<\/body><\/html>/', $results);
 
         // And just to make sure, if we 'logout', we should be denied access now
         Session::logout();
@@ -101,7 +105,7 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         $builders = $this->buildData();
         $controller = new TestAuthAPIController(true);
         $_POST['un'] = 'me@example.com';
-        $_POST['as'] = Session::getAPISecretFromPassword('XXX');
+        $_POST['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
         $results = $controller->go();
         $this->assertPattern('/{"result":"success"}/', $results);
     }
@@ -109,7 +113,7 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
     public function testGetAuthParameters() {
         $builders = $this->buildData();
         $this->assertEqual(ThinkUpAuthAPIController::getAuthParameters('me@example.com'),
-        'un=me%40example.com&as=1829cc1b13f920a05fb201e8d2a9e4dc58b669b1');
+        'un=me%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c');
     }
 
     public function testIsAPICall() {
@@ -118,7 +122,7 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
 
         // API call (JSON)
         $_GET['un'] = 'me@example.com';
-        $_GET['as'] = Session::getAPISecretFromPassword('XXX');
+        $_GET['as'] = 'c9089f3c9adaf0186f6ffb1ee8d6501c';
         $results = $controller->go();
         $this->assertPattern('/{"result":"success"}/', $results);
         $this->assertFalse(strpos($results, '<html'));
@@ -136,7 +140,7 @@ class TestOfTestAuthAPIController extends ThinkUpUnitTestCase {
         $owner_builder = FixtureBuilder::build('owners', array(
             'id' => 1, 
             'email' => 'me@example.com', 
-            'pwd' => 'XXX', 
+            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c', 
             'is_activated' => 1
         ));
 

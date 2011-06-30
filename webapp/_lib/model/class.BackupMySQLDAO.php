@@ -78,7 +78,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                         $q = "LOAD DATA INFILE '$infile' INTO TABLE $table";
                         $stmt = $this->execute($q);
                         if (! $stmt) {
-                            throw new Exception("unbale to load data file: " . $infile);
+                            throw new Exception("unable to load data file: " . $infile);
                         }
                         $stmt->closeCursor();
                         unlink($infile);
