@@ -152,76 +152,84 @@ interface FollowDAO {
      * @param int $count
      * @return array Numbered keys, with arrays - named keys
      */
-    public function getMostFollowedFollowers($user_id, $network, $count = 20);
+    public function getMostFollowedFollowers($user_id, $network, $count = 20, $page = 1);
 
     /**
      * Gets the followes with highest follower:friend count.
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page defaults to 1
      * @return array - numbered keys, with arrays - named keys
      */
-    public function getLeastLikelyFollowers($user_id, $network, $count = 20);
+    public function getLeastLikelyFollowers($user_id, $network, $count = 20, $page = 1);
 
     /**
      * Gets the followers with the earliest join date.
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page defaults to 1
      * @return array - numbered keys, with arrays - named keys
      */
-    public function getEarliestJoinerFollowers($user_id, $network, $count = 20);
+    public function getEarliestJoinerFollowers($user_id, $network, $count = 20, $page = 1);
 
     /**
      * Gets the friends with the highest tweet per day count.
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page defaults to 1
      * @return array - numbered keys, with arrays - named keys
      */
-    public function getMostActiveFollowees($user_id, $network, $count = 20);
+    public function getMostActiveFollowees($user_id, $network, $count = 20, $page = 1);
 
     /**
      * Gets a list of inactive friends.
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page defaults to 1
      * @return array - numbered keys, with arrays - named keys
      */
-    public function getFormerFollowees($user_id, $network, $count = 20);
+    public function getFormerFollowees($user_id, $network, $count = 20, $page = 1);
 
     /**
      * Gets a list of inactive followers.
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page defaults to 1
      * @return array - numbered keys, with arrays - named keys
      */
-    public function getFormerFollowers($user_id, $network, $count = 20);
+    public function getFormerFollowers($user_id, $network, $count = 20, $page = 1);
 
     /**
      * Gets the followers with the lowest tweet-per-day ratio.
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page defaults to 1
      * @return array - numbered keys, with arrays - named keys
      */
-    public function getLeastActiveFollowees($user_id, $network, $count = 20);
+    public function getLeastActiveFollowees($user_id, $network, $count = 20, $page = 1);
 
     /**
      * Gets the friends with the most followers
      * @param int $user_id
      * @param str $network
      * @param int $count
+     * @param int $page defaults to 1
      * @return array - numbered keys, with arrays - named keys
      */
-    public function getMostFollowedFollowees($user_id, $network, $count = 20);
+    public function getMostFollowedFollowees($user_id, $network, $count = 20, $page = 1);
 
     /**
      * Gets friends that the two inputed user IDs both follow.
      * @param int $uid
      * @param int $instance_uid
      * @param str $network
+     * @param int $page defaults to 1
      * @return array - numbered keys, with arrays - named keys
      */
     public function getMutualFriends($uid, $instance_uid, $network);

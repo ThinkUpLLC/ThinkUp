@@ -44,7 +44,7 @@ interface PostDAO {
      * @param int $limit
      * @return array Array of Post objects with author member variable set
      */
-    public function getStandaloneReplies($username, $network, $limit);
+    public function getStandaloneReplies($username, $network, $limit, $page = 1);
 
     /**
      * Get replies to a post
@@ -244,6 +244,8 @@ interface PostDAO {
      * @param str $direction either "DESC" or "ASC". Defaults to DESC.
      * @param bool $iterator Specify whether or not you want a post iterator returned. Default to
      * false.
+     * @param int $page The page of results to return. Defaults to 1. Pages start
+     * at 1, not 0.
      * @param bool $is_public Whether or not these results are going to be displayed publicly. Defaults to false.
      * @return array Posts with link object set
      */
@@ -386,12 +388,14 @@ interface PostDAO {
      * @param str $network Default 'twitter'
      * @return array Post objects with author set
      */
-    public function getOrphanReplies($username, $count, $network = 'twitter');
+    public function getOrphanReplies($username, $count, $network = 'twitter', $page = 1);
 
     /**
      * Get stray replied-to posts--posts that are listed in the in_repy_to_post_id field, but aren't in the posts table
      * @param int $author_id
      * @param str $network
+     * @param int $page The page of results to return. Defaults to 1. Pages start
+     * at 1, not 0.
      * @return array $row['in_reply_to_post_id']
      */
     public function getStrayRepliedToPosts($author_id, $network);
