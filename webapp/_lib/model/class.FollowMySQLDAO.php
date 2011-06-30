@@ -244,17 +244,20 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataRowAsArray($ps);
     }
 
-    public function getMostFollowedFollowers($user_id, $network, $count = 20) {
+    public function getMostFollowedFollowers($user_id, $network, $count = 20, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = " SELECT *, ".$this->getAverageTweetCount()." ";
         $q .= " FROM  #prefix#follows AS f INNER JOIN #prefix#users AS u ";
         $q .= " ON u.user_id = f.follower_id ";
         $q .= " WHERE f.user_id = :userid AND f.network = :network and u.network=f.network AND active=1 ";
         $q .= " ORDER BY u.follower_count DESC, u.user_name DESC ";
-        $q .= " LIMIT :count ;";
+        $q .= " LIMIT :start_on_record, :count ;";
         $vars = array(
             ':userid'=>$user_id, 
             ':network'=>$network,
-            ':count'=>(int)$count
+            ':count'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -263,7 +266,9 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
     }
 
     //TODO: Remove hardcoded 10k follower threshold in query below
-    public function getLeastLikelyFollowers($user_id, $network, $count = 20) {
+    public function getLeastLikelyFollowers($user_id, $network, $count = 20, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = "SELECT u.*, ROUND(100*friend_count/follower_count,4) ";
         $q .= "AS LikelihoodOfFollow, ".$this->getAverageTweetCount()." ";
         $q .= "FROM #prefix#users AS u INNER JOIN #prefix#follows AS f ";
@@ -271,27 +276,31 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         $q .= "WHERE f.user_id = :userid AND f.network=:network AND f.network=u.network AND active=1 ";
         $q .= "AND follower_count > 10000 AND friend_count > 0 ";
         $q .= "ORDER BY LikelihoodOfFollow ASC, u.follower_count DESC ";
-        $q .= "LIMIT :count ;";
+        $q .= "LIMIT :start_on_record, :count ;";
         $vars = array(
             ':userid'=>$user_id, 
             ':network'=>$network,
-            ':count'=>(int)$count
+            ':count'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsArrays($ps);
     }
 
-    public function getEarliestJoinerFollowers($user_id, $network, $count = 20) {
+    public function getEarliestJoinerFollowers($user_id, $network, $count = 20, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = " SELECT u.*, ".$this->getAverageTweetCount()." ";
         $q .= " FROM #prefix#users AS u ";
         $q .= " INNER JOIN #prefix#follows f ON u.user_id = f.follower_id ";
         $q .= " WHERE f.user_id = :userid AND f.network=:network AND u.network=f.network AND active=1 ";
-        $q .= " ORDER BY u.user_id ASC LIMIT :count ;";
+        $q .= " ORDER BY u.user_id ASC LIMIT :start_on_record, :count ;";
         $vars = array(
             ':userid'=>$user_id, 
             ':network'=>$network,
-            ':count'=>(int)$count
+            ':count'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -299,16 +308,19 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataRowsAsArrays($ps);
     }
 
-    public function getMostActiveFollowees($user_id, $network, $count = 20) {
+    public function getMostActiveFollowees($user_id, $network, $count = 20, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = " SELECT u.*, ".$this->getAverageTweetCount()." ";
         $q .= " FROM #prefix#users AS u ";
         $q .= " INNER JOIN #prefix#follows AS f ON f.user_id = u.user_id ";
         $q .= " WHERE f.follower_id = :userid AND f.network=:network AND u.network=f.network AND active=1 ";
-        $q .= " ORDER BY avg_tweets_per_day DESC LIMIT :count ";
+        $q .= " ORDER BY avg_tweets_per_day DESC LIMIT :start_on_record, :count ";
         $vars = array(
             ':userid'=>$user_id, 
             ':network'=>$network,
-            ':count'=>(int)$count
+            ':count'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -316,15 +328,18 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataRowsAsArrays($ps);
     }
 
-    public function getFormerFollowees($user_id, $network, $count = 20) {
+    public function getFormerFollowees($user_id, $network, $count = 20, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = " SELECT u.* FROM #prefix#users AS u ";
         $q .= " INNER JOIN #prefix#follows AS f ON f.user_id = u.user_id ";
         $q .= " WHERE f.follower_id = :userid AND active=0 AND f.network=:network AND f.network=u.network ";
-        $q .= " ORDER BY u.follower_count DESC LIMIT :count";
+        $q .= " ORDER BY u.follower_count DESC LIMIT :start_on_record, :count";
         $vars = array(
             ':userid'=>$user_id, 
             ':network'=>$network,
-            ':count'=>(int)$count
+            ':count'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -332,14 +347,17 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataRowsAsArrays($ps);
     }
 
-    public function getFormerFollowers($user_id, $network, $count = 20) {
+    public function getFormerFollowers($user_id, $network, $count = 20, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q = "select u.* FROM #prefix#users u inner join #prefix#follows f ";
         $q .= "on f.follower_id = u.user_id WHERE f.user_id = :userid AND f.network=:network AND active=0 ";
-        $q .= " AND f.network=u.network order by u.follower_count DESC LIMIT :count ";
+        $q .= " AND f.network=u.network order by u.follower_count DESC LIMIT :start_on_record, :count ";
         $vars = array(
             ':userid'=>$user_id, 
             ':network'=>$network,
-            ':count'=>(int)$count
+            ':count'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -347,17 +365,20 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataRowsAsArrays($ps);
     }
 
-    public function getLeastActiveFollowees($user_id, $network, $count = 20) {
+    public function getLeastActiveFollowees($user_id, $network, $count = 20, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = " SELECT *, ".$this->getAverageTweetCount()." ";
         $q .= " FROM #prefix#users AS u ";
         $q .= " INNER JOIN #prefix#follows AS f ON f.user_id = u.user_id ";
         $q .= " WHERE f.follower_id = :userid AND f.network=:network AND f.network=u.network AND active=1 ";
         $q .= " ORDER BY avg_tweets_per_day ASC, u.user_name ASC ";
-        $q .= " LIMIT :count ";
+        $q .= " LIMIT :start_on_record, :count ";
         $vars = array(
             ':userid'=>$user_id, 
             ':network'=>$network,
-            ':count'=>(int)$count
+            ':count'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -365,16 +386,19 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
         return $this->getDataRowsAsArrays($ps);
     }
 
-    public function getMostFollowedFollowees($user_id, $network, $count = 20) {
+    public function getMostFollowedFollowees($user_id, $network, $count = 20, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $q  = " SELECT *, ".$this->getAverageTweetCount()." ";
         $q .= " FROM #prefix#users AS u ";
         $q .= " INNER JOIN #prefix#follows AS f ON f.user_id = u.user_id ";
         $q .= " WHERE f.follower_id = :userid AND f.network=:network AND u.network = f.network AND active=1 ";
-        $q .= " ORDER BY follower_count DESC LIMIT :count ";
+        $q .= " ORDER BY follower_count DESC LIMIT :start_on_record, :count ";
         $vars = array(
             ':userid'=>$user_id, 
             ':network'=>$network,
-            ':count'=>(int)$count
+            ':count'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);

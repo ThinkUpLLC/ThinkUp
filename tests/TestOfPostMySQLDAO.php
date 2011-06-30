@@ -363,6 +363,13 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $replies = $dao ->getOrphanReplies('jack', 10, 'twitter');
         $this->assertEqual(sizeof($replies), 10);
         $this->assertEqual($replies[0]->post_text, "Hey @ev and @jack should fix Twitter - post 9");
+
+        //test paging
+        $replies = $dao ->getOrphanReplies('ev', 1, 'twitter', $page = 1);
+        $this->assertEqual($replies[0]->post_text, "Hey @ev and @jack should fix Twitter - post 9");
+
+        $replies = $dao ->getOrphanReplies('ev', 1, 'twitter', $page = 2);
+        $this->assertEqual($replies[0]->post_text, "Hey @ev and @jack should fix Twitter - post 8");
     }
 
     /**
@@ -777,6 +784,15 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9',
         "Standalone mention");
         $this->assertEqual($posts[0]->author->username, 'user2', "Post author");
+
+        //test paging
+        $posts = $dao->getStandaloneReplies('jack', 'twitter', 1, $page = 1);
+        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 9',
+        "Standalone mention");
+
+        $posts = $dao->getStandaloneReplies('jack', 'twitter', 1, $page = 2);
+        $this->assertEqual($posts[0]->post_text, 'Hey @ev and @jack should fix Twitter - post 8',
+        "Standalone mention");
     }
 
     /**
@@ -2391,7 +2407,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'is_protected' => false,
             'source' => 'web',
             'location' => null,
-            'description' => '… ',
+            'description' => 'â€¦ ',
             'url' => 'http://www.therainforestsite.com',
             'author_friends_count' => 239,
             'author_post_count' => 26,
@@ -2450,7 +2466,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'follower_count' => 14,
             'is_protected' => false,
             'location' => null,
-            'description' => '… ',
+            'description' => 'â€¦ ',
             'friend_count' => 239,
             'post_count' => 26,
             'joined' => '2010-10-12 13:12:48',

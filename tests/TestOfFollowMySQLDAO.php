@@ -210,6 +210,13 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertEqual($result[0]["user_id"], 1234567890);
         $this->assertEqual($result[1]["user_id"], 1623457890);
+
+        //test paging
+        $result = $this->DAO->getMostFollowedFollowers(1324567890, 'twitter', 1, $page = 1);
+        $this->assertEqual($result[0]["user_id"], 1234567890);
+
+        $result = $this->DAO->getMostFollowedFollowers(1324567890, 'twitter', 1, $page = 2);
+        $this->assertEqual($result[0]["user_id"], 1623457890);
     }
 
     public function testGetLeastLikelyFollowers(){
@@ -219,6 +226,13 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($result), 2);
         $this->assertEqual($result[0]["user_id"], 1234567890);
         $this->assertEqual($result[1]["user_id"], 1623457890);
+
+        //test paging
+        $result = $this->DAO->getLeastLikelyFollowers(1324567890, 'twitter', 1, $page = 1);
+        $this->assertEqual($result[0]["user_id"], 1234567890);
+
+        $result = $this->DAO->getLeastLikelyFollowers(1324567890, 'twitter', 1, $page = 2);
+        $this->assertEqual($result[0]["user_id"], 1623457890);
     }
 
     public function testGetEarliestJoinerFollowers(){
@@ -228,6 +242,13 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($result), 2);
         $this->assertEqual($result[0]['user_id'], 1234567890);
         $this->assertEqual($result[1]['user_id'], 1623457890);
+
+        //test paging
+        $result = $this->DAO->getEarliestJoinerFollowers(1324567890, 'twitter', 1, $page = 1);
+        $this->assertEqual($result[0]['user_id'], 1234567890);
+
+        $result = $this->DAO->getEarliestJoinerFollowers(1324567890, 'twitter', 1, $page = 2);
+        $this->assertEqual($result[0]['user_id'], 1623457890);
     }
 
     public function testGetMostActiveFollowees(){
@@ -237,6 +258,13 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($result), 2);
         $this->assertEqual($result[0]['user_id'], 1324567890);
         $this->assertEqual($result[1]['user_id'], 1623457890);
+
+        //test paging
+        $result = $this->DAO->getMostActiveFollowees(1234567890, 'twitter', 1, $page = 1);
+        $this->assertEqual($result[0]['user_id'], 1324567890);
+
+        $result = $this->DAO->getMostActiveFollowees(1234567890, 'twitter', 1, $page = 2);
+        $this->assertEqual($result[0]['user_id'], 1623457890);
     }
 
     public function testGetFormerFollowees(){

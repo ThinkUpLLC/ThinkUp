@@ -140,7 +140,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $post;
     }
 
-    public function getStandaloneReplies($username, $network, $limit) {
+    public function getStandaloneReplies($username, $network, $limit, $page = 1) {
+        $start_on_record = ($page - 1) * $limit;
+
         $username = '@'.$username;
         $q = " SELECT p.*, u.*, pub_date + INTERVAL #gmt_offset# hour AS adj_pub_date ";
         $q .= " FROM #prefix#posts AS p ";
@@ -156,11 +158,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         $q .= " AND p.network=:network AND in_reply_to_post_id is null ";
         $q .= " ORDER BY adj_pub_date DESC ";
-        $q .= " LIMIT :limit";
+        $q .= " LIMIT :start_on_record, :limit";
         $vars = array(
             ':username'=>$username,
             ':network'=>$network,
-            ':limit'=>(int)$limit
+            ':limit'=>(int)$limit,
+            ':start_on_record'=>(int)$start_on_record
         );
 
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
@@ -1145,7 +1148,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $iterator = false, $is_public);
     }
 
-    public function getOrphanReplies($username, $count, $network = "twitter") {
+    public function getOrphanReplies($username, $count, $network = "twitter", $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
         $username = "@".$username;
         $q = " SELECT p.* , u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= " FROM #prefix#posts p ";
@@ -1160,11 +1165,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $q .= " AND in_reply_to_post_id is null ";
         $q .= " AND in_retweet_of_post_id is null ";
         $q .= " AND p.network = :network ";
-        $q .= " ORDER BY pub_date DESC LIMIT :limit;";
+        $q .= " ORDER BY pub_date DESC LIMIT :start_on_record, :limit;";
         $vars = array(
             ':username'=>$username,
             ':network'=>$network,
-            ':limit'=>(int)$count
+            ':limit'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
