@@ -181,7 +181,7 @@ $(function() {
     $(".btnPub").click(function() {
       var element = $(this);
       var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token;
+      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle public on
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
@@ -199,7 +199,7 @@ $(function() {
     $(".btnPriv").click(function() {
       var element = $(this);
       var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token;
+      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle public off
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
@@ -219,7 +219,7 @@ $(function() {
     $(".btnPlay").click(function() {
       var element = $(this);
       var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token;
+      var dataString = 'u=' + u + "&p=1&csrf_token=" + window.csrf_token; // toggle active on
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
@@ -237,7 +237,7 @@ $(function() {
     $(".btnPause").click(function() {
       var element = $(this);
       var u = element.attr("id");
-      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token;
+      var dataString = 'u=' + u + "&p=0&csrf_token=" + window.csrf_token; // toggle active off
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
@@ -255,7 +255,7 @@ $(function() {
 
   $(function() {
     var activate = function(u) {
-      var dataString = 'pid=' + u + "&a=1&csrf_token=" + window.csrf_token;
+      var dataString = 'pid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle plugin on
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
@@ -282,7 +282,7 @@ $(function() {
     };
 
     var deactivate = function(u) {
-      var dataString = 'pid=' + u + "&a=0&csrf_token=" + window.csrf_token;
+      var dataString = 'pid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle plugin off
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-pluginactive.php",
@@ -321,7 +321,7 @@ $(function() {
     var activateOwner = function(u) {
       //removing the "user" from id here to stop conflict with plugin    
       u = u.substr(4);
-      var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token;
+      var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",
@@ -350,7 +350,7 @@ $(function() {
     var deactivateOwner = function(u) {
       //removing the "user" from id here to stop conflict with plugin
       u = u.substr(4);
-      var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token;
+      var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle owner active off
       $.ajax({
         type: "GET",
         url: "{/literal}{$site_root_path}{literal}account/toggle-owneractive.php",

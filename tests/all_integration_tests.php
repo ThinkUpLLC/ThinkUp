@@ -36,6 +36,7 @@ $web_tests->add(new WebTestOfApplicationSettings());
 $web_tests->add(new WebTestOfCaptchaImage());
 $web_tests->add(new WebTestOfChangePassword());
 $web_tests->add(new WebTestOfCrawlerRun());
+$web_tests->add(new WebTestOfCSRFToken());
 $web_tests->add(new WebTestOfDashboard());
 $web_tests->add(new WebTestOfDeleteInstance());
 $web_tests->add(new WebTestOfLogin());

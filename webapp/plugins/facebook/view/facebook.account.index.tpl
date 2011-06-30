@@ -17,7 +17,7 @@
         </div>
         <div class="grid_8 right">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
-            {insert name="csrf_token"}
+            {insert name="csrf_token"}<!-- delete account csrf token -->
             <input onClick="return confirm('Do you really want to delete this Facebook account?');"  type="submit" name="action" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="delete" /></form></span>
         </div>
     </div>
@@ -25,7 +25,7 @@
     <br />
 
     <h2 class="subhead">Facebook Pages</h2>
-    {if count($owner_instance_pages) > 0 }
+    {if isset($owner_instance_pages) && count($owner_instance_pages) > 0 }
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
@@ -39,6 +39,7 @@
         </div>
         <div class="grid_8 right">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
+            {insert name="csrf_token"}<!-- delete page csrf token -->
             <input onClick="return confirm('Do you really want to delete this page?');"  type="submit" name="action" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="delete" /></form></span>
         </div>
 
