@@ -190,7 +190,7 @@
                 <div id="post-replies-div"{if $search_on} style="display: none;"{/if}><br />
                   <div id="post_replies clearfix">
                   {foreach from=$replies key=tid item=t name=foo}
-                    {include file="_post.clean.tpl" t=$t sort='no' scrub_reply_username=true reply_count=$post->reply_count_cache}
+                    {include file="_post.author_no_counts.tpl" post=$t scrub_reply_username=true}
                   {/foreach}
                 
                   </div>

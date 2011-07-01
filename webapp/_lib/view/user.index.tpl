@@ -77,7 +77,7 @@
         <div class="clearfix">
             <h2>Posts</h2>
             {foreach from=$user_statuses key=tid item=t name=foo}
-              {include file="_post.lite.tpl" t=$t}
+              {include file="_post.counts_no_author.tpl" t=$t}
             {/foreach}
 
            <div class="float-l">

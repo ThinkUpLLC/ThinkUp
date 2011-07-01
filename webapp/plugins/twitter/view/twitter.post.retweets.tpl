@@ -122,7 +122,7 @@
 <div class="prepend">
   <div class="append_20 clearfix bt"><br />
     {foreach from=$retweets key=tid item=t name=foo}
-      {include file="_post.clean.tpl" t=$t sort='no' scrub_reply_username=false}
+      {include file="_post.author_no_counts.tpl" post=$t scrub_reply_username=false}
     {/foreach}
   </div>
 </div>

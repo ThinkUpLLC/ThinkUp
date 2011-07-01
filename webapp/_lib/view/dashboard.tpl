@@ -78,7 +78,7 @@
 
               {if $recent_posts}
                 {foreach from=$recent_posts key=tid item=t name=foo}
-                  {include file="_post.lite.tpl" t=$t headings="NONE"}
+                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
                 {/foreach}
               {/if}
 
@@ -122,7 +122,7 @@
               <div class="clearfix">
                 <h2 >This Week's Most Replied-To Posts</h2>
                 {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
-                  {include file="_post.lite.tpl" t=$t headings="NONE"}
+                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
                 {/foreach}
               </div>
             {/if}
@@ -150,7 +150,7 @@
               <div class="clearfix">
                 <h2>This Week's Most Retweeted</h2>
                 {foreach from=$most_retweeted_1wk key=tid item=t name=foo}
-                  {include file="_post.lite.tpl" t=$t headings="NONE"}
+                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
                 {/foreach}
               </div>
             {/if}

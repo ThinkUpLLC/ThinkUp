@@ -34,15 +34,16 @@
 {if $all_tweets and ($display eq 'tweets-all' or $display eq 'tweets-questions')}
 <div id="all-posts-div">
   {foreach from=$all_tweets key=tid item=t name=foo}
-    {include file="_post.tpl" t=$t}
+    {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
   {/foreach}
 </div>
 {/if}
 
 {if $all_tweets and $display eq 'ftweets-all'}
 <div id="all-posts-div">
+<br>
   {foreach from=$all_tweets key=tid item=t name=foo}
-    {include file="_post.tpl" t=$t}
+    {include file="_post.author_no_counts.tpl" post=$t}
   {/foreach}
 </div>
 {/if}
@@ -55,13 +56,13 @@
 
 {if $most_replied_to_tweets}
   {foreach from=$most_replied_to_tweets key=tid item=t name=foo}
-    {include file="_post.tpl" t=$t}
+    {include file="_post.counts_no_author.tpl" post=$t}
   {/foreach}
 {/if}
 
 {if $most_retweeted}
   {foreach from=$most_retweeted key=tid item=t name=foo}
-    {include file="_post.tpl" t=$t}
+    {include file="_post.counts_no_author.tpl" post=$t}
   {/foreach}
 {/if}
 
@@ -83,23 +84,26 @@
 {/if}
 
 {if $orphan_replies}
+<br>
   {foreach from=$orphan_replies key=tid item=t name=foo}
-    {include file="_post.otherorphan.tpl" t=$t}
+    {include file="_post.author_no_counts.tpl" post=$t}
   {/foreach}
   </form>
 {/if} 
 
 {if $all_mentions}
 <div id="all-posts-div">
+<br>
   {foreach from=$all_mentions key=tid item=t name=foo}
-    {include file="_post.otherorphan.tpl" t=$t}
+    {include file="_post.author_no_counts.tpl" post=$t}
   {/foreach}
 </div>
 {/if}
 
 {if $all_replies}
+<br>
   {foreach from=$all_replies key=tid item=t name=foo}
-    {include file="_post.tpl" t=$t}
+    {include file="_post.author_no_counts.tpl" post=$t}
   {/foreach}
 {/if}
 
