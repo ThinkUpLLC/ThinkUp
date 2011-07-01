@@ -167,13 +167,19 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         } else if (!is_writable($THINKUP_CFG['log_location'])) {
             $message = "In order to test your ThinkUp installation with your current settings, ".
             $THINKUP_CFG['log_location']. " must be a writable file.";
+        } else if (filesize($THINKUP_CFG['log_location']) > 10485760) {
+            $message = "Your crawler log file is so large it may cause a PHP Fatal error due to memory usage. ".
+            "Please make ". $THINKUP_CFG['log_location']. " less than 10MB in size and try again.";
         }
         if ( !isset($THINKUP_CFG['stream_log_location']) || $THINKUP_CFG['stream_log_location'] === false) {
-            $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['stream_log_location'] must be set to a ".
-            "writable file.";
+            $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['stream_log_location'] must be set ".
+            "to a writable file.";
         } else if (!is_writable($THINKUP_CFG['stream_log_location'])) {
             $message = "In order to test your ThinkUp installation with your current settings, ".
             $THINKUP_CFG['stream_log_location']. " must be a writable file.";
+        } else if (filesize($THINKUP_CFG['stream_log_location']) > 10485760) {
+            $message = "Your stream log file is so large it may cause a PHP Fatal error due to memory usage. ".
+            "Please make ". $THINKUP_CFG['stream_log_location']. " less than 10MB in size and try again.";
         }
 
         global $TEST_DATABASE;
