@@ -16,7 +16,9 @@
   <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
     <div class="grid_14">
       {if $t->link->is_image}
-        <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
+        {if $t->link->expanded_url}
+          <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
+        {/if}
       {/if}
       
       <div class="post">

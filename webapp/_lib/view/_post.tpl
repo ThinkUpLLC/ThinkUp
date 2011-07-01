@@ -37,7 +37,9 @@
         </div>
     <div class="grid_9">
       {if $t->link->is_image}
-        <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
+        {if $t->link->expanded_url}
+         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
+        {/if}
       {/if}
       <div class="post">
         {if $t->post_text}
@@ -65,12 +67,6 @@
       {/if}
         {if $t->favd_count}
           <small>&nbsp;<a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}&v=favs">Fav'd: {$t->favd_count}</a></small>
-        {/if}
-        {if $t->link->expanded_url and !$t->link->is_image and ($t->link->expanded_url != $t->link->url)}
-          <br>
-          <small>
-            <a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a>
-          </small>
         {/if}
 
       <span class="small gray">

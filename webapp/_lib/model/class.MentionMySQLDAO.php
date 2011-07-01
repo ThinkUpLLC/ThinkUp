@@ -89,7 +89,9 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
         $ps  = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
-            throw new Exception("Error: Could not update mentions_posts.");
+            $this->logger->logDebug("Could not update mentions_posts with $post_id, $mention_id", 
+            __METHOD__.','. __LINE__);
+            // throw new Exception("Error: Could not update mentions_posts.");
         }
     }
 
