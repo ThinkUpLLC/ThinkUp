@@ -112,9 +112,37 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->post_id, 103);
         $this->assertEqual($result->network, 'twitter');
         $this->assertTrue($result->is_image);
+        
+        // instagr.am
+        // check first with ending slash in URL (which the URLs 'should' include)
+        $tweet["post_id"] = 104;
+        $tweet['post_text'] = "This is an instagram post http:/instagr.am/blah/ Yay!";
+        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $link_dao = new LinkMySQLDAO();
+        $result = $link_dao->getLinkByUrl('http://instagr.am/blah/');
+        $this->assertIsA($result, "Link");
+        $this->assertEqual($result->url, 'http://instagr.am/blah/');
+        $this->assertEqual($result->expanded_url, 'http://instagr.am/blah/media/');
+        $this->assertEqual($result->title, '');
+        $this->assertEqual($result->post_id, 104);
+        $this->assertEqual($result->network, 'twitter');
+        $this->assertTrue($result->is_image);
+
+        // check w/out ending slash also just in case
+        $tweet["post_id"] = 105;
+        $tweet['post_text'] = "This is an instagram post http:/instagr.am/blah Yay!";
+        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $result = $link_dao->getLinkByUrl('http://instagr.am/blah');
+        $this->assertIsA($result, "Link");
+        $this->assertEqual($result->url, 'http://instagr.am/blah');
+        $this->assertEqual($result->expanded_url, 'http://instagr.am/blah/media/');
+        $this->assertEqual($result->title, '');
+        $this->assertEqual($result->post_id, 105);
+        $this->assertEqual($result->network, 'twitter');
+        $this->assertTrue($result->is_image);
 
         //Flic.kr
-        $tweet["post_id"] = 104;
+        $tweet["post_id"] = 106;
         $tweet['post_text'] = "This is a Flickr post http://flic.kr/blah Yay!";
         URLProcessor::processTweetURLs($this->logger, $tweet);
 
@@ -124,7 +152,7 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->url, 'http://flic.kr/blah');
         $this->assertEqual($result->expanded_url, '');
         $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 104);
+        $this->assertEqual($result->post_id, 106);
         $this->assertEqual($result->network, 'twitter');
         $this->assertTrue($result->is_image);
     }

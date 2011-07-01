@@ -58,6 +58,16 @@ class URLProcessor {
             } elseif (substr($u, 0, strlen('http://flic.kr/')) == 'http://flic.kr/') {
                 $is_image = 1;
             } elseif (substr($u, 0, strlen('http://instagr.am/')) == 'http://instagr.am/') {
+                // see: http://instagr.am/developer/embedding/ for reference
+                // the following does a redirect to the actual jpg
+                // make a check for an end slash in the url -- if it is there (likely) then adding a second
+                // slash prior to the 'media' string will break the expanded url
+                if ($u[strlen($u)-1] == '/') {
+                    $eurl = $u . 'media/';
+                } else {
+                    $eurl = $u . '/media/';
+                }
+                $logger->logDebug("expanded instagram URL to: " . $eurl, __METHOD__.','.__LINE__);
                 $is_image = 1;
             }
             if ($link_dao->insert($u, $eurl, $title, $tweet['post_id'], 'twitter', $is_image)) {

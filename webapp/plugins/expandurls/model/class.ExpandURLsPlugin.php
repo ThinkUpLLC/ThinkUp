@@ -105,7 +105,9 @@ class ExpandURLsPlugin implements CrawlerPlugin {
     }
 
     /**
-     * Save direct link to Instagr.am images in data store.
+     * Save direct link to Instagr.am images in data store.  Now that these links are expanded on the fly,
+     * we shouldn't need this method any more, except for 'legacy' unexpanded links in the database during
+     * the transition period.
      */
     public function expandInstagramImageURLs() {
         $logger = Logger::getInstance();
@@ -122,20 +124,18 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $total_errors = 0;
         $eurl = '';
         foreach ($insta_links_to_expand as $il) {
-            $html = (string) Utils::getURLContents($il);
-            if ($html) {
-                preg_match('/<meta property="og:image" content="[^"]+"\/>/i', $html, $matches);
-                if (isset($matches[0])) {
-                    $eurl = substr($matches[0], 35, -3);
-                    $logger->logDebug("Got instagr.am expanded URL: $eurl", __METHOD__.','.__LINE__);
-                }
-                if ($eurl != '') {
-                    $link_dao->saveExpandedUrl($il, $eurl, '', 1);
-                    $total_thumbnails = $total_thumbnails + 1;
-                } else {
-                    $total_errors = $total_errors + 1;
-                }
+            // see: http://instagr.am/developer/embedding/
+            // make a check for an end slash in the url -- if it is there (likely) then adding a second 
+            // prior to the 'media' string will break the expanded url
+            if ($il[strlen($il)-1] == '/') {
+                $eurl = $il . 'media/';
+            } else {
+                $eurl = $il . '/media/';
             }
+            $logger->logDebug("expanded instagram URL to: " . $eurl, __METHOD__.','.__LINE__);
+            $link_dao->saveExpandedUrl($il, $eurl, '', 1);
+            $total_thumbnails = $total_thumbnails + 1;
+
         }
         $logger->logUserSuccess($total_thumbnails." Instagr.am thumbnails expanded (".$total_errors." errors)",
         __METHOD__.','.__LINE__);
