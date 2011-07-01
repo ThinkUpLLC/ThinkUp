@@ -9,7 +9,8 @@
 <div class="individual-tweet post clearfix"{if $smarty.foreach.foo.index % 2 == 1} style="background-color:#EEE"{/if}>
     <div class="grid_2 alpha">
       <div class="avatar-container">
-        <a href="{$site_root_path}user/?u={$r.questioner_username|urlencode}&n={$r.network|urlencode}&i={$selected_instance_username}"><img src="{$r.questioner_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+        <a href="{$site_root_path}user/?u={$r.questioner_username|urlencode}&n={$r.network|urlencode}&i={$selected_instance_username}">
+        <img src="{$r.questioner_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
       </div>
     </div>
     <div class="grid_4 small">
@@ -55,7 +56,8 @@
   
   <div class="grid_2 alpha">
     <div class="avatar-container">
-      <a href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}"><img src="{$r.answerer_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+      <a href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}">
+      <img src="{$r.answerer_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$r.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
     </div>
   </div>
   <div class="grid_4 small">

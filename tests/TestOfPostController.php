@@ -206,9 +206,25 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertPattern( "/This is a test post/", $results);
     }
 
-    private function buildPublicPostWithMixedAccessResponses() {
+    public function testCleanXSS() {
+        $with_xss = true;
+        $builders = $this->buildPublicPostWithMixedAccessResponses($with_xss);
+        $_GET["t"] = '1001';
+        $_GET['n'] = 'twitter';
+        //Log in and see private replies and retweets
+        $this->simulateLogin('me@example.com');
+        //default menu item
+        $_GET["v"] = 'default';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern("/This is a test post&#60;script&#62;alert\(&#39;wa&#39;\);&#60;\/script&#62;/", $results);
+    }
+
+    private function buildPublicPostWithMixedAccessResponses($with_xss = false) {
+        $post_text = 'This is a test post';
+        if($with_xss) { $post_text .= "<script>alert('wa');</script>"; } 
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
-        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter',
+        'author_username'=>'ev', 'post_text'=>$post_text, 'retweet_count_cache'=>'5', 'network'=>'twitter',
         'is_protected'=>'0'));
         $original_post_author_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev',
         'is_protected'=>'0', 'network'=>'twitter'));

@@ -56,6 +56,9 @@ class LoginController extends ThinkUpController {
                 } else {
                     $session = new Session();
                     $user_email = $_POST['email'];
+                    if (get_magic_quotes_gpc()) {
+                        $user_email = stripslashes($user_email);
+                    }
                     $this->addToView('email', $user_email);
                     $owner = $owner_dao->getByEmail($user_email);
                     if (!$owner) {

@@ -11,7 +11,7 @@
     </div>
   </div>
   {if !$closed and !$success_msg}
-    <form name="form1" method="post" action="register.php{if $invite_code}?code={$invite_code}{/if}" class="login append_20">
+    <form name="form1" method="post" action="register.php{if $invite_code}?code={$invite_code|filter_xss}{/if}" class="login append_20">
       <div class="clearfix">
         <div class="grid_4 prefix_5 right">
           <label for="full_name">
@@ -19,7 +19,7 @@
           </label>
         </div>
         <div class="grid_10 left">
-          <input name="full_name" type="text" id="full_name"{if  isset($name)} value="{$name}"{/if}>
+          <input name="full_name" type="text" id="full_name"{if  isset($name)} value="{$name|filter_xss}"{/if}>
           <small>
             <br>
             Example: Angelina Jolie
@@ -36,7 +36,7 @@
           </label>
         </div>
         <div class="grid_10 left">
-          <input name="email" type="text" id="email"{if  isset($mail)} value="{$mail}"{/if}>
+          <input name="email" type="text" id="email"{if  isset($mail)} value="{$mail|filter_xss}"{/if}>
           <small>
             <br>
             Example: angie@example.com
