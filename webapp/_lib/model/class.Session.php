@@ -101,7 +101,7 @@ class Session {
     private function saltedsha1($pwd) {
         return sha1(sha1($pwd.$this->salt).$this->salt);
     }
-
+ 
     /**
      * Encrypt password
      * @param str $pwd password

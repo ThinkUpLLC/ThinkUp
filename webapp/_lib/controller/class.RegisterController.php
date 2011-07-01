@@ -30,6 +30,9 @@
  *
  */
 class RegisterController extends ThinkUpController {
+    /* Note: This controller is not used when the installer registers the first user. Class.InstallerController
+     * handles that
+     */  
     /**
      * Required form submission values
      * @var array
@@ -108,14 +111,17 @@ class RegisterController extends ThinkUpController {
                                 $es = new SmartyThinkUp();
                                 $es->caching=false;
                                 $session = new Session();
-                                $activ_code = rand(1000, 9999);
-                                $cryptpass = $session->pwdcrypt($_POST['pass2']);
+                                $act_code = rand(1000, 9999);
+                                // Generate a salt for the user and combine it with the password
+                                $salt = $owner_dao->generateSalt($_POST['email']);
+                                $cryptpass = $owner_dao->generatePassword($_POST['pass2'], $salt);
                                 $server = $_SERVER['HTTP_HOST'];
-                                $owner_dao->create($_POST['email'], $cryptpass, $activ_code, $_POST['full_name']);
-
+                                // Insert the details into the database
+                                $owner_dao->create($_POST['email'], $cryptpass, $salt, $act_code, $_POST['full_name']);
+                              
                                 $es->assign('server', $server );
                                 $es->assign('email', urlencode($_POST['email']) );
-                                $es->assign('activ_code', $activ_code );
+                                $es->assign('activ_code', $act_code );
                                 $message = $es->fetch('_email.registration.tpl');
 
                                 Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
