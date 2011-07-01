@@ -140,39 +140,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $post;
     }
 
-    public function getStandaloneReplies($username, $network, $limit) {
-        $username = '@'.$username;
-        $q = " SELECT p.*, u.*, pub_date + INTERVAL #gmt_offset# hour AS adj_pub_date ";
-        $q .= " FROM #prefix#posts AS p ";
-        $q .= " INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id WHERE ";
-
-        //fulltext search only works for words longer than 4 chars
-        if ( strlen($username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
-            $q .= " MATCH (`post_text`) AGAINST(:username IN BOOLEAN MODE) ";
-        } else {
-            $username = '%'.$username .'%';
-            $q .= " post_text LIKE :username ";
-        }
-
-        $q .= " AND p.network=:network AND in_reply_to_post_id is null ";
-        $q .= " ORDER BY adj_pub_date DESC ";
-        $q .= " LIMIT :limit";
-        $vars = array(
-            ':username'=>$username,
-            ':network'=>$network,
-            ':limit'=>(int)$limit
-        );
-
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $ps = $this->execute($q, $vars);
-        $all_rows = $this->getDataRowsAsArrays($ps);
-        $replies = array();
-        foreach ($all_rows as $row) {
-            $replies[] = $this->setPostWithAuthor($row);
-        }
-        return $replies;
-    }
-
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
     $count= 350, $page = 1) {
         $start_on_record = ($page - 1) * $count;

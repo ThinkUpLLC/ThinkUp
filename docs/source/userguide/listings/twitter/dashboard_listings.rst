@@ -28,7 +28,6 @@ Replies
    dashboard_mentions-all.rst
    dashboard_mentions-allreplies.rst
    dashboard_mentions-orphan.rst
-   dashboard_mentions-standalone.rst
    dashboard_tweets-convo.rst
 
 Who You Follow

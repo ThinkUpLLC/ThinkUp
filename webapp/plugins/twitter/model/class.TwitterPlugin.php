@@ -213,18 +213,6 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             $omtab->addDataset($omtabds1);
             $omtab->addDataset($omtabds2);
             $menus["mentions-orphan"] = $omtab;
-
-            //All Mentions Standalone
-            $sttab = new MenuItem("Standalone Mentions",
-            "Mentions you have marked as standalone", $twitter_data_tpl);
-            $sttabds1 = new Dataset("standalone_replies", 'PostDAO', "getStandaloneReplies",
-            array($instance->network_username, 'twitter', 15));
-            $sttabds2 = new Dataset("all_tweets", 'PostDAO', "getAllPosts", array($instance->network_user_id,
-            'twitter', 15));
-            $sttabds2->addHelp('userguide/listings/twitter/dashboard_mentions-standalone');
-            $sttab->addDataset($sttabds1);
-            $sttab->addDataset($sttabds2);
-            $menus["mentions-standalone"] = $sttab;
         } else {
             //All public mentions
             $amtab = new MenuItem("All Mentions", "Any post that mentions you", $twitter_data_tpl, 'Replies');
