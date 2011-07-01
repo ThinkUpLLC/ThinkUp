@@ -101,11 +101,13 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
             } else {
                 $source = 'web';
             }
+            $is_protected = $counter == 18 ? 1 : 0; // post with id 18 is protected
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
             'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.
             $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4), 'retweet_count_cache'=>5, 'network'=>'twitter',
-            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 'is_protected' => 0));
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0, 
+            'is_protected' => $is_protected));
             $counter++;
         }
 
@@ -113,12 +115,13 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 0;
         while ($counter < 40) {
             $post_id = $counter + 80;
+            $is_protected = $counter == 18 ? 1 : 0; // post with id 18 is protected
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>19,
             'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
             $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
-            'is_protected' => 0));
+            'is_protected' => $is_protected));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'explanded_url'=>'http://example.com/'.$counter.'.html', 'title'=>'Link $counter', 'clicks'=>0, 
@@ -224,15 +227,22 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetAllFavsForUserID() {
         $this->dao = new FavoritePostMySQLDAO();
-        $res = $this->dao->getAllFavoritePosts(20, 'twitter', 6);
+        $res = $this->dao->getAllFavoritePosts(20, 'twitter', 6, 1, false); //not public
         $this->assertIsA($res, "array");
         $this->assertEqual(count($res), 6);
         $this->assertEqual($res[0]->post_text, 'This is link post 19');
+        $this->assertEqual($res[1]->post_text, 'This is link post 18');
         $i = 0;
         while ($i < 6) {
             $this->debug( $res[$i]->post_text );
             $i++;
         }
+        // just check that we get the same result w/out the explicit arg
+        $res = $this->dao->getAllFavoritePosts(20, 'twitter', 6); //not public
+        $this->assertIsA($res, "array");
+        $this->assertEqual(count($res), 6);
+        $this->assertEqual($res[0]->post_text, 'This is link post 19');
+        $this->assertEqual($res[1]->post_text, 'This is link post 18');
 
         //iterator
         $res = $this->dao->getAllFavoritePostsIterator(20, 'twitter', 6);
@@ -246,6 +256,24 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
             $i++;
         }
         $this->assertFalse($res->valid());
+    }
+
+    /**
+     * Test fetch of N favorited posts for a given user by userid, but where public = true.
+     * post with id 18 should not be fetched this time
+     */
+    public function testGetAllFavsForUserID2() {
+        $this->dao = new FavoritePostMySQLDAO();
+        $res = $this->dao->getAllFavoritePosts(20, 'twitter', 6, 1, true); // public
+        $this->assertIsA($res, "array");
+        $this->assertEqual(count($res), 6);
+        $this->assertEqual($res[0]->post_text, 'This is link post 19');
+        $this->assertEqual($res[1]->post_text, 'This is link post 17');
+        $i = 0;
+        while ($i < 6) {
+            $this->debug( $res[$i]->post_text );
+            $i++;
+        }
     }
 
     /**

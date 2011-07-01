@@ -35,6 +35,27 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
     public function setUp() {
         parent::setUp();
         $this->builders = self::buildData();
+
+        //set up some private data
+        //private image post
+        $this->builders[] = FixtureBuilder::build('posts', array('post_id'=>150, 'author_user_id'=>18,
+        'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
+        'source'=>'web', 'pub_date'=>'-1d', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
+        'post_text'=>'This is private image post 1', 'network'=>'twitter', 'is_protected'=>1));
+
+        $this->builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/1private',
+        'expanded_url'=>'http://example.com/1private.jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>150, 
+        'is_image'=>1));
+
+        //private link post
+        $this->builders[] = FixtureBuilder::build('posts', array('post_id'=>151, 'author_user_id'=>18,
+        'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
+        'source'=>'web', 'pub_date'=>'-1d', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
+        'post_text'=>'This is private link post 1', 'network'=>'twitter', 'is_protected'=>1));
+
+        $this->builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/1private',
+        'expanded_url'=>'http://example.com/private1', 'title'=>'', 'clicks'=>0, 'post_id'=>151, 
+        'is_image'=>0));
     }
 
     public function tearDown() {
@@ -69,12 +90,46 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
         //$this->showSource();
         $this->assertText('This is link post 25');
         $this->assertText('Link 25');
+        //not logged in, shouldn't display private link post
+        $this->assertNoText('This is private link post 1');
+    }
+
+    public function testPrivateLinksFromFriends() {
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+
+        $this->click("Log In");
+
+        $this->get($this->url.'/index.php?v=links-friends&u=ev&n=twitter');
+        $this->assertTitle("ev on Twitter | ThinkUp");
+        //$this->showSource();
+        $this->assertText('This is link post 39');
+        $this->assertText('Link 39');
+        //logged in, should display private link post
+        $this->assertText('This is private link post 1');
     }
 
     public function testPhotosByFriends() {
         $this->get($this->url.'/index.php?v=links-photos&u=ev&n=twitter');
         $this->assertTitle("ev on Twitter | ThinkUp");
         $this->assertText('This is image post 25');
+        //not logged in, shouldn't display private image post
+        $this->assertNoText('This is private image post 1');
+    }
+
+    public function testPrivatePhotosByFriends() {
+        $this->get($this->url.'/session/login.php');
+        $this->setField('email', 'me@example.com');
+        $this->setField('pwd', 'secretpassword');
+
+        $this->click("Log In");
+
+        $this->get($this->url.'/index.php?v=links-photos&u=ev&n=twitter');
+        $this->assertTitle("ev on Twitter | ThinkUp");
+        $this->assertText('This is image post 39');
+        //logged in, should display private image post
+        $this->assertText('This is private image post 1');
     }
 
     public function testConversations() {
@@ -91,4 +146,6 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
         $this->get($this->url.'/index.php?v=tweets-convo&u=ev&n=twitter');
         $this->assertText('No tweets to display.');
     }
+
+    //@TODO Add tests for Favorites and Links from Favorites
 }

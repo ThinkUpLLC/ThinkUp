@@ -63,8 +63,9 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $res = $this->execute($q, $vars);
         return $this->getUpdateCount($res);
     }
-    public function getAllFavoritePosts($owner_id, $network, $count, $page=1) {
-        return $this->getAllFavoritePostsByUserID($owner_id, $network, $count, "pub_date", "DESC", null, $page);
+    public function getAllFavoritePosts($owner_id, $network, $count, $page=1, $is_public = false) {
+        return $this->getAllFavoritePostsByUserID($owner_id, $network, $count, "pub_date", "DESC", null,
+        $page, false, $is_public);
     }
     public function getAllFavoritePostsUpperBound($owner_id, $network, $count, $ub) {
         return $this->getAllFavoritePostsByUserID($owner_id, $network, $count, "pub_date", "DESC", $ub);
@@ -87,16 +88,21 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
      * @return array Posts with link object set or PostIterator
      */
     private function getAllFavoritePostsByUserID($owner_id, $network, $count, $order_by="pub_date", $direction="DESC",
-    $ubound = null, $page=1, $iterator = false) {
+    $ubound = null, $page=1, $iterator = false, $is_public = false) {
         $direction = $direction=="DESC" ? "DESC": "ASC";
         $start_on_record = ($page - 1) * $count;
         if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($order_by, $this->OPTIONAL_FIELDS  )) {
             $order_by="pub_date";
         }
+        if ($is_public) {
+            $protected = ' AND p.is_protected = 0 ';
+        } else {
+            $protected = '';
+        }
         $q = "select l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date from (#prefix#posts p
         INNER JOIN #prefix#favorites f on f.post_id = p.post_id) LEFT JOIN #prefix#links l on l.post_id = p.post_id 
         where f.fav_of_user_id = :owner_id AND p.network=:network ";
-
+        $q .= $protected;
         if ($order_by == 'reply_count_cache') {
             $q .= "AND reply_count_cache > 0 ";
         }

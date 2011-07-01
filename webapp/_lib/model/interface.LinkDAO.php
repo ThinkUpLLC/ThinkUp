@@ -73,27 +73,30 @@ interface LinkDAO {
      * @param str $network
      * @param int $count
      * @param int $page
+     * @param bool $is_public
      * @return array with Link objects
      */
-    public function getLinksByFriends($user_id, $network, $count = 15, $page = 1);
+    public function getLinksByFriends($user_id, $network, $count = 15, $page = 1, $is_public = false);
     /**
      * Get the links in a user's favorites.
      * @param int $user_id
      * @param str $network
      * @param int $count
      * @param int $page
+     * @param bool $is_public
      * @return array with Link objects
      */
-    public function getLinksByFavorites($user_id, $network, $count = 15, $page = 1);
+    public function getLinksByFavorites($user_id, $network, $count = 15, $page = 1, $is_public = false);
     /**
      * Get the images posted by a user's friends.
      * @param int $user_id
      * @param str $network
      * @param int $count
      * @param int $page
+     * @param bool $is_public
      * @return array numbered keys, with Link objects
      */
-    public function getPhotosByFriends($user_id, $network, $count = 15, $page = 1);
+    public function getPhotosByFriends($user_id, $network, $count = 15, $page = 1, $is_public = false);
     /**
      * Gets a number of links that has not been expanded.
      * Non standard output - Scheduled for deprecation.

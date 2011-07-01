@@ -82,16 +82,24 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $counter++;
         }
 
-        //Insert several posts
+        //Insert several posts, the last one protected.
         $counter = 0;
-        while ($counter < 5) {
+        while ($counter < 4) {
             $post_id = $counter + 80;
             $user_id = ($counter * 5) + 2;
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id,
             'author_user_id'=>$user_id, 'author_username'=>'user'.$counter, 'in_reply_to_post_id'=>0,
+            'is_protected' => 0,
             'author_fullname'=>'User.'.$counter.' Name.'.$counter, 'post_text'=>'Post by user'.$counter));
             $counter++;
         }
+        $post_id = $counter + 80;
+        $user_id = ($counter * 5) + 2;
+        $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id,
+        'author_user_id'=>$user_id, 'author_username'=>'user'.$counter, 'in_reply_to_post_id'=>0,
+        'is_protected' => 1,
+        'author_fullname'=>'User.'.$counter.' Name.'.$counter, 'post_text'=>'Post by user'.$counter));
+        $counter++;
 
         $builders[] = FixtureBuilder::build('follows', array('follower_id'=>2, 'user_id'=>7, 'active'=>1));
         $builders[] = FixtureBuilder::build('follows', array('follower_id'=>2, 'user_id'=>22, 'active'=>1));
@@ -211,7 +219,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      * Test Of getLinksByFriends Method
      */
     public function testGetLinksByFriends(){
-        $result = $this->DAO->getLinksByFriends(2, 'twitter');
+        $result = $this->DAO->getLinksByFriends(2, 'twitter', 15, 1, false); // not public
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 12);
@@ -240,12 +248,42 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($result), 5);
     }
 
+    /**
+     * test weeding out the protected items
+     */
+    public function testGetLinksByFriends2(){
+
+        $result = $this->DAO->getLinksByFriends(2, 'twitter', 15, 1, true); // public
+
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 8); // (1 protected post x 4) less than the previous test
+        $posts = array(
+        80=>array('pid'=>80, 'uid'=>2, 'fr'=>true),
+        81=>array('pid'=>81, 'uid'=>7, 'fr'=>true),
+        82=>array('pid'=>82, 'uid'=>12, 'fr'=>false),
+        83=>array('pid'=>83, 'uid'=>17, 'fr'=>true),
+        84=>array('pid'=>84, 'uid'=>22, 'fr'=>true)
+        );
+        foreach($result as $key=>$val){
+            $this->assertIsA($val, "link");
+            $this->assertIsA($val->container_post, "Post");
+            $num = $val->post_id;
+            $pid = $posts[$num]['pid'];
+            $uid = $posts[$num]['uid'];
+            $this->assertEqual($val->container_post->post_id, $pid);
+            $this->assertEqual($val->container_post->author_user_id, $uid);
+            $this->assertEqual($val->container_post->post_text, 'Post by '.$val->container_post->author_username);
+            $this->assertEqual($val->container_post->in_reply_to_post_id, 0);
+            $this->assertTrue($posts[$num]['fr']);
+        }
+    }
+
 
     /**
      * Test Of getPhotosByFriends Method
      */
     public function testGetPhotosByFriends(){
-        $result = $this->DAO->getPhotosByFriends(2, 'twitter');
+        $result = $this->DAO->getPhotosByFriends(2, 'twitter', 15, 1, false); // not public
 
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 9);
@@ -273,6 +311,36 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getPhotosByFriends(2, 'twitter', 5, 2);
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 4);
+    }
+
+    /**
+     * Test Of getPhotosByFriends Method, weeding out the protected items
+     */
+    public function testGetPhotosByFriends2(){
+        $result = $this->DAO->getPhotosByFriends(2, 'twitter', 15, 1, true); // public
+
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 6); // (1 protected post x 3) less than the previous test
+        $posts = array(
+        80=>array('pid'=>80, 'uid'=>2, 'fr'=>true),
+        81=>array('pid'=>81, 'uid'=>7, 'fr'=>true),
+        82=>array('pid'=>82, 'uid'=>12, 'fr'=>false),
+        83=>array('pid'=>83, 'uid'=>17, 'fr'=>true),
+        84=>array('pid'=>84, 'uid'=>22, 'fr'=>true)
+        );
+        foreach($result as $key=>$val){
+            $this->assertIsA($val, "link");
+            $this->assertIsA($val->container_post, "Post");
+            $this->assertTrue($val->is_image);
+            $num = $val->post_id;
+            $pid = $posts[$num]['pid'];
+            $uid = $posts[$num]['uid'];
+            $this->assertEqual($val->container_post->post_id, $pid);
+            $this->assertEqual($val->container_post->author_user_id, $uid);
+            $this->assertEqual($val->container_post->post_text, 'Post by '.$val->container_post->author_username);
+            $this->assertEqual($val->container_post->in_reply_to_post_id, 0);
+            $this->assertTrue($posts[$num]['fr']);
+        }
     }
 
     /**
@@ -382,6 +450,48 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $result = $this->DAO->getLinksByFavorites(20, 'twitter');
         $this->assertIsA($result, "array");
         $this->assertEqual(count($result), 5);
+        $lbuilders = null;
+    }
+
+    /**
+     * Test of getLinksByFavorites method, weeding out the protected items
+     */
+    public function testGetFavoritedLinks2() {
+        $lbuilders = array();
+        // test links for fav checking
+        $counter = 0;
+        while ($counter < 5) {
+            $post_id = $counter + 180;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+            $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>0, 
+            'expanded_url'=>'', 'error'=>''));
+            $counter++;
+        }
+        //Insert several posts for fav checking-- links will be associated with 5 of them
+        $counter = 0;
+        while ($counter < 10) {
+            $post_id = $counter + 180;
+            $user_id = ($counter * 5) + 2;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+            $is_protected = $counter == 0 ? 1 : 0;
+
+            $lbuilders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>$user_id,
+            'author_username'=>"user$counter", 'author_fullname'=>"User$counter Name$counter", 
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$post_id, 'pub_date'=>'2009-01-01 00:'.
+            $pseudo_minute.':00', 'network'=>'twitter', 'is_protected' => $is_protected,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+
+            // user '20' favorites the first 7 of the test posts, only 5 of which will have links
+            if ($counter < 7) {
+                $lbuilders[] = FixtureBuilder::build('favorites', array('post_id'=>$post_id,
+                'author_user_id'=>$user_id, 'fav_of_user_id'=>20, 'network'=>'twitter'));
+            }
+            $counter++;
+        }
+        $result = $this->DAO->getLinksByFavorites(20, 'twitter', 15, 1, true);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 4);
         $lbuilders = null;
     }
 

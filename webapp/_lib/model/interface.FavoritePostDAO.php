@@ -55,9 +55,10 @@ interface FavoritePostDAO extends PostDAO {
      * @param str $network
      * @param int $count
      * @param int $page
+     * @param bool $is_public
      * @return array Posts with link object set
      */
-    public function getAllFavoritePosts($owner_id, $network, $count, $page=1);
+    public function getAllFavoritePosts($owner_id, $network, $count, $page=1, $is_public = false);
     /**
      * Wrapper function for getAllFavoritePostsByUserID. Takes an 'upper bound' argument ($ub)-- if set,
      * only posts with id < $ub are retrieved.

@@ -112,14 +112,22 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getUpdateCount($ps);
     }
 
-    public function getLinksByFriends($user_id, $network, $count = 15, $page = 1) {
+    public function getLinksByFriends($user_id, $network, $count = 15, $page = 1, $is_public = false) {
         $start_on_record = ($page - 1) * $count;
+
+        if ($is_public) {
+            $protected = 'AND p.is_protected = 0 ';
+        } else {
+            $protected = '';
+        }
 
         $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#links AS l ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
-        $q .= "WHERE l.network = :network AND  p.author_user_id IN ( ";
+        $q .= "WHERE l.network = :network ";
+        $q .= $protected;
+        $q .=  "AND p.author_user_id IN ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
         $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network=:network ";
         $q .= ")";
@@ -153,11 +161,18 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $link;
     }
 
-    public function getLinksByFavorites($user_id, $network, $count = 15, $page = 1) {
+    public function getLinksByFavorites($user_id, $network, $count = 15, $page = 1, $is_public = false) {
         $start_on_record = ($page - 1) * $count;
+
+        if ($is_public) {
+            $protected = 'AND p.is_protected = 0 ';
+        } else {
+            $protected = '';
+        }
 
         $q  = "SELECT l.*, p.*, pub_date - interval 8 hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts as p, #prefix#favorites as f, #prefix#links as l WHERE f.post_id = p.post_id ";
+        $q .= $protected;
         $q .= "AND p.post_id = l.post_id AND p.network = l.network ";
         $q .= "AND l.network = :network AND  f.fav_of_user_id = :user_id ";
         $q .= "ORDER BY l.post_id DESC ";
@@ -173,14 +188,22 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getDataRowsAsObjects($ps, "Link");
     }
 
-    public function getPhotosByFriends($user_id, $network, $count = 15, $page = 1) {
+    public function getPhotosByFriends($user_id, $network, $count = 15, $page = 1, $is_public = false) {
         $start_on_record = ($page - 1) * $count;
+
+        if ($is_public) {
+            $protected = 'AND p.is_protected = 0 ';
+        } else {
+            $protected = '';
+        }
 
         $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#links AS l ";
         $q .= "INNER JOIN #prefix#posts p ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
-        $q .= "WHERE is_image = 1 AND l.network=:network AND p.author_user_id in ( ";
+        $q .= "WHERE is_image = 1 AND l.network=:network ";
+        $q .= $protected;
+        $q .= "AND p.author_user_id in ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
         $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network = :network) ";
         $q .= "ORDER BY l.post_id DESC  ";

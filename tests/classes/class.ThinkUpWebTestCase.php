@@ -145,7 +145,8 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>18,
             'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
             'source'=>'web', 'pub_date'=>"2006-01-02 00:$pseudo_minute:00", 'reply_count_cache'=>0, 
-            'retweet_count_cache'=>0, 'post_text'=>'This is image post '.$counter, 'network'=>'twitter'));
+            'retweet_count_cache'=>0, 'post_text'=>'This is image post '.$counter, 'network'=>'twitter',
+            'is_protected'=>0));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'expanded_url'=>'http://example.com/'.$counter.'jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>$post_id, 
@@ -161,7 +162,7 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>19,
             'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>"2006-03-01 00:$pseudo_minute:00",
-            'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
+            'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter', 'is_protected'=>0));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'expanded_url'=>'http://example.com/'.$counter.'html', 

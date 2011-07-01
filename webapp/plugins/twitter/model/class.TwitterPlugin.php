@@ -301,7 +301,8 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
 
         $fvalltab = new MenuItem("Your Favorites", "All your favorites", $twitter_data_tpl, 'Favorites');
         $fvalltabds = new Dataset("all_tweets", 'FavoritePostDAO', "getAllFavoritePosts",
-        array($instance->network_user_id, 'twitter', 20, "#page_number#"), 'getAllFavoritePostsIterator',
+        array($instance->network_user_id, 'twitter', 20, "#page_number#", !Session::isLoggedIn()),
+        'getAllFavoritePostsIterator',
         array($instance->network_user_id, 'twitter', GridController::getMaxRows()) );
         $fvalltabds->addHelp('userguide/listings/twitter/dashboard_ftweets-all');
         $fvalltab->addDataset($fvalltabds);
@@ -316,7 +317,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         //Links from friends
         $fltab = new MenuItem('Links from People You Follow', 'Links your friends posted', $twitter_data_tpl, 'Links');
         $fltabds = new Dataset("links", 'LinkDAO', "getLinksByFriends",
-        array($instance->network_user_id, 'twitter', 15, '#page_number#'));
+        array($instance->network_user_id, 'twitter', 15, '#page_number#',!Session::isLoggedIn()));
         $fltabds->addHelp('userguide/listings/twitter/dashboard_links-friends');
         $fltab->addDataset($fltabds);
         $menus["links-friends"] = $fltab;
@@ -324,7 +325,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         //Links from favorites
         $lftab = new MenuItem('Links From Favorites', 'Links in posts you favorited', $twitter_data_tpl);
         $lftabds = new Dataset("links", 'LinkDAO', "getLinksByFavorites",
-        array($instance->network_user_id, 'twitter', 15, '#page_number#'));
+        array($instance->network_user_id, 'twitter', 15, '#page_number#',!Session::isLoggedIn()));
         $lftabds->addHelp('userguide/listings/twitter/dashboard_links-favorites');
         $lftab->addDataset($lftabds);
         $menus["links-favorites"] = $lftab;
@@ -332,7 +333,7 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         //Photos
         $ptab = new MenuItem("Photos from People You Follow", 'Photos your friends have posted', $twitter_data_tpl);
         $ptabds = new Dataset("links", 'LinkDAO', "getPhotosByFriends",
-        array($instance->network_user_id, 'twitter', 15, '#page_number#'));
+        array($instance->network_user_id, 'twitter', 15, '#page_number#',!Session::isLoggedIn()));
         $ptabds->addHelp('userguide/listings/twitter/dashboard_links-photos');
         $ptab->addDataset($ptabds);
         $menus["links-photos"] = $ptab;
@@ -369,10 +370,9 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             'twitter', 'default', 'km', !Session::isLoggedIn()) );
             $retweets_menu_item->addDataset($retweets_dataset);
             $menus['fwds'] = $retweets_menu_item;
-            // aju
             $favd_menu_item = new MenuItem("Favorited", "Those who favorited this tweet", $twitter_data_tpl);
             //if not logged in, show only public fav'd info
-            $favd_dataset = new Dataset("favds", 'FavoritePostDAO', "getFavdsOfPost", array($post->post_id,
+            $favd_dataset = new Dataset("favds", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
             'twitter', !Session::isLoggedIn()) );
             $favd_menu_item->addDataset($favd_dataset);
             $menus['favs'] = $favd_menu_item;
