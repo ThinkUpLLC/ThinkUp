@@ -746,6 +746,59 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getAllPostsByUserID($author_id, $network, $count, $order_by, $direction, $include_replies, 1,
         $iterator = true, $is_public);
     }
+    
+    /**
+     * Iterator wrapper for getPostsByFriends
+     */
+    public function getPostsByFriendsIterator($user_id, $network, $count, $is_public=false) {
+        return $this->getPostsByFriends($user_id, $network, $count, 1, $is_public, true);
+    }
+
+    /**
+     * get the posts from the friends of the given user_id;
+     * that is, their 'timeline' data
+     */
+    public function getPostsByFriends($user_id, $network, $count = 15, $page = 1, $is_public = false, 
+        $iterator = false) {
+
+        $start_on_record = ($page - 1) * $count;
+        if ($is_public) {
+            $protected = 'AND p.is_protected = 0 ';
+        } else {
+            $protected = '';
+        }
+
+        $q  = "SELECT p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, " . 
+        "pub_date + interval #gmt_offset# hour AS adj_pub_date ";
+        $q .= "FROM #prefix#posts AS p ";
+        $q .= "LEFT JOIN #prefix#links AS l ";
+        $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
+        $q .= "WHERE p.network = :network ";
+        $q .= $protected;
+        $q .= " AND p.author_user_id IN ( ";
+        $q .= "   SELECT user_id FROM #prefix#follows AS f ";
+        $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network=:network ";
+        $q .= ")";
+        $q .= "ORDER BY p.post_id DESC ";
+        $q .= "LIMIT :start_on_record, :limit";
+        $vars = array(
+            ':user_id'=>$user_id,
+            ':network'=>$network,
+            ':limit'=>$count,
+            ':start_on_record'=>(int)$start_on_record
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        if ($iterator) {
+            return (new PostIterator($ps));
+        }
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+        foreach ($all_rows as $row) {
+            $posts[] = $this->setPostWithLink($row);
+        }
+        return $posts;
+    }
 
     public function getAllQuestionPosts($author_id, $network, $count, $page=1, $order_by = 'pub_date',
     $direction = 'DESC', $is_public = false) {

@@ -144,6 +144,15 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
     }
 
     public function getDashboardMenuItems($instance) {
+
+        // determine if the Twitter Realtime plugin is active.
+        $rt_plugin_active = false;
+        $plugin_dao = DAOFactory::getDAO('PluginDAO');
+        $plugin_id = $plugin_dao->getPluginId('twitterrealtime');
+        if (isset($plugin_id)) {
+            $rt_plugin_active = $plugin_dao->isPluginActive($plugin_id);
+        }
+        
         $twitter_data_tpl = Utils::getPluginViewDirectory('twitter').'twitter.inline.view.tpl';
         $menus = array();
         //All tab
@@ -179,6 +188,16 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $mstabds->addHelp('userguide/listings/twitter/dashboard_tweets-mostretweeted');
         $mstab->addDataset($mstabds);
         $menus["tweets-mostretweeted"] = $mstab;
+        
+        if ($rt_plugin_active) {
+            // 'home timeline'
+            $tltab = new MenuItem("Timeline", "Your Timeline", $twitter_data_tpl);
+            $tltab2 = new Dataset("home_timeline", 'PostDAO', "getPostsByFriends",
+            array($instance->network_user_id, $instance->network, 20, '#page_number#', !Session::isLoggedIn()),
+            'getPostsByFriendsIterator', array($instance->network_user_id, 'twitter', GridController::getMaxRows()));
+            $tltab->addDataset($tltab2);
+            $menus["home-timeline"] = $tltab;
+        }
 
         if (Session::isLoggedIn()) { //show protected tweets
             //All Mentions
@@ -308,12 +327,14 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $fvalltab->addDataset($fvalltabds);
         $menus["ftweets-all"] = $fvalltab;
 
-        $fvdtab = new MenuItem("Favorited by Others", "Favorited by Others", $twitter_data_tpl);
-        $ftab2 = new Dataset("all_favd", 'FavoritePostDAO', "getAllFavoritedPosts",
-        array($instance->network_user_id, $instance->network, 20, '#page_number#'));
-        $fvdtab->addDataset($ftab2);
-        $menus["favd-all"] = $fvdtab;
-
+        if ($rt_plugin_active) {
+            $fvdtab = new MenuItem("Favorited by Others", "Favorited by Others", $twitter_data_tpl);
+            $ftab2 = new Dataset("all_favd", 'FavoritePostDAO', "getAllFavoritedPosts",
+            array($instance->network_user_id, $instance->network, 20, '#page_number#'));
+            $fvdtab->addDataset($ftab2);
+            $menus["favd-all"] = $fvdtab;
+        }
+        
         //Links from friends
         $fltab = new MenuItem('Links from People You Follow', 'Links your friends posted', $twitter_data_tpl, 'Links');
         $fltabds = new Dataset("links", 'LinkDAO', "getLinksByFriends",

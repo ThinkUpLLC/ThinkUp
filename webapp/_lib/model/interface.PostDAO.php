@@ -208,6 +208,31 @@ interface PostDAO {
      */
     public function getAllPosts($author_id, $network, $count, $page=1, $include_replies=true,
     $order_by = 'pub_date', $direction = 'DESC', $is_public = false);
+    
+    /**
+     * get the posts from the friends of the given user_id; 
+     * that is, their 'timeline' data.
+     * @param int $user_id
+     * @param str  $network
+     * @param int $count
+     * @param int $page
+     * @param bool $is_public
+     * @param bool $iterator
+     * @return array Posts or PostsIterator
+     */
+    public function getPostsByFriends($user_id, $network, $count = 15, $page = 1, $is_public = false, 
+    $iterator = false);
+    
+    /**
+     * Iterator wrapper for getPostsByFriends
+     * @param int $user_id
+     * @param str  $network
+     * @param int $count
+     * @param bool $is_public
+     * @return PostsIterator
+     */
+    public function getPostsByFriendsIterator($user_id, $network, $count, $is_public=false);
+
 
     /**
      * Get all posts by an author given an author ID that contain a question mark
