@@ -143,25 +143,28 @@ SQL;
         return $this->getUpdateCount($ps);
     }
 
-    public function create($email, $pass, $acode, $full_name) {
-        return $this->createOwner($email, $pass, $acode, $full_name, false);
+    public function create($email, $pass, $salt, $acode, $full_name) {
+        return $this->createOwner($email, $pass, $salt, $acode, $full_name, false);
+    }
+    
+    
+
+    public function createAdmin($email, $pass, $salt, $activation_code, $full_name) {
+        return $this->createOwner($email, $pass, $salt, $activation_code, $full_name, true);
     }
 
-    public function createAdmin($email, $pwd, $activation_code, $full_name) {
-        return $this->createOwner($email, $pwd, $activation_code, $full_name, true);
-    }
-
-    private function createOwner($email, $pass, $acode, $full_name, $is_admin) {
+    private function createOwner($email, $pass, $salt, $activation_code, $full_name, $is_admin) {
         if (!$this->doesOwnerExist($email)) {
-            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, joined=NOW(), activation_code=:acode, ";
-            $q .= "full_name=:full_name";
+            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, salt=:salt, joined=NOW(),";
+            $q .= "activation_code=:acode, full_name=:full_name";
             if ($is_admin) {
                 $q .= ", is_admin=1";
             }
             $vars = array(
                 ':email'=>$email,
                 ':pass'=>$pass,
-                ':acode'=>$acode,
+                ':salt'=>$salt,
+                ':acode'=>$activation_code,
                 ':full_name'=>$full_name
             );
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
@@ -271,4 +274,59 @@ SQL;
         $stmt = $this->execute($q, array(':is_activated' => $is_activated, ':id' => $id));
         return $this->getUpdateCount($stmt);
     }
+    
+    public function generateSalt($email){
+        return hash('sha256', rand().$email);
+    }
+    
+    public function generatePassword($password, $salt){
+        $hash = hash('sha256', $password.$salt);
+    
+        for ($i = 0; $i < 100; $i++)
+            $hash = hash('sha256',$hash);
+
+        return $hash;
+    }
+    
+    public function getSaltByEmail($email){
+        $q = "SELECT salt ";
+        $q .= "FROM #prefix#owners u ";
+        $q .= "WHERE u.email = :email";
+        $vars = array(':email'=>$email);
+        $ps = $this->execute($q, $vars);
+        $query = $this->getDataRowAsArray($ps);
+        return $query['salt'];
+    }
+    
+    public function checkIfUserHasAUniqueSalt($email){
+        $q = "SELECT salt ";
+        $q .= "FROM #prefix#owners u ";
+        $q .= "WHERE u.email = :email";
+        $vars = array(':email'=>$email);
+        $ps = $this->execute($q, $vars);
+        $query = $this->getDataRowAsArray($ps);
+        return !is_null($query['salt']);
+    }
+    
+    public function updateSalt($email, $salt) {
+        $q = " UPDATE #prefix#owners SET salt=:salt WHERE email=:email";
+        $vars = array(
+            ':email'=>$email,
+            ':salt'=>$salt
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+    
+    public function checkSaltedPassword($email, $password) {
+        $q = "SELECT * ";
+        $q .= "FROM #prefix#owners u ";
+        $q .= "WHERE u.email = :email AND u.pwd = :password";
+        $vars = array(':email'=>$email, ':password'=>$password);
+        $ps = $this->execute($q, $vars);
+        return $this->getDataIsReturned($ps);
+    }
+    
+    
 }

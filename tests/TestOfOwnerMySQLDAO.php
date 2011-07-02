@@ -47,11 +47,14 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $builders = array();
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
-        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>'XXX', 'activation_code'=>'8888', 
+        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>'XXX', 'salt'=>null, 'activation_code'=>'8888', 
         'account_status'=>''));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
-        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>'YYY', 'account_status'=>''));
+        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>'YYY', 'salt'=>null, 'account_status'=>''));
+               
+        $builders[] = FixtureBuilder::build('owners', array('full_name'=>'Salted User',
+        'email'=>'salteduser@example.com', 'is_activated'=>1, 'pwd'=>'saltedpass', 'salt'=>'salt', 'account_status'=>''));
 
         return $builders;
     }
@@ -83,7 +86,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetAllOwners() {
         $all_owners = $this->DAO->getAllOwners();
-        $this->assertEqual(sizeof($all_owners), 2);
+        $this->assertEqual(sizeof($all_owners), 3);
         $this->assertEqual($all_owners[0]->email, 'ttuser@example.com');
         $this->assertEqual($all_owners[1]->email, 'ttuser1@example.com');
     }
@@ -182,9 +185,9 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testCreate() {
         //Create new owner who does not exist
-        $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 1);
+        $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'salt', 'XXX', 'ThinkUp J. User2'), 1);
         //Create new owner who does exist
-        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 0);
+        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'salt', 'XXX', 'ThinkUp J. User2'), 0);
     }
 
     /**
@@ -223,7 +226,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new OwnerMySQLDAO($config_array);
 
         $this->assertFalse($dao->doesAdminExist());
-        $dao->createAdmin('test@example.com', 'password', 'adfadfad', 'My Full Name');
+        $dao->createAdmin('test@example.com', 'password', 'salt', 'adfadfad', 'My Full Name');
         $this->assertTrue($dao->doesAdminExist());
     }
 
@@ -326,4 +329,45 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         //        $data = $stmt->fetch();
         //        $this->assertEqual($data['is_activated'], 0);
     }
+    
+    public function testGenerateSalt(){
+        $salt_array = array();
+        $salt_array[] = $this->DAO->generateSalt('me@me.com');
+        $salt_array[] = $this->DAO->generateSalt('you@you.com');
+        $salt_array[] = $this->DAO->generateSalt('testing@test.com');
+        $salt_array[] = $this->DAO->generateSalt('hello@google.com');
+        $salt_array[] = $this->DAO->generateSalt('me+cats@lol.com');
+        $this->assertEqual(sizeof($salt_array), sizeof(array_unique($salt_array)));
+    }
+    
+    public function testGeneratePassword(){
+        $this->assertEqual($this->DAO->generatePassword('password', 'salt'), 
+        '212a4f83b0966b24188a7ac4f01abc81d70c6e3c118bd37ff789e3dd2109560f', "Password Generation is faulty, should be 
+        equal");
+        
+    }
+    
+    public function testGetSaltByEmail(){     
+        $this->assertEqual($this->DAO->getSaltByEmail('salteduser@example.com'), 'salt', 'Incorrect salt returned');
+        $this->assertNotEqual($this->DAO->getSaltByEmail('salteduser@example.com'), 'wrongsalt', 
+         'Wrong salt returned');
+    
+    }
+    
+    public function testCheckIfUserHasAUniqueSalt(){
+        $this->assertTrue($this->DAO->CheckIfUserHasAUniqueSalt('salteduser@example.com'), 'User should have unique salt');
+        $this->assertFalse($this->DAO->CheckIfUserHasAUniqueSalt('ttuser1@example.com'), 'User should not have unique salt');
+
+    }
+    
+    public function testUpdateSalt(){
+        $this->assertEqual($this->DAO->updateSalt('salteduser@example.com', 'newsalt'), 1, 'Problem updating salt');
+        $this->assertEqual($this->DAO->updateSalt('nonexistentuser@example.com', 'newsalt'), 0, 'Nothing should happen');
+    }
+    
+    public function testCheckSaltedPassword(){       
+        $this->assertTrue($this->DAO->checkSaltedPassword('salteduser@example.com', 'saltedpass'));
+        $this->assertFalse($this->DAO->checkSaltedPassword('salteduser@example.com', 'wrongpass'));
+    }
+    
 }
