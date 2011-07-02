@@ -33,6 +33,7 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 require_once THINKUP_ROOT_PATH.'webapp/plugins/hellothinkup/model/class.HelloThinkUpPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.TwitterRealtimePlugin.php';
 
 class TestOfWebapp extends ThinkUpUnitTestCase {
 
@@ -83,8 +84,47 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
 
         $menus_array = $webapp->getDashboardMenu($instance);
         $this->assertIsA($menus_array, 'Array');
-        $this->assertEqual(sizeof($menus_array), 18);
+        $this->assertEqual(sizeof($menus_array), 17);
         $this->assertIsA($menus_array['tweets-all'], 'MenuItem');
+
+        // now define the twitter realtime plugin but don't set as active... count should be the same
+        $builders = array();
+        $builders[] = FixtureBuilder::build('plugins', array('name'=>'Twitter Realtime',
+        'folder_name'=>'twitterrealtime',
+        'is_active' =>0));
+
+        $webapp->registerPlugin('twitterrealtime', "TwitterRealtimePlugin");
+        $menus_array = $webapp->getDashboardMenu($instance);
+        $this->assertIsA($menus_array, 'Array');
+        $this->assertEqual(sizeof($menus_array), 17);
+        // these two should only show up if the realtime plugin is active (which it is not in this case)
+        $this->assertFalse(isset($menus_array['home-timeline']));
+        $this->assertFalse(isset($menus_array['favd-all']));
+
+    }
+
+    public function testGetDashboardMenuWithRTPlugin() {
+
+        // define an active twitter realtime plugin
+        $builders = array();
+        $builders[] = FixtureBuilder::build('plugins', array('name'=>'Twitter Realtime',
+        'folder_name'=>'twitterrealtime',
+        'is_active' =>1));
+
+        $webapp = Webapp::getInstance();
+        $config = Config::getInstance();
+        $webapp->registerPlugin('twitter', "TwitterPlugin");
+        $webapp->setActivePlugin('twitter');
+
+        $instance = new Instance();
+        $instance->network_user_id = 930061;
+
+        $menus_array = $webapp->getDashboardMenu($instance);
+        $this->assertIsA($menus_array, 'Array');
+        $this->assertEqual(sizeof($menus_array), 19);
+        // check that the two additional menus are defined
+        $this->assertIsA($menus_array['home-timeline'], 'MenuItem');
+        $this->assertIsA($menus_array['favd-all'], 'MenuItem');
     }
 
     public function testGetDashboardMenuItem() {

@@ -180,6 +180,19 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $counter++;
         }
 
+        // Add some protected posts
+        $counter = 0;
+        while ($counter < 5) {
+            $post_id = $counter + 20000;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>123456,
+            'author_username'=>'user_123456', 'author_fullname'=>'User 123456', 'is_geo_encoded'=>0,
+            'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>1,
+            'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
+            $pseudo_minute.':00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter'));
+            $counter++;
+        }
+
         //Add replies to specific post
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>131, 'author_user_id'=>20,
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
@@ -199,7 +212,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'network'=>'twitter', 
         'post_text'=>'@shutterbug This is a link post reply http://example.com/', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'in_reply_to_post_id'=>41, 'location'=>'Mumbai, Maharashtra, India', 'reply_retweet_distance'=>1500, 
         'is_geo_encoded'=>1));
 
@@ -213,14 +226,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'quoter', 'author_fullname'=>'Quoter of Quotables', 'network'=>'twitter', 
         'post_text'=>'Be liberal in what you accept and conservative in what you send', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'location'=>'New Delhi, Delhi, India', 'geo'=>'28.635308,77.22496', 'is_geo_encoded'=>1));
         //retweet 1
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>135, 'author_user_id'=>20,
         'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter', 
         'post_text'=>'RT @quoter Be liberal in what you accept and conservative in what you send', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'in_retweet_of_post_id'=>134, 'location'=>'Chennai, Tamil Nadu, India', 'geo'=>'13.060416,80.249634', 
         'reply_retweet_distance'=>2000, 'is_geo_encoded'=>1, 'in_reply_to_post_id'=>null));
         //retweet 2
@@ -228,7 +241,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'user2', 'author_fullname'=>'User 2', 'network'=>'twitter', 
         'post_text'=>'RT @quoter Be liberal in what you accept and conservative in what you send', 
         'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'in_retweet_of_post_id'=>134, 'location'=>'Dwarka, New Delhi, Delhi, India', 'geo'=>'28.635308,77.22496', 
         'reply_retweet_distance'=>'0', 'is_geo_encoded'=>1));
         //retweet 3
@@ -236,7 +249,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'network'=>'twitter', 
         'post_text'=>'RT @quoter Be liberal in what you accept and conservative in what you send', 
         'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'in_retweet_of_post_id'=>134, 'location'=>'Mumbai, Maharashtra, India', 'geo'=>'19.017656,72.856178', 
         'reply_retweet_distance'=>1500, 'is_geo_encoded'=>1));
 
@@ -273,14 +286,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'author_username'=>'user3', 'author_fullname'=>'User 3', 'network'=>'twitter', 
         'post_text'=>'@user4 I\'m replying to another post not in the TT db', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'in_reply_to_user_id'=>20, 'in_reply_to_post_id'=>251));
 
         //Add post by instance not on public timeline
         $builders[] = FixtureBuilder::build('posts', array('post_id'=>143, 'author_user_id'=>24,
         'author_username'=>'notonpublictimeline', 'author_fullname'=>'Not on public timeline', 
         'network'=>'twitter', 'post_text'=>'This post should not be on the public timeline', 
-        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00'));
 
         //Add replies to specific post
@@ -1899,7 +1912,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetPoststoGeoencode() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getPoststoGeoencode();
-        $this->assertEqual(count($posts), 136);
+        $this->assertEqual(count($posts), 141);
         $this->assertIsA($posts, "array");
     }
 
@@ -2178,6 +2191,37 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($mention['user_name'], 'RSAMatthew');
         $this->assertEqual($mention['count_cache'], 1);
         $this->assertEqual($mp[0]['author_user_id'], 140955302);
+    }
+
+    /**
+     * test of getPostsByFriends method
+     */
+    public function testGetPostsByFriends() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>13, 'follower_id'=>18));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>19, 'follower_id'=>18));
+        $dao = new PostMySQLDAO();
+        $res = $dao->getPostsByFriends(18, 'twitter', 10);
+        $this->assertEqual(count($res), 10);
+        $this->assertEqual($res[0]->author_user_id,13);
+        $this->assertEqual($res[1]->author_user_id,19);
+    }
+
+    /**
+     * test of getPostsByFriends method. Checking that protected posts aren't included when the
+     * 'public' flag is set.
+     */
+    public function testGetPostsByFriends2() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>13, 'follower_id'=>18));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>123456, 'follower_id'=>18));
+        $dao = new PostMySQLDAO();
+        $res = $dao->getPostsByFriends(18, 'twitter', 5, 1, false); // not public
+        $this->assertEqual(count($res), 5);
+        $this->assertEqual($res[0]->author_user_id, 123456);
+        $res = $dao->getPostsByFriends(18, 'twitter', 5, 1, true); // public
+        $this->assertEqual(count($res), 5);
+        $this->assertEqual($res[0]->author_user_id,13);
     }
 
     /**

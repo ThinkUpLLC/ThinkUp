@@ -147,6 +147,9 @@ class Config {
     public function getGMTOffset($time = 0) {
         $time = $time ? $time : 'now';
         $tz = ($this->getValue('timezone')==null)?date('e'):$this->getValue('timezone');
+        // this may be currently required for some setups to avoid fatal php timezone complaints when
+        // exec'ing off the streaming child processes.
+        // date_default_timezone_set($tz);
         return timezone_offset_get( new DateTimeZone($tz), new DateTime($time) ) / 3600;
     }
 }
