@@ -29,6 +29,7 @@ require_once 'init.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.StreamCollect2.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.ConsumerUserStream.php';
 require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.StreamMessageQueueMySQL.php';
+require_once THINKUP_WEBAPP_PATH.'plugins/twitterrealtime/model/class.StreamMessageQueueRedis.php';
 
 
 $stream_coll = new StreamCollect2($argc, $argv);

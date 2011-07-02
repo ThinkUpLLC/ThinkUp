@@ -62,7 +62,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $menus = $this->webapp->getDashboardMenu($instance);
 
-        $this->assertEqual(sizeof($menus), 18, "Test number of Twitter Dashboard menu items");
+        $this->assertEqual(sizeof($menus), 19, "Test number of Twitter Dashboard menu items");
         $first_post_menuitem = $menus["tweets-all"];
         $this->assertEqual($first_post_menuitem->name, "All Tweets", "Test name of first post menu item");
         $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");
@@ -74,12 +74,17 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($first_post_menuitem_dataset->dao_method_name, "getAllPosts",
         "Test first post menu item's first dataset fetching method");
 
-        // check favorites menu, which just has one item currently
+        // favorites menu
         $favs_menu = $menus["ftweets-all"];
         $this->assertEqual(sizeof($favs_menu), 1);
         $favs_menuitem_datasets = $favs_menu->getDatasets();
         $favs_menuitem_dataset = $favs_menuitem_datasets[0];
         $this->assertEqual($favs_menuitem_dataset->name, "all_tweets");
+        
+        $links_menuitem = $menus["favd-all"];
+        $links_menuitem_datasets = $links_menuitem->getDatasets();
+        $links_menuitem_dataset = $links_menuitem_datasets[0];
+        $this->assertEqual($links_menuitem_dataset->name, "all_favd");
 
         // check links menu
         $links_menu = $menus["links-friends"];
@@ -96,6 +101,11 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $links_menuitem_datasets = $links_menuitem->getDatasets();
         $links_menuitem_dataset = $links_menuitem_datasets[0];
         $this->assertEqual($links_menuitem_dataset->name, "links");
+        
+        $links_menuitem = $menus["home-timeline"];
+        $links_menuitem_datasets = $links_menuitem->getDatasets();
+        $links_menuitem_dataset = $links_menuitem_datasets[0];
+        $this->assertEqual($links_menuitem_dataset->name, "home_timeline");
 
         //Test post page menu items
         $post = new Post(array('id'=>1, 'author_user_id'=>10, 'author_username'=>'no one', 'author_fullname'=>"No One",

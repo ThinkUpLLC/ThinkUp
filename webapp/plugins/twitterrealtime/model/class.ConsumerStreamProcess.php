@@ -71,7 +71,7 @@ class ConsumerStreamProcess {
             $this->json_parser->parseJSON($status);
             $logger->logDebug("retrieved item is: [" . $status . "]", __METHOD__.','.__LINE__);
         } else {
-            $logger->logDebug(" -ran out of list items -- sleeping " . $this->STIME, __METHOD__.','.__LINE__);
+            // $logger->logDebug(" -ran out of list items -- sleeping " . $this->STIME, __METHOD__.','.__LINE__);
             sleep($this->STIME);
         }
     }
