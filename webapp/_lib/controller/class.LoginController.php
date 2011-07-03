@@ -61,6 +61,14 @@ class LoginController extends ThinkUpController {
                     }
                     $this->addToView('email', $user_email);
                     $owner = $owner_dao->getByEmail($user_email);
+                    if($owner_dao->checkIfUserHasAUniqueSalt($user_email)){ // if the user has a unique salt get it
+                        $salt =  $owner_dao->getSaltByEmail($user_email);
+                        $saltedPassword =  $owner_dao->generatePassword($_POST['pwd'], $salt);
+                        $validPass =  $owner_dao->checkSaltedPassword($user_email, $saltedPassword);                       
+                    }
+                    else{
+                        $validPass = false;
+                    }                  
                     if (!$owner) {
                         $this->addErrorMessage("Incorrect email");
                         return $this->generateView();
@@ -68,7 +76,7 @@ class LoginController extends ThinkUpController {
                         $this->addErrorMessage("Inactive account. " . $owner->account_status. ". ".
                         '<a href="forgot.php">Reset your password.</a>');
                         return $this->generateView();
-                    } elseif (!$session->pwdCheck($_POST['pwd'], $owner_dao->getPass($user_email))) { //failed login
+                    } elseif (!$session->pwdCheck($_POST['pwd'], $owner_dao->getPass($user_email)) && !$validPass) { //failed login
                         if ($owner->failed_logins >= 10) {
                             $owner_dao->deactivateOwner($user_email);
                             $owner_dao->setAccountStatus($user_email,
@@ -78,7 +86,15 @@ class LoginController extends ThinkUpController {
                         $this->addErrorMessage("Incorrect password");
                         return $this->generateView();
                     } else {
-                        // this sets variables in the session
+                        // user has logged in sucessfully this sets variables in the session
+                        // if they dont have a unqiue salt generate one and store it in the database
+                        if(!$owner_dao->checkIfUserHasAUniqueSalt($user_email)){
+                                $salt = $owner_dao->generateSalt($user_email);
+                                $cryptpass = $owner_dao->generatePassword($_POST['pwd'], $salt);
+                                $owner_dao->updatePassword($user_email, $cryptpass);
+                                $owner_dao->updateSalt($user_email, $salt);
+                        }
+                        
                         $session->completeLogin($owner);
                         $owner_dao->updateLastLogin($user_email);
                         $owner_dao->resetFailedLogins($user_email);
