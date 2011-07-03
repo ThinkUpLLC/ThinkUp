@@ -41,6 +41,8 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->builders = self::buildData();
         $this->DAO = new OwnerMySQLDAO();
+        $this->config = Config::getInstance();
+        $this->prefix = $this->config->getValue('table_prefix');
     }
 
     protected function buildData() {
@@ -48,7 +50,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
         'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>'XXX', 'activation_code'=>'8888', 
-        'account_status'=>''));
+        'account_status'=>'', 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
         'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>'YYY', 'account_status'=>''));
@@ -72,6 +74,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($existing_owner->email, 'ttuser@example.com');
         $this->assertEqual($existing_owner->failed_logins, 0);
         $this->assertEqual($existing_owner->account_status, '');
+        $this->assertEqual($existing_owner->api_key, 'c9089f3c9adaf0186f6ffb1ee8d6501c');
 
         //owner does not exist
         $non_existing_owner = $this->DAO->getByEmail('idontexist@example.com');
@@ -185,6 +188,49 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 1);
         //Create new owner who does exist
         $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 0);
+
+        // we should validate this created user data
+        $sql = "select *, unix_timestamp(joined) as joined_ts from " .
+        $this->prefix . "owners where email = 'ttuser2@example.com'";
+        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual('ThinkUp J. User2', $data['full_name']);
+        $this->assertEqual('s3cr3t', $data['pwd']);
+        $this->assertEqual(0, $data['is_activated']);
+        $this->assertEqual(0, $data['is_admin']);
+        $this->assertEqual('0000-00-00', $data['last_login']);
+        $this->assertEqual('ttuser2@example.com', $data['email']);
+        $this->assertTrue( time() < ($data['joined_ts'] + (60 * 60 * 25) )); // joind within last 25 hours
+        $this->assertNotNull($data['api_key']);
+        $this->assertEqual(strlen($data['api_key']), 32); //md5 32 char api key
+    }
+
+    /**
+     * Test reset api key
+     */
+    public function testResetAPIKey() {
+
+        // bad user id, key not reset
+        $new_api_key = $this->DAO->resetAPIKey(-99);
+        $this->assertFalse($new_api_key);
+        $sql = "select id, api_key from " . $this->prefix . "owners where id = " .
+        $this->builders[0]->columns['last_insert_id'];
+        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($this->builders[0]->columns['api_key'], $data['api_key']); // should be the same api_key
+
+        // good user id, key reset
+        $new_api_key = $this->DAO->resetAPIKey($this->builders[0]->columns['last_insert_id']);
+        $this->assertEqual(strlen($data['api_key']), 32); //md5 32 char api key
+        $sql = "select id, api_key from " . $this->prefix . "owners where id = " .
+        $this->builders[0]->columns['last_insert_id'];
+        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual($this->builders[0]->columns['last_insert_id'], $data['id']);
+        $this->assertNotEqual($this->builders[0]->columns['api_key'], $data['api_key']); // should be a new api_key
+        $this->assertNotNull($data['api_key']);
+        $this->assertEqual(strlen($data['api_key']), 32); //md5 32 char api key
+        $this->assertEqual($new_api_key, $data['api_key']);
     }
 
     /**

@@ -40,7 +40,8 @@ SELECT
     is_activated,
     password_token,
     account_status,
-    failed_logins
+    failed_logins,
+    api_key
 FROM #prefix#owners AS o
 WHERE email = :email;
 SQL;
@@ -153,16 +154,18 @@ SQL;
 
     private function createOwner($email, $pass, $acode, $full_name, $is_admin) {
         if (!$this->doesOwnerExist($email)) {
-            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, joined=NOW(), activation_code=:acode, ";
-            $q .= "full_name=:full_name";
+            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, joined=NOW(), activation_code=:acode, " .
+            "full_name=:full_name, api_key=:api_key";
             if ($is_admin) {
                 $q .= ", is_admin=1";
             }
+            $api_key = $this->generateAPIKey();
             $vars = array(
                 ':email'=>$email,
                 ':pass'=>$pass,
                 ':acode'=>$acode,
-                ':full_name'=>$full_name
+                ':full_name'=>$full_name,
+                ':api_key'=>$api_key
             );
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $ps = $this->execute($q, $vars);
@@ -270,5 +273,25 @@ SQL;
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, array(':is_activated' => $is_activated, ':id' => $id));
         return $this->getUpdateCount($stmt);
+    }
+
+    public function resetAPIKey($id) {
+        $q = "UPDATE #prefix#owners SET api_key=:api_key WHERE id=:id";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $new_api_key = $this->generateAPIKey();
+        $stmt = $this->execute($q, array(':api_key' => $new_api_key, ':id' => $id));
+        if($this->getUpdateCount($stmt) == 0) {
+            return false;
+        } else {
+            return $new_api_key;
+        }
+    }
+
+    /**
+     * Generate a new API KEY - md5 hashed random string
+     * @return str A generated API Key
+     */
+    private function generateAPIKey() {
+         return md5(uniqid(mt_rand(), true)); // generate random api key
     }
 }

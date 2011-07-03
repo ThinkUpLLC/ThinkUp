@@ -185,4 +185,12 @@ interface OwnerDAO {
      * @return int number of updated rows.
      */
     public function setOwnerActive($id, $is_activated);
+
+    /**
+     * Generates and sets a new API KEY
+     * 
+     * @param str $owner_id
+     * @return str A new API Key
+     */
+    public function resetAPIKey($id);
 }

@@ -81,6 +81,12 @@ class Owner {
     var $account_status;
 
     /**
+     * String api_key for API auth
+     * @var str
+     */
+    var $api_key;
+
+    /**
      * Constructor
      * @param array $val Key/value pairs to construct Owner
      * @return Owner
