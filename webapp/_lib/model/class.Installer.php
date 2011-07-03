@@ -636,7 +636,6 @@ class Installer {
             'db_socket' => $db_config['db_socket'],
             'db_port' => $db_config['db_port'],
             'table_prefix' => $db_config['table_prefix'],
-            'GMT_offset' => $db_config['GMT_offset'],
             'timezone' => $db_config['timezone']
         );
 

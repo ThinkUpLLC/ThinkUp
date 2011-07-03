@@ -110,7 +110,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertText('Houston, we have a problem: Account activation failed.');
 
         //Get activation code for user from database
-        date_default_timezone_set('America/Los_Angeles');
+        Utils::setDefaultTimezonePHPini();
         $owner_dao = new OwnerMySQLDAO();
         $code = $owner_dao->getActivationCode('user@example.com');
         $activation_code = $code['activation_code'];
@@ -134,4 +134,56 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertTitle('Configure Your Account | ThinkUp');
         $this->assertText('admin');
     }
+
+    public function testFieldLevelMessagesForInvalidInputs() {
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
+
+        //Config file doesn't exist
+        $this->assertFalse(file_exists($THINKUP_CFG['source_root_path'].
+        'webapp/test_installer/thinkup/config.inc.php'));
+
+        //Start installation process
+        $this->get($this->url.'/test_installer/thinkup/');
+        $this->assertTitle("ThinkUp");
+        $this->assertText('ThinkUp\'s configuration file does not exist! Try installing ThinkUp.');
+        $this->clickLink("installing ThinkUp.");
+        $this->assertText('Great! Your system has everything it needs to run ThinkUp. You may proceed to the next '.
+        'step.');
+        $this->clickLinkById('nextstep');
+
+        $this->assertText('Create Your ThinkUp Account');
+        $this->setField('full_name', '');
+        $this->setField('site_email', 'notavalidemailaddress');
+        $this->setField('password', 'secdddddd');
+        $this->setField('confirm_password', 'secret');
+        $this->setField('timezone', '');
+
+        $this->setField('db_host', '');
+        $this->setField('db_name', '');
+        $this->setField('db_user', '');
+        $this->setField('db_passwd', '');
+        $this->setField('db_socket', '');
+        $this->clickSubmitByName('Submit');
+
+        $this->assertNoText('ThinkUp has been installed successfully. Check your email account; an account activation '.
+        'message has been sent.');
+        $this->assertText('Your passwords did not match');
+        $this->assertText('Please enter a database host.');
+        $this->assertText('Please enter a database host.');
+        $this->assertText("Please select your server's timezone.");
+    }
+
+    // Can't use this test b/c we can't change the PHP ini settings of host instance
+    //    public function testTimezoneDropdownDefaultValue() {
+    //        //if php.ini's date.timezone is set to America/New_York, so should the tz dropdown in the UI
+    //        ini_set('date.timezone', 'America/New_York');
+    //        $this->get($this->url.'/test_installer/thinkup/install/index.php?step=2');
+    //        $this->assertFieldById('timezone', 'America/New_York');
+    //
+    //        //if php.ini's date.timezone isn't set at all the tz dropdown should say so
+    //        ini_set('date.timezone', '');
+    //        Utils::setDefaultTimezonePHPini();
+    //        $this->get($this->url.'/test_installer/thinkup/install/index.php?step=2');
+    //        $this->assertFieldById('timezone', '');
+    //    }
 }

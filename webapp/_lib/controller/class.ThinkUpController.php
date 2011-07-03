@@ -381,7 +381,7 @@ abstract class ThinkUpController {
             }
         } catch (Exception $e) {
             //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings
-            date_default_timezone_set('America/Los_Angeles');
+            Utils::setDefaultTimezonePHPini();
             $content_type = $this->content_type;
             if (strpos($content_type, ';') !== false) {
                 $exploded = explode(';', $content_type);

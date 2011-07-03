@@ -43,6 +43,7 @@
             </div>
           </div>
           <div class="clearfix append_20">
+          {include file="_usermessage.tpl" field="email"}
             <div class="grid_5 prefix_3 right">
               <label>Email&nbsp;Address</label>
             </div>
@@ -52,6 +53,7 @@
           </div>
 
           <div class="clearfix append_20">
+          {include file="_usermessage.tpl" field="password"}
             <div class="grid_5 prefix_3 right">
               <label>Choose&nbsp;Password</label>
             </div>
@@ -70,11 +72,13 @@
           </div>
 
           <div class="clearfix append_20">
+          {include file="_usermessage.tpl" field="timezone"}
             <div class="grid_6 prefix_2 right">
-              <label>Your Time Zone</label>
+              <label>Server Time Zone</label>
             </div>
             <div class="grid_10 prefix_1 left">
               <select name="timezone" id="timezone" style="margin-top:1.25em">
+              <option value=""{if $current_tz eq ''} selected{/if}>date.timezone not set in php.ini. Select timezone:</option>
                 {foreach from=$tz_list key=group_name item=group}
                   <optgroup label='{$group_name}'>
                     {foreach from=$group item=tz}
@@ -83,13 +87,15 @@
                   </optgroup>
                 {/foreach}
               </select>
-              <span class="input_information">Choose the location closest to you.</span>
+              <span class="input_information">Defaults to <a href="http://www.php.net/manual/en/function.date-default-timezone-get.php">php.ini's date.timezone value</a>. {$current_server_time}</span>
             </div>
           </div>
 
           <h2 class="clearfix step_title">Connect ThinkUp to Your Database</h2>
 
           <div class="clearfix append_20">
+          {include file="_usermessage.tpl" field="database"}
+          {include file="_usermessage.tpl" field="database_host"}
             <div class="grid_5 prefix_3 right">
               <label>Database Host</label>
             </div>
@@ -102,6 +108,7 @@
           
 
           <div class="clearfix append_20">
+          {include file="_usermessage.tpl" field="database_name"}
             <div class="grid_5 prefix_3 right">
               <label>Database Name</label>
             </div>

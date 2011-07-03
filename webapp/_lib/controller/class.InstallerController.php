@@ -39,7 +39,7 @@ class InstallerController extends ThinkUpController {
 
     public function __construct($session_started=false) {
         //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings
-        date_default_timezone_set('America/Los_Angeles');
+        Utils::setDefaultTimezonePHPini();
         Utils::defineConstants();
         //Don't call parent constructor because config.inc.php doesn't exist yet
         //Instead, set up the view manager with manual array configuration
@@ -167,6 +167,9 @@ class InstallerController extends ThinkUpController {
         }
 
         $current_tz = isset($_POST['timezone']) ? $_POST['timezone'] : date_default_timezone_get();
+        if (defined(PHP_INI_CONTAINS_TZ) && PHP_INI_CONTAINS_TZ === false) { //let user know no tz set in php.ini
+            $current_tz = '';
+        }
 
         $this->addToView('db_name', '');
         $this->addToView('db_user', '');
@@ -178,6 +181,10 @@ class InstallerController extends ThinkUpController {
         $this->addToView('tz_list', $this->getTimeZoneList());
         $this->addToView('current_tz', $current_tz);
         $this->addToView('site_email', 'you@example.com');
+        $current_server_time = @exec('date');
+        $current_server_time =  (!empty($current_server_time))?"Current server time: <b>".
+        $current_server_time.'</b>':'';
+        $this->addToView('current_server_time', $current_server_time);
     }
 
     /**
@@ -209,11 +216,10 @@ class InstallerController extends ThinkUpController {
             $db_config['db_socket']    = $THINKUP_CFG['db_socket'];
             $db_config['db_port']      = $THINKUP_CFG['db_port'];
             $db_config['table_prefix'] = $THINKUP_CFG['table_prefix'];
-            $db_config['GMT_offset']   = $THINKUP_CFG['GMT_offset'];
             $db_config['timezone']     = $THINKUP_CFG['timezone'];
             $email                     = trim($_POST['site_email']);
         } else {
-            // make sure we're not from error of couldn't write config.inc.php
+            // make sure we're not from error or couldn't write config.inc.php
             if ( !isset($_POST['db_user']) && !isset($_POST['db_passwd']) && !isset($_POST['db_name']) &&
             !isset($_POST['db_host']) ) {
                 $this->addErrorMessage("Missing database credentials");
@@ -232,12 +238,6 @@ class InstallerController extends ThinkUpController {
             $db_config['table_prefix'] = trim($_POST['db_prefix']);
             $db_config['timezone']     = trim($_POST['timezone']);
             $email                     = trim($_POST['site_email']);
-
-            // get GMT offset in hours
-            $db_config['GMT_offset'] = timezone_offset_get(
-            new DateTimeZone($_POST['timezone']),
-            new DateTime('now')
-            ) / 3600;
         }
         $db_config['db_type'] = 'mysql'; //default for now
         $password = $_POST['password'];
@@ -247,18 +247,34 @@ class InstallerController extends ThinkUpController {
 
         // check email
         if ( !Utils::validateEmail($email) ) {
-            $this->addErrorMessage("Please enter a valid email address.");
+            $this->addErrorMessage("Please enter a valid email address.", "email");
             $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
-        } else if ( $password != $confirm_password || $password == '' ) { //check password
+        }
+
+        if ( $password != $confirm_password || $password == '' ) { //check password
             if ($password != $confirm_password) {
-                $this->addErrorMessage("Your passwords did not match.");
+                $this->addErrorMessage("Your passwords did not match.", "password");
             } else {
-                $this->addErrorMessage("Please choose a password.");
+                $this->addErrorMessage("Please choose a password.", "password");
             }
             $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
-        } elseif (($error = $this->installer->checkDb($db_config)) !== true) { //check db
+        }
+
+        if ($_POST['db_name'] == '') {
+            $this->addErrorMessage("Please enter a database name.", "database_name");
+        }
+
+        if ( $_POST['db_host'] == '') {
+            $this->addErrorMessage("Please enter a database host.", "database_host");
+        }
+
+        if ($_POST['timezone'] == '') {
+            $this->addErrorMessage("Please select your server's timezone.", "timezone");
+        }
+
+        if (($error = $this->installer->checkDb($db_config)) !== true) { //check db
             if (($p = strpos($error->getMessage(), "Unknown MySQL server host")) !== false ||
             ($p = strpos($error->getMessage(), "Can't connect to MySQL server")) !== false ||
             ($p = strpos($error->getMessage(), "Can't connect to local MySQL server through socket")) !== false ||
@@ -268,7 +284,7 @@ class InstallerController extends ThinkUpController {
                 $db_error = $error->getMessage();
             }
             $this->addErrorMessage("ThinkUp couldn't connect to your database. The error message is:<br /> ".
-            " <strong>$db_error</strong><br />Please correct your database information and try again.");
+            " <strong>$db_error</strong><br />Please correct your database information and try again.", "database");
             $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
         }

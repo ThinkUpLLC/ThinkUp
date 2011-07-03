@@ -38,8 +38,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     const FILE_DOWNLOAD_TIMEOUT = 60;
 
     public function setUp() {
-        date_default_timezone_set('America/Los_Angeles');
-
+        Utils::setDefaultTimezonePHPini();
         parent::setUp();
 
         $optiondao = new OptionMySQLDAO();
@@ -187,7 +186,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->assertText('Houston, we have a problem: Account activation failed.');
 
         //Get activation code for user from database
-        date_default_timezone_set('America/Los_Angeles');
+        Utils::setDefaultTimezonePHPini();
         $owner_dao = new OwnerMySQLDAO();
         $code = $owner_dao->getActivationCode('user@example.com');
         $activation_code = $code['activation_code'];

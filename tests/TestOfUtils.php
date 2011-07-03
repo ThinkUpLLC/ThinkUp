@@ -202,4 +202,20 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         "LikelihoodOfFollow ASC, u.follower_count DESC LIMIT 123 ;";
         $this->assertEqual($merged_sql, $expected_merged_sql);
     }
+
+    public function testSetDefaultTimezonePHPini() {
+        // no ini value should default to LA
+        ini_set('date.timezone', false);
+        Utils::setDefaultTimezonePHPini();
+        $tz = ini_get('date.timezone');
+        //$tz = date_default_timezone_get();
+        $this->assertEqual($tz, 'America/Los_Angeles');
+
+        // ini value present, should be set to that
+        ini_set('date.timezone','America/New_York');
+        Utils::setDefaultTimezonePHPini();
+        $tz = ini_get('date.timezone');
+        //$tz = date_default_timezone_get();
+        $this->assertEqual($tz, 'America/New_York');
+    }
 }

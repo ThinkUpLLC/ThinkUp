@@ -296,7 +296,7 @@ class Utils {
         ob_end_clean();
         return $content;
     }
-    
+
     /**
      * Given a PDO SQL statement with parameters to bind, replaces the :param tokens with the parameters and return
      * a string for display/debugging purposes.
@@ -309,5 +309,20 @@ class Utils {
             $sql = str_replace($k, (is_int($v))?$v:"'".$v."'", $sql);
         }
         return $sql;
+    }
+
+    /**
+     * If date.timezone is not set in php.ini, default to America/Los_Angeles to avoid date() warning about
+     * using system settings.
+     * This method exists to avoid the warning which Smarty triggers in views that don't have access to a
+     * THINKUP_CFG timezone setting yet, like during installation, or when a config file doesn't exist.
+     */
+    public static function setDefaultTimezonePHPini() {
+        if (ini_get('date.timezone') == false) {
+            if ( !defined('PHP_INI_CONTAINS_TZ')) {
+                define('PHP_INI_CONTAINS_TZ', false);
+            }
+            ini_set('date.timezone','America/Los_Angeles'); // if not set in php.ini, use LA
+        }
     }
 }
