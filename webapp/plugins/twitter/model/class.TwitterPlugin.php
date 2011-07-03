@@ -255,6 +255,14 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         $poptabds->addHelp('userguide/listings/twitter/dashboard_followers-mostfollowed');
         $poptab->addDataset($poptabds);
         $menus["friends-mostfollowed"] = $poptab;
+        
+        // 'home timeline'
+        $tltab = new MenuItem("Timeline", "Your Home Timeline", $twitter_data_tpl);
+        $tltab2 = new Dataset("home_timeline", 'PostDAO', "getPostsByFriends",
+        array($instance->network_user_id, $instance->network, 20, '#page_number#', !Session::isLoggedIn()),
+        'getPostsByFriendsIterator', array($instance->network_user_id, 'twitter', GridController::getMaxRows()));
+        $tltab->addDataset($tltab2);
+        $menus["home-timeline"] = $tltab;
 
         //Follower count history
         $follower_history_tpl = Utils::getPluginViewDirectory('twitter').'twitter.followercount.tpl';

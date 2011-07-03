@@ -74,6 +74,7 @@
 
 {if ($display eq 'mentions-all' and not $all_mentions) or 
     ($display eq 'mentions-allreplies' and not $all_replies) or
+    ($display eq 'home-timeline' and not $home_timeline) or
     ($display eq 'mentions-orphan' and not $orphan_replies)}
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
     <p>
@@ -96,6 +97,14 @@
 <br>
   {foreach from=$all_mentions key=tid item=t name=foo}
     {include file="_post.author_no_counts.tpl" post=$t}
+  {/foreach}
+</div>
+{/if}
+
+{if $home_timeline}
+<div id="all-posts-div">
+  {foreach from=$home_timeline key=tid item=t name=foo}
+    {include file="_post.tpl" t=$t}
   {/foreach}
 </div>
 {/if}
