@@ -244,6 +244,12 @@ class FacebookCrawler {
             "pub_date"=>$p->created_time, 
             "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
             'is_protected'=>$is_protected);
+
+            //sometimes the Facebook object doesn't contain a message field. If blank, try "name"
+            if ($ttp["post_text"] == '') {
+                $ttp["post_text"] = isset($p->name)?$p->name:'';
+            }
+
             array_push($thinkup_posts, $ttp);
             if ( isset($p->comments)) {
                 $comments_captured = 0;
