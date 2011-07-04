@@ -98,7 +98,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':location'=>$user->location,
             ':description'=>$user->description,
             ':url'=>$user->url,
-            ':is_protected'=>$user->is_protected,
+            ':is_protected'=>$this->convertBoolToDB($user->is_protected),
             ':follower_count'=>$user->follower_count,
             ':post_count'=>$user->post_count,
             ':found_in'=>$user->found_in,
