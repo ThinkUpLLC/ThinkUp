@@ -88,7 +88,7 @@ abstract class PluginHook {
      */
     public function getPluginObject($shortname) {
         if (!isset($this->plugins[$shortname]) ) {
-            throw new Exception("No plugin object defined for: " . $shortname);
+            throw new PluginNotFoundException($shortname);
         }
         return $this->plugins[$shortname];
     }

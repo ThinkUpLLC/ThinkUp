@@ -110,17 +110,11 @@
                 {/if}
               </div>
             </div>
-
-              
           </div> <!-- end .clearfix -->
-
-          </div> <!-- end .clearfix -->
-   
-
 
 {if $retweets}
 <div class="prepend">
-  <div class="append_20 clearfix bt"><br />
+  <div class="append_20 clearfix bt"><br /><br />
     {foreach from=$retweets key=tid item=t name=foo}
       {include file="_post.author_no_counts.tpl" post=$t scrub_reply_username=false}
     {/foreach}

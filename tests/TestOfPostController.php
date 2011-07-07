@@ -41,6 +41,8 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         parent::setUp();
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
+        $this->config = Config::getInstance();
+        $this->prefix = $this->config->getValue('table_prefix');
     }
 
     public function tearDown(){
@@ -220,9 +222,32 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertPattern("/This is a test post&#60;script&#62;alert\(&#39;wa&#39;\);&#60;\/script&#62;/", $results);
     }
 
+    public function testControlWithNonExistentPluginActivated() {
+        $data[] = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
+        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter',
+        'is_protected'=>0));
+        $data[] = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'0',
+        'network'=>'twitter'));
+        $data[] = FixtureBuilder::build('plugins', array('name'=>"Nonexistent", 'folder_name'=>'idontexist',
+        'is_active'=>1));
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+        $this->assertNoPattern("/No plugin object defined for/", $results);
+
+        //assert plugin has been deactivated
+        $sql = "SELECT * FROM " . $this->prefix . "plugins WHERE folder_name='idontexist';";
+        $stmt = PluginMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertEqual(0, $data['is_active']);
+    }
+
     private function buildPublicPostWithMixedAccessResponses($with_xss = false) {
         $post_text = 'This is a test post';
-        if($with_xss) { $post_text .= "<script>alert('wa');</script>"; } 
+        if ($with_xss) {
+            $post_text .= "<script>alert('wa');</script>";
+        }
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
         'author_username'=>'ev', 'post_text'=>$post_text, 'retweet_count_cache'=>'5', 'network'=>'twitter',
         'is_protected'=>'0'));

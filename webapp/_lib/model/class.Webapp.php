@@ -113,7 +113,14 @@ class Webapp extends PluginHook {
             $this->active_plugins = $plugin_dao->getActivePlugins();
             //For each active plugin, check if getPostDetailMenu method exists
             foreach ($this->active_plugins as $plugin) {
-                $plugin_class_name = $this->getPluginObject($plugin->folder_name);
+                try {
+                    $plugin_class_name = $this->getPluginObject($plugin->folder_name);
+                } catch (PluginNotFoundException $e) {
+                    //there's a plugin activated which doesn't exist in the source code, so deactivate it
+                    $plugin_id = $plugin_dao->getPluginId($plugin->folder_name);
+                    $plugin_dao->setActive($plugin_id, 0);
+                }
+
                 //if so, add to sidebar_menu
                 $p = new $plugin_class_name;
                 if ($p instanceof PostDetailPlugin) {

@@ -143,6 +143,9 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
     }
 
     public function setActive($id, $active) {
+        if (is_bool($active)) {
+            $active = $this->convertBoolToDB($active);
+        }
         $q = "
             UPDATE 
                 #prefix#plugins

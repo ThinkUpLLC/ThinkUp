@@ -418,7 +418,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $config = Config::getInstance();
-        $this->assertEqual('No plugin object defined for: idontexist', $v_mgr->getTemplateDataItem('error_msg'));
+        $this->assertEqual('No plugin object defined for idontexist', $v_mgr->getTemplateDataItem('error_msg'));
         $owner = $v_mgr->getTemplateDataItem('owner');
         $this->assertIsA($owner, 'Owner');
         $this->assertTrue(!$owner->is_admin);

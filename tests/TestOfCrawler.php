@@ -48,7 +48,7 @@ class TestOfCrawler extends ThinkUpUnitTestCase {
         $crawler = Crawler::getInstance();
         $this->assertTrue(isset($crawler));
         //clean copy of crawler, no registered plugins, will throw exception
-        $this->expectException( new Exception("No plugin object defined for: hellothinkup") );
+        $this->expectException( new PluginNotFoundException("hellothinkup") );
         $this->assertEqual($crawler->getPluginObject("hellothinkup"), "HelloThinkUpPlugin");
         //register a plugin
         $crawler->registerPlugin('hellothinkup', 'HelloThinkUpPlugin');

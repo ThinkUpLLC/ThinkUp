@@ -49,7 +49,7 @@ class TestOfPluginHook extends ThinkUpBasicUnitTestCase {
      */
     public function testGetPluginObjectDoesntExist() {
         $test_ph = new TestFauxHookableApp();
-        $this->expectException( new Exception("No plugin object defined for: notregistered") );
+        $this->expectException( new PluginNotFoundException("notregistered") );
         $plugin_obj = $test_ph->getPluginObject("notregistered");
     }
 
@@ -65,7 +65,8 @@ class TestOfPluginHook extends ThinkUpBasicUnitTestCase {
 
         //register an object without the right method
         $test_ph->registerPerformAppFunction('TestFauxPluginOne');
-        $this->expectException( new Exception("The TestFauxPluginOne object does not have a performAppFunction method.") );
+        $this->expectException(new
+        Exception("The TestFauxPluginOne object does not have a performAppFunction method."));
         $test_ph->performAppFunction();
     }
 }
