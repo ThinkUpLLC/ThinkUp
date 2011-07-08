@@ -1,7 +1,7 @@
 
  <div class="">
+  <div class="help-container">{insert name="help_link" id=$display}</div>
   {if $description}<i>{$description}</i>{/if}
-  {insert name="help_link" id=$display}
 </div>
     {if $error}
     <p class="error">

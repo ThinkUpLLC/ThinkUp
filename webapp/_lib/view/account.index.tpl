@@ -70,9 +70,8 @@
         <script type="text/javascript"> var site_root_path = '{$site_root_path}';</script>
         <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
         
-        
    <div class="prepend_20">
-    <div style="float:right;margin:20px">{insert name="help_link" id='backup'}</div>
+    <div class="help-container">{insert name="help_link" id='backup'}</div>
     <h1>Back Up and Export Data</h1>
 
     <p><br />
@@ -88,7 +87,7 @@
       <div class="thinkup-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
         {include file="_usermessage.tpl" field='password'}
-        <div style="float:right;margin:20px">{insert name="help_link" id='account'}</div>
+        <div class="help-container">{insert name="help_link" id='account'}</div>
         <h1>Password</h1><br />
           <form name="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
             <div class="clearfix">
@@ -166,7 +165,7 @@ data using a special URL which contains this key. You can reset your key to some
       <div class="section" id="ttusers">
         <div class="thinkup-canvas clearfix">
           <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-          <div style="float:right;margin:20px">{insert name="help_link" id='users'}</div>
+          <div class="help-container">{insert name="help_link" id='users'}</div>
             <h1>All Users</h1><br />
             <ul class="user-accounts">
               {foreach from=$owners key=oid item=o}

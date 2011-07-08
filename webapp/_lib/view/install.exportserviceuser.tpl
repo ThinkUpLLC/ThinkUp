@@ -4,7 +4,7 @@
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
 
-<div style="float:right;margin:20px">{insert name="help_link" id='export_user_data'}</div>
+<div class="help-container">{insert name="help_link" id='export_user_data'}</div>
 <h1>Export Service User Data</h1>
 
         {include file="_usermessage.tpl"}

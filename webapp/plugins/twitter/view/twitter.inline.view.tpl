@@ -1,7 +1,8 @@
+<div class="help-container">{insert name="help_link" id=$display}</div>
 <div class="clearfix">
   <h2>{$header}</h2>
   {if $description}
-    <i>{$description} {insert name="help_link" id=$display}
+    <i>{$description}
       {if $is_searchable}
         <br /><a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a> 
       {/if}
@@ -9,7 +10,6 @@
     </i>
   {/if}
 </div>
-
     {if $error}
     <p class="error">
         {$error}

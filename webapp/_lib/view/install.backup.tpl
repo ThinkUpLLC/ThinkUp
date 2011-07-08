@@ -5,7 +5,7 @@
       <div class="grid_22 push_1 clearfix">
         {include file="_usermessage.tpl"}
 
-<div style="float:right;margin:20px">{insert name="help_link" id='backup'}</div>
+<div class="help-container">{insert name="help_link" id='backup'}</div>
 <h1>Back Up Your ThinkUp Data</h1>
 
 {if $no_zip_support}

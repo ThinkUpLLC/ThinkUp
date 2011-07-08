@@ -1,12 +1,13 @@
 <div class="">
   {if $description}
-    <i>{$description} {insert name="help_link" id=$display}
+    <i>{$description} 
       {if $is_searchable}
         <br /><a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a> 
       {/if}
       {if $logged_in_user and $display eq 'all_facebook_posts'} | <a href="{$site_root_path}post/export.php?u={$instance->network_username}&n={$instance->network|urlencode}">Export</a>{/if}
     </i>
     {/if}
+    <div class="help-container">{insert name="help_link" id=$display}</div>
 </div>
 
 {if ($display eq 'all_facebook_posts' and not $all_facebook_posts) or 

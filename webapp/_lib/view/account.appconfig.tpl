@@ -1,5 +1,5 @@
   <div class="prepend_20">
-    <div style="float:right;margin:20px">{insert name="help_link" id='application_settings'}</div>
+    <div class="help-container">{insert name="help_link" id='application_settings'}</div>
     <h1>Application Settings</h1>
   </div>
   <div class="clearfix prepend_20">

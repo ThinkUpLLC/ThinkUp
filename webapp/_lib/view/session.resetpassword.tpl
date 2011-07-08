@@ -2,7 +2,7 @@
 {include file="_statusbar.tpl"}
 
 <div class="container_24 thinkup-canvas round-all">
-  <div class="prepend_20">
+  <div class="prepend_20" style="padding:20px">
     <h1>Reset Password</h1>
   </div>
   <div class="clearfix prepend_20">
