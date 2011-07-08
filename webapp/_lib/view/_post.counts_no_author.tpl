@@ -65,7 +65,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
     </div>
     <div class="grid_2 center">
     {if $post->network eq 'twitter'}
-     {if show_favorites_instead_of_retweets}
+     {if $show_favorites_instead_of_retweets && $show_favorites_instead_of_retweets != false}
        {if $post->favd_count}
        <span class="reply-count">
           <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network}&v=favs">{$post->favd_count}</a>
