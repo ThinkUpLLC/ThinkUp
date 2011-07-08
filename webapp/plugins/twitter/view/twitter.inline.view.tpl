@@ -50,7 +50,7 @@
 
 {if $all_favd and $display eq 'favd-all'}
   {foreach from=$all_favd key=tid item=t name=foo}
-    {include file="_post.tpl" t=$t}
+    {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets='true'}
   {/foreach}
 {/if}
 

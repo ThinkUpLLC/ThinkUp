@@ -105,7 +105,8 @@
                   <h3>Forward{if $post->all_retweets > 1}s{/if} to {$reach|number_format}</h3>
                {/if} <!-- end if retweets -->
                {if $favds}
-                  <h2>Users who favorited this post.</h2>
+                  <h1>{$favds|@count}</h2>
+                  <h3>favorites</h3>
                {/if} <!-- end if favds -->
                 {/if}
               </div>
@@ -126,7 +127,7 @@
   <div class="prepend">
   <div class="append_20 clearfix bt"><br />
     {foreach from=$favds key=fid item=f name=foo}
-        {include file="_userf.tpl" f=$f}
+        {include file="_user.tpl" f=$f}
     {/foreach}
   </div>
   </div>

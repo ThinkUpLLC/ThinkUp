@@ -6,13 +6,14 @@ Included in multiple plugin templates which render lists of posts.
 Parameters:
 $post (required) Post object
 $scrub_reply_username (optional) If set or not false, scrub the @reply username from the post_text
+$show_favorites_instead_of_retweets (optional) If set or not false, show favorites instead of retweet counts.
 *}
 
 {if $smarty.foreach.foo.first}
   <div class="header clearfix">
     <div class="grid_14 alpha">&#160;</div>
     <div class="grid_2 center">
-      {if $post->network eq 'twitter'}retweets{/if}
+      {if $post->network eq 'twitter'}{if $show_favorites_instead_of_retweets}favorites{else}retweets{/if}{/if}
     </div>
     <div class="grid_2 center omega">
       replies
@@ -64,12 +65,22 @@ $scrub_reply_username (optional) If set or not false, scrub the @reply username 
     </div>
     <div class="grid_2 center">
     {if $post->network eq 'twitter'}
+     {if show_favorites_instead_of_retweets}
+       {if $post->favd_count}
+       <span class="reply-count">
+          <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network}&v=favs">{$post->favd_count}</a>
+       </span>
+      {else}
+        &#160;
+      {/if}
+    {else}
       {if $post->all_retweets > 0}
         <span class="reply-count">
         <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network}&v=fwds">{$post->all_retweets|number_format}{if $post->rt_threshold}+{/if}<!-- retweet{if $post->retweet_count_cache eq 1}{else}s{/if}--></a>
         </span>
       {else}
         &#160;
+      {/if}
       {/if}
     {/if}
     </div>

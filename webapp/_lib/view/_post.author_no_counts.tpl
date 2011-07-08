@@ -7,6 +7,8 @@ Parameters:
 $post (required) Post object
 $scrub_reply_username (optional) If set or not false, scrub the @reply username from the post_text
 $username_link (optional) If set to 'internal', render username link to internal user page.
+$show_distance (optional) If set to 'true', show the location and reply/retweet distance from original post.
+$unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles or kilometers of distance.
 *}
 <div class="clearfix">
 <div class="individual-tweet post clearfix{if $post->is_protected} private{/if}">
@@ -25,6 +27,8 @@ $username_link (optional) If set to 'internal', render username link to internal
 
       {if ($post->author && $post->author->follower_count > 0)}
         <div class="gray">{$post->author->follower_count|number_format} followers</div>
+      {else}
+      <br>
       {/if}
         {if $post->network == 'twitter'}
             {if $post->is_reply_by_friend or $post->is_retweet_by_friend}
@@ -77,7 +81,7 @@ $username_link (optional) If set to 'internal', render username link to internal
         from 
         {if $show_distance}
             {if $unit eq 'km'}
-              {$post->reply_retweet_distance|number_format} kms away
+              {$post->reply_retweet_distance|number_format} kms away in
               {else}
               {$post->reply_retweet_distance|number_format} miles away in 
             {/if}
