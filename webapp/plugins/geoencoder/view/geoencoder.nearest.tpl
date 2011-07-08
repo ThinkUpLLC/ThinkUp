@@ -34,7 +34,7 @@
    <div class="append_20 clearfix"><br />
      {foreach from=$geoencoder_nearest key=tid item=t name=foo}
         {if  $smarty.foreach.foo.index > 1}
-       {include file="_post.author_no_counts.tpl" t=$t sort='no' show_distance='true' scrub_reply_username='true' unit=$geoencoder_options.distance_unit->option_value}
+       {include file="_post.author_no_counts.tpl" post=$t sort='no' show_distance='true' scrub_reply_username='true' unit=$geoencoder_options.distance_unit->option_value}
        {/if}
      {/foreach}
    </div>
