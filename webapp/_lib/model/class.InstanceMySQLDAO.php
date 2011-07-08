@@ -376,16 +376,24 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         if ($ot){
             $q .= "total_posts_by_owner = :tpbo, ";
         }
-        $q .= "total_replies_in_system = (SELECT count(id) FROM #prefix#posts ";
-        $q .= "WHERE network = :network AND MATCH(post_text) AGAINST(:username)), ";
+        // For performance reasons, set this to null for now.
+        $q .= "total_replies_in_system=null, ";
+        // The former subquery is a performance hog, and the field is not in use.
+        //@TODO Remove the field from the table entirely.
+        //        $q .= "total_replies_in_system = (SELECT count(id) FROM #prefix#posts ";
+        //        $q .= "WHERE network = :network AND MATCH(post_text) AGAINST(:username)), ";
         $q .= "total_follows_in_system = (SELECT count(*) FROM #prefix#follows ";
         $q .= "WHERE user_id=:uid AND active=1 AND network = :network), ";
         $q .= "is_archive_loaded_follows = :ialf, ";
         $q .= "is_archive_loaded_replies = :ialr, ";
-        $q .= "earliest_reply_in_system = (SELECT pub_date ";
-        $q .= "     FROM #prefix#posts ";
-        $q .= "     WHERE network = :network AND match (post_text) AGAINST(:username) ";
-        $q .= "     ORDER BY pub_date ASC LIMIT 1), ";
+        // For performance reasons, set this to null for now.
+        $q .= "earliest_reply_in_system = null, ";
+        // The former subquery is a performance hog, and the field is not in use.
+        //@TODO Remove the field from the table entirely.
+        //        $q .= "earliest_reply_in_system = (SELECT pub_date ";
+        //        $q .= "     FROM #prefix#posts ";
+        //        $q .= "     WHERE network = :network AND match (post_text) AGAINST(:username) ";
+        //        $q .= "     ORDER BY pub_date ASC LIMIT 1), ";
         $q .= "earliest_post_in_system = (SELECT pub_date ";
         $q .= "     FROM #prefix#posts ";
         $q .= "     WHERE author_user_id = :uid AND network = :network ";

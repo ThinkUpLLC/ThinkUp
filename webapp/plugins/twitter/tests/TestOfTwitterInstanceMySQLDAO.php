@@ -627,7 +627,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->last_page_fetched_replies, 2);
         $this->assertEqual($result->last_post_id, 512);
         $this->assertEqual($result->last_page_fetched_tweets, 17);
-        $this->assertEqual($result->total_replies_in_system, $mentions);
+        $this->assertNull($result->total_replies_in_system);
         $this->assertEqual($result->total_follows_in_system, $follows);
         $this->assertEqual($result->total_posts_in_system, $posts);
         $this->assertTrue($result->is_archive_loaded_follows);
