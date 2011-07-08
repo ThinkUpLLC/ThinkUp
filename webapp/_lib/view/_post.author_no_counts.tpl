@@ -37,7 +37,6 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
                 <a href="http://twitter.com/{$post->author_username}" title="{$post->author_username} on Twitter"><span class="sprite ui-icon-person"></span></a>
             {/if}
         {/if}
-      
     </div>
     <div class="grid_12 omega">
       {if $post->link->is_image}
@@ -48,11 +47,9 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
       <div class="post">
         {if $post->post_text}
           {if $scrub_reply_username}
-            {if $reply_count && $reply_count > $top_20_post_min}
-                <div class="reply_text" id="reply_text-{$smarty.foreach.foo.iteration}">
-            {/if} 
+            <div class="reply_text" id="reply_text-{$smarty.foreach.foo.iteration}">
             {$post->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
-            {if $reply_count && $reply_count > $top_20_post_min}</div>{/if}
+            </div>
           {else}
             {$post->post_text|filter_xss|link_usernames_to_twitter}
           {/if}
