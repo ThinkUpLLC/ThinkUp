@@ -1,7 +1,7 @@
 Understanding ThinkUp's Folder Permissions
 ==========================================
 
-In order for ThinkUp to run, it must be able to write cached and compiled files to a speific folder within its own
+In order for ThinkUp to run, it must be able to write cached and compiled files to a specific folder within its own
 installation, the ``/_lib/view/compiled_view/`` folder and its subfolders.
 
 The recommended and most secure way to grant ThinkUp write access to these folders is to change the owner of this
@@ -17,4 +17,5 @@ writable by the world. To do that, you can run this command:
 
 ``chmod -R 777 /your/path/to/thinkup/_lib/view/compiled_view/``
 
-If possible, change the folder's owner to the web server user instead of of setting its permissions to world-writable.
+If possible, change the folder's owner to the web server user instead of setting its permissions to world-writable.
+
