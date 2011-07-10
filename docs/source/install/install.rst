@@ -2,7 +2,7 @@ Step-by-Step Installation Guide
 ===============================
 
 The following is a general tutorial for how to install ThinkUp on
-an arbitrary web host. This document assumes some familiar with
+an arbitrary web host. This document assumes some familiarity with
 basic web hosting concepts; you may need to refer to your hosting
 company's documentation for specifics, or find an
 environment-specific tutorial in the `Community Wiki <https://github.com/ginatrapani/ThinkUp/wiki/Installing-ThinkUp>`_.
@@ -135,7 +135,7 @@ The opening section creates your administrative account for the system:
 
 .. image:: imgs/configdb.png
 
-The second section is where ThinkUp need the details about your database:
+The second section is where ThinkUp needs the details about your database:
 
 -  Under *Database Host*, enter the address of the server for your database.
 -  Under *Database Name*, type the name of the database you created earlier, *or* the name of the database you plan on

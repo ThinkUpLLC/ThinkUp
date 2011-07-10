@@ -37,7 +37,7 @@ are large. (We consider a ThinkUp database with any table over 1 million rows la
 
 Depending on your server speed and utilization, it can take a very long time for database structure updates to 
 complete on very large installations; so the web-based backup tool can time out. To be on the safe side,
-large installation administrators should use the command line backup tool to avoid potential time-outs..
+large installation administrators should use the command line backup tool to avoid potential time-outs.
 
 To use the CLI backup, SSH into your web server and ``cd`` into the ``thinkup/install/cli/`` folder.
 Then, run:
@@ -49,7 +49,7 @@ This command will back up your current database.
 **Restore Your ThinkUp Backup**
 
 In :doc:`Settings>Application
-</userguide/settings/application>`,you can upload a ThinkUp backup file under the "Restore Your Thinkup Database."
+</userguide/settings/application>`, you can upload a ThinkUp backup file under the "Restore Your Thinkup Database."
 Click on the "Choose File" button to upload your ThinkUp backup file and restore it. This restore operation will
 overwrite your entire existing database; use with caution.
 
@@ -57,7 +57,7 @@ Export a Single Service User's Data
 -----------------------------------
 
 If you want to move a single service user's ThinkUp archive to another ThinkUp installation--if, say, your database
-has become too big and unwieldy, or a user has set up a new ThinkUp installation and want to import their 
+has become too big and unwieldy, or a user has set up a new ThinkUp installation and wants to import their
 existing archive--you can do that.
 
 Under :doc:`Settings>Application
@@ -70,7 +70,7 @@ the data into another ThinkUp installation.
 When to Back Up and When to Export
 ----------------------------------
 
-ThinkUp's Backup tool exports the entire database, including internal database ID's, to file. Use the backup
+ThinkUp's Backup tool exports the entire database, including internal database ID's, to a file. Use the backup
 tool when you are starting with a completely fresh, new database and want to restore everything: including ThinkUp
 users, passwords, and plugin settings.
 
