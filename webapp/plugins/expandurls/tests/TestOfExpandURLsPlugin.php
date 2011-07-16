@@ -63,6 +63,10 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link = $link_dao->getLinkById(2);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, 'Error expanding URL');
+
+        $link = $link_dao->getLinkById(3);
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->error, 'Invalid URL');
     }
 
     private function buildData() {
