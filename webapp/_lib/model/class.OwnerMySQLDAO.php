@@ -28,6 +28,11 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
+    /**
+     *
+     * @var str
+     */
+    private $salt = "ab194d42da0dff4a5c01ad33cb4f650a7069178b";
 
     public function getByEmail($email) {
         $q = <<<SQL
@@ -144,18 +149,20 @@ SQL;
         return $this->getUpdateCount($ps);
     }
 
-    public function create($email, $pass, $acode, $full_name) {
-        return $this->createOwner($email, $pass, $acode, $full_name, false);
+    public function create($email, $pass, $salt, $acode, $full_name) {
+        return $this->createOwner($email, $pass, $salt, $acode, $full_name, false);
+    }
+    
+    public function createAdmin($email, $pass, $salt, $activation_code, $full_name) {
+        return $this->createOwner($email, $pass, $salt, $activation_code, $full_name, true);
     }
 
-    public function createAdmin($email, $pwd, $activation_code, $full_name) {
-        return $this->createOwner($email, $pwd, $activation_code, $full_name, true);
-    }
-
-    private function createOwner($email, $pass, $acode, $full_name, $is_admin) {
+    private function createOwner($email, $pass, $salt, $activation_code, $full_name, $is_admin) {
         if (!$this->doesOwnerExist($email)) {
-            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, joined=NOW(), activation_code=:acode, " .
-            "full_name=:full_name, api_key=:api_key";
+
+            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, pwd_salt=:salt, joined=NOW(),
+            activation_code=:acode, full_name=:full_name, api_key=:api_key";
+
             if ($is_admin) {
                 $q .= ", is_admin=1";
             }
@@ -163,9 +170,10 @@ SQL;
             $vars = array(
                 ':email'=>$email,
                 ':pass'=>$pass,
-                ':acode'=>$acode,
+                ':salt'=>$salt,
+                ':acode'=>$activation_code,
                 ':full_name'=>$full_name,
-                ':api_key'=>$api_key
+				':api_key'=>$api_key
             );
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $ps = $this->execute($q, $vars);
@@ -294,4 +302,137 @@ SQL;
     private function generateAPIKey() {
         return md5(uniqid(mt_rand(), true)); // generate random api key
     }
+
+	public function generateSalt($email){
+	    // Generate a unique random salt by appending the users email to a random number and returning the hash of it 
+        return hash('sha256', rand().$email);
+    }
+    
+    public function generateUniqueSaltedPassword($password, $salt){
+        // Hashes a password with a unique random salt
+        // Generate the first hash
+        $hash = hash('sha256', $password.$salt);
+        /* Now hash it 100 times, this means that if the database is broken into it will take 100x longer to try each
+         * possible password
+         */
+        for ($i = 0; $i < 100; $i++)
+            $hash = hash('sha256',$hash);
+
+        return $hash;
+    }
+    
+    public function getSaltByEmail($email){
+        $q = "SELECT * ";
+        $q .= "FROM #prefix#owners u ";
+        $q .= "WHERE u.email = :email";
+        $vars = array(':email'=>$email);
+        $ps = $this->execute($q, $vars);
+        $query = $this->getDataRowAsArray($ps);
+        return $query['pwd_salt'];
+    }
+        
+    public function updateSalt($email, $salt) {
+        $q = " UPDATE #prefix#owners SET pwd_salt=:salt WHERE email=:email";
+        $vars = array(
+            ':email'=>$email,
+            ':salt'=>$salt
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+    
+    public function checkUniqueSaltedPassword($email, $password) {
+        $q = "SELECT pwd ";
+        $q .= "FROM #prefix#owners u ";
+        $q .= "WHERE u.email = :email AND u.pwd = :password";
+        $vars = array(':email'=>$email, ':password'=>$password);
+        $ps = $this->execute($q, $vars);
+        return $this->getDataIsReturned($ps);
+    }
+    
+   /**
+     *
+     * @param str $pwd Password
+     * @return str MD5-hashed password
+     */
+    private function md5pwd($pwd) {
+        return md5($pwd);
+    }
+
+    /**
+     *
+     * @param str $pwd Password
+     * @return str SHA1-hashed password
+     */
+    private function sha1pwd($pwd) {
+        return sha1($pwd);
+    }
+    /**
+     *
+     * @param str $pwd
+     * @return str Salted SHA1 password
+     */
+    private function saltedsha1($pwd) {
+        return sha1(sha1($pwd.$this->salt).$this->salt);
+    }
+
+    /**
+     * Encrypt password
+     * @param str $pwd password
+     * @return str Encrypted password
+     */
+    public function pwdCrypt($pwd) {
+        return $this->saltedsha1($pwd);
+    }
+
+    /**
+     * Check password
+     * @param str $pwd Password
+     * @param str $result Result
+     * @return bool Whether or submitted password matches check
+     */
+    public function pwdCheck($pwd, $result) {
+        if ($this->saltedsha1($pwd) == $result || $this->sha1pwd($pwd) == $result || $this->md5pwd($pwd) == $result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public function isOwnerAuthorized($email, $password) {
+        /* With the implementation of the unique salt feature there are two scenarios each password check must address
+         * 1) The user has a password without a unique salt hashed the old way
+         * 2) The user has a password with a unique salt hashed the new way
+         * This function deals with that issue and returns true if the password is valid and false otherwise
+         */
+        
+        // The value the salt will have in the database if it is not unique
+        $default_salt = "ab194d42da0dff4a5c01ad33cb4f650a7069178b";
+        // Get the users salt from the database
+        $salt = $this->getSaltByEmail($email);
+        // Get there password from the database
+        $db_password = $this->getPass($email);
+        
+        // Check if they have a unique salt or not and hash appropriately
+        if ($salt == $default_salt) {
+            $hashed_pwd = $this->pwdCrypt($password); // Hash it the old way
+            // Then pass it to the old pwdCheck as there are 3 hashes it needs to be checked against
+            if ($this->pwdCheck($password, $db_password) == true) {
+                return true;
+            } else {
+                return false;
+            }
+               
+        } else {
+            $hashed_pwd = $this->generateUniqueSaltedPassword($password, $salt); // Hash it the new way
+            // Check if it matches the password stored in the database
+            if ($hashed_pwd == $db_password) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
 }

@@ -32,16 +32,6 @@
  *
  */
 class Session {
-    /**
-     *
-     * @var str
-     */
-    private $salt = "ab194d42da0dff4a5c01ad33cb4f650a7069178b";
-    /**
-     * Salt used to create API secret tokens.
-     * @var str
-     */
-    private static $api_salt = "a3cb4f27bdda09a01adb19df892c3650a7001b6fb";
 
     /**
      * @return bool Is user logged into ThinkUp
@@ -73,55 +63,6 @@ class Session {
             return SessionCache::get('user');
         } else {
             return null;
-        }
-    }
-
-    /**
-     *
-     * @param str $pwd Password
-     * @return str MD5-hashed password
-     */
-    private function md5pwd($pwd) {
-        return md5($pwd);
-    }
-
-    /**
-     *
-     * @param str $pwd Password
-     * @return str SHA1-hashed password
-     */
-    private function sha1pwd($pwd) {
-        return sha1($pwd);
-    }
-    /**
-     *
-     * @param str $pwd
-     * @return str Salted SHA1 password
-     */
-    private function saltedsha1($pwd) {
-        return sha1(sha1($pwd.$this->salt).$this->salt);
-    }
-
-    /**
-     * Encrypt password
-     * @param str $pwd password
-     * @return str Encrypted password
-     */
-    public function pwdCrypt($pwd) {
-        return $this->saltedsha1($pwd);
-    }
-
-    /**
-     * Check password
-     * @param str $pwd Password
-     * @param str $result Result
-     * @return bool Whether or submitted password matches check
-     */
-    public function pwdCheck($pwd, $result) {
-        if ($this->saltedsha1($pwd) == $result || $this->sha1pwd($pwd) == $result || $this->md5pwd($pwd) == $result) {
-            return true;
-        } else {
-            return false;
         }
     }
 

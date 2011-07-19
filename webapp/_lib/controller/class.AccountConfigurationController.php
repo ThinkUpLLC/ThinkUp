@@ -62,9 +62,9 @@ class AccountConfigurationController extends ThinkUpAuthController {
         //process password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
         && isset($_POST['pass1']) && isset($_POST['pass2'])) {
-            $origpass = $owner_dao->getPass($this->getLoggedInUser());
-            $session = new Session();
-            if (!$session->pwdCheck($_POST['oldpass'], $origpass)) {
+
+            // Check their old password is correct
+            if (!$owner_dao->isOwnerAuthorized($this->getLoggedInUser(), $_POST['oldpass']) )  {    
                 $this->addErrorMessage("Old password does not match or empty.", 'password');
             } elseif ($_POST['pass1'] != $_POST['pass2']) {
                 $this->addErrorMessage("New passwords did not match. Your password has not been changed.", 'password');
@@ -74,9 +74,17 @@ class AccountConfigurationController extends ThinkUpAuthController {
             } else {
                 // verify CSRF token
                 $this->validateCSRFToken();
-                $cryptpass = $session->pwdcrypt($_POST['pass1']);
-                $owner_dao->updatePassword($this->getLoggedInUser(), $cryptpass);
-                $this->addSuccessMessage("Your password has been updated.", 'password');
+                // Generate new unique salt and store it in the database
+                $salt = $owner_dao->generateSalt($this->getLoggedInUser());
+                $owner_dao->updateSalt($this->getLoggedInUser(), $salt);
+                // Combine the password and salt
+                $newpass = $owner_dao->generateUniqueSaltedPassword($_POST['pass1'], $salt);
+                // Try to update the password
+                if ($owner_dao->updatePassword($this->getLoggedInUser(), $newpass ) < 1 ) {
+                    $this->addErrorMessage("Your password has NOT been updated.", 'password');
+                } else {
+                    $this->addSuccessMessage("Your password has been updated.", 'password');
+                }
             }
         }
 

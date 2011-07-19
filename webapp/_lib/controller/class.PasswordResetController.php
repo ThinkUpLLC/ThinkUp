@@ -29,7 +29,7 @@
  * @author Michael Louis Thaler <michael.louis.thaler[at]gmail[dot]com>
  */
 class PasswordResetController extends ThinkUpController {
-
+    
     public function control() {
         $session = new Session();
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
@@ -50,9 +50,16 @@ class PasswordResetController extends ThinkUpController {
         }
 
         if (isset($_POST['password'])) {
+            
             if ($_POST['password'] == $_POST['password_confirm']) {
                 $login_controller = new LoginController(true);
-                if ($owner_dao->updatePassword($user->email, $session->pwdcrypt($_POST['password'])) < 1 ) {
+                // Generate a new salt and store it in the database
+                $salt = $owner_dao->generateSalt($user->email);
+                $owner_dao->updateSalt($user->email, $salt);
+                // Combine the password and salt
+                $newpass = $owner_dao->generateUniqueSaltedPassword($_POST['password'], $salt);
+                // Try to update the password
+                if ($owner_dao->updatePassword($user->email, $newpass ) < 1 ) {
                     $login_controller->addErrorMessage('Problem changing your password!');
                 } else {
                     $owner_dao->activateOwner($user->email);
