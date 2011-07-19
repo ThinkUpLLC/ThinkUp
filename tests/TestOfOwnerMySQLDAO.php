@@ -36,26 +36,52 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      * @var OwnerMySQLDAO
      */
     protected $dao;
+    /**
+     * Deprecated default salt, exposed for testing purposes only
+     * @var str
+     */
+    public static $default_salt = 'ab194d42da0dff4a5c01ad33cb4f650a7069178b';
 
     public function setUp() {
         parent::setUp();
-        $this->builders = self::buildData();
         $this->DAO = new OwnerMySQLDAO();
+        $this->builders = self::buildData();
         $this->config = Config::getInstance();
-        $this->prefix = $this->config->getValue('table_prefix');
     }
 
     protected function buildData() {
         $builders = array();
 
+        $salt = 'salt';
+        $pwd1 = self::hashPasswordUsingDeprecatedMethod('pwd1');
+        $pwd2 = self::hashPasswordUsingDeprecatedMethod('pwd2');
+        $pwd3 = self::hashPasswordUsingCurrentMethod('pwd3', $salt);
+
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
-        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>'XXX', 'activation_code'=>'8888', 
+        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>$pwd1, 
+        'pwd_salt'=>self::$default_salt, 'activation_code'=>'8888', 
         'account_status'=>'', 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
-        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>'YYY', 'account_status'=>''));
+        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>$pwd2, 
+        'pwd_salt'=>self::$default_salt, 'account_status'=>''));
+         
+        $builders[] = FixtureBuilder::build('owners', array('full_name'=>'Salted User',
+        'email'=>'salteduser@example.com', 'is_activated'=>1, 'pwd'=>$pwd3, 'pwd_salt'=>$salt, 
+        'account_status'=>''));
 
         return $builders;
+    }
+
+    //For testing purposes only, to populate the pwd field in tu_owners
+    public static function hashPasswordUsingDeprecatedMethod($password) {
+        //the static password salt ThinkUp used to use
+        return sha1(sha1($password.self::$default_salt).self::$default_salt);
+    }
+
+    //For testing purposes only, to populate the pwd field in tu_owners
+    public static function hashPasswordUsingCurrentMethod($password, $salt) {
+        return hash('sha256', $password.$salt);
     }
 
     public function tearDown() {
@@ -86,7 +112,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetAllOwners() {
         $all_owners = $this->DAO->getAllOwners();
-        $this->assertEqual(sizeof($all_owners), 2);
+        $this->assertEqual(sizeof($all_owners), 3);
         $this->assertEqual($all_owners[0]->email, 'ttuser@example.com');
         $this->assertEqual($all_owners[1]->email, 'ttuser1@example.com');
     }
@@ -146,7 +172,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($result);
         //activated owner
         $result = $this->DAO->getPass('ttuser1@example.com');
-        $this->assertEqual($result, 'YYY');
+        $this->assertEqual($result, self::hashPasswordUsingDeprecatedMethod('pwd2'));
     }
 
     /**
@@ -185,17 +211,17 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testCreate() {
         //Create new owner who does not exist
-        $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 1);
+        $this->assertNotEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'ThinkUp J. User2'), false);
         //Create new owner who does exist
-        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 0);
+        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'ThinkUp J. User2'), false);
 
         // we should validate this created user data
         $sql = "select *, unix_timestamp(joined) as joined_ts from " .
-        $this->prefix . "owners where email = 'ttuser2@example.com'";
-        $stmt = OwnerMysqlDAO::$PDO->query($sql);
+        $this->table_prefix . "owners where email = 'ttuser2@example.com'";
+        $stmt = OwnerMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual('ThinkUp J. User2', $data['full_name']);
-        $this->assertEqual('s3cr3t', $data['pwd']);
+        $this->assertNotEqual('s3cr3t', $data['pwd']); //pwd should be hashed, so not equal
         $this->assertEqual(0, $data['is_activated']);
         $this->assertEqual(0, $data['is_admin']);
         $this->assertEqual('0000-00-00', $data['last_login']);
@@ -212,7 +238,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         // bad user id, key not reset
         $new_api_key = $this->DAO->resetAPIKey(-99);
         $this->assertFalse($new_api_key);
-        $sql = "select id, api_key from " . $this->prefix . "owners where id = " .
+        $sql = "select id, api_key from " . $this->table_prefix . "owners where id = " .
         $this->builders[0]->columns['last_insert_id'];
         $stmt = OwnerMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -221,7 +247,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         // good user id, key reset
         $new_api_key = $this->DAO->resetAPIKey($this->builders[0]->columns['last_insert_id']);
         $this->assertEqual(strlen($data['api_key']), 32); //md5 32 char api key
-        $sql = "select id, api_key from " . $this->prefix . "owners where id = " .
+        $sql = "select id, api_key from " . $this->table_prefix . "owners where id = " .
         $this->builders[0]->columns['last_insert_id'];
         $stmt = OwnerMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -268,7 +294,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new OwnerMySQLDAO($config_array);
 
         $this->assertFalse($dao->doesAdminExist());
-        $dao->createAdmin('test@example.com', 'password', 'adfadfad', 'My Full Name');
+        $dao->createAdmin('test@example.com', 'password', 'My Full Name');
         $this->assertTrue($dao->doesAdminExist());
     }
 
@@ -355,5 +381,20 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $owner = $this->DAO->getByEmail('ttuser2@example.com');
         //new status
         $this->assertFalse($owner->is_activated);
+    }
+
+    public function testIsOwnerAuthorized(){
+        // Check a correct unique salted password
+        $this->assertTrue($this->DAO->isOwnerAuthorized('salteduser@example.com', 'pwd3'),
+        'Credentials should be valid');
+        // Check a correct non-unique salted password
+        $this->assertTrue($this->DAO->isOwnerAuthorized('ttuser1@example.com', 'pwd2'),
+        'Credentials should be valid');
+        // Check a incorrect unique salted password
+        $this->assertFalse($this->DAO->isOwnerAuthorized('salteduser@example.com', 'wrongpass'),
+        'Credentials should be invalid');
+        // Check a incorrect non-unique salted password
+        $this->assertFalse($this->DAO->isOwnerAuthorized('ttuser1@example.com', 'wrong'),
+        'Credentials should be invalid');
     }
 }

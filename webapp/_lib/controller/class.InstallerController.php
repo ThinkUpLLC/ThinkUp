@@ -337,12 +337,7 @@ class InstallerController extends ThinkUpController {
 
         $owner_dao = DAOFactory::getDAO('OwnerDAO', $db_config);
         if ( !$owner_dao->doesAdminExist() && !$owner_dao->doesOwnerExist($email)) { // create admin if not exists
-            $session = new Session();
-            $activation_code = rand(1000, 9999);
-            $crypt_pass = $session->pwdcrypt($password);
-            //$owner_dao->insertActivatedAdmin($email, $crypt_pass, $full_name);
-            $owner_dao->createAdmin($email, $crypt_pass, $activation_code, $full_name);
-
+            $activation_code = $owner_dao->createAdmin($email, $password, $full_name);
             // view for email
             $cfg_array =  array(
             'site_root_path'=>THINKUP_BASE_URL,

@@ -41,7 +41,6 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $config = Config::getInstance();
-        $this->prefix = $config->getValue('table_prefix');
         $this->builders = self::buildData();
         $this->dao = new FavoritePostMySQLDAO();
     }

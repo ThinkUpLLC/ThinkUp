@@ -323,7 +323,7 @@ class SimpleStackTrace {
      *                                to search for.
      */
     function __construct($prefixes) {
-        $this->prefixes = $prefixes;
+        $this->table_prefixes = $prefixes;
     }
 
     /**
@@ -369,7 +369,7 @@ class SimpleStackTrace {
      *    @return boolean         True if matches a target.
      */
     protected function frameMatchesPrefix($frame) {
-        foreach ($this->prefixes as $prefix) {
+        foreach ($this->table_prefixes as $prefix) {
             if (strncmp($frame['function'], $prefix, strlen($prefix)) == 0) {
                 return true;
             }

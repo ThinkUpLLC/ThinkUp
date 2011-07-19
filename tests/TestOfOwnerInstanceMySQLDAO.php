@@ -39,7 +39,6 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $this->config = Config::getInstance();
-        $this->prefix = $this->config->getValue('table_prefix');
     }
 
     public function tearDown() {
@@ -95,7 +94,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new OwnerInstanceMysqlDAO();
         $result = $dao->insert(10, 20, 'aaa', 'bbb');
         $this->assertTrue($result);
-        $stmt = OwnerInstanceMysqlDAO::$PDO->query( "select * from " . $this->prefix . 'owner_instances' );
+        $stmt = OwnerInstanceMysqlDAO::$PDO->query( "select * from " . $this->table_prefix . 'owner_instances' );
         $data = $stmt->fetch();
         $this->assertEqual(10, $data['owner_id'], 'we have an owner_id of: 10');
         $this->assertEqual(20, $data['instance_id'], 'we have an instance_id of: 20');
@@ -160,7 +159,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
 
         // valid update
         $result = $dao->updateTokens(2, 20, 'ccc3', 'ddd3');
-        $sql = "select * from " . $this->prefix . 'owner_instances where instance_id = 20';
+        $sql = "select * from " . $this->table_prefix . 'owner_instances where instance_id = 20';
         $stmt = OwnerInstanceMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data['oauth_access_token'], 'ccc3');

@@ -38,7 +38,6 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $this->config = Config::getInstance();
-        $this->prefix = $this->config->getValue('table_prefix');
     }
 
     public function tearDown() {
@@ -133,7 +132,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         // a good plugin insert
         $plugin = $this->createPlugin();
         $this->assertTrue($dao->insertPlugin($plugin), 'a successful insert');
-        $sql = "select * from " . $this->prefix . 'plugins where name = "' . $plugin->name . '"';
+        $sql = "select * from " . $this->table_prefix . 'plugins where name = "' . $plugin->name . '"';
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->verifyPluginData($data, $plugin);
@@ -143,7 +142,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $plugin->name = 'has no home page';
         $plugin->homepage = null;
         $this->assertTrue($dao->insertPlugin($plugin), 'a successful insert');
-        $sql = "select * from " . $this->prefix . 'plugins where name = "' . $plugin->name . '"';
+        $sql = "select * from " . $this->table_prefix . 'plugins where name = "' . $plugin->name . '"';
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->verifyPluginData($data, $plugin);
@@ -153,7 +152,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $plugin->name = 'not active';
         $plugin->homepage = null;
         $this->assertTrue($dao->insertPlugin($plugin), 'a successful insert');
-        $sql = "select * from " . $this->prefix . 'plugins where name = "' . $plugin->name . '"';
+        $sql = "select * from " . $this->table_prefix . 'plugins where name = "' . $plugin->name . '"';
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->verifyPluginData($data, $plugin);
@@ -224,7 +223,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $test_plugin_records = $builders_array[0]->columns;
         $plugin->id = $test_plugin_records['last_insert_id'];
         $this->assertTrue($dao->updatePlugin($plugin));
-        $sql = "select * from " . $this->prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
+        $sql = "select * from " . $this->table_prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->verifyPluginData($data, $plugin);
@@ -235,7 +234,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $test_plugin_records = $builders_array[0]->columns;
         $plugin->id = $test_plugin_records['last_insert_id'];
         $this->assertTrue($dao->updatePlugin($plugin));
-        $sql = "select * from " . $this->prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
+        $sql = "select * from " . $this->table_prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->verifyPluginData($data, $plugin);
@@ -246,7 +245,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $test_plugin_records = $builders_array[0]->columns;
         $plugin->id = $test_plugin_records['last_insert_id'];
         $this->assertTrue($dao->updatePlugin($plugin));
-        $sql = "select * from " . $this->prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
+        $sql = "select * from " . $this->table_prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->verifyPluginData($data, $plugin);
@@ -262,7 +261,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $test_plugin_records = $builders_array[0]->columns;
         $id = $test_plugin_records['last_insert_id'];
         $this->assertTrue($dao->setActive($id, true));
-        $sql = "select * from " . $this->prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
+        $sql = "select * from " . $this->table_prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data['is_active'], 1);
@@ -272,7 +271,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $id = $test_plugin_records['last_insert_id'];
         // nothing updated, so false
         $this->assertFalse($dao->setActive($id, true));
-        $sql = "select * from " . $this->prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
+        $sql = "select * from " . $this->table_prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data['is_active'], 1);
@@ -281,7 +280,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $test_plugin_records = $builders_array[1]->columns;
         $id = $test_plugin_records['last_insert_id'];
         $this->assertTrue($dao->setActive($id, false));
-        $sql = "select * from " . $this->prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
+        $sql = "select * from " . $this->table_prefix . 'plugins where id = ' . $test_plugin_records['last_insert_id'];
         $stmt = PluginMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data['is_active'], 0);

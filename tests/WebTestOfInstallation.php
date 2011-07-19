@@ -128,6 +128,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->setField('pwd', 'secret');
         $this->click("Log In");
         $this->assertText('You have no services configured. Set up a service');
+        //$this->showSource();
 
         //Visit Settings page and assert content there
         $this->click("Settings");

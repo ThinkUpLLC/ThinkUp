@@ -39,7 +39,6 @@ class TestOfPostIterator extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $this->config = Config::getInstance();
-        $this->prefix = $this->config->getValue('table_prefix');
     }
 
     public function tearDown() {
@@ -58,7 +57,7 @@ class TestOfPostIterator extends ThinkUpUnitTestCase {
 
     public function testStmtNoResults() {
         $post_dao = DAOFactory::getDAO('PostDAO');
-        $sql = "select * from " . $this->prefix . self::TEST_TABLE;
+        $sql = "select * from " . $this->table_prefix . self::TEST_TABLE;
         $stmt = PostMysqlDAO::$PDO->query($sql);
         $post_it = new PostIterator($stmt);
         $cnt = 0;

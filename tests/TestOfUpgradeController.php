@@ -41,8 +41,6 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         parent::setUp();
 
         $config = Config::getInstance();
-
-        $this->prefix = $config->getValue('table_prefix');
         $dao = DAOFactory::getDAO('OptionDAO');
         $this->pdo = OptionMysqlDAO::$PDO;
 
@@ -353,7 +351,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $snowflakekey = 'runnig_snowflake_uprade';
 
         // no snowflake update needed...
-        $this->pdo->query("truncate table " . $this->prefix . "options");
+        $this->pdo->query("truncate table " . $this->table_prefix . "options");
         $this->simulateLogin('me@example.com', true);
         $this->assertFalse(SessionCache::isKeySet($snowflakekey));
 
@@ -364,8 +362,8 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertPattern('/needs 1 database update/', $results);
 
         // snowflake update needed...
-        $this->pdo->query("drop table " . $this->prefix . "options");
-        $this->testdb_helper->runSQL('ALTER TABLE ' . $this->prefix .
+        $this->pdo->query("drop table " . $this->table_prefix . "options");
+        $this->testdb_helper->runSQL('ALTER TABLE ' . $this->table_prefix .
         'instances CHANGE last_post_id last_status_id bigint(11) NOT NULL');
         $controller = new UpgradeController(true);
         $results = $controller->go();
@@ -381,7 +379,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $stmt = $this->pdo->query("desc " . $this->prefix . "instances last_post_id");
+        $stmt = $this->pdo->query("desc " . $this->table_prefix . "instances last_post_id");
         $data = $stmt->fetch();
         $this->assertEqual($data['Field'], 'last_post_id');
         $this->assertPattern('/bigint\(20\)\s+unsigned/i', $data['Type']);
@@ -392,7 +390,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $controller = new UpgradeController(true);
         $results = $controller->go();
         $this->assertTrue($obj->processed);
-        $stmt = $this->pdo->query("desc " . $this->prefix . "instances last_post_id");
+        $stmt = $this->pdo->query("desc " . $this->table_prefix . "instances last_post_id");
         $data = $stmt->fetch();
         $this->assertEqual($data['Field'], 'last_post_id');
         $this->assertPattern('/bigint\(20\)\s+unsigned/i', $data['Type']);
@@ -471,7 +469,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $_GET['migration_done'] = true;
 
         $results = $controller->go();
-        $sql = "select * from " . $this->prefix . 'options';
+        $sql = "select * from " . $this->table_prefix . 'options';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data['option_value'], $app_version);
@@ -479,7 +477,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         // with a db record...
         $config->setValue('THINKUP_VERSION', ($config->getValue('THINKUP_VERSION') + 1 ));
         $results = $controller->go();
-        $sql = "select * from " . $this->prefix . 'options';
+        $sql = "select * from " . $this->table_prefix . 'options';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data['option_value'], ($app_version + 1));
@@ -503,7 +501,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $_GET['upgrade_token'] = $token;
 
         $results = $controller->go();
-        $sql = "select * from " . $this->prefix . 'options';
+        $sql = "select * from " . $this->table_prefix . 'options';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data['option_value'], $app_version);

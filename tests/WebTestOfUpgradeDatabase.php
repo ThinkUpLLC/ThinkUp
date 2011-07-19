@@ -58,7 +58,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         exec('rm -rf ' . THINKUP_ROOT_PATH.'webapp/test_installer' . '/*');
 
         $config = Config::getInstance();
-        $this->prefix = $config->getValue('table_prefix');
+        $this->table_prefix = $config->getValue('table_prefix');
     }
 
     public function tearDown() {
@@ -108,7 +108,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $MIGRATIONS[ $migration_versions[$migration_max_index] ]);
         $this->debug("Testing migration " . $migration_versions[2] . " => ".$migration_versions[$migration_max_index]);
         $data = $this->setUpApp($migration_versions[2], $MIGRATIONS);
-        $this->pdo->query('ALTER TABLE ' . $this->prefix .
+        $this->pdo->query('ALTER TABLE ' . $this->table_prefix .
         'instances CHANGE last_post_id last_status_id bigint(11) NOT NULL');
         $this->runMigrations($run_migrations, $migration_versions[$i]);
         if ($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {

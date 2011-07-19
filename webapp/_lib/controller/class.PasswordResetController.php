@@ -52,7 +52,8 @@ class PasswordResetController extends ThinkUpController {
         if (isset($_POST['password'])) {
             if ($_POST['password'] == $_POST['password_confirm']) {
                 $login_controller = new LoginController(true);
-                if ($owner_dao->updatePassword($user->email, $session->pwdcrypt($_POST['password'])) < 1 ) {
+                // Try to update the password
+                if ($owner_dao->updatePassword($user->email, $_POST['password'] ) < 1 ) {
                     $login_controller->addErrorMessage('Problem changing your password!');
                 } else {
                     $owner_dao->activateOwner($user->email);

@@ -33,6 +33,8 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 class TestOfPasswordResetController extends ThinkUpUnitTestCase {
     protected $owner;
     protected $token;
+    protected $owner_salt;
+    protected $token_salt;
 
     public function setUp() {
         parent::setUp();
@@ -42,15 +44,24 @@ class TestOfPasswordResetController extends ThinkUpUnitTestCase {
     }
 
     protected function buildData() {
-        $session = new Session();
-        $cryptpass = $session->pwdcrypt("oldpassword");
-        $builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        'email'=>'me@example.com', 'pwd'=>$cryptpass, 'activation_code'=>'8888', 'is_activated'=>1));
+        $builders = array();
+
+        $saltedpass = TestOfOwnerMySQLDAO::hashPasswordUsingCurrentMethod('oldpassword', 'testsalt');
+
+        $cryptpass = TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("oldpassword");
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
+        'email'=>'me@example.com', 'pwd'=>$cryptpass, 'pwd_salt'=>TestOfOwnerMySQLDAO::$default_salt,
+        'activation_code'=>'8888', 'is_activated'=>1));
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'Salted User',
+        'email'=>'salt@example.com', 'pwd'=>$saltedpass, 'pwd_salt'=>TestOfOwnerMySQLDAO::$default_salt,
+        'activation_code'=>'8888', 'is_activated'=>1));
         $dao = DAOFactory::getDAO('OwnerDAO');
         $this->owner = $dao->getByEmail('me@example.com');
         $this->token = $this->owner->setPasswordRecoveryToken();
 
-        return $builder;
+        $this->owner_salt = $dao->getByEmail('salt@example.com');
+        $this->token_salt = $this->owner_salt->setPasswordRecoveryToken();
+        return $builders;
     }
 
     public function tearDown() {
@@ -122,7 +133,7 @@ SQL;
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), "Passwords didn't match.");
     }
 
-    public function testOfControllerGoodTokenMatchedNewPassword() {
+    public function testOfControllerGoodTokenMatchedNewPasswordWithNoUniqueSalt() {
         $dao = DAOFactory::getDAO('OwnerDAO');
         $dao->setAccountStatus("me@example.com", "Deactivated account");
 
@@ -139,11 +150,37 @@ SQL;
         $_GET['token'] = $this->token;
         $controller = new PasswordResetController(true);
         $result = $controller->go();
-
-        $session = new Session();
-
-        $this->assertTrue($session->pwdCheck($_POST['password'], $dao->getPass('me@example.com')));
+         
         $owner = $dao->getByEmail('me@example.com');
+        $this->assertEqual($owner->account_status, '');
+
+        // Check a new unique salt got generated
+        $sql = "select pwd_salt from " . $this->table_prefix . "owners where email = 'me@example.com'";
+        $stmt = OwnerMySQLDAO::$PDO->query($sql);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->assertNotEqual($data['pwd_salt'], TestOfOwnerMySQLDAO::$default_salt);
+    }
+
+    public function testOfControllerGoodTokenMatchedNewPasswordWithUniqueSalt() {
+        $dao = DAOFactory::getDAO('OwnerDAO');
+        $dao->setAccountStatus("salt@example.com", "Deactivated account");
+
+        $time = strtotime('-1 hour');
+        $q = <<<SQL
+UPDATE #prefix#owners
+SET password_token = '{$this->token_salt}_{$time}'
+WHERE id = 2;
+SQL;
+        $this->testdb_helper->runSQL($q);
+
+        $_POST['password'] = 'the same';
+        $_POST['password_confirm'] = 'the same';
+        $_GET['token'] = $this->token_salt;
+        $controller = new PasswordResetController(true);
+        $result = $controller->go();
+
+        //assert account status is not deactivated
+        $owner = $dao->getByEmail('salt@example.com');
         $this->assertEqual($owner->account_status, '');
     }
 }

@@ -38,6 +38,10 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
      */
     var $test_database_name;
     /**
+     * @var str
+     */
+    var $table_prefix;
+    /**
      * Create a clean copy of the ThinkUp database structure
      */
     public function setUp() {
@@ -54,6 +58,8 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
         $this->testdb_helper->drop($this->test_database_name);
         $this->testdb_helper->create($THINKUP_CFG['source_root_path']."webapp/install/sql/build-db_mysql.sql");
+
+        $this->table_prefix = $config->getValue('table_prefix');
     }
 
     /**

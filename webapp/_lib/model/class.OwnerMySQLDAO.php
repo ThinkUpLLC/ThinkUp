@@ -28,6 +28,11 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
+    /**
+     *
+     * @var str
+     */
+    private $default_salt = "ab194d42da0dff4a5c01ad33cb4f650a7069178b";
 
     public function getByEmail($email) {
         $q = <<<SQL
@@ -134,44 +139,56 @@ SQL;
     }
 
     public function updatePassword($email, $pwd) {
-        $q = " UPDATE #prefix#owners SET pwd=:pwd WHERE email=:email";
+        // Generate new unique salt and store it in the database
+        $salt = $this->generateSalt($email);
+        $this->updateSalt($email, $salt);
+        //Hash the password using the new salt
+        $hashed_password = $this->hashPassword($pwd, $salt);
+        //Store the new hashed password in the database
+        $q = " UPDATE #prefix#owners SET pwd=:hashed_password WHERE email=:email";
         $vars = array(
             ':email'=>$email,
-            ':pwd'=>$pwd
+            ':hashed_password'=>$hashed_password
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
 
-    public function create($email, $pass, $acode, $full_name) {
-        return $this->createOwner($email, $pass, $acode, $full_name, false);
+    public function create($email, $pass, $full_name) {
+        return $this->createOwner($email, $pass, $full_name, false);
     }
 
-    public function createAdmin($email, $pwd, $activation_code, $full_name) {
-        return $this->createOwner($email, $pwd, $activation_code, $full_name, true);
+    public function createAdmin($email, $pass, $full_name) {
+        return $this->createOwner($email, $pass, $full_name, true);
     }
 
-    private function createOwner($email, $pass, $acode, $full_name, $is_admin) {
+    private function createOwner($email, $pwd, $full_name, $is_admin) {
         if (!$this->doesOwnerExist($email)) {
-            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:pass, joined=NOW(), activation_code=:acode, " .
-            "full_name=:full_name, api_key=:api_key";
+            $activation_code = rand(1000, 9999);
+            $pwd_salt = $this->generateSalt($email);
+            $api_key = $this->generateAPIKey();
+            $hashed_pwd = $this->hashPassword($pwd, $pwd_salt);
+
+            $q = "INSERT INTO #prefix#owners SET email=:email, pwd=:hashed_pwd, pwd_salt=:pwd_salt, joined=NOW(), ";
+            $q .= "activation_code=:activation_code, full_name=:full_name, api_key=:api_key";
+
             if ($is_admin) {
                 $q .= ", is_admin=1";
             }
-            $api_key = $this->generateAPIKey();
             $vars = array(
                 ':email'=>$email,
-                ':pass'=>$pass,
-                ':acode'=>$acode,
+                ':hashed_pwd'=>$hashed_pwd,
+                ':pwd_salt'=>$pwd_salt,
+                ':activation_code'=>$activation_code,
                 ':full_name'=>$full_name,
                 ':api_key'=>$api_key
             );
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $ps = $this->execute($q, $vars);
-            return $this->getUpdateCount($ps);
+            return $activation_code;
         } else {
-            return 0;
+            return false;
         }
     }
 
@@ -293,5 +310,123 @@ SQL;
      */
     private function generateAPIKey() {
         return md5(uniqid(mt_rand(), true)); // generate random api key
+    }
+
+    /**
+     * Generate a unique, random salt by appending the users email to a random number and returning the hash of it
+     * @param str $email
+     * @return str Salt
+     */
+    private function generateSalt($email){
+        return hash('sha256', rand().$email);
+    }
+
+    /**
+     * Hashes a password with a given salt.
+     * @param str $password
+     * @param str $salt
+     * @param str Hashed password
+     */
+    private function hashPassword($password, $salt) {
+        return hash('sha256', $password.$salt);
+    }
+
+    /**
+     * Retrives the salt for a given user
+     * @param str $email
+     * @return str Salt
+     */
+    private function getSaltByEmail($email){
+        $q = "SELECT * ";
+        $q .= "FROM #prefix#owners u ";
+        $q .= "WHERE u.email = :email";
+        $vars = array(':email'=>$email);
+        $ps = $this->execute($q, $vars);
+        $query = $this->getDataRowAsArray($ps);
+        return $query['pwd_salt'];
+    }
+
+    /**
+     * Updates the password salt for a given user
+     * @param str $email
+     * @param str $salt
+     * @return int Number of rows updated
+     */
+    private function updateSalt($email, $salt) {
+        $q = " UPDATE #prefix#owners SET pwd_salt=:salt WHERE email=:email";
+        $vars = array(
+            ':email'=>$email,
+            ':salt'=>$salt
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+
+    /**
+     * DEPRECATED: This method of password-hashing is no longer used. It's still here for backwards compatibility.
+     * @param str $pwd Password
+     * @return str MD5-hashed password
+     */
+    private function md5pwd($pwd) {
+        return md5($pwd);
+    }
+
+    /**
+     * DEPRECATED: This method of password-hashing is no longer used. It's still here for backwards compatibility.
+     * @param str $pwd Password
+     * @return str SHA1-hashed password
+     */
+    private function sha1pwd($pwd) {
+        return sha1($pwd);
+    }
+    /**
+     * DEPRECATED: This method of password-hashing is no longer used. It's still here for backwards compatibility.
+     * @param str $pwd
+     * @return str Salted SHA1 password
+     */
+    private function saltedsha1($pwd) {
+        return sha1(sha1($pwd.$this->default_salt).$this->default_salt);
+    }
+
+    /**
+     * DEPRECATED: This method of password-hashing is no longer used. It's still here for backwards compatibility.
+     * Encrypt password
+     * @param str $pwd password
+     * @return str Encrypted password
+     */
+    private function pwdCrypt($pwd) {
+        return $this->saltedsha1($pwd);
+    }
+
+    /**
+     * DEPRECATED: This method of password-hashing is no longer used. It's still here for backwards compatibility.
+     * Check password
+     * @param str $pwd Password
+     * @param str $result Result
+     * @return bool Whether or submitted password matches check
+     */
+    private function pwdCheck($pwd, $result) {
+        if ($this->saltedsha1($pwd) == $result || $this->sha1pwd($pwd) == $result || $this->md5pwd($pwd) == $result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isOwnerAuthorized($email, $password) {
+        // Get salt from the database
+        $db_salt = $this->getSaltByEmail($email);
+        // Get password from the database
+        $db_password = $this->getPass($email);
+
+        if ($db_salt == $this->default_salt) { //using old, default salt
+            $hashed_pwd = $this->pwdCrypt($password); // Hash the old way
+            return $this->pwdCheck($password, $db_password); //Check the old way
+        } else {
+            $hashed_pwd = $this->hashPassword($password, $db_salt); // Hash the new way
+            // Check if it matches the password stored in the database
+            return ($hashed_pwd == $db_password);
+        }
     }
 }

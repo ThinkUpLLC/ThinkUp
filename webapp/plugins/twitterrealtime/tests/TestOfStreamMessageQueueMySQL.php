@@ -42,12 +42,11 @@ class TestOfStreamMessageQueueMySQL extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $this->config = Config::getInstance();
-        $this->prefix = $this->config->getValue('table_prefix');
     }
 
     public function tearDown() {
         // truncate data....
-        StreamDataMySQLDAO::$PDO->query("truncate table " . $this->prefix . 'stream_data');
+        StreamDataMySQLDAO::$PDO->query("truncate table " . $this->table_prefix . 'stream_data');
         parent::tearDown();
     }
 
@@ -55,14 +54,14 @@ class TestOfStreamMessageQueueMySQL extends ThinkUpUnitTestCase {
         // queue data set
         $queue = new StreamMessageQueueMySQL();
         $queue->enqueueStatus("this is a status");
-        $stmt = StreamDataMySQLDAO::$PDO->query("select * from " . $this->prefix . 'stream_data');
+        $stmt = StreamDataMySQLDAO::$PDO->query("select * from " . $this->table_prefix . 'stream_data');
         $data = $stmt->fetchAll();
         $this->assertEqual(count($data), 1);
         $this->assertEqual($data[0]['data'], "this is a status");
         $this->assertEqual($data[0]['network'], "twitter");
 
         $queue->enqueueStatus("this is a status too");
-        $stmt = StreamDataMySQLDAO::$PDO->query("select * from " . $this->prefix . 'stream_data');
+        $stmt = StreamDataMySQLDAO::$PDO->query("select * from " . $this->table_prefix . 'stream_data');
         $data = $stmt->fetchAll();
         $this->assertEqual(count($data), 2);
         $this->assertEqual($data[1]['data'], "this is a status too");
@@ -73,14 +72,14 @@ class TestOfStreamMessageQueueMySQL extends ThinkUpUnitTestCase {
         // queue data set
         $queue = new StreamMessageQueueMySQL();
         $queue->enqueueStatus("this is a status");
-        $stmt = StreamDataMySQLDAO::$PDO->query("select * from " . $this->prefix . 'stream_data');
+        $stmt = StreamDataMySQLDAO::$PDO->query("select * from " . $this->table_prefix . 'stream_data');
         $data = $stmt->fetchAll();
         $this->assertEqual(count($data), 1);
         $this->assertEqual($data[0]['data'], "this is a status");
         $this->assertEqual($data[0]['network'], "twitter");
 
         $queue->enqueueStatus("this is a status too");
-        $stmt = StreamDataMySQLDAO::$PDO->query("select * from " . $this->prefix . 'stream_data');
+        $stmt = StreamDataMySQLDAO::$PDO->query("select * from " . $this->table_prefix . 'stream_data');
         $data = $stmt->fetchAll();
         $this->assertEqual(count($data), 2);
         $this->assertEqual($data[1]['data'], "this is a status too");

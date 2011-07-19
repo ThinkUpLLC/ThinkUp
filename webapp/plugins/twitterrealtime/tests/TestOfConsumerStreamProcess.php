@@ -44,7 +44,6 @@ class TestOfConsumerStreamProcess extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->config = Config::getInstance();
-        $this->prefix = $this->config->getValue('table_prefix');
         $this->test_dir = THINKUP_ROOT_PATH . 'webapp/plugins/twitterrealtime/tests/testdata/';
         $this->post_dao = DAOFactory::getDAO('PostDAO');
         $this->favs_dao = DAOFactory::getDAO('FavoritePostDAO');

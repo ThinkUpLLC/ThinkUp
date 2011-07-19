@@ -41,7 +41,7 @@ class TestOfStreamMessageQueueFactory extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $this->config = Config::getInstance();
-        $this->prefix = $this->config->getValue('table_prefix');
+        $this->table_prefix = $this->config->getValue('table_prefix');
     }
 
     public function tearDown() {

@@ -68,7 +68,8 @@ class LoginController extends ThinkUpController {
                         $this->addErrorMessage("Inactive account. " . $owner->account_status. ". ".
                         '<a href="forgot.php">Reset your password.</a>');
                         return $this->generateView();
-                    } elseif (!$session->pwdCheck($_POST['pwd'], $owner_dao->getPass($user_email))) { //failed login
+                        // If the credentials supplied by the user are incorrect
+                    } elseif (!$owner_dao->isOwnerAuthorized($user_email, $_POST['pwd']) ) {
                         if ($owner->failed_logins >= 10) {
                             $owner_dao->deactivateOwner($user_email);
                             $owner_dao->setAccountStatus($user_email,
@@ -78,7 +79,7 @@ class LoginController extends ThinkUpController {
                         $this->addErrorMessage("Incorrect password");
                         return $this->generateView();
                     } else {
-                        // this sets variables in the session
+                        // user has logged in sucessfully this sets variables in the session
                         $session->completeLogin($owner);
                         $owner_dao->updateLastLogin($user_email);
                         $owner_dao->resetFailedLogins($user_email);

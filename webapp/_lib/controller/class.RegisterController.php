@@ -23,6 +23,7 @@
  *
  * Register Controller
  * Registers new ThinkUp users.
+ * This controller is not used when the installer registers the first user. Class.InstallerController handles that
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Terrance Shepherd, Gina Trapani
  * @author Terrance Shepherd
@@ -105,27 +106,30 @@ class RegisterController extends ThinkUpController {
                             if ($owner_dao->doesOwnerExist($_POST['email'])) {
                                 $this->addErrorMessage("User account already exists.", 'email');
                             } else {
-                                $es = new SmartyThinkUp();
-                                $es->caching=false;
-                                $session = new Session();
-                                $activ_code = rand(1000, 9999);
-                                $cryptpass = $session->pwdcrypt($_POST['pass2']);
-                                $server = $_SERVER['HTTP_HOST'];
-                                $owner_dao->create($_POST['email'], $cryptpass, $activ_code, $_POST['full_name']);
+                                // Insert the details into the database
+                                $activation_code =  $owner_dao->create($_POST['email'], $_POST['pass2'],
+                                $_POST['full_name']);
 
-                                $es->assign('server', $server );
-                                $es->assign('email', urlencode($_POST['email']) );
-                                $es->assign('activ_code', $activ_code );
-                                $message = $es->fetch('_email.registration.tpl');
+                                if ($activation_code != false) {
+                                    $es = new SmartyThinkUp();
+                                    $es->caching=false;
+                                    $server = $_SERVER['HTTP_HOST'];
+                                    $es->assign('server', $server );
+                                    $es->assign('email', urlencode($_POST['email']) );
+                                    $es->assign('activ_code', $activation_code );
+                                    $message = $es->fetch('_email.registration.tpl');
 
-                                Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
-                                ." Account", $message);
+                                    Mailer::mail($_POST['email'], "Activate Your ".$config->getValue('app_title')
+                                    ." Account", $message);
 
-                                SessionCache::unsetKey('ckey');
-                                $this->addSuccessMessage("Success! Check your email for an activation link.");
-                                //delete invite code
-                                if ( $is_invite_code_valid ) {
-                                    $invite_dao->deleteInviteCode($invite_code);
+                                    SessionCache::unsetKey('ckey');
+                                    $this->addSuccessMessage("Success! Check your email for an activation link.");
+                                    //delete invite code
+                                    if ( $is_invite_code_valid ) {
+                                        $invite_dao->deleteInviteCode($invite_code);
+                                    }
+                                } else {
+                                    $this->addErrorMessage("Unable to register a new user. Please try again.");
                                 }
                             }
                         }

@@ -38,7 +38,6 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->config = Config::getInstance();
         $this->config->setValue('debug', true);
-        $this->prefix = $this->config->getValue('table_prefix');
         $dao = DAOFactory::getDAO('OptionDAO');
         $this->pdo = PluginOptionMySQLDAO::$PDO;
     }
@@ -219,7 +218,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertNull($session_instance_network);
         $this->assertNull($session_instance_username);
 
-        $sql = "select * from " . $this->prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
+        $sql = "select * from " . $this->table_prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
         . '\' order by option_id';
         $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
         $data = array();
@@ -265,7 +264,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_obj->status, 'success');
         $this->assertEqual($json_obj->saved, 5);
         $this->assertEqual($json_obj->deleted, 0);
-        $sql = "select * from " . $this->prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
+        $sql = "select * from " . $this->table_prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
         . '\' order by option_id';
         $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
         $data = array();
@@ -305,7 +304,7 @@ class TestOfAppConfigController extends ThinkUpUnitTestCase {
         $this->assertEqual($json_obj->status, 'success');
         $this->assertEqual($json_obj->saved, 1);
         $this->assertEqual($json_obj->deleted, 4);
-        $sql = "select * from " . $this->prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
+        $sql = "select * from " . $this->table_prefix . 'options where namespace = \'' . OptionDAO::APP_OPTIONS
         . '\' order by option_id';
         $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
         $data = array();

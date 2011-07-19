@@ -39,7 +39,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function setUp() {
         parent::setUp();
         $config = Config::getInstance();
-        $this->prefix = $config->getValue('table_prefix');
         $this->builders = self::buildData();
     }
 
@@ -1415,7 +1414,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new PostMySQLDAO();
         $dao->addPost($vals);
-        $stmt = PostMySQLDAO::$PDO->query( "select * from " . $this->prefix . 'posts where post_id=1000' );
+        $stmt = PostMySQLDAO::$PDO->query( "select * from " . $this->table_prefix . 'posts where post_id=1000' );
         $data = $stmt->fetch();
         $this->assertEqual($data['is_reply_by_friend'], 1);
     }
@@ -1440,7 +1439,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new PostMySQLDAO();
         $dao->addPost($vals);
-        $stmt = PostMySQLDAO::$PDO->query( "select * from " . $this->prefix . 'posts where post_id=1000' );
+        $stmt = PostMySQLDAO::$PDO->query( "select * from " . $this->table_prefix . 'posts where post_id=1000' );
         $data = $stmt->fetch();
         $this->assertEqual($data['is_retweet_by_friend'], 1);
     }
@@ -2200,7 +2199,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         // good id
         $update_cnt = $dao->updateAuthorUsername($authorid, 'twitter', 'newname');
         $stmt = PostMySQLDAO::$PDO->query(
-        "select * from " . $this->prefix . "posts where author_user_id = $authorid and network = 'twitter'");
+        "select * from " . $this->table_prefix . "posts where author_user_id = $authorid and network = 'twitter'");
         $data_returned = false;
         $cnt = 0;
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

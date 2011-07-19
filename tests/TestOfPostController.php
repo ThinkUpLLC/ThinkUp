@@ -42,7 +42,6 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('twitter', 'TwitterPlugin');
         $this->config = Config::getInstance();
-        $this->prefix = $this->config->getValue('table_prefix');
     }
 
     public function tearDown(){
@@ -237,7 +236,7 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertNoPattern("/No plugin object defined for/", $results);
 
         //assert plugin has been deactivated
-        $sql = "SELECT * FROM " . $this->prefix . "plugins WHERE folder_name='idontexist';";
+        $sql = "SELECT * FROM " . $this->table_prefix . "plugins WHERE folder_name='idontexist';";
         $stmt = PluginMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->assertEqual(0, $data['is_active']);

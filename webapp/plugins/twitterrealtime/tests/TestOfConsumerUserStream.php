@@ -44,7 +44,6 @@ class TestOfConsumerUserStream extends ThinkUpUnitTestCase {
         StreamMessageQueueFactory::$queue = null;
         $this->logger = Logger::getInstance();
         $this->config = Config::getInstance();
-        $this->prefix = $this->config->getValue('table_prefix');
     }
 
     public function tearDown() {
@@ -90,7 +89,7 @@ class TestOfConsumerUserStream extends ThinkUpUnitTestCase {
 
         // stream proc data set
         $sql = "select process_id, email, instance_id, unix_timestamp(last_report) as last_report from " .
-        $this->prefix . "stream_procs";
+        $this->table_prefix . "stream_procs";
         $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetchAll();
         $process_id = getmypid();
@@ -127,7 +126,7 @@ class TestOfConsumerUserStream extends ThinkUpUnitTestCase {
 
             // stream proc data set
             $sql = "select process_id, email, instance_id, unix_timestamp(last_report) as last_report from " .
-            $this->prefix . "stream_procs";
+            $this->table_prefix . "stream_procs";
             $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
             $data = $stmt->fetchAll();
             $process_id = getmypid();
@@ -146,7 +145,7 @@ class TestOfConsumerUserStream extends ThinkUpUnitTestCase {
         'email' => 'mark@example.com', 'instance_id' => 1));
         $consumer_user_stream->enqueueStatus("string1");
         $consumer_user_stream->enqueueStatus("string2");
-        $sql = "select * from " . $this->prefix . "stream_data";
+        $sql = "select * from " . $this->table_prefix . "stream_data";
         $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetchAll();
         $this->assertIdentical($data[0][0],'1');
@@ -157,7 +156,7 @@ class TestOfConsumerUserStream extends ThinkUpUnitTestCase {
         $this->assertIdentical($data[1][2],'twitter');
 
         $sql = "select process_id, email, instance_id, unix_timestamp(last_report) as last_report from " .
-        $this->prefix . "stream_procs";
+        $this->table_prefix . "stream_procs";
         $stmt = PluginOptionMysqlDAO::$PDO->query($sql);
         $data = $stmt->fetchAll();
         $process_id = getmypid();
