@@ -90,7 +90,7 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         //must be logged in to search
         $this->assertNoPattern('/Search/');
         $this->assertText('Retweets');
-        $this->assertText('Geoencoder');
+        $this->assertText('GeoEncoder');
         $this->assertText('Response Map');
         $this->assertText('Nearest Responses');
 

@@ -70,7 +70,7 @@ class GeoEncoderPlugin implements CrawlerPlugin, PostDetailPlugin {
         $map_template_path = Utils::getPluginViewDirectory('geoencoder').'geoencoder.map.tpl';
 
         //Define a menu item
-        $map_menu_item = new MenuItem("Response Map", "", $map_template_path, 'Geoencoder');
+        $map_menu_item = new MenuItem("Response Map", "", $map_template_path, 'GeoEncoder');
         //Define a dataset to be displayed when that menu item is selected
         $map_menu_item_dataset_1 = new Dataset("geoencoder_map", 'PostDAO', "getRelatedPosts",
         array($post->post_id, $post->network, 'location') );

@@ -20,6 +20,7 @@ solutions.
    changeemail
    backupcannotwrite
    slowbigdb
+   notgeoencodedyet
 
 Advanced Troubleshooting
 ------------------------

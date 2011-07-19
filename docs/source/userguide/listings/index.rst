@@ -26,3 +26,4 @@ Per-post data listings show information as it relates to a single post.
    all/post_listings.rst
    twitter/post_listings.rst
    facebook/post_listings.rst
+   geoencoder/post_listings.rst

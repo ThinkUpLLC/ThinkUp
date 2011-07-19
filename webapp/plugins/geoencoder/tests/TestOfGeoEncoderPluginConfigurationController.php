@@ -93,7 +93,6 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertEqual(
         PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['gmaps_api_key']['type']);
         $this->assertTrue(!isset($controller->option_elements['gmaps_api_key']['default_value']));
-        $this->assertEqual($controller->option_headers['gmaps_api_key'], 'GeoEncoder Plugin Options');
         $this->assertEqual($controller->option_required_message['gmaps_api_key'],
         'Please enter your Google Maps API Key');
 
