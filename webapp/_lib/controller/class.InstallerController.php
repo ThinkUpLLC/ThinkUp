@@ -346,10 +346,11 @@ class InstallerController extends ThinkUpController {
         if ( !$owner_dao->doesAdminExist() && !$owner_dao->doesOwnerExist($email)) { // create admin if not exists
             $session = new Session();
             $activation_code = rand(1000, 9999);
-            $crypt_pass = $session->pwdcrypt($password);
-            //$owner_dao->insertActivatedAdmin($email, $crypt_pass, $full_name);
-            $owner_dao->createAdmin($email, $crypt_pass, $activation_code, $full_name);
-
+            // Generate a salt for the user and combine it with the password
+            $salt = $owner_dao->generateSalt($email);
+            $cryptpass = $owner_dao->generatePassword($password, $salt);
+            // Insert the details into the database
+            $owner_dao->createAdmin($email, $cryptpass, $salt, $activation_code, $full_name);
             // view for email
             $cfg_array =  array(
             'site_root_path'=>THINKUP_BASE_URL,
