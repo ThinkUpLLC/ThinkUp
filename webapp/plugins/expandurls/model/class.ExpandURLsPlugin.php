@@ -168,6 +168,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
             } else {
                 $total_errors = $total_errors + 1;
                 $logger->logError($l." is not a valid URL; skipping expansion", __METHOD__.','.__LINE__);
+                $link_dao->saveExpansionError($l, "Invalid URL");
             }
         }
         $logger->logUserSuccess($total_expanded." URLs successfully expanded (".$total_errors." errors).",
