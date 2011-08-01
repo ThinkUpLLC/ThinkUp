@@ -29,7 +29,7 @@ Blog, Facebook, and Twitter
 
 You can also find ThinkUp community members on various channels across the web:
 
-* On Twitter, follow `@thinkuapp <http://twitter.com/thinkuapp>`_
+* On Twitter, follow `@thinkupapp <http://twitter.com/thinkupapp>`_
 * Like `ThinkUp's Facebook Page <http://facebook.com/thinkupapp>`_
 * Read and comment on `Expert Labs' blog <http://expertlabs.org>`_
 
