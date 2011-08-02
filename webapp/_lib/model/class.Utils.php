@@ -319,10 +319,16 @@ class Utils {
      */
     public static function setDefaultTimezonePHPini() {
         if (ini_get('date.timezone') == false) {
-            if ( !defined('PHP_INI_CONTAINS_TZ')) {
-                define('PHP_INI_CONTAINS_TZ', false);
+            // supress the date_default_timezone_get() warn as php 5.3.* doesn't like when date.timezone is not set in
+            // php.ini, but many systems comment it out by default, or have no php.ini by default
+            $error_reporting = error_reporting(); // save old reporting setting
+            error_reporting( E_ERROR | E_USER_ERROR ); // turn off warning messages
+            $tz = date_default_timezone_get(); // get tz if we can
+            error_reporting( $error_reporting ); // reset error reporting
+            if(! $tz) { // if no $tz defined, use UTC
+                $tz = 'UTC';
             }
-            ini_set('date.timezone','America/Los_Angeles'); // if not set in php.ini, use LA
+            ini_set('date.timezone',$tz);
         }
     }
 }

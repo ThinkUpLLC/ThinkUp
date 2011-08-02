@@ -204,13 +204,6 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
     }
 
     public function testSetDefaultTimezonePHPini() {
-        // no ini value should default to LA
-        ini_set('date.timezone', false);
-        Utils::setDefaultTimezonePHPini();
-        $tz = ini_get('date.timezone');
-        //$tz = date_default_timezone_get();
-        $this->assertEqual($tz, 'America/Los_Angeles');
-
         // ini value present, should be set to that
         ini_set('date.timezone','America/New_York');
         Utils::setDefaultTimezonePHPini();
