@@ -245,7 +245,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->go();
-        $this->assertPattern("/Please select your server's timezone./", $result);
+        $this->assertPattern("/Please select a time zone./", $result);
         $this->restoreConfigFile();
     }
 

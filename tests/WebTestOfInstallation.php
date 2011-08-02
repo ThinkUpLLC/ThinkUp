@@ -170,7 +170,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertText('Your passwords did not match');
         $this->assertText('Please enter a database host.');
         $this->assertText('Please enter a database host.');
-        $this->assertText("Please select your server's timezone.");
+        $this->assertText("Please select a time zone.");
     }
 
     // Can't use this test b/c we can't change the PHP ini settings of host instance

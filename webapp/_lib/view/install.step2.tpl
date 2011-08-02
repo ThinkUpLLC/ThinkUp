@@ -74,11 +74,11 @@
           <div class="clearfix append_20">
           {include file="_usermessage.tpl" field="timezone"}
             <div class="grid_6 prefix_2 right">
-              <label>Server Time Zone</label>
+              <label>Time Zone</label>
             </div>
             <div class="grid_10 prefix_1 left">
               <select name="timezone" id="timezone" style="margin-top:1.25em">
-              <option value=""{if $current_tz eq ''} selected{/if}>date.timezone not set in php.ini. Select timezone:</option>
+              <option value=""{if $current_tz eq ''} selected{/if}>Select a Time Zone:</option>
                 {foreach from=$tz_list key=group_name item=group}
                   <optgroup label='{$group_name}'>
                     {foreach from=$group item=tz}
@@ -87,7 +87,19 @@
                   </optgroup>
                 {/foreach}
               </select>
-              <span class="input_information">Defaults to <a href="http://www.php.net/manual/en/function.date-default-timezone-get.php">php.ini's date.timezone value</a>. {$current_server_time}</span>
+              <script type="text/javascript" src="{$site_root_path}assets/js/extlib/detect_timezone.js"></script>
+              <script type="text/javascript">
+              {literal}
+              var tz_info = jstz.determine_timezone().timezone;
+              var tz_option_id = '#tz-' + tz_info.olson_tz;
+              if( $('#timezone option[value=' + tz_info.olson_tz + ']').length > 0) {
+                  if( $(tz_option_id) ) {
+                      $('#timezone').val(tz_info.olson_tz);
+                  }
+              }
+              {/literal}
+              </script>
+              <span class="input_information">Defaults to your browser's time zone; will fall back to <a href="http://www.php.net/manual/en/function.date-default-timezone-get.php">php.ini's date.time zone value</a>.</span>
             </div>
           </div>
 
