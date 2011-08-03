@@ -38,6 +38,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
     var $builder1;
     var $builder2;
     var $builder3;
+    var $builder4;
 
     public function setUp(){
         parent::setUp();
@@ -46,8 +47,13 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $session = new Session();
         $cryptpass = $session->pwdcrypt("secretpassword");
+        
+        $owner_dao = new OwnerMySQLDAO();
+        $salt = $owner_dao->generateSalt('salt@example.com');
+        $password = $owner_dao->generatePassword('secretpassword', $salt);
 
-        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1, 'is_admin'=>1);
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 
+        'salt'=>'ab194d42da0dff4a5c01ad33cb4f650a7069178b', 'is_activated'=>1, 'is_admin'=>1);
         $this->builder1 = FixtureBuilder::build('owners', $owner);
 
         $instance = array('id'=>1);
@@ -55,12 +61,17 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $owner_instance = array('owner_id'=>1, 'instance_id'=>1);
         $this->builder3 = FixtureBuilder::build('owner_instances', $owner_instance);
+        
+        $owner_withsalt = array('id'=>6, 'email'=>'salt@example.com', 'pwd'=>$password, 'pwd_salt'=>$salt, 
+        'is_activated'=>1, 'is_admin'=>1);
+        $this->builder4 = FixtureBuilder::build('owners', $owner_withsalt);
     }
 
     public function tearDown() {
         $this->builder1 = null;
         $this->builder2 = null;
         $this->builder3 = null;
+        $this->builder4 = null;
         parent::tearDown();
     }
 
@@ -152,14 +163,25 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
         $this->assertPattern("/Inactive account/", $v_mgr->getTemplateDataItem('error_msg'));
     }
 
-    public function testCorrectUserPassword() {
+    public function testCorrectUserPasswordAndUniqueSalt() {
         $_POST['Submit'] = 'Log In';
-        $_POST['email'] = 'me@example.com';
+        $_POST['email'] = 'salt@example.com';
         $_POST['pwd'] = 'secretpassword';
 
         $controller = new LoginController(true);
         $results = $controller->go();
-
+        
+        $this->assertPattern("/Logged in as admin: salt@example.com/", $results);
+    }
+    
+    public function testCorrectUserPasswordAndNoUniqueSalt() {
+        $_POST['Submit'] = 'Log In';
+        $_POST['email'] = 'me@example.com';
+        $_POST['pwd'] = 'secretpassword';
+        
+        $controller = new LoginController(true);
+        $results = $controller->go();
+        
         $this->assertPattern("/Logged in as admin: me@example.com/", $results);
     }
 

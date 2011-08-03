@@ -61,6 +61,15 @@ class LoginController extends ThinkUpController {
                     }
                     $this->addToView('email', $user_email);
                     $owner = $owner_dao->getByEmail($user_email);
+                    /* The login controller needs to deal with 2 possibilites, either the user has a unique salt or
+                     * the default salt
+                     */
+                    // Get the salt
+                    $salt =  $owner_dao->getSaltByEmail($user_email);
+                    // Generate wjat the password would be if they had a unique salt
+                    $salted_password =  $owner_dao->generatePassword($_POST['pwd'], $salt);
+                    // Check if its valid
+                    $valid_pass =  $owner_dao->checkSaltedPassword($user_email, $salted_password);                       
                     if (!$owner) {
                         $this->addErrorMessage("Incorrect email");
                         return $this->generateView();
@@ -68,7 +77,11 @@ class LoginController extends ThinkUpController {
                         $this->addErrorMessage("Inactive account. " . $owner->account_status. ". ".
                         '<a href="forgot.php">Reset your password.</a>');
                         return $this->generateView();
-                    } elseif (!$session->pwdCheck($_POST['pwd'], $owner_dao->getPass($user_email))) { //failed login
+                        /*
+                         * If the password hashed with and without a unique salt doesn't match the one stored in
+                         * the database the password supplied is wrong 
+                         */
+                    } elseif (!$session->pwdCheck($_POST['pwd'], $owner_dao->getPass($user_email)) && !$valid_pass) { 
                         if ($owner->failed_logins >= 10) {
                             $owner_dao->deactivateOwner($user_email);
                             $owner_dao->setAccountStatus($user_email,
@@ -78,7 +91,7 @@ class LoginController extends ThinkUpController {
                         $this->addErrorMessage("Incorrect password");
                         return $this->generateView();
                     } else {
-                        // this sets variables in the session
+                        // user has logged in sucessfully this sets variables in the session
                         $session->completeLogin($owner);
                         $owner_dao->updateLastLogin($user_email);
                         $owner_dao->resetFailedLogins($user_email);

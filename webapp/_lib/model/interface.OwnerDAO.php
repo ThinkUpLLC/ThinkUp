@@ -90,9 +90,10 @@ interface OwnerDAO {
      * @param str $pass
      * @param str $acode
      * @param str $full_name
+     * @param str $salt
      * @return int Affected rows
      */
-    public function create($email, $pass, $acode, $full_name);
+    public function create($email, $pass, $salt, $acode, $full_name);
 
     /**
      * Update last_login field for given owner
@@ -130,9 +131,10 @@ interface OwnerDAO {
      * @param str $pwd
      * @param str $activation_code
      * @param str $full_name
+     * @param str $salt
      * @return int Update count
      */
-    public function createAdmin($email, $pwd, $activation_code, $full_name);
+    public function createAdmin($email, $pwd, $salt, $activation_code, $full_name);
 
     /**
      * Promote an owner to admin status.
@@ -193,4 +195,42 @@ interface OwnerDAO {
      * @return str A new API Key
      */
     public function resetAPIKey($owner_id);
+
+    /**
+     * Generates a salt for secure password storage
+     * @param str $email
+     * @return str Salt
+     */
+    public function generateSalt($email);
+   
+    /**
+     * Combines the users password with the salt and hashes them
+     *  @param str $password
+     *  @param str $salt
+     *  @return str Password
+     */
+    public function generatePassword($password, $salt);
+    
+    /**
+     * Retrives the salt for a given user
+     * @param str $email
+     * @return str Salt
+     */
+    public function getSaltByEmail($email);
+       
+    /**
+     * Updates the password salt for a given user
+     * @param str $email
+     * @param str $salt
+     * @return int Number of rows updated
+     */
+    public function updateSalt($email, $salt);
+    
+    /**
+     * Checks if a unique salted password given by a user is correct
+     * @param str $email
+     * @param str $password
+     * @return boolean True if the password supplied matches the one in the database
+     */    
+    public function checkSaltedPassword($email, $password);
 }

@@ -62,8 +62,21 @@ class AccountConfigurationController extends ThinkUpAuthController {
         //process password change
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
         && isset($_POST['pass1']) && isset($_POST['pass2'])) {
+            /*
+             * We have to deal with 2 possibilites here, the user may have a password with a unique salt or
+             * the default salt
+             */
+            // Get there old password from the database    
             $origpass = $owner_dao->getPass($this->getLoggedInUser());
-            if (!$this->app_session->pwdCheck($_POST['oldpass'], $origpass)) {
+            // Get the salt for there password from the database
+            $salt = $owner_dao->getSaltByEmail($this->getLoggedInUser());
+            // Generate what the password would be if they had a unique salt
+            $saltpass = $owner_dao->generatePassword($_POST['oldpass'], $salt);
+            /* Check there old password is correct, so either the password with a unqiue salt or the password with
+             * the default salt matches the one satored in the database.
+             */ 
+            if (!$this->app_session->pwdCheck($_POST['oldpass'], $origpass) &&
+            !$owner_dao->checkSaltedPassword($this->getLoggedInUser(), $saltpass))  {    
                 $this->addErrorMessage("Old password does not match or empty.", 'password');
             } elseif ($_POST['pass1'] != $_POST['pass2']) {
                 $this->addErrorMessage("New passwords did not match. Your password has not been changed.", 'password');
@@ -73,9 +86,17 @@ class AccountConfigurationController extends ThinkUpAuthController {
             } else {
                 // verify CSRF token
                 $this->validateCSRFToken();
-                $cryptpass = $this->app_session->pwdcrypt($_POST['pass1']);
-                $owner_dao->updatePassword($this->getLoggedInUser(), $cryptpass);
-                $this->addSuccessMessage("Your password has been updated.", 'password');
+                // Generate new unique salt and store it in the database
+                $salt = $owner_dao->generateSalt($this->getLoggedInUser());
+                $owner_dao->updateSalt($this->getLoggedInUser(), $salt);
+                // Combine the password and salt
+                $newpass = $owner_dao->generatePassword($_POST['pass1'], $salt);
+                // Try to update the password
+                if ($owner_dao->updatePassword($this->getLoggedInUser(), $newpass ) < 1 ) {
+                    $this->addErrorMessage("Your password has NOT been updated.", 'password');
+                } else {
+                    $this->addSuccessMessage("Your password has been updated.", 'password');
+                }
             }
         }
 
