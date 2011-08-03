@@ -38,14 +38,13 @@ class GeoEncoderPluginConfigurationController extends PluginConfigurationControl
 
         /** set option fields **/
         // gmaps_api_key text field
-        $name_field = array('name' => 'gmaps_api_key', 'label' => 'Enter Your Google Maps API Key');
+        $name_field = array('name' => 'gmaps_api_key', 'label' => 'Google Maps API Key');
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field);
-        $this->addPluginOptionHeader('gmaps_api_key', 'GeoEncoder Plugin Options');
         $this->addPluginOptionRequiredMessage('gmaps_api_key',
             'Please enter your Google Maps API Key');
 
         // distance_unit radio field
-        $distance_unit_field = array('name' => 'distance_unit', 'label' => 'Select Unit of Distance');
+        $distance_unit_field = array('name' => 'distance_unit', 'label' => 'Unit of Distance');
         $distance_unit_field['values'] = array('Kilometers' => 'km', 'Miles' => 'mi');
         $distance_unit_field['default_value'] = 'km';
         $this->addPluginOption(self::FORM_RADIO_ELEMENT, $distance_unit_field);
