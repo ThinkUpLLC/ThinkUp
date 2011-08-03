@@ -167,7 +167,7 @@ class InstallerController extends ThinkUpController {
         }
 
         $current_tz = isset($_POST['timezone']) ? $_POST['timezone'] : date_default_timezone_get();
-        if (defined(PHP_INI_CONTAINS_TZ) && PHP_INI_CONTAINS_TZ === false) { //let user know no tz set in php.ini
+        if (defined('PHP_INI_CONTAINS_TZ') && 'PHP_INI_CONTAINS_TZ' === false) { //let user know no tz set in php.ini
             $current_tz = '';
         }
 
