@@ -1,6 +1,6 @@
 -- Convert posts.pub_date from TIMESTAMP to DATETIME to prevent automatic timezone conversions
 ALTER TABLE tu_posts MODIFY pub_date DATETIME NOT NULL 
-    COMMENT 'The date/time when this post was published.';
+    COMMENT 'The UTC date/time when this post was published.';
     
 -- Convert every pub_date from localtime to UTC
 UPDATE tu_posts 

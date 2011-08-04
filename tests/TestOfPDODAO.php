@@ -313,21 +313,21 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         "mysql:dbname=thinkup;host=localhost;unix_socket=/var/mysql");
         $this->restoreConfigFile();
     }
-    
+
     public function testCompareTimezoneOffsets() {
-        $this->removeConfigFile();
-        Config::destroyInstance();
-        $cfg_values = array("timezone"=>"Europe/London");
-        $timezone = Config::getInstance($cfg_values)->getValue('timezone');
+        $config = Config::getInstance();
+        $config->setValue('timezone', 'Europe/London');
+        $timezone = $config->getValue('timezone');
         $time = new DateTime("now", new DateTimeZone($timezone) );
         $tz_config = $time->format('P');
-        
-        // this should return the same timezone offset as the config value
-        $testdao = new TestMySQLDAO($cfg_values);
-        $tz_server = $testdao->getTimezoneOffset();
-        
-        $this->assertEqual($tz_config, $tz_server['tz_offset']);
-        $this->restoreConfigFile();
 
+        //destroy the existing PDO connection which gets established in setUp to start with a clean slate
+        TestMySQLDAO::destroyPDO();
+
+        // this should return the same timezone offset as the config value
+        $test_dao = new TestMySQLDAO();
+        $tz_server = $test_dao->getTimezoneOffset();
+
+        $this->assertEqual($tz_config, $tz_server['tz_offset']);
     }
 }

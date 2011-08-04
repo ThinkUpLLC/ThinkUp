@@ -325,7 +325,7 @@ CREATE TABLE tu_posts (
   place varchar(255) DEFAULT NULL COMMENT 'Post-level name of a place from which a post was published, ie, Woodland Hills, Los Angeles.',
   place_id varchar(255) DEFAULT NULL COMMENT 'Post-level place ID on a given network.',
   geo varchar(255) DEFAULT NULL COMMENT 'The post''s latitude and longitude coordinates.',
-  pub_date timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'The timestamp of when this post was published.',
+  pub_date datetime NOT NULL COMMENT 'The UTC date/time when this post was published.',
   in_reply_to_user_id bigint(11) DEFAULT NULL COMMENT 'The ID of the user that this post is in reply to.',
   in_reply_to_post_id bigint(20) unsigned DEFAULT NULL COMMENT 'The ID of the post that this post is in reply to.',
   reply_count_cache int(11) NOT NULL DEFAULT '0' COMMENT 'The total number of replies this post received in the data store.',
@@ -421,7 +421,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2011-08-04 10:39:30
+-- Dump completed on 2011-08-04 11:57:06
 
 --
 -- Insert DB Version
