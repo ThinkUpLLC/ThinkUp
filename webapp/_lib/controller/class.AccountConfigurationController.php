@@ -63,7 +63,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
         if (isset($_POST['changepass']) && $_POST['changepass'] == 'Change password' && isset($_POST['oldpass'])
         && isset($_POST['pass1']) && isset($_POST['pass2'])) {
             $origpass = $owner_dao->getPass($this->getLoggedInUser());
-            if (!$this->app_session->pwdCheck($_POST['oldpass'], $origpass)) {
+            $session = new Session();
+            if (!$session->pwdCheck($_POST['oldpass'], $origpass)) {
                 $this->addErrorMessage("Old password does not match or empty.", 'password');
             } elseif ($_POST['pass1'] != $_POST['pass2']) {
                 $this->addErrorMessage("New passwords did not match. Your password has not been changed.", 'password');
@@ -73,7 +74,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
             } else {
                 // verify CSRF token
                 $this->validateCSRFToken();
-                $cryptpass = $this->app_session->pwdcrypt($_POST['pass1']);
+                $cryptpass = $session->pwdcrypt($_POST['pass1']);
                 $owner_dao->updatePassword($this->getLoggedInUser(), $cryptpass);
                 $this->addSuccessMessage("Your password has been updated.", 'password');
             }

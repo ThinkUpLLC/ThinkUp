@@ -32,7 +32,7 @@
  */
 class LogoutController extends ThinkUpAuthController {
     public function authControl() {
-        $this->app_session->logout();
+        Session::logout();
         $controller = new DashboardController(true);
         $controller->addSuccessMessage("You have successfully logged out.");
         return $controller->go();

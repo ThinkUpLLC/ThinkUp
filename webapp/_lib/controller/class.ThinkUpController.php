@@ -96,7 +96,6 @@ abstract class ThinkUpController {
                 $this->start_time = microtime(true);
             }
             $this->view_mgr = new SmartyThinkUp();
-            $this->app_session = new Session();
             if ($this->isLoggedIn()) {
                 $this->addToView('logged_in_user', $this->getLoggedInUser());
             }
