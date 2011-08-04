@@ -351,7 +351,7 @@ CREATE TABLE tu_posts (
   KEY is_protected (is_protected),
   KEY in_reply_to_post_id (in_reply_to_post_id),
   FULLTEXT KEY post_fulltext (post_text)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Posts by service users on a given network.';
 
 --
 -- Table structure for table tu_stream_data
@@ -421,7 +421,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2011-08-04 11:57:06
+-- Dump completed on 2011-08-04 12:39:11
 
 --
 -- Insert DB Version
