@@ -1228,6 +1228,19 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
     }
 
+    public function updateAuthorUsername($author_user_id, $network, $author_username) {
+        $q = " UPDATE  #prefix#posts SET author_username = :author_username ";
+        $q .= " WHERE author_user_id = :author_user_id AND network=:network";
+        $vars = array(
+            ':author_user_id'=>$author_user_id,
+            ':author_username'=>$author_username,
+            ':network' => $network
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+
     /**
      * Extract location specific to city for each post
      * @param int $location Location as stored in the database

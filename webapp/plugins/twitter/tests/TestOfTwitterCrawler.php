@@ -105,6 +105,34 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->instance->is_archive_loaded_follows = true;
     }
 
+    private function setUpInstanceUserAnilDashUsernameChange() {
+        $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36824', 'network_viewer_id'=>'36823',
+        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
+        'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
+        'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
+        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0', 
+        'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
+        'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
+        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+        'earliest_post_in_system'=>'01-01-2009'
+        );
+        $this->instance = new TwitterInstance($r);
+
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', 2,
+        1234, 5, 350);
+
+        $this->api->available = true;
+        $this->api->available_api_calls_for_crawler = 20;
+        $this->instance->is_archive_loaded_follows = true;
+
+        // add post to backfill
+        $builder = FixtureBuilder::build('posts', array('post_id'=>1, 'author_user_id'=>36824,
+            'author_username'=>'anildash', 'author_fullname'=>'Anil Dash', 'author_avatar'=>'avatar.jpg', 
+            'post_text'=>'This is a great post', 'network'=>'twitter','in_rt_of_user_id' => null,
+            'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
+        return $builder;
+    }
+
     private function setUpInstanceUserPrivateMcprivate() {
         $this->builders[] = FixtureBuilder::build('users', array('user_id'=>'123456', 'user_name'=>'mcprivate',
         'full_name'=>'Private McPrivate', 'last_updated'=>'2007-01-01 20:34:13', 'network'=>'twitter',
@@ -205,6 +233,41 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->location, "NYC: 40.739069,-73.987082");
         $this->assertEqual($post->place, "");
         $this->assertEqual($post->geo, "");
+    }
+
+    public function testFetchInstanceUserTweetsUsernameChange() {
+        $post_builder = self::setUpInstanceUserAnilDashUsernameChange();
+
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17,
+        'network_username'=>'anildash2', 'network'=>'twitter', 'network_viewer_id'=>15, 
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
+
+        $pdao = DAOFactory::getDAO('PostDAO');
+
+        // old post before crawl
+        $post = $pdao->getPost(1, 'twitter');
+        $this->assertEqual($post->author_username, "anildash");
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceUserTweets();
+
+        // old post after crawl
+        $post = $pdao->getPost(1, 'twitter');
+        $this->assertEqual($post->author_username, "anildash2");
+
+        // new post have the new username as well...
+        $post = $pdao->getPost(15660310954, 'twitter');
+        $this->assertEqual($post->author_username, "anildash2");
+
+        // instace has the new username as well...
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        $instance = $instance_dao->getByUsername("anildash");
+        $this->assertNull($instance);
+
+        $instance = $instance_dao->getByUsername("anildash2");
+        $this->assertNotNull($instance);
+
     }
 
     public function testFetchPrivateInstanceUserTweets() {
@@ -404,7 +467,6 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         if (isset($tc->user)) {
             $id->save($this->instance, $tc->user->post_count, $this->logger);
         }
-
         $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 22);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 4);
