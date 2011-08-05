@@ -432,4 +432,13 @@ interface PostDAO {
      *               Both arrays are sorted by number of use, descending.
      */
     public function getClientsUsedByUserOnNetwork($author_id, $network);
+
+    /**
+     * Update author username by author ID for all posts in the post table for a defined network
+     * @param int $author_user_id
+     * @param str $network
+     * @param str $author_username
+     * @return int Count of posts updated
+     */
+    public function updateAuthorUsername($author_user_id, $network, $author_username);
 }

@@ -492,4 +492,14 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
             return null;
         }
     }
+
+    public function updateUsername($id, $network_username) {
+        $q = "UPDATE ".$this->getTableName()." SET network_username = :network_username WHERE id = :id LIMIT 1";
+        $vars = array(
+            ':id'=>$id,
+            ':network_username'=>$network_username
+        );
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
 }

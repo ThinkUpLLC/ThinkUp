@@ -210,4 +210,12 @@ interface InstanceDAO {
      * @return int hours
      */
     public function getHoursSinceLastCrawlerRun();
+
+    /**
+     * Update network username
+     * @param int instance ID
+     * @param str new username
+     * @return int Count of updated instances
+     */
+    public function updateUsername($id, $username);
 }

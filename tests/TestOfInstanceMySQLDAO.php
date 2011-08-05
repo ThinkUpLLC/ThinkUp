@@ -727,4 +727,18 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[0]->network_username, "Jillian Dickerson" );
     }
 
+    public function testUpdateInstanceUsername() {
+        $this->DAO = new InstanceMySQLDAO();
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>17,
+        'network_username'=>'johndoe', 'network'=>'twitter', 'network_viewer_id'=>15, 
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
+
+        $instance = $this->DAO->getByUsername('johndoe');
+        $update_cnt = $this->DAO->updateUsername($instance->id, 'johndoe2');
+        $this->assertEqual(1, $update_cnt);
+        $instance = $this->DAO->getByUsername('johndoe');
+        $this->assertNull($instance);
+        $instance = $this->DAO->getByUsername('johndoe2');
+        $this->assertEqual($instance->network_username, "johndoe2" );
+    }
 }
