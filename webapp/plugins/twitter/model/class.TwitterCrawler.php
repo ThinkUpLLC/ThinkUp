@@ -76,7 +76,7 @@ class TwitterCrawler {
      */
     public function fetchInstanceUserInfo() {
         if ($this->api->available && $this->api->available_api_calls_for_crawler > 0) {
-            $owner_profile = str_replace("[id]", $this->instance->network_username,
+            $owner_profile = str_replace("[id]", $this->instance->network_user_id,
             $this->api->cURL_source['show_user']);
             list($cURL_status, $twitter_data) = $this->api->apiRequest($owner_profile);
             if ($cURL_status == 200) {
@@ -195,6 +195,7 @@ class TwitterCrawler {
                     $tweets = $this->api->parseXML($twitter_data);
 
                     $pd = DAOFactory::getDAO('PostDAO');
+                    $new_username = false;
                     foreach ($tweets as $tweet) {
                         $tweet['network'] = 'twitter';
 
@@ -237,6 +238,15 @@ class TwitterCrawler {
                 $status_message .= "All of ".$this->user->username. "'s tweets are in ThinkUp.";
                 $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
             }
+
+            if($this->user->username != $this->instance->network_username) {
+                // User has changed their username, so update instance and posts data
+                $instance_dao = DAOFactory::getDAO('InstanceDAO');
+                $instance_dao->updateUsername($this->instance->id,$this->user->username);
+                $post_dao = DAOFactory::getDAO('PostDAO');
+                $post_dao->updateAuthorUsername($this->instance->network_user_id, 'twitter', $this->user->username);
+            }
+
         }
     }
     /**

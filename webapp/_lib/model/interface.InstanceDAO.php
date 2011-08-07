@@ -210,4 +210,11 @@ interface InstanceDAO {
      * @return int hours
      */
     public function getHoursSinceLastCrawlerRun();
+
+    /**
+     * Update network username
+     * @param int Instnace Id
+     * @param string Username
+     */
+    public function updateUsername($id, $username);
 }
