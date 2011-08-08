@@ -62,15 +62,23 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
         $link = $link_dao->getLinkById(2);
         $this->assertEqual($link->expanded_url, '');
-        $this->assertEqual($link->error, 'Error expanding URL');
+        $this->assertEqual($link->error, "Short URL returned '404 Not Found'");
 
         $link = $link_dao->getLinkById(3);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, 'Invalid URL');
+
+        $link = $link_dao->getLinkById(4);
+        $this->assertEqual($link->expanded_url, 'http://bit.ly');
+        $this->assertEqual($link->error, '');
+
+        $link = $link_dao->getLinkById(5);
+        $this->assertEqual($link->expanded_url, 'http://thinkupapp.com/');
+        $this->assertEqual($link->error, '');
     }
 
     private function buildData() {
-        $owner_builder = FixtureBuilder::build('owners', array(
+        $builders[] = FixtureBuilder::build('owners', array(
             'id' => 1, 
             'email' => 'admin@example.com', 
             'pwd' => 'XXX', 
@@ -79,7 +87,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         ));
 
         //Insert test links (not images, not expanded)
-        $link1_builder = FixtureBuilder::build('links', array(
+        $builders[] = FixtureBuilder::build('links', array(
             'id' => 1,
             'url' => 'http://bit.ly/a5VmbO',
             'expanded_url' => null,
@@ -91,7 +99,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         ));
 
         // An invalid link (will return 404 Not Found)
-        $link2_builder = FixtureBuilder::build('links', array(
+        $builders[] = FixtureBuilder::build('links', array(
             'id' => 2,
             'url' => 'http://bit.ly/0101001010',
             'expanded_url' => null,
@@ -103,7 +111,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         ));
 
         // A malformed URL
-        $link3_builder = FixtureBuilder::build('links', array(
+        $builders[] = FixtureBuilder::build('links', array(
             'id' => 3,
             'url' => 'http:///asdf.com',
             'expanded_url' => null,
@@ -113,7 +121,32 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'is_image' => 0,
             'error' => null
         ));
-        return array($owner_builder, $link1_builder, $link2_builder, $link3_builder);
+
+        // Valid URL with no path
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 4,
+            'url' => 'http://bit.ly',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'is_image' => 0,
+            'error' => null
+        ));
+
+        // Valid URL with no path ending in a slash
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 5,
+            'url' => 'http://thinkupapp.com/',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'is_image' => 0,
+            'error' => null
+        ));
+
+        return $builders;
     }
 
     public function  testFlickrCrawl() {

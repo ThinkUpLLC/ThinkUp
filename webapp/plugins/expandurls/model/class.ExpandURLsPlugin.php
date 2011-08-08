@@ -167,7 +167,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                 }
             } else {
                 $total_errors = $total_errors + 1;
-                $logger->logError($l." is not a valid URL; skipping expansion", __METHOD__.','.__LINE__);
+                $logger->logError($l." not a valid URL", __METHOD__.','.__LINE__);
                 $link_dao->saveExpansionError($l, "Invalid URL");
             }
         }
@@ -179,10 +179,10 @@ class ExpandURLsPlugin implements CrawlerPlugin {
      * Expand a given short URL
      *
      * @param str $tinyurl Shortened URL
-     * @param LinkDAO $ldao
+     * @param LinkDAO $link_dao
      * @return str Expanded URL
      */
-    private function untinyurl($tinyurl, $ldao) {
+    private function untinyurl($tinyurl, $link_dao) {
         $logger = Logger::getInstance();
         $url = parse_url($tinyurl);
         $host = $url['host'];
@@ -190,9 +190,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $query = isset($url['query']) ? '?'.$url['query'] : '';
         $fragment = isset($url['fragment']) ? '#'.$url['fragment'] : '';
         if (empty($url['path'])) {
-            $logger->logError("$tinyurl has no path", __METHOD__.','.__LINE__);
-            $ldao->saveExpansionError($tinyurl, "Error expanding URL");
-            return '';
+            $path = '';
         } else {
             $path = $url['path'];
         }
@@ -206,8 +204,9 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         $response = curl_exec($ch);
         if ($response === false) {
-            $logger->logError("cURL error: ".curl_error($ch), __METHOD__.','.__LINE__);
-            $ldao->saveExpansionError($tinyurl, "Error expanding URL");
+            $error_msg = "cURL error: ".curl_error($ch);
+            $logger->logError($error_msg, __METHOD__.','.__LINE__);
+            $link_dao->saveExpansionError($tinyurl, $error_msg);
             $tinyurl = '';
         }
         curl_close($ch);
@@ -221,8 +220,9 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         }
 
         if (strpos($response, 'HTTP/1.1 404 Not Found') === 0) {
-            $logger->logError("Short URL returned '404 Not Found'", __METHOD__.','.__LINE__);
-            $ldao->saveExpansionError($tinyurl, "Error expanding URL");
+            $error_msg = "Short URL returned '404 Not Found'";
+            $logger->logError($error_msg, __METHOD__.','.__LINE__);
+            $link_dao->saveExpansionError($tinyurl, $error_msg);
             return '';
         }
         return $tinyurl;
