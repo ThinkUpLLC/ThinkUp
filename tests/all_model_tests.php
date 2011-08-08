@@ -33,7 +33,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 /* MODEL TESTS */
 $model_tests = new TestSuite('Model tests');
 $model_tests->add(new TestOfLogger());
-$model_tests->add(new TestOfPDODAO());
 $model_tests->add(new TestOfPDOCorePluginDAO());
 $model_tests->add(new TestOfDAOFactory());
 $model_tests->add(new TestOfConfig());
@@ -78,6 +77,7 @@ $model_tests->add(new TestOfStreamProcMySQLDAO());
 $model_tests->add(new TestOfHashtagMySQLDAO());
 $model_tests->add(new TestOfMentionMySQLDAO());
 $model_tests->add(new TestOfPlaceMySQLDAO());
+$model_tests->add(new TestOfPDODAO());
 
 $tr = new TextReporter();
 $model_tests->run( $tr );

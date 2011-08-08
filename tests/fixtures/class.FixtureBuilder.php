@@ -131,6 +131,11 @@ class FixtureBuilder {
         }
         $pdo = new PDO($db_string, $this->config->getValue('db_user'), $this->config->getValue('db_password'));
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        //set timezone
+        $timezone = $this->config->getValue('timezone');
+        $time = new DateTime("now", new DateTimeZone($timezone) );
+        $tz_offset = $time->format('P');
+        $pdo->exec("SET time_zone = '$tz_offset'");
         return $pdo;
     }
 

@@ -329,5 +329,6 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $tz_server = $test_dao->getTimezoneOffset();
 
         $this->assertEqual($tz_config, $tz_server['tz_offset']);
+        Config::destroyInstance();
     }
 }

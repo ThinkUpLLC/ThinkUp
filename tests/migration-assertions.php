@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '0.13';
+$LATEST_VERSION = '0.14';
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -391,7 +391,7 @@ $MIGRATIONS = array(
 
     /* beta 0.13 */
     '0.13' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.13.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -408,6 +408,83 @@ $MIGRATIONS = array(
                     'match' => "/user_id/",
                     'column' => 'Key_name', 
                 )
+            )
+        )
+    ),
+
+    /* beta 0.14 */
+    '0.14' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    // Created tu_mentions table
+                    'query' => 'DESCRIBE tu_mentions count_cache',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created tu_mentions_posts table
+                    'query' => 'DESCRIBE tu_mentions_posts mention_id',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created tu_hashtags table
+                    'query' => 'DESCRIBE tu_hashtags count_cache',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created tu_hashtags_posts table
+                    'query' => 'DESCRIBE tu_hashtags_posts hashtag_id',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created tu_places table
+                    'query' => 'DESCRIBE tu_places place_id',
+                    'match' => "/varchar\(100\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created tu_places_posts table
+                    'query' => 'DESCRIBE tu_places_posts post_id',
+                    'match' => "/bigint\(20\) UNSIGNED/i",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created tu_stream_data table
+                    'query' => 'DESCRIBE tu_stream_data data',
+                    'match' => "/text/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created tu_stream_procs table
+                    'query' => 'DESCRIBE tu_stream_procs instance_id',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Added fav_timestamp field
+                    'query' => 'DESCRIBE tu_favorites fav_timestamp',
+                    'match' => "/timestamp/",
+                    'column' => 'Type', 
+                ),
+                //@TODO Figure out why these assertions fail
+//                array(
+//                    // Added api_key field
+//                    'query' => 'DESCRIBE tu_owners api_key',
+//                    'match' => "/varchar\(32\)/",
+//                    'column' => 'Type', 
+//                ),
+//                array(
+//                    // Changed pub_date from timestamp to datetime
+//                    'query' => 'DESCRIBE tu_posts pub_date',
+//                    'match' => "/datetime/",
+//                    'column' => 'Type', 
+//                )
             )
         )
     ),

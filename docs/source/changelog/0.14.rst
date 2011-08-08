@@ -1,0 +1,36 @@
+Beta 0.14 - 09 Aug 2011
+=======================
+
+**New Features:**
+
+*   Added missing pagination from user and post listings
+*   Added ability to :doc:`reset your RSS feed URL's API key without having to change your ThinkUp password 
+    </userguide/settings/account>`
+*   Added realtime plugin support throughout core app (though not packaging Twitter Realtime with user distribution yet)
+*   Added ability to deal with Twitter username changes gracefully
+
+**Bugfixes:**
+
+*   Fixed: CSRF bug which prevented users from deleting Facebook accounts
+*   Fixed: "No default value" MySQL errors on certain Windows-based server configurations
+*   Fixed: "No plugin object defined for: pluginname" exception. ThinkUp now automatically deactivates non-existent
+    plugins if they're marked as active in the data store
+*   Fixed: Persistent "Updated 15 hours ago" timezone bug
+*   Fixed: doesOwnerHaveAccess() error when you click on a Facebook user name from a reply list
+
+
+**Improvements:**
+
+*   Security hardening: Added :doc:`filter for cross-site scripting code </contribute/developers/howto/filterxss>` in
+    all data coming from external sources
+*   Improved usability in installation timezone dropdown by adding client TZ auto-detection
+*   Improved Instagr.am image embedding
+*   Improved :doc:`ExpandURLs process </userguide/settings/plugins/expandurls>` to avoid endless loop-checking malformed
+    links 
+*   Improved GeoEncoder plugin settings area usability and :doc:`documentation </userguide/settings/plugins/geoencoder>`
+*   Cleaned up and standardized post presentation across views
+*   Optimized/sped up crawler SQL query for saving instance data
+*   Converted all :doc:`post publish_dates to UTC </contribute/developers/timezones>`
+*   Removed Standalone mentions data listing
+*   Removed "Hello ThinkUp" developer example plugin from user distribution
+*   Added ~3,000 words of application documentation
