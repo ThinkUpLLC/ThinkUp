@@ -20,7 +20,7 @@
           <input type="hidden" name="n" value="{$post->network}" />
           <ul class="side-subnav">
           <li{if $smarty.get.v eq ''} class="currentview"{/if}>
-          <a href="index.php?t={$post->post_id}&n={$post->network}">Post Replies&nbsp;&nbsp;&nbsp;</a>
+          <a href="index.php?t={$post->post_id}&n={$post->network|urlencode}">Post Replies&nbsp;&nbsp;&nbsp;</a>
           </li>
           {if $logged_in_user && $post->reply_count_cache && $post->reply_count_cache > 1}
             <li id="grid_search_input">

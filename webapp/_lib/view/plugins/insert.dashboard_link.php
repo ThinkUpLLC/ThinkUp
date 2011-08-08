@@ -37,6 +37,11 @@
  * -------------------------------------------------------------
  */
 function smarty_insert_dashboard_link($params, &$smarty) {
-    return $smarty->_tpl_vars['site_root_path'].'?u='.$smarty->_tpl_vars['selected_instance_username'].
-    '&n='.$smarty->_tpl_vars['selected_instance_network'];
+    if (isset($smarty->_tpl_vars['selected_instance_username']) &&
+    isset($smarty->_tpl_vars['selected_instance_network'])) {
+        return $smarty->_tpl_vars['site_root_path'].'?u='.urlencode($smarty->_tpl_vars['selected_instance_username']).
+        '&n='.urlencode($smarty->_tpl_vars['selected_instance_network']);
+    } else {
+        return $smarty->_tpl_vars['site_root_path'];
+    }
 }
