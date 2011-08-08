@@ -22,7 +22,7 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
       {if $post->network == 'twitter' && $username_link != 'internal'}
         <a href="{$site_root_path}user/?u={$post->author_username|urlencode}&n={$post->network|urlencode}&i={$selected_instance_username}">{$post->author_username}</a>
       {else}
-        <a href="{$site_root_path}public.php?u={$post->author_username|urlencode}&n={$post->network|urlencode}">{$post->author_username}</a>
+        <a href="{$site_root_path}user/index.php?u={$post->author_username|urlencode}&n={$post->network|urlencode}">{$post->author_username}</a>
       {/if}
 
       {if ($post->author && $post->author->follower_count > 0)}

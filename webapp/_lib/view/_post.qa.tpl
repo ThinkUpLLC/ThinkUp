@@ -18,7 +18,7 @@
         <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
           href="http://twitter.com/{$r.questioner_username}">{$r.questioner_username}</a><span class="ui-icon ui-icon-newwin"></span>
       {else}
-        <a href="{$site_root_path}public.php?u={$r.questioner_username|urlencode}&n={$r.network|urlencode}">
+        <a href="{$site_root_path}user/index.php?u={$r.questioner_username|urlencode}&n={$r.network|urlencode}">
         {$r.questioner_username}
         </a><span class="ui-icon ui-icon-newwin"></span>
       {/if}
@@ -65,7 +65,7 @@
       <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
       href="http://twitter.com/{$r.answerer_username}">{$r.answerer_username}</a><span class="ui-icon ui-icon-newwin"></span>
       {else}
-      <a href="{$site_root_path}public.php?u={$r.questioner_username|urlencode}&n={$r.network|urlencode}">
+      <a href="{$site_root_path}user/index.php?u={$r.questioner_username|urlencode}&n={$r.network|urlencode}">
         {$r.answerer_username}
       </a>
       {/if}
