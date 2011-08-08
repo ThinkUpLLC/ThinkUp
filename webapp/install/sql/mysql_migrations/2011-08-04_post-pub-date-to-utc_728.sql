@@ -53,8 +53,7 @@ CREATE TABLE tu_posts_b14 (
 
 INSERT INTO tu_posts_b14 (SELECT id, post_id, author_user_id, author_username, author_fullname, author_avatar,
 author_follower_count, post_text, is_protected, source, location, place, null, geo, 
-CONVERT_TZ(pub_date, '+00:00', 
-TIME_FORMAT( SEC_TO_TIME( UNIX_TIMESTAMP( NOW() ) - UNIX_TIMESTAMP( UTC_TIMESTAMP() ) ), '%H:%i')),
+CONVERT_TZ(pub_date, '+00:00', @@global.time_zone),
 in_reply_to_user_id, in_reply_to_post_id, reply_count_cache, is_reply_by_friend, in_retweet_of_post_id,
 old_retweet_count_cache, is_retweet_by_friend, reply_retweet_distance, network, is_geo_encoded, in_rt_of_user_id,
 retweet_count_cache, retweet_count_api FROM tu_posts);
