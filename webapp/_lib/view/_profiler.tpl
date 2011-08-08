@@ -4,7 +4,7 @@
 {if $smarty.foreach.foo.index == 0}
 
 Profiling enabled:<br />
-{$t.time} seconds {$t.action}
+{if $t.time > 0.5}<span style="color:red">{/if}{$t.time}{if $t.time > 0.5}</span>{/if} seconds {$t.action}
 <center>
 <table style="border-spacing: 5px;">
 <tr>
