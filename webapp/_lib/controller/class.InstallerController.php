@@ -167,9 +167,6 @@ class InstallerController extends ThinkUpController {
         }
 
         $current_tz = isset($_POST['timezone']) ? $_POST['timezone'] : date_default_timezone_get();
-        if (defined('PHP_INI_CONTAINS_TZ') && 'PHP_INI_CONTAINS_TZ' === false) { //let user know no tz set in php.ini
-            $current_tz = '';
-        }
 
         $this->addToView('db_name', '');
         $this->addToView('db_user', '');
@@ -182,8 +179,7 @@ class InstallerController extends ThinkUpController {
         $this->addToView('current_tz', $current_tz);
         $this->addToView('site_email', 'you@example.com');
         $current_server_time = @exec('date');
-        $current_server_time =  (!empty($current_server_time))?"Current server time: <b>".
-        $current_server_time.'</b>':'';
+        $current_server_time =  (!empty($current_server_time))?$current_server_time:'';
         $this->addToView('current_server_time', $current_server_time);
     }
 
@@ -271,7 +267,7 @@ class InstallerController extends ThinkUpController {
         }
 
         if ($_POST['timezone'] == '') {
-            $this->addErrorMessage("Please select your server's timezone.", "timezone");
+            $this->addErrorMessage("Please select a timezone.", "timezone");
         }
 
         if (($error = $this->installer->checkDb($db_config)) !== true) { //check db
