@@ -807,8 +807,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $builders = $this->buildFacebookPostAndReplies();
         $posts = $dao->getRepliesToPost(145, 'facebook');
         $this->assertEqual(sizeof($posts), 2);
-        $this->assertEqual($posts[0]->post_text, '@ev Cool!', "post reply");
-        $this->assertEqual($posts[1]->post_text, '@ev Rock on!', "post reply");
+        $this->assertEqual($posts[0]->post_text, '@ev Cool!');
+        $this->assertEqual($posts[1]->post_text, '@ev Rock on!');
 
         // test paging
         $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
@@ -872,17 +872,17 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $pb1 = FixtureBuilder::build('posts', array('post_id'=>145, 'author_user_id'=>30,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'This is a Facebook post', 'reply_count_cache'=>2,
-        'network'=>'facebook'));
+        'network'=>'facebook', 'pub_date'=>'-3h'));
         array_push($builders, $pb1);
 
         $pb2 = FixtureBuilder::build('posts', array('post_id'=>146, 'author_user_id'=>31,
         'author_full_name'=>'Facebook User 2', 'post_text'=>'@ev Cool!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>145, 'network'=>'facebook'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook', 'pub_date'=>'-2h'));
         array_push($builders, $pb2);
 
         $pb3 = FixtureBuilder::build('posts', array('post_id'=>147, 'author_user_id'=>32,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'@ev Rock on!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>145, 'network'=>'facebook'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook', 'pub_date'=>'-1h'));
         array_push($builders, $pb3);
 
         return $builders;
@@ -916,17 +916,17 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $pb1 = FixtureBuilder::build('posts', array('post_id'=>145, 'author_user_id'=>30,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'This is a Facebook post', 'reply_count_cache'=>2,
-        'network'=>'facebook page'));
+        'network'=>'facebook page', 'pub_date'=>'-3h'));
         array_push($builders, $pb1);
 
         $pb2 = FixtureBuilder::build('posts', array('post_id'=>146, 'author_user_id'=>31,
         'author_full_name'=>'Facebook User 2', 'post_text'=>'@ev Cool!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>145, 'network'=>'facebook page'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook page', 'pub_date'=>'-2h'));
         array_push($builders, $pb2);
 
         $pb3 = FixtureBuilder::build('posts', array('post_id'=>147, 'author_user_id'=>32,
         'author_full_name'=>'Facebook User 3', 'post_text'=>'@ev Rock on!', 'reply_count_cache'=>0,
-        'in_reply_to_post_id'=>145, 'network'=>'facebook page'));
+        'in_reply_to_post_id'=>145, 'network'=>'facebook page', 'pub_date'=>'-1h'));
         array_push($builders, $pb3);
 
         return $builders;

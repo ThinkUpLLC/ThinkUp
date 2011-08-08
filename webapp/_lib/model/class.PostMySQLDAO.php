@@ -858,21 +858,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $iterator=false, $is_public = false) {
         $direction = $direction=="DESC" ? "DESC": "ASC";
 
-        if (is_string($from)) {
-            $from = strtotime($from);
-        }
-        if (is_string($until)) {
-            $until = strtotime($until);
-        }
-
         $order_by = $this->sanitizeOrderBy($order_by);
 
         $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
         $q .= "LEFT JOIN #prefix#links l ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
-        $q .= "WHERE author_user_id = :author_id AND p.network=:network AND pub_date BETWEEN FROM_UNIXTIME(:from) ";
-        $q .= "AND FROM_UNIXTIME(:until) ";
+        $q .= "WHERE author_user_id = :author_id AND p.network=:network AND pub_date BETWEEN :from AND :until ";
         if ($order_by == 'reply_count_cache') {
             $q .= "AND reply_count_cache > 0 ";
         }
@@ -889,7 +881,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':from' => $from,
             ':until' => $until
         );
-
+        //echo Utils::mergeSQLVars($q, $vars);
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
