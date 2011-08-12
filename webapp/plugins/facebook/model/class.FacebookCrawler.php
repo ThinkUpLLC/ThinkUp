@@ -231,6 +231,7 @@ class FacebookCrawler {
         $thinkup_users = array();
         $profile = null;
         foreach ($stream->data as $p) {
+			var_dump($p); //delete me!
             $post_id = explode("_", $p->id);
             $post_id = $post_id[1];
             if ($profile==null) {
