@@ -130,8 +130,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
 		
 		// test a post with no message field, but has a name field. $post->post_text should not be blank
 		$post = $pd->getPost('10150328374252744', 'facebook');
-		$this->assertEqual($post->post_text,
-		'Superman Restored (Theatrical Trailer)');
+		$this->assertEqual($post->post_text, 'Superman Restored (Theatrical Trailer)');
 		
 		
     }
