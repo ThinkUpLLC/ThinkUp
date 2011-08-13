@@ -259,8 +259,8 @@ are in place to stop long URLs or words from overflowing. */
 
 /* --- CONTENT -------------------------------- */
 
-.post {} /* border-top:1px solid #CCC; */
-.tweet {font-size:1.6em;line-height:1.1em;}
+.post {word-wrap: break-word;} /* border-top:1px solid #CCC; */
+.tweet {font-size:1.6em;line-height:1.1em; word-wrap: break-word;}
 .individual-tweet {padding:0; line-height:1.2em;} /* border-top:1px solid #CCC;*/
 .individual-tweet a:link, .individual-tweet a:visited {text-decoration:none;}
 .individual-tweet a:hover {text-decoration:underline;}
