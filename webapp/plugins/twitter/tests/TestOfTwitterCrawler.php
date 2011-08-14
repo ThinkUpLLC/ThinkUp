@@ -235,6 +235,22 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->geo, "");
     }
 
+    public function testFetchInstanceUserTweetsEscapeHTML() {
+        self::setUpInstanceUserAnilDash();
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceUserTweets();
+
+        //Test post with location has location set
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($pdao->isPostInDB(15660373190, 'twitter'));
+        $post = $pdao->getPost(15660373190, 'twitter');
+        $this->assertEqual($post->post_text, "@nicknotned NYC isn't a rival, it's just a better evolution of the " .
+        "concept of a locale where innovation happens. > & <");
+
+    }
+
     public function testFetchInstanceUserTweetsUsernameChange() {
         $post_builder = self::setUpInstanceUserAnilDashUsernameChange();
 
