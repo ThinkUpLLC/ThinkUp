@@ -472,19 +472,18 @@ $MIGRATIONS = array(
                     'match' => "/timestamp/",
                     'column' => 'Type', 
                 ),
-                //@TODO Figure out why these assertions fail
-//                array(
-//                    // Added api_key field
-//                    'query' => 'DESCRIBE tu_owners api_key',
-//                    'match' => "/varchar\(32\)/",
-//                    'column' => 'Type', 
-//                ),
-//                array(
-//                    // Changed pub_date from timestamp to datetime
-//                    'query' => 'DESCRIBE tu_posts pub_date',
-//                    'match' => "/datetime/",
-//                    'column' => 'Type', 
-//                )
+                array(
+                    // Added api_key field
+                    'query' => 'DESCRIBE tu_owners api_key',
+                    'match' => "/varchar\(32\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Changed pub_date from timestamp to datetime
+                    'query' => 'DESCRIBE tu_posts pub_date',
+                    'match' => "/datetime/",
+                    'column' => 'Type', 
+                )
             )
         )
     ),
