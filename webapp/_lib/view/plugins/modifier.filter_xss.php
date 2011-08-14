@@ -43,5 +43,6 @@
  * @return string
  */
 function smarty_modifier_filter_xss($text) {
+    $text = html_entity_decode($text); # because Twitter sends html-encoded chars that get stored in the DB
     return filter_var($text, FILTER_SANITIZE_SPECIAL_CHARS);
 }

@@ -5,7 +5,6 @@
     <div class="grid_12">post</div>
   </div>
 {/if}
-
 <div class="individual-tweet post clearfix"{if $smarty.foreach.foo.index % 2 == 1} style="background-color:#EEE"{/if}>
     <div class="grid_2 alpha">
       <div class="avatar-container">
@@ -32,7 +31,7 @@
     <div class="grid_12 omega">
       <div class="post">
         {if $r.question}
-           {$r.question|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}
+           {$r.question|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}
         {else}
           <span class="no-post-text">No post text</span>
         {/if}
@@ -76,7 +75,7 @@
   <div class="grid_12 omega">
       <div class="post">
         {if $r.answer}
-          {$r.answer|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}
+          {$r.answer|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames:$i->network_username:$r.network}
         {else}
           <span class="no-post-text">No post text</span>
         {/if}
