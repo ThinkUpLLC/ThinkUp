@@ -39,7 +39,7 @@ class UpdateNowController extends ThinkUpAuthAPIController {
         $php_path =  (!empty($whichphp))?$whichphp:'php';
         $email = $this->getLoggedInUser();
         $owner = parent::getOwner($email);
-        $rss_url = THINKUP_BASE_URL . sprintf('rss.php?un=%s&as=%s', $email, $owner->api_key);
+        $rss_url = THINKUP_BASE_URL . sprintf('rss.php?un=%s&as=%s', urlencode($email), $owner->api_key);
         $config = Config::getInstance();
         $site_root_path = $config->getValue('site_root_path');
         $this->addInfoMessage('<b>Hint</b><br />You can automate ThinkUp crawls by subscribing to '.

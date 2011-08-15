@@ -38,17 +38,35 @@ class TestOfUpdateNowController extends ThinkUpUnitTestCase {
         $controller = new UpdateNowController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->control();
-        $this->assertPattern('/rss.php\?un=me@example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/', $result);
+        $this->assertPattern('/rss.php\?un=me\%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/', $result);
+    }
+
+    public function testLoadProperRSSUrlWithPlusSignInEmailAddress() {
+        $builder = $this->buildData();
+        $this->simulateLogin('me+checkurlencoding@example.com', true, true);
+        $controller = new UpdateNowController(true);
+        $this->assertTrue(isset($controller));
+        $result = $controller->control();
+        $this->debug($result);
+        $this->assertPattern('/rss.php\?un=me\%2Bcheckurlencoding%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/',
+        $result);
     }
 
     private function buildData() {
-        $owner_builder = FixtureBuilder::build('owners', array(
+        $builders[] = FixtureBuilder::build('owners', array(
             'id' => 1, 
             'email' => 'me@example.com', 
             'pwd' => 'XXX', 
             'is_activated' => 1,
             'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
             ));
-            return array($owner_builder);
+            $builders[] = FixtureBuilder::build('owners', array(
+            'id' => 2, 
+            'email' => 'me+checkurlencoding@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1,
+            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
+            ));
+            return $builders;
     }
 }
