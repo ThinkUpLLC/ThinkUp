@@ -134,8 +134,7 @@ var TU_Update = function() {
 						tu_update.submitForm();
 					} else {
 						$('#info-parent').removeClass('ui-state-highlight');
-						$('#info-parent').removeClass('ui-corner-all');
-						$('#info-parent').addClass('success');
+						$('#info-parent').addClass('ui-state-success');
 						$('#migration-info').html(
 								'Success! Your ThinkUp is now up-to-date.');
 						$('#migrate_spinner').hide();

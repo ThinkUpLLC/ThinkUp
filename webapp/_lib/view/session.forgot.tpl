@@ -14,9 +14,12 @@
         </div>
       {/if}
       {if isset($success_msg)}
-        <div class="success">
-          {$success_msg}
-        </div>
+         <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+             <p>
+               <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+               {$success_msg}
+             </p>
+         </div> 
       {/if}
     </div>
   </div>

@@ -1,8 +1,11 @@
 {if $field}
     {if $success_msgs.$field}
-    <p class="success">
-        {$success_msgs.$field}
-    </p>    
+     <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+         <p>
+           <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+           {$success_msgs.$field}
+         </p>
+     </div>	
     {/if}
     {if $error_msgs.$field}
      <div class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
@@ -23,9 +26,12 @@
     {/if}
 {else}
     {if $success_msg}
-    <p class="success">
-        {$success_msg}
-    </p>    
+     <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+         <p>
+           <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+           {$success_msg}
+         </p>
+     </div>		
     {/if}
     {if $error_msg}
      <div class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">

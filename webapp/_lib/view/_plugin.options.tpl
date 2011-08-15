@@ -37,9 +37,13 @@ function show_advanced() {
 
 <form id="plugin_option_form" onsubmit="return false;">
 
-<p class="success" id="plugin_options_success" style="display: none;">
-    Saved!
-</p>
+<div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;display: none;" id="plugin_options_success">
+     <p>
+       <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+       Saved!
+     </p>
+ </div> 
+
 
 <div id="plugin_option_server_error" 
     class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em; display: none;">

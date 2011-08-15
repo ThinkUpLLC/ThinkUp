@@ -33,10 +33,14 @@
         <h2 class="clearfix step_title">Check System Requirements</h2>
         {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd && $libs.pdo
             && $libs.pdo_mysql && $libs.json}
-        <p class="success" style="margin-bottom: 30px">
-             <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
-             You may proceed to the next step.
-        </p>
+            
+             <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+                 <p>
+                   <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+                     <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
+                     You may proceed to the next step.
+                 </p>
+             </div> 
         {else}
         <div class="ui-state-error ui-corner-all" style="margin-bottom: 20px; padding: 0.5em 0.7em;">
              <p>

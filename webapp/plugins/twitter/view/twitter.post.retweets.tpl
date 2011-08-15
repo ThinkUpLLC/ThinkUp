@@ -154,7 +154,7 @@
         url: "{/literal}{$site_root_path}{literal}post/mark-parent.php",
         data: dataString,
         success: function() {
-          $('#div' + Id).html("<div class='success' id='message" + Id + "'></div>");
+          $('#div' + Id).html("<div class='ui-state-success ui-corner-all' id='message" + Id + "'></div>");
           $('#message' + Id).html("<p>Saved!</p>").hide().fadeIn(1500, function() {
             $('#message'+Id);  
           });

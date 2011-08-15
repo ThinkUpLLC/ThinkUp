@@ -42,7 +42,7 @@
                   <span id="spanpluginactivation{$ip->id}">
                       <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
                   </span>
-                  <span style="display: none;" class='success mt_10' id="message{$ip->id}"></span>
+                  <span style="display: none;" class='ui-state-success  ui-corner-all mt_10' id="message{$ip->id}"></span>
                   </div>
                 {/if}
               </div>
@@ -174,7 +174,7 @@ data using a special URL which contains this key. You can reset your key to some
                   {if !$o->is_admin}
                   <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
                   {/if}
-                  <span style="display: none;" class='success mt_10' id="message1{$o->id}"></span>
+                  <span style="display: none;" class='ui-state-success ui-corner-all mt_10' id="message1{$o->id}"></span>
                   
                   {if $o->instances neq null}
                     <ul>
@@ -223,7 +223,7 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
         data: dataString,
         success: function() {
-          $('#div' + u).html("<span class='success' id='message" + u + "'></span>");
+          $('#div' + u).html("<span class='ui-state-success ui-corner-all' id='message" + u + "'></span>");
           $('#message' + u).html("Set to public!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
@@ -241,7 +241,7 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-public.php",
         data: dataString,
         success: function() {
-          $('#div' + u).html("<span class='success' id='message" + u + "'></span>");
+          $('#div' + u).html("<span class='ui-state-success ui-corner-all' id='message" + u + "'></span>");
           $('#message' + u).html("Set to private!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
@@ -261,7 +261,7 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
         data: dataString,
         success: function() {
-          $('#divactivate' + u).html("<span class='success mt_10' id='message" + u + "'></span>");
+          $('#divactivate' + u).html("<span class='ui-state-success ui-corner-all mt_10' id='message" + u + "'></span>");
           $('#message' + u).html("Crawling has started!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
@@ -279,7 +279,7 @@ $(function() {
         url: "{/literal}{$site_root_path}{literal}account/toggle-active.php",
         data: dataString,
         success: function() {
-          $('#divactivate' + u).html("<span class='success mt_10' id='message" + u + "'></span>");
+          $('#divactivate' + u).html("<span class='ui-state-success ui-corner-all mt_10' id='message" + u + "'></span>");
           $('#message' + u).html("Crawling has paused!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });

@@ -223,18 +223,9 @@ text-align: center;
 /* body overlay div (backround grayout for slick grid search unit */
 #screen {position: absolute; left: 0; top: 0; background: #000; z-index: 99; color: red; display: none;}
 
-
-.success {
-  background-color: #BFDFBF;
-  margin: 10px 0px;
-  padding: 10px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-}
-
+.ui-state-success { background-color: #BFDFBF; border: 1px solid green; color:green; }
 .ui-state-highlight p a {color:#416A93;}
 .ui-state-error p a {color:#416A93;}
-
 
 /* Sidebar */
 

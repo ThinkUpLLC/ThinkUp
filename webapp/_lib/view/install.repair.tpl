@@ -5,24 +5,33 @@
         <h2 class="clearfix step_title">Repairing</h2>
         {include file="_usermessage.tpl"}
         {if $posted}
+
           {if $succeed}
           <div style="margin-bottom: 20px;">
-            <p class="success"><strong>Repairs complete</strong>. Please remove <code>$THINKUP_CFG['repair'] = true;</code>
-              from config.inc.php to prevent this page from being used by unauthorized users.
-              {if $username && password}
-                Your newly created admin user: <strong>{$username}</strong>, password:
-                <strong>{$password}</strong>
-              {/if}
-            </p>
+          
+             <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+                 <p>
+                   <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+                    <strong>Repairs complete</strong>. Please remove <code>$THINKUP_CFG['repair'] = true;</code>
+                      from config.inc.php to prevent this page from being used by unauthorized users.
+                      {if $username && password}
+                        Your newly created admin user: <strong>{$username}</strong>, password:
+                        <strong>{$password}</strong>
+                      {/if}
+                    </p>
+                  </div>
+                  <div class="clearfix">
+                    {foreach from=$messages_db item=msg}
+                      {$msg}
+                    {/foreach}
+                    {foreach from=$messages_admin item=msg}
+                      {$msg}
+                    {/foreach}
+             </div>
+
           </div>
-          <div class="clearfix">
-            {foreach from=$messages_db item=msg}
-              {$msg}
-            {/foreach}
-            {foreach from=$messages_admin item=msg}
-              {$msg}
-            {/foreach}
-          </div>
+
+
           {else}
           <div class="clearfix error_message">
             <strong>Ups!</strong> Something goes wrong, read the hints below!

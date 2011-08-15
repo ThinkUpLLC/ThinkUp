@@ -31,9 +31,15 @@
     <div class="clearfix prepend_20 append_20">
       <div class="grid_22 push_1 clearfix">
       <h2 class="clearfix step_title">Congratulations!</h2>
-          <p class="success" style="margin-bottom: 30px">
+
+     <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+         <p>
+           <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
             ThinkUp has been installed successfully. Check your email account; an account activation message has been sent.
-          </p>
+         </p>
+     </div> 
+
+    
     
 <br /><br />
        <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 

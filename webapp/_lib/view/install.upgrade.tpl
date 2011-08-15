@@ -11,13 +11,16 @@
   </div>
 
     {if ! $migrations[0]}
-    <div class="success" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
     <!-- no upgrade needed -->
-    <p>Your database is up to date. <a href="{$site_root_path}">Continue using ThinkUp</a>, or <a href="backup.php">back up your database.</a></p>
-        {if $version_updated}
-        <p>Your application database version has been updated to reflect the latest installed version of ThinkUp.</p>
-        {/if}
-    </div>
+     <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+         <p>
+           <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+           Your database is up to date. <a href="{$site_root_path}">Continue using ThinkUp</a>, or <a href="backup.php">back up your database.</a>
+                {if $version_updated}
+                <p>Your application database version has been updated to reflect the latest installed version of ThinkUp.</p>
+                {/if}
+        </p>
+     </div> 
     {else}
     <div id="info-parent" class="ui-state-highlight ui-corner-all" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
         <div id="migration-info">

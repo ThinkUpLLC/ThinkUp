@@ -16,9 +16,13 @@
     </p>
 </div>
 
-<p class="success" id="settings_success" style="display: none;">
-    Settings Saved!
-</p>
+ <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;display: none;" id="settings_success">
+     <p>
+       <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+       Settings saved!
+     </p>
+ </div> 
+
 
 <form id="app-settings-form" name="app_settings" method="post" action="{$site_root_path}session/app_settings.php"
   onsubmit="return false">
