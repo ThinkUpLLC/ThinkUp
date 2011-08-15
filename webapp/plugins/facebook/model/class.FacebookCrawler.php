@@ -231,6 +231,7 @@ class FacebookCrawler {
         $thinkup_users = array();
         $profile = null;
         foreach ($stream->data as $p) {
+			var_dump($p); //delete me!
             $post_id = explode("_", $p->id);
             $post_id = $post_id[1];
             if ($profile==null) {
@@ -244,6 +245,12 @@ class FacebookCrawler {
             "pub_date"=>$p->created_time, 
             "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
             'is_protected'=>$is_protected);
+
+            //sometimes the Facebook object doesn't contain a message field. If blank, try "name"
+            if ($ttp["post_text"] == '') {
+                $ttp["post_text"] = isset($p->name)?$p->name:'';
+            }
+
             array_push($thinkup_posts, $ttp);
             if ( isset($p->comments)) {
                 $comments_captured = 0;

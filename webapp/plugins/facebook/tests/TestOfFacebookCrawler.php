@@ -127,6 +127,12 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, 697015835);
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/697015835/picture');
         $this->assertTrue($user->is_protected);
+		
+		// test a post with no message field, but has a name field. $post->post_text should not be blank
+		$post = $pd->getPost('10150328374252744', 'facebook');
+		$this->assertEqual($post->post_text, 'Superman Restored (Theatrical Trailer)');
+		
+		
     }
 
     public function testFetchPageStream() {
