@@ -332,16 +332,11 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                             error_log("TEST FAIL DEBUGGING:");
                             error_log('Query for assertion ' . $assertion_sql['query'] . " with match "
                             . $assertion_sql['match'] . " failed");
-                            $debug_stmt = $this->pdo->query("select * from tu_options");
+                            $debug_stmt = $this->pdo->query("show tables");
                             $debug_data = $debug_stmt->fetchAll(PDO::FETCH_ASSOC);
-                            error_log("Contents of tu_options table:");
+                            error_log("Current table list:");
                             var_dump($debug_data);
                             $debug_stmt->closeCursor();
-                            error_log("Contents of tu_plugin_options table:");
-                            $debug_stmt = $this->pdo->query("select * from tu_plugin_options");
-                            $debug_data = $debug_stmt->fetchAll(PDO::FETCH_ASSOC);
-                            $debug_stmt->closeCursor();
-                            var_dump($debug_data);
                             error_log("json return data: " . $content);
                         }
                     }
