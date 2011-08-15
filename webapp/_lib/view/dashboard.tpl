@@ -38,14 +38,14 @@
     </div>
 
     <div class="thinkup-canvas round-all grid_20 alpha omega prepend_20 append_20" style="min-height:340px">
-      <div class="prefix_1">
+      <div class="prefix_1 suffix_1">
 
         {include file="_usermessage.tpl"}
 
         {if $instance}
             <!--begin public user dashboard-->
             {if $user_details}
-            <div class="suffix_1 grid_18 alpha omega">
+            <div class="grid_18 alpha omega">
               <div class="clearfix dashboard-header round-all">
                 <div class="grid_2 alpha">
                   <div class="avatar-container">
