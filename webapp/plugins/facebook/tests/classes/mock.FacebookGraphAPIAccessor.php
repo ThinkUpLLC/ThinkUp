@@ -45,7 +45,7 @@ class FacebookGraphAPIAccessor {
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
-        echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
+        //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
         ';
         $result=  file_get_contents($FAUX_DATA_PATH.$url);
         return json_decode($result);
@@ -69,7 +69,7 @@ class FacebookGraphAPIAccessor {
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
-        echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
+        //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
         ';
         $result=  file_get_contents($FAUX_DATA_PATH.$url);
         return json_decode($result);
