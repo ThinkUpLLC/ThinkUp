@@ -39,8 +39,8 @@ class TestOfForgotPasswordController extends ThinkUpUnitTestCase {
     }
 
     protected function buildData() {
-        $session = new Session();
-        $cryptpass = $session->pwdcrypt("oldpassword");
+        $owner_dao = new OwnerMySQLDAO();
+        $cryptpass = $owner_dao->pwdcrypt("oldpassword");
         $builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
         'email'=>'me@example.com', 'pwd'=>$cryptpass, 'activation_code'=>8888, 'is_activated'=>1));
         return $builder;

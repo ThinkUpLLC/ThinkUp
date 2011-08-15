@@ -39,21 +39,30 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->builders = self::buildData();
         $this->DAO = new OwnerMySQLDAO();
+        $this->builders = self::buildData();
         $this->config = Config::getInstance();
         $this->prefix = $this->config->getValue('table_prefix');
     }
 
     protected function buildData() {
         $builders = array();
-
+        
+        $salt = 'salt';
+        $pwd1 = $this->DAO->pwdCrypt('pwd1');
+        $pwd2 = $this->DAO->pwdCrypt('pwd2');
+        $pwd3 = $this->DAO->generateUniqueSaltedPassword('pwd3', $salt);
+        
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
-        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>'XXX', 'activation_code'=>'8888', 
+        'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>$pwd1, 'pwd_salt'=>null, 'activation_code'=>'8888', 
         'account_status'=>'', 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
-        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>'YYY', 'account_status'=>''));
+        'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>$pwd2, 'pwd_salt'=>null, 'account_status'=>''));
+               
+        $builders[] = FixtureBuilder::build('owners', array('full_name'=>'Salted User',
+        'email'=>'salteduser@example.com', 'is_activated'=>1, 'pwd'=>$pwd3, 'pwd_salt'=>$salt, 
+        'account_status'=>''));
 
         return $builders;
     }
@@ -86,7 +95,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetAllOwners() {
         $all_owners = $this->DAO->getAllOwners();
-        $this->assertEqual(sizeof($all_owners), 2);
+        $this->assertEqual(sizeof($all_owners), 3);
         $this->assertEqual($all_owners[0]->email, 'ttuser@example.com');
         $this->assertEqual($all_owners[1]->email, 'ttuser1@example.com');
     }
@@ -146,7 +155,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($result);
         //activated owner
         $result = $this->DAO->getPass('ttuser1@example.com');
-        $this->assertEqual($result, 'YYY');
+        $this->assertEqual($result, $this->DAO->pwdCrypt('pwd2'));
     }
 
     /**
@@ -185,9 +194,9 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testCreate() {
         //Create new owner who does not exist
-        $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 1);
+        $this->assertEqual($this->DAO->create('ttuser2@example.com', 's3cr3t', 'salt', 'XXX', 'ThinkUp J. User2'), 1);
         //Create new owner who does exist
-        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'XXX', 'ThinkUp J. User2'), 0);
+        $this->assertEqual($this->DAO->create('ttuser@example.com', 's3cr3t', 'salt', 'XXX', 'ThinkUp J. User2'), 0);
 
         // we should validate this created user data
         $sql = "select *, unix_timestamp(joined) as joined_ts from " .
@@ -268,7 +277,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new OwnerMySQLDAO($config_array);
 
         $this->assertFalse($dao->doesAdminExist());
-        $dao->createAdmin('test@example.com', 'password', 'adfadfad', 'My Full Name');
+        $dao->createAdmin('test@example.com', 'password', 'salt', 'adfadfad', 'My Full Name');
         $this->assertTrue($dao->doesAdminExist());
     }
 
@@ -355,5 +364,85 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $owner = $this->DAO->getByEmail('ttuser2@example.com');
         //new status
         $this->assertFalse($owner->is_activated);
+
     }
+    
+    public function testGenerateSalt(){
+        // Ensure a unique salt is generated for each user
+        $salt_array = array();
+        $salt_array[] = $this->DAO->generateSalt('me@me.com');
+        $salt_array[] = $this->DAO->generateSalt('you@you.com');
+        $salt_array[] = $this->DAO->generateSalt('testing@test.com');
+        $salt_array[] = $this->DAO->generateSalt('hello@google.com');
+        $salt_array[] = $this->DAO->generateSalt('me+cats@lol.com');
+        $this->assertEqual(sizeof($salt_array), sizeof(array_unique($salt_array)), 'Size of arrays should be equal,
+        each salt should be unique');
+    }
+    
+    public function testGeneratePassword(){
+        $this->assertEqual($this->DAO->generateUniqueSaltedPassword('password', 'salt'), 
+        '212a4f83b0966b24188a7ac4f01abc81d70c6e3c118bd37ff789e3dd2109560f', "Password Generation is faulty, should be 
+        equal");
+    }
+    
+    public function testGetSaltByEmail(){     
+        $this->assertEqual($this->DAO->getSaltByEmail('salteduser@example.com'), 'salt', 'Incorrect salt returned');
+        $this->assertNotEqual($this->DAO->getSaltByEmail('salteduser@example.com'), 'wrongsalt', 
+         'Wrong salt returned');
+    }
+    
+    public function testUpdateSalt(){
+        $this->assertEqual($this->DAO->updateSalt('salteduser@example.com', 'newsalt'), 1, 'Problem updating salt');
+        $this->assertEqual($this->DAO->updateSalt('nonexistentuser@example.com', 'newsalt'), 0, 
+        'Nothing should happen');
+    }
+    
+    public function testCheckUniqueSaltedPassword(){
+        $pass = $this->DAO->generateUniqueSaltedPassword('pwd3', 'salt');
+        $this->assertTrue($this->DAO->checkUniqueSaltedPassword('salteduser@example.com', $pass), 'Password should 
+        be correct');
+        $this->assertFalse($this->DAO->checkUniqueSaltedPassword('salteduser@example.com', 'wrongpass'), 'Password 
+        should be incorrect');
+    }
+    
+    public function testIsOwnerAuthorized(){
+        // Check a correct unique salted password
+        $this->assertTrue($this->DAO->isOwnerAuthorized('salteduser@example.com', 'pwd3'), 'Credentials should be
+        valid');
+        // Check a correct non-unique salted password
+        $this->assertTrue($this->DAO->isOwnerAuthorized('ttuser1@example.com', 'pwd2'), 'Credentials should be
+        valid');
+        // Check a incorrect unique salted password
+        $this->assertFalse($this->DAO->isOwnerAuthorized('salteduser@example.com', 'wrongpass'), 'Credentials should be
+        invalid');
+        // Check a incorrect non-unique salted password
+        $this->assertFalse($this->DAO->isOwnerAuthorized('ttuser1@example.com', 'wrong'), 'Credentials should be
+        invalid');
+    }
+    
+   public function testPwdCrypt() {
+       // This function returns the saltedsha1(password) so we check if the correct saltedsha1 hash for cat is returned
+       $this->assertEqual($this->DAO->pwdCrypt('cat'), '17ce242925679a052c18e8b3b5418052201d6554',
+       'Wrong Hash Returned' );
+    }
+
+    public function testPwdCheck() {
+        /*
+         * Password check confirms that the password supplies matches either the MD5, SHA1 or salted SHA1 hash of the
+         * password. So we need to check these 3 cases.
+         */  
+        
+        // MD5 hash
+        $this->assertTrue($this->DAO->pwdCrypt('cat', 'd077f244def8a70e5ea758bd8352fcd8'), 'MD5 hash verification
+        is broke' );
+        
+        // SHA1 hash
+        $this->assertTrue($this->DAO->pwdCrypt('cat', '9d989e8d27dc9e0ec3389fc855f142c3d40f0c50'),
+        'SHA1 hash verification is broke' );
+        
+        // Salted SHA1 hash
+        $this->assertTrue($this->DAO->pwdCrypt('cat', '17ce242925679a052c18e8b3b5418052201d6554'),
+        'Salted SHA1 hash verification is broke' );
+    }
+    
 }

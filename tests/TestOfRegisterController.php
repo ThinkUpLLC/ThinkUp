@@ -57,8 +57,8 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
     }
 
     public function testAlreadyLoggedIn() {
-        $session = new Session();
-        $cryptpass = $session->pwdcrypt("secretpassword");
+        $owner_dao = new OwnerMySQLDAO();
+        $cryptpass = $owner_dao->pwdcrypt("secretpassword");
         $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
         $builder1 = FixtureBuilder::build('owners', $owner);
         $instance = array('id'=>1, 'network_username'=>'thinkupapp');

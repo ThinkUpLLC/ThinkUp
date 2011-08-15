@@ -62,8 +62,8 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
         $builders = array();
 
         //Add owner
-        $session = new Session();
-        $cryptpass = $session->pwdcrypt("secretpassword");
+        $owner_dao = new OwnerMySQLDAO();
+        $cryptpass = $owner_dao->pwdcrypt("secretpassword");
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass,
         'is_activated'=>1,'is_admin'=>1));
 
