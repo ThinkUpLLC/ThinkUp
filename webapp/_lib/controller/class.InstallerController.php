@@ -245,12 +245,15 @@ class InstallerController extends ThinkUpController {
             $display_errors = true;
         }
 
-        if ( $password != $confirm_password || $password == '' ) { //check password
+        if ( $password != $confirm_password || $password == '' || strlen($password) < 5 ) { //check password
             if ($password != $confirm_password) {
                 $this->addErrorMessage("Your passwords did not match.", "password");
-            } else {
+            } else if ( $password == '' ) {
                 $this->addErrorMessage("Please choose a password.", "password");
-            }
+            } else if ( strlen($password) < 5 ) {
+                $this->addErrorMessage("Password must be at least 5 characters.", "password");
+            } 
+            
             $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
         }
