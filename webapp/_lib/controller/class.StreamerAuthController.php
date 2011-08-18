@@ -63,7 +63,8 @@ class StreamerAuthController extends ThinkUpController {
             }
 
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
-            if ($owner_dao->isOwnerAuthorized($username, $pwd)) {
+            $owner = $owner_dao->getByEmail($username);
+            if ($owner_dao->isOwnerAuthorized($username, $pw)) {
                 $authorized = true;
                 Session::completeLogin($owner);
             } else {
