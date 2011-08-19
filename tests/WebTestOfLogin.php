@@ -81,8 +81,9 @@ class WebTestOfLogin extends ThinkUpWebTestCase {
             $this->setField('email', 'me@example.com');
             $this->setField('pwd', 'wrongpassword');
             $this->click("Log In");
+            //$this->showSource();
 
-            if ($i <= 11) {
+            if ($i < 10) {
                 $this->assertText('Incorrect password');
                 $this->assertField('email', 'me@example.com');
             } else {
