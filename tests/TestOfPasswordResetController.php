@@ -183,4 +183,30 @@ SQL;
         $owner = $dao->getByEmail('salt@example.com');
         $this->assertEqual($owner->account_status, '');
     }
+
+    public function testOwnerHasCleanStateAfterSuccessfulPasswordReset() {
+        $builder = FixtureBuilder::build('owners', array('id'=>3, 'full_name'=>'Zaphod Beeblebrox',
+        'email'=>'zaphod@hog.com', 'is_activated'=>false, 'failed_logins'=>10,
+        'account_status'=>'Deactivated account'));
+
+        $dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $dao->getByEmail('zaphod@hog.com');
+        $token = $owner->setPasswordRecoveryToken();
+
+        $_POST['password'] = 'trillian';
+        $_POST['password_confirm'] = 'trillian';
+        $_GET['token'] = $token;
+
+        $controller = new PasswordResetController(true);
+        $result = $controller->go();
+
+        // Lack of error_msg in PasswordResetController's view template indicates success.
+        $v_mgr = $controller->getViewManager();
+        $this->assertFalse($v_mgr->getTemplateDataItem('error_msg'));
+
+        $owner = $dao->getByEmail('zaphod@hog.com');
+        $this->assertEqual($owner->is_activated, true);
+        $this->assertEqual($owner->account_status, '');
+        $this->assertEqual($owner->failed_logins, 0);
+    }
 }
