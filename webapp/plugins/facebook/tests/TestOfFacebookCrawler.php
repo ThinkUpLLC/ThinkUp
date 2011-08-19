@@ -61,6 +61,20 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0'
         );
         $this->instance = new Instance($r);
+		
+		$r2 = array('id'=>2, 'network_username'=>'Mark Linford', 'network_user_id'=>'729597743',
+        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook',
+        'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
+        'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
+        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+        'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0'
+        );
+        $this->instance2 = new Instance($r2);
+		
     }
 
     public function tearDown() {
@@ -127,6 +141,14 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, 697015835);
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/697015835/picture');
         $this->assertTrue($user->is_protected);
+		
+		// test a post with no message field, but has a name field. $post->post_text should not be blank
+		$fbc2 = new FacebookCrawler($this->instance2, 'fauxaccesstoken');
+		$fbc2->fetchUserPostsAndReplies($this->instance2->network_user_id);
+		$post = $pd->getPost('10150328374252744', 'facebook');
+		$this->assertEqual($post->post_text, 'Superman Restored (Theatrical Trailer)');
+		
+		
     }
 
     public function testFetchPageStream() {
