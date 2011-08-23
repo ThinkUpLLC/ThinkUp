@@ -205,25 +205,23 @@ class GeoEncoderCrawler {
 
     /**
      * Calculate distance between reply and initial post
-     * @var string $location1
-     * @var string $location2
+     * @var str $location1
+     * @var str $location2
      * @return int $distance
      */
     public function getDistanceBetweenPosts($location1, $location2) {
-        $latitude = array(
-        '0' => 0,
-        '1' => 0
-        );
-        $longitude = array(
-        '0' => 0,
-        '1' => 0
-        );
+        $latitude = array('0' => 0, '1' => 0);
+        $longitude = array('0' => 0, '1' => 0);
         $place1 = explode(',',$location1,2);
-        $latitude[0] = $place1[0];
-        $longitude[0] = $place1[1];
+        if (is_array($place1) && count($place1) >= 2) {
+            $latitude[0] = $place1[0];
+            $longitude[0] = $place1[1];
+        }
         $place2 = explode(',',$location2,2);
-        $latitude[1] = $place2[0];
-        $longitude[1] = $place2[1];
+        if (is_array($place2) && count($place2) >= 2) {
+            $latitude[1] = $place2[0];
+            $longitude[1] = $place2[1];
+        }
         if ($latitude[0] == 0 || $latitude[1] == 0 || $longitude[0] == 0 || $longitude[1] == 0) {
             return 0;
         }
@@ -239,7 +237,7 @@ class GeoEncoderCrawler {
     }
 
     /**
-     * Method to find distance between reply and initial post
+     * Retrieve distance between reply and initial post
      * @var PostDAO $pdao
      * @var array $post
      * @var str $geodata
