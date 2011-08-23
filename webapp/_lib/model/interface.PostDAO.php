@@ -498,4 +498,11 @@ interface PostDAO {
      * @return int Count of posts updated
      */
     public function updateAuthorUsername($author_user_id, $network, $author_username);
+
+    /**
+     * Delete post by ID
+     * @param int $id
+     * @return boolean True if post deleted, False if not (ie: post did not exist)
+     */
+    public function deletePost($id);
 }

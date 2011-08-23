@@ -895,6 +895,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
 
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+
         $ps = $this->execute($q, $vars);
 
         if ($iterator) {
@@ -1293,6 +1294,17 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':author_user_id'=>$author_user_id,
             ':author_username'=>$author_username,
             ':network' => $network
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+
+
+    public function deletePost($id) {
+        $q = "DELETE from #prefix#posts WHERE id = :id LIMIT 1";
+        $vars = array(
+            ':id'=>$id,
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
