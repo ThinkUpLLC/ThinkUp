@@ -104,6 +104,27 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->instance->is_archive_loaded_follows = true;
     }
 
+    private function setUpInstanceUserAnilDashDelete() {
+        $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36825', 'network_viewer_id'=>'36823',
+        'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
+        'total_posts_in_system'=>'21', 'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 
+        'is_archive_loaded_replies'=>'0', 'is_archive_loaded_follows'=>'0', 'total_posts_by_owner'=>1,
+        'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',  'avg_replies_per_day'=>'2', 'is_public'=>'0', 
+        'is_active'=>'0', 'network'=>'twitter', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
+        'last_page_fetched_favorites' => '0', 'favorites_profile' => '0', 'owner_favs_in_system' => '0',
+        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+        'earliest_post_in_system'=>'01-01-2009'
+        );
+        $this->instance = new TwitterInstance($r);
+
+        $this->api = new CrawlerTwitterAPIAccessorOAuth('111', '222', 'fake_key', 'fake_secret', 2,
+        1234, 5, 350);
+
+        $this->api->available = true;
+        $this->api->available_api_calls_for_crawler = 20;
+        $this->instance->is_archive_loaded_follows = true;
+    }
+
     private function setUpInstanceUserAnilDashUsernameChange() {
         $r = array('id'=>1, 'network_username'=>'anildash', 'network_user_id'=>'36824', 'network_viewer_id'=>'36823',
         'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'17', 
@@ -282,6 +303,31 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $instance = $instance_dao->getByUsername("anildash2");
         $this->assertNotNull($instance);
+
+    }
+
+    public function testDeletedTweet() {
+        $post_builder = self::setUpInstanceUserAnilDashDelete();
+
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>36825,
+        'network_username'=>'anildash', 'network'=>'twitter', 'network_viewer_id'=>36825, 
+        'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
+
+        // some tweets...
+        $builder = FixtureBuilder::build('posts', array('id' => 1, 'post_id' => 12345,
+        'author_user_id' => 36825, 'pub_date' => '2010-06-08 04:45:16'));
+        $builder2 = FixtureBuilder::build('posts', array('id' => 2, 'post_id' => 123456,
+        'author_user_id' => 36825, 'pub_date' => '2010-06-08 04:45:16'));
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserTweets();
+
+        // should be deleted, not  found on twitter...
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $this->assertNull($pdao->getPost(12345, 'twitter'));
+
+        // found on twitter, so don't delete
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $this->assertNotNull($pdao->getPost(123456, 'twitter'));
 
     }
 

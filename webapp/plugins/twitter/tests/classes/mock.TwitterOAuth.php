@@ -53,8 +53,7 @@ class TwitterOAuth {
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
-        //        echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
-        //        ';
+        //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. "\n";
         if (!file_exists($FAUX_DATA_PATH.$url)) {
             if (is_numeric($url) && strlen($url) == 3) {
                 // if the URL is a 3 character, numeric string, set the last error code to it. For testing errors.
@@ -64,7 +63,9 @@ class TwitterOAuth {
             }
             return "";
         } else {
-            return file_get_contents($FAUX_DATA_PATH.$url);
+            $data = file_get_contents($FAUX_DATA_PATH.$url);
+            $this->last_status_code = 200;
+            return $data;
         }
     }
 

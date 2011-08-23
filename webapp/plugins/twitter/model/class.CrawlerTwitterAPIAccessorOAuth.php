@@ -119,7 +119,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                  $status_message = "Parsing XML data from $account_status ";
                  $status = $this->parseXML($twitter_data);
 
-                 if (isset($status['remaining-hits']) && isset($status['hourly-limit']) && 
+                 if (isset($status['remaining-hits']) && isset($status['hourly-limit']) &&
                  isset($status['reset-time'])){
                      $this->available_api_calls_for_twitter = $status['remaining-hits'];//get this from API
                      $this->api_hourly_limit = $status['hourly-limit'];//get this from API
@@ -127,7 +127,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                  } else {
                      throw new Exception('API status came back malformed');
                  }
-                 //Figure out how many minutes are left in the hour, then multiply that x 1 for api calls 
+                 //Figure out how many minutes are left in the hour, then multiply that x 1 for api calls
                  //to leave unmade
                  $next_reset_in_minutes = (int) date('i', (int) $this->next_api_reset);
                  $current_time_in_minutes = (int) date("i", time());
@@ -138,7 +138,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                      $minutes_left_in_hour = 60 - ($current_time_in_minutes - $next_reset_in_minutes);
                  }
 
-                 $this->api_calls_to_leave_unmade = 
+                 $this->api_calls_to_leave_unmade =
                  $minutes_left_in_hour * $this->api_calls_to_leave_unmade_per_minute;
                  $this->available_api_calls_for_crawler = $this->available_api_calls_for_twitter -
                  round($this->api_calls_to_leave_unmade);
@@ -154,10 +154,11 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
           * Make Twitter API request.
           * @param str $url
           * @param array $args URL query string parameters
-          * @param boolean $auth Does it require authorization via OAuth
+          * @param bool $auth Defaults to true, does it require authorization via OAuth
+          * @param bool $suppress_404_error Defaults to false, don't log 404 errors from deleted tweets
           * @return array (cURL status, cURL content returned)
           */
-         public function apiRequest($url, $args = array(), $auth = true) {
+         public function apiRequest($url, $args = array(), $auth = true, $suppress_404_error = false) {
              $logger = Logger::getInstance();
              $attempts = 0;
              $continue = true;
@@ -180,8 +181,12 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                          }
                          $translated_status_code = $this->translateErrorCode($status);
                          $status_message .= " | API ERROR: $translated_status_code";
-                         //$status_message .= "\n\n$content\n\n";
-                         $logger->logUserError($status_message, __METHOD__.','.__LINE__);
+
+                         //we expect a 404 when checking a tweet deletion, so suppress log line if defined
+                         if ($suppress_404_error === false && $status == 404) {
+                             $logger->logUserError($status_message, __METHOD__.','.__LINE__);
+                         }
+
                          $status_message = "";
                          if ($status != 404 && $status != 403) {
                              $attempts++;
