@@ -62,12 +62,12 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
         $builders = array();
 
         //Add owner
-        $cryptpass = TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("secretpassword");
-        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass,
-        'is_activated'=>1,'is_admin'=>1, 'pwd_salt'=>TestOfOwnerMySQLDAO::$default_salt));
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("secretpassword");
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$hashed_pass,
+        'is_activated'=>1,'is_admin'=>1, 'pwd_salt'=>OwnerMySQLDAO::$default_salt));
 
-        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$cryptpass,
-        'is_activated'=>1,'is_admin'=>0, 'pwd_salt'=>TestOfOwnerMySQLDAO::$default_salt));
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$hashed_pass,
+        'is_activated'=>1,'is_admin'=>0, 'pwd_salt'=>OwnerMySQLDAO::$default_salt));
 
         //Add instances
         $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>17,

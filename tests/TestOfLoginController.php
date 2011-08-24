@@ -47,17 +47,17 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
     protected function buildData() {
         $builders = array();
 
-        $cryptpass = TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("secretpassword");
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("secretpassword");
 
-        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass,
-        'pwd_salt'=>TestOfOwnerMySQLDAO::$default_salt, 'is_activated'=>1, 'is_admin'=>1));
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$hashed_pass,
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'is_activated'=>1, 'is_admin'=>1));
 
         $builders[] = FixtureBuilder::build('instances', array('id'=>1));
          
         $builders[] = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>1));
 
         $test_salt = 'test_salt';
-        $password = TestOfOwnerMySQLDAO::hashPasswordUsingCurrentMethod('secretpassword', $test_salt);
+        $password = ThinkUpTestLoginHelper::hashPasswordUsingCurrentMethod('secretpassword', $test_salt);
 
         $builders[] = FixtureBuilder::build('owners', array('id'=>6, 'email'=>'salt@example.com', 'pwd'=>$password,
         'pwd_salt'=>$test_salt, 'is_activated'=>1, 'is_admin'=>1));
@@ -141,9 +141,9 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
     }
 
     public function testDeactivatedUser() {
-        $cryptpass = TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("blah");
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("blah");
 
-        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$cryptpass, 'is_activated'=>0);
+        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$hashed_pass, 'is_activated'=>0);
         $builder = FixtureBuilder::build('owners', $owner);
 
         $_POST['Submit'] = 'Log In';
@@ -190,10 +190,10 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
     }
 
     public function testFailedLoginIncrements() {
-        $cryptpass = TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("blah");
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("blah");
 
-        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1,
-        'pwd_salt'=>TestOfOwnerMySQLDAO::$default_salt);
+        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$hashed_pass, 'is_activated'=>1,
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt);
         $builder = FixtureBuilder::build('owners', $owner);
 
         //try 5 failed logins then a successful one and assert failed login count gets reset
@@ -227,9 +227,9 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
     }
 
     public function testFailedLoginLockout() {
-        $cryptpass =TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("blah");
+        $hashed_pass =ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("blah");
 
-        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
+        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$hashed_pass, 'is_activated'=>1);
         $builder = FixtureBuilder::build('owners', $owner);
 
         //force login lockout by providing the wrong password more than 10 times

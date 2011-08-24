@@ -58,9 +58,9 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
 
     public function testAlreadyLoggedIn() {
         $owner_dao = new OwnerMySQLDAO();
-        $cryptpass = TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("secretpassword");
-        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1,
-        'pwd_salt'=>TestOfOwnerMySQLDAO::$default_salt);
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("secretpassword");
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$hashed_pass, 'is_activated'=>1,
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt);
         $builder1 = FixtureBuilder::build('owners', $owner);
         $instance = array('id'=>1, 'network_username'=>'thinkupapp');
         $builder2 = FixtureBuilder::build('instances', $instance);

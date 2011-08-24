@@ -39,10 +39,10 @@ class TestOfForgotPasswordController extends ThinkUpUnitTestCase {
     }
 
     protected function buildData() {
-        $cryptpass = TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("oldpassword");
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("oldpassword");
         $builder = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        'email'=>'me@example.com', 'pwd'=>$cryptpass, 'activation_code'=>8888, 'is_activated'=>1,
-        'pwd_salt'=>TestOfOwnerMySQLDAO::$default_salt));
+        'email'=>'me@example.com', 'pwd'=>$hashed_pass, 'activation_code'=>8888, 'is_activated'=>1,
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt));
         return $builder;
     }
 

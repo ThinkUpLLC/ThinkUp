@@ -32,7 +32,7 @@ class OwnerMySQLDAO extends PDODAO implements OwnerDAO {
      *
      * @var str
      */
-    private $default_salt = "ab194d42da0dff4a5c01ad33cb4f650a7069178b";
+    public static $default_salt = "ab194d42da0dff4a5c01ad33cb4f650a7069178b";
 
     public function getByEmail($email) {
         $q = <<<SQL
@@ -386,7 +386,7 @@ SQL;
      * @return str Salted SHA1 password
      */
     private function saltedsha1($pwd) {
-        return sha1(sha1($pwd.$this->default_salt).$this->default_salt);
+        return sha1(sha1($pwd.self::$default_salt).self::$default_salt);
     }
 
     /**
@@ -420,7 +420,7 @@ SQL;
         // Get password from the database
         $db_password = $this->getPass($email);
 
-        if ($db_salt == $this->default_salt) { //using old, default salt
+        if ($db_salt == self::$default_salt) { //using old, default salt
             $hashed_pwd = $this->pwdCrypt($password); // Hash the old way
             return $this->pwdCheck($password, $db_password); //Check the old way
         } else {

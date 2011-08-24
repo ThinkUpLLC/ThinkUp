@@ -40,7 +40,7 @@ class TestOfStreamerAuthController extends ThinkUpUnitTestCase {
     }
 
     public function testSuccessfulLogin() {
-        $hashed_pass = TestOfOwnerMySQLDAO::hashPasswordUsingCurrentMethod('mypassword', 'test');
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingCurrentMethod('mypassword', 'test');
 
         $builder = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$hashed_pass,
         'pwd_salt'=>'test', 'is_activated'=>1, 'is_admin'=>1));

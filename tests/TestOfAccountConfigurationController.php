@@ -58,11 +58,11 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $builders = array();
 
         //Add owner
-        $cryptpass = TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("oldpassword");
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("oldpassword");
 
         $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'full_name'=>'ThinkUp J. User',
-        'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>$cryptpass, 
-        'pwd_salt'=> TestOfOwnerMySQLDAO::$default_salt, 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
+        'email'=>'me@example.com', 'is_activated'=>1, 'pwd'=>$hashed_pass, 
+        'pwd_salt'=> OwnerMySQLDAO::$default_salt, 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
 
         $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'full_name'=>'ThinkUp J. Admin',
         'email'=>'admin@example.com', 'is_activated'=>1, 'is_admin'=>1));
@@ -480,7 +480,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $sql = "select pwd_salt from " . $this->table_prefix . "owners where email = 'me@example.com'";
         $stmt = OwnerMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->assertNotEqual($data['pwd_salt'], TestOfOwnerMySQLDAO::$default_salt);
+        $this->assertNotEqual($data['pwd_salt'], OwnerMySQLDAO::$default_salt);
     }
 
     public function testAuthControlLoggedInChangePasswordOldPwdDoesntMatch() {

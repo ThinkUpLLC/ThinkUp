@@ -36,11 +36,6 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
      * @var OwnerMySQLDAO
      */
     protected $dao;
-    /**
-     * Deprecated default salt, exposed for testing purposes only
-     * @var str
-     */
-    public static $default_salt = 'ab194d42da0dff4a5c01ad33cb4f650a7069178b';
 
     public function setUp() {
         parent::setUp();
@@ -53,35 +48,24 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $builders = array();
 
         $salt = 'salt';
-        $pwd1 = self::hashPasswordUsingDeprecatedMethod('pwd1');
-        $pwd2 = self::hashPasswordUsingDeprecatedMethod('pwd2');
-        $pwd3 = self::hashPasswordUsingCurrentMethod('pwd3', $salt);
+        $pwd1 = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod('pwd1');
+        $pwd2 = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod('pwd2');
+        $pwd3 = ThinkUpTestLoginHelper::hashPasswordUsingCurrentMethod('pwd3', $salt);
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
         'email'=>'ttuser@example.com', 'is_activated'=>0, 'pwd'=>$pwd1, 
-        'pwd_salt'=>self::$default_salt, 'activation_code'=>'8888', 
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'activation_code'=>'8888', 
         'account_status'=>'', 'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'));
 
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User1',
         'email'=>'ttuser1@example.com', 'is_activated'=>1, 'pwd'=>$pwd2, 
-        'pwd_salt'=>self::$default_salt, 'account_status'=>''));
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt, 'account_status'=>''));
          
         $builders[] = FixtureBuilder::build('owners', array('full_name'=>'Salted User',
         'email'=>'salteduser@example.com', 'is_activated'=>1, 'pwd'=>$pwd3, 'pwd_salt'=>$salt, 
         'account_status'=>''));
 
         return $builders;
-    }
-
-    //For testing purposes only, to populate the pwd field in tu_owners
-    public static function hashPasswordUsingDeprecatedMethod($password) {
-        //the static password salt ThinkUp used to use
-        return sha1(sha1($password.self::$default_salt).self::$default_salt);
-    }
-
-    //For testing purposes only, to populate the pwd field in tu_owners
-    public static function hashPasswordUsingCurrentMethod($password, $salt) {
-        return hash('sha256', $password.$salt);
     }
 
     public function tearDown() {
@@ -172,7 +156,7 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($result);
         //activated owner
         $result = $this->DAO->getPass('ttuser1@example.com');
-        $this->assertEqual($result, self::hashPasswordUsingDeprecatedMethod('pwd2'));
+        $this->assertEqual($result, ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod('pwd2'));
     }
 
     /**

@@ -37,10 +37,10 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
         $this->pdo = ExportMySQLDAO::$PDO;
         $this->export_test = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_user_export_test.zip';
 
-        $cryptpass = TestOfOwnerMySQLDAO::hashPasswordUsingDeprecatedMethod("secretpassword");
+        $hashed_pass = ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("secretpassword");
 
-        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1, 'is_admin'=>1,
-        'pwd_salt'=>TestOfOwnerMySQLDAO::$default_salt);
+        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$hashed_pass, 'is_activated'=>1, 'is_admin'=>1,
+        'pwd_salt'=>OwnerMySQLDAO::$default_salt);
         $this->builders[] = FixtureBuilder::build('owners', $owner);
 
         $instance = array('id'=>1, 'network_username'=>'test_user', 'network'=>'twitter');

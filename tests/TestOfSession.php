@@ -97,11 +97,6 @@ class TestOfSession extends ThinkUpUnitTestCase {
         $this->assertEqual($_SESSION[$config->getValue('source_root_path')]['user'], 'me@example.com');
         $this->assertTrue(isset($_SESSION[$config->getValue('source_root_path')]['user_is_admin']));
         $this->assertFalse($_SESSION[$config->getValue('source_root_path')]['user_is_admin']);
-        //        $cryptpass = $session->pwdcrypt("secretpassword");
-        //
-        //        $owner = array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$cryptpass, 'is_activated'=>1);
-        //        $this->builder1 = FixtureBuilder::build('owners', $owner);
-
         // we should have a CSRF token
         $this->assertNotNull($_SESSION[$config->getValue('source_root_path')]['csrf_token']);
     }
