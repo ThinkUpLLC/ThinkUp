@@ -70,12 +70,6 @@ class StreamerAuthController extends ThinkUpController {
             } else {
                 $output = "ERROR: Incorrect username and password.";
             }
-        } else { // check user is logged in on the web
-            if ( $this->isLoggedIn() ) {
-                $authorized = true;
-            } else {
-                $output = "ERROR: Invalid or missing stream method, username, and password.";
-            }
         }
 
         if ($authorized) {

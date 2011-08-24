@@ -32,9 +32,24 @@ require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 class TestOfStreamerAuthController extends ThinkUpUnitTestCase {
 
     public function testInvalidLogin() {
-        $controller = new StreamerAuthController(1, array('you@example.com', 'password'));
+        //CLI
+        $controller = new StreamerAuthController(3, array('stream', 'you@example.com', 'password'));
         $this->assertTrue(isset($controller));
         $results = $controller->go();
-        $this->assertPattern('/ERROR: Invalid or missing stream method, username, and password./', $results);
+        $this->assertPattern('/ERROR: Incorrect username and password./', $results);
+    }
+
+    public function testSuccessfulLogin() {
+        $hashed_pass = TestOfOwnerMySQLDAO::hashPasswordUsingCurrentMethod('mypassword', 'test');
+
+        $builder = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com', 'pwd'=>$hashed_pass,
+        'pwd_salt'=>'test', 'is_activated'=>1, 'is_admin'=>1));
+
+        //CLI
+        $controller = new StreamerAuthController(2, array('stream', 'me@example.com', 'mypassword'));
+        $this->assertTrue(isset($controller));
+        $results = $controller->go();
+        $this->debug($results);
+        $this->assertNoPattern('/ERROR: Invalid or missing username and password./', $results);
     }
 }
