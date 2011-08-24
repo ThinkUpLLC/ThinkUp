@@ -31,17 +31,12 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
-
 class TestOfLoginController extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
         $this->DAO = new OwnerMySQLDAO();
         $this->builders = self::buildData();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitter', 'TwitterPlugin');
     }
 
     protected function buildData() {
@@ -234,7 +229,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         //force login lockout by providing the wrong password more than 10 times
         $i = 1;
-        while ($i <= 15) {
+        while ($i <= 11) {
             $_POST['Submit'] = 'Log In';
             $_POST['email'] = 'me2@example.com';
             $_POST['pwd'] = 'blah1';
@@ -243,14 +238,15 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
             $v_mgr = $controller->getViewManager();
             $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-            if ($i <= 11) {
+
+            $owner = $this->DAO->getByEmail('me2@example.com');
+
+            if ($i < 10) {
                 $this->assertPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('error_msg'));
-                $owner = $this->DAO->getByEmail('me2@example.com');
                 $this->assertEqual($owner->failed_logins, $i);
             } else {
                 $this->assertEqual("Inactive account. Account deactivated due to too many failed logins. ".
                 '<a href="forgot.php">Reset your password.</a>', $v_mgr->getTemplateDataItem('error_msg'));
-                $owner = $this->DAO->getByEmail('me2@example.com');
                 $this->assertEqual($owner->account_status, "Account deactivated due to too many failed logins");
             }
             $i = $i + 1;
