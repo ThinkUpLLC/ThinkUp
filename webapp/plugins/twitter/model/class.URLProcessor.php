@@ -38,43 +38,47 @@ class URLProcessor {
         if (!$urls) {
             $urls = Post::extractURLs($tweet['post_text']);
         }
-        foreach ($urls as $u) {
-            $logger->logInfo("processing url: $u", __METHOD__.','.__LINE__);
-            $is_image = 0;
+        foreach ($urls as $url) {
+            $logger->logInfo("processing url: $url", __METHOD__.','.__LINE__);
+            $is_image = false;
             $title = '';
-            $eurl = '';
-            if (substr($u, 0, strlen('http://twitpic.com/')) == 'http://twitpic.com/') {
-                $eurl = 'http://twitpic.com/show/thumb/'.substr($u, strlen('http://twitpic.com/'));
-                $is_image = 1;
-            } elseif (substr($u, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/') {
-                $eurl = $u.'.th.jpg';
-                $is_image = 1;
-            } elseif (substr($u, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
-                $eurl = 'http://twitgoo.com/show/thumb/'.substr($u, strlen('http://twitgoo.com/'));
-                $is_image = 1;
-            } elseif (substr($u, 0, strlen('http://picplz.com/')) == 'http://picplz.com/') {
-                $eurl = $u.'/thumb/';
-                $is_image = 1;
-            } elseif (substr($u, 0, strlen('http://flic.kr/')) == 'http://flic.kr/') {
-                $is_image = 1;
-            } elseif (substr($u, 0, strlen('http://instagr.am/')) == 'http://instagr.am/') {
+            $expanded_url = '';
+            if (substr($url, 0, strlen('http://twitpic.com/')) == 'http://twitpic.com/') {
+                $expanded_url = 'http://twitpic.com/show/thumb/'.substr($url, strlen('http://twitpic.com/'));
+                $is_image = true;
+            } elseif (substr($url, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/') {
+                $expanded_url = $url.'.th.jpg';
+                $is_image = true;
+            } elseif (substr($url, 0, strlen('http://twitgoo.com/')) == 'http://twitgoo.com/') {
+                $expanded_url = 'http://twitgoo.com/show/thumb/'.substr($url, strlen('http://twitgoo.com/'));
+                $is_image = true;
+            } elseif (substr($url, 0, strlen('http://picplz.com/')) == 'http://picplz.com/') {
+                $expanded_url = $url.'/thumb/';
+                $is_image = true;
+            } elseif (substr($url, 0, strlen('http://flic.kr/')) == 'http://flic.kr/') {
+                $is_image = true;
+            } elseif (substr($url, 0, strlen('http://instagr.am/')) == 'http://instagr.am/') {
                 // see: http://instagr.am/developer/embedding/ for reference
                 // the following does a redirect to the actual jpg
                 // make a check for an end slash in the url -- if it is there (likely) then adding a second
                 // slash prior to the 'media' string will break the expanded url
-                if ($u[strlen($u)-1] == '/') {
-                    $eurl = $u . 'media/';
+                if ($url[strlen($url)-1] == '/') {
+                    $expanded_url = $url . 'media/';
                 } else {
-                    $eurl = $u . '/media/';
+                    $expanded_url = $url . '/media/';
                 }
-                $logger->logDebug("expanded instagram URL to: " . $eurl, __METHOD__.','.__LINE__);
-                $is_image = 1;
+                $logger->logDebug("expanded instagram URL to: " . $expanded_url, __METHOD__.','.__LINE__);
+                $is_image = true;
             }
-            if ($link_dao->insert($u, $eurl, $title, $tweet['post_id'], 'twitter', $is_image)) {
-                $logger->logSuccess("Inserted ".$u." (".$eurl.", ".$is_image."), into links table",
+            $link_array = array('url'=>$url, 'expanded_url'=>$expanded_url, 'post_id'=>$tweet['post_id'],
+            'network'=>'twitter', 'is_image'=>$is_image);
+            $link = new Link($link_array);
+            if ($link_dao->insert($link)) {
+                $logger->logSuccess("Inserted ".$url." (".$expanded_url.", ".$is_image."), into links table",
                 __METHOD__.','.__LINE__);
             } else {
-                $logger->logError("Did NOT insert ".$u." (".$eurl.") into links table", __METHOD__.','.__LINE__);
+                $logger->logError("Did NOT insert ".$url." (".$expanded_url.") into links table", __METHOD__.','.
+                __LINE__);
             }
         }
     }

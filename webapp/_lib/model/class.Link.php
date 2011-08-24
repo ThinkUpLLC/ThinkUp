@@ -27,60 +27,57 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @author christoffer Viken <christoffer[at]viken[dot]me>
  */
-
 class Link {
     /**
-     * Unique Identifier in storage.
-     * @var int
+     * @var int Internal unique ID.
      */
     var $id;
     /**
-     * Shortform URL
-     * @var str
+     * @var str Link URL as it appears inside the post, ie, shortened in tweets.
      */
     var $url;
     /**
-     * Expanded URL
-     * @var str
+     * @var str Link URL expanded from its shortened form.
      */
     var $expanded_url;
     /**
-     * Title of target page
-     * @var str
+     * @var str Link title.
      */
-    var $title;
+    var $title = '';
     /**
-     * Click count
-     * @var int
+     * @var str Link description.
      */
-    var $clicks;
+    var $description = '';
     /**
-     * ID of the post which this link was found
-     * @var int
+     * @var str URL of a thumbnail image associated with this link.
+     */
+    var $image_src = '';
+    /**
+     * @var str Link or image caption.
+     */
+    var $caption = '';
+    /**
+     * @var int Total known link clicks.
+     */
+    var $clicks = 0;
+    /**
+     * @var int ID of the post which this link appeared on a given network.
      */
     var $post_id;
     /**
-     * Network of the post this link is in
-     * @var str
+     * @var str Network of the post in which the link appeared.
      */
     var $network;
     /**
-     * Link to an image?
-     * @var bool
+     * @var book Whether or not the link represents an image.
      */
-    var $is_image;
+    var $is_image = false;
     /**
-     * Error message
-     * @var str
+     * @var str Details of any error expanding a link.
      */
-    var $error;
+    var $error = '';
     /**
-     * Direct image URL
-     * @var str
-     */
-    var $img_src;
-    /**
-     * Container tweet
+     * Container post
      * @var Post object
      */
     var $container_post;
@@ -97,8 +94,7 @@ class Link {
     public function __construct($val = false) {
         if ($val){
             $this->constructValIncluded($val);
-        }
-        else {
+        } else {
             $this->constructNoVal();
         }
     }
@@ -109,7 +105,9 @@ class Link {
      */
     private function constructValIncluded($val){
         if (isset($val["url"])) {
-            $this->id = $val["id"];
+            if (isset($val["id"])) {
+                $this->id = $val["id"];
+            }
             $this->url = $val["url"];
             if (isset($val["expanded_url"])) {
                 $this->expanded_url = $val["expanded_url"];
@@ -131,10 +129,22 @@ class Link {
                 $this->network = $val["network"];
             }
 
-            $this->is_image = PDODAO::convertDBToBool($val["is_image"]);
-
+            if (isset($val["is_image"])) {
+                $is_image = PDODAO::convertDBToBool($val["is_image"]);
+                $this->is_image = $is_image;
+            }
             if (isset($val["error"])) {
                 $this->error = $val["error"];
+            }
+
+            if (isset($val["description"])) {
+                $this->description = $val['description'];
+            }
+            if (isset($val["image_src"])) {
+                $this->image_src = $val['image_src'];
+            }
+            if (isset($val["caption"])) {
+                $this->caption = $val['caption'];
             }
         }
     }

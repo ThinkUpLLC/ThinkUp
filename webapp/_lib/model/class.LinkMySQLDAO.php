@@ -29,20 +29,22 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  */
 class LinkMySQLDAO extends PDODAO implements LinkDAO {
-    public function insert($url, $expanded, $title, $post_id, $network, $is_image = false ){
-        $is_image = $this->convertBoolToDB($is_image);
-
+    public function insert(Link $link){
         $q  = "INSERT IGNORE INTO #prefix#links ";
-        $q .= "(url, expanded_url, title, post_id, network, is_image) ";
-        $q .= "VALUES ( :url, :expanded, :title, :post_id, :network, :is_image ) ";
+        $q .= "(url, expanded_url, title, description, image_src, caption, post_id, network, is_image) ";
+        $q .= "VALUES ( :url, :expanded, :title, :description, :image_src, :caption, :post_id, :network, ";
+        $q .= ":is_image ) ";
 
         $vars = array(
-            ':url'=>$url,
-            ':expanded'=>$expanded,
-            ':title'=>$title,
-            ':post_id'=>$post_id,
-            ':network'=>$network,
-            ':is_image'=>(int)$is_image
+            ':url'=>$link->url,
+            ':expanded'=>$link->expanded_url,
+            ':title'=>$link->title,
+            ':description'=>$link->description,
+            ':image_src'=>$link->image_src,
+            ':caption'=>$link->caption,
+            ':post_id'=>$link->post_id,
+            ':network'=>$link->network,
+            ':is_image'=>self::convertBoolToDB($link->is_image)
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -94,18 +96,21 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $ret;
     }
 
-    public function update( $url, $expanded, $title, $post_id, $network, $is_image = false ){
+    public function update(Link $link){
         $q  = "UPDATE #prefix#links ";
-        $q .= "SET expanded_url=:expanded, title=:title, ";
-        $q .= "post_id=:post_id, is_image=:is_image, network=:network ";
+        $q .= "SET expanded_url=:expanded, title=:title, description=:description, image_src=:image_src, ";
+        $q .= "caption=:caption, post_id=:post_id, is_image=:is_image, network=:network ";
         $q .= "WHERE url=:url; ";
         $vars = array(
-            ':url'=>$url,
-            ':expanded'=>$expanded,
-            ':title'=>$title,
-            ':post_id'=>$post_id,
-            ':is_image'=>$is_image,
-            ':network'=>$network
+            ':url'=>$link->url,
+            ':expanded'=>$link->expanded_url,
+            ':title'=>$link->title,
+            ':description'=>$link->description,
+            ':image_src'=>$link->image_src,
+            ':caption'=>$link->caption,
+            ':post_id'=>$link->post_id,
+            ':is_image'=>self::convertBoolToDB($link->is_image),
+            ':network'=>$link->network
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);

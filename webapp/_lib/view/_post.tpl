@@ -59,9 +59,10 @@
         {if !$post && $t->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
-      {if $t->link->expanded_url and !$t->link->is_image and ($t->link->expanded_url != $t->link->url)}
+      {if $t->link->expanded_url}
         <span class="small">
-          <a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{$t->link->expanded_url}</a>
+          <br /><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{if $t->link->title}{$t->link->title}{else}{$t->link->expanded_url}{/if}</a>
+          {if $t->link->description}<br /><small>{$t->link->description}</small>{/if}
         </span><br>
       {else}
         <br>

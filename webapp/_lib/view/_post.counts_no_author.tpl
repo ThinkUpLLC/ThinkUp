@@ -28,6 +28,15 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
         {if $post->link->expanded_url}
           <div class="pic"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" /></a></div>
         {/if}
+      {else}
+        <br>
+      {/if}
+        
+        {if $post->link->expanded_url}
+        <span class="small">
+          <a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->expanded_url}{/if}</a>
+          {if $post->link->description}<br /><small>{$post->link->description}</small>{/if}
+        </span><br>
       {/if}
       
       <div class="post">
@@ -37,8 +46,6 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
           {else}
             {$post->post_text|filter_xss|link_usernames_to_twitter}
           {/if}
-        {else}
-          <span class="no-post-text">No post text</span>
         {/if}
         {if !$post && $post->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>

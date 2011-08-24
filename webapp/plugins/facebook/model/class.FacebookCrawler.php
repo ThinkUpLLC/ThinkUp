@@ -150,6 +150,22 @@ class FacebookCrawler {
                 $this->logger->logUserInfo("No new posts found.", __METHOD__.','.__LINE__);
             }
 
+            $links = $thinkup_data["links"];
+
+            $total_links_added = 0;
+            $link_dao = DAOFactory::getDAO('LinkDAO');
+            foreach ($links as $link) {
+                $added_links = $link_dao->insert($link);
+                $total_links_added = $total_links_added + (($added_links)?1:0);
+                $this->logger->logInfo("Added $added_links link for ".$post["author_username"].":".
+                $post["post_text"], __METHOD__.','.__LINE__);
+            }
+            if ($total_links_added > 0 ) {
+                $this->logger->logUserSuccess("Collected $total_links_added new links", __METHOD__.','.__LINE__);
+            } else {
+                $this->logger->logUserInfo("No new links found.", __METHOD__.','.__LINE__);
+            }
+
             $users = $thinkup_data["users"];
             if (count($users) > 0) {
                 foreach ($users as $user) {
@@ -198,6 +214,22 @@ class FacebookCrawler {
                 " for ".$post["author_username"].":".$post["post_text"], __METHOD__.','.__LINE__);
             }
 
+            $links = $thinkup_data["links"];
+
+            $total_links_added = 0;
+            $link_dao = DAOFactory::getDAO('LinkDAO');
+            foreach ($links as $link) {
+                $added_links = $link_dao->insert($link);
+                $total_links_added = $total_links_added + (($added_links)?1:0);
+                $this->logger->logInfo("Added $added_links link for ".$post["author_username"].":".
+                $post["post_text"], __METHOD__.','.__LINE__);
+            }
+            if ($total_links_added > 0 ) {
+                $this->logger->logUserSuccess("Collected $total_links_added new links", __METHOD__.','.__LINE__);
+            } else {
+                $this->logger->logUserInfo("No new links found.", __METHOD__.','.__LINE__);
+            }
+
             $added_users = 0;
             $users = $thinkup_data["users"];
             if (count($users) > 0) {
@@ -229,6 +261,7 @@ class FacebookCrawler {
     private function parseStream($stream, $network) {
         $thinkup_posts = array();
         $thinkup_users = array();
+        $thinkup_links = array();
         $profile = null;
         foreach ($stream->data as $p) {
             $post_id = explode("_", $p->id);
@@ -244,7 +277,24 @@ class FacebookCrawler {
             "pub_date"=>$p->created_time, 
             "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
             'is_protected'=>$is_protected);
+
             array_push($thinkup_posts, $ttp);
+
+            if (isset($p->source) || isset($p->link)) { // there's a link to store
+                $link_url = (isset($p->source))?$p->source:$p->link;
+                $link = new Link(array(
+                "url"=>$link_url, 
+                "expanded_url"=>(isset($p->picture))?$p->picture:$link_url, 
+                "image_src"=>(isset($p->picture))?$p->picture:'',
+                "caption"=>(isset($p->caption))?$p->caption:'', 
+                "description"=>(isset($p->description))?$p->description:'',
+                "title"=>(isset($p->name))?$p->name:'', 
+                "network"=>$network, "post_id"=>$post_id, 
+                "is_image"=>(isset($p->picture))
+                ));
+                array_push($thinkup_links, $link);
+            }
+
             if ( isset($p->comments)) {
                 $comments_captured = 0;
                 if (isset($p->comments->data)) {
@@ -317,7 +367,7 @@ class FacebookCrawler {
                 }
             }
         }
-        return array("posts"=>$thinkup_posts, "users"=>$thinkup_users);
+        return array("posts"=>$thinkup_posts, "users"=>$thinkup_users, "links"=>$thinkup_links);
     }
 
 }

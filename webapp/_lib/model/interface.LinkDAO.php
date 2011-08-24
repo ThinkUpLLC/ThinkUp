@@ -31,15 +31,10 @@
 interface LinkDAO {
     /**
      * Inserts a link into the database.
-     * @param str $url
-     * @param str $expanded
-     * @param str $title
-     * @param int $post_id
-     * @param str $network
-     * @param bool $is_image
+     * @param Link $link
      * @return int insert ID
      */
-    public function insert($url, $expanded, $title, $post_id, $network, $is_image = false );
+    public function insert(Link $link);
     /**
      * Sets a expanded URL in storage.
      * @param str $url
@@ -58,15 +53,10 @@ interface LinkDAO {
     public function saveExpansionError($url, $error_text);
     /**
      * Updates a URL in storage.
-     * @param str $url
-     * @param str $expanded
-     * @param str $title
-     * @param int $post_id
-     * @param str $network
-     * @param bool $is_image
+     * @param Link $link
      * @return int Update count
      */
-    public function update($url, $expanded, $title, $post_id, $network, $is_image = false );
+    public function update(Link $link);
     /**
      * Get the links posted by a user's friends.
      * @param int $user_id

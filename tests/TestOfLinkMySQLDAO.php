@@ -121,14 +121,12 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->DAO = null;
     }
 
-    /**
-     * Test Of Insert Method
-     */
     public function testInsert(){
-        $result = $this->DAO->insert(
-            'http://example.com/test',
-            'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 'Very Long URL', '12345678901',
-            'twitter', false);
+        $link = new Link(array('url'=>'http://example.com/test',
+        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 
+        'title'=>'Very Long URL', 'post_id'=>'12345678901', 'network'=>'twitter', 'is_image'=>false));
+
+        $result = $this->DAO->insert($link);
         //Is insert ID returned?
         $this->assertEqual($result, 56);
 
@@ -139,9 +137,36 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->expanded_url,
         'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php');
         $this->assertEqual($result->title, 'Very Long URL');
-        $this->assertEqual($result->post_id, 12345678901);
+        $this->assertEqual($result->post_id, '12345678901');
         $this->assertEqual($result->network, 'twitter');
         $this->assertFalse($result->is_image);
+        $this->assertEqual($result->image_src, '');
+        $this->assertEqual($result->caption, '');
+        $this->assertEqual($result->description, '');
+
+        //test another with new fields set
+        $link = new Link(array('url'=>'http://example.com/test2',
+        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 
+        'title'=>'Very Long URL', 'post_id'=>'123456789011', 'network'=>'twitter', 'is_image'=>false, 
+        'image_src'=>'http://example.com/thumbnail.png', 'description'=>'My hot link', 'caption'=>"Hot, huh?"));
+
+        $result = $this->DAO->insert($link);
+        //Is insert ID returned?
+        $this->assertEqual($result, 57);
+
+        //OK now check it
+        $result = $this->DAO->getLinkByUrl('http://example.com/test2');
+        $this->assertIsA($result, "Link");
+        $this->assertEqual($result->url, 'http://example.com/test2');
+        $this->assertEqual($result->expanded_url,
+        'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php');
+        $this->assertEqual($result->title, 'Very Long URL');
+        $this->assertEqual($result->post_id, '123456789011');
+        $this->assertEqual($result->network, 'twitter');
+        $this->assertFalse($result->is_image);
+        $this->assertEqual($result->image_src, 'http://example.com/thumbnail.png');
+        $this->assertEqual($result->caption, 'Hot, huh?');
+        $this->assertEqual($result->description, 'My hot link');
     }
 
     /**
@@ -183,25 +208,22 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($linkthathaserror->error, "This is expansion error text");
     }
 
-    /**
-     * Test Of update Method
-     */
     public function testUpdate(){
-        $result = $this->DAO->insert(
-            'http://example.com/test',
-            'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php',
-            'Very Long URL',
-        15000, 'twitter'
-        );
+        $link = new Link(array('url'=>'http://example.com/test',
+        'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 
+        'title'=>'Very Long URL', 'post_id'=>'15000', 'network'=>'twitter', 'is_image'=>false));
+
+        $result = $this->DAO->insert($link);
         $this->assertEqual($result, 56);
 
-        $result = $this->DAO->update(
-            'http://example.com/test', 
-            'http://very.long.domain.that.nobody.would.bother.to.type.com/image.png', 
-            'Even Longer URL', 
-        15001, 'twitter',
-        true
-        );
+        $link->post_id = 15001;
+        $link->title = 'Even Longer URL';
+        $link->is_image = true;
+        $link->expanded_url = 'http://very.long.domain.that.nobody.would.bother.to.type.com/image.png';
+        $link->description = "This is the link description";
+        $link->image_src = "thumbnail.jpg";
+        $link->caption = "my caption";
+        $result = $this->DAO->update($link);
         $this->assertEqual($result, 1);
 
         //OK now check it
@@ -213,11 +235,11 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->title, 'Even Longer URL');
         $this->assertEqual($result->post_id, 15001);
         $this->assertEqual($result->id, 56);
+        $this->assertEqual($result->image_src, 'thumbnail.jpg');
+        $this->assertEqual($result->caption, 'my caption');
+        $this->assertEqual($result->description, 'This is the link description');
     }
 
-    /**
-     * Test Of getLinksByFriends Method
-     */
     public function testGetLinksByFriends(){
         $result = $this->DAO->getLinksByFriends(2, 'twitter', 15, 1, false); // not public
 

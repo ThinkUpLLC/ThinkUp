@@ -45,10 +45,22 @@ class FacebookGraphAPIAccessor {
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
-        //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
-        //';
-        $result=  file_get_contents($FAUX_DATA_PATH.$url);
-        return json_decode($result);
+        return self::decodeFileContents($FAUX_DATA_PATH.$url);
+    }
+
+    private static function decodeFileContents($file_path) {
+        $debug = (getenv('TEST_DEBUG')!==false) ? true : false;
+        if ($debug) {
+            echo "READING LOCAL TEST DATA FILE: ".$file_path. '
+';
+        }
+        $contents=  file_get_contents($file_path);
+        $decoded = json_decode($contents);
+        if ($decoded == null && $debug) {
+            echo "JSON was not decoded! Check if it is valid JSON at http://jsonlint.com/
+";
+        }
+        return $decoded;
     }
 
     /**
@@ -69,9 +81,6 @@ class FacebookGraphAPIAccessor {
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
-        //echo "READING LOCAL DATA FILE: ".$FAUX_DATA_PATH.$url. '
-        //';
-        $result=  file_get_contents($FAUX_DATA_PATH.$url);
-        return json_decode($result);
+        return self::decodeFileContents($FAUX_DATA_PATH.$url);
     }
 }
