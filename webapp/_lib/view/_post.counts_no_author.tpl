@@ -11,7 +11,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
 
 {if $smarty.foreach.foo.first}
   <div class="header clearfix">
-    <div class="grid_14 alpha">&#160;</div>
+    <div class="grid_13 alpha">&#160;</div>
     <div class="grid_2 center">
       {if $post->network eq 'twitter'}{if $show_favorites_instead_of_retweets}favorites{else}retweets{/if}{/if}
     </div>
@@ -23,22 +23,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
 
 <div class="clearfix">
   <div class="individual-tweet post clearfix{if $post->is_protected} private{/if}">
-    <div class="grid_14">
-      {if $post->link->is_image}
-        {if $post->link->expanded_url}
-          <div class="pic"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" /></a></div>
-        {/if}
-      {else}
-        <br>
-      {/if}
-        
-        {if $post->link->expanded_url}
-        <span class="small">
-          <a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->expanded_url}{/if}</a>
-          {if $post->link->description}<br /><small>{$post->link->description}</small>{/if}
-        </span><br>
-      {/if}
-      
+    <div class="grid_13">
       <div class="post">
         {if $post->post_text}
           {if $scrub_reply_username}
@@ -47,12 +32,23 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
             {$post->post_text|filter_xss|link_usernames_to_twitter}
           {/if}
         {/if}
+      {if $post->link->is_image}
+      <br>
+        {if $post->link->expanded_url}
+         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" style="margin-bottom:50px;"/></a></div>
+         <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
+          {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
+        {/if}
+      {/if}
+
+
         {if !$post && $post->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
       {if $post->link->expanded_url and !$post->link->is_image and ($post->link->expanded_url != $post->link->url)}
         <span class="small">
-          <a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">{$post->link->expanded_url}</a>
+          <a href="{$post->link->url}" title="{if $post->link->title}{$post->link->title}{/if}">{if $post->link->title}{$post->link->title}{else}{$post->link->expanded_url}{/if}</a>
+          {if $post->link->description}<br>{$post->link->description}{/if}
         </span>
       {/if}
       <div class="small gray">

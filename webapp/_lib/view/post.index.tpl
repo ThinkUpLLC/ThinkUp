@@ -86,8 +86,6 @@
                           {/if}
                           
                         {/if}
-                    {else}
-                      <span class="no-post-text">No post text</span>
                     {/if}
                   </div>
 
@@ -97,12 +95,14 @@
                     </div>
                   {/if}
 
-                  {if $post->link->expanded_url and $post->link->is_image}<br ><br >
-                    <div class="pic clearfix">
-                      <a href="{$post->link->url}"><img src="{$post->link->expanded_url}" alt=""></a><span class="ui-icon ui-icon-newwin">
-                    </div>
-                  {/if}
-
+                {if $post->link->is_image}
+                    <br>
+                    {if $post->link->expanded_url}
+                     <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" style="margin-bottom:50px;"/></a></div>
+                     <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
+                      {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
+                    {/if}
+                {/if}
                   {literal}
                   <script>
                   $(function() {

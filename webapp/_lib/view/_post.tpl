@@ -37,11 +37,6 @@
       {/if}
         </div>
     <div class="grid_9">
-      {if $t->link->is_image}
-        {if $t->link->expanded_url}
-         <div class="pic"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" /></a></div>
-        {/if}
-      {/if}
       <div class="post">
         {if $t->post_text}
           {if $scrub_reply_username}
@@ -54,12 +49,21 @@
             {$t->post_text|filter_xss|link_usernames_to_twitter}
           {/if}
         {else}
-          <span class="no-post-text">No post text</span>
+          <span class="no-post-text"></span>
         {/if}
+      {if $t->link->is_image}
+      <br>
+        {if $t->link->expanded_url}
+         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" style="margin-bottom:50px;"/></a></div>
+         <span class="small"><a href="{$t->link->url}" title="{$t->link->expanded_url}">{if $t->link->title}{$t->link->title}{else}{$t->link->url}{/if}</a>
+          {if $t->link->description}<br><small>{$t->link->description}</small>{/if}</span>
+        {/if}
+      {/if}
+        
         {if !$post && $t->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
-      {if $t->link->expanded_url}
+      {if $t->link->expanded_url && $t->link->is_image == 0}
         <span class="small">
           <br /><a href="{$t->link->expanded_url}" title="{$t->link->expanded_url}">{if $t->link->title}{$t->link->title}{else}{$t->link->expanded_url}{/if}</a>
           {if $t->link->description}<br /><small>{$t->link->description}</small>{/if}
