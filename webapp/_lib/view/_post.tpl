@@ -1,4 +1,6 @@
 {if $smarty.foreach.foo.first}
+<div style="clear:all"></div>
+<br><br><br>
   <div class="header clearfix">
     <div class="grid_2 alpha">&#160;</div>
     <div class="grid_3">&#160;</div>
@@ -50,25 +52,25 @@
           {/if}
         {/if}
       {if $t->link->expanded_url}
-      <br>
+        {if $t->post_text != ''}<br>{/if}
         {if $t->link->is_image}
-         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" style="margin-bottom:50px;"/></a></div>
+         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" style="margin-bottom:5px;"/></a></div>
         {/if}
          <span class="small"><a href="{$t->link->url}" title="{$t->link->expanded_url}">{if $t->link->title}{$t->link->title}{else}{$t->link->url}{/if}</a>
         {if $t->link->description}<br><small>{$t->link->description}</small>{/if}</span>
       {/if}
         
         {if !$post && $t->in_reply_to_post_id }
-          <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
+          <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
         {if $t->favd_count}
-          <small>&nbsp;<a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}&v=favs">Fav'd: {$t->favd_count}</a></small>
+          <small>&nbsp;<a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}&v=favs">Fav'd: {$t->favd_count}</a></small>
         {/if}
 
       <span class="small gray">
-
+        <br clear="all">
        <span class="metaroll">
-          <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->adj_pub_date|relative_datetime} ago</a>
+          <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}">{$t->adj_pub_date|relative_datetime} ago</a>
           {if $t->is_geo_encoded < 2}
             {if $show_distance}
                 {if $unit eq 'km'}
@@ -92,7 +94,7 @@
     <div class="grid_2 center">
     {if $t->network eq 'twitter'}
       {if $t->all_retweets > 0}
-        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}&v=fwds">{$t->all_retweets|number_format}{if $t->rt_threshold}+{/if}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
+        <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}&v=fwds">{$t->all_retweets|number_format}{if $t->rt_threshold}+{/if}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
       {else}
         &#160;
       {/if}
@@ -101,7 +103,7 @@
     <div class="grid_2 center omega">
       {if $t->reply_count_cache > 0}
         <span class="reply-count">
-        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
+        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
       {else}
         &#160;
       {/if}

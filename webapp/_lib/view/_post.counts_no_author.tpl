@@ -23,7 +23,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
 
 <div class="clearfix">
   <div class="individual-tweet post clearfix{if $post->is_protected} private{/if}">
-    <div class="grid_13">
+    <div class="grid_13 alpha">
       <div class="post">
         {if $post->post_text}
           {if $scrub_reply_username}
@@ -33,9 +33,9 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
           {/if}
         {/if}
       {if $post->link->expanded_url}
-      <br>
+        {if $t->post_text != ''}<br>{/if}
         {if $post->link->is_image}
-         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" style="margin-bottom:50px;"/></a></div>
+         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" style="margin-bottom:5px;"/></a></div>
         {/if}
          <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
         {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
@@ -43,7 +43,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
 
 
         {if !$post && $post->in_reply_to_post_id }
-          <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
+          <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}&n={$post->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
       {if $post->link->expanded_url and !$post->link->is_image and ($post->link->expanded_url != $post->link->url)}
         <span class="small">
@@ -52,8 +52,9 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
         </span>
       {/if}
       <div class="small gray">
+      <br clear="all">
         <span class="metaroll">
-        <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network}">{$post->adj_pub_date|relative_datetime} ago</a>
+        <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
         {if $post->is_geo_encoded < 2}
         from {$post->location|truncate:60:' ...'}
        {/if}
@@ -71,7 +72,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
      {if $show_favorites_instead_of_retweets && $show_favorites_instead_of_retweets != false}
        {if $post->favd_count}
        <span class="reply-count">
-          <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network}&v=favs">{$post->favd_count}</a>
+          <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=favs">{$post->favd_count}</a>
        </span>
       {else}
         &#160;
@@ -79,7 +80,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
     {else}
       {if $post->all_retweets > 0}
         <span class="reply-count">
-        <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network}&v=fwds">{$post->all_retweets|number_format}{if $post->rt_threshold}+{/if}<!-- retweet{if $post->retweet_count_cache eq 1}{else}s{/if}--></a>
+        <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=fwds">{$post->all_retweets|number_format}{if $post->rt_threshold}+{/if}<!-- retweet{if $post->retweet_count_cache eq 1}{else}s{/if}--></a>
         </span>
       {else}
         &#160;
@@ -90,7 +91,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
     <div class="grid_2 center omega">
       {if $post->reply_count_cache > 0}
         <span class="reply-count">
-        <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network}">{$post->reply_count_cache}<!-- repl{if $post->reply_count_cache eq 1}y{else}ies{/if}--></a>
+        <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->reply_count_cache}<!-- repl{if $post->reply_count_cache eq 1}y{else}ies{/if}--></a>
         </span>
       {else}
         &#160;
