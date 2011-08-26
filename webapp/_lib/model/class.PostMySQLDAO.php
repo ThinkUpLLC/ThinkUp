@@ -1009,13 +1009,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getAllPostsByUsernameIterator($username, $network, $count = 0) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", $count, null, null,
-        $iterator = true);
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, null, null, $iterator = true);
     }
 
     public function getAllPostsByUsername($username, $network) {
-        return $this->getAllPostsByUsernameOrderedBy($username, $network="twitter", null, null, null,
-        $iterator = false);
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, null, null, null, $iterator = false);
     }
 
     public function getMostRepliedToPostsInLastWeek($username, $network, $count, $is_public = false) {

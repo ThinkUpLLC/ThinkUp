@@ -84,6 +84,7 @@ class TestOfExportController extends ThinkUpUnitTestCase {
 
     public function testOwnerWithAccess() {
         $builders = $this->buildData();
+        $builders2 = $this->buildFacebookData();
 
         $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
@@ -96,6 +97,27 @@ class TestOfExportController extends ThinkUpUnitTestCase {
         $results = ob_get_contents();
         ob_end_clean();
         $this->assertPattern("/My first post/", $results);
+        $this->assertPattern("/My second post/", $results);
+        $this->assertNoPattern("/My first Facebook post/", $results);
+    }
+
+    public function testOwnerWithAccessFacebookPageData() {
+        $builders = $this->buildFacebookData();
+        $builders2 = $this->buildData();
+
+        $this->simulateLogin('me2@example.com');
+        $_GET['u'] = 'someuser1';
+        $_GET['n'] = 'facebook page';
+        $controller = new ExportController(true);
+        $this->assertTrue(isset($controller));
+
+        ob_start();
+        $controller->control();
+        $results = ob_get_contents();
+        ob_end_clean();
+        $this->assertPattern("/My first Facebook post/", $results);
+        $this->assertPattern("/My second Facebook post/", $results);
+        $this->assertNoPattern("/My first post/", $results);
     }
 
     public function testExplicitPostsExport() {
@@ -134,23 +156,42 @@ class TestOfExportController extends ThinkUpUnitTestCase {
     }
 
     private function buildData() {
-        $owner_builder = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com'));
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>1, 'network_username'=>'someuser1',
+        $builders[] = FixtureBuilder::build('owners', array('id'=>1, 'email'=>'me@example.com'));
+        $builders[] = FixtureBuilder::build('instances', array('id'=>1, 'network_username'=>'someuser1',
         'network'=>'twitter'));
-        $instance1_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_username'=>'someuser2',
+        $builders[] = FixtureBuilder::build('instances', array('id'=>2, 'network_username'=>'someuser2',
         'network'=>'twitter'));
-        $owner_instance_builder = FixtureBuilder::build('owner_instances', array('instance_id'=>1, 'owner_id'=>1));
-        $posts1_builder = FixtureBuilder::build('posts', array('post_id' => '1', 'author_username'=>'someuser1',
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id'=>1, 'owner_id'=>1));
+        $builders[] = FixtureBuilder::build('posts', array('post_id' => '1', 'author_username'=>'someuser1',
         'post_text'=>'My first post', 'network'=>'twitter'));
-        $posts2_builder = FixtureBuilder::build('posts', array('post_id' => '2', 'author_username'=>'someuser1',
+        $builders[] = FixtureBuilder::build('posts', array('post_id' => '2', 'author_username'=>'someuser1',
         'post_text'=>'My second post', 'network'=>'twitter'));
-        $reply_builder = FixtureBuilder::build('posts', array('post_id' => '3', 'author_username'=>'someuser2',
+        $builders[] = FixtureBuilder::build('posts', array('post_id' => '3', 'author_username'=>'someuser2',
         'post_text'=>'Reply to first post', 'network'=>'twitter', 'in_reply_to_post_id' => '1', 
         'author_user_id'=>'15'));
-        $user_builder = FixtureBuilder::build('users', array('user_id'=>'15', 'network_username'=>'someuser2',
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'15', 'network_username'=>'someuser2',
         'network'=>'twitter'));
 
-        return array($owner_builder, $instance_builder, $instance1_builder, $owner_instance_builder, $posts1_builder,
-        $posts2_builder, $reply_builder, $user_builder);
+        return $builders;
+    }
+
+    private function buildFacebookData() {
+        $builders[] = FixtureBuilder::build('owners', array('id'=>2, 'email'=>'me2@example.com'));
+        $builders[] = FixtureBuilder::build('instances', array('id'=>3, 'network_username'=>'someuser1',
+        'network'=>'facebook page'));
+        $builders[] = FixtureBuilder::build('instances', array('id'=>4, 'network_username'=>'someuser2',
+        'network'=>'facebeook page'));
+        $builders[] = FixtureBuilder::build('owner_instances', array('instance_id'=>3, 'owner_id'=>2));
+        $builders[] = FixtureBuilder::build('posts', array('post_id' => '1', 'author_username'=>'someuser1',
+        'post_text'=>'My first Facebook post', 'network'=>'facebook page'));
+        $builders[] = FixtureBuilder::build('posts', array('post_id' => '2', 'author_username'=>'someuser1',
+        'post_text'=>'My second Facebook post', 'network'=>'facebook page'));
+        $builders[] = FixtureBuilder::build('posts', array('post_id' => '3', 'author_username'=>'someuser2',
+        'post_text'=>'Reply to first Facebook post', 'network'=>'facebook page', 'in_reply_to_post_id' => '1', 
+        'author_user_id'=>'15'));
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'15', 'network_username'=>'someuser2',
+        'network'=>'facebook'));
+
+        return $builders;
     }
 }

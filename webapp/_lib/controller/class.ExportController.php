@@ -58,8 +58,8 @@ class ExportController extends ThinkUpAuthController {
         $this->setContentType('text/csv');
 
         if (!$this->is_missing_param) {
-            $od = DAOFactory::getDAO('OwnerDAO');
-            $owner = $od->getByEmail( $this->getLoggedInUser() );
+            $owner_dao = DAOFactory::getDAO('OwnerDAO');
+            $owner = $owner_dao->getByEmail( $this->getLoggedInUser() );
 
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
             if ( isset($_GET['u']) && $instance_dao->isUserConfigured($_GET['u'], $_GET['n']) ){
