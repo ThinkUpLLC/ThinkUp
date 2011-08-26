@@ -90,12 +90,12 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $total_thumbnails = 0;
         $total_errors = 0;
         foreach ($flickrlinkstoexpand as $fl) {
-            $eurl = $fa->getFlickrPhotoSource($fl);
-            if ($eurl["expanded_url"] != '') {
-                $link_dao->saveExpandedUrl($fl, $eurl["expanded_url"], '', 1);
+            $expanded_url = $fa->getFlickrPhotoSource($fl);
+            if ($expanded_url["expanded_url"] != '') {
+                $link_dao->saveExpandedUrl($fl, $expanded_url["expanded_url"], '', 1);
                 $total_thumbnails = $total_thumbnails + 1;
-            } elseif ($eurl["error"] != '') {
-                $link_dao->saveExpansionError($fl, $eurl["error"]);
+            } elseif ($expanded_url["error"] != '') {
+                $link_dao->saveExpansionError($fl, $expanded_url["error"]);
                 $total_errors = $total_errors + 1;
             }
             $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
@@ -121,18 +121,18 @@ class ExpandURLsPlugin implements CrawlerPlugin {
 
         $total_thumbnails = 0;
         $total_errors = 0;
-        $eurl = '';
+        $expanded_url = '';
         foreach ($insta_links_to_expand as $il) {
             // see: http://instagr.am/developer/embedding/
             // make a check for an end slash in the url -- if it is there (likely) then adding a second
             // prior to the 'media' string will break the expanded url
             if ($il[strlen($il)-1] == '/') {
-                $eurl = $il . 'media/';
+                $expanded_url = $il . 'media/';
             } else {
-                $eurl = $il . '/media/';
+                $expanded_url = $il . '/media/';
             }
-            $logger->logDebug("expanded instagram URL to: " . $eurl, __METHOD__.','.__LINE__);
-            $link_dao->saveExpandedUrl($il, $eurl, '', 1);
+            $logger->logDebug("expanded instagram URL to: " . $expanded_url, __METHOD__.','.__LINE__);
+            $link_dao->saveExpandedUrl($il, $expanded_url, '', 1);
             $total_thumbnails = $total_thumbnails + 1;
         }
         $logger->logUserSuccess($total_thumbnails." Instagr.am thumbnails expanded (".$total_errors." errors)",
@@ -146,29 +146,38 @@ class ExpandURLsPlugin implements CrawlerPlugin {
     public function expandRemainingURLs($total_links_to_expand) {
         $logger = Logger::getInstance();
         $link_dao = DAOFactory::getDAO('LinkDAO');
-        $linkstoexpand = $link_dao->getLinksToExpand($total_links_to_expand);
+        $links_to_expand = $link_dao->getLinksToExpand($total_links_to_expand);
 
-        $logger->logUserInfo(count($linkstoexpand)." links to expand. Please wait. Working...",
+        $logger->logUserInfo(count($links_to_expand)." links to expand. Please wait. Working...",
         __METHOD__.','.__LINE__);
 
         $total_expanded = 0;
         $total_errors = 0;
-        foreach ($linkstoexpand as $l) {
-            if (Utils::validateURL($l)) {
-                $logger->logInfo("Expanding ".($total_expanded+1). " of ".count($linkstoexpand)." (".$l.")",
+        foreach ($links_to_expand as $link) {
+            if (Utils::validateURL($link)) {
+                $logger->logInfo("Expanding ".($total_expanded+1). " of ".count($links_to_expand)." (".$link.")",
                 __METHOD__.','.__LINE__);
 
-                $eurl = self::untinyurl($l, $link_dao);
-                if ($eurl != '') {
-                    $link_dao->saveExpandedUrl($l, $eurl);
+                //make sure shortened short links--like t.co--get fully expanded
+                $fully_expanded = false;
+                $short_link = $link;
+                while (!$fully_expanded) {
+                    $expanded_url = self::untinyurl($short_link, $link_dao, $link);
+                    if ($expanded_url == $short_link || $expanded_url == '') {
+                        $fully_expanded = true;
+                    }
+                    $short_link = $expanded_url;
+                }
+                if ($expanded_url != '') {
+                    $link_dao->saveExpandedUrl($link, $expanded_url);
                     $total_expanded = $total_expanded + 1;
                 } else {
                     $total_errors = $total_errors + 1;
                 }
             } else {
                 $total_errors = $total_errors + 1;
-                $logger->logError($l." not a valid URL", __METHOD__.','.__LINE__);
-                $link_dao->saveExpansionError($l, "Invalid URL");
+                $logger->logError($link." not a valid URL", __METHOD__.','.__LINE__);
+                $link_dao->saveExpansionError($link, "Invalid URL");
             }
         }
         $logger->logUserSuccess($total_expanded." URLs successfully expanded (".$total_errors." errors).",
@@ -180,12 +189,20 @@ class ExpandURLsPlugin implements CrawlerPlugin {
      *
      * @param str $tinyurl Shortened URL
      * @param LinkDAO $link_dao
+     * @param str $original_link
      * @return str Expanded URL
      */
-    private function untinyurl($tinyurl, $link_dao) {
+    private function untinyurl($tinyurl, $link_dao, $original_link) {
         $logger = Logger::getInstance();
         $url = parse_url($tinyurl);
-        $host = $url['host'];
+        if (isset($url['host'])) {
+            $host = $url['host'];
+        } else {
+            $error_msg = $tinyurl.": No host found.";
+            $logger->logError($error_msg, __METHOD__.','.__LINE__);
+            $link_dao->saveExpansionError($original_link, $error_msg);
+            return '';
+        }
         $port = isset($url['port']) ? $url['port'] : 80;
         $query = isset($url['query']) ? '?'.$url['query'] : '';
         $fragment = isset($url['fragment']) ? '#'.$url['fragment'] : '';
@@ -195,18 +212,19 @@ class ExpandURLsPlugin implements CrawlerPlugin {
             $path = $url['path'];
         }
 
+        $reconstructed_url = "http://$host:$port".$path.$query.$fragment;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, "http://$host:$port".$path.$query.$fragment);
+        curl_setopt($ch, CURLOPT_URL, $reconstructed_url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5); // seconds
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_NOBODY, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         $response = curl_exec($ch);
         if ($response === false) {
-            $error_msg = "cURL error: ".curl_error($ch);
+            $error_msg = $reconstructed_url." cURL error: ".curl_error($ch);
             $logger->logError($error_msg, __METHOD__.','.__LINE__);
-            $link_dao->saveExpansionError($tinyurl, $error_msg);
+            $link_dao->saveExpansionError($original_link, $error_msg);
             $tinyurl = '';
         }
         curl_close($ch);
@@ -220,9 +238,9 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         }
 
         if (strpos($response, 'HTTP/1.1 404 Not Found') === 0) {
-            $error_msg = "Short URL returned '404 Not Found'";
+            $error_msg = $reconstructed_url." returned '404 Not Found'";
             $logger->logError($error_msg, __METHOD__.','.__LINE__);
-            $link_dao->saveExpansionError($tinyurl, $error_msg);
+            $link_dao->saveExpansionError($original_link, $error_msg);
             return '';
         }
         return $tinyurl;

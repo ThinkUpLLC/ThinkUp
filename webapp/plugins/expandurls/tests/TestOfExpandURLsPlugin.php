@@ -62,7 +62,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
         $link = $link_dao->getLinkById(2);
         $this->assertEqual($link->expanded_url, '');
-        $this->assertEqual($link->error, "Short URL returned '404 Not Found'");
+        $this->assertEqual($link->error, "http://bit.ly:80/0101001010 returned '404 Not Found'");
 
         $link = $link_dao->getLinkById(3);
         $this->assertEqual($link->expanded_url, '');
@@ -75,6 +75,15 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link = $link_dao->getLinkById(5);
         $this->assertEqual($link->expanded_url, 'http://thinkupapp.com/');
         $this->assertEqual($link->error, '');
+
+        $link = $link_dao->getLinkById(6);
+        $this->assertEqual($link->expanded_url,
+        'http://www.macworld.com/article/161927/2011/08/steve_jobs_resigns_as_apple_ceo.html#lsrc.twt_danfrakes');
+        $this->assertEqual($link->error, '');
+
+        $link = $link_dao->getLinkById(7);
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->error, '/27427184: No host found.');
     }
 
     private function buildData() {
@@ -138,6 +147,30 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('links', array(
             'id' => 5,
             'url' => 'http://thinkupapp.com/',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'is_image' => 0,
+            'error' => null
+        ));
+
+        // A double-shortened URL, t.co pointing to valid short URL macw.us/qpivQF
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 6,
+            'url' => 'http://t.co/xRRz4lk',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'is_image' => 0,
+            'error' => null
+        ));
+
+        // A double-shortened URL, t.co pointing to an invalid URL
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 7,
+            'url' => 'http://t.co/LfN0PXm',
             'expanded_url' => null,
             'title' => '',
             'clicks' => 0,
