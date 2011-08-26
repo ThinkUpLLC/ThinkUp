@@ -34,10 +34,10 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
         {/if}
       {if $post->link->expanded_url}
         {if $t->post_text != ''}<br>{/if}
-        {if $post->link->is_image}
-         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" style="margin-bottom:5px;"/></a></div>
+        {if $post->link->image_src}
+         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->image_src}" style="margin-bottom:5px;"/></a></div>
         {/if}
-         <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->expanded_url}{/if}</a>
+         <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
         {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
         <br clear="all">
       {/if}

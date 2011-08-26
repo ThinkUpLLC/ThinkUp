@@ -51,7 +51,6 @@ class ExpandURLsPlugin implements CrawlerPlugin {
             self::expandFlickrThumbnails($options['flickr_api_key']->option_value);
         }
 
-        self::expandInstagramImageURLs();
         //@TODO: Bit.ly URLs
 
         //Remaining URLs
@@ -78,64 +77,29 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $link_dao = DAOFactory::getDAO('LinkDAO');
         //Flickr thumbnails
         $logger->setUsername(null);
-        $fa = new FlickrAPIAccessor($api_key);
+        $flickr_api = new FlickrAPIAccessor($api_key);
 
-        $flickrlinkstoexpand = $link_dao->getLinksToExpandByURL('http://flic.kr/');
-        if (count($flickrlinkstoexpand) > 0) {
-            $logger->logUserInfo(count($flickrlinkstoexpand)." Flickr links to expand.",  __METHOD__.','.__LINE__);
+        $flickr_links_to_expand = $link_dao->getLinksToExpandByURL('http://flic.kr/');
+        if (count($flickr_links_to_expand) > 0) {
+            $logger->logUserInfo(count($flickr_links_to_expand)." Flickr links to expand.",  __METHOD__.','.__LINE__);
         } else {
             $logger->logUserInfo("There are no Flickr thumbnails to expand.",  __METHOD__.','.__LINE__);
         }
 
         $total_thumbnails = 0;
         $total_errors = 0;
-        foreach ($flickrlinkstoexpand as $fl) {
-            $expanded_url = $fa->getFlickrPhotoSource($fl);
-            if ($expanded_url["expanded_url"] != '') {
-                $link_dao->saveExpandedUrl($fl, $expanded_url["expanded_url"], '', 1);
+        foreach ($flickr_links_to_expand as $flickr_link) {
+            $photo_details = $flickr_api->getFlickrPhotoSource($flickr_link);
+            if ($photo_details["image_src"] != '') {
+                //@TODO Make another Flickr API call to get the photo title & description and save to tu_links
+                $link_dao->saveExpandedUrl($flickr_link, $flickr_link, '', $photo_details["image_src"]);
                 $total_thumbnails = $total_thumbnails + 1;
-            } elseif ($expanded_url["error"] != '') {
-                $link_dao->saveExpansionError($fl, $expanded_url["error"]);
+            } elseif ($photo_details["error"] != '') {
+                $link_dao->saveExpansionError($flickr_link, $photo_details["error"]);
                 $total_errors = $total_errors + 1;
             }
-            $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
-            __METHOD__.','.__LINE__);
         }
-    }
-
-    /**
-     * Save direct link to Instagr.am images in data store.  Now that these links are expanded on the fly,
-     * we shouldn't need this method any more, except for 'legacy' unexpanded links in the database during
-     * the transition period.
-     */
-    public function expandInstagramImageURLs() {
-        $logger = Logger::getInstance();
-        $link_dao = DAOFactory::getDAO('LinkDAO');
-        $insta_links_to_expand = $link_dao->getLinksToExpandByURL('http://instagr.am/');
-        if (count($insta_links_to_expand) > 0) {
-            $logger->logUserInfo(count($insta_links_to_expand)." Instagr.am links to expand.",
-            __METHOD__.','.__LINE__);
-        } else {
-            $logger->logUserInfo("There are no Instagr.am thumbnails to expand.",  __METHOD__.','.__LINE__);
-        }
-
-        $total_thumbnails = 0;
-        $total_errors = 0;
-        $expanded_url = '';
-        foreach ($insta_links_to_expand as $il) {
-            // see: http://instagr.am/developer/embedding/
-            // make a check for an end slash in the url -- if it is there (likely) then adding a second
-            // prior to the 'media' string will break the expanded url
-            if ($il[strlen($il)-1] == '/') {
-                $expanded_url = $il . 'media/';
-            } else {
-                $expanded_url = $il . '/media/';
-            }
-            $logger->logDebug("expanded instagram URL to: " . $expanded_url, __METHOD__.','.__LINE__);
-            $link_dao->saveExpandedUrl($il, $expanded_url, '', 1);
-            $total_thumbnails = $total_thumbnails + 1;
-        }
-        $logger->logUserSuccess($total_thumbnails." Instagr.am thumbnails expanded (".$total_errors." errors)",
+        $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
         __METHOD__.','.__LINE__);
     }
 
@@ -169,7 +133,8 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                     $short_link = $expanded_url;
                 }
                 if ($expanded_url != '') {
-                    $link_dao->saveExpandedUrl($link, $expanded_url);
+                    $image_src = URLProcessor::getImageSource($expanded_url);
+                    $link_dao->saveExpandedUrl($link, $expanded_url, '', $image_src);
                     $total_expanded = $total_expanded + 1;
                 } else {
                     $total_errors = $total_errors + 1;
@@ -185,7 +150,8 @@ class ExpandURLsPlugin implements CrawlerPlugin {
     }
 
     /**
-     * Expand a given short URL
+     * Return the expanded version of a given short URL or save an error for the $original_link in links table and
+     * return an empty string.
      *
      * @param str $tinyurl Shortened URL
      * @param LinkDAO $link_dao

@@ -32,7 +32,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
 
 class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
@@ -134,7 +133,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'expanded_url'=>'http://example.com/'.$counter.'.jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>$post_id, 
-            'is_image'=>1));
+            'image_src'=>'image.png'));
 
             $counter++;
         }
@@ -152,7 +151,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'explanded_url'=>'http://example.com/'.$counter.'.html', 'title'=>'Link $counter', 'clicks'=>0, 
-            'post_id'=>$post_id, 'is_image'=>0));
+            'post_id'=>$post_id, 'image_src'=>''));
 
             $counter++;
         }
@@ -218,7 +217,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com',
         'expanded_url'=>'http://example.com/expanded-link.html', 'title'=>'Link 1', 'clicks'=>0, 'post_id'=>133, 
-        'is_image'=>0));
+        'image_src'=>''));
 
         //Add retweets of a specific post
         //original post

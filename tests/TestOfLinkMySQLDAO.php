@@ -46,8 +46,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $post_id = $counter + 80;
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>0, 
-            'expanded_url'=>'', 'error'=>''));
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 
+            'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
             $counter++;
         }
 
@@ -56,8 +56,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 5) {
             $post_id = $counter + 80;
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://flic.kr/p/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>1, 
-            'expanded_url'=>'', 'error'=>''));
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 
+            'expanded_url'=>'', 'error'=>'', 'image_src'=>'http://flic.kr/thumbnail.png'));
             $counter++;
         }
 
@@ -67,7 +67,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_id = $counter + 80;
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://flic.kr/p/'.$counter.'e',
             'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 
-            'is_image'=>1, 'error'=>'Generic test error message, Photo not found', 
+            'error'=>'Generic test error message, Photo not found', 'image_src'=>'http://flic.kr/thumbnail.png', 
             'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
@@ -77,8 +77,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 5) {
             $post_id = $counter + 80;
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://bit.ly/beEEfs',
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter',  'is_image'=>1, 
-            'error'=>'',  'expanded_url'=>'', 'error'=>''));
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 
+            'error'=>'',  'expanded_url'=>'', 'error'=>'', 'image_src'=>'http://iamathumbnail.png'));
             $counter++;
         }
 
@@ -122,9 +122,9 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testInsert(){
-        $link = new Link(array('url'=>'http://example.com/test',
+        $link = new Link(array('url'=>'http://example.com/test', 'image_src'=>'',
         'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 
-        'title'=>'Very Long URL', 'post_id'=>'12345678901', 'network'=>'twitter', 'is_image'=>false));
+        'title'=>'Very Long URL', 'post_id'=>'12345678901', 'network'=>'twitter'));
 
         $result = $this->DAO->insert($link);
         //Is insert ID returned?
@@ -139,15 +139,14 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->title, 'Very Long URL');
         $this->assertEqual($result->post_id, '12345678901');
         $this->assertEqual($result->network, 'twitter');
-        $this->assertFalse($result->is_image);
         $this->assertEqual($result->image_src, '');
         $this->assertEqual($result->caption, '');
         $this->assertEqual($result->description, '');
 
         //test another with new fields set
-        $link = new Link(array('url'=>'http://example.com/test2',
+        $link = new Link(array('url'=>'http://example.com/test2', 'image_src'=>'',
         'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 
-        'title'=>'Very Long URL', 'post_id'=>'123456789011', 'network'=>'twitter', 'is_image'=>false, 
+        'title'=>'Very Long URL', 'post_id'=>'123456789011', 'network'=>'twitter', 
         'image_src'=>'http://example.com/thumbnail.png', 'description'=>'My hot link', 'caption'=>"Hot, huh?"));
 
         $result = $this->DAO->insert($link);
@@ -163,7 +162,6 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->title, 'Very Long URL');
         $this->assertEqual($result->post_id, '123456789011');
         $this->assertEqual($result->network, 'twitter');
-        $this->assertFalse($result->is_image);
         $this->assertEqual($result->image_src, 'http://example.com/thumbnail.png');
         $this->assertEqual($result->caption, 'Hot, huh?');
         $this->assertEqual($result->description, 'My hot link');
@@ -192,7 +190,6 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $updatedlink = $this->DAO->getLinkByUrl($link);
         $this->assertEqual($updatedlink->expanded_url, "http://expandedurl2.com");
         $this->assertEqual($updatedlink->title, "my title1");
-        $this->assertTrue($updatedlink->is_image);
     }
 
     /**
@@ -209,16 +206,15 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testUpdate(){
-        $link = new Link(array('url'=>'http://example.com/test',
+        $link = new Link(array('url'=>'http://example.com/test', 'image_src'=>'',
         'expanded_url'=>'http://very.long.domain.that.nobody.would.bother.to.type.com/index.php', 
-        'title'=>'Very Long URL', 'post_id'=>'15000', 'network'=>'twitter', 'is_image'=>false));
+        'title'=>'Very Long URL', 'post_id'=>'15000', 'network'=>'twitter'));
 
         $result = $this->DAO->insert($link);
         $this->assertEqual($result, 56);
 
         $link->post_id = 15001;
         $link->title = 'Even Longer URL';
-        $link->is_image = true;
         $link->expanded_url = 'http://very.long.domain.that.nobody.would.bother.to.type.com/image.png';
         $link->description = "This is the link description";
         $link->image_src = "thumbnail.jpg";
@@ -319,7 +315,6 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         foreach($result as $key=>$val){
             $this->assertIsA($val, "link");
             $this->assertIsA($val->container_post, "Post");
-            $this->assertTrue($val->is_image);
             $num = $val->post_id;
             $pid = $posts[$num]['pid'];
             $uid = $posts[$num]['uid'];
@@ -353,7 +348,6 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         foreach($result as $key=>$val){
             $this->assertIsA($val, "link");
             $this->assertIsA($val->container_post, "Post");
-            $this->assertTrue($val->is_image);
             $num = $val->post_id;
             $pid = $posts[$num]['pid'];
             $uid = $posts[$num]['uid'];
@@ -402,13 +396,13 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $counter = 2000;
         $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
         $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
-        $q  = "INSERT IGNORE INTO tu_links (url, title, clicks, post_id, network, is_image) ";
-        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
+        $q  = "INSERT IGNORE INTO tu_links (url, title, clicks, post_id, network, image_src) ";
+        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', '');";
         $res = PDODAO::$PDO->exec($q);
         $this->assertEqual($res, 1);
 
-        $q  = "INSERT IGNORE INTO tu_links (url, title, clicks, post_id, network, is_image) ";
-        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', 0);";
+        $q  = "INSERT IGNORE INTO tu_links (url, title, clicks, post_id, network, image_src) ";
+        $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', '');";
         $res = PDODAO::$PDO->exec($q);
         $this->assertEqual($res, 0);
     }
@@ -423,11 +417,11 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
         $builder1 = $builder2 = null;
         try {
             $builder1 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$counter, 'network'=>'twitter', 'is_image'=>0, 
-                'expanded_url'=>'', 'error'=>''));
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$counter, 'network'=>'twitter', 
+            'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
             $builder2 = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$counter, 'network'=>'twitter', 'is_image'=>0, 
-                'expanded_url'=>'', 'error'=>''));
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$counter, 'network'=>'twitter', 
+            'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
         } catch(PDOException $e) {
             $this->assertPattern('/Integrity constraint violation/', $e->getMessage());
         }
@@ -445,8 +439,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_id = $counter + 180;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>0, 
-            'expanded_url'=>'', 'error'=>''));
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 
+            'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
             $counter++;
         }
         //Insert several posts for fav checking-- links will be associated with 5 of them
@@ -486,7 +480,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_id = $counter + 180;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>0, 
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 
             'expanded_url'=>'', 'error'=>''));
             $counter++;
         }
@@ -524,8 +518,8 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
             $post_id = $counter + 280;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
             $lbuilders[] = FixtureBuilder::build('links', array('url'=>'http://example2.com/'.$counter,
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 'is_image'=>0, 
-            'expanded_url'=>'', 'error'=>''));
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'network'=>'twitter', 
+            'expanded_url'=>'', 'error'=>'', 'image_src'=>''));
             $counter++;
         }
         //create posts-- links will be associated with the first 15 of them

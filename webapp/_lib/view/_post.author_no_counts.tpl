@@ -39,10 +39,8 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
         {/if}
     </div>
     <div class="grid_12 omega">
-      {if $post->link->is_image}
-        {if $post->link->expanded_url}
-         <div class="pic"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" /></a></div>
-        {/if}
+      {if $post->link->image_src}
+         <div class="pic"><a href="{$post->link->url}"><img src="{$post->link->image_src}" /></a></div>
       {/if}
       <div class="post">
         {if $post->post_text}
@@ -59,7 +57,7 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
         {if !$post && $post->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">&larr;</a>
         {/if}
-      {if $post->link->expanded_url and !$post->link->is_image and ($post->link->expanded_url != $post->link->url)}
+      {if $post->link->expanded_url and !$post->link->image_src and ($post->link->expanded_url != $post->link->url)}
         <small>
           <a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">{$post->link->expanded_url}</a>
         </small>

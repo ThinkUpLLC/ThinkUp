@@ -45,7 +45,7 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
 
         $this->builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/1private',
         'expanded_url'=>'http://example.com/1private.jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>150, 
-        'is_image'=>1));
+        'image_src'=>'image.png'));
 
         //private link post
         $this->builders[] = FixtureBuilder::build('posts', array('post_id'=>151, 'author_user_id'=>18,
@@ -55,7 +55,7 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
 
         $this->builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/1private',
         'expanded_url'=>'http://example.com/private1', 'title'=>'', 'clicks'=>0, 'post_id'=>151, 
-        'is_image'=>0));
+        'image_src'=>''));
     }
 
     public function tearDown() {

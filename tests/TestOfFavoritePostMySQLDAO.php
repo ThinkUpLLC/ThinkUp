@@ -29,7 +29,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/facebook/model/class.FacebookPlugin.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
 
 class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
     /**
@@ -124,7 +123,7 @@ class TestOfFavoritePostMySQLDAO extends ThinkUpUnitTestCase {
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'explanded_url'=>'http://example.com/'.$counter.'.html', 'title'=>'Link $counter', 'clicks'=>0, 
-            'post_id'=>$post_id, 'is_image'=>0));
+            'post_id'=>$post_id, 'image_src'=>''));
 
             $counter++;
         }

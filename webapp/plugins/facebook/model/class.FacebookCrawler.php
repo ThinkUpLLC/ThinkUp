@@ -284,13 +284,12 @@ class FacebookCrawler {
                 $link_url = (isset($p->source))?$p->source:$p->link;
                 $link = new Link(array(
                 "url"=>$link_url, 
-                "expanded_url"=>(isset($p->picture))?$p->picture:$link_url, 
+                "expanded_url"=>$link_url, 
                 "image_src"=>(isset($p->picture))?$p->picture:'',
                 "caption"=>(isset($p->caption))?$p->caption:'', 
                 "description"=>(isset($p->description))?$p->description:'',
                 "title"=>(isset($p->name))?$p->name:'', 
-                "network"=>$network, "post_id"=>$post_id, 
-                "is_image"=>(isset($p->picture))
+                "network"=>$network, "post_id"=>$post_id 
                 ));
                 array_push($thinkup_links, $link);
             }

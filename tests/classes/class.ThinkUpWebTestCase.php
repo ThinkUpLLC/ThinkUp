@@ -149,7 +149,7 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'expanded_url'=>'http://example.com/'.$counter.'jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>$post_id, 
-            'is_image'=>1));
+            'image_src'=>'image.png'));
 
             $counter++;
         }
@@ -165,7 +165,7 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'expanded_url'=>'http://example.com/'.$counter.'html', 
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'is_image'=>0));
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'image_src'=>''));
 
             $counter++;
         }

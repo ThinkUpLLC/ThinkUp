@@ -34,22 +34,22 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
 
     public function testGetFlickrPhotoSourceFlickrAPINonResponsive() {
         $logger = Logger::getInstance();
-        $fa = new FlickrAPIAccessor('dummykey', $logger);
+        $flickr_api = new FlickrAPIAccessor('dummykey', $logger);
 
-        $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AEasdfasdfasdfasdfasdf');
+        $photo_details = $flickr_api->getFlickrPhotoSource('http://flic.kr/p/6YS7AEasdfasdfasdfasdfasdf');
         //this file does not exist so response will be false
-        $this->assertEqual($eurl["expanded_url"], '');
-        $this->assertEqual($eurl["error"], 'No response from Flickr API');
+        $this->assertEqual($photo_details["image_src"], '');
+        $this->assertEqual($photo_details["error"], 'No response from Flickr API');
         $logger->close();
     }
 
     public function testGetFlickrPhotoSourceNoFlickrAPIKey() {
         $logger = Logger::getInstance();
-        $fa = new FlickrAPIAccessor('', $logger);
+        $flickr_api = new FlickrAPIAccessor('', $logger);
 
-        $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AE');
-        $this->assertEqual($eurl["expanded_url"], '');
-        $this->assertEqual($eurl["error"], '');
+        $photo_details = $flickr_api->getFlickrPhotoSource('http://flic.kr/p/6YS7AE');
+        $this->assertEqual($photo_details["image_src"], '');
+        $this->assertEqual($photo_details["error"], '');
         //logger will have logged that the API key was not set
 
         $logger->close();
@@ -57,23 +57,24 @@ class TestOfFlickrAPIAccessor extends UnitTestCase {
 
     public function testGetFlickrPhotoSourceFlickrAPIReturnsError() {
         $logger = Logger::getInstance();
-        $fa = new FlickrAPIAccessor('dummykey', $logger);
+        $flickr_api = new FlickrAPIAccessor('dummykey', $logger);
 
-        $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/6YS7AE');
-        $this->assertEqual($eurl["expanded_url"], '');
-        $this->assertEqual($eurl["error"], 'Photo not found');
+        $photo_details = $flickr_api->getFlickrPhotoSource('http://flic.kr/p/6YS7AE');
+        $this->assertEqual($photo_details["image_src"], '');
+        $this->assertEqual($photo_details["error"], 'Photo not found');
 
         $logger->close();
     }
 
     public function testGetFlickrPhotoSourceSuccess() {
         $logger = Logger::getInstance();
-        $fa = new FlickrAPIAccessor('dummykey', $logger);
+        $flickr_api = new FlickrAPIAccessor('dummykey', $logger);
 
-        $this->assertTrue(isset($fa));
+        $this->assertTrue(isset($flickr_api));
 
-        $eurl = $fa->getFlickrPhotoSource('http://flic.kr/p/7QAWC7');
-        $this->assertEqual($eurl["expanded_url"], 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
+        $photo_details = $flickr_api->getFlickrPhotoSource('http://flic.kr/p/7QAWC7');
+        $this->assertEqual($photo_details["image_src"],
+        'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
 
         $logger->close();
     }

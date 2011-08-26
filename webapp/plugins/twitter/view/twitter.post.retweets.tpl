@@ -20,7 +20,7 @@
                     <span class="no-post-text">No post text</span>
                   {/if}
                 </span>
-                {if $post->link->expanded_url and !$post->link->is_image and $post->link->expanded_url != $post->link->url}
+                {if $post->link->expanded_url and !$post->link->image_src and $post->link->expanded_url != $post->link->url}
                   <br><a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">
                     {$post->link->expanded_url}
                   </a>

@@ -15,10 +15,8 @@
     <a href="http://twitter.com/{$l->container_post->author_username}">{$l->container_post->author_username}</a>
   </div>
   <div class="grid_13">
-    {if $l->is_image}
-     {if $l->expanded_url}
-      <a href="{$l->url}"><div class="pic"><img src="{$l->expanded_url}" /></div></a>
-     {/if}
+    {if $l->image_src}
+      <a href="{$l->url}"><div class="pic"><img src="{$l->image_src}" /></div></a>
     {else}
       {if $l->expanded_url}
       <small>

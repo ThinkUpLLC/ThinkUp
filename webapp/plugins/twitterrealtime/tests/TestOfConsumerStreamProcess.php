@@ -35,7 +35,6 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.Consu
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.ConsumerStreamProcess.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.TwitterJSONStreamParser.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.StreamMessageQueue.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
 
 class TestOfConsumerStreamProcess extends ThinkUpUnitTestCase {
 

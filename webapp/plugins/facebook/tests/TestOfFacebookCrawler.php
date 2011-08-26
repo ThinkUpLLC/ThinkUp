@@ -176,16 +176,14 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->link->url,
         'http://lifehacker.com/5653429/top-10-ios-jailbreak-hacks');
         $this->assertEqual($post->link->expanded_url,
+        'http://lifehacker.com/5653429/top-10-ios-jailbreak-hacks');
+        $this->assertEqual($post->link->image_src,
         'http://platform.ak.fbcdn.net/www/app_full_proxy.php?app=45439413586&v=1&size=z&cksum=7de062ac249fe7caef80f66'.
         'f49a38818&src=http%3A%2F%2Fcache-02.gawkerassets.com%2Fassets%2Fimages%2F17%2F2010%2F10%2F160x120_jailbreak-'.
         'top-10.jpg');
         $this->assertEqual($post->link->description,
         'If you purchased an iOS device, you also signed up for its many limitations. Jailbreaking can put you back '.
         'in control. Here are ten great jailbreak hacks to help you customize and better utilize your iOS device...');
-        $this->assertEqual($post->link->image_src,
-        'http://platform.ak.fbcdn.net/www/app_full_proxy.php?app=45439413586&v=1&size=z&cksum=7de062ac249fe7caef80f6'.
-        '6f49a38818&src=http%3A%2F%2Fcache-02.gawkerassets.com%2Fassets%2Fimages%2F17%2F2010%2F10%2F160x120_jailbreak'.
-        '-top-10.jpg');
 
         //assert user network is set to Facebook, not Facebook Page
         $ud = new UserMySQLDAO();

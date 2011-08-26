@@ -66,19 +66,19 @@ class FlickrAPIAccessor {
                             $src = $s['source'];
                         }
                     }
-                    return array("expanded_url"=>$src, "error"=>'');
+                    return array("image_src"=>$src, "error"=>'');
                 } else {
                     $this->logger->logInfo("ERROR: '".$fphoto['message']."'", __METHOD__.','.__LINE__);
-                    return array("expanded_url"=>'', "error"=>$fphoto['message']);
+                    return array("image_src"=>'', "error"=>$fphoto['message']);
                 }
 
             } else {
                 $this->logger->logInfo("ERROR: No response from Flickr API", __METHOD__.','.__LINE__);
-                return array("expanded_url"=>'', "error"=>'No response from Flickr API');
+                return array("image_src"=>'', "error"=>'No response from Flickr API');
             }
         } else {
             $this->logger->logInfo("ERROR: Flickr API key is not set", __METHOD__.','.__LINE__);
-            return array("expanded_url"=>'', "error"=>'');
+            return array("image_src"=>'', "error"=>'');
         }
     }
 

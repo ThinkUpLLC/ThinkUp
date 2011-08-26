@@ -84,6 +84,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link = $link_dao->getLinkById(7);
         $this->assertEqual($link->expanded_url, '');
         $this->assertEqual($link->error, '/27427184: No host found.');
+
+        $link = $link_dao->getLinkById(8);
+        $this->assertEqual($link->expanded_url, 'http://twitpic.com/6bheho');
+        $this->assertEqual($link->image_src, 'http://twitpic.com/show/thumb/6bheho');
+        $this->assertEqual($link->error, '');
     }
 
     private function buildData() {
@@ -103,7 +108,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => '',
             'clicks' => 0,
             'post_id' => 1,
-            'is_image' => 0,
+            'image_src' => '',
             'error' => null
         ));
 
@@ -115,7 +120,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => '',
             'clicks' => 0,
             'post_id' => 1,
-            'is_image' => 0,
+            'image_src' => '',
             'error' => null
         ));
 
@@ -127,7 +132,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => '',
             'clicks' => 0,
             'post_id' => 1,
-            'is_image' => 0,
+            'image_src' => '',
             'error' => null
         ));
 
@@ -139,7 +144,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => '',
             'clicks' => 0,
             'post_id' => 1,
-            'is_image' => 0,
+            'image_src' => '',
             'error' => null
         ));
 
@@ -151,7 +156,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => '',
             'clicks' => 0,
             'post_id' => 1,
-            'is_image' => 0,
+            'image_src' => '',
             'error' => null
         ));
 
@@ -163,7 +168,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => '',
             'clicks' => 0,
             'post_id' => 1,
-            'is_image' => 0,
+            'image_src' => '',
             'error' => null
         ));
 
@@ -175,7 +180,19 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => '',
             'clicks' => 0,
             'post_id' => 1,
-            'is_image' => 0,
+            'image_src' => '',
+            'error' => null
+        ));
+
+        // Shortened known image URL (Twitpic)
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 8,
+            'url' => 'http://bit.ly/qpBNce',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'image_src' => '',
             'error' => null
         ));
 
@@ -201,7 +218,8 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link_dao = DAOFactory::getDAO('LinkDAO');
 
         $link = $link_dao->getLinkById(43);
-        $this->assertEqual($link->expanded_url, 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
+        $this->assertEqual($link->image_src, 'http://farm3.static.flickr.com/2755/4488149974_04d9558212_m.jpg');
+        $this->assertEqual($link->expanded_url, 'http://flic.kr/p/7QQBy7');
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(42);
@@ -236,7 +254,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
                 'title' => "Link $counter",
                 'clicks' => 0,
                 'post_id' => $post_id,
-                'is_image' => 0,
+                'image_src' => '',
                 'error' => null
             ));
             $counter++;
@@ -254,7 +272,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
                 'title' => "Link $counter",
                 'clicks' => 0,
                 'post_id' => $post_id,
-                'is_image' => 1,
+                'image_src' => 'image.png',
                 'error' => null
             ));
             $counter++;
@@ -267,7 +285,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => "Link 0",
             'clicks' => 0,
             'post_id' => 200,
-            'is_image' => 1,
+            'image_src' => 'thumbnail.png',
             'error' => null
         ));
 
@@ -283,7 +301,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
                 'title' => "Link $counter",
                 'clicks' => 0,
                 'post_id' => $post_id,
-                'is_image' => 1,
+                'image_src' => 'image.jpg',
                 'error' => 'Photo not found'
                 ));
                 $counter++;
@@ -314,7 +332,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
                 'title' => "Link $counter",
                 'clicks' => 0,
                 'post_id' => $post_id,
-                'is_image' => 0,
+                'image_src' => '',
                 'error' => null
             ));
             $counter++;
@@ -328,11 +346,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
             $builders[] = FixtureBuilder::build('links', array(
                 'url' => "http://instagr.am/$counter",
-                'expanded_url' => null,
+                'expanded_url' => "http://instagr.am/$counter",
                 'title' => "Link $counter",
                 'clicks' => 0,
                 'post_id' => $post_id,
-                'is_image' => 1,
+                'image_src' => "http://instagr.am/$counter/media/",
                 'error' => null
             ));
             $counter++;
@@ -345,7 +363,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'title' => "Link 0",
             'clicks' => 0,
             'post_id' => 200,
-            'is_image' => 1,
+            'image_src' => 'image.png',
             'error' => null
         ));
 
@@ -361,7 +379,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
                 'title' => "Link $counter",
                 'clicks' => 0,
                 'post_id' => $post_id,
-                'is_image' => 1,
+                'image_src' => 'photo.png',
                 'error' => 'Photo not found'
                 ));
                 $counter++;
@@ -392,9 +410,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($link->error, '');
 
         $link = $link_dao->getLinkById(42);
-        $this->assertEqual($link->expanded_url, 'http://instagr.am/41/media/');
+        $this->assertEqual($link->expanded_url, 'http://instagr.am/41');
+        $this->assertEqual($link->image_src, 'http://instagr.am/41/media/');
 
         $link = $link_dao->getLinkById(41);
-        $this->assertEqual($link->expanded_url, 'http://instagr.am/40/media/');
+        $this->assertEqual($link->expanded_url, 'http://instagr.am/40');
+        $this->assertEqual($link->image_src, 'http://instagr.am/40/media/');
     }
 }

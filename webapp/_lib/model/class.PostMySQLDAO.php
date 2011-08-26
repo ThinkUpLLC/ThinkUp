@@ -77,7 +77,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getPost($post_id, $network, $is_public = false) {
-        $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, l.error, l.description, ";
+        $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.image_src, l.error, l.description, ";
         $q .= "l.image_src, l.caption, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON l.post_id = p.post_id AND l.network = p.network ";
         $q .= "WHERE p.post_id=:post_id AND p.network=:network ";
@@ -144,7 +144,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $count= 350, $page = 1) {
         $start_on_record = ($page - 1) * $count;
 
-        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
+        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.image_src, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
@@ -201,7 +201,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $is_public = false, $count = 350, $page = 1) {
         $start_on_record = ($page - 1) * $count;
 
-        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
+        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.image_src, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
@@ -231,7 +231,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getRetweetsOfPost($post_id, $network='twitter', $order_by = 'default', $unit = 'km',
     $is_public = false, $count = null, $page = 1) {
-        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.is_image, l.error, ";
+        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.image_src, l.error, ";
         $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
@@ -282,7 +282,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $geo_encoded_only = true, $include_original_post = true) {
         $start_on_record = ($page - 1) * $count;
 
-        $q = "(SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour as
+        $q = "(SELECT p.*, l.url, l.expanded_url, l.image_src, l.error, pub_date + interval #gmt_offset# hour as
         adj_pub_date
         FROM #prefix#posts p
         LEFT JOIN #prefix#links AS l
@@ -298,7 +298,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         $q .= ") ";
         if ($include_original_post) {
-            $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.is_image, l.error, pub_date + interval #gmt_offset# hour
+            $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.image_src, l.error, pub_date + interval #gmt_offset# hour
             as adj_pub_date
             FROM #prefix#posts p
             LEFT JOIN #prefix#links AS l
@@ -565,8 +565,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             if ($entities && isset($entities['urls'])) {
                 $urls = $entities['urls'];
             }
-            // if $urls is null, will extract from tweet content.
-            URLProcessor::processTweetURLs($this->logger, $vals, $urls);
+            URLProcessor::processPostURLs($vals['post_text'], $vals['post_id'], 'twitter', $this->logger, $urls);
 
             if (isset($entities)) {
                 if (isset($entities['mentions'])) {
@@ -768,7 +767,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $protected = '';
         }
 
-        $q  = "SELECT p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.is_image, " .
+        $q  = "SELECT p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.image_src, " .
         "pub_date + interval #gmt_offset# hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "LEFT JOIN #prefix#links AS l ";

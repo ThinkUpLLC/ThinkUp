@@ -31,7 +31,6 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.TwitterJSONStreamParser.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
 
 class TestOfTwitterJSONStreamParser extends ThinkUpUnitTestCase {
     /**
@@ -300,9 +299,8 @@ class TestOfTwitterJSONStreamParser extends ThinkUpUnitTestCase {
         $result = $link_dao->getLinkByUrl('http://twitpic.com/3z50uy');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://twitpic.com/3z50uy');
-        $this->assertEqual($result->expanded_url, 'http://twitpic.com/show/thumb/3z50uy');
-        $this->assertTrue($result->is_image);
-
+        $this->assertEqual($result->expanded_url, 'http://twitpic.com/3z50uy');
+        $this->assertEqual($result->image_src, 'http://twitpic.com/show/thumb/3z50uy');
     }
 
     public function testPlacePolygon() {

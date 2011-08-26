@@ -25,11 +25,10 @@
  * @author Gina Trapani
  * @author Amy Unruh
  */
-require_once 'tests/init.tests.php';
-require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
-require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpUnitTestCase.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.URLProcessor.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 
 class TestOfURLProcessor extends ThinkUpUnitTestCase {
     /**
@@ -43,7 +42,7 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
 
     public function setUp() {
         $this->logger = Logger::getInstance();
-        $this->faux_data_path = THINKUP_ROOT_PATH. 'webapp/plugins/twitter/tests/testdata/URLProcessor';
+        $this->faux_data_path = THINKUP_ROOT_PATH. 'tests/data/URLProcessor';
         parent::setUp();
     }
 
@@ -51,109 +50,112 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->logger->close();
         parent::tearDown();
     }
-
-    public function testProcessTweetURLs() {
+    public function testProcessPostURLs() {
+        $network = 'twitter';
         //Twitpic
-        $tweet["post_id"] = 100;
-        $tweet['post_text'] = "This is a Twitpic post http://twitpic.com/blah Yay!";
-        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $post_id = 100;
+        $post_text = "This is a Twitpic post http://twitpic.com/blah Yay!";
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
         $result = $link_dao->getLinkByUrl('http://twitpic.com/blah');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://twitpic.com/blah');
-        $this->assertEqual($result->expanded_url, 'http://twitpic.com/show/thumb/blah');
+        $this->assertEqual($result->expanded_url, 'http://twitpic.com/blah');
+        $this->assertEqual($result->image_src, 'http://twitpic.com/show/thumb/blah');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 100);
         $this->assertEqual($result->network, 'twitter');
-        $this->assertTrue($result->is_image);
 
         //Yfrog
-        $tweet["post_id"] = 101;
-        $tweet['post_text'] = "This is a Yfrog post http://yfrog.com/blah Yay!";
-        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $post_id = 101;
+        $post_text = "This is a Yfrog post http://yfrog.com/blah Yay!";
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
         $result = $link_dao->getLinkByUrl('http://yfrog.com/blah');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://yfrog.com/blah');
-        $this->assertEqual($result->expanded_url, 'http://yfrog.com/blah.th.jpg');
+        $this->assertEqual($result->expanded_url, 'http://yfrog.com/blah');
+        $this->assertEqual($result->image_src, 'http://yfrog.com/blah.th.jpg');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 101);
         $this->assertEqual($result->network, 'twitter');
-        $this->assertTrue($result->is_image);
 
         //Twitgoo
-        $tweet["post_id"] = 102;
-        $tweet['post_text'] = "This is a Twitgoo post http://twitgoo.com/blah Yay!";
-        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $post_id = 102;
+        $post_text = "This is a Twitgoo post http://twitgoo.com/blah Yay!";
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
         $result = $link_dao->getLinkByUrl('http://twitgoo.com/blah');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://twitgoo.com/blah');
-        $this->assertEqual($result->expanded_url, 'http://twitgoo.com/show/thumb/blah');
+        $this->assertEqual($result->expanded_url, 'http://twitgoo.com/blah');
+        $this->assertEqual($result->image_src, 'http://twitgoo.com/show/thumb/blah');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 102);
         $this->assertEqual($result->network, 'twitter');
-        $this->assertTrue($result->is_image);
+
+        //test facebook
+        $network = 'facebook';
 
         //Picplz
-        $tweet["post_id"] = 103;
-        $tweet['post_text'] = "This is a Picplz post http://picplz.com/blah Yay!";
-        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $post_id = 103;
+        $post_text = "This is a Picplz post http://picplz.com/blah Yay!";
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
         $result = $link_dao->getLinkByUrl('http://picplz.com/blah');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://picplz.com/blah');
-        $this->assertEqual($result->expanded_url, 'http://picplz.com/blah/thumb/');
+        $this->assertEqual($result->expanded_url, 'http://picplz.com/blah');
+        $this->assertEqual($result->image_src, 'http://picplz.com/blah/thumb/');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 103);
-        $this->assertEqual($result->network, 'twitter');
-        $this->assertTrue($result->is_image);
+        $this->assertEqual($result->network, 'facebook');
 
         // instagr.am
         // check first with ending slash in URL (which the URLs 'should' include)
-        $tweet["post_id"] = 104;
-        $tweet['post_text'] = "This is an instagram post http:/instagr.am/blah/ Yay!";
-        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $post_id = 104;
+        $post_text = "This is an instagram post http:/instagr.am/blah/ Yay!";
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
         $link_dao = new LinkMySQLDAO();
         $result = $link_dao->getLinkByUrl('http://instagr.am/blah/');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://instagr.am/blah/');
-        $this->assertEqual($result->expanded_url, 'http://instagr.am/blah/media/');
+        $this->assertEqual($result->expanded_url, 'http://instagr.am/blah/');
+        $this->assertEqual($result->image_src, 'http://instagr.am/blah/media/');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 104);
-        $this->assertEqual($result->network, 'twitter');
-        $this->assertTrue($result->is_image);
+        $this->assertEqual($result->network, 'facebook');
 
         // check w/out ending slash also just in case
-        $tweet["post_id"] = 105;
-        $tweet['post_text'] = "This is an instagram post http:/instagr.am/blah Yay!";
-        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $post_id = 105;
+        $post_text = "This is an instagram post http:/instagr.am/blah Yay!";
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
         $result = $link_dao->getLinkByUrl('http://instagr.am/blah');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://instagr.am/blah');
-        $this->assertEqual($result->expanded_url, 'http://instagr.am/blah/media/');
+        $this->assertEqual($result->expanded_url, 'http://instagr.am/blah');
+        $this->assertEqual($result->image_src, 'http://instagr.am/blah/media/');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 105);
-        $this->assertEqual($result->network, 'twitter');
-        $this->assertTrue($result->is_image);
+        $this->assertEqual($result->network, 'facebook');
 
         //Flic.kr
-        $tweet["post_id"] = 106;
-        $tweet['post_text'] = "This is a Flickr post http://flic.kr/blah Yay!";
-        URLProcessor::processTweetURLs($this->logger, $tweet);
+        $post_id = 106;
+        $post_text = "This is a Flickr post http://flic.kr/blah Yay!";
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
         $result = $link_dao->getLinkByUrl('http://flic.kr/blah');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://flic.kr/blah');
-        $this->assertEqual($result->expanded_url, '');
+        $this->assertEqual($result->expanded_url, 'http://flic.kr/blah');
+        $this->assertEqual($result->image_src, '');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 106);
-        $this->assertEqual($result->network, 'twitter');
-        $this->assertTrue($result->is_image);
+        $this->assertEqual($result->network, 'facebook');
     }
 }

@@ -69,10 +69,6 @@ class Link {
      */
     var $network;
     /**
-     * @var book Whether or not the link represents an image.
-     */
-    var $is_image = false;
-    /**
      * @var str Details of any error expanding a link.
      */
     var $error = '';
@@ -129,10 +125,6 @@ class Link {
                 $this->network = $val["network"];
             }
 
-            if (isset($val["is_image"])) {
-                $is_image = PDODAO::convertDBToBool($val["is_image"]);
-                $this->is_image = $is_image;
-            }
             if (isset($val["error"])) {
                 $this->error = $val["error"];
             }
@@ -159,7 +151,6 @@ class Link {
             $this->other['network'] = $this->network;
             $this->container_post = new Post($this->other);
         }
-        $this->is_image = PDODAO::convertDBToBool($this->is_image);
     }
 
     /**

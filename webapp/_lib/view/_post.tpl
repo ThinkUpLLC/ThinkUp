@@ -53,8 +53,8 @@
         {/if}
       {if $t->link->expanded_url}
         {if $t->post_text != ''}<br>{/if}
-        {if $t->link->is_image}
-         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$t->link->url}"><img src="{$t->link->expanded_url}" style="margin-bottom:5px;"/></a></div>
+        {if $t->link->image_src}
+         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$t->link->expanded_url}"><img src="{$t->link->image_src}" style="margin-bottom:5px;"/></a></div>
         {/if}
          <span class="small"><a href="{$t->link->url}" title="{$t->link->expanded_url}">{if $t->link->title}{$t->link->title}{else}{$t->link->url}{/if}</a>
         {if $t->link->description}<br><small>{$t->link->description}</small>{/if}</span>

@@ -49,7 +49,6 @@ $plugin_tests->add(new TestOfTwitterInstanceMySQLDAO());
 $plugin_tests->add(new TestOfTwitterOAuth());
 $plugin_tests->add(new TestOfTwitterPlugin());
 $plugin_tests->add(new TestOfTwitterPluginConfigurationController());
-$plugin_tests->add(new TestOfURLProcessor());
 $plugin_tests->add(new TestOfRetweetDetector());
 $plugin_tests->add(new TestOfHelloThinkUpPluginConfigurationController());
 $plugin_tests->add(new TestOfSmartyModifierLinkUsernames());

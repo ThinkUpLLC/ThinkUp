@@ -31,9 +31,8 @@
 class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function insert(Link $link){
         $q  = "INSERT IGNORE INTO #prefix#links ";
-        $q .= "(url, expanded_url, title, description, image_src, caption, post_id, network, is_image) ";
-        $q .= "VALUES ( :url, :expanded, :title, :description, :image_src, :caption, :post_id, :network, ";
-        $q .= ":is_image ) ";
+        $q .= "(url, expanded_url, title, description, image_src, caption, post_id, network) ";
+        $q .= "VALUES ( :url, :expanded, :title, :description, :image_src, :caption, :post_id, :network ) ";
 
         $vars = array(
             ':url'=>$link->url,
@@ -43,8 +42,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':image_src'=>$link->image_src,
             ':caption'=>$link->caption,
             ':post_id'=>$link->post_id,
-            ':network'=>$link->network,
-            ':is_image'=>self::convertBoolToDB($link->is_image)
+            ':network'=>$link->network
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -52,17 +50,15 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getInsertId($ps);
     }
 
-    public function saveExpandedURL($url, $expanded, $title = '', $is_image = false  ){
-        $is_image = $this->convertBoolToDB($is_image);
-
+    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '' ){
         $q  = "UPDATE #prefix#links ";
-        $q .= "SET expanded_url=:expanded, title=:title, is_image=:isimage ";
+        $q .= "SET expanded_url=:expanded, title=:title, image_src=:image_src ";
         $q .= "WHERE url=:url ";
         $vars = array(
             ':url'=>$url,
             ':expanded'=>$expanded,
             ':title'=>$title,
-            ':isimage'=>$is_image
+            ':image_src'=>$image_src
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -77,9 +73,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     }
 
     public function saveExpansionError($url, $error_text){
-        $q  = "UPDATE #prefix#links ";
-        $q .= "SET error=:error ";
-        $q .= "WHERE url=:url ";
+        $q  = "UPDATE #prefix#links SET error=:error WHERE url=:url ";
         $vars = array(
             ':url'=>$url,
             ':error'=>$error_text
@@ -99,7 +93,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function update(Link $link){
         $q  = "UPDATE #prefix#links ";
         $q .= "SET expanded_url=:expanded, title=:title, description=:description, image_src=:image_src, ";
-        $q .= "caption=:caption, post_id=:post_id, is_image=:is_image, network=:network ";
+        $q .= "caption=:caption, post_id=:post_id, network=:network ";
         $q .= "WHERE url=:url; ";
         $vars = array(
             ':url'=>$link->url,
@@ -109,7 +103,6 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':image_src'=>$link->image_src,
             ':caption'=>$link->caption,
             ':post_id'=>$link->post_id,
-            ':is_image'=>self::convertBoolToDB($link->is_image),
             ':network'=>$link->network
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
@@ -206,7 +199,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q .= "FROM #prefix#links AS l ";
         $q .= "INNER JOIN #prefix#posts p ";
         $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
-        $q .= "WHERE is_image = 1 AND l.network=:network ";
+        $q .= "WHERE image_src != '' AND l.network=:network ";
         $q .= $protected;
         $q .= "AND p.author_user_id in ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";

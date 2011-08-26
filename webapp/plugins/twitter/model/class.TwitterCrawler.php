@@ -116,7 +116,7 @@ class TwitterCrawler {
             $page = 1;
             while ($continue_fetching) {
                 $search_results = $this->api->cURL_source['search']."?q=".urlencode($term).
-            "&result_type=recent&rpp=100&page=".$page;
+                "&result_type=recent&rpp=100&page=".$page;
                 list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, null, false);
                 if ($cURL_status == 200) {
                     $tweets = $this->api->parseJSON($twitter_data);
@@ -127,7 +127,8 @@ class TwitterCrawler {
 
                         if ($pd->addPost($tweet) > 0) {
                             $count = $count + 1;
-                            URLProcessor::processTweetURLs($this->logger, $tweet);
+                            URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
+                            $this->logger);
 
                             //don't update owner info from reply
                             if ($tweet['user_id'] != $this->user->user_id) {
@@ -203,7 +204,8 @@ class TwitterCrawler {
                             $count = $count + 1;
                             $this->instance->total_posts_in_system = $this->instance->total_posts_in_system + 1;
                             //expand and insert links contained in tweet
-                            URLProcessor::processTweetURLs($this->logger, $tweet);
+                            URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
+                            $this->logger);
                         }
                         if ($tweet['post_id'] > $this->instance->last_post_id)
                         $this->instance->last_post_id = $tweet['post_id'];
@@ -267,7 +269,7 @@ class TwitterCrawler {
                 foreach ($tweets as $tweet) {
                     if ($pd->addPost($tweet, $this->user, $this->logger) > 0) {
                         $status_message = 'Added replied to tweet ID '.$tid." to database.";
-                        URLProcessor::processTweetURLs($this->logger, $tweet);
+                        URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter', $this->logger);
                     }
                 }
             } elseif ($cURL_status == 404 || $cURL_status == 403) {
@@ -345,7 +347,8 @@ class TwitterCrawler {
                             if ($pd->addPost($tweet, $this->user, $this->logger) > 0) {
                                 $count++;
                                 //expand and insert links contained in tweet
-                                URLProcessor::processTweetURLs($this->logger, $tweet);
+                                URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
+                                $this->logger);
                                 if ($tweet['user_id'] != $this->user->user_id) {
                                     //don't update owner info from reply
                                     $u = new User($tweet, 'mentions');
@@ -490,7 +493,8 @@ class TwitterCrawler {
                         if ($pd->addPost($tweet, $user_with_retweet, $this->logger) > 0) {
                             $count++;
                             //expand and insert links contained in tweet
-                            URLProcessor::processTweetURLs($this->logger, $tweet);
+                            URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
+                            $this->logger);
                             $this->user_dao->updateUser($user_with_retweet);
                         }
                     }
@@ -780,7 +784,8 @@ class TwitterCrawler {
                                 if ($pd->addPost($tweet, $stale_friend, $this->logger) > 0) {
                                     $count++;
                                     //expand and insert links contained in tweet
-                                    URLProcessor::processTweetURLs($this->logger, $tweet);
+                                    URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
+                                    $this->logger);
                                 }
                                 if (!$stale_friend_updated_from_tweets) {
                                     //Update stale_friend values here
@@ -1191,8 +1196,6 @@ class TwitterCrawler {
                     if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
                         $this->logger->logInfo("found new fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
                         $fcount++;
-                        // the following no longer necessary-- is done w/in addFavorite via addPostAndAssociatedInfo.
-                        // $this->processTweetURLs($tweet);
                         $this->logger->logInfo("fcount: $fcount", __METHOD__.','.__LINE__);
                         $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
                     } else {
@@ -1301,8 +1304,6 @@ class TwitterCrawler {
 
                 if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
                     $fcount++;
-                    // the following no longer necessary -- is done within addFavorite via addPostAndAssociatedInfo.
-                    // $this->processTweetURLs($tweet);
                     $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
                 } else {
                     $status_message = "have already stored favorite: ". $tweet['post_id'];
@@ -1429,8 +1430,6 @@ class TwitterCrawler {
                 $fav['network'] = 'twitter';
                 // check whether the tweet is in the db-- if not, add it.
                 if ($fpd->addFavorite($this->user->user_id, $fav) > 0) {
-                    // the following no longer necessary -- is done within addFavorite via addPostAndAssociatedInfo.
-                    // $this->processTweetURLs($fav);
                     $this->logger->logInfo("added fav " . $fav['post_id'], __METHOD__.','.__LINE__);
                     $fcount++;
                 } else {

@@ -216,7 +216,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                                 'title' => '',
                                 'clicks' => 0,
                                 'post_id' => $post_id,
-                                'is_image' => 1));
+                                'image_src' => 'image.png'));
 
             $counter++;
         }
@@ -247,7 +247,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                                 'title' => 'Link $counter',
                                 'clicks' => 0,
                                 'post_id' => $post_id,
-                                'is_image' => 0));
+                                'image_src' => ''));
 
             $counter++;
         }
@@ -363,7 +363,7 @@ class TestOfPostAPIController extends ThinkUpUnitTestCase {
                             'title' => 'Link 1',
                             'clicks' => 0,
                             'post_id' => 133,
-                            'is_image' => 0));
+                            'image_src' => ''));
 
         //Add retweets of a specific post
         //original post
