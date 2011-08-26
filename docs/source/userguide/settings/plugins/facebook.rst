@@ -14,8 +14,8 @@ Key, Application Secret and Application ID in the Facebook plugin's settings pag
 Add a Facebook user profile to ThinkUp
 --------------------------------------
 
-Once the Facebook plugin has been configured, to add a Facebook user to ThinkUp, click on the "Connect with Facebook"
-button to add your user account.
+Click on the "Authorize ThinkUp on Facebook" button to add your Facebook user account to ThinkUp. This button will only
+appear if the Facebook plugin is configured.
 
 Add a Facebook page to ThinkUp
 ------------------------------

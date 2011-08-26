@@ -48,19 +48,23 @@ class FacebookGraphAPIAccessor {
         return self::decodeFileContents($FAUX_DATA_PATH.$url);
     }
 
-    private static function decodeFileContents($file_path) {
+    private static function decodeFileContents($file_path, $decode_json=true) {
         $debug = (getenv('TEST_DEBUG')!==false) ? true : false;
         if ($debug) {
             echo "READING LOCAL TEST DATA FILE: ".$file_path. '
 ';
         }
         $contents=  file_get_contents($file_path);
-        $decoded = json_decode($contents);
-        if ($decoded == null && $debug) {
-            echo "JSON was not decoded! Check if it is valid JSON at http://jsonlint.com/
+        if ($decode_json) {
+            $decoded = json_decode($contents);
+            if ($decoded == null && $debug) {
+                echo "JSON was not decoded! Check if it is valid JSON at http://jsonlint.com/
 ";
+            }
+            return $decoded;
+        } else {
+            return $contents;
         }
-        return $decoded;
     }
 
     /**
@@ -70,10 +74,11 @@ class FacebookGraphAPIAccessor {
      * literally the raw URL that needs to be passed in.
      *
      * @param str $path
+     * @param book $decode_json If true, return decoded JSON
      * @return array Decoded JSON response
      */
-    public static function rawApiRequest($path) {
-        $url = $path;//.'?access_token='.$access_token;
+    public static function rawApiRequest($path, $decode_json=true) {
+        $url = $path;
 
         $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/facebook/tests/testdata/';
         $url = str_replace('https://graph.facebook.com/', '', $url);
@@ -81,6 +86,6 @@ class FacebookGraphAPIAccessor {
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
-        return self::decodeFileContents($FAUX_DATA_PATH.$url);
+        return self::decodeFileContents($FAUX_DATA_PATH.$url, $decode_json);
     }
 }

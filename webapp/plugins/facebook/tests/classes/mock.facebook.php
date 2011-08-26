@@ -60,6 +60,11 @@ class Facebook {
     }
 
     public function api($str) {
+        if ($str = '/me') {
+            return array('name'=>'Gina Trapani', 'id'=>'606837591');
+        }
+    }
 
+    public function setAccessToken($token) {
     }
 }

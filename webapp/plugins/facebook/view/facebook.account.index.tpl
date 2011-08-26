@@ -3,7 +3,7 @@
     {include file="_usermessage.tpl"}
 
     {if count($owner_instances) > 0 }
-    <h2 class="subhead">Facebook User Accounts</h2>
+    <h2 class="subhead">Facebook User Profiles</h2>
     {foreach from=$owner_instances key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
@@ -24,8 +24,8 @@
     {/foreach}
     <br />
 
-    <h2 class="subhead">Facebook Pages</h2>
     {if isset($owner_instance_pages) && count($owner_instance_pages) > 0 }
+    <h2 class="subhead">Facebook Pages</h2>
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
@@ -48,6 +48,7 @@
     {/if}
 
 
+<h2 class="subhead">Add a Facebook Page You "Like"</h2>
 {foreach from=$owner_instances key=iid item=i name=foo}
   {assign var='facebook_user_id' value=$i->network_user_id}
   {if $user_pages.$facebook_user_id}
@@ -75,12 +76,18 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
         </div>
         </form>
     </div>
-{/if}
+    {else}
+    To add a Facebook page to ThinkUp, "like" it on Facebook.com and refresh this page.
+    {/if}
 {/foreach}
 {/if}
 </div> 
 <div id="add-account-div" style="display: none;">
-    {if $fbconnect_link}<h2 class="subhead">Add a Facebook User</h2>{$fbconnect_link}{/if}
+    {if $fbconnect_link}<br><h2 class="subhead">Add a Facebook User</h2>
+    Click on this button to authorize ThinkUp to access your Facebook user account.
+<a href="{$fbconnect_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkUp on Facebook</a>
+<div style="clear:all">&nbsp;<br><br><br></div>
+    {/if}
     <div>
     </div>
 </div>

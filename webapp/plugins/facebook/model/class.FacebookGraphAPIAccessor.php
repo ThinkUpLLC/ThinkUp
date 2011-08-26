@@ -46,16 +46,20 @@ class FacebookGraphAPIAccessor {
         return json_decode($result);
     }
     /**
-     * Make a Graph API request with the absolute URL. This URL needs to
-     * include the https://graph.facebook.com/ at the start and the
-     * access token at the end as well as everything in between. It is
-     * literally the raw URL that needs to be passed in.
+     * Make a Graph API request with the absolute URL. This URL needs to include the https://graph.facebook.com/ at
+     * the start and the access token at the end as well as everything in between. It is literally the raw URL that
+     * needs to be passed in.
      *
      * @param str $path
+     * @param book $decode_json Defaults to true, if true returns decoded JSON
      * @return array Decoded JSON response
      */
-    public static function rawApiRequest($path) {
-        $result = Utils::getURLContents($path);
-        return json_decode($result);
+    public static function rawApiRequest($path, $decode_json=true) {
+        if ($decode_json) {
+            $result = Utils::getURLContents($path);
+            return json_decode($result);
+        } else {
+            return Utils::getURLContents($path);
+        }
     }
 }
