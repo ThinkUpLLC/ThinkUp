@@ -61,9 +61,9 @@ class PluginOptionController extends ThinkUpAdminController {
         return $this->generateView();
     }
 
-
     /*
-     * sets plugin options
+     * Sets plugin options in the data store.
+     * @param int Plugin ID
      */
     public function setPluginOptions($plugin_id) {
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
@@ -73,8 +73,10 @@ class PluginOptionController extends ThinkUpAdminController {
         $cnt = 0;
         $inserted = array();
         $deleted = 0;
-        foreach($_GET as $key => $value ) {
-            if ( preg_match('/^option_/', $key) ) {
+        foreach ($_GET as $key => $value ) {
+            //trim starting or ending whitespace
+            $value = trim($value);
+            if (preg_match('/^option_/', $key) ) {
                 $name = preg_replace('/^option_/', '', $key);
                 $id_name = "id_option_" . $name;
                 if (isset($_GET[$id_name])) {
@@ -111,7 +113,7 @@ class PluginOptionController extends ThinkUpAdminController {
 
     /*
      * Checks if a plugin ID is valid
-     * @param int A plugin id
+     * @param int A plugin ID
      * @return bool
      */
     public function isValidPluginId($plugin_id) {

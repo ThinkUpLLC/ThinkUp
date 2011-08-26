@@ -180,6 +180,45 @@ class TestOfPluginOptionController extends ThinkUpUnitTestCase {
         $_GET['option_test2'] = 'value2';
         $results = $controller->go();
 
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
+        $this->assertEqual($json_response->status, 'success');
+        $this->assertEqual($json_response->results->updated, 2);
+        // has insert info with id
+        $this->assertEqual($json_response->results->inserted->test1, 3);
+        $this->assertEqual($json_response->results->inserted->test2, 4);
+
+        $sql = "select * from " . $this->table_prefix . 'options where namespace = \'plugin_options-2\'';
+        $stmt = $this->pdo->query($sql);
+        $this->assertEqual($stmt->rowCount(), 3);
+        for($i = 0; $i < 3; $i++) {
+            $data[$i] = $stmt->fetch();
+            $this->assertEqual($data[$i]['option_name'], 'test' . $i);
+            $this->assertEqual($data[$i]['option_value'], 'value' . $i);
+        }
+    }
+
+    public function testSavePluginOptionWithWhitespace() {
+        // add one option
+        $controller = $this->getController();
+        $builder = $this->buildPlugin();
+        $_GET['plugin_id'] = $builder->columns[ 'last_insert_id' ];
+        $_GET['action'] = 'set_options';
+        $_GET['option_test0'] = 'value0 ';
+        $_GET['csrf_token'] = parent::CSRF_TOKEN;
+        $results = $controller->go();
+        $json_response = json_decode($results);
+        $this->assertIsA($json_response, 'stdClass');
+        // {"status":"success","results":{"updated":1}}
+        $this->assertEqual($json_response->status, 'success');
+        $this->assertEqual($json_response->results->updated, 1);
+        unset($_GET['option_test0']);
+
+        // add more
+        $controller = $this->getController();
+        $_GET['option_test1'] = '   value1';
+        $_GET['option_test2'] = 'value2 ';
+        $results = $controller->go();
 
         $json_response = json_decode($results);
         $this->assertIsA($json_response, 'stdClass');
