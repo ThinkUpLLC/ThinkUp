@@ -67,7 +67,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
     private function buildInstanceData() {
         //Add instance
-        $instance_builder = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>606837591,
+        $instance_builder = FixtureBuilder::build('instances', array('id'=>1, 'network_user_id'=>'606837591',
         'network_username'=>'Gina Trapani', 'network'=>'facebook', 'is_active'=>1));
         array_push($this->builders, $instance_builder);
 
@@ -77,7 +77,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         array_push($this->builders, $owner_instance_builder);
 
         //Add second instance
-        $instance2_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>668406218,
+        $instance2_builder = FixtureBuilder::build('instances', array('id'=>2, 'network_user_id'=>'668406218',
         'network_username'=>'Penelope Caridad', 'network'=>'facebook', 'is_active'=>1));
         array_push($this->builders, $instance2_builder);
 
@@ -251,11 +251,11 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $plugin1 = FixtureBuilder::build('plugins', array('id'=>2, 'folder_name'=>'facebook'));
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
         $plugin_opt1 = FixtureBuilder::build('options',
-        array('namespace' => $namespace, 'option_name' => 'facebook_api_key', 'option_value' => "dummy_key") );
+        array('namespace' => $namespace, 'option_name' => 'facebook_api_key', 'option_value' => "k3y") );
         $plugin_opt2 = FixtureBuilder::build('options',
-        array('namespace' => $namespace, 'option_name' => 'facebook_api_secret', 'option_value' => "dummy_secret") );
+        array('namespace' => $namespace, 'option_name' => 'facebook_api_secret', 'option_value' => "scrt") );
         $plugin_opt3 = FixtureBuilder::build('options',
-        array('namespace' => $namespace, 'option_name' => 'facebook_app_id', 'option_value' => "12345") );
+        array('namespace' => $namespace, 'option_name' => 'facebook_app_id', 'option_value' => "77") );
         return array($plugin1, $plugin_opt1, $plugin_opt2, $plugin_opt3);
     }
 
@@ -306,13 +306,13 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $owner_dao = new OwnerMySQLDAO();
 
         $config = Config::getInstance();
-        $config->setValue('site_root_path', '/mythinkup/');
+        $config->setValue('site_root_path', '/');
 
-        $_SERVER['SERVER_NAME'] = "mytestserver";
-        SessionCache::put('facebook_auth_csrf', 'testiferricous-csrf-token');
+        $_SERVER['SERVER_NAME'] = "srvr";
+        SessionCache::put('facebook_auth_csrf', '123');
         $_GET['p'] = 'facebook';
-        $_GET['code'] = 'thisisatestfauxcode';
-        $_GET['state'] = 'testiferricous-csrf-token';
+        $_GET['code'] = '456';
+        $_GET['state'] = '123';
 
         $options_arry = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
@@ -344,13 +344,13 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $owner_dao = new OwnerMySQLDAO();
 
         $config = Config::getInstance();
-        $config->setValue('site_root_path', '/mythinkup/');
+        $config->setValue('site_root_path', '/');
 
-        $_SERVER['SERVER_NAME'] = "mytestserver";
-        SessionCache::put('facebook_auth_csrf', 'testiferricous-csrf-token');
+        $_SERVER['SERVER_NAME'] = "srvr";
+        SessionCache::put('facebook_auth_csrf', '123');
         $_GET['p'] = 'facebook';
-        $_GET['code'] = 'thisisatestfauxcode';
-        $_GET['state'] = 'NOTOURtestiferricous-csrf-token';
+        $_GET['code'] = '456';
+        $_GET['state'] = 'NOT123';
 
         $options_arry = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
@@ -376,13 +376,13 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $owner_dao = new OwnerMySQLDAO();
 
         $config = Config::getInstance();
-        $config->setValue('site_root_path', '/mythinkup/');
+        $config->setValue('site_root_path', '/');
 
-        $_SERVER['SERVER_NAME'] = "mytestserver";
-        SessionCache::put('facebook_auth_csrf', 'testiferricous-csrf-token');
+        $_SERVER['SERVER_NAME'] = "srvr";
+        SessionCache::put('facebook_auth_csrf', '123');
         $_GET['p'] = 'facebook';
-        $_GET['code'] = 'thisisatestfauxcode';
-        $_GET['state'] = 'testiferricous-csrf-token';
+        $_GET['code'] = '456';
+        $_GET['state'] = '123';
 
         $options_arry = $this->buildPluginOptions();
         $this->simulateLogin('me@example.com', true);
@@ -393,7 +393,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), "Success! You've reconnected your Facebook ".
         "account. To connect a different account, log out of Facebook in a different browser tab and try again.");
-        $this->debug($output);
+        //$this->debug($output);
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
         $this->assertNotNull($instance);
