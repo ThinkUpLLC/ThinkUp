@@ -37,22 +37,16 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
         {if $post->link->is_image}
          <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->expanded_url}" style="margin-bottom:5px;"/></a></div>
         {/if}
-         <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
+         <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->expanded_url}{/if}</a>
         {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
+        <br clear="all">
       {/if}
-
 
         {if !$post && $post->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}&n={$post->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
-      {if $post->link->expanded_url and !$post->link->is_image and ($post->link->expanded_url != $post->link->url)}
-        <span class="small">
-          <a href="{$post->link->url}" title="{if $post->link->title}{$post->link->title}{/if}">{if $post->link->title}{$post->link->title}{else}{$post->link->expanded_url}{/if}</a>
-          {if $post->link->description}<br>{$post->link->description}{/if}
-        </span>
-      {/if}
+
       <div class="small gray">
-      <br clear="all">
         <span class="metaroll">
         <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->adj_pub_date|relative_datetime} ago</a>
         {if $post->is_geo_encoded < 2}

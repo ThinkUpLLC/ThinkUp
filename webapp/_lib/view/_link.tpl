@@ -2,7 +2,7 @@
   <div class="header clearfix">
     <div class="grid_1 alpha">&nbsp;</div>
     <div class="grid_3 right">name</div>
-    <div class="grid_14">post</div>
+    <div class="grid_13">post</div>
   </div>
 {/if}
 
@@ -14,7 +14,7 @@
   <div class="grid_3 right small">
     <a href="http://twitter.com/{$l->container_post->author_username}">{$l->container_post->author_username}</a>
   </div>
-  <div class="grid_14">
+  <div class="grid_13">
     {if $l->is_image}
      {if $l->expanded_url}
       <a href="{$l->url}"><div class="pic"><img src="{$l->expanded_url}" /></div></a>
