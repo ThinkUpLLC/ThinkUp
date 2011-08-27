@@ -31,17 +31,12 @@ require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterOAuthThinkUp.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.TwitterPlugin.php';
-
 class TestOfLoginController extends ThinkUpUnitTestCase {
 
     public function setUp(){
         parent::setUp();
         $this->DAO = new OwnerMySQLDAO();
         $this->builders = self::buildData();
-        $webapp = Webapp::getInstance();
-        $webapp->registerPlugin('twitter', 'TwitterPlugin');
     }
 
     protected function buildData() {
@@ -154,7 +149,10 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-        $this->assertPattern("/Inactive account/", $v_mgr->getTemplateDataItem('error_msg'));
+        $error_msg = 'Inactive account. ';
+        $error_msg .= '<a href="http://thinkupapp.com/docs/install/install.html#activate-your-account">';
+        $error_msg .= 'You must activate your account.</a>';
+        $this->assertEqual($error_msg, $v_mgr->getTemplateDataItem('error_msg'));
     }
 
     public function testCorrectUserPasswordAndUniqueSalt() {
@@ -234,7 +232,7 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
         //force login lockout by providing the wrong password more than 10 times
         $i = 1;
-        while ($i <= 15) {
+        while ($i <= 11) {
             $_POST['Submit'] = 'Log In';
             $_POST['email'] = 'me2@example.com';
             $_POST['pwd'] = 'blah1';
@@ -243,17 +241,31 @@ class TestOfLoginController extends ThinkUpUnitTestCase {
 
             $v_mgr = $controller->getViewManager();
             $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Log in');
-            if ($i <= 11) {
+
+            $owner = $this->DAO->getByEmail('me2@example.com');
+
+            if ($i < 10) {
                 $this->assertPattern("/Incorrect password/", $v_mgr->getTemplateDataItem('error_msg'));
-                $owner = $this->DAO->getByEmail('me2@example.com');
                 $this->assertEqual($owner->failed_logins, $i);
             } else {
                 $this->assertEqual("Inactive account. Account deactivated due to too many failed logins. ".
                 '<a href="forgot.php">Reset your password.</a>', $v_mgr->getTemplateDataItem('error_msg'));
-                $owner = $this->DAO->getByEmail('me2@example.com');
                 $this->assertEqual($owner->account_status, "Account deactivated due to too many failed logins");
             }
             $i = $i + 1;
         }
+    }
+
+    public function testLoginWithDeactivatedAccount() {
+        $hashed_pass =ThinkUpTestLoginHelper::hashPasswordUsingDeprecatedMethod("blah");
+
+        $owner = array('id'=>2, 'email'=>'me2@example.com', 'pwd'=>$hashed_pass, 'is_activated'=>0);
+        $builder = FixtureBuilder::build('owners', $owner);
+
+        $_POST['Submit'] = 'Log In';
+        $_POST['email'] = 'me2@example.com';
+        $_POST['pwd'] = 'blah';
+        $controller = new LoginController(true);
+        $results = $controller->go();
     }
 }

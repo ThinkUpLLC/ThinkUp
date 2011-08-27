@@ -58,6 +58,7 @@ class PasswordResetController extends ThinkUpController {
                 } else {
                     $owner_dao->activateOwner($user->email);
                     $owner_dao->clearAccountStatus($user->email);
+                    $owner_dao->resetFailedLogins($user->email);
                     $login_controller->addSuccessMessage('You have changed your password.');
                 }
                 return $login_controller->go();
