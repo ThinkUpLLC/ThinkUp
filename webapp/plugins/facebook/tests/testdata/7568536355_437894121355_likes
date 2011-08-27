@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "id": "100002586603826", 
+      "name": "Sade Tolgahan"
+    }, 
+    {
+      "id": "100000931059876", 
+      "name": "Kosso Thierry"
+    }, 
+ ], 
+  "paging": {
+    "next": "https://graph.facebook.com/133954286636768_144568048938151/likes?limit=25&offset=25"
+  }
+}

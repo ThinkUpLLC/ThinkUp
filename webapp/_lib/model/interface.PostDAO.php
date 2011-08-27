@@ -374,6 +374,18 @@ interface PostDAO {
     public function getMostRepliedToPosts($user_id, $network, $count, $page=1, $is_public = false);
 
     /**
+     * Get posts by a user ordered by favorite/like count.
+     * @param int $user_id
+     * @param str $network
+     * @param int $count
+     * @param int $page Page number, defaults to 1
+     * @param bool $is_public Whether or not the results of this method call are going to be publicly displayed.
+     * Defaults to false.
+     * @return array Posts with link object set
+     */
+    public function getMostFavedPosts($user_id, $network, $count, $page=1, $is_public = false);
+
+    /**
      * Get posts by a usre ordered by retweet count desc
      * @param int $user_id
      * @param str $network
@@ -425,7 +437,16 @@ interface PostDAO {
     public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = NULL, $geodata = NULL, $distance = 0);
 
     /**
-     * Get specified number of most-replied-to posts by a username on a network
+     * Update the favorite/like count cache for a post.
+     * @param int $post_id
+     * @param str $network
+     * @param int $fav_like_count
+     * @return int Number of updated rows
+     */
+    public function updateFavLikeCount($post_id, $network, $fav_like_count);
+
+    /**
+     * Get most-replied-to posts by a username on a network in the last 7 days.
      * @param str $username The username of the user to fetch posts for.
      * @param str $network The network of the user to fetch posts for.
      * @param int $count The number of posts to fetch.
@@ -434,6 +455,17 @@ interface PostDAO {
      * @return array Posts
      */
     public function getMostRepliedToPostsInLastWeek($username, $network, $count, $is_public = false);
+
+    /**
+     * Get most-favorited posts published by a username on a network in the last 7 days.
+     * @param str $username The username of the user to fetch posts for.
+     * @param str $network The network of the user to fetch posts for.
+     * @param int $count The number of posts to fetch.
+     * @param bool $is_public Whether or not the results from this method call are going to be publicly displayed.
+     * Defaults to false.
+     * @return array Posts
+     */
+    public function getMostFavedPostsInLastWeek($username, $network, $count, $is_public = false);
 
     /**
      * Get specified number of most-retweeted posts by a username on a network

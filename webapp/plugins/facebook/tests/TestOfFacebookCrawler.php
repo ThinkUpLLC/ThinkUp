@@ -104,28 +104,31 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertTrue($user->is_protected);
     }
 
-    public function testFetchUserPostsAndReplies() {
+    public function testFetchPostsAndReplies() {
         $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken');
 
-        $fbc->fetchUserPostsAndReplies($this->instance->network_user_id);
+        $fbc->fetchPostsAndReplies($this->instance->network_user_id, false);
 
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('158944054123704', 'facebook');
         $this->assertEqual($post->post_text, 'that movie made me want to build things');
         $this->assertEqual($post->reply_count_cache, 0);
         $this->assertTrue($post->is_protected);
+        $this->assertEqual($post->favlike_count_cache, 0);
 
         $post = $post_dao->getPost('153956564638648', 'facebook');
         $this->assertEqual($post->post_text,
         'Britney Glee episode tonight. I may explode into a million pieces, splattered all over my living room walls.');
         $this->assertEqual($post->reply_count_cache, 19);
         $this->assertTrue($post->is_protected);
+        $this->assertEqual($post->favlike_count_cache, 3);
 
         $post = $post_dao->getPost('1546020', 'facebook');
         $this->assertPattern('/not the target demographic/', $post->post_text);
         $this->assertEqual($post->reply_count_cache, 0);
         $this->assertEqual($post->in_reply_to_post_id, '153956564638648');
         $this->assertTrue($post->is_protected);
+        $this->assertEqual($post->favlike_count_cache, 0);
 
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
@@ -144,7 +147,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
 
         //Test post with a link to a video
         $fbc2 = new FacebookCrawler($this->instance2, 'fauxaccesstoken');
-        $fbc2->fetchUserPostsAndReplies($this->instance2->network_user_id);
+        $fbc2->fetchPostsAndReplies($this->instance2->network_user_id, false);
         $post = $post_dao->getPost('10150328374252744', 'facebook');
         $this->assertEqual($post->post_text, '');
         $this->assertNotNull($post->link);
@@ -163,7 +166,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     public function testFetchPageStream() {
         $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken');
 
-        $fbc->fetchPagePostsAndReplies('7568536355');
+        $fbc->fetchPostsAndReplies('7568536355', true);
 
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('437900891355', 'facebook page');
@@ -194,12 +197,17 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
 
         $user = $ud->getUserByName('Matthew Fleisher', 'facebook page');
         $this->assertEqual($user, null);
+
+        $fav_dao = new FavoritePostMySQLDAO();
+        $favs = $fav_dao->getUsersWhoFavedPost('437894121355', 'facebook page');
+        $this->assertEqual($favs[0]['user_name'], 'Tigger Pike');
+        $this->assertEqual($favs[0]['user_id'], '641265671');
     }
 
     public function testPostReplyPaging() {
         $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken');
 
-        $fbc->fetchPagePostsAndReplies('133954286636768');
+        $fbc->fetchPostsAndReplies('133954286636768', true);
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('144568048938151', 'facebook page');
         $this->assertEqual($post->reply_count_cache, 70);

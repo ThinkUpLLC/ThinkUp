@@ -123,133 +123,20 @@ class FacebookCrawler {
     }
 
     /**
-     * Fetch a save the posts and replies on a user's profile.
-     * @param int $uid
+     * Fetch a save the posts and replies on a user's profile or page.
+     * @param int $id Facebook user or page ID.
+     * @param bool $is_page If true then this is a Facebook page, else it's a user profile
      */
-    public function fetchUserPostsAndReplies($uid) {
-        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$uid.'/posts', $this->access_token);
+    public function fetchPostsAndReplies($id, $is_page) {
+        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$id.'/posts', $this->access_token);
 
         if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
             $this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
             __METHOD__.','.__LINE__);
 
-            $thinkup_data = $this->parseStream($stream, 'facebook');
-            $posts = $thinkup_data["posts"];
-
-            $total_posts_added = 0;
-            $post_dao = DAOFactory::getDAO('PostDAO');
-            foreach ($posts as $post) {
-                $added_posts = $post_dao->addPost($post);
-                $total_posts_added = $total_posts_added + $added_posts;
-                $this->logger->logInfo("Added $added_posts post for ".$post["author_username"].":".
-                $post["post_text"], __METHOD__.','.__LINE__);
-            }
-            if ($total_posts_added > 0 ) {
-                $this->logger->logUserSuccess("Collected $total_posts_added new posts", __METHOD__.','.__LINE__);
-            } else {
-                $this->logger->logUserInfo("No new posts found.", __METHOD__.','.__LINE__);
-            }
-
-            $links = $thinkup_data["links"];
-
-            $total_links_added = 0;
-            $link_dao = DAOFactory::getDAO('LinkDAO');
-            foreach ($links as $link) {
-                $added_links = $link_dao->insert($link);
-                $total_links_added = $total_links_added + (($added_links)?1:0);
-                $this->logger->logInfo("Added $added_links link for ".$post["author_username"].":".
-                $post["post_text"], __METHOD__.','.__LINE__);
-            }
-            if ($total_links_added > 0 ) {
-                $this->logger->logUserSuccess("Collected $total_links_added new links", __METHOD__.','.__LINE__);
-            } else {
-                $this->logger->logUserInfo("No new links found.", __METHOD__.','.__LINE__);
-            }
-
-            $users = $thinkup_data["users"];
-            if (count($users) > 0) {
-                foreach ($users as $user) {
-                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
-                    $found_in = 'Facebook user profile stream';
-                    $user_object = new User($user, $found_in);
-                    $user_dao = DAOFactory::getDAO('UserDAO');
-                    $user_dao->updateUser($user_object);
-                }
-            }
-            $this->logger->logUserSuccess("Updated or inserted ".count($users)." user(s).", __METHOD__.','.__LINE__);
+            $thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
         } else {
-            $this->logger->logInfo("No Facebook posts found for user ID $uid", __METHOD__.','.__LINE__);
-        }
-    }
-
-    /**
-     * Fetch a save the posts and replies on a Facebook page.
-     * @param int $pid Page ID
-     */
-    public function fetchPagePostsAndReplies($pid) {
-        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$pid.'/posts', $this->access_token);
-
-        if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
-            $this->logger->logSuccess(sizeof($stream->data)." Facebook posts found for page ID $pid.",
-            __METHOD__.','.__LINE__);
-
-            $thinkup_data = $this->parseStream($stream, 'facebook page');
-            $posts = $thinkup_data["posts"];
-
-            $post_dao = DAOFactory::getDAO('PostDAO');
-            $added_posts = 0;
-            foreach ($posts as $post) {
-                if ($post['author_username']== "" && isset($post['author_user_id'])) {
-                    $commenter_object = $this->fetchUserInfo($post['author_user_id'], 'facebook',
-                    'Facebook page comments');
-                    if (isset($commenter_object)) {
-                        $post["author_username"] = $commenter_object->full_name;
-                        $post["author_fullname"] = $commenter_object->full_name;
-                        $post["author_avatar"] = $commenter_object->avatar;
-                    }
-                }
-
-                $added_posts = $added_posts + $post_dao->addPost($post);
-                $this->logger->logInfo("Added post ID ".$post["post_id"]." on ".$post["network"].
-                " for ".$post["author_username"].":".$post["post_text"], __METHOD__.','.__LINE__);
-            }
-
-            $links = $thinkup_data["links"];
-
-            $total_links_added = 0;
-            $link_dao = DAOFactory::getDAO('LinkDAO');
-            foreach ($links as $link) {
-                $added_links = $link_dao->insert($link);
-                $total_links_added = $total_links_added + (($added_links)?1:0);
-                $this->logger->logInfo("Added $added_links link for ".$post["author_username"].":".
-                $post["post_text"], __METHOD__.','.__LINE__);
-            }
-            if ($total_links_added > 0 ) {
-                $this->logger->logUserSuccess("Collected $total_links_added new links", __METHOD__.','.__LINE__);
-            } else {
-                $this->logger->logUserInfo("No new links found.", __METHOD__.','.__LINE__);
-            }
-
-            $added_users = 0;
-            $users = $thinkup_data["users"];
-            if (count($users) > 0) {
-                foreach ($users as $user) {
-                    $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], $user['network']);
-                    $found_in = 'Facebook page stream';
-                    $user_object = new User($user, $found_in);
-                    $user_dao = DAOFactory::getDAO('UserDAO');
-                    $user_dao->updateUser($user_object);
-                    $added_users = $added_users + 1;
-                }
-            }
-            if ($added_posts > 0 || $added_users > 0) {
-                $this->logger->logUserSuccess($added_posts." post(s) added; ".$added_users." user(s) updated.",
-                __METHOD__.','.__LINE__);
-            } else {
-                $this->logger->logUserInfo("No new page posts found.", __METHOD__.','.__LINE__);
-            }
-        } else {
-            $this->logger->logInfo("No Facebook posts found for page ID $pid", __METHOD__.','.__LINE__);
+            $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
         }
     }
 
@@ -258,10 +145,19 @@ class FacebookCrawler {
      * @param Object $stream
      * @param str $source The network for the post; by default 'facebook'
      */
-    private function parseStream($stream, $network) {
+    private function processStream($stream, $network) {
         $thinkup_posts = array();
+        $total_added_posts = 0;
+
         $thinkup_users = array();
+        $total_added_users = 0;
+
         $thinkup_links = array();
+        $total_links_added = 0;
+
+        $thinkup_likes = array();
+        $total_added_likes = 0;
+
         $profile = null;
         foreach ($stream->data as $p) {
             $post_id = explode("_", $p->id);
@@ -271,14 +167,27 @@ class FacebookCrawler {
             }
             //assume profile comments are private and page posts are public
             $is_protected = ($network=='facebook')?1:0;
+            //get likes count
+            $likes_count = 0;
+            if (isset($p->likes)) {
+                if (is_int($p->likes)) {
+                    $likes_count = $p->likes;
+                } elseif (isset($p->likes->count) && is_int($p->likes->count) )  {
+                    $likes_count = $p->likes->count;
+                }
+            }
             $ttp = array("post_id"=>$post_id, "author_username"=>$profile->username,
             "author_fullname"=>$profile->username,"author_avatar"=>$profile->avatar, 
             "author_user_id"=>$profile->user_id, "post_text"=>isset($p->message)?$p->message:'', 
-            "pub_date"=>$p->created_time, 
+            "pub_date"=>$p->created_time, "favlike_count_cache"=>$likes_count,
             "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
             'is_protected'=>$is_protected);
 
             array_push($thinkup_posts, $ttp);
+            $total_added_posts = $total_added_posts + $this->storePosts($thinkup_posts);
+
+            //free up memory
+            $thinkup_posts = array();
 
             if (isset($p->source) || isset($p->link)) { // there's a link to store
                 $link_url = (isset($p->source))?$p->source:$p->link;
@@ -293,8 +202,14 @@ class FacebookCrawler {
                 ));
                 array_push($thinkup_links, $link);
             }
+            $total_links_addded = $total_links_added + $this->storeLinks($thinkup_links);
+            if ($total_links_added > 0 ) {
+                $this->logger->logUserSuccess("Collected $total_links_added new links", __METHOD__.','.__LINE__);
+            }
+            //free up memory
+            $thinkup_links  = array();
 
-            if ( isset($p->comments)) {
+            if (isset($p->comments)) {
                 $comments_captured = 0;
                 if (isset($p->comments->data)) {
                     $post_comments = $p->comments->data;
@@ -325,6 +240,12 @@ class FacebookCrawler {
                         }
                     }
                 }
+                $total_added_posts = $total_added_posts + $this->storePosts($thinkup_posts);
+                $total_added_users = $total_added_users + $this->storeUsers($thinkup_users);
+                //free up memory
+                $thinkup_posts = array();
+                $thinkup_users = array();
+
                 // collapsed comment thread
                 if (isset($p->comments->count) && $p->comments->count > $comments_captured) {
                     $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/comments?access_token='.
@@ -353,11 +274,16 @@ class FacebookCrawler {
                                     array_push($thinkup_users, $ttu);
                                 }
                             }
+
+                            $total_added_posts = $total_added_posts + $this->storePosts($thinkup_posts);
+                            $total_added_users = $total_added_users + $this->storeUsers($thinkup_users);
+                            //free up memory
+                            $thinkup_posts = array();
+                            $thinkup_users = array();
                             if (isset($comments_stream->paging->next)) {
                                 $api_call = str_replace('\u00257C', '|', $comments_stream->paging->next);
                             }
-                        }
-                        else {
+                        } else {
                             // no comments (pun intended)
                             break;
                         }
@@ -365,8 +291,162 @@ class FacebookCrawler {
                     while (isset($comments_stream->paging->next));
                 }
             }
+
+            //process "likes"
+            if (isset($p->likes)) {
+                $likes_captured = 0;
+                if (isset($p->likes->data)) {
+                    $post_likes = $p->likes->data;
+                    $post_likes_count = isset($post_likes)?sizeof($post_likes):0;
+                    if (is_array($post_likes) && sizeof($post_likes) > 0) {
+                        foreach ($post_likes as $l) {
+                            if (isset($l->name) && isset($l->id)) {
+                                //Get users
+                                $ttu = array("user_name"=>$l->name, "full_name"=>$l->name,
+                                "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
+                                '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
+                                "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
+                                "network"=>'facebook'); //Users are always set to network=facebook
+                                array_push($thinkup_users, $ttu);
+
+                                $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
+                                "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
+                                array_push($thinkup_likes, $fav_to_add);
+                                $likes_captured = $likes_captured + 1;
+                            }
+                        }
+                    }
+                }
+
+                $total_added_users = $total_added_users + $this->storeUsers($thinkup_users);
+                $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+                //free up memory
+                $thinkup_users = array();
+                $thinkup_likes = array();
+
+                // collapsed likes
+                if (isset($p->likes->count) && $p->likes->count > $likes_captured) {
+                    $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
+                    $this->access_token;
+                    do {
+                        $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
+                        if (isset($likes_stream) && is_array($likes_stream->data)) {
+                            foreach ($likes_stream->data as $l) {
+                                if (isset($l->name) && isset($l->id)) {
+                                    //Get users
+                                    $ttu = array("user_name"=>$l->name, "full_name"=>$l->name,
+                                    "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
+                                    '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
+                                    "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
+                                    "network"=>'facebook'); //Users are always set to network=facebook
+                                    array_push($thinkup_users, $ttu);
+
+                                    $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
+                                   "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
+                                    array_push($thinkup_likes, $fav_to_add);
+                                    $likes_captured = $likes_captured + 1;
+                                }
+                            }
+
+                            $total_added_posts = $total_added_posts + $this->storePosts($thinkup_posts);
+                            $total_added_users = $total_added_users + $this->storeUsers($thinkup_users);
+                            //free up memory
+                            $thinkup_posts = array();
+                            $thinkup_users = array();
+
+                            if (isset($likes_stream->paging->next)) {
+                                $api_call = str_replace('\u00257C', '|', $likes_stream->paging->next);
+                            }
+                        } else {
+                            // no likes
+                            break;
+                        }
+                    }
+                    while (isset($likes_stream->paging->next));
+                }
+            }
+            $total_added_users = $total_added_users + $this->storeUsers($thinkup_users);
+            $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+            //free up memory
+            $thinkup_users = array();
+            $thinkup_likes = array();
         }
-        return array("posts"=>$thinkup_posts, "users"=>$thinkup_users, "links"=>$thinkup_links);
+
+        if ($total_added_posts > 0 ) {
+            $this->logger->logUserSuccess("Collected $total_added_posts posts", __METHOD__.','.__LINE__);
+        } else {
+            $this->logger->logUserInfo("No new posts found.", __METHOD__.','.__LINE__);
+        }
+        if ($total_added_users > 0 ) {
+            $this->logger->logUserSuccess("Collected $total_added_users users", __METHOD__.','.__LINE__);
+        } else {
+            $this->logger->logUserInfo("No new users found.", __METHOD__.','.__LINE__);
+        }
+        if ($total_added_likes > 0 ) {
+            $this->logger->logUserSuccess("Collected $total_added_likes likes", __METHOD__.','.__LINE__);
+        } else {
+            $this->logger->logUserInfo("No new likes found.", __METHOD__.','.__LINE__);
+        }
     }
 
+    private function storePosts($posts){
+        $added_posts = 0;
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        foreach ($posts as $post) {
+            if ($post['author_username']== "" && isset($post['author_user_id'])) {
+                $commenter_object = $this->fetchUserInfo($post['author_user_id'], 'facebook', 'Facebook page comments');
+                if (isset($commenter_object)) {
+                    $post["author_username"] = $commenter_object->full_name;
+                    $post["author_fullname"] = $commenter_object->full_name;
+                    $post["author_avatar"] = $commenter_object->avatar;
+                }
+            }
+            $added_posts = $added_posts + $post_dao->addPost($post);
+            if ($added_posts == 0 && isset($post['favlike_count_cache'])) {
+                //post already exists in storage, so update its like count only
+                $post_dao->updateFavLikeCount($post['post_id'], $post['network'], $post['favlike_count_cache']);
+            }
+
+            $this->logger->logInfo("Added post ID ".$post["post_id"]." on ".$post["network"].
+            " for ".$post["author_username"].":".$post["post_text"], __METHOD__.','.__LINE__);
+        }
+        return $added_posts;
+    }
+
+    private function storeLinks($links) {
+        $total_links_added = 0;
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        foreach ($links as $link) {
+            $added_links = $link_dao->insert($link);
+            $total_links_added = $total_links_added + (($added_links)?1:0);
+        }
+        return $total_links_added;
+    }
+
+    private function storeUsers($users) {
+        $added_users = 0;
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        if (count($users) > 0) {
+            $user_dao = DAOFactory::getDAO('UserDAO');
+            foreach ($users as $user) {
+                $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], $user['network']);
+                $found_in = 'Facebook stream';
+                $user_object = new User($user, $found_in);
+                $user_dao->updateUser($user_object);
+                $added_users = $added_users + 1;
+            }
+        }
+        return $added_users;
+    }
+
+    private function storeLikes($likes) {
+        $added_likes = 0;
+        if (count($likes) > 0) {
+            $fav_dao = DAOFactory::getDAO('FavoritePostDAO');
+            foreach ($likes as $like) {
+                $added_likes = $added_likes + $fav_dao->addFavorite($like['favoriter_id'], $like);
+            }
+        }
+        return $added_likes;
+    }
 }

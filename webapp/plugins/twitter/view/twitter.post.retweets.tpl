@@ -43,7 +43,7 @@
                     });
                   });
 
-            	  });
+                  });
                 </script>
                 {/literal}
 
@@ -54,36 +54,31 @@
                 <div class="clearfix gray" id="more-detail" style="display:none;width:460px;">
                   <div class="grid_2 alpha">
                     <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png">
-                 	</div>
+                     </div>
                   <div class="grid_5">
-                	  {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
-                		{if $post->location}{$post->location}{/if}
-                		<!--
-                 		{if $post->in_reply_to_post_id}<a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">In reply to</a>{/if}
-                  	{if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
-                	  -->
-                	</div>
+                      {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
+                        {if $post->location}{$post->location}{/if}
+                        <!--
+                         {if $post->in_reply_to_post_id}<a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">In reply to</a>{/if}
+                      {if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
+                      -->
+                    </div>
                   <div class="grid_4 omega">
-                		{if $post->source}
-                		
-                			  {if $post->source eq 'web'}
-                			    the web
-                			  {else}
-              			      {$post->source}<span class="ui-icon ui-icon-newwin"></span>
-                			  {/if}
-                		{/if}<br>
-            			  {if $post->network eq 'twitter'}
-                		  <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
+                        {if $post->source}
+                        
+                              {if $post->source eq 'web'}
+                                the web
+                              {else}
+                                {$post->source}<span class="ui-icon ui-icon-newwin"></span>
+                              {/if}
+                        {/if}<br>
+                          {if $post->network eq 'twitter'}
+                          <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
                     {/if}
                   </div>
                 </div> <!-- /#more-detail -->
- 
- 
- 
- 
               </div>
                 
- 
  
                 <!--{if $post->is_geo_encoded eq 1}
                 <div>

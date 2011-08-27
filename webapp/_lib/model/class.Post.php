@@ -34,148 +34,127 @@ class Post {
      */
     const TWITTER_RT_THRESHOLD = 100;
     /**
-     *
-     * @var int
+     * @var int Internal unique ID..
      */
     var $id;
     /**
-     *
-     * @var int
+     * @var int The ID of the post inside the respective service.
      */
     var $post_id;
     /**
-     *
-     * @var int
+     * @var int The user ID inside the respective service, e.g. Twitter or Facebook user IDs.
      */
     var $author_user_id;
     /**
-     *
-     * @var str
-     */
-    var $author_fullname;
-    /**
-     *
-     * @var str
+     * @var str The user's username inside the respective service, e.g. Twitter or Facebook user name.
      */
     var $author_username;
     /**
-     *
-     * @var str
+     * @var str The user's real, full name on a given service, e.g. Gina Trapani.
+     */
+    var $author_fullname;
+    /**
+     * @var str The URL to the user's avatar for a given service.
      */
     var $author_avatar;
     /**
-     *
-     * @var str
+     * @var int Post author's follower count. [Twitter-specific]
+     */
+    var $author_follower_count;
+    /**
+     * @var str The textual content of a user's post on a given service.
      */
     var $post_text;
     /**
-     * @var bool
+     * @var tinyint Whether or not this post is protected, e.g. not publicly visible.
      */
     var $is_protected;
     /**
-     *
-     * @var str
+     * @var str The client used to publish this post, e.g. if you post from the Twitter web interface, this will be
+     * "web".
      */
     var $source;
     /**
-     *
-     * @var str
+     * @var str Author-level location, e.g., the author's location as set in his or her profile. Use author-level
+     location if post-level location is not set.
      */
     var $location;
     /**
-     *
-     * @var str
+     * @var str Post-level name of a place from which a post was published, ie, Woodland Hills, Los Angeles.
      */
     var $place;
     /**
-     *
-     * @var int
+     * @var str Post-level place ID on a given network.
      */
     var $place_id;
     /**
-     *
-     * @var str
+     * @var str The post's latitude and longitude coordinates.
      */
     var $geo;
     /**
-     *
-     * @var str
+     * @var str The UTC date/time when this post was published.
      */
     var $pub_date;
     /**
-     *
-     * @var str
-     */
-    var $adj_pub_date;
-    /**
-     *
-     * @var int
+     * @var int The ID of the user that this post is in reply to.
      */
     var $in_reply_to_user_id;
     /**
-     *
-     * @var bool
-     */
-    var $is_reply_by_friend;
-    /**
-     *
-     * @var int
+     * @var int The ID of the post that this post is in reply to.
      */
     var $in_reply_to_post_id;
     /**
-     *
-     * @var int
+     * @var int The total number of replies this post received in the data store.
      */
     var $reply_count_cache;
     /**
-     *
-     * @var int
+     * @var tinyint Whether or not this reply was authored by a friend of the original post's author.
+     */
+    var $is_reply_by_friend;
+    /**
+     * @var int The ID of the post that this post is a retweet of. [Twitter-specific]
      */
     var $in_retweet_of_post_id;
     /**
-     * @var int
-     */
-    var $in_rt_of_user_id;
-    /**
-     *
-     * @var int
-     * The retweet count from the database
-     */
-    var $retweet_count_cache;
-    /**
-     * @var int
-     * the retweet count reported from twitter.com
-     */
-    var $retweet_count_api;
-    /**
-     * @var int
+     * @var int Manual count of old-style retweets as determined by ThinkUp. [Twitter-specific]
      */
     var $old_retweet_count_cache;
     /**
-     *
-     * @var int
-     */
-    var $reply_retweet_distance;
-    /**
-     *
-     * @var bool
+     * @var tinyint Whether or not this retweet was posted by a friend of the original post's author. [Twitter-specific]
      */
     var $is_retweet_by_friend;
     /**
-     * @var str 'true' or 'false'
+     * @var int The distance (in km) away from the post that this post is in reply or retweet of [Twitter-specific-ish]
      */
-    var $favorited;
+    var $reply_retweet_distance;
     /**
-     *
-     * @var str
+     * @var str The network that this post belongs to in lower-case, e.g. twitter or facebook
      */
     var $network;
     /**
+     * @var int Whether or not this post has been geo-encoded.
      * @TODO Give these constants meaningful names
-     * @var int 0 if Not Geoencoded, 1 if Successful, 2 if ZERO_RESULTS,
+     * 0 if Not Geoencoded, 1 if Successful, 2 if ZERO_RESULTS,
      * 3 if OVER_QUERY_LIMIT, 4 if REQUEST_DENIED, 5 if INVALID_REQUEST, 6 if INSUFFICIENT_DATA
      */
-    var $is_geo_encoded;
+    var $is_geo_encoded = false;
+    /**
+     * @var int The ID of the user that this post is retweeting. [Twitter-specific]
+     */
+    var $in_rt_of_user_id;
+    /**
+     * @var int Manual count of native retweets as determined by ThinkUp. [Twitter-specific]
+     */
+    var $retweet_count_cache;
+    /**
+     * @var int The total number of native retweets as reported by Twitter API. [Twitter-specific]
+     */
+    var $retweet_count_api;
+    /**
+     * @var int The total number of favorites or likes this post received.
+     */
+    var $favlike_count_cache;
+
     /**
      *
      * @var User $author Optionally set
@@ -187,20 +166,17 @@ class Post {
      */
     var $link;
     /**
-     *
-     * @var int $favd_count Optionally set
+     * @var str Non-persistent, 'true' or 'false'
      */
-    var $favd_count;
+    var $favorited;
     /**
-     * @var int, non-persistent, used for UI
+     * @var int Non-persistent, used for UI
      */
     var $all_retweets;
-
     /**
-     * @var int, non-persistent, used for UI, indicates whether twitter rt count threshold was reached.
+     * @var int Non-persistent, used for UI, indicates whether Twitter RT count threshold was reached.
      */
     var $rt_threshold;
-
     /**
      * Constructor
      * @param array $val Array of key/value pairs
@@ -235,6 +211,7 @@ class Post {
         $this->network = $val["network"];
         $this->is_reply_by_friend = PDODAO::convertDBToBool($val["is_reply_by_friend"]);
         $this->is_retweet_by_friend = PDODAO::convertDBToBool($val["is_retweet_by_friend"]);
+        $this->favlike_count_cache = $val["favlike_count_cache"];
 
         if (isset($val['is_protected'])) {
             $this->is_protected = PDODAO::convertDBToBool($val["is_protected"]);
@@ -243,9 +220,6 @@ class Post {
         // favorited is non-persistent.  Will be set from xml, but not from database retrieval.
         if (isset($val["favorited"])) {
             $this->favorited = $val["favorited"];
-        }
-        if (isset($val['favd_count'])) {
-            $this->favd_count = $val['favd_count'];
         }
 
         // For the retweet count display, we will use the larger of retweet_count_cache and retweet_count_api,

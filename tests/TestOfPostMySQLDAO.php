@@ -2543,4 +2543,25 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             );
             return array($post, $entities, $user_array);
     }
+
+    public function testUpdateFavLikeCount() {
+        $dao = new PostMySQLDAO();
+        $post = $dao->getPost(10, 'twitter');
+        $this->assertEqual($post->favlike_count_cache, 0);
+
+        // bad id
+        $update_cnt = $dao->updateFavLikeCount(-99, 'twitter', 25);
+        $this->assertEqual($update_cnt, 0);
+
+        // bad network
+        $update_cnt = $dao->updateFavLikeCount(10, 'no-net', 25);
+        $this->assertEqual($update_cnt, 0);
+
+        // good id
+        $update_cnt = $dao->updateFavLikeCount(10, 'twitter', 25);
+        $this->assertEqual($update_cnt, 1);
+
+        $post = $dao->getPost(10, 'twitter');
+        $this->assertEqual($post->favlike_count_cache, 25);
+    }
 }

@@ -221,11 +221,13 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         // if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($orderaa_by, $this->OPTIONAL_FIELDS  )) {
         //     $order_by="pub_date";
         // }
-        $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date, count(*) AS favd_count ";
+        $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date, ";
+        //TODO: Store favlike_count_cache during Twitter crawl so we don't do this dynamic GROUP BY fakeout
+        $q .= "count(*) AS favlike_count_cache ";
         $q .= "FROM (#prefix#posts p INNER JOIN #prefix#favorites f on f.post_id = p.post_id) ";
         $q .= "LEFT JOIN #prefix#links l ON l.post_id = p.post_id WHERE p.author_user_id = :author_user_id ";
         $q .= "AND p.network = :network ";
-        $q .= "GROUP BY p.post_text ORDER BY YEARWEEK(p.pub_date) DESC, favd_count DESC, p.pub_date DESC ";
+        $q .= "GROUP BY p.post_text ORDER BY YEARWEEK(p.pub_date) DESC, favlike_count_cache DESC, p.pub_date DESC ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
           ':author_user_id'=>$author_user_id,

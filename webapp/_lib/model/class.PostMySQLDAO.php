@@ -50,7 +50,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
      */
     var $OPTIONAL_FIELDS = array('in_reply_to_user_id', 'in_reply_to_post_id','in_retweet_of_post_id',
     'in_rt_of_user_id', 'location', 'place', 'place_id', 'geo', 'retweet_count_cache', 
-    'retweet_count_api', 'old_retweet_count_cache', 
+    'retweet_count_api', 'old_retweet_count_cache', 'favlike_count_cache',
     'reply_count_cache', 'is_reply_by_friend', 'is_retweet_by_friend', 
     'reply_retweet_distance', 'is_geo_encoded', 'author_follower_count');
 
@@ -501,10 +501,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
 
     /**
-     * Increment either reply_count_cache, old_retweet_count_cache, or retweet_count_cache
+     * Increment either reply_count_cache, old_retweet_count_cache, retweet_count_cache, or favlike_count_cache
      * @param int $post_id
      * @param str $network
-     * @param str $fieldname either "reply" , "old_retweet" (old-style retweets), or "native_retweet"
+     * @param str $fieldname either "reply" , "old_retweet" (old-style retweets), "native_retweet" or "favlike"
      * @return int Number of updated rows
      */
     private function incrementCacheCount($post_id, $network, $post_type) {
@@ -515,6 +515,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $fieldname = "retweet";
         } elseif ($post_type == "old_retweet") {
             $fieldname = "old_retweet";
+        } else if ($post_type == "favlike") {
+            $fieldname ="favlike";
         }
         if ($fieldname) {
             $q = " UPDATE  #prefix#posts SET ".$fieldname."_count_cache = ".$fieldname."_count_cache + 1 ";
@@ -1020,6 +1022,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $iterator = false, $is_public);
     }
 
+    public function getMostFavedPostsInLastWeek($username, $network, $count, $is_public = false) {
+        return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'favlike_count_cache', 7,
+        $iterator = false, $is_public);
+    }
+
     public function getMostRetweetedPostsInLastWeek($username, $network, $count, $is_public = false) {
         return $this->getAllPostsByUsernameOrderedBy($username, $network, $count, 'retweets', 7,
         $iterator = false, $is_public);
@@ -1148,6 +1155,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getMostRepliedToPosts($user_id, $network, $count, $page=1, $is_public = false) {
         return $this->getAllPostsByUserID($user_id, $network, $count, "reply_count_cache", "DESC", true, $page,
+        $iterator = false, $is_public);
+    }
+
+    public function getMostFavedPosts($user_id, $network, $count, $page=1, $is_public = false) {
+        return $this->getAllPostsByUserID($user_id, $network, $count, "favlike_count_cache", "DESC", true, $page,
         $iterator = false, $is_public);
     }
 
@@ -1376,4 +1388,18 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         arsort($clients);
         return $clients;
     }
+
+    public function updateFavLikeCount($post_id, $network, $fav_like_count) {
+        $q = " UPDATE #prefix#posts SET favlike_count_cache=:favlike_count_cache WHERE post_id=:post_id ";
+        $q .= "AND network=:network;";
+        $vars = array(
+            ':favlike_count_cache'=>$fav_like_count,
+            ':post_id'=>$post_id,
+            ':network'=>$network
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+
 }

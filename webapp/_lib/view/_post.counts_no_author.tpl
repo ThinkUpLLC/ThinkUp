@@ -13,7 +13,11 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
   <div class="header clearfix">
     <div class="grid_13 alpha">&#160;</div>
     <div class="grid_2 center">
-      {if $post->network eq 'twitter'}{if $show_favorites_instead_of_retweets}favorites{else}retweets{/if}{/if}
+      {if $post->network eq 'twitter'}
+        {if $show_favorites_instead_of_retweets}favorites{else}retweets{/if}
+     {else}
+        {if $show_favorites_instead_of_retweets}likes{/if}
+     {/if}
     </div>
     <div class="grid_2 center omega">
       replies
@@ -64,9 +68,9 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
     <div class="grid_2 center">
     {if $post->network eq 'twitter'}
      {if $show_favorites_instead_of_retweets && $show_favorites_instead_of_retweets != false}
-       {if $post->favd_count}
+       {if $post->favlike_count_cache}
        <span class="reply-count">
-          <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=favs">{$post->favd_count}</a>
+          <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=favs">{$post->favlike_count_cache}</a>
        </span>
       {else}
         &#160;
@@ -80,6 +84,15 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
         &#160;
       {/if}
       {/if}
+    {/if}
+    {if $post->network eq 'facebook' OR $post->network eq 'facebook page'}
+        {if $post->favlike_count_cache  > 0}
+        <span class="reply-count">
+            <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=likes">{$post->favlike_count_cache}</a>
+        </span>
+        {else}
+        &#160;
+        {/if}
     {/if}
     </div>
     <div class="grid_2 center omega">

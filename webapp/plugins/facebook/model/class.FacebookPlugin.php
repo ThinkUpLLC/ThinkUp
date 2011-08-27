@@ -26,7 +26,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  */
-class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
+class FacebookPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
 
     public function activate() {
     }
@@ -47,19 +47,19 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
     public function crawl() {
         $logger = Logger::getInstance();
         $config = Config::getInstance();
-        $id = DAOFactory::getDAO('InstanceDAO');
-        $oid = DAOFactory::getDAO('OwnerInstanceDAO');
-        $od = DAOFactory::getDAO('OwnerDAO');
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
 
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
 
-        $current_owner = $od->getByEmail(Session::getLoggedInUser());
+        $current_owner = $owner_dao->getByEmail(Session::getLoggedInUser());
 
         //crawl Facebook user profiles
-        $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook');
+        $instances = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook');
         foreach ($instances as $instance) {
-            if (!$oid->doesOwnerHaveAccess($current_owner, $instance)) {
+            if (!$owner_instance_dao->doesOwnerHaveAccess($current_owner, $instance)) {
                 // Owner doesn't have access to this instance; let's not crawl it.
                 continue;
             }
@@ -67,41 +67,41 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
             $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Facebook.",
             __METHOD__.','.__LINE__);
 
-            $tokens = $oid->getOAuthTokens($instance->id);
+            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
             $access_token = $tokens['oauth_access_token'];
 
-            $id->updateLastRun($instance->id);
+            $instance_dao->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $access_token);
             try {
                 $crawler->fetchInstanceUserInfo();
-                $crawler->fetchUserPostsAndReplies($instance->network_user_id);
+                $crawler->fetchPostsAndReplies($instance->network_user_id, false);
             } catch (Exception $e) {
                 $logger->logUserError('PROFILE EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }
 
-            $id->save($crawler->instance, 0, $logger);
+            $instance_dao->save($crawler->instance, 0, $logger);
             $logger->logUserSuccess("Finished collecting data for ".$instance->network_username." on Facebook.",
             __METHOD__.','.__LINE__);
         }
 
         //crawl Facebook pages
-        $instances = $id->getAllActiveInstancesStalestFirstByNetwork('facebook page');
+        $instances = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook page');
         foreach ($instances as $instance) {
             $logger->setUsername($instance->network_username);
             $logger->logUserSuccess("Starting to collect data for ".$instance->network_username."'s Facebook Page.",
             __METHOD__.','.__LINE__);
-            $tokens = $oid->getOAuthTokens($instance->id);
+            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
             $access_token = $tokens['oauth_access_token'];
 
-            $id->updateLastRun($instance->id);
+            $instance_dao->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $access_token);
 
             try {
-                $crawler->fetchPagePostsAndReplies($instance->network_user_id);
+                $crawler->fetchPostsAndReplies($instance->network_user_id, true);
             } catch (Exception $e) {
                 $logger->logUserError('PAGE EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }
-            $id->save($crawler->instance, 0, $logger);
+            $instance_dao->save($crawler->instance, 0, $logger);
             $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s Facebook Page.",
             __METHOD__.','.__LINE__);
         }
@@ -118,7 +118,7 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
         $menus = array();
 
         //All tab
-        $alltab = new MenuItem("All", 'All status updates', $fb_data_tpl, 'Posts');
+        $alltab = new MenuItem("All posts", 'All status updates', $fb_data_tpl, 'Posts');
         $alltabds = new Dataset("all_facebook_posts", 'PostDAO', "getAllPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"),
         'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()), false );
@@ -134,6 +134,14 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
         $mrttab->addDataset($mrttabds);
         $menus["mostreplies"] = $mrttab;
 
+        // Most liked posts
+        $mltab = new MenuItem("Most liked", "Posts with most likes", $fb_data_tpl);
+        $mltabds = new Dataset("most_replied_to_posts", 'PostDAO', "getMostFavedPosts",
+        array($instance->network_user_id, $instance->network, 15, '#page_number#'));
+        //$mrttabds->addHelp('userguide/listings/facebook/dashboard_mostreplies');
+        $mltab->addDataset($mltabds);
+        $menus["mostlikes"] = $mltab;
+
         //Questions tab
         $qtab = new MenuItem("Inquiries", "Inquiries, or posts with a question mark in them",
         $fb_data_tpl);
@@ -142,6 +150,23 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin {
         $qtabds->addHelp('userguide/listings/facebook/dashboard_questions');
         $qtab->addDataset($qtabds);
         $menus["questions"] = $qtab;
+
+        return $menus;
+    }
+
+
+    public function getPostDetailMenuItems($post) {
+        $facebook_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.post.likes.tpl';
+        $menus = array();
+
+        if ($post->network == 'facebook' || $post->network == 'facebook page') {
+            $likes_menu_item = new MenuItem("Likes", "Those who liked this post", $facebook_data_tpl, 'Facebook');
+            //if not logged in, show only public fav'd info
+            $liked_dataset = new Dataset("likes", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
+            $post->network, !Session::isLoggedIn()) );
+            $likes_menu_item->addDataset($liked_dataset);
+            $menus['likes'] = $likes_menu_item;
+        }
 
         return $menus;
     }

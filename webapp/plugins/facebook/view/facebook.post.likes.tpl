@@ -1,67 +1,4 @@
-{include file="_header.tpl"}
-{include file="_statusbar.tpl"}
-
-<div class="container_24">
-  <div class="clearfix">
-    
-    <div class="grid_4 alpha omega" style="background-color:#e6e6e6"> <!-- begin left nav -->
-      <div id="nav-sidebar">
-        <ul id="top-level-sidenav"><br />
-        
-        {if $post}
-          <ul class="side-subnav">
-            <li><br><a href="{insert name=dashboard_link}">Dashboard</a></li>
-          </ul>
-          
-          <li>
-          Post
-          <form id="grid_search_form" action="{$site_root_path}post">
-          <input type="hidden" name="t" value="{$post->post_id}" />
-          <input type="hidden" name="n" value="{$post->network}" />
-          <ul class="side-subnav">
-          <li{if $smarty.get.v eq ''} class="currentview"{/if}>
-          <a href="index.php?t={$post->post_id}&n={$post->network|urlencode}">Replies&nbsp;&nbsp;&nbsp;</a>
-          </li>
-          {if $logged_in_user && $post->reply_count_cache && $post->reply_count_cache > 1}
-            <li id="grid_search_input">
-            <input type="text" name="search" id="grid_search_sidebar_input" value="" style="margin-top: 3px;" size="10"/><input type="submit" href="#" class="grid_search" onclick="$('#grid_search_form').submit(); return false;" value="Search">
-            </li>
-          {/if}
-          </ul>
-          </form>
-          </li>
-        {/if}
-        
-        {if $sidebar_menu}
-          {foreach from=$sidebar_menu key=smkey item=sidebar_menu_item name=smenuloop}
-            {if $sidebar_menu_item->header}</li></ul> <li>{$sidebar_menu_item->header}<ul class="side-subnav">{/if}
-              <li{if $smarty.get.v eq $smkey} class="currentview"{/if}><a href="index.php?v={$smkey}&t={$post->post_id}&n={$post->network}">{$sidebar_menu_item->name}&nbsp;&nbsp;&nbsp;</a></li>
-            {/foreach}
-              </li>
-            </ul>
-        {/if}
-
-        </ul>
-      </div>
-    </div> <!-- end left nav -->
-
-    <div class="thinkup-canvas round-all grid_20 alpha omega prepend_20 append_20" style="min-height:340px">
-      <div class="prefix_1">
-
-        {include file="_usermessage.tpl"}
-
-        {if $data_template}
-            {include file=$data_template}
-            <div class="float-l">
-              <!-- {if $next_page}
-              <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n}&{/if}page={$next_page}" id="next_page">&#60; Older Posts</a>
-              {/if}
-              {if $last_page}
-              | <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n}&{/if}page={$last_page}" id="last_page">Newer Posts  &#62;</a>
-              {/if}-->
-            </div>
-        {else}
-
+       {if $post}
           {if $post}
             <div class="clearfix">
               <div class="grid_2 alpha">
@@ -173,58 +110,31 @@
 
               <div class="grid_5 omega center keystats">
                 <div class="big-number">
-                    <h1>{$post->reply_count_cache|number_format}</h1>
-                    <h3>replies in {$post->adj_pub_date|relative_datetime}</h3>
+                       {if $likes}
+                      <h1>{$likes|@count}</h2>
+                      <h3>likes</h3>
+                   {/if} <!-- end if favds -->
                 </div>
               </div>
             </div> <!-- /.clearfix -->
           {/if} <!-- end if post -->
-          
-          {if $replies}
-            <div class="prepend">
-              <div class="append_20 clearfix bt">
-                {include file="_post.word-frequency.tpl"}
-                {if $replies && $logged_in_user}
-                    {include file="_grid.search.tpl" version2=true}
-                {/if}
-                <div id="post-replies-div"{if $search_on} style="display: none;"{/if}><br />
-                  <div id="post_replies clearfix">
-                  {foreach from=$replies key=tid item=t name=foo}
-                    {include file="_post.author_no_counts.tpl" post=$t scrub_reply_username=true}
-                  {/foreach}
-                
-                  </div>
-                </div>
-                <script src="{$site_root_path}assets/js/extlib/Snowball.stemmer.min.js" type="text/javascript"></script>
-                {if $search_on}<script type="text/javascript">grid_search_on = true</script>{/if}
-                <script src="{$site_root_path}assets/js/word_frequency.js" type="text/javascript"></script>
-                {if !$logged_in_user && $private_reply_count > 0}
-                  <span style="font-size:12px">Not showing {$private_reply_count} private repl{if $private_reply_count == 1}y{else}ies{/if}.</span>
-                {/if}
-              </div>
-            </div>
-          {/if}
-        {/if}
+    {/if}
 
-        <!--
-        <div class="append prepend clearfix">
-          <a href="{$site_root_path}index.php" class="tt-button ui-state-default tt-button-icon-left ui-corner-all">
-            <span class="ui-icon ui-icon-circle-arrow-w"></span>
-            Back home
-          </a>
-        </div>
-          &nbsp;
-        -->  
-          
-      </div> <!-- /.prefix_1 -->
-    </div> <!-- /.thinkup-canvas -->
-  </div> <!-- /.clearfix -->
-</div> <!-- /.container_24 -->
+{if $likes}
+  <div class="prepend">
+  <div class="append_20 clearfix bt"><br />
+    {foreach from=$likes key=fid item=f name=foo}
+        {include file="_user.tpl" f=$f}
+    {/foreach}
+  </div>
+  </div>
+{/if}
 
-  <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-  {if $replies && $logged_in_user}
-    <script type="text/javascript">post_username = '{$post->author_username}';</script>
+
+<script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
+{if $is_searchable}
+    {include file="_grid.search.tpl"}
     <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
-  {/if}
-{include file="_footer.tpl"}
+    
+{/if}
+

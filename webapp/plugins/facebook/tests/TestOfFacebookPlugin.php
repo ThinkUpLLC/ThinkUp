@@ -54,9 +54,9 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $menus = $webapp->getDashboardMenu($instance);
         $posts_menu = $menus["all_facebook_posts"];
 
-        $this->assertEqual(sizeof($menus), 3, "Test number of post tabs");
+        $this->assertEqual(sizeof($menus), 4);
         $first_post_tab = $menus['all_facebook_posts'];
-        $this->assertEqual($first_post_tab->name, "All", "Test name of first post tab");
+        $this->assertEqual($first_post_tab->name, "All posts", "Test name of first post tab");
         $this->assertEqual($first_post_tab->description, "All status updates", "Test description of first post tab");
 
         $first_post_tab_datasets = $first_post_tab->getDatasets();

@@ -6,7 +6,7 @@
     <div class="grid_3">&#160;</div>
     <div class="grid_9">&#160;</div>
     <div class="grid_2 center">
-      {if $t->network eq 'twitter'}retweets{/if}
+      {if $t->network eq 'twitter'}retweets{else}likes{/if}
     </div>
     <div class="grid_2 center omega">
       replies
@@ -63,9 +63,6 @@
         {if !$post && $t->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$t->in_reply_to_post_id}&n={$t->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>
         {/if}
-        {if $t->favd_count}
-          <small>&nbsp;<a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}&v=favs">Fav'd: {$t->favd_count}</a></small>
-        {/if}
 
       <span class="small gray">
         <br clear="all">
@@ -95,10 +92,15 @@
     {if $t->network eq 'twitter'}
       {if $t->all_retweets > 0}
         <span class="reply-count"><a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}&v=fwds">{$t->all_retweets|number_format}{if $t->rt_threshold}+{/if}<!-- retweet{if $t->retweet_count_cache eq 1}{else}s{/if}--></a></span>
-      {else}
-        &#160;
       {/if}
+    {else}
+        {if $t->favlike_count_cache > 0}
+        <span class="reply-count">
+            <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}&v=likes">{$t->favlike_count_cache}</a>
+        </span>
+        {else}&nbsp;{/if}
     {/if}
+    
     </div>
     <div class="grid_2 center omega">
       {if $t->reply_count_cache > 0}

@@ -181,6 +181,13 @@ class DashboardController extends ThinkUpController {
             $most_retweeted_1wk = $post_dao->getMostRetweetedPostsInLastWeek($this->instance->network_username,
             $this->instance->network, 5);
             $this->addToView('most_retweeted_1wk', $most_retweeted_1wk);
+            //for now, only show most liked/faved posts on Facebook dashboard
+            //once we cache fave counts for Twitter, we can remove this conditional
+            if ($this->instance->network == "facebook" || $this->instance->network == "facebook page") {
+                $most_faved_1wk = $post_dao->getMostFavedPostsInLastWeek($this->instance->network_username,
+                $this->instance->network, 5);
+                $this->addToView('most_faved_1wk', $most_faved_1wk);
+            }
 
             //follows
             $follow_dao = DAOFactory::getDAO('FollowDAO');

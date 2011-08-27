@@ -78,7 +78,11 @@
 
               {if $recent_posts}
                 {foreach from=$recent_posts key=tid item=t name=foo}
-                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                    {if $instance->network eq "twitter"}
+                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                    {else}
+                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                    {/if}
                 {/foreach}
               {/if}
 
@@ -122,7 +126,20 @@
               <div class="clearfix">
                 <h2 >This Week's Most Replied-To Posts</h2>
                 {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
-                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                    {if $instance->network eq "twitter"}
+                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                    {else}
+                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                    {/if}
+                {/foreach}
+              </div>
+            {/if}
+
+            {if $most_faved_1wk}
+              <div class="clearfix">
+                <h2 >This Week's Most Liked Posts</h2>
+                {foreach from=$most_faved_1wk key=tid item=t name=foo}
+                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
                 {/foreach}
               </div>
             {/if}
