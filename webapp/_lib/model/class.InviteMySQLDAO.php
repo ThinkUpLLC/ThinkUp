@@ -62,7 +62,7 @@ class InviteMySQLDAO extends PDODAO implements InviteDAO {
         return $this->getDataIsReturned($ps);
     }
 
-    public function isInviteValid( $invite_code) {
+    public function isInviteValid($invite_code) {
         if ($this->doesInviteExist($invite_code)) {
             $q = " SELECT created_time FROM #prefix#invites WHERE invite_code=:invite_code";
             $vars = array(

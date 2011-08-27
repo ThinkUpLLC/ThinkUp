@@ -41,7 +41,7 @@ interface InstanceDAO {
      * @param str $network name of network to limit to
      * @return array with Instance
      */
-    public function getAllActiveInstancesStalestFirstByNetwork( $network = "twitter" );
+    public function getAllActiveInstancesStalestFirstByNetwork($network = "twitter");
 
     /**
      * Get all active instances, by last run oldest first
@@ -195,7 +195,7 @@ interface InstanceDAO {
      * @param int $viewer_id
      * @param str $network Defaults to 'facebook'
      */
-    public function getByUserAndViewerId($network_user_id, $viewer_id, $network = "facebook");
+    public function getByUserAndViewerId($network_user_id, $viewer_id, $network = 'facebook');
 
     /**
      * Get instance by viewer ID on a network
@@ -203,7 +203,7 @@ interface InstanceDAO {
      * @param str $network
      * @return Instance
      */
-    public function getByViewerId($viewer_id, $network = "facebook");
+    public function getByViewerId($viewer_id, $network = 'facebook');
 
     /**
      * Get the number of hours since the freshest instance was updated
@@ -214,8 +214,8 @@ interface InstanceDAO {
     /**
      * Update network username
      * @param int instance ID
-     * @param str new username
+     * @param str new network_username
      * @return int Count of updated instances
      */
-    public function updateUsername($id, $username);
+    public function updateUsername($id, $network_username);
 }

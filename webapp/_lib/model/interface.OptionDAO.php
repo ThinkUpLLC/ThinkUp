@@ -113,4 +113,34 @@ interface OptionDAO {
      * @return bool Whether or not an options table exists
      */
     public function isOptionsTable();
+    
+    /**
+     * Does ? (Updates a option, maybe)
+     * @param $namespace
+     * @param $name
+     * @param $value 
+     * @return int Update Count
+     */
+    public function updateOptionByName($namespace, $name, $value);
+    
+    /**
+     * Gets option data from session using namespace as a key
+     * @param $namespace
+     * @retrun $array Hash of option data
+     */
+    public function getSessionData($namespace);
+    
+    /**
+     * Sets option data in the session using namespace as a key
+     * @param $namespace
+     * @param array Hash of option data
+     * @retun $array Hash of option data
+     */
+    public function setSessionData($namespace, $data);
+    
+    /**
+     * Clears session data by namespace
+     * @param $namespace
+     */
+    public function clearSessionData($namespace);
 }

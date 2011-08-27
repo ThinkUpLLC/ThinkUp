@@ -61,7 +61,7 @@ interface PluginOptionDAO {
      * @param int A plugin option id
      * @return bool If successful or not
      */
-    public function deleteOption($option_id);
+    public function deleteOption($id);
 
     /**
      * Get a hash of Option objects keyed on option name
