@@ -169,7 +169,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
             $link_dao->saveExpansionError($original_link, $error_msg);
             return '';
         }
-        $port = isset($url['port']) ? $url['port'] : 80;
+        $port = isset($url['port']) ? ':'.$url['port'] : '';
         $query = isset($url['query']) ? '?'.$url['query'] : '';
         $fragment = isset($url['fragment']) ? '#'.$url['fragment'] : '';
         if (empty($url['path'])) {
@@ -177,8 +177,9 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         } else {
             $path = $url['path'];
         }
+        $scheme = isset($url['scheme'])?$url['scheme']:'http';
 
-        $reconstructed_url = "http://$host:$port".$path.$query.$fragment;
+        $reconstructed_url = $scheme."://$host$port".$path.$query.$fragment;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $reconstructed_url);

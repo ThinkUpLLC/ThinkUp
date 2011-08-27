@@ -62,7 +62,7 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
         $link = $link_dao->getLinkById(2);
         $this->assertEqual($link->expanded_url, '');
-        $this->assertEqual($link->error, "http://bit.ly:80/0101001010 returned '404 Not Found'");
+        $this->assertEqual($link->error, "http://bit.ly/0101001010 returned '404 Not Found'");
 
         $link = $link_dao->getLinkById(3);
         $this->assertEqual($link->expanded_url, '');
@@ -89,6 +89,13 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($link->expanded_url, 'http://twitpic.com/6bheho');
         $this->assertEqual($link->image_src, 'http://twitpic.com/show/thumb/6bheho');
         $this->assertEqual($link->error, '');
+
+        $link = $link_dao->getLinkById(9);
+        $this->assertEqual($link->expanded_url, 'https://secure.aclu.org/site/Advocacy?'.
+        'cmd=display&page=UserAction&id=3561&s_subsrc=110819_CAyouth_tw');
+        $this->assertEqual($link->image_src, '');
+        $this->assertEqual($link->error, '');
+
     }
 
     private function buildData() {
@@ -188,6 +195,18 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('links', array(
             'id' => 8,
             'url' => 'http://bit.ly/qpBNce',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'image_src' => '',
+            'error' => null
+        ));
+
+        // Shortened https URL
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 9,
+            'url' => 'http://t.co/MZrNmBc',
             'expanded_url' => null,
             'title' => '',
             'clicks' => 0,
