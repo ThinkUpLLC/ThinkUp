@@ -48,7 +48,7 @@ interface FavoritePostDAO extends PostDAO {
      * @param str $network
      * @return int
      */
-    public function unFavorite($tid, $uid, $network="twitter");
+    public function unFavorite($tid, $uid, $network = 'twitter');
     /**
      * Wrapper function for getAllFavoritePostsByUserID. Supports pagination.
      * @param int $owner_id
@@ -84,7 +84,7 @@ interface FavoritePostDAO extends PostDAO {
      * @param int $count
      * @return PostIterator
      */
-    public function getAllFavoritePostsByUsernameIterator($username, $network, $count=0);
+    public function getAllFavoritePostsByUsernameIterator($username, $network, $count = 0);
     /**
      * Iterator wrapper for getAllFavoritePostsByUserID
      * @param int $user_id

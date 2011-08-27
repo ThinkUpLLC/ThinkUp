@@ -79,19 +79,19 @@ interface OwnerDAO {
     /**
      * Set hashed, owner password in the data store.
      * @param str $email
-     * @param str $password
+     * @param str $pwd
      * @return int Affected rows
      */
-    public function updatePassword($email, $password);
+    public function updatePassword($email, $pwd);
 
     /**
      * Insert owner
      * @param str $email
-     * @param str $password
+     * @param str $pass
      * @param str $full_name
      * @return mixed Activation code int if successful, false if not
      */
-    public function create($email, $password, $full_name);
+    public function create($email, $pass, $full_name);
 
     /**
      * Update last_login field for given owner
@@ -126,11 +126,11 @@ interface OwnerDAO {
      * Insert an activated admin owner
      *
      * @param str $email
-     * @param str $password
+     * @param str $pass
      * @param str $full_name
      * @return mixed Activation code int if successful, false if not
      */
-    public function createAdmin($email, $password, $full_name);
+    public function createAdmin($email, $pass, $full_name);
 
     /**
      * Promote an owner to admin status.
@@ -187,10 +187,10 @@ interface OwnerDAO {
     /**
      * Generates and sets a new API key.
      *
-     * @param str $owner_id
+     * @param str $id
      * @return str A new API Key
      */
-    public function resetAPIKey($owner_id);
+    public function resetAPIKey($id);
 
     /**
      * Checks if the email/password credentials are authorized.

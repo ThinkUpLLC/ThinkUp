@@ -35,7 +35,7 @@ interface PostDAO {
      * @param str $network
      * @return Post Post with optional link member object set, null if post doesn't exist
      */
-    public function getPost($post_id, $network);
+    public function getPost($post_id, $network, $is_public = false);
 
     /**
      * Get replies to a post
@@ -80,7 +80,7 @@ interface PostDAO {
      * start at 1, not 0.
      * @return array Retweets of post with optional link object set
      */
-    public function getRetweetsOfPost($post_id, $network = 'twitter', $order_by = 'default', $unit = 'km',
+    public function getRetweetsOfPost($post_id, $network='twitter', $order_by = 'default', $unit = 'km',
     $is_public = false, $count = null, $page = 1);
 
     /**
@@ -93,7 +93,7 @@ interface PostDAO {
      * @param bool $include_original_post Whether or not to include the post you're querying. Defaults to true.
      * @return array Array of replies, retweets, and original post
      */
-    public function getRelatedPostsArray($post_id, $network = 'twitter', $is_public = false, $count = 350, $page =1,
+    public function getRelatedPostsArray($post_id, $network='twitter', $is_public = false, $count = 350, $page = 1,
     $geo_encoded_only = true, $include_original_post = true);
 
     /**
@@ -106,7 +106,7 @@ interface PostDAO {
      * @param bool $include_original_post Whether or not to include the post you're querying. Defaults to true.
      * @return array Array of post objects
      */
-    public function getRelatedPosts($post_id, $network = 'twitter', $is_public = false, $count = 350, $page = 1,
+    public function getRelatedPosts($post_id, $network='twitter', $is_public = false, $count = 350, $page = 1,
     $geo_encoded_only = true, $include_original_post = true);
 
     /**
@@ -127,7 +127,7 @@ interface PostDAO {
      * @param str $network Defaults to 'twitter'
      * @return array Back and forth posts
      */
-    public function getExchangesBetweenUsers($author_id, $other_user_id, $network = 'twitter');
+    public function getExchangesBetweenUsers($author_id, $other_user_id, $network='twitter');
 
     /**
      * Check to see if Post is in database
@@ -295,7 +295,7 @@ interface PostDAO {
      * @param str $network
      * @return Iterator PostIterator by author (no link set)
      */
-    public function getAllPostsByUsernameIterator($username, $network);
+    public function getAllPostsByUsernameIterator($username, $network, $count = 0);
 
     /**
      * Get count of posts by author username
@@ -392,7 +392,7 @@ interface PostDAO {
      * @param str $network Default 'twitter'
      * @return array Post objects with author set
      */
-    public function getOrphanReplies($username, $count, $network = 'twitter', $page = 1);
+    public function getOrphanReplies($username, $count, $network = "twitter", $page = 1); 
 
     /**
      * Get stray replied-to posts--posts that are listed in the in_repy_to_post_id field, but aren't in the posts table
@@ -410,7 +410,7 @@ interface PostDAO {
      * @return array $row['id'],$row['location'],$row['geo'],$row['post']
      * @return array $row['in_reply_to_post_id'],$row['in_retweet_of_post_id']
      */
-    public function getPostsToGeoencode($limit = 500);
+    public function getPostsToGeoencode($limit = 5000);
 
     /**
      * Set geo-location data for post
@@ -422,7 +422,7 @@ interface PostDAO {
      * @param int $distance
      * @return bool True if geo-location data for post added successfully
      */
-    public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = NULL, $geodata = NULL, $distance = 0);
+    public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = null, $geodata = null, $distance = 0);
 
     /**
      * Get specified number of most-replied-to posts by a username on a network
@@ -464,4 +464,11 @@ interface PostDAO {
      * @return int Count of posts updated
      */
     public function updateAuthorUsername($author_user_id, $network, $author_username);
+    
+    /**
+     * Sanitizes an order_by argument to avoid SQL injection and ensure that the table you're ordering by is valid.
+     * @param string $order_by Column to order on.
+     * @return string Sanitized column name. If the column was invalid, "pub_date" is returned.
+     */
+    public function sanitizeOrderBy($order_by);
 }

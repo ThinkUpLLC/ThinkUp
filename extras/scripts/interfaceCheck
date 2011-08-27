@@ -1,0 +1,148 @@
+#!/bin/bash
+ 
+# Navigate to the model directory
+cd `dirname $0`/../../webapp/_lib/model
+
+# Get a list of all the files which are interfaces 
+ls | grep 'interface.' >ListOfInterfaces.txt
+
+# Find out how many interfaces we have (We need to pipe the output of WC to awk as it prints the name of the file also) 
+length=$(wc -l ListOfInterfaces.txt | awk '{print $1}')
+
+# Variable to keep track of how far through the list of interfaces we are
+loop_count=1
+
+# Go through each interface in the list
+while [ $loop_count -le $length ]
+do
+
+# Get the interface to check
+interface_to_check=$(head -1 ListOfInterfaces.txt)
+
+# Open the interface file and get a list of all the methods
+cat $interface_to_check | grep 'public function' > WorkingInterface.txt
+
+# Now open the corresponding class
+
+# Determine if its a plugin or DAO
+echo $interface_to_check | grep -q 'DAO.php'
+
+# If its a DAO ($? returns the value of the last command)
+if [ $? = "0" ]; then
+	class_to_check=$interface_to_check
+	# Remove interface. from the front, and add class.
+	class_to_check=${class_to_check/'interface.'/'class.'}
+	# Remove DAO.php from the end, and add MySQLDAO.php
+	class_to_check=${class_to_check/'DAO'/'MySQLDAO'}
+	
+	# Check there is a class implementing the interface in this directory (currently this script doesn't support implementing classes outside of this directory)
+	# Redirecting the error output stops error messages about missing files being printed to the terminal
+	ls $class_to_check > /dev/null 2>&1
+	
+	# If an implementing class isn't present in this directory
+	if [ $? != "0" ]; then
+		# We skip this interface
+		# Increment the counter
+		loop_count=`expr $loop_count + 1`
+		# Remove this interface from the list
+		sed -i -e "1d" ListOfInterfaces.txt
+		# Delete our working file as it wont be empty
+		rm WorkingInterface.txt
+		continue
+	fi
+	
+	# If an implementing class is present in this directory
+	# Get all the methods from the implementing class
+	cat $class_to_check | grep 'public function' > WorkingClass.txt
+
+# If its a plugin	
+else
+	class_to_check=$interface_to_check
+	#Remove interface. from the front and add class.
+	class_to_check=${class_to_check/'interface.'/'class.'}
+	#Remove Plugin from the end
+	class_to_check=${class_to_check/'Plugin'/}
+	
+	# Redirecting the error output stops error messages about missing files being printed to the terminal
+	ls $class_to_check > /dev/null 2>&1
+	
+	# If an implementing class isn't present in this directory
+	if [ $? != "0" ]; then
+		# We skip this interface
+		# Increment the counter
+		loop_count=`expr $loop_count + 1`
+		# Remove this interface from the list
+		sed -i -e "1d" ListOfInterfaces.txt
+		# Delete our working file as it wont be empty
+		rm WorkingInterface.txt
+		continue
+	fi
+	
+	# If an implementing class is present in this directory
+	# Get all the methods from the implementing class
+	cat $class_to_check | grep 'public function' > WorkingClass.txt
+fi
+
+# Now we have all the methods we need to check every public method in the class is in the interface
+# If a method isn't in the interface print out an error message
+
+#Get the number of lines in the class We need to pipe the output of WC to awk as it prints the name of the file also) 
+class_length=$(wc -l WorkingClass.txt | awk '{print $1}')
+
+# Variable to keep track of how far through the class we are
+counter=0
+
+#For each method in the class
+while [ $class_length -ne $counter ]
+do
+	# Get the first method we want to look for
+	method_to_check=$(head -1 WorkingClass.txt)
+	# Stip the { from the end (interfaces dont have the { so our search for it will fail if we dont remove it)
+	method_to_check=${method_to_check/'{'/''}
+	# Remove leading whitespace characters (otherwise grep will try to match the whitespace which wont be present in the interface)
+	method_to_check="${method_to_check#"${method_to_check%%[![:space:]]*}"}"   
+	# Remove trailing whitespace characters (otherwise grep will try to match the whitespace which wont be present in the interface)
+	method_to_check="${method_to_check%"${method_to_check##*[![:space:]]}"}"   
+
+	# Methods which are excluded from being checked
+	echo $method_to_check | grep -q -E '(__construct)|(registerCrawlerPlugin)|(registerStreamerPlugin)'
+	 
+	# If the method is one of the exclusions
+	if [ $? = "0" ]; then
+		# Increment the counter 
+		counter=`expr $counter + 1`
+		continue 
+	fi
+	
+	# Search for the method in the interface
+	grep -q "$method_to_check" WorkingInterface.txt
+	
+	# If it is in the interface
+	if [ $? = "0" ]; then
+		# Remove the top line of working class
+		sed -i -e "1d" WorkingClass.txt
+
+	# If it isn't in the interface
+	else
+		# Print an error message
+		echo $method_to_check ' is present in ' $class_to_check ' but not present or spelt differently in ' $interface_to_check
+		# Remove the top line of the working class
+		sed -i -e "1d" WorkingClass.txt
+	fi
+
+	# Increment the counter 
+	counter=`expr $counter + 1`
+done
+
+# Now were dont checking that class and interface pair we need to move onto the next one
+# Increment the loop_count
+loop_count=`expr $loop_count + 1`
+# Remove the interface we just checked from the list of interfaces
+sed -i -e "1d" ListOfInterfaces.txt
+
+done
+
+# Clean up
+rm WorkingClass.txt
+rm ListOfInterfaces.txt
+rm WorkingInterface.txt

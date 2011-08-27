@@ -100,7 +100,7 @@ interface LinkDAO {
      * @param str $url
      * @return array with numbered keys, with strings
      */
-    public function getLinksToExpandByURL($prefix);
+    public function getLinksToExpandByURL($url);
     /**
      * Gets a link with a given ID
      * @param int $id

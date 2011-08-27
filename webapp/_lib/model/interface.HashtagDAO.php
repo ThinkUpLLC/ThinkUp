@@ -51,15 +51,15 @@ interface HashtagDAO {
     public function getHashtagInfoForTag($hashtag, $network = 'twitter');
     /**
      * Get the hashtag(s) which appear in a given post.
-     * @param int $post_id
+     * @param int $pid
      * @param str $network
      * @return array hashtag_posts table array
      */
-    public function getHashtagsForPost($post_id, $network = 'twitter');
+    public function getHashtagsForPost($pid, $network = 'twitter');
     /**
      * Get an array of post IDs where a hashtag appears by hashtag ID.
-     * @param int $hashtag_id Hashtag ID
+     * @param int $hid Hashtag ID
      * @return array hashtag_posts table array
      */
-    public function getHashtagsForPostHID($hashtag_id);
+    public function getHashtagsForPostHID($hid);
 }

@@ -88,9 +88,9 @@ interface InstallerDAO {
     /**
      * Run a sql migration command
      *
-     * @param str $sql SQL command to execute
+     * @param str $insql SQL command to execute
      */
-    public function runMigrationSQL($sql);
+    public function runMigrationSQL($insql);
 
     /**
      * Diff the current database table structure with desired table structure.
@@ -101,7 +101,7 @@ interface InstallerDAO {
      * @param array $existing_tables
      * @return array Array of 'queries', and 'for_update', what SQL will update the current structure to desired state
      */
-    public function diffDataStructure($queries = '', $tables = array());
+    public function diffDataStructure($desired_structure_sql_string = '', $existing_tables = array());
 
     /**
      * Temporary method to determine if database is 64-bit post ID ready

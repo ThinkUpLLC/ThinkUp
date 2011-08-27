@@ -236,9 +236,9 @@ interface FollowDAO {
 
     /**
      * Gets the friends that do not follow you back.
-     * @param int $uid
+     * @param int $user_id
      * @param str $network
      * @return array - numbered keys, with arrays - named keys
      */
-    public function getFriendsNotFollowingBack($uid, $network);
+    public function getFriendsNotFollowingBack($user_id, $network);
 }

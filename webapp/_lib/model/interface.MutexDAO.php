@@ -34,7 +34,7 @@ interface MutexDAO {
      * @param string $name
      * @return boolean True if the mutex was obtained, false if another thread was already holding this mutex.
      */
-    public function getMutex($name);
+    public function getMutex($name, $timeout=1);
 
     /**
      * Release a named mutex.

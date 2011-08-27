@@ -43,9 +43,9 @@ interface FollowerCountDAO  {
      * Get follower count history for a user
      * @param int $network_user_id
      * @param str $network
-     * @param str $group_by 'DAY', 'WEEK', 'MONTH'
+     * @param str $units 'DAY', 'WEEK', 'MONTH'
      * @param int $limit Defaults to 10
      * @return array $history, $percentages
      */
-    public function getHistory($network_user_id, $network, $group_by, $limit=10);
+    public function getHistory($network_user_id, $network, $units, $limit=10);
 }

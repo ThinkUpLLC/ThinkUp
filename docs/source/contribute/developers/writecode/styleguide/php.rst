@@ -69,3 +69,16 @@ Drupal conventions to take notice of
 Some of these are inherited from PEAR:
 
 * When constructing multi line IFs, the boolean operator should be at the beginning of the line, not the end.
+
+Method and parameter names in interfaces
+------------------------------------
+
+Methods and there parameters in interfaces must have exactly the same name as in there implementing classes.
+Whitespace must also be the same in both the class and interface.
+
+The interfaceCheck script located at extras/scripts/interfaceCheck will automatically check you have followed this rule.
+
+You can run it from the terminal by typing ./extras/scripts/interfaceCheck from ThinkUp's root directory
+
+It will print any errors to the terminal, no output means everythings fine.
+
