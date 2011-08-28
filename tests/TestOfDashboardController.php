@@ -143,7 +143,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
 
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All Tweets', 'Header');
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All tweets');
         $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'All tweets', 'Description');
         $this->assertIsA($v_mgr->getTemplateDataItem('all_tweets'), 'array', 'Array of tweets');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('all_tweets')), 15, '15 posts in listing');
@@ -163,7 +163,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
 
         //test if view variables were set correctly
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All Tweets', 'Header');
+        $this->assertEqual($v_mgr->getTemplateDataItem('header'), 'All tweets');
         $this->assertEqual($v_mgr->getTemplateDataItem('description'), 'All tweets', 'Description');
         $this->assertIsA($v_mgr->getTemplateDataItem('all_tweets'), 'array', 'Array of tweets');
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('all_tweets')), 15, '15 posts in listing');

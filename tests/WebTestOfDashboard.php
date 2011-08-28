@@ -69,7 +69,7 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->assertNoText('Logged in as admin: me@example.com');
 
         //click on a nav link
-        $this->click("All Tweets");
+        $this->click("All tweets");
 
         //make sure it takes you to posts view
         $this->assertText('All tweets');

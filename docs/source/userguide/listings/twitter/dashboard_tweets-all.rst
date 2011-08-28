@@ -1,4 +1,4 @@
-All Tweets
+All tweets
 ==========
 
 All the tweets ThinkUp has captured for this Twitter instance.

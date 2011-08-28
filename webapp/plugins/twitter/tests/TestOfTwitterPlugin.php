@@ -63,9 +63,9 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $menus = $this->webapp->getDashboardMenu($instance);
 
-        $this->assertEqual(sizeof($menus), 17, "Test number of Twitter Dashboard menu items");
+        $this->assertEqual(sizeof($menus), 15);
         $first_post_menuitem = $menus["tweets-all"];
-        $this->assertEqual($first_post_menuitem->name, "All Tweets", "Test name of first post menu item");
+        $this->assertEqual($first_post_menuitem->name, "All tweets", "Test name of first post menu item");
         $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");
 
         $first_post_menuitem_datasets = $first_post_menuitem->getDatasets();
@@ -133,9 +133,9 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $menus = $this->webapp->getDashboardMenu($instance);
 
-        $this->assertEqual(sizeof($menus), 19, "Test number of Twitter Dashboard menu items");
+        $this->assertEqual(sizeof($menus), 17);
         $first_post_menuitem = $menus["tweets-all"];
-        $this->assertEqual($first_post_menuitem->name, "All Tweets", "Test name of first post menu item");
+        $this->assertEqual($first_post_menuitem->name, "All tweets", "Test name of first post menu item");
         $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");
 
         $first_post_menuitem_datasets = $first_post_menuitem->getDatasets();
