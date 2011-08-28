@@ -1236,7 +1236,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getPostsToGeoencode($limit = 5000) {
         $q = "SELECT q.post_id, q.location, q.geo, q.place, q.in_reply_to_post_id, q.in_retweet_of_post_id, ";
-        $q.= "q.is_reply_by_friend, q.is_retweet_by_friend FROM ";
+        $q.= "q.is_reply_by_friend, q.is_retweet_by_friend, q.network FROM ";
         $q .= "(SELECT * FROM #prefix#posts AS p WHERE ";
         $q .= " (p.geo IS NOT null OR p.place IS NOT null OR p.location IS NOT null)";
         $q .= " AND (p.is_geo_encoded='0' OR p.is_geo_encoded='3') ";
@@ -1250,33 +1250,37 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $all_rows;
     }
 
-    public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = null, $geodata = null, $distance = 0) {
+    public function setGeoencodedPost($post_id, $network, $is_geo_encoded = 0, $location = null, $geodata = null,
+    $distance = 0) {
         if ($location && $geodata && ($is_geo_encoded>=1 && $is_geo_encoded<=5)) {
             $q = "UPDATE #prefix#posts p SET p.location = :location, p.geo = :geo, ";
             $q .= "p.reply_retweet_distance = :distance, p.is_geo_encoded = :is_geo_encoded ";
-            $q .= "WHERE p.post_id = :post_id";
+            $q .= "WHERE p.post_id = :post_id AND p.network=:network";
             $vars = array(
                 ':location'=>$location,
                 ':geo'=>$geodata,
                 ':distance'=>$distance,
                 ':is_geo_encoded'=>$is_geo_encoded,
-                ':post_id'=>$post_id
+                ':post_id'=>$post_id,
+                ':network'=>$network
             );
         } else {
-            $q = "UPDATE #prefix#posts p SET p.is_geo_encoded = :is_geo_encoded WHERE p.post_id = :post_id";
+            $q = "UPDATE #prefix#posts p SET p.is_geo_encoded = :is_geo_encoded ";
+            $q .= "WHERE p.post_id = :post_id AND p.network=:network";
             $vars = array(
                 ':is_geo_encoded'=>$is_geo_encoded,
-                ':post_id'=>$post_id
+                ':post_id'=>$post_id,
+                ':network'=>$network
             );
         }
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         if ($this->getUpdateCount($ps) > 0) {
-            $logstatus = "Geolocation for post $post_id IS_GEO_ENCODED: $is_geo_encoded";
+            $logstatus = "Geolocation for $network post $post_id IS_GEO_ENCODED: $is_geo_encoded";
             $this->logger->logInfo($logstatus, __METHOD__.','.__LINE__);
             return true;
         } else {
-            $logstatus = "Geolocation for post_id=$post_id IS_GEO_ENCODED: $is_geo_encoded not saved";
+            $logstatus = "Geolocation for $network post_id=$post_id IS_GEO_ENCODED: $is_geo_encoded not saved";
             $this->logger->logInfo($logstatus, __METHOD__.','.__LINE__);
             return false;
         }

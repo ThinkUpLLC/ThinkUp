@@ -82,7 +82,7 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
 
         // Test: Example of unsuccessful geoencoding resulting out of INVALID_REQUEST.
         // NOTE: Not a test case encountered in actual crawl
-        $post = $pdao->getPost(15331235880, 'twitter');
+        $post = $pdao->getPost('15331235880', 'twitter');
         $this->assertEqual($post->is_geo_encoded, 5);
         $this->assertEqual($post->geo, '28.60abc2815 77.049136');
 
@@ -226,84 +226,84 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         'is_active'=>1));
 
         //Insert test posts
-        $builders[] = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>15645300636,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>1, 'post_id'=>'15645300636', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_test'=>'thinking....',
         'location'=>'New Delhi', 'place'=>NULL, 'geo'=>'28.602815 77.049136', 'is_geo_encoded'=>0,
         'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>15435434230,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>2, 'post_id'=>'15435434230', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'i think its working now :D...',
         'location'=>NULL, 'place'=>NULL, 'geo'=>NULL, 'is_geo_encoded'=>6));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>3, 'post_id'=>15344199472,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>3, 'post_id'=>'15344199472', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'lets try again ...',
         'location'=>'New Delhi', 'place'=>NULL, 'geo'=>NULL, 'is_retweet_by_friend'=>1,
         'in_retweet_of_post_id'=>15645300636, 'is_geo_encoded'=>0, 'in_reply_to_post_id'=>null));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>4, 'post_id'=>15338041815,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>4, 'post_id'=>'15338041815', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'howdy ???',
         'location'=>'Mumbai', 'place'=>NULL, 'geo'=>NULL, 'is_geo_encoded'=>3));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>5, 'post_id'=>15331235880,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>5, 'post_id'=>'15331235880', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>':)', 'location'=>'New Delhi',
         'place'=>NULL, 'geo'=>'28.60abc2815 77.049136', 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>6, 'post_id'=>15268690400,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>6, 'post_id'=>'15268690400', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'hmm... lets c...',
         'location'=>'abc', 'place'=>NULL, 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>7, 'post_id'=>15244973830,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>7, 'post_id'=>'15244973830', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'hmmm....',
         'location'=>'Ü', 'place'=>NULL, 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>8, 'post_id'=>15219161227,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>8, 'post_id'=>'15219161227', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet',
         'post_text'=>'RT @jerrybrito: New Podcast: Gina Trapani and Anil Dash on Expert Labs and ThinkUp ow.ly/17zfrX',
         'location'=>'New Delhi', 'place'=>NULL, 'geo'=>'28.56213 77.165297', 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>12, 'post_id'=>15052338902,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>12, 'post_id'=>'15052338902', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet',
         'post_text'=>'@imnishantg thats the problem.... :P', 'location'=>'New Delhi',
         'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>NULL, 'is_reply_by_friend'=>1,
         'in_reply_to_post_id'=>15338041815, 'is_geo_encoded'=>0, 'in_retweet_of_post_id'=>null));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>13, 'post_id'=>14914043658,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>13, 'post_id'=>'14914043658', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'is done with exams !!!', 
         'location'=>'New Delhi', 'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>14, 'post_id'=>14913946516,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>14, 'post_id'=>'14913946516', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'is done with exams !!! :-)',
         'location'=>'New Delhi', 'place'=>'abc', 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>15, 'post_id'=>11259110570,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>15, 'post_id'=>'11259110570', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'im here finally ;)....',
         'location'=>'New Delhi', 'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>'28.56213 77.165297',
         'is_reply_by_friend'=>1, 'in_reply_to_post_id'=>14914043658, 'is_geo_encoded'=>0, 
         'in_retweet_of_post_id'=>null));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>16, 'post_id'=>12259110570,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>16, 'post_id'=>'12259110570', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'im here finally ;)....',
         'location'=>'New Delhi', 'place'=>'request_denied', 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>18, 'post_id'=>13212618909,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>18, 'post_id'=>'13212618909', 'network'=>'twitter',
         'author_user_id'=>772673, 'author_username'=>'mwilkie', 'post_text'=>'Just watched chris corn cob a sheep.',
         'location'=>'iPhone: 40.681839,-73.983734', 'place'=>NULL, 'geo'=>NULL, 'is_retweet_by_friend'=>1,
         'in_retweet_of_post_id'=>11259110570, 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>19, 'post_id'=>1231210570,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>19, 'post_id'=>'1231210570', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'im here finally ;)....',
         'location'=>'New Delhi', 'place'=>'Sector 8, R.K. Puram, New Delhi', 'geo'=>'28.56213 77.165297',
         'is_reply_by_friend'=>1, 'in_reply_to_post_id'=>14914043658, 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>20, 'post_id'=>13259110570,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>20, 'post_id'=>'13259110570', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'im here finally ;)....',
         'location'=>'New Delhi', 'place'=>'over_query_limit', 'geo'=>NULL, 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>21, 'post_id'=>15645301636,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>21, 'post_id'=>'15645301636', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>'thinking....',
         'location'=>'New Delhi', 'place'=>NULL, 'geo'=>'28.602815 77.049136', 'is_geo_encoded'=>0));
 
-        $builders[] = FixtureBuilder::build('posts', array('id'=>22, 'post_id'=>11331235880,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>22, 'post_id'=>'11331235880', 'network'=>'twitter',
         'author_user_id'=>127567137, 'author_username'=>'ekanshpreet', 'post_text'=>':)', 'location'=>'New Delhi',
         'location'=>NULL, 'geo'=>'28.60abc2815 77.049136', 'is_geo_encoded'=>0));
 

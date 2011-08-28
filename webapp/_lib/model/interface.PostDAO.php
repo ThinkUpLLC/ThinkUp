@@ -427,14 +427,16 @@ interface PostDAO {
     /**
      * Set geo-location data for post
      * @param int $post_id
+     * @param str $network
      * @param int $is_geo_encoded 0 if Not Geoencoded, 1 if Successful,
      * 2 if ZERO_RESULTS, 3 if OVER_QUERY_LIMIT, 4 if REQUEST_DENIED, 5 if INVALID_REQUEST
-     * @param string $location
-     * @param string $geodata
+     * @param str $location
+     * @param str $geodata
      * @param int $distance
      * @return bool True if geo-location data for post added successfully
      */
-    public function setGeoencodedPost($post_id, $is_geo_encoded = 0, $location = NULL, $geodata = NULL, $distance = 0);
+    public function setGeoencodedPost($post_id, $network, $is_geo_encoded = 0, $location = NULL, $geodata = NULL,
+    $distance = 0);
 
     /**
      * Update the favorite/like count cache for a post.

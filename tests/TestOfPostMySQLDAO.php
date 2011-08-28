@@ -1920,12 +1920,15 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testSetGeoencodedPost() {
         $dao = new PostMySQLDAO();
-        $setData = $dao->setGeoencodedPost(131, 1);
+        $result = $dao->setGeoencodedPost(131, 'twitter', 1);
+        //already set to 1
+        $this->assertFalse($result);
         $post = $dao->getPost(131, 'twitter');
         $this->assertEqual($post->is_geo_encoded, 1);
         $this->assertEqual($post->reply_retweet_distance, 0);
 
-        $setData = $dao->setGeoencodedPost(131, 1, 'New Delhi', '78', 100);
+        $result = $dao->setGeoencodedPost(131, 'twitter', 1, 'New Delhi', '78', 100);
+        $this->assertTrue($result);
         $post = $dao->getPost(131, 'twitter');
         $this->assertEqual($post->is_geo_encoded, 1);
         $this->assertEqual($post->geo, 78);
@@ -1933,17 +1936,27 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($post->reply_retweet_distance, 100);
 
         //Since both of $location and $geodata are not defined, only is_geo_encoded field is updated
-        $setData = $dao->setGeoencodedPost(131, 2, '', 29);
+        $result = $dao->setGeoencodedPost(131, 'twitter', 2, '', 29);
+        $this->assertTrue($result);
         $post = $dao->getPost(131, 'twitter');
         $this->assertEqual($post->is_geo_encoded, 2);
         $this->assertEqual($post->geo, '78');
         $this->assertEqual($post->location, 'New Delhi');
 
         //Since both of $location and $geodata are not defined, only is_geo_encoded field is updated
-        $setData = $dao->setGeoencodedPost(131, 1, 'Dwarka');
+        $result = $dao->setGeoencodedPost(131, 'twitter', 1, 'Dwarka');
+        $this->assertTrue($result);
         $post = $dao->getPost(131, 'twitter');
         $this->assertEqual($post->geo, '78');
         $this->assertEqual($post->location, 'New Delhi');
+
+        //bad post ID
+        $result = $dao->setGeoencodedPost('1314452345243', 'twitter', 1, 'Dwarka');
+        $this->assertFalse($result);
+
+        //bad network
+        $result = $dao->setGeoencodedPost('131', 'testnetwork', 1, 'Dwarka');
+        $this->assertFalse($result);
     }
 
     /**
