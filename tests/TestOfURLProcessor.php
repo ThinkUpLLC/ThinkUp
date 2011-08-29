@@ -50,6 +50,7 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->logger->close();
         parent::tearDown();
     }
+
     public function testProcessPostURLs() {
         $network = 'twitter';
         //Twitpic
@@ -152,7 +153,8 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $result = $link_dao->getLinkByUrl('http://flic.kr/blah');
         $this->assertIsA($result, "Link");
         $this->assertEqual($result->url, 'http://flic.kr/blah');
-        $this->assertEqual($result->expanded_url, 'http://flic.kr/blah');
+        //still need to expand the flic.kr link
+        $this->assertEqual($result->expanded_url, '');
         $this->assertEqual($result->image_src, '');
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 106);

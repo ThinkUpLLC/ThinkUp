@@ -318,6 +318,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $retweets = $pdao->getRetweetsOfPost('13708601491193856', 'twitter', true);
         $this->assertEqual(sizeof($retweets), 1);
         $this->assertEqual($post->link->url, "http://is.gd/izUl5");
+        $this->assertNotEqual($post->link->expanded_url, "http://is.gd/izUl5");
 
         $post = $pdao->getPost('13960125416996864', 'twitter');
         $this->assertEqual($post->in_retweet_of_post_id, '13708601491193856');
@@ -534,6 +535,22 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
         $this->assertEqual($retval, true);
         $builder2 = null;
+
+        //Assert links got saved
+        $post_dao = new PostMySQLDAO();
+        $post = $post_dao->getPost('25138632577', 'twitter');
+        $this->assertIsA($post->link, "Link");
+        $this->assertEqual($post->post_text, "Raw RSS feed of independent neuroblogs ".
+        "http://friendfeed.com/neuroghetto Now also listed at scienceblogging.org Yay!");
+        $this->assertEqual($post->link->url, "http://friendfeed.com/neuroghetto");
+        $this->assertEqual($post->link->expanded_url, '');
+
+        $post = $post_dao->getPost('25598018110', 'twitter');
+        $this->assertIsA($post->link, "Link");
+        $this->assertEqual($post->post_text, "Wal-mart: People line up at midnight to buy baby formula, waiting for ".
+        "monthly govt checks to hit accounts http://bit.ly/aK5pCQ");
+        $this->assertEqual($post->link->url, "http://bit.ly/aK5pCQ");
+        $this->assertEqual($post->link->expanded_url, '');
     }
 
     public function testFetchFavoritesOfInstanceuserBadResponse() {

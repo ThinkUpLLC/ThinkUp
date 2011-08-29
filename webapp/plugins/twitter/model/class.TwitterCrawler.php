@@ -1194,6 +1194,7 @@ class TwitterCrawler {
                     $tweet['network'] = 'twitter';
 
                     if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
+                        URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter', $this->logger);
                         $this->logger->logInfo("found new fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
                         $fcount++;
                         $this->logger->logInfo("fcount: $fcount", __METHOD__.','.__LINE__);
@@ -1303,6 +1304,7 @@ class TwitterCrawler {
                 $this->logger->logInfo("working on fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
 
                 if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
+                    URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter', $this->logger);
                     $fcount++;
                     $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);
                 } else {
@@ -1430,6 +1432,7 @@ class TwitterCrawler {
                 $fav['network'] = 'twitter';
                 // check whether the tweet is in the db-- if not, add it.
                 if ($fpd->addFavorite($this->user->user_id, $fav) > 0) {
+                    URLProcessor::processPostURLs($fav['post_text'], $fav['post_id'], 'twitter', $this->logger);
                     $this->logger->logInfo("added fav " . $fav['post_id'], __METHOD__.','.__LINE__);
                     $fcount++;
                 } else {

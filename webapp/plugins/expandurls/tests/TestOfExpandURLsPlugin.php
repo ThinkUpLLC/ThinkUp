@@ -96,6 +96,11 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($link->image_src, '');
         $this->assertEqual($link->error, '');
 
+        $link = $link_dao->getLinkById(10);
+        $this->assertEqual($link->url, 'http://t.co/oDI8D34');
+        $this->assertEqual($link->expanded_url, 'http://yfrog.com/gz2inwrj');
+        $this->assertEqual($link->image_src, 'http://yfrog.com/gz2inwrj.th.jpg');
+        $this->assertEqual($link->error, '');
     }
 
     private function buildData() {
@@ -215,6 +220,17 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
             'error' => null
         ));
 
+        // Double-shortened known image URL (Yfrog)
+        $builders[] = FixtureBuilder::build('links', array(
+            'id' => 10,
+            'url' => 'http://t.co/oDI8D34',
+            'expanded_url' => null,
+            'title' => '',
+            'clicks' => 0,
+            'post_id' => 1,
+            'image_src' => '',
+            'error' => null
+        ));
         return $builders;
     }
 

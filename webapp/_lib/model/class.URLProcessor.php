@@ -45,8 +45,10 @@ class URLProcessor {
                 $logger->logInfo("Processing URL: $url", __METHOD__.','.__LINE__);
                 $image_src = self::getImageSource($url);
 
-                $link_array = array('url'=>$url, 'expanded_url'=>$url, "image_src"=>$image_src, 'post_id'=>$post_id,
-                'network'=>$network);
+                //if we have an image_src, the URL is a known image source not in need of expansion
+                $expanded_url = isset($image_src)?$url:'';
+                $link_array = array('url'=>$url, 'expanded_url'=>$expanded_url, "image_src"=>$image_src,
+                'post_id'=>$post_id, 'network'=>$network);
                 $link = new Link($link_array);
                 if ($link_dao->insert($link)) {
                     $logger->logSuccess("Inserted ".$url." (thumbnail ".$image_src."), into links table",
@@ -66,7 +68,7 @@ class URLProcessor {
      * @return str $image_src
      */
     public static function getImageSource($url) {
-        $image_src = '';
+        $image_src = null;
         if (substr($url, 0, strlen('http://twitpic.com/')) == 'http://twitpic.com/') {
             $image_src = 'http://twitpic.com/show/thumb/'.substr($url, strlen('http://twitpic.com/'));
         } elseif (substr($url, 0, strlen('http://yfrog.com/')) == 'http://yfrog.com/') {
