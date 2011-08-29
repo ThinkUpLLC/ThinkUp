@@ -44,25 +44,27 @@ class DashboardController extends ThinkUpController {
 
     public function control() {
         $this->setViewTemplate('dashboard.tpl');
-        $this->setInstance();
+        if ($this->shouldRefreshCache() ) {
+            $this->setInstance();
 
-        $this->view_name = (isset($_GET['v']))?$_GET['v']:'default';
-        $webapp = Webapp::getInstance();
-        if (isset($this->instance)) {
-            $webapp->setActivePlugin($this->instance->network);
-            $sidebar_menu = $webapp->getDashboardMenu($this->instance);
-            $this->addToView('sidebar_menu', $sidebar_menu);
-            $this->loadView();
-        } else {
-            if (!Session::isLoggedIn()) {
-                $this->addInfoMessage('There are no public accounts set up in this ThinkUp installation.<br /><br />'.
+            $this->view_name = (isset($_GET['v']))?$_GET['v']:'default';
+            $webapp = Webapp::getInstance();
+            if (isset($this->instance)) {
+                $webapp->setActivePlugin($this->instance->network);
+                $sidebar_menu = $webapp->getDashboardMenu($this->instance);
+                $this->addToView('sidebar_menu', $sidebar_menu);
+                $this->loadView();
+            } else {
+                if (!Session::isLoggedIn()) {
+                    $this->addInfoMessage('There are no public accounts set up in this ThinkUp installation.<br /><br />'.
                 'To make a current account public, log in and click on "Settings." Click on one of the plugins '.
                 'that contain accounts (like Twitter or Facebook) and click "Set Public" next to the account that '.
                 ' should appear to users who are not logged in.');
-            } else  {
-                $config = Config::getInstance();
-                $this->addInfoMessage('You have no services configured. <a href="'.$config->getValue('site_root_path').
+                } else  {
+                    $config = Config::getInstance();
+                    $this->addInfoMessage('You have no services configured. <a href="'.$config->getValue('site_root_path').
                 'account/">Set up a service like Twitter or Facebook now&rarr;</a>');
+                }
             }
         }
         return $this->generateView();
