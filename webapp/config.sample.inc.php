@@ -19,6 +19,9 @@ $THINKUP_CFG['timezone']                  = 'America/Los_Angeles';
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
 $THINKUP_CFG['cache_pages']               = true;
 
+// Smarty file cache lifetime in seconds; defaults to 600 (10 minutes)caching
+$THINKUP_CFG['cache_lifetime']               = 600;
+
 // The crawler, when triggered by requests to the RSS feed, will only launch if it's been
 // 20 minutes or more since the last crawl.
 $THINKUP_CFG['rss_crawler_refresh_rate']  = 20;

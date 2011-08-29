@@ -54,7 +54,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $this->assertTrue(sizeof($v_mgr->plugins_dir), 2);
         $this->assertEqual($v_mgr->plugins_dir[0], 'plugins');
         $this->assertEqual($v_mgr->cache_dir, THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache');
-        $this->assertEqual($v_mgr->cache_lifetime, 300);
+        $this->assertEqual($v_mgr->cache_lifetime, $cfg->getValue('cache_lifetime'));
         $this->assertTrue($v_mgr->caching);
     }
 
@@ -64,6 +64,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
     public function testSmartyThinkUpAssignedValuesDebugOn() {
         $cfg = Config::getInstance();
         $cfg->setValue('debug', true);
+        $cfg->setValue('cache_lifetime', 1200);
         $cfg->setValue('app_title', 'Testy ThinkUp Custom Application Name');
         $cfg->setValue('site_root_path', '/my/thinkup/folder/');
         $v_mgr = new SmartyThinkUp();
@@ -74,6 +75,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'Testy ThinkUp Custom Application Name');
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
         $this->assertEqual($v_mgr->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/');
+        $this->assertEqual($v_mgr->cache_lifetime, 1200);
     }
 
     /**
@@ -98,12 +100,13 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
         'site_root_path'=>'/my/thinkup/folder/test',
         'source_root_path'=>'/Users/gina/Sites/thinkup', 
         'app_title'=>"My ThinkUp", 
-        'cache_pages'=>true);
+        'cache_pages'=>true, 'cache_lifetime'=>1000);
         $v_mgr = new SmartyThinkUp($cfg_array);
 
         $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'My ThinkUp');
         $this->assertEqual($v_mgr->getTemplateDataItem('logo_link'), '');
         $this->assertEqual($v_mgr->getTemplateDataItem('site_root_path'), '/my/thinkup/folder/test');
+        $this->assertEqual($v_mgr->cache_lifetime, 1000);
     }
 
     public function testAddHelp() {

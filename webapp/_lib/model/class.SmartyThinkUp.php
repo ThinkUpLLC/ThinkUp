@@ -97,6 +97,7 @@ class SmartyThinkUp extends Smarty {
         $site_root_path = $config_array['site_root_path'];
         $app_title = $config_array['app_title'];
         $cache_pages = $config_array['cache_pages'];
+        $cache_lifetime = isset($config_array['cache_lifetime'])?$config_array['cache_lifetime']:600;
         $debug =  $config_array['debug'];
         Utils::defineConstants();
 
@@ -106,7 +107,7 @@ class SmartyThinkUp extends Smarty {
         $this->plugins_dir = array('plugins', THINKUP_WEBAPP_PATH.'_lib/view/plugins/');
         $this->cache_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache';
         $this->caching = ($cache_pages)?1:0;
-        $this->cache_lifetime = 300;
+        $this->cache_lifetime = $cache_lifetime;
         $this->debug = $debug;
 
         $this->assign('app_title', $app_title);
