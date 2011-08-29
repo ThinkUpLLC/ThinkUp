@@ -255,7 +255,7 @@ class Post {
         $url_pattern = '(?i)\b'.
         '((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)'. 
         '(?:[^\s()<>/][^\s()<>]*|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+'.
-        '(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))';
+        '(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’,�]))';
         preg_match_all('#'.$url_pattern.'#', $post_text, $matches);
         $corrected_urls = array_map( 'Link::addMissingHttp', $matches[0]);
         return array_filter($corrected_urls,'Utils::validateURL');

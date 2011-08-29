@@ -159,5 +159,19 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 106);
         $this->assertEqual($result->network, 'facebook');
+
+        $post_id = 107;
+        $post_text = "This is a post with a curly quote closing the link http://t.co/2JVSpi5Ó yo";
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
+
+        $link_dao = new LinkMySQLDAO();
+        $result = $link_dao->getLinkByUrl('http://t.co/2JVSpi5');
+        $this->assertIsA($result, "Link");
+        $this->assertEqual($result->url, 'http://t.co/2JVSpi5');
+        $this->assertEqual($result->expanded_url, '');
+        $this->assertEqual($result->image_src, '');
+        $this->assertEqual($result->title, '');
+        $this->assertEqual($result->post_id, 107);
+        $this->assertEqual($result->network, 'facebook');
     }
 }

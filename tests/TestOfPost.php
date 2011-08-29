@@ -54,7 +54,8 @@ class TestOfPost extends ThinkUpBasicUnitTestCase {
         "detects embedding <http://foo.com/blah_blah/> nicely <tag>http://example.com</tag>" 
         => array('http://foo.com/blah_blah/', 'http://example.com'),
         '"RT @someone doesnt screw up RTs with quotes that bookend a link like http://example.com"'
-        => array('http://example.com') );
+        => array('http://example.com'),
+        "This here's a t.co link enclosed by a curly brace http://t.co/2JVSpi5Ó"=> array ('http://t.co/2JVSpi5'));
 
         foreach ($test_patterns as $test_text=>$expected_urls) {
             $urls = Post::extractURLs($test_text);
