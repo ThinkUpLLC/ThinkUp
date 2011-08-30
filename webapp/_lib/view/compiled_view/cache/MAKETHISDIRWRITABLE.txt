@@ -1,1 +1,0 @@
-chmod -R 777 cache/
