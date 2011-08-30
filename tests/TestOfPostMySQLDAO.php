@@ -1708,6 +1708,22 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test deletePost
+     */
+    public function testDeletePost() {
+        $pdao = new PostMySQLDAO();
+
+        // no such post
+        $this->assertEqual(0, $pdao->deletePost(-99));
+
+        // post deleted
+        $this->assertEqual(1, $pdao->deletePost(1));
+        $sql = "select * from " . $this->table_prefix . 'posts where id = 1';
+        $stmt = PostMysqlDAO::$PDO->query($sql);
+        $this->assertFalse($stmt->fetch(PDO::FETCH_ASSOC));
+    }
+
+    /**
      * Test getTotalPostsByUser
      */
     public function testGetTotalPostsByUser() {

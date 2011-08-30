@@ -157,7 +157,7 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
           * @param boolean $auth Does it require authorization via OAuth
           * @return array (cURL status, cURL content returned)
           */
-         public function apiRequest($url, $args = array(), $auth = true) {
+         public function apiRequest($url, $args = array(), $auth = true, $suppress_404_error = false) {
              $logger = Logger::getInstance();
              $attempts = 0;
              $continue = true;
@@ -166,7 +166,6 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                  while ($attempts <= $this->num_retries && $continue) {
                      $content = $this->to->OAuthRequest($url, 'GET', $args);
                      $status = $this->to->lastStatusCode();
-
                      $this->available_api_calls_for_twitter = $this->available_api_calls_for_twitter - 1;
                      $this->available_api_calls_for_crawler = $this->available_api_calls_for_crawler - 1;
                      $status_message = "";
@@ -180,8 +179,12 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                          }
                          $translated_status_code = $this->translateErrorCode($status);
                          $status_message .= " | API ERROR: $translated_status_code";
-                         //$status_message .= "\n\n$content\n\n";
-                         $logger->logUserError($status_message, __METHOD__.','.__LINE__);
+
+                         //sometimes we expect a 404, delete a tweet check?, so suppress if defined
+                         if($suppress_404_error === false && $status == 404) {
+                             $logger->logUserError($status_message, __METHOD__.','.__LINE__);
+                         }
+
                          $status_message = "";
                          if ($status != 404 && $status != 403) {
                              $attempts++;

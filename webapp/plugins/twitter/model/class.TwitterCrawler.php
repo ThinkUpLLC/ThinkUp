@@ -93,7 +93,7 @@ class TwitterCrawler {
                         $this->user->follower_count);
                     }
                     $this->logger->logUserSuccess("Successfully fetched ".$this->user->username.
-                    "'s details from Twitter.", __METHOD__.','.__LINE__);
+                    "'s details from Twitter. Tweet Count: ". $this->user->post_count, __METHOD__.','.__LINE__);
                 } else {
                     $this->logger->logUserError("Twitter didn't return information for "
                     .$this->user->username, __METHOD__.','.__LINE__);
@@ -150,6 +150,52 @@ class TwitterCrawler {
             }
         }
     }
+
+    /**
+     * Delete posts from the db if needed.
+     */
+    private function processDeletedTweets() {
+        if($this->api->available && $this->api->available_api_calls_for_crawler > 0) {
+            $recent_tweets = str_replace("[id]", $this->user->username, $this->api->cURL_source['user_timeline']);
+            list($cURL_status, $twitter_data) =
+            $this->api->apiRequest($recent_tweets, array('count' => '100', 'include_rts' => 'true') );
+            $this->logger->logUserInfo("Checking for deleted tweets", __METHOD__.','.__LINE__);
+            if ($cURL_status == 200) {
+                $count = 0;
+                $tweets = $this->api->parseXML($twitter_data);
+                $tweets_array = array();
+                $last_id = 0;
+                foreach($tweets as $tweet) {
+                    $tweets_array[$tweet['post_id'] . ''] =  $tweet;
+                    $last_id = $tweet['post_id'];
+                }
+                $pd = DAOFactory::getDAO('PostDAO');
+                $db_posts = $pd->getAllPosts($this->instance->network_user_id, 'twitter',
+                count($tweets), 1,true, 'pub_date', 'DESC', false);
+
+                foreach($db_posts as $post) {
+                    if(! isset($tweets_array[ $post->post_id . '']) ) {
+                        // verify this tweet does not exists
+                        $show_tweet = str_replace("[id]", $post->post_id, $this->api->cURL_source['show_tweet']);
+                        list($cURL_status, $tweet_data)
+                        = $this->api->apiRequest($show_tweet, array(), true, true);
+                        if($cURL_status == 404) {
+                            $this->logger->logUserInfo( "Deleting post: " . $post->post_id . ' ' . $post->post_text,
+                            __METHOD__.','.__LINE__);
+                            $pd->deletePost($post->id);
+                            $this->instance->total_posts_in_system--;
+                        } else {
+                            $this->logger->logError( "Not deleting post, still exists on Twitter, or non 404 status: "
+                            . $cURL_status .  ' - ' . $post->post_id . ' ' . $post->post_text, __METHOD__.','.__LINE__);
+                        }
+                    }
+                }
+
+            } else {
+                $this->logger->logError("Unable to fetch tweets for deletion accounting", __METHOD__.','.__LINE__);
+            }
+        }
+    }
     /**
      * Capture the current instance users's tweets and store them in the database.
      */
@@ -157,11 +203,20 @@ class TwitterCrawler {
         if (!isset($this->user)) {
             $this->fetchInstanceUserInfo();
         }
+
         if (isset($this->user)) {
+
+            // check for deletes
+            if($this->instance->total_posts_in_system >= $this->user->post_count) {
+                $this->processDeletedTweets();
+                return;
+            }
+
             $status_message = "";
             $got_latest_page_of_tweets = false;
             $continue_fetching = true;
-
+            $this->logger->logUserInfo("Twitter user post count:  " . $this->user->post_count .
+            " - Thinkup post count: "  . $this->instance->total_posts_in_system, __METHOD__.','.__LINE__);
             while ($this->api->available && $this->api->available_api_calls_for_crawler > 0
             && $this->user->post_count > $this->instance->total_posts_in_system && $continue_fetching) {
 
@@ -189,7 +244,6 @@ class TwitterCrawler {
                     if (!$got_latest_page_of_tweets && $this->instance->last_post_id > 0)
                     $args["since_id"] = $this->instance->last_post_id;
                 }
-
                 list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $args);
                 if ($cURL_status == 200) {
                     $count = 0;
@@ -210,7 +264,7 @@ class TwitterCrawler {
                         if ($tweet['post_id'] > $this->instance->last_post_id)
                         $this->instance->last_post_id = $tweet['post_id'];
                     }
-                    $status_message .= count($tweets)." tweet(s) found and $count saved";
+                    $status_message .= ' ' . count($tweets)." tweet(s) found and $count saved";
                     $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
                     $status_message = "";
 
@@ -237,7 +291,7 @@ class TwitterCrawler {
             }
 
             if ($this->instance->total_posts_in_system >= $this->user->post_count) {
-                $status_message .= "All of ".$this->user->username. "'s tweets are in ThinkUp.";
+                $status_message = "All of ".$this->user->username. "'s tweets are in ThinkUp.";
                 $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
             }
 
