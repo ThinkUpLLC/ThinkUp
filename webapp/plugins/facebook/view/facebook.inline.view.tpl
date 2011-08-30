@@ -1,4 +1,5 @@
 <div class="">
+  <div class="help-container">{insert name="help_link" id=$display}</div>
   {if $description}
     <i>{$description} 
       {if $is_searchable}
@@ -7,7 +8,6 @@
       {if $logged_in_user and $display eq 'all_facebook_posts'} | <a href="{$site_root_path}post/export.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Export</a>{/if}
     </i>
     {/if}
-    <div class="help-container">{insert name="help_link" id=$display}</div>
 </div>
 
 {if ($display eq 'all_facebook_posts' and not $all_facebook_posts) or 
@@ -21,15 +21,19 @@
 {/if}
 
 {if $all_facebook_posts and ($display eq 'all_facebook_posts' OR $display eq 'questions')}
+<div id="all-posts-div">
   {foreach from=$all_facebook_posts key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}
   {/foreach}
+</div>
 {/if}
 
 {if $most_replied_to_posts}
+<div id="all-posts-div">
   {foreach from=$most_replied_to_posts key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}
   {/foreach}
+</div>
 {/if}
 
 
@@ -62,36 +66,6 @@
     {include file="_link.tpl" t=$f}
   {/foreach}  
 {/if}
-
-<script type="text/javascript">
-  {literal}
-  $(function() {
-    // Begin reply assignment actions.
-    $(".button").click(function() {
-      var element = $(this);
-      var Id = element.attr("id");
-      var oid = Id;
-      var pid = $("select#pid" + Id + " option:selected").val();
-      var u = '{/literal}{$i->network_username|escape:'url'}{literal}';
-      var t = 'inline.view.tpl';
-      var ck = '{/literal}{$i->network_username|escape:'url'}-{$logged_in_user}-{$display}{literal}';
-      var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}post/mark-parent.php",
-        data: dataString,
-        success: function() {
-          $('#div' + Id).html("<div class='ui-state-success ui-corner-all' id='message" + Id + "'></div>");
-          $('#message' + Id).html("<p>Saved!</p>").hide().fadeIn(1500, function() {
-            $('#message'+Id);  
-          });
-        }
-      });
-      return false;
-    });
-  });
-  {/literal}
-</script>
 
 {if $is_searchable}
     {include file="_grid.search.tpl"}

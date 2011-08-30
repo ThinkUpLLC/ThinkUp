@@ -138,7 +138,7 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin
         $mltab = new MenuItem("Most liked", "Posts with most likes", $fb_data_tpl);
         $mltabds = new Dataset("most_replied_to_posts", 'PostDAO', "getMostFavedPosts",
         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
-        //$mrttabds->addHelp('userguide/listings/facebook/dashboard_mostreplies');
+        $mltabds->addHelp('userguide/listings/facebook/dashboard_mostlikes');
         $mltab->addDataset($mltabds);
         $menus["mostlikes"] = $mltab;
 
