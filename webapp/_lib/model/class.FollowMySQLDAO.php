@@ -61,8 +61,8 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
 
     public function update($user_id, $follower_id, $network, $debug_api_call = '') {
         $q = " UPDATE #prefix#follows ";
-        $q .= " SET last_seen=NOW(), debug_api_call = :debug";
-        $q .= " WHERE user_id = :userid AND follower_id = :followerid AND network = :network ;";
+        $q .= "SET last_seen=NOW(), debug_api_call = :debug ";
+        $q .= "WHERE user_id = :userid AND follower_id = :followerid AND network = :network;";
         $vars = array(
             ':userid'=>$user_id, 
             ':followerid'=>$follower_id,
@@ -76,9 +76,9 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
     }
 
     public function deactivate($user_id, $follower_id, $network, $debug_api_call = '') {
-        $q = " UPDATE #prefix#follows ";
-        $q .= " SET active = 0 , debug_api_call = :debug ";
-        $q .= " WHERE user_id = :userid AND follower_id = :followerid AND network = :network ;";
+        $q = "UPDATE #prefix#follows ";
+        $q .= "SET active = 0 , debug_api_call = :debug ";
+        $q .= "WHERE user_id = :userid AND follower_id = :followerid AND network = :network;";
         $vars = array(
             ':userid'=>$user_id, 
             ':followerid'=>$follower_id,
@@ -92,9 +92,9 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
     }
 
     public function insert($user_id, $follower_id, $network, $debug_api_call = '') {
-        $q  = " INSERT INTO #prefix#follows ";
-        $q .= " (user_id, follower_id, last_seen, debug_api_call, network) ";
-        $q .= " VALUES ( :userid, :followerid, NOW(), :debug, :network );";
+        $q  = "INSERT INTO #prefix#follows ";
+        $q .= "(user_id, follower_id, first_seen, last_seen, debug_api_call, network) ";
+        $q .= "VALUES ( :userid, :followerid, NOW(), NOW(), :debug, :network );";
         $vars = array(
             ':userid'=>$user_id, 
             ':followerid'=>$follower_id,

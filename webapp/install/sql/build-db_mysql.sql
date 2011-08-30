@@ -50,16 +50,17 @@ CREATE TABLE tu_follower_count (
 --
 
 CREATE TABLE tu_follows (
-  user_id bigint(11) NOT NULL,
-  follower_id bigint(11) NOT NULL,
-  last_seen timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  active int(11) NOT NULL DEFAULT '1',
-  network varchar(20) NOT NULL DEFAULT 'twitter',
-  debug_api_call varchar(255) NOT NULL,
+  user_id bigint(11) NOT NULL COMMENT 'User ID on a particular service who has been followed.',
+  follower_id bigint(11) NOT NULL COMMENT 'User ID on a particular service who has followed user_id.',
+  last_seen timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last time this relationship was seen on the originating network.',
+  first_seen timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'First time this relationship was seen on the originating network.',
+  active int(11) NOT NULL DEFAULT '1' COMMENT 'Whether or not the relationship is active (1 if so, 0 if not.)',
+  network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
+  debug_api_call varchar(255) NOT NULL COMMENT 'Developer-only field for storing the API URL source of this data point.',
   UNIQUE KEY user_id (network,follower_id,user_id),
   KEY active (network,active,last_seen),
   KEY network (network,last_seen)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user follow and friend relationships.';
 
 --
 -- Table structure for table tu_hashtags
@@ -424,7 +425,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2011-08-30 11:56:12
+-- Dump completed on 2011-08-30 12:08:55
 
 --
 -- Insert DB Version
