@@ -78,7 +78,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertEqual($plugins[4]->name,"Twitter", "Twitter 'name' Test");
         $this->assertEqual($plugins[4]->folder_name,"twitter", "Twitter 'folder_name' test");
-        
+
         $this->assertEqual($plugins[5]->name,"Twitter Realtime", "Twitter 'name' Test");
         $this->assertEqual($plugins[5]->folder_name,"twitterrealtime", "Twitter 'folder_name' test");
     }
@@ -293,7 +293,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
 
         $this->assertTrue($dao->isPluginActive(1));
-        $this->assertFalse($dao->isPluginActive(2));
+        $this->assertTrue($dao->isPluginActive(2));
         $this->assertFalse($dao->isPluginActive(15));
     }
 
@@ -305,7 +305,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertEqual($dao->getPluginId('twitter'), 1);
         $this->assertEqual($dao->getPluginId('idontexist'), null);
-        $this->assertEqual($dao->getPluginId('testpluginact'), 3);
+        $this->assertEqual($dao->getPluginId('testpluginact'), 5);
     }
 
     public function testGetPluginFolder() {
@@ -316,7 +316,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
 
         $this->assertEqual($dao->getPluginFolder(1), 'twitter');
         $this->assertEqual($dao->getPluginFolder(99), null);
-        $this->assertEqual($dao->getPluginFolder(3), 'testpluginact');
+        $this->assertEqual($dao->getPluginFolder(5), 'testpluginact');
     }
 
     public function testGetAllPlugins() {
@@ -326,9 +326,9 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
 
         $plugins = $dao->getAllPlugins();
-        $this->assertTrue(count($plugins) == 3);
-        $this->assertTrue($plugins[1]->name == "My Test Plugin");
-        $this->assertTrue($plugins[1]->folder_name == "testplugin");
+        $this->assertTrue(count($plugins) == 5);
+        $this->assertEqual($plugins[3]->name, "My Test Plugin");
+        $this->assertEqual($plugins[3]->folder_name, "testplugin");
 
         // no plugins?
         $builders_array = null;
@@ -342,7 +342,7 @@ class TestOfPluginMySQLDAO extends ThinkUpUnitTestCase {
         $dao = new PluginMySQLDAO();
         $plugins = $dao->getActivePlugins();
 
-        $this->assertEqual(count($plugins), 2);
+        $this->assertEqual(count($plugins), 4);
         $this->assertEqual($plugins[0]->name,"Twitter");
         $this->assertEqual($plugins[0]->folder_name,"twitter");
 

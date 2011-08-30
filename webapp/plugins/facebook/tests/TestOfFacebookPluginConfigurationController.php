@@ -248,15 +248,15 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
     }
 
     private function buildPluginOptions() {
-        $plugin1 = FixtureBuilder::build('plugins', array('id'=>2, 'folder_name'=>'facebook'));
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
-        $plugin_opt1 = FixtureBuilder::build('options',
+        $builders = array();
+        $builders[] = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'facebook_api_key', 'option_value' => "k3y") );
-        $plugin_opt2 = FixtureBuilder::build('options',
+        $builders[] = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'facebook_api_secret', 'option_value' => "scrt") );
-        $plugin_opt3 = FixtureBuilder::build('options',
+        $builders[] = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'facebook_app_id', 'option_value' => "77") );
-        return array($plugin1, $plugin_opt1, $plugin_opt2, $plugin_opt3);
+        return $builders;
     }
 
     public function testAddPage() {

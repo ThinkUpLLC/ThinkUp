@@ -131,16 +131,16 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testOfGetOptions() {
-        $plugin_builder1 = FixtureBuilder::build('plugins', array('id'=>'2', 'folder_name'=>'test_plugin'));
-        $plugin_builder2 = FixtureBuilder::build('plugins', array('id'=>'3', 'folder_name'=>'test_plugin1'));
+        $plugin_builder1 = FixtureBuilder::build('plugins', array('id'=>'4', 'folder_name'=>'test_plugin'));
+        $plugin_builder2 = FixtureBuilder::build('plugins', array('id'=>'5', 'folder_name'=>'test_plugin1'));
 
         # init our dao
         $dao = new PluginOptionMySQLDAO();
         $builder1 = $this->buildOptions(1, 'test name', 'test option');
         $insert_id1 = $builder1->columns[ 'last_insert_id' ];
-        $builder2 = $this->buildOptions(2, 'test name2', 'test option2');
+        $builder2 = $this->buildOptions(4, 'test name2', 'test option2');
         $insert_id2 = $builder2->columns[ 'last_insert_id' ];
-        $builder3 = $this->buildOptions(2, 'test name3', 'test option3');
+        $builder3 = $this->buildOptions(4, 'test name3', 'test option3');
         $insert_id3 = $builder3->columns[ 'last_insert_id' ];
 
         // bad plugin id
@@ -157,12 +157,12 @@ class TestOfPluginOptionMySQLDAO extends ThinkUpUnitTestCase {
         // gets all options if plugin_id passed one more time
         $options = $dao->getOptions('test_plugin');
         $this->assertNotNull( $options );
-        $this->assertEqual(2, count($options));
+        $this->assertEqual(count($options), 2);
         $this->assertIsA($options[0], 'PluginOption');
-        $this->assertEqual($options[0]->plugin_id, 2);
+        $this->assertEqual($options[0]->plugin_id, 4);
         $this->assertEqual($options[0]->id, 3);
         $this->assertIsA($options[1], 'PluginOption');
-        $this->assertEqual($options[1]->plugin_id, 2);
+        $this->assertEqual($options[1]->plugin_id, 4);
         $this->assertEqual($options[1]->id, 4);
     }
 

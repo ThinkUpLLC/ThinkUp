@@ -241,11 +241,8 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $config = Config::getInstance();
 
         //use fake Flickr API key
-        $plugin_builder = FixtureBuilder::build('plugins', array('id'=>'2', 'folder_name'=>'expandurls'));
-        $option_builder = FixtureBuilder::build('options', array(
-            'namespace' => OptionDAO::PLUGIN_OPTIONS . '-2',
-            'option_name' => 'flickr_api_key',
-            'option_value' => 'dummykey') );
+        $option_builder = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        'option_name' => 'flickr_api_key', 'option_value' => 'dummykey') );
 
         $this->simulateLogin('admin@example.com', true);
         $crawler->crawl();
@@ -427,11 +424,8 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $crawler = Crawler::getInstance();
         $config = Config::getInstance();
 
-        $plugin_builder = FixtureBuilder::build('plugins', array('id'=>'2', 'folder_name'=>'expandurls'));
-        $option_builder = FixtureBuilder::build('options', array(
-            'namespace' => OptionDAO::PLUGIN_OPTIONS . '-2',
-            'option_name' => 'flickr_api_key',
-            'option_value' => 'dummykey') );
+        $option_builder = FixtureBuilder::build('options', array( 'namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        'option_name' => 'flickr_api_key', 'option_value' => 'dummykey') );
 
         $this->simulateLogin('admin@example.com', true);
         $crawler->crawl();
