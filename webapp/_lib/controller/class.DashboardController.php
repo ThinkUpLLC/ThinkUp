@@ -175,7 +175,7 @@ class DashboardController extends ThinkUpController {
 
             $post_dao = DAOFactory::getDAO('PostDAO');
             //posts
-            $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 3, true);
+            $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 20, true);
             $this->addToView('recent_posts', $recent_posts);
             $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
             $this->instance->network, 5);
