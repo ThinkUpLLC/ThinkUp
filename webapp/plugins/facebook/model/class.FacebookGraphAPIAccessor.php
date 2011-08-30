@@ -36,12 +36,18 @@ class FacebookGraphAPIAccessor {
      * @param str $access_token
      * @return array Decoded JSON response
      */
-    public static function apiRequest($path, $access_token, $fields=null) {
+    public static function apiRequest($path, $access_token, $fields=null, $params=null) {
         $api_domain = 'https://graph.facebook.com';
         $url = $api_domain.$path.'?access_token='.$access_token;
         if ($fields != null ) {
             $url = $url.'&fields='.$fields;
         }
+		if ($params != null) {
+			foreach($params AS $param_key => $param_value) {
+			    $url .= '&' . $param_key . "=" . $param_value;
+			}
+		}
+		var_dump($url);
         $result = Utils::getURLContents($url);
         return json_decode($result);
     }

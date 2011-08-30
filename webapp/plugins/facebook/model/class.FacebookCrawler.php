@@ -103,7 +103,9 @@ class FacebookCrawler {
      * @param array $details
      */
     private function parseUserDetails($details) {
+	    //var_dump($details);
         if (isset($details->name) && isset($details->id)) {
+<<<<<<< HEAD
             $user_vals = array();
 
             $user_vals["user_name"] = $details->name;
@@ -120,6 +122,24 @@ class FacebookCrawler {
             $user_vals["network"] = $details->network;
             $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0; // this will help us in getting correct range of posts
             return $user_vals;
+=======
+            $ua = array();
+
+            $ua["user_name"] = $details->name;
+            $ua["full_name"] = $details->name;
+            $ua["user_id"] = $details->id;
+            $ua["avatar"] = 'https://graph.facebook.com/'.$details->id.'/picture';
+            $ua['url'] = isset($details->website)?$details->website:'';
+            $ua["follower_count"] = 0;
+            $ua["location"] = isset($details->location->name)?$details->location->name:'';
+            $ua["description"] = isset($details->about)?$details->about:'';
+            $ua["is_protected"] = 1; //for now, assume a Facebook user is private
+            $ua["post_count"] = 0;
+            $ua["joined"] = null;
+            $ua["network"] = $details->network;
+			$ua["updated_time"] = isset($details->updated_time)?$details->updated_time:''; // this will help us in getting correct range of posts
+            return $ua;
+>>>>>>> Initial changes to files - trying to figure out crawler methods and such
         } else {
             return null;
         }
@@ -131,6 +151,7 @@ class FacebookCrawler {
      * @param bool $is_page If true then this is a Facebook page, else it's a user profile
      */
     public function fetchPostsAndReplies($id, $is_page) {
+<<<<<<< HEAD
 		// 'since' is the datetime of the last post in ThinkUp DB. 'until' is the last post in stream, according to Facebook
 		$post_dao = DAOFactory::getDAO('PostDAO');
 		$sincePost = $post_dao->getAllPosts($id, "facebook", 1, true, 'pub_date', 'DESC');
@@ -165,6 +186,27 @@ class FacebookCrawler {
 		}
 		
 		
+=======
+        //$stream = FacebookGraphAPIAccessor::apiRequest('/'.$id.'/posts', $this->access_token);
+		// 'since' is the datetime of the last post in DB. 'until' is the last post in stream, according to Facebook
+		
+		$post_dao = DAOFactory::getDAO('PostDAO');
+		//$sincePost = $post_dao->getAllPostsByUsernameOrderedBy($id, "facebook", 1, "pub_date");
+		//$sincePost = $post_dao->getAllPostsByUserID($id, "facebook", 1, $order_by="pub_date", $direction="DESC");
+		$sincePost = $post_dao->getAllPostsIterator($id, "facebook", 1, true, 'pub_date', 'DESC');
+		
+		var_dump($sincePost); exit; 
+		
+        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$id.'/posts', $this->access_token, null, array('since' =>'0'));
+        if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
+            $this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
+            __METHOD__.','.__LINE__);
+
+            $thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
+        } else {
+            $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
+        }
+>>>>>>> Initial changes to files - trying to figure out crawler methods and such
     }
 
     /**
@@ -205,8 +247,13 @@ class FacebookCrawler {
             if ($profile==null) {
                 $profile = $this->fetchUserInfo($p->from->id, $network, 'Post stream', true);
             }
+<<<<<<< HEAD
 
             //Assume profile comments are private and page posts are public
+=======
+			//var_dump($profile);
+            //assume profile comments are private and page posts are public
+>>>>>>> Initial changes to files - trying to figure out crawler methods and such
             $is_protected = ($network=='facebook')?1:0;
             //Get likes count
             $likes_count = 0;
