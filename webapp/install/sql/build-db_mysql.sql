@@ -229,8 +229,8 @@ CREATE TABLE tu_owner_instances (
 CREATE TABLE tu_owners (
   id int(20) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
   full_name varchar(200) NOT NULL COMMENT 'User full name.',
-  pwd varchar(256) DEFAULT NULL COMMENT 'Hash of the owner password',
-  pwd_salt varchar(256) NOT NULL COMMENT 'Salt for securely hashing the owner password',
+  pwd varchar(255) DEFAULT NULL COMMENT 'Hash of the owner password',
+  pwd_salt varchar(255) NOT NULL COMMENT 'Salt for securely hashing the owner password',
   email varchar(200) NOT NULL COMMENT 'User email.',
   activation_code int(10) NOT NULL DEFAULT '0' COMMENT 'User activation code.',
   joined date NOT NULL DEFAULT '0000-00-00' COMMENT 'Date user registered for an account.',
@@ -425,13 +425,13 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2011-08-30 12:08:55
+-- Dump completed on 2011-08-30 15:07:47
 
 --
 -- Insert DB Version
 --
 INSERT INTO tu_options (namespace, option_name, option_value, last_updated, created)
-VALUES ('application_options', 'database_version', '0.14', NOW(), NOW()); 
+VALUES ('application_options', 'database_version', '0.15', NOW(), NOW()); 
 
 --
 -- Insert default plugin(s)

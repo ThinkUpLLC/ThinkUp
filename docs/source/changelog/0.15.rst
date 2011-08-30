@@ -1,0 +1,35 @@
+Beta 0.15 - 30 Aug 2011
+=======================
+
+**New features:**
+
+*   Capture Facebook media: Store and display Facebook post links titles, images, descriptions, and captions
+*   Capture Facebook "likes": Store and display Facebook post "likes" and sort posts by most-liked, this week and all
+    time
+*   Capture Facebook friends' location (when permitted) so that the Geoencoder plugin can plot Facebook replies on a
+    Google Map
+*   Add "Recent Activity" dashboard chart: A post-by-post bar chart of replies and likes/retweets
+
+**Improvements:**
+
+*   Upgrade Facebook plugin to OAuth 2.0 for more secure authorization flow 
+*   Improve login security: Enable database-stored per-user password salt (instead of hard-coded single salt)
+*   Improve t.co support: The ExpandURLs plugin gracefully handles  multiple-shortened URLs, like a t.co link which
+    shortens a bit.ly or instagr.am link
+*   On a fresh installation, enable the Twitter, Facebook, and Expand URLs plugins by default
+*   Add configurable "cache_lifetime" value to the config.inc.php file to reduce database load on busy installations
+*   Sped up dashboard render time by aggressively caching query output to file
+
+**Fixes:**
+
+*   Smartly remove deleted tweets from ThinkUp's datastore
+*   Reduce failures during database upgrade process
+*   Fix broken links to service user pages & restored post listings there
+*   Fix missing image thumbnails for t.co-shortened image links
+*   Fix RSS feed link for email addresses with a + sign in them
+*   Fix broken Facebook post export
+*   Simplified and consolidated Twitter dashboard menu
+*   Fixed bug where locked user account didn't get unlocked on password reset
+*   Fix in-post HTML entities display bug (in an "I <3 NY" tweet, &lt;3 displays as <3)
+*   Various CSS/page layout fixes
+

@@ -29,7 +29,7 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '0.14';
+$LATEST_VERSION = '0.15';
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -414,7 +414,7 @@ $MIGRATIONS = array(
 
     /* beta 0.14 */
     '0.14' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.14.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -487,4 +487,55 @@ $MIGRATIONS = array(
             )
         )
     ),
+
+    /* beta 0.15 */
+    '0.15' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    // Created first_seen column
+                    'query' => 'DESCRIBE tu_follows first_seen',
+                    'match' => "/timestamp/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created pwd_salt column
+                    'query' => 'DESCRIBE tu_owners pwd_salt',
+                    'match' => "/varchar\(255\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created description column
+                    'query' => 'DESCRIBE tu_links description',
+                    'match' => "/varchar\(255\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created image_src column
+                    'query' => 'DESCRIBE tu_links image_src',
+                    'match' => "/varchar\(255\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Created caption column
+                    'query' => 'DESCRIBE tu_links caption',
+                    'match' => "/varchar\(255\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    // Dropped is_image column
+                    'query' => 'DESCRIBE tu_links is_image',
+                    'no_match' => true
+                ),
+                array(
+                    // Created favlike_count_cache column
+                    'query' => 'DESCRIBE tu_posts favlike_count_cache',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+            )
+        )
+     )
 );

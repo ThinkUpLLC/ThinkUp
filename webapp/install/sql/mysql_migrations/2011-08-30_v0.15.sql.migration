@@ -1,0 +1,105 @@
+-- 2011-08-11
+-- Add password salt field
+ALTER TABLE tu_owners ADD pwd_salt VARCHAR( 255 ) COMMENT  'Salt for securely hashing the owner password'  AFTER `pwd`;
+-- Fill in default value
+UPDATE tu_owners SET pwd_salt = 'ab194d42da0dff4a5c01ad33cb4f650a7069178b' WHERE 1;
+-- Should never be null
+ALTER TABLE tu_owners CHANGE pwd_salt pwd_salt VARCHAR( 255 ) NOT NULL COMMENT  'Salt for securely hashing the owner password';
+
+ALTER TABLE tu_owners MODIFY pwd varchar( 255 ) COMMENT 'Hash of the owner password';
+
+
+-- 2011-08-23
+-- Add link fields to support Facebook metadata
+
+-- ALTER TABLE  tu_links 
+-- ADD description VARCHAR( 255 ) NOT NULL COMMENT  'Link description.' AFTER  title,
+-- ADD image_src VARCHAR( 255 ) NOT NULL COMMENT  'URL of a thumbnail image associated with this link.' AFTER  description,
+-- ADD caption VARCHAR( 255 ) NOT NULL COMMENT  'Link or image caption.' AFTER  image_src;
+
+CREATE TABLE tu_links_b15 (
+  id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
+  url varchar(255) NOT NULL COMMENT 'Link URL as it appears inside the post, ie, shortened in tweets.',
+  expanded_url varchar(255) NOT NULL COMMENT 'Link URL expanded from its shortened form.',
+  title varchar(255) NOT NULL COMMENT 'Link title.',
+  description varchar(255) NOT NULL COMMENT 'Link description.',
+  image_src varchar(255) NOT NULL COMMENT 'URL of a thumbnail image associated with this link.',
+  caption varchar(255) NOT NULL COMMENT 'Link or image caption.',
+  clicks int(11) NOT NULL DEFAULT '0' COMMENT 'Total known link clicks.',
+  post_id bigint(20) unsigned NOT NULL COMMENT 'ID of the post which this link appeared on a given network.',
+  network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'Network of the post in which the link appeared.',
+  is_image tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Whether or not the link represents an image. 1 if yes, 0 if not.',
+  error varchar(255) NOT NULL DEFAULT '' COMMENT 'Details of any error expanding a link.',
+  PRIMARY KEY (id),
+  UNIQUE KEY url (url,post_id,network),
+  KEY is_image (is_image),
+  KEY post_id (post_id,network)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT 'Links which appear in posts.';
+
+INSERT INTO tu_links_b15 (SELECT id, url, expanded_url, title, null, null, null, clicks, post_id, network, is_image, error FROM tu_links);
+
+RENAME TABLE tu_links TO tu_links_b14;
+
+RENAME TABLE tu_links_b15 TO tu_links;
+
+DROP TABLE tu_links_b14;
+
+
+-- 2011-08-25
+-- http://t.co links shorten already shortened links. Undo expansion to correct them
+UPDATE tu_links SET expanded_url = '' WHERE expanded_url != '' AND instr(url, 'http://t.co') > 0;
+
+
+-- 2011-08-26
+-- Move image thumbnails to the new image_src field
+UPDATE tu_links SET image_src=expanded_url WHERE is_image=1;
+
+-- Set expanded_url equal to '' for images so that ExpandURLs redoes the expansion properly
+UPDATE tu_links SET expanded_url='' WHERE is_image=1;
+
+-- Drop deprecated field. From here on in, a link is an image if image_src is set
+ALTER TABLE tu_links DROP is_image;
+
+
+-- 2011-08-27
+-- Add a field to posts to track fav/like count cache
+-- ALTER TABLE  tu_posts ADD  favlike_count_cache INT( 11 ) NOT NULL DEFAULT  '0' COMMENT  'The total number of favorites or likes this post received.';
+
+CREATE TABLE tu_posts_b15 LIKE tu_posts;
+
+ALTER TABLE tu_posts_b15 ADD favlike_count_cache INT( 11 ) NOT NULL DEFAULT  '0' COMMENT  'The total number of favorites or likes this post received.';
+
+INSERT INTO tu_posts_b15 (SELECT *, 0 FROM tu_posts);
+
+RENAME TABLE tu_posts TO tu_posts_b14;
+
+RENAME TABLE tu_posts_b15 TO tu_posts;
+
+DROP TABLE tu_posts_b14;
+
+
+-- 2011-08-30
+-- Add first_seen field to tu_follows
+-- While we're in there, comment all the fields of the new table
+
+CREATE TABLE tu_follows_b15 (
+  user_id bigint(11) NOT NULL COMMENT 'User ID on a particular service who has been followed.',
+  follower_id bigint(11) NOT NULL COMMENT 'User ID on a particular service who has followed user_id.',
+  last_seen timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last time this relationship was seen on the originating network.',
+  first_seen timestamp NOT NULL COMMENT 'First time this relationship was seen on the originating network.',
+  active int(11) NOT NULL DEFAULT '1' COMMENT 'Whether or not the relationship is active (1 if so, 0 if not.)',
+  network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
+  debug_api_call varchar(255) NOT NULL COMMENT 'Developer-only field for storing the API URL source of this data point.',
+  UNIQUE KEY user_id (network,follower_id,user_id),
+  KEY active (network,active,last_seen),
+  KEY network (network,last_seen)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT 'Service user follow and friend relationships.';
+
+INSERT INTO tu_follows_b15 (SELECT user_id, follower_id, last_seen, last_seen, active, network, debug_api_call FROM tu_follows);
+
+RENAME TABLE tu_follows TO tu_follows_b14;
+
+RENAME TABLE tu_follows_b15 TO tu_follows;
+
+DROP TABLE tu_follows_b14;
+
