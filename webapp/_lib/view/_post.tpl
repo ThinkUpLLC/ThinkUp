@@ -96,7 +96,7 @@
     {else}
         {if $t->favlike_count_cache > 0}
         <span class="reply-count">
-            <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}&v=likes">{$t->favlike_count_cache}</a>
+            <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}&v=likes">{$t->favlike_count_cache|number_format}</a>
         </span>
         {else}&nbsp;{/if}
     {/if}
@@ -105,7 +105,7 @@
     <div class="grid_2 center omega">
       {if $t->reply_count_cache > 0}
         <span class="reply-count">
-        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}">{$t->reply_count_cache}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
+        <a href="{$site_root_path}post/?t={$t->post_id}&n={$t->network|urlencode}">{$t->reply_count_cache|number_format}<!-- repl{if $t->reply_count_cache eq 1}y{else}ies{/if}--></a></span>
       {else}
         &#160;
       {/if}

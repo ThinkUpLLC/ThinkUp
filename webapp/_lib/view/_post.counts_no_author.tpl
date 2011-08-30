@@ -70,7 +70,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
      {if $show_favorites_instead_of_retweets && $show_favorites_instead_of_retweets != false}
        {if $post->favlike_count_cache}
        <span class="reply-count">
-          <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=favs">{$post->favlike_count_cache}</a>
+          <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=favs">{$post->favlike_count_cache|number_format}</a>
        </span>
       {else}
         &#160;
@@ -88,7 +88,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
     {if $post->network eq 'facebook' OR $post->network eq 'facebook page'}
         {if $post->favlike_count_cache  > 0}
         <span class="reply-count">
-            <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=likes">{$post->favlike_count_cache}</a>
+            <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=likes">{$post->favlike_count_cache|number_format}</a>
         </span>
         {else}
         &#160;
@@ -98,7 +98,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
     <div class="grid_2 center omega">
       {if $post->reply_count_cache > 0}
         <span class="reply-count">
-        <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->reply_count_cache}<!-- repl{if $post->reply_count_cache eq 1}y{else}ies{/if}--></a>
+        <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}">{$post->reply_count_cache|number_format}<!-- repl{if $post->reply_count_cache eq 1}y{else}ies{/if}--></a>
         </span>
       {else}
         &#160;
