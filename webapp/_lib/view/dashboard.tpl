@@ -90,10 +90,9 @@
                 {if $instance->network neq "twitter" && $recent_posts|@count > 3}
                 <h2>Recent Activity</h2>
                 <div class="clearfix">
-                    <img width="700" height="225" src="http://chart.googleapis.com/chart?chd=t:{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=a&chbh=a&chco=FF9900,777777&chdl=Likes|Replies&chs=700x225&cht=bvo&chm=N,666666,0,-1,11|N,666666,1,-1,11" style="margin-top:5px">
+                    <img width="700" height="225" src="http://chart.googleapis.com/chart?chxs=0,,8&chxt=x&chxl=0:|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{$post->pub_date|date_format:"%b %e"}|{/foreach}&chd=t:{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=a&chbh=a&chco=FF9900,cccccc&chdl=Likes|Replies&chs=700x225&cht=bvo&chm=N,666666,0,-1,11|N,666666,1,-1,11">
                 </div>
                 {/if}
-                
               {/if}
 
               {if $follower_count_history_by_day.history && $follower_count_history_by_week.history}
