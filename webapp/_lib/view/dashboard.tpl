@@ -87,13 +87,40 @@
                     {/if}
                 {/foreach}
 
-                {if $instance->network neq "twitter" && $recent_posts|@count > 3}
+                {if $recent_posts|@count > 3}
                 <h2>Recent Activity</h2>
                 <div class="clearfix">
-                    <img width="700" height="225" src="http://chart.googleapis.com/chart?chxs=0,,8&chxt=x&chxl=0:|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{$post->pub_date|date_format:"%b %e"}|{/foreach}&chd=t:{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=a&chbh=a&chco=FF9900,cccccc&chdl=Likes|Replies&chs=700x225&cht=bvo&chm=N,666666,0,-1,11|N,666666,1,-1,11">
+                    {if $instance->network neq "twitter"} 
+                        <img width="700" height="225" src="http://chart.googleapis.com/chart?chxs=0,,8&chxt=x&chxl=0:|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{$post->pub_date|date_format:"%b %e"}|{/foreach}&chd=t:{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=a&chbh=a&chco=FF9900,cccccc&chdl=Likes|Replies&chs=700x225&cht=bvs&chm=N*s*,666666,-1,-1,10,,e::5">
+                    {else}
+                        <img width="700" height="225" src="http://chart.googleapis.com/chart?chxs=0,,8&chxt=x&chxl=0:|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{$post->pub_date|date_format:"%b %e"}|{/foreach}&chd=t:{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->all_retweets > 0}{$post->all_retweets}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=a&chbh=a&chco=FF9900,cccccc&chdl=Retweets|Replies&chs=700x225&cht=bvs&chm=N*s*,666666,-1,-1,10,,e::5">
+                    {/if}
                 </div>
                 {/if}
               {/if}
+
+            {if $most_replied_to_1wk}
+              <div class="clearfix">
+                <h2>This Week's Most Replied-To Posts</h2>
+                {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
+                    {if $instance->network eq "twitter"}
+                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                    {else}
+                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                    {/if}
+                {/foreach}
+              </div>
+            {/if}
+
+            {if $most_faved_1wk}
+              <div class="clearfix">
+                <h2>This Week's Most Liked Posts</h2>
+                {foreach from=$most_faved_1wk key=tid item=t name=foo}
+                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                {/foreach}
+              </div>
+            {/if}
+
 
               {if $follower_count_history_by_day.history && $follower_count_history_by_week.history}
               <div class="clearfix">
@@ -131,24 +158,12 @@
                 </div>
             {/if}
             
-            {if $most_replied_to_1wk}
-              <div class="clearfix">
-                <h2>This Week's Most Replied-To Posts</h2>
-                {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
-                    {if $instance->network eq "twitter"}
-                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
-                    {else}
-                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
-                    {/if}
-                {/foreach}
-              </div>
-            {/if}
 
-            {if $most_faved_1wk}
+            {if $most_retweeted_1wk}
               <div class="clearfix">
-                <h2>This Week's Most Liked Posts</h2>
-                {foreach from=$most_faved_1wk key=tid item=t name=foo}
-                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                <h2>This Week's Most Retweeted</h2>
+                {foreach from=$most_retweeted_1wk key=tid item=t name=foo}
+                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
                 {/foreach}
               </div>
             {/if}
@@ -172,14 +187,7 @@
         </div>
         <small>Recently posting about {$instance->posts_per_day|round} times a day{if $latest_clients_usage}, mostly using {foreach from=$latest_clients_usage key=name item=num_posts name=foo}{$name}{if !$smarty.foreach.foo.last} and {/if}{/foreach}{/if}</small>
         {/if}
-            {if $most_retweeted_1wk}
-              <div class="clearfix">
-                <h2>This Week's Most Retweeted</h2>
-                {foreach from=$most_retweeted_1wk key=tid item=t name=foo}
-                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
-                {/foreach}
-              </div>
-            {/if}
+
 
           {/if} 
           
