@@ -84,8 +84,8 @@ class FacebookCrawler {
 
         $user = $this->parseUserDetails($user_details);
         if (isset($user)) {
-//            $post_dao = DAOFactory::getDAO('PostDAO');
-//            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
+            //            $post_dao = DAOFactory::getDAO('PostDAO');
+            //            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
             $user_object = new User($user, $found_in);
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user_dao->updateUser($user_object);
@@ -175,15 +175,17 @@ class FacebookCrawler {
                     $likes_count = $p->likes->count;
                 }
             }
-            $ttp = array("post_id"=>$post_id, "author_username"=>$profile->username,
-            "author_fullname"=>$profile->username,"author_avatar"=>$profile->avatar, 
-            "author_user_id"=>$p->from->id, "post_text"=>isset($p->message)?$p->message:'', 
-            "pub_date"=>$p->created_time, "favlike_count_cache"=>$likes_count,
-            "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
-            'is_protected'=>$is_protected, 'location'=>$profile->location);
+            if (isset($profile)) {
+                $ttp = array("post_id"=>$post_id, "author_username"=>$profile->username,
+                "author_fullname"=>$profile->username,"author_avatar"=>$profile->avatar, 
+                "author_user_id"=>$p->from->id, "post_text"=>isset($p->message)?$p->message:'', 
+                "pub_date"=>$p->created_time, "favlike_count_cache"=>$likes_count,
+                "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
+                'is_protected'=>$is_protected, 'location'=>$profile->location);
 
-            array_push($thinkup_posts, $ttp);
-            $total_added_posts = $total_added_posts + $this->storePosts($thinkup_posts);
+                array_push($thinkup_posts, $ttp);
+                $total_added_posts = $total_added_posts + $this->storePosts($thinkup_posts);
+            }
 
             //free up memory
             $thinkup_posts = array();
@@ -341,7 +343,7 @@ class FacebookCrawler {
                                     array_push($thinkup_users, $ttu);
 
                                     $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
-                                   "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
+                                   "author_user_id"=>$p->from->id, "post_id"=>$post_id);
                                     array_push($thinkup_likes, $fav_to_add);
                                     $likes_captured = $likes_captured + 1;
                                 }
