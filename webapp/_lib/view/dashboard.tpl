@@ -78,12 +78,22 @@
 
               {if $recent_posts}
                 {foreach from=$recent_posts key=tid item=t name=foo}
-                    {if $instance->network eq "twitter"}
-                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
-                    {else}
-                        {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                    {if $smarty.foreach.foo.index < 3}
+                        {if $instance->network eq "twitter"}
+                            {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                        {else}
+                            {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                        {/if}
                     {/if}
                 {/foreach}
+
+                {if $instance->network neq "twitter" && $recent_posts|@count > 3}
+                <h2>Recent Activity</h2>
+                <div class="clearfix">
+                    <img width="700" height="225" src="http://chart.googleapis.com/chart?chd=t:{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=a&chbh=a&chco=FF9900,777777&chdl=Likes|Replies&chs=700x225&cht=bvo&chm=N,666666,0,-1,11|N,666666,1,-1,11" style="margin-top:5px">
+                </div>
+                {/if}
+                
               {/if}
 
               {if $follower_count_history_by_day.history && $follower_count_history_by_week.history}
@@ -109,7 +119,7 @@
 
             {if $least_likely_followers}
               <div class="clearfix">
-                <h2 >Most Discerning Followers</h2>
+                <h2>Most Discerning Followers</h2>
                 <div class="clearfix">
                 {foreach from=$least_likely_followers key=uid item=u name=foo}
                   <div class="avatar-container" style="float:left;margin:7px;">  
@@ -121,10 +131,10 @@
                 </div>
                 </div>
             {/if}
-
+            
             {if $most_replied_to_1wk}
               <div class="clearfix">
-                <h2 >This Week's Most Replied-To Posts</h2>
+                <h2>This Week's Most Replied-To Posts</h2>
                 {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
                     {if $instance->network eq "twitter"}
                         {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
@@ -137,7 +147,7 @@
 
             {if $most_faved_1wk}
               <div class="clearfix">
-                <h2 >This Week's Most Liked Posts</h2>
+                <h2>This Week's Most Liked Posts</h2>
                 {foreach from=$most_faved_1wk key=tid item=t name=foo}
                   {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
                 {/foreach}
