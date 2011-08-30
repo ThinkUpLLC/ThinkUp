@@ -28,12 +28,11 @@ How ThinkUp Handles Sensitive Data
 ThinkUp's official distribution adheres to a set of rules and standards for handling sensitive data, such as:
 
 **Passwords.** The only password that ThinkUp stores in its database is each user's ThinkUp account password. This
-password is not stored in clear text; ThinkUp stores a salted `SHA-1 <http://en.wikipedia.org/wiki/SHA1>`_ hash
-of the password. To prevent brute force attacks which attempt to guess this password, ThinkUp enforces a 
-:doc:`failed login attempt cap </userguide/accounts/index>`.
+password is hashed (not stored in clear text). To prevent brute force attacks which attempt to guess this password,
+ThinkUp enforces a :doc:`failed login attempt cap </userguide/accounts/index>`.
 
 **Social network credentials.** ThinkUp and its core plugins do not store passwords to social networks like Facebook
-or Twitter. Instead, ThinkUp stores OAuth credentials to access these networks. This gives users the ability to easily
+or Twitter. Instead, ThinkUp stores OAuth credentials to access these networks. This gives users the ability to
 revoke ThinkUp's access to their data on the originating network's settings.
 
 **Private post and user details.** While ThinkUp collects private posts and data its authorized users have access to on
@@ -54,7 +53,8 @@ Security Measure ThinkUp's Application Code Puts in Place
 
 Currently ThinkUp's application code enforces:
 
-*   One-way password hashing which obscures plaintext passwords from anyone with direct access to the ThinkUp database.
+*   One-way password hashing using `SHA-2 <http://en.wikipedia.org/wiki/SHA2>`_ hash and a unique, per-user salt
+    which obscures plaintext passwords from anyone with direct access to the ThinkUp database.
 *   :doc:`A failed login attempt cap</userguide/accounts/index>` to stave off brute force password-guessing attacks.
 *   The use of OAuth credentials instead of storing third-party usernames and passwords.
 *   Protection against `cross-site request forgery <http://en.wikipedia.org/wiki/CSRF>`_ attacks per 
