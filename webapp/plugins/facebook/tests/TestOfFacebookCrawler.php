@@ -115,6 +115,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->reply_count_cache, 0);
         $this->assertTrue($post->is_protected);
         $this->assertEqual($post->favlike_count_cache, 0);
+        $this->assertEqual($post->location, 'San Diego, California');
 
         $post = $post_dao->getPost('153956564638648', 'facebook');
         $this->assertEqual($post->post_text,
@@ -122,6 +123,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->reply_count_cache, 19);
         $this->assertTrue($post->is_protected);
         $this->assertEqual($post->favlike_count_cache, 3);
+        $this->assertEqual($post->location, 'San Diego, California');
 
         $post = $post_dao->getPost('1546020', 'facebook');
         $this->assertPattern('/not the target demographic/', $post->post_text);
@@ -129,21 +131,31 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->in_reply_to_post_id, '153956564638648');
         $this->assertTrue($post->is_protected);
         $this->assertEqual($post->favlike_count_cache, 0);
+        $this->assertEqual($post->location, 'La Mesa, California');
 
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
         $this->assertTrue(isset($user));
         $this->assertEqual($user->username, 'Gina Trapani');
         $this->assertEqual($user->full_name, 'Gina Trapani');
-        $this->assertEqual($user->user_id, 606837591);
+        $this->assertEqual($user->user_id, '606837591');
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/606837591/picture');
         $this->assertTrue($user->is_protected);
-
+        $this->assertEqual($user->location, 'San Diego, California');
+//sleep(1000);
         $user = $user_dao->getUserByName('Mitch Wagner', 'facebook');
         $this->assertTrue(isset($user));
-        $this->assertEqual($user->user_id, 697015835);
+        $this->assertEqual($user->user_id, '697015835');
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/697015835/picture');
         $this->assertTrue($user->is_protected);
+        $this->assertEqual($user->location, 'La Mesa, California');
+
+        $user = $user_dao->getUserByName('Jeffrey McManus', 'facebook');
+        $this->assertTrue(isset($user));
+        $this->assertEqual($user->user_id, '691270740');
+        $this->assertEqual($user->avatar, 'https://graph.facebook.com/691270740/picture');
+        $this->assertTrue($user->is_protected);
+        $this->assertEqual($user->location, '');
 
         //Test post with a link to a video
         $fbc2 = new FacebookCrawler($this->instance2, 'fauxaccesstoken');

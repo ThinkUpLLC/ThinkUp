@@ -105,7 +105,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             SessionCache::put('facebook_auth_csrf', md5(uniqid(rand(), true)));
         }
 
-        $params = array('scope'=>'offline_access,read_stream,user_likes,user_location,user_website,read_friendlists',
+        $params = array('scope'=>
+        'offline_access,read_stream,user_likes,user_location,user_website,read_friendlists,friends_location',
         'state'=>SessionCache::get('facebook_auth_csrf'));
 
         $fbconnect_link = $facebook->getLoginUrl($params);

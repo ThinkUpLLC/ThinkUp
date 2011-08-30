@@ -79,14 +79,13 @@ class FacebookCrawler {
     public function fetchUserInfo($uid, $network, $found_in) {
         // Get owner user details and save them to DB
         $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
-        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token,
-        $fields);
+        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token, $fields);
         $user_details->network = $network;
 
         $user = $this->parseUserDetails($user_details);
         if (isset($user)) {
-            $post_dao = DAOFactory::getDAO('PostDAO');
-            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
+//            $post_dao = DAOFactory::getDAO('PostDAO');
+//            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
             $user_object = new User($user, $found_in);
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user_dao->updateUser($user_object);
@@ -102,21 +101,21 @@ class FacebookCrawler {
      */
     private function parseUserDetails($details) {
         if (isset($details->name) && isset($details->id)) {
-            $ua = array();
+            $user_vals = array();
 
-            $ua["user_name"] = $details->name;
-            $ua["full_name"] = $details->name;
-            $ua["user_id"] = $details->id;
-            $ua["avatar"] = 'https://graph.facebook.com/'.$details->id.'/picture';
-            $ua['url'] = isset($details->website)?$details->website:'';
-            $ua["follower_count"] = 0;
-            $ua["location"] = isset($details->location->name)?$details->location->name:'';
-            $ua["description"] = isset($details->about)?$details->about:'';
-            $ua["is_protected"] = 1; //for now, assume a Facebook user is private
-            $ua["post_count"] = 0;
-            $ua["joined"] = null;
-            $ua["network"] = $details->network;
-            return $ua;
+            $user_vals["user_name"] = $details->name;
+            $user_vals["full_name"] = $details->name;
+            $user_vals["user_id"] = $details->id;
+            $user_vals["avatar"] = 'https://graph.facebook.com/'.$details->id.'/picture';
+            $user_vals['url'] = isset($details->website)?$details->website:'';
+            $user_vals["follower_count"] = 0;
+            $user_vals["location"] = isset($details->location->name)?$details->location->name:'';
+            $user_vals["description"] = isset($details->about)?$details->about:'';
+            $user_vals["is_protected"] = 1; //for now, assume a Facebook user is private
+            $user_vals["post_count"] = 0;
+            $user_vals["joined"] = null;
+            $user_vals["network"] = $details->network;
+            return $user_vals;
         } else {
             return null;
         }
@@ -178,10 +177,10 @@ class FacebookCrawler {
             }
             $ttp = array("post_id"=>$post_id, "author_username"=>$profile->username,
             "author_fullname"=>$profile->username,"author_avatar"=>$profile->avatar, 
-            "author_user_id"=>$profile->user_id, "post_text"=>isset($p->message)?$p->message:'', 
+            "author_user_id"=>$p->from->id, "post_text"=>isset($p->message)?$p->message:'', 
             "pub_date"=>$p->created_time, "favlike_count_cache"=>$likes_count,
             "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
-            'is_protected'=>$is_protected);
+            'is_protected'=>$is_protected, 'location'=>$profile->location);
 
             array_push($thinkup_posts, $ttp);
             $total_added_posts = $total_added_posts + $this->storePosts($thinkup_posts);
@@ -226,14 +225,14 @@ class FacebookCrawler {
                                 "author_user_id"=>$c->from->id, "post_text"=>$c->message, 
                                 "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id, 
                                 "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network, 
-                                'is_protected'=>$is_protected);
+                                'is_protected'=>$is_protected, 'location'=>'');
                                 array_push($thinkup_posts, $ttp);
                                 //Get users
                                 $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
                                 "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->from->id.
                                 '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
                                 "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments",
-                                "network"=>'facebook'); //Users are always set to network=facebook
+                                "network"=>'facebook', 'location'=>''); //Users are always set to network=facebook
                                 array_push($thinkup_users, $ttu);
                                 $comments_captured = $comments_captured + 1;
                             }
@@ -263,14 +262,14 @@ class FacebookCrawler {
                                     $c->from->id.'/picture', "author_user_id"=>$c->from->id, "post_text"=>$c->message,
                                     "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id,
                                     "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network,
-                                    'is_protected'=>$is_protected);
+                                    'is_protected'=>$is_protected, 'location'=>'');
                                     array_push($thinkup_posts, $ttp);
                                     //Get users
                                     $ttu = array("user_name"=>$c->from->name, "full_name"=>$c->from->name,
                                     "user_id"=>$c->from->id, "avatar"=>'https://graph.facebook.com/'.$c->from->id.
                                     '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
                                     "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Comments",
-                                    "network"=>'facebook'); //Users are always set to network=facebook
+                                    "network"=>'facebook', 'location'=>''); //Users are always set to network=facebook
                                     array_push($thinkup_users, $ttu);
                                 }
                             }
@@ -393,12 +392,13 @@ class FacebookCrawler {
         $added_posts = 0;
         $post_dao = DAOFactory::getDAO('PostDAO');
         foreach ($posts as $post) {
-            if ($post['author_username']== "" && isset($post['author_user_id'])) {
-                $commenter_object = $this->fetchUserInfo($post['author_user_id'], 'facebook', 'Facebook page comments');
-                if (isset($commenter_object)) {
-                    $post["author_username"] = $commenter_object->full_name;
-                    $post["author_fullname"] = $commenter_object->full_name;
-                    $post["author_avatar"] = $commenter_object->avatar;
+            if (isset($post['author_user_id'])) {
+                $user_object = $this->fetchUserInfo($post['author_user_id'], 'facebook', 'Facebook page comments');
+                if (isset($user_object)) {
+                    $post["author_username"] = $user_object->full_name;
+                    $post["author_fullname"] = $user_object->full_name;
+                    $post["author_avatar"] = $user_object->avatar;
+                    $post["location"] = $user_object->location;
                 }
             }
             $added_posts = $added_posts + $post_dao->addPost($post);
@@ -425,15 +425,12 @@ class FacebookCrawler {
 
     private function storeUsers($users) {
         $added_users = 0;
-        $post_dao = DAOFactory::getDAO('PostDAO');
         if (count($users) > 0) {
-            $user_dao = DAOFactory::getDAO('UserDAO');
             foreach ($users as $user) {
-                $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], $user['network']);
-                $found_in = 'Facebook stream';
-                $user_object = new User($user, $found_in);
-                $user_dao->updateUser($user_object);
-                $added_users = $added_users + 1;
+                $user_object = $this->fetchUserInfo($user['user_id'], 'facebook', 'Facebook stream');
+                if (isset($user_object)) {
+                    $added_users = $added_users + 1;
+                }
             }
         }
         return $added_users;
