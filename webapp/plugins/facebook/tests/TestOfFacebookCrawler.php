@@ -173,6 +173,11 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'Julian Francis Adderley.');
         $this->assertEqual($post->link->title, 'Superman Restored (Theatrical Trailer)');
         $this->assertEqual($post->link->network, 'facebook');
+		
+		// Test Facebook paging by confirming post on second "page"
+		$post = $post_dao->getPost('10150357566827744', 'facebook');
+		$this->assertNotNull($post);
+		$this->assertEqual($post->author_user_id, '729597743');
     }
 
     public function testFetchPageStream() {

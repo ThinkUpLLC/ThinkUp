@@ -47,7 +47,6 @@ class FacebookGraphAPIAccessor {
 			    $url .= '&' . $param_key . "=" . $param_value;
 			}
 		}
-		var_dump($url);
         $result = Utils::getURLContents($url);
         return json_decode($result);
     }
