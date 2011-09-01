@@ -105,7 +105,6 @@ class FacebookCrawler {
     private function parseUserDetails($details) {
 	    //var_dump($details);
         if (isset($details->name) && isset($details->id)) {
-<<<<<<< HEAD
             $user_vals = array();
 
             $user_vals["user_name"] = $details->name;
@@ -122,6 +121,7 @@ class FacebookCrawler {
             $user_vals["network"] = $details->network;
             $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0; // this will help us in getting correct range of posts
             return $user_vals;
+<<<<<<< HEAD
 =======
             $ua = array();
 
@@ -142,6 +142,8 @@ class FacebookCrawler {
 >>>>>>> Initial changes to files - trying to figure out crawler methods and such
         } else {
             return null;
+=======
+>>>>>>> somehow this got majorly messed up after a git rebase. Hopefully this is corrected now
         }
     }
 
@@ -153,8 +155,11 @@ class FacebookCrawler {
     public function fetchPostsAndReplies($id, $is_page) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> misc. commit
+=======
+>>>>>>> somehow this got majorly messed up after a git rebase. Hopefully this is corrected now
 		// 'since' is the datetime of the last post in ThinkUp DB. 'until' is the last post in stream, according to Facebook
 		$post_dao = DAOFactory::getDAO('PostDAO');
 		$sincePost = $post_dao->getAllPosts($id, "facebook", 1, true, 'pub_date', 'DESC');
@@ -187,6 +192,7 @@ class FacebookCrawler {
 			    $keepLooping = FALSE; //failsafe to keep from looping forever
 			}
 		}
+<<<<<<< HEAD
 		
 		
 <<<<<<< HEAD
@@ -213,6 +219,8 @@ class FacebookCrawler {
 >>>>>>> Initial changes to files - trying to figure out crawler methods and such
 =======
 >>>>>>> misc. commit
+=======
+>>>>>>> somehow this got majorly messed up after a git rebase. Hopefully this is corrected now
     }
 
     /**
