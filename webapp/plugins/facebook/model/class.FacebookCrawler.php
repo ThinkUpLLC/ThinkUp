@@ -152,6 +152,9 @@ class FacebookCrawler {
      */
     public function fetchPostsAndReplies($id, $is_page) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> misc. commit
 		// 'since' is the datetime of the last post in ThinkUp DB. 'until' is the last post in stream, according to Facebook
 		$post_dao = DAOFactory::getDAO('PostDAO');
 		$sincePost = $post_dao->getAllPosts($id, "facebook", 1, true, 'pub_date', 'DESC');
@@ -186,6 +189,7 @@ class FacebookCrawler {
 		}
 		
 		
+<<<<<<< HEAD
 =======
         //$stream = FacebookGraphAPIAccessor::apiRequest('/'.$id.'/posts', $this->access_token);
 		// 'since' is the datetime of the last post in DB. 'until' is the last post in stream, according to Facebook
@@ -207,6 +211,8 @@ class FacebookCrawler {
             $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
         }
 >>>>>>> Initial changes to files - trying to figure out crawler methods and such
+=======
+>>>>>>> misc. commit
     }
 
     /**
