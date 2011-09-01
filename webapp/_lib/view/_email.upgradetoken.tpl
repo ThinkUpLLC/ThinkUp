@@ -1,8 +1,8 @@
-Looks like you're upgrading your ThinkUp installation. Great! To complete the process, click on this link to apply new database updates:
+Looks like you're upgrading your {$app_title} installation. Great! To complete the process, click on this link to apply new database updates:
 
 http{if $smarty.server.HTTPS}s{/if}://{$server}{$site_root_path}install/upgrade.php?upgrade_token={$token} 
 
-If you have trouble, get in touch with the ThinkUp community on the mailing list:
+If you have trouble, get in touch with the {$app_title} community on the mailing list:
 
 http://groups.google.com/group/thinkupapp
 

@@ -12,7 +12,7 @@
           <li id="step-tab-2" class="ui-state-default ui-corner-top">
             <div class="key-stat install_step">
             <h1>2</h1>
-            <h3>Configure ThinkUp</h3>
+            <h3>Configure {$app_title}</h3>
             </div>
           </li>
           <li id="step-tab-3" class="no-border ui-state-default ui-corner-top">
@@ -37,7 +37,7 @@
              <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
                  <p>
                    <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                     <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
+                     <strong>Great!</strong> Your system has everything it needs to run {$app_title}.
                      You may proceed to the next step.
                  </p>
              </div> 
@@ -63,7 +63,7 @@
         </div>
         {if !$php_compat}
         <div class="clearfix append_20 info_message">
-          <p>ThinkUp needs PHP version greater or equal to v.{$php_required_version}</p>
+          <p>{$app_title} needs PHP version greater or equal to v.{$php_required_version}</p>
         </div>
         {/if}
         
@@ -81,7 +81,7 @@
         </div>
         {if !$libs.curl}
         <div class="clearfix append_20 info_message">
-          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.curl.php" target="_blank">cURL PHP library</a> installed on your system.</p>
+          <p>{$app_title} needs the <a href="http://www.php.net/manual/en/book.curl.php" target="_blank">cURL PHP library</a> installed on your system.</p>
         </div>
         {/if}
         
@@ -99,7 +99,7 @@
         </div>
         {if !$libs.gd}
         <div class="clearfix append_20 info_message">
-          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.image.php" target="_blank">GD PHP library</a> installed on your system.</p>
+          <p>{$app_title} needs the <a href="http://www.php.net/manual/en/book.image.php" target="_blank">GD PHP library</a> installed on your system.</p>
         </div>
         {/if}
         
@@ -117,7 +117,7 @@
         </div>
         {if !$libs.pdo OR !$libs.pdo_mysql}
         <div class="clearfix append_20 info_message">
-          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/pdo.installation.php" target="_blank">PDO extension</a> and the <a href="http://php.net/manual/en/ref.pdo-mysql.php" target="_blank">MySQL driver</a> installed on your system.</p>
+          <p>{$app_title} needs the <a href="http://www.php.net/manual/en/pdo.installation.php" target="_blank">PDO extension</a> and the <a href="http://php.net/manual/en/ref.pdo-mysql.php" target="_blank">MySQL driver</a> installed on your system.</p>
         </div>
         {/if}
 
@@ -135,7 +135,7 @@
         </div>
         {if !$libs.json}
         <div class="clearfix append_20 info_message">
-          <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.json.php" target="_blank">JSON PHP extension</a> installed on your system.</p>
+          <p>{$app_title} needs the <a href="http://www.php.net/manual/en/book.json.php" target="_blank">JSON PHP extension</a> installed on your system.</p>
         </div>
         {/if}
 

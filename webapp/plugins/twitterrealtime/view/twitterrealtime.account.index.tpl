@@ -27,8 +27,8 @@
 {include file="_plugin.admin-request.tpl"}
 </div>
 
-<!--<p>Alternately, add a public Twitter username for ThinkUp capture data about:</p>
-<form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to ThinkUp"></form>-->
+<!--<p>Alternately, add a public Twitter username for {$app_title} capture data about:</p>
+<form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to {$app_title}"></form>-->
 
 <p>
 <b>Note:</b> You can use redis for the realtime data queue. You will need php 5.3 or greater, and a redis server 

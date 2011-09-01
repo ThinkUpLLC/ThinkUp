@@ -77,15 +77,15 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
         </form>
     </div>
     {else}
-    To add a Facebook page to ThinkUp, "like" it on Facebook.com and refresh this page.
+    To add a Facebook page to {$app_title}, "like" it on Facebook.com and refresh this page.
     {/if}
 {/foreach}
 {/if}
 </div> 
 <div id="add-account-div" style="display: none;">
     {if $fbconnect_link}<br><h2 class="subhead">Add a Facebook User</h2>
-    Click on this button to authorize ThinkUp to access your Facebook user account.
-<a href="{$fbconnect_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkUp on Facebook</a>
+    Click on this button to authorize {$app_title} to access your Facebook user account.
+<a href="{$fbconnect_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize {$app_title} on Facebook</a>
 <div style="clear:all">&nbsp;<br><br><br></div>
     {/if}
     <div>
@@ -101,7 +101,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {if $user_is_admin}
 <h2 class="subhead">Configure the Facebook Plugin</h2>
 <ol style="margin-left:40px">
-<li><a href="http://developers.facebook.com/setup/">Create a ThinkUp Facebook application.</a></li>
+<li><a href="http://developers.facebook.com/setup/">Create a {$app_title} Facebook application.</a></li>
 <li>Set the Web Site &gt; Site URL to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}</pre></li>
 <li>Enter the Facebook-provided API Key, Application Secret and Application ID here.</li></ol>
 {/if}

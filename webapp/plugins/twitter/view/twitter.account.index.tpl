@@ -29,8 +29,8 @@
 
 <div id="add-account-div" style="display: none;">
 <h2 class="subhead">Add a Twitter account</h2>
-<p>Click on this button to authorize ThinkUp to access your Twitter account.</p>
-<a href="{$oauthorize_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkUp on Twitter</a>
+<p>Click on this button to authorize {$app_title} to access your Twitter account.</p>
+<a href="{$oauthorize_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize {$app_title} on Twitter</a>
 <br /><br /><br />
 </div>
 
@@ -38,8 +38,8 @@
 {include file="_plugin.admin-request.tpl"}
 </div>
 
-<!--<p>Alternately, add a public Twitter username for ThinkUp capture data about:</p>
-<form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to ThinkUp"></form>-->
+<!--<p>Alternately, add a public Twitter username for {$app_title} capture data about:</p>
+<form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to {$app_title}"></form>-->
 
 
 {if $options_markup}
@@ -47,7 +47,7 @@
 <!-- Configure the Twitter Plugin -->
 {if $user_is_admin}
 <h2 class="subhead">Configure the Twitter Plugin</h2>
-<ol style="margin-left:40px"><li><a href="http://twitter.com/oauth_clients/">Register your ThinkUp application on Twitter</a>.</li>
+<ol style="margin-left:40px"><li><a href="http://twitter.com/oauth_clients/">Register your {$app_title} application on Twitter</a>.</li>
 <li>Set the callback URL to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/twitter/auth.php</pre></li>
 <li>Set the application Default Access type to "Read-only".</li>
 <li>Enter the Twitter-provided consumer key and secret here.</li></ol>

@@ -75,8 +75,8 @@
     <h1>Back Up and Export Data</h1>
 
     <p><br />
-    <a href="{$site_root_path}install/backup.php">Back up ThinkUp's entire database</a> (highly recommended before upgrading ThinkUp)<br /><br />
-    <a href="{$site_root_path}install/exportuserdata.php">Export a single service user's data</a> (for transfer into another existing ThinkUp database)
+    <a href="{$site_root_path}install/backup.php">Back up {$app_title}'s entire database</a> (highly recommended before upgrading {$app_title})<br /><br />
+    <a href="{$site_root_path}install/exportuserdata.php">Export a single service user's data</a> (for transfer into another existing {$app_title} database)
     </p>
   </div>
         
@@ -127,14 +127,14 @@
           {include file="_usermessage.tpl" field='api_key'}
 
 <p>
-External applications use your ThinkUp API key for authentication. For example, 
-RSS news readers can update your ThinkUp
+External applications use your {$app_title} API key for authentication. For example, 
+RSS news readers can update your {$app_title}
 data using a special URL which contains this key. You can reset your key to something new here. 
 <a href="http://thinkupapp.com/docs/userguide/settings/account.html">Learn more.</a><br /><br />
 </p>
 
           <div style="text-align: center; border-top: solid gray 1px; padding: 20px 0px 20px 0px;">
-             <strong>Your Current ThinkUp API Key:</strong>
+             <strong>Your Current {$app_title} API Key:</strong>
              <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
              <span id="show_api_key">
              <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();">
@@ -147,7 +147,7 @@ data using a special URL which contains this key. You can reset your key to some
       <div class="grid_10 prefix_9 left">
                 <input type="hidden" name="reset_api_key" value="Reset API Key" />
                 <span id="apikey_conf" style="display: none;">
-                Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
+                Don't forget! If you reset your API key, you will need to update your {$app_title} crawler RSS feed subscription. This action cannot be undone.
                 </span>
                 <input type="button" value="Reset Your API Key" 
                 class="tt-button ui-state-default ui-priority-secondary ui-corner-all"
