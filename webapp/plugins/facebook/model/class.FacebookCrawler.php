@@ -79,13 +79,7 @@ class FacebookCrawler {
     public function fetchUserInfo($uid, $network, $found_in) {
         // Get owner user details and save them to DB
         $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
-<<<<<<< HEAD
         $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token);
-=======
-        //$user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token,
-        //$fields);
-		$user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token);
->>>>>>> d27175998a2f0f2752e9fa97e691c9f2254b1b3f
         $user_details->network = $network;
 
         $user = $this->parseUserDetails($user_details);
@@ -94,13 +88,8 @@ class FacebookCrawler {
             $post_dao = DAOFactory::getDAO('PostDAO');
             $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
             $user_object = new User($user, $found_in);
-<<<<<<< HEAD
             // storing Facebook 'updated_time' in other space in User object, in case it might interfer with other code
             $user_object->updated_time = $user['updated_time'];
-=======
-			// storing Facebook 'updated_time' in other space in User object, in case it might interfer with other code
-			$user_object->updated_time = $user['updated_time'];
->>>>>>> d27175998a2f0f2752e9fa97e691c9f2254b1b3f
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user_dao->updateUser($user_object);
 			//var_dump($user_object);
@@ -117,7 +106,6 @@ class FacebookCrawler {
     private function parseUserDetails($details) {
 	    //var_dump($details);
         if (isset($details->name) && isset($details->id)) {
-<<<<<<< HEAD
             $user_vals = array();
 
             $user_vals["user_name"] = $details->name;
@@ -134,26 +122,6 @@ class FacebookCrawler {
             $user_vals["network"] = $details->network;
             $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0; // this will help us in getting correct range of posts
             return $user_vals;
-=======
-            $ua = array();
-
-            $ua["user_name"] = $details->name;
-            $ua["full_name"] = $details->name;
-            $ua["user_id"] = $details->id;
-            $ua["avatar"] = 'https://graph.facebook.com/'.$details->id.'/picture';
-            $ua['url'] = isset($details->website)?$details->website:'';
-            $ua["follower_count"] = 0;
-            $ua["location"] = isset($details->location->name)?$details->location->name:'';
-            $ua["description"] = isset($details->about)?$details->about:'';
-            $ua["is_protected"] = 1; //for now, assume a Facebook user is private
-            $ua["post_count"] = 0;
-            $ua["joined"] = null;
-            $ua["network"] = $details->network;
-			$ua["updated_time"] = isset($details->updated_time)?$details->updated_time:''; // this will help us in getting correct range of posts
-            return $ua;
->>>>>>> d27175998a2f0f2752e9fa97e691c9f2254b1b3f
-        } else {
-            return null;
         }
     }
 
@@ -163,7 +131,6 @@ class FacebookCrawler {
      * @param bool $is_page If true then this is a Facebook page, else it's a user profile
      */
     public function fetchPostsAndReplies($id, $is_page) {
-<<<<<<< HEAD
 		// 'since' is the datetime of the last post in ThinkUp DB. 'until' is the last post in stream, according to Facebook
 		$post_dao = DAOFactory::getDAO('PostDAO');
 		$sincePost = $post_dao->getAllPosts($id, "facebook", 1, true, 'pub_date', 'DESC');
@@ -196,29 +163,6 @@ class FacebookCrawler {
 			    $keepLooping = FALSE; //failsafe to keep from looping forever
 			}
 		}
-		
-		
-=======
-        //$stream = FacebookGraphAPIAccessor::apiRequest('/'.$id.'/posts', $this->access_token);
-		// 'since' is the datetime of the last post in DB. 'until' is the last post in stream, according to Facebook
-		
-		$post_dao = DAOFactory::getDAO('PostDAO');
-		//$sincePost = $post_dao->getAllPostsByUsernameOrderedBy($id, "facebook", 1, "pub_date");
-		//$sincePost = $post_dao->getAllPostsByUserID($id, "facebook", 1, $order_by="pub_date", $direction="DESC");
-		$sincePost = $post_dao->getAllPostsIterator($id, "facebook", 1, true, 'pub_date', 'DESC');
-		
-		var_dump($sincePost); exit; 
-		
-        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$id.'/posts', $this->access_token, null, array('since' =>'0'));
-        if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
-            $this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
-            __METHOD__.','.__LINE__);
-
-            $thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
-        } else {
-            $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
-        }
->>>>>>> d27175998a2f0f2752e9fa97e691c9f2254b1b3f
     }
 
     /**
