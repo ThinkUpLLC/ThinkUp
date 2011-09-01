@@ -118,6 +118,7 @@ class FacebookCrawler {
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;
             $user_vals["network"] = $details->network;
+            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0; // this will help us in getting correct range of posts
             return $user_vals;
         } else {
             return null;
@@ -130,16 +131,40 @@ class FacebookCrawler {
      * @param bool $is_page If true then this is a Facebook page, else it's a user profile
      */
     public function fetchPostsAndReplies($id, $is_page) {
-        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$id.'/posts', $this->access_token);
+		// 'since' is the datetime of the last post in ThinkUp DB. 'until' is the last post in stream, according to Facebook
+		$post_dao = DAOFactory::getDAO('PostDAO');
+		$sincePost = $post_dao->getAllPosts($id, "facebook", 1, true, 'pub_date', 'DESC');
+		$since = $sincePost[0]->pub_date;
+		$since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
+		$profile = $this->fetchUserInfo($id, 'facebook', 'Post stream');
+		$until = $profile->other["updated_time"];
+		
+		$keepLooping = TRUE;
+		$i = 0;
+		$rawNextRequest = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
+		
+		while ($keepLooping) {
+			$i++;
+			$stream = FacebookGraphAPIAccessor::rawApiRequest($rawNextRequest, TRUE);
+			if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
+				$this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
+				__METHOD__.','.__LINE__);
 
-        if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
-            $this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
-            __METHOD__.','.__LINE__);
-
-            $thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
-        } else {
-            $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
-        }
+				$thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
+				
+				//get the next page for the loop
+				$rawNextRequest = $stream->paging->next;
+			} else {
+				$this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
+				$keepLooping = FALSE;
+			}
+			
+			if ($i > 10) {
+			    $keepLooping = FALSE; //failsafe to keep from looping forever
+			}
+		}
+		
+		
     }
 
     /**
@@ -368,6 +393,7 @@ class FacebookCrawler {
                     $total_added_posts = $total_added_posts + $post_comments_added;
                 }
 
+<<<<<<< HEAD
                 //process "likes"
                 if ($must_process_likes) {
                     if (isset($p->likes)) {
@@ -391,6 +417,35 @@ class FacebookCrawler {
                                         array_push($thinkup_likes, $fav_to_add);
                                         $likes_captured = $likes_captured + 1;
                                     }
+=======
+                $total_added_users = $total_added_users + $this->storeUsers($thinkup_users);
+                $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+                //free up memory
+                $thinkup_users = array();
+                $thinkup_likes = array();
+
+                // collapsed likes
+                if (isset($p->likes->count) && $p->likes->count > $likes_captured) {
+                    $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
+                    $this->access_token;
+                    do {
+                        $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
+                        if (isset($likes_stream) && is_array($likes_stream->data)) {
+                            foreach ($likes_stream->data as $l) {
+                                if (isset($l->name) && isset($l->id)) {
+                                    //Get users
+                                    $ttu = array("user_name"=>$l->name, "full_name"=>$l->name,
+                                    "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
+                                    '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
+                                    "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
+                                    "network"=>'facebook'); //Users are always set to network=facebook
+                                    array_push($thinkup_users, $ttu);
+
+                                    $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
+                                    "author_user_id"=>$p->from->id, "post_id"=>$post_id);
+                                    array_push($thinkup_likes, $fav_to_add);
+                                    $likes_captured = $likes_captured + 1;
+>>>>>>> misc. commit
                                 }
                             }
                         }
