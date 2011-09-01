@@ -79,14 +79,16 @@ class FacebookCrawler {
     public function fetchUserInfo($uid, $network, $found_in) {
         // Get owner user details and save them to DB
         $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
-        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token, $fields);
+        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token);
         $user_details->network = $network;
 
         $user = $this->parseUserDetails($user_details);
         if (isset($user)) {
-            //            $post_dao = DAOFactory::getDAO('PostDAO');
-            //            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
             $user_object = new User($user, $found_in);
+            // storing Facebook 'updated_time' in other space in User object, in case it might interfer with other code
+            $user_object->updated_time = $user['updated_time'];
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user_dao->updateUser($user_object);
             return $user_object;
@@ -115,6 +117,7 @@ class FacebookCrawler {
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;
             $user_vals["network"] = $details->network;
+            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0; // this will help us in getting correct range of posts
             return $user_vals;
         } else {
             return null;
@@ -127,16 +130,40 @@ class FacebookCrawler {
      * @param bool $is_page If true then this is a Facebook page, else it's a user profile
      */
     public function fetchPostsAndReplies($id, $is_page) {
-        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$id.'/posts', $this->access_token);
+		// 'since' is the datetime of the last post in ThinkUp DB. 'until' is the last post in stream, according to Facebook
+		$post_dao = DAOFactory::getDAO('PostDAO');
+		$sincePost = $post_dao->getAllPosts($id, "facebook", 1, true, 'pub_date', 'DESC');
+		$since = $sincePost[0]->pub_date;
+		$since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
+		$profile = $this->fetchUserInfo($id, 'facebook', 'Post stream');
+		$until = $profile->other["updated_time"];
+		
+		$keepLooping = TRUE;
+		$i = 0;
+		$rawNextRequest = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
+		
+		while ($keepLooping) {
+			$i++;
+			$stream = FacebookGraphAPIAccessor::rawApiRequest($rawNextRequest, TRUE);
+			if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
+				$this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
+				__METHOD__.','.__LINE__);
 
-        if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
-            $this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
-            __METHOD__.','.__LINE__);
-
-            $thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
-        } else {
-            $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
-        }
+				$thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
+				
+				//get the next page for the loop
+				$rawNextRequest = $stream->paging->next;
+			} else {
+				$this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
+				$keepLooping = FALSE;
+			}
+			
+			if ($i > 10) {
+			    $keepLooping = FALSE; //failsafe to keep from looping forever
+			}
+		}
+		
+		
     }
 
     /**
@@ -343,7 +370,7 @@ class FacebookCrawler {
                                     array_push($thinkup_users, $ttu);
 
                                     $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
-                                   "author_user_id"=>$p->from->id, "post_id"=>$post_id);
+                                    "author_user_id"=>$p->from->id, "post_id"=>$post_id);
                                     array_push($thinkup_likes, $fav_to_add);
                                     $likes_captured = $likes_captured + 1;
                                 }
