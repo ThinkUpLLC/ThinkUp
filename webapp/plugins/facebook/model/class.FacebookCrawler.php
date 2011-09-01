@@ -83,7 +83,6 @@ class FacebookCrawler {
         $user_details->network = $network;
 
         $user = $this->parseUserDetails($user_details);
-		//var_dump($user);exit;
         if (isset($user)) {
             $post_dao = DAOFactory::getDAO('PostDAO');
             $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
@@ -92,8 +91,7 @@ class FacebookCrawler {
             $user_object->updated_time = $user['updated_time'];
             $user_dao = DAOFactory::getDAO('UserDAO');
             $user_dao->updateUser($user_object);
-			//var_dump($user_object);
-            return $user_object; exit;
+            return $user_object;
         } else {
             return null;
         }
@@ -104,7 +102,6 @@ class FacebookCrawler {
      * @param array $details
      */
     private function parseUserDetails($details) {
-	    //var_dump($details);
         if (isset($details->name) && isset($details->id)) {
             $user_vals = array();
 
@@ -190,7 +187,6 @@ class FacebookCrawler {
             if ($profile==null) {
                 $profile = $this->fetchUserInfo($p->from->id, $network, 'Post stream');
             }
-			//var_dump($profile);
             //assume profile comments are private and page posts are public
             $is_protected = ($network=='facebook')?1:0;
             //get likes count
