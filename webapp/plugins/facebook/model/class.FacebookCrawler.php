@@ -135,8 +135,7 @@ class FacebookCrawler {
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;
             $user_vals["network"] = $details->network;
-            //this will help us in getting correct range of posts
-            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0;
+            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0; // this will help us in getting correct range of posts
             return $user_vals;
         }
     }
@@ -427,29 +426,33 @@ class FacebookCrawler {
                     $total_added_posts = $total_added_posts + $post_comments_added;
                 }
 
-                //process "likes"
-                if ($must_process_likes) {
-                    if (isset($p->likes)) {
-                        $likes_captured = 0;
-                        if (isset($p->likes->data)) {
-                            $post_likes = $p->likes->data;
-                            $post_likes_count = isset($post_likes)?sizeof($post_likes):0;
-                            if (is_array($post_likes) && sizeof($post_likes) > 0) {
-                                foreach ($post_likes as $l) {
-                                    if (isset($l->name) && isset($l->id)) {
-                                        //Get users
-                                        $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
-                                        "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
-                                        '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
-                                        "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
-                                        "network"=>'facebook'); //Users are always set to network=facebook
-                                        array_push($thinkup_users, $user_to_add);
+                $total_added_users = $total_added_users + $this->storeUsers($thinkup_users);
+                $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+                //free up memory
+                $thinkup_users = array();
+                $thinkup_likes = array();
 
-                                        $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
-                                        "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
-                                        array_push($thinkup_likes, $fav_to_add);
-                                        $likes_captured = $likes_captured + 1;
-                                    }
+                // collapsed likes
+                if (isset($p->likes->count) && $p->likes->count > $likes_captured) {
+                    $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
+                    $this->access_token;
+                    do {
+                        $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
+                        if (isset($likes_stream) && is_array($likes_stream->data)) {
+                            foreach ($likes_stream->data as $l) {
+                                if (isset($l->name) && isset($l->id)) {
+                                    //Get users
+                                    $ttu = array("user_name"=>$l->name, "full_name"=>$l->name,
+                                    "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
+                                    '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
+                                    "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
+                                    "network"=>'facebook'); //Users are always set to network=facebook
+                                    array_push($thinkup_users, $ttu);
+
+                                    $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
+                                    "author_user_id"=>$p->from->id, "post_id"=>$post_id);
+                                    array_push($thinkup_likes, $fav_to_add);
+                                    $likes_captured = $likes_captured + 1;
                                 }
                             }
                         }
