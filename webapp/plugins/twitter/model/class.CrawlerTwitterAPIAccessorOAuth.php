@@ -183,7 +183,11 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                          $status_message .= " | API ERROR: $translated_status_code";
 
                          //we expect a 404 when checking a tweet deletion, so suppress log line if defined
-                         if ($suppress_404_error === false && $status == 404) {
+                         if ($status == 404) {
+                             if ($suppress_404_error === false ) {
+                                 $logger->logUserError($status_message, __METHOD__.','.__LINE__);
+                             }
+                         } else { //do log any other kind of error
                              $logger->logUserError($status_message, __METHOD__.','.__LINE__);
                          }
 
