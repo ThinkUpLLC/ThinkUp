@@ -147,7 +147,8 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $ps = $this->execute($q, $vars);
         $results = $this->getUpdateCount($ps);
         if ($results > 0) {
-            $this->logger->logInfo("User ".$user->username." updated in system.", __METHOD__.','.__LINE__);
+            $this->logger->logInfo("User ".$user->username." (".$user->found_in.") updated in system.",
+            __METHOD__.','.__LINE__);
         }
         return $results;
     }
