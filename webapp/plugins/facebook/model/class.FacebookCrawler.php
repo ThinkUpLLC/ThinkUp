@@ -162,13 +162,21 @@ class FacebookCrawler {
 
         $profile = null;
 
-        $post_dao = DAOFactory::getDAO('PostDAO');
+        //efficiency control vars
         $must_process_likes = true;
         $must_process_comments = true;
+        $post_comments_added = 0;
+        $post_likes_added = 0;
+        $comments_difference = false;
+        $likes_difference = false;
 
-        foreach ($stream->data as $p) {
+        $post_dao = DAOFactory::getDAO('PostDAO');
+
+        foreach ($stream->data as $index=>$p) {
             $post_id = explode("_", $p->id);
             $post_id = $post_id[1];
+            $this->logger->logInfo("Beginning to process ".$post_id.", post ".$index." of ".count($stream->data),
+            __METHOD__.','.__LINE__);
             if ($profile==null) {
                 $profile = $this->fetchUserInfo($p->from->id, $network, 'Post stream', true);
             }
@@ -206,8 +214,8 @@ class FacebookCrawler {
                         "; skipping comment processing", __METHOD__.','.__LINE__);
                     } else {
                         $comments_difference = $p->comments->count - $post_in_storage->reply_count_cache;
-                        $this->logger->logInfo($comments_difference." new comment(s) to process for post ".$post_id,
-                        __METHOD__.','.__LINE__);
+                        $this->logger->logInfo($comments_difference." new comment(s) of ".$p->comments->count.
+                        " total to process for post ".$post_id, __METHOD__.','.__LINE__);
                     }
                 }
             }
@@ -283,15 +291,31 @@ class FacebookCrawler {
                                 }
                             }
                         }
-                        $total_added_posts = $total_added_posts + $this->storePostsAndAuthors($thinkup_posts,
-                        "Post stream comments");
+                        $post_comments_added = $post_comments_added +
+                        $this->storePostsAndAuthors($thinkup_posts, "Post stream comments");
+
                         //free up memory
                         $thinkup_posts = array();
 
+                        if (is_int($comments_difference) && $post_comments_added >= $comments_difference) {
+                            $must_process_comments = false;
+                            if (isset($comments_stream->paging->next)) {
+                                $this->logger->logInfo("Caught up on post ".$post_id."'s balance of ".
+                                $comments_difference." comments; stopping comment processing", __METHOD__.','.__LINE__);
+                            }
+                        }
                         // collapsed comment thread
-                        if (isset($p->comments->count) && $p->comments->count > $comments_captured ) {
+                        if (isset($p->comments->count) && $p->comments->count > $comments_captured
+                        && $must_process_comments) {
+                            if (is_int($comments_difference)) {
+                                $offset = $p->comments->count - $comments_difference;
+                                $offset_str = "&offset=".$offset."&limit=".$comments_difference;
+                            } else {
+                                $offset_str = "";
+                            }
                             $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.
-                            '/comments?access_token='. $this->access_token;
+                            '/comments?access_token='. $this->access_token.$offset_str;
+                            //$this->logger->logInfo("API call ".$api_call, __METHOD__.','.__LINE__);
                             do {
                                 $comments_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
                                 if (isset($comments_stream) && is_array($comments_stream->data)) {
@@ -315,20 +339,33 @@ class FacebookCrawler {
                                         }
                                     }
 
-                                    $total_added_posts = $total_added_posts +
+                                    $post_comments_added = $post_comments_added +
                                     $this->storePostsAndAuthors($thinkup_posts, "Posts stream comments collapsed");
+
+                                    if (is_int($comments_difference) && $post_comments_added >= $comments_difference) {
+                                        $must_process_comments = false;
+                                        if (isset($comments_stream->paging->next)) {
+                                            $this->logger->logInfo("Caught up on post ".$post_id."'s balance of ".
+                                            $comments_difference." comments; stopping comment processing",
+                                            __METHOD__.','.__LINE__);
+                                        }
+                                    }
+
                                     //free up memory
                                     $thinkup_posts = array();
-                                    if (isset($comments_stream->paging->next)) {
+                                    if (isset($comments_stream->paging->next) ) {
                                         $api_call = str_replace('\u00257C', '|', $comments_stream->paging->next);
                                     }
                                 } else {
                                     // no comments (pun intended)
                                     break;
                                 }
-                            } while (isset($comments_stream->paging->next));
+                            } while (isset($comments_stream->paging->next) && $must_process_comments);
                         }
                     }
+                    $this->logger->logUserInfo("Added ".$post_comments_added." comment(s) for post ". $post_id,
+                    __METHOD__.','.__LINE__);
+                    $total_added_posts = $total_added_posts + $post_comments_added;
                 }
 
                 //process "likes"
@@ -359,15 +396,31 @@ class FacebookCrawler {
                         }
 
                         $total_added_users = $total_added_users + $this->storeUsers($thinkup_users, "Likes");
-                        $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+                        $post_likes_added = $post_likes_added + $this->storeLikes($thinkup_likes);
+
                         //free up memory
                         $thinkup_users = array();
                         $thinkup_likes = array();
 
+                        if (is_int($likes_difference) && $post_likes_added >= $likes_difference) {
+                            $must_process_likes = false;
+                            if (isset($likes_stream->paging->next)) {
+                                $this->logger->logInfo("Caught up on post ".$post_id."'s balance of ".
+                                $likes_difference." likes; stopping like processing", __METHOD__.','.__LINE__);
+                            }
+                        }
+
                         // collapsed likes
-                        if (isset($p->likes->count) && $p->likes->count > $likes_captured) {
+                        if (isset($p->likes->count) && $p->likes->count > $likes_captured && $must_process_likes) {
+                            if (is_int($likes_difference)) {
+                                $offset = $p->likes->count - $likes_difference;
+                                $offset_str = "&offset=".$offset;
+                            } else {
+                                $offset_str = "";
+                            }
+
                             $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
-                            $this->access_token;
+                            $this->access_token.$offset_str;
                             do {
                                 $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
                                 if (isset($likes_stream) && is_array($likes_stream->data)) {
@@ -390,10 +443,20 @@ class FacebookCrawler {
 
                                     $total_added_users = $total_added_users + $this->storeUsers($thinkup_users,
                                     "Likes");
-                                    $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+                                    $post_likes_added = $post_likes_added + $this->storeLikes($thinkup_likes);
+
                                     //free up memory
                                     $thinkup_users = array();
                                     $thinkup_likes = array();
+
+                                    if (is_int($likes_difference) && $post_likes_added >= $likes_difference) {
+                                        $must_process_likes = false;
+                                        if (isset($likes_stream->paging->next)) {
+                                            $this->logger->logInfo("Caught up on post ".$post_id."'s balance of ".
+                                            $likes_difference." likes; stopping like processing",
+                                            __METHOD__.','.__LINE__);
+                                        }
+                                    }
 
                                     if (isset($likes_stream->paging->next)) {
                                         $api_call = str_replace('\u00257C', '|', $likes_stream->paging->next);
@@ -402,16 +465,24 @@ class FacebookCrawler {
                                     // no likes
                                     break;
                                 }
-                            } while (isset($likes_stream->paging->next));
+                            } while (isset($likes_stream->paging->next ) && $must_process_likes);
                         }
                     }
+                    $this->logger->logUserInfo("Added ".$post_likes_added." like(s) for post ".$post_id,
+                    __METHOD__.','.__LINE__);
+                    $total_added_likes = $total_added_likes + $post_likes_added;
                 }
                 //free up memory
                 $thinkup_users = array();
                 $thinkup_likes = array();
             }
+            //reset control vars for next post
             $must_process_likes = true;
             $must_process_comments = true;
+            $post_comments_added = 0;
+            $post_likes_added = 0;
+            $comments_difference = false;
+            $likes_difference = false;
         }
 
         if ($total_added_posts > 0 ) {
@@ -448,12 +519,12 @@ class FacebookCrawler {
             $added_posts = $post_dao->addPost($post);
             if ($added_posts > 0) {
                 $this->logger->logInfo("Added post ID ".$post["post_id"]." on ".$post["network"].
-                " for ".$post["author_username"].":".$post["post_text"], __METHOD__.','.__LINE__);
+                " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
             }
             $total_added_posts = $total_added_posts + $added_posts;
             $added_posts = 0;
         }
-        return $added_posts;
+        return $total_added_posts;
     }
 
     private function storeLinks($links) {
