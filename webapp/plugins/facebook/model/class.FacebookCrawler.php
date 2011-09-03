@@ -71,25 +71,28 @@ class FacebookCrawler {
 
     /**
      * Fetch and save a Facebook user's information.
-     * @param int $uid Facebook user ID
+     * @param int $user_id Facebook user ID
      * @param str $network Either 'facebook page' or 'facebook'
      * @param str $found_in Where the user was found
+     * @param bool $reload_from_facebook Defaults to false; if true will always query Facebook API for update
      * @return User
      */
-    public function fetchUserInfo($uid, $network, $found_in) {
-        // Get owner user details and save them to DB
-        $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
-        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token, $fields);
-        $user_details->network = $network;
+    public function fetchUserInfo($user_id, $network, $found_in, $reload_from_facebook=false) {
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        if ($reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
+            // Get owner user details and save them to DB
+            $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
+            $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
+            $user_details->network = $network;
 
-        $user = $this->parseUserDetails($user_details);
-        if (isset($user)) {
-            //            $post_dao = DAOFactory::getDAO('PostDAO');
-            //            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
-            $user_object = new User($user, $found_in);
-            $user_dao = DAOFactory::getDAO('UserDAO');
-            $user_dao->updateUser($user_object);
-            return $user_object;
+            $user = $this->parseUserDetails($user_details);
+            if (isset($user)) {
+                $user_object = new User($user, $found_in);
+                $user_dao->updateUser($user_object);
+                return $user_object;
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
@@ -167,12 +170,12 @@ class FacebookCrawler {
             $post_id = explode("_", $p->id);
             $post_id = $post_id[1];
             if ($profile==null) {
-                $profile = $this->fetchUserInfo($p->from->id, $network, 'Post stream');
+                $profile = $this->fetchUserInfo($p->from->id, $network, 'Post stream', true);
             }
 
-            //assume profile comments are private and page posts are public
+            //Assume profile comments are private and page posts are public
             $is_protected = ($network=='facebook')?1:0;
-            //get likes count
+            //Get likes count
             $likes_count = 0;
             if (isset($p->likes)) {
                 if (is_int($p->likes)) {
@@ -182,206 +185,233 @@ class FacebookCrawler {
                 }
             }
 
-            //Figure out if we have to process likes and comments
             $post_in_storage = $post_dao->getPost($post_id, $network);
+
+            //Figure out if we have to process likes and comments
             if (isset($post_in_storage)) {
                 if ($post_in_storage->favlike_count_cache >= $likes_count ) {
                     $must_process_likes = false;
-                    $this->logger->logInfo("Already have ".$likes_count." likes for post ID ".$post_id.
-                    "; Skipping like processing this crawler run", __METHOD__.','.__LINE__);
+                    $this->logger->logInfo("Already have ".$likes_count." like(s) for post ".$post_id.
+                    "in storage; skipping like processing", __METHOD__.','.__LINE__);
+                } else  {
+                    $likes_difference = $likes_count - $post_in_storage->favlike_count_cache;
+                    $this->logger->logInfo($likes_difference." new like(s) to process for post ".$post_id,
+                    __METHOD__.','.__LINE__);
                 }
 
                 if (isset($p->comments->count)) {
                     if ($post_in_storage->reply_count_cache >= $p->comments->count) {
                         $must_process_comments = false;
-                        $this->logger->logInfo("Already have ".$p->comments->count." comments for post ID ".$post_id.
-                        "; Skipping comments processing", __METHOD__.','.__LINE__);
+                        $this->logger->logInfo("Already have ".$p->comments->count." comment(s) for post ".$post_id.
+                        "; skipping comment processing", __METHOD__.','.__LINE__);
+                    } else {
+                        $comments_difference = $p->comments->count - $post_in_storage->reply_count_cache;
+                        $this->logger->logInfo($comments_difference." new comment(s) to process for post ".$post_id,
+                        __METHOD__.','.__LINE__);
                     }
                 }
             }
 
-            if (isset($profile) && !isset($post_in_storage)) {
-                $posts_to_process = array("post_id"=>$post_id, "author_username"=>$profile->username,
-                "author_fullname"=>$profile->username,"author_avatar"=>$profile->avatar, 
-                "author_user_id"=>$p->from->id, "post_text"=>isset($p->message)?$p->message:'', 
-                "pub_date"=>$p->created_time, "favlike_count_cache"=>$likes_count,
-                "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
-                'is_protected'=>$is_protected, 'location'=>$profile->location);
+            if (isset($profile) ) {
+                if (!isset($post_in_storage)) {
+                    $post_to_process = array("post_id"=>$post_id, "author_username"=>$profile->username,
+                    "author_fullname"=>$profile->username,"author_avatar"=>$profile->avatar, 
+                    "author_user_id"=>$p->from->id, "post_text"=>isset($p->message)?$p->message:'', 
+                    "pub_date"=>$p->created_time, "favlike_count_cache"=>$likes_count,
+                    "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
+                    'is_protected'=>$is_protected, 'location'=>$profile->location);
 
-                array_push($thinkup_posts, $posts_to_process);
-                $total_added_posts = $total_added_posts + $this->storePostsAndAuthors($thinkup_posts, "Owner stream");
-                //free up memory
-                $thinkup_posts = array();
-
-                if (isset($p->source) || isset($p->link)) { // there's a link to store
-                    $link_url = (isset($p->source))?$p->source:$p->link;
-                    $link = new Link(array(
-                    "url"=>$link_url, 
-                    "expanded_url"=>$link_url, 
-                    "image_src"=>(isset($p->picture))?$p->picture:'',
-                    "caption"=>(isset($p->caption))?$p->caption:'', 
-                    "description"=>(isset($p->description))?$p->description:'',
-                    "title"=>(isset($p->name))?$p->name:'', 
-                    "network"=>$network, "post_id"=>$post_id 
-                    ));
-                    array_push($thinkup_links, $link);
-                }
-                $total_links_addded = $total_links_added + $this->storeLinks($thinkup_links);
-                if ($total_links_added > 0 ) {
-                    $this->logger->logUserSuccess("Collected $total_links_added new links", __METHOD__.','.__LINE__);
-                }
-                //free up memory
-                $thinkup_links  = array();
-            }
-
-            if ($must_process_comments) {
-                if (isset($p->comments)) {
-                    $comments_captured = 0;
-                    if (isset($p->comments->data)) {
-                        $post_comments = $p->comments->data;
-                        $post_comments_count = isset($post_comments)?sizeof($post_comments):0;
-                        if (is_array($post_comments) && sizeof($post_comments) > 0) {
-                            foreach ($post_comments as $c) {
-                                if (isset($c->from)) {
-                                    $comment_id = explode("_", $c->id);
-                                    $comment_id = $comment_id[2];
-                                    //Get posts
-                                    $posts_to_process = array("post_id"=>$comment_id, "author_username"=>$c->from->name,
-                                    "author_fullname"=>$c->from->name,
-                                    "author_avatar"=>'https://graph.facebook.com/'.$c->from->id.'/picture', 
-                                    "author_user_id"=>$c->from->id, "post_text"=>$c->message, 
-                                    "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id, 
-                                    "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network, 
-                                    'is_protected'=>$is_protected, 'location'=>'');
-                                    array_push($thinkup_posts, $posts_to_process);
-                                    $comments_captured = $comments_captured + 1;
-                                }
-                            }
-                        }
-                    }
+                    array_push($thinkup_posts, $post_to_process);
                     $total_added_posts = $total_added_posts + $this->storePostsAndAuthors($thinkup_posts,
-                    "Post stream comments");
+                    "Owner stream");
                     //free up memory
                     $thinkup_posts = array();
 
-                    // collapsed comment thread
-                    if (isset($p->comments->count) && $p->comments->count > $comments_captured ) {
-                        $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/comments?access_token='.
-                        $this->access_token;
-                        do {
-                            $comments_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
-                            if (isset($comments_stream) && is_array($comments_stream->data)) {
-                                foreach ($comments_stream->data as $c) {
-                                    if (isset($c->from)) {
-                                        $comment_id = explode("_", $c->id);
-                                        $comment_id = $comment_id[sizeof($comment_id)-1];
-                                        //Get posts
-                                        $posts_to_process = array("post_id"=>$comment_id,
-                                        "author_username"=>$c->from->name, "author_fullname"=>$c->from->name,
-                                        "author_avatar"=>'https://graph.facebook.com/'.
-                                        $c->from->id.'/picture', "author_user_id"=>$c->from->id,
-                                        "post_text"=>$c->message, "pub_date"=>$c->created_time,
-                                        "in_reply_to_user_id"=>$profile->user_id,
-                                        "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network,
-                                        'is_protected'=>$is_protected, 'location'=>'');
-                                        array_push($thinkup_posts, $posts_to_process);
-                                    }
-                                }
-
-                                $total_added_posts = $total_added_posts + $this->storePostsAndAuthors($thinkup_posts,
-                                "Posts stream comments collapsed");
-                                //free up memory
-                                $thinkup_posts = array();
-                                if (isset($comments_stream->paging->next)) {
-                                    $api_call = str_replace('\u00257C', '|', $comments_stream->paging->next);
-                                }
-                            } else {
-                                // no comments (pun intended)
-                                break;
-                            }
-                        }
-                        while (isset($comments_stream->paging->next));
+                    if (isset($p->source) || isset($p->link)) { // there's a link to store
+                        $link_url = (isset($p->source))?$p->source:$p->link;
+                        $link = new Link(array(
+                        "url"=>$link_url, 
+                        "expanded_url"=>$link_url, 
+                        "image_src"=>(isset($p->picture))?$p->picture:'',
+                        "caption"=>(isset($p->caption))?$p->caption:'', 
+                        "description"=>(isset($p->description))?$p->description:'',
+                        "title"=>(isset($p->name))?$p->name:'', 
+                        "network"=>$network, "post_id"=>$post_id 
+                        ));
+                        array_push($thinkup_links, $link);
+                    }
+                    $total_links_addded = $total_links_added + $this->storeLinks($thinkup_links);
+                    if ($total_links_added > 0 ) {
+                        $this->logger->logUserSuccess("Collected $total_links_added new links",
+                        __METHOD__.','.__LINE__);
+                    }
+                    //free up memory
+                    $thinkup_links  = array();
+                } else { // post already exists in storage
+                    if ($must_process_likes) { //update its like count only
+                        $post_dao->updateFavLikeCount($post_id, $network, $likes_count);
+                        $this->logger->logInfo("Updated Like count for post ".$post_id . " to ". $likes_count,
+                        __METHOD__.','.__LINE__);
                     }
                 }
-            }
-            //process "likes"
-            if ($must_process_likes) {
-                if (isset($p->likes)) {
-                    $likes_captured = 0;
-                    if (isset($p->likes->data)) {
-                        $post_likes = $p->likes->data;
-                        $post_likes_count = isset($post_likes)?sizeof($post_likes):0;
-                        if (is_array($post_likes) && sizeof($post_likes) > 0) {
-                            foreach ($post_likes as $l) {
-                                if (isset($l->name) && isset($l->id)) {
-                                    //Get users
-                                    $ttu = array("user_name"=>$l->name, "full_name"=>$l->name,
-                                    "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
-                                    '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
-                                    "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
-                                    "network"=>'facebook'); //Users are always set to network=facebook
-                                    array_push($thinkup_users, $ttu);
 
-                                    $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
-                                    "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
-                                    array_push($thinkup_likes, $fav_to_add);
-                                    $likes_captured = $likes_captured + 1;
+                if ($must_process_comments) {
+                    if (isset($p->comments)) {
+                        $comments_captured = 0;
+                        if (isset($p->comments->data)) {
+                            $post_comments = $p->comments->data;
+                            $post_comments_count = isset($post_comments)?sizeof($post_comments):0;
+                            if (is_array($post_comments) && sizeof($post_comments) > 0) {
+                                foreach ($post_comments as $c) {
+                                    if (isset($c->from)) {
+                                        $comment_id = explode("_", $c->id);
+                                        $comment_id = $comment_id[2];
+                                        //only add to queue if not already in storage
+                                        $comment_in_storage = $post_dao->getPost($comment_id, $network);
+                                        if (!isset($comment_in_storage)) {
+                                            $comment_to_process = array("post_id"=>$comment_id,
+                                            "author_username"=>$c->from->name, "author_fullname"=>$c->from->name,
+                                            "author_avatar"=>'https://graph.facebook.com/'.$c->from->id.'/picture', 
+                                            "author_user_id"=>$c->from->id, "post_text"=>$c->message, 
+                                            "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id, 
+                                            "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network, 
+                                            'is_protected'=>$is_protected, 'location'=>'');
+                                            array_push($thinkup_posts, $comment_to_process);
+                                            $comments_captured = $comments_captured + 1;
+                                        }
+                                    }
                                 }
                             }
                         }
+                        $total_added_posts = $total_added_posts + $this->storePostsAndAuthors($thinkup_posts,
+                        "Post stream comments");
+                        //free up memory
+                        $thinkup_posts = array();
+
+                        // collapsed comment thread
+                        if (isset($p->comments->count) && $p->comments->count > $comments_captured ) {
+                            $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.
+                            '/comments?access_token='. $this->access_token;
+                            do {
+                                $comments_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
+                                if (isset($comments_stream) && is_array($comments_stream->data)) {
+                                    foreach ($comments_stream->data as $c) {
+                                        if (isset($c->from)) {
+                                            $comment_id = explode("_", $c->id);
+                                            $comment_id = $comment_id[sizeof($comment_id)-1];
+                                            //only add to queue if not already in storage
+                                            $comment_in_storage = $post_dao->getPost($comment_id, $network);
+                                            if (!isset($comment_in_storage)) {
+                                                $comment_to_process = array("post_id"=>$comment_id,
+                                                "author_username"=>$c->from->name, "author_fullname"=>$c->from->name,
+                                                "author_avatar"=>'https://graph.facebook.com/'.
+                                                $c->from->id.'/picture', "author_user_id"=>$c->from->id,
+                                                "post_text"=>$c->message, "pub_date"=>$c->created_time,
+                                                "in_reply_to_user_id"=>$profile->user_id,
+                                                "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network,
+                                                'is_protected'=>$is_protected, 'location'=>'');
+                                                array_push($thinkup_posts, $comment_to_process);
+                                            }
+                                        }
+                                    }
+
+                                    $total_added_posts = $total_added_posts +
+                                    $this->storePostsAndAuthors($thinkup_posts, "Posts stream comments collapsed");
+                                    //free up memory
+                                    $thinkup_posts = array();
+                                    if (isset($comments_stream->paging->next)) {
+                                        $api_call = str_replace('\u00257C', '|', $comments_stream->paging->next);
+                                    }
+                                } else {
+                                    // no comments (pun intended)
+                                    break;
+                                }
+                            } while (isset($comments_stream->paging->next));
+                        }
                     }
+                }
 
-                    $total_added_users = $total_added_users + $this->storeUsers($thinkup_users, "Likes");
-                    $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
-                    //free up memory
-                    $thinkup_users = array();
-                    $thinkup_likes = array();
-
-                    // collapsed likes
-                    if (isset($p->likes->count) && $p->likes->count > $likes_captured) {
-                        $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
-                        $this->access_token;
-                        do {
-                            $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
-                            if (isset($likes_stream) && is_array($likes_stream->data)) {
-                                foreach ($likes_stream->data as $l) {
+                //process "likes"
+                if ($must_process_likes) {
+                    if (isset($p->likes)) {
+                        $likes_captured = 0;
+                        if (isset($p->likes->data)) {
+                            $post_likes = $p->likes->data;
+                            $post_likes_count = isset($post_likes)?sizeof($post_likes):0;
+                            if (is_array($post_likes) && sizeof($post_likes) > 0) {
+                                foreach ($post_likes as $l) {
                                     if (isset($l->name) && isset($l->id)) {
                                         //Get users
-                                        $ttu = array("user_name"=>$l->name, "full_name"=>$l->name,
+                                        $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
                                         "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
                                         '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
                                         "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
                                         "network"=>'facebook'); //Users are always set to network=facebook
-                                        array_push($thinkup_users, $ttu);
+                                        array_push($thinkup_users, $user_to_add);
 
                                         $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
-                                       "author_user_id"=>$p->from->id, "post_id"=>$post_id);
+                                        "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
                                         array_push($thinkup_likes, $fav_to_add);
                                         $likes_captured = $likes_captured + 1;
                                     }
                                 }
-
-                                $total_added_users = $total_added_users + $this->storeUsers($thinkup_users, "Likes");
-                                $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
-                                //free up memory
-                                $thinkup_users = array();
-                                $thinkup_likes = array();
-
-                                if (isset($likes_stream->paging->next)) {
-                                    $api_call = str_replace('\u00257C', '|', $likes_stream->paging->next);
-                                }
-                            } else {
-                                // no likes
-                                break;
                             }
                         }
-                        while (isset($likes_stream->paging->next));
+
+                        $total_added_users = $total_added_users + $this->storeUsers($thinkup_users, "Likes");
+                        $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+                        //free up memory
+                        $thinkup_users = array();
+                        $thinkup_likes = array();
+
+                        // collapsed likes
+                        if (isset($p->likes->count) && $p->likes->count > $likes_captured) {
+                            $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
+                            $this->access_token;
+                            do {
+                                $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
+                                if (isset($likes_stream) && is_array($likes_stream->data)) {
+                                    foreach ($likes_stream->data as $l) {
+                                        if (isset($l->name) && isset($l->id)) {
+                                            //Get users
+                                            $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
+                                            "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
+                                            '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
+                                            "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
+                                            "network"=>'facebook'); //Users are always set to network=facebook
+                                            array_push($thinkup_users, $user_to_add);
+
+                                            $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
+                                           "author_user_id"=>$p->from->id, "post_id"=>$post_id);
+                                            array_push($thinkup_likes, $fav_to_add);
+                                            $likes_captured = $likes_captured + 1;
+                                        }
+                                    }
+
+                                    $total_added_users = $total_added_users + $this->storeUsers($thinkup_users,
+                                    "Likes");
+                                    $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+                                    //free up memory
+                                    $thinkup_users = array();
+                                    $thinkup_likes = array();
+
+                                    if (isset($likes_stream->paging->next)) {
+                                        $api_call = str_replace('\u00257C', '|', $likes_stream->paging->next);
+                                    }
+                                } else {
+                                    // no likes
+                                    break;
+                                }
+                            } while (isset($likes_stream->paging->next));
+                        }
                     }
                 }
                 //free up memory
                 $thinkup_users = array();
                 $thinkup_likes = array();
             }
+            $must_process_likes = true;
+            $must_process_comments = true;
         }
 
         if ($total_added_posts > 0 ) {
@@ -416,13 +446,6 @@ class FacebookCrawler {
                 }
             }
             $added_posts = $post_dao->addPost($post);
-            if ($added_posts == 0 && isset($post['favlike_count_cache'])) {
-                //post already exists in storage, so update its like count only
-                $post_dao->updateFavLikeCount($post['post_id'], $post['network'], $post['favlike_count_cache']);
-                $this->logger->logInfo("Updated Like count for post ID ".$post["post_id"] . " to ".
-                $post['favlike_count_cache'], __METHOD__.','.__LINE__);
-            }
-
             if ($added_posts > 0) {
                 $this->logger->logInfo("Added post ID ".$post["post_id"]." on ".$post["network"].
                 " for ".$post["author_username"].":".$post["post_text"], __METHOD__.','.__LINE__);

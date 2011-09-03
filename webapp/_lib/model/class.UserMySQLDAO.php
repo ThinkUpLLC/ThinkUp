@@ -106,8 +106,9 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
             ':network'=>$user->network
         );
 
-        if (!$this->isUserInDB($user->user_id, $user->network)) {
-            $this->logger->logDebug("adding new user: ".$user->username." to system.", __METHOD__.','.__LINE__);
+        $is_user_in_storage = false;
+        $is_user_in_storage = $this->isUserInDB($user->user_id, $user->network);
+        if (!$is_user_in_storage) {
             $q = "INSERT INTO #prefix#users (user_id, user_name, full_name, avatar, location, description, url, ";
             $q .= "is_protected, follower_count, post_count, ".($has_friend_count ? "friend_count, " : "")." ".
             ($has_favorites_count ? "favorites_count, " : "")." ".
@@ -147,8 +148,8 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $ps = $this->execute($q, $vars);
         $results = $this->getUpdateCount($ps);
         if ($results > 0) {
-            $this->logger->logInfo("User ".$user->username." (".$user->found_in.") updated in system.",
-            __METHOD__.','.__LINE__);
+            $this->logger->logInfo((($is_user_in_storage)?"Updated":"Added"). " user ".$user->username.
+            " (found in ".$user->found_in.")", __METHOD__.','.__LINE__);
         }
         return $results;
     }
