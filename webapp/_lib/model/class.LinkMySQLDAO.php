@@ -304,4 +304,34 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $ps = $this->execute($q, $vars);
         return $this->getDataRowsAsObjects($ps, "Link");
     }
+    
+	public function getLinksByLastTouched($url, $post_id, $limit, $days) {
+	    $q  = "SELECT l.* ";
+		$q .= "FROM #prefix#posts AS p ";
+		$q .= "JOIN #prefix#links AS l ";
+		$q .= "ON p.post_id = l.post_id ";
+		$q .= "WHERE l.url LIKE :url AND l.error = '' ";
+		$q .= "AND l.expanded_url != '' ";
+		$q .= "AND l.post_id >= :post_id ";
+		$q .= "AND p.pub_date <= DATE_SUB(CURDATE(), INTERVAL :days DAY) ";
+		$q .= "GROUP BY url ";
+		$q .= "ORDER BY pub_date ASC LIMIT :limit ";
+		
+		$vars = array(
+		    ':limit'=>$limit,
+			':days'=>$days,
+			':post_id'=>$post_id,
+			':url'=>$url.'%'
+		);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+		$ps = $this->execute($q, $vars);
+
+		$rows = $this->getDataRowsAsArrays($ps);
+
+		$urls = array();
+        foreach($rows as $row){
+            $urls[] = $row['url'];
+        }
+        return $urls;
+	}
 }

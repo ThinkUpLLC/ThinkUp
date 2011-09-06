@@ -155,7 +155,11 @@ class DAOFactory {
     //Mutex MySQL DAO
         'MutexDAO' => array (
     //MySQL Version
-            'mysql' => 'MutexMySQLDAO')
+            'mysql' => 'MutexMySQLDAO'),
+    //ExpandURLs Instance DAO
+		'ExpandURLsInstanceDAO' => array(
+	//MySQL Version
+	        'mysql' => 'ExpandURLsInstanceMySQLDAO' )
     );
 
     /*

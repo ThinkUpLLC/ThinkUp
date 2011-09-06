@@ -87,7 +87,7 @@ class ExpandURLsInstanceMySQLDAO extends InstanceMySQLDAO implements InstanceDAO
     private function insertMetaData($instance_object) {
         $q  = "INSERT INTO ".$this->getMetaTableName()." ";
         $q .= "(id, ";
-        $lfi = ($instance_object->cursor != "" ? true : false);
+        $lfi = ($instance_object->cursor != 0 ? true : false);
         if ($lfi){
             $q .= "cursor, ";
         }

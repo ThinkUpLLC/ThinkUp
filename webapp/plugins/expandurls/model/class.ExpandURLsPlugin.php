@@ -30,6 +30,8 @@
  */
 class ExpandURLsPlugin implements CrawlerPlugin {
 
+    var $link_limit = 0;
+
     public function activate() {
     }
 
@@ -43,22 +45,42 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $logger = Logger::getInstance();
         $logger->setUsername(null);
 
+        $instance_dao = DAOFactory::getDAO('ExpandURLsInstanceDAO');
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('expandurls', true);
-
-        //Flickr image thumbnails
-        if (isset($options['flickr_api_key']->option_value)) {
-            self::expandFlickrThumbnails($options['flickr_api_key']->option_value);
-        }
-
-        self::expandInstagramImageURLs();
-        //@TODO: Bit.ly URLs
-
-        //Remaining URLs
-        $link_limit = isset($options['links_to_expand']->option_value) ?
+        
+        //Limit the number of links expanded each crawl
+        $this->link_limit = isset($options['links_to_expand']->option_value) ?
         (int)$options['links_to_expand']->option_value : 1500;
 
-        self::expandRemainingURLs($link_limit);
+        //Flickr image thumbnails
+        if ($this->link_limit > 0) {
+            if (isset($options['flickr_api_key']->option_value)) {
+                self::expandFlickrThumbnails($options['flickr_api_key']->option_value);
+            }
+        }
+
+        if ($this->link_limit > 0) {        
+            self::expandInstagramImageURLs();
+        }
+        
+        //Bit.ly URLs
+        if ($this->link_limit > 0) {
+            if (isset($options['bitly_api_key']->option_value, $options['bitly_login']->option_value, 
+    		    $options['day_cap']->option_value, $options['hour_cap']->option_value, 
+    			$options['bitly_limit']->option_value)) {
+                self::expandBitlyLinks($options['bitly_api_key']->option_value, 
+    			$options['bitly_login']->option_value, $options['day_cap']->option_value, 
+    			$options['hour_cap']->option_value, $options['bitly_limit']->option_value);
+           }
+        }
+               
+        //Remaining links
+        if ($this->link_limit > 0) {
+            self::expandRemainingURLs();        
+        } else {
+            $logger->logUserInfo("Limit of links to expand reached.", __METHOD__.','.__LINE__);
+        }
     }
 
     /**
@@ -101,12 +123,69 @@ class ExpandURLsPlugin implements CrawlerPlugin {
             $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
             __METHOD__.','.__LINE__);
         }
+		$this->link_limit = $this->link_limit - $total_thumbnails;
     }
+    
+    /*
+    *Expand Bit.ly links and recheck click count on old ones
+    *
+    *@param api_key bitly api key
+    *@param bit_login bitly login name
+    *@param day_cap num of days to go back
+    *@param hour_cap time between rechecks
+    *@param bitly_limit how many links to recheck
+    */
+    
+    public function expandBitlyLinks($api_key, $bit_login, $day_cap, $hour_cap, $bitly_limit) {
+        $logger = Logger::getInstance();
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+		$instance_dao = DAOFactory::getDAO('ExpandURLsInstanceDAO');
+        
+        $logger->setUsername(null);
+        $ba = new BitlyAPIAccessor($api_key, $bit_login, $bitly_limit);
 
+		//Expandable array for bit.ly urls
+		$bitly_urls = array('http://bit.ly/', 'http://bitly.com/', 'http://j.mp/');
+        foreach ($bitly_urls as $bitly_url) {
+		    $bitlylinkstoexpand = $link_dao->getLinksToExpandByURL($bitly_url);
+		
+            if (count($bitlylinkstoexpand) > 0) {
+                $logger->logUserInfo(count($bitlylinkstoexpand). " $bitly_url" . " links to expand.", __METHOD__.','.__LINE__);
+            } else {
+                $logger->logUserInfo("There are no " . $bitly_url . " links to expand.", __METHOD__.','.__LINE__);
+            }
+        
+        $total_links = 0;
+        $total_errors = 0;
+        foreach ($bitlylinkstoexpand as $bl) {
+            $eurl = $ba->getBitlyLinkData($bl);
+            if ($eurl["expanded_url"] != '') {
+                $link_dao->saveExpandedUrl($bl, $eurl["expanded_url"], $eurl["title"], 0, $eurl["clicks"]);
+                $total_links = $total_links + 1;
+            } elseif ($eurl["error"] != '') {
+                $link_dao->saveExpansionError($bl, $eurl["error"]);
+                $total_errors = $total_errors + 1;
+            }
+        }
+        $this->link_limit = $this->link_limit - $total_links;
+        
+        $logger->logUserSuccess($total_links. " " . $bitly_url . " links expanded (".$total_errors." errors)", 
+        __METHOD__.','.__LINE__);
+		$post_id = 13095328022536192;
+                $limit = 15;
+                $day_cap = 90;
+                echo $instance_dao->id;
+		   // if ($instance_dao->cursor == 0) {
+		//@todo check that timeframe is ok something like: if.check==true...
+		//@todo do link_limit subtraction when done with each set of expands
+		//@todo a way to get the last post_id checked then pass into getLinksBy...
+		    $bitlylinkstorecheck = $link_dao->getLinksByLastTouched($bitly_url, $post_id, $limit, $day_cap);
+		   // }
+		}
+    }
+        
     /**
-     * Save direct link to Instagr.am images in data store.  Now that these links are expanded on the fly,
-     * we shouldn't need this method any more, except for 'legacy' unexpanded links in the database during
-     * the transition period.
+     * Save direct link to Instagr.am images in data store.
      */
     public function expandInstagramImageURLs() {
         $logger = Logger::getInstance();
@@ -123,18 +202,23 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $total_errors = 0;
         $eurl = '';
         foreach ($insta_links_to_expand as $il) {
-            // see: http://instagr.am/developer/embedding/
-            // make a check for an end slash in the url -- if it is there (likely) then adding a second
-            // prior to the 'media' string will break the expanded url
-            if ($il[strlen($il)-1] == '/') {
-                $eurl = $il . 'media/';
-            } else {
-                $eurl = $il . '/media/';
+            $html = (string) Utils::getURLContents($il);
+            if ($html) {
+                preg_match('/<meta property="og:image" content="[^"]+"\/>/i', $html, $matches);
+                if (isset($matches[0])) {
+                    $eurl = substr($matches[0], 35, -3);
+                    $logger->logDebug("Got instagr.am expanded URL: $eurl", __METHOD__.','.__LINE__);
+                }
+                if ($eurl != '') {
+                    $link_dao->saveExpandedUrl($il, $eurl, '', 1);
+                    $total_thumbnails = $total_thumbnails + 1;
+                } else {
+                    $total_errors = $total_errors + 1;
+                }
             }
-            $logger->logDebug("expanded instagram URL to: " . $eurl, __METHOD__.','.__LINE__);
-            $link_dao->saveExpandedUrl($il, $eurl, '', 1);
-            $total_thumbnails = $total_thumbnails + 1;
         }
+		$this->link_limit = $this->link_limit - $total_thumbnails;
+        
         $logger->logUserSuccess($total_thumbnails." Instagr.am thumbnails expanded (".$total_errors." errors)",
         __METHOD__.','.__LINE__);
     }
@@ -143,10 +227,10 @@ class ExpandURLsPlugin implements CrawlerPlugin {
      * Expand all unexpanded URLs
      * @param $total_links_to_expand The number of links to expand
      */
-    public function expandRemainingURLs($total_links_to_expand) {
+    public function expandRemainingURLs() {
         $logger = Logger::getInstance();
         $link_dao = DAOFactory::getDAO('LinkDAO');
-        $linkstoexpand = $link_dao->getLinksToExpand($total_links_to_expand);
+        $linkstoexpand = $link_dao->getLinksToExpand($this->link_limit);
 
         $logger->logUserInfo(count($linkstoexpand)." links to expand. Please wait. Working...",
         __METHOD__.','.__LINE__);
@@ -167,10 +251,11 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                 }
             } else {
                 $total_errors = $total_errors + 1;
-                $logger->logError($l." not a valid URL", __METHOD__.','.__LINE__);
-                $link_dao->saveExpansionError($l, "Invalid URL");
+                $logger->logError($l." is not a valid URL; skipping expansion", __METHOD__.','.__LINE__);
             }
         }
+		$this->link_limit = $this->link_limit - $total_expanded;
+        
         $logger->logUserSuccess($total_expanded." URLs successfully expanded (".$total_errors." errors).",
         __METHOD__.','.__LINE__);
     }
@@ -179,10 +264,10 @@ class ExpandURLsPlugin implements CrawlerPlugin {
      * Expand a given short URL
      *
      * @param str $tinyurl Shortened URL
-     * @param LinkDAO $link_dao
+     * @param LinkDAO $ldao
      * @return str Expanded URL
      */
-    private function untinyurl($tinyurl, $link_dao) {
+    private function untinyurl($tinyurl, $ldao) {
         $logger = Logger::getInstance();
         $url = parse_url($tinyurl);
         $host = $url['host'];
@@ -190,7 +275,9 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $query = isset($url['query']) ? '?'.$url['query'] : '';
         $fragment = isset($url['fragment']) ? '#'.$url['fragment'] : '';
         if (empty($url['path'])) {
-            $path = '';
+            $logger->logError("$tinyurl has no path", __METHOD__.','.__LINE__);
+            $ldao->saveExpansionError($tinyurl, "Error expanding URL");
+            return '';
         } else {
             $path = $url['path'];
         }
@@ -204,9 +291,8 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         $response = curl_exec($ch);
         if ($response === false) {
-            $error_msg = "cURL error: ".curl_error($ch);
-            $logger->logError($error_msg, __METHOD__.','.__LINE__);
-            $link_dao->saveExpansionError($tinyurl, $error_msg);
+            $logger->logError("cURL error: ".curl_error($ch), __METHOD__.','.__LINE__);
+            $ldao->saveExpansionError($tinyurl, "Error expanding URL");
             $tinyurl = '';
         }
         curl_close($ch);
@@ -220,9 +306,8 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         }
 
         if (strpos($response, 'HTTP/1.1 404 Not Found') === 0) {
-            $error_msg = "Short URL returned '404 Not Found'";
-            $logger->logError($error_msg, __METHOD__.','.__LINE__);
-            $link_dao->saveExpansionError($tinyurl, $error_msg);
+            $logger->logError("Short URL returned '404 Not Found'", __METHOD__.','.__LINE__);
+            $ldao->saveExpansionError($tinyurl, "Error expanding URL");
             return '';
         }
         return $tinyurl;
