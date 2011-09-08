@@ -12,7 +12,7 @@
           <li id="step-tab-2" class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
             <div class="key-stat install_step">
             <h1>2</h1>
-            <h3>Configure ThinkUp</h3>
+            <h3>Configure {$app_title}</h3>
             </div>
           </li>
           <li id="step-tab-3" class="no-border ui-state-default ui-corner-top">
@@ -33,7 +33,7 @@
         <form class="input" name="form1" method="post" action="index.php?step=3">
             {include file="_usermessage.tpl"}
 
-            <h2 class="clearfix step_title">Create Your ThinkUp Account</h2>
+            <h2 class="clearfix step_title">Create Your {$app_title} Account</h2>
           <div class="clearfix append_20">
             <div class="grid_5 prefix_3 right">
               <label>Name</label>
@@ -103,7 +103,7 @@
             </div>
           </div>
 
-          <h2 class="clearfix step_title">Connect ThinkUp to Your Database</h2>
+          <h2 class="clearfix step_title">Connect {$app_title} to Your Database</h2>
 
           <div class="clearfix append_20">
           {include file="_usermessage.tpl" field="database"}
@@ -126,7 +126,7 @@
             </div>
             <div class="grid_10 prefix_1 left">
               <input type="text" name="db_name" id="db_name"{if isset($db_name)} value="{$db_name}"{/if}>
-              <span class="input_information">If the database does not exist, ThinkUp will attempt to create it.</span>
+              <span class="input_information">If the database does not exist, {$app_title} will attempt to create it.</span>
             </div>
           </div>
           
@@ -188,7 +188,7 @@
                 </div>
                 <div class="grid_10 prefix_1 left">
                   <input type="text" name="db_prefix" id="db_prefix"{if isset($db_prefix)} value="{$db_prefix}"{/if}>
-                  <span class="input_information">Optional prefix for your ThinkUp tables.</span>
+                  <span class="input_information">Optional prefix for your {$app_title} tables.</span>
                 </div>
               </div>
           </div>

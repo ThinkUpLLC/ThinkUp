@@ -74,7 +74,7 @@ ThinkUp{$post_id} = new function() {literal} {
           txt += ": " + data[0].replies[i].text + '</div><br clear="all">';
         }
     }
-    txt += 'Powered by <a href="http://thinkupapp.com">ThinkUp</a>';
+    txt += 'Powered by <a href="http://thinkupapp.com">' + {$app_title} + '</a>';
     div.innerHTML =  txt;  // assign new HTML into #ROOT
     div.style.display = 'block'; // make element visible
   }

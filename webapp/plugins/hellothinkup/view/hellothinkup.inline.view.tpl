@@ -1,4 +1,4 @@
-Hello ThinkUp Post Detail Plugin in action!
+Hello {$app_title} Post Detail Plugin in action!
 <br />
 Header: {$header}<br />
 Description: {$description}

@@ -12,7 +12,7 @@
           <li id="step-tab-2" class="ui-state-default ui-corner-top">
             <div class="key-stat install_step">
             <h1><span class="pass_step" id="pass-step-2">2</span></h1>
-            <h3>Configure ThinkUp</h3>
+            <h3>Configure {$app_title}</h3>
             </div>
           </li>
           <li id="step-tab-3" class="no-border ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
@@ -35,7 +35,7 @@
      <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
          <p>
            <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-            ThinkUp has been installed successfully. Check your email account; an account activation message has been sent.
+            {$app_title} has been installed successfully. Check your email account; an account activation message has been sent.
          </p>
      </div> 
 
@@ -48,8 +48,8 @@
              <b>Help! I didn't get the email.</b><br />
              If you didn't receive your account activation email, then PHP's 
              <a href="http://php.net/manual/en/function.mail.php">mail function</a> isn't working correctly on your server.
-              You may activate your account manually by setting the is_activated field equal to 1 in ThinkUp's
-             owners table, but keep in mind that ThinkUp's registration and forgot password features require
+              You may activate your account manually by setting the is_activated field equal to 1 in {$app_title}'s
+             owners table, but keep in mind that {$app_title}'s registration and forgot password features require
              that the mail() function can send out email messages successfully.
         </p>
        </div>

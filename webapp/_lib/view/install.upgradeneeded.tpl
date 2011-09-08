@@ -4,7 +4,7 @@
 
 <head>
 <meta charset="utf-8">
-<title>ThinkUp: Upgrading</title>
+<title>{$app_title}: Upgrading</title>
 <link rel="shortcut icon" type="image/x-icon"
     href="/assets/img/favicon.ico">
 <!-- jquery -->
@@ -52,7 +52,7 @@
 <div id="menu-bar">
 <ul>
     <li class="round-tr round-br round-tl round-bl"><a
-        href="http://thinkupapp.com/">Get ThinkUp</a></li>
+        href="http://thinkupapp.com/">Get {$app_title}</a></li>
 </ul>
 </div>
 <!-- end #menu-bar --></div>
@@ -63,10 +63,10 @@
 <!--  we are upgrading -->
 <p>
 {if $user_is_admin}
-ThinkUp's database needs an update. <a href="{$site_root_path}install/upgrade.php">Update now</a>.
+{$app_title}'s database needs an update. <a href="{$site_root_path}install/upgrade.php">Update now</a>.
 {else}
-ThinkUp is currently in the process of upgrading. Please try back again in a little while.<br /><br />
-If you are the administrator of this ThinkUp installation, check your email to complete the upgrade process.<br />
+{$app_title} is currently in the process of upgrading. Please try back again in a little while.<br /><br />
+If you are the administrator of this {$app_title} installation, check your email to complete the upgrade process.<br />
 (<a href="http://thinkupapp.com/docs/troubleshoot/messages/upgrading.html">What? Help!</a>)
 
 <p>
