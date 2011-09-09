@@ -47,15 +47,20 @@ class FacebookCrawler {
      */
     var $access_token;
     /**
+     * @var int Maximum amount of time the crawler should spend fetching a profile or page in seconds
+     */
+    var $max_crawl_time;
+    /**
      *
      * @param Instance $instance
      * @return FacebookCrawler
      */
-    public function __construct($instance, $access_token) {
+    public function __construct($instance, $access_token, $max_crawl_time) {
         $this->instance = $instance;
         $this->logger = Logger::getInstance();
-        $this->logger->setUsername($instance->network_username);
+        //$this->logger->setUsername(ucwords($instance->network). ' | '.$instance->network_username );
         $this->access_token = $access_token;
+        $this->max_crawl_time = $max_crawl_time;
     }
 
     /**
@@ -118,27 +123,57 @@ class FacebookCrawler {
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;
             $user_vals["network"] = $details->network;
+            //this will help us in getting correct range of posts
+            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0;
             return $user_vals;
-        } else {
-            return null;
         }
     }
 
     /**
-     * Fetch a save the posts and replies on a user's profile or page.
+     * Fetch and save the posts and replies on a user's profile or page. This function will loop back through a
+     * user's or pages archive of posts.
      * @param int $id Facebook user or page ID.
      * @param bool $is_page If true then this is a Facebook page, else it's a user profile
      */
     public function fetchPostsAndReplies($id, $is_page) {
-        $stream = FacebookGraphAPIAccessor::apiRequest('/'.$id.'/posts', $this->access_token);
+        $fetch_next_page = true;
+        $current_page_number = 1;
+        $next_api_request = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
 
-        if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
-            $this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
-            __METHOD__.','.__LINE__);
+        //Cap crawl time for very busy pages with thousands of likes/comments
+        $fetch_stop_time = time() + $this->max_crawl_time;
 
-            $thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
-        } else {
-            $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
+        while ($fetch_next_page) {
+            $stream = FacebookGraphAPIAccessor::rawApiRequest($next_api_request, true);
+            if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
+                $this->logger->logInfo(sizeof($stream->data)." Facebook posts found on page ".$current_page_number,
+                __METHOD__.','.__LINE__);
+
+                $this->processStream($stream, (($is_page)?'facebook page':'facebook'), $current_page_number);
+
+                if (isset($stream->paging->next)) {
+                    if ($current_page_number == 1) { // Determine 'since', datetime of oldest post in datastore
+                        $post_dao = DAOFactory::getDAO('PostDAO');
+                        $since_post = $post_dao->getAllPosts($id, (($is_page)?'facebook page':'facebook'), 1, 1,
+                        true, 'pub_date', 'ASC');
+                        $since = isset($since_post[0])?$since_post[0]->pub_date:0;
+                        $since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
+                        ($since < 0)?$since=0:$since=$since;
+                    }
+                    $next_api_request = $stream->paging->next . '&since=' . $since;
+                    $current_page_number++;
+                } else {
+                    $fetch_next_page = false;
+                }
+            } else {
+                $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
+                $fetch_next_page = false;
+            }
+            if (time() > $fetch_stop_time) {
+                $fetch_next_page = false;
+                $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
+                ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
+            }
         }
     }
 
@@ -146,8 +181,9 @@ class FacebookCrawler {
      * Convert parsed JSON of a profile or page's posts into ThinkUp posts and users
      * @param Object $stream
      * @param str $source The network for the post; by default 'facebook'
+     * @param int Page number being processed
      */
-    private function processStream($stream, $network) {
+    private function processStream($stream, $network, $page_number) {
         $thinkup_posts = array();
         $total_added_posts = 0;
 
@@ -175,8 +211,8 @@ class FacebookCrawler {
         foreach ($stream->data as $index=>$p) {
             $post_id = explode("_", $p->id);
             $post_id = $post_id[1];
-            $this->logger->logInfo("Beginning to process ".$post_id.", post ".$index." of ".count($stream->data),
-            __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Beginning to process ".$post_id.", post ".($index+1)." of ".count($stream->data).
+            " on page ".$page_number, __METHOD__.','.__LINE__);
             if ($profile==null) {
                 $profile = $this->fetchUserInfo($p->from->id, $network, 'Post stream', true);
             }
@@ -363,8 +399,13 @@ class FacebookCrawler {
                             } while (isset($comments_stream->paging->next) && $must_process_comments);
                         }
                     }
-                    $this->logger->logUserInfo("Added ".$post_comments_added." comment(s) for post ". $post_id,
-                    __METHOD__.','.__LINE__);
+                    if ($post_comments_added > 0) { //let user know
+                        $this->logger->logUserInfo("Added ".$post_comments_added." comment(s) for post ". $post_id,
+                        __METHOD__.','.__LINE__);
+                    } else {
+                        $this->logger->logInfo("Added ".$post_comments_added." comment(s) for post ". $post_id,
+                        __METHOD__.','.__LINE__);
+                    }
                     $total_added_posts = $total_added_posts + $post_comments_added;
                 }
 
@@ -485,21 +526,8 @@ class FacebookCrawler {
             $likes_difference = false;
         }
 
-        if ($total_added_posts > 0 ) {
-            $this->logger->logUserSuccess("Collected $total_added_posts posts", __METHOD__.','.__LINE__);
-        } else {
-            $this->logger->logUserInfo("No new posts found.", __METHOD__.','.__LINE__);
-        }
-        if ($total_added_users > 0 ) {
-            $this->logger->logUserSuccess("Collected $total_added_users users", __METHOD__.','.__LINE__);
-        } else {
-            $this->logger->logUserInfo("No new users found.", __METHOD__.','.__LINE__);
-        }
-        if ($total_added_likes > 0 ) {
-            $this->logger->logUserSuccess("Collected $total_added_likes likes", __METHOD__.','.__LINE__);
-        } else {
-            $this->logger->logUserInfo("No new likes found.", __METHOD__.','.__LINE__);
-        }
+        $this->logger->logUserSuccess("On page ".$page_number.", captured ".$total_added_posts." post(s), ".
+        $total_added_users." user(s) and ".$total_added_likes." like(s)", __METHOD__.','.__LINE__);
     }
 
     private function storePostsAndAuthors($posts, $posts_source){

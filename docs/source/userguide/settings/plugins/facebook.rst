@@ -1,8 +1,7 @@
 Facebook
 ========
 
-ThinkUp's Facebook plugin collects status updates for Facebook users and the Facebook pages those users like. The 
-Facebook plugin is not as robust as the Twitter plugin, but we plan to get it up to speed in the coming months.
+ThinkUp's Facebook plugin collects posts and status updates for Facebook users and the Facebook pages those users like.
 
 Configure the Facebook Plugin (Admin only)
 ------------------------------------------
@@ -10,6 +9,23 @@ Configure the Facebook Plugin (Admin only)
 To use the Facebook plugin, you'l need to `create a Facebook application on facebook.com 
 <http://developers.facebook.com/setup/>`_. Set the Web Site > Site URL  as recommended, and the Facebook-provided API
 Key, Application Secret and Application ID in the Facebook plugin's settings page in ThinkUp.
+
+Plugin Settings
+---------------
+
+**Application ID** (required) is the Application ID provided when you `create a Facebook application on facebook.com 
+<http://developers.facebook.com/setup/>`_ for use with ThinkUp.
+
+**API Key** (required) is the API Key provided when you `create a Facebook application on facebook.com 
+<http://developers.facebook.com/setup/>`_ for use with ThinkUp.
+
+**Application Secret:** (required) is the Application Secret provided when you `create a Facebook application on
+facebook.com <http://developers.facebook.com/setup/>`_ for use with ThinkUp.
+
+**Max crawl time in minutes:** (optional) is the maximum amount of time that ThinkUp will spend crawling a single
+Facebook user or page. This cap is in place for very busy pages or profiles with deep archives which could take hours
+to crawl. The default value is 20 minutes. This means that by default, after 20 minutes of crawling a particular
+Facebook profile or page, the crawler will move onto the next one.
 
 Add a Facebook user profile to ThinkUp
 --------------------------------------

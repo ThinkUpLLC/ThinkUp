@@ -83,12 +83,12 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testConstructor() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken');
+        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
         $this->assertEqual($fbc->access_token, 'fauxaccesstoken');
     }
 
     public function testFetchInstanceUserInfo() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken');
+        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
         $fbc->fetchInstanceUserInfo();
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
@@ -105,7 +105,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testFetchPostsAndReplies() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken');
+        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
 
         $fbc->fetchPostsAndReplies($this->instance->network_user_id, false);
 
@@ -142,7 +142,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/606837591/picture');
         $this->assertTrue($user->is_protected);
         $this->assertEqual($user->location, 'San Diego, California');
-//sleep(1000);
+        //sleep(1000);
         $user = $user_dao->getUserByName('Mitch Wagner', 'facebook');
         $this->assertTrue(isset($user));
         $this->assertEqual($user->user_id, '697015835');
@@ -158,7 +158,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->location, '');
 
         //Test post with a link to a video
-        $fbc2 = new FacebookCrawler($this->instance2, 'fauxaccesstoken');
+        $fbc2 = new FacebookCrawler($this->instance2, 'fauxaccesstoken', 10);
         $fbc2->fetchPostsAndReplies($this->instance2->network_user_id, false);
         $post = $post_dao->getPost('10150328374252744', 'facebook');
         $this->assertEqual($post->post_text, '');
@@ -173,10 +173,15 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'Julian Francis Adderley.');
         $this->assertEqual($post->link->title, 'Superman Restored (Theatrical Trailer)');
         $this->assertEqual($post->link->network, 'facebook');
+
+        // Test Facebook paging by confirming post on second "page"
+        $post = $post_dao->getPost('10150357566827744', 'facebook');
+        $this->assertNotNull($post);
+        $this->assertEqual($post->author_user_id, '729597743');
     }
 
     public function testFetchPageStream() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken');
+        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
 
         $fbc->fetchPostsAndReplies('7568536355', true);
 
@@ -214,10 +219,15 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $favs = $fav_dao->getUsersWhoFavedPost('437894121355', 'facebook page');
         $this->assertEqual($favs[0]['user_name'], 'Tigger Pike');
         $this->assertEqual($favs[0]['user_id'], '641265671');
+
+        // Test Facebook paging by confirming post on second "page" was captured
+        $post = $post_dao->getPost('437660146355', 'facebook page');
+        $this->assertNotNull($post);
+        $this->assertEqual($post->author_user_id, '7568536355');
     }
 
     public function testPostReplyPaging() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken');
+        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
 
         $fbc->fetchPostsAndReplies('133954286636768', true);
         $post_dao = new PostMySQLDAO();

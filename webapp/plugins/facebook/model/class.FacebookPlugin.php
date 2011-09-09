@@ -54,56 +54,40 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
 
+        $max_crawl_time = isset($options['max_crawl_time']) ? $options['max_crawl_time']->option_value : 20;
+        //convert to seconds
+        $max_crawl_time = $max_crawl_time * 60;
+
         $current_owner = $owner_dao->getByEmail(Session::getLoggedInUser());
 
-        //crawl Facebook user profiles
-        $instances = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook');
+        //crawl Facebook user profiles and pages
+        $profiles = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook');
+        $pages = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook page');
+        $instances = array_merge($profiles, $pages);
+
         foreach ($instances as $instance) {
             if (!$owner_instance_dao->doesOwnerHaveAccess($current_owner, $instance)) {
                 // Owner doesn't have access to this instance; let's not crawl it.
                 continue;
             }
-            $logger->setUsername($instance->network_username);
-            $logger->logUserSuccess("Starting to collect data for ".$instance->network_username." on Facebook.",
-            __METHOD__.','.__LINE__);
+            $logger->setUsername(ucwords($instance->network) . ' | '.$instance->network_username );
+            $logger->logUserSuccess("Starting to collect data for ".$instance->network_username."'s ".
+            ucwords($instance->network), __METHOD__.','.__LINE__);
 
             $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
             $access_token = $tokens['oauth_access_token'];
 
             $instance_dao->updateLastRun($instance->id);
-            $crawler = new FacebookCrawler($instance, $access_token);
+            $crawler = new FacebookCrawler($instance, $access_token, $max_crawl_time);
             try {
-                $crawler->fetchInstanceUserInfo();
                 $crawler->fetchPostsAndReplies($instance->network_user_id, false);
             } catch (Exception $e) {
-                $logger->logUserError('PROFILE EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
+                $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }
 
             $instance_dao->save($crawler->instance, 0, $logger);
-            $logger->logUserSuccess("Finished collecting data for ".$instance->network_username." on Facebook.",
-            __METHOD__.','.__LINE__);
-        }
-
-        //crawl Facebook pages
-        $instances = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook page');
-        foreach ($instances as $instance) {
-            $logger->setUsername($instance->network_username);
-            $logger->logUserSuccess("Starting to collect data for ".$instance->network_username."'s Facebook Page.",
-            __METHOD__.','.__LINE__);
-            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
-            $access_token = $tokens['oauth_access_token'];
-
-            $instance_dao->updateLastRun($instance->id);
-            $crawler = new FacebookCrawler($instance, $access_token);
-
-            try {
-                $crawler->fetchPostsAndReplies($instance->network_user_id, true);
-            } catch (Exception $e) {
-                $logger->logUserError('PAGE EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
-            }
-            $instance_dao->save($crawler->instance, 0, $logger);
-            $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s Facebook Page.",
-            __METHOD__.','.__LINE__);
+            $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
+            ucwords($instance->network), __METHOD__.','.__LINE__);
         }
     }
 
@@ -121,7 +105,8 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin
         $alltab = new MenuItem("All posts", 'All status updates', $fb_data_tpl, 'Posts');
         $alltabds = new Dataset("all_facebook_posts", 'PostDAO', "getAllPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"),
-        'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()), false );
+        'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()),
+        false );
         $alltabds->addHelp('userguide/listings/facebook/dashboard_all_facebook_posts');
         $alltab->addDataset($alltabds);
         $menus["all_facebook_posts"] = $alltab;

@@ -37,5 +37,10 @@
 		 "icon": "https://fbcdn-photos-a.akamaihd.net/photos-ak-snc1/v43/177/87741124305/app_2_87741124305_4027.gif"
       }
       
-   ]
+   ],
+   
+   "paging": {
+       "previous": "https://graph.facebook.com/729597743/posts?limit=25&since=1315339243", 
+       "next": "https://graph.facebook.com/729597743/posts?limit=25&until=1313604329"
+  }
 }

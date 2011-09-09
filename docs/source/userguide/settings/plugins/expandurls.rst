@@ -10,8 +10,8 @@ Picplz.)
 This plugin has a 5-second timeout on every shortened URL request. If it cannot get the expanded URL information back
 in less than 5 seconds, it will save the error in the links table and the plugin will not try again.
 
-Options
--------
+Plugin Settings
+---------------
 
 **Links to expand per crawl** (required) is the total number of links the plugin should process in a given crawler run.
 The default value is 1500 links. Keep in mind that the higher this number is, the longer a given crawl can take to

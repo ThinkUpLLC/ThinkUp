@@ -42,9 +42,9 @@ class Logger {
     var $log = null;
     /**
      *
-     * @var str $network_username The user we're logging about
+     * @var str $service_user The user we're logging about
      */
-    var $network_username = null;
+    var $service_user = null;
     /**
      *
      * @var int All (user and developer) messages
@@ -141,7 +141,7 @@ class Logger {
      * @param str $username
      */
     public function setUsername($username) {
-        $this->network_username = $username;
+        $this->service_user = $username;
     }
 
     /**
@@ -181,8 +181,8 @@ class Logger {
                     default:
                         $status_signature .= 'INFO   | ';
                 }
-                if (isset($this->network_username)) {
-                    $status_signature .= $this->network_username .' | ';
+                if (isset($this->service_user)) {
+                    $status_signature .= $this->service_user .' | ';
                 }
                 $status_signature .= $classname." | ";
                 if (strlen($status_message) > 0) {

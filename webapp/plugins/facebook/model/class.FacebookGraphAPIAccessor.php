@@ -34,6 +34,7 @@ class FacebookGraphAPIAccessor {
      * Make a Graph API request.
      * @param str $path
      * @param str $access_token
+     * @param str $fields Comma-delimited list of fields to return from FB API
      * @return array Decoded JSON response
      */
     public static function apiRequest($path, $access_token, $fields=null) {

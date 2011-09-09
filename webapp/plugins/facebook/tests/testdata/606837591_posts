@@ -654,7 +654,7 @@
       }
    ],
    "paging": {
-      "previous": "https://graph.facebook.com/606837591/posts?access_token=2227470867%7C2.z1HZlQoDEfTRje0OSFD_iQ__.3600.1286085600-606837591%7CjHwAWFCRV-4j2l41V7u78J41myg&limit=25&since=2010-10-03T04%3A15%3A16%2B0000",
-      "next": "https://graph.facebook.com/606837591/posts?access_token=2227470867%7C2.z1HZlQoDEfTRje0OSFD_iQ__.3600.1286085600-606837591%7CjHwAWFCRV-4j2l41V7u78J41myg&limit=25&until=2010-08-04T01%3A47%3A24%2B0000"
+      "previous": "https://graph.facebook.com/606837591/posts?access_token=testfauxtoken&limit=25&since=2010-10-03T04%3A15%3A16%2B0000",
+      "next": "https://graph.facebook.com/606837591/posts?access_token=testfauxtoken&limit=25&until=2010-08-04T01%3A47%3A24%2B0000"
    }
 }
