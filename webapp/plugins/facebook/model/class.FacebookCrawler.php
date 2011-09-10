@@ -58,33 +58,24 @@ class FacebookCrawler {
     public function __construct($instance, $access_token, $max_crawl_time) {
         $this->instance = $instance;
         $this->logger = Logger::getInstance();
-        //$this->logger->setUsername(ucwords($instance->network). ' | '.$instance->network_username );
         $this->access_token = $access_token;
         $this->max_crawl_time = $max_crawl_time;
     }
 
     /**
-     * Fetch and save the instance user's information.
-     */
-    public function fetchInstanceUserInfo() {
-        $user = $this->fetchUserInfo($this->instance->network_user_id, $this->instance->network, "Owner Status");
-        if (isset($user)) {
-            $this->logger->logUserSuccess("Successfully fetched ".$this->instance->network_username.
-            "'s details from Facebook", __METHOD__.','.__LINE__);
-        }
-    }
-
-    /**
-     * Fetch and save a Facebook user's information.
+     * If user doesn't exist in the datastore, fetch details from Facebook API and insert into the datastore.
+     * If $reload_from_facebook is true, update existing user details in store with data from Facebook API.
      * @param int $user_id Facebook user ID
-     * @param str $network Either 'facebook page' or 'facebook'
      * @param str $found_in Where the user was found
-     * @param bool $reload_from_facebook Defaults to false; if true will always query Facebook API for update
+     * @param bool $reload_from_facebook Defaults to false; if true will query Facebook API and update existing user
      * @return User
      */
-    public function fetchUserInfo($user_id, $network, $found_in, $reload_from_facebook=false) {
+    public function fetchUser($user_id, $found_in, $force_reload_from_facebook=false) {
+        //assume all users except the instance user is a facebook profile, not a page
+        $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
         $user_dao = DAOFactory::getDAO('UserDAO');
-        if ($reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
+        $user_object = null;
+        if ($force_reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
             // Get owner user details and save them to DB
             $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
             $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
@@ -94,18 +85,22 @@ class FacebookCrawler {
             if (isset($user)) {
                 $user_object = new User($user, $found_in);
                 $user_dao->updateUser($user_object);
-                return $user_object;
-            } else {
-                return null;
             }
-        } else {
-            return null;
+            if (isset($user_object)) {
+                $this->logger->logUserSuccess("Successfully fetched ".$user_id. " ".$network."'s details from Facebook",
+                __METHOD__.','.__LINE__);
+            } else {
+                $this->logger->logUserError("Error fetching ".$user_id." ". $network."'s details from Facebook",
+                __METHOD__.','.__LINE__);
+            }
         }
+        return $user_object;
     }
 
     /**
      * Convert decoded JSON data from Facebook into a ThinkUp user object.
      * @param array $details
+     * @retun array $user_vals
      */
     private function parseUserDetails($details) {
         if (isset($details->name) && isset($details->id)) {
@@ -130,12 +125,12 @@ class FacebookCrawler {
     }
 
     /**
-     * Fetch and save the posts and replies on a user's profile or page. This function will loop back through a
+     * Fetch and save the posts and replies for the crawler's instance. This function will loop back through the
      * user's or pages archive of posts.
-     * @param int $id Facebook user or page ID.
-     * @param bool $is_page If true then this is a Facebook page, else it's a user profile
      */
-    public function fetchPostsAndReplies($id, $is_page) {
+    public function fetchPostsAndReplies() {
+        $id = $this->instance->network_user_id;
+        $network = $this->instance->network;
         $fetch_next_page = true;
         $current_page_number = 1;
         $next_api_request = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
@@ -143,23 +138,22 @@ class FacebookCrawler {
         //Cap crawl time for very busy pages with thousands of likes/comments
         $fetch_stop_time = time() + $this->max_crawl_time;
 
+        //Determine 'since', datetime of oldest post in datastore
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $since_post = $post_dao->getAllPosts($id, $network, 1, 1, true, 'pub_date', 'ASC');
+        $since = isset($since_post[0])?$since_post[0]->pub_date:0;
+        $since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
+        ($since < 0)?$since=0:$since=$since;
+
         while ($fetch_next_page) {
             $stream = FacebookGraphAPIAccessor::rawApiRequest($next_api_request, true);
             if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
                 $this->logger->logInfo(sizeof($stream->data)." Facebook posts found on page ".$current_page_number,
                 __METHOD__.','.__LINE__);
 
-                $this->processStream($stream, (($is_page)?'facebook page':'facebook'), $current_page_number);
+                $this->processStream($stream, $network, $current_page_number);
 
                 if (isset($stream->paging->next)) {
-                    if ($current_page_number == 1) { // Determine 'since', datetime of oldest post in datastore
-                        $post_dao = DAOFactory::getDAO('PostDAO');
-                        $since_post = $post_dao->getAllPosts($id, (($is_page)?'facebook page':'facebook'), 1, 1,
-                        true, 'pub_date', 'ASC');
-                        $since = isset($since_post[0])?$since_post[0]->pub_date:0;
-                        $since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
-                        ($since < 0)?$since=0:$since=$since;
-                    }
                     $next_api_request = $stream->paging->next . '&since=' . $since;
                     $current_page_number++;
                 } else {
@@ -180,7 +174,7 @@ class FacebookCrawler {
     /**
      * Convert parsed JSON of a profile or page's posts into ThinkUp posts and users
      * @param Object $stream
-     * @param str $source The network for the post; by default 'facebook'
+     * @param str $source The network for the post, either 'facebook' or 'facebook page'
      * @param int Page number being processed
      */
     private function processStream($stream, $network, $page_number) {
@@ -213,8 +207,8 @@ class FacebookCrawler {
             $post_id = $post_id[1];
             $this->logger->logInfo("Beginning to process ".$post_id.", post ".($index+1)." of ".count($stream->data).
             " on page ".$page_number, __METHOD__.','.__LINE__);
-            if ($profile==null) {
-                $profile = $this->fetchUserInfo($p->from->id, $network, 'Post stream', true);
+            if (!isset($profile)) {
+                $profile = $this->fetchUser($p->from->id, 'Post stream', true);
             }
 
             //Assume profile comments are private and page posts are public
@@ -233,6 +227,7 @@ class FacebookCrawler {
 
             //Figure out if we have to process likes and comments
             if (isset($post_in_storage)) {
+                $this->logger->logInfo("Post ".$post_id. " already in storage", __METHOD__.','.__LINE__);
                 if ($post_in_storage->favlike_count_cache >= $likes_count ) {
                     $must_process_likes = false;
                     $this->logger->logInfo("Already have ".$likes_count." like(s) for post ".$post_id.
@@ -254,6 +249,8 @@ class FacebookCrawler {
                         " total to process for post ".$post_id, __METHOD__.','.__LINE__);
                     }
                 }
+            } else {
+                $this->logger->logInfo("Post ".$post_id. " not in storage", __METHOD__.','.__LINE__);
             }
 
             if (isset($profile) ) {
@@ -516,6 +513,8 @@ class FacebookCrawler {
                 //free up memory
                 $thinkup_users = array();
                 $thinkup_likes = array();
+            } else {
+                $this->logger->logError("No profile set", __METHOD__.','.__LINE__);
             }
             //reset control vars for next post
             $must_process_likes = true;
@@ -536,7 +535,7 @@ class FacebookCrawler {
         $post_dao = DAOFactory::getDAO('PostDAO');
         foreach ($posts as $post) {
             if (isset($post['author_user_id'])) {
-                $user_object = $this->fetchUserInfo($post['author_user_id'], 'facebook', $posts_source);
+                $user_object = $this->fetchUser($post['author_user_id'], $posts_source);
                 if (isset($user_object)) {
                     $post["author_username"] = $user_object->full_name;
                     $post["author_fullname"] = $user_object->full_name;
@@ -547,6 +546,9 @@ class FacebookCrawler {
             $added_posts = $post_dao->addPost($post);
             if ($added_posts > 0) {
                 $this->logger->logInfo("Added post ID ".$post["post_id"]." on ".$post["network"].
+                " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
+            } else  {
+                $this->logger->logInfo("Didn't add post ".$post["post_id"]." on ".$post["network"].
                 " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
             }
             $total_added_posts = $total_added_posts + $added_posts;
@@ -569,7 +571,7 @@ class FacebookCrawler {
         $added_users = 0;
         if (count($users) > 0) {
             foreach ($users as $user) {
-                $user_object = $this->fetchUserInfo($user['user_id'], 'facebook', $users_source);
+                $user_object = $this->fetchUser($user['user_id'], $users_source);
                 if (isset($user_object)) {
                     $added_users = $added_users + 1;
                 }

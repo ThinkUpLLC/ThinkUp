@@ -80,7 +80,7 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin
             $instance_dao->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $access_token, $max_crawl_time);
             try {
-                $crawler->fetchPostsAndReplies($instance->network_user_id, false);
+                $crawler->fetchPostsAndReplies();
             } catch (Exception $e) {
                 $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }

@@ -60,9 +60,9 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
         'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0'
         );
-        $this->instance = new Instance($r);
+        $this->profile1_instance = new Instance($r);
 
-        $r2 = array('id'=>2, 'network_username'=>'Mark Linford', 'network_user_id'=>'729597743',
+        $r = array('id'=>2, 'network_username'=>'Mark Linford', 'network_user_id'=>'729597743',
         'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
         'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
@@ -73,8 +73,33 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
         'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0'
         );
-        $this->instance2 = new Instance($r2);
+        $this->profile2_instance = new Instance($r);
 
+        $r = array('id'=>3, 'network_username'=>'Mark Linford', 'network_user_id'=>'7568536355',
+        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook page',
+        'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
+        'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
+        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+        'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0'
+        );
+        $this->page1_instance = new Instance($r);
+
+        $r = array('id'=>4, 'network_username'=>'Mark Linford', 'network_user_id'=>'133954286636768',
+        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook page',
+        'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
+        'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
+        'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
+        'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0'
+        );
+        $this->page2_instance = new Instance($r);
     }
 
     public function tearDown() {
@@ -83,13 +108,13 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testConstructor() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
+        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
         $this->assertEqual($fbc->access_token, 'fauxaccesstoken');
     }
 
-    public function testFetchInstanceUserInfo() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
-        $fbc->fetchInstanceUserInfo();
+    public function testFetchUser() {
+        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+        $fbc->fetchUser($this->profile1_instance->network_user_id, $this->profile1_instance->network, "Owner Status");
         $user_dao = new UserMySQLDAO();
         $user = $user_dao->getUserByName('Gina Trapani', 'facebook');
 
@@ -104,10 +129,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertTrue($user->is_protected);
     }
 
-    public function testFetchPostsAndReplies() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
+    public function testFetchPostsAndRepliesForProfile() {
+        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
 
-        $fbc->fetchPostsAndReplies($this->instance->network_user_id, false);
+        $fbc->fetchPostsAndReplies();
 
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('158944054123704', 'facebook');
@@ -158,8 +183,8 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->location, '');
 
         //Test post with a link to a video
-        $fbc2 = new FacebookCrawler($this->instance2, 'fauxaccesstoken', 10);
-        $fbc2->fetchPostsAndReplies($this->instance2->network_user_id, false);
+        $fbc2 = new FacebookCrawler($this->profile2_instance, 'fauxaccesstoken', 10);
+        $fbc2->fetchPostsAndReplies();
         $post = $post_dao->getPost('10150328374252744', 'facebook');
         $this->assertEqual($post->post_text, '');
         $this->assertNotNull($post->link);
@@ -180,10 +205,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->author_user_id, '729597743');
     }
 
-    public function testFetchPageStream() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
+    public function testFetchPostsAndRepliesForPage() {
+        $fbc = new FacebookCrawler($this->page1_instance, 'fauxaccesstoken', 10);
 
-        $fbc->fetchPostsAndReplies('7568536355', true);
+        $fbc->fetchPostsAndReplies();
 
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('437900891355', 'facebook page');
@@ -227,9 +252,9 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testPostReplyPaging() {
-        $fbc = new FacebookCrawler($this->instance, 'fauxaccesstoken', 10);
+        $fbc = new FacebookCrawler($this->page2_instance, 'fauxaccesstoken', 10);
 
-        $fbc->fetchPostsAndReplies('133954286636768', true);
+        $fbc->fetchPostsAndReplies('133954286636768', 'facebook page');
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('144568048938151', 'facebook page');
         $this->assertEqual($post->reply_count_cache, 70);
