@@ -72,6 +72,7 @@ class FacebookCrawler {
      */
     public function fetchUser($user_id, $found_in, $force_reload_from_facebook=false) {
         //assume all users except the instance user is a facebook profile, not a page
+        //@TODO: Start supporting users of type 'facebook page'
         $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
         $user_dao = DAOFactory::getDAO('UserDAO');
         $user_object = null;
@@ -87,11 +88,14 @@ class FacebookCrawler {
                 $user_dao->updateUser($user_object);
             }
             if (isset($user_object)) {
-                $this->logger->logUserSuccess("Successfully fetched ".$user_id. " ".$network."'s details from Facebook",
+                $this->logger->logSuccess("Successfully fetched ".$user_id. " ".$network."'s details from Facebook",
                 __METHOD__.','.__LINE__);
             } else {
-                $this->logger->logUserError("Error fetching ".$user_id." ". $network."'s details from Facebook",
-                __METHOD__.','.__LINE__);
+                //@TODO: Most of these errors occur because TU doesn't yet support users of type 'facebook page'
+                //We just assume every user is a vanilla FB user. However, we can't retrieve page details using
+                //a vanilla user call here
+                $this->logger->logInfo("Error fetching ".$user_id." ". $network."'s details from Facebook API, ".
+                "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
             }
         }
         return $user_object;
@@ -397,7 +401,7 @@ class FacebookCrawler {
                         }
                     }
                     if ($post_comments_added > 0) { //let user know
-                        $this->logger->logUserInfo("Added ".$post_comments_added." comment(s) for post ". $post_id,
+                        $this->logger->logUserSuccess("Added ".$post_comments_added." comment(s) for post ". $post_id,
                         __METHOD__.','.__LINE__);
                     } else {
                         $this->logger->logInfo("Added ".$post_comments_added." comment(s) for post ". $post_id,
@@ -506,7 +510,7 @@ class FacebookCrawler {
                             } while (isset($likes_stream->paging->next ) && $must_process_likes);
                         }
                     }
-                    $this->logger->logUserInfo("Added ".$post_likes_added." like(s) for post ".$post_id,
+                    $this->logger->logInfo("Added ".$post_likes_added." like(s) for post ".$post_id,
                     __METHOD__.','.__LINE__);
                     $total_added_likes = $total_added_likes + $post_likes_added;
                 }

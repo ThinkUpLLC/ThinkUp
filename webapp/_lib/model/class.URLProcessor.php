@@ -42,7 +42,7 @@ class URLProcessor {
         if ($urls) {
             $link_dao = DAOFactory::getDAO('LinkDAO');
             foreach ($urls as $url) {
-                $logger->logInfo("Processing URL: $url", __METHOD__.','.__LINE__);
+                $logger->logInfo("Processing URL $url", __METHOD__.','.__LINE__);
                 $image_src = self::getImageSource($url);
 
                 //if we have an image_src, the URL is a known image source not in need of expansion
@@ -51,11 +51,11 @@ class URLProcessor {
                 'post_id'=>$post_id, 'network'=>$network);
                 $link = new Link($link_array);
                 if ($link_dao->insert($link)) {
-                    $logger->logSuccess("Inserted ".$url." (thumbnail ".$image_src."), into links table",
-                    __METHOD__.','.__LINE__);
+                    $logger->logSuccess("Inserted ".$url." ".(($image_src=='')?'':"(thumbnail ".$image_src.") ").
+                    "into links table", __METHOD__.','.__LINE__);
                 } else {
-                    $logger->logError("Did NOT insert ".$url." (thumbnail ".$image_src.") into links table",
-                    __METHOD__.','.__LINE__);
+                    $logger->logInfo($url." ".(($image_src=='')?'':"(thumbnail ".$image_src.") ").
+                    "already exists in links table", __METHOD__.','.__LINE__);
                 }
             }
         }

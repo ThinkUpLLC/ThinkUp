@@ -65,7 +65,8 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
         $ret = $this->getUpdateCount($ps);
         if ($ret > 0) {
-            $this->logger->logSuccess("Expanded URL $expanded for $url saved", __METHOD__.','.__LINE__);
+            $this->logger->logSuccess("Expanded URL $expanded for $url saved".
+            (($image_src=='')?'':" (thumbnail ".$image_src.")"), __METHOD__.','.__LINE__);
         } else {
             $this->logger->logError("Expanded URL NOT saved", __METHOD__.','.__LINE__);
         }
@@ -83,7 +84,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
         $ret = $this->getUpdateCount($ps);
         if ($ret > 0) {
-            $this->logger->logInfo("Error '$error_text' saved for link ID $url saved", __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Error '$error_text' saved for $url", __METHOD__.','.__LINE__);
         } else {
             $this->logger->logInfo("Error '$error_text' for URL NOT saved", __METHOD__.','.__LINE__);
         }

@@ -83,7 +83,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         if (count($flickr_links_to_expand) > 0) {
             $logger->logUserInfo(count($flickr_links_to_expand)." Flickr links to expand.",  __METHOD__.','.__LINE__);
         } else {
-            $logger->logUserInfo("There are no Flickr thumbnails to expand.",  __METHOD__.','.__LINE__);
+            $logger->logInfo("There are no Flickr thumbnails to expand.",  __METHOD__.','.__LINE__);
         }
 
         $total_thumbnails = 0;
@@ -99,8 +99,10 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                 $total_errors = $total_errors + 1;
             }
         }
-        $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
-        __METHOD__.','.__LINE__);
+        if (count($flickr_links_to_expand) > 0) {
+            $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
+            __METHOD__.','.__LINE__);
+        }
     }
 
     /**
@@ -117,7 +119,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
 
         $total_expanded = 0;
         $total_errors = 0;
-        foreach ($links_to_expand as $link) {
+        foreach ($links_to_expand as $index=>$link) {
             if (Utils::validateURL($link)) {
                 $logger->logInfo("Expanding ".($total_expanded+1). " of ".count($links_to_expand)." (".$link.")",
                 __METHOD__.','.__LINE__);
@@ -126,7 +128,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                 $fully_expanded = false;
                 $short_link = $link;
                 while (!$fully_expanded) {
-                    $expanded_url = self::untinyurl($short_link, $link_dao, $link);
+                    $expanded_url = self::untinyurl($short_link, $link_dao, $link, $index, count($links_to_expand));
                     if ($expanded_url == $short_link || $expanded_url == '') {
                         $fully_expanded = true;
                     }
@@ -156,16 +158,19 @@ class ExpandURLsPlugin implements CrawlerPlugin {
      * @param str $tinyurl Shortened URL
      * @param LinkDAO $link_dao
      * @param str $original_link
+     * @param int $current_number Current link number
+     * @param int $total_number Total links in group
      * @return str Expanded URL
      */
-    private function untinyurl($tinyurl, $link_dao, $original_link) {
+    private function untinyurl($tinyurl, $link_dao, $original_link, $current_number, $total_number) {
+        $error_log_prefix = $current_number." of ".$total_number." links: ";
         $logger = Logger::getInstance();
         $url = parse_url($tinyurl);
         if (isset($url['host'])) {
             $host = $url['host'];
         } else {
             $error_msg = $tinyurl.": No host found.";
-            $logger->logError($error_msg, __METHOD__.','.__LINE__);
+            $logger->logError($error_log_prefix.$error_msg, __METHOD__.','.__LINE__);
             $link_dao->saveExpansionError($original_link, $error_msg);
             return '';
         }
@@ -190,7 +195,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $response = curl_exec($ch);
         if ($response === false) {
             $error_msg = $reconstructed_url." cURL error: ".curl_error($ch);
-            $logger->logError($error_msg, __METHOD__.','.__LINE__);
+            $logger->logError($error_log_prefix.$error_msg, __METHOD__.','.__LINE__);
             $link_dao->saveExpansionError($original_link, $error_msg);
             $tinyurl = '';
         }
@@ -206,7 +211,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
 
         if (strpos($response, 'HTTP/1.1 404 Not Found') === 0) {
             $error_msg = $reconstructed_url." returned '404 Not Found'";
-            $logger->logError($error_msg, __METHOD__.','.__LINE__);
+            $logger->logError($error_log_prefix.$error_msg, __METHOD__.','.__LINE__);
             $link_dao->saveExpansionError($original_link, $error_msg);
             return '';
         }
