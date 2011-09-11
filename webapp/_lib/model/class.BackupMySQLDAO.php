@@ -99,7 +99,7 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
         $stmt = $this->execute($q);
         $data = $this->getDataRowsAsArrays($stmt);
         $create_tables = '';
-        $zip_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/thinkup_db_backup.zip';
+        $zip_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/.htthinkup_db_backup.zip';
         if ($backup_file) {
             $zip_file = $backup_file;
         }

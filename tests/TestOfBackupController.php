@@ -36,7 +36,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         new BackupMySQLDAO();
         $this->config = Config::getInstance();
         $this->pdo = BackupMySQLDAO::$PDO;
-        $this->backup_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_db_backup.zip';
+        $this->backup_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/.htthinkup_db_backup.zip';
         $this->backup_test = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_db_backup_test.zip';
         $this->backup_dir = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/backup';
     }

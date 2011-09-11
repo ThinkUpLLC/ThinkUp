@@ -47,7 +47,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->init_db_version = $config->getValue('THINKUP_VERSION');
         $config->setValue('THINKUP_VERSION', $config->getValue('THINKUP_VERSION') + 10); //set a high version num
 
-        $this->token_file = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . '/upgrade_token';
+        $this->token_file = THINKUP_WEBAPP_PATH . UpgradeController::CACHE_DIR . '/.htupgrade_token';
 
         $this->migrations_test_dir = THINKUP_ROOT_PATH . 'tests/data/migrations/';
         $this->migrations_dir = THINKUP_WEBAPP_PATH . 'install/sql/mysql_migrations/';

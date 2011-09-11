@@ -101,6 +101,6 @@ class TestOfTestAuthController extends ThinkUpUnitTestCase {
         $controller = new TestAuthController(true);
         $results = $controller->go();
 
-        $this->assertEqual($controller->getCacheKeyString(), 'testme.tpl-me@example.com');
+        $this->assertEqual($controller->getCacheKeyString(), '.httestme.tpl-me@example.com');
     }
 }

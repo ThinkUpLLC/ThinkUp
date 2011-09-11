@@ -81,7 +81,7 @@ class TestOfTestController extends ThinkUpUnitTestCase {
         $controller = new TestController(true);
         $results = $controller->go();
 
-        $this->assertEqual($controller->getCacheKeyString(), 'testme.tpl-');
+        $this->assertEqual($controller->getCacheKeyString(), '.httestme.tpl-');
     }
 
     /**
