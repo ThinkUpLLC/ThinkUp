@@ -32,15 +32,14 @@
       <div class="grid_22 push_1 clearfix">
         <h2 class="clearfix step_title">Check System Requirements</h2>
         {if $permission.compiled_view && $permission.cache && $php_compat && $libs.curl && $libs.gd && $libs.pdo
-            && $libs.pdo_mysql && $libs.json}
-            
-             <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
-                 <p>
-                   <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                     <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
-                     You may proceed to the next step.
-                 </p>
-             </div> 
+         && $libs.pdo_mysql && $libs.json && $libs.simplexml && $libs.hash}
+         <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+             <p>
+               <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
+                 <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
+                 You may proceed to the next step.
+             </p>
+         </div> 
         {else}
         <div class="ui-state-error ui-corner-all" style="margin-bottom: 20px; padding: 0.5em 0.7em;">
              <p>
@@ -138,7 +137,43 @@
           <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.json.php" target="_blank">JSON PHP extension</a> installed on your system.</p>
         </div>
         {/if}
-
+        
+        <div class="clearfix append_20">
+          <div class="grid_6 prefix_5 right">
+            <span class="label{if !$libs.hash} no{/if}">HASH Message Digest Framework installed</span>
+          </div>
+          <div class="grid_8 prefix_1 left">
+            {if $libs.hash}
+            <span class="value yes">Yes</span>
+            {else}
+            <span class="value no">No</span>
+            {/if}
+          </div>
+        </div>
+        {if !$libs.hash}
+        <div class="clearfix append_20 info_message">
+          <p>ThinkUp needs the <a href="http://php.net/manual/en/book.hash.php" target="_blank">HASH Message Digest Framework PHP extension</a> installed on your system.</p>
+        </div>
+        {/if}
+        
+        <div class="clearfix append_20">
+          <div class="grid_6 prefix_5 right">
+            <span class="label{if !$libs.simplexml} no{/if}">SimpleXML installed</span>
+          </div>
+          <div class="grid_8 prefix_1 left">
+            {if $libs.simplexml}
+            <span class="value yes">Yes</span>
+            {else}
+            <span class="value no">No</span>
+            {/if}
+          </div>
+        </div>
+        {if !$libs.simplexml}
+        <div class="clearfix append_20 info_message">
+          <p>ThinkUp needs the <a href="http://php.net/manual/en/book.simplexml.php" target="_blank">SimpleXML PHP extension</a> installed on your system.</p>
+        </div>
+        {/if}
+        
         <div class="clearfix append_20">
           <div class="grid_6 prefix_5 right">
             {if $permissions_compat}
