@@ -17,7 +17,7 @@ except for the  external libraries listed below.
 
 ## EXTERNAL LIBRARIES
 
-- [Facebook Platform PHP5 client](http://wiki.developers.facebook.com/index.php/PHP) (Included) 
+- [Facebook Platform PHP5 SDK](https://github.com/facebook/php-sdk) (Included) 
 - [SimpleTest](http://www.simpletest.org/) (Included)
 - [Smarty](http://smarty.net) (Included)
 - [Twitter OAuth by Abraham Williams](http://github.com/abraham/twitteroauth) (Included)
