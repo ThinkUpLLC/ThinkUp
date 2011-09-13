@@ -175,7 +175,9 @@ class Installer {
      * @return array
      */
     public function checkDependency($libs = array()) {
-        $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false);
+        $ret = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false, 'hash'=>false,
+        'simplexml'=>false);
+        
         // check curl
         if ( self::curlDependenciesMet() ) {
             $ret['curl'] = true;
@@ -195,6 +197,14 @@ class Installer {
         // check JSON
         if ( extension_loaded('json') && function_exists('json_decode') && function_exists('json_encode') ) {
             $ret['json'] = true;
+        }
+        // check php5-hash
+        if ( extension_loaded('hash') ) {
+            $ret['hash'] = true;
+        }
+        // check php5-simplexml
+        if ( extension_loaded('simplexml') ) {
+            $ret['simplexml'] = true;
         }
         // when testing
         if ( defined('TESTS_RUNNING') && TESTS_RUNNING && !empty($libs) ) {

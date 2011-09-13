@@ -138,7 +138,43 @@
           <p>ThinkUp needs the <a href="http://www.php.net/manual/en/book.json.php" target="_blank">JSON PHP extension</a> installed on your system.</p>
         </div>
         {/if}
-
+        
+        <div class="clearfix append_20">
+          <div class="grid_6 prefix_5 right">
+            <span class="label{if !$libs.hash} no{/if}">HASH Message Digest Framework installed</span>
+          </div>
+          <div class="grid_8 prefix_1 left">
+            {if $libs.hash}
+            <span class="value yes">Yes</span>
+            {else}
+            <span class="value no">No</span>
+            {/if}
+          </div>
+        </div>
+        {if !$libs.hash}
+        <div class="clearfix append_20 info_message">
+          <p>ThinkUp needs the <a href="http://php.net/manual/en/book.hash.php" target="_blank">HASH Message Digest Framework PHP extension</a> installed on your system.</p>
+        </div>
+        {/if}
+        
+        <div class="clearfix append_20">
+          <div class="grid_6 prefix_5 right">
+            <span class="label{if !$libs.simplexml} no{/if}">SimpleXML installed</span>
+          </div>
+          <div class="grid_8 prefix_1 left">
+            {if $libs.simplexml}
+            <span class="value yes">Yes</span>
+            {else}
+            <span class="value no">No</span>
+            {/if}
+          </div>
+        </div>
+        {if !$libs.simplexml}
+        <div class="clearfix append_20 info_message">
+          <p>ThinkUp needs the <a href="http://php.net/manual/en/book.simplexml.php" target="_blank">SimpleXML PHP extension</a> installed on your system.</p>
+        </div>
+        {/if}
+        
         <div class="clearfix append_20">
           <div class="grid_6 prefix_5 right">
             {if $permissions_compat}
