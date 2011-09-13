@@ -164,6 +164,10 @@ class UpgradeController extends ThinkUpAuthController {
         $config = Config::getInstance();
         $status = false;
         $db_version = UpgradeController::getCurrentDBVersion($config->getValue( 'cache_pages' ));
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
         if (version_compare($db_version, $config->getValue('THINKUP_VERSION'), '<') ) {
             if ( $class_name != 'UpgradeController' ) {
                 $status = true;

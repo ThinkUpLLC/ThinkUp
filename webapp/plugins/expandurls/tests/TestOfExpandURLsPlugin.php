@@ -446,4 +446,120 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($link->expanded_url, 'http://instagr.am/40');
         $this->assertEqual($link->image_src, 'http://instagr.am/40/media/');
     }
+<<<<<<< Updated upstream
 }
+=======
+    
+    public function  testBitlyCrawl() {
+        $builders = $this->buildBitlyData();
+
+        $crawler = Crawler::getInstance();
+        $config = Config::getInstance();
+
+        //use fake Bitly API key
+        $option_builder = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        'option_name' => 'bitly_api_key', 'option_value' => 'dummykey'));
+
+        //use fake Bitly login name
+        $option_builder_1 = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        'option_name' => 'bitly_login', 'option_value' => 'dummylogin'));
+
+        $this->simulateLogin('admin@example.com', true);
+        $crawler->crawl();
+
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+
+        $link = $link_dao->getLinkById(43);
+        $this->assertEqual($link->expanded_url, 'http://static.ak.fbcdn.net/rsrc.php/zw/r/ZEKh4ZZQY74.png');
+        $this->assertEqual($link->title, 'Bitly Test URL');
+        $this->assertEqual($link->clicks, 5);
+        $this->assertEqual($link->error, '');
+
+        $link = $link_dao->getLinkById(42);
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->error, 'No response from Bitly API');
+
+        $link = $link_dao->getLinkById(41);
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->error, 'No response from Bitly API');
+    }
+
+    private function buildBitlyData() {
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('owners', array(
+            'id' => 1, 
+            'email' => 'admin@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1,
+            'is_admin' => 1 
+        ));
+
+        //Insert test links (not expanded)
+        $counter = 0;
+        while ($counter < 40) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://example.com/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'image_src' => '',
+                'error' => null
+            ));
+            $counter++;
+        }
+
+        //Insert test links (links that don't exist, not expanded)
+        $counter = 40;
+        while ($counter < 42) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://bit.ly/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'image_src' => 'image.png',
+                'error' => null
+            ));
+            $counter++;
+        }
+
+        // Insert legit Bitly shortened link, not expanded
+        $builders[] = FixtureBuilder::build('links', array(
+            'url' => "http://bit.ly/dPOYo3",
+            'expanded_url' => null,
+            'title' => "Link 0",
+            'clicks' => 0,
+            'post_id' => 200,
+            'image_src' => '',
+            'error' => null
+        ));
+
+        //Insert test links with errors (not expanded)
+        $counter = 0;
+        while ($counter < 5) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://bit.ly/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'image_src' => '',
+                'error' => 'Photo not found'
+                ));
+                $counter++;
+        }
+        return $builders;
+    }
+}
+>>>>>>> Stashed changes

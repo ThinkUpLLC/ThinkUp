@@ -382,7 +382,7 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      * Test Of getLinksToExpandByURL Method
      */
     public function testGetLinksToExpandByURL() {
-        $flickrlinkstoexpand = $this->DAO->getLinksToExpandByUrl('http://flic.kr/');
+        $flickrlinkstoexpand = $this->DAO->getLinksToExpandByUrl('http://flic.kr/', 20);
 
         $this->assertEqual(count($flickrlinkstoexpand), 10);
         $this->assertIsA($flickrlinkstoexpand, "array");

@@ -41,9 +41,10 @@ interface LinkDAO {
      * @param str $expanded
      * @param str $title
      * @param str $image_src
+     * @param int $clicks
      * @return int Update count
      */
-    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '' );
+    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '', $clicks = 0 );
     /**
      * Stores a error message.
      * @param str $url
