@@ -80,8 +80,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertTitle("ThinkUp");
         $this->assertText('ThinkUp\'s configuration file does not exist! Try installing ThinkUp.');
         $this->clickLink("installing ThinkUp.");
-        $this->assertText('Great! Your system has everything it needs to run ThinkUp. You may proceed to the next '.
-        'step.');
+        $this->assertText('Great! Your system has everything it needs to run ThinkUp.');
         $this->clickLinkById('nextstep');
 
         $this->assertText('Create Your ThinkUp Account');
@@ -148,8 +147,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertTitle("ThinkUp");
         $this->assertText('ThinkUp\'s configuration file does not exist! Try installing ThinkUp.');
         $this->clickLink("installing ThinkUp.");
-        $this->assertText('Great! Your system has everything it needs to run ThinkUp. You may proceed to the next '.
-        'step.');
+        $this->assertText('Great! Your system has everything it needs to run ThinkUp.');
         $this->clickLinkById('nextstep');
 
         $this->assertText('Create Your ThinkUp Account');
