@@ -99,8 +99,74 @@ class ExpandURLsPlugin implements CrawlerPlugin {
                 $total_errors = $total_errors + 1;
             }
         }
+<<<<<<< Updated upstream
         if (count($flickr_links_to_expand) > 0) {
             $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
+=======
+        $logger->logUserSuccess($total_thumbnails." Flickr thumbnails expanded (".$total_errors." errors)",
+        __METHOD__.','.__LINE__);
+    }
+
+    
+    /*
+    *Expand Bit.ly links and recheck click count on old ones
+    *
+    *@param api_key bitly api key
+    *@param bit_login bitly login name
+    *
+    */
+    
+    public function expandBitlyLinks($api_key, $bit_login) {
+        $logger = Logger::getInstance();
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        
+        $logger->setUsername(null);
+        $ba = new BitlyAPIAccessor($api_key, $bit_login);
+
+		$bitly_urls = array('http://bit.ly/', 'http://bitly.com/', 'http://j.mp/');
+        foreach ($bitly_urls as $bitly_url) {
+            if ($this->link_limit != 0) { 
+    		    $bitlylinkstoexpand = $link_dao->getLinksToExpandByURL($bitly_url, $this->link_limit);
+	
+                if (count($bitlylinkstoexpand) > 0) {
+                    $logger->logUserInfo(count($bitlylinkstoexpand). " $bitly_url" . 
+                    " links to expand.", __METHOD__.','.__LINE__);
+                } else {
+                    $logger->logUserInfo("There are no " . $bitly_url . " links to expand.", __METHOD__.','.__LINE__);
+                }
+        
+            $total_links = 0;
+            $total_errors = 0;
+            foreach ($bitlylinkstoexpand as $bl) {
+                $eurl = $ba->getBitlyLinkData($bl);
+
+                if ($eurl["error"] == '') {
+                    $link_dao->saveExpandedUrl($bl, $eurl["expanded_url"], $eurl["title"], $empty = '', 
+                    $eurl["clicks"]);
+                    $total_links = $total_links + 1;
+                } else if ($eurl["error"] != '') {
+                    $link_dao->saveExpansionError($bl, $eurl["error"]);
+                    $total_errors = $total_errors + 1;
+                }
+            }
+            $this->link_limit = $this->link_limit - $total_links;
+        
+            $logger->logUserSuccess($total_links. " " . $bitly_url . " links expanded (".$total_errors." errors)", 
+            __METHOD__.','.__LINE__);
+	    	}
+	    }
+    }
+        
+    /**
+     * Save direct link to Instagr.am images in data store.
+     */
+    public function expandInstagramImageURLs() {
+        $logger = Logger::getInstance();
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        $insta_links_to_expand = $link_dao->getLinksToExpandByURL('http://instagr.am/', $this->link_limit);
+        if (count($insta_links_to_expand) > 0) {
+            $logger->logUserInfo(count($insta_links_to_expand)." Instagr.am links to expand.",
+>>>>>>> Stashed changes
             __METHOD__.','.__LINE__);
         }
     }
