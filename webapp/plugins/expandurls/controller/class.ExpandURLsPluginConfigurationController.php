@@ -42,6 +42,12 @@ class ExpandURLsPluginConfigurationController extends PluginConfigurationControl
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'flickr_api_key',
         'label'=>'Flickr API key (<a href="http://www.flickr.com/services/api/keys/">Get it here</a>)')); // add element
 
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'bitly_login',
+        'label'=>'Bit.ly Username'));
+
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'bitly_api_key',
+        'label'=>'Bit.ly API key (<a href="http://bitly.com/a/your_api_key">Get it here</a>'));
+
         return $this->generateView();
     }
 }

@@ -99,6 +99,8 @@ class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase 
         $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         $this->assertPattern('/Flickr API key/', $output);
+        $this->assertPattern('/Bit.ly API key/', $output);
+        $this->assertPattern('/Bit.ly Username/', $output);
     }
 
     /**
@@ -114,6 +116,8 @@ class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase 
         // we have a text form element with proper data
         $this->assertNoPattern('/save options/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_error_flickr_api_key/', $output); // should have no api key
+        $this->assertNoPattern('/plugin_options_error_bitly_api_key/', $output); // should have no api key
+        $this->assertNoPattern('/plugin_options_error_bitly_login/', $output); // should have no login name
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
 
         //app not configured
@@ -135,6 +139,8 @@ class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase 
         // we have a text form element with proper data
         $this->assertPattern('/save options/', $output); // should have submit option
         $this->assertPattern('/plugin_options_error_flickr_api_key/', $output); // should have api key option
+        $this->assertPattern('/plugin_options_error_bitly_api_key/', $output); // should have api key option
+        $this->assertPattern('/plugin_options_error_bitly_login/', $output); // should have login name option
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
 
         //app not configured

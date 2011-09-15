@@ -29,6 +29,11 @@
  *
  */
 class ExpandURLsPlugin implements CrawlerPlugin {
+    /**
+     * Max number of links to expand during a given crawl; set in ExpandURLs Plugin options area.
+     * @var int
+     */
+    var $link_limit = 0;
 
     public function activate() {
     }
@@ -46,18 +51,28 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('expandurls', true);
 
-        //Flickr image thumbnails
-        if (isset($options['flickr_api_key']->option_value)) {
-            self::expandFlickrThumbnails($options['flickr_api_key']->option_value);
-        }
-
-        //@TODO: Bit.ly URLs
-
-        //Remaining URLs
-        $link_limit = isset($options['links_to_expand']->option_value) ?
+        //Limit the number of links expanded each crawl
+        $this->link_limit = isset($options['links_to_expand']->option_value) ?
         (int)$options['links_to_expand']->option_value : 1500;
 
-        self::expandRemainingURLs($link_limit);
+        if ($this->link_limit != 0) {
+            //Flickr image thumbnails
+            if (isset($options['flickr_api_key']->option_value)) {
+                self::expandFlickrThumbnails($options['flickr_api_key']->option_value);
+            }
+
+            //Bit.ly URLs
+            if (isset($options['bitly_api_key']->option_value,
+            $options['bitly_login']->option_value)) {
+                self::expandBitlyLinks($options['bitly_api_key']->option_value,
+                $options['bitly_login']->option_value);
+            }
+
+            //Remaining links
+            self::expandRemainingURLs();
+        } else {
+            $logger->logUserInfo("Limit of links to expand reached.", __METHOD__.','.__LINE__);
+        }
     }
 
     /**
@@ -69,7 +84,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
     }
 
     /**
-     * Expand shortened Flickr links to image thumbnails if Flickr API key is set
+     * Expand shortened Flickr links to image thumbnails if Flickr API key is set.
      * @param $api_key Flickr API key
      */
     public function expandFlickrThumbnails($api_key) {
@@ -79,7 +94,7 @@ class ExpandURLsPlugin implements CrawlerPlugin {
         $logger->setUsername(null);
         $flickr_api = new FlickrAPIAccessor($api_key);
 
-        $flickr_links_to_expand = $link_dao->getLinksToExpandByURL('http://flic.kr/');
+        $flickr_links_to_expand = $link_dao->getLinksToExpandByURL('http://flic.kr/', $this->link_limit);
         if (count($flickr_links_to_expand) > 0) {
             $logger->logUserInfo(count($flickr_links_to_expand)." Flickr links to expand.",  __METHOD__.','.__LINE__);
         } else {
@@ -106,13 +121,57 @@ class ExpandURLsPlugin implements CrawlerPlugin {
     }
 
     /**
-     * Expand all unexpanded URLs
-     * @param $total_links_to_expand The number of links to expand
+     * Expand Bit.ly links and recheck click count on old ones.
+     *
+     * @param str bitly api key
+     * @param str bitly login name
      */
-    public function expandRemainingURLs($total_links_to_expand) {
+    public function expandBitlyLinks($api_key, $bit_login) {
         $logger = Logger::getInstance();
         $link_dao = DAOFactory::getDAO('LinkDAO');
-        $links_to_expand = $link_dao->getLinksToExpand($total_links_to_expand);
+
+        $logger->setUsername(null);
+        $api_accessor = new BitlyAPIAccessor($api_key, $bit_login);
+
+        $bitly_urls = array('http://bit.ly/', 'http://bitly.com/', 'http://j.mp/');
+        foreach ($bitly_urls as $bitly_url) {
+            if ($this->link_limit != 0) {
+                $bitly_links_to_expand = $link_dao->getLinksToExpandByURL($bitly_url, $this->link_limit);
+
+                if (count($bitly_links_to_expand) > 0) {
+                    $logger->logUserInfo(count($bitly_links_to_expand). " $bitly_url" . " links to expand.",
+                    __METHOD__.','.__LINE__);
+                } else {
+                    $logger->logUserInfo("There are no " . $bitly_url . " links to expand.", __METHOD__.','.__LINE__);
+                }
+
+                $total_links = 0;
+                $total_errors = 0;
+                foreach ($bitly_links_to_expand as $link) {
+                    $link_data = $api_accessor->getBitlyLinkData($link);
+                    if ($link_data["expanded_url"] != '') {
+                        $link_dao->saveExpandedUrl($link, $link_data["expanded_url"], $link_data["title"], '',
+                        $link_data["clicks"]);
+                        $total_links = $total_links + 1;
+                    } elseif ($link_data["error"] != '') {
+                        $link_dao->saveExpansionError($link, $link_data["error"]);
+                        $total_errors = $total_errors + 1;
+                    }
+                }
+
+                $logger->logUserSuccess($total_links. " " . $bitly_url . " links expanded (".$total_errors." errors)",
+                __METHOD__.','.__LINE__);
+            }
+        }
+    }
+
+    /**
+     * Save expanded version of all unexpanded URLs to data store.
+     */
+    public function expandRemainingURLs() {
+        $logger = Logger::getInstance();
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+        $links_to_expand = $link_dao->getLinksToExpand($this->link_limit);
 
         $logger->logUserInfo(count($links_to_expand)." links to expand. Please wait. Working...",
         __METHOD__.','.__LINE__);
