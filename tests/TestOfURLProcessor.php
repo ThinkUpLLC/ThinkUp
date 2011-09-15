@@ -97,6 +97,22 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->title, '');
         $this->assertEqual($result->post_id, 102);
         $this->assertEqual($result->network, 'twitter');
+        
+        //Lockerz
+        $post_id = 108;
+        $post_text = "This is a lockerz post http://lockerz.com/s/138376416 Yay!";
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
+
+        $link_dao = new LinkMySQLDAO();
+        $result = $link_dao->getLinkByUrl('http://lockerz.com/s/138376416');
+        $this->assertIsA($result, "Link");
+        $this->assertEqual($result->url, 'http://lockerz.com/s/138376416');
+        $this->assertEqual($result->expanded_url, 'http://lockerz.com/s/138376416');
+        $this->assertEqual($result->image_src,
+        'http://api.plixi.com/api/tpapi.svc/imagefromurl?url=http://plixi.com/p/138376416&size=thumbnail');
+        $this->assertEqual($result->title, '');
+        $this->assertEqual($result->post_id, 108);
+        $this->assertEqual($result->network, 'twitter');
 
         //test facebook
         $network = 'facebook';
@@ -161,7 +177,7 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->network, 'facebook');
 
         $post_id = 107;
-        $post_text = "This is a post with a curly quote closing the link http://t.co/2JVSpi5Ó yo";
+        $post_text = "This is a post with a curly quote closing the link http://t.co/2JVSpi5 yo";
         URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
