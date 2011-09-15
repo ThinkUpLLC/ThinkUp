@@ -63,7 +63,7 @@ class URLProcessor {
 
     /**
      * Get a direct link to an image thumbnail for a given URL if it exists. Currently supports Twitpic, Twitgoo,
-     * Picplz, Yfrog, and Instagr.am.
+     * Picplz, Yfrog, Instagr.am and Lockerz.
      * @param str $url
      * @return str $image_src
      */
@@ -87,6 +87,9 @@ class URLProcessor {
             } else {
                 $image_src = $url . '/media/';
             }
+        } elseif (substr($url, 0, strlen('http://lockerz.com/')) == 'http://lockerz.com/') {
+            $url = str_replace('lockerz.com/s/', 'plixi.com/p/', $url);
+            $image_src = 'http://api.plixi.com/api/tpapi.svc/imagefromurl?url='.$url.'&size=thumbnail';
         }
         return $image_src;
     }

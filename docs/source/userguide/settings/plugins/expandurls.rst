@@ -31,4 +31,4 @@ Related
 -------
 
 The Twitter plugin automatically stores photo thumbnails for short links from known image sources Yfrog, Twitpic,
-Twitgoo, Instagr.am and Picplz.
+Twitgoo, Instagr.am, Picplz, and Lockerz.
