@@ -122,41 +122,51 @@ class FacebookCrawler {
      * Fetch and save the posts and replies for the crawler's instance. This function will loop back through the
      * user's or pages archive of posts.
      */
-    public function fetchPostsAndReplies($id, $is_page) {
-		// 'since' is the datetime of the last post in ThinkUp DB. 'until' is the last post in stream, according to Facebook
-		$post_dao = DAOFactory::getDAO('PostDAO');
-		$sincePost = $post_dao->getAllPosts($id, "facebook", 1, true, 'pub_date', 'DESC');
-		$since = $sincePost[0]->pub_date;
-		$since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
-		$profile = $this->fetchUserInfo($id, 'facebook', 'Post stream');
-		$until = $profile->other["updated_time"];
+    public function fetchPostsAndReplies() {
+        $id = $this->instance->network_user_id;
+        $network = $this->instance->network;
 		
-		$keepLooping = TRUE;
-		$i = 0;
-		$rawNextRequest = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
+        // fetch user's friends
+        $this->storeFriends();
 		
-		while ($keepLooping) {
-			$i++;
-			$stream = FacebookGraphAPIAccessor::rawApiRequest($rawNextRequest, TRUE);
-			if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
-				$this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
-				__METHOD__.','.__LINE__);
+        $fetch_next_page = true;
+        $current_page_number = 1;
+        $next_api_request = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
 
-				$thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
-				
-				//get the next page for the loop
-				$rawNextRequest = $stream->paging->next;
-			} else {
-				$this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
-				$keepLooping = FALSE;
-			}
-			
-			if ($i > 10) {
-			    $keepLooping = FALSE; //failsafe to keep from looping forever
-			}
-		}
-		
-		
+        //Cap crawl time for very busy pages with thousands of likes/comments
+        $fetch_stop_time = time() + $this->max_crawl_time;
+
+        //Determine 'since', datetime of oldest post in datastore
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $since_post = $post_dao->getAllPosts($id, $network, 1, 1, true, 'pub_date', 'ASC');
+        $since = isset($since_post[0])?$since_post[0]->pub_date:0;
+        $since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
+        ($since < 0)?$since=0:$since=$since;
+
+        while ($fetch_next_page) {
+            $stream = FacebookGraphAPIAccessor::rawApiRequest($next_api_request, true);
+            if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
+                $this->logger->logInfo(sizeof($stream->data)." Facebook posts found on page ".$current_page_number,
+                __METHOD__.','.__LINE__);
+
+                $this->processStream($stream, $network, $current_page_number);
+
+                if (isset($stream->paging->next)) {
+                    $next_api_request = $stream->paging->next . '&since=' . $since;
+                    $current_page_number++;
+                } else {
+                    $fetch_next_page = false;
+                }
+            } else {
+                $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
+                $fetch_next_page = false;
+            }
+            if (time() > $fetch_stop_time) {
+                $fetch_next_page = false;
+                $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
+                ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
+            }
+        }
     }
 
     /**
@@ -582,4 +592,48 @@ class FacebookCrawler {
         }
         return $added_likes;
     }
+	
+	private function storeFriends() {
+	
+	    // https://github.com/ginatrapani/ThinkUp/issues/69
+		
+	    //Retrieve friends via the Facebook API
+		$user_id = $this->instance->network_user_id;
+		$access_token = $this->access_token;
+		$network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
+		$friends = FacebookGraphAPIAccessor::apiRequest('/' . $user_id . '/friends', $access_token);
+		
+		//store relationships in follows table
+		$follows_dao = DAOFactory::getDAO('FollowDAO');
+		$follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+		$user_dao = DAOFactory::getDAO('UserDAO');
+				
+		foreach ($friends->data AS $friend) {
+			
+			$follower_id = $friend->id;
+			if ($follows_dao->followExists($user_id, $follower_id, $network)) {
+			    // follow relationship already exists
+				$follows_dao->update($user_id, $follower_id, $network);
+			} else {
+			    // follow relationship does not exist yet
+				$follows_dao->insert($user_id, $follower_id, $network);
+			}
+			
+			//and users in users table.			 
+			$follower_details = FacebookGraphAPIAccessor::apiRequest('/'.$follower_id, $this->access_token);
+			$follower_details->network = $network;
+
+			$follower = $this->parseUserDetails($follower_details);
+			$follower_object = new User($follower);
+			 
+			$user_dao->updateUser($follower_object);
+
+		}
+
+		//totals in follower_count table
+		$follower_count_dao->insert($user_id, $network, count($friends->data));
+		
+		
+		
+	}
 }
