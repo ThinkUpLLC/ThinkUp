@@ -54,18 +54,70 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $menus = $webapp->getDashboardMenu($instance);
         $posts_menu = $menus["all_facebook_posts"];
 
-        $this->assertEqual(sizeof($menus), 4);
-        $first_post_tab = $menus['all_facebook_posts'];
-        $this->assertEqual($first_post_tab->name, "All posts", "Test name of first post tab");
-        $this->assertEqual($first_post_tab->description, "All status updates", "Test description of first post tab");
+        $this->assertEqual(sizeof($menus), 5);
+        $post_tab = $menus['all_facebook_posts'];
+        $this->assertEqual($post_tab->name, "All posts");
+        $this->assertEqual($post_tab->description, "All status updates");
 
-        $first_post_tab_datasets = $first_post_tab->getDatasets();
-        $first_post_tab_dataset = $first_post_tab_datasets[0];
-        $this->assertEqual($first_post_tab_dataset->name, "all_facebook_posts",
-        "Test first post tab's first dataset name");
-        $this->assertEqual($first_post_tab_dataset->dao_name, 'PostDAO');
-        $this->assertEqual($first_post_tab_dataset->dao_method_name, "getAllPosts",
-        "Test first post tab's first dataset fetching method");
+        $post_tab_datasets = $post_tab->getDatasets();
+        $this->assertEqual(count($post_tab_datasets), 1);
+        $post_tab_dataset = $post_tab_datasets[0];
+        $this->assertEqual($post_tab_dataset->name, "all_facebook_posts");
+        $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
+        $this->assertEqual($post_tab_dataset->dao_method_name, "getAllPosts");
+
+        $post_tab = $menus['mostreplies'];
+        $this->assertEqual($post_tab->name, "Most replied-to");
+        $this->assertEqual($post_tab->description, "Posts with most replies");
+
+        $post_tab_datasets = $post_tab->getDatasets();
+        $this->assertEqual(count($post_tab_datasets), 1);
+        $post_tab_dataset = $post_tab_datasets[0];
+        $this->assertEqual($post_tab_dataset->name, "most_replied_to_posts");
+        $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
+        $this->assertEqual($post_tab_dataset->dao_method_name, "getMostRepliedToPosts");
+
+        $post_tab = $menus['mostlikes'];
+        $this->assertEqual($post_tab->name, "Most liked");
+        $this->assertEqual($post_tab->description, "Posts with most likes");
+
+        $post_tab_datasets = $post_tab->getDatasets();
+        $this->assertEqual(count($post_tab_datasets), 1);
+        $post_tab_dataset = $post_tab_datasets[0];
+        $this->assertEqual($post_tab_dataset->name, "most_replied_to_posts");
+        $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
+        $this->assertEqual($post_tab_dataset->dao_method_name, "getMostFavedPosts");
+
+        $post_tab = $menus['questions'];
+        $this->assertEqual($post_tab->name, "Inquiries");
+        $this->assertEqual($post_tab->description, "Inquiries, or posts with a question mark in them");
+
+        $post_tab_datasets = $post_tab->getDatasets();
+        $this->assertEqual(count($post_tab_datasets), 1);
+        $post_tab_dataset = $post_tab_datasets[0];
+        $this->assertEqual($post_tab_dataset->name, "all_facebook_posts");
+        $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
+        $this->assertEqual($post_tab_dataset->dao_method_name, "getAllQuestionPosts");
+
+        $post_tab = $menus['followers-history'];
+        $this->assertEqual($post_tab->name, "Friend count history");
+        $this->assertEqual($post_tab->description, "Your friend count over time");
+
+        $post_tab_datasets = $post_tab->getDatasets();
+        $this->assertEqual(count($post_tab_datasets), 3);
+        $post_tab_dataset = $post_tab_datasets[0];
+        $this->assertEqual($post_tab_dataset->name, "follower_count_history_by_day");
+        $this->assertEqual($post_tab_dataset->dao_name, 'FollowerCountDAO');
+        $this->assertEqual($post_tab_dataset->dao_method_name, "getHistory");
+        $post_tab_dataset = $post_tab_datasets[1];
+        $this->assertEqual($post_tab_dataset->name, "follower_count_history_by_week");
+        $this->assertEqual($post_tab_dataset->dao_name, 'FollowerCountDAO');
+        $this->assertEqual($post_tab_dataset->dao_method_name, "getHistory");
+        $post_tab_dataset = $post_tab_datasets[2];
+        $this->assertEqual($post_tab_dataset->name, "follower_count_history_by_month");
+        $this->assertEqual($post_tab_dataset->dao_name, 'FollowerCountDAO');
+        $this->assertEqual($post_tab_dataset->dao_method_name, "getHistory");
+
         $logger->close();
     }
 

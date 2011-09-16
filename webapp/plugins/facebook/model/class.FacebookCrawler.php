@@ -51,6 +51,11 @@ class FacebookCrawler {
      */
     var $max_crawl_time;
     /**
+     * Whether or not an instance Facebook Page's total likes has been recorded in the follower count table.
+     * @var bool
+     */
+    var $page_like_count_set = false;
+    /**
      *
      * @param Instance $instance
      * @return FacebookCrawler
@@ -78,7 +83,7 @@ class FacebookCrawler {
         $user_object = null;
         if ($force_reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
             // Get owner user details and save them to DB
-            $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
+            $fields = $network!='facebook page'?'id,name,about,location,website':'';
             $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
             $user_details->network = $network;
 
@@ -87,6 +92,14 @@ class FacebookCrawler {
                 $user_object = new User($user, $found_in);
                 $user_dao->updateUser($user_object);
             }
+
+            // Record the current number of page likes in follower count table
+            if ($network == 'facebook page' && isset($user_details->likes) && !$this->page_like_count_set) {
+                $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+                $follower_count_dao->insert($this->instance->network_user_id, 'facebook page', $user_details->likes);
+                $this->page_like_count_set = true;
+            }
+
             if (isset($user_object)) {
                 $this->logger->logSuccess("Successfully fetched ".$user_id. " ".$network."'s details from Facebook",
                 __METHOD__.','.__LINE__);
@@ -135,6 +148,10 @@ class FacebookCrawler {
     public function fetchPostsAndReplies() {
         $id = $this->instance->network_user_id;
         $network = $this->instance->network;
+
+        // fetch user's friends
+        $this->storeFriends();
+
         $fetch_next_page = true;
         $current_page_number = 1;
         $next_api_request = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
@@ -593,5 +610,43 @@ class FacebookCrawler {
             }
         }
         return $added_likes;
+    }
+
+    private function storeFriends() {
+        if ($this->instance->network == 'facebook') {
+            //Retrieve friends via the Facebook API
+            $user_id = $this->instance->network_user_id;
+            $access_token = $this->access_token;
+            $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
+            $friends = FacebookGraphAPIAccessor::apiRequest('/' . $user_id . '/friends', $access_token);
+
+            //store relationships in follows table
+            $follows_dao = DAOFactory::getDAO('FollowDAO');
+            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+            $user_dao = DAOFactory::getDAO('UserDAO');
+
+            foreach ($friends->data AS $friend) {
+                $follower_id = $friend->id;
+                if ($follows_dao->followExists($user_id, $follower_id, $network)) {
+                    // follow relationship already exists
+                    $follows_dao->update($user_id, $follower_id, $network);
+                } else {
+                    // follow relationship does not exist yet
+                    $follows_dao->insert($user_id, $follower_id, $network);
+                }
+
+                //and users in users table.
+                $follower_details = FacebookGraphAPIAccessor::apiRequest('/'.$follower_id, $this->access_token);
+                $follower_details->network = $network;
+
+                $follower = $this->parseUserDetails($follower_details);
+                $follower_object = new User($follower);
+
+                $user_dao->updateUser($follower_object);
+            }
+
+            //totals in follower_count table
+            $follower_count_dao->insert($user_id, $network, count($friends->data));
+        }
     }
 }

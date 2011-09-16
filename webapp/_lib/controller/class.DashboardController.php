@@ -56,14 +56,15 @@ class DashboardController extends ThinkUpController {
                 $this->loadView();
             } else {
                 if (!Session::isLoggedIn()) {
-                    $this->addInfoMessage('There are no public accounts set up in this ThinkUp installation.<br /><br />'.
-                'To make a current account public, log in and click on "Settings." Click on one of the plugins '.
-                'that contain accounts (like Twitter or Facebook) and click "Set Public" next to the account that '.
-                ' should appear to users who are not logged in.');
+                    $this->addInfoMessage('There are no public accounts set up in this ThinkUp installation.'.
+                    '<br /><br />To make a current account public, log in and click on "Settings." '.
+                    'Click on one of the plugins that contain accounts (like Twitter or Facebook) and '.
+                    'click "Set Public" next to the account that should appear to users who are not logged in.');
                 } else  {
                     $config = Config::getInstance();
-                    $this->addInfoMessage('You have no services configured. <a href="'.$config->getValue('site_root_path').
-                'account/">Set up a service like Twitter or Facebook now&rarr;</a>');
+                    $this->addInfoMessage('You have no services configured. <a href="'.
+                    $config->getValue('site_root_path').
+                    'account/">Set up a service like Twitter or Facebook now&rarr;</a>');
                 }
             }
         }
@@ -175,7 +176,8 @@ class DashboardController extends ThinkUpController {
 
             $post_dao = DAOFactory::getDAO('PostDAO');
             //posts
-            $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 20, true);
+            $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 20,
+            true);
             $this->addToView('recent_posts', $recent_posts);
             $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
             $this->instance->network, 5);
@@ -202,13 +204,12 @@ class DashboardController extends ThinkUpController {
             //by day
             $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
             $follower_count_history_by_day = $follower_count_dao->getHistory($this->instance->network_user_id,
-            'twitter', 'DAY', 5);
-            //print_r($follower_count_history_by_day);
+            $this->instance->network, 'DAY', 5);
             $this->addToView('follower_count_history_by_day', $follower_count_history_by_day);
 
             //by week
             $follower_count_history_by_week = $follower_count_dao->getHistory($this->instance->network_user_id,
-            'twitter', 'WEEK', 5);
+            $this->instance->network, 'WEEK', 5);
             $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
 
             $post_dao = DAOFactory::getDAO('PostDAO');

@@ -129,7 +129,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertTrue($user->is_protected);
     }
 
-    public function testFetchPostsAndRepliesForProfile() {
+    public function testFetchPostsAndRepliesForProfile1() {
         $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
 
         $fbc->fetchPostsAndReplies();
@@ -181,10 +181,17 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->avatar, 'https://graph.facebook.com/691270740/picture');
         $this->assertTrue($user->is_protected);
         $this->assertEqual($user->location, '');
+    }
 
+    public function testFetchPostsAndRepliesForProfile2() {
         //Test post with a link to a video
         $fbc2 = new FacebookCrawler($this->profile2_instance, 'fauxaccesstoken', 10);
+
         $fbc2->fetchPostsAndReplies();
+
+        $post_dao = new PostMySQLDAO();
+        $user_dao = new UserMySQLDAO();
+
         $post = $post_dao->getPost('10150328374252744', 'facebook');
         $this->assertEqual($post->post_text, '');
         $this->assertNotNull($post->link);
@@ -203,6 +210,27 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $post = $post_dao->getPost('10150357566827744', 'facebook');
         $this->assertNotNull($post);
         $this->assertEqual($post->author_user_id, '729597743');
+
+        // Test Facebook friends and followers. This user only exists in testing as a "friend."
+        $user = $user_dao->getUserByName('Poppy Linford', 'facebook');
+        $this->assertTrue(isset($user));
+        $this->assertEqual($user->user_id, '682523675');
+        // Test follow is set
+        $follow_dao = new FollowMySQLDAO();
+        $this->assertTrue($follow_dao->followExists('729597743', '682523675', 'facebook'));
+
+        // Test FollowerCount is set
+        $sql = "SELECT * FROM ".$this->table_prefix.
+        "follower_count WHERE network='facebook' AND network_user_id='729597743';";
+
+        $stmt = FollowerCountMySQLDAO::$PDO->query($sql);
+        $data = array();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            array_push($data, $row);
+        }
+        $stmt->closeCursor();
+
+        $this->assertEqual($data[0]['count'], 1);
     }
 
     public function testFetchPostsAndRepliesForPage() {
@@ -249,6 +277,18 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $post = $post_dao->getPost('437660146355', 'facebook page');
         $this->assertNotNull($post);
         $this->assertEqual($post->author_user_id, '7568536355');
+
+        // Test FollowerCount is set
+        $sql = "SELECT * FROM ".$this->table_prefix.
+        "follower_count WHERE network='facebook page' AND network_user_id='7568536355';";
+
+        $stmt = FollowerCountMySQLDAO::$PDO->query($sql);
+        $data = array();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            array_push($data, $row);
+        }
+        $stmt->closeCursor();
+        $this->assertEqual($data[0]['count'], 307758);
     }
 
     public function testPostReplyPaging() {

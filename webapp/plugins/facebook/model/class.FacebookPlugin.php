@@ -136,6 +136,22 @@ class FacebookPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin
         $qtab->addDataset($qtabds);
         $menus["questions"] = $qtab;
 
+        //Follower count history
+        $follower_history_tpl = Utils::getPluginViewDirectory('facebook').'facebook.followercount.tpl';
+        $trendtab = new MenuItem(($instance->network == 'facebook page')?'Fan count history':'Friend count history',
+        'Your '.(($instance->network == 'facebook page')?'fan':'friend').' count over time', $follower_history_tpl);
+        $trendtabds = new Dataset("follower_count_history_by_day", 'FollowerCountDAO', 'getHistory',
+        array($instance->network_user_id, $instance->network, 'DAY', 15));
+        $trendtab->addDataset($trendtabds);
+        $trendtabweekds = new Dataset("follower_count_history_by_week", 'FollowerCountDAO', 'getHistory',
+        array($instance->network_user_id, $instance->network, 'WEEK', 15));
+        $trendtab->addDataset($trendtabweekds);
+        $trendtabmonthds = new Dataset("follower_count_history_by_month", 'FollowerCountDAO', 'getHistory',
+        array($instance->network_user_id, $instance->network, 'MONTH', 11));
+        $trendtabmonthds->addHelp('userguide/listings/facebook/dashboard_followers-history');
+        $trendtab->addDataset($trendtabmonthds);
+        $menus['followers-history'] = $trendtab;
+
         return $menus;
     }
 
