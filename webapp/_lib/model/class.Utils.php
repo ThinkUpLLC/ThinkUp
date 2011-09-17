@@ -126,7 +126,7 @@ class Utils {
     }
 
     /**
-     * Get the contents of a URL
+     * Get the contents of a URL via GET
      * @param str $URL
      * @return str contents
      */
@@ -141,6 +141,41 @@ class Utils {
         //echo "URL: ".$URL."\n";
         //echo $contents;
         //echo "STATUS: ".$status."\n";
+        if (isset($contents)) {
+            return $contents;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get the contents of a URL via POST
+     * @param str $URL
+     * @param array $fields
+     * @return str contents
+     */
+    public static function getURLContentsViaPost($URL, array $fields) {
+        $fields_string = '';
+        //url-ify the data for the POST
+        foreach($fields as $key=>$value) {
+            $fields_string .= $key.'='.$value.'&';
+        }
+        rtrim($fields_string,'&');
+
+        //open connection
+        $ch = curl_init();
+
+        //set the url, number of POST vars, POST data
+        curl_setopt($ch,CURLOPT_URL,$URL);
+        curl_setopt($ch,CURLOPT_POST,count($fields));
+        curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        //execute post
+        $contents = curl_exec($ch);
+
+        //close connection
+        curl_close($ch);
         if (isset($contents)) {
             return $contents;
         } else {

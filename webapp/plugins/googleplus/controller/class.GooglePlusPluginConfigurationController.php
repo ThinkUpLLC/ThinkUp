@@ -84,15 +84,51 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
      * @param array $options Plugin options array
      */
     protected function setUpGPlusInteractions(array $options) {
-        // Create OAuth link
+        //get options
         $client_id = $options['google_plus_client_id']->option_value;
+        $client_secret = $options['google_plus_client_secret']->option_value;
+
         //prep redirect URI
         $config = Config::getInstance();
         $site_root_path = $config->getValue('site_root_path');
         $redirect_uri = urlencode('http://'.$_SERVER['SERVER_NAME'].$site_root_path.'account/?p=googleplus');
 
+        //create OAuth link
         $oauth_link = "https://accounts.google.com/o/oauth2/auth?client_id=".$client_id.
         "&redirect_uri=".$redirect_uri."&scope=https://www.googleapis.com/auth/plus.me&response_type=code";
         $this->addToView('oauth_link', $oauth_link);
+
+        // Google provided a code to get an access token
+        if (isset($_GET['code'])) {
+            $code = $_GET['code'];
+
+            //prep access token request URL as per http://code.google.com/apis/accounts/docs/OAuth2.html#SS
+            $access_token_request_url = "https://accounts.google.com/o/oauth2/token";
+            $fields = array(
+            'code'=>urlencode($code),
+            'client_id'=>urlencode($client_id),
+            'client_secret'=>urlencode($client_secret),
+            'redirect_uri'=>$redirect_uri,
+            'grant_type'=>urlencode('authorization_code')
+            );
+
+            //get tokens
+            $tokens = GooglePlusAPIAccessor::rawPostApiRequest($access_token_request_url, $fields, true);
+            $info_msg = $this->saveAccessTokens($tokens->access_token, $tokens->refresh_token);
+            $this->addInfoMessage($info_msg);
+        }
+    }
+
+    /**
+     * Save newly-acquired OAuth access tokens to application options.
+     * @param str $access_token
+     * @param str $refresh_token
+     * @return str Success message
+     */
+    protected function saveAccessTokens($access_token, $refresh_token) {
+        $msg = 'Need to save '.$access_token.' and '.$refresh_token.' to database';
+        $this->view_mgr->clear_all_cache();
+
+        return $msg;
     }
 }

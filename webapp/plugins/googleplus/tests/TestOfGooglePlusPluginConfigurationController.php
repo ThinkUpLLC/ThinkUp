@@ -102,14 +102,16 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertEqual( count($controller->option_elements), 2);
         $this->assertNotNull( $controller->option_elements['google_plus_client_id']);
         $this->assertEqual(
-        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['google_plus_client_id']['type'] );
+        PluginConfigurationController::FORM_TEXT_ELEMENT,
+        $controller->option_elements['google_plus_client_id']['type'] );
         $this->assertTrue( isset($controller->option_elements['google_plus_client_id']['default_value']) );
         $this->assertEqual( count($controller->option_required_message), 2);
         $this->assertTrue( isset($controller->option_required_message['google_plus_client_id']));
 
         $this->assertNotNull( $controller->option_elements['google_plus_client_secret']);
         $this->assertEqual(
-        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['google_plus_client_secret']['type'] );
+        PluginConfigurationController::FORM_TEXT_ELEMENT,
+        $controller->option_elements['google_plus_client_secret']['type'] );
         $this->assertTrue(isset($controller->option_elements['google_plus_client_secret']['default_value']) );
         $this->assertTrue(isset($controller->option_required_message['google_plus_client_secret']));
 
@@ -223,7 +225,8 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         //Should see error message
         $this->assertPattern("/Please set your Google\+ client ID and secret./", $results);
         //Shouldn't see authorize link
-        $this->assertNoPattern("/Click on this button to authorize ThinkUp to access your Google\+ account./", $results);
+        $this->assertNoPattern("/Click on this button to authorize ThinkUp to access your Google\+ account./",
+        $results);
         $this->assertNoPattern("/Authorize ThinkUp on Google\+/", $results);
     }
 
@@ -255,5 +258,4 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         array('namespace' => $namespace, 'option_name' => 'google_plus_client_secret', 'option_value' => "s3cr3t") );
         return $builders;
     }
-
 }
