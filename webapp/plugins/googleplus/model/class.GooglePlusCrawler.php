@@ -69,18 +69,18 @@ class GooglePlusCrawler {
      * @return User
      */
     public function fetchUser($user_id, $found_in, $force_reload_from_googleplus=false) {
-        $network = 'googleplus';
+        $network = 'google+';
         $user_dao = DAOFactory::getDAO('UserDAO');
         $user_object = null;
         if ($force_reload_from_googleplus || !$user_dao->isUserInDB($user_id, $network)) {
             // Get owner user details and save them to DB
             $fields = 'displayName,id,image,tagline';
             //@TODO: Actually fetch user data from Google+ API
-            $user_details = GooglePlusAPIAccessor::apiRequest('/people/'.$user_id, $this->access_token, $fields);
+            $user_details = GooglePlusAPIAccessor::apiRequest('people/'.$user_id, $this->access_token, $fields);
             $user_details->network = $network;
 
             $user = $this->parseUserDetails($user_details);
-            
+
             if (isset($user)) {
                 $user_object = new User($user, $found_in);
                 $user_dao->updateUser($user_object);
@@ -116,7 +116,7 @@ class GooglePlusCrawler {
             if (count($details->placesLived) > 0) {
                 foreach ($details->placesLived as $placeLived){
                     if (isset($placeLived->primary))
-                        $user_vals["location"] = $placeLived->value;
+                    $user_vals["location"] = $placeLived->value;
                 }
             }
             $user_vals["description"] = isset($details->tagline)?$details->tagline:'';

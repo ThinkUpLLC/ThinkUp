@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/facebook/tests/TestOfFacebookCrawler.php
+ * ThinkUp/webapp/plugins/googleplus/tests/TestOfFacebookCrawler.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2011 Henri Watson
  *
  * LICENSE:
  *
@@ -21,18 +21,17 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Test of FacebookCrawler
+ * Test of GooglePlusCrawler
  *
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2011 Henri Watson
  */
 require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/model/class.GooglePlusCrawler.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/tests/classes/mock.GooglePlusAPIAccessor.php';
-//require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/tests/classes/mock.facebook.php';
+//require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/tests/classes/mock.googleplus.php';
 
 class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
     /**
@@ -54,7 +53,7 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
         'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
-        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook',
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'googleplus',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
@@ -77,7 +76,7 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $gpc = new GooglePlusCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
         $gpc->fetchUser($this->profile1_instance->network_user_id, $this->profile1_instance->network, true);
         $user_dao = new UserMySQLDAO();
-        $user = $user_dao->getUserByName('Gina Trapani', 'googleplus');
+        $user = $user_dao->getUserByName('Gina Trapani', 'google+');
 
         $this->assertTrue(isset($user));
         $this->assertEqual($user->username, 'Gina Trapani');

@@ -37,10 +37,10 @@ class GooglePlusAPIAccessor {
      * @return array Decoded JSON response
      */
     public static function apiRequest($path, $access_token, $fields=null) {
-        $api_domain = 'https://www.googleapis.com/plus/v1';
-        $url = $api_domain.$path;//.'?access_token='.$access_token;
+        $api_domain = 'https://www.googleapis.com/plus/v1/';
+        $url = $api_domain.$path.'?access_token='.$access_token;
         $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/googleplus/tests/testdata/';
-        $url = str_replace('https://www.googleapis.com/plus/v1/', '', $url);
+        $url = str_replace($api_domain, '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
