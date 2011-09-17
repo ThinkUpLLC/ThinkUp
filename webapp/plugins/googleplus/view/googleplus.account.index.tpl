@@ -10,7 +10,7 @@
 <li><a href="http://code.google.com/apis/console#access">Create a project in the Google APIs Console.</a></li>
 <li>Turn on the Google+ API. Click on "API Access" in the menu, then click on "Create an OAuth 2.0 client ID."</li>
 <li>Edit the settings for your new Client ID and set the first line of Authorized Redirect URIs to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}account/?p=googleplus</pre></li>
-<li>Enter the Google-provided Client ID here.</li></ol>
+<li>Enter the Google-provided Client ID and secret here.</li></ol>
 {/if}
 <p>
 {$options_markup}

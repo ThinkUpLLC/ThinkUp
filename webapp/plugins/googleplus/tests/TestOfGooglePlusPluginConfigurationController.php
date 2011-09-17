@@ -86,6 +86,9 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertEqual($options_hash['clientid']->option_name, 'clientid');
         $this->assertEqual($options_hash['clientid']->option_value, 'testclientid');
 
+        $this->assertEqual($options_hash['clientsecret']->id, 3);
+        $this->assertEqual($options_hash['clientsecret']->option_name, 'clientsecret');
+        $this->assertEqual($options_hash['clientsecret']->option_value, 'testclientsecret');
     }
 
     public function testAddTextOptionNotAdmin() {
@@ -95,17 +98,23 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $plugin  = $build_data[2];
         $plugin_option  = $build_data[3];
 
-        // just name, not an admin, so view onluy
-        // $controller->addPluginOption(PluginConfigurationController::FORM_TEXT_ELEMENT, array('name' => 'clientid'));
+        // just user, not an admin, so view only
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 1);
+        $this->assertEqual( count($controller->option_elements), 2);
         $this->assertNotNull( $controller->option_elements['clientid']);
         $this->assertEqual(
         PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['clientid']['type'] );
         $this->assertTrue( isset($controller->option_elements['clientid']['default_value']) );
-        $this->assertEqual( count($controller->option_required_message), 1);
+        $this->assertEqual( count($controller->option_required_message), 2);
         $this->assertTrue( isset($controller->option_required_message['clientid']));
+
+        $this->assertNotNull( $controller->option_elements['clientsecret']);
+        $this->assertEqual(
+        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['clientsecret']['type'] );
+        $this->assertTrue(isset($controller->option_elements['clientsecret']['default_value']) );
+        $this->assertTrue(isset($controller->option_required_message['clientsecret']));
+
         $v_mgr = $controller->getViewManager();
         $options_markup = $v_mgr->getTemplateDataItem('options_markup');
         $this->assertNotNull($options_markup);
@@ -130,12 +139,12 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         // just name, is admin, so form should be enabled
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 1);
+        $this->assertEqual( count($controller->option_elements), 2);
         $this->assertNotNull( $controller->option_elements['clientid']);
         $this->assertEqual(
         PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['clientid']['type'] );
         $this->assertTrue( isset($controller->option_elements['clientid']['default_value']) );
-        $this->assertEqual( count($controller->option_required_message), 1);
+        $this->assertEqual( count($controller->option_required_message), 2);
         $this->assertTrue( isset($controller->option_required_message['clientid']));
         $v_mgr = $controller->getViewManager();
         $options_markup = $v_mgr->getTemplateDataItem('options_markup');
@@ -148,7 +157,10 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
 
         // we have a text form element with proper data
         $input_field = $this->getElementById($doc, 'plugin_options_clientid');
-        $this->assertEqual($input_field->getAttribute('value'), $plugin_option->columns['option_value']);
+        $this->assertEqual($input_field->getAttribute('value'), $plugin_option[0]->columns['option_value']);
+
+        $input_field = $this->getElementById($doc, 'plugin_options_clientsecret');
+        $this->assertEqual($input_field->getAttribute('value'), $plugin_option[1]->columns['option_value']);
 
         // var_dump("<html><body>" . $options_markup . "</body></html>");
 
@@ -178,16 +190,19 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'googleplus', 'is_active' => 1) );
         $plugin_id = $builder_plugin->columns['last_insert_id'];
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .$plugin_id;
-        $builder_plugin_options =
+        $builder_plugin_options[] =
         FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'clientid', 'option_value' => "testclientid") );
+        $builder_plugin_options[] =
+        FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name' => 'clientsecret', 'option_value' => "testclientsecret") );
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new GooglePlusPluginConfigurationController($owner, 'googleplus');
         return array($controller, $builder_owner, $builder_plugin, $builder_plugin_options);
     }
-
+     
     function getElementById($doc, $id) {
         $xpath = new DOMXPath($doc);
         return $xpath->query("//*[@id='$id']")->item(0);

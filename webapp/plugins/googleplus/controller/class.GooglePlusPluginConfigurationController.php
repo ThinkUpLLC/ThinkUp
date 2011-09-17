@@ -38,12 +38,19 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
             'Hello, world! This is the Google+ plugin configuration page for  '.$this->owner->email .'.');
 
         /** set option fields **/
-        // name text field
+        // client ID text field
         $name_field = array('name' => 'clientid', 'label' => 'Client ID'); // set an element name and label
         $name_field['default_value'] = ''; // set default value
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('clientid', 'A client ID is required to use Google+.');
+
+        // client secret text field
+        $name_field = array('name' => 'clientsecret', 'label' => 'Client secret'); // set an element name and label
+        $name_field['default_value'] = ''; // set default value
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add element
+        // set a special required message
+        $this->addPluginOptionRequiredMessage('clientsecret', 'A client secret is required to use Google+.');
 
         return $this->generateView();
     }
