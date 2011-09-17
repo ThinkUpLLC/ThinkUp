@@ -53,7 +53,7 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
         'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
         'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
-        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'googleplus',
+        'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'google+',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
         'posts_per_day'=>1, 'posts_per_week'=>1, 'percentage_replies'=>50, 'percentage_links'=>50,
@@ -86,6 +86,6 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->description,
         'ThinkUp lead developer, This Week in Google co-host, Todo.txt apps creator, founding editor of Lifehacker');
         $this->assertEqual($user->url, '');
-        $this->assertTrue($user->is_protected);
+        $this->assertFalse($user->is_protected);
     }
 }

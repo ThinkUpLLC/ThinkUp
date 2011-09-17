@@ -3,7 +3,7 @@
  *
  * ThinkUp/webapp/plugins/googleplus/model/class.GooglePlusCrawler.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2011 Gina Trapani
  *
  * LICENSE:
  *
@@ -23,11 +23,11 @@
  * Google+ Crawler
  *
  * Retrieves user data from Google+, converts it to ThinkUp objects, and stores them in the ThinkUp database.
- * All Google+ users are inserted with the network set to 'googleplus'
+ * All Google+ users are inserted with the network set to 'google+'
  *
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
+ * @copyright 2011 Gina Trapani
  */
 class GooglePlusCrawler {
     /**
@@ -45,19 +45,14 @@ class GooglePlusCrawler {
      */
     var $access_token;
     /**
-     * @var int Maximum amount of time the crawler should spend fetching a profile or page in seconds
-     */
-    var $max_crawl_time;
-    /**
      *
      * @param Instance $instance
      * @return GooglePlusCrawler
      */
-    public function __construct($instance, $access_token, $max_crawl_time) {
+    public function __construct($instance, $access_token) {
         $this->instance = $instance;
         $this->logger = Logger::getInstance();
         $this->access_token = $access_token;
-        $this->max_crawl_time = $max_crawl_time;
     }
 
     /**
@@ -113,14 +108,14 @@ class GooglePlusCrawler {
             $user_vals['url'] = '';
             $user_vals["follower_count"] = 0;
             $user_vals["location"] = '';
-            if (count($details->placesLived) > 0) {
+            if (isset($details->placesLived) && count($details->placesLived) > 0) {
                 foreach ($details->placesLived as $placeLived){
                     if (isset($placeLived->primary))
                     $user_vals["location"] = $placeLived->value;
                 }
             }
             $user_vals["description"] = isset($details->tagline)?$details->tagline:'';
-            $user_vals["is_protected"] = 1; //for now, assume a Google+ user is private
+            $user_vals["is_protected"] = 0; //All Google+ users are public
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;
             $user_vals["network"] = $details->network;
