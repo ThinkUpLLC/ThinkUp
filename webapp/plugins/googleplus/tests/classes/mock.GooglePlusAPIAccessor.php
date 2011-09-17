@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ThinkUp/webapp/plugins/googleplus/model/class.GooglePlusAPIAccessor.php
+ * ThinkUp/webapp/plugins/googleplus/model/mock.GooglePlusAPIAccessor.php
  *
  * LICENSE:
  *
@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Mock Google PlusAPI Accessor
+ * Mock Google+ API Accessor
  *
  * Reads test data files instead of the actual Google servers for the purposes of running tests.
  *
@@ -31,17 +31,17 @@
  */
 class GooglePlusAPIAccessor {
     /**
-     * Make a Graph API request.
+     * Make a Google+ API request.
      * @param str $path
      * @param str $access_token
      * @return array Decoded JSON response
      */
     public static function apiRequest($path, $access_token, $fields=null) {
-        $api_domain = 'https://graph.googleplus.com';
+        $api_domain = 'https://www.googleapis.com';
         $url = $api_domain.$path;//.'?access_token='.$access_token;
 
         $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/googleplus/tests/testdata/';
-        $url = str_replace('https://graph.googleplus.com/', '', $url);
+        $url = str_replace('https://www.googleapis.com/plus/v1/', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
@@ -85,7 +85,7 @@ class GooglePlusAPIAccessor {
         $url = preg_replace('/([\?\&])access_token\=[^\?\&]+([\?\&])*/', "$1", $url);
         $url = preg_replace('/[\?\&]$/', '', $url);
 
-        $url = str_replace('https://graph.googleplus.com/', '', $url);
+        $url = str_replace('https://www.googleapis.com/', '', $url);
         //$url = str_replace('?access_token=fauxaccesstoken', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
