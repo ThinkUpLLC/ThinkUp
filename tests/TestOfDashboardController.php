@@ -91,7 +91,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $instance = $v_mgr->getTemplateDataItem('instance');
         $this->assertEqual($instance->network_username, 'jack');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-', $controller->getCacheKeyString());
+        $this->assertEqual($controller->getCacheKeyString(), '.htdashboard.tpl-', $controller->getCacheKeyString());
         $this->assertFalse($v_mgr->getTemplateDataItem('is_searchable'));
     }
 
@@ -110,7 +110,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $instance = $v_mgr->getTemplateDataItem('instance');
         $this->assertEqual($instance->network_username, 'ev');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-', $controller->getCacheKeyString());
+        $this->assertEqual($controller->getCacheKeyString(), '.htdashboard.tpl-', $controller->getCacheKeyString());
         $this->assertFalse($v_mgr->getTemplateDataItem('is_searchable'));
     }
 
@@ -130,7 +130,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $instance = $v_mgr->getTemplateDataItem('instance');
         $this->assertEqual($instance->network_username, 'ev');
 
-        $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-me@example.com-ev-twitter', 'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), '.htdashboard.tpl-me@example.com-ev-twitter', 'Cache key');
     }
 
     public function testNotLoggedInPosts() {
@@ -169,8 +169,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('all_tweets')), 15, '15 posts in listing');
 
         $config = Config::getInstance();
-        $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-me@example.com-ev-twitter-tweets-all',
-        'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), '.htdashboard.tpl-me@example.com-ev-twitter-tweets-all');
         $this->assertTrue($v_mgr->getTemplateDataItem('is_searchable'));
     }
 
@@ -192,8 +191,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('author_replies')), 1, '1 posts in listing');
 
         $config = Config::getInstance();
-        $this->assertEqual($controller->getCacheKeyString(), 'dashboard.tpl-me@example.com-ev-twitter-tweets-convo',
-        'Cache key');
+        $this->assertEqual($controller->getCacheKeyString(), '.htdashboard.tpl-me@example.com-ev-twitter-tweets-convo');
     }
 
     public function testLoggedInPeople() {
@@ -233,7 +231,7 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
 
         $config = Config::getInstance();
         $this->assertEqual($controller->getCacheKeyString(),
-        'dashboard.tpl-me@example.com-ev-twitter-friends-mostactive', 'Cache key');
+        '.htdashboard.tpl-me@example.com-ev-twitter-friends-mostactive');
     }
 
     public function testNonexistentPluginIsActive() {

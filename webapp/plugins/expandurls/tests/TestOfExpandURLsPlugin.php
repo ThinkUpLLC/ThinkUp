@@ -31,7 +31,9 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/classes/mock.FlickrAPIAccessor.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/tests/classes/mock.BitlyAPIAccessor.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/model/class.ExpandURLsPlugin.php';
+//require_once THINKUP_ROOT_PATH.'webapp/plugins/expandurls/model/class.BitlyAPIAccessor.php';
 
 class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
 
@@ -445,5 +447,117 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         $link = $link_dao->getLinkById(41);
         $this->assertEqual($link->expanded_url, 'http://instagr.am/40');
         $this->assertEqual($link->image_src, 'http://instagr.am/40/media/');
+    }
+
+    public function  testBitlyCrawl() {
+        $builders = $this->buildBitlyData();
+
+        $crawler = Crawler::getInstance();
+        $config = Config::getInstance();
+
+        //use fake Bitly API key
+        $builders[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        'option_name' => 'bitly_api_key', 'option_value' => 'dummykey'));
+
+        //use fake Bitly login name
+        $builder[] = FixtureBuilder::build('options', array('namespace' => OptionDAO::PLUGIN_OPTIONS . '-3',
+        'option_name' => 'bitly_login', 'option_value' => 'bitly123'));
+
+        $this->simulateLogin('admin@example.com', true);
+        $crawler->crawl();
+
+        $link_dao = DAOFactory::getDAO('LinkDAO');
+
+        $link = $link_dao->getLinkById(43);
+        $this->assertEqual($link->expanded_url, 'http://static.ak.fbcdn.net/rsrc.php/zw/r/ZEKh4ZZQY74.png');
+        $this->assertEqual($link->title, 'Bitly Test URL');
+        $this->assertEqual($link->clicks, 636449);
+        $this->assertEqual($link->error, '');
+
+        $link = $link_dao->getLinkById(42);
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->error, 'No response from http://bit.ly API');
+
+        $link = $link_dao->getLinkById(41);
+        $this->assertEqual($link->expanded_url, '');
+        $this->assertEqual($link->error, 'No response from http://bit.ly API');
+    }
+
+    private function buildBitlyData() {
+        $builders = array();
+
+        $builders[] = FixtureBuilder::build('owners', array(
+            'id' => 1, 
+            'email' => 'admin@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1,
+            'is_admin' => 1 
+        ));
+
+        //Insert test links (not images, not expanded)
+        $counter = 0;
+        while ($counter < 40) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://example.com/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'image_src' => '',
+                'error' => null
+            ));
+            $counter++;
+        }
+
+        //Insert test links (links that don't exist, not expanded)
+        $counter = 40;
+        while ($counter < 42) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://bit.ly/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'image_src' => 'image.png',
+                'error' => null
+            ));
+            $counter++;
+        }
+
+        // Insert legit Bitly shortened link, not expanded
+        $builders[] = FixtureBuilder::build('links', array(
+            'url' => "http://bit.ly/dPOYo3",
+            'expanded_url' => null,
+            'title' => "Link 0",
+            'clicks' => 0,
+            'post_id' => 200,
+            'image_src' => '',
+            'error' => null
+        ));
+
+        //Insert test links with errors (images from Flickr, not expanded)
+        $counter = 0;
+        while ($counter < 5) {
+            $post_id = $counter + 80;
+            $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
+
+            $builders[] = FixtureBuilder::build('links', array(
+                'url' => "http://bit.ly/$counter",
+                'expanded_url' => null,
+                'title' => "Link $counter",
+                'clicks' => 0,
+                'post_id' => $post_id,
+                'image_src' => '',
+                'error' => 'Photo not found'
+                ));
+                $counter++;
+        }
+        return $builders;
     }
 }

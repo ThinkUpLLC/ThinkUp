@@ -72,6 +72,11 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $this->addPluginOptionRequiredMessage('facebook_api_secret',
         'The Facebook plugin requires a valid Application Secret.');
 
+        $max_crawl_time_label = 'Max crawl time in minutes';
+        $max_crawl_time = array('name' => 'max_crawl_time', 'label' => $max_crawl_time_label,
+        'default_value' => '20', 'advanced'=>true);
+        $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_crawl_time);
+
         $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
 

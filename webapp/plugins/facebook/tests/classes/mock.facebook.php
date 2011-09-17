@@ -68,3 +68,7 @@ class Facebook {
     public function setAccessToken($token) {
     }
 }
+
+class BaseFacebook {
+    //placeholder for mock class load detection in facebook.php plugin file
+}

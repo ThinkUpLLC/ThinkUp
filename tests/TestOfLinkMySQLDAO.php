@@ -171,25 +171,36 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      * Test Of saveExpandedUrl method
      */
     public function testSaveExpandedUrl() {
-        $linkstoexpand = $this->DAO->getLinksToExpand();
-        $this->assertIsA($linkstoexpand, 'Array');
-        $this->assertTrue(sizeof($linkstoexpand)>0);
+        $links_to_expand = $this->DAO->getLinksToExpand();
+        $this->assertIsA($links_to_expand, 'Array');
+        $this->assertTrue(sizeof($links_to_expand)>0);
 
-        $link = $linkstoexpand[0];
+        //Just expanded URL
+        $link = $links_to_expand[0];
         $this->DAO->saveExpandedUrl($link, "http://expandedurl.com");
+        $updated_link = $this->DAO->getLinkByUrl($link);
+        $this->assertEqual($updated_link->expanded_url, "http://expandedurl.com");
 
-        $updatedlink = $this->DAO->getLinkByUrl($link);
-        $this->assertEqual($updatedlink->expanded_url, "http://expandedurl.com");
-
+        //With title
         $this->DAO->saveExpandedUrl($link, "http://expandedurl1.com", 'my title');
-        $updatedlink = $this->DAO->getLinkByUrl($link);
-        $this->assertEqual($updatedlink->expanded_url, "http://expandedurl1.com");
-        $this->assertEqual($updatedlink->title, "my title");
+        $updated_link = $this->DAO->getLinkByUrl($link);
+        $this->assertEqual($updated_link->expanded_url, "http://expandedurl1.com");
+        $this->assertEqual($updated_link->title, "my title");
 
-        $this->DAO->saveExpandedUrl($link, "http://expandedurl2.com", 'my title1', 1);
-        $updatedlink = $this->DAO->getLinkByUrl($link);
-        $this->assertEqual($updatedlink->expanded_url, "http://expandedurl2.com");
-        $this->assertEqual($updatedlink->title, "my title1");
+        //With title and image_src
+        $this->DAO->saveExpandedUrl($link, "http://expandedurl2.com", 'my title1', 'http://expandedurl2.com/thumb.png');
+        $updated_link = $this->DAO->getLinkByUrl($link);
+        $this->assertEqual($updated_link->expanded_url, "http://expandedurl2.com");
+        $this->assertEqual($updated_link->image_src, "http://expandedurl2.com/thumb.png");
+        $this->assertEqual($updated_link->title, "my title1");
+
+        //With title, image_src, and click_count
+        $this->DAO->saveExpandedUrl($link, "http://expandedurl3.com", 'my title3', '', 128);
+        $updated_link = $this->DAO->getLinkByUrl($link);
+        $this->assertEqual($updated_link->expanded_url, "http://expandedurl3.com");
+        $this->assertEqual($updated_link->image_src, "");
+        $this->assertEqual($updated_link->title, "my title3");
+        $this->assertEqual($updated_link->clicks, 128);
     }
 
     /**
@@ -363,9 +374,9 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      * Test Of getLinksToExpand Method
      */
     public function testGetLinksToExpand() {
-        $linkstoexpand = $this->DAO->getLinksToExpand();
-        $this->assertEqual(count($linkstoexpand), 51);
-        $this->assertIsA($linkstoexpand, "array");
+        $links_to_expand = $this->DAO->getLinksToExpand();
+        $this->assertEqual(count($links_to_expand), 51);
+        $this->assertIsA($links_to_expand, "array");
     }
 
     /**
@@ -382,10 +393,15 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      * Test Of getLinksToExpandByURL Method
      */
     public function testGetLinksToExpandByURL() {
-        $flickrlinkstoexpand = $this->DAO->getLinksToExpandByUrl('http://flic.kr/');
+        $flickr_links_to_expand = $this->DAO->getLinksToExpandByUrl('http://flic.kr/');
 
-        $this->assertEqual(count($flickrlinkstoexpand), 10);
-        $this->assertIsA($flickrlinkstoexpand, "array");
+        $this->assertEqual(count($flickr_links_to_expand), 10);
+        $this->assertIsA($flickr_links_to_expand, "array");
+
+        $flickr_links_to_expand = $this->DAO->getLinksToExpandByUrl('http://flic.kr/', 5);
+
+        $this->assertEqual(count($flickr_links_to_expand), 5);
+        $this->assertIsA($flickr_links_to_expand, "array");
     }
 
     /**

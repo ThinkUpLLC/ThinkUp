@@ -81,8 +81,12 @@ class FacebookGraphAPIAccessor {
         $url = $path;
 
         $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/facebook/tests/testdata/';
+
+        $url = preg_replace('/([\?\&])access_token\=[^\?\&]+([\?\&])*/', "$1", $url);
+        $url = preg_replace('/[\?\&]$/', '', $url);
+
         $url = str_replace('https://graph.facebook.com/', '', $url);
-        $url = str_replace('?access_token=fauxaccesstoken', '', $url);
+        //$url = str_replace('?access_token=fauxaccesstoken', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);

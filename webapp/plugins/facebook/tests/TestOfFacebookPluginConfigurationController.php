@@ -147,6 +147,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/save options/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_error_facebook_api_key/', $output); // should have no api key
         $this->assertNoPattern('/plugin_options_error_message_facebook_api_secret/', $output); // no secret
+        $this->assertNoPattern('/plugin_options_max_crawl_time/', $output); // no advanced option
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
 
@@ -175,6 +176,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertPattern('/save options/', $output); // should have submit option
         $this->assertPattern('/plugin_options_error_facebook_api_key/', $output); // should have api key option
         $this->assertPattern('/plugin_options_error_message_facebook_api_secret/', $output); // secret option
+        $this->assertPattern('/plugin_options_max_crawl_time/', $output); // advanced option
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
 

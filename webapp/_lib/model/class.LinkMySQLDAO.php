@@ -50,22 +50,27 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $this->getInsertId($ps);
     }
 
-    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '' ){
-        $q  = "UPDATE #prefix#links ";
-        $q .= "SET expanded_url=:expanded, title=:title, image_src=:image_src ";
-        $q .= "WHERE url=:url ";
+    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '', $click_count = null ){
         $vars = array(
             ':url'=>$url,
             ':expanded'=>$expanded,
             ':title'=>$title,
             ':image_src'=>$image_src
         );
+        $q  = "UPDATE #prefix#links ";
+        $q .= "SET expanded_url=:expanded, title=:title, image_src=:image_src ";
+        if (isset($click_count)) {
+            $q .= ", clicks=:clicks ";
+            $vars[':clicks'] = $click_count;
+        }
+        $q .= "WHERE url=:url ";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
 
         $ret = $this->getUpdateCount($ps);
         if ($ret > 0) {
-            $this->logger->logSuccess("Expanded URL $expanded for $url saved", __METHOD__.','.__LINE__);
+            $this->logger->logSuccess("Expanded URL $expanded for $url saved".
+            (($image_src=='')?'':" (thumbnail ".$image_src.")"), __METHOD__.','.__LINE__);
         } else {
             $this->logger->logError("Expanded URL NOT saved", __METHOD__.','.__LINE__);
         }
@@ -83,7 +88,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
 
         $ret = $this->getUpdateCount($ps);
         if ($ret > 0) {
-            $this->logger->logInfo("Error '$error_text' saved for link ID $url saved", __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Error '$error_text' saved for $url", __METHOD__.','.__LINE__);
         } else {
             $this->logger->logInfo("Error '$error_text' for URL NOT saved", __METHOD__.','.__LINE__);
         }
@@ -245,24 +250,27 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         return $urls;
     }
 
-    public function getLinksToExpandByURL($url) {
+    public function getLinksToExpandByURL($url, $limit = 0) {
         $q  = "SELECT l.url ";
         $q .= "FROM #prefix#links AS l ";
         $q .= "WHERE l.expanded_url = ''  ";
         $q .= "AND l.url LIKE :url AND l.error = '' ";
-        $q .= "GROUP BY l.url";
-        $vars = array(
-            ':url'=>$url."%"
-            );
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-            $ps = $this->execute($q, $vars);
+        $q .= "GROUP BY l.url ";
+        $vars = array( ':url'=>$url."%" );
+        if ($limit != 0) {
+            $q .= "LIMIT :limit";
+            $vars[':limit'] = $limit;
+        }
 
-            $rows = $this->getDataRowsAsArrays($ps);
-            $urls = array();
-            foreach($rows as $row){
-                $urls[] = $row['url'];
-            }
-            return $urls;
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+
+        $rows = $this->getDataRowsAsArrays($ps);
+        $urls = array();
+        foreach($rows as $row){
+            $urls[] = $row['url'];
+        }
+        return $urls;
     }
 
     public function getLinkById($id) {

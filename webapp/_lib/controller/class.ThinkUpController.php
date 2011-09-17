@@ -159,9 +159,15 @@ abstract class ThinkUpController {
     }
 
     /**
-     * Returns cache key as a string
+     * Returns cache key as a string,
+     * Preface every key with .ht to make resulting file "forbidden" by request thanks to Apache's default rule
+     * <FilesMatch "^\.([Hh][Tt])">
+     *    Order allow,deny
+     *    Deny from all
+     *    Satisfy All
+     * </FilesMatch>
      *
-     * Set to public for the sake of tests.
+     * Set to public for the sake of tests only.
      * @return str cache key
      */
     public function getCacheKeyString() {
@@ -173,7 +179,7 @@ abstract class ThinkUpController {
         foreach ($keys as $key) {
             array_push($view_cache_key, $_GET[$key]);
         }
-        return $this->view_template.self::KEY_SEPARATOR.(implode($view_cache_key, self::KEY_SEPARATOR));
+        return '.ht'.$this->view_template.self::KEY_SEPARATOR.(implode($view_cache_key, self::KEY_SEPARATOR));
     }
 
     /**

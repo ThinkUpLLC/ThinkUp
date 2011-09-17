@@ -149,8 +149,8 @@ class UpgradeController extends ThinkUpAuthController {
      * Delete token file if it exists
      */
     public function deleteTokenFile() {
-        if (file_exists(THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/upgrade_token')) {
-            unlink(THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/upgrade_token');
+        if (file_exists(THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/.htupgrade_token')) {
+            unlink(THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/.htupgrade_token');
         }
     }
 
@@ -200,7 +200,7 @@ class UpgradeController extends ThinkUpAuthController {
      * @return bool True if the token is valid
      */
     public static function isTokenAuth($query_token) {
-        $token_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/upgrade_token';
+        $token_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/.htupgrade_token';
         $status = false;
         if (file_exists($token_file)) {
             $file_token = file_get_contents($token_file);
@@ -278,7 +278,7 @@ class UpgradeController extends ThinkUpAuthController {
      * Generates a one time upgrade token, and emails admins with the token info.
      */
     public function generateUpgradeToken() {
-        $token_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/upgrade_token';
+        $token_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/.htupgrade_token';
         $md5_token = '';
         if (! file_exists($token_file)) {
             $fp = fopen($token_file, 'w');

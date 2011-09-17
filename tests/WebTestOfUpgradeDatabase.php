@@ -284,7 +284,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
             $this->get($this->url.'/test_installer/thinkup/');
             $this->assertText("ThinkUp's database needs an update");
-            $file_token = file_get_contents($this->install_dir.'/thinkup/_lib/view/compiled_view/upgrade_token');
+            $file_token = file_get_contents($this->install_dir.'/thinkup/_lib/view/compiled_view/.htupgrade_token');
             $token_url = $this->url.'/test_installer/thinkup/install/upgrade.php?upgrade_token=' . $file_token;
             $this->get($token_url);
             $content = $this->getBrowser()->getContent();

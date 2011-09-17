@@ -90,7 +90,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('next_page'), null);
         $this->assertEqual($v_mgr->getTemplateDataItem('last_page'), 0);
 
-        $this->assertEqual($controller->getCacheKeyString(), 'user.index.tpl-me@example.com-someuser1-twitter');
+        $this->assertEqual($controller->getCacheKeyString(), '.htuser.index.tpl-me@example.com-someuser1-twitter');
     }
 
     public function testExistentUserWithInstance() {
@@ -115,7 +115,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         //we're on the first page by default, so no last page
         $this->assertEqual($v_mgr->getTemplateDataItem('last_page'), null);
         $this->assertEqual($controller->getCacheKeyString(),
-        'user.index.tpl-me@example.com-someuser1-twitter-instancetestuser');
+        '.htuser.index.tpl-me@example.com-someuser1-twitter-instancetestuser');
     }
 
     public function testUserPostPaging() {
@@ -147,7 +147,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('next_page'), 2);
         $this->assertEqual($v_mgr->getTemplateDataItem('last_page'), null);
         $this->assertEqual($controller->getCacheKeyString(),
-        'user.index.tpl-me@example.com-someuser1-twitter-instancetestuser');
+        '.htuser.index.tpl-me@example.com-someuser1-twitter-instancetestuser');
 
         //Second page
         $_GET['page'] = '2';
@@ -164,7 +164,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('next_page'), 3);
         $this->assertEqual($v_mgr->getTemplateDataItem('last_page'), 1);
         $this->assertEqual($controller->getCacheKeyString(),
-        'user.index.tpl-me@example.com-someuser1-twitter-instancetestuser-2');
+        '.htuser.index.tpl-me@example.com-someuser1-twitter-instancetestuser-2');
 
         //Third (last) page
         $_GET['page'] = '3';
@@ -181,7 +181,7 @@ class TestOfUserController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('next_page'), null);
         $this->assertEqual($v_mgr->getTemplateDataItem('last_page'), 2);
         $this->assertEqual($controller->getCacheKeyString(),
-        'user.index.tpl-me@example.com-someuser1-twitter-instancetestuser-3');
+        '.htuser.index.tpl-me@example.com-someuser1-twitter-instancetestuser-3');
     }
 
     private function buildData() {

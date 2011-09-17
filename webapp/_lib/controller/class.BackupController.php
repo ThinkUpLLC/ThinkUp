@@ -41,7 +41,7 @@ class BackupController extends ThinkUpAdminController {
         parent::__construct($session_started);
         $this->setViewTemplate('install.backup.tpl');
         $this->setPageTitle('Backup & Restore');
-        $this->backup_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/thinkup_db_backup.zip';
+        $this->backup_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/.htthinkup_db_backup.zip';
     }
 
     public function adminControl() {

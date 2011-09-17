@@ -33,7 +33,7 @@ require_once THINKUP_ROOT_PATH.'webapp/plugins/twitter/model/class.RetweetDetect
 
 class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
     var $logger;
-
+     
     public function setUp() {
         $this->logger = Logger::getInstance();
     }
@@ -43,23 +43,99 @@ class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
     }
 
     public function testIsRetweet() {
-        $startwithcolon =
+        $owner = 'ginatrapani';
+
+        // Test all variations of the RT @ username format
+        $start_with_colon =
         "RT @ginatrapani: how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
-        $nostartnocolon =
+        $no_start_no_colon =
         "Agreed: RT @ginatrapani guilty pleasure: dropping the &quot;my wife&quot; bomb on unsuspecting straight";
-        $startwithcolonspaces =
+        $start_with_colon_spaces =
         "RT @ginatrapani    how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
-        $startwithcoloncutoff =
+        $start_with_colon_cutoff =
         "RT @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
-        $lowwercase =
+        $lower_case =
         "rt @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
 
-        $o = 'ginatrapani';
-        $this->assertTrue(RetweetDetector::isRetweet($startwithcolon, 'ginatrapani'));
-        $this->assertTrue(RetweetDetector::isRetweet($nostartnocolon, 'ginatrapani'));
-        $this->assertTrue(RetweetDetector::isRetweet($startwithcolonspaces, 'ginatrapani'));
-        $this->assertTrue(RetweetDetector::isRetweet($startwithcoloncutoff, 'ginatrapani'));
-        $this->assertTrue(RetweetDetector::isRetweet($lowwercase, 'ginatrapani'));
+        $this->assertTrue(RetweetDetector::isRetweet($start_with_colon, $owner));
+        $this->assertTrue(RetweetDetector::isRetweet($no_start_no_colon, $owner));
+        $this->assertTrue(RetweetDetector::isRetweet($start_with_colon_spaces, $owner));
+        $this->assertTrue(RetweetDetector::isRetweet($start_with_colon_cutoff, $owner));
+        $this->assertTrue(RetweetDetector::isRetweet($lower_case, $owner));
+
+        // Test all variations of the MT @ username format
+        $mt_start_with_colon =
+        "MT @ginatrapani: how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
+        $mt_start_with_colon =
+        "Agreed: MT @ginatrapani guilty pleasure: dropping the &quot;my wife&quot; bomb on unsuspecting straight";
+        $mt_start_with_colon_spaces =
+        "MT @ginatrapani    how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
+        $mt_start_with_colon_cutoff =
+        "MT @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
+        $mt_lower_case =
+        "mt @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
+
+        $this->assertTrue(RetweetDetector::isRetweet($mt_start_with_colon, $owner));
+        $this->assertTrue(RetweetDetector::isRetweet($mt_start_with_colon, $owner));
+        $this->assertTrue(RetweetDetector::isRetweet($mt_start_with_colon_spaces, $owner));
+        $this->assertTrue(RetweetDetector::isRetweet($mt_start_with_colon_cutoff, $owner));
+        $this->assertTrue(RetweetDetector::isRetweet($mt_lower_case, $owner));
+
+        // Test the quoted retweet style
+        $quoted_retweet = '“@ginatrapani: how to do (almost) everything in Google Buzz, including turn it off”';
+        $this->assertTrue(RetweetDetector::isRetweet($quoted_retweet, $owner));
+    }
+
+    public function testIsStandardRetweet() {
+        $owner = 'ginatrapani';
+
+        // Test all variations of the RT @ username format
+        $start_with_colon =
+        "RT @ginatrapani: how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
+        $no_start_no_colon =
+        "Agreed: RT @ginatrapani guilty pleasure: dropping the &quot;my wife&quot; bomb on unsuspecting straight";
+        $start_with_colon_spaces =
+        "RT @ginatrapani    how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
+        $start_with_colon_cutoff =
+        "RT @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
+        $lower_case =
+        "rt @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
+
+        $this->assertTrue(RetweetDetector::isStandardRetweet($start_with_colon, $owner));
+        $this->assertTrue(RetweetDetector::isStandardRetweet($no_start_no_colon, $owner));
+        $this->assertTrue(RetweetDetector::isStandardRetweet($start_with_colon_spaces, $owner));
+        $this->assertTrue(RetweetDetector::isStandardRetweet($start_with_colon_cutoff, $owner));
+        $this->assertTrue(RetweetDetector::isStandardRetweet($lower_case, $owner));
+    }
+
+    public function testIsMTRetweet() {
+        $owner = 'ginatrapani';
+
+        // Test all variations of the MT @ username format
+        $mt_start_with_colon =
+        "MT @ginatrapani: how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
+        $mt_start_with_colon =
+        "Agreed: MT @ginatrapani guilty pleasure: dropping the &quot;my wife&quot; bomb on unsuspecting straight";
+        $mt_start_with_colon_spaces =
+        "MT @ginatrapani    how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
+        $mt_start_with_colon_cutoff =
+        "MT @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
+        $mt_lower_case =
+        "mt @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
+
+        $this->assertTrue(RetweetDetector::isMTRetweet($mt_start_with_colon, $owner));
+        $this->assertTrue(RetweetDetector::isMTRetweet($mt_start_with_colon, $owner));
+        $this->assertTrue(RetweetDetector::isMTRetweet($mt_start_with_colon_spaces, $owner));
+        $this->assertTrue(RetweetDetector::isMTRetweet($mt_start_with_colon_cutoff, $owner));
+        $this->assertTrue(RetweetDetector::isMTRetweet($mt_lower_case, $owner));
+    }
+
+    public function testIsQuotedRetweet() {
+        $owner = 'ginatrapani';
+
+        // Test the quoted retweet style
+        $quoted_retweet = '“@ginatrapani: how to do (almost) everything in Google Buzz, including turn it off”';
+        $this->assertTrue(RetweetDetector::isQuotedRetweet($quoted_retweet, $owner));
     }
 
     public function testDetectRetweets() {
@@ -99,23 +175,52 @@ class TestOfRetweetDetector extends ThinkUpBasicUnitTestCase {
         'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 
         'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0)));
 
-        $startwithcolon =
+        // Test standard format retweet
+        $start_with_colon =
         "RT @ginatrapani: how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
-        $nostartnocolon =
+        $no_start_no_colon =
         "Agreed: RT @ginatrapani guilty pleasure: dropping the &quot;my wife&quot; bomb on unsuspecting straight '.
         'people, mid-conversation";
-        $startwithcolonspaces =
+        $start_with_colon_spaces =
         "RT @ginatrapani    how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
-        $startwithcoloncutoff =
+        $start_with_colon_cutoff =
         "RT @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
-        $lowwercase =
+        $lower_case =
         "rt @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
-        $nonexistent = "rt @ginatrapani this is a non-existent tweet";
+        $non_existent = "rt @ginatrapani this is a non-existent tweet";
 
-        $this->assertTrue(RetweetDetector::detectOriginalTweet($nostartnocolon, $recent_tweets) == 9021481076);
-        $this->assertTrue(RetweetDetector::detectOriginalTweet($startwithcolonspaces, $recent_tweets) == 8925077246);
-        $this->assertTrue(RetweetDetector::detectOriginalTweet($startwithcoloncutoff, $recent_tweets) == 9031523906);
-        $this->assertTrue(RetweetDetector::detectOriginalTweet($startwithcolon, $recent_tweets) == 8925077246);
-        $this->assertTrue(RetweetDetector::detectOriginalTweet($nonexistent, $recent_tweets) === false);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($start_with_colon, $recent_tweets) == 8925077246);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($no_start_no_colon, $recent_tweets) == 9021481076);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($start_with_colon_spaces, $recent_tweets) == 8925077246);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($start_with_colon_cutoff, $recent_tweets) == 9031523906);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($lower_case, $recent_tweets) == 9031523906);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($non_existent, $recent_tweets) === false);
+
+        // Test MT format retweet
+        $mt_start_with_colon =
+        "MT @ginatrapani: how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
+        $mt_no_start_no_colon =
+        "Agreed: MT @ginatrapani guilty pleasure: dropping the &quot;my wife&quot; bomb on unsuspecting straight '.
+        'people, mid-conversation";
+        $mt_start_with_colon_spaces =
+        "MT @ginatrapani    how to do (almost) everything in Google Buzz, including turn it off http://bit.ly/bfQTQH";
+        $mt_start_with_colon_cutoff =
+        "MT @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
+        $mt_lower_case =
+        "mt @ginatrapani: one of the most fun photo shoots &amp; interviews I've ever done http://bit.ly/9ldYNw thx.";
+        $mt_non_existent = "mt @ginatrapani this is a non-existent tweet";
+
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($mt_start_with_colon, $recent_tweets) == 8925077246);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($mt_no_start_no_colon, $recent_tweets) == 9021481076);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($mt_start_with_colon_spaces, $recent_tweets)
+        == 8925077246);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($mt_start_with_colon_cutoff, $recent_tweets)
+        == 9031523906);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($mt_lower_case, $recent_tweets) == 9031523906);
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($mt_non_existent, $recent_tweets) === false);
+
+        // Test quoted retweet
+        $quoted_retweet = '“@ginatrapani: how to do (almost) everything in Google Buzz, including turn it off”';
+        $this->assertTrue(RetweetDetector::detectOriginalTweet($quoted_retweet, $recent_tweets) == 8925077246);
     }
 }

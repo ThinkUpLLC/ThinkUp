@@ -298,6 +298,7 @@ class Utils {
     }
 
     /**
+     * FOR TESTING AND DEBUGGING USE ONLY. DO NOT USE IN PRODUCTION APPLICATION CODE.
      * Given a PDO SQL statement with parameters to bind, replaces the :param tokens with the parameters and return
      * a string for display/debugging purposes.
      * @param str $sql
@@ -308,6 +309,11 @@ class Utils {
         foreach ($vars as $k => $v) {
             $sql = str_replace($k, (is_int($v))?$v:"'".$v."'", $sql);
         }
+        $config = Config::getInstance();
+        $prefix = $config->getValue('table_prefix');
+        $gmt_offset = $config->getGMTOffset();
+        $sql = str_replace('#gmt_offset#', $gmt_offset, $sql);
+        $sql = str_replace('#prefix#', $prefix, $sql);
         return $sql;
     }
 

@@ -41,9 +41,10 @@ interface LinkDAO {
      * @param str $expanded
      * @param str $title
      * @param str $image_src
+     * @param int $click_count
      * @return int Update count
      */
-    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '' );
+    public function saveExpandedURL($url, $expanded, $title = '', $image_src = '', $click_count = null );
     /**
      * Stores a error message.
      * @param str $url
@@ -95,12 +96,13 @@ interface LinkDAO {
      */
     public function getLinksToExpand($limit = 1500);
     /**
-     * Gets all links with short URL statring with a prefix.
+     * Gets all links with short URL starting with a prefix.
      * Non standard output - Scheduled for deprecation.
      * @param str $url
+     * @param int $limit
      * @return array with numbered keys, with strings
      */
-    public function getLinksToExpandByURL($prefix);
+    public function getLinksToExpandByURL($prefix, $limit = 0);
     /**
      * Gets a link with a given ID
      * @param int $id

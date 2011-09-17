@@ -195,7 +195,7 @@
           
           <div class="clearfix append_20">
             <div class="grid_10 prefix_9 left">
-              <input type="submit" name="Submit" class="next_step tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Next Step &raquo">
+              <input type="submit" name="Submit" class="next_step tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Set It Up &raquo">
             </div>
           </div>
 

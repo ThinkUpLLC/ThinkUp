@@ -32,9 +32,8 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani
  */
-
 //For testing purposes, only include Facebook library if mock class hasn't already been loaded
-if (!class_exists('Facebook')) {
+if (!class_exists('BaseFacebook')) {
     Utils::defineConstants();
     require_once THINKUP_WEBAPP_PATH.'plugins/facebook/extlib/facebook/facebook.php';
 }

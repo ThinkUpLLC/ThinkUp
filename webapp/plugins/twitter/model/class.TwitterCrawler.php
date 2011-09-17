@@ -93,7 +93,8 @@ class TwitterCrawler {
                         $this->user->follower_count);
                     }
                     $this->logger->logUserSuccess("Successfully fetched ".$this->user->username.
-                    "'s details from Twitter. Tweet Count: ". $this->user->post_count, __METHOD__.','.__LINE__);
+                    "'s details from Twitter. Twitter's tweet count is ". $this->user->post_count,
+                    __METHOD__.','.__LINE__);
                 } else {
                     $this->logger->logUserError("Twitter didn't return information for "
                     .$this->user->username, __METHOD__.','.__LINE__);
@@ -159,7 +160,7 @@ class TwitterCrawler {
             $recent_tweets = str_replace("[id]", $this->user->username, $this->api->cURL_source['user_timeline']);
             list($cURL_status, $twitter_data) =
             $this->api->apiRequest($recent_tweets, array('count' => '100', 'include_rts' => 'true') );
-            $this->logger->logUserInfo("Checking for deleted tweets", __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Checking for deleted tweets", __METHOD__.','.__LINE__);
             if ($cURL_status == 200) {
                 $count = 0;
                 $tweets = $this->api->parseXML($twitter_data);
@@ -180,7 +181,7 @@ class TwitterCrawler {
                         list($cURL_status, $tweet_data)
                         = $this->api->apiRequest($show_tweet, array(), true, true);
                         if ($cURL_status == 404) {
-                            $this->logger->logUserInfo( "Deleting post: " . $post->post_id . ' ' . $post->post_text,
+                            $this->logger->logInfo( "Deleting post: " . $post->post_id . ' ' . $post->post_text,
                             __METHOD__.','.__LINE__);
                             $pd->deletePost($post->id);
                             $this->instance->total_posts_in_system--;
@@ -214,8 +215,8 @@ class TwitterCrawler {
             $status_message = "";
             $got_latest_page_of_tweets = false;
             $continue_fetching = true;
-            $this->logger->logUserInfo("Twitter user post count:  " . $this->user->post_count .
-            " - Thinkup post count: "  . $this->instance->total_posts_in_system, __METHOD__.','.__LINE__);
+            $this->logger->logInfo("Twitter user post count:  " . $this->user->post_count .
+            " and ThinkUp post count: "  . $this->instance->total_posts_in_system, __METHOD__.','.__LINE__);
             while ($this->api->available && $this->api->available_api_calls_for_crawler > 0
             && $this->user->post_count > $this->instance->total_posts_in_system && $continue_fetching) {
 
