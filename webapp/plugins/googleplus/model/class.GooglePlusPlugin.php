@@ -24,7 +24,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2011 Gina Trapani
  */
-class GooglePlusPlugin implements CrawlerPlugin, PostDetailPlugin {
+class GooglePlusPlugin implements CrawlerPlugin, DashboardPlugin {
 
     public function activate() {
     }
@@ -87,5 +87,49 @@ class GooglePlusPlugin implements CrawlerPlugin, PostDetailPlugin {
         $menu_items['data_vis_2'] = $hello_menu_item_2;
 
         return $menu_items;
+    }
+
+
+    public function getDashboardMenuItems($instance) {
+        $gp_data_tpl = Utils::getPluginViewDirectory('googleplus').'googleplus.inline.view.tpl';
+
+        $menus = array();
+
+        //All tab
+        $alltab = new MenuItem("All posts", 'All posts', $gp_data_tpl, 'Posts');
+        $alltabds = new Dataset("all_gplus_posts", 'PostDAO', "getAllPosts",
+        array($instance->network_user_id, $instance->network, 15, "#page_number#"),
+        'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()),
+        false );
+        $alltabds->addHelp('userguide/listings/googleplus/dashboard_all_gplus_posts');
+        $alltab->addDataset($alltabds);
+        $menus["all_gplus_posts"] = $alltab;
+        /* @TODO
+         // Most replied-to tab
+         $mrttab = new MenuItem("Most replied-to", "Posts with most replies", $gp_data_tpl);
+         $mrttabds = new Dataset("most_replied_to_posts", 'PostDAO', "getMostRepliedToPosts",
+         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
+         $mrttabds->addHelp('userguide/listings/facebook/dashboard_mostreplies');
+         $mrttab->addDataset($mrttabds);
+         $menus["mostreplies"] = $mrttab;
+
+         // Most liked posts
+         $mltab = new MenuItem("Most liked", "Posts with most likes", $gp_data_tpl);
+         $mltabds = new Dataset("most_replied_to_posts", 'PostDAO', "getMostFavedPosts",
+         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
+         $mltabds->addHelp('userguide/listings/facebook/dashboard_mostlikes');
+         $mltab->addDataset($mltabds);
+         $menus["mostlikes"] = $mltab;
+
+         //Questions tab
+         $qtab = new MenuItem("Inquiries", "Inquiries, or posts with a question mark in them",
+         $gp_data_tpl);
+         $qtabds = new Dataset("all_facebook_posts", 'PostDAO', "getAllQuestionPosts",
+         array($instance->network_user_id, $instance->network, 15, "#page_number#"));
+         $qtabds->addHelp('userguide/listings/facebook/dashboard_questions');
+         $qtab->addDataset($qtabds);
+         $menus["questions"] = $qtab;
+         */
+        return $menus;
     }
 }

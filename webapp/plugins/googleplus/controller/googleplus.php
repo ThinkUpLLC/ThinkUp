@@ -36,7 +36,7 @@
  */
 
 $webapp = Webapp::getInstance();
-$webapp->registerPlugin('googleplus', 'GooglePlusPlugin');
+$webapp->registerPlugin('google+', 'GooglePlusPlugin');
 
 $crawler = Crawler::getInstance();
 $crawler->registerCrawlerPlugin('GooglePlusPlugin');
