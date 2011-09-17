@@ -37,11 +37,11 @@ class GooglePlusAPIAccessor {
      * @return array Decoded JSON response
      */
     public static function apiRequest($path, $access_token, $fields=null) {
-        $api_domain = 'https://graph.googleplus.com';
-        $url = $api_domain.$path;//.'?access_token='.$access_token;
+        $api_domain = 'https://www.googleapis.com/plus/v1/';
+        $url = $api_domain.$path.'?access_token='.$access_token;
 
         $FAUX_DATA_PATH = THINKUP_ROOT_PATH . 'webapp/plugins/googleplus/tests/testdata/';
-        $url = str_replace('https://graph.googleplus.com/', '', $url);
+        $url = str_replace('https://www.googleapis.com/plus/v1/', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
@@ -85,11 +85,30 @@ class GooglePlusAPIAccessor {
         $url = preg_replace('/([\?\&])access_token\=[^\?\&]+([\?\&])*/', "$1", $url);
         $url = preg_replace('/[\?\&]$/', '', $url);
 
-        $url = str_replace('https://graph.googleplus.com/', '', $url);
+        $url = str_replace('https://www.googleapis.com/plus/v1/', '', $url);
         //$url = str_replace('?access_token=fauxaccesstoken', '', $url);
         $url = str_replace('/', '_', $url);
         $url = str_replace('&', '-', $url);
         $url = str_replace('?', '-', $url);
         return self::decodeFileContents($FAUX_DATA_PATH.$url, $decode_json);
+    }
+
+    /**
+     * Make a Graph API request with the absolute URL. This URL needs to include the https://graph.googleplus.com/ at
+     * the start and the access token at the end as well as everything in between. It is literally the raw URL that
+     * needs to be passed in.
+     *
+     * @param str $path
+     * @param bool $decode_json Defaults to true, if true returns decoded JSON
+     * @return array Decoded JSON response
+     */
+    public static function rawPostApiRequest($path, $fields, $decode_json=true) {
+        $fields_string = '';
+        foreach($fields as $key=>$value) {
+            $fields_string .= $key.'='.$value.'&';
+        }
+        rtrim($fields_string,'&');
+
+        return self::rawApiRequest($path.$fields_string, $decode_json);
     }
 }

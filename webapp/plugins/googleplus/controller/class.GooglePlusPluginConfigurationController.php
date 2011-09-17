@@ -114,19 +114,63 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
 
             //get tokens
             $tokens = GooglePlusAPIAccessor::rawPostApiRequest($access_token_request_url, $fields, true);
-            $info_msg = $this->saveAccessTokens($tokens->access_token, $tokens->refresh_token);
-            $this->addInfoMessage($info_msg);
+            $gplus_user = GooglePlusAPIAccessor::apiRequest('people/me', $tokens->access_token, null);
+            $gplus_user_id = $gplus_user->id;
+            $gplus_username = $gplus_user->displayName;
+
+            $this->saveAccessTokens($gplus_user_id, $gplus_username, $tokens->access_token,
+            $tokens->refresh_token);
         }
     }
 
     /**
      * Save newly-acquired OAuth access tokens to application options.
+     * @param str $gplus_user_id
+     * @param str $gplus_username
      * @param str $access_token
      * @param str $refresh_token
      * @return str Success message
      */
-    protected function saveAccessTokens($access_token, $refresh_token) {
-        $msg = 'Need to save '.$access_token.' and '.$refresh_token.' to database';
+    protected function saveAccessTokens($gplus_user_id, $gplus_username, $access_token, $refresh_token) {
+        $msg = '';
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+        $user_dao = DAOFactory::getDAO('UserDAO');
+
+        $instance = $instance_dao->getByUserIdOnNetwork($gplus_user_id, 'google+');
+        if (isset($instance)) {
+            $owner_instance = $owner_instance_dao->get($this->owner->id, $instance->id);
+            if ($owner_instance == null) { //Instance already exists, owner instance doesn't
+                //Add owner instance with session key
+                $owner_instance_dao->insert($this->owner->id, $instance->id, $access_token, $refresh_token);
+                $msg .= "Success! Your Google+ account has been added to ThinkUp.";
+            } else {
+                $owner_instance_dao->updateTokens($this->owner->id, $instance->id, $access_token, $refresh_token);
+                $msg .= "Success! You've reconnected your Google+ account. To connect a different account, log ".
+                "out of Google in a different browser tab and try again.";
+            }
+        } else { //Instance does not exist
+            $instance_dao->insert($gplus_user_id, $gplus_username, 'google+');
+            $instance = $instance_dao->getByUserIdOnNetwork($gplus_user_id, 'google+');
+            $owner_instance_dao->insert(
+            $this->owner->id,
+            $instance->id, $access_token, $refresh_token);
+            $msg .= "Success! Your Google+ account has been added to ThinkUp.";
+        }
+
+        if (!$user_dao->isUserInDB($gplus_user_id, 'google+')) {
+            $r = array('user_id'=>$gplus_user_id, 'user_name'=>$gplus_username,'full_name'=>$gplus_username, 'avatar'=>'',
+            'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0,
+            'friend_count'=>0, 'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'',
+            'last_post_id'=>'', 'network'=>'facebook' );
+            $u = new User($r, 'Owner info');
+            $user_dao->updateUser($u);
+        }
+
+        if ($msg != '') {
+            $this->addSuccessMessage($msg);
+        }
+
         $this->view_mgr->clear_all_cache();
 
         return $msg;

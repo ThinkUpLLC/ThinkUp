@@ -38,7 +38,7 @@ class GooglePlusAPIAccessor {
      * @return array Decoded JSON response
      */
     public static function apiRequest($path, $access_token, $fields=null) {
-        $api_domain = 'https://graph.googleplus.com';
+        $api_domain = 'https://www.googleapis.com/plus/v1/';
         $url = $api_domain.$path.'?access_token='.$access_token;
         if ($fields != null ) {
             $url = $url.'&fields='.$fields;

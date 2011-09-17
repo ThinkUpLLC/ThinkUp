@@ -32,9 +32,10 @@ require_once 'tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
-
 require_once THINKUP_ROOT_PATH.
 'webapp/plugins/googleplus/controller/class.GooglePlusPluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.
+'webapp/plugins/googleplus/tests/classes/mock.GooglePlusAPIAccessor.php';
 
 class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase {
 
@@ -257,5 +258,38 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $builders[] = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'google_plus_client_secret', 'option_value' => "s3cr3t") );
         return $builders;
+    }
+
+    public function testGetOAuthTokens() {
+        $builders = $this->buildPluginOptions();
+
+        $plugin_options_dao = DAOFactory::getDAO("PluginOptionDAO");
+        PluginOptionMySQLDAO::$cached_options = array();
+
+        $builders[] = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new GooglePlusPluginConfigurationController($owner);
+
+        $_GET['code'] = 'test-google-provided-code';
+
+        $results = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'),
+        'Success! Your Google+ account has been added to ThinkUp.');
+
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $instance_dao = new InstanceMySQLDAO();
+
+        $instance = $instance_dao->getByUserIdOnNetwork('123456789', 'google+');
+        $this->assertNotNull($instance); //Instance created
+
+        $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
+        $this->assertNotNull($owner_instance); //Owner Instance created
+        //OAuth tokens set
+        $this->assertEqual($owner_instance->oauth_access_token, 'faux-access-token');
+        $this->assertEqual($owner_instance->oauth_access_token_secret, 'faux-refresh-token');
     }
 }
