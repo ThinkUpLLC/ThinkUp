@@ -152,9 +152,11 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
             $trend = false;
             $percentages = false;
             $milestone = false;
+            $max_count = false;
+            $min_count = false;
         }
         return array('history'=>$history, 'percentages'=>$percentages, 'y_axis'=>$y_axis, 'trend'=>$trend,
-        'milestone'=> $milestone);
+        'milestone'=> $milestone, 'max_count'=>$max_count, 'min_count'=>$min_count);
     }
 
     /**
