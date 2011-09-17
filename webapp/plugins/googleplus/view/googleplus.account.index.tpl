@@ -1,6 +1,14 @@
 <b>Google+ Plugin</b>
 
-<p>{$message}</p>
+{include file="_usermessage.tpl"}
+
+{if $oauth_link}<br><h2 class="subhead">Add a Google+ Account</h2>
+
+Click on this button to authorize ThinkUp to access your Google+ account.
+<a href="{$oauth_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkUp on Google+</a>
+
+<div style="clear:all">&nbsp;<br><br><br></div>
+{/if}
 
 {if $options_markup}
 <div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>

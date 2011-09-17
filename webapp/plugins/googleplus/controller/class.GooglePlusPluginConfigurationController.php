@@ -30,28 +30,69 @@
  */
 
 class GooglePlusPluginConfigurationController extends PluginConfigurationController {
+    /**
+     *
+     * @var Owner
+     */
+    var $owner;
+    /**
+     * Constructor
+     * @param Owner $owner
+     * @return GooglePlusPluginConfigurationController
+     */
+    public function __construct($owner) {
+        parent::__construct($owner, 'googleplus');
+        $this->disableCaching();
+        $this->owner = $owner;
+    }
+
     public function authControl() {
         $config = Config::getInstance();
         Utils::defineConstants();
         $this->setViewTemplate( THINKUP_WEBAPP_PATH.'plugins/googleplus/view/googleplus.account.index.tpl');
-        $this->addToView('message',
-            'Hello, world! This is the Google+ plugin configuration page for  '.$this->owner->email .'.');
 
         /** set option fields **/
         // client ID text field
-        $name_field = array('name' => 'clientid', 'label' => 'Client ID'); // set an element name and label
+        $name_field = array('name' => 'google_plus_client_id', 'label' => 'Client ID'); // set an element name and label
         $name_field['default_value'] = ''; // set default value
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add element
         // set a special required message
-        $this->addPluginOptionRequiredMessage('clientid', 'A client ID is required to use Google+.');
+        $this->addPluginOptionRequiredMessage('google_plus_client_id', 'A client ID is required to use Google+.');
 
         // client secret text field
-        $name_field = array('name' => 'clientsecret', 'label' => 'Client secret'); // set an element name and label
+        $name_field = array('name' => 'google_plus_client_secret', 'label' => 'Client secret');
         $name_field['default_value'] = ''; // set default value
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add element
         // set a special required message
-        $this->addPluginOptionRequiredMessage('clientsecret', 'A client secret is required to use Google+.');
+        $this->addPluginOptionRequiredMessage('google_plus_client_secret',
+        'A client secret is required to use Google+.');
 
+        $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
+        $options = $plugin_option_dao->getOptionsHash('googleplus', true); //get cached
+
+        if (isset($options['google_plus_client_id']->option_value)
+        && isset($options['google_plus_client_secret']->option_value)) {
+            $this->setUpGPlusInteractions($options);
+        } else {
+            $this->addErrorMessage('Please set your Google+ client ID and secret.');
+        }
         return $this->generateView();
+    }
+
+    /**
+     * Add user auth link or process incoming auth requests.
+     * @param array $options Plugin options array
+     */
+    protected function setUpGPlusInteractions(array $options) {
+        // Create OAuth link
+        $client_id = $options['google_plus_client_id']->option_value;
+        //prep redirect URI
+        $config = Config::getInstance();
+        $site_root_path = $config->getValue('site_root_path');
+        $redirect_uri = urlencode('http://'.$_SERVER['SERVER_NAME'].$site_root_path.'account/?p=googleplus');
+
+        $oauth_link = "https://accounts.google.com/o/oauth2/auth?client_id=".$client_id.
+        "&redirect_uri=".$redirect_uri."&scope=https://www.googleapis.com/auth/plus.me&response_type=code";
+        $this->addToView('oauth_link', $oauth_link);
     }
 }
