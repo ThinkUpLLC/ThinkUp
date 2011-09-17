@@ -50,7 +50,8 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
 
     public function testConstructor() {
         $controller = new GooglePlusPluginConfigurationController(null, 'googleplus');
-        $this->assertTrue(isset($controller), 'constructor test');
+        $this->assertNotNull($controller);
+        $this->assertIsA($controller, 'GooglePlusPluginConfigurationController');
     }
 
     public function testOutput() {
@@ -74,16 +75,16 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $v_mgr = $controller->getViewManager();
         $message = $v_mgr->getTemplateDataItem('message');
         $this->assertEqual($message,
-        'Hello, world! This is the example plugin configuration page for  me@example.com.', 'message set ' . $message);
+        'Hello, world! This is the Google+ plugin configuration page for  me@example.com.', 'message set ' . $message);
     }
 
     public function testOptionList2HashByOptionName() {
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $options_hash = $controller->optionList2HashByOptionName();
-        $this->assertEqual($options_hash['testname']->id, 2);
-        $this->assertEqual($options_hash['testname']->option_name, 'testname');
-        $this->assertEqual($options_hash['testname']->option_value, 'Hal');
+        $this->assertEqual($options_hash['clientid']->id, 2);
+        $this->assertEqual($options_hash['clientid']->option_name, 'clientid');
+        $this->assertEqual($options_hash['clientid']->option_value, 'testclientid');
 
     }
 
@@ -95,20 +96,16 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $plugin_option  = $build_data[3];
 
         // just name, not an admin, so view onluy
-        // $controller->addPluginOption(PluginConfigurationController::FORM_TEXT_ELEMENT, array('name' => 'testname'));
+        // $controller->addPluginOption(PluginConfigurationController::FORM_TEXT_ELEMENT, array('name' => 'clientid'));
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 7);
-        $this->assertNotNull( $controller->option_elements['testname']);
+        $this->assertEqual( count($controller->option_elements), 1);
+        $this->assertNotNull( $controller->option_elements['clientid']);
         $this->assertEqual(
-        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['testname']['type'] );
-        $this->assertTrue( isset($controller->option_elements['testname']['default_value']) );
-        $this->assertEqual( count($controller->option_headers), 2);
-        $this->assertTrue( isset($controller->option_headers['testname']));
-        $this->assertEqual( count($controller->option_not_required), 3);
-        $this->assertFalse( isset($controller->option_not_required['testname']));
-        $this->assertEqual( count($controller->option_required_message), 2);
-        $this->assertTrue( isset($controller->option_required_message['testname']));
+        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['clientid']['type'] );
+        $this->assertTrue( isset($controller->option_elements['clientid']['default_value']) );
+        $this->assertEqual( count($controller->option_required_message), 1);
+        $this->assertTrue( isset($controller->option_required_message['clientid']));
         $v_mgr = $controller->getViewManager();
         $options_markup = $v_mgr->getTemplateDataItem('options_markup');
         $this->assertNotNull($options_markup);
@@ -133,22 +130,16 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         // just name, is admin, so form should be enabled
         $output = $controller->go();
         $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 7);
-        $this->assertNotNull( $controller->option_elements['testname']);
+        $this->assertEqual( count($controller->option_elements), 1);
+        $this->assertNotNull( $controller->option_elements['clientid']);
         $this->assertEqual(
-        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['testname']['type'] );
-        $this->assertTrue( isset($controller->option_elements['testname']['default_value']) );
-        $this->assertEqual( count($controller->option_headers), 2);
-        $this->assertTrue( isset($controller->option_headers['testname']));
-        $this->assertEqual( count($controller->option_not_required), 3);
-        $this->assertFalse( isset($controller->option_not_required['testname']));
-        $this->assertEqual( count($controller->option_required_message), 2);
-        $this->assertTrue( isset($controller->option_required_message['testname']));
+        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['clientid']['type'] );
+        $this->assertTrue( isset($controller->option_elements['clientid']['default_value']) );
+        $this->assertEqual( count($controller->option_required_message), 1);
+        $this->assertTrue( isset($controller->option_required_message['clientid']));
         $v_mgr = $controller->getViewManager();
         $options_markup = $v_mgr->getTemplateDataItem('options_markup');
         $this->assertNotNull($options_markup);
-
-        $this->assertEqual( isset($controller->option_elements['RegKey']['validation_regex']), '^\d+$' );
 
         //parse option_markup
         $doc = new DOMDocument();
@@ -156,7 +147,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
 
         // we have a text form element with proper data
-        $input_field = $this->getElementById($doc, 'plugin_options_testname');
+        $input_field = $this->getElementById($doc, 'plugin_options_clientid');
         $this->assertEqual($input_field->getAttribute('value'), $plugin_option->columns['option_value']);
 
         // var_dump("<html><body>" . $options_markup . "</body></html>");
@@ -165,124 +156,21 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertFalse($input_field->getAttribute('disabled'));
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
         $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
-
-
     }
 
-    public function testAddRadioOptions() {
-        $this->simulateLogin('me@example.com', true);
-        $build_data = $this->buildController();
-        $controller = $build_data[0];
-        $owner  = $build_data[1];
-        $plugin  = $build_data[2];
-        $plugin_option  = $build_data[3];
-
-        // radio options name, is admin, so form should be enabled
-        $output = $controller->go();
-        $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 7);
-        $this->assertNotNull( $controller->option_elements['testname']);
-        $this->assertEqual(
-        PluginConfigurationController::FORM_RADIO_ELEMENT, $controller->option_elements['testradio']['type'] );
-        $this->assertTrue( isset($controller->option_elements['testradio']['default_value']) );
-        $this->assertEqual( count($controller->option_headers), 2);
-        $this->assertFalse( isset($controller->option_required_message['testradio']));
-        $v_mgr = $controller->getViewManager();
-        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
-        $this->assertNotNull($options_markup);
-
-        //parse option_markup
-        $doc = new DOMDocument();
-        // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
-
-        // we have a text form element with proper data
-        $radio_div = $this->getElementById($doc, 'plugin_options_testradio');
-        $radios = $radio_div->getElementsByTagName('input');
-        $this->assertEqual(3, $radios->length);
-        $this->assertEqual( $radios->item(0)->getAttribute('value'), '1');
-        $this->assertEqual( $radios->item(1)->getAttribute('value'), '2');
-        $this->assertEqual( $radios->item(2)->getAttribute('value'), '3');
-        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
-
-    }
-
-    public function testAddSelectOptions() {
-        $this->simulateLogin('me@example.com', true);
-        $build_data = $this->buildController();
-        $controller = $build_data[0];
-        $owner  = $build_data[1];
-        $plugin  = $build_data[2];
-        $plugin_option  = $build_data[3];
-
-        // radio options name, is admin, so form should be enabled
-        $output = $controller->go();
-        $this->assertNotNull( $controller->option_elements);
-        $this->assertEqual( count($controller->option_elements), 7);
-        $this->assertNotNull( $controller->option_elements['testbirthyear']);
-        $this->assertEqual(
-        PluginConfigurationController::FORM_SELECT_ELEMENT, $controller->option_elements['testbirthyear']['type'] );
-        $this->assertTrue( isset($controller->option_elements['testbirthyear']['default_value']) );
-        $this->assertFalse( isset($controller->option_required_message['testbirthyear']));
-        $v_mgr = $controller->getViewManager();
-        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
-        $this->assertNotNull($options_markup);
-
-        //parse option_markup
-        $doc = new DOMDocument();
-        // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
-
-        // we have a text form element with proper data
-        $select = $this->getElementById($doc, 'plugin_options_testbirthyear');
-        $options = $select->getElementsByTagName('option');
-        $this->assertEqual(111, $options->length);
-        $this->assertEqual( $options->item(0)->getAttribute('value'), '1900');
-        $this->assertEqual( $options->item(50)->getAttribute('value'), '1950');
-        $this->assertEqual( $options->item(110)->getAttribute('value'), '2010');
-
-        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
-
-    }
-
-    public function testAddAdvancedOptions() {
-        $this->simulateLogin('me@example.com', true);
-        $build_data = $this->buildController();
-        $controller = $build_data[0];
-        $owner  = $build_data[1];
-        $plugin  = $build_data[2];
-        $plugin_option  = $build_data[3];
-
-        // radio options name, is admin, so form should be enabled
-        $output = $controller->go();
-        $v_mgr = $controller->getViewManager();
-        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
-        $this->assertNotNull($options_markup);
-
-        //parse option_markup
-        $doc = new DOMDocument();
-        // parse our html
-        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
-
-        $show_adv = $this->getElementById($doc, 'adv-flip-prompt');
-        $this->assertPattern('/Show/', $doc->saveXML( $show_adv ) );
-
-    }
     public function testGetPluginOptions() {
         $build_data = $this->buildController();
         $controller = $build_data[0];
         $options_hash = $controller->getPluginOptions();
-        $this->assertEqual($options_hash['testname']->id, 2);
-        $this->assertEqual($options_hash['testname']->option_name, 'testname');
-        $this->assertEqual($options_hash['testname']->option_value, 'Hal');
+        $this->assertEqual($options_hash['clientid']->id, 2);
+        $this->assertEqual($options_hash['clientid']->option_name, 'clientid');
+        $this->assertEqual($options_hash['clientid']->option_value, 'testclientid');
 
         // get a single undefined option
         $this->assertFalse($controller->getPluginOption('not defined'));
 
         // get a single defined option
-        $this->assertEqual($controller->getPluginOption('testname'), 'Hal');
+        $this->assertEqual($controller->getPluginOption('clientid'), 'testclientid');
     }
 
     private function buildController() {
@@ -292,7 +180,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .$plugin_id;
         $builder_plugin_options =
         FixtureBuilder::build('options',
-        array('namespace' => $namespace, 'option_name' => 'testname', 'option_value' => "Hal") );
+        array('namespace' => $namespace, 'option_name' => 'clientid', 'option_value' => "testclientid") );
         $this->simulateLogin('me@example.com');
         $owner_dao = DAOFactory::getDAO('OwnerDAO');
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
