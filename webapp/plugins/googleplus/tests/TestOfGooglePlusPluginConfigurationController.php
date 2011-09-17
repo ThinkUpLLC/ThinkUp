@@ -283,7 +283,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
         $instance_dao = new InstanceMySQLDAO();
 
-        $instance = $instance_dao->getByUserIdOnNetwork('123456789', 'google+');
+        $instance = $instance_dao->getByUserIdOnNetwork('113612142759476883204', 'google+');
         $this->assertNotNull($instance); //Instance created
 
         $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
