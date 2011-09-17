@@ -30,12 +30,12 @@ class PlaceMySQLDAO extends PDODAO implements PlaceDAO {
         if (!$place) {
             return null;
         }
-        $pid = null;
+        $place_id = null;
 
         // if we have a place_id, then insert into tu_places
         if (isset($place['id'])) {
-            $pid = $place['id'];
-            $this->logger->logDebug("processing place: " . $pid, __METHOD__.','.__LINE__);
+            $place_id = $place['id'];
+            $this->logger->logDebug("processing place: " . $place_id, __METHOD__.','.__LINE__);
             $bounding_box = $place['bounding_box'];
             //@TODO check that type is polygon
             $coords = $bounding_box['coordinates'][0];
@@ -54,7 +54,7 @@ class PlaceMySQLDAO extends PDODAO implements PlaceDAO {
             $q .= "VALUES (:place_id, :place_type, :name, :full_name, :country_code, :country, :network, " .
                 "PolygonFromText(:bounding_box), Centroid(PolygonFromText(:bounding_box)))";
             $vars = array(
-                ':place_id' => $pid,
+                ':place_id' => (string)$place_id,
                 ':place_type' => $place['place_type'],
                 ':name' => $place['name'],
                 ':full_name' => $place['full_name'],
@@ -68,7 +68,7 @@ class PlaceMySQLDAO extends PDODAO implements PlaceDAO {
         }
 
         // If point coords are set, add that information.
-        // Include the place id (pid) if it was set; otherwise that field will be null.
+        // Include the place id if it was set; otherwise that field will be null.
         if (isset($place['point_coords']) && isset($place['point_coords']['coordinates']) && $post_id) {
             $point_coords = $place['point_coords'];
             //@TODO confirm that data is of type 'Point'
@@ -77,8 +77,8 @@ class PlaceMySQLDAO extends PDODAO implements PlaceDAO {
             $q .= "(post_id, place_id, longlat, network) VALUES (";
             $q .= ":post_id, :place_id, PointFromText(:point), :network)";
             $vars = array(
-                ':place_id' => $pid,
-                ':post_id' => $post_id,
+                ':place_id' => (string)$place_id,
+                ':post_id' => (string)$post_id,
                 ':point' => $pcstr,
                 ':network' => $network
             );
@@ -103,7 +103,7 @@ class PlaceMySQLDAO extends PDODAO implements PlaceDAO {
         $q = "SELECT id, AsText(longlat) AS longlat, post_id, place_id, network FROM #prefix#places_posts " .
         "WHERE post_id = :post_id AND network = :network";
         $ps = $this->execute($q, array(
-            ':post_id' => $post_id,
+            ':post_id' => (string)$post_id,
             ':network' => $network));
         $row = $this->getDataRowAsArray($ps);
         if ($row) {

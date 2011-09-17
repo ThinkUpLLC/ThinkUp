@@ -220,8 +220,6 @@ class PostAPIController extends ThinkUpController {
         switch ($order_by) {
             case 'date': $order_by = 'pub_date';
             break;
-            case 'post_id': $order_by = 'p.post_id';
-            break;
             case 'location': $order_by = 'location';
             break;
             case 'source': $order_by = 'source';

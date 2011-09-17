@@ -66,7 +66,7 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
             $q .= "VALUES ( :user_id, :user_name, :network, :count) ";
 
             $vars  = array(
-                ':user_id'  =>$mention_user_id,
+                ':user_id'  =>(string)$mention_user_id,
                 ':user_name'  =>$mention_user_name,
                 ':network'  =>$network,
                 ':count' => 1
@@ -83,13 +83,13 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
         $q .= "VALUES ( :post_id, :mention_id, :author_user_id) ";
         $vars = array(
              ':mention_id'   =>$mention_id,
-             ':post_id'      =>$post_id,
-             ':author_user_id' => $author_user_id
+             ':post_id'      =>(string)$post_id,
+             ':author_user_id' => (string)$author_user_id
         );
         $ps  = $this->execute($q, $vars);
         $res = $this->getUpdateCount($ps);
         if (!$res) {
-            $this->logger->logDebug("Could not update mentions_posts with $post_id, $mention_id", 
+            $this->logger->logDebug("Could not update mentions_posts with $post_id, $mention_id",
             __METHOD__.','. __LINE__);
             // throw new Exception("Error: Could not update mentions_posts.");
         }
@@ -117,7 +117,7 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
     public function getMentionInfoUserID($user_id, $network = 'twitter') {
         $q = "SELECT * FROM #prefix#mentions WHERE user_id = :user_id AND network = :network";
         $vars = array(
-            ':user_id' => $user_id,
+            ':user_id' =>(string) $user_id,
             ':network' => $network
         );
         $ps = $this->execute($q, $vars);
@@ -129,10 +129,10 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
         }
     }
 
-    public function getMentionsForPost($pid, $network = 'twitter') {
+    public function getMentionsForPost($post_id, $network = 'twitter') {
         $q = "SELECT * FROM #prefix#mentions_posts WHERE post_id = :post_id AND network = :network ORDER BY mention_id";
         $vars = array(
-            ':post_id' => $pid,
+            ':post_id' => (string)$post_id,
             ':network' => $network
         );
         $ps = $this->execute($q, $vars);
@@ -144,10 +144,10 @@ class MentionMySQLDAO extends PDODAO implements MentionDAO {
         }
     }
 
-    public function getMentionsForPostMID($mid) {
+    public function getMentionsForPostMID($mention_id) {
         $q = "SELECT * FROM #prefix#mentions_posts WHERE mention_id = :mention_id ORDER BY post_id";
         $vars = array(
-            ':mention_id' => $mid
+            ':mention_id' => $mention_id
         );
         $ps = $this->execute($q, $vars);
         $all_rows = $this->getDataRowsAsArrays($ps);

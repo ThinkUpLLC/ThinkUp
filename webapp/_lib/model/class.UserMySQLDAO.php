@@ -43,7 +43,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $q .= "FROM #prefix#users ";
         $q .= "WHERE user_id = :user_id AND network = :network;";
         $vars = array(
-            ':user_id'=>$user_id, 
+            ':user_id'=>(string)$user_id, 
             ':network'=>$network
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
@@ -91,7 +91,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $user->post_count = $user->post_count != '' ? $user->post_count : 0;
 
         $vars = array(
-            ':user_id'=>$user->user_id,
+            ':user_id'=>(string)$user->user_id,
             ':username'=>$user->username,
             ':full_name'=>$user->full_name,
             ':avatar'=>$user->avatar,
@@ -159,7 +159,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $q .= "FROM #prefix#users u ";
         $q .= "WHERE u.user_id = :user_id AND u.network = :network;";
         $vars = array(
-            ':user_id'=>$user_id,
+            ':user_id'=>(string)$user_id,
             ':network'=>$network
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);

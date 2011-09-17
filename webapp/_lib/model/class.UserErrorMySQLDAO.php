@@ -38,8 +38,8 @@ class UserErrorMySQLDAO extends PDODAO implements UserErrorDAO {
             ':id'=>$id, 
             ':error_code'=>$error_code,
             ':error_text'=>$error_text,
-            ':issued_to'=>$issued_to,
-           ':network'=>$network
+            ':issued_to'=>(string)$issued_to,
+            ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
 

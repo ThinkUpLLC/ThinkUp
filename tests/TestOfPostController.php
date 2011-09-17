@@ -79,10 +79,10 @@ class TestOfPostController extends ThinkUpUnitTestCase {
     }
 
     public function testControlNonNumericPostID(){
-        $_GET["t"] = 'notapostID45';
+        $_GET["t"] = 'postsnowhavelettersandnumbersinthem1324324';
         $controller = new PostController(true);
         $results = $controller->go();
-        $this->assertPattern("/Post not specified/", $results);
+        $this->assertNoPattern("/Post not specified/", $results);
     }
 
     public function testControlExistingPrivatePostIDNotLoggedIn() {

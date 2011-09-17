@@ -71,12 +71,12 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
     public function insert($network_user_id, $network_username, $network = "twitter", $viewer_id = false) {
         $q  = "INSERT INTO ".$this->getTableName()." ";
         $q .= "(network_user_id, network_username, network, network_viewer_id) ";
-        $q .= "VALUES (:uid , :username, :network, :viewerid) ";
+        $q .= "VALUES (:user_id , :username, :network, :viewer_id) ";
         $vars = array(
-            ':uid'=>$network_user_id,
+            ':user_id'=>(string)$network_user_id,
             ':username'=>$network_username,
             ':network'=>$network,
-            ':viewerid'=>($viewer_id ? $viewer_id : $network_user_id)
+            ':viewer_id'=>(string)($viewer_id ? $viewer_id : $network_user_id)
         );
         $ps = $this->execute($q, $vars);
         return $this->getInsertId($ps);
@@ -173,9 +173,9 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q  = "SELECT ".$this->getFieldList();
         $q .= "FROM ".$this->getTableName()." ";
         $q .= $this->getMetaTableJoin();
-        $q .= "WHERE network_user_id = :uid AND network = :network ";
+        $q .= "WHERE network_user_id = :user_id AND network = :network ";
         $vars = array(
-            ':uid'=>$network_user_id,
+            ':user_id'=>(string)$network_user_id,
             ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
@@ -288,17 +288,17 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= "  FROM (";
         $q .= "        SELECT *";
         $q .= "          FROM #prefix#posts";
-        $q .= "         WHERE author_user_id=:uid AND network=:network";
+        $q .= "         WHERE author_user_id=:user_id AND network=:network";
         $q .= "         ORDER BY pub_date DESC";
         $q .= "         LIMIT :num_posts) AS p,";
         $q .= "       (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts";
-        $q .= "         WHERE author_user_id=:uid AND network=:network) AS all_posts ";
+        $q .= "         WHERE author_user_id=:user_id AND network=:network) AS all_posts ";
         $q .= "ORDER BY pub_date ASC ";
         $q .= "LIMIT 1;";
         $vars = array(
-        	':uid' => $network_user_id,
+            ':user_id' => (string)$network_user_id,
             ':network' => $network,
             ':num_posts' => $num_posts_max
         );
@@ -326,21 +326,21 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= "  FROM (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts";
-        $q .= "         WHERE author_user_id=:uid AND network=:network";
+        $q .= "         WHERE author_user_id=:user_id AND network=:network";
         $q .= "           AND in_reply_to_user_id > 0) AS num_replies,";
         $q .= "       (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts AS p";
         $q .= "     LEFT JOIN #prefix#links AS l";
         $q .= "               ON (p.post_id = l.post_id AND p.network = l.network)";
-        $q .= "         WHERE author_user_id=:uid AND p.network=:network ";
+        $q .= "         WHERE author_user_id=:user_id AND p.network=:network ";
         $q .= "           AND l.post_id IS NOT NULL) AS num_links,";
         $q .= "       (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts";
-        $q .= "         WHERE author_user_id=:uid AND network=:network) AS all_posts;";
+        $q .= "         WHERE author_user_id=:user_id AND network=:network) AS all_posts;";
         $vars = array(
-        	':uid' => $network_user_id,
+            ':user_id' => (string)$network_user_id,
             ':network' => $network,
         );
         $result = $this->getDataRowAsArray($this->execute($q, $vars));
@@ -369,10 +369,10 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         }
         $q .= "favorites_profile = :fp, ";
         $q .= "owner_favs_in_system = (select count(*) from #prefix#favorites ";
-        $q .= "where fav_of_user_id= :uid and network=:network), ";
+        $q .= "where fav_of_user_id= :user_id and network=:network), ";
         $q .= "crawler_last_run = NOW(), ";
         $q .= "total_posts_in_system = (select count(*) from #prefix#posts ";
-        $q .= "where author_user_id=:uid and network = :network), ";
+        $q .= "where author_user_id=:user_id and network = :network), ";
         if ($ot){
             $q .= "total_posts_by_owner = :tpbo, ";
         }
@@ -383,7 +383,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         //        $q .= "total_replies_in_system = (SELECT count(id) FROM #prefix#posts ";
         //        $q .= "WHERE network = :network AND MATCH(post_text) AGAINST(:username)), ";
         $q .= "total_follows_in_system = (SELECT count(*) FROM #prefix#follows ";
-        $q .= "WHERE user_id=:uid AND active=1 AND network = :network), ";
+        $q .= "WHERE user_id=:user_id AND active=1 AND network = :network), ";
         $q .= "is_archive_loaded_follows = :ialf, ";
         $q .= "is_archive_loaded_replies = :ialr, ";
         // For performance reasons, set this to null for now.
@@ -396,7 +396,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         //        $q .= "     ORDER BY pub_date ASC LIMIT 1), ";
         $q .= "earliest_post_in_system = (SELECT pub_date ";
         $q .= "     FROM #prefix#posts ";
-        $q .= "     WHERE author_user_id = :uid AND network = :network ";
+        $q .= "     WHERE author_user_id = :user_id AND network = :network ";
         $q .= "     ORDER BY pub_date ASC LIMIT 1), ";
         $q .= "posts_per_day = :ppd, ";
         $q .= "posts_per_week = :ppw, ";
@@ -405,9 +405,9 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= "WHERE id = :id;";
 
         $vars = array(
-            ':last_post_id' => $i->last_post_id,
+            ':last_post_id' => (string)$i->last_post_id,
             ':fp'           => $i->favorites_profile,
-            ':uid'          => $i->network_user_id,
+            ':user_id'      => (string)$i->network_user_id,
             ':tpbo'         => $user_xml_total_posts_by_owner,
             ':username'     => "%".$i->network_username."%",
             ':ialf'         => $is_archive_loaded_follows,
@@ -460,8 +460,8 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= "WHERE network_user_id = :network_user_id AND network_viewer_id = :viewer_id ";
         $q .= "AND network = :network";
         $vars = array(
-            ':network_user_id'=>$network_user_id,
-            ':viewer_id'=>$viewer_id,
+            ':network_user_id'=>(string)$network_user_id,
+            ':viewer_id'=>(string)$viewer_id,
             ':network'=>$network
         );
         $ps = $this->execute($q, $vars);
@@ -474,7 +474,7 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= $this->getMetaTableJoin();
         $q .= "WHERE network_viewer_id = :viewer_id AND network = :network ";
         $vars = array(
-            ':viewer_id'=>$viewer_id,
+            ':viewer_id'=>(string)$viewer_id,
             ':network'=>$network
         );
         $ps = $this->execute($q, $vars);

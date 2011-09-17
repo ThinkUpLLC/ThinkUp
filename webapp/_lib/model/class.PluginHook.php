@@ -89,6 +89,8 @@ abstract class PluginHook {
      * @return str Object name
      */
     public function getPluginObject($shortname) {
+        //Ugh googleplus/google+ hack
+        $shortname = ($shortname=='googleplus')?'google+':$shortname;
         if (!isset($this->plugins[$shortname]) ) {
             throw new PluginNotFoundException($shortname);
         }

@@ -1,0 +1,137 @@
+{
+ "kind": "plus#activityFeed",
+ "nextPageToken": "eJxb85aBtbiIQTArsSxRLycxL13PM68kNT21SOjRgiXfG9stmBgYPRlYyxJzSlMrihgEEOr8SnOTUova1kyV5Z7yoJuJgaGigIFBtaG4kKGOAQTY4SyR0iIGpmhP310JamWvNi2FKmVg362wJeHKzUAL28mnq2ZbFuxbrHvym7_sB6uelwXbS0GaWRkYGHUYUAETAweaCBsDQwMSlwMuzwLmQjkCyFokwFIMjA4wAQcUIxzA9mAHLAgmIw4lQNAAVwZmwA3DpoUDrtIDwlBAdSwSgGtvwG25A4zBhE0Jsrc4GGGGwl2r4AB2jgOSYoQOXEECt7kBiyDYDgUsYkBREaAbmBmYIAEA1cw0gYAtCNDAtACr0xxAAqhuYcQSFg4MMHtZUMQhvAaUOEA1DQYEEAwBqJENGJ5lYUhAtVDAAa4TW4iyYBEjABSwCbLgl0akEwRQZEDxKSMDRl6DAMzkyYGwBYu5DWBjFBlxhSOmBtSgwZEdGhgwHAjhgiKbCVkAOUNCZTgUiHMKFCDSD0S7A4TDwoDkJw6QbQIAfqlI7w",
+ "selfLink": "https://www.googleapis.com/plus/v1/people/113612142759476883204/activities/public?",
+ "nextLink": "https://www.googleapis.com/plus/v1/people/113612142759476883204/activities/public?maxResults=20&pageToken=eJxb85aBtbiIQTArsSxRLycxL13PM68kNT21SOjRgiXfG9stmBgYPRlYyxJzSlMrihgEEOr8SnOTUova1kyV5Z7yoJuJgaGigIFBtaG4kKGOAQTY4SyR0iIGpmhP310JamWvNi2FKmVg362wJeHKzUAL28mnq2ZbFuxbrHvym7_sB6uelwXbS0GaWRkYGHUYUAETAweaCBsDQwMSlwMuzwLmQjkCyFokwFIMjA4wAQcUIxzA9mAHLAgmIw4lQNAAVwZmwA3DpoUDrtIDwlBAdSwSgGtvwG25A4zBhE0Jsrc4GGGGwl2r4AB2jgOSYoQOXEECt7kBiyDYDgUsYkBREaAbmBmYIAEA1cw0gYAtCNDAtACr0xxAAqhuYcQSFg4MMHtZUMQhvAaUOEA1DQYEEAwBqJENGJ5lYUhAtVDAAa4TW4iyYBEjABSwCbLgl0akEwRQZEDxKSMDRl6DAMzkyYGwBYu5DWBjFBlxhSOmBtSgwZEdGhgwHAjhgiKbCVkAOUNCZTgUiHMKFCDSD0S7A4TDwoDkJw6QbQIAfqlI7w",
+ "title": "Plus Public Activity Feed for Gina Trapani",
+ "updated": "2011-09-17T23:56:40.761Z",
+ "id": "tag:google.com,2010:/plus/people/113612142759476883204/activities/public",
+ "items": [
+  {
+   "kind": "plus#activity",
+   "title": "Reshared post from Jeff Jarvis\n \n\nEnjoyable This Week in Google this week (but then, I enjoy it e...",
+   "published": "2011-09-15T20:45:32.298Z",
+   "updated": "2011-09-15T20:45:32.298Z",
+   "id": "z12pcfdr2wvyzjfff22iiz3pjrnws3lle",
+   "url": "https://plus.google.com/113612142759476883204/posts/JxWujEBH3ow",
+   "actor": {
+    "id": "113612142759476883204",
+    "displayName": "Gina Trapani",
+    "url": "https://plus.google.com/113612142759476883204",
+    "image": {
+     "url": "https://lh3.googleusercontent.com/-S7felHynDq8/AAAAAAAAAAI/AAAAAAAAAAA/90sajvVhfnk/photo.jpg"
+    }
+   },
+   "verb": "share",
+   "object": {
+    "objectType": "activity",
+    "id": "z130s34qcujiwnb0t22tgt3xbtnfhr2e0",
+    "actor": {
+     "id": "105076678694475690385",
+     "displayName": "Jeff Jarvis",
+     "url": "https://plus.google.com/105076678694475690385",
+     "image": {
+      "url": "https://lh3.googleusercontent.com/-43wvGLie8Fg/AAAAAAAAAAI/AAAAAAAAAAA/FyaY388KsKY/photo.jpg"
+     }
+    },
+    "content": "Enjoyable This Week in Google this week (but then, I enjoy it every week) with \u003cspan class=\"proflinkWrapper\"\u003e\u003cspan class=\"proflinkPrefix\"\u003e+\u003c/span\u003e\u003ca href=\"https://plus.google.com/101261243957067319422\" class=\"proflink\" oid=\"101261243957067319422\"\u003eLeo Laporte\u003c/a\u003e\u003c/span\u003e and \u003cspan class=\"proflinkWrapper\"\u003e\u003cspan class=\"proflinkPrefix\"\u003e+\u003c/span\u003e\u003ca href=\"https://plus.google.com/113612142759476883204\" class=\"proflink\" oid=\"113612142759476883204\"\u003eGina Trapani\u003c/a\u003e\u003c/span\u003e",
+    "url": "https://plus.google.com/105076678694475690385/posts/5DhS85isf6g",
+    "replies": {
+     "totalItems": 30
+    },
+    "plusoners": {
+     "totalItems": 50
+    },
+    "resharers": {
+     "totalItems": 9
+    },
+    "attachments": [
+     {
+      "objectType": "video",
+      "displayName": "This Week In Google 112: Losers Like Us",
+      "content": "Hosts:Leo Laporte, Jeff Jarvis, and Gina Trapani\nGoogle Flight search takes off, opting out location data collection, Google acquiring Zagat, new name for Google Docs, and more\nDownload or subscribe to this show at twit.tv/twig.\nWe invite you to read, add to, and amend our show notes.\nFriendfeed links for this episode.\nThanks to Cachefly for the bandwidth for this show.\n\n\nRunning time: 1:16:26",
+      "url": "http://www.youtube.com/v/Unx6mg1taQI&hl=en&fs=1&autoplay=1",
+      "image": {
+       "url": "http://images0-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&gadget=a&resize_h=100&url=https%3A%2F%2Fytimg.googleusercontent.com%2Fvi%2FUnx6mg1taQI%2Fhqdefault.jpg",
+       "type": "image/jpeg"
+      }
+     }
+    ]
+   },
+   "annotation": "Really fun episode this week.",
+   "provider": {
+    "title": "Google+"
+   },
+   "access": {
+    "kind": "plus#acl",
+    "items": [
+     {
+      "type": "public"
+     }
+    ]
+   }
+  },
+  {
+   "kind": "plus#activity",
+   "title": "I've got a date with the G+ API this weekend to make a ThinkUp plugin!",
+   "published": "2011-09-15T20:44:20.000Z",
+   "updated": "2011-09-15T20:44:21.727Z",
+   "id": "z12is5v4snurihgdl22iiz3pjrnws3lle",
+   "url": "https://plus.google.com/113612142759476883204/posts/9G8sfZSZqFa",
+   "actor": {
+    "id": "113612142759476883204",
+    "displayName": "Gina Trapani",
+    "url": "https://plus.google.com/113612142759476883204",
+    "image": {
+     "url": "https://lh3.googleusercontent.com/-S7felHynDq8/AAAAAAAAAAI/AAAAAAAAAAA/90sajvVhfnk/photo.jpg"
+    }
+   },
+   "verb": "post",
+   "object": {
+    "objectType": "note",
+    "content": "I&#39;ve got a date with the G+ API this weekend to make a ThinkUp plugin!",
+    "originalContent": "",
+    "url": "https://plus.google.com/113612142759476883204/posts/9G8sfZSZqFa",
+    "replies": {
+     "totalItems": 24
+    },
+    "plusoners": {
+     "totalItems": 159
+    },
+    "resharers": {
+     "totalItems": 29
+    },
+    "attachments": [
+     {
+      "objectType": "article",
+      "displayName": "Getting Started on the Google+ API - Google+ Platform Blog",
+      "content": "Official source of information about the Google+ platform",
+      "url": "http://googleplusplatform.blogspot.com/2011/09/getting-started-on-google-api.html"
+     },
+     {
+      "objectType": "photo",
+      "image": {
+       "url": "http://images0-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&gadget=a&resize_h=100&url=http%3A%2F%2F2.bp.blogspot.com%2F-XV4uMT_Pn7g%2FTnI5T7BCmpI%2FAAAAAAAAAIw%2FCecR4H-s80k%2Fs320%2Fauthorize.png",
+       "type": "image/jpeg"
+      },
+      "fullImage": {
+       "url": "http://2.bp.blogspot.com/-XV4uMT_Pn7g/TnI5T7BCmpI/AAAAAAAAAIw/CecR4H-s80k/s320/authorize.png",
+       "type": "image/jpeg"
+      }
+     }
+    ]
+   },
+   "provider": {
+    "title": "Google+"
+   },
+   "access": {
+    "kind": "plus#acl",
+    "items": [
+     {
+      "type": "public"
+     }
+    ]
+   }
+  }
+ ]
+}

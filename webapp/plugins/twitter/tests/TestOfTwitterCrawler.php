@@ -146,7 +146,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->instance->is_archive_loaded_follows = true;
 
         // add post to backfill
-        $builder = FixtureBuilder::build('posts', array('post_id'=>1, 'author_user_id'=>36824,
+        $builder = FixtureBuilder::build('posts', array('post_id'=>'1', 'author_user_id'=>36824,
             'author_username'=>'anildash', 'author_fullname'=>'Anil Dash', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is a great post', 'network'=>'twitter','in_rt_of_user_id' => null,
             'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
@@ -224,10 +224,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $tc->fetchInstanceUserInfo();
 
-        $udao = DAOFactory::getDAO('UserDAO');
-        $user = $udao->getDetails(36823, 'twitter');
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user = $user_dao->getDetails('36823', 'twitter');
         $this->assertTrue($user->id == 1);
-        $this->assertTrue($user->user_id == 36823);
+        $this->assertTrue($user->user_id == '36823');
         $this->assertTrue($user->username == 'anildash');
         $this->assertTrue($user->found_in == 'Owner Status');
     }
@@ -240,16 +240,16 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserTweets();
 
         //Test post with location has location set
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertTrue($pdao->isPostInDB(15680112737, 'twitter'));
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($post_dao->isPostInDB('15680112737', 'twitter'));
 
-        $post = $pdao->getPost(15680112737, 'twitter');
+        $post = $post_dao->getPost('15680112737', 'twitter');
         $this->assertEqual($post->location, "NYC: 40.739069,-73.987082");
         $this->assertEqual($post->place, "Stuyvesant Town, New York");
         $this->assertEqual($post->geo, "40.73410845 -73.97885982");
 
         //Test post without location doesn't have it set
-        $post = $pdao->getPost(15660552927, 'twitter');
+        $post = $post_dao->getPost('15660552927', 'twitter');
         $this->assertEqual($post->location, "NYC: 40.739069,-73.987082");
         $this->assertEqual($post->place, "");
         $this->assertEqual($post->geo, "");
@@ -263,9 +263,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserTweets();
 
         //Test post with location has location set
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertTrue($pdao->isPostInDB(15660373190, 'twitter'));
-        $post = $pdao->getPost(15660373190, 'twitter');
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($post_dao->isPostInDB('15660373190', 'twitter'));
+        $post = $post_dao->getPost('15660373190', 'twitter');
         $this->assertEqual($post->post_text, "@nicknotned NYC isn't a rival, it's just a better evolution of the " .
         "concept of a locale where innovation happens. > & <");
 
@@ -278,10 +278,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'network_username'=>'anildash2', 'network'=>'twitter', 'network_viewer_id'=>15, 
         'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
 
-        $pdao = DAOFactory::getDAO('PostDAO');
+        $post_dao = DAOFactory::getDAO('PostDAO');
 
         // old post before crawl
-        $post = $pdao->getPost(1, 'twitter');
+        $post = $post_dao->getPost(1, 'twitter');
         $this->assertEqual($post->author_username, "anildash");
 
         $tc = new TwitterCrawler($this->instance, $this->api);
@@ -289,11 +289,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserTweets();
 
         // old post after crawl
-        $post = $pdao->getPost(1, 'twitter');
+        $post = $post_dao->getPost(1, 'twitter');
         $this->assertEqual($post->author_username, "anildash2");
 
         // new post have the new username as well...
-        $post = $pdao->getPost(15660310954, 'twitter');
+        $post = $post_dao->getPost('15660310954', 'twitter');
         $this->assertEqual($post->author_username, "anildash2");
 
         // instace has the new username as well...
@@ -309,25 +309,25 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     public function testDeletedTweet() {
         $post_builder = self::setUpInstanceUserAnilDashDelete();
 
-        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>36825,
-        'network_username'=>'anildash', 'network'=>'twitter', 'network_viewer_id'=>36825, 
+        $builders[] = FixtureBuilder::build('instances', array('network_user_id'=>'36825',
+        'network_username'=>'anildash', 'network'=>'twitter', 'network_viewer_id'=>'36825', 
         'crawler_last_run'=>'2010-01-01 12:00:01', 'is_active'=>1));
 
         // some tweets...
-        $builder = FixtureBuilder::build('posts', array('id' => 1, 'post_id' => 12345,
-        'author_user_id' => 36825, 'pub_date' => '2010-06-08 04:45:16'));
-        $builder2 = FixtureBuilder::build('posts', array('id' => 2, 'post_id' => 123456,
-        'author_user_id' => 36825, 'pub_date' => '2010-06-08 04:45:16'));
+        $builder = FixtureBuilder::build('posts', array('id' => 1, 'post_id' => '12345',
+        'author_user_id' => '36825', 'pub_date' => '2010-06-08 04:45:16'));
+        $builder2 = FixtureBuilder::build('posts', array('id' => 2, 'post_id' => '123456',
+        'author_user_id' => '36825', 'pub_date' => '2010-06-08 04:45:16'));
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserTweets();
 
         // should be deleted, not  found on twitter...
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertNull($pdao->getPost(12345, 'twitter'));
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $this->assertNull($post_dao->getPost('12345', 'twitter'));
 
         // found on twitter, so don't delete
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertNotNull($pdao->getPost(123456, 'twitter'));
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $this->assertNotNull($post_dao->getPost('123456', 'twitter'));
 
     }
 
@@ -338,10 +338,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserTweets();
 
         //Test post is set as protected
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertTrue($pdao->isPostInDB(14846078418, 'twitter'));
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($post_dao->isPostInDB('14846078418', 'twitter'));
 
-        $post = $pdao->getPost(14846078418, 'twitter');
+        $post = $post_dao->getPost('14846078418', 'twitter');
         $this->debug(Utils::varDumpToString($post));
         $this->assertTrue($post->is_protected);
     }
@@ -354,29 +354,29 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
         $tc->fetchInstanceUserTweets();
 
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $post = $pdao->getPost('13708601491193856', 'twitter');
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $post = $post_dao->getPost('13708601491193856', 'twitter');
         // the xml <retweeted_status> for the original post (that 'amygdala' retweeted) includes a native
         // <retweet_count> of 8. In our database we only have 1 of those RTs stored/processed.
         $this->assertEqual($post->retweet_count_api, 8);
         $this->assertEqual($post->retweet_count_cache, 1);
         $this->assertEqual($post->old_retweet_count_cache, 0);
-        $retweets = $pdao->getRetweetsOfPost('13708601491193856', 'twitter', true);
+        $retweets = $post_dao->getRetweetsOfPost('13708601491193856', 'twitter', true);
         $this->assertEqual(sizeof($retweets), 1);
         $this->assertEqual($post->link->url, "http://is.gd/izUl5");
         $this->assertNotEqual($post->link->expanded_url, "http://is.gd/izUl5");
 
-        $post = $pdao->getPost('13960125416996864', 'twitter');
+        $post = $post_dao->getPost('13960125416996864', 'twitter');
         $this->assertEqual($post->in_retweet_of_post_id, '13708601491193856');
-        $this->assertEqual($post->in_rt_of_user_id, 20542737);
+        $this->assertEqual($post->in_rt_of_user_id, '20542737');
         $this->assertEqual($post->link->url, "http://is.gd/izUl5");
 
         $tc->fetchInstanceUserMentions();
         // old-style RT
-        $post = $pdao->getPost('8957053141778432', 'twitter');
-        $this->assertEqual($post->in_rt_of_user_id, 2768241);
+        $post = $post_dao->getPost('8957053141778432', 'twitter');
+        $this->assertEqual($post->in_rt_of_user_id, '2768241');
         $this->assertEqual($post->in_retweet_of_post_id, '8927196122972160');
-        $post_orig = $pdao->getPost('8927196122972160', 'twitter');
+        $post_orig = $post_dao->getPost('8927196122972160', 'twitter');
         $this->assertEqual($post_orig->old_retweet_count_cache, 1);
         $this->assertEqual($post_orig->retweet_count_cache, 0);
         $this->assertEqual($post_orig->retweet_count_api, 0);
@@ -388,10 +388,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $tc->fetchInstanceUserInfo();
         $tc->fetchSearchResults('@whitehouse');
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $this->assertTrue($pdao->isPostInDB('11837263794', 'twitter'));
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($post_dao->isPostInDB('11837263794', 'twitter'));
 
-        $post = $pdao->getPost('11837263794', 'twitter');
+        $post = $post_dao->getPost('11837263794', 'twitter');
         $this->assertEqual($post->post_text,
         "RT @whitehouse: The New Start Treaty: Read the text and remarks by President Obama &amp; ".
         'President Medvedev http://bit.ly/cAm9hF');
@@ -404,10 +404,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $tc->fetchInstanceUserFollowers();
         $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($fdao->followExists(36823, 119950880, 'twitter'), 'new follow exists');
+        $this->assertTrue($fdao->followExists('36823', '119950880', 'twitter'), 'new follow exists');
 
-        $udao = DAOFactory::getDAO('UserDAO');
-        $updated_user = $udao->getUserByName('meatballhat', 'twitter');
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $updated_user = $user_dao->getUserByName('meatballhat', 'twitter');
         $this->assertEqual($updated_user->full_name, 'Dan Buch', 'follower full name set to '.
         $updated_user->full_name);
         $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower location set to '.
@@ -421,10 +421,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $tc->fetchInstanceUserFriends();
         $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($fdao->followExists(14834340, 36823, 'twitter'), 'new friend exists');
+        $this->assertTrue($fdao->followExists('14834340', '36823', 'twitter'), 'new friend exists');
 
-        $udao = DAOFactory::getDAO('UserDAO');
-        $updated_user = $udao->getUserByName('jayrosen_nyu', 'twitter');
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $updated_user = $user_dao->getUserByName('jayrosen_nyu', 'twitter');
         $this->assertEqual($updated_user->full_name, 'Jay Rosen', 'friend full name set');
         $this->assertEqual($updated_user->location, 'New York City', 'friend location set');
     }
@@ -437,12 +437,12 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $fd = DAOFactory::getDAO('FollowDAO');
         $stale_friend = $fd->getStalestFriend($this->instance->network_user_id, $this->instance->network);
         $this->assertTrue(isset($stale_friend), 'there is a stale friend');
-        $this->assertEqual($stale_friend->user_id, 930061, 'stale friend is ginatrapani');
+        $this->assertEqual($stale_friend->user_id, '930061', 'stale friend is ginatrapani');
         $this->assertEqual($stale_friend->username, 'ginatrapani', 'stale friend is ginatrapani');
 
         $tc->fetchFriendTweetsAndFriends();
         $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($fdao->followExists(14834340, 930061, 'twitter'), 'ginatrapani friend loaded');
+        $this->assertTrue($fdao->followExists('14834340', '930061', 'twitter'), 'ginatrapani friend loaded');
     }
 
     public function testFetchInstanceUserFollowersByIds() {
@@ -453,7 +453,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $tc->fetchInstanceUserFollowers();
         $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($fdao->followExists(36823, 114811186, 'twitter'), 'new follow exists');
+        $this->assertTrue($fdao->followExists('36823', '114811186', 'twitter'), 'new follow exists');
     }
 
     public function testFetchRetweetsOfInstanceuser() {
@@ -465,15 +465,15 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         // we now get the 'new-style' retweet count from the retweet_count field in the xml,
         // which is parsed into 'retweet_count_cache' in the post vals.  This will not necessarily match
         // the number of retweets in the database any more (but does in this test case).
-        $builder = FixtureBuilder::build('posts', array('post_id'=>14947487415, 'author_user_id'=>930061,
+        $builder = FixtureBuilder::build('posts', array('post_id'=>'14947487415', 'author_user_id'=>'930061',
         'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani', 'post_text'=>
         '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'pub_date'=>'-1d',
         // start w/ the RT counts zeroed out, let the processing populate them
         'reply_count_cache'=>1, 'old_retweet_count_cache'=>0, 'retweet_count_cache'=>0, 'retweet_count_api' => 0));
 
-        $pdao = DAOFactory::getDAO('PostDAO');
+        $post_dao = DAOFactory::getDAO('PostDAO');
         $tc->fetchRetweetsOfInstanceUser();
-        $post = $pdao->getPost(14947487415, 'twitter');
+        $post = $post_dao->getPost('14947487415', 'twitter');
         $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets from cache count');
         // in processing the retweets of the post, if they contain a <retweeted_status> element pointing
         // to the original post, and that original post information includes a retweet count, we will update the
@@ -481,7 +481,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->retweet_count_api, 2, '2 new-style retweets count from API');
         // should not have processed any old-style retweets here
         $this->assertEqual($post->old_retweet_count_cache, 0, '0 old-style retweets count from API');
-        $retweets = $pdao->getRetweetsOfPost(14947487415, 'twitter', true);
+        $retweets = $post_dao->getRetweetsOfPost('14947487415', 'twitter', true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
 
         //make sure duplicate posts aren't going into the db on next crawler run
@@ -490,16 +490,16 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserInfo();
 
         $tc->fetchRetweetsOfInstanceUser();
-        $post = $pdao->getPost(14947487415, 'twitter');
+        $post = $post_dao->getPost('14947487415', 'twitter');
         $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets detected');
         $this->assertEqual($post->retweet_count_api, 2, '2 new-style retweets count from API');
-        $retweets = $pdao->getRetweetsOfPost(14947487415, 'twitter', true);
+        $retweets = $post_dao->getRetweetsOfPost('14947487415', 'twitter', true);
         $this->assertEqual(sizeof($retweets), 3, '3 retweets loaded');
 
-        $post = $pdao->getPost(12722783896, 'twitter');
-        $rts2 = $pdao->getRetweetsOfPost(12722783896, 'twitter', true);
+        $post = $post_dao->getPost('12722783896', 'twitter');
+        $rts2 = $post_dao->getRetweetsOfPost('12722783896', 'twitter', true);
         $this->assertEqual(sizeof($rts2), 1, '1 retweet loaded');
-        $this->assertEqual($rts2[0]->in_rt_of_user_id, 930061);
+        $this->assertEqual($rts2[0]->in_rt_of_user_id, '930061');
     }
 
     public function testFetchStrayRepliedToTweets() {
@@ -508,11 +508,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
         $tc->fetchInstanceUserTweets();
-        $pdao = DAOFactory::getDAO('PostDAO');
-        $tweets = $pdao->getAllPostsByUsername('anildash', 'twitter');
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $tweets = $post_dao->getAllPostsByUsername('anildash', 'twitter');
 
         $tc->fetchStrayRepliedToTweets();
-        $post = $pdao->getPost(15752814831, 'twitter');
+        $post = $post_dao->getPost('15752814831', 'twitter');
         $this->assertTrue(isset($post));
         $this->assertEqual($post->reply_count_cache, 1);
     }
@@ -810,10 +810,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc = new TwitterCrawler($this->instance, $this->api);
 
         $follow_dao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($follow_dao->followExists(930061, 36823, 'twitter', true), 'Active follow exists');
+        $this->assertTrue($follow_dao->followExists('930061', '36823', 'twitter', true), 'Active follow exists');
 
         $tc->cleanUpFollows();
-        $this->assertFalse($follow_dao->followExists(930061, 36823, 'twitter', true), 'Follow marked inactive');
+        $this->assertFalse($follow_dao->followExists('930061', '36823', 'twitter', true), 'Follow marked inactive');
     }
 
     public function testLoggingErrorOutput() {

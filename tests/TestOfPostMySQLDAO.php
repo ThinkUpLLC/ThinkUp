@@ -112,7 +112,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
             'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.
-            $pseudo_minute.':00', 'reply_count_cache'=>rand(0, 4), 'is_protected'=>0,
+            $pseudo_minute.':00', 'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
             'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
             'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
             'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
@@ -783,7 +783,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetRepliesToPost() {
         $dao = new PostMySQLDAO();
         // Default Sorting
-        $posts = $dao->getRepliesToPost(41, 'twitter');
+        $posts = $dao->getRepliesToPost('41', 'twitter');
         $this->assertEqual(sizeof($posts), 3);
         $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
@@ -792,14 +792,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[1]->location,'Chennai, Tamil Nadu, India');
         $this->assertEqual($posts[2]->post_text, '@shutterbug This is a link post reply http://example.com/',
         "post reply");
-        $this->assertEqual($posts[2]->post_id, 133, "post ID");
+        $this->assertEqual($posts[2]->post_id, '133', "post ID");
         $this->assertEqual($posts[2]->author->username, 'linkbaiter', "Post author");
         $this->assertEqual($posts[2]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
 
         $this->assertEqual($posts[2]->location,'Mumbai, Maharashtra, India');
 
         // Sorting By Proximity
-        $posts = $dao->getRepliesToPost(41, 'twitter', 'location');
+        $posts = $dao->getRepliesToPost('41', 'twitter', 'location');
         $this->assertEqual(sizeof($posts), 3);
         $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
@@ -808,7 +808,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[1]->location,'Mumbai, Maharashtra, India');
         $this->assertEqual($posts[1]->post_text, '@shutterbug This is a link post reply http://example.com/',
         "post reply");
-        $this->assertEqual($posts[1]->post_id, 133, "post ID");
+        $this->assertEqual($posts[1]->post_id, '133', "post ID");
         $this->assertEqual($posts[1]->author->username, 'linkbaiter', "Post author");
         $this->assertEqual($posts[1]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
 
@@ -816,39 +816,39 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // Test date ordering for Facebook posts
         $builders = $this->buildFacebookPostAndReplies();
-        $posts = $dao->getRepliesToPost(145, 'facebook');
+        $posts = $dao->getRepliesToPost('145', 'facebook');
         $this->assertEqual(sizeof($posts), 2);
         $this->assertEqual($posts[0]->post_text, '@ev Cool!');
         $this->assertEqual($posts[1]->post_text, '@ev Rock on!');
 
         // test paging
-        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+        $posts= $dao->getRepliesToPost('41', 'twitter', 'location', $unit = 'km', $is_public = false,
         $count = 1, $page = 1);
         $this->assertEqual(sizeof($posts), 1);
         $this->assertEqual($posts[0]->post_text, '@shutterbug Nice shot!', "post reply");
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
         $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
 
-        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+        $posts= $dao->getRepliesToPost('41', 'twitter', 'location', $unit = 'km', $is_public = false,
         $count = 1, $page = 2);
         $this->assertEqual(sizeof($posts), 1);
         $this->assertEqual($posts[0]->post_text, '@shutterbug This is a link post reply http://example.com/');
         $this->assertEqual($posts[0]->author->username, 'linkbaiter');
         $this->assertEqual($posts[0]->location,'Mumbai, Maharashtra, India');
 
-        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+        $posts= $dao->getRepliesToPost('41', 'twitter', 'location', $unit = 'km', $is_public = false,
         $count = 1, $page = 3);
         $this->assertEqual(sizeof($posts), 1);
         $this->assertEqual($posts[0]->location,'Chennai, Tamil Nadu, India');
 
         // test count
-        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+        $posts= $dao->getRepliesToPost('41', 'twitter', 'location', $unit = 'km', $is_public = false,
         $count = 1, $page = 1);
         $this->assertEqual(sizeof($posts), 1);
-        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+        $posts= $dao->getRepliesToPost('41', 'twitter', 'location', $unit = 'km', $is_public = false,
         $count = 2, $page = 1);
         $this->assertEqual(sizeof($posts), 2);
-        $posts= $dao->getRepliesToPost(41, 'twitter', 'location', $unit = 'km', $is_public = false,
+        $posts= $dao->getRepliesToPost('41', 'twitter', 'location', $unit = 'km', $is_public = false,
         $count = 3, $page = 1);
         $this->assertEqual(sizeof($posts), 3);
 
@@ -1499,13 +1499,13 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $vals['geo'] = '';
             $vals['place'] = '';
             $vals['network'] = 'twitter';
-            $vals['in_retweet_of_post_id'] = 13708601491193856;
+            $vals['in_retweet_of_post_id'] = '13708601491193856';
             $vals['in_rt_of_user_id'] = 20542737;
 
             // for a native RT, the RT'd post info includes the original post
             $retweeted_post = array();
             $rtp = array();
-            $rtp['post_id'] = 13708601491193856;
+            $rtp['post_id'] = '13708601491193856';
             $rtp['author_user_id'] = 20542737;
             $rtp['user_id'] = 20542737;
             $rtp['author_username']= 'user100';
@@ -1539,7 +1539,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $dao->addPost($vals);
             $counter++;
         }
-        $post = $dao->getPost(13708601491193856, 'twitter');
+        $post = $dao->getPost('13708601491193856', 'twitter');
         $this->assertEqual($post->retweet_count_cache, 105);
         $this->assertEqual($post->old_retweet_count_cache, 0);
         $this->assertEqual($post->retweet_count_api, 100);
@@ -1589,13 +1589,13 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             $vals['geo'] = '';
             $vals['place'] = '';
             $vals['network'] = 'twitter';
-            $vals['in_retweet_of_post_id'] = 13708601491193856;
+            $vals['in_retweet_of_post_id'] = '13708601491193856';
             $vals['in_rt_of_user_id'] = 20542737;
 
             // for a native RT, the RT'd post info includes the original post
             $retweeted_post = array();
             $rtp = array();
-            $rtp['post_id'] = 13708601491193856;
+            $rtp['post_id'] = '13708601491193856';
             $rtp['author_user_id'] = 20542737;
             $rtp['user_id'] = 20542737;
             $rtp['author_username']= 'user100';
@@ -1658,8 +1658,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['geo'] = '';
         $vals['place'] = '';
         $vals['network'] = 'twitter';
-        $vals['in_retweet_of_post_id'] = 13708601491193856;
-        $vals['in_rt_of_user_id'] = 20542737;
+        $vals['in_retweet_of_post_id'] = '13708601491193856';
+        $vals['in_rt_of_user_id'] = '20542737';
         $dao->addPost($vals);
         $counter++;
 
@@ -1691,12 +1691,12 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['geo'] = '';
         $vals['place'] = '';
         $vals['network'] = 'twitter';
-        $vals['in_retweet_of_post_id'] = 13708601491193856;
+        $vals['in_retweet_of_post_id'] = '13708601491193856';
         $vals['in_rt_of_user_id'] = 20542737;
         $dao->addPost($vals);
         $counter++;
 
-        $post = $dao->getPost(13708601491193856, 'twitter');
+        $post = $dao->getPost('13708601491193856', 'twitter');
         $this->assertEqual($post->retweet_count_cache, 10);
         $this->assertEqual($post->old_retweet_count_cache, 2);
         $this->assertEqual($post->retweet_count_api, 100);
@@ -2241,12 +2241,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetPostsByFriends2() {
         $builders = array();
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>13, 'follower_id'=>18));
-        $builders[] = FixtureBuilder::build('follows', array('user_id'=>123456, 'follower_id'=>18));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'13', 'follower_id'=>'18'));
+        $builders[] = FixtureBuilder::build('follows', array('user_id'=>'123456', 'follower_id'=>'18'));
         $dao = new PostMySQLDAO();
+
         $res = $dao->getPostsByFriends(18, 'twitter', 5, 1, false); // not public
         $this->assertEqual(count($res), 5);
-        $this->assertEqual($res[0]->author_user_id, 123456);
+        $this->assertEqual($res[0]->author_user_id, 13);
+
         $res = $dao->getPostsByFriends(18, 'twitter', 5, 1, true); // public
         $this->assertEqual(count($res), 5);
         $this->assertEqual($res[0]->author_user_id,13);
@@ -2592,5 +2594,68 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         $post = $dao->getPost(10, 'twitter');
         $this->assertEqual($post->favlike_count_cache, 25);
+    }
+
+    public function testUpdateReplyCount() {
+        $dao = new PostMySQLDAO();
+        $post = $dao->getPost(10, 'twitter');
+        $this->assertEqual($post->reply_count_cache, 0);
+
+        // bad id
+        $update_cnt = $dao->updateReplyCount(-99, 'twitter', 25);
+        $this->assertEqual($update_cnt, 0);
+
+        // bad network
+        $update_cnt = $dao->updateReplyCount(10, 'no-net', 25);
+        $this->assertEqual($update_cnt, 0);
+
+        // good id
+        $update_cnt = $dao->updateReplyCount(10, 'twitter', 25);
+        $this->assertEqual($update_cnt, 1);
+
+        $post = $dao->getPost(10, 'twitter');
+        $this->assertEqual($post->reply_count_cache, 25);
+    }
+
+    public function testUpdateRetweetCount() {
+        $dao = new PostMySQLDAO();
+        $post = $dao->getPost(10, 'twitter');
+        $this->assertEqual($post->retweet_count_cache, 5);
+
+        // bad id
+        $update_cnt = $dao->updateRetweetCount(-99, 'twitter', 25);
+        $this->assertEqual($update_cnt, 0);
+
+        // bad network
+        $update_cnt = $dao->updateRetweetCount(10, 'no-net', 25);
+        $this->assertEqual($update_cnt, 0);
+
+        // good id
+        $update_cnt = $dao->updateRetweetCount(10, 'twitter', 25);
+        $this->assertEqual($update_cnt, 1);
+
+        $post = $dao->getPost(10, 'twitter');
+        $this->assertEqual($post->retweet_count_cache, 25);
+    }
+
+    public function testUpdatePostText() {
+        $dao = new PostMySQLDAO();
+        $post = $dao->getPost(10, 'twitter');
+        $this->assertEqual($post->post_text, "This is post 10");
+
+        // bad id
+        $update_cnt = $dao->updatePostText(-99, 'twitter', 'updated post text');
+        $this->assertEqual($update_cnt, 0);
+
+        // bad network
+        $update_cnt = $dao->updatePostText(10, 'no-net', 'updated post text');
+        $this->assertEqual($update_cnt, 0);
+
+        // good id
+        $update_cnt = $dao->updatePostText(10, 'twitter', 'This is updated post 10');
+        $this->assertEqual($update_cnt, 1);
+
+        $post = $dao->getPost(10, 'twitter');
+        $this->assertEqual($post->post_text, 'This is updated post 10');
     }
 }

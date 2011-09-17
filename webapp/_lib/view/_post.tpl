@@ -6,7 +6,7 @@
     <div class="grid_3">&#160;</div>
     <div class="grid_9">&#160;</div>
     <div class="grid_2 center">
-      {if $t->network eq 'twitter'}retweets{else}likes{/if}
+      {if $t->network eq 'twitter'}retweets{else}{if $t->network eq 'google+'}+1's{else}likes{/if}{/if}
     </div>
     <div class="grid_2 center omega">
       replies
@@ -48,7 +48,11 @@
             {$t->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
             {if $reply_count && $reply_count > $top_20_post_min}</div>{/if}
           {else}
+           {if $t->network == 'google+'}
+            {$t->post_text}
+           {else}
             {$t->post_text|filter_xss|link_usernames_to_twitter}
+            {/if}
           {/if}
         {/if}
       {if $t->link->expanded_url}

@@ -32,11 +32,11 @@ class PostErrorMySQLDAO extends PDODAO implements PostErrorDAO {
         $q = "INSERT INTO #prefix#post_errors (post_id, network, error_code, error_text, error_issued_to_user_id) ";
         $q .= " VALUES (:id, :network, :error_code, :error_text, :issued_to);";
         $vars = array(
-            ':id'=>$post_id,
+            ':id'=>(string)$post_id,
             ':network'=>$network,
             ':error_code'=>$error_code,
             ':error_text'=>$error_text,
-            ':issued_to'=>$issued_to_user_id
+            ':issued_to'=>(string)$issued_to_user_id
         );
         $ps = $this->execute($q, $vars);
         return $this->getInsertId($ps);

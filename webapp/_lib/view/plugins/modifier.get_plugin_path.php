@@ -39,6 +39,8 @@
 function smarty_modifier_get_plugin_path($network) {
     if ($network == "facebook page") {
         return "facebook";
+    } elseif ($network == "google+") {
+        return "googleplus";
     } else {
         return $network;
     }

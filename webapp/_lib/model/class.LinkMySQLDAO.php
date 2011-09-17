@@ -134,7 +134,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
         $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network=:network ";
         $q .= ")";
-        $q .= "ORDER BY l.post_id DESC ";
+        $q .= "ORDER BY l.id DESC ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':user_id'=>$user_id,
@@ -178,7 +178,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q .= $protected;
         $q .= "AND p.post_id = l.post_id AND p.network = l.network ";
         $q .= "AND l.network = :network AND  f.fav_of_user_id = :user_id ";
-        $q .= "ORDER BY l.post_id DESC ";
+        $q .= "ORDER BY l.id DESC ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':user_id'=>$user_id,
@@ -209,7 +209,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q .= "AND p.author_user_id in ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
         $q .= "   WHERE f.follower_id=:user_id AND f.active=1 AND f.network = :network) ";
-        $q .= "ORDER BY l.post_id DESC  ";
+        $q .= "ORDER BY l.id DESC  ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
             ':user_id'=>$user_id,
@@ -233,7 +233,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q .= "   SELECT l.url, l.post_id ";
         $q .= "   FROM #prefix#links AS l ";
         $q .= "   WHERE l.expanded_url = '' and l.error = '' ";
-        $q .= "   ORDER BY post_id DESC LIMIT :limit ";
+        $q .= "   ORDER BY id DESC LIMIT :limit ";
         $q .= ") AS l1 ";
         $q .= "GROUP BY l1.url ";
         $vars = array(

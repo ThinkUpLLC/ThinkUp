@@ -448,6 +448,33 @@ interface PostDAO {
     public function updateFavLikeCount($post_id, $network, $fav_like_count);
 
     /**
+     * Update the reply count cache for a post.
+     * @param int $post_id
+     * @param str $network
+     * @param int $reply_count
+     * @return int Number of updated rows
+     */
+    public function updateReplyCount($post_id, $network, $reply_count);
+
+    /**
+     * Update the retweet count cache for a post.
+     * @param int $post_id
+     * @param str $network
+     * @param int $retweet_count
+     * @return int Number of updated rows
+     */
+    public function updateRetweetCount($post_id, $network, $retweet_count);
+
+    /**
+     * Update the text of a post.
+     * @param int $post_id
+     * @param str $network
+     * @param str $post_text
+     * @return int Number of updated rows
+     */
+    public function updatePostText($post_id, $network, $post_text);
+
+    /**
      * Get most-replied-to posts by a username on a network in the last 7 days.
      * @param str $username The username of the user to fetch posts for.
      * @param str $network The network of the user to fetch posts for.

@@ -367,34 +367,34 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         $q  = "DESCRIBE #prefix#posts;";
         $rows = $this->getDataRowsAsArrays($this->execute($q));
         foreach ($rows as $row) {
-            if ($row['Field'] == 'post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
-                return true;
-            }
-            if ($row['Field'] == 'in_retweet_of_post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
-                return true;
-            }
-            if ($row['Field'] == 'in_reply_to_post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
-                return true;
+            if ($row['Field'] == 'post_id' || $row['Field'] == 'in_retweet_of_post_id'
+            || ($row['Field'] == 'in_reply_to_post_id')) {
+                if (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(50)') {
+                    return true;
+                }
             }
         }
         $q  = "DESCRIBE #prefix#links;";
         $rows = $this->getDataRowsAsArrays($this->execute($q));
         foreach ($rows as $row) {
-            if ($row['Field'] == 'post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+            if ($row['Field'] == 'post_id'
+            && (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(50)')) {
                 return true;
             }
         }
         $q  = "DESCRIBE #prefix#post_errors;";
         $rows = $this->getDataRowsAsArrays($this->execute($q));
         foreach ($rows as $row) {
-            if ($row['Field'] == 'post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+            if ($row['Field'] == 'post_id'
+            && (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(50)')) {
                 return true;
             }
         }
         $q  = "DESCRIBE #prefix#users;";
         $rows = $this->getDataRowsAsArrays($this->execute($q));
         foreach ($rows as $row) {
-            if ($row['Field'] == 'last_post_id' && strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED') {
+            if ($row['Field'] == 'last_post_id'
+            && (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(50)')) {
                 return true;
             }
         }

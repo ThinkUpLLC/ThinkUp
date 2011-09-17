@@ -42,22 +42,23 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         // first add the post (if need be-- this post may have already been inserted).
         $retval = $this->addPostAndAssociatedInfo($vals, $entities, $user_array);
         $q = "INSERT IGNORE INTO #prefix#favorites (post_id, author_user_id, fav_of_user_id, network) ";
-        $q .= "VALUES ( :pid, :uid, :fid, :network) ";
+        $q .= "VALUES ( :post_id, :user_id, :fav_of_user_id, :network) ";
         $vars = array(
-            ':pid' => $vals['post_id'],
-            ':uid' => $vals['author_user_id'],
-            ':fid' => $favoriter_id,
+            ':post_id' => (string) $vals['post_id'],
+            ':user_id' => (string) $vals['author_user_id'],
+            ':fav_of_user_id' => (string) $favoriter_id,
             ':network' => $vals['network']
         );
         $res = $this->execute($q, $vars);
         return $this->getUpdateCount($res);
     }
 
-    public function unFavorite($tid, $uid, $network = 'twitter') {
-        $q = "DELETE FROM #prefix#favorites where post_id = :tid AND fav_of_user_id = :uid AND network = :network";
+    public function unFavorite($post_id, $user_id, $network = 'twitter') {
+        $q = "DELETE FROM #prefix#favorites WHERE post_id = :post_id ";
+        $q .= "AND fav_of_user_id = :user_id AND network = :network";
         $vars = array(
-            ':tid' => $tid,
-            ':uid' => $uid,
+            ':post_id' => (string) $post_id,
+            ':user_id' => (string) $user_id,
             ':network' => $network,
         );
         $res = $this->execute($q, $vars);
@@ -230,7 +231,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         $q .= "GROUP BY p.post_text ORDER BY YEARWEEK(p.pub_date) DESC, favlike_count_cache DESC, p.pub_date DESC ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
-          ':author_user_id'=>$author_user_id,
+          ':author_user_id'=>(string) $author_user_id,
           ':network'=>$network,
           ':limit'=>$count,
           ':start_on_record'=>(int)$start_on_record
@@ -258,7 +259,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         // could potentially order by follower count instead
         $q .= " ORDER BY fav_timestamp desc ";
         $vars = array(
-            ':post_id'=>$post_id,
+            ':post_id'=>(string) $post_id,
             ':network'=>$network
         );
         $ps = $this->execute($q, $vars);

@@ -46,7 +46,7 @@ class PostController extends ThinkUpController {
 
         $network = (isset($_GET['n']) )?$_GET['n']:'twitter';
         if ($this->shouldRefreshCache()) {
-            if ( isset($_GET['t']) && is_numeric($_GET['t']) ) {
+            if ( isset($_GET['t']) ) {
                 $post_id = $_GET['t'];
                 $post = $post_dao->getPost($post_id, $network);
                 if ( isset($post) ){

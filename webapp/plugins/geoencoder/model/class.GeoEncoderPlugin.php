@@ -19,8 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- */
-/**
+ *
  * GeoEncoder Plugin
  *
  * The GeoEncoder plugin validates the geolocation information for a post and stores it to use
@@ -44,17 +43,17 @@ class GeoEncoderPlugin implements CrawlerPlugin, PostDetailPlugin {
     public function crawl() {
         $logger = Logger::getInstance();
         $logger->setUsername(null);
-        $pdao = DAOFactory::getDAO('PostDAO');
+        $post_dao = DAOFactory::getDAO('PostDAO');
         $crawler = new GeoEncoderCrawler;
 
-        $posts_to_geoencode = $pdao->getPostsToGeoencode(2000);
+        $posts_to_geoencode = $post_dao->getPostsToGeoencode(2000);
         $logger->logUserInfo("There are ".count($posts_to_geoencode)." posts to geoencode.", __METHOD__.','.__LINE__);
 
         foreach ($posts_to_geoencode as $post_data) {
             if ($post_data['geo']!='') {
-                $crawler->performReverseGeoencoding($pdao, $post_data);
+                $crawler->performReverseGeoencoding($post_dao, $post_data);
             } else {
-                $crawler->performGeoencoding($pdao, $post_data);
+                $crawler->performGeoencoding($post_dao, $post_data);
             }
         }
         $logger->logUserSuccess("Post geoencoding complete.", __METHOD__.','.__LINE__);

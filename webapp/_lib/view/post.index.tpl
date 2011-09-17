@@ -35,7 +35,7 @@
         {if $sidebar_menu}
           {foreach from=$sidebar_menu key=smkey item=sidebar_menu_item name=smenuloop}
             {if $sidebar_menu_item->header}</li></ul> <li>{$sidebar_menu_item->header}<ul class="side-subnav">{/if}
-              <li{if $smarty.get.v eq $smkey} class="currentview"{/if}><a href="index.php?v={$smkey}&t={$post->post_id}&n={$post->network}">{$sidebar_menu_item->name}&nbsp;&nbsp;&nbsp;</a></li>
+              <li{if $smarty.get.v eq $smkey} class="currentview"{/if}><a href="index.php?v={$smkey}&t={$post->post_id}&n={$post->network|urlencode}">{$sidebar_menu_item->name}&nbsp;&nbsp;&nbsp;</a></li>
             {/foreach}
               </li>
             </ul>
@@ -163,7 +163,7 @@
 
                   <!--{if $post->is_geo_encoded eq 1}
                   <div>
-                  <a href="{$site_root_path}post/map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
+                  <a href="{$site_root_path}post/map.php?t=post&pid={$post->post_id}&n={$post->network|urlencode}" title="Locate on Map">
                     <img src="{$site_root_path}assets/img/map_icon.png" class="map-icon map-icon-public">
                   </a>
                   </div>

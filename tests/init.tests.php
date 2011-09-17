@@ -53,5 +53,6 @@ THINKUP_ROOT_PATH . 'webapp/plugins/facebook/tests/',
 THINKUP_ROOT_PATH . 'webapp/plugins/twitter/tests/',
 THINKUP_ROOT_PATH . 'webapp/plugins/twitterrealtime/tests/',
 THINKUP_ROOT_PATH . 'webapp/plugins/geoencoder/tests/',
-THINKUP_ROOT_PATH . 'webapp/plugins/hellothinkup/tests/'
+THINKUP_ROOT_PATH . 'webapp/plugins/hellothinkup/tests/',
+THINKUP_ROOT_PATH . 'webapp/plugins/googleplus/tests/'
 ));

@@ -30,11 +30,11 @@
  */
 class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
     public function insert($network_user_id, $network, $count){
-        $q  = " INSERT INTO #prefix#follower_count ";
-        $q .= " (network_user_id, network, date, count) ";
-        $q .= " VALUES ( :network_user_id, :network, NOW(), :count );";
+        $q  = "INSERT INTO #prefix#follower_count ";
+        $q .= "(network_user_id, network, date, count) ";
+        $q .= "VALUES ( :network_user_id, :network, NOW(), :count );";
         $vars = array(
-            ':network_user_id'=>$network_user_id, 
+            ':network_user_id'=>(string) $network_user_id, 
             ':network'=>$network,
             ':count'=>$count
         );
@@ -64,7 +64,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         $q .= "GROUP BY ".$group_by." ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
         $q .= "ORDER BY history_counts.full_date ASC";
         $vars = array(
-            ':network_user_id'=>$network_user_id,
+            ':network_user_id'=>(string) $network_user_id,
             ':network'=>$network,
             ':limit'=>(int)$limit
         );

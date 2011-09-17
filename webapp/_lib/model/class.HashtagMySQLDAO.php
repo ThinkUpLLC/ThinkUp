@@ -80,7 +80,7 @@ class HashtagMySQLDAO extends PDODAO implements HashtagDAO {
 
         $vars = array(
              ':hashtag_id' => $hashtag_id,
-             ':post_id' => $post_id,
+             ':post_id' =>(string)$post_id,
              ':network' => $network
         );
         $ps  = $this->execute($q, $vars);

@@ -14,7 +14,7 @@
           <li>
             <ul class="side-subnav">
               <li{if $smarty.get.v eq ''} class="currentview"{/if}><br />
-                <a href="{$site_root_path}index.php?u={$instance->network_username|urlencode}&n={$instance->network}">Dashboard</a>
+                <a href="{$site_root_path}index.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Dashboard</a>
               </li>
         {/if}
         {if $sidebar_menu}
@@ -26,7 +26,7 @@
         <ul class="side-subnav">
         {/if}
         <li{if $smarty.get.v eq $smkey} class="currentview"{/if}>
-        <a href="{$site_root_path}index.php?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network}">{$sidebar_menu_item->name}</a></li>
+        <a href="{$site_root_path}index.php?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">{$sidebar_menu_item->name}</a></li>
         {/foreach}
         </ul>
         </li>
@@ -67,10 +67,10 @@
               {include file=$data_template}
               <div class="float-l" id="older-posts-div">
                 {if $next_page}
-                  <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n}&{/if}page={$next_page}" id="next_page">&#60; Older Posts</a>
+                  <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page">&#60; Older Posts</a>
                 {/if}
                 {if $last_page}
-                  | <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n}&{/if}page={$last_page}" id="last_page">Newer Posts  &#62;</a>
+                  | <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page">Newer Posts  &#62;</a>
                 {/if}
               </div>
 
@@ -97,7 +97,7 @@
                         {/if}
                     {/foreach}
                     {if $instance->network neq "twitter"} 
-                        <img width="700" height="225" src="http://chart.googleapis.com/chart?chxs=0,,8&chxt=x&chxl=0:|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{$post->pub_date|date_format:"%b %e"}|{/foreach}&chd=t:{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=FF9900,cccccc&chdl=Likes|Replies&chs=700x225&cht=bvs&chm=N*s*,666666,-1,-1,10,,e::5">
+                        <img width="700" height="225" src="http://chart.googleapis.com/chart?chxs=0,,8&chxt=x&chxl=0:|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{$post->pub_date|date_format:"%b %e"}|{/foreach}&chd=t:{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=FF9900,cccccc&chdl={if $instance->network eq 'google+'}%2B1's{else}Likes{/if}|Replies&chs=700x225&cht=bvs&chm=N*s*,666666,-1,-1,10,,e::5">
                     {else}
                         <img width="700" height="225" src="http://chart.googleapis.com/chart?chxs=0,,8&chxt=x&chxl=0:|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{$post->pub_date|date_format:"%b %e"}|{/foreach}&chd=t:{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->all_retweets > 0}{$post->all_retweets}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=FF9900,cccccc&chdl=Retweets|Replies&chs=700x225&cht=bvs&chm=N*s*,666666,-1,-1,10,,e::5">
                     {/if}
@@ -107,7 +107,7 @@
 
             {if $most_replied_to_1wk}
               <div class="clearfix">
-                <h2>This Week's Most Replied-To Posts</h2>
+                <h2>This Week's Most {if $instance->network eq 'google+'}Discussed{else}Replied-To{/if} Posts</h2>
                 {foreach from=$most_replied_to_1wk key=tid item=t name=foo}
                     {if $instance->network eq "twitter"}
                         {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
@@ -120,7 +120,7 @@
 
             {if $most_faved_1wk}
               <div class="clearfix">
-                <h2>This Week's Most Liked Posts</h2>
+                <h2>This Week's Most {if $instance->network eq 'google+'}+1'ed{else}Liked{/if} Posts</h2>
                 {foreach from=$most_faved_1wk key=tid item=t name=foo}
                   {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
                 {/foreach}
@@ -167,9 +167,9 @@
 
             {if $most_retweeted_1wk}
               <div class="clearfix">
-                <h2>This Week's Most Retweeted</h2>
+                <h2>This Week's Most {if $instance->network eq 'google+'}Reshared{else}Retweeted{/if}</h2>
                 {foreach from=$most_retweeted_1wk key=tid item=t name=foo}
-                  {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                  {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets=false}
                 {/foreach}
               </div>
             {/if}
