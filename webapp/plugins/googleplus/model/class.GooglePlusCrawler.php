@@ -92,6 +92,67 @@ class GooglePlusCrawler {
     }
 
     /**
+     * Check the validity of G+'s OAuth token by requestig the instance user's details.
+     * Fetch details from Google+ API for the current instance user and insert into the datastore.
+     * @return User
+     */
+    public function initializeInstanceUser($client_id, $client_secret, $access_token, $refresh_token, $owner_id) {
+        $network = 'google+';
+        $user_dao = DAOFactory::getDAO('UserDAO');
+        $user_object = null;
+        // Get owner user details and save them to DB
+        $fields = 'displayName,id,image,tagline';
+        $user_details = GooglePlusAPIAccessor::apiRequest('people/me', $this->access_token, $fields);
+
+        if (isset($user_details->error->code) && $user_details->error->code == '401') {
+            //Token has expired, fetch and save a new one
+            $tokens = self::getOAuthTokens($client_id, $client_secret, $refresh_token, 'refresh_token');
+            $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+            $owner_instance_dao->updateTokens($owner_id, $this->instance->id, $access_token, $refresh_token);
+            $this->access_token  = $tokens->access_token;
+            //try again
+            $user_details = GooglePlusAPIAccessor::apiRequest('people/me', $this->access_token, $fields);
+        }
+
+        $user_details->network = $network;
+        $user = $this->parseUserDetails($user_details);
+        if (isset($user)) {
+            $user_object = new User($user, 'Owner initialization');
+            $user_dao->updateUser($user_object);
+        }
+        if (isset($user_object)) {
+            $this->logger->logSuccess("Successfully fetched ".$user_object->username. " ".$user_object->network.
+            "'s details from Google+", __METHOD__.','.__LINE__);
+        } else {
+            $this->logger->logInfo("Error fetching ".$user_id." ". $network."'s details from the Google+ API, ".
+                "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
+        }
+        return $user_object;
+    }
+
+    public static function getOAuthTokens($client_id, $client_secret, $code_refresh_token, $grant_type,
+    $redirect_uri=null) {
+        //prep access token request URL as per http://code.google.com/apis/accounts/docs/OAuth2.html#SS
+        $access_token_request_url = "https://accounts.google.com/o/oauth2/token";
+        $fields = array(
+            'client_id'=>urlencode($client_id),
+            'client_secret'=>urlencode($client_secret),
+            'grant_type'=>urlencode($grant_type)
+        );
+        if ($grant_type=='refresh_token') {
+            $fields['refresh_token'] = $code_refresh_token;
+        } elseif ($grant_type=='authorization_code') {
+            $fields['code'] = $code_refresh_token;
+        }
+        if (isset($redirect_uri)) {
+            $fields['redirect_uri'] = $redirect_uri;
+        }
+        //get tokens
+        $tokens = GooglePlusAPIAccessor::rawPostApiRequest($access_token_request_url, $fields, true);
+        return $tokens;
+    }
+
+    /**
      * Convert decoded JSON data from Google+ into a ThinkUp user object.
      * @param array $details
      * @retun array $user_vals

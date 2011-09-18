@@ -52,30 +52,36 @@ class GooglePlusPlugin implements CrawlerPlugin, DashboardPlugin {
         //crawl Google+ users
         $instances = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('google+');
 
-        foreach ($instances as $instance) {
-            if (!$owner_instance_dao->doesOwnerHaveAccess($current_owner, $instance)) {
-                // Owner doesn't have access to this instance; let's not crawl it.
-                continue;
+        if (isset($options['google_plus_client_id']->option_value)
+        && isset($options['google_plus_client_secret']->option_value)) {
+            foreach ($instances as $instance) {
+                if (!$owner_instance_dao->doesOwnerHaveAccess($current_owner, $instance)) {
+                    // Owner doesn't have access to this instance; let's not crawl it.
+                    continue;
+                }
+                $logger->setUsername(ucwords($instance->network) . ' | '.$instance->network_username );
+                $logger->logUserSuccess("Starting to collect data for ".$instance->network_username."'s ".
+                ucwords($instance->network), __METHOD__.','.__LINE__);
+
+                $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
+                $access_token = $tokens['oauth_access_token'];
+                $refresh_token = $tokens['oauth_access_token_secret'];
+
+                $instance_dao->updateLastRun($instance->id);
+                $crawler = new GooglePlusCrawler($instance, $access_token);
+                try {
+                    //@TODO Make this fetchPosts when that's ready
+                    $crawler->initializeInstanceUser($options['google_plus_client_id']->option_value,
+                    $options['google_plus_client_secret']->option_value, $access_token, $refresh_token,
+                    $current_owner->id);
+                } catch (Exception $e) {
+                    $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
+                }
+
+                $instance_dao->save($crawler->instance, 0, $logger);
+                $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
+                ucwords($instance->network), __METHOD__.','.__LINE__);
             }
-            $logger->setUsername(ucwords($instance->network) . ' | '.$instance->network_username );
-            $logger->logUserSuccess("Starting to collect data for ".$instance->network_username."'s ".
-            ucwords($instance->network), __METHOD__.','.__LINE__);
-
-            $tokens = $owner_instance_dao->getOAuthTokens($instance->id);
-            $access_token = $tokens['oauth_access_token'];
-
-            $instance_dao->updateLastRun($instance->id);
-            $crawler = new GooglePlusCrawler($instance, $access_token);
-            try {
-                //@TODO Make this fetchPostsAndReplies when that's ready
-                $crawler->fetchUser($instance->network_user_id, 'google+', true);
-            } catch (Exception $e) {
-                $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
-            }
-
-            $instance_dao->save($crawler->instance, 0, $logger);
-            $logger->logUserSuccess("Finished collecting data for ".$instance->network_username."'s ".
-            ucwords($instance->network), __METHOD__.','.__LINE__);
         }
     }
 

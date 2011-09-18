@@ -46,25 +46,9 @@ class GooglePlusAPIAccessor {
         $result = Utils::getURLContents($url);
         return json_decode($result);
     }
-    /**
-     * Make a Graph API request with the absolute URL. This URL needs to include the https://graph.googleplus.com/ at
-     * the start and the access token at the end as well as everything in between. It is literally the raw URL that
-     * needs to be passed in.
-     *
-     * @param str $path
-     * @param bool $decode_json Defaults to true, if true returns decoded JSON
-     * @return array Decoded JSON response
-     */
-    public static function rawGetApiRequest($path, $decode_json=true) {
-        $result = Utils::getURLContents($path);
-        if ($decode_json) {
-            $result = json_decode($result);
-        }
-        return $result;
-    }
 
     /**
-     * Make a Graph API request with the absolute URL. This URL needs to include the https://graph.googleplus.com/ at
+     * Make a Graph API request with the absolute URL. This URL needs to include https://www.googleapis.com/plus/v1/ at
      * the start and the access token at the end as well as everything in between. It is literally the raw URL that
      * needs to be passed in.
      *

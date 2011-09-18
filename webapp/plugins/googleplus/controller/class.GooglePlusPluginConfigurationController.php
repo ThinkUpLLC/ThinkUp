@@ -107,18 +107,8 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
         if (isset($_GET['code'])) {
             $code = $_GET['code'];
 
-            //prep access token request URL as per http://code.google.com/apis/accounts/docs/OAuth2.html#SS
-            $access_token_request_url = "https://accounts.google.com/o/oauth2/token";
-            $fields = array(
-            'code'=>urlencode($code),
-            'client_id'=>urlencode($client_id),
-            'client_secret'=>urlencode($client_secret),
-            'redirect_uri'=>$redirect_uri,
-            'grant_type'=>urlencode('authorization_code')
-            );
-
-            //get tokens
-            $tokens = GooglePlusAPIAccessor::rawPostApiRequest($access_token_request_url, $fields, true);
+            $tokens = GooglePlusCrawler::getOAuthTokens($client_id, $client_secret, $code, 'authorization_code',
+            $redirect_uri);
             $gplus_user = GooglePlusAPIAccessor::apiRequest('people/me', $tokens->access_token, null);
             $gplus_user_id = $gplus_user->id;
             $gplus_username = $gplus_user->displayName;

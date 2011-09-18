@@ -36,6 +36,8 @@ require_once THINKUP_ROOT_PATH.
 'webapp/plugins/googleplus/controller/class.GooglePlusPluginConfigurationController.php';
 require_once THINKUP_ROOT_PATH.
 'webapp/plugins/googleplus/tests/classes/mock.GooglePlusAPIAccessor.php';
+require_once THINKUP_ROOT_PATH.
+'webapp/plugins/googleplus/tests/classes/mock.GooglePlusCrawler.php';
 
 class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase {
 

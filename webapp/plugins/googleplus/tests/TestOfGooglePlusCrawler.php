@@ -88,4 +88,54 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($user->url, '');
         $this->assertFalse($user->is_protected);
     }
+
+    public function testInitializeInstanceUserFreshToken() {
+        $gpc = new GooglePlusCrawler($this->profile1_instance, 'faux-access-token', 10);
+        $gpc->initializeInstanceUser('test_client_id', 'test_client_secret', 'valid_token', 'test_refresh_token', 1);
+        $user_dao = new UserMySQLDAO();
+        $user = $user_dao->getUserByName('Gina Trapani', 'google+');
+
+        $this->assertTrue(isset($user));
+        $this->assertEqual($user->username, 'Gina Trapani');
+        $this->assertEqual($user->full_name, 'Gina Trapani');
+        $this->assertEqual($user->user_id, '113612142759476883204');
+        $this->assertEqual($user->location, "San Diego");
+        $this->assertEqual($user->description,
+        'ThinkUp lead developer, This Week in Google co-host, Todo.txt apps creator, founding editor of Lifehacker');
+        $this->assertEqual($user->url, '');
+        $this->assertFalse($user->is_protected);
+    }
+
+    public function testInitializeInstanceUserExpiredToken() {
+        $gpc = new GooglePlusCrawler($this->profile1_instance, 'faux-expired-access-token', 10);
+        $gpc->initializeInstanceUser('test_client_id', 'test_client_secret', 'valid_token', 'test_refresh_token', 1);
+
+        $user_dao = new UserMySQLDAO();
+        $user = $user_dao->getUserByName('Gina Trapani', 'google+');
+
+        $this->assertTrue(isset($user));
+        $this->assertEqual($user->username, 'Gina Trapani');
+        $this->assertEqual($user->full_name, 'Gina Trapani');
+        $this->assertEqual($user->user_id, '113612142759476883204');
+        $this->assertEqual($user->location, "San Diego");
+        $this->assertEqual($user->description,
+        'ThinkUp lead developer, This Week in Google co-host, Todo.txt apps creator, founding editor of Lifehacker');
+        $this->assertEqual($user->url, '');
+        $this->assertFalse($user->is_protected);
+    }
+
+    public function testGetOAuthTokens() {
+        $gpc = new GooglePlusCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+
+        //test getting initial token
+        $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-code1', 'authorization_code');
+        $this->assertEqual($tokens->access_token, 'faux-access-token');
+        $this->assertEqual($tokens->refresh_token, 'faux-refresh-token');
+
+        //test refreshing token
+        $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-refresh_token1',
+        'refresh_token');
+        $this->assertEqual($tokens->access_token, 'faux-access-token');
+        $this->assertEqual($tokens->refresh_token, 'faux-refresh-token');
+    }
 }
