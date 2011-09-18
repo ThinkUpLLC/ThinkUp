@@ -76,6 +76,11 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
         } else {
             $this->addErrorMessage('Please set your Google+ client ID and secret.');
         }
+
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'google+');
+        $this->addToView('owner_instances', $owner_instances);
+
         return $this->generateView();
     }
 
@@ -91,7 +96,7 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
         //prep redirect URI
         $config = Config::getInstance();
         $site_root_path = $config->getValue('site_root_path');
-        $redirect_uri = urlencode('http://'.$_SERVER['SERVER_NAME'].$site_root_path.'account/?p=googleplus');
+        $redirect_uri = urlencode('http://'.$_SERVER['SERVER_NAME'].$site_root_path.'account/?p=google%2B');
 
         //create OAuth link
         $oauth_link = "https://accounts.google.com/o/oauth2/auth?client_id=".$client_id.
