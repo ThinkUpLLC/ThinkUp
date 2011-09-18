@@ -70,7 +70,6 @@ class GooglePlusCrawler {
         if ($force_reload_from_googleplus || !$user_dao->isUserInDB($user_id, $network)) {
             // Get owner user details and save them to DB
             $fields = 'displayName,id,image,tagline';
-            //@TODO: Actually fetch user data from Google+ API
             $user_details = GooglePlusAPIAccessor::apiRequest('people/'.$user_id, $this->access_token, $fields);
             $user_details->network = $network;
 
@@ -183,6 +182,119 @@ class GooglePlusCrawler {
             //this will help us in getting correct range of posts
             $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0;
             return $user_vals;
+        }
+    }
+    
+    
+    /**
+     * Capture the current instance users's posts and store them in the database.
+     */
+    public function fetchInstanceUserPosts() {
+        $user_posts = GooglePlusAPIAccessor::apiRequest('/people/'.$this->instance->network_user_id.'/activities/public?alt=json&maxResults=100&pp=1', $this->access_token, '');
+        
+        foreach ($user_posts->$items as $item) {
+            $post['post_id'] => $item->id;
+            $post['author_username'] => $item->actor->displayName;
+            $post['author_fullname'] => $item->actor->displayName;
+            $post['author_avatar'] => $item->actor->image->url;
+            $post['author_user_id'] => $item->actor->id;
+            if ($item->verb == "share") {
+            
+            } else if ($item->verb == "post") {
+            
+            } else if ($item->verb 
+            $post['post_text'] => 
+        }
+        
+        $status_message = "";
+        $got_latest_page_of_tweets = false;
+        $continue_fetching = true;
+        $this->logger->logInfo("Twitter user post count:  " . $this->user->post_count .
+        " and ThinkUp post count: "  . $this->instance->total_posts_in_system, __METHOD__.','.__LINE__);
+        while ($this->api->available && $this->api->available_api_calls_for_crawler > 0
+        && $this->user->post_count > $this->instance->total_posts_in_system && $continue_fetching) {
+
+            $recent_tweets = str_replace("[id]", $this->user->username,
+            $this->api->cURL_source['user_timeline']);
+            $args = array();
+            $count_arg =  (isset($this->twitter_options['tweet_count_per_call']))?
+            $this->twitter_options['tweet_count_per_call']->option_value:100;
+            $args["count"] = $count_arg;
+            $args["include_rts"] = "true";
+            $last_page_of_tweets = round($this->api->archive_limit / $count_arg) + 1;
+
+            //set page and since_id params for API call
+            if ($got_latest_page_of_tweets
+            && $this->user->post_count != $this->instance->total_posts_in_system
+            && $this->instance->total_posts_in_system < $this->api->archive_limit) {
+                if ($this->instance->last_page_fetched_tweets < $last_page_of_tweets) {
+                    $this->instance->last_page_fetched_tweets = $this->instance->last_page_fetched_tweets + 1;
+                } else {
+                    $continue_fetching = false;
+                    $this->instance->last_page_fetched_tweets = 0;
+                }
+                $args["page"] = $this->instance->last_page_fetched_tweets;
+            } else {
+                if (!$got_latest_page_of_tweets && $this->instance->last_post_id > 0)
+                $args["since_id"] = $this->instance->last_post_id;
+            }
+            list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $args);
+            if ($cURL_status == 200) {
+                $count = 0;
+                $tweets = $this->api->parseXML($twitter_data);
+
+                $pd = DAOFactory::getDAO('PostDAO');
+                $new_username = false;
+                foreach ($tweets as $tweet) {
+                    $tweet['network'] = 'twitter';
+
+                    if ($pd->addPost($tweet, $this->user, $this->logger) > 0) {
+                        $count = $count + 1;
+                        $this->instance->total_posts_in_system = $this->instance->total_posts_in_system + 1;
+                        //expand and insert links contained in tweet
+                        URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
+                        $this->logger);
+                    }
+                    if ($tweet['post_id'] > $this->instance->last_post_id)
+                    $this->instance->last_post_id = $tweet['post_id'];
+                }
+                $status_message .= ' ' . count($tweets)." tweet(s) found and $count saved";
+                $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+                $status_message = "";
+
+                //if you've got more than the Twitter API archive limit, stop looking for more tweets
+                if ($this->instance->total_posts_in_system >= $this->api->archive_limit) {
+                    $this->instance->last_page_fetched_tweets = 1;
+                    $continue_fetching = false;
+                    $overage_info = "Twitter only makes ".$this->api->archive_limit.
+                    " tweets available, so some of the oldest ones may be missing.";
+                } else {
+                    $overage_info = "";
+                }
+                if ($this->user->post_count == $this->instance->total_posts_in_system) {
+                    $this->instance->is_archive_loaded_tweets = true;
+                }
+                $status_message .= $this->instance->total_posts_in_system." tweets are in ThinkUp; ".
+                $this->user->username ." has ". $this->user->post_count." tweets according to Twitter.";
+                $this->logger->logUserInfo($status_message, __METHOD__.','.__LINE__);
+                if ($overage_info != '') {
+                    $this->logger->logUserError($overage_info, __METHOD__.','.__LINE__);
+                }
+                $got_latest_page_of_tweets = true;
+            }
+        }
+
+        if ($this->instance->total_posts_in_system >= $this->user->post_count) {
+            $status_message = "All of ".$this->user->username. "'s tweets are in ThinkUp.";
+            $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+        }
+
+        if (isset($this->user->username) && $this->user->username != $this->instance->network_username) {
+            // User has changed their username, so update instance and posts data
+            $instance_dao = DAOFactory::getDAO('InstanceDAO');
+            $instance_dao->updateUsername($this->instance->id,$this->user->username);
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $post_dao->updateAuthorUsername($this->instance->network_user_id, 'twitter', $this->user->username);
         }
     }
 }
