@@ -2,7 +2,7 @@
 /*
  Plugin Name: Hello ThinkUp
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/hellothinkup/
- Description: The "Hello, world!" of ThinkUp plugins.
+ Description: Developer example plugin.
  Version: 0.01
  Icon: assets/img/plugin_icon.png
  Author: Gina Trapani

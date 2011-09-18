@@ -2,7 +2,7 @@
 /*
  Plugin Name: Twitter Realtime
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/twitterrealtime/
- Description: Support for the Twitter streaming API
+ Description: Capture and display tweets in realtime.
  Icon: assets/img/twitter_icon.png
  Version: 0.01
  Author: Amy Unruh, Mark Wilkie

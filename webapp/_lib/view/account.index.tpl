@@ -35,7 +35,7 @@
                 </div>
                 <div class="grid_14">
                   <div style="font-size:14px">{$ip->description}</div>
-                  <span style="font-size:12px;color:#999"><a href="{$ip->homepage}">v{$ip->version}</a> by {$ip->author}</span>
+                  <!--<span style="font-size:12px;color:#999"><a href="{$ip->homepage}">v{$ip->version}</a> by {$ip->author}</span>-->
                 </div>
                 {if $user_is_admin}
                 <div class="grid_4 omega">
