@@ -70,33 +70,24 @@ class FacebookCrawler {
      * @param bool $reload_from_facebook Defaults to false; if true will query Facebook API and update existing user
      * @return User
      */
-    public function fetchUser($user_id, $found_in, $force_reload_from_facebook=false) {
-        //assume all users except the instance user is a facebook profile, not a page
-        //@TODO: Start supporting users of type 'facebook page'
-        $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
-        $user_dao = DAOFactory::getDAO('UserDAO');
-        $user_object = null;
-        if ($force_reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
-            // Get owner user details and save them to DB
-            $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
-            $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
-            $user_details->network = $network;
+    public function fetchUserInfo($uid, $network, $found_in) {
+        // Get owner user details and save them to DB
+        $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
+        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token);
+        $user_details->network = $network;
 
-            $user = $this->parseUserDetails($user_details);
-            if (isset($user)) {
-                $user_object = new User($user, $found_in);
-                $user_dao->updateUser($user_object);
-            }
-            if (isset($user_object)) {
-                $this->logger->logSuccess("Successfully fetched ".$user_id. " ".$network."'s details from Facebook",
-                __METHOD__.','.__LINE__);
-            } else {
-                //@TODO: Most of these errors occur because TU doesn't yet support users of type 'facebook page'
-                //We just assume every user is a vanilla FB user. However, we can't retrieve page details using
-                //a vanilla user call here
-                $this->logger->logInfo("Error fetching ".$user_id." ". $network."'s details from Facebook API, ".
-                "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
-            }
+        $user = $this->parseUserDetails($user_details);
+        if (isset($user)) {
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
+            $user_object = new User($user, $found_in);
+            // storing Facebook 'updated_time' in other space in User object, in case it might interfer with other code
+            $user_object->updated_time = $user['updated_time'];
+            $user_dao = DAOFactory::getDAO('UserDAO');
+            $user_dao->updateUser($user_object);
+            return $user_object;
+        } else {
+            return null;
         }
         return $user_object;
     }
@@ -122,8 +113,7 @@ class FacebookCrawler {
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;
             $user_vals["network"] = $details->network;
-            //this will help us in getting correct range of posts
-            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0;
+            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0; // this will help us in getting correct range of posts
             return $user_vals;
         }
     }
@@ -132,47 +122,41 @@ class FacebookCrawler {
      * Fetch and save the posts and replies for the crawler's instance. This function will loop back through the
      * user's or pages archive of posts.
      */
-    public function fetchPostsAndReplies() {
-        $id = $this->instance->network_user_id;
-        $network = $this->instance->network;
-        $fetch_next_page = true;
-        $current_page_number = 1;
-        $next_api_request = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
+    public function fetchPostsAndReplies($id, $is_page) {
+		// 'since' is the datetime of the last post in ThinkUp DB. 'until' is the last post in stream, according to Facebook
+		$post_dao = DAOFactory::getDAO('PostDAO');
+		$sincePost = $post_dao->getAllPosts($id, "facebook", 1, true, 'pub_date', 'DESC');
+		$since = $sincePost[0]->pub_date;
+		$since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
+		$profile = $this->fetchUserInfo($id, 'facebook', 'Post stream');
+		$until = $profile->other["updated_time"];
+		
+		$keepLooping = TRUE;
+		$i = 0;
+		$rawNextRequest = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
+		
+		while ($keepLooping) {
+			$i++;
+			$stream = FacebookGraphAPIAccessor::rawApiRequest($rawNextRequest, TRUE);
+			if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
+				$this->logger->logInfo(sizeof($stream->data)." Facebook posts found.",
+				__METHOD__.','.__LINE__);
 
-        //Cap crawl time for very busy pages with thousands of likes/comments
-        $fetch_stop_time = time() + $this->max_crawl_time;
-
-        //Determine 'since', datetime of oldest post in datastore
-        $post_dao = DAOFactory::getDAO('PostDAO');
-        $since_post = $post_dao->getAllPosts($id, $network, 1, 1, true, 'pub_date', 'ASC');
-        $since = isset($since_post[0])?$since_post[0]->pub_date:0;
-        $since = strtotime($since) - (60 * 60 * 24); // last post minus one day, just to be safe
-        ($since < 0)?$since=0:$since=$since;
-
-        while ($fetch_next_page) {
-            $stream = FacebookGraphAPIAccessor::rawApiRequest($next_api_request, true);
-            if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
-                $this->logger->logInfo(sizeof($stream->data)." Facebook posts found on page ".$current_page_number,
-                __METHOD__.','.__LINE__);
-
-                $this->processStream($stream, $network, $current_page_number);
-
-                if (isset($stream->paging->next)) {
-                    $next_api_request = $stream->paging->next . '&since=' . $since;
-                    $current_page_number++;
-                } else {
-                    $fetch_next_page = false;
-                }
-            } else {
-                $this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
-                $fetch_next_page = false;
-            }
-            if (time() > $fetch_stop_time) {
-                $fetch_next_page = false;
-                $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
-                ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
-            }
-        }
+				$thinkup_data = $this->processStream($stream, (($is_page)?'facebook page':'facebook'));
+				
+				//get the next page for the loop
+				$rawNextRequest = $stream->paging->next;
+			} else {
+				$this->logger->logInfo("No Facebook posts found for ID $id", __METHOD__.','.__LINE__);
+				$keepLooping = FALSE;
+			}
+			
+			if ($i > 10) {
+			    $keepLooping = FALSE; //failsafe to keep from looping forever
+			}
+		}
+		
+		
     }
 
     /**
@@ -410,29 +394,33 @@ class FacebookCrawler {
                     $total_added_posts = $total_added_posts + $post_comments_added;
                 }
 
-                //process "likes"
-                if ($must_process_likes) {
-                    if (isset($p->likes)) {
-                        $likes_captured = 0;
-                        if (isset($p->likes->data)) {
-                            $post_likes = $p->likes->data;
-                            $post_likes_count = isset($post_likes)?sizeof($post_likes):0;
-                            if (is_array($post_likes) && sizeof($post_likes) > 0) {
-                                foreach ($post_likes as $l) {
-                                    if (isset($l->name) && isset($l->id)) {
-                                        //Get users
-                                        $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
-                                        "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
-                                        '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
-                                        "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
-                                        "network"=>'facebook'); //Users are always set to network=facebook
-                                        array_push($thinkup_users, $user_to_add);
+                $total_added_users = $total_added_users + $this->storeUsers($thinkup_users);
+                $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+                //free up memory
+                $thinkup_users = array();
+                $thinkup_likes = array();
 
-                                        $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
-                                        "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
-                                        array_push($thinkup_likes, $fav_to_add);
-                                        $likes_captured = $likes_captured + 1;
-                                    }
+                // collapsed likes
+                if (isset($p->likes->count) && $p->likes->count > $likes_captured) {
+                    $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
+                    $this->access_token;
+                    do {
+                        $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
+                        if (isset($likes_stream) && is_array($likes_stream->data)) {
+                            foreach ($likes_stream->data as $l) {
+                                if (isset($l->name) && isset($l->id)) {
+                                    //Get users
+                                    $ttu = array("user_name"=>$l->name, "full_name"=>$l->name,
+                                    "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
+                                    '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
+                                    "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
+                                    "network"=>'facebook'); //Users are always set to network=facebook
+                                    array_push($thinkup_users, $ttu);
+
+                                    $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
+                                    "author_user_id"=>$p->from->id, "post_id"=>$post_id);
+                                    array_push($thinkup_likes, $fav_to_add);
+                                    $likes_captured = $likes_captured + 1;
                                 }
                             }
                         }
