@@ -70,33 +70,24 @@ class FacebookCrawler {
      * @param bool $reload_from_facebook Defaults to false; if true will query Facebook API and update existing user
      * @return User
      */
-    public function fetchUser($user_id, $found_in, $force_reload_from_facebook=false) {
-        //assume all users except the instance user is a facebook profile, not a page
-        //@TODO: Start supporting users of type 'facebook page'
-        $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
-        $user_dao = DAOFactory::getDAO('UserDAO');
-        $user_object = null;
-        if ($force_reload_from_facebook || !$user_dao->isUserInDB($user_id, $network)) {
-            // Get owner user details and save them to DB
-            $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
-            $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$user_id, $this->access_token, $fields);
-            $user_details->network = $network;
+    public function fetchUserInfo($uid, $network, $found_in) {
+        // Get owner user details and save them to DB
+        $fields = $network!='facebook page'?'id,name,about,location,website':'id,name,location,website';
+        $user_details = FacebookGraphAPIAccessor::apiRequest('/'.$uid, $this->access_token);
+        $user_details->network = $network;
 
-            $user = $this->parseUserDetails($user_details);
-            if (isset($user)) {
-                $user_object = new User($user, $found_in);
-                $user_dao->updateUser($user_object);
-            }
-            if (isset($user_object)) {
-                $this->logger->logSuccess("Successfully fetched ".$user_id. " ".$network."'s details from Facebook",
-                __METHOD__.','.__LINE__);
-            } else {
-                //@TODO: Most of these errors occur because TU doesn't yet support users of type 'facebook page'
-                //We just assume every user is a vanilla FB user. However, we can't retrieve page details using
-                //a vanilla user call here
-                $this->logger->logInfo("Error fetching ".$user_id." ". $network."'s details from Facebook API, ".
-                "response was ".Utils::varDumpToString($user_details), __METHOD__.','.__LINE__);
-            }
+        $user = $this->parseUserDetails($user_details);
+        if (isset($user)) {
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $user["post_count"] = $post_dao->getTotalPostsByUser($user['user_name'], 'facebook');
+            $user_object = new User($user, $found_in);
+            // storing Facebook 'updated_time' in other space in User object, in case it might interfer with other code
+            $user_object->updated_time = $user['updated_time'];
+            $user_dao = DAOFactory::getDAO('UserDAO');
+            $user_dao->updateUser($user_object);
+            return $user_object;
+        } else {
+            return null;
         }
         return $user_object;
     }
@@ -122,8 +113,7 @@ class FacebookCrawler {
             $user_vals["post_count"] = 0;
             $user_vals["joined"] = null;
             $user_vals["network"] = $details->network;
-            //this will help us in getting correct range of posts
-            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0;
+            $user_vals["updated_time"] = isset($details->updated_time)?$details->updated_time:0; // this will help us in getting correct range of posts
             return $user_vals;
         }
     }
@@ -135,6 +125,10 @@ class FacebookCrawler {
     public function fetchPostsAndReplies() {
         $id = $this->instance->network_user_id;
         $network = $this->instance->network;
+		
+        // fetch user's friends
+        $this->storeFriends();
+		
         $fetch_next_page = true;
         $current_page_number = 1;
         $next_api_request = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
@@ -410,29 +404,33 @@ class FacebookCrawler {
                     $total_added_posts = $total_added_posts + $post_comments_added;
                 }
 
-                //process "likes"
-                if ($must_process_likes) {
-                    if (isset($p->likes)) {
-                        $likes_captured = 0;
-                        if (isset($p->likes->data)) {
-                            $post_likes = $p->likes->data;
-                            $post_likes_count = isset($post_likes)?sizeof($post_likes):0;
-                            if (is_array($post_likes) && sizeof($post_likes) > 0) {
-                                foreach ($post_likes as $l) {
-                                    if (isset($l->name) && isset($l->id)) {
-                                        //Get users
-                                        $user_to_add = array("user_name"=>$l->name, "full_name"=>$l->name,
-                                        "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
-                                        '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
-                                        "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
-                                        "network"=>'facebook'); //Users are always set to network=facebook
-                                        array_push($thinkup_users, $user_to_add);
+                $total_added_users = $total_added_users + $this->storeUsers($thinkup_users);
+                $total_added_likes = $total_added_likes + $this->storeLikes($thinkup_likes);
+                //free up memory
+                $thinkup_users = array();
+                $thinkup_likes = array();
 
-                                        $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
-                                        "author_user_id"=>$profile->user_id, "post_id"=>$post_id);
-                                        array_push($thinkup_likes, $fav_to_add);
-                                        $likes_captured = $likes_captured + 1;
-                                    }
+                // collapsed likes
+                if (isset($p->likes->count) && $p->likes->count > $likes_captured) {
+                    $api_call = 'https://graph.facebook.com/'.$p->from->id.'_'.$post_id.'/likes?access_token='.
+                    $this->access_token;
+                    do {
+                        $likes_stream = FacebookGraphAPIAccessor::rawApiRequest($api_call);
+                        if (isset($likes_stream) && is_array($likes_stream->data)) {
+                            foreach ($likes_stream->data as $l) {
+                                if (isset($l->name) && isset($l->id)) {
+                                    //Get users
+                                    $ttu = array("user_name"=>$l->name, "full_name"=>$l->name,
+                                    "user_id"=>$l->id, "avatar"=>'https://graph.facebook.com/'.$l->id.
+                                    '/picture', "location"=>'', "description"=>'', "url"=>'', "is_protected"=>1,
+                                    "follower_count"=>0, "post_count"=>0, "joined"=>'', "found_in"=>"Likes",
+                                    "network"=>'facebook'); //Users are always set to network=facebook
+                                    array_push($thinkup_users, $ttu);
+
+                                    $fav_to_add = array("favoriter_id"=>$l->id, "network"=>$network,
+                                    "author_user_id"=>$p->from->id, "post_id"=>$post_id);
+                                    array_push($thinkup_likes, $fav_to_add);
+                                    $likes_captured = $likes_captured + 1;
                                 }
                             }
                         }
@@ -594,4 +592,48 @@ class FacebookCrawler {
         }
         return $added_likes;
     }
+	
+	private function storeFriends() {
+	
+	    // https://github.com/ginatrapani/ThinkUp/issues/69
+		
+	    //Retrieve friends via the Facebook API
+		$user_id = $this->instance->network_user_id;
+		$access_token = $this->access_token;
+		$network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
+		$friends = FacebookGraphAPIAccessor::apiRequest('/' . $user_id . '/friends', $access_token);
+		
+		//store relationships in follows table
+		$follows_dao = DAOFactory::getDAO('FollowDAO');
+		$follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+		$user_dao = DAOFactory::getDAO('UserDAO');
+				
+		foreach ($friends->data AS $friend) {
+			
+			$follower_id = $friend->id;
+			if ($follows_dao->followExists($user_id, $follower_id, $network)) {
+			    // follow relationship already exists
+				$follows_dao->update($user_id, $follower_id, $network);
+			} else {
+			    // follow relationship does not exist yet
+				$follows_dao->insert($user_id, $follower_id, $network);
+			}
+			
+			//and users in users table.			 
+			$follower_details = FacebookGraphAPIAccessor::apiRequest('/'.$follower_id, $this->access_token);
+			$follower_details->network = $network;
+
+			$follower = $this->parseUserDetails($follower_details);
+			$follower_object = new User($follower);
+			 
+			$user_dao->updateUser($follower_object);
+
+		}
+
+		//totals in follower_count table
+		$follower_count_dao->insert($user_id, $network, count($friends->data));
+		
+		
+		
+	}
 }

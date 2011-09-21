@@ -203,6 +203,11 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $post = $post_dao->getPost('10150357566827744', 'facebook');
         $this->assertNotNull($post);
         $this->assertEqual($post->author_user_id, '729597743');
+		
+		// Test Facebook friends and followers. This user only exists in testing as a "friend."
+		$user = $user_dao->getUserByName('Poppy Linford', 'facebook');
+        $this->assertTrue(isset($user));
+		$this->assertEqual($user->user_id, '682523675');
     }
 
     public function testFetchPostsAndRepliesForPage() {

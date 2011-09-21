@@ -1,0 +1,210 @@
+<?php
+/**
+ *
+ * ThinkUp/webapp/plugins/googleplus/tests/TestOfGooglePlusPluginConfigurationController.php
+ *
+ * Copyright (c) 2011 Gina Trapani
+ *
+ * LICENSE:
+ *
+ * This file is part of ThinkUp (http://thinkupapp.com).
+ *
+ * ThinkUp is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * ThinkUp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Test of TestOfGooglePlusPluginConfigurationController
+ *
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2011 Gina Trapani
+ * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ *
+ */
+require_once 'tests/init.tests.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
+require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
+
+require_once THINKUP_ROOT_PATH.
+'webapp/plugins/googleplus/controller/class.GooglePlusPluginConfigurationController.php';
+
+class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase {
+
+    public function setUp(){
+        parent::setUp();
+        $webapp = Webapp::getInstance();
+        $webapp->registerPlugin('googleplus', 'GooglePlusPlugin');
+    }
+
+    public function tearDown(){
+        parent::tearDown();
+    }
+
+    public function testConstructor() {
+        $controller = new GooglePlusPluginConfigurationController(null, 'googleplus');
+        $this->assertNotNull($controller);
+        $this->assertIsA($controller, 'GooglePlusPluginConfigurationController');
+    }
+
+    public function testOutput() {
+        //not logged in, no owner set
+        $controller = new GooglePlusPluginConfigurationController(null, 'googleplus');
+        $output = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
+
+        // logged in
+        // build a user
+        $builder = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new GooglePlusPluginConfigurationController($owner, 'googleplus');
+        $output = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $message = $v_mgr->getTemplateDataItem('message');
+        $this->assertEqual($message,
+        'Hello, world! This is the Google+ plugin configuration page for  me@example.com.', 'message set ' . $message);
+    }
+
+    public function testOptionList2HashByOptionName() {
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $options_hash = $controller->optionList2HashByOptionName();
+        $this->assertEqual($options_hash['clientid']->id, 2);
+        $this->assertEqual($options_hash['clientid']->option_name, 'clientid');
+        $this->assertEqual($options_hash['clientid']->option_value, 'testclientid');
+
+        $this->assertEqual($options_hash['clientsecret']->id, 3);
+        $this->assertEqual($options_hash['clientsecret']->option_name, 'clientsecret');
+        $this->assertEqual($options_hash['clientsecret']->option_value, 'testclientsecret');
+    }
+
+    public function testAddTextOptionNotAdmin() {
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+
+        // just user, not an admin, so view only
+        $output = $controller->go();
+        $this->assertNotNull( $controller->option_elements);
+        $this->assertEqual( count($controller->option_elements), 2);
+        $this->assertNotNull( $controller->option_elements['clientid']);
+        $this->assertEqual(
+        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['clientid']['type'] );
+        $this->assertTrue( isset($controller->option_elements['clientid']['default_value']) );
+        $this->assertEqual( count($controller->option_required_message), 2);
+        $this->assertTrue( isset($controller->option_required_message['clientid']));
+
+        $this->assertNotNull( $controller->option_elements['clientsecret']);
+        $this->assertEqual(
+        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['clientsecret']['type'] );
+        $this->assertTrue(isset($controller->option_elements['clientsecret']['default_value']) );
+        $this->assertTrue(isset($controller->option_required_message['clientsecret']));
+
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+
+    }
+
+    public function testAddTextOptionIsAdmin() {
+        $is_admin = 1;
+        $this->simulateLogin('me@example.com', true);
+        $build_data = $this->buildController();
+        // var_dump($build_data[1]);
+        $controller = $build_data[0];
+        $owner  = $build_data[1];
+        $plugin  = $build_data[2];
+        $plugin_option  = $build_data[3];
+
+        // just name, is admin, so form should be enabled
+        $output = $controller->go();
+        $this->assertNotNull( $controller->option_elements);
+        $this->assertEqual( count($controller->option_elements), 2);
+        $this->assertNotNull( $controller->option_elements['clientid']);
+        $this->assertEqual(
+        PluginConfigurationController::FORM_TEXT_ELEMENT, $controller->option_elements['clientid']['type'] );
+        $this->assertTrue( isset($controller->option_elements['clientid']['default_value']) );
+        $this->assertEqual( count($controller->option_required_message), 2);
+        $this->assertTrue( isset($controller->option_required_message['clientid']));
+        $v_mgr = $controller->getViewManager();
+        $options_markup = $v_mgr->getTemplateDataItem('options_markup');
+        $this->assertNotNull($options_markup);
+
+        //parse option_markup
+        $doc = new DOMDocument();
+        // parse our html
+        $doc = DOMDocument::loadHTML("<html><body>" . $options_markup . "</body></html>");
+
+        // we have a text form element with proper data
+        $input_field = $this->getElementById($doc, 'plugin_options_clientid');
+        $this->assertEqual($input_field->getAttribute('value'), $plugin_option[0]->columns['option_value']);
+
+        $input_field = $this->getElementById($doc, 'plugin_options_clientsecret');
+        $this->assertEqual($input_field->getAttribute('value'), $plugin_option[1]->columns['option_value']);
+
+        // var_dump("<html><body>" . $options_markup . "</body></html>");
+
+        // submit and elemnts should be disbaled
+        $this->assertFalse($input_field->getAttribute('disabled'));
+        $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
+        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+    }
+
+    public function testGetPluginOptions() {
+        $build_data = $this->buildController();
+        $controller = $build_data[0];
+        $options_hash = $controller->getPluginOptions();
+        $this->assertEqual($options_hash['clientid']->id, 2);
+        $this->assertEqual($options_hash['clientid']->option_name, 'clientid');
+        $this->assertEqual($options_hash['clientid']->option_value, 'testclientid');
+
+        // get a single undefined option
+        $this->assertFalse($controller->getPluginOption('not defined'));
+
+        // get a single defined option
+        $this->assertEqual($controller->getPluginOption('clientid'), 'testclientid');
+    }
+
+    private function buildController() {
+        $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+        $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'googleplus', 'is_active' => 1) );
+        $plugin_id = $builder_plugin->columns['last_insert_id'];
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-' .$plugin_id;
+        $builder_plugin_options[] =
+        FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name' => 'clientid', 'option_value' => "testclientid") );
+        $builder_plugin_options[] =
+        FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name' => 'clientsecret', 'option_value' => "testclientsecret") );
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new GooglePlusPluginConfigurationController($owner, 'googleplus');
+        return array($controller, $builder_owner, $builder_plugin, $builder_plugin_options);
+    }
+     
+    function getElementById($doc, $id) {
+        $xpath = new DOMXPath($doc);
+        return $xpath->query("//*[@id='$id']")->item(0);
+    }
+}
