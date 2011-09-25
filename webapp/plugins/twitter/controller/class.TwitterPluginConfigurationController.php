@@ -134,10 +134,10 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
      * Set plugin option fields for admin/plugin form
      */
     private function addOptionForm() {
-        $oauth_consumer_key = array('name' => 'oauth_consumer_key', 'label' => 'Consumer key');
+        $oauth_consumer_key = array('name' => 'oauth_consumer_key', 'label' => 'Consumer key', 'size' => 27);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_key);
 
-        $oauth_consumer_secret = array('name' => 'oauth_consumer_secret', 'label' => 'Consumer secret');
+        $oauth_consumer_secret = array('name' => 'oauth_consumer_secret', 'label' => 'Consumer secret', 'size' => 50);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_secret);
         $archive_limit_label = 'Pagination Limit <span style="font-size: 10px;">' .
         '[<a href="http://dev.twitter.com/pages/every_developer" title="Twitter still maintains a database '.
@@ -149,32 +149,32 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
 
         $num_twitter_errors_label = 'Total API Errors to Tolerate';
         $num_twitter_errors = array('name' => 'num_twitter_errors', 'label' => $num_twitter_errors_label,
-        'default_value' => '5', 'advanced'=>true);
+        'default_value' => '5', 'advanced'=>true, 'size'=>3);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $num_twitter_errors);
 
         $favs_older_pages_label = 'Number of Pages to Check for Older Favorites';
         $favs_older_pages = array('name' => 'favs_older_pages', 'label' => $favs_older_pages_label,
-        'default_value' => '2', 'advanced'=>true);
+        'default_value' => '2', 'advanced'=>true, 'size'=>2);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $favs_older_pages);
 
         $favs_cleanup_pages_label = 'Number of Pages to Search each Crawl for Missed Favorites';
         $favs_cleanup_pages = array('name' => 'favs_cleanup_pages', 'label' => $favs_cleanup_pages_label,
-        'default_value' => '1', 'advanced'=>true);
+        'default_value' => '1', 'advanced'=>true, 'size'=>2);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $favs_cleanup_pages);
 
         $max_api_calls_per_crawl_label = 'Max API Calls Per Crawl';
         $max_api_calls_per_crawl = array('name' => 'max_api_calls_per_crawl', 'label' => $max_api_calls_per_crawl_label,
-        'default_value' => '350', 'advanced'=> true);
+        'default_value' => '350', 'advanced'=> true, 'size'=>3);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_api_calls_per_crawl);
 
         $api_calls_to_leave_unmade_per_minute_label = 'API Calls to Leave Unmade Per Minute Remaining in the Hour';
         $api_calls_to_leave_unmade_per_minute = array('name' => 'api_calls_to_leave_unmade_per_minute', 'label' =>
-        $api_calls_to_leave_unmade_per_minute_label, 'default_value' => '2.0', 'advanced'=> true);
+        $api_calls_to_leave_unmade_per_minute_label, 'default_value' => '2.0', 'advanced'=> true, 'size'=>2);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $api_calls_to_leave_unmade_per_minute);
 
         $tweet_count_per_call_label = 'Tweet Count to Return Per API Call';
         $tweet_count_per_call = array('name' => 'tweet_count_per_call', 'label' => $tweet_count_per_call_label,
-        'default_value' => '100', 'advanced'=> true);
+        'default_value' => '100', 'advanced'=> true, 'size'=>3);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $tweet_count_per_call);
     }
 }

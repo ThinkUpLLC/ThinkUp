@@ -39,7 +39,7 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
 
         /** set option fields **/
         // name text field
-        $name_field = array('name' => 'testname', 'label' => 'Your Name'); // set an element name and label
+        $name_field = array('name' => 'testname', 'label' => 'Your Name', 'size' => 40); // set element name and label
         $name_field['default_value'] = 'ThinkUp User'; // set default value
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add element
         // set testname header

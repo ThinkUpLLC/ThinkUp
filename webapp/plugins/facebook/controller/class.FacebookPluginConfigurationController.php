@@ -53,28 +53,28 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
         // Application ID text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_app_id',
-        'label'=>'Application ID')); // add element
+        'label'=>'Application ID', 'size' => 18)); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_app_id',
         'The Facebook plugin requires a valid Application ID.');
 
         // API Key text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_key',
-        'label'=>'API Key')); // add element
+        'label'=>'API Key', 'size' => 18)); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_api_key',
         'The Facebook plugin requires a valid API Key.');
 
         // Application Secret text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_secret',
-        'label'=>'Application Secret')); // add element
+        'label'=>'Application Secret', 'size' => 37)); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_api_secret',
         'The Facebook plugin requires a valid Application Secret.');
 
         $max_crawl_time_label = 'Max crawl time in minutes';
         $max_crawl_time = array('name' => 'max_crawl_time', 'label' => $max_crawl_time_label,
-        'default_value' => '20', 'advanced'=>true);
+        'default_value' => '20', 'advanced'=>true, 'size' => 3);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_crawl_time);
 
         $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
