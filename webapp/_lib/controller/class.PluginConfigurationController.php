@@ -258,6 +258,9 @@ abstract class PluginConfigurationController extends ThinkUpAuthController {
             if (isset($args['value'])) {
                 $element['value'] = $args['value'];
             }
+            if (isset($args['size'])) {
+                $element['size'] = $args['size'];
+            }
             if (isset($args['advanced'])) {
                 $element['advanced'] = true;
                 // advanced options should not be required

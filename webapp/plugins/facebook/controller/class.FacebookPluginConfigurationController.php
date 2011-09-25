@@ -53,21 +53,21 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
         // Application ID text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_app_id',
-        'label'=>'Application ID')); // add element
+        'label'=>'Application ID', 'size' => 18)); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_app_id',
         'The Facebook plugin requires a valid Application ID.');
 
         // API Key text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_key',
-        'label'=>'API Key')); // add element
+        'label'=>'API Key', 'size' => 18)); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_api_key',
         'The Facebook plugin requires a valid API Key.');
 
         // Application Secret text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_secret',
-        'label'=>'Application Secret')); // add element
+        'label'=>'Application Secret', 'size' => 37)); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_api_secret',
         'The Facebook plugin requires a valid Application Secret.');
