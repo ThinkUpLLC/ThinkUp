@@ -32,6 +32,38 @@
  */
 class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
 
+    /**
+     * Percentage of allocated API calls that each crawler function will use per run for non-authed instances.
+     * @var array
+     */
+    var $api_budget_allocation_noauth = array(
+        'fetchInstanceUserTweets' => array('percent' => 25),
+        'fetchAndAddTweetRepliedTo' => array('percent' => 25), // for fetchStrayRepliedToTweets
+        'fetchAndAddUser' => array('percent' => 25),
+        'fetchFriendTweetsAndFriends' => array('percent' => 25),
+        'fetchSearchResults' => array('percent' => 25),
+        'cleanUpFollows' => array('percent' => 25)
+    );
+
+    /**
+     * Percentage of allocated API calls that each crawler function will use per run for authed instances.
+     * @var array
+     */
+    var $api_budget_allocation_auth = array(
+        'fetchInstanceUserTweets' => array('percent' => 20),
+        'fetchAndAddTweetRepliedTo' => array('percent' => 20), // for fetchStrayRepliedToTweets
+        'fetchAndAddUser' => array('percent' => 20), // for fetchUnloadedFollowerDetails 
+        'fetchFriendTweetsAndFriends' => array('percent' => 20),
+        'fetchInstanceUserMentions' => array('percent' => 20),
+        'fetchInstanceUserFriends' => array('percent' => 20),
+        'getFavsPage' => array('percent' => 20), // called from testCleanupMissedFavs|maintFavsFetch|archivingFavsFetch
+        'archivingFavsFetch' => array('percent' => 20), // called from fetchInstanceFavorites
+        'fetchInstanceUserFollowersByIDs' => array('percent' => 20), // for fetchInstanceUserFollowers
+        'fetchUserTimelineForRetweet' => array('percent' => 20), // fetchRetweetsOfInstanceUser->fetchStatusRetweets
+        'cleanUpMissedFavsUnFavs' => array('percent' => 20),
+        'cleanUpFollows' => array('percent' => 20),
+    );
+
     public function activate() {
     }
 
@@ -93,16 +125,17 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
                 $num_twitter_errors, $max_api_calls_per_crawl);
             }
 
+            // budget our twitter calls
+            $call_limits = $this->budgetCrawlLimits($max_api_calls_per_crawl, $noauth);
+
             $crawler = new TwitterCrawler($instance, $api);
 
             $api->init();
+            $api->setCallerLimits($call_limits);
 
             if ($api->available_api_calls_for_crawler > 0) {
 
                 $instance_dao->updateLastRun($instance->id);
-
-                // No auth req'd
-                //$crawler->fetchInstanceUserInfo();
 
                 // No auth for public Twitter users
                 $crawler->fetchInstanceUserTweets();
@@ -347,5 +380,21 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
             $menus['favs'] = $favd_menu_item;
         }
         return $menus;
+    }
+
+    /**
+     * Allocates api call counts to each crawler function
+     * @param int $max_api_calls_per_crawl
+     * @param bool $noauth
+     * @return @array Budget array
+     */
+    public function budgetCrawlLimits($max_api_calls_per_crawl, $noauth) {
+        $budget_array_config = $noauth ? $this->api_budget_allocation_noauth : $this->api_budget_allocation_auth;
+        $budget_array = array();
+        foreach($budget_array_config as $function_name => $value) {
+            $count = intval( $max_api_calls_per_crawl * ($value['percent'] * .01) );
+            $budget_array[$function_name] = array('count' => $count, 'remaining' => $count);
+        }
+        return $budget_array;
     }
 }

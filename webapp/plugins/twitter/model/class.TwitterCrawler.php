@@ -118,7 +118,11 @@ class TwitterCrawler {
             while ($continue_fetching) {
                 $search_results = $this->api->cURL_source['search']."?q=".urlencode($term).
                 "&result_type=recent&rpp=100&page=".$page;
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, null, false);
+                try {
+                    list($cURL_status, $twitter_data) = $this->api->apiRequest($search_results, null, false);
+                } catch (APICallLimitExceededException $e) {
+                    break;
+                }
                 if ($cURL_status == 200) {
                     $tweets = $this->api->parseJSON($twitter_data);
                     $pd = DAOFactory::getDAO('PostDAO');
@@ -244,7 +248,11 @@ class TwitterCrawler {
                     if (!$got_latest_page_of_tweets && $this->instance->last_post_id > 0)
                     $args["since_id"] = $this->instance->last_post_id;
                 }
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $args);
+                try {
+                    list($cURL_status, $twitter_data) = $this->api->apiRequest($recent_tweets, $args);
+                } catch (APICallLimitExceededException $e) {
+                    break;
+                }
                 if ($cURL_status == 200) {
                     $count = 0;
                     $tweets = $this->api->parseXML($twitter_data);
@@ -362,13 +370,18 @@ class TwitterCrawler {
                         $args['page'] = $this->instance->last_page_fetched_replies;
                     }
 
-                    list($cURL_status, $twitter_data) = $this->api->apiRequest($mentions, $args);
+                    try {
+                        list($cURL_status, $twitter_data) = $this->api->apiRequest($mentions, $args);
+                    } catch (APICallLimitExceededException $e) {
+                        break;
+                    }
+
                     if ($cURL_status > 200) {
                         $continue_fetching = false;
                     } else {
                         $count = 0;
                         $tweets = $this->api->parseXML($twitter_data);
-                        if (count($tweets) == 0 && $got_newest_mentions) {# you're paged back and no new tweets
+                        if (count($tweets) == 0 && $got_newest_mentions) {// you're paged back and no new tweets
                             $this->instance->last_page_fetched_replies = 1;
                             $continue_fetching = false;
                             $this->instance->is_archive_loaded_mentions = true;
@@ -499,7 +512,11 @@ class TwitterCrawler {
             $args['count'] = $count_arg;
             $args["include_rts"]="true";
 
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($stream_with_retweet, $args);
+            try {
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($stream_with_retweet, $args);
+            } catch (APICallLimitExceededException $e) {
+                return;
+            }
 
             if ($cURL_status == 200) {
                 $count = 0;
@@ -586,7 +603,11 @@ class TwitterCrawler {
             }
             $args['cursor'] = strval($next_cursor);
 
-            list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $args);
+            try {
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($follower_ids, $args);
+            } catch (APICallLimitExceededException $e) {
+                break;
+            }
 
             if ($cURL_status > 200) {
                 $continue_fetching = false;
@@ -606,7 +627,7 @@ class TwitterCrawler {
                 }
 
                 foreach ($ids as $id) {
-                    # add/update follow relationship
+                    // add/update follow relationship
                     if ($fd->followExists($this->instance->network_user_id, $id['id'], 'twitter')) {
                         //update it
                         if ($fd->update($this->instance->network_user_id, $id['id'], 'twitter',
@@ -655,7 +676,7 @@ class TwitterCrawler {
                 $this->logger->logInfo("Follower archive is not loaded; fetch should begin.", __METHOD__.','.__LINE__);
             }
 
-            # Fetch follower pages
+            // Fetch follower pages
             $continue_fetching = true;
             $updated_follow_count = 0;
             $inserted_follow_count = 0;
@@ -691,7 +712,7 @@ class TwitterCrawler {
                         $utu = new User($u, 'Follows');
                         $this->user_dao->updateUser($utu);
 
-                        # add/update follow relationship
+                        // add/update follow relationship
                         if ($fd->followExists($this->instance->network_user_id, $utu->user_id, 'twitter')) {
                             //update it
                             if ($fd->update($this->instance->network_user_id, $utu->user_id, 'twitter',
@@ -738,7 +759,7 @@ class TwitterCrawler {
             }
 
             $status_message = "";
-            # Fetch friend pages
+            // Fetch friend pages
             $continue_fetching = true;
             $updated_follow_count = 0;
             $inserted_follow_count = 0;
@@ -752,7 +773,11 @@ class TwitterCrawler {
                 }
                 $args['cursor'] = strval($next_cursor);
 
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $args);
+                try {
+                    list($cURL_status, $twitter_data) = $this->api->apiRequest($friend_ids, $args);
+                } catch (APICallLimitExceededException $e) {
+                    break;
+                }
 
                 if ($cURL_status > 200) {
                     $continue_fetching = false;
@@ -772,7 +797,7 @@ class TwitterCrawler {
                         $utu = new User($u, 'Friends');
                         $this->user_dao->updateUser($utu);
 
-                        # add/update follow relationship
+                        // add/update follow relationship
                         if ($fd->followExists($utu->user_id, $this->instance->network_user_id, 'twitter')) {
                             //update it
                             if ($fd->update($utu->user_id, $this->instance->network_user_id, 'twitter',
@@ -825,7 +850,11 @@ class TwitterCrawler {
                         $args['since_id'] = $stale_friend->last_post_id;
                     }
 
-                    list($cURL_status, $twitter_data) = $this->api->apiRequest($stale_friend_tweets, $args);
+                    try {
+                        list($cURL_status, $twitter_data) = $this->api->apiRequest($stale_friend_tweets, $args);
+                    } catch (APICallLimitExceededException $e) {
+                        break;
+                    }
 
                     if ($cURL_status == 200) {
                         $count = 0;
@@ -898,7 +927,11 @@ class TwitterCrawler {
             $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
             foreach ($strays as $s) {
                 if ($this->api->available && $this->api->available_api_calls_for_crawler > 0) {
-                    $this->fetchAndAddTweetRepliedTo($s['in_reply_to_post_id']);
+                    try {
+                        $this->fetchAndAddTweetRepliedTo($s['in_reply_to_post_id']);
+                    } catch (APICallLimitExceededException $e) {
+                        break;
+                    }
                 }
             }
         }
@@ -918,7 +951,12 @@ class TwitterCrawler {
 
             foreach ($strays as $s) {
                 if ($this->api->available && $this->api->available_api_calls_for_crawler > 0) {
-                    $this->fetchAndAddUser($s['follower_id'], "Follower IDs");
+                    try {
+                        $this->fetchAndAddUser($s['follower_id'], "Follower IDs");
+                    } catch (APICallLimitExceededException $e) {
+                        break;
+                    }
+
                 }
             }
         }
@@ -960,7 +998,7 @@ class TwitterCrawler {
                 $updated_follow_count = 0;
                 $inserted_follow_count = 0;
                 foreach ($ids as $id) {
-                    # add/update follow relationship
+                    // add/update follow relationship
                     if ($fd->followExists($id['id'], $uid, 'twitter')) {
                         //update it
                         if ($fd->update($id['id'], $uid, 'twitter', Utils::getURLWithParams($friend_ids, $args))) {
@@ -1028,7 +1066,11 @@ class TwitterCrawler {
                 $args["source_id"] = $oldfollow["followee_id"];
                 $args["target_id"] = $oldfollow["follower_id"];
 
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($friendship_call, $args);
+                try {
+                    list($cURL_status, $twitter_data) = $this->api->apiRequest($friendship_call, $args);
+                } catch (APICallLimitExceededException $e) {
+                    break;
+                }
 
                 if ($cURL_status == 200) {
                     $friendship = $this->api->parseXML($twitter_data);
@@ -1178,21 +1220,25 @@ class TwitterCrawler {
         $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
 
         while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue) {
-            if ($mode != 0) { // in maintenance, not archiving mode
-                list($fcount, $mpage, $older_favs_smode, $stop_page, $new_favs_to_add, $last_fav_id,
-                $last_page_fetched_favorites, $continue) =
-                $this->maintFavsFetch ($starting_fav_id, $fcount, $mpage, $older_favs_smode, $stop_page,
-                $new_favs_to_add, $last_fav_id, $last_page_fetched_favorites, $continue);
-                // }
-            } else { // mode 0 -- archiving mode
-                if (!$finished_first_fetch) {
-                    list($fcount, $last_fav_id, $last_page_fetched_favorites, $continue) =
-                    $this->archivingFavsFetch($fcount, $last_fav_id, $last_page_fetched_favs_start, $continue);
-                    $finished_first_fetch = true;
-                } else {
-                    list($fcount, $last_fav_id, $last_page_fetched_favorites, $continue) =
-                    $this->archivingFavsFetch($fcount, $last_fav_id, $last_page_fetched_favorites, $continue);
+            try {
+                if ($mode != 0) { // in maintenance, not archiving mode
+                    list($fcount, $mpage, $older_favs_smode, $stop_page, $new_favs_to_add, $last_fav_id,
+                    $last_page_fetched_favorites, $continue) =
+                    $this->maintFavsFetch ($starting_fav_id, $fcount, $mpage, $older_favs_smode, $stop_page,
+                    $new_favs_to_add, $last_fav_id, $last_page_fetched_favorites, $continue);
+                    // }
+                } else { // mode 0 -- archiving mode
+                    if (!$finished_first_fetch) {
+                        list($fcount, $last_fav_id, $last_page_fetched_favorites, $continue) =
+                        $this->archivingFavsFetch($fcount, $last_fav_id, $last_page_fetched_favs_start, $continue);
+                        $finished_first_fetch = true;
+                    } else {
+                        list($fcount, $last_fav_id, $last_page_fetched_favorites, $continue) =
+                        $this->archivingFavsFetch($fcount, $last_fav_id, $last_page_fetched_favorites, $continue);
+                    }
                 }
+            } catch (APICallLimitExceededException $e) {
+                break;
             }
         } // end while
         // update necessary instance fields
@@ -1466,7 +1512,11 @@ class TwitterCrawler {
         while ($count < $favs_cleanup_pages && $this->api->available &&
         $this->api->available_api_calls_for_crawler ) {
             // get the favs from that page
-            list($tweets, $cURL_status, $twitter_data) = $this->getFavsPage($page);
+            try {
+                list($tweets, $cURL_status, $twitter_data) = $this->getFavsPage($page);
+            } catch (APICallLimitExceededException $e) {
+                break;
+            }
             if ($cURL_status != 200 || $tweets == -1) {
                 // todo - handle more informatively
                 $this->logger->logInfo("in cleanUpMissedFavsUnFavs, error with: $twitter_data",

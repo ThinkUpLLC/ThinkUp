@@ -65,6 +65,11 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
      */
     var $num_retries = 2;
 
+    /*
+     * @var array List of crawl limits, and calls remaining based on function caller names
+     */
+    var $function_api_call_limits = false;
+
     /**
      * A list of Twitter API error codes and their explanations.
      * @var array
@@ -163,6 +168,21 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
              $attempts = 0;
              $continue = true;
 
+             // check for api function caller limits
+             $caller_data = debug_backtrace();
+             $calling_function = $caller_data[1]['function'];
+             $calling_line = $caller_data[1]['line'];
+
+             if ($this->function_api_call_limits && isset($this->function_api_call_limits[$calling_function])) {
+                 if ($this->function_api_call_limits[$calling_function]['remaining'] == 0) {
+                     $message = 'We are over the API call limit ' .
+                     $this->function_api_call_limits[$calling_function]['count'] .
+                     " for the function call $calling_function on line $calling_line";
+                     $logger->logUserInfo($message,__METHOD__.','.__LINE__);
+                     throw new APICallLimitExceededException($message);
+                 }
+             }
+
              if ($auth) {
                  while ($attempts <= $this->num_retries && $continue) {
                      $content = $this->to->OAuthRequest($url, 'GET', $args);
@@ -203,16 +223,24 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
                              }
                          } else {
                              $continue = false;
+                             if ($this->function_api_call_limits
+                             && isset($this->function_api_call_limits[$calling_function])) {
+                                 $this->function_api_call_limits[$calling_function]['remaining']--;
+                             }
                          }
                      } else {
                          $continue = false;
                          $url = Utils::getURLWithParams($url, $args);
                          $status_message = "API request: ".$url;
                          $logger->logInfo($status_message, __METHOD__.','.__LINE__);
+                         if ($this->function_api_call_limits
+                         && isset($this->function_api_call_limits[$calling_function])) {
+                             $this->function_api_call_limits[$calling_function]['remaining']--;
+                         }
                      }
 
                      if ($url != "https://api.twitter.com/1/account/rate_limit_status.xml") {
-                         $logger->logInfo($this->getStatus(), __METHOD__.','.__LINE__);
+                         $logger->logInfo($this->getStatus($calling_function), __METHOD__.','.__LINE__);
                      }
                  }
              } else {
@@ -226,12 +254,18 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
 
          /**
           * Get API call balance information formatted for logging.
+          * @param str $calling_function Calling function name
           * @return str
           */
-         public function getStatus() {
-             return $this->available_api_calls_for_twitter." of ".$this->api_hourly_limit." Twitter API calls ".
-        "left this hour; ". round($this->available_api_calls_for_crawler)." budgeted for ThinkUp until ".
+         public function getStatus($calling_function = null) {
+             $status = $this->available_api_calls_for_twitter." of ".$this->api_hourly_limit." Twitter API calls ".
+            "left this hour; ". round($this->available_api_calls_for_crawler)." budgeted for ThinkUp until ".
              date('H:i', (int) $this->next_api_reset).".";
+             if (isset($calling_function) && isset($this->function_api_call_limits[$calling_function]['remaining'])) {
+                 $status .= " ".$this->function_api_call_limits[$calling_function]['remaining'] . " left for ".
+                 $calling_function.".";
+             }
+             return $status;
          }
 
          /**
@@ -262,5 +296,23 @@ class CrawlerTwitterAPIAccessorOAuth extends TwitterAPIAccessorOAuth {
           */
          public function getTwitterErrorCodes() {
              return $this->error_codes;
+         }
+
+         /**
+          * Sets function caller limits
+          */
+         public function setCallerLimits($limits) {
+             $this->function_api_call_limits = $limits;
+         }
+
+         /**
+          * gets function caller limits
+          */
+         public function getCallerLimit($function) {
+             $limit = false;
+             if ($this->function_api_call_limits && isset($this->function_api_call_limits[$function])) {
+                 $limit = $this->function_api_call_limits[$function];
+             }
+             return $limit;
          }
 }
