@@ -79,8 +79,8 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new FollowerCountMySQLDAO();
         $result = $dao->getHistory(930061, 'twitter', 'DAY', 3);
-        $this->assertEqual(sizeof($result), 5, '5 sets of data returned--history, percentages, Y axis, trend, '.
-        'milestone');
+        $this->assertEqual(sizeof($result), 7, '7 sets of data returned--history, percentages, Y axis, trend, '.
+        'milestone, and maximum/minimum counts');
 
         $this->debug(Utils::varDumpToString($result));
         //check history
@@ -158,8 +158,8 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new FollowerCountMySQLDAO();
         $result = $dao->getHistory(930061, 'twitter', 'DAY', 3);
-        $this->assertEqual(sizeof($result), 5, '5 sets of data returned--history, percentages, Y axis, trend, '.
-        'milestone');
+        $this->assertEqual(sizeof($result), 7, '7 sets of data returned--history, percentages, Y axis, trend, '.
+        'milestone, and maximum/minimum counts');
 
         $this->debug(Utils::varDumpToString($result));
         //check history
@@ -258,8 +258,8 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new FollowerCountMySQLDAO();
         $result = $dao->getHistory(930061, 'twitter', 'WEEK', 3);
-        $this->assertEqual(sizeof($result), 5, '5 sets of data returned--history, percentages, Y axis, trend, '.
-        'milestone');
+        $this->assertEqual(sizeof($result), 7, '7 sets of data returned--history, percentages, Y axis, trend, '.
+        'milestone, and maximum/minimum counts');
 
         $this->debug(Utils::varDumpToString($result));
 
@@ -322,8 +322,8 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new FollowerCountMySQLDAO();
         $result = $dao->getHistory(930061, 'twitter', 'DAY', 5);
-        $this->assertEqual(sizeof($result), 5, '5 sets of data returned--history, percentages, Y axis, trend, '.
-        'milestone');
+        $this->assertEqual(sizeof($result), 7, '7 sets of data returned--history, percentages, Y axis, trend, '.
+        'milestone, and maximum/minimum counts');
 
         //check history
         $this->assertEqual(sizeof($result['history']), 5, '5 counts returned');
@@ -386,8 +386,8 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new FollowerCountMySQLDAO();
         $result = $dao->getHistory(930061, 'twitter', 'DAY', 4);
-        $this->assertEqual(sizeof($result), 5, '5 sets of data returned--history, percentages, Y axis, trend, '.
-        'milestone');
+        $this->assertEqual(sizeof($result), 7, '7 sets of data returned--history, percentages, Y axis, trend, '.
+        'milestone, and maximum/minimum counts');
 
         $this->debug(Utils::varDumpToString($result));
 
@@ -416,8 +416,8 @@ class TestOfFollowerCountMySQLDAO extends ThinkUpUnitTestCase {
 
         $dao = new FollowerCountMySQLDAO();
         $result = $dao->getHistory(930061, 'twitter', 'DAY', 4);
-        $this->assertEqual(sizeof($result), 5, '5 sets of data returned--history, percentages, Y axis, trend, '.
-        'milestone');
+        $this->assertEqual(sizeof($result), 7, '7 sets of data returned--history, percentages, Y axis, trend, '.
+        'milestone, and maximum/minimum counts');
 
         $this->debug(Utils::varDumpToString($result));
 
