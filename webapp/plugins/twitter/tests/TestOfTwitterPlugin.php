@@ -224,4 +224,42 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $active_instances = $instance_dao->getAllInstances("DESC", true, "twitter");
         $this->assertEqual(sizeof($active_instances), 0);
     }
+
+    public function testBudgetCrawlLimits() {
+
+        // set all our bedget percentages to 10% for testing
+        $tw_plugin = new TwitterPlugin();
+        $auth_budget_config = $tw_plugin->api_budget_allocation_auth;
+        foreach($auth_budget_config as $function_name => $value) {
+            $auth_budget_config[$function_name]['percent'] = 10;
+        }
+        $tw_plugin->api_budget_allocation_auth = $auth_budget_config;
+
+        $noauth_budget_config = $tw_plugin->api_budget_allocation_noauth;
+        foreach($noauth_budget_config as $function_name => $value) {
+            $noauth_budget_config[$function_name]['percent'] = 10;
+        }
+        $tw_plugin->api_budget_allocation_noauth = $noauth_budget_config;
+
+
+        // with auth
+        $limits = $tw_plugin->budgetCrawlLimits(1000, false);
+        $this->assertIsA($limits, 'Array');
+        $this->assertEqual(count($limits), 12);
+        foreach($limits as $limit_key => $value) {
+            $this->assertEqual($value['count'], 100);
+            $this->assertEqual($value['remaining'], 100);
+        }
+
+        // no auth
+        $limits = $tw_plugin->budgetCrawlLimits(1000, true);
+        $this->assertIsA($limits, 'Array');
+        $this->assertEqual(count($limits), 6);
+        foreach($limits as $limit_key => $value) {
+            $this->assertEqual($value['count'], 100);
+            $this->assertEqual($value['remaining'], 100);
+        }
+
+    }
+
 }

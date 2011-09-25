@@ -271,6 +271,28 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     }
 
+    public function testFetchInstanceUserTweetsBudgeted() {
+        self::setUpInstanceUserAnilDash();
+
+        // set up crawl limit budget
+        $crawl_limit = array('fetchInstanceUserTweets' => array('count' => 2, 'remaining' => 2) );
+        $this->api->setCallerLimits($crawl_limit);
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceUserTweets();
+
+        //Test post with location has location set
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $this->assertTrue($pdao->isPostInDB(15660373190, 'twitter'));
+        $post = $pdao->getPost(15660373190, 'twitter');
+        $this->assertEqual($post->post_text, "@nicknotned NYC isn't a rival, it's just a better evolution of the " .
+        "concept of a locale where innovation happens. > & <");
+
+        $crawl_limit = $this->api->getCallerLimit('fetchInstanceUserTweets');
+        $this->assertIsA($crawl_limit,'Array');
+        $this->assertEqual($crawl_limit['remaining'], 0);
+    }
+
     public function testFetchInstanceUserTweetsUsernameChange() {
         $post_builder = self::setUpInstanceUserAnilDashUsernameChange();
 
@@ -382,6 +404,26 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post_orig->retweet_count_api, 0);
     }
 
+    public function testFetchInstanceUserTweetsRetweetsBudget() {
+        self::setUpInstanceUserAmygdala();
+        // set up crawl limit budget
+        $crawl_limit = array('fetchInstanceUserMentions' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+
+        $this->instance->last_page_fetched_tweets = 17;
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceUserTweets();
+
+        $pdao = DAOFactory::getDAO('PostDAO');
+
+        $tc->fetchInstanceUserMentions();
+        // old-style RT
+        $post = $pdao->getPost('8957053141778432', 'twitter');
+        $this->assertNull($post);
+    }
+
     public function testFetchSearchResults() {
         self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api);
@@ -395,6 +437,20 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->post_text,
         "RT @whitehouse: The New Start Treaty: Read the text and remarks by President Obama &amp; ".
         'President Medvedev http://bit.ly/cAm9hF');
+    }
+
+    public function testFetchSearchResultsBudget() {
+        self::setUpInstanceUserAnilDash();
+        // set up crawl limit budget
+        $crawl_limit = array('fetchSearchResults' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+        $tc = new TwitterCrawler($this->instance, $this->api);
+
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchSearchResults('@whitehouse');
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $this->assertFalse($pdao->isPostInDB('11837263794', 'twitter'));
+
     }
 
     public function testFetchInstanceUserFollowers() {
@@ -429,6 +485,20 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($updated_user->location, 'New York City', 'friend location set');
     }
 
+    public function testFetchInstanceUserFriendsBudget() {
+        self::setUpInstanceUserAnilDash();
+        // set up crawl limit budget
+        $crawl_limit = array('fetchInstanceUserFriends' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+
+        $tc->fetchInstanceUserFriends();
+        $fdao = DAOFactory::getDAO('FollowDAO');
+        $this->assertFalse($fdao->followExists(14834340, 36823, 'twitter'), 'new friend doesn\'t exists');
+
+    }
+
     public function testFetchInstanceUserFriendsByIds() {
         self::setUpInstanceUserAnilDash();
         $tc = new TwitterCrawler($this->instance, $this->api);
@@ -445,6 +515,26 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertTrue($fdao->followExists(14834340, 930061, 'twitter'), 'ginatrapani friend loaded');
     }
 
+    public function testFetchInstanceUserFriendsByIdsBudget() {
+        self::setUpInstanceUserAnilDash();
+        // set up crawl limit budget
+        $crawl_limit = array('fetchFriendTweetsAndFriends' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+
+        $fd = DAOFactory::getDAO('FollowDAO');
+        $stale_friend = $fd->getStalestFriend($this->instance->network_user_id, $this->instance->network);
+        $this->assertTrue(isset($stale_friend), 'there is a stale friend');
+        $this->assertEqual($stale_friend->user_id, 930061, 'stale friend is ginatrapani');
+        $this->assertEqual($stale_friend->username, 'ginatrapani', 'stale friend is ginatrapani');
+
+        $tc->fetchFriendTweetsAndFriends();
+        $fdao = DAOFactory::getDAO('FollowDAO');
+        $this->assertFalse($fdao->followExists(14834340, 930061, 'twitter'), 'ginatrapani notfriend loaded');
+    }
+
     public function testFetchInstanceUserFollowersByIds() {
         self::setUpInstanceUserAnilDash();
         $this->api->available_api_calls_for_crawler = 2;
@@ -454,6 +544,20 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc->fetchInstanceUserFollowers();
         $fdao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue($fdao->followExists(36823, 114811186, 'twitter'), 'new follow exists');
+    }
+
+    public function testFetchInstanceUserFollowersByIdsBudget() {
+        self::setUpInstanceUserAnilDash();
+        // set up crawl limit budget
+        $crawl_limit = array('fetchInstanceUserFollowersByIDs' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+        $this->api->available_api_calls_for_crawler = 2;
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+
+        $tc->fetchInstanceUserFollowers();
+        $fdao = DAOFactory::getDAO('FollowDAO');
+        $this->assertFalse($fdao->followExists(36823, 114811186, 'twitter'), 'new does not exists');
     }
 
     public function testFetchRetweetsOfInstanceuser() {
@@ -502,6 +606,27 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($rts2[0]->in_rt_of_user_id, 930061);
     }
 
+    public function testFetchRetweetsOfInstanceuserBudget() {
+        self::setUpInstanceUserGinaTrapani();
+        // set up crawl limit budget
+        $crawl_limit = array('fetchUserTimelineForRetweet' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+
+        $builder = FixtureBuilder::build('posts', array('post_id'=>14947487415, 'author_user_id'=>930061,
+        'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani', 'post_text'=>
+        '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'pub_date'=>'-1d',
+        // start w/ the RT counts zeroed out, let the processing populate them
+        'reply_count_cache'=>1, 'old_retweet_count_cache'=>0, 'retweet_count_cache'=>0, 'retweet_count_api' => 0));
+
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $tc->fetchRetweetsOfInstanceUser();
+        $post = $pdao->getPost(14947487415, 'twitter');
+        $this->assertEqual($post->retweet_count_cache, 0, '0 new-style retweets from cache count');
+    }
+
     public function testFetchStrayRepliedToTweets() {
         self::setUpInstanceUserAnilDash();
         $this->api->available_api_calls_for_crawler = 4;
@@ -515,6 +640,25 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $post = $pdao->getPost(15752814831, 'twitter');
         $this->assertTrue(isset($post));
         $this->assertEqual($post->reply_count_cache, 1);
+    }
+
+    public function testFetchStrayRepliedToTweetsBudget() {
+        self::setUpInstanceUserAnilDash();
+        // set up crawl limit budget
+        $crawl_limit = array('fetchAndAddTweetRepliedTo' => array('count' => 2, 'remaining' => 0) );
+
+        $this->api->setCallerLimits($crawl_limit);
+        $this->api->available_api_calls_for_crawler = 4;
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceUserTweets();
+        $pdao = DAOFactory::getDAO('PostDAO');
+        $tweets = $pdao->getAllPostsByUsername('anildash', 'twitter');
+
+        $tc->fetchStrayRepliedToTweets();
+        $post = $pdao->getPost(15752814831, 'twitter');
+        $this->assertTrue(isset($post));
+        $this->assertEqual($post->reply_count_cache, 0);
     }
 
     public function testFetchFavoritesOfInstanceuser() {
@@ -597,6 +741,24 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         "monthly govt checks to hit accounts http://bit.ly/aK5pCQ");
         $this->assertEqual($post->link->url, "http://bit.ly/aK5pCQ");
         $this->assertEqual($post->link->expanded_url, '');
+    }
+    public function testFetchFavoritesOfInstanceuserBudget() {
+        self::setUpInstanceUserAmygdala();
+        // set up crawl limit budget
+        $crawl_limit = array('getFavsPage' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+
+        $this->api->available_api_calls_for_crawler = 3;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage1/');
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $tc->fetchInstanceFavorites();
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
+        if (isset($tc->user)) {
+            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        }
+        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->assertEqual($this->instance->owner_favs_in_system, 0);
     }
 
     public function testFetchFavoritesOfInstanceuserBadResponse() {
@@ -755,6 +917,28 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $builder2 = null;
     }
 
+    public function testCleanupMissedFavsBudget() {
+        $this->logger->logInfo("in testCleanupMissedFavs", __METHOD__.','.__LINE__);
+        $id = DAOFactory::getDAO('TwitterInstanceDAO');
+
+        self::setUpInstanceUserAmygdala();
+        // set up crawl limit budget
+        $crawl_limit = array('getFavsPage' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+        $this->instance->last_unfav_page_checked = 3;
+        $this->api->available_api_calls_for_crawler = 10;
+        $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
+        //set cfg value
+        $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
+        $builder2 = FixtureBuilder::build('options',
+        array('namespace' => $namespace, 'option_name'=>'favs_cleanup_pages', 'option_value'=>3));
+
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->fetchInstanceUserInfo();
+        $retval = $tc->cleanUpMissedFavsUnFavs();
+        $this->assertEqual($this->instance->owner_favs_in_system, 0);
+    }
+
     public function testAddRmOldFavMaintSearch() {
         $this->logger->logInfo("in testAddRmOldFavMaintSearch", __METHOD__.','.__LINE__);
         //set plugin cfg values
@@ -814,6 +998,17 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $tc->cleanUpFollows();
         $this->assertFalse($follow_dao->followExists(930061, 36823, 'twitter', true), 'Follow marked inactive');
+    }
+
+    public function testCleanUpFollowsBudget() {
+        self::setUpInstanceUserGinaTrapani();
+        // set up crawl limit budget
+        $crawl_limit = array('cleanUpFollows' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+        $tc = new TwitterCrawler($this->instance, $this->api);
+        $tc->cleanUpFollows();
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertTrue($follow_dao->followExists(930061, 36823, 'twitter', true), 'Follow not marked inactive');
     }
 
     public function testLoggingErrorOutput() {
