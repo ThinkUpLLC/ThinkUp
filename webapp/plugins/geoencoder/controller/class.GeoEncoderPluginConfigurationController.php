@@ -39,7 +39,7 @@ class GeoEncoderPluginConfigurationController extends PluginConfigurationControl
 
         /** set option fields **/
         // gmaps_api_key text field
-        $name_field = array('name' => 'gmaps_api_key', 'label' => 'Google Maps API Key');
+        $name_field = array('name' => 'gmaps_api_key', 'label' => 'Google Maps API Key', 'size' => 55);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field);
         $this->addPluginOptionRequiredMessage('gmaps_api_key',
             'Please enter your Google Maps API Key');

@@ -78,6 +78,19 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
 
     }
 
+    public function testTextInputSize() {
+        //not logged in, no owner set
+        $controller = new HelloThinkUpPluginConfigurationController(null, 'hellothinkup');
+        $builder = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new HelloThinkUpPluginConfigurationController($owner, 'hellothinkup');
+        $output = $controller->go();
+        $this->assertEqual($controller->option_elements['testname']['size'], 40);
+    }
+
     public function testOptionList2HashByOptionName() {
         $build_data = $this->buildController();
         $controller = $build_data[0];

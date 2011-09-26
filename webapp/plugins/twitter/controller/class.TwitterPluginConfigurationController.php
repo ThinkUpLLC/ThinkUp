@@ -134,10 +134,10 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
      * Set plugin option fields for admin/plugin form
      */
     private function addOptionForm() {
-        $oauth_consumer_key = array('name' => 'oauth_consumer_key', 'label' => 'Consumer key');
+        $oauth_consumer_key = array('name' => 'oauth_consumer_key', 'label' => 'Consumer key', 'size' => 27);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_key);
 
-        $oauth_consumer_secret = array('name' => 'oauth_consumer_secret', 'label' => 'Consumer secret');
+        $oauth_consumer_secret = array('name' => 'oauth_consumer_secret', 'label' => 'Consumer secret', 'size' => 47);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $oauth_consumer_secret);
         $archive_limit_label = 'Pagination Limit <span style="font-size: 10px;">' .
         '[<a href="http://dev.twitter.com/pages/every_developer" title="Twitter still maintains a database '.
