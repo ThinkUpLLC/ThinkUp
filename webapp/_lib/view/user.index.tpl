@@ -28,7 +28,7 @@
         <div class="clearfix">
           <div class="grid_2 alpha">
             <div class="avatar-container">
-              <img src="{$profile->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$profile->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
+              <a href="http://twitter.com/{$profile->username}" title="{$profile->username}"><img src="{$profile->avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$profile->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/></a>
             </div>
           </div>
           <div class="grid_12">
