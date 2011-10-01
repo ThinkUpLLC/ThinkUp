@@ -3,7 +3,7 @@ Contributors: ginatrapani, samwho
 Tags: thinkup, twitter
 Requires at least: 2.9.1
 Tested up to: 2.9.1
-Stable tag: 0.7
+Stable tag: 0.8
 
 Displays Twitter data via ThinkUp in a post or page via a shortcode.
 
@@ -31,6 +31,10 @@ username. Add the `username="yourtwittername"` parameter to the shortcode to use
 the default.
 
 == Changelog ==
+
+= 0.8 =
+* Correctly obtain plugin directory path in all installation scenarios
+* WordPress i18n functions now used properly, with static strings and static textdomain
 
 = 0.7 =
 * Refactored code to be object-oriented; Changed all shortcode "status" references to "post"; Added Help and FAQ areas
