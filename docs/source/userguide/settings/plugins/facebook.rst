@@ -7,20 +7,17 @@ Configure the Facebook Plugin (Admin only)
 ------------------------------------------
 
 To use the Facebook plugin, you'l need to `create a Facebook application on facebook.com 
-<http://developers.facebook.com/setup/>`_. Set the Web Site > Site URL  as recommended, and the Facebook-provided API
+<https://developers.facebook.com/apps>`_. Set the Web Site > Site URL  as recommended, and the Facebook-provided API
 Key, Application Secret and Application ID in the Facebook plugin's settings page in ThinkUp.
 
 Plugin Settings
 ---------------
 
-**Application ID** (required) is the Application ID provided when you `create a Facebook application on facebook.com 
-<http://developers.facebook.com/setup/>`_ for use with ThinkUp.
+**App ID** (required) is the Application ID provided when you `create a Facebook application on facebook.com 
+<https://developers.facebook.com/apps>`_ for use with ThinkUp.
 
-**API Key** (required) is the API Key provided when you `create a Facebook application on facebook.com 
-<http://developers.facebook.com/setup/>`_ for use with ThinkUp.
-
-**Application Secret:** (required) is the Application Secret provided when you `create a Facebook application on
-facebook.com <http://developers.facebook.com/setup/>`_ for use with ThinkUp.
+**App Secret:** (required) is the Application Secret provided when you `create a Facebook application on
+facebook.com <https://developers.facebook.com/apps>`_ for use with ThinkUp.
 
 **Max crawl time in minutes:** (optional) is the maximum amount of time that ThinkUp will spend crawling a single
 Facebook user or page. This cap is in place for very busy pages or profiles with deep archives which could take hours
