@@ -47,18 +47,15 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         if ($units != "DAY" && $units != 'WEEK' && $units != 'MONTH') {
             $units = 'DAY';
         }
-        $query_date_format = "%c/%e";
         if ($units == 'DAY') {
             $group_by = 'fc.date';
         } else if ($units == 'WEEK') {
             $group_by = 'YEAR(fc.date), WEEK(fc.date)';
         } else if ($units == 'MONTH') {
             $group_by = 'YEAR(fc.date), MONTH(fc.date)';
-            $query_date_format = "%c/%Y";
         }
         $q = "SELECT network_user_id, network, count, date, full_date FROM ";
-        $q .= "(SELECT network_user_id, network, count, DATE_FORMAT(date, '".$query_date_format.
-        "') as date, date as full_date ";
+        $q .= "(SELECT network_user_id, network, count, DATE_FORMAT(date, '%c/%e') as date, date as full_date ";
         $q .= "FROM #prefix#follower_count AS fc ";
         $q .= "WHERE fc.network_user_id = :network_user_id AND fc.network=:network ";
         $q .= "GROUP BY ".$group_by." ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
@@ -99,7 +96,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
                         $date_ago = date ($format, strtotime('-'.$i.' '.$units.$date));
                     } else {
                         $first_day_of_this_month = date('n/1');
-                        $format = 'n/Y';
+                        $format = 'm/d/Y';
                         $date_ago = date ($format, strtotime('-'.$i.' '.$units.$first_day_of_this_month));
                     }
                     $dates_to_display[$date_ago] = "no data";
