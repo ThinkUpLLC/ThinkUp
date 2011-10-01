@@ -53,24 +53,17 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
         // Application ID text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_app_id',
-        'label'=>'Application ID', 'size' => 18)); // add element
+        'label'=>'App ID', 'size' => 18)); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_app_id',
-        'The Facebook plugin requires a valid Application ID.');
-
-        // API Key text field
-        $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_key',
-        'label'=>'API Key', 'size' => 18)); // add element
-        // set a special required message
-        $this->addPluginOptionRequiredMessage('facebook_api_key',
-        'The Facebook plugin requires a valid API Key.');
+        'The Facebook plugin requires a valid App ID.');
 
         // Application Secret text field
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'facebook_api_secret',
-        'label'=>'Application Secret', 'size' => 37)); // add element
+        'label'=>'App Secret', 'size' => 37)); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('facebook_api_secret',
-        'The Facebook plugin requires a valid Application Secret.');
+        'The Facebook plugin requires a valid App Secret.');
 
         $max_crawl_time_label = 'Max crawl time in minutes';
         $max_crawl_time = array('name' => 'max_crawl_time', 'label' => $max_crawl_time_label,
@@ -83,7 +76,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         if (isset($options['facebook_app_id']->option_value) && isset($options['facebook_api_secret']->option_value)) {
             $this->setUpFacebookInteractions($options);
         } else {
-            $this->addErrorMessage('Please set your Facebook API key, application ID and secret.');
+            $this->addErrorMessage('Please set your Facebook App ID and App Secret.');
         }
         return $this->generateView();
     }

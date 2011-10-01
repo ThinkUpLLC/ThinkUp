@@ -19,7 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License along with ThinkUp.  If not, see
  * <http://www.gnu.org/licenses/>.
- *
+ */
+/**
  * GooglePlus Plugin Configuration Controller
  *
  * @license http://www.gnu.org/licenses/gpl.html
@@ -51,14 +52,14 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
 
         /** set option fields **/
         // client ID text field
-        $name_field = array('name' => 'google_plus_client_id', 'label' => 'Client ID', 'size'=>50);
+        $name_field = array('name' => 'google_plus_client_id', 'label' => 'Client ID'); // set an element name and label
         $name_field['default_value'] = ''; // set default value
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add element
         // set a special required message
         $this->addPluginOptionRequiredMessage('google_plus_client_id', 'A client ID is required to use Google+.');
 
         // client secret text field
-        $name_field = array('name' => 'google_plus_client_secret', 'label' => 'Client secret', 'size'=>40);
+        $name_field = array('name' => 'google_plus_client_secret', 'label' => 'Client secret');
         $name_field['default_value'] = ''; // set default value
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $name_field); // add element
         // set a special required message
