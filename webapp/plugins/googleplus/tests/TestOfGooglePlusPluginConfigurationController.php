@@ -296,4 +296,31 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertEqual($owner_instance->oauth_access_token, 'faux-access-token');
         $this->assertEqual($owner_instance->oauth_access_token_secret, 'faux-refresh-token');
     }
+
+    public function testGetOAuthTokensWithError() {
+        $builders = $this->buildPluginOptions();
+
+        $config = Config::getInstance();
+        $config->setValue('site_root_path', '/');
+
+        $plugin_options_dao = DAOFactory::getDAO("PluginOptionDAO");
+        PluginOptionMySQLDAO::$cached_options = array();
+
+        $builders[] = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new GooglePlusPluginConfigurationController($owner);
+
+        $_GET['code'] = 'test-google-provided-code-should-return-error';
+
+        $results = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), '');
+        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
+        'Oops! Something went wrong while obtaining OAuth tokens.<br>Google says "google_error_text." '.
+        'Please double-check your settings and try again.');
+    }
+
 }

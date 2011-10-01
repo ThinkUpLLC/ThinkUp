@@ -109,13 +109,18 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
             $crawler = new GooglePlusCrawler(null, null);
             $tokens = $crawler->getOAuthTokens($client_id, $client_secret, $code, 'authorization_code',
             $redirect_uri);
-            $gplus_api_accessor = new GooglePlusAPIAccessor();
-            $gplus_user = $gplus_api_accessor->apiRequest('people/me', $tokens->access_token, null);
-            $gplus_user_id = $gplus_user->id;
-            $gplus_username = $gplus_user->displayName;
+            if (isset($tokens->error)) {
+                $this->addErrorMessage("Oops! Something went wrong while obtaining OAuth tokens.<br>Google says \"".
+                $tokens->error.".\" Please double-check your settings and try again.");
+            } else {
+                $gplus_api_accessor = new GooglePlusAPIAccessor();
+                $gplus_user = $gplus_api_accessor->apiRequest('people/me', $tokens->access_token, null);
+                $gplus_user_id = $gplus_user->id;
+                $gplus_username = $gplus_user->displayName;
 
-            $this->saveAccessTokens($gplus_user_id, $gplus_username, $tokens->access_token,
-            $tokens->refresh_token);
+                $this->saveAccessTokens($gplus_user_id, $gplus_username, $tokens->access_token,
+                $tokens->refresh_token);
+            }
         }
     }
 
