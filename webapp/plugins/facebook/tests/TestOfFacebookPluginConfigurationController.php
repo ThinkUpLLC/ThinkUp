@@ -109,7 +109,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
-        'Please set your Facebook API key, application ID and secret.');
+        'Please set your Facebook App ID and App Secret.');
     }
 
     public function testOutputNoParams() {
@@ -174,7 +174,6 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
 
         // we have a text form element with proper data
         $this->assertPattern('/save options/', $output); // should have submit option
-        $this->assertPattern('/plugin_options_error_facebook_api_key/', $output); // should have api key option
         $this->assertPattern('/plugin_options_error_message_facebook_api_secret/', $output); // secret option
         $this->assertPattern('/plugin_options_max_crawl_time/', $output); // advanced option
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
