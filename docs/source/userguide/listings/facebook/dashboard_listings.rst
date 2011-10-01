@@ -18,3 +18,4 @@ Posts
    dashboard_mostreplies.rst
    dashboard_mostlikes.rst
    dashboard_questions.rst
+   dashboard_followers-history.rst
