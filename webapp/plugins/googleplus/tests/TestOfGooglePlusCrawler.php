@@ -139,6 +139,32 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($tokens->refresh_token, 'faux-refresh-token');
     }
 
+    public function testGetOAuthTokensWithAndWithoutSSL() {
+        $gpc = new GooglePlusCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+
+        //test getting token with HTTPS
+        $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
+        $_SERVER['HTTPS'] = 'y';
+        $site_root_path = '';
+        $ssl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != '')?'s':'');
+        $redirect_uri = urlencode('http'.$ssl.'://'.$_SERVER['SERVER_NAME']. $site_root_path.'account/?p=google%2B');
+
+        $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-code1', 'authorization_code',
+        $redirect_uri);
+        $this->assertEqual($tokens->access_token, 'faux-access-token-with-https');
+        $this->assertEqual($tokens->refresh_token, 'faux-refresh-token-with-https');
+
+        //test getting token without HTTPS
+        $_SERVER['HTTPS'] = '';
+        $ssl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != '')?'s':'');
+        $redirect_uri = urlencode('http'.$ssl. '://'.$_SERVER['SERVER_NAME']. $site_root_path.'account/?p=google%2B');
+
+        $tokens = $gpc->getOAuthTokens('test-client-id', 'test-client-secret', 'test-code1', 'authorization_code',
+        $redirect_uri);
+        $this->assertEqual($tokens->access_token, 'faux-access-token-without-https');
+        $this->assertEqual($tokens->refresh_token, 'faux-refresh-token-without-https');
+    }
+
     public function testFetchInstanceUserPosts() {
         $gpc = new GooglePlusCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
         $gpc->fetchInstanceUserPosts();
