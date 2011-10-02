@@ -96,11 +96,13 @@ class UpgradeController extends ThinkUpAuthController {
             $migrations = $this->getMigrationList($db_version);
             $processed = false;
             $sql = $migrations[$migration_index]['sql'];
+            $new_migration = $migrations[$migration_index]['new_migration'];
+            $migration_file_name = $migrations[$migration_index]['filename'];
             // remove comments...
             $sql = preg_replace('/\-\-.*/','', $sql);
 
             try {
-                $install_dao->runMigrationSQL($sql);
+                $install_dao->runMigrationSQL($sql, $new_migration, $migration_file_name);
                 $processed = true;
                 $this->setJsonData( array( 'processed'=>$processed, 'sql'=>$sql));
             } catch(Exception $e) {
@@ -233,13 +235,14 @@ class UpgradeController extends ThinkUpAuthController {
      * @param int The current db version
      * @return array List of migration sql
      */
-    public function getMigrationList($version) {
+    public function getMigrationList($version, $no_version = false) {
         $dir = THINKUP_WEBAPP_PATH . self::MIGRATION_DIR;
-        $dir_list = glob($dir . '/*.migration');
-        $migrations = array();
         $config = Config::getInstance();
+        $table_prefix = $config->getValue('table_prefix');
+        $dir_list = glob('{' . $dir . '/*.sql,' . $dir . '/*.migration}', GLOB_BRACE);
+        $migrations = array();
         for ($i = 0; $i < count($dir_list); $i++) {
-            if (preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql\.migration/', $dir_list[$i], $matches)) {
+            if (preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql(\.migration)?/', $dir_list[$i], $matches)) {
                 $migration_version = $matches[1];
                 // skip early pre beta 1 versions...
                 if (preg_match('/^0\.00/', $migration_version)) {
@@ -261,16 +264,41 @@ class UpgradeController extends ThinkUpAuthController {
                         throw new OpenFileException("Unable to open file: " + $dir_list[$i]);
                     } else {
                         // check for modified prefix
-                        $table_prefix = $config->getValue('table_prefix');
                         if ($table_prefix != 'tu_') {
                             $migration_string = str_replace('tu_', $table_prefix, $migration_string);
                         }
-                        $migration = array("version" =>  $migration_version, 'sql'  => $migration_string);
+                        $path_info = pathinfo($dir_list[$i]);
+                        $migration =
+                        array("version" =>  $migration_version, 'sql'  => $migration_string, 'new_migration' => false,
+                        'filename' => $path_info['basename']);
+                        if($path_info['extension'] == 'sql')  {
+                            $migration['new_migration'] = true;
+                        }
                         array_push($migrations, $migration);
                     }
                 }
             }
         }
+        // add non-versioned sql if running via command line and no version arg '--with-new-sql'
+        if($no_version) {
+            foreach($dir_list as $file) {
+                if (! preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql(\.migration)?/', $file)
+                && preg_match("/\.sql$/", $file)
+                ) {
+                    $migration_string = file_get_contents($file);
+                    // check for modified prefix
+                    if ($table_prefix != 'tu_') {
+                        $migration_string = str_replace('tu_', $table_prefix, $migration_string);
+                    }
+                    $path_info = pathinfo($file);
+                    $migration =
+                    array("version" =>  $migration_version, 'sql'  => $migration_string, 'new_migration' => false,
+                        'filename' => $path_info['basename'], 'new_migration' => true);
+                    array_push($migrations, $migration);
+                }
+            }
+        }
+        usort($migrations, "migration_date_sort");
         return $migrations;
     }
 
@@ -335,4 +363,9 @@ class UpgradeController extends ThinkUpAuthController {
             }
         }
     }
+}
+
+// for our migration sort by key
+function migration_date_sort($a,$b) {
+    return strtolower($a['filename']) > strtolower($b['filename']);
 }

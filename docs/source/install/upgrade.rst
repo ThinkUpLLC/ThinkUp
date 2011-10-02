@@ -81,3 +81,12 @@ have to do is update ThinkUp's version number in the database. Do this by runnin
 database (first replace x.xx with the current version you're upgrading to):
 
 ``UPDATE tu_options SET option_value='x.xx' WHERE namespace='application_options' AND option_name='database_version';``
+
+Upgrading A Development Database
+-------------------------------
+
+As of version 0.16 beta, developers can use the CLI upgrade tool to run any new database migrations using the argument "--with-new-sql":
+
+``$ php upgrade.php --with-new-sql``
+
+The CLI tool will keep track of any migrations that have been applied and only run new migrations. Developers can just run the tool with the "--with-new-sql" option to get their install up to date. This also applies to migration files rolled into the release builds.
