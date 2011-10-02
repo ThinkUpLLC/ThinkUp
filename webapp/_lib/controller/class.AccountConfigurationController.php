@@ -165,7 +165,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
         } else {
             $pld = DAOFactory::getDAO('PluginDAO');
             $config = Config::getInstance();
-            $installed_plugins = $pld->getInstalledPlugins($config->getValue("source_root_path"));
+            $installed_plugins = $pld->getInstalledPlugins();
             $this->addToView('installed_plugins', $installed_plugins);
         }
         /* End plugin-specific configuration handling */

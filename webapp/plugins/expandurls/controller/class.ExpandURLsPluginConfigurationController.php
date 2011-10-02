@@ -31,6 +31,7 @@ class ExpandURLsPluginConfigurationController extends PluginConfigurationControl
         $config = Config::getInstance();
         Utils::defineConstants();
         $this->setViewTemplate( THINKUP_WEBAPP_PATH. 'plugins/expandurls/view/expandurls.account.index.tpl');
+        $this->view_mgr->addHelp('expandurls', 'userguide/settings/plugins/expandurls');
 
         $links_to_expand = array( 'name' => 'links_to_expand', 'label' => 'Links to expand per crawl',
         'default_value' => 1500, 'size'=>4);

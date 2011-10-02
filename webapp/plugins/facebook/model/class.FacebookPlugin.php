@@ -26,7 +26,14 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani, Mark Wilkie
  */
-class FacebookPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+
+    public function __construct($vals=null) {
+        parent::__construct($vals);
+        $this->folder_name = 'facebook';
+        $this->addRequiredSetting('facebook_app_id');
+        $this->addRequiredSetting('facebook_api_secret');
+    }
 
     public function activate() {
     }

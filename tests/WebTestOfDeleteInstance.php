@@ -34,6 +34,11 @@ class WebTestOfDeleteInstance extends ThinkUpWebTestCase {
     public function setUp() {
         parent::setUp();
         $this->builders = self::buildData();
+        //set up required Twitter plugin options
+        $this->builders[] = FixtureBuilder::build('options', array('namespace'=>'plugin_options-1',
+        'option_name'=>'oauth_consumer_secret', 'option_value'=>'testconsumersecret'));
+        $this->builders[] = FixtureBuilder::build('options', array('namespace'=>'plugin_options-1',
+        'option_name'=>'oauth_consumer_key', 'option_value'=>'testconsumerkey'));
     }
 
     public function tearDown() {

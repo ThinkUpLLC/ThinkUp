@@ -1,7 +1,7 @@
 <div class="append_20">
-<h2 class="subhead">Expand URLs Plugin</h2>
+<h2 class="subhead">Expand URLs Plugin {insert name="help_link" id='expandurls'}</h2>
 
-<p>Expands shortened links, including images. <a href="http://thinkupapp.com/docs/userguide/settings/plugins/expandurls.html">Learn more.</a></p>
+<p>Expands shortened links, including images.</p>
 
 <div id="contact-admin-div" style="display: none; margin-top: 20px;">
 {include file="_plugin.admin-request.tpl"}
@@ -9,15 +9,13 @@
 
 
 {if $options_markup}
-<br />
+<div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
-<p>
-	<b>Option(s)</b>
-</p>
+<h2 class="subhead">Set Up the ExpandURLs Plugin</h2>
+{include file="_usermessage.tpl" field="setup"}
 {/if}
-<p>
 {$options_markup}
-<p>
+</p>
+</div>
 {/if}
 
-<br/>

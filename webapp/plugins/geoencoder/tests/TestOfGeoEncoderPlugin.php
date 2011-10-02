@@ -54,6 +54,13 @@ class TestOfGeoEncoderPlugin extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
+    public function testConstructor() {
+        $plugin = new GeoEncoderPlugin();
+        $this->assertIsA($plugin, 'GeoEncoderPlugin');
+        $this->assertEqual(count($plugin->required_settings), 1);
+        $this->assertFalse($plugin->isConfigured());
+    }
+
     public function testGeoEncoderCrawl() {
         $this->simulateLogin('admin@example.com', true);
         $crawler = Crawler::getInstance();

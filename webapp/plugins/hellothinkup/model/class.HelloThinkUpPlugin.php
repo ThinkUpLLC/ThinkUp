@@ -27,7 +27,13 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau, Mark Wilkie
  */
-class HelloThinkUpPlugin implements CrawlerPlugin, PostDetailPlugin {
+class HelloThinkUpPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin {
+
+    public function __construct($vals=null) {
+        parent::__construct($vals);
+        $this->folder_name = 'hellothinkup';
+        $this->addRequiredSetting('testname');
+    }
 
     public function activate() {
     }

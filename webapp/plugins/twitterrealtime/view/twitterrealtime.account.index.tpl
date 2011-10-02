@@ -1,5 +1,5 @@
 <div class="append_20">
-<h2 class="subhead">Twitter Realtime Plugin</h2>
+<h2 class="subhead">Twitter Realtime Plugin {insert name="help_link" id='twitterrealtime'}</h2>
 
 {if count($owner_instances) > 0 }
     <p>The Twitter Realtime Plugin requires the <a href="./?p=twitter">Twitter plugin</a> to be configured with your

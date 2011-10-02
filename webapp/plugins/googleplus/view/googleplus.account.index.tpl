@@ -1,9 +1,22 @@
+<div class="append_20">
+<h2 class="subhead">Google+ Plugin {insert name="help_link" id='googleplus'}</h2>
+
+<p>The Google+ plugin collects posts, reply counts, and +1 counts from Google+ for an authorized user. <i>Note:</i> The Google+ API is in its early stages and its capabilities are limited.</p>
 
 {include file="_usermessage.tpl"}
+
+{if $oauth_link}
+<br>
+{include file="_usermessage.tpl" field='authorization'}
+<a href="{$oauth_link}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Add a Google+ User</a>
+<div style="clear:all">&nbsp;<br><br><br></div>
+{/if}
 
     {if count($owner_instances) > 0 }
     <h2 class="subhead">Google+ Accounts</h2>
 
+    {include file="_usermessage.tpl" field='user_add'}
+    
     {foreach from=$owner_instances key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
@@ -25,18 +38,16 @@
     <br />
     {/if}
 
-{if $oauth_link}<br><h2 class="subhead">Add a Google+ Account</h2>
+<div id="contact-admin-div" style="display: none;">
+{include file="_plugin.admin-request.tpl"}
+</div>
 
-Click on this button to authorize ThinkUp to access your Google+ account.
-<a href="{$oauth_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkUp on Google+</a>
-
-<div style="clear:all">&nbsp;<br><br><br></div>
-{/if}
 
 {if $options_markup}
 <div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
-<h2 class="subhead">Configure the Google+ Plugin</h2>
+<h2 class="subhead">Set Up the Google+ Plugin</h2>
+{include file="_usermessage.tpl" field="setup"}
 <ol style="margin-left:40px">
 <li><a href="http://code.google.com/apis/console#access">Create a project in the Google APIs Console.</a></li>
 <li>Click "Services" and switch Google+ API to "On." Next, click "API Access" then "Create an OAuth 2.0 client ID."</li>
@@ -47,7 +58,7 @@ Click on this button to authorize ThinkUp to access your Google+ account.
 {$options_markup}
 </p>
 </div>
-
+</div>
 {literal}
 <script type="text/javascript">
 if( required_values_set ) {

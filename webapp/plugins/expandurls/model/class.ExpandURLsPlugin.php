@@ -28,12 +28,17 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class ExpandURLsPlugin implements CrawlerPlugin {
+class ExpandURLsPlugin extends Plugin implements CrawlerPlugin {
     /**
      * Max number of links to expand during a given crawl; set in ExpandURLs Plugin options area.
      * @var int
      */
     var $link_limit = 0;
+
+    public function __construct($vals=null) {
+        parent::__construct($vals);
+        $this->folder_name = 'expandurls';
+    }
 
     public function activate() {
     }

@@ -68,8 +68,20 @@ class Plugin {
      * @var str plugin icon
      */
     var $icon;
+    /**
+     * Non-persistent array of plugin options which are required for the plugin to run.
+     * @var array
+     */
+    var $required_settings;
+    /**
+     * Non-persistent hash of plugin options.
+     * @var array
+     */
+    var $options_hash = null;
 
     public function __construct($val = null) {
+        $this->required_settings = array();
+
         if (! $val) {
             return;
         }
@@ -92,4 +104,41 @@ class Plugin {
         }
     }
 
+    /**
+     * Add a setting name to the required settings array.
+     * @param str $setting_name
+     */
+    public function addRequiredSetting($setting_name) {
+        $this->required_settings[] = $setting_name;
+    }
+
+    /**
+     * Return whether or not the plugin's required settings have been set in the options table
+     * @return bool
+     */
+    public function isConfigured() {
+        $this->options_hash = $this->getOptionsHash();
+        foreach ($this->required_settings as $setting_name) {
+            if (!isset($this->options_hash[$setting_name])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Retrieve this plugin's options from the data store.
+     * @return array
+     */
+    public function getOptionsHash() {
+        if (!isset($this->options_hash)) {
+            $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
+            if (isset($this->id)) {
+                $this->options_hash  = $plugin_option_dao->getOptionsHashByPluginId($this->id);
+            } else {
+                $this->options_hash  = $plugin_option_dao->getOptionsHash($this->folder_name);
+            }
+        }
+        return $this->options_hash;
+    }
 }

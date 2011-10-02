@@ -30,7 +30,7 @@
  * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
  *
  */
-class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
 
     /**
      * Percentage of allocated API calls that each crawler function will use per run for non-authed instances.
@@ -63,6 +63,13 @@ class TwitterPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin 
         'cleanUpMissedFavsUnFavs' => array('percent' => 20),
         'cleanUpFollows' => array('percent' => 20),
     );
+
+    public function __construct($vals = null) {
+        parent::__construct($vals);
+        $this->folder_name = 'twitter';
+        $this->addRequiredSetting('oauth_consumer_key');
+        $this->addRequiredSetting('oauth_consumer_secret');
+    }
 
     public function activate() {
     }

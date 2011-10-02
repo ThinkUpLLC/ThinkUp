@@ -48,6 +48,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $config = Config::getInstance();
         Utils::defineConstants();
         $this->setViewTemplate(THINKUP_WEBAPP_PATH.'plugins/facebook/view/facebook.account.index.tpl');
+        $this->view_mgr->addHelp('facebook', 'userguide/settings/plugins/facebook');
 
         /** set option fields **/
 
@@ -70,13 +71,11 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         'default_value' => '20', 'advanced'=>true, 'size' => 3);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $max_crawl_time);
 
-        $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
-        $options = $plugin_option_dao->getOptionsHash('facebook', true); //get cached
-
-        if (isset($options['facebook_app_id']->option_value) && isset($options['facebook_api_secret']->option_value)) {
-            $this->setUpFacebookInteractions($options);
+        $facebook_plugin = new FacebookPlugin();
+        if ($facebook_plugin->isConfigured()) {
+            $this->setUpFacebookInteractions($facebook_plugin->getOptionsHash());
         } else {
-            $this->addErrorMessage('Please set your Facebook App ID and App Secret.');
+            $this->addErrorMessage('Please complete plugin setup to start using it.', 'setup');
         }
         return $this->generateView();
     }
@@ -110,10 +109,7 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $fbconnect_link = $facebook->getLoginUrl($params);
         $this->addToView('fbconnect_link', $fbconnect_link);
 
-        $status = self::processPageActions($options, $facebook);
-        $this->addInfoMessage($status["info"]);
-        $this->addErrorMessage($status["error"]);
-        $this->addSuccessMessage($status["success"]);
+        self::processPageActions($options, $facebook);
 
         $logger = Logger::getInstance();
         $user_pages = array();
@@ -139,19 +135,14 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
 
         $this->addToView('owner_instances', $owner_instances);
-        if (isset($options['facebook_api_key'])) {
-            $this->addToView('fb_api_key', $options['facebook_api_key']->option_value);
-        }
     }
 
     /**
      * Process actions based on $_GET parameters. Authorize FB user or add FB page.
      * @param arr $options Facebook plugin options
      * @param Facebook $facebook Facebook object
-     * @return arr Array of success and error messages
      */
     protected function processPageActions($options, Facebook $facebook) {
-        $messages = array("error"=>'', "success"=>'', "info"=>'');
 
         //authorize user
         if (isset($_GET["code"]) && isset($_GET["state"])) {
@@ -176,7 +167,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                     $fb_user_profile = $facebook->api('/me');
                     $fb_username = $fb_user_profile['name'];
                     $fb_user_id = $fb_user_profile['id'];
-                    $messages['success'] = $this->saveAccessToken($fb_user_id, $access_token, $fb_username);
+                    $this->addSuccessMessage($this->saveAccessToken($fb_user_id, $access_token, $fb_username),
+                    'authorization');
                 } else {
                     $error_msg = "Problem authorizing your Facebook account! Please correct your plugin settings.";
                     $error_object = json_decode($access_token_response);
@@ -187,10 +179,11 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                     } else {
                         $error_msg = $error_msg."<br>Facebook's response: \"".$access_token_response. "\"";
                     }
-                    $messages['error'] = $error_msg;
+                    $this->addErrorMessage($error_msg, 'authorization');
                 }
             } else {
-                $messages['error'] = "Could not authenticate Facebook account due to invalid CSRF token.";
+                $this->addErrorMessage("Could not authenticate Facebook account due to invalid CSRF token.",
+                'authorization');
             }
         }
 
@@ -203,10 +196,9 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             $access_token = $tokens['oauth_access_token'];
 
             $page_data = FacebookGraphAPIAccessor::apiRequest('/'.$_GET["facebook_page_id"], $access_token);
-            $messages = self::insertPage($page_data->id, $_GET["viewer_id"], $_GET["instance_id"],
-            $page_data->name, $page_data->picture, $messages);
+            self::insertPage($page_data->id, $_GET["viewer_id"], $_GET["instance_id"], $page_data->name,
+            $page_data->picture);
         }
-        return $messages;
     }
 
     /**
@@ -214,10 +206,9 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
      * @param int $fb_user_id
      * @param str $fb_access_token
      * @param str $fb_username
-     * @return str Success message
+     * @return void
      */
     protected function saveAccessToken($fb_user_id, $fb_access_token, $fb_username) {
-        $msg = '';
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
         $user_dao = DAOFactory::getDAO('UserDAO');
@@ -228,17 +219,17 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             if ($owner_instance == null) { //Instance already exists, owner instance doesn't
                 //Add owner instance with session key
                 $owner_instance_dao->insert($this->owner->id, $instance->id, $fb_access_token);
-                $msg .= "Success! Your Facebook account has been added to ThinkUp.";
+                $this->addSuccessMessage("Success! Your Facebook account has been added to ThinkUp.", 'user_add');
             } else {
                 $owner_instance_dao->updateTokens($this->owner->id, $instance->id, $fb_access_token, '');
-                $msg .= "Success! You've reconnected your Facebook account. To connect a different account, log ".
-                "out of Facebook in a different browser tab and try again.";
+                $this->addSuccessMessage("Success! You've reconnected your Facebook account. To connect a ".
+                "different account, log  out of Facebook in a different browser tab and try again.", 'user_add');
             }
         } else { //Instance does not exist
             $instance_dao->insert($fb_user_id, $fb_username, 'facebook');
             $instance = $instance_dao->getByUserIdOnNetwork($fb_user_id, 'facebook');
             $owner_instance_dao->insert($this->owner->id, $instance->id, $fb_access_token);
-            $msg .= "Success! Your Facebook account has been added to ThinkUp.";
+            $this->addSuccessMessage("Success! Your Facebook account has been added to ThinkUp.", 'user_add');
         }
 
         if (!$user_dao->isUserInDB($fb_user_id, 'facebook')) {
@@ -250,12 +241,19 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             $user_dao->updateUser($u);
         }
         $this->view_mgr->clear_all_cache();
-
-        return $msg;
     }
 
+    /**
+     * Insert Facebook page instance into the data store
+     * @param str $fb_page_id
+     * @param str $viewer_id
+     * @param int $existing_instance_id
+     * @param str $fb_page_name
+     * @param str $fb_page_avatar
+     * @return void
+     */
     protected function insertPage($fb_page_id, $viewer_id, $existing_instance_id, $fb_page_name,
-    $fb_page_avatar, $messages) {
+    $fb_page_avatar) {
         //check if instance exists
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
@@ -266,13 +264,13 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             if ($i == null ) {
                 $instance_id = $instance_dao->insert($fb_page_id, $fb_page_name, "facebook page", $viewer_id);
                 if ($instance_id) {
-                    $messages["success"] .= "Success! Your Facebook page has been added.";
+                    $this->addSuccessMessage("Success! Your Facebook page has been added.", 'page_add');
                 }
                 $tokens = $owner_instance_dao->getOAuthTokens($existing_instance_id);
                 $session_key = $tokens['oauth_access_token'];
                 $owner_instance_dao->insert($this->owner->id, $instance_id, $session_key);
             } else {
-                $messages["error"] .= "This Facebook Page is already in ThinkUp.";
+                $this->addInfoMessage("This Facebook Page is already in ThinkUp.", 'page_add');
             }
             if (!$user_in_db) {
                 $val = array();
@@ -292,10 +290,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $result = $user_dao->updateUser($user);
             }
         } else {
-            $messages["error"] .= "This Facebook Page is already in ThinkUp.";
+            $this->addInfoMessage("This Facebook Page is already in ThinkUp.", 'page_add');
             $instance_id = $i->id;
         }
-        return $messages;
     }
-
 }

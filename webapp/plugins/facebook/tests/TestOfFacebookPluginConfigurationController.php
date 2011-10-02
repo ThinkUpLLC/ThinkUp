@@ -108,8 +108,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
-        'Please set your Facebook App ID and App Secret.');
+        $errors = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($errors['setup'], 'Please complete plugin setup to start using it.');
+        $this->debug(Utils::varDumpToString($errors));
     }
 
     public function testOutputNoParams() {
@@ -145,7 +146,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $output = $controller->go();
         // we have a text form element with proper data
         $this->assertNoPattern('/save options/', $output); // should have no submit option
-        $this->assertNoPattern('/plugin_options_error_facebook_api_key/', $output); // should have no api key
+        $this->assertNoPattern('/plugin_options_error_facebook_app_id/', $output); // should have no app id
         $this->assertNoPattern('/plugin_options_error_message_facebook_api_secret/', $output); // no secret
         $this->assertNoPattern('/plugin_options_max_crawl_time/', $output); // no advanced option
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
@@ -252,8 +253,6 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
         $builders = array();
         $builders[] = FixtureBuilder::build('options',
-        array('namespace' => $namespace, 'option_name' => 'facebook_api_key', 'option_value' => "k3y") );
-        $builders[] = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'facebook_api_secret', 'option_value' => "scrt") );
         $builders[] = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name' => 'facebook_app_id', 'option_value' => "77") );
@@ -284,7 +283,10 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $this->assertIsA($v_mgr->getTemplateDataItem('owner_instances'), 'array', 'Owner instances set');
         $this->assertTrue($v_mgr->getTemplateDataItem('fbconnect_link') != '', 'Authorization link set');
-        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), 'Success! Your Facebook page has been added.');
+
+        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual($msgs['page_add'], 'Success! Your Facebook page has been added.');
+        $this->debug(Utils::varDumpToString($msgs));
         $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), null, $v_mgr->getTemplateDataItem('error_msg'));
         $instance = $instance_dao->getByUserIdOnNetwork('162504567094163', 'facebook page');
         $this->assertNotNull($instance);
@@ -297,8 +299,10 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $output = $controller->go();
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), null);
-        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'This Facebook Page is already in ThinkUp.',
-        $v_mgr->getTemplateDataItem('error_msg'));
+
+        $msgs = $v_mgr->getTemplateDataItem('info_msgs');
+        $this->assertEqual($msgs['page_add'], 'This Facebook Page is already in ThinkUp.');
+        $this->debug(Utils::varDumpToString($msgs));
     }
 
     public function testConnectAccountSuccessful()  {
@@ -326,9 +330,10 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $output = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), "Success! Your Facebook account has been ".
-        "added to ThinkUp.");
-        $this->debug($output);
+
+        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual($msgs['user_add'], "Success! Your Facebook account has been added to ThinkUp.");
+        $this->debug(Utils::varDumpToString($msgs));
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
         $this->assertNotNull($instance); //Instance created
@@ -364,9 +369,11 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $output = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
+
+        $msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($msgs['authorization'],
         "Could not authenticate Facebook account due to invalid CSRF token.");
-        $this->debug($output);
+        $this->debug(Utils::varDumpToString($msgs));
     }
 
     public function testConnectAccountThatAlreadyExists()  {
@@ -392,9 +399,10 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $output = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), "Success! You've reconnected your Facebook ".
-        "account. To connect a different account, log out of Facebook in a different browser tab and try again.");
-        //$this->debug($output);
+        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual($msgs['user_add'], "Success! You've reconnected your Facebook account. To connect ".
+        "a different account, log  out of Facebook in a different browser tab and try again.");
+        $this->debug(Utils::varDumpToString($msgs));
 
         $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
         $this->assertNotNull($instance);

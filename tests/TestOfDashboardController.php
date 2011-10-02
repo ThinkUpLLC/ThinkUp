@@ -69,8 +69,8 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertPattern("/You have no services configured./", $v_mgr->getTemplateDataItem('info_msg'));
-        $this->assertPattern("/Set up a service/", $v_mgr->getTemplateDataItem('info_msg'));
+        $this->assertPattern("/Welcome to ThinkUp. Let\'s get started./", $v_mgr->getTemplateDataItem('info_msg'));
+        $this->assertPattern("/Adjust Your Settings/", $results);
     }
 
     public function testNotLoggedInNoUserOrViewSpecifiedDefaultServiceUserSet() {

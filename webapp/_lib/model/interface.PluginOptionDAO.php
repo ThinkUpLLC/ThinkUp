@@ -49,12 +49,20 @@ interface PluginOptionDAO {
     public function updateOption($id, $name, $value);
 
     /**
-     * Get plugin options
+     * Get plugin options by plugin folder name
      * @param str A plugin folder
      * @param bool $cached Whether or not to retrieved cached options, default to false
      * @return array A list of PluginOption objects
      */
     public function getOptions($plugin_folder, $cached = false);
+
+    /**
+     * Get plugin options by plugin ID
+     * @param int A plugin ID
+     * @param bool $cached Whether or not to retrieved cached options, default to false
+     * @return array A list of PluginOption objects
+     */
+    public function getOptionsByPluginId($plugin_id, $cached = false);
 
     /**
      * Delete a plugin option by id
@@ -70,4 +78,12 @@ interface PluginOptionDAO {
      * @return array A hash table of Options with option_name as the key
      */
     public function getOptionsHash($plugin_folder, $cached = false);
+
+    /**
+     * Get a hash of Option objects keyed on option name by plugin ID
+     * @param int Plugin ID
+     * @param bool $cached Whether or not to retrieved cached options, default to false
+     * @return array A hash table of Options with option_name as the key
+     */
+    public function getOptionsHashByPluginId($plugin_id, $cached = false);
 }

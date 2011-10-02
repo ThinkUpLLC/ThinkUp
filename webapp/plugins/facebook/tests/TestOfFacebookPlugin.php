@@ -44,6 +44,13 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
+    public function testConstructor() {
+        $plugin = new FacebookPlugin();
+        $this->assertIsA($plugin, 'FacebookPlugin');
+        $this->assertEqual(count($plugin->required_settings), 2);
+        $this->assertFalse($plugin->isConfigured());
+    }
+
     public function testMenuItemRegistration() {
         $webapp = Webapp::getInstance();
         $logger = Logger::getInstance();

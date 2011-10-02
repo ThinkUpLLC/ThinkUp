@@ -24,7 +24,14 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2011 Gina Trapani
  */
-class GooglePlusPlugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, PostDetailPlugin {
+
+    public function __construct($vals=null) {
+        parent::__construct($vals);
+        $this->folder_name = 'googleplus';
+        $this->addRequiredSetting('google_plus_client_secret');
+        $this->addRequiredSetting('google_plus_client_id');
+    }
 
     public function activate() {
     }

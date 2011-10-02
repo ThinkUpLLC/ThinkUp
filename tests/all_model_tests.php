@@ -51,6 +51,7 @@ $model_tests->add(new TestOfOptionMySQLDAO());
 $model_tests->add(new TestOfOwner());
 $model_tests->add(new TestOfOwnerMySQLDAO());
 $model_tests->add(new TestOfOwnerInstanceMySQLDAO());
+$model_tests->add(new TestOfPlugin());
 $model_tests->add(new TestOfPluginMySQLDAO());
 $model_tests->add(new TestOfPluginOptionMySQLDAO());
 $model_tests->add(new TestOfPluginHook());

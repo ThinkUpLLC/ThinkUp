@@ -13,7 +13,7 @@ var is_admin = {if $user_is_admin}true;{else}false;{/if}
         {assign var='required_values_set' value=false}
     {/if}
 {/foreach}
-var required_values_set = {if $required_values_set}true{else}false{/if}
+var required_values_set = {if $required_values_set}true{else}false{/if};
 
 {literal}
 var advanced_visible = false;

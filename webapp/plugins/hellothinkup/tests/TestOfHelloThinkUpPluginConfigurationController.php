@@ -74,7 +74,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $v_mgr = $controller->getViewManager();
         $message = $v_mgr->getTemplateDataItem('message');
         $this->assertEqual($message,
-        'Hello, world! This is the example plugin configuration page for  me@example.com.', 'message set ' . $message);
+        'Hello ThinkUp world! This is an example plugin configuration page for  me@example.com.');
 
     }
 

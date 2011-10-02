@@ -48,6 +48,7 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
         $config = Config::getInstance();
         Utils::defineConstants();
         $this->setViewTemplate( THINKUP_WEBAPP_PATH.'plugins/googleplus/view/googleplus.account.index.tpl');
+        $this->view_mgr->addHelp('googleplus', 'userguide/settings/plugins/googleplus');
 
         /** set option fields **/
         // client ID text field
@@ -68,16 +69,12 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
         $plugin_option_dao = DAOFactory::getDAO('PluginOptionDAO');
         $options = $plugin_option_dao->getOptionsHash('googleplus', true); //get cached
 
-        if (isset($options['google_plus_client_id']->option_value)
-        && isset($options['google_plus_client_secret']->option_value)) {
+        $plugin = new GooglePlusPlugin();
+        if ($plugin->isConfigured()) {
             $this->setUpGPlusInteractions($options);
         } else {
-            $this->addErrorMessage('Please set your Google+ client ID and secret.');
+            $this->addErrorMessage('Please complete plugin setup to start using it.', 'setup');
         }
-
-        $instance_dao = DAOFactory::getDAO('InstanceDAO');
-        $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'google+');
-        $this->addToView('owner_instances', $owner_instances);
 
         return $this->generateView();
     }
@@ -111,7 +108,7 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
             $redirect_uri);
             if (isset($tokens->error)) {
                 $this->addErrorMessage("Oops! Something went wrong while obtaining OAuth tokens.<br>Google says \"".
-                $tokens->error.".\" Please double-check your settings and try again.");
+                $tokens->error.".\" Please double-check your settings and try again.", 'authorization');
             } else {
                 $gplus_api_accessor = new GooglePlusAPIAccessor();
                 $gplus_user = $gplus_api_accessor->apiRequest('people/me', $tokens->access_token, null);
@@ -122,6 +119,10 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
                 $tokens->refresh_token);
             }
         }
+
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'google+');
+        $this->addToView('owner_instances', $owner_instances);
     }
 
     /**
@@ -130,10 +131,9 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
      * @param str $gplus_username
      * @param str $access_token
      * @param str $refresh_token
-     * @return str Success message
+     * @return void
      */
     protected function saveAccessTokens($gplus_user_id, $gplus_username, $access_token, $refresh_token) {
-        $msg = '';
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
         $user_dao = DAOFactory::getDAO('UserDAO');
@@ -144,11 +144,11 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
             if ($owner_instance == null) { //Instance already exists, owner instance doesn't
                 //Add owner instance with session key
                 $owner_instance_dao->insert($this->owner->id, $instance->id, $access_token, $refresh_token);
-                $msg .= "Success! Your Google+ account has been added to ThinkUp.";
+                $this->addSuccessMessage("Success! Your Google+ account has been added to ThinkUp.", 'user_add');
             } else {
                 $owner_instance_dao->updateTokens($this->owner->id, $instance->id, $access_token, $refresh_token);
-                $msg .= "Success! You've reconnected your Google+ account. To connect a different account, log ".
-                "out of Google in a different browser tab and try again.";
+                $this->addSuccessMessage("Success! You've reconnected your Google+ account. To connect a different ".
+                "account, log out of Google in a different browser tab and try again.", 'user_add');
             }
         } else { //Instance does not exist
             $instance_dao->insert($gplus_user_id, $gplus_username, 'google+');
@@ -156,24 +156,17 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
             $owner_instance_dao->insert(
             $this->owner->id,
             $instance->id, $access_token, $refresh_token);
-            $msg .= "Success! Your Google+ account has been added to ThinkUp.";
+            $this->addSuccessMessage("Success! Your Google+ account has been added to ThinkUp.", 'user_add');
         }
 
         if (!$user_dao->isUserInDB($gplus_user_id, 'google+')) {
-            $r = array('user_id'=>$gplus_user_id, 'user_name'=>$gplus_username,'full_name'=>$gplus_username, 'avatar'=>'',
-            'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0,
+            $r = array('user_id'=>$gplus_user_id, 'user_name'=>$gplus_username,'full_name'=>$gplus_username,
+            'avatar'=>'', 'location'=>'', 'description'=>'', 'url'=>'', 'is_protected'=>'',  'follower_count'=>0,
             'friend_count'=>0, 'post_count'=>0, 'last_updated'=>'', 'last_post'=>'', 'joined'=>'',
             'last_post_id'=>'', 'network'=>'facebook' );
             $u = new User($r, 'Owner info');
             $user_dao->updateUser($u);
         }
-
-        if ($msg != '') {
-            $this->addSuccessMessage($msg);
-        }
-
         $this->view_mgr->clear_all_cache();
-
-        return $msg;
     }
 }

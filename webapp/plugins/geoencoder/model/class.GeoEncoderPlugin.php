@@ -31,7 +31,13 @@
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */
-class GeoEncoderPlugin implements CrawlerPlugin, PostDetailPlugin {
+class GeoEncoderPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin {
+
+    public function __construct($vals=null) {
+        parent::__construct($vals);
+        $this->folder_name = 'geoencoder';
+        $this->addRequiredSetting('gmaps_api_key');
+    }
 
     public function activate() {
     }

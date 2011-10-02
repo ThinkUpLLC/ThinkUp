@@ -55,7 +55,7 @@ interface PluginDAO {
      * Inserts a plugin record
      * @throws BadArgumentException If param is not a Plugin object
      * @param Plugin A plugin data object
-     * @return bool Whether or not it was insertedss
+     * @return int|bool Insert ID of new row, or false if none
      */
     public function insertPlugin($plugin);
 
@@ -90,10 +90,10 @@ interface PluginDAO {
 
     /**
      * Detect what plugins exist in the filesystem; parse their header comments for plugin metadata
-     * @param str Plugin path
      * @return array Installed plugins
      */
-    public function getInstalledPlugins($plugin_path);
+    public function getInstalledPlugins();
+
     /**
      * Validate a plugin id
      * @param int A plugin id

@@ -62,9 +62,20 @@ class DashboardController extends ThinkUpController {
                     'click "Set Public" next to the account that should appear to users who are not logged in.');
                 } else  {
                     $config = Config::getInstance();
-                    $this->addInfoMessage('You have no services configured. <a href="'.
-                    $config->getValue('site_root_path').
-                    'account/">Set up a service like Twitter or Facebook now&rarr;</a>');
+                    $this->addInfoMessage('Welcome to ThinkUp. Let\'s get started.');
+
+                    $plugin_dao = DAOFactory::getDAO('PluginDAO');
+                    $plugins = $plugin_dao->getInstalledPlugins();
+                    $add_user_buttons = array();
+                    foreach ($plugins as $plugin) {
+                        if ($plugin->folder_name == 'twitter' || $plugin->folder_name == 'facebook'
+                        || $plugin->folder_name == 'googleplus') {
+                            if ($plugin->is_active && $plugin->isConfigured()) {
+                                $add_user_buttons[] = $plugin->folder_name;
+                            }
+                        }
+                    }
+                    $this->addToView('add_user_buttons', $add_user_buttons);
                 }
             }
         }

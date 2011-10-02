@@ -67,27 +67,42 @@ class PluginOptionMySQLDAO extends PDODAO implements PluginOptionDAO {
         $plugin_dao = DAOFactory::getDAO('PluginDAO');
         $plugin_id = $plugin_dao->getPluginId($plugin_folder);
         if ($plugin_id) {
-            $namespace = $this->namespace . '-' . $plugin_id;
-            $options =  $this->option_dao->getOptions($namespace, $cached);
-            $plugin_opts = array();
-            if ($options) {
-                foreach($options as $option) {
-                    $plugin_opt = new PluginOption();
-                    $plugin_opt->id = $option->option_id;
-                    $plugin_opt->plugin_id = $plugin_id;
-                    $plugin_opt->option_name = $option->option_name;
-                    $plugin_opt->option_value = $option->option_value;
-                    array_push($plugin_opts, $plugin_opt);
-                }
-            }
-            return $plugin_opts;
+            return self::getOptionsByPluginId($plugin_id, $cached);
         } else {
             return null;
         }
     }
 
+    public function getOptionsByPluginId($plugin_id, $cached = false) {
+        $namespace = $this->namespace . '-' . $plugin_id;
+        $options =  $this->option_dao->getOptions($namespace, $cached);
+        $plugin_opts = array();
+        if ($options) {
+            foreach($options as $option) {
+                $plugin_opt = new PluginOption();
+                $plugin_opt->id = $option->option_id;
+                $plugin_opt->plugin_id = $plugin_id;
+                $plugin_opt->option_name = $option->option_name;
+                $plugin_opt->option_value = $option->option_value;
+                array_push($plugin_opts, $plugin_opt);
+            }
+        }
+        return $plugin_opts;
+    }
+
     public function getOptionsHash($plugin_folder, $cached = false) {
         $options = $this->getOptions($plugin_folder, $cached);
+        $options_hash = array();
+        if (count( $options) > 0 ) {
+            foreach ($options as $option) {
+                $options_hash[ $option->option_name ] = $option;
+            }
+        }
+        return $options_hash;
+    }
+
+    public function getOptionsHashByPluginId($plugin_id, $cached = false) {
+        $options = $this->getOptionsByPluginId($plugin_id, $cached);
         $options_hash = array();
         if (count( $options) > 0 ) {
             foreach ($options as $option) {

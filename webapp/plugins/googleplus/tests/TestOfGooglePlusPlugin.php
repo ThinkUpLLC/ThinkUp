@@ -42,7 +42,6 @@ class TestOfGooglePlusPlugin extends ThinkUpUnitTestCase {
         $webapp = Webapp::getInstance();
         $webapp->registerPlugin('google+', 'GooglePlusPlugin');
         $webapp->setActivePlugin('google+');
-
     }
 
     public function tearDown(){
@@ -53,6 +52,8 @@ class TestOfGooglePlusPlugin extends ThinkUpUnitTestCase {
         $plugin = new GooglePlusPlugin();
         $this->assertNotNull($plugin);
         $this->assertIsA($plugin, 'GooglePlusPlugin');
+        $this->assertEqual(count($plugin->required_settings), 2);
+        $this->assertFalse($plugin->isConfigured());
     }
 
     public function testMenuItemRegistration() {

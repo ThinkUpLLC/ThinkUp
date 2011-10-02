@@ -55,6 +55,14 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         $this->logger->close();
     }
 
+    public function testConstructor() {
+        $plugin = new TwitterPlugin();
+        $this->assertNotNull($plugin);
+        $this->assertIsA($plugin, 'TwitterPlugin');
+        $this->assertEqual(count($plugin->required_settings), 2);
+        $this->assertFalse($plugin->isConfigured());
+    }
+
     public function testMenuItemRegistrationForDashboardAndPost() {
         $pd = DAOFactory::getDAO('PostDAO');
         $instance = new Instance();

@@ -3,6 +3,7 @@
  Plugin Name: Google+
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/googleplus/
  Description: Capture and display Google+ posts.
+ Class: GooglePlusPlugin
  Version: 0.01
  Icon: assets/img/plugin_icon.png
  Author: Gina Trapani

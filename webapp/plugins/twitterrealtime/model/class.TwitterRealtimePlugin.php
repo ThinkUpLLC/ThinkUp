@@ -30,7 +30,15 @@
  * @author Amy Unruh
  *
  */
-class TwitterRealtimePlugin implements StreamerPlugin {
+class TwitterRealtimePlugin extends Plugin implements StreamerPlugin {
+
+    public function __construct($vals=null) {
+        parent::__construct($vals);
+        $this->folder_name = 'twitterrealtime';
+        //@TODO: Build in support for making a plugin dependent on another plugin's settings, like Twitter's
+        //        $this->addRequiredSetting('oauth_consumer_key');
+        //        $this->addRequiredSetting('oauth_consumer_secret');
+    }
 
     public function activate() {
     }

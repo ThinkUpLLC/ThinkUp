@@ -47,6 +47,13 @@ class TestOfExpandURLsPlugin extends ThinkUpUnitTestCase {
         parent::tearDown();
     }
 
+    public function testConstructor() {
+        $plugin = new ExpandURLsPlugin();
+        $this->assertIsA($plugin, 'ExpandURLsPlugin');
+        $this->assertEqual(count($plugin->required_settings), 0);
+        $this->assertTrue($plugin->isConfigured());
+    }
+
     public function testExpandURLsCrawl() {
         $builders = $this->buildData();
 

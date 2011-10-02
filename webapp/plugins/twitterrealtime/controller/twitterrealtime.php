@@ -5,6 +5,7 @@
  Description: Capture and display tweets in realtime.
  Icon: assets/img/twitter_icon.png
  Version: 0.01
+ Class: TwitterRealtimePlugin
  Author: Amy Unruh, Mark Wilkie
  */
 

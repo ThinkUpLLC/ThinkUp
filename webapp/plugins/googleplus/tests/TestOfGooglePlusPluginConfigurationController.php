@@ -34,6 +34,7 @@ require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php
 require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/controller/class.GooglePlusPluginConfigurationController.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/tests/classes/mock.GooglePlusAPIAccessor.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/model/class.GooglePlusCrawler.php';
+require_once THINKUP_ROOT_PATH.'webapp/plugins/googleplus/model/class.GooglePlusPlugin.php';
 
 class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase {
 
@@ -221,9 +222,12 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'), 'Please set your Google+ client ID and secret.');
+
         //Should see error message
-        $this->assertPattern("/Please set your Google\+ client ID and secret./", $results);
+        $errors = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($errors['setup'], 'Please complete plugin setup to start using it.');
+        $this->debug(Utils::varDumpToString($errors));
+
         //Shouldn't see authorize link
         $this->assertNoPattern("/Click on this button to authorize ThinkUp to access your Google\+ account./",
         $results);
@@ -245,8 +249,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         //Shouldn't see error message
         $this->assertNoPattern("/Please set your Google\+ client ID and secret./", $results);
         //Should see authorize link
-        $this->assertPattern("/Click on this button to authorize ThinkUp to access your Google\+ account./", $results);
-        $this->assertPattern("/Authorize ThinkUp on Google\+/", $results);
+        $this->assertPattern("/Add a Google\+ User/", $results);
     }
 
     private function buildPluginOptions() {
@@ -281,8 +284,9 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
 
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
-        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'),
-        'Success! Your Google+ account has been added to ThinkUp.');
+        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual($msgs['user_add'], 'Success! Your Google+ account has been added to ThinkUp.');
+        $this->debug(Utils::varDumpToString($msgs));
 
         $owner_instance_dao = new OwnerInstanceMySQLDAO();
         $instance_dao = new InstanceMySQLDAO();
@@ -318,9 +322,9 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $results = $controller->go();
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), '');
-        $this->assertEqual($v_mgr->getTemplateDataItem('error_msg'),
-        'Oops! Something went wrong while obtaining OAuth tokens.<br>Google says "google_error_text." '.
-        'Please double-check your settings and try again.');
+        $msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($msgs['authorization'], 'Oops! Something went wrong while obtaining OAuth tokens.'.
+        '<br>Google says "google_error_text." Please double-check your settings and try again.');
+        $this->debug(Utils::varDumpToString($msgs));
     }
-
 }

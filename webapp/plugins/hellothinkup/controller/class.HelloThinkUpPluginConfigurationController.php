@@ -34,8 +34,10 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
         $config = Config::getInstance();
         Utils::defineConstants();
         $this->setViewTemplate( THINKUP_WEBAPP_PATH.'plugins/hellothinkup/view/hellothinkup.account.index.tpl');
-        $this->addToView('message',
-            'Hello, world! This is the example plugin configuration page for  '.$this->owner->email .'.');
+        $this->addToView('message', 'Hello ThinkUp world! This is an example plugin configuration page for  '.
+        $this->owner->email .'.');
+        //@TODO: Write "How to build ThinkUp plugin" and link it here
+        //$this->view_mgr->addHelp('hellothinkup', 'userguide/settings/plugins/hellothinkup');
 
         /** set option fields **/
         // name text field

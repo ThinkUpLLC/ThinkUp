@@ -1,9 +1,24 @@
 <div class="append_20">
+<h2 class="subhead">Facebook Plugin {insert name="help_link" id='facebook'}</h2>
+
+<p>The Facebook plugin collects posts and status updates for Facebook users and the Facebook pages those users like.</p>
 
     {include file="_usermessage.tpl"}
 
+<div id="add-account-div" style="display: none;">
+    {if $fbconnect_link}
+<br>
+     {include file="_usermessage.tpl" field="authorization"}
+<a href="{$fbconnect_link}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Add a Facebook User</a>
+<div style="clear:all">&nbsp;<br><br><br></div>
+    {/if}
+    <div>
+    </div>
+</div>
+
     {if count($owner_instances) > 0 }
     <h2 class="subhead">Facebook User Profiles</h2>
+     {include file="_usermessage.tpl" field="user_add"}
     {foreach from=$owner_instances key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
@@ -26,6 +41,7 @@
 
     {if isset($owner_instance_pages) && count($owner_instance_pages) > 0 }
     <h2 class="subhead">Facebook Pages</h2>
+    {include file="_usermessage.tpl" field="page_add"}
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
     <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
@@ -82,15 +98,6 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {/foreach}
 {/if}
 </div> 
-<div id="add-account-div" style="display: none;">
-    {if $fbconnect_link}<br><h2 class="subhead">Add a Facebook User</h2>
-    Click on this button to authorize ThinkUp to access your Facebook user account.
-<a href="{$fbconnect_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkUp on Facebook</a>
-<div style="clear:all">&nbsp;<br><br><br></div>
-    {/if}
-    <div>
-    </div>
-</div>
 
 <div id="contact-admin-div" style="display: none;">
 {include file="_plugin.admin-request.tpl"}
@@ -99,7 +106,8 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {if $options_markup}
 <div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
-<h2 class="subhead">Configure the Facebook Plugin</h2>
+<h2 class="subhead">Set Up the Facebook Plugin</h2>
+{include file="_usermessage.tpl" field="setup"}
 <ol style="margin-left:40px">
 <li><a href="https://developers.facebook.com/apps">Create a ThinkUp Facebook application.</a></li>
 <li>Set the Web Site &gt; Site URL to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}</pre></li>

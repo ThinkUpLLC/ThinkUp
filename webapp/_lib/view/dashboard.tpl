@@ -192,11 +192,23 @@
         </div>
         <small>Recently posting about {$instance->posts_per_day|round} times a day{if $latest_clients_usage}, mostly using {foreach from=$latest_clients_usage key=name item=num_posts name=foo}{$name}{if !$smarty.foreach.foo.last} and {/if}{/foreach}{/if}</small>
         {/if}
-
-
           {/if} 
           
         {/if}
+
+{if !$instance}
+        <div style="width:60%;text-align:center;">
+        {if $add_user_buttons}
+        {foreach from=$add_user_buttons key=smkey item=button name=smenuloop}
+            <br><br>
+            <div style="float:right;"><a href="{$site_root_path}account/?p={$button}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Add a {if $button eq 'googleplus'}Google+{else}{$button|ucwords}{/if} Account</a></div>
+         {/foreach}
+        {/if}
+        <br><br>
+        <div style="float:right;"><a href="{$site_root_path}account/" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Adjust Your Settings</a></div>
+        </div>
+{/if}
+
       </div> <!-- /.prefix_1 -->
     </div> <!-- /.thinkup-canvas -->
     

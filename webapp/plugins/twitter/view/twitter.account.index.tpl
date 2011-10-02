@@ -1,7 +1,21 @@
 <div class="append_20">
-<h2 class="subhead">Twitter Plugin</h2>
+<h2 class="subhead">Twitter Plugin {insert name="help_link" id='twitter'}</h2>
+
+<p>The Twitter plugin captures and display tweets, replies, mentions, retweets, friends, followers, favorites, links, and photos.</p>
+
+{include file="_usermessage.tpl"}
+
+{if $oauthorize_link}
+<br>
+<div id="add-account-div" style="display: none;">
+<a href="{$oauthorize_link}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Add a Twitter account</a>
+<br /><br />
+</div>
+{/if}
 
 {if count($owner_instances) > 0 }
+<br>
+<h2 class="subhead">Twitter Accounts</h2>
     {foreach from=$owner_instances key=iid item=i name=foo}
         <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
@@ -27,13 +41,6 @@
 {/if}
 </div>
 
-<div id="add-account-div" style="display: none;">
-<h2 class="subhead">Add a Twitter account</h2>
-<p>Click on this button to authorize ThinkUp to access your Twitter account.</p>
-<a href="{$oauthorize_link}" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Authorize ThinkUp on Twitter</a>
-<br /><br /><br />
-</div>
-
 <div id="contact-admin-div" style="display: none;">
 {include file="_plugin.admin-request.tpl"}
 </div>
@@ -44,9 +51,9 @@
 
 {if $options_markup}
 <div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
-<!-- Configure the Twitter Plugin -->
 {if $user_is_admin}
-<h2 class="subhead">Configure the Twitter Plugin</h2>
+<h2 class="subhead">Set Up the Twitter Plugin</h2>
+{include file="_usermessage.tpl" field="setup"}
 <ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps">Create a new application on Twitter for ThinkUp</a>.</li>
 <li>Set the callback URL to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/twitter/auth.php</pre></li>
 <li>Set the application Default Access type to "Read-only".</li>

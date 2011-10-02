@@ -3,6 +3,7 @@
  Plugin Name: GeoEncoder
  Plugin URI: http://github.com/ginatrapani/thinkup/tree/master/webapp/plugins/geoencoder/
  Description: Plot conversations on a Google Map.
+ Class: GeoEncoderPlugin
  Icon: assets/img/geoencoder_icon.png
  Version: 0.01
  Author: Ekansh Preet Singh, Mark Wilkie

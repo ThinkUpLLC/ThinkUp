@@ -57,10 +57,9 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
     }
 
     public function insertPlugin($plugin) {
-        if (! is_object($plugin) || get_class($plugin) != 'Plugin'
-        || ! isset($plugin->name) || ! isset($plugin->folder_name)
-        || ! isset($plugin->is_active) ) {
-            throw new BadArgumentException("insertPlugin() requires a valid plugin data object");
+        if (!is_object($plugin) || !isset($plugin->name) || !isset($plugin->folder_name)
+        || !isset($plugin->is_active) ) {
+            throw new BadArgumentException("PluginDAO::insertPlugin requires a valid plugin data object");
         }
         $q = 'INSERT INTO
                 #prefix#plugins (name, folder_name, description, author, version, homepage, is_active)
@@ -78,7 +77,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, $vars);
         if ( $this->getInsertCount($stmt) > 0) {
-            return true;
+            return $this->getInsertId($stmt);
         } else {
             return false;
         }
@@ -158,7 +157,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
         return $this->getUpdateCount($stmt);
     }
 
-    public function getInstalledPlugins($plugin_path) {
+    public function getInstalledPlugins() {
         // Detect what plugins exist in the filesystem; parse their header comments for plugin metadata
         Utils::defineConstants();
         $active_plugins = $inactive_plugins = array();
@@ -168,14 +167,21 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
                 $fhandle = fopen($includefile, "r");
                 $contents = fread($fhandle, filesize($includefile));
                 fclose($fhandle);
-                $installed_plugin = $this->parseFileContents($contents, $pf);
+                $plugin_vals = $this->parseFileContents($contents, $pf);
+                if (isset($plugin_vals['class'])) {
+                    require_once THINKUP_WEBAPP_PATH.'plugins/'.$pf."/model/class.".$plugin_vals['class'].".php";
+                    $installed_plugin = new $plugin_vals['class']($plugin_vals);
+                } else {
+                    $installed_plugin = new Plugin($plugin_vals);
+                }
                 if (isset($installed_plugin)) {
                     // Insert or update plugin entries in the database
                     if (!isset($installed_plugin->id)) {
-                        if ($this->insertPlugin($installed_plugin)) {
-                            $installed_plugin->id = $this->getPluginId($installed_plugin->folder_name);
-                        } else {
+                        $new_plugin_id = $this->insertPlugin($installed_plugin);
+                        if ($new_plugin_id === false) {
                             $this->updatePlugin($installed_plugin);
+                        } else {
+                            $installed_plugin->id = $new_plugin_id;
                         }
                     }
                     // Store in list, active first
@@ -218,6 +224,9 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
                 if (preg_match('/Icon:(.*)/', $line, $m)) {
                     $plugin_vals['icon'] = trim($m[1]);
                 }
+                if (preg_match('/Class:(.*)/', $line, $m)) {
+                    $plugin_vals['class'] = trim($m[1]);
+                }
 
             }
             $plugin_vals["folder_name"] = $pf;
@@ -227,7 +236,7 @@ class PluginMySQLDAO extends PDODAO implements PluginDAO {
             } else {
                 $plugin_vals["is_active"] = 0;
             }
-            return new Plugin($plugin_vals);
+            return $plugin_vals;
         } else {
             return null;
         }

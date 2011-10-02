@@ -50,6 +50,11 @@ class GeoEncoderPluginConfigurationController extends PluginConfigurationControl
         $distance_unit_field['default_value'] = 'km';
         $this->addPluginOption(self::FORM_RADIO_ELEMENT, $distance_unit_field);
 
+        $plugin = new GeoEncoderPlugin();
+        if (!$plugin->isConfigured()) {
+            $this->addErrorMessage('Please complete plugin setup to start using it.', 'setup');
+        }
+
         return $this->generateView();
     }
 }

@@ -20,8 +20,7 @@
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
               {if $smarty.foreach.foo.first}
                 <div class="clearfix header">
-                  <div class="grid_4 alpha">name</div>
-                  <div class="grid_14">description</div>
+                  <div class="grid_18 alpha">name</div>
                   {if $user_is_admin}
                   <div class="grid_4 omega">activate/deactivate</div>
                   {/if}
@@ -29,13 +28,12 @@
               {/if}
               {if $user_is_admin || $ip->is_active}
               <div class="clearfix bt append prepend">
-                <div class="grid_4 small alpha"><a href="?p={if $ip->folder_name eq 'googleplus'}{'google+'|urlencode}{else}{$ip->folder_name}{/if}"><span  id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l"></span>
+                <div class="grid_18 small alpha">
+                    <a href="?p={if $ip->folder_name eq 'googleplus'}{'google+'|urlencode}{else}{$ip->folder_name}{/if}"><span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l" style="margin-right:5px;"></span>
+                    {if $ip->is_active}{if !$ip->isConfigured()}<span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>{/if}{/if}
                     <span {if !$ip->is_active}style="display: none;"{/if} id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
-                    <span {if $ip->is_active}style="display: none;"{/if} id="spanpluginnametext{$ip->id}">{$ip->name}</span>
-                </div>
-                <div class="grid_14">
-                  <div style="font-size:14px">{$ip->description}</div>
-                  <!--<span style="font-size:12px;color:#999"><a href="{$ip->homepage}">v{$ip->version}</a> by {$ip->author}</span>-->
+                    <span {if $ip->is_active}style="display: none;"{/if} id="spanpluginnametext{$ip->id}">{$ip->name}</span><br >
+                    <span style="color:#666"><small>{$ip->description}</small></span><br>
                 </div>
                 {if $user_is_admin}
                 <div class="grid_4 omega">

@@ -113,6 +113,7 @@ class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase 
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
+        $this->debug($output);
         // we have a text form element with proper data
         $this->assertNoPattern('/save options/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_error_flickr_api_key/', $output); // should have no api key
