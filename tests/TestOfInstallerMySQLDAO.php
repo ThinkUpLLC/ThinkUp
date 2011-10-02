@@ -3,7 +3,7 @@
  *
  * ThinkUp/tests/TestOfInstallerMySQLDAO.php
  *
- * Copyright (c) 2009-2011 Gina Trapani, Guillaume Boudreau
+ * Copyright (c) 2009-2011 Gina Trapani, Mark Wilkie
  *
  * LICENSE:
  *
@@ -183,4 +183,167 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue($dao->needsSnowflakeUpgrade());
     }
 
+    public function testRunMigration() {
+        $dao = new InstallerMySQLDAO();
+        $this->testdb_helper->runSQL('CREATE TABLE `tu_test2` (`value` int(11) NOT NULL)');
+
+        //errors
+        try {
+            $dao->runMigrationSQL('bad sql');
+            $this->fail('should throw exception');
+        } catch (Exception $e) {
+            $this->assertTrue(true, 'should thow exception');
+        }
+        try {
+            $dao->runMigrationSQL('insert into tu_test2 (valuee) VALUES ("a")');
+            $this->fail('should throw exception');
+        } catch (Exception $e) {
+            $this->assertTrue(true, 'should thow exception');
+        }
+
+        // old migration
+        $dao->runMigrationSQL("insert into tu_test2 (value) VALUES (1)");
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_test2");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(1, $data[0]['value']);
+
+        //old migration multiple queries
+        $dao->runMigrationSQL("delete from tu_test2;" .
+        "insert into tu_test2 (value) VALUES (2);" .
+        "insert into tu_test2 (value) VALUES (3)");
+
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_test2");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(2, $data[0]['value']);
+        $this->assertEqual(3, $data[1]['value']);
+
+    }
+
+    public function testRunNewMigrationNoTable() {
+        $dao = new InstallerMySQLDAO();
+        $this->testdb_helper->runSQL('CREATE TABLE `tu_test2` (`value` int(11) NOT NULL)');
+        $this->testdb_helper->runSQL('DROP TABLE IF EXISTS tu_completed_migrations');
+
+        $dao->runMigrationSQL("insert into tu_test2 (value) VALUES (2);", true, $filename = 'a_file');
+
+        // tu_completed_migrations table should now exists
+        $stmt = InstallerMySQLDAO::$PDO->query("SHOW TABLES LIKE 'tu_completed_migrations'");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(1, count($data));
+        $this->assertEqual($data[0][0], "tu_completed_migrations");
+
+        // migration should have run
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_test2");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(2, $data[0]['value']);
+
+        // tu_completed_migrations table should contan a record for our latest migration
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_completed_migrations");
+        $data = $stmt->fetchAll();
+        $this->assertEqual($data[0]['migration'], 'a_file-0');
+
+    }
+
+    public function testRunNewMigrationsTwice() {
+        $dao = new InstallerMySQLDAO();
+        $this->testdb_helper->runSQL('CREATE TABLE `tu_test2` (`value` int(11) NOT NULL)');
+        $this->testdb_helper->runSQL('DROP TABLE IF EXISTS tu_completed_migrations');
+
+        $dao->runMigrationSQL("insert into tu_test2 (value) VALUES (2);", true, $filename = 'a_file');
+
+        // first migration should have run
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_test2");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 1);
+        $this->assertEqual(2, $data[0]['value']);
+
+        // tu_completed_migrations table should contain a record for our latest migration
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_completed_migrations");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 1);
+        $this->assertEqual($data[0]['migration'], 'a_file-0');
+
+        $dao->runMigrationSQL("insert into tu_test2 (value) VALUES (2);" .
+        "insert into tu_test2 (value) VALUES (3);" .
+        "insert into tu_test2 (value) VALUES (4);", 
+        true, $filename = 'a_file');
+
+        // migration should have run
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_test2");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 3);
+        $this->assertEqual(2, $data[0]['value']);
+        $this->assertEqual(3, $data[1]['value']);
+        $this->assertEqual(4, $data[2]['value']);
+
+        // tu_completed_migrations table should contain a record for our latest migration
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_completed_migrations");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 3);
+        $this->assertEqual($data[0]['migration'], 'a_file-0');
+        $this->assertEqual($data[1]['migration'], 'a_file-1');
+        $this->assertEqual($data[2]['migration'], 'a_file-2');
+    }
+
+    public function testRunNewMigrationsSkipIfExists() {
+        $dao = new InstallerMySQLDAO();
+        $this->testdb_helper->runSQL('CREATE TABLE `tu_test2` (`value` int(11) NOT NULL)');
+        $this->testdb_helper->runSQL('DROP TABLE IF EXISTS tu_completed_migrations');
+
+        $dao->runMigrationSQL("insert into tu_test2 (value) VALUES (2);" .
+        "insert into tu_test2 (value) VALUES (3);" .
+        "DROP TABLE IF EXISTS tu_users_b16;" .
+        "insert into tu_test2 (value) VALUES (4);" .
+        "insert into tu_test2 (value) VALUES (5);", 
+        true, $filename = 'a_file');
+
+        // migration should have run
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_test2");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 4);
+        $this->assertEqual(2, $data[0]['value']);
+        $this->assertEqual(3, $data[1]['value']);
+        $this->assertEqual(4, $data[2]['value']);
+        $this->assertEqual(5, $data[3]['value']);
+
+        // tu_completed_migrations table should contain a record for our latest migration
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_completed_migrations");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 4);
+        $this->assertEqual($data[0]['migration'], 'a_file-0');
+        $this->assertEqual($data[1]['migration'], 'a_file-1');
+        $this->assertEqual($data[2]['migration'], 'a_file-2');
+        $this->assertEqual($data[3]['migration'], 'a_file-3');
+    }
+
+    public function testRunNewMigrationStripsVersionForStorage() {
+        $dao = new InstallerMySQLDAO();
+        $this->testdb_helper->runSQL('CREATE TABLE `tu_test2` (`value` int(11) NOT NULL)');
+        $this->testdb_helper->runSQL('DROP TABLE IF EXISTS tu_completed_migrations');
+
+        $dao->runMigrationSQL("insert into tu_test2 (value) VALUES (2);" .
+        "insert into tu_test2 (value) VALUES (3);" .
+        "DROP TABLE IF EXISTS tu_users_b16;" .
+        "insert into tu_test2 (value) VALUES (4);" .
+        "insert into tu_test2 (value) VALUES (5);", 
+        true, $filename = 'a_file_v0.13.sql');
+
+        // migration should have run
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_test2");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 4);
+        $this->assertEqual(2, $data[0]['value']);
+        $this->assertEqual(3, $data[1]['value']);
+        $this->assertEqual(4, $data[2]['value']);
+        $this->assertEqual(5, $data[3]['value']);
+
+        // tu_completed_migrations table should contain a record for our latest migration
+        $stmt = InstallerMySQLDAO::$PDO->query("select * from tu_completed_migrations");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 4);
+        $this->assertEqual($data[0]['migration'], 'a_file-0');
+        $this->assertEqual($data[1]['migration'], 'a_file-1');
+        $this->assertEqual($data[2]['migration'], 'a_file-2');
+        $this->assertEqual($data[3]['migration'], 'a_file-3');
+    }
 }

@@ -72,12 +72,13 @@ Developers Running Nightly Code
 -------------------------------
 
 If you're a developer :doc:`running nightly code from ThinkUp's git repository </contribute/developers/devfromsource>`,
-after you update ThinkUp's files from git, make sure you run any necessary database migrations by hand. Look for
-those in the ``thinkup/install/sql/mysql_migrations/`` folder. It's up to you to keep track of which migrations you've
-run by hand, and which you need to run.
+after you update ThinkUp's files from git, you'll need to catch up on any necessary database migrations.
 
-If you're updating to a new release of ThinkUp and you've run all the database migrations manually already, all you
-have to do is update ThinkUp's version number in the database. Do this by running the following query on your ThinkUp
-database (first replace x.xx with the current version you're upgrading to):
+As of beta 16 (v0.16), developers can use the CLI upgrade tool to run any new database migrations using the argument
+"--with-new-sql":
 
-``UPDATE tu_options SET option_value='x.xx' WHERE namespace='application_options' AND option_name='database_version';``
+``$ php upgrade.php --with-new-sql``
+
+The CLI tool will keep track of any migrations that have been applied and only run new migrations. Developers can just
+run the tool with the "--with-new-sql" option to get their install up to date. This also applies to migration files
+rolled into the release builds.

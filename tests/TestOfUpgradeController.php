@@ -115,6 +115,147 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertEqual(file_get_contents($this->test_migrations[1]), $queries[0]['sql']);
     }
 
+    public function testGetMigrationList() {
+        $this->simulateLogin('me@example.com', true);
+        $controller = new UpgradeController(true);
+        $this->migrationFiles(1);
+        $this->newMigrationFiles('some_stuff');
+        $this->newMigrationFiles('some_stuff', $old = true); // older already ran?
+        $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+        $list = $controller->getMigrationList($db_version);
+        $this->assertEqual(count($list), 2);
+        $this->assertFalse($list[0]['new_migration']);
+        $this->assertTrue($list[1]['new_migration']);
+        $this->assertPattern("/^2010-09-17_v\d+\.\d+\.sql\.migration$/",$list[0]['filename']);
+        $this->assertPattern("/^2011-09-21_some_stuff_v\d+\.\d+\.sql$/",$list[1]['filename']);
+        //var_dump($list);
+    }
+
+    public function testGetMigrationListWithNewSQL() {
+        $this->simulateLogin('me@example.com', true);
+        $controller = new UpgradeController(true);
+        $this->migrationFiles(1);
+        $this->newMigrationFiles('some_stuff');
+        $this->newMigrationFiles('some_stuff2', $old = false, $add_sql = false, $no_version = true);
+        $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+        $list = $controller->getMigrationList($db_version, $no_version = true);
+        $clean_list = array();
+        $cnt = 0;
+        foreach($list as $migration) {
+            if(preg_match("/some_stuff/", $migration['filename'])) {
+                array_push($clean_list, $migration);
+            }
+            $cnt++;
+        }
+        $this->assertTrue($clean_list[0]['new_migration']);
+        $this->assertTrue($clean_list[1]['new_migration']);
+        $this->assertPattern("/^2011-09-21_some_stuff2.sql$/",$clean_list[0]['filename']);
+        $this->assertPattern("/^2011-09-21_some_stuff_v10.15.sql$/",$clean_list[1]['filename']);
+
+        // run migration
+        $install_dao = DAOFactory::getDAO('InstallerDAO');
+        foreach($clean_list as $migration) {
+            $sql = preg_replace('/\-\-.*/','', $migration['sql']);
+            $install_dao->runMigrationSQL($sql, $migration['new_migration'], $migration['filename']);
+        }
+        $stmt = $this->pdo->query("select * from tu_completed_migrations");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 5);
+        $this->assertEqual($data[0]['migration'], '2011-09-21_some_stuff2-0');
+        $this->assertEqual($data[1]['migration'], '2011-09-21_some_stuff2-1');
+        $this->assertEqual($data[2]['migration'], '2011-09-21_some_stuff-0');
+        $this->assertEqual($data[3]['migration'], '2011-09-21_some_stuff-1');
+        $this->assertEqual($data[4]['migration'], '2011-09-21_some_stuff-2');
+
+        // run same migration file now as a versioned file with one new sql line
+        $migration = $clean_list[0];
+        $filename = $migration['filename'] = '2011-09-21_some_stuff2_v1.1.sql';
+        $migration['sql'] .= "\nINSERT INTO tu_test1 (value) VALUES (5);";
+        $sql = preg_replace('/\-\-.*/','', $migration['sql']);
+        $install_dao->runMigrationSQL($sql, $migration['new_migration'], $filename);
+
+        $stmt = $this->pdo->query("select * from tu_completed_migrations");
+        $data2 = $stmt->fetchAll();
+        $this->assertEqual(count($data2), 6);
+        $this->assertEqual($data2[0]['migration'], '2011-09-21_some_stuff2-0');
+        $this->assertEqual($data2[1]['migration'], '2011-09-21_some_stuff2-1');
+        $this->assertEqual($data2[2]['migration'], '2011-09-21_some_stuff-0');
+        $this->assertEqual($data2[3]['migration'], '2011-09-21_some_stuff-1');
+        $this->assertEqual($data2[4]['migration'], '2011-09-21_some_stuff-2');
+        $this->assertEqual($data2[5]['migration'], '2011-09-21_some_stuff2-2');
+    }
+
+    public function testRunNewMigration() {
+        $this->simulateLogin('me@example.com', true);
+        $controller = new UpgradeController(true);
+        $this->newMigrationFiles('some_stuff');
+        $this->newMigrationFiles('some_stuff', $old = true); // older already ran?
+        $db_version = UpgradeController::getCurrentDBVersion($cached = false);
+        $list = $controller->getMigrationList($db_version);
+        $this->assertEqual(count($list), 1);
+        $this->assertTrue($list[0]['new_migration']);
+        $this->assertPattern("/^2011-09-21_some_stuff_v\d+\.\d+\.sql$/",$list[0]['filename']);
+
+        $_GET['migration_index'] = 1;
+        $results = $controller->go();
+        $obj = json_decode($results);
+        $this->assertTrue($obj->processed);
+        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = preg_replace('/\-\-.*/','', $sql);
+        $this->assertEqual($obj->sql, $sql);
+
+        $sql = "show tables like  'tu_test1'";
+        $stmt = $this->pdo->query($sql);
+        $data = $stmt->fetch();
+        $this->assertEqual($data[0], 'tu_test1');
+        $sql = 'select * from tu_test1';
+        $stmt = $this->pdo->query($sql);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertEqual(count($data), 3);
+        $this->assertEqual($data[0]['value'], 1);
+        $this->assertEqual($data[1]['value'], 2);
+        $this->assertEqual($data[2]['value'], 3);
+        // tu_completed_migrations table should contain a record for our latest migration
+        $stmt = $this->pdo->query("select * from tu_completed_migrations");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 3);
+        $this->assertEqual($data[0]['migration'], '2011-09-21_some_stuff-0');
+        $this->assertEqual($data[1]['migration'], '2011-09-21_some_stuff-1');
+        $this->assertEqual($data[2]['migration'], '2011-09-21_some_stuff-2');
+
+        // run it againto veriy it skips alrready run migrations, but add a new one as well
+        $new_sql = "INSERT INTO tu_test1 (value) VALUES (4),(5),(6);";
+        $this->newMigrationFiles('some_stuff', false, $new_sql);
+        $_GET['migration_index'] = 1;
+        $results = $controller->go();
+        $obj = json_decode($results);
+        $this->assertTrue($obj->processed);
+        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = preg_replace('/\-\-.*/','', $sql);
+        $this->assertEqual($obj->sql, $sql);
+        $sql = 'select * from tu_test1';
+        $stmt = $this->pdo->query($sql);
+        $data2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertEqual(count($data2), 6);
+        $this->assertEqual($data2[0]['value'], 1);
+        $this->assertEqual($data2[1]['value'], 2);
+        $this->assertEqual($data2[2]['value'], 3);
+        $this->assertEqual($data2[3]['value'], 4);
+        $this->assertEqual($data2[4]['value'], 5);
+        $this->assertEqual($data2[5]['value'], 6);
+
+        $stmt = $this->pdo->query("select * from tu_completed_migrations");
+        $data2 = $stmt->fetchAll();
+        $this->assertEqual(count($data2), 4);
+        $this->assertEqual($data2[0]['migration'], '2011-09-21_some_stuff-0');
+        $this->assertEqual($data2[1]['migration'], '2011-09-21_some_stuff-1');
+        $this->assertEqual($data2[2]['migration'], '2011-09-21_some_stuff-2');
+        $this->assertEqual($data2[3]['migration'], '2011-09-21_some_stuff-3');
+        $this->assertEqual($data2[0]['date_ran'], $data[0]['date_ran']);
+        $this->assertEqual($data2[1]['date_ran'], $data[1]['date_ran']);
+        $this->assertEqual($data2[2]['date_ran'], $data[2]['date_ran']);
+    }
+
     public function testGenerateUpgradeToken() {
         $this->simulateLogin('me@example.com');
         $controller = new UpgradeController(true);
@@ -284,7 +425,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[0]));
+        $sql_file = file_get_contents($this->test_migrations[0]);
+        $sql_file = preg_replace('/\-\-.*/','', $sql_file);
+        $this->assertEqual($obj->sql, $sql_file);
 
         $sql = "show tables like  'tu_test1'";
         $stmt = $this->pdo->query($sql);
@@ -308,7 +451,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[0]));
+        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = preg_replace('/\-\-.*/','', $sql);
+        $this->assertEqual($obj->sql, $sql);
 
         $sql = "show tables like  'tu_test1'";
         $stmt = $this->pdo->query($sql);
@@ -332,7 +477,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[0]));
+        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = preg_replace('/\-\-.*/','', $sql);
+        $this->assertEqual($obj->sql, $sql);
 
         $sql = "show tables like  'tu_test1'";
         $stmt = $this->pdo->query($sql);
@@ -343,7 +490,6 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 3);
     }
-
 
     public function testProcessSnowflakeMigration() {
         $config = Config::getInstance();
@@ -413,7 +559,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[1]));
+        $sql = file_get_contents($this->test_migrations[1]);
+        $sql = preg_replace('/\-\-.*/','', $sql);
+        $this->assertEqual($obj->sql, $sql);
 
         $sql = "show tables like  'tu_test2'";
         $stmt = $this->pdo->query($sql);
@@ -428,7 +576,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[0]));
+        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = preg_replace('/\-\-.*/','', $sql);
+        $this->assertEqual($obj->sql, $sql);
 
         $sql = "show tables like  'tu_test1'";
         $stmt = $this->pdo->query($sql);
@@ -457,7 +607,9 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $this->assertEqual($obj->sql, file_get_contents($this->test_migrations[0]));
+        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = preg_replace('/\-\-.*/','', $sql);
+        $this->assertEqual($obj->sql, $sql);
     }
 
     public function testMigrationDone() {
@@ -534,6 +686,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
         $updated_file = file_get_contents($this->test_migrations[0]);
+        $updated_file = preg_replace('/\-\-.*/','', $updated_file);
         $updated_file = str_replace('tu_', 'new_prefix_', $updated_file);
         $this->debug($obj->sql);
         $this->assertEqual($obj->sql, $updated_file);
@@ -567,5 +720,37 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
             copy($migration_test2, $migration2);
             $this->test_migrations[] = $migration2;
         }
+    }
+    private function newMigrationFiles($name, $old = false, $add_sql = false, $no_version = false, $date = false) {
+        $config = Config::getInstance();
+        $app_version = $config->getValue('THINKUP_VERSION');
+        if(! $date) {
+            $date = '2011-09-21';
+        }
+        $migration_version = $app_version;
+        if($old == false) {
+            $migration_version = $app_version;
+        } else {
+            $migration_version = $app_version - 10;
+        }
+        $migration_test1 = $this->migrations_test_dir . $this->migrations_file1;
+        if($no_version) {
+            $migration_test1 = $this->migrations_test_dir . $this->migrations_file2;
+        }
+        $migration1 = $this->migrations_dir . $date . '_' . $name;
+        if(! $no_version) {
+            $migration1 .= '_v' . $migration_version;
+        }
+        $migration1 .= '.sql';
+        if(file_exists($migration1)) {
+            unlink($migration1);
+        }
+        copy($migration_test1, $migration1);
+        if($add_sql) {
+            $msql = file_get_contents($migration1);
+            $msql .= "\n" . $add_sql;
+            file_put_contents($migration1, $msql);
+        }
+        $this->test_migrations[] = $migration1;
     }
 }
