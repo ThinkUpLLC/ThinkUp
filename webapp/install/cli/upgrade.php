@@ -107,9 +107,6 @@ try {
     $upgrade_start_time = microtime(true);
     putenv('CLI_BACKUP=true');
     $upgrade_ctl = new UpgradeController();
-    $no_version = false;
-
-    $no_version = true;
 
     $migrations = $upgrade_ctl->getMigrationList($db_version, $no_version);
     $install_dao = DAOFactory::getDAO('InstallerDAO');
