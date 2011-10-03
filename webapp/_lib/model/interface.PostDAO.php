@@ -31,7 +31,7 @@
 interface PostDAO {
     /**
      * Get post by ID
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @return Post Post with optional link member object set, null if post doesn't exist
      */
@@ -39,7 +39,7 @@ interface PostDAO {
 
     /**
      * Get replies to a post
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @param str $order_by Order of sorting posts
      * @param int $unit Defaults to km
@@ -54,7 +54,7 @@ interface PostDAO {
 
     /**
      * Get replies Iterator to a post
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @param str $order_by Order of sorting posts
      * @param int $unit Defaults to km
@@ -69,7 +69,7 @@ interface PostDAO {
 
     /**
      * Get retweets of post
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network Defaults to 'twitter'
      * @param str $order_by Order of sorting posts
      * @param int $unit Defaults to km
@@ -85,7 +85,7 @@ interface PostDAO {
 
     /**
      * Get all related posts (retweets and replies)
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network Defaults to 'twitter'
      * @param bool $is_public Defaults to false
      * @param int $page The page of results to return. Defaults to 1.
@@ -98,7 +98,7 @@ interface PostDAO {
 
     /**
      * Get all related posts (retweets and replies)
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network Defaults to 'twitter'
      * @param bool $is_public Defaults to false
      * @param int $page The page of results to return. Defaults to 1.
@@ -111,7 +111,7 @@ interface PostDAO {
 
     /**
      * Get posts that author has replied to (for question/answer exchanges)
-     * @param int $author_id
+     * @param str $author_id
      * @param int $count
      * @param str $network Defaults to 'twitter'
      * @param int $page Page number, defaults to 1
@@ -122,7 +122,7 @@ interface PostDAO {
 
     /**
      * Get all the back-and-forth posts between two users.
-     * @param int $author_id
+     * @param str $author_id
      * @param int $other_user_id
      * @param str $network Defaults to 'twitter'
      * @return array Back and forth posts
@@ -131,7 +131,7 @@ interface PostDAO {
 
     /**
      * Check to see if Post is in database
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @return bool true if post is in the database
      */
@@ -139,7 +139,7 @@ interface PostDAO {
     /**
      * Check to see if reply is in database
      * This is an alias for isPostInDB
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @return bool true if reply is in the database
      */
@@ -195,7 +195,7 @@ interface PostDAO {
 
     /**
      * Get all posts by an author given an author ID
-     * @param int $author_id
+     * @param str $author_id
      * @param str  $network
      * @param int $count
      * @param int $page
@@ -234,7 +234,7 @@ interface PostDAO {
 
     /**
      * Get all posts by an author given an author ID that contain a question mark
-     * @param int $author_id
+     * @param str $author_id
      * @param str  $network
      * @param int $count
      * @param int $page
@@ -250,7 +250,7 @@ interface PostDAO {
     /**
      * Get all posts by a given user based on a given time frame.
      *
-     * @param int $author_id The ID of the author to search for.
+     * @param str $author_id The ID of the author to search for.
      * @param str $network The network of the user to search for.
      * @param mixed $from The date to search from. Can be a unix timestamp or a valid date string.
      * @param mixed $ntil The date to search until (not inclusive). Can be a unix timestamp or a valid date string.
@@ -268,7 +268,7 @@ interface PostDAO {
 
     /**
      * Get all posts by an author given an author ID
-     * @param int $author_id
+     * @param str $author_id
      * @param str  $network
      * @param int $count
      * @param bool $include_replies If true, return posts with in_reply_to_post_id set
@@ -307,7 +307,7 @@ interface PostDAO {
 
     /**
      * Get all the sources of an author's posts and their count
-     * @param int $author_id
+     * @param str $author_id
      * @param str $network
      * @return array "source"=>"web", "total"=>15
      */
@@ -408,7 +408,7 @@ interface PostDAO {
 
     /**
      * Get stray replied-to posts--posts that are listed in the in_repy_to_post_id field, but aren't in the posts table
-     * @param int $author_id
+     * @param str $author_id
      * @param str $network
      * @param int $page The page of results to return. Defaults to 1. Pages start
      * at 1, not 0.
@@ -426,7 +426,7 @@ interface PostDAO {
 
     /**
      * Set geo-location data for post
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @param int $is_geo_encoded 0 if Not Geoencoded, 1 if Successful,
      * 2 if ZERO_RESULTS, 3 if OVER_QUERY_LIMIT, 4 if REQUEST_DENIED, 5 if INVALID_REQUEST
@@ -440,7 +440,7 @@ interface PostDAO {
 
     /**
      * Update the favorite/like count cache for a post.
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @param int $fav_like_count
      * @return int Number of updated rows
@@ -449,7 +449,7 @@ interface PostDAO {
 
     /**
      * Update the reply count cache for a post.
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @param int $reply_count
      * @return int Number of updated rows
@@ -458,7 +458,7 @@ interface PostDAO {
 
     /**
      * Update the retweet count cache for a post.
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @param int $retweet_count
      * @return int Number of updated rows
@@ -467,7 +467,7 @@ interface PostDAO {
 
     /**
      * Update the text of a post.
-     * @param int $post_id
+     * @param str $post_id
      * @param str $network
      * @param str $post_text
      * @return int Number of updated rows
@@ -509,7 +509,7 @@ interface PostDAO {
 
     /**
      * Calculate how much each client is used by a user on a specific network
-     * @param int $author_id
+     * @param str $author_id
      * @param string $network
      * @return array First element of the returned array is an array of all the clients the user used, ever.
      *               The second element is an array of the clients used for the last 25 posts.
@@ -519,7 +519,7 @@ interface PostDAO {
 
     /**
      * Update author username by author ID for all posts in the post table for a defined network
-     * @param int $author_user_id
+     * @param str $author_user_id
      * @param str $network
      * @param str $author_username
      * @return int Count of posts updated
@@ -532,4 +532,12 @@ interface PostDAO {
      * @return boolean True if post deleted, False if not (ie: post did not exist)
      */
     public function deletePost($id);
+
+    /**
+     * Get most recent posts which have replies, likes, and/or retweets, and are not direct replies to another post.
+     * @param str $author_user_id
+     * @param str $network
+     * @param int $count
+     */
+    public function getHotPosts($author_user_id, $network, $count);
 }

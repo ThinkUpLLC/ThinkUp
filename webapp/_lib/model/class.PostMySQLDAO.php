@@ -911,6 +911,31 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
+    public function getHotPosts($author_user_id, $network, $count) {
+        $q  = "SELECT p.*, l.*, pub_date + interval #gmt_offset# hour as adj_pub_date FROM #prefix#posts p ";
+        $q .= "LEFT JOIN #prefix#links l ON p.post_id = l.post_id AND p.network = l.network ";
+        $q .= "WHERE p.author_user_id = :author_user_id AND p.network=:network ";
+        $q .= "AND (p.reply_count_cache + p.favlike_count_cache + p.retweet_count_cache) > 0 ";
+        $q .= "AND (p.in_reply_to_post_id IS null OR p.in_reply_to_post_id = 0) ";
+        $q .= "AND (p.in_reply_to_user_id IS null OR p.in_reply_to_user_id = 0) ";
+        $q .= "ORDER BY p.pub_date DESC LIMIT :limit";
+        $vars = array(
+            ':author_user_id'=>$author_user_id,
+            ':network'=>$network,
+            ':limit'=>$count
+        );
+        //echo Utils::mergeSQLVars($q, $vars);
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+        foreach ($all_rows as $row) {
+            $posts[] = $this->setPostWithLink($row);
+        }
+        return $posts;
+    }
+
     public function getPostsByUserInRange($author_id, $network, $from, $until, $order_by="pub_date", $direction="DESC",
     $iterator=false, $is_public = false) {
         $direction = $direction=="DESC" ? "DESC": "ASC";

@@ -635,9 +635,6 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($total, 0);
     }
 
-    /**
-     * Test getAllPosts
-     */
     public function testGetAllPostsByUsername() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getAllPostsByUsername('shutterbug', 'twitter');
@@ -645,6 +642,21 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         //non-existent author
         $posts = $dao->getAllPostsByUsername('idontexist', 'twitter');
+        $this->assertEqual(sizeof($posts), 0);
+    }
+
+    public function testGetHotPosts() {
+        $dao = new PostMySQLDAO();
+        $posts = $dao->getHotPosts(13, 'twitter', 5);
+        $this->assertEqual(sizeof($posts), 5);
+
+        foreach ($posts as $post) {
+            $this->assertTrue(($post->reply_count_cache + $post->retweet_count_cache + $post->favlike_count_cache)>0);
+            $this->assertEqual($post->in_reply_to_post_id, 0);
+        }
+
+        //non-existent author
+        $posts = $dao->getHotPosts(1000000, 'twitter', 5);
         $this->assertEqual(sizeof($posts), 0);
     }
 

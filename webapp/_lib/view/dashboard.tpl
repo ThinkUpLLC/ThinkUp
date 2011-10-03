@@ -76,7 +76,20 @@
 
             {else} <!-- else if $data_template -->
 
+            {if $hot_posts|@count > 3}
+              <h2>Hot Posts</h2>
+                {foreach from=$hot_posts key=tid item=t name=foo}
+                    {if $smarty.foreach.foo.index < 3}
+                        {if $instance->network eq "twitter"}
+                            {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                        {else}
+                            {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                        {/if}
+                    {/if}
+                {/foreach}
+            {else}
               {if $recent_posts}
+              <h2>Recent posts</h2>
                 {foreach from=$recent_posts key=tid item=t name=foo}
                     {if $smarty.foreach.foo.index < 3}
                         {if $instance->network eq "twitter"}
@@ -86,24 +99,25 @@
                         {/if}
                     {/if}
                 {/foreach}
+              {/if}
+            {/if}
 
-                {if $recent_posts|@count > 3}
+            {if $hot_posts|@count > 3}
                 <h2>Recent Activity</h2>
                 <div class="clearfix">
-                    {foreach from=$recent_posts key=post_id item=post name=foo}
+                    {foreach from=$hot_posts key=post_id item=post name=foo}
                         {assign var="ra_count" value="`$post->favlike_count_cache+$post->reply_count_cache+$post->all_retweets`"}
                         {if $ra_max < $ra_count}
                             {assign var="ra_max" value=$ra_count}
                         {/if}
                     {/foreach}
                     {if $instance->network neq "twitter"} 
-                        <img width="700" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{if $post->post_text}{$post->post_text|truncate:50|urlencode}{elseif $post->link->title}{$post->link->title|truncate:50|urlencode}{elseif $post->link->url}{$post->link->url|truncate:50|urlencode}{else}{$post->pub_date|date_format:"%b %e"}{/if}|{/foreach}&chd=t:{foreach from=$recent_posts key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=FF9900,cccccc&&chdl={if $instance->network eq 'google+'}%2B1's{else}Likes{/if}|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
+                        <img width="700" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$hot_posts|@array_reverse key=post_id item=post name=foo}{if $post->post_text}{$post->post_text|truncate:50|urlencode}{elseif $post->link->title}{$post->link->title|truncate:50|urlencode}{elseif $post->link->url}{$post->link->url|truncate:50|urlencode}{else}{$post->pub_date|date_format:"%b %e"}{/if}|{/foreach}&chd=t:{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->favlike_count_cache > 0}{$post->favlike_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=FF9900,cccccc&&chdl={if $instance->network eq 'google+'}%2B1's{else}Likes{/if}|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
                     {else}
-                        <img width="700" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$recent_posts|@array_reverse key=post_id item=post name=foo}{$post->post_text|truncate:50|urlencode}|{/foreach}&chd=t:{foreach from=$recent_posts key=post_id item=post name=foo}{if $post->all_retweets > 0}{$post->all_retweets}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$recent_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=FF9900,cccccc&chdl=Retweets|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
+                        <img width="700" height="280" src="http://chart.googleapis.com/chart?chxs=0,,11&chxt=y&chxl=0:|{foreach from=$hot_posts|@array_reverse key=post_id item=post name=foo}{$post->post_text|truncate:50|urlencode}|{/foreach}&chd=t:{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->all_retweets > 0}{$post->all_retweets}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}|{foreach from=$hot_posts key=post_id item=post name=foo}{if $post->reply_count_cache > 0}{$post->reply_count_cache}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chds=0,{$ra_max+5}&chbh=a&chco=FF9900,cccccc&chdl=Retweets|Replies&chs=700x280&cht=bhs&chm=N*s*,666666,-1,-1,11,,e:2:0">
                     {/if}
                 </div>
-                {/if}
-              {/if}
+            {/if}
 
             {if $most_replied_to_1wk}
               <div class="clearfix">

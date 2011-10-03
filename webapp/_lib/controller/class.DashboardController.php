@@ -189,6 +189,8 @@ class DashboardController extends ThinkUpController {
             $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 20,
             true);
             $this->addToView('recent_posts', $recent_posts);
+            $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 20);
+            $this->addToView('hot_posts', $hot_posts);
             $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
             $this->instance->network, 5);
             $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
