@@ -76,7 +76,32 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertNoPattern('/However, there is no administrator set up for this installation/', $result);
     }
 
-    public function testFreshInstallStep1() {
+    public function testFreshInstallStep1ReqsNotMet() {
+        //remove config file
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        //drop DB
+        $this->testdb_helper->drop($this->test_database_name);
+
+        $reqs = array('curl'=>false, 'gd'=>false, 'pdo'=>false, 'pdo_mysql'=>false, 'json'=>false, 'hash'=>false,
+        'simplexml'=>false);
+
+        $controller = new InstallerController(true, $reqs);
+        $this->assertTrue(isset($controller));
+        $result = $controller->go();
+
+        //system requirements have not been met
+        $this->assertNoPattern('/Your system has everything it needs to run ThinkUp./', $result);
+        $this->assertPattern('/Your web server isn\'t set up to run ThinkUp. Please fix the problems below and try '.
+        'installation again./', $result);
+        $this->assertPattern('/ThinkUp needs the /', $result);
+
+        //make sure install did not auto-progress to step 2 b/c
+        $this->assertNoPattern('/Create Your ThinkUp Account/', $result);
+        $this->restoreConfigFile();
+    }
+
+    public function testFreshInstallStep1AllReqsMet() {
         //remove config file
         Config::destroyInstance();
         $this->removeConfigFile();
@@ -87,6 +112,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->go();
         $this->assertPattern('/Your system has everything it needs to run ThinkUp./', $result);
+        //make sure we've auto-progressed to step 2 b/c all requirements have been met
+        $this->assertPattern('/Create Your ThinkUp Account/', $result);
         $this->restoreConfigFile();
     }
 

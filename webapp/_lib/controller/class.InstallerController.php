@@ -36,8 +36,13 @@ class InstallerController extends ThinkUpController {
      * @var Installer
      */
     private $installer;
+    /**
+     * Pre-set requirements settings for testing only.
+     * @var array
+     */
+    private $reqs;
 
-    public function __construct($session_started=false) {
+    public function __construct($session_started=false, $reqs=null) {
         //Explicitly set TZ (before we have user's choice) to avoid date() warning about using system settings
         Utils::setDefaultTimezonePHPini();
         Utils::defineConstants();
@@ -52,6 +57,7 @@ class InstallerController extends ThinkUpController {
         $this->view_mgr = new SmartyThinkUp($cfg_array);
         $this->setPageTitle('Install ThinkUp');
         $this->disableCaching();
+        $this->reqs = $reqs;
     }
 
     public function control() {
@@ -115,16 +121,20 @@ class InstallerController extends ThinkUpController {
         $this->setViewTemplate('install.step1.tpl');
 
         // php version check
-        $php_compat = 0;
+        $php_compat = false;
         if ( $this->installer->checkVersion() ) {
-            $php_compat = 1;
+            $php_compat = true;
         }
         $this->addToView('php_compat', $php_compat);
         $requiredVersion = $this->installer->getRequiredVersion();
         $this->addToView('php_required_version', $requiredVersion['php']);
 
         // libs check
-        $libs = $this->installer->checkDependency();
+        if (isset($this->reqs)) { //testing only
+            $libs = $this->installer->checkDependency($this->reqs);
+        } else {
+            $libs = $this->installer->checkDependency();
+        }
         $libs_compat = true;
         foreach ($libs as $lib) {
             if (!$lib) {
@@ -152,6 +162,12 @@ class InstallerController extends ThinkUpController {
         $requirements_met = ($php_compat && $libs_compat && $permissions_compat);
         $this->addToView('requirements_met', $requirements_met);
         $this->addToView('subtitle', 'Check System Requirements');
+
+        //If all requirements are met, go to step 2
+        if ($requirements_met) {
+            $this->addSuccessMessage("<strong>Great!</strong> Your system has everything it needs to run ThinkUp.");
+            $this->step2();
+        }
     }
 
     /**
