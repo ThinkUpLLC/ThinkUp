@@ -34,7 +34,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
             {$post->post_text|filter_xss|regex_replace:"/^@[a-zA-Z0-9_]+/":""|link_usernames_to_twitter}
           {else}
           {if $post->network == 'google+'}
-            {$post->post_text}
+            {$post->post_text|strip_tags|truncate:'150'}
            {else}
             {$post->post_text|filter_xss|link_usernames_to_twitter}
             {/if}
