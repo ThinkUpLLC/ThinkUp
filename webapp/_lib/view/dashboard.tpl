@@ -81,9 +81,9 @@
                 {foreach from=$hot_posts key=tid item=t name=foo}
                     {if $smarty.foreach.foo.index < 3}
                         {if $instance->network eq "twitter"}
-                            {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                            {include file="_post.counts_no_author.tpl" post=$t}
                         {else}
-                            {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                            {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets=true}
                         {/if}
                     {/if}
                 {/foreach}
@@ -93,9 +93,9 @@
                 {foreach from=$recent_posts key=tid item=t name=foo}
                     {if $smarty.foreach.foo.index < 3}
                         {if $instance->network eq "twitter"}
-                            {include file="_post.counts_no_author.tpl" post=$t headings="NONE"}
+                            {include file="_post.counts_no_author.tpl" post=$t}
                         {else}
-                            {include file="_post.counts_no_author.tpl" post=$t headings="NONE" show_favorites_instead_of_retweets=true}
+                            {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets=true}
                         {/if}
                     {/if}
                 {/foreach}
