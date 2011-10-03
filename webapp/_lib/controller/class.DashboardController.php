@@ -61,7 +61,6 @@ class DashboardController extends ThinkUpController {
                     'Click on one of the plugins that contain accounts (like Twitter or Facebook) and '.
                     'click "Set Public" next to the account that should appear to users who are not logged in.');
                 } else  {
-                    $config = Config::getInstance();
                     $this->addInfoMessage('Welcome to ThinkUp. Let\'s get started.');
 
                     $plugin_dao = DAOFactory::getDAO('PluginDAO');
