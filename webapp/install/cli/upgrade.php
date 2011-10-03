@@ -43,22 +43,27 @@ array_shift($argv);
 if(isset($argv[0]) && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
     usage();
 }
-
+$no_version = false;
+if(isset($argv[0]) && preg_match('/^(\-\-with\-new\-sql)$/i', $argv[0])) {
+    $no_version = true;
+}
 try {
     // do we need a migration?
     $db_version = UpgradeController::getCurrentDBVersion($cached = false);
     $config = Config::getInstance();
     $thinkup_db_version = $config->getValue('THINKUP_VERSION');
     $filename = false;
-    if($db_version == $thinkup_db_version) {
+    if($db_version == $thinkup_db_version && ! $no_version) {
         error_log("\nYour ThinkUp database structure is up to date.\n");
         exit;
     } else {
-        print "\nThinkup needs to be upgraded to version $thinkup_db_version, proceed => [y|n] ";
-        $handle = fopen ("php://stdin","r");
-        $line = fgets($handle);
-        if(trim($line) != 'y'){
-            exit;
+        if(! $no_version) {
+            print "\nThinkup needs to be upgraded to version $thinkup_db_version, proceed => [y|n] ";
+            $handle = fopen ("php://stdin","r");
+            $line = fgets($handle);
+            if(trim($line) != 'y'){
+                exit;
+            }
         }
         print "\nWould you like to backup your data first? => [y|n] ";
         $handle = fopen ("php://stdin","r");
@@ -97,16 +102,35 @@ try {
     // run updates...
 
     // get migrations we need to run...
-    print "\nUpgrading Thinkup to version $thinkup_db_version...\n\n";
+    if(! $no_version) {
+        print "\nUpgrading Thinkup to version $thinkup_db_version...\n\n";
+    }
 
     $upgrade_start_time = microtime(true);
     putenv('CLI_BACKUP=true');
     $upgrade_ctl = new UpgradeController();
-    $migrations = $upgrade_ctl->getMigrationList($db_version);
+    $no_version = false;
+
+    $no_version = true;
+
+    $migrations = $upgrade_ctl->getMigrationList($db_version, $no_version);
     $install_dao = DAOFactory::getDAO('InstallerDAO');
+    if($no_version && count($migrations) > 0) {
+        $s = count($migrations) > 1 ? 's' : '';
+        print "\nFound " . count($migrations) . " migration" . $s . " to process...\n";
+    }
     foreach($migrations as $migration) {
-        print("  Running migration " . $migration['version'] . "\n");
-        $install_dao->runMigrationSQL($migration['sql']);
+        if($no_version) {
+            print("\n  Running migration with file " . $migration['filename'] . "\n");
+        } else {
+            print("\n  Running migration " . $migration['version'] . "\n");
+        }
+        $sql = preg_replace('/\-\-.*/','', $migration['sql']);
+        $install_dao->runMigrationSQL($sql, $migration['new_migration'], $migration['filename']);
+    }
+    if(count($migrations) == 0) {
+        print("\n  No migrations to run...\n\n");
+        exit;
     }
 
     $option_dao = DAOFactory::getDAO('OptionDAO');
@@ -133,7 +157,9 @@ try {
 
 function usage() {
     print "\n Usage:\n\n";
-    print "   php upgrade.php [--help]\n\n";
-    print "    --help - usage help\n\n";
+    print "   php upgrade.php [--help][--with-new-sql]\n\n";
+    print "    --with-new-sql - will upgrade with non-versioned in development sql files\n";
+    print "                     example: '2011-05-17_new_feature.sql'\n";
+    print "    --help         - usage help\n\n";
     exit;
 }

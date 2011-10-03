@@ -139,16 +139,69 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         }
     }
 
-    public function runMigrationSQL($insql) {
+    public function runMigrationSQL($insql, $new_migration = false, $filename = false) {
+        $config = Config::getInstance();
+        $table_prefix = $config->getValue('table_prefix');
         $sql_list = preg_split('/;/',$insql);
+        $cnt = 0;
         foreach($sql_list as $sql) {
             if(preg_match('/^\s+$/', $sql) || $sql == '') { # skip empty lines
                 continue;
+            }
+            // if a new migration, check to see if it has already been run
+            if($new_migration) {
+                //set up migration table if it doesn't exists
+                $stmt = $this->execute("SHOW TABLES LIKE '#prefix#completed_migrations'");
+                $table_data = $this->getDataRowAsArray($stmt);
+                if(! isset($table_data)) {
+                    // create table data
+                    $sql_file = THINKUP_WEBAPP_PATH . 'install/sql/completed_migrations.sql';
+                    $migration_string = file_get_contents($sql_file);
+                    if ($table_prefix != 'tu_') {
+                        $migration_string = str_replace('tu_', $table_prefix, $migration_string);
+                    }
+                    $ps = $this->execute($migration_string);
+                    $error_array = $ps->errorInfo();
+                    if ($error_array[0] > 0) {
+                        throw new Exception("Unable to create completed_migrations table: " . $migration_string);
+                    }
+                }
+            }
+            // have we already run this new migration?
+            $already_run = false;
+            // is this an IF Exists statement, if so, skip it.
+            $if_exists_statement = false;
+            if(preg_match("/IF\s+EXISTS/i", $sql)) {
+                $if_exists_statement = true;
+            }
+            if($new_migration && $filename && ! $if_exists_statement) {
+                $filename = preg_replace("/_v\d+\..*$/", '', $filename); // remove version number from migration key
+                $filename = preg_replace("/\.sql$/", '', $filename); // remove .sql from migration key
+                $migration_key = $filename . '-' . $cnt;
+                $migration_sql = "SELECT migration FROM #prefix#completed_migrations where migration = :migration";
+                $stmt = $this->execute($migration_sql, array(':migration' => $migration_key));
+                $already_run = $this->getDataIsReturned($stmt);
+                if($already_run) {
+                    $cnt++;
+                    error_log("Migration with key '$migration_key' has already been run...");
+                    continue;
+                }
             }
             $ps = $this->execute($sql);
             $error_array = $ps->errorInfo();
             if ($error_array[0] > 0) {
                 throw new Exception("migration sql error for $sql: " . $sql);
+            }
+            $ps->closeCursor();
+            if(! $if_exists_statement) {
+                $cnt++;
+            }
+            if($new_migration == true && ! $if_exists_statement) {
+                $migration_sql = "INSERT INTO #prefix#completed_migrations (migration) VALUES (:migration)";
+                $stmt = $this->execute($migration_sql, array(':migration' => $migration_key));
+                if($this->getInsertCount($stmt) != 1) {
+                    throw new Exception("Unable to add record to completed_migrations table: " . $migration_sql);
+                }
             }
         }
     }
