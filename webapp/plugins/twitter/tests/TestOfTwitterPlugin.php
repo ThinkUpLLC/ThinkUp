@@ -70,7 +70,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $menus = $this->webapp->getDashboardMenu($instance);
 
-        $this->assertEqual(sizeof($menus), 15);
+        $this->assertEqual(sizeof($menus), 16);
         $first_post_menuitem = $menus["tweets-all"];
         $this->assertEqual($first_post_menuitem->name, "All tweets", "Test name of first post menu item");
         $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");
@@ -140,7 +140,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $menus = $this->webapp->getDashboardMenu($instance);
 
-        $this->assertEqual(sizeof($menus), 17);
+        $this->assertEqual(sizeof($menus), 18);
         $first_post_menuitem = $menus["tweets-all"];
         $this->assertEqual($first_post_menuitem->name, "All tweets", "Test name of first post menu item");
         $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");
@@ -250,7 +250,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
         // with auth
         $limits = $twitter_plugin->budgetCrawlLimits(1000, false);
         $this->assertIsA($limits, 'Array');
-        $this->assertEqual(count($limits), 12);
+        $this->assertEqual(count($limits), 14);
         foreach($limits as $limit_key => $value) {
             $this->assertEqual($value['count'], 100);
             $this->assertEqual($value['remaining'], 100);

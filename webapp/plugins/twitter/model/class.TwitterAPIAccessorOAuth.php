@@ -55,7 +55,7 @@ class TwitterAPIAccessorOAuth {
      */
     var $oauth_access_token_secret;
     /**
-     * @var int
+     * @var str
      */
     var $next_cursor;
     /**
@@ -141,14 +141,14 @@ class TwitterAPIAccessorOAuth {
      * Define how to access the Twitter API.
      * @return array URLs by API call.
      */
-    public function prepAPI() {
-        # Define how to access Twitter API
+    protected function prepAPI() {
+        // Define how to access Twitter API
         $api_domain = 'https://api.twitter.com/1';
         $api_format = 'xml';
         $search_domain = 'http://search.twitter.com';
         $search_format = 'json';
 
-        # Define method paths ... [id] is a placeholder
+        // Define method paths ... [id] is a placeholder
         $api_method = array(
             "end_session"=>"/account/end_session", "rate_limit"=>"/account/rate_limit_status", 
             "delivery_device"=>"/account/update_delivery_device", "location"=>"/account/update_location", 
@@ -169,8 +169,10 @@ class TwitterAPIAccessorOAuth {
             "show_tweet"=>"/statuses/show/[id]", "post_tweet"=>"/statuses/update", 
             "user_timeline"=>"/statuses/user_timeline/[id]", "show_user"=>"/users/show/[id]", 
             "retweeted_by_me"=>"/statuses/retweeted_by_me", "retweets_of_me"=>"/statuses/retweets_of_me", 
-            "retweeted_by"=>"/statuses/[id]/retweeted_by");
-        # Construct cURL sources
+            "retweeted_by"=>"/statuses/[id]/retweeted_by", "groups"=>"/lists/memberships",
+            "check_group_member"=>"/lists/members/show",
+        );
+        // Construct cURL sources
         foreach ($api_method as $key=>$value) {
             $urls[$key] = $api_domain.$value.".".$api_format;
         }
@@ -343,6 +345,20 @@ class TwitterAPIAccessorOAuth {
                         $parsed_payload = array('source_follows_target'=>$xml->source->following,
                             'target_follows_source'=>$xml->target->following);
                         break;
+                    case 'lists_list':
+                        $this->next_cursor = $xml->next_cursor;
+                        foreach ($xml->lists->children() as $item) {
+                            $parsed_payload[] = array(
+                            // might want to get additional fields:
+                            // slug, subscriber_count, member_count, created_at, mode
+                                'group_id' => (string)$item->id,
+                                'group_name' => (string)$item->full_name,
+                                'owner_id' => (string)$item->user->id,
+                                'owner_name' => (string)$item->user->screen_name,
+                                'network' => 'twitter',
+                            );
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -413,6 +429,7 @@ class TwitterAPIAccessorOAuth {
      * @return int
      */
     public function getNextCursor() {
+        //Don't cast this to an int; will break on extra large cursors in PHP 5.2
         return $this->next_cursor;
     }
     /**

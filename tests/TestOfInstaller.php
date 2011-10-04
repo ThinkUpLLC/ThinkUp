@@ -135,18 +135,34 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         // test with some tables
         // drop all but follows and links
         $this->DAO = new InstallerMySQLDAO($config_array);
-        $q = "DROP TABLE ".$config->getValue('table_prefix')."encoded_locations, ".
-        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix').
-        "instances, ".$config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix').
-        "owners, ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
-        $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."favorites, ".$config->getValue('table_prefix')."instances_twitter, ".
-        $config->getValue('table_prefix')."users,".$config->getValue('table_prefix')."options,".
+        $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."encoded_locations, ".
+        $config->getValue('table_prefix')."favorites, ".
+        //$config->getValue('table_prefix')."follows, ".
+        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."groups, ".
+        $config->getValue('table_prefix')."group_members, ".
+        $config->getValue('table_prefix')."group_member_count, ".
+        $config->getValue('table_prefix')."hashtags," .
+        $config->getValue('table_prefix')."hashtags_posts, " .
+        $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_twitter, ".
         $config->getValue('table_prefix')."invites," .
-        $config->getValue('table_prefix')."mentions," . $config->getValue('table_prefix')."mentions_posts, " .
-        $config->getValue('table_prefix')."hashtags," . $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."places," . $config->getValue('table_prefix')."places_posts, " .
-        $config->getValue('table_prefix')."stream_data, " . $config->getValue('table_prefix')."stream_procs";
+        //$config->getValue('table_prefix')."links," .
+        $config->getValue('table_prefix')."mentions," .
+        $config->getValue('table_prefix')."mentions_posts, " .
+        $config->getValue('table_prefix')."owner_instances, ".
+        $config->getValue('table_prefix')."owners, ".
+        $config->getValue('table_prefix')."options, ".
+        $config->getValue('table_prefix')."places," .
+        $config->getValue('table_prefix')."places_posts, " .
+        $config->getValue('table_prefix')."plugins, ".
+        $config->getValue('table_prefix')."post_errors, ".
+        $config->getValue('table_prefix')."posts, ".
+        $config->getValue('table_prefix')."stream_data, " .
+        $config->getValue('table_prefix')."stream_procs, ".
+        $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."users;";
         PDODAO::$PDO->exec($q);
 
         $installer = Installer::getInstance();
@@ -195,18 +211,32 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
         // test with incomplete tables (also fail)
         $this->DAO = new InstallerMySQLDAO($config_array);
-        $q = "DROP TABLE ".$config->getValue('table_prefix')."encoded_locations, ".
-        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix').
-        "instances, ".$config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix').
-        "owners, ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
-        $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."favorites, ".$config->getValue('table_prefix')."instances_twitter, ".
-        $config->getValue('table_prefix')."users," . $config->getValue('table_prefix')."options,".
-        $config->getValue('table_prefix')."invites, " .
-        $config->getValue('table_prefix')."mentions," . $config->getValue('table_prefix')."mentions_posts, " .
-        $config->getValue('table_prefix')."hashtags," . $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."places," . $config->getValue('table_prefix')."places_posts, " .
-        $config->getValue('table_prefix')."stream_data, " . $config->getValue('table_prefix')."stream_procs";
+        $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."encoded_locations, ".
+        $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."groups, ".
+        $config->getValue('table_prefix')."group_members, ".
+        $config->getValue('table_prefix')."group_member_count, ".
+        $config->getValue('table_prefix')."hashtags," .
+        $config->getValue('table_prefix')."hashtags_posts, " .
+        $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_twitter, ".
+        $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."mentions," .
+        $config->getValue('table_prefix')."mentions_posts, " .
+        $config->getValue('table_prefix')."owner_instances, ".
+        $config->getValue('table_prefix')."owners, ".
+        $config->getValue('table_prefix')."options, ".
+        $config->getValue('table_prefix')."places," .
+        $config->getValue('table_prefix')."places_posts, " .
+        $config->getValue('table_prefix')."plugins, ".
+        $config->getValue('table_prefix')."post_errors, ".
+        $config->getValue('table_prefix')."posts, ".
+        $config->getValue('table_prefix')."stream_data, " .
+        $config->getValue('table_prefix')."stream_procs, ".
+        $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."users;";
 
         PDODAO::$PDO->exec($q);
 
@@ -247,16 +277,32 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
         // test with incomplete tables (will fail)
         $this->DAO = new InstallerMySQLDAO($config_array);
-        $q = "DROP TABLE ".$config->getValue('table_prefix')."encoded_locations, ".
-        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix').
-        "instances, ".$config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix').
-        "owners, ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
-        $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users," . $config->getValue('table_prefix')."options, " .
-        $config->getValue('table_prefix')."mentions," . $config->getValue('table_prefix')."mentions_posts, " .
-        $config->getValue('table_prefix')."hashtags," . $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."places," . $config->getValue('table_prefix')."places_posts, " .
-        $config->getValue('table_prefix')."stream_data, " . $config->getValue('table_prefix')."stream_procs";
+        $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."encoded_locations, ".
+        $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."groups, ".
+        $config->getValue('table_prefix')."group_members, ".
+        $config->getValue('table_prefix')."group_member_count, ".
+        $config->getValue('table_prefix')."hashtags," .
+        $config->getValue('table_prefix')."hashtags_posts, " .
+        $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_twitter, ".
+        $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."mentions," .
+        $config->getValue('table_prefix')."mentions_posts, " .
+        $config->getValue('table_prefix')."owner_instances, ".
+        $config->getValue('table_prefix')."owners, ".
+        $config->getValue('table_prefix')."options, ".
+        $config->getValue('table_prefix')."places," .
+        $config->getValue('table_prefix')."places_posts, " .
+        $config->getValue('table_prefix')."plugins, ".
+        $config->getValue('table_prefix')."post_errors, ".
+        $config->getValue('table_prefix')."posts, ".
+        $config->getValue('table_prefix')."stream_data, " .
+        $config->getValue('table_prefix')."stream_procs, ".
+        $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."users;";
         PDODAO::$PDO->exec($q);
 
         Installer::$show_tables = array();
@@ -274,12 +320,32 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
         //drop some tables so is_installed will be false
         $this->DAO = new InstallerMySQLDAO($config_array);
-        $q = "DROP TABLE ".$config->getValue('table_prefix')."encoded_locations, ".
-        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix').
-        "instances, ".$config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix').
-        "owners, ".$config->getValue('table_prefix')."plugins, ".$config->getValue('table_prefix')."post_errors, ".
-        $config->getValue('table_prefix')."posts, ".$config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users," . $config->getValue('table_prefix')."options";
+        $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."encoded_locations, ".
+        $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."groups, ".
+        $config->getValue('table_prefix')."group_members, ".
+        $config->getValue('table_prefix')."group_member_count, ".
+        $config->getValue('table_prefix')."hashtags," .
+        $config->getValue('table_prefix')."hashtags_posts, " .
+        $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_twitter, ".
+        $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."mentions," .
+        $config->getValue('table_prefix')."mentions_posts, " .
+        $config->getValue('table_prefix')."owner_instances, ".
+        $config->getValue('table_prefix')."owners, ".
+        $config->getValue('table_prefix')."options, ".
+        $config->getValue('table_prefix')."places," .
+        $config->getValue('table_prefix')."places_posts, " .
+        $config->getValue('table_prefix')."plugins, ".
+        $config->getValue('table_prefix')."post_errors, ".
+        $config->getValue('table_prefix')."posts, ".
+        $config->getValue('table_prefix')."stream_data, " .
+        $config->getValue('table_prefix')."stream_procs, ".
+        $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."users;";
         PDODAO::$PDO->exec($q);
 
         if ( file_exists(THINKUP_WEBAPP_PATH . 'config.inc.php') ) {
@@ -314,19 +380,34 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         // test on existing owner table that's recognized as a ThinkUp table
         // drop everything but owners
         $dao = new InstallerMySQLDAO($config_array);
-        $q = "DROP TABLE ".$config->getValue('table_prefix')."encoded_locations, ".
-        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix')."instances, ".
-        $config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix')."plugins, " .
-        $config->getValue('table_prefix')."post_errors, ". $config->getValue('table_prefix')."posts, " .
-        $config->getValue('table_prefix')."user_errors, ". $config->getValue('table_prefix')."users, ".
-        $config->getValue('table_prefix')."follows, ".$config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."links," . $config->getValue('table_prefix')."options, ".
-        $config->getValue('table_prefix')."instances_twitter, ".$config->getValue('table_prefix')."invites, " .
-        $config->getValue('table_prefix')."mentions," . $config->getValue('table_prefix')."mentions_posts, " .
-        $config->getValue('table_prefix')."hashtags," . $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."places," . $config->getValue('table_prefix')."places_posts, " .
-        $config->getValue('table_prefix')."stream_data, " . $config->getValue('table_prefix')."stream_procs";
-
+        $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."encoded_locations, ".
+        $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."follows, ".
+        $config->getValue('table_prefix')."groups, ".
+        $config->getValue('table_prefix')."group_members, ".
+        $config->getValue('table_prefix')."group_member_count, ".
+        $config->getValue('table_prefix')."hashtags," .
+        $config->getValue('table_prefix')."hashtags_posts, " .
+        $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_twitter, ".
+        $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."links," .
+        $config->getValue('table_prefix')."mentions," .
+        $config->getValue('table_prefix')."mentions_posts, " .
+        $config->getValue('table_prefix')."owner_instances, ".
+        //$config->getValue('table_prefix')."owners, ".
+        $config->getValue('table_prefix')."options, ".
+        $config->getValue('table_prefix')."places," .
+        $config->getValue('table_prefix')."places_posts, " .
+        $config->getValue('table_prefix')."plugins, ".
+        $config->getValue('table_prefix')."post_errors, ".
+        $config->getValue('table_prefix')."posts, ".
+        $config->getValue('table_prefix')."stream_data, " .
+        $config->getValue('table_prefix')."stream_procs, ".
+        $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."users;";
         PDODAO::$PDO->exec($q);
 
         Installer::$show_tables = array();
@@ -341,19 +422,32 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
         // test with verbose on empty test database
         $dao = new InstallerMySQLDAO($config_array);
-        $q = "DROP TABLE ".$config->getValue('table_prefix')."encoded_locations, ".
-        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix')."instances, ".
-        $config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix')."plugins, ".
-        $config->getValue('table_prefix')."post_errors, ".$config->getValue('table_prefix')."posts, ".
-        $config->getValue('table_prefix')."user_errors, ".$config->getValue('table_prefix')."users, ".
-        $config->getValue('table_prefix')."follows, ".$config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."links, ".$config->getValue('table_prefix')."owners," .
+        $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."encoded_locations, ".
+        $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."groups, ".
+        $config->getValue('table_prefix')."group_members, ".
+        $config->getValue('table_prefix')."group_member_count, ".
+        $config->getValue('table_prefix')."hashtags," .
+        $config->getValue('table_prefix')."hashtags_posts, " .
+        $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_twitter, ".
+        $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."mentions," .
+        $config->getValue('table_prefix')."mentions_posts, " .
+        $config->getValue('table_prefix')."owner_instances, ".
+        $config->getValue('table_prefix')."owners, ".
         $config->getValue('table_prefix')."options, ".
-        $config->getValue('table_prefix')."instances_twitter, ".$config->getValue('table_prefix')."invites";
-        $config->getValue('table_prefix')."mentions," . $config->getValue('table_prefix')."mentions_posts, " .
-        $config->getValue('table_prefix')."hashtags," . $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."places," . $config->getValue('table_prefix')."post_locations, " .
-        $config->getValue('table_prefix')."stream_data, " . $config->getValue('table_prefix')."stream_procs";
+        $config->getValue('table_prefix')."places," .
+        $config->getValue('table_prefix')."places_posts, " .
+        $config->getValue('table_prefix')."plugins, ".
+        $config->getValue('table_prefix')."post_errors, ".
+        $config->getValue('table_prefix')."posts, ".
+        $config->getValue('table_prefix')."stream_data, " .
+        $config->getValue('table_prefix')."stream_procs, ".
+        $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."users;";
 
         PDODAO::$PDO->exec($q);
 
@@ -368,21 +462,36 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
 
         // test on existent tables that's not recognized as a ThinkUp table
         $this->DAO = new InstallerMySQLDAO($config_array);
-        $q = "DROP TABLE ".$config->getValue('table_prefix')."encoded_locations, ".
-        $config->getValue('table_prefix')."follower_count, ".$config->getValue('table_prefix')."instances, ".
-        $config->getValue('table_prefix')."owner_instances, ".$config->getValue('table_prefix')."owners, ".
-        $config->getValue('table_prefix')."plugins, ". $config->getValue('table_prefix')."post_errors, ".
-        $config->getValue('table_prefix')."posts, ". $config->getValue('table_prefix')."user_errors, ".
-        $config->getValue('table_prefix')."users, ".$config->getValue('table_prefix')."favorites, ".
-        $config->getValue('table_prefix')."follows, " .
+        $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."encoded_locations, ".
+        $config->getValue('table_prefix')."favorites, ".
+        $config->getValue('table_prefix')."follower_count, ".
+        $config->getValue('table_prefix')."follows, ".
+        $config->getValue('table_prefix')."groups, ".
+        $config->getValue('table_prefix')."group_members, ".
+        $config->getValue('table_prefix')."group_member_count, ".
+        $config->getValue('table_prefix')."hashtags," .
+        $config->getValue('table_prefix')."hashtags_posts, " .
+        $config->getValue('table_prefix')."instances, ".
+        $config->getValue('table_prefix')."instances_twitter, ".
+        $config->getValue('table_prefix')."invites," .
+        $config->getValue('table_prefix')."links," .
+        $config->getValue('table_prefix')."mentions," .
+        $config->getValue('table_prefix')."mentions_posts, " .
+        $config->getValue('table_prefix')."owner_instances, ".
+        $config->getValue('table_prefix')."owners, ".
         $config->getValue('table_prefix')."options, ".
-        $config->getValue('table_prefix')."instances_twitter, ".$config->getValue('table_prefix')."invites, " .
-        $config->getValue('table_prefix')."links, " .
-        $config->getValue('table_prefix')."mentions," . $config->getValue('table_prefix')."mentions_posts, " .
-        $config->getValue('table_prefix')."hashtags," . $config->getValue('table_prefix')."hashtags_posts, " .
-        $config->getValue('table_prefix')."places," . $config->getValue('table_prefix')."places_posts, " .
-        $config->getValue('table_prefix')."stream_data, " . $config->getValue('table_prefix')."stream_procs";
+        $config->getValue('table_prefix')."places," .
+        $config->getValue('table_prefix')."places_posts, " .
+        $config->getValue('table_prefix')."plugins, ".
+        $config->getValue('table_prefix')."post_errors, ".
+        $config->getValue('table_prefix')."posts, ".
+        $config->getValue('table_prefix')."stream_data, " .
+        $config->getValue('table_prefix')."stream_procs, ".
+        $config->getValue('table_prefix')."user_errors, ".
+        $config->getValue('table_prefix')."users;";
         PDODAO::$PDO->exec($q);
+
         $q = "CREATE TABLE weird_random_table(id INT);";
         PDODAO::$PDO->exec($q);
 
@@ -429,8 +538,8 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     public function testGetTablesToInstall(){
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
-        $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'hashtags',
-        'hashtags_posts', 
+        $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'group_member_count',
+        'group_members', 'groups', 'hashtags', 'hashtags_posts', 
         'instances',  'instances_twitter', 'invites', 'links', 'mentions', 'mentions_posts', 'options', 
         'owner_instances', 'owners', 'places','places_posts', 
         'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users');

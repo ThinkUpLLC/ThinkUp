@@ -73,8 +73,15 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'last_post_id'=>''));
 
         // insert test follow
-        $this->builders[] = FixtureBuilder::build('follows', array('user_id'=>930061, 'follower_id'=>36823,
+        $this->builders[] = FixtureBuilder::build('follows', array('user_id'=>'930061', 'follower_id'=>'36823',
         'last_seen'=>'-2y'));
+
+        $this->builders[] = FixtureBuilder::build('groups', array('group_id'=>'19994710',
+        'group_name'=>'@userx/anotherlist', 'network' => 'twitter', 'is_active'=>1));
+
+        // stale group membership
+        $this->builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>'36823',
+        'group_id'=>'19994710', 'is_active' => 1, 'network'=>'twitter', 'last_seen' => '-3d'));
     }
 
     public function tearDown() {
@@ -212,17 +219,17 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     public function testConstructor() {
         self::setUpInstanceUserAnilDash();
-        $tc = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
 
-        $this->assertTrue($tc != null);
+        $this->assertTrue($twitter_crawler != null);
     }
 
     public function testFetchInstanceUserInfo() {
         self::setUpInstanceUserAnilDash();
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
 
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceUserInfo();
 
         $user_dao = DAOFactory::getDAO('UserDAO');
         $user = $user_dao->getDetails('36823', 'twitter');
@@ -235,9 +242,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     public function testFetchInstanceUserTweets() {
         self::setUpInstanceUserAnilDash();
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceUserTweets();
 
         //Test post with location has location set
         $post_dao = DAOFactory::getDAO('PostDAO');
@@ -258,9 +265,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     public function testFetchInstanceUserTweetsEscapeHTML() {
         self::setUpInstanceUserAnilDash();
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceUserTweets();
 
         //Test post with location has location set
         $post_dao = DAOFactory::getDAO('PostDAO');
@@ -277,9 +284,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         // set up crawl limit budget
         $crawl_limit = array('fetchInstanceUserTweets' => array('count' => 2, 'remaining' => 2) );
         $this->api->setCallerLimits($crawl_limit);
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceUserTweets();
 
         //Test post with location has location set
         $pdao = DAOFactory::getDAO('PostDAO');
@@ -306,9 +313,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $post = $post_dao->getPost(1, 'twitter');
         $this->assertEqual($post->author_username, "anildash");
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceUserTweets();
 
         // old post after crawl
         $post = $post_dao->getPost(1, 'twitter');
@@ -340,8 +347,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'author_user_id' => '36825', 'pub_date' => '2010-06-08 04:45:16'));
         $builder2 = FixtureBuilder::build('posts', array('id' => 2, 'post_id' => '123456',
         'author_user_id' => '36825', 'pub_date' => '2010-06-08 04:45:16'));
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserTweets();
 
         // should be deleted, not  found on twitter...
         $post_dao = DAOFactory::getDAO('PostDAO');
@@ -356,8 +363,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     public function testFetchPrivateInstanceUserTweets() {
         self::setUpInstanceUserPrivateMcPrivate();
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserTweets();
 
         //Test post is set as protected
         $post_dao = DAOFactory::getDAO('PostDAO');
@@ -372,9 +379,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         self::setUpInstanceUserAmygdala();
         $this->instance->last_page_fetched_tweets = 17;
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceUserTweets();
 
         $post_dao = DAOFactory::getDAO('PostDAO');
         $post = $post_dao->getPost('13708601491193856', 'twitter');
@@ -393,7 +400,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->in_rt_of_user_id, '20542737');
         $this->assertEqual($post->link->url, "http://is.gd/izUl5");
 
-        $tc->fetchInstanceUserMentions();
+        $twitter_crawler->fetchInstanceUserMentions();
         // old-style RT
         $post = $post_dao->getPost('8957053141778432', 'twitter');
         $this->assertEqual($post->in_rt_of_user_id, '2768241');
@@ -412,13 +419,13 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $this->instance->last_page_fetched_tweets = 17;
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceUserTweets();
 
         $pdao = DAOFactory::getDAO('PostDAO');
 
-        $tc->fetchInstanceUserMentions();
+        $twitter_crawler->fetchInstanceUserMentions();
         // old-style RT
         $post = $pdao->getPost('8957053141778432', 'twitter');
         $this->assertNull($post);
@@ -426,10 +433,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     public function testFetchSearchResults() {
         self::setUpInstanceUserAnilDash();
-        $tc = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
 
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchSearchResults('@whitehouse');
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchSearchResults('@whitehouse');
         $post_dao = DAOFactory::getDAO('PostDAO');
         $this->assertTrue($post_dao->isPostInDB('11837263794', 'twitter'));
 
@@ -444,10 +451,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         // set up crawl limit budget
         $crawl_limit = array('fetchSearchResults' => array('count' => 2, 'remaining' => 0) );
         $this->api->setCallerLimits($crawl_limit);
-        $tc = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
 
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchSearchResults('@whitehouse');
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchSearchResults('@whitehouse');
         $pdao = DAOFactory::getDAO('PostDAO');
         $this->assertFalse($pdao->isPostInDB('11837263794', 'twitter'));
 
@@ -456,11 +463,11 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     public function testFetchInstanceUserFollowers() {
         self::setUpInstanceUserAnilDash();
         $this->instance->is_archive_loaded_follows = false;
-        $tc = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
 
-        $tc->fetchInstanceUserFollowers();
-        $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($fdao->followExists('36823', '119950880', 'twitter'), 'new follow exists');
+        $twitter_crawler->fetchInstanceUserFollowers();
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertTrue($follow_dao->followExists('36823', '119950880', 'twitter'), 'new follow exists');
 
         $user_dao = DAOFactory::getDAO('UserDAO');
         $updated_user = $user_dao->getUserByName('meatballhat', 'twitter');
@@ -470,14 +477,46 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $updated_user->location);
     }
 
+    public function testFetchInstanceUserGroups() {
+        self::setUpInstanceUserAnilDash();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+
+        $twitter_crawler->fetchInstanceUserGroups();
+        $group_dao = DAOFactory::getDAO('GroupDAO');
+        $this->assertTrue($group_dao->isGroupInStorage($group = '1234566', 'twitter'), 'group does not exist');
+
+        $group_member_dao = DAOFactory::getDAO('GroupMemberDAO');
+        $this->assertTrue($group_member_dao->isGroupMemberInStorage($user = '36823', $group = '1234566', 'twitter'),
+        'group member does not exist');
+        $this->assertFalse($group_member_dao->isGroupMemberInStorage($user = '930061', $group = '1234566', 'twitter'),
+        'group member exists');
+
+        $group_membership_count_dao = DAOFactory::getDAO('GroupMembershipCountDAO');
+        $history = $group_membership_count_dao->getHistory($user = '36823', 'twitter', 'DAYS');
+        $this->assertEqual(count($history['history']), 1);
+    }
+
+    public function testUpdateStaleGroupMemberships() {
+        self::setUpInstanceUserAnilDash();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+
+        $group_member_dao = DAOFactory::getDAO('GroupMemberDAO');
+        $this->assertTrue($group_member_dao->isGroupMemberInStorage($user = '36823', $group = '19994710', 'twitter',
+        $active = true), 'group member does not exist');
+
+        $twitter_crawler->updateStaleGroupMemberships();
+        $this->assertFalse($group_member_dao->isGroupMemberInStorage($user = '36823', $group = '19994710', 'twitter',
+        $active = true), 'group member active');
+    }
+
     public function testFetchInstanceUserFriends() {
         self::setUpInstanceUserAnilDash();
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
-        $tc->fetchInstanceUserFriends();
-        $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($fdao->followExists('14834340', '36823', 'twitter'), 'new friend exists');
+        $twitter_crawler->fetchInstanceUserFriends();
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertTrue($follow_dao->followExists('14834340', '36823', 'twitter'), 'new friend exists');
 
         $user_dao = DAOFactory::getDAO('UserDAO');
         $updated_user = $user_dao->getUserByName('jayrosen_nyu', 'twitter');
@@ -490,19 +529,19 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         // set up crawl limit budget
         $crawl_limit = array('fetchInstanceUserFriends' => array('count' => 2, 'remaining' => 0) );
         $this->api->setCallerLimits($crawl_limit);
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
-        $tc->fetchInstanceUserFriends();
-        $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertFalse($fdao->followExists(14834340, 36823, 'twitter'), 'new friend doesn\'t exists');
+        $twitter_crawler->fetchInstanceUserFriends();
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertFalse($follow_dao->followExists(14834340, 36823, 'twitter'), 'new friend doesn\'t exists');
 
     }
 
     public function testFetchInstanceUserFriendsByIds() {
         self::setUpInstanceUserAnilDash();
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
         $fd = DAOFactory::getDAO('FollowDAO');
         $stale_friend = $fd->getStalestFriend($this->instance->network_user_id, $this->instance->network);
@@ -510,9 +549,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($stale_friend->user_id, '930061', 'stale friend is ginatrapani');
         $this->assertEqual($stale_friend->username, 'ginatrapani', 'stale friend is ginatrapani');
 
-        $tc->fetchFriendTweetsAndFriends();
-        $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($fdao->followExists('14834340', '930061', 'twitter'), 'ginatrapani friend loaded');
+        $twitter_crawler->fetchFriendTweetsAndFriends();
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertTrue($follow_dao->followExists('14834340', '930061', 'twitter'), 'ginatrapani friend loaded');
     }
 
     public function testFetchInstanceUserFriendsByIdsBudget() {
@@ -521,8 +560,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $crawl_limit = array('fetchFriendTweetsAndFriends' => array('count' => 2, 'remaining' => 0) );
         $this->api->setCallerLimits($crawl_limit);
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
         $fd = DAOFactory::getDAO('FollowDAO');
         $stale_friend = $fd->getStalestFriend($this->instance->network_user_id, $this->instance->network);
@@ -530,20 +569,20 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($stale_friend->user_id, 930061, 'stale friend is ginatrapani');
         $this->assertEqual($stale_friend->username, 'ginatrapani', 'stale friend is ginatrapani');
 
-        $tc->fetchFriendTweetsAndFriends();
-        $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertFalse($fdao->followExists(14834340, 930061, 'twitter'), 'ginatrapani notfriend loaded');
+        $twitter_crawler->fetchFriendTweetsAndFriends();
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertFalse($follow_dao->followExists(14834340, 930061, 'twitter'), 'ginatrapani notfriend loaded');
     }
 
     public function testFetchInstanceUserFollowersByIds() {
         self::setUpInstanceUserAnilDash();
         $this->api->available_api_calls_for_crawler = 2;
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
-        $tc->fetchInstanceUserFollowers();
-        $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertTrue($fdao->followExists('36823', '114811186', 'twitter'), 'new follow exists');
+        $twitter_crawler->fetchInstanceUserFollowers();
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertTrue($follow_dao->followExists('36823', '114811186', 'twitter'), 'new follow exists');
     }
 
     public function testFetchInstanceUserFollowersByIdsBudget() {
@@ -552,18 +591,18 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $crawl_limit = array('fetchInstanceUserFollowersByIDs' => array('count' => 2, 'remaining' => 0) );
         $this->api->setCallerLimits($crawl_limit);
         $this->api->available_api_calls_for_crawler = 2;
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
-        $tc->fetchInstanceUserFollowers();
-        $fdao = DAOFactory::getDAO('FollowDAO');
-        $this->assertFalse($fdao->followExists(36823, 114811186, 'twitter'), 'new does not exists');
+        $twitter_crawler->fetchInstanceUserFollowers();
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $this->assertFalse($follow_dao->followExists(36823, 114811186, 'twitter'), 'new does not exists');
     }
 
     public function testFetchRetweetsOfInstanceuser() {
         self::setUpInstanceUserGinaTrapani();
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
         //first, load retweeted tweet into db
         // we now get the 'new-style' retweet count from the retweet_count field in the xml,
@@ -576,7 +615,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'reply_count_cache'=>1, 'old_retweet_count_cache'=>0, 'retweet_count_cache'=>0, 'retweet_count_api' => 0));
 
         $post_dao = DAOFactory::getDAO('PostDAO');
-        $tc->fetchRetweetsOfInstanceUser();
+        $twitter_crawler->fetchRetweetsOfInstanceUser();
         $post = $post_dao->getPost('14947487415', 'twitter');
         $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets from cache count');
         // in processing the retweets of the post, if they contain a <retweeted_status> element pointing
@@ -590,10 +629,10 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         //make sure duplicate posts aren't going into the db on next crawler run
         self::setUpInstanceUserGinaTrapani();
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
-        $tc->fetchRetweetsOfInstanceUser();
+        $twitter_crawler->fetchRetweetsOfInstanceUser();
         $post = $post_dao->getPost('14947487415', 'twitter');
         $this->assertEqual($post->retweet_count_cache, 3, '3 new-style retweets detected');
         $this->assertEqual($post->retweet_count_api, 2, '2 new-style retweets count from API');
@@ -612,8 +651,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $crawl_limit = array('fetchUserTimelineForRetweet' => array('count' => 2, 'remaining' => 0) );
         $this->api->setCallerLimits($crawl_limit);
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
         $builder = FixtureBuilder::build('posts', array('post_id'=>'14947487415', 'author_user_id'=>'930061',
         'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani', 'post_text'=>
@@ -622,7 +661,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         'reply_count_cache'=>1, 'old_retweet_count_cache'=>0, 'retweet_count_cache'=>0, 'retweet_count_api' => 0));
 
         $post_dao = DAOFactory::getDAO('PostDAO');
-        $tc->fetchRetweetsOfInstanceUser();
+        $twitter_crawler->fetchRetweetsOfInstanceUser();
         $post = $post_dao->getPost('14947487415', 'twitter');
         $this->assertEqual($post->retweet_count_cache, 0, '0 new-style retweets from cache count');
     }
@@ -630,13 +669,13 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
     public function testFetchStrayRepliedToTweets() {
         self::setUpInstanceUserAnilDash();
         $this->api->available_api_calls_for_crawler = 4;
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceUserTweets();
         $post_dao = DAOFactory::getDAO('PostDAO');
         $tweets = $post_dao->getAllPostsByUsername('anildash', 'twitter');
 
-        $tc->fetchStrayRepliedToTweets();
+        $twitter_crawler->fetchStrayRepliedToTweets();
         $post = $post_dao->getPost('15752814831', 'twitter');
         $this->assertTrue(isset($post));
         $this->assertEqual($post->reply_count_cache, 1);
@@ -649,13 +688,13 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $this->api->setCallerLimits($crawl_limit);
         $this->api->available_api_calls_for_crawler = 4;
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceUserTweets();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceUserTweets();
         $pdao = DAOFactory::getDAO('PostDAO');
         $tweets = $pdao->getAllPostsByUsername('anildash', 'twitter');
 
-        $tc->fetchStrayRepliedToTweets();
+        $twitter_crawler->fetchStrayRepliedToTweets();
         $post = $pdao->getPost(15752814831, 'twitter');
         $this->assertTrue(isset($post));
         $this->assertEqual($post->reply_count_cache, 0);
@@ -665,15 +704,15 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         self::setUpInstanceUserAmygdala();
         $this->api->available_api_calls_for_crawler = 3;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage1/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 22);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 4);
         $this->assertEqual($this->instance->favorites_profile, 82);
@@ -681,28 +720,28 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->logger->logInfo("second round of archiving", __METHOD__.','.__LINE__);
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage2/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 84);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
 
         $this->logger->logInfo("now in maintenance mode", __METHOD__.','.__LINE__);
         $this->api->available_api_calls_for_crawler = 4;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 87);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
         $this->assertEqual($retval, true);
@@ -713,14 +752,14 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->logger->logInfo("now in maintenance mode, second pass", __METHOD__.','.__LINE__);
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage5/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 88);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
         $this->assertEqual($retval, true);
@@ -750,14 +789,14 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
         $this->api->available_api_calls_for_crawler = 3;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage1/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $tc->fetchInstanceFavorites();
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $twitter_crawler->fetchInstanceFavorites();
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 0);
     }
 
@@ -766,16 +805,16 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         self::setUpInstanceUserAmygdala();
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage4/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
 
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 0);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
     }
@@ -785,28 +824,28 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         self::setUpInstanceUserAmygdala();
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage7/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 0);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
 
         $this->logger->logInfo("now in maintenance mode, second pass", __METHOD__.','.__LINE__);
         $this->api->available_api_calls_for_crawler = 10;
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 0);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
     }
@@ -820,16 +859,16 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage8/');
         $this->instance->last_page_fetched_favorites = -20;
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
 
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 3);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
     }
@@ -842,29 +881,29 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         self::setUpInstanceUserAmygdala();
         $this->api->available_api_calls_for_crawler = 10;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage8/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
 
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 3);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
 
         $this->logger->logInfo("now in maintenance mode, second pass", __METHOD__.','.__LINE__);
         $this->api->available_api_calls_for_crawler = 10;
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 3);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 1);
     }
@@ -874,16 +913,16 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         self::setUpInstanceUserAmygdala();
         $this->api->available_api_calls_for_crawler = 0;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage1/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->fetchInstanceFavorites();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->fetchInstanceFavorites();
         // Save instance
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
 
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 0);
         $this->assertEqual($this->instance->last_page_fetched_favorites, 0);
         $this->assertEqual($this->instance->favorites_profile, 0);
@@ -891,7 +930,7 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     public function testCleanupMissedFavs() {
         $this->logger->logInfo("in testCleanupMissedFavs", __METHOD__.','.__LINE__);
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
 
         self::setUpInstanceUserAmygdala();
         $this->instance->last_unfav_page_checked = 3;
@@ -902,24 +941,24 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $builder2 = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name'=>'favs_cleanup_pages', 'option_value'=>3));
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->cleanUpMissedFavsUnFavs();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->cleanUpMissedFavsUnFavs();
         $this->assertEqual($retval, true);
         // check that the count 'rolled over'
         $this->assertEqual($this->instance->last_unfav_page_checked, 0);
         // Save instance
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         $this->assertEqual($this->instance->owner_favs_in_system, 27);
         $builder2 = null;
     }
 
     public function testCleanupMissedFavsBudget() {
         $this->logger->logInfo("in testCleanupMissedFavs", __METHOD__.','.__LINE__);
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
 
         self::setUpInstanceUserAmygdala();
         // set up crawl limit budget
@@ -933,9 +972,9 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $builder2 = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name'=>'favs_cleanup_pages', 'option_value'=>3));
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->cleanUpMissedFavsUnFavs();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->cleanUpMissedFavsUnFavs();
         $this->assertEqual($this->instance->owner_favs_in_system, 0);
     }
 
@@ -948,22 +987,22 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $builder3 = FixtureBuilder::build('options',
         array('namespace' => $namespace, 'option_name'=>'favs_cleanup_pages','option_value'=>3));
 
-        $id = DAOFactory::getDAO('TwitterInstanceDAO');
+        $instance_dao = DAOFactory::getDAO('TwitterInstanceDAO');
 
         self::setUpInstanceUserAmygdala();
         $this->api->available_api_calls_for_crawler = 3;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage3/');
 
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
-        $retval = $tc->cleanUpMissedFavsUnFavs();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
+        $retval = $twitter_crawler->cleanUpMissedFavsUnFavs();
         $this->assertEqual($retval, true);
         $this->assertEqual($this->instance->last_unfav_page_checked, 3);
         // Save instance
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         // check fav count
         $this->assertEqual($this->instance->owner_favs_in_system, 40);
 
@@ -972,16 +1011,16 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->api->available_api_calls_for_crawler = 3;
         $this->instance->last_unfav_page_checked = 2;
         $this->api->to->setDataPath('webapp/plugins/twitter/tests/testdata/favs_tests/favs_stage6/');
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->fetchInstanceUserInfo();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->fetchInstanceUserInfo();
 
-        $retval = $tc->cleanUpMissedFavsUnFavs();
+        $retval = $twitter_crawler->cleanUpMissedFavsUnFavs();
         $this->assertEqual($retval, true);
         // Save instance
-        if (isset($tc->user)) {
-            $id->save($this->instance, $tc->user->post_count, $this->logger);
+        if (isset($twitter_crawler->user)) {
+            $instance_dao->save($this->instance, $twitter_crawler->user->post_count, $this->logger);
         }
-        $this->instance = $id->getByUsernameOnNetwork("amygdala", "twitter");
+        $this->instance = $instance_dao->getByUsernameOnNetwork("amygdala", "twitter");
         // check fav count- should have removed 2 and added 21...
         // update: due to issue with TwitterAPI, not currently removing un-favs from database
         // $this->assertEqual($this->instance->owner_favs_in_system, 59);
@@ -991,12 +1030,12 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
 
     public function testCleanUpFollows404() {
         self::setUpInstanceUserGinaTrapani();
-        $tc = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
 
         $follow_dao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue($follow_dao->followExists('930061', '36823', 'twitter', true), 'Active follow exists');
 
-        $tc->cleanUpFollows();
+        $twitter_crawler->cleanUpFollows();
         $this->assertFalse($follow_dao->followExists('930061', '36823', 'twitter', true), 'Follow marked inactive');
     }
 
@@ -1005,8 +1044,8 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         // set up crawl limit budget
         $crawl_limit = array('cleanUpFollows' => array('count' => 2, 'remaining' => 0) );
         $this->api->setCallerLimits($crawl_limit);
-        $tc = new TwitterCrawler($this->instance, $this->api);
-        $tc->cleanUpFollows();
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+        $twitter_crawler->cleanUpFollows();
         $follow_dao = DAOFactory::getDAO('FollowDAO');
         $this->assertTrue($follow_dao->followExists(930061, 36823, 'twitter', true), 'Follow not marked inactive');
     }

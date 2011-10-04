@@ -155,7 +155,23 @@ class DAOFactory {
     //Mutex MySQL DAO
         'MutexDAO' => array (
     //MySQL Version
-            'mysql' => 'MutexMySQLDAO')
+            'mysql' => 'MutexMySQLDAO'),
+    //Group MySQL DAO
+        'GroupDAO' => array (
+    //MySQL Version
+            'mysql' => 'GroupMySQLDAO'),
+    //Group Membership Count MySQL DAO
+        'GroupMembershipCountDAO' => array (
+    //MySQL Version
+            'mysql' => 'GroupMembershipCountMySQLDAO'),
+    //Group Member MySQL DAO
+        'GroupMemberDAO' => array (
+    //MySQL Version
+            'mysql' => 'GroupMemberMySQLDAO'),
+    //Group Owner MySQL DAO
+        'GroupOwnerDAO' => array (
+    //MySQL Version
+            'mysql' => 'GroupOwnerMySQLDAO'),
     );
 
     /*

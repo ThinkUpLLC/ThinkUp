@@ -84,7 +84,7 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
 
         $menus_array = $webapp->getDashboardMenu($instance);
         $this->assertIsA($menus_array, 'Array');
-        $this->assertEqual(sizeof($menus_array), 15);
+        $this->assertEqual(sizeof($menus_array), 16);
         $this->assertIsA($menus_array['tweets-all'], 'MenuItem');
 
         // now define the twitter realtime plugin but don't set as active... count should be the same
@@ -96,7 +96,7 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
         $webapp->registerPlugin('twitterrealtime', "TwitterRealtimePlugin");
         $menus_array = $webapp->getDashboardMenu($instance);
         $this->assertIsA($menus_array, 'Array');
-        $this->assertEqual(sizeof($menus_array), 15);
+        $this->assertEqual(sizeof($menus_array), 16);
         // these two should only show up if the realtime plugin is active (which it is not in this case)
         $this->assertFalse(isset($menus_array['home-timeline']));
         $this->assertFalse(isset($menus_array['favd-all']));
@@ -121,7 +121,7 @@ class TestOfWebapp extends ThinkUpUnitTestCase {
 
         $menus_array = $webapp->getDashboardMenu($instance);
         $this->assertIsA($menus_array, 'Array');
-        $this->assertEqual(sizeof($menus_array), 17);
+        $this->assertEqual(sizeof($menus_array), 18);
         // check that the two additional menus are defined
         $this->assertIsA($menus_array['home-timeline'], 'MenuItem');
         $this->assertIsA($menus_array['favd-all'], 'MenuItem');

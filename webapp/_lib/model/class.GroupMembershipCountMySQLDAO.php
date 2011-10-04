@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * ThinkUp/webapp/_lib/model/class.FollowerCountMySQLDAO.php
+ * ThinkUp/webapp/_lib/model/class.GroupMembershipCountMySQLDAO.php
  *
- * Copyright (c) 2009-2011 Gina Trapani
+ * Copyright (c) 2011 SwellPath, Inc.
  *
  * LICENSE:
  *
@@ -21,22 +21,38 @@
  * <http://www.gnu.org/licenses/>.
  *
  *
- * Follower Count MySQL Data Access Object Implementation
+ * Group Membership Count MySQL Data Access Object Implementation
+ * (based on class.FollowerCountMySQLDAO.php)
  *
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2009-2011 Gina Trapani
- * @author Gina Trapani <ginatrapani[at]gmail[dot]com>
+ * @copyright 2011 SwellPath, Inc.
+ * @author Christian G. Warden <cwarden[at]xerus[dot]org>
  *
  */
-class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
-    public function insert($network_user_id, $network, $count){
-        $q  = "INSERT INTO #prefix#follower_count ";
-        $q .= "(network_user_id, network, date, count) ";
+class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCountDAO {
+    public function insert($network_user_id, $network, $count) {
+        $q  = "INSERT INTO #prefix#group_member_count ";
+        $q .= "(member_user_id, network, date, count) ";
         $q .= "VALUES ( :network_user_id, :network, NOW(), :count );";
         $vars = array(
-            ':network_user_id'=>(string) $network_user_id, 
+            ':network_user_id'=>(string) $network_user_id,
             ':network'=>$network,
             ':count'=>$count
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getInsertCount($ps);
+    }
+
+    public function updateCount($network_user_id, $network) {
+        $q  = "INSERT INTO #prefix#group_member_count ";
+        $q .= "(member_user_id, network, date, count) ";
+        $q .= "SELECT :network_user_id, :network, NOW(), COUNT(group_id) ";
+        $q .= "FROM #prefix#group_members WHERE member_user_id = :network_user_id ";
+        $q .= "AND network = :network AND is_active = 1";
+        $vars = array(
+            ':network_user_id'=>(string) $network_user_id,
+            ':network'=>$network,
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -54,10 +70,10 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
         } else if ($units == 'MONTH') {
             $group_by = 'YEAR(fc.date), MONTH(fc.date)';
         }
-        $q = "SELECT network_user_id, network, count, date, full_date FROM ";
-        $q .= "(SELECT network_user_id, network, count, DATE_FORMAT(date, '%c/%e') as date, date as full_date ";
-        $q .= "FROM #prefix#follower_count AS fc ";
-        $q .= "WHERE fc.network_user_id = :network_user_id AND fc.network=:network ";
+        $q = "SELECT member_user_id, network, count, date, full_date FROM ";
+        $q .= "(SELECT member_user_id, network, count, DATE_FORMAT(date, '%c/%e') as date, date as full_date ";
+        $q .= "FROM #prefix#group_member_count AS fc ";
+        $q .= "WHERE fc.member_user_id = :network_user_id AND fc.network=:network ";
         $q .= "GROUP BY ".$group_by." ORDER BY full_date DESC LIMIT :limit ) as history_counts ";
         $q .= "ORDER BY history_counts.full_date ASC";
         $vars = array(
@@ -79,9 +95,9 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
             $trend = false;
             if (sizeof($history_rows) == $limit) { //we have a complete data set
                 //calculate the trend
-                $first_follower_count = reset($simplified_history);
-                $last_follower_count = end($simplified_history);
-                $trend = ($last_follower_count - $first_follower_count)/sizeof($simplified_history);
+                $first_group_count = reset($simplified_history);
+                $last_group_count = end($simplified_history);
+                $trend = ($last_group_count - $first_group_count)/sizeof($simplified_history);
                 $trend = intval(round($trend));
                 //complete data set
                 $history = $simplified_history;
@@ -139,7 +155,7 @@ class FollowerCountMySQLDAO extends PDODAO implements FollowerCountDAO {
             if (isset($milestone)) {
                 $milestone['units_of_time'] = $units;
             }
-            //only set milestone if it's within 10 to avoid "954 weeks until you reach 1000 followers" messaging
+            //only set milestone if it's within 10 to avoid "954 weeks until you reach 1000 groups" messaging
             if ($milestone['will_take'] > 10) {
                 $milestone = null;
             }

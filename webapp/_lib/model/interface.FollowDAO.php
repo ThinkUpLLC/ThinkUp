@@ -31,7 +31,7 @@
 
 interface FollowDAO {
     /**
-     * Checks weather a given 'follow' exist in storage.
+     * Checks whether a given 'follow' exist in storage.
      * @param int $user_id
      * @param int $follower_id
      * @param str $network

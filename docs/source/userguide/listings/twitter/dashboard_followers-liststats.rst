@@ -1,7 +1,7 @@
-Follower Count History
-======================
+List Membership Count History
+=============================
 
-The Twitter instance user's follower count history over time, by day, week, and month.
+The Twitter user's list membership count history over time, by day, week, and month.
 
 If a notable milestone is within sight, you'll see a "Next milestone" message which tells you how many weeks it will
 take to reach that milestone. 

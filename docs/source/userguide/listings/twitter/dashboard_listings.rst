@@ -40,6 +40,7 @@ Followers
    dashboard_followers-leastlikely.rst
    dashboard_followers-mostfollowed.rst
    dashboard_followers-history.rst
+   dashboard_followers-liststats.rst
 
 Links
 -----

@@ -211,4 +211,13 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         //$tz = date_default_timezone_get();
         $this->assertEqual($tz, 'America/New_York');
     }
+
+    public function testPredictNextMilestoneDate() {
+        //No next milestone prediced
+        $this->assertNull(Utils::predictNextMilestoneDate(10, 0));
+
+        //Next milestone in 5 units of time
+        $expected = array('next_milestone'=>100, 'will_take'=>5);
+        $this->assertEqual(Utils::predictNextMilestoneDate(75, 5), $expected);
+    }
 }

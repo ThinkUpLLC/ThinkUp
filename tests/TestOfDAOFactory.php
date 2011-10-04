@@ -333,7 +333,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertNotNull($dao);
         $this->assertIsA($dao, 'ExportMySQLDAO');
     }
-    
+
     /**
      * Test get StreamProcDAO
      */
@@ -342,6 +342,25 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertNotNull($dao);
         $this->assertIsA($dao, 'StreamProcMySQLDAO');
     }
+
+    public function testGetGroupDAO() {
+        $dao = DAOFactory::getDAO('GroupDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'GroupMySQLDAO');
+    }
+
+    public function testGetGroupMemberDAO() {
+        $dao = DAOFactory::getDAO('GroupMemberDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'GroupMemberMySQLDAO');
+    }
+
+    public function testGetGroupMembershipDAO() {
+        $dao = DAOFactory::getDAO('GroupMembershipCountDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'GroupMembershipCountMySQLDAO');
+    }
+
     /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
@@ -354,7 +373,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 25);
+        $this->assertEqual(sizeof($result), 28);
         $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
         $this->restoreConfigFile();
     }

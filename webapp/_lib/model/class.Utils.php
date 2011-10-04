@@ -372,4 +372,54 @@ class Utils {
             ini_set('date.timezone',$tz);
         }
     }
+
+
+    /**
+     * Calculate the number of time units it will take to reach the next count milestone given
+     * a trend of upward increments.
+     * @param int $current_count
+     * @param int $upward_increment
+     * @return array 'next_milestone'=> int, 'will_take'=>int
+     */
+    public static function predictNextMilestoneDate($current_count, $upward_increment) {
+        if ($upward_increment > 0 ) {
+            $milestones = array(
+            1000000,
+            750000,
+            500000,
+            300000,
+            250000,
+            200000,
+            150000,
+            100000,
+            50000,
+            25000,
+            10000,
+            5000,
+            1000,
+            500,
+            200,
+            100
+            );
+
+            $goal_count = 0;
+            foreach ($milestones as $milestone) {
+                if ($current_count < $milestone) {
+                    $goal_count = $milestone;
+                }
+            }
+            if ($goal_count == 0) { //group count is over a million
+                $float_val = $current_count/10000000;
+                $goal_count = round($float_val, 1);
+                $goal_count = $goal_count * 10000000;
+                if ($current_count > $goal_count) {
+                    $goal_count = $goal_count + 500000;
+                }
+            }
+            $prediction = intval(round(($goal_count - $current_count)/$upward_increment));
+            return array('next_milestone'=>$goal_count, 'will_take'=>$prediction);
+        } else {
+            return null;
+        }
+    }
 }
