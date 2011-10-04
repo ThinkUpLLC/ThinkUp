@@ -10,11 +10,6 @@
     </i>
   {/if}
 </div>
-    {if $error}
-    <p class="error">
-        {$error}
-    </p>    
-    {/if}
 {if ($display eq 'tweets-all' and not $all_tweets) or 
     ($display eq 'tweets-mostreplies' and not $most_replied_to_tweets) or
     ($display eq 'tweets-mostretweeted' and not $most_retweeted) or
@@ -149,36 +144,3 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
     {include file="_link.tpl" t=$f}
   {/foreach}  
 {/if}
-
-<script type="text/javascript">
-  {literal}
-  $(function() {
-    // Begin reply assignment actions.
-    $(".button").click(function() {
-      var element = $(this);
-      var Id = element.attr("id");
-      var oid = Id;
-      var pid = $("select#pid" + Id + " option:selected").val();
-      var u = '{/literal}{$i->network_username|escape:'url'}{literal}';
-      var t = 'inline.view.tpl';
-      var ck = '{/literal}{$i->network_username|escape:'url'}-{$logged_in_user}-{$display}{literal}';
-      var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}post/mark-parent.php",
-        data: dataString,
-        success: function() {
-          $('#div' + Id).html("<div class='success' id='message" + Id + "'></div>");
-          $('#message' + Id).html("<p>Saved!</p>").hide().fadeIn(1500, function() {
-            $('#message'+Id);  
-          });
-        }
-      });
-      return false;
-    });
-  });
-  {/literal}
-</script>
-
-
-

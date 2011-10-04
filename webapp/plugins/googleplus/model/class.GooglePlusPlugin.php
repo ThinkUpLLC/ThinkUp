@@ -98,14 +98,13 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         $menus = array();
 
         if ($post->network == 'google+') {
-            $likes_menu_item = new MenuItem("+1's", "Those who +1'ed this post", $template_path, 'Google+');
+            $likes_menu_item = new MenuItem("+1's", "", $template_path, 'Google+');
             //if not logged in, show only public fav'd info
             $liked_dataset = new Dataset("plus1s", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
             $post->network, !Session::isLoggedIn()) );
             $likes_menu_item->addDataset($liked_dataset);
             $menus['plus1s'] = $likes_menu_item;
         }
-
         return $menus;
     }
 

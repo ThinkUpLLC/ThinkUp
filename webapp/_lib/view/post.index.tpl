@@ -160,14 +160,6 @@
                     {/if}
                     
                   </div> <!-- /#more-detail -->
-
-                  <!--{if $post->is_geo_encoded eq 1}
-                  <div>
-                  <a href="{$site_root_path}post/map.php?t=post&pid={$post->post_id}&n={$post->network|urlencode}" title="Locate on Map">
-                    <img src="{$site_root_path}assets/img/map_icon.png" class="map-icon map-icon-public">
-                  </a>
-                  </div>
-                  {/if}-->
                 </div>
               </div>
 

@@ -1,9 +1,3 @@
-    {if $error}
-    <p class="error">
-        {$error}
-    </p>    
-    {/if}
-    
        {if $post}
           <div class="clearfix">
             <div class="grid_2 alpha">
@@ -78,16 +72,6 @@
                   </div>
                 </div> <!-- /#more-detail -->
               </div>
-                
- 
-                <!--{if $post->is_geo_encoded eq 1}
-                <div>
-                <a href="{$site_root_path}post/map.php?t=post&pid={$post->post_id}&n={$post->network}" title="Locate on Map">
-                  <img src="{$site_root_path}assets/img/map_icon.png" class="map-icon map-icon-public">
-                </a>
-                </div>
-                {/if}-->
-
             </div>
             <div class="grid_5 center keystats omega">
               <div class="big-number">
@@ -131,35 +115,6 @@
 
 <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
 
-<script type="text/javascript">
-  {literal}
-  $(function() {
-    // Begin reply assignment actions.
-    $(".button").click(function() {
-      var element = $(this);
-      var Id = element.attr("id");
-      var oid = Id;
-      var pid = $("select#pid" + Id + " option:selected").val();
-      var u = '{/literal}{$i->network_username|escape:'url'}{literal}';
-      var t = 'inline.view.tpl';
-      var ck = '{/literal}{$i->network_username|escape:'url'}-{$logged_in_user}-{$display}{literal}';
-      var dataString = 'u=' + u + '&pid=' + pid + '&oid[]=' + oid + '&t=' + t + '&ck=' + ck;
-      $.ajax({
-        type: "GET",
-        url: "{/literal}{$site_root_path}{literal}post/mark-parent.php",
-        data: dataString,
-        success: function() {
-          $('#div' + Id).html("<div class='ui-state-success ui-corner-all' id='message" + Id + "'></div>");
-          $('#message' + Id).html("<p>Saved!</p>").hide().fadeIn(1500, function() {
-            $('#message'+Id);  
-          });
-        }
-      });
-      return false;
-    });
-  });
-  {/literal}
-</script>
 
 {if $is_searchable}
     {include file="_grid.search.tpl"}

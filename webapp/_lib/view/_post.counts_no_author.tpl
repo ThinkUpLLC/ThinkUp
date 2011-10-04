@@ -74,7 +74,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
      {if $show_favorites_instead_of_retweets && $show_favorites_instead_of_retweets != false}
        {if $post->favlike_count_cache}
        <span class="reply-count">
-          <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v=favs">{$post->favlike_count_cache|number_format}</a>
+          <a href="{$site_root_path}post/?t={$post->post_id}&n={$post->network|urlencode}&v={if $post->network eq 'twitter'}favs{else}plus1s{/if}">{$post->favlike_count_cache|number_format}</a>
        </span>
       {else}
         &#160;
