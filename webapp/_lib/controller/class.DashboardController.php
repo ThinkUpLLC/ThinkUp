@@ -173,6 +173,7 @@ class DashboardController extends ThinkUpController {
 
             $this->addToView('instance', $this->instance);
         }
+        $this->addToView('developer_log', $config->getValue('is_log_verbose'));
     }
 
     /**

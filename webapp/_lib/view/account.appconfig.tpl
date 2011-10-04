@@ -123,6 +123,19 @@
         Set the service user to display by default. {insert name="help_link" id="default_service_user"}
       </div>
 
+      <div style="float: left;">
+        <label for="is_log_verbose">
+          Developer log:
+          <br />
+        </label>
+      </div>
+      <div style="float: left;">
+        <input type="checkbox" name="is_log_verbose" id="is_log_verbose" value="true">
+      </div>
+      <div style="clear:both;"></div>
+      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+        See the verbose, unformatted developer log on the Update Now screen.
+      </div>
    </div>
 
     <div style="text-align: center" id="save_setting_image">

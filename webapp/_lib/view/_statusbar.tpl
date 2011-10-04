@@ -45,7 +45,7 @@
       Last update: {$crawler_last_run|relative_datetime} ago
       {/if}
     {/if}
-    {if $instance} {if $logged_in_user} {if $instances|@count > 1 } | {/if} <a href="{$site_root_path}crawler/updatenow.php">Update now</a>{/if}{/if}
+    {if $instance} {if $logged_in_user} {if $instances|@count > 1 } | {/if} <a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}">Update now</a>{/if}{/if}
   </div> <!-- .status-bar-left -->
   
   <div class="status-bar-right text-right">

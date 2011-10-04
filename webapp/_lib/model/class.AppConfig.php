@@ -93,6 +93,14 @@ class AppConfig {
             'match' => '/^true$/',
             'match_message' => ' be true'
             ),
+        'is_log_verbose' => array(
+            'type' => 'checkbox',
+            'title' => 'See the verbose, unformatted developer log on the Update Now screen',
+            'required' => false,
+            'default' => 'false',
+            'match' => '/^(true|false)$/',
+            'match_message' => 'Must be true or false'
+            ),
         'default_instance' => array(
             'type' => 'text',
             'title' => 'The service user to display by default',

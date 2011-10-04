@@ -73,8 +73,14 @@
     <h1>Back Up and Export Data</h1>
 
     <p><br />
-    <a href="{$site_root_path}install/backup.php">Back up ThinkUp's entire database</a> (highly recommended before upgrading ThinkUp)<br /><br />
-    <a href="{$site_root_path}install/exportuserdata.php">Export a single service user's data</a> (for transfer into another existing ThinkUp database)
+    <a href="{$site_root_path}install/backup.php">Back up ThinkUp's entire database</a>
+    <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+         Recommended before upgrading ThinkUp.
+      </div>
+    <a href="{$site_root_path}install/exportuserdata.php">Export a single service user's data</a>
+    <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+         For transfer into another existing ThinkUp database.
+    </div>
     </p>
   </div>
         

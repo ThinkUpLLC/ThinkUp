@@ -36,6 +36,13 @@ Check this box if you don't want to allow users to
 :doc:`embed ThinkUp threads on third-party web sites </userguide/listings/all/post_listings>` using a JavaScript
 embed code. When this box is checked, the code will not be available for use.
 
+Developer Log
+-------------
+
+Check this box if you want to see the :doc:`verbose, unformatted developer
+log </troubleshoot/common/advanced/crawlerlog>` on the "Update Now" screen, instead of the quieter, formatted user log.
+Once you change this setting, go back to the Dashboard and click on "Update Now" to see the change in action.
+
 Default service user
 --------------------
 

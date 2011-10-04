@@ -51,8 +51,8 @@ class AppConfigController extends ThinkUpAdminController {
                 $app_config[$key]['title'] =
                 isset($app_config[$key]['title']) ? $app_config[$key]['title'] : $key;
 
-                if ((isset($_POST[$key])  && $_POST[$key] != '') || $app_config[$key]['required'] &&
-                ( (! isset($app_config[$key]['value']) || $app_config[$key]['value'] == '')
+                if ((isset($_POST[$key])  && $_POST[$key] != '') || $app_config[$key]['required']
+                && ( (! isset($app_config[$key]['value']) || $app_config[$key]['value'] == '')
                 && ! isset($required[$key]) ) ) {
                     $config_values[$key] = $app_config[$key];
                     if (isset($_POST[$key])) {
