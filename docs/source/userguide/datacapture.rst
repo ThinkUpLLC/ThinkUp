@@ -1,8 +1,8 @@
 Update Your Data
 ================
 
-Once you've set up service users like your Twitter or Facebook account, you want to start capturing data from those
-networks. Here's how.
+Once you've set up service users like your Twitter, Facebook, or Google+ account, you want to start capturing data
+from those networks. Here's how.
 
 Manually in Your Browser
 ------------------------
@@ -18,14 +18,11 @@ using either RSS or cron.
 Automatically via RSS
 ---------------------
 
-Use your RSS newsreader to capture social media data on a regular basis. At the bottom of the "Update now" page, you'll
-see a Hint which reads "You can automate ThinkUp crawls by subscribing to this secret RSS feed in your favorite
-newsreader."
+Use your RSS newsreader to capture social media data on a regular basis. In 
+:doc:`Settings > Account </userguide/settings/account>`, you'll find a secret RSS URL button. Copy and paste the feed
+link into your favorite newsreader, and refresh the subscription in order to kick off a ThinkUp update.
 
-Copy and paste the "this RSS feed" link into your favorite newsreader, and refresh the subscription in order to kick
-off a ThinkUp update.
-
-Anyone who knows your ThinkUp RSS URL can kick off a data update. If you've shared the URL with someone who should not
+Anyone who knows your ThinkUp RSS URL can run a data update. If you've shared the URL with someone who should not
 have it, you can reset it in :doc:`Settings > Account </userguide/settings/account>`. Resetting your API key will
 disable any future updates from URLs which contain the old API key.
 
@@ -33,5 +30,6 @@ Automatically via Cron
 ----------------------
 
 Alternately, advanced users can add a command to the server's `crontab <http://en.wikipedia.org/wiki/Cron>`_ which
-runs hourly (or whatever interval you prefer) to update ThinkUp data. Copy and paste the command from the Hint text
-at the bottom of the "Update now" page. Just be sure to change ``yourpassword`` to your real password!
+runs hourly (or whatever interval you prefer) to update ThinkUp data. Copy and paste the command from the 
+"Automate ThinkUp Crawls" section of the :doc:`Settings > Account </userguide/settings/account>` page. Just be sure to
+change ``yourpassword`` to your real password!

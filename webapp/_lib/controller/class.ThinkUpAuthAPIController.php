@@ -96,7 +96,7 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
         $email = $this->getLoggedInUser();
         $owner = self::getOwner($email);
         $api_secret = self::getAPISecretFromRequest();
-        if(isset($owner) && $owner->api_key == $api_secret) {
+        if (isset($owner) && $owner->api_key == $api_secret) {
             return $owner;
         } else {
             return (false);
@@ -110,7 +110,7 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
      */
     public static function getAuthParameters($email) {
         $owner = self::getOwner($email);
-        if(isset($owner)) {
+        if (isset($owner)) {
             return 'un='.urlencode($email).'&as='.urlencode($owner->api_key);
         } else {
             throw new Exception("Invalid email passed to ThinkUpAuthAPIController->getAuthParameters()");
@@ -132,7 +132,7 @@ abstract class ThinkUpAuthAPIController extends ThinkUpAuthController {
      * @return Owner
      */
     protected static function getOwner($email) {
-        if(self::$owner) {
+        if (self::$owner) {
             return self::$owner;
         } else {
             $owner_dao = DAOFactory::getDAO('OwnerDAO');

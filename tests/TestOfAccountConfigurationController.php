@@ -668,8 +668,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner->full_name, 'ThinkUp J. User');
         $this->assertEqual($owner->email, 'me@example.com');
         $success_msgs = $v_mgr->getTemplateDataItem('success_msgs');
-        $this->assertEqual($success_msgs['api_key'], 'Your API Key has been reset to <strong>' . $owner->api_key .
-        '</strong>');
+        $this->assertEqual($success_msgs['api_key'],
+        'Your API Key has been reset! Please update your ThinkUp RSS feed subscription.');
 
         // Has API Key actually changed
         $this->assertNotEqual('c9089f3c9adaf0186f6ffb1ee8d6501c', $owner->api_key);
@@ -693,5 +693,43 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         } catch(InvalidCSRFTokenException $e) {
             $this->assertIsA($e, 'InvalidCSRFTokenException');
         }
+    }
+
+    public function testLoadProperRSSUrl() {
+        $builder = $this->buildRSSData();
+        $this->simulateLogin('me152@example.com', true, true);
+        $controller = new AccountConfigurationController(true);
+        $this->assertTrue(isset($controller));
+        $result = $controller->control();
+        $this->assertPattern('/rss.php\?un=me152\%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/', $result);
+    }
+
+    public function testLoadProperRSSUrlWithPlusSignInEmailAddress() {
+        $builder = $this->buildRSSData();
+        $this->simulateLogin('me153+checkurlencoding@example.com', true, true);
+        $controller = new AccountConfigurationController(true);
+        $this->assertTrue(isset($controller));
+        $result = $controller->control();
+        $this->debug($result);
+        $this->assertPattern('/rss.php\?un=me153\%2Bcheckurlencoding%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/',
+        $result);
+    }
+
+    private function buildRSSData() {
+        $builders[] = FixtureBuilder::build('owners', array(
+            'id' => 152, 
+            'email' => 'me152@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1,
+            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
+            ));
+            $builders[] = FixtureBuilder::build('owners', array(
+            'id' => 153, 
+            'email' => 'me153+checkurlencoding@example.com', 
+            'pwd' => 'XXX', 
+            'is_activated' => 1,
+            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
+            ));
+            return $builders;
     }
 }

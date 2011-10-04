@@ -120,16 +120,27 @@
               </div>
             </div>
           </form>
+<br><br>
+<div class="help-container">{insert name="help_link" id='rss'}</div>
+<h1>Automate ThinkUp Crawls</h1><br />
 
-        <h1>API Key</h1><br />
-          {include file="_usermessage.tpl" field='api_key'}
+<p>To set up ThinkUp to update automatically, subscribe to this secret RSS feed URL in your favorite news reader.</p>
 
-<p>
-External applications use your ThinkUp API key for authentication. For example, 
-RSS news readers can update your ThinkUp
-data using a special URL which contains this key. You can reset your key to something new here. 
-<a href="http://thinkupapp.com/docs/userguide/settings/account.html">Learn more.</a><br /><br />
+<div style="text-align: center; padding: 20px 0px 20px 0px;width:100%;">
+<a href="{$rss_crawl_url}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Secret RSS Feed to Update ThinkUp</a>
+<div style="clear:all">&nbsp;<br><br><br></div>
+</div>
+
+<p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)
+<br />
+<div style="background-color:black;color:white;"><small><code style="font-family:Courier;">{$cli_crawl_command}</code></small></div>
+<br /><br /><br/>
 </p>
+
+<h1>Reset Your API Key</h1><br />
+{include file="_usermessage.tpl" field='api_key'}
+
+<p>Accidentally share your secret RSS URL? Reset your ThinkUp API key (and RSS feed URL) here.<br><br></p>
 
           <div style="text-align: center; border-top: solid gray 1px; padding: 20px 0px 20px 0px;">
              <strong>Your Current ThinkUp API Key:</strong>

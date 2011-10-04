@@ -90,7 +90,8 @@ class AccountConfigurationController extends ThinkUpAuthController {
             if(! $api_key) {
                 throw new Exception("Unbale to update user's api_key, something bad must have happened");
             }
-            $this->addSuccessMessage("Your API Key has been reset to <strong>" . $api_key . '</strong>', 'api_key');
+            $this->addSuccessMessage("Your API Key has been reset! Please update your ThinkUp RSS feed subscription.",
+            'api_key');
             $owner->api_key = $api_key;
         }
 
@@ -163,9 +164,9 @@ class AccountConfigurationController extends ThinkUpAuthController {
             $profiler = Profiler::getInstance();
             $profiler->clearLog();
         } else {
-            $pld = DAOFactory::getDAO('PluginDAO');
+            $plugin_dao = DAOFactory::getDAO('PluginDAO');
             $config = Config::getInstance();
-            $installed_plugins = $pld->getInstalledPlugins();
+            $installed_plugins = $plugin_dao->getInstalledPlugins();
             $this->addToView('installed_plugins', $installed_plugins);
         }
         /* End plugin-specific configuration handling */
@@ -183,6 +184,19 @@ class AccountConfigurationController extends ThinkUpAuthController {
             $this->addToView('public_instances', $instance_dao->getPublicInstances());
         }
 
+        $whichphp = @exec('which php');
+        $php_path =  (!empty($whichphp))?$whichphp:'php';
+        $email = $this->getLoggedInUser();
+
+        //rss_crawl_url
+        $rss_crawl_url = THINKUP_BASE_URL . sprintf('rss.php?un=%s&as=%s', urlencode($email), $owner->api_key);
+        $this->addToView('rss_crawl_url', $rss_crawl_url);
+        //cli_crawl_command
+        $cli_crawl_command = 'cd '.THINKUP_WEBAPP_PATH.'crawler/;export THINKUP_PASSWORD=yourpassword; '.$php_path.
+        ' crawl.php '.$email;
+        $this->addToView('cli_crawl_command', $cli_crawl_command);
+        //help link
+        $this->view_mgr->addHelp('rss', 'userguide/datacapture');
         return $this->generateView();
     }
 }

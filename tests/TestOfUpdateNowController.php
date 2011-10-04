@@ -32,24 +32,21 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 
 class TestOfUpdateNowController extends ThinkUpUnitTestCase {
-    public function testLoadProperRSSUrl() {
-        $builder = $this->buildData();
-        $this->simulateLogin('me@example.com', true, true);
+
+    public function testConstructor() {
         $controller = new UpdateNowController(true);
-        $this->assertTrue(isset($controller));
-        $result = $controller->control();
-        $this->assertPattern('/rss.php\?un=me\%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/', $result);
+        $this->assertIsA($controller, 'UpdateNowController');
     }
 
-    public function testLoadProperRSSUrlWithPlusSignInEmailAddress() {
+    public function testHint() {
         $builder = $this->buildData();
-        $this->simulateLogin('me+checkurlencoding@example.com', true, true);
+        $this->simulateLogin('me@example.com', true, true);
+
         $controller = new UpdateNowController(true);
-        $this->assertTrue(isset($controller));
-        $result = $controller->control();
-        $this->debug($result);
-        $this->assertPattern('/rss.php\?un=me\%2Bcheckurlencoding%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/',
-        $result);
+        $result = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('info_msg'),
+        "<b>Hint</b>: You can set up ThinkUp to update automatically. Visit Settings &rarr; Account to find out how.");
     }
 
     private function buildData() {
@@ -60,13 +57,7 @@ class TestOfUpdateNowController extends ThinkUpUnitTestCase {
             'is_activated' => 1,
             'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
             ));
-            $builders[] = FixtureBuilder::build('owners', array(
-            'id' => 2, 
-            'email' => 'me+checkurlencoding@example.com', 
-            'pwd' => 'XXX', 
-            'is_activated' => 1,
-            'api_key' => 'c9089f3c9adaf0186f6ffb1ee8d6501c'
-            ));
             return $builders;
     }
+
 }

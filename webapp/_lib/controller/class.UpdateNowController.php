@@ -35,23 +35,10 @@ class UpdateNowController extends ThinkUpAuthAPIController {
         $this->setContentType('text/html; charset=UTF-8');
         $this->setPageTitle("ThinkUp Crawler");
         $this->setViewTemplate('crawler.updatenow.tpl');
-        $whichphp = @exec('which php');
-        $php_path =  (!empty($whichphp))?$whichphp:'php';
-        $email = $this->getLoggedInUser();
-        $owner = parent::getOwner($email);
-        $rss_url = THINKUP_BASE_URL . sprintf('rss.php?un=%s&as=%s', urlencode($email), $owner->api_key);
-        $config = Config::getInstance();
-        $site_root_path = $config->getValue('site_root_path');
-        $this->addInfoMessage('<b>Hint</b><br />You can automate ThinkUp crawls by subscribing to '.
-            '<strong><a href="'.$rss_url.'" target="_blank">this secret RSS feed</a></strong> '.
-            'in your favorite newsreader. Accidentally share the feed URL? ' .
-            '<a href="' . $site_root_path . 'account/index.php?m=manage#instances">Reset it.</a>'.
-            '<br /><br />Alternately, use the command below to set up a cron job that '.
-            'runs hourly to update your posts. (Be sure to change yourpassword to your real password!)<br /><br />'.
-            '<code style="font-family:Courier">cd '.THINKUP_WEBAPP_PATH.
-            'crawler/;export THINKUP_PASSWORD=yourpassword; '.$php_path.' crawl.php '.$this->getLoggedInUser().
-            '</code><br /><br /><a href="http://thinkupapp.com/docs/userguide/datacapture.html">Learn more about '.
-            'how to update your ThinkUp data</a>.' );
+
+        $this->addInfoMessage('<b>Hint</b>: You can set up ThinkUp to update automatically. Visit '.
+        'Settings &rarr; Account to find out how.' );
+
         if (isset($_GET['log']) && $_GET['log'] == 'full') {
             $this->addToView('log', 'full');
         }
