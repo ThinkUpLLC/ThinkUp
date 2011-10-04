@@ -27,7 +27,7 @@
  * @copyright 2009-2011 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
-chdir('../..');
+chdir(dirname(__FILE__) . '/../..');
 require_once 'init.php';
 //Avoid "Error: DateTime::__construct(): It is not safe to rely on the system's timezone settings" error
 require_once 'config.inc.php';
@@ -46,7 +46,7 @@ if(! BackupController::checkForZipSupport()) {
 
 try {
     array_shift($argv);
-    if($argv[0] && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
+    if(!empty($argv[0]) && preg_match('/^(\-h|\-\-help)$/i', $argv[0])) {
         usage();
     }
 

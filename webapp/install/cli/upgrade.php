@@ -26,7 +26,7 @@
  * @copyright 2009-2011 Mark Wilkie
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  */
-chdir('../..');
+chdir(dirname(__FILE__) . '/../..');
 require_once 'init.php';
 //Avoid "Error: DateTime::__construct(): It is not safe to rely on the system's timezone settings" error
 require_once 'config.inc.php';
