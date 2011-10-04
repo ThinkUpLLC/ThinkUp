@@ -195,17 +195,6 @@
                 {/if}
               </div>
             </div>
-            {if !$permissions_compat}
-            <div class="clearfix append_20 info_message">
-              <p>Make sure the following directories are writeable by the web server:</p>
-              <p><code>{$writeable_directories.logs}</code></p>
-              <p><code>{$writeable_directories.compiled_view}</code></p>
-              <p><code>{$writeable_directories.cache}</code></p>
-              <p class="prepend_20">If you have terminal (SSH) access to your web server then you can simply copy and paste the following command into your terminal:</p>
-              <p>As root: <code>chown -R apache {$writeable_directories.logs} {$writeable_directories.compiled_view} {$writeable_directories.cache}</code></p>
-              <p>Or if you don't have root access: <code>chmod -R 777 {$writeable_directories.logs} {$writeable_directories.compiled_view} {$writeable_directories.cache}</code></p>
-            </div>
-            {/if}
         {/if}
         
       </div>

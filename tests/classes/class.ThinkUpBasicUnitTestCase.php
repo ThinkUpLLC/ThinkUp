@@ -157,10 +157,13 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
             $message = "In order to test your ThinkUp installation, ".THINKUP_WEBAPP_PATH. '_lib/view/compiled_view'.
             "must be writable.";
         }
-        if (!is_writable(THINKUP_WEBAPP_PATH. '_lib/view/compiled_view/cache')) {
-            $message = "In order to test your ThinkUp installation, ".THINKUP_WEBAPP_PATH.
-            '_lib/view/compiled_view/cache'. "must be writable.";
+        if (!file_exists(THINKUP_WEBAPP_PATH. '_lib/view/compiled_view/cache')) {
+            if (!mkdir( THINKUP_WEBAPP_PATH. '_lib/view/compiled_view/cache/', 0777)){
+                $message = "In order to test your ThinkUp installation, ".THINKUP_WEBAPP_PATH.
+                '_lib/view/compiled_view/cache/ must exist and be writable.';
+            }
         }
+
         if ($THINKUP_CFG['log_location'] === false) {
             $message = "In order to test your ThinkUp installation, \$THINKUP_CFG['log_location'] must be set to a ".
             "writable file.";

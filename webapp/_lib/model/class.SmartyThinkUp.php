@@ -235,7 +235,19 @@ class SmartyThinkUp extends Smarty {
      * @param str Results
      */
     public function fetch($template, $cache_key=null, $compile_id=null, $display=false) {
-        if (! is_writable($this->compile_dir) || ! is_writable($this->compile_dir.'/cache') ) {
+        $continue = false;
+        if (is_writable($this->compile_dir)) {
+            if ($this->caching == 1 && !file_exists($this->compile_dir.'/cache')) {
+                if (mkdir($this->compile_dir.'/cache/', 0777)) {
+                    $continue = true;
+                }
+            } else {
+                $continue = true;
+            }
+        }
+        if ($continue) {
+            return parent::fetch($template, $cache_key, $compile_id, $display);
+        } else {
             Utils::defineConstants();
             $whoami = @exec('whoami');
             if (empty($whoami)) {
@@ -244,8 +256,6 @@ class SmartyThinkUp extends Smarty {
             return str_replace(array('#THINKUP_BASE_URL#', '#WHOAMI#', '#COMPILE_DIR#'),
             array(THINKUP_BASE_URL, $whoami, $this->compile_dir),
             file_get_contents(THINKUP_WEBAPP_PATH.'_lib/view/500-perm.html'));
-        } else {
-            return parent::fetch($template, $cache_key, $compile_id, $display);
         }
     }
 
