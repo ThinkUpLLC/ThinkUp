@@ -10,11 +10,11 @@ $THINKUP_CFG['app_title']                 = 'ThinkUp';
 // For example, if the /webapp/ folder is located at http://yourdomain/thinkup/, set to '/thinkup/'.
 $THINKUP_CFG['site_root_path']            = '/';
 
-// Full server path to /thinkup/ folder.
-$THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
+// Server path to /thinkup/ source code folder, dirname( __FILE__ ) . '/'; by default
+$THINKUP_CFG['source_root_path']          = dirname( __FILE__ ) . '/';
 
 // Your timezone
-$THINKUP_CFG['timezone']                  = 'America/Los_Angeles';
+$THINKUP_CFG['timezone']                  = 'UTC';
 
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
 $THINKUP_CFG['cache_pages']               = true;
@@ -66,8 +66,10 @@ $THINKUP_CFG['enable_profiler']           = false;
 // If false (or unset), the database connection's charset will not be explicitly set.
 $THINKUP_CFG['set_pdo_charset']           = false;
 
-//Test database override: Set this to run tests against the tests database
+//TESTS OVERRIDE: Run against the tests database and use unpackaged developer /thinkup/webapp/ folder structure
 if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
+    // Full server path to /thinkup/ source code folder.
+    $THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
     $THINKUP_CFG['db_user']                   = 'your_test_database_username';
     $THINKUP_CFG['db_password']               = 'your_test_database_password';
     $THINKUP_CFG['db_name']                   = 'your_test_database_name'; //by default, thinkup_tests

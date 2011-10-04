@@ -638,7 +638,7 @@ class Installer {
 
         $new_config = array(
             'site_root_path' => THINKUP_BASE_URL,
-            'source_root_path' => THINKUP_ROOT_PATH,
+            'source_root_path' => "dirname( __FILE__ ) . '/'",
             'db_host' => $db_config['db_host'],
             'db_user' => $db_config['db_user'],
             'db_password' => $db_config['db_password'],
@@ -655,8 +655,13 @@ class Installer {
             if (preg_match('/\[\'([a-zA-Z0-9_]+)\'\]/', $line, $regs)) {
                 $what = $regs[1];
                 if (isset($new_config[$what])) {
-                    $sample_config[$line_num] = preg_replace('/=.*;(.*)/', "= '" . $new_config[$what] . "';\\1",
-                    $sample_config[$line_num]);
+                    if ($what != 'source_root_path') {
+                        $sample_config[$line_num] = preg_replace('/=.*;(.*)/', "= '" . $new_config[$what] . "';\\1",
+                        $sample_config[$line_num]);
+                    } else { //don't quote source_root_path default value
+                        $sample_config[$line_num] = preg_replace('/=.*;(.*)/', "= " . $new_config[$what] . ";\\1",
+                        $sample_config[$line_num]);
+                    }
                 }
             }
         } // end foreach

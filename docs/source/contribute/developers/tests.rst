@@ -7,18 +7,14 @@ that pass. Here's how to run and write tests.
 Configure Your Test Environment
 -------------------------------
 
-Copy ``tests/config.tests.sample.inc.php`` to
-``tests/config.tests.inc.php`` and set the appropriate values. You will
-need a clean, empty database to run your tests. By default, name it
-``thinkup_tests`` and set the ``$TEST_DATABASE`` config variable to that
-name. You will also need a local installation of ThinkUp; set the
-``$TEST_SERVER_DOMAIN`` config variable equal to its URL--for example,
-``http://localhost``.
+Copy ``tests/config.tests.sample.inc.php`` to ``tests/config.tests.inc.php`` and set the appropriate values. You will
+need a clean, empty database to run your tests. By default, name it ``thinkup_tests`` and set the ``$TEST_DATABASE``
+config variable to that name. You will also need a local installation of ThinkUp; set the ``$TEST_SERVER_DOMAIN``
+config variable equal to its URL--for example, ``http://localhost``.
 
-In ``webapp/config.inc.php``, in the DEVELOPER CONFIG section, set the
-name of your tests database, and the username and password to access it.
-This database name should match the one you just set in
-``tests/config.tests.inc.php``.
+In ``webapp/config.inc.php``, in the DEVELOPER CONFIG section, set the name of your tests database, and the username
+and password to access it. This database name should match the one you just set in ``tests/config.tests.inc.php``. 
+Finally, set ``$THINKUP_CFG['source_root_path']`` to the full path of the thinkup source files.
 
 Test Assumptions
 ----------------
