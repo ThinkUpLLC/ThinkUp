@@ -31,8 +31,8 @@
                 <div class="grid_18 small alpha">
                     <a href="?p={if $ip->folder_name eq 'googleplus'}{'google+'|urlencode}{else}{$ip->folder_name}{/if}"><span id="spanpluginimage{$ip->id}"><img src="{$site_root_path}plugins/{$ip->folder_name}/{$ip->icon}" class="float-l" style="margin-right:5px;"></span>
                     {if $ip->is_active}{if !$ip->isConfigured()}<span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>{/if}{/if}
-                    <span {if !$ip->is_active}style="display: none;"{/if} id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
-                    <span {if $ip->is_active}style="display: none;"{/if} id="spanpluginnametext{$ip->id}">{$ip->name}</span><br >
+                    <span {if !$ip->is_active}style="display:none;padding:5px;"{/if} id="spanpluginnamelink{$ip->id}">{$ip->name}</span></a>
+                    <span {if $ip->is_active}style="display:none;padding:5px;"{/if} id="spanpluginnametext{$ip->id}">{$ip->name}</span><br >
                     <span style="color:#666"><small>{$ip->description}</small></span><br>
                 </div>
                 {if $user_is_admin}
@@ -40,7 +40,7 @@
                   <span id="spanpluginactivation{$ip->id}">
                       <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
                   </span>
-                  <span style="display: none;" class='ui-state-success  ui-corner-all mt_10' id="message{$ip->id}"></span>
+                  <span style="display: none;padding:5px;" class='ui-state-success ui-corner-all mt_10' id="message{$ip->id}"></span>
                   </div>
                 {/if}
               </div>
@@ -172,7 +172,7 @@ data using a special URL which contains this key. You can reset your key to some
                   {if !$o->is_admin}
                   <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
                   {/if}
-                  <span style="display: none;" class='ui-state-success ui-corner-all mt_10' id="message1{$o->id}"></span>
+                  <span style="display:none;padding:5px;" class='ui-state-success ui-corner-all mt_10' id="message1{$o->id}"></span>
                   
                   {if $o->instances neq null}
                     <ul>
@@ -260,7 +260,7 @@ $(function() {
         data: dataString,
         success: function() {
           $('#divactivate' + u).html("<span class='ui-state-success ui-corner-all mt_10' id='message" + u + "'></span>");
-          $('#message' + u).html("Crawling has started!").hide().fadeIn(1500, function() {
+          $('#message' + u).html("Started!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
         }
@@ -278,7 +278,7 @@ $(function() {
         data: dataString,
         success: function() {
           $('#divactivate' + u).html("<span class='ui-state-success ui-corner-all mt_10' id='message" + u + "'></span>");
-          $('#message' + u).html("Crawling has paused!").hide().fadeIn(1500, function() {
+          $('#message' + u).html("Paused!").hide().fadeIn(1500, function() {
             $('#message' + u);
           });
         }
