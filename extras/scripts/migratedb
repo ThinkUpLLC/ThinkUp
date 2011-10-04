@@ -57,7 +57,9 @@ VALUES ('Expand URLs', 'expandurls', 'Expand shortened links.', 'Gina Trapani', 
 
 mv build-db_mysql.sql ../.
 
+cd ..
+
 echo "
 
 Check the output for errors.
-Complete build script generated and saved as thinkup/webapp/install/sql/build-db_mysql.sql"
+Complete build script generated and saved as $(pwd)/build-db_mysql.sql"
