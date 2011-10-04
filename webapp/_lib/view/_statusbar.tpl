@@ -1,14 +1,6 @@
 {literal}
   <script type="text/javascript">
     $(document).ready(function() {
-      $('#choose-instance').click(function() {
-        $('#instance-selector').show();
-        $('#choose-instance').hide();
-      });
-      $('#cancel-instance').click(function() {
-        $('#instance-selector').hide();
-        $('#choose-instance').show();
-      });
       function changeMe() {
         var _mu = $("select#instance-select").val();
         if (_mu != "null") {
@@ -26,16 +18,6 @@
       <!-- the user has selected a particular one of their instances -->
       {literal}
         <script type="text/javascript">
-          $(document).ready(function() {
-            $('#choose-instance').click(function() {
-              $('#instance-selector').show();
-              $('#choose-instance').hide();
-            });
-            $('#cancel-instance').click(function() {
-              $('#instance-selector').hide();
-              $('#choose-instance').show();
-            });
-          });
           function changeMe() {
             var _mu = $("select#instance-select").val();
             if (_mu != "null") {
@@ -46,17 +28,15 @@
       {/literal}
       
       {if $instances|@count > 1 }
-      <span id="choose-instance"><span class="underline">Switch service user</span></span>
-      <span id="instance-selector" style="display:none;">
+      <span id="instance-selector">
         <select id="instance-select" onchange="changeMe();">
           <option value="">-- Switch service user --</option>
           {foreach from=$instances key=tid item=i}
             {if $i->network_user_id != $instance->network_user_id}
-              <option value="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username} - {$i->network|capitalize} (updated {$i->crawler_last_run|relative_datetime} ago{if !$i->is_active} (paused){/if})</option>
+              <option value="{$site_root_path}?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username} - {$i->network|capitalize}</option>
             {/if}
           {/foreach}
         </select>
-        <span id="cancel-instance">Cancel</span>
       </span>
     {/if}
     {else}
