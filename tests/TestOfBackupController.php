@@ -93,6 +93,26 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $this->assertPattern('/Back Up Your ThinkUp Data/', $results);
     }
 
+    public function testLoadBackupViewCLIWarn() {
+        $this->simulateLogin('me@example.com', true);
+        $controller = new BackupController(true);
+        $results = $controller->control();
+        $this->assertPattern('/Back Up Your ThinkUp Data/', $results);
+        $v_mgr = $controller->getViewManager();
+        $this->assertNull($v_mgr->getTemplateDataItem('high_table_row_count') ) ;
+
+        // table row counts are bad
+        $old_count = UpgradeController::$WARN_TABLE_ROW_COUNT;
+        UpgradeController::$WARN_TABLE_ROW_COUNT = 2;
+        $results = $controller->control();
+        $this->assertPattern('/We recommend that you use the.*Command Line Backup Tool.*when upgrading Thinkup/sm', 
+        $results);
+        $table_counts = $v_mgr->getTemplateDataItem('high_table_row_count');
+        $this->assertNotNull($table_counts);
+        $this->assertNotNull(3, $table_counts['count']); // tu_plugins, defaults to three
+        UpgradeController::$WARN_TABLE_ROW_COUNT = $old_count;
+    }
+
     public function XtestBackupCrawlerHasMutex() {
         // mutex needs to be on another db handle, so can't use doa framework to test
         $mutex_name = $this->config->getValue('db_name') . '.' . 'crawler';

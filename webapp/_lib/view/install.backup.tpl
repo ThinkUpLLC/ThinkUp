@@ -21,7 +21,7 @@
     </p>
 </div>
 {else}
- 
+
 <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
     <p>
         <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
@@ -29,6 +29,20 @@
         if it doesn't work, run a mysqldump manually on your ThinkUp server.
     </p>
 </div>
+
+{if $high_table_row_count}
+<!-- too many db records, use CLI interface? -->
+<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
+    <p>
+        <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
+        The table <b>{$high_table_row_count.table}</b> has a row count of 
+        <b>{$high_table_row_count.count|number_format:0:".":","}</b>.
+        We recommend that you use the <a href="http://thinkupapp.com/docs/install/backup.html">
+        <b>Command Line Backup Tool</b></a> when upgrading Thinkup.
+    </p>
+</div>
+<br />
+{/if}
 
 <input type="button" id="login-save" name="Submit" style="margin: 20px 0px 0px 20px;"
 onclick="document.location.href='?backup=true'" 
