@@ -138,8 +138,39 @@
 </div>
 
 <p>Alternately, use the command below to set up a cron job that runs hourly to update your posts. (Be sure to change yourpassword to your real password!)
-<br />
-<div style="background-color:black;color:white;"><small><code style="font-family:Courier;">{$cli_crawl_command}</code></small></div>
+<br /><br />
+<div><small><code style="font-family:Courier;" id="clippy_2988">{$cli_crawl_command}</code></small>
+
+
+      <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+              width="100"
+              height="14"
+              class="clippy"
+              id="clippy" >
+      <param name="movie" value="{$site_root_path}assets/flash/clippy.swf"/>
+      <param name="allowScriptAccess" value="always" />
+      <param name="quality" value="high" />
+      <param name="scale" value="noscale" />
+      <param NAME="FlashVars" value="id=clippy_2988&amp;copied=copied!&amp;copyto=copy to clipboard">
+      <param name="bgcolor" value="#FFFFFF">
+      <param name="wmode" value="opaque">
+      <embed src="{$site_root_path}assets/flash/clippy.swf"
+             width="100"
+             height="14"
+             name="clippy"
+             quality="high"
+             allowScriptAccess="always"
+             type="application/x-shockwave-flash"
+             pluginspage="http://www.macromedia.com/go/getflashplayer"
+             FlashVars="id=clippy_2988&amp;copied=copied!&amp;copyto=copy to clipboard"
+             bgcolor="#FFFFFF"
+             wmode="opaque"
+      />
+      </object>
+
+
+
+</div>
 <br /><br /><br/>
 </p>
 
@@ -439,4 +470,4 @@ $(function() {
   {/literal}
 </script>
 
-{include file="_footer.tpl"}
+{include file="_footer.tpl" linkify="false"}

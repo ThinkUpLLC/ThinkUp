@@ -1,5 +1,7 @@
   <div class="container small center">
+  {if $linkify neq 'false'}
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
+  {/if}
 
     <div id="ft" role="contentinfo">
       <p>
