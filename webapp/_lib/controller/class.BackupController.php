@@ -50,6 +50,12 @@ class BackupController extends ThinkUpAdminController {
         if (! self::checkForZipSupport()) {
             $this->addToView('no_zip_support', true);
         }
+        // pass the count of the table with  the most records
+        $table_stats_dao = DAOFactory::getDAO('TableStatsDAO');
+        $table_counts = $table_stats_dao->getTableRowCounts();
+        if($table_counts[0]['count'] > UpgradeController::$WARN_TABLE_ROW_COUNT) {
+            $this->addToView('high_table_row_count',$table_counts[0]);
+        }
         try {
             $backup_dao = DAOFactory::getDAO('BackupDAO');
             if (isset($_GET['backup'])) {

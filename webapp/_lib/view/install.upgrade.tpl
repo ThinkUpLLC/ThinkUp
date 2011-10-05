@@ -10,6 +10,21 @@
     </div>
   </div>
 
+    {if $high_table_row_count}
+    <!-- too many db records, use CLI interface? -->
+    <div id="info-parent" class="ui-state-highlight ui-corner-all" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
+        <div id="migration-info">
+           <p>
+            <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
+            Wow, your database has grown! The <b>{$high_table_row_count.table}</b> table  has <b>{$high_table_row_count.count|number_format:0:".":","} rows</b>.
+            Since upgrading a large database can time out in the browser, we recommend that you use the <a href="http://thinkupapp.com/docs/install/upgrade.html">
+            <b>command line upgrade tool</b></a> when upgrading ThinkUp.
+            </p>
+        </div>
+    </div>
+    <br />
+    {/if}
+
     {if ! $migrations[0]}
     <!-- no upgrade needed -->
      <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
@@ -39,7 +54,7 @@
     {if $migrations[0]}
     <div class="clearfix">
     <br /><br />
-        <div class="grid_10 prefix_9 left">
+    <div class="grid_10 prefix_9 left">
         <form name="upgrade" method="get" action="" id="upgrade-form" onsubmit="return false;">
         <input id="migration-submit" 
         name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" 

@@ -21,14 +21,24 @@
     </p>
 </div>
 {else}
- 
+    <p>
+        Click on the button below to back up your ThinkUp database. This new ThinkUp feature is in testing; 
+        if it doesn't work, run a <a href="http://dev.mysql.com/doc/refman/5.1/en/mysqldump.html">mysqldump</a> manually on your ThinkUp server.
+    </p>
+
+{if $high_table_row_count}
+<!-- too many db records, use CLI interface? -->
 <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
     <p>
         <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
-        Click on the button below to back up your ThinkUp database. This new ThinkUp feature is in testing now; 
-        if it doesn't work, run a mysqldump manually on your ThinkUp server.
+        Wow, your database has grown! The <b>{$high_table_row_count.table}</b> table has 
+        <b>{$high_table_row_count.count|number_format:0:".":","} rows</b>.
+        Since backing up such a big database can time out in the browser, we recommend that you use the 
+        <a href="http://thinkupapp.com/docs/install/backup.html"><b>command line backup tool</b></a> when backing up ThinkUp.
     </p>
 </div>
+<br />
+{/if}
 
 <input type="button" id="login-save" name="Submit" style="margin: 20px 0px 0px 20px;"
 onclick="document.location.href='?backup=true'" 
@@ -43,12 +53,9 @@ class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Ba
     <h1>Restore Your Thinkup Database</h1>
 </div>
   
-<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
     <p>
-        <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
         Import a ThinkUp database from file by uploading it below.</p>
     </p>
-</div>
 
 
 <form name="backup_form" id="backup-form" method="post" enctype="multipart/form-data" 
