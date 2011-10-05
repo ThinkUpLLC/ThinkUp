@@ -24,7 +24,7 @@ rm -rf build/thinkup/_lib/view/compiled_view/*.tpl.php
 rm -rf build/thinkup/_lib/view/compiled_view/upgrade_token
 rm -rf build/thinkup/_lib/view/compiled_view/latest_email
 rm -rf build/thinkup/_lib/view/compiled_view/*.tmp
-rm -rf build/thinkup/_lib/view/compiled_view/cache/*.tpl
+rm -rf build/thinkup/_lib/view/compiled_view/cache/
 rm -rf build/thinkup/_lib/extlib/simpletest/
 rm -rf build/thinkup/plugins/*/tests/
 rm build/thinkup/config.inc.php
