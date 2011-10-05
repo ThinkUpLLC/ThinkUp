@@ -837,7 +837,7 @@ class TwitterCrawler {
             while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
                 $stale_friend = $fd->getStalestFriend($this->user->user_id, 'twitter');
                 if ($stale_friend != null) {
-                    $this->logger->logInfo($stale_friend->username." is friend most need of update",
+                    $this->logger->logInfo($stale_friend->username." is friend most in need of update",
                     __METHOD__.','.__LINE__);
                     $stale_friend_tweets = str_replace("[id]", $stale_friend->username,
                     $this->api->cURL_source['user_timeline']);
