@@ -1,0 +1,29 @@
+Beta 0.16 - 06 Oct 2011
+=======================
+
+**New features:**
+
+*   Google + plugin: Capture the last 25 public posts for an authorized Google account, chart reply and like totals
+*   Facebook plugin: Capture backposts, chart friend/page liker count over time, capture friend and page liker details
+*   Dashboard: See hot posts at the top of the page (replaced most recent posts)
+
+**Improvements:**
+
+*   Database upgrader: Track what migrations have run and which haven't so in the event of a timeout, the upgrade
+    process can resume and retry only the migrations which have not run
+*   Facebook plugin: Optimize crawl for busy pages and profiles to use fewer API requests and get more data, added max
+    crawl time option to end very lengthy crawls
+*   Recent Activity chart: Replace post dates with post text to clearly see what posts have what totals
+*   Settings->Plugin listing: Display alerts next to plugins missing required settings
+*   Plugin settings page: Standardized layout, removed extraneous copy, added help links, set fields to the width of
+    expected value
+*   Smarter installation: Added more thorough system requirement checks, skip step 1 to reduce clicks when reqs are met
+*   Twitter plugin: Added per-function API call budgeting for better failsafes in the event of greedy process
+*   Follower Count charts: Switched to bar charts to see daily/weekly/monthly totals more clearly
+*   Twitter plugin: Detect "MT"-style retweets
+*   Image thumbnail support: Added Lockerz to list of detected image sources
+*   Facebook plugin: Removed API key setting field, which is no longer used by Facebook
+*   Add Application-wide setting to see verbose crawler log on Update Now page
+*   Move crawl RSS URL and cron command to Settings->Account page, added copy to clipboard button
+*   Simplify "Switch user" dropdown: Reduce number of clicks to switch user from 3 to 2
+*   Improve crawl logging for Facebook and Twitter
