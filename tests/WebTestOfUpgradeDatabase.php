@@ -101,7 +101,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             . $migration_versions[$migration_max_index] );
             $this->debug("");
         }
-
         // then test a migration from 4 that needs a snowflake uprade
         $this->debug("Testing snowflake migration/update");
         $run_migrations = array($migration_versions[$migration_max_index] =>
@@ -228,23 +227,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $latest_migration = glob($migration_sql_dir . '*_v' . $LATEST_VERSION .'.sql.migration');
         if ($LATEST_VERSION == $current_version) {
             $this->debug("Building zip for latest version: $LATEST_VERSION");
-            $sql_files = glob($migration_sql_dir . '*.sql');
-            if (sizeof($sql_files) > 0) {
-                $this->debug("found sql update for latest version $LATEST_VERSION: $sql_files[0]");
-                if ( !isset($latest_migration[0])) {
-                    $date_stamp = date("Y-m-d");
-                    $latest_migration_file = $migration_sql_dir . $date_stamp . '_v' . $LATEST_VERSION .
-                    '.sql.migration';
-                    $fp = fopen($latest_migration_file, 'w');
-                    $sql_files = glob($migration_sql_dir . '*.sql');
-                    $sql_file = $sql_files[0];
-                    $sql_migration = file_get_contents($sql_file);
-                    fwrite($fp, " -- migration file " . $sql_file . "\n\n");
-                    fwrite($fp, $sql_migration);
-                    fwrite($fp, "\n\n--");
-                    fclose($fp);
-                }
-            }
             exec('extras/scripts/generate-distribution');
             exec('cp build/thinkup.zip build/' . $LATEST_VERSION . '.zip');
             if (file_exists($latest_migration_file)) {
@@ -253,7 +235,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         }
         return array('MIGRATIONS' => $MIGRATIONS, 'latest_migration_file'  => $latest_migration_file );
     }
-
     /**
      * Runs migrations list
      */
@@ -312,6 +293,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 if ( !preg_match('/"processed":true/', $content)) {
                     error_log($content);
                 }
+                if(isset($json_array[$cnt]) && $json_array[$cnt]->version == $json_migration->version) {
+                    continue;
+                }
                 $this->debug("Running migration assertion test for " . $json_migration->version);
                 if ( !isset($MIGRATIONS[ $json_migration->version ])) { continue; } // no assertions, so skip
                 $assertions = $MIGRATIONS[ $json_migration->version ];
@@ -332,12 +316,6 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                             error_log("TEST FAIL DEBUGGING:");
                             error_log('Query for assertion ' . $assertion_sql['query'] . " with match "
                             . $assertion_sql['match'] . " failed");
-                            $debug_stmt = $this->pdo->query("show tables");
-                            $debug_data = $debug_stmt->fetchAll(PDO::FETCH_ASSOC);
-                            error_log("Current table list:");
-                            var_dump($debug_data);
-                            $debug_stmt->closeCursor();
-                            error_log("json return data: " . $content);
                         }
                     }
                     $stmt->closeCursor();
