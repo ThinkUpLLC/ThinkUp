@@ -184,6 +184,10 @@ class Post {
      */
     public function __construct($val) {
         $this->id = $val["id"];
+        // a fix for getPost() where the join of the links table column links.id overides the posts.id
+        if (!isset($this->id) && isset($val["post_key"])) {
+            $this->id = $val["post_key"];
+        }
         $this->post_id = $val["post_id"];
         $this->author_user_id = $val["author_user_id"];
         $this->author_username = $val["author_username"];

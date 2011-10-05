@@ -118,6 +118,21 @@ class TestOfTwitterJSONStreamParser extends ThinkUpUnitTestCase {
         $this->assertEqual($user->user_id, 586);
     }
 
+    public function testDeleteHandling() {
+        /*
+         * post to delete
+         * {"delete":{"status":{"user_id_str":"972651","id_str":"36558145308332032","id":36558145308332032,
+         * "user_id":972651}}}
+         */
+        $builder1 = FixtureBuilder::build('posts', array('post_id' => '36558145308332032', 'network' => 'twitter'));
+
+        $item = $this->getJSONStringFromFile("delete.json");
+        $this->json_parser->parseJSON($item);
+
+        $post = $this->post_dao->getPost('36558145308332032', 'twitter');
+        $this->assertNull($post);
+    }
+
     /**
      * 1 rt
      */
