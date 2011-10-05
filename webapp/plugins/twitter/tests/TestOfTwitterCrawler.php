@@ -615,15 +615,15 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $tc = new TwitterCrawler($this->instance, $this->api);
         $tc->fetchInstanceUserInfo();
 
-        $builder = FixtureBuilder::build('posts', array('post_id'=>14947487415, 'author_user_id'=>930061,
+        $builder = FixtureBuilder::build('posts', array('post_id'=>'14947487415', 'author_user_id'=>'930061',
         'author_username'=>'ginatrapani', 'author_fullname'=>'Gina Trapani', 'post_text'=>
         '&quot;Wearing your new conference tee shirt does NOT count as dressing up.&quot;', 'pub_date'=>'-1d',
         // start w/ the RT counts zeroed out, let the processing populate them
         'reply_count_cache'=>1, 'old_retweet_count_cache'=>0, 'retweet_count_cache'=>0, 'retweet_count_api' => 0));
 
-        $pdao = DAOFactory::getDAO('PostDAO');
+        $post_dao = DAOFactory::getDAO('PostDAO');
         $tc->fetchRetweetsOfInstanceUser();
-        $post = $pdao->getPost(14947487415, 'twitter');
+        $post = $post_dao->getPost('14947487415', 'twitter');
         $this->assertEqual($post->retweet_count_cache, 0, '0 new-style retweets from cache count');
     }
 
