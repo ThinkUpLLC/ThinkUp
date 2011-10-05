@@ -77,7 +77,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getPost($post_id, $network, $is_public = false) {
-        $q = "SELECT  p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.image_src, l.error, l.description, ";
+        $q = "SELECT  p.*, p.id as post_key, l.id, l.url, l.expanded_url, l.title, l.clicks, l.image_src, l.error, l.description, ";
         $q .= "l.image_src, l.caption, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON l.post_id = p.post_id AND l.network = p.network ";
         $q .= "WHERE p.post_id=:post_id AND p.network=:network ";

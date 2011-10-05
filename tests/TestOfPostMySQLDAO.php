@@ -778,6 +778,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($post->link));
         //no link, so link member variables do not get set
         $this->assertTrue(!isset($post->link->id));
+        // our post primary key id
+        $this->assertEqual($post->id, 11);
     }
 
     /**
