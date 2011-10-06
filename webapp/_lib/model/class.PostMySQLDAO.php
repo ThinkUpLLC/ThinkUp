@@ -281,40 +281,36 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     public function getRelatedPostsArray($post_id, $network='twitter', $is_public = false, $count = 350, $page = 1,
     $geo_encoded_only = true, $include_original_post = true) {
         $start_on_record = ($page - 1) * $count;
+        $q = "SELECT * FROM (
+        SELECT p.*,
+        l.url, l.expanded_url, l.image_src, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
+        FROM #prefix#posts p 
+        LEFT JOIN #prefix#links AS l 
+        ON l.post_id = p.post_id AND p.network = :network
+        WHERE (in_retweet_of_post_id=:post_id OR in_reply_to_post_id=:post_id) ";
 
-        $q = "(SELECT p.*, l.url, l.expanded_url, l.image_src, l.error, pub_date + interval #gmt_offset# hour as
-        adj_pub_date
-        FROM #prefix#posts p
-        LEFT JOIN #prefix#links AS l
-        ON l.post_id = p.post_id
-        WHERE
-        (in_retweet_of_post_id=:post_id OR in_reply_to_post_id=:post_id)
-        AND p.network = :network ";
-        if ($geo_encoded_only) {
-            $q .= "AND is_geo_encoded='1' ";
-        }
-        if ($is_public) {
-            $q .= "AND p.is_protected = 0 ";
-        }
-        $q .= ") ";
         if ($include_original_post) {
-            $q .= "UNION (SELECT p.*, l.url, l.expanded_url, l.image_src, l.error, pub_date + interval #gmt_offset# hour
-            as adj_pub_date
+            $q .= "UNION
+            SELECT p.*,
+            l.url, l.expanded_url, l.image_src, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
             FROM #prefix#posts p
             LEFT JOIN #prefix#links AS l
-            ON l.post_id = p.post_id
-            WHERE p.post_id=:post_id
-            AND p.network = :network ";
-            if ($geo_encoded_only) {
-                $q .= "AND is_geo_encoded='1' ";
-            }
-            if ($is_public) {
-                $q .= "AND p.is_protected = 0 ";
-            }
-            $q .= ") ";
+            ON l.post_id = p.post_id AND p.network = :network
+            WHERE p.post_id=:post_id  ";
         }
-        $q .= "ORDER BY reply_retweet_distance, location, id LIMIT :start_on_record, :limit";
-
+        $q .= ") s ";
+        if ($geo_encoded_only) {
+            $q .= "WHERE is_geo_encoded='1' ";
+        }
+        if ($is_public) {
+            if (!$geo_encoded_only) {
+                $q .= "WHERE ";
+            } else {
+                $q .= "AND ";
+            }
+            $q .= "is_protected = '0' ";
+        }
+        $q .= "ORDER BY reply_retweet_distance, location, id LIMIT :start_on_record, :limit;";
         $vars = array(
             ':post_id'=>(string)$post_id,
             ':network'=>$network,

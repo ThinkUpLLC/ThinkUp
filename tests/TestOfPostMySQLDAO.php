@@ -1171,10 +1171,56 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testGetRelatedPostsArray() {
         $dao = new PostMySQLDAO();
-        $posts = $dao->getRelatedPostsArray(134, 'twitter');
+        $posts = $dao->getRelatedPostsArray('134', 'twitter', $is_public=false, $count=350, $page=1,
+        $geo_encoded_only=false, $include_original_post=true);
+        //print_r($posts);
         $this->assertEqual(count($posts), 5);
         $this->assertIsA($posts[0], 'Array');
-        $posts = $dao->getRelatedPosts(1344545, 'twitter');
+        //assert original post is included
+        $included_original_post = false;
+        foreach ($posts as $post) {
+            if ($post['post_id'] == '134') {
+                $included_original_post = true;
+            }
+        }
+        $this->assertTrue($included_original_post);
+
+        $posts = $dao->getRelatedPostsArray('134', 'twitter', $is_public=true, 350, 1, $geo_encoded_only=false,
+        $include_original_post=false);
+        $this->assertEqual(count($posts), 3);
+        //print_r($posts);
+        //assert original post is NOT included
+        $included_original_post = false;
+        foreach ($posts as $post) {
+            if ($post['post_id'] == '134') {
+                $included_original_post = true;
+            }
+        }
+        $this->assertFalse($included_original_post);
+
+        $posts = $dao->getRelatedPostsArray('134', 'twitter', $is_public=true, 350, 1, $geo_encoded_only=false,
+        $include_original_post=true);
+        //assert there are no protected posts
+        $included_protected_posts = false;
+        foreach ($posts as $post) {
+            if ($post['is_protected'] == 1) {
+                $included_protected_posts = true;
+            }
+        }
+        $this->assertFalse($included_protected_posts);
+
+        $posts = $dao->getRelatedPostsArray('134', 'twitter', $is_public=false, 350, 1, $geo_encoded_only=true,
+        $include_original_post=true);
+        //assert there are no posts NOT geoencoded
+        $included_ungeoencoded_posts = false;
+        foreach ($posts as $post) {
+            if ($post['is_geo_encoded'] == 0) {
+                $included_ungeoencoded_posts = true;
+            }
+        }
+        $this->assertFalse($included_ungeoencoded_posts);
+
+        $posts = $dao->getRelatedPosts('1344545', 'twitter');
         $this->assertEqual(count($posts), 0);
     }
 
