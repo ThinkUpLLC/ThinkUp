@@ -57,6 +57,7 @@ class CrawlerAuthController extends ThinkUpController {
         $authorized = false;
 
         if (isset($this->argc) && $this->argc > 1) { // check for CLI credentials
+            $this->content_type = 'text/plain';
             $session = new Session();
             $username = $this->argv[1];
             if ($this->argc > 2) {
