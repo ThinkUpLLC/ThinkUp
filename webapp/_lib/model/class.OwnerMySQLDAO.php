@@ -337,7 +337,7 @@ SQL;
      * @return str Salt
      */
     private function getSaltByEmail($email){
-        $q = "SELECT * ";
+        $q = "SELECT pwd_salt ";
         $q .= "FROM #prefix#owners u ";
         $q .= "WHERE u.email = :email";
         $vars = array(':email'=>$email);
