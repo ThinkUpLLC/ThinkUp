@@ -209,34 +209,51 @@
     
     {if $user_is_admin}
       <div class="section" id="ttusers">
+
+      <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
+        <div class="append_20 clearfix">
+        
+{foreach from=$owners key=oid item=o name=oloop}
+  {if $smarty.foreach.oloop.first}
+    <div class="clearfix header">
+      <div class="grid_8 alpha">name</div>
+      {if $user_is_admin}
+      <div class="grid_10">service users</div>
+      <div class="grid_4 omega">actions</div>
+      {/if}
+    </div>
+  {/if}
+  
+  <div class="clearfix bt append prepend">
+    <div class="grid_8 small alpha">
+        <span{if $o->is_admin} style="background-color:#FFFFCC"{/if}>{$o->full_name}</span><br>
+        <small>{$o->email}</small>
+        <span style="color:#666"><br><small>{if $o->last_login neq '0000-00-00'}logged in {$o->last_login|relative_datetime} ago{/if}</small></span><br>
+        
+    </div>
+    <div class="grid_10 small">
+        {if $o->instances neq null}
+          {foreach from=$o->instances key=iid item=i}
+              {$i->network_username} | {$i->network|capitalize}
+              {if !$i->is_active} (paused){/if}<br>
+          {/foreach}
+        {else}
+           &nbsp;
+        {/if}
+    </div>
+    {if $user_is_admin}
+        <div class="grid_4 omega">
+          {if !$o->is_admin}
+          <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+          {/if}
+      </div>
+    {/if}
+  </div>
+{/foreach}
+        </div>
+     </div>
+
         <div class="thinkup-canvas clearfix">
-          <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-          <div class="help-container">{insert name="help_link" id='users'}</div>
-            <h1>All Users</h1><br />
-            <ul class="user-accounts">
-              {foreach from=$owners key=oid item=o}
-                <li>
-                  <b>{$o->full_name} ({$o->email})</b>{if $o->last_login neq '0000-00-00'}, last logged in {$o->last_login}{/if}{if $o->is_admin}, Administrator<br />{/if}
-                  {if !$o->is_admin}
-                  <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
-                  {/if}
-                  <span style="display:none;padding:5px;" class='ui-state-success ui-corner-all mt_10' id="message1{$o->id}"></span>
-                  
-                  {if $o->instances neq null}
-                    <ul>
-                      {foreach from=$o->instances key=iid item=i}
-                        <li>
-                          {$i->network_username} ({$i->network|capitalize})
-                          {if !$i->is_active} (paused){/if}
-                        </li>
-                      {/foreach}
-                    </ul>
-                  {/if}
-                </li>
-              {/foreach}
-            </ul>
-          </div>
-          
          <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
         <h1>Invite User</h1>
         {include file="_usermessage.tpl" field='invite'}
