@@ -142,7 +142,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $clean_list = array();
         $cnt = 0;
         foreach($list as $migration) {
-            if(preg_match("/some_stuff/", $migration['filename'])) {
+            if (preg_match("/some_stuff/", $migration['filename'])) {
                 array_push($clean_list, $migration);
             }
             $cnt++;
@@ -150,7 +150,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertTrue($clean_list[0]['new_migration']);
         $this->assertTrue($clean_list[1]['new_migration']);
         $this->assertPattern("/^2011-09-21_some_stuff2.sql$/",$clean_list[0]['filename']);
-        $this->assertPattern("/^2011-09-21_some_stuff_v10.15.sql$/",$clean_list[1]['filename']);
+        $this->assertPattern("/^2011-09-21_some_stuff_v1".$db_version.".sql$/",$clean_list[1]['filename']);
 
         // run migration
         $install_dao = DAOFactory::getDAO('InstallerDAO');
@@ -724,29 +724,29 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
     private function newMigrationFiles($name, $old = false, $add_sql = false, $no_version = false, $date = false) {
         $config = Config::getInstance();
         $app_version = $config->getValue('THINKUP_VERSION');
-        if(! $date) {
+        if (! $date) {
             $date = '2011-09-21';
         }
         $migration_version = $app_version;
-        if($old == false) {
+        if ($old == false) {
             $migration_version = $app_version;
         } else {
             $migration_version = $app_version - 10;
         }
         $migration_test1 = $this->migrations_test_dir . $this->migrations_file1;
-        if($no_version) {
+        if ($no_version) {
             $migration_test1 = $this->migrations_test_dir . $this->migrations_file2;
         }
         $migration1 = $this->migrations_dir . $date . '_' . $name;
-        if(! $no_version) {
+        if (! $no_version) {
             $migration1 .= '_v' . $migration_version;
         }
         $migration1 .= '.sql';
-        if(file_exists($migration1)) {
+        if (file_exists($migration1)) {
             unlink($migration1);
         }
         copy($migration_test1, $migration1);
-        if($add_sql) {
+        if ($add_sql) {
             $msql = file_get_contents($migration1);
             $msql .= "\n" . $add_sql;
             file_put_contents($migration1, $msql);
