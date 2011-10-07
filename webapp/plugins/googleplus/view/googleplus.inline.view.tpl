@@ -1,3 +1,4 @@
+<div class="">
           {if $post}
             <div class="clearfix">
               <div class="grid_2 alpha">
