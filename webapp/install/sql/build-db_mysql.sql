@@ -23,7 +23,7 @@ CREATE TABLE tu_encoded_locations (
 --
 
 CREATE TABLE tu_favorites (
-  post_id varchar(50) NOT NULL COMMENT 'Post ID on a given network.',
+  post_id varchar(80) NOT NULL COMMENT 'Post ID on a given network.',
   author_user_id varchar(30) NOT NULL COMMENT 'User ID of favorited post author on a given network.',
   fav_of_user_id varchar(30) NOT NULL COMMENT 'User ID who favorited post on a given network.',
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
@@ -80,7 +80,7 @@ CREATE TABLE tu_hashtags (
 --
 
 CREATE TABLE tu_hashtags_posts (
-  post_id varchar(50) NOT NULL COMMENT 'Post ID on a given network.',
+  post_id varchar(80) NOT NULL COMMENT 'Post ID on a given network.',
   hashtag_id int(11) NOT NULL COMMENT 'Internal hashtag ID.',
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'The network this post appeared on in lower-case, e.g. twitter or facebook.',
   UNIQUE KEY hashtag_post (hashtag_id,post_id),
@@ -97,7 +97,7 @@ CREATE TABLE tu_instances (
   network_user_id varchar(30) NOT NULL COMMENT 'User ID on a given network, like a user''s Twitter ID or Facebook user ID.',
   network_viewer_id varchar(30) NOT NULL COMMENT 'Network user ID of the viewing user (which can affect permissions).',
   network_username varchar(255) NOT NULL COMMENT 'Username on a given network, like a user''s Twitter username or Facebook user name.',
-  last_post_id varchar(50) NOT NULL COMMENT 'Last network post ID fetched for this instance.',
+  last_post_id varchar(80) NOT NULL COMMENT 'Last network post ID fetched for this instance.',
   crawler_last_run timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'The last time the crawler completed a run for this instance.',
   total_posts_by_owner int(11) DEFAULT '0' COMMENT 'Total posts by this instance as reported by service API.',
   total_posts_in_system int(11) DEFAULT '0' COMMENT 'Total posts in datastore authored by this instance.',
@@ -128,7 +128,7 @@ CREATE TABLE tu_instances_twitter (
   id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
   last_page_fetched_replies int(11) NOT NULL DEFAULT '1' COMMENT 'Last page of replies fetched for this instance.',
   last_page_fetched_tweets int(11) NOT NULL DEFAULT '1' COMMENT 'Last page of tweets fetched for this instance.',
-  last_favorite_id varchar(50) DEFAULT NULL COMMENT 'Last favorite post ID of the instance saved.',
+  last_favorite_id varchar(80) DEFAULT NULL COMMENT 'Last favorite post ID of the instance saved.',
   last_unfav_page_checked int(11) DEFAULT '0' COMMENT 'Last page of older favorites checked for backfilling.',
   last_page_fetched_favorites int(11) DEFAULT NULL COMMENT 'Last page of favorites fetched.',
   PRIMARY KEY (id)
@@ -182,7 +182,7 @@ CREATE TABLE tu_mentions (
 --
 
 CREATE TABLE tu_mentions_posts (
-  post_id varchar(50) NOT NULL COMMENT 'Post ID on a given network.',
+  post_id varchar(80) NOT NULL COMMENT 'Post ID on a given network.',
   author_user_id varchar(30) NOT NULL COMMENT 'Author user ID of the post which contains the mention on a given network.',
   mention_id int(11) NOT NULL COMMENT 'Internal mention ID.',
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'The network which the mentioning post and mention comes from.',
@@ -270,7 +270,7 @@ CREATE TABLE tu_places (
 CREATE TABLE tu_places_posts (
   id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
   longlat point NOT NULL COMMENT 'Longitude/lattitude point.',
-  post_id varchar(50) NOT NULL COMMENT 'Post ID on a given network.',
+  post_id varchar(80) NOT NULL COMMENT 'Post ID on a given network.',
   place_id varchar(100) DEFAULT NULL COMMENT 'Place ID on a given network.',
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'The network this post appeared on in lower-case, e.g. twitter or facebook.',
   PRIMARY KEY (id),
@@ -299,7 +299,7 @@ CREATE TABLE tu_plugins (
 
 CREATE TABLE tu_post_errors (
   id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
-  post_id varchar(50) NOT NULL COMMENT 'Post ID on the originating service.',
+  post_id varchar(80) NOT NULL COMMENT 'Post ID on the originating service.',
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
   error_code int(11) NOT NULL COMMENT 'Error code issues from the service.',
   error_text varchar(255) NOT NULL COMMENT 'Error text as supplied from the service.',
@@ -314,7 +314,7 @@ CREATE TABLE tu_post_errors (
 
 CREATE TABLE tu_posts (
   id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID..',
-  post_id varchar(50) NOT NULL COMMENT 'The ID of the post inside the respective service.',
+  post_id varchar(80) NOT NULL COMMENT 'The ID of the post inside the respective service.',
   author_user_id varchar(30) NOT NULL COMMENT 'The user ID inside the respective service, e.g. Twitter or Facebook user IDs.',
   author_username varchar(50) NOT NULL COMMENT 'The user''s username inside the respective service, e.g. Twitter or Facebook user name.',
   author_fullname varchar(50) NOT NULL COMMENT 'The user''s real, full name on a given service, e.g. Gina Trapani.',
@@ -329,10 +329,10 @@ CREATE TABLE tu_posts (
   geo varchar(255) DEFAULT NULL COMMENT 'The post''s latitude and longitude coordinates.',
   pub_date datetime NOT NULL COMMENT 'The UTC date/time when this post was published.',
   in_reply_to_user_id varchar(30) DEFAULT NULL COMMENT 'The ID of the user that this post is in reply to.',
-  in_reply_to_post_id varchar(50) DEFAULT NULL COMMENT 'The ID of the post that this post is in reply to.',
+  in_reply_to_post_id varchar(80) DEFAULT NULL COMMENT 'The ID of the post that this post is in reply to.',
   reply_count_cache int(11) NOT NULL DEFAULT '0' COMMENT 'The total number of replies this post received in the data store.',
   is_reply_by_friend tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Whether or not this reply was authored by a friend of the original post''s author.',
-  in_retweet_of_post_id varchar(50) DEFAULT NULL COMMENT 'The ID of the post that this post is a retweet of. [Twitter-specific]',
+  in_retweet_of_post_id varchar(80) DEFAULT NULL COMMENT 'The ID of the post that this post is a retweet of. [Twitter-specific]',
   old_retweet_count_cache int(11) NOT NULL DEFAULT '0' COMMENT 'Manual count of old-style retweets as determined by ThinkUp. [Twitter-specific]',
   is_retweet_by_friend tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Whether or not this retweet was posted by a friend of the original post''s author. [Twitter-specific]',
   reply_retweet_distance int(11) NOT NULL DEFAULT '0' COMMENT 'The distance (in km) away from the post that this post is in reply or retweet of [Twitter-specific-ish]',
@@ -416,7 +416,7 @@ CREATE TABLE tu_users (
   found_in varchar(100) DEFAULT NULL COMMENT 'What data source or API call the last update originated from (for developer debugging).',
   last_post timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'The time of the latest post the user authored.',
   joined timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'When the user joined the network.',
-  last_post_id varchar(50) NOT NULL COMMENT 'Network post ID of the latest post the user authored.',
+  last_post_id varchar(80) NOT NULL COMMENT 'Network post ID of the latest post the user authored.',
   network varchar(20) NOT NULL DEFAULT 'twitter' COMMENT 'Originating network in lower case, i.e., twitter or facebook.',
   favorites_count int(11) DEFAULT NULL COMMENT 'Total number of posts the user has favorited.',
   PRIMARY KEY (id),
@@ -424,7 +424,7 @@ CREATE TABLE tu_users (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service user details.';
 
 
--- Dump completed on 2011-10-07 15:32:47
+-- Dump completed on 2011-10-07 17:32:10
 
 --
 -- Insert DB Version
