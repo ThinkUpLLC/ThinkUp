@@ -310,7 +310,7 @@ class Utils {
     public static function defineConstantBaseUrl() {
         if ( defined('THINKUP_BASE_URL') ) return;
 
-        $dirs_under_root = array('account', 'post', 'session', 'user', 'install');
+        $dirs_under_root = array('account', 'post', 'session', 'user', 'install', 'tests');
         $current_script_path = explode('/', $_SERVER['PHP_SELF']);
         array_pop($current_script_path);
         if ( in_array( end($current_script_path), $dirs_under_root ) ) {

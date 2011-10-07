@@ -57,9 +57,9 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
 
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
         $this->testdb_helper->drop($this->test_database_name);
-        $this->testdb_helper->create($THINKUP_CFG['source_root_path']."webapp/install/sql/build-db_mysql.sql");
-
         $this->table_prefix = $config->getValue('table_prefix');
+        $this->testdb_helper->prefix = $this->table_prefix;
+        $this->testdb_helper->create($THINKUP_CFG['source_root_path']."/webapp/install/sql/build-db_mysql.sql");
     }
 
     /**

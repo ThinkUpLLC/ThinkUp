@@ -42,7 +42,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         parent::setUp();
 
         $optiondao = new OptionMySQLDAO();
-        $this->pdo = OptionMysqlDAO::$PDO;
+        $this->pdo = OptionMySQLDAO::$PDO;
 
         $this->install_dir = THINKUP_ROOT_PATH.'webapp/test_installer';
         $this->installs_dir = THINKUP_ROOT_PATH.'build';
@@ -82,7 +82,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
     public function testMigrations() {
         // run updates and migrations
-        require 'tests/migration-assertions.php';
+        require dirname(__FILE__) . '/migration-assertions.php';
         $migrations_count = count($MIGRATIONS);
         $migration_versions = array();
         foreach($MIGRATIONS as  $version => $migration_data) {
@@ -155,7 +155,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
      */
     private function setUpApp($version, $MIGRATIONS) {
         // run updates and migrations
-        require 'tests/migration-assertions.php';
+        require dirname(__FILE__) . '/migration-assertions.php';
         $this->debug("Setting up base install for upgrade: $version");
         $zip_url = $MIGRATIONS[$version]['zip_url'];
 
@@ -163,6 +163,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         //install beta 1
         $zipfile = $this->getInstall($zip_url, $version, $this->installs_dir);
         //Extract into test_installer directory and set necessary folder permissions
+        chdir(dirname(__FILE__) . '/../');
         exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
         'cd webapp/test_installer/;'.
         'unzip ' . $zipfile . ';chmod -R 777 thinkup');
@@ -182,8 +183,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->assertTitle("ThinkUp");
         $this->assertText('ThinkUp\'s configuration file does not exist! Try installing ThinkUp.');
         $this->clickLink("installing ThinkUp.");
-        $this->assertText('Great! Your system has everything it needs to run ThinkUp. You may proceed to the next '.
-        'step.');
+        $this->assertText('Great! Your system has everything it needs to run ThinkUp.');
 
         //Set test mode
         putenv("MODE=TESTS");
@@ -204,6 +204,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->setField('db_user', $THINKUP_CFG['db_user']);
         $this->setField('db_passwd', $THINKUP_CFG['db_password']);
         $this->setField('db_socket', $THINKUP_CFG['db_socket']);
+        $this->setField('db_prefix', $THINKUP_CFG['table_prefix']);
         $this->clickSubmitByName('Submit');
 
         $this->assertText('ThinkUp has been installed successfully. Check your email account; an account activation '.
@@ -211,7 +212,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         //Config file has been written
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
-        'webapp/test_installer/thinkup/config.inc.php'));
+          '/webapp/test_installer/thinkup/config.inc.php'));
 
         //Test bad activation code
         $this->get($this->url.'/test_installer/thinkup/session/activate.php?usr=user@example.com&code=dummycode');
@@ -236,6 +237,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->setField('email', 'user@example.com');
         $this->setField('pwd', 'secret');
         $this->click("Log In");
+        //$this->showSource();
         $this->assertText('You have no'); //accounts/services configured. Set up an account now');
         $this->assertText('Set up'); //an account/a service like Twitter or Facebook now
         //Visit Configuration/Settings page and assert content there
@@ -250,7 +252,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->assertText('admin');
 
         // run updates and migrations
-        require 'tests/migration-assertions.php';
+        require dirname(__FILE__) . '/migration-assertions.php';
 
         // build latest  version for testing
         $migration_sql_dir = THINKUP_ROOT_PATH . 'webapp/install/sql/mysql_migrations/';
@@ -272,19 +274,21 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     /**
      * Runs migrations list
      */
-    private function runMigrations($TMIGRATIONS, $base_version, $fail = false) {
-        require 'tests/migration-assertions.php';
+    private function runMigrations($TMIGRATIONS, $base_version) {
+        require dirname(__FILE__) . '/migration-assertions.php';
+        require THINKUP_WEBAPP_PATH.'config.inc.php';
         foreach($TMIGRATIONS as  $version => $migration_data) {
             $this->debug("Running migration test for version: $version");
             $url = $migration_data['zip_url'];
             $zipfile = $this->getInstall($url, $version, $this->installs_dir);
             $this->debug("unzipping $zipfile");
+            chdir(dirname(__FILE__) . '/../');
             //Extract into test_installer directory and set necessary folder permissions
             exec('cp ' . $zipfile .  ' webapp/test_installer/.;'.
             'cd webapp/test_installer/;unzip -o ' . $zipfile);
 
             // run updates and migrations
-            require 'tests/migration-assertions.php';
+            require dirname(__FILE__) . '/migration-assertions.php';
 
             // update version php file
             if ($version == $LATEST_VERSION) {
@@ -333,6 +337,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                     $install_dao = DAOFactory::getDAO('InstallerDAO');
                     foreach($MIGRATIONS[$json_migration->version ]['setup_sql'] as $sql) {
                         $this->debug('running setup_sql script: ' . substr($sql, 0, 40)  . '...');
+                        if ($THINKUP_CFG['table_prefix'] != 'tu_') {
+                            $sql = str_replace('tu_', $THINKUP_CFG['table_prefix'], $sql);
+                        }
                         $install_dao->runMigrationSQL($sql);
                     }
                 }
@@ -362,6 +369,10 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                         continue;
                     }
                     $this->debug("Running assertion sql: " . $assertion_sql['query']);
+                    if ($THINKUP_CFG['table_prefix'] != 'tu_') {
+                        $assertion_sql['query'] = str_replace('tu_', $THINKUP_CFG['table_prefix'],
+                        $assertion_sql['query']);
+                    }
                     $stmt = $this->pdo->query($assertion_sql['query']);
                     $data = $stmt->fetch(PDO::FETCH_ASSOC);
                     if (isset($assertion_sql['no_match'])) {
@@ -389,6 +400,9 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             foreach($migration_data['migration_assertions'] as $assertions) {
                 foreach($assertions as $assertion) {
                     $this->debug("Running assertion sql: " . $assertion['query']);
+                    if ($THINKUP_CFG['table_prefix'] != 'tu_') {
+                        $assertion['query'] = str_replace('tu_', $THINKUP_CFG['table_prefix'], $assertion['query']);
+                    }
                     $stmt = $this->pdo->query($assertion['query']);
                     $data = $stmt->fetch(PDO::FETCH_ASSOC);
                     if (isset($assertion['no_match'])) {

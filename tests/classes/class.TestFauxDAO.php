@@ -27,7 +27,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Christoffer Viken, Gina Trapani, Mark Wilkie
  */
-require_once 'tests/classes/interface.TestDAO.php';
+require_once dirname(__FILE__) . '/interface.TestDAO.php';
 
 /*
  * Faux TestDAO implementation for TestOfDAOFactory test

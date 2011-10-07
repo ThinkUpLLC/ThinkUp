@@ -101,7 +101,8 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $queries = $v_mgr->getTemplateDataItem('migrations');
         $this->assertEqual(1, count($queries), 'one migration query');
-        $this->assertEqual(file_get_contents($this->test_migrations[0]), $queries[0]['sql']);
+        $this->assertEqual(str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[0])),
+        $queries[0]['sql']);
 
         $this->test_migrations = array(); //clear out old data
         $this->migrationFiles(2);
@@ -111,8 +112,10 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $v_mgr = $controller->getViewManager();
         $queries = $v_mgr->getTemplateDataItem('migrations');
         $this->assertEqual(2, count($queries), 'two migration query');
-        $this->assertEqual(file_get_contents($this->test_migrations[0]), $queries[1]['sql']);
-        $this->assertEqual(file_get_contents($this->test_migrations[1]), $queries[0]['sql']);
+        $this->assertEqual(str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[0])),
+        $queries[1]['sql']);
+        $this->assertEqual(str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[1])),
+        $queries[0]['sql']);
     }
 
     public function testDatabaseMigrationNeededHighTableCount() {
@@ -186,7 +189,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
             $sql = preg_replace('/\-\-.*/','', $migration['sql']);
             $install_dao->runMigrationSQL($sql, $migration['new_migration'], $migration['filename']);
         }
-        $stmt = $this->pdo->query("select * from  " . $this->table_prefix . "completed_migrations");
+        $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
         $data = $stmt->fetchAll();
         $this->assertEqual(count($data), 5);
         $this->assertEqual($data[0]['migration'], '2011-09-21_some_stuff2-0');
@@ -198,11 +201,11 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         // run same migration file now as a versioned file with one new sql line
         $migration = $clean_list[0];
         $filename = $migration['filename'] = '2011-09-21_some_stuff2_v1.1.sql';
-        $migration['sql'] .= "\nINSERT INTO  " . $this->table_prefix . "test1 (value) VALUES (5);";
+        $migration['sql'] .= "\nINSERT INTO " . $this->table_prefix . "test1 (value) VALUES (5);";
         $sql = preg_replace('/\-\-.*/','', $migration['sql']);
         $install_dao->runMigrationSQL($sql, $migration['new_migration'], $filename);
 
-        $stmt = $this->pdo->query("select * from  " . $this->table_prefix . "completed_migrations");
+        $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
         $data2 = $stmt->fetchAll();
         $this->assertEqual(count($data2), 6);
         $this->assertEqual($data2[0]['migration'], '2011-09-21_some_stuff2-0');
@@ -228,15 +231,15 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[0]));
         $sql = preg_replace('/\-\-.*/','', $sql);
         $this->assertEqual($obj->sql, $sql);
 
-        $sql = "show tables like   '" . $this->table_prefix . "test1'";
+        $sql = "show tables like  '" . $this->table_prefix . "test1'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
-        $this->assertEqual($data[0],  $this->table_prefix . "test1");
-        $sql = 'select * from  ' . $this->table_prefix . "test1";
+        $this->assertEqual($data[0], $this->table_prefix . 'test1');
+        $sql = 'select * from ' . $this->table_prefix . 'test1';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 3);
@@ -244,7 +247,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertEqual($data[1]['value'], 2);
         $this->assertEqual($data[2]['value'], 3);
         // tu_completed_migrations table should contain a record for our latest migration
-        $stmt = $this->pdo->query("select * from  " . $this->table_prefix . "completed_migrations");
+        $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
         $data = $stmt->fetchAll();
         $this->assertEqual(count($data), 3);
         $this->assertEqual($data[0]['migration'], '2011-09-21_some_stuff-0');
@@ -252,16 +255,16 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertEqual($data[2]['migration'], '2011-09-21_some_stuff-2');
 
         // run it againto veriy it skips alrready run migrations, but add a new one as well
-        $new_sql = "INSERT INTO  " . $this->table_prefix . "test1 (value) VALUES (4),(5),(6);";
+        $new_sql = "INSERT INTO #prefix#test1 (value) VALUES (4),(5),(6);";
         $this->newMigrationFiles('some_stuff', false, $new_sql);
         $_GET['migration_index'] = 1;
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[0]));
         $sql = preg_replace('/\-\-.*/','', $sql);
         $this->assertEqual($obj->sql, $sql);
-        $sql = 'select * from  ' . $this->table_prefix . 'test1';
+        $sql = 'select * from ' . $this->table_prefix . 'test1';
         $stmt = $this->pdo->query($sql);
         $data2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data2), 6);
@@ -272,7 +275,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertEqual($data2[4]['value'], 5);
         $this->assertEqual($data2[5]['value'], 6);
 
-        $stmt = $this->pdo->query("select * from  " . $this->table_prefix . "completed_migrations");
+        $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
         $data2 = $stmt->fetchAll();
         $this->assertEqual(count($data2), 4);
         $this->assertEqual($data2[0]['migration'], '2011-09-21_some_stuff-0');
@@ -538,15 +541,15 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $sql_file = file_get_contents($this->test_migrations[0]);
+        $sql_file = str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[0]));
         $sql_file = preg_replace('/\-\-.*/','', $sql_file);
         $this->assertEqual($obj->sql, $sql_file);
 
-        $sql = "show tables like '" . $this->table_prefix . "test1'";
+        $sql = "show tables like  '" . $this->table_prefix . "test1'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
-        $this->assertEqual($data[0],  $this->table_prefix . 'test1');
-        $sql = 'select * from  ' . $this->table_prefix . 'test1';
+        $this->assertEqual($data[0], $this->table_prefix . 'test1');
+        $sql = 'select * from ' . $this->table_prefix . 'test1';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 3);
@@ -564,15 +567,15 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[0]));
         $sql = preg_replace('/\-\-.*/','', $sql);
         $this->assertEqual($obj->sql, $sql);
 
-        $sql = "show tables like '" . $this->table_prefix . "test1'";
+        $sql = "show tables like  '" . $this->table_prefix . "test1'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
-        $this->assertEqual($data[0],  $this->table_prefix . 'test1');
-        $sql = 'select * from  ' . $this->table_prefix . 'test1';
+        $this->assertEqual($data[0], $this->table_prefix . 'test1');
+        $sql = 'select * from ' . $this->table_prefix . 'test1';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 3);
@@ -590,15 +593,15 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[0]));
         $sql = preg_replace('/\-\-.*/','', $sql);
         $this->assertEqual($obj->sql, $sql);
 
-        $sql = "show tables like   '" . $this->table_prefix . "test1'";
+        $sql = "show tables like  '" . $this->table_prefix . "test1'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
-        $this->assertEqual($data[0],  $this->table_prefix . 'test1');
-        $sql = 'select * from  ' . $this->table_prefix . 'test1';
+        $this->assertEqual($data[0], $this->table_prefix . 'test1');
+        $sql = 'select * from ' . $this->table_prefix . 'test1';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 3);
@@ -675,15 +678,15 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $sql = file_get_contents($this->test_migrations[1]);
+        $sql = str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[1]));
         $sql = preg_replace('/\-\-.*/','', $sql);
         $this->assertEqual($obj->sql, $sql);
 
-        $sql = "show tables like   '" . $this->table_prefix . "test2'";
+        $sql = "show tables like  '" . $this->table_prefix . "test2'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data[0], $this->table_prefix . 'test2');
-        $sql = 'select * from  ' . $this->table_prefix . 'test2';
+        $sql = 'select * from ' . $this->table_prefix . 'test2';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 1);
@@ -692,15 +695,15 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[0]));
         $sql = preg_replace('/\-\-.*/','', $sql);
         $this->assertEqual($obj->sql, $sql);
 
-        $sql = "show tables like '" . $this->table_prefix . "test1'";
+        $sql = "show tables like  '" . $this->table_prefix . "test1'";
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data[0], $this->table_prefix . 'test1');
-        $sql = 'select * from  ' . $this->table_prefix . 'test1';
+        $sql = 'select * from ' . $this->table_prefix . 'test1';
         $stmt = $this->pdo->query($sql);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEqual(count($data), 3);
@@ -723,7 +726,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $results = $controller->go();
         $obj = json_decode($results);
         $this->assertTrue($obj->processed);
-        $sql = file_get_contents($this->test_migrations[0]);
+        $sql = str_replace('tu_', $this->table_prefix, file_get_contents($this->test_migrations[0]));
         $sql = preg_replace('/\-\-.*/','', $sql);
         $this->assertEqual($obj->sql, $sql);
     }
@@ -779,6 +782,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
     public function testProcessMigrationsDifferentPrefix() {
 
         $config = Config::getInstance();
+        $old_table_prefix = $config->getValue('table_prefix');
         $config->setValue('table_prefix', 'new_prefix_');
 
         $stmt = $this->pdo->query("show tables");
@@ -787,7 +791,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         //var_dump($data);
         foreach($data as $table) {
             foreach($table as $key=> $value) {
-                $new_value = preg_replace("/tu_/", " new_prefix_", $value);
+                $new_value = preg_replace("/^" . $old_table_prefix . "/", " new_prefix_", $value);
                 $sql = "RENAME TABLE $value TO $new_value";
                 $this->pdo->query($sql);
             }

@@ -128,17 +128,16 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
         $data = $stmt->fetchAll();
         $pre_import = count($data);
 
-
         $export_file = $dao->export();
 
-        $this->pdo->query("drop table tu_plugins");
+        $this->pdo->query("drop table " . $this->table_prefix . "plugins");
         $this->assertTrue( $dao->import($export_file) );
-        $stmt = $this->pdo->query("show create table tu_plugins");
+        $stmt = $this->pdo->query("show create table " . $this->table_prefix . "plugins");
         $data = $stmt->fetch();
         $stmt->closeCursor();
-        $this->assertEqual($data['Table'], 'tu_plugins');
+        $this->assertEqual($data['Table'], $this->table_prefix . 'plugins');
 
-        $stmt = $this->pdo->query("select * from tu_plugins");
+        $stmt = $this->pdo->query("select * from " . $this->table_prefix . "plugins");
 
         $data = $stmt->fetch();
         $this->assertEqual($data['id'], 1);
@@ -160,15 +159,14 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
         $data = $stmt->fetchAll();
         $pre_import = count($data);
 
-
         $export_file = $dao->export();
-        $this->pdo->query("drop table tu_plugins");
+        $this->pdo->query("drop table " . $this->table_prefix . "plugins");
         $this->pdo->query("create table tu_dropme (`value` int(11) NOT NULL)");
         $this->assertTrue( $dao->import($export_file) );
-        $stmt = $this->pdo->query("show create table tu_plugins");
+        $stmt = $this->pdo->query("show create table " . $this->table_prefix . "plugins");
         $data = $stmt->fetch();
         $stmt->closeCursor();
-        $this->assertEqual($data['Table'], 'tu_plugins');
+        $this->assertEqual($data['Table'], $this->table_prefix . 'plugins');
 
         $stmt = $this->pdo->query("show tables like '%dropme'");
         $data = $stmt->fetch();
@@ -180,20 +178,20 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($pre_import, $post_import);
     }
 
-public function recursiveDelete($str){
-    if (is_file($str)){
-        if (! preg_match("MAKETHISDIRWRITABLE", $str)) {
-            return @unlink($str);
-        } else {
-            return true;
+    public function recursiveDelete($str){
+        if (is_file($str)){
+            if (! preg_match("MAKETHISDIRWRITABLE", $str)) {
+                return @unlink($str);
+            } else {
+                return true;
+            }
+        }
+        elseif (is_dir($str)){
+            $scan = glob(rtrim($str,'/').'/*');
+            foreach($scan as $index=>$path){
+                $this->recursiveDelete($path);
+            }
+            return @rmdir($str);
         }
     }
-    elseif (is_dir($str)){
-        $scan = glob(rtrim($str,'/').'/*');
-        foreach($scan as $index=>$path){
-            $this->recursiveDelete($path);
-        }
-        return @rmdir($str);
-    }
-}
 }

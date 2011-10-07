@@ -51,6 +51,9 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
             'test_id int(11),' .
             'unique key test_id_idx (test_id)' .
             ')';
+        if ($this->testdb_helper->prefix != 'tu_') {
+            $test_table_sql = str_replace('tu_', $this->testdb_helper->prefix, $test_table_sql);
+        }
         $this->testdb_helper->runSQL($test_table_sql);
 
         //some test data as well
@@ -187,7 +190,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     public function testGetOwnerDAONoConfigFile(){
         $this->removeConfigFile();
         Config::destroyInstance();
-        $cfg_values = array("table_prefix"=>"tu_", "db_host"=>"localhost");
+        $cfg_values = array("table_prefix"=>$this->testdb_helper->prefix, "db_host"=>"localhost");
         $config = Config::getInstance($cfg_values);
         $dao = DAOFactory::getDAO('OwnerDAO', $cfg_values);
         $this->assertTrue(isset($dao));
@@ -375,7 +378,7 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
     public function testGetInstallerDAONoConfigFile(){
         $this->removeConfigFile();
         Config::destroyInstance();
-        $cfg_values = array("table_prefix"=>"tu_", "db_host"=>"localhost");
+        $cfg_values = array("table_prefix"=>$this->testdb_helper->prefix, "db_host"=>"localhost");
         $config = Config::getInstance($cfg_values);
         $dao = DAOFactory::getDAO('InstallerDAO', $cfg_values);
         $this->assertTrue(isset($dao));

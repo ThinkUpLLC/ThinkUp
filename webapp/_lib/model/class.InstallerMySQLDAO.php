@@ -161,6 +161,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
                     if ($table_prefix != 'tu_') {
                         $migration_string = str_replace('tu_', $table_prefix, $migration_string);
                     }
+
                     $ps = $this->execute($migration_string);
                     $error_array = $ps->errorInfo();
                     if ($error_array[0] > 0) {
