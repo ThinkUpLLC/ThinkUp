@@ -511,6 +511,8 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->pdo->query("drop table " . $this->table_prefix . "options");
         $this->testdb_helper->runSQL('ALTER TABLE ' . $this->table_prefix .
         'instances CHANGE last_post_id last_status_id bigint(11) NOT NULL');
+        $this->testdb_helper->runSQL('ALTER TABLE ' . $this->table_prefix .'links ADD  post_id BIGINT( 20 ) NOT NULL,'.
+        'ADD network VARCHAR( 20 ) NOT NULL');
         $controller = new UpgradeController(true);
         $results = $controller->go();
         $this->assertPattern('/needs 2 database updates/', $results);

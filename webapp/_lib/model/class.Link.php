@@ -61,13 +61,9 @@ class Link {
      */
     var $clicks = 0;
     /**
-     * @var int ID of the post which this link appeared on a given network.
+     * @var int Internal ID of the post in which this link appeared.
      */
-    var $post_id;
-    /**
-     * @var str Network of the post in which the link appeared.
-     */
-    var $network;
+    var $post_key;
     /**
      * @var str Details of any error expanding a link.
      */
@@ -117,12 +113,8 @@ class Link {
                 $this->clicks = $val["clicks"];
             }
 
-            if (isset($val["post_id"])) {
-                $this->post_id = $val["post_id"];
-            }
-
-            if (isset($val["network"])) {
-                $this->network = $val["network"];
+            if (isset($val["post_key"])) {
+                $this->post_key = $val["post_key"];
             }
 
             if (isset($val["error"])) {
@@ -147,8 +139,7 @@ class Link {
     private function constructNoVal(){
         if (isset($this->other['author_user_id'])){
             $this->other['id'] = $this->id;
-            $this->other['post_id'] = $this->post_id;
-            $this->other['network'] = $this->network;
+            $this->other['post_key'] = $this->post_key;
             $this->container_post = new Post($this->other);
         }
     }

@@ -101,8 +101,8 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
             $protected = '';
         }
         $q = "select l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date from (#prefix#posts p
-        INNER JOIN #prefix#favorites f on f.post_id = p.post_id) LEFT JOIN #prefix#links l on l.post_id = p.post_id 
-        where f.fav_of_user_id = :owner_id AND p.network=:network ";
+        INNER JOIN #prefix#favorites f on f.post_id = p.post_id) LEFT JOIN #prefix#links l on l.post_key = p.id 
+        WHERE f.fav_of_user_id = :owner_id AND p.network=:network ";
         $q .= $protected;
         if ($order_by == 'reply_count_cache') {
             $q .= "AND reply_count_cache > 0 ";
@@ -161,7 +161,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         );
         $q = "select l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date from
         ((#prefix#posts p INNER JOIN #prefix#favorites f on f.post_id = p.post_id) LEFT JOIN 
-        #prefix#links l on l.post_id = p.post_id) LEFT JOIN #prefix#users u on u.user_id = f.fav_of_user_id 
+        #prefix#links l on l.post_key = p.id) LEFT JOIN #prefix#users u on u.user_id = f.fav_of_user_id 
         where u.user_name = :author_username AND p.network=:network ";
 
         if ($in_last_x_days > 0) {
@@ -226,7 +226,7 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         //TODO: Store favlike_count_cache during Twitter crawl so we don't do this dynamic GROUP BY fakeout
         $q .= "count(*) AS favlike_count_cache ";
         $q .= "FROM (#prefix#posts p INNER JOIN #prefix#favorites f on f.post_id = p.post_id) ";
-        $q .= "LEFT JOIN #prefix#links l ON l.post_id = p.post_id WHERE p.author_user_id = :author_user_id ";
+        $q .= "LEFT JOIN #prefix#links l ON l.post_key = p.id WHERE p.author_user_id = :author_user_id ";
         $q .= "AND p.network = :network ";
         $q .= "GROUP BY p.post_text ORDER BY YEARWEEK(p.pub_date) DESC, favlike_count_cache DESC, p.pub_date DESC ";
         $q .= "LIMIT :start_on_record, :limit";

@@ -283,11 +283,11 @@ class FacebookCrawler {
                     "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
                     'is_protected'=>$is_protected, 'location'=>$profile->location);
 
-                    array_push($thinkup_posts, $post_to_process);
-                    $total_added_posts = $total_added_posts + $this->storePostsAndAuthors($thinkup_posts,
-                    "Owner stream");
-                    //free up memory
-                    $thinkup_posts = array();
+                    $new_post_key = $this->storePostAndAuthor($post_to_process, "Owner stream");
+
+                    if ($new_post_key !== false ) {
+                        $total_added_posts++;
+                    }
 
                     if (isset($p->source) || isset($p->link)) { // there's a link to store
                         $link_url = (isset($p->source))?$p->source:$p->link;
@@ -298,7 +298,7 @@ class FacebookCrawler {
                         "caption"=>(isset($p->caption))?$p->caption:'', 
                         "description"=>(isset($p->description))?$p->description:'',
                         "title"=>(isset($p->name))?$p->name:'', 
-                        "network"=>$network, "post_id"=>$post_id 
+                        "post_key"=>$new_post_key 
                         ));
                         array_push($thinkup_links, $link);
                     }
@@ -552,30 +552,35 @@ class FacebookCrawler {
 
     private function storePostsAndAuthors($posts, $posts_source){
         $total_added_posts = 0;
-        $added_posts = 0;
-        $post_dao = DAOFactory::getDAO('PostDAO');
+        $added_post = 0;
         foreach ($posts as $post) {
-            if (isset($post['author_user_id'])) {
-                $user_object = $this->fetchUser($post['author_user_id'], $posts_source);
-                if (isset($user_object)) {
-                    $post["author_username"] = $user_object->full_name;
-                    $post["author_fullname"] = $user_object->full_name;
-                    $post["author_avatar"] = $user_object->avatar;
-                    $post["location"] = $user_object->location;
-                }
-            }
-            $added_posts = $post_dao->addPost($post);
-            if ($added_posts > 0) {
+            $added_post_key = $this->storePostAndAuthor($post, $posts_source);
+            if ($added_post !== false) {
                 $this->logger->logInfo("Added post ID ".$post["post_id"]." on ".$post["network"].
                 " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
+                $total_added_posts = $total_added_posts ++;
             } else  {
                 $this->logger->logInfo("Didn't add post ".$post["post_id"]." on ".$post["network"].
                 " for ".$post["author_username"].":".substr($post["post_text"],0, 20)."...", __METHOD__.','.__LINE__);
             }
-            $total_added_posts = $total_added_posts + $added_posts;
-            $added_posts = 0;
+            $added_post = 0;
         }
         return $total_added_posts;
+    }
+
+    private function storePostAndAuthor($post, $post_source){
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        if (isset($post['author_user_id'])) {
+            $user_object = $this->fetchUser($post['author_user_id'], $post_source);
+            if (isset($user_object)) {
+                $post["author_username"] = $user_object->full_name;
+                $post["author_fullname"] = $user_object->full_name;
+                $post["author_avatar"] = $user_object->avatar;
+                $post["location"] = $user_object->location;
+            }
+        }
+        $added_post_key = $post_dao->addPost($post);
+        return $added_post_key;
     }
 
     private function storeLinks($links) {

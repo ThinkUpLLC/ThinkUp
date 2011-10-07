@@ -204,7 +204,7 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'A fan made trailer for the Warner Bros. production of Superman Returns. Fan trailer produced and edited by '.
         'Julian Francis Adderley.');
         $this->assertEqual($post->link->title, 'Superman Restored (Theatrical Trailer)');
-        $this->assertEqual($post->link->network, 'facebook');
+        $this->assertEqual($post->link->post_key, 1);
 
         // Test Facebook paging by confirming post on second "page"
         $post = $post_dao->getPost('10150357566827744', 'facebook');

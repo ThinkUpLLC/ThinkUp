@@ -209,10 +209,10 @@ class GooglePlusCrawler {
                 $post['reply_count_cache'] = $item->object->replies->totalItems;
                 $post['favlike_count_cache'] = $item->object->plusoners->totalItems;
                 $post['retweet_count_cache'] = $item->object->resharers->totalItems;
-                $total_posts_added = $post_dao->addPost($post);
+                $inserted_post_key = $post_dao->addPost($post);
 
                 //If no post was added, at least update reply/fave/reshare counts and post text
-                if ($total_posts_added < 1) {
+                if ($inserted_post_key === false) {
                     $post_dao->updateFavLikeCount($post['post_id'], 'google+', $post['favlike_count_cache']);
                     $post_dao->updateReplyCount($post['post_id'], 'google+', $post['reply_count_cache']);
                     $post_dao->updateRetweetCount($post['post_id'], 'google+', $post['retweet_count_cache']);
@@ -231,7 +231,7 @@ class GooglePlusCrawler {
                     ?$item->object->attachments[0]->content:'',
                     "title"=>(isset($item->object->attachments[0]->displayName))
                     ?$item->object->attachments[0]->displayName:'',
-                    "network"=>'google+', "post_id"=>$post['post_id'] 
+                    "post_key"=>$inserted_post_key 
                     ));
                     $added_links = $link_dao->insert($link);
                 }

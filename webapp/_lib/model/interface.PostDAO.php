@@ -166,7 +166,7 @@ interface PostDAO {
      * int equal to either 1 or 0.
      *
      * @param array $vals see above
-     * @return int number of posts inserted
+     * @return int|bool New insert id or false if not inserted
      */
     public function addPost($vals);
 

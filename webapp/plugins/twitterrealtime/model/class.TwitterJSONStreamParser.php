@@ -105,10 +105,10 @@ class TwitterJSONStreamParser {
      */
     private function addPost($content) {
         list($post, $entities, $user_array) = $this->parsePost($content);
-        $pd = DAOFactory::getDAO('PostDAO');
-        $pd->setLoggerInstance($this->logger);
-        $retval = $pd->addPostAndAssociatedInfo($post, $entities, $user_array);
-        return $retval;
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        $post_dao->setLoggerInstance($this->logger);
+        $inserted_post_key = $post_dao->addPostAndAssociatedInfo($post, $entities, $user_array);
+        return $inserted_post_key;
     }
 
     /**

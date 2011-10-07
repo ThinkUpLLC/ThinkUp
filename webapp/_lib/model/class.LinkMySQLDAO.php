@@ -31,8 +31,8 @@
 class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function insert(Link $link){
         $q  = "INSERT IGNORE INTO #prefix#links ";
-        $q .= "(url, expanded_url, title, description, image_src, caption, post_id, network) ";
-        $q .= "VALUES ( :url, :expanded, :title, :description, :image_src, :caption, :post_id, :network ) ";
+        $q .= "(url, expanded_url, title, description, image_src, caption, post_key) ";
+        $q .= "VALUES ( :url, :expanded, :title, :description, :image_src, :caption, :post_key ) ";
 
         $vars = array(
             ':url'=>$link->url,
@@ -41,8 +41,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':description'=>$link->description,
             ':image_src'=>$link->image_src,
             ':caption'=>$link->caption,
-            ':post_id'=>$link->post_id,
-            ':network'=>$link->network
+            ':post_key'=>$link->post_key
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -98,7 +97,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function update(Link $link){
         $q  = "UPDATE #prefix#links ";
         $q .= "SET expanded_url=:expanded, title=:title, description=:description, image_src=:image_src, ";
-        $q .= "caption=:caption, post_id=:post_id, network=:network ";
+        $q .= "caption=:caption, post_key=:post_key ";
         $q .= "WHERE url=:url; ";
         $vars = array(
             ':url'=>$link->url,
@@ -107,8 +106,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
             ':description'=>$link->description,
             ':image_src'=>$link->image_src,
             ':caption'=>$link->caption,
-            ':post_id'=>$link->post_id,
-            ':network'=>$link->network
+            ':post_key'=>$link->post_key
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
@@ -127,8 +125,8 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#links AS l ";
-        $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
-        $q .= "WHERE l.network = :network ";
+        $q .= "ON p.id = l.post_key ";
+        $q .= "WHERE p.network = :network ";
         $q .= $protected;
         $q .=  "AND p.author_user_id IN ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
@@ -176,8 +174,8 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q  = "SELECT l.*, p.*, pub_date - interval 8 hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts as p, #prefix#favorites as f, #prefix#links as l WHERE f.post_id = p.post_id ";
         $q .= $protected;
-        $q .= "AND p.post_id = l.post_id AND p.network = l.network ";
-        $q .= "AND l.network = :network AND  f.fav_of_user_id = :user_id ";
+        $q .= "AND p.id = l.post_key ";
+        $q .= "AND p.network = :network AND  f.fav_of_user_id = :user_id ";
         $q .= "ORDER BY l.id DESC ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
@@ -203,8 +201,8 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
         $q  = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#links AS l ";
         $q .= "INNER JOIN #prefix#posts p ";
-        $q .= "ON p.post_id = l.post_id AND p.network = l.network ";
-        $q .= "WHERE image_src != '' AND l.network=:network ";
+        $q .= "ON p.id = l.post_key ";
+        $q .= "WHERE image_src != '' AND p.network=:network ";
         $q .= $protected;
         $q .= "AND p.author_user_id in ( ";
         $q .= "   SELECT user_id FROM #prefix#follows AS f ";
@@ -230,7 +228,7 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function getLinksToExpand($limit = 1500) {
         $q  = "SELECT l1.url AS url ";
         $q .= "FROM (  ";
-        $q .= "   SELECT l.url, l.post_id ";
+        $q .= "   SELECT l.url, l.post_key ";
         $q .= "   FROM #prefix#links AS l ";
         $q .= "   WHERE l.expanded_url = '' and l.error = '' ";
         $q .= "   ORDER BY id DESC LIMIT :limit ";
@@ -302,7 +300,8 @@ class LinkMySQLDAO extends PDODAO implements LinkDAO {
     public function getLinksForPost($post_id, $network = 'twitter') {
         $q  = "SELECT l.* ";
         $q .= "FROM #prefix#links AS l ";
-        $q .= "WHERE l.post_id=:post_id  and network = :network ";
+        $q .= "INNER JOIN #prefix#posts as p ON l.post_key = p.id ";
+        $q .= "WHERE p.post_id=:post_id  and p.network = :network ";
         $vars = array(
             ':post_id'=>$post_id,
             ':network' => $network

@@ -38,23 +38,23 @@ class WebTestOfTwitterDashboard extends ThinkUpWebTestCase {
 
         //set up some private data
         //private image post
-        $this->builders[] = FixtureBuilder::build('posts', array('post_id'=>150, 'author_user_id'=>18,
+        $this->builders[] = FixtureBuilder::build('posts', array('id'=>150, 'post_id'=>150, 'author_user_id'=>18,
         'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
         'source'=>'web', 'pub_date'=>'-1d', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
         'post_text'=>'This is private image post 1', 'network'=>'twitter', 'is_protected'=>1));
 
         $this->builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/1private',
-        'expanded_url'=>'http://example.com/1private.jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>150, 
+        'expanded_url'=>'http://example.com/1private.jpg', 'title'=>'', 'clicks'=>0, 'post_key'=>150, 
         'image_src'=>'image.png'));
 
         //private link post
-        $this->builders[] = FixtureBuilder::build('posts', array('post_id'=>151, 'author_user_id'=>18,
+        $this->builders[] = FixtureBuilder::build('posts', array('id'=>151, 'post_id'=>151, 'author_user_id'=>18,
         'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
         'source'=>'web', 'pub_date'=>'-1d', 'reply_count_cache'=>0, 'retweet_count_cache'=>0,
         'post_text'=>'This is private link post 1', 'network'=>'twitter', 'is_protected'=>1));
 
         $this->builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/1private',
-        'expanded_url'=>'http://example.com/private1', 'title'=>'', 'clicks'=>0, 'post_id'=>151, 
+        'expanded_url'=>'http://example.com/private1', 'title'=>'', 'clicks'=>0, 'post_key'=>151, 
         'image_src'=>''));
     }
 

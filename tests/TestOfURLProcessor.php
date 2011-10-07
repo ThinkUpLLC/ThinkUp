@@ -52,10 +52,13 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
     }
 
     public function testProcessPostURLs() {
+        $builders = array();
         $network = 'twitter';
         //Twitpic
         $post_id = 100;
         $post_text = "This is a Twitpic post http://twitpic.com/blah Yay!";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
         URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
@@ -65,12 +68,13 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->expanded_url, 'http://twitpic.com/blah');
         $this->assertEqual($result->image_src, 'http://twitpic.com/show/thumb/blah');
         $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 100);
-        $this->assertEqual($result->network, 'twitter');
+        $this->assertEqual($result->post_key, 100);
 
         //Yfrog
         $post_id = 101;
         $post_text = "This is a Yfrog post http://yfrog.com/blah Yay!";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
         URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
@@ -80,12 +84,13 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->expanded_url, 'http://yfrog.com/blah');
         $this->assertEqual($result->image_src, 'http://yfrog.com/blah.th.jpg');
         $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 101);
-        $this->assertEqual($result->network, 'twitter');
+        $this->assertEqual($result->post_key, 101);
 
         //Twitgoo
         $post_id = 102;
         $post_text = "This is a Twitgoo post http://twitgoo.com/blah Yay!";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
         URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
@@ -95,31 +100,13 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->expanded_url, 'http://twitgoo.com/blah');
         $this->assertEqual($result->image_src, 'http://twitgoo.com/show/thumb/blah');
         $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 102);
-        $this->assertEqual($result->network, 'twitter');
-
-        //Lockerz
-        $post_id = 108;
-        $post_text = "This is a lockerz post http://lockerz.com/s/138376416 Yay!";
-        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
-
-        $link_dao = new LinkMySQLDAO();
-        $result = $link_dao->getLinkByUrl('http://lockerz.com/s/138376416');
-        $this->assertIsA($result, "Link");
-        $this->assertEqual($result->url, 'http://lockerz.com/s/138376416');
-        $this->assertEqual($result->expanded_url, 'http://lockerz.com/s/138376416');
-        $this->assertEqual($result->image_src,
-        'http://api.plixi.com/api/tpapi.svc/imagefromurl?url=http://plixi.com/p/138376416&size=thumbnail');
-        $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 108);
-        $this->assertEqual($result->network, 'twitter');
-
-        //test facebook
-        $network = 'facebook';
+        $this->assertEqual($result->post_key, 102);
 
         //Picplz
         $post_id = 103;
         $post_text = "This is a Picplz post http://picplz.com/blah Yay!";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
         URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
@@ -129,13 +116,14 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->expanded_url, 'http://picplz.com/blah');
         $this->assertEqual($result->image_src, 'http://picplz.com/blah/thumb/');
         $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 103);
-        $this->assertEqual($result->network, 'facebook');
+        $this->assertEqual($result->post_key, 103);
 
         // instagr.am
         // check first with ending slash in URL (which the URLs 'should' include)
         $post_id = 104;
         $post_text = "This is an instagram post http:/instagr.am/blah/ Yay!";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
         URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
         $link_dao = new LinkMySQLDAO();
         $result = $link_dao->getLinkByUrl('http://instagr.am/blah/');
@@ -144,12 +132,13 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->expanded_url, 'http://instagr.am/blah/');
         $this->assertEqual($result->image_src, 'http://instagr.am/blah/media/');
         $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 104);
-        $this->assertEqual($result->network, 'facebook');
+        $this->assertEqual($result->post_key, 104);
 
         // check w/out ending slash also just in case
         $post_id = 105;
         $post_text = "This is an instagram post http:/instagr.am/blah Yay!";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
         URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
         $result = $link_dao->getLinkByUrl('http://instagr.am/blah');
         $this->assertIsA($result, "Link");
@@ -157,12 +146,13 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->expanded_url, 'http://instagr.am/blah');
         $this->assertEqual($result->image_src, 'http://instagr.am/blah/media/');
         $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 105);
-        $this->assertEqual($result->network, 'facebook');
+        $this->assertEqual($result->post_key, 105);
 
         //Flic.kr
         $post_id = 106;
         $post_text = "This is a Flickr post http://flic.kr/blah Yay!";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
         URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
@@ -173,11 +163,12 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->expanded_url, '');
         $this->assertEqual($result->image_src, '');
         $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 106);
-        $this->assertEqual($result->network, 'facebook');
+        $this->assertEqual($result->post_key, 106);
 
         $post_id = 107;
         $post_text = "This is a post with a curly quote closing the link http://t.co/2JVSpi5 yo";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
         URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
 
         $link_dao = new LinkMySQLDAO();
@@ -187,7 +178,26 @@ class TestOfURLProcessor extends ThinkUpUnitTestCase {
         $this->assertEqual($result->expanded_url, '');
         $this->assertEqual($result->image_src, '');
         $this->assertEqual($result->title, '');
-        $this->assertEqual($result->post_id, 107);
-        $this->assertEqual($result->network, 'facebook');
+        $this->assertEqual($result->post_key, 107);
+
+        //Lockerz
+        $post_id = 108;
+        $post_text = "This is a lockerz post http://lockerz.com/s/138376416 Yay!";
+        $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id, 'network'=>'twitter',
+        'post_text'=>$post_text));
+        URLProcessor::processPostURLs($post_text, $post_id, $network, $this->logger);
+
+        $link_dao = new LinkMySQLDAO();
+        $result = $link_dao->getLinkByUrl('http://lockerz.com/s/138376416');
+        $this->assertIsA($result, "Link");
+        $this->assertEqual($result->url, 'http://lockerz.com/s/138376416');
+        $this->assertEqual($result->expanded_url, 'http://lockerz.com/s/138376416');
+        $this->assertEqual($result->image_src,
+        'http://api.plixi.com/api/tpapi.svc/imagefromurl?url=http://plixi.com/p/138376416&size=thumbnail');
+        $this->assertEqual($result->title, '');
+        $this->assertEqual($result->post_key, 108);
+
+        //test facebook
+        $network = 'facebook';
     }
 }

@@ -97,7 +97,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'network_username'=>'notonpublictimeline', 'is_public'=>0, 'network'=>'twitter'));
 
         //Add straight text posts
-        $counter = 0;
+        $counter = 1;
         while ($counter < 40) {
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
             if ($counter % 3 == 0) {
@@ -109,10 +109,11 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             }
             // issue #813 -build more of a range of retweet_count_cache and old_retweet_count_cache values for the
             // retweet testing.
-            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
-            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 
-            'post_text'=>'This is post '.$counter, 'source'=>$source, 'pub_date'=>'2006-01-01 00:'.
-            $pseudo_minute.':00', 'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>13, 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'post_text'=>'This is post '.$counter,
+            'source'=>$source, 'pub_date'=>'2006-01-01 00:'. $pseudo_minute.':00',
+            'reply_count_cache'=>($counter==10)?0:rand(0, 4), 'is_protected'=>0,
             'retweet_count_cache'=>floor($counter/2), 'network'=>'twitter',
             'old_retweet_count_cache' => floor($counter/3), 'in_rt_of_user_id' => null,
             'in_reply_to_post_id'=>null, 'in_retweet_of_post_id'=>null, 'is_geo_encoded'=>0));
@@ -124,7 +125,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $post_id = $counter + 40;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>18,
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id,
+            'author_user_id'=>18,
             'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is image post '.$counter, 'source'=>'Flickr', 'in_reply_to_post_id'=>null,
             'in_retweet_of_post_id'=>null, 'is_protected'=>0,
@@ -132,7 +134,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
             'pub_date'=>'2006-01-02 00:'.$pseudo_minute.':00', 'network'=>'twitter', 'is_geo_encoded'=>0));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'expanded_url'=>'http://example.com/'.$counter.'.jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>$post_id, 
+            'expanded_url'=>'http://example.com/'.$counter.'.jpg', 'title'=>'', 'clicks'=>0, 'post_key'=>$post_id, 
             'image_src'=>'image.png'));
 
             $counter++;
@@ -143,7 +145,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 40) {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>19,
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id,
+            'author_user_id'=>19,
             'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'is_geo_encoded'=>0,
             'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
@@ -151,7 +154,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'explanded_url'=>'http://example.com/'.$counter.'.html', 'title'=>'Link $counter', 'clicks'=>0, 
-            'post_id'=>$post_id, 'image_src'=>''));
+            'post_key'=>$post_id, 'image_src'=>''));
 
             $counter++;
         }
@@ -184,7 +187,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         while ($counter < 5) {
             $post_id = $counter + 20000;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>123456,
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id,
+            'author_user_id'=>123456,
             'author_username'=>'user_123456', 'author_fullname'=>'User 123456', 'is_geo_encoded'=>0,
             'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>1,
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>'2006-03-01 00:'.
@@ -207,7 +211,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null, 'is_protected'=>0,
         'location'=>'Chennai, Tamil Nadu, India', 'reply_retweet_distance'=>2000, 'is_geo_encoded'=>1));
 
-        $builders[] = FixtureBuilder::build('posts', array('post_id'=>133, 'author_user_id'=>19,
+        $builders[] = FixtureBuilder::build('posts', array('id'=>133, 'post_id'=>133, 'author_user_id'=>19,
         'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'network'=>'twitter', 
         'post_text'=>'@shutterbug This is a link post reply http://example.com/', 'source'=>'web', 
         'pub_date'=>'2006-03-01 00:00:00', 'reply_count_cache'=>0, 'retweet_count_cache'=>0, 
@@ -216,7 +220,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'is_geo_encoded'=>1));
 
         $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com',
-        'expanded_url'=>'http://example.com/expanded-link.html', 'title'=>'Link 1', 'clicks'=>0, 'post_id'=>133, 
+        'expanded_url'=>'http://example.com/expanded-link.html', 'title'=>'Link 1', 'clicks'=>0, 'post_key'=>133, 
         'image_src'=>''));
 
         //Add retweets of a specific post
@@ -779,7 +783,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         //no link, so link member variables do not get set
         $this->assertTrue(!isset($post->link->id));
         // our post primary key id
-        $this->assertEqual($post->id, 11);
+        $this->assertEqual($post->id, 10);
     }
 
     /**
@@ -1346,7 +1350,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['author_avatar']='avatar.jpg';
 
         //test add post without all the req'd fields set
-        $this->assertEqual($dao->addPost($vals), 0, "Post not inserted, not all values set");
+        $this->assertFalse($dao->addPost($vals), "Post not inserted, not all values set");
 
         $vals['author_user_id']= 22;
         $vals['post_text']="Go confidently in the direction of your dreams! Live the life you've imagined.";
@@ -1356,7 +1360,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['is_protected'] = 1;
 
         //add post with insufficient location data
-        $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
+        $this->assertEqual($dao->addPost($vals), 20018);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1371,7 +1375,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['in_reply_to_post_id']= '';
 
         //test add straight post that doesn't exist
-        $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
+        $this->assertEqual($dao->addPost($vals), 20019);
         $post = $dao->getPost(250, 'twitter');
         $this->assertEqual($post->post_id, 250);
         $this->assertEqual($post->author_user_id, 22);
@@ -1396,12 +1400,12 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         //test add post that does exist
         $vals['post_id']=129;
-        $this->assertEqual($dao->addPost($vals), 0, "Post exists, nothing inserted");
+        $this->assertFalse($dao->addPost($vals), "Post exists, nothing inserted");
 
         //test add reply, check cache count
         $vals['post_id']=251;
         $vals['in_reply_to_post_id']= 129;
-        $this->assertEqual($dao->addPost($vals), 1, "Reply inserted");
+        $this->assertEqual($dao->addPost($vals), 20020);
         $post = $dao->getPost(129, 'twitter');
         $this->assertEqual($post->reply_count_cache, 1, "reply count got updated");
 
@@ -1409,7 +1413,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['post_id']=252;
         $vals['in_reply_to_post_id']= '';
         $vals['in_retweet_of_post_id']= 128;
-        $this->assertEqual($dao->addPost($vals), 1, "Retweet inserted");
+        $this->assertEqual($dao->addPost($vals), 20021);
         $post = $dao->getPost(128, 'twitter');
         $this->assertEqual($post->old_retweet_count_cache, 1, "old-style retweet count got updated");
         $this->assertEqual($post->retweet_count_cache, 0);
@@ -1431,7 +1435,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['network']= 'twitter';
         $vals['is_protected'] = 0;
 
-        $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
+        $this->assertEqual($dao->addPost($vals), 20018);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1456,7 +1460,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['network']= 'twitter';
         $vals['is_protected'] = 1;
 
-        $this->assertEqual($dao->addPost($vals), 1, "Post inserted");
+        $this->assertEqual($dao->addPost($vals), 20018);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1790,7 +1794,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $pdao = new PostMySQLDAO();
         $total_posts = $pdao->getTotalPostsByUser('ev', 'twitter');
 
-        $this->assertTrue($total_posts == 41);
+        $this->assertEqual($total_posts, 40);
     }
 
     public function testGetMostRepliedToPostsInLastWeek() {
@@ -1987,7 +1991,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetPoststoGeoencode() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getPoststoGeoencode();
-        $this->assertEqual(count($posts), 141);
+        $this->assertEqual(count($posts), 140);
         $this->assertIsA($posts, "array");
     }
 
@@ -2043,13 +2047,13 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         list($all_time_clients_usage, $latest_clients_usage) = $dao->getClientsUsedByUserOnNetwork(13, 'twitter');
         $this->assertIsA($all_time_clients_usage, 'array');
         $this->assertEqual(sizeof($all_time_clients_usage), 3);
-        $this->assertEqual($all_time_clients_usage['Tweetie for Mac'], 14);
+        $this->assertEqual($all_time_clients_usage['Tweetie for Mac'], 13);
         $this->assertEqual($all_time_clients_usage['web'], 14);
         $this->assertEqual($all_time_clients_usage['Tweet Button'], 13);
         $keys = array_keys($all_time_clients_usage);
-        $this->assertEqual($keys[0], 'Tweetie for Mac');
-        $this->assertEqual($keys[1], 'web');
-        $this->assertEqual($keys[2], 'Tweet Button');
+        $this->assertEqual($keys[2], 'Tweetie for Mac');
+        $this->assertEqual($keys[0], 'web');
+        $this->assertEqual($keys[1], 'Tweet Button');
 
         $this->assertIsA($latest_clients_usage, 'array');
         $this->assertEqual(sizeof($latest_clients_usage), 3);

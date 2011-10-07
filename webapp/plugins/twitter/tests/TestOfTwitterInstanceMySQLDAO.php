@@ -534,11 +534,11 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         for($i=0; $i <= 250; $i++){
             $sender = rand(5,16);
             $data = 'asdf qwerty flakes meep';
-            $postid = rand(1000, 1000000);
-            while(isset($pic[$postid])){
-                $postid = rand(1000, 1000000);
+            $post_id = rand(1000, 1000000);
+            while(isset($pic[$post_id])){
+                $post_id = rand(1000, 1000000);
             }
-            $pic[$postid] = true;
+            $pic[$post_id] = true;
 
             $number = rand(1,8);
             if ($number == 1 or $number == 2){
@@ -556,14 +556,15 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
             } else {
                 $reply_to = 'NULL';
             }
-            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$postid, 'author_user_id'=>$sender,
-            'post_text'=>$data, 'pub_date'=>'-'.$number.'h', 'in_reply_to_user_id'=>$reply_to));
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id,
+            'author_user_id'=>$sender, 'post_text'=>$data, 'pub_date'=>'-'.$number.'h',
+            'in_reply_to_user_id'=>$reply_to));
             if ($sender == 10){
                 $posts++;
             }
 
             if ($number % 2 == 1) {
-                $builders[] = FixtureBuilder::build('links', array('url'=>$data, 'post_id'=>$postid));
+                $builders[] = FixtureBuilder::build('links', array('url'=>$data, 'post_key'=>$post_id));
                 if ($sender == 10){
                     $links++;
                 }

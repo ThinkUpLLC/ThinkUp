@@ -125,12 +125,12 @@ class TwitterCrawler {
                 }
                 if ($cURL_status == 200) {
                     $tweets = $this->api->parseJSON($twitter_data);
-                    $pd = DAOFactory::getDAO('PostDAO');
+                    $post_dao = DAOFactory::getDAO('PostDAO');
                     $count = 0;
                     foreach ($tweets as $tweet) {
                         $tweet['network'] = 'twitter';
-
-                        if ($pd->addPost($tweet) > 0) {
+                        $inserted_post_key = $post_dao->addPost($tweet);
+                        if ($inserted_post_key !== false) {
                             $count = $count + 1;
                             URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
                             $this->logger);
@@ -174,8 +174,8 @@ class TwitterCrawler {
                     $tweets_array[$tweet['post_id'] . ''] =  $tweet;
                     $last_id = $tweet['post_id'];
                 }
-                $pd = DAOFactory::getDAO('PostDAO');
-                $db_posts = $pd->getAllPosts($this->instance->network_user_id, 'twitter',
+                $post_dao = DAOFactory::getDAO('PostDAO');
+                $db_posts = $post_dao->getAllPosts($this->instance->network_user_id, 'twitter',
                 count($tweets), 1,true, 'pub_date', 'DESC', false);
 
                 foreach($db_posts as $post) {
@@ -187,7 +187,7 @@ class TwitterCrawler {
                         if ($cURL_status == 404) {
                             $this->logger->logInfo( "Deleting post: " . $post->post_id . ' ' . $post->post_text,
                             __METHOD__.','.__LINE__);
-                            $pd->deletePost($post->id);
+                            $post_dao->deletePost($post->id);
                             $this->instance->total_posts_in_system--;
                         } else {
                             $this->logger->logError( "Not deleting post, still exists on Twitter, or non 404 status: "
@@ -257,12 +257,13 @@ class TwitterCrawler {
                     $count = 0;
                     $tweets = $this->api->parseXML($twitter_data);
 
-                    $pd = DAOFactory::getDAO('PostDAO');
+                    $post_dao = DAOFactory::getDAO('PostDAO');
                     $new_username = false;
                     foreach ($tweets as $tweet) {
                         $tweet['network'] = 'twitter';
 
-                        if ($pd->addPost($tweet, $this->user, $this->logger) > 0) {
+                        $inserted_post_key = $post_dao->addPost($tweet, $this->user, $this->logger);
+                        if ( $inserted_post_key !== false) {
                             $count = $count + 1;
                             $this->instance->total_posts_in_system = $this->instance->total_posts_in_system + 1;
                             //expand and insert links contained in tweet
@@ -327,9 +328,10 @@ class TwitterCrawler {
 
             if ($cURL_status == 200) {
                 $tweets = $this->api->parseXML($twitter_data);
-                $pd = DAOFactory::getDAO('PostDAO');
+                $post_dao = DAOFactory::getDAO('PostDAO');
                 foreach ($tweets as $tweet) {
-                    if ($pd->addPost($tweet, $this->user, $this->logger) > 0) {
+                    $inserted_post_key = $post_dao->addPost($tweet, $this->user, $this->logger);
+                    if ($inserted_post_key !== false) {
                         $status_message = 'Added replied to tweet ID '.$tid." to database.";
                         URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter', $this->logger);
                     }
@@ -390,9 +392,9 @@ class TwitterCrawler {
                             $status_message = "";
                         }
 
-                        $pd = DAOFactory::getDAO('PostDAO');
+                        $post_dao = DAOFactory::getDAO('PostDAO');
                         if (!isset($recentTweets)) {
-                            $recentTweets = $pd->getAllPosts($this->user->user_id, 'twitter', 100);
+                            $recentTweets = $post_dao->getAllPosts($this->user->user_id, 'twitter', 100);
                         }
                         $count = 0;
                         foreach ($tweets as $tweet) {
@@ -411,7 +413,8 @@ class TwitterCrawler {
                                     __METHOD__.','.__LINE__);
                                 }
                             }
-                            if ($pd->addPost($tweet, $this->user, $this->logger) > 0) {
+                            $inserted_post_key = $post_dao->addPost($tweet, $this->user, $this->logger);
+                            if ( $inserted_post_key !== false ) {
                                 $count++;
                                 //expand and insert links contained in tweet
                                 URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
@@ -523,7 +526,7 @@ class TwitterCrawler {
                 $tweets = $this->api->parseXML($twitter_data);
 
                 if (count($tweets) > 0) {
-                    $pd = DAOFactory::getDAO('PostDAO');
+                    $post_dao = DAOFactory::getDAO('PostDAO');
                     foreach ($tweets as $tweet) {
                         // The parser now processes native retweet information for posts (and includes the
                         // orig post in the parsed data if there was a RT). This method can now take advantage
@@ -561,7 +564,8 @@ class TwitterCrawler {
                         //     " is rt of " . $tweet['in_retweet_of_post_id'],// . ", ". $rtp['post_text'],
                         //     __METHOD__.','.__LINE__);
                         // }
-                        if ($pd->addPost($tweet, $user_with_retweet, $this->logger) > 0) {
+                        $inserted_post_key = $post_dao->addPost($tweet, $user_with_retweet, $this->logger);
+                        if ( $inserted_post_key !== false) {
                             $count++;
                             //expand and insert links contained in tweet
                             URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
@@ -831,7 +835,7 @@ class TwitterCrawler {
 
         if (isset($this->user)) {
             $fd = DAOFactory::getDAO('FollowDAO');
-            $pd = DAOFactory::getDAO('PostDAO');
+            $post_dao = DAOFactory::getDAO('PostDAO');
 
             $continue_fetching = true;
             while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
@@ -863,8 +867,8 @@ class TwitterCrawler {
                         if (count($tweets) > 0) {
                             $stale_friend_updated_from_tweets = false;
                             foreach ($tweets as $tweet) {
-
-                                if ($pd->addPost($tweet, $stale_friend, $this->logger) > 0) {
+                                $inserted_post_key = $post_dao->addPost($tweet, $stale_friend, $this->logger);
+                                if ( $inserted_post_key !== false) {
                                     $count++;
                                     //expand and insert links contained in tweet
                                     URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter',
@@ -920,8 +924,8 @@ class TwitterCrawler {
             $this->fetchInstanceUserInfo();
         }
         if (isset($this->user)) {
-            $pd = DAOFactory::getDAO('PostDAO');
-            $strays = $pd->getStrayRepliedToPosts($this->user->user_id, $this->user->network);
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $strays = $post_dao->getStrayRepliedToPosts($this->user->user_id, $this->user->network);
             $status_message = count($strays).' stray replied-to tweets to load for user ID '.
             $this->user->user_id . ' on '.$this->user->network;
             $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
@@ -1289,11 +1293,11 @@ class TwitterCrawler {
                 __METHOD__.','.__LINE__);
                 $continue = false;
             } else {
-                $pd = DAOFactory::getDAO('FavoritePostDAO');
+                $post_dao = DAOFactory::getDAO('FavoritePostDAO');
                 foreach ($tweets as $tweet) {
                     $tweet['network'] = 'twitter';
 
-                    if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
+                    if ($post_dao->addFavorite($this->user->user_id, $tweet) > 0) {
                         URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter', $this->logger);
                         $this->logger->logInfo("found new fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
                         $fcount++;
@@ -1396,14 +1400,14 @@ class TwitterCrawler {
                 }
                 return array($fcount, $last_fav_id, $last_page_fetched_favorites, $continue);
             }
-            $pd = DAOFactory::getDAO('FavoritePostDAO');
+            $post_dao = DAOFactory::getDAO('FavoritePostDAO');
             $status_message = "user id: " . $this->user->user_id;
             $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
             foreach ($tweets as $tweet) {
                 $tweet['network'] = 'twitter';
                 $this->logger->logInfo("working on fav: " . $tweet['post_id'], __METHOD__.','.__LINE__);
 
-                if ($pd->addFavorite($this->user->user_id, $tweet) > 0) {
+                if ($post_dao->addFavorite($this->user->user_id, $tweet) > 0) {
                     URLProcessor::processPostURLs($tweet['post_text'], $tweet['post_id'], 'twitter', $this->logger);
                     $fcount++;
                     $this->logger->logInfo("added favorite: ". $tweet['post_id'], __METHOD__.','.__LINE__);

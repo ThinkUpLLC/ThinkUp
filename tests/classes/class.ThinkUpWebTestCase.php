@@ -124,16 +124,16 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>18, 'follower_id'=>13));
 
-        $counter = 0;
+        $counter = 1;
         while ($counter < 40) {
             $reply_or_forward_count = $counter + 200;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$counter, 'author_user_id'=>13,
-            'author_username'=>'ev', 'author_fullname'=>'Ev Williams', 'author_avatar'=>'avatar.jpg', 'source'=>'web', 
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$counter, 'post_id'=>$counter,
+            'author_user_id'=>13, 'author_username'=>'ev', 'author_fullname'=>'Ev Williams',
+            'author_avatar'=>'avatar.jpg', 'source'=>'web', 
             'pub_date'=>"2006-01-01 00:$pseudo_minute:00", 'reply_count_cache'=>$reply_or_forward_count, 
             'retweet_count_cache'=>$reply_or_forward_count, 'post_text'=>'This is post '.$counter, 
             'network'=>'twitter', 'is_protected'=>0, 'is_geo_encoded'=>1));
-
             $counter++;
         }
 
@@ -141,14 +141,15 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
         while ($counter < 40) {
             $post_id = $counter + 40;
             $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
-            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>18,
-            'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug', 'author_avatar'=>'avatar.jpg', 
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id,
+            'author_user_id'=>18, 'author_username'=>'shutterbug', 'author_fullname'=>'Shutter Bug',
+            'author_avatar'=>'avatar.jpg', 
             'source'=>'web', 'pub_date'=>"2006-01-02 00:$pseudo_minute:00", 'reply_count_cache'=>0, 
             'retweet_count_cache'=>0, 'post_text'=>'This is image post '.$counter, 'network'=>'twitter',
             'is_protected'=>0));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
-            'expanded_url'=>'http://example.com/'.$counter.'jpg', 'title'=>'', 'clicks'=>0, 'post_id'=>$post_id, 
+            'expanded_url'=>'http://example.com/'.$counter.'jpg', 'title'=>'', 'clicks'=>0, 'post_key'=>$post_id, 
             'image_src'=>'image.png'));
 
             $counter++;
@@ -158,14 +159,15 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
         while ($counter < 40) {
             $post_id = $counter + 80;
             $pseudo_minute = str_pad(($counter), 2, "0", STR_PAD_LEFT);
-            $builders[] = FixtureBuilder::build('posts', array('post_id'=>$post_id, 'author_user_id'=>19,
-            'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter', 'author_avatar'=>'avatar.jpg', 
+            $builders[] = FixtureBuilder::build('posts', array('id'=>$post_id, 'post_id'=>$post_id,
+            'author_user_id'=>19, 'author_username'=>'linkbaiter', 'author_fullname'=>'Link Baiter',
+            'author_avatar'=>'avatar.jpg', 
             'post_text'=>'This is link post '.$counter, 'source'=>'web', 'pub_date'=>"2006-03-01 00:$pseudo_minute:00",
             'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter', 'is_protected'=>0));
 
             $builders[] = FixtureBuilder::build('links', array('url'=>'http://example.com/'.$counter,
             'expanded_url'=>'http://example.com/'.$counter.'html', 
-            'title'=>'Link '.$counter, 'clicks'=>0, 'post_id'=>$post_id, 'image_src'=>''));
+            'title'=>'Link '.$counter, 'clicks'=>0, 'post_key'=>$post_id, 'image_src'=>''));
 
             $counter++;
         }

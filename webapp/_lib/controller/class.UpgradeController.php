@@ -271,7 +271,7 @@ class UpgradeController extends ThinkUpAuthController {
                         $migration =
                         array("version" =>  $migration_version, 'sql'  => $migration_string, 'new_migration' => false,
                         'filename' => $path_info['basename']);
-                        if($path_info['extension'] == 'sql')  {
+                        if ($path_info['extension'] == 'sql')  {
                             $migration['new_migration'] = true;
                         }
                         array_push($migrations, $migration);
@@ -280,7 +280,7 @@ class UpgradeController extends ThinkUpAuthController {
             }
         }
         // add non-versioned sql if running via command line and no version arg '--with-new-sql'
-        if($no_version) {
+        if ($no_version) {
             foreach($dir_list as $file) {
                 if (! preg_match('/_v(\d+\.\d+(\.\d+)?(\w+)?)\.sql(\.migration)?/', $file)
                 && preg_match("/\.sql$/", $file)

@@ -332,9 +332,9 @@ class InstanceMySQLDAO extends PDOCorePluginDAO implements InstanceDAO {
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts AS p";
         $q .= "     LEFT JOIN #prefix#links AS l";
-        $q .= "               ON (p.post_id = l.post_id AND p.network = l.network)";
+        $q .= "               ON (p.id = l.post_key)";
         $q .= "         WHERE author_user_id=:user_id AND p.network=:network ";
-        $q .= "           AND l.post_id IS NOT NULL) AS num_links,";
+        $q .= "           AND l.id IS NOT NULL) AS num_links,";
         $q .= "       (";
         $q .= "        SELECT COUNT(*) AS total";
         $q .= "          FROM #prefix#posts";

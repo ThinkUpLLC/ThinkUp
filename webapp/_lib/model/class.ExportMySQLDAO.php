@@ -259,7 +259,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         $stmt = $this->execute($q);
 
         $q = "SELECT ".$this->getExportFields('links', 'l')." INTO OUTFILE '$links_file' FROM #prefix#links l ";
-        $q .= "INNER JOIN ".self::$exported_posts_table_name." p ON l.post_id = p.post_id AND l.network = p.network;";
+        $q .= "INNER JOIN #prefix#posts p ON l.post_key = p.id;";
         $stmt = $this->execute($q);
 
         $q = "SELECT DISTINCT ".$this->getExportFields('users', 'u')." INTO OUTFILE '$users_file' ";
