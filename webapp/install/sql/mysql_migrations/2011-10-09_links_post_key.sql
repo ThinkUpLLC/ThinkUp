@@ -20,7 +20,7 @@ ALTER TABLE  tu_links_b16 ADD INDEX  post_key (  post_key );
 
 ALTER TABLE  tu_links_b16 ADD UNIQUE INDEX url (  url ,  post_key );
 
-INSERT IGNORE INTO tu_links_b16 (SELECT * FROM tu_links);
+INSERT IGNORE INTO tu_links_b16 (SELECT * FROM tu_links) #rollback=5;
 
 ALTER TABLE  tu_links_b16 DROP  post_id, DROP  network ;
 

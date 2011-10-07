@@ -269,11 +269,8 @@ class UpgradeController extends ThinkUpAuthController {
                         }
                         $path_info = pathinfo($dir_list[$i]);
                         $migration =
-                        array("version" =>  $migration_version, 'sql'  => $migration_string, 'new_migration' => false,
+                        array("version" =>  $migration_version, 'sql'  => $migration_string, 'new_migration' => true,
                         'filename' => $path_info['basename']);
-                        if ($path_info['extension'] == 'sql')  {
-                            $migration['new_migration'] = true;
-                        }
                         array_push($migrations, $migration);
                     }
                 }

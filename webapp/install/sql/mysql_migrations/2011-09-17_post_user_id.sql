@@ -23,7 +23,7 @@ ALTER TABLE  tu_users_b16 CHANGE  user_id  user_id VARCHAR( 30 ) NOT NULL  COMME
 ALTER TABLE  tu_users_b16 CHANGE  last_post_id  last_post_id varchar( 80 ) NOT NULL 
 COMMENT 'Network post ID of the latest post the user authored.';
 
-INSERT INTO tu_users_b16 (SELECT * FROM tu_users);
+INSERT INTO tu_users_b16 (SELECT * FROM tu_users)#rollback=3;
 
 RENAME TABLE tu_users TO tu_users_b15;
 RENAME TABLE tu_users_b16 TO tu_users;
@@ -54,7 +54,7 @@ COMMENT  'The ID of the post that this post is a retweet of. [Twitter-specific]'
 ALTER TABLE  tu_posts_b16 CHANGE post_text  post_text TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
 COMMENT  'The textual content of a user''s post on a given service.';
 
-INSERT INTO tu_posts_b16 (SELECT * FROM tu_posts);
+INSERT INTO tu_posts_b16 (SELECT * FROM tu_posts)#rollback=8;
 
 RENAME TABLE tu_posts TO tu_posts_b15;
 RENAME TABLE tu_posts_b16 TO tu_posts;
@@ -70,7 +70,7 @@ COMMENT  'User ID on a particular service who has followed user_id.';
 ALTER TABLE  tu_follows_b16 CHANGE  user_id  user_id VARCHAR( 30 ) NOT NULL
 COMMENT  'User ID on a particular service who has been followed.';
 
-INSERT INTO tu_follows_b16 (SELECT * FROM tu_follows);
+INSERT INTO tu_follows_b16 (SELECT * FROM tu_follows)#rollback=3;
 
 RENAME TABLE tu_follows TO tu_follows_b15;
 RENAME TABLE tu_follows_b16 TO tu_follows;
@@ -85,7 +85,7 @@ CREATE TABLE tu_follower_count_b16 (
   count int(11) NOT NULL COMMENT 'Total number of followers.'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Follower counts by date and time.';
 
-INSERT INTO tu_follower_count_b16 (SELECT * FROM tu_follower_count);
+INSERT INTO tu_follower_count_b16 (SELECT * FROM tu_follower_count)#rollback=1;
 
 RENAME TABLE tu_follower_count TO tu_follower_count_b15;
 RENAME TABLE tu_follower_count_b16 TO tu_follower_count;
@@ -104,7 +104,7 @@ CREATE TABLE tu_user_errors_b16 (
   KEY user_id (user_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT 'Errors in response to requests for user information.';
 
-INSERT INTO tu_user_errors_b16 (SELECT * FROM tu_user_errors);
+INSERT INTO tu_user_errors_b16 (SELECT * FROM tu_user_errors)#rollback=1;
 
 RENAME TABLE tu_user_errors TO tu_user_errors_b15;
 RENAME TABLE tu_user_errors_b16 TO tu_user_errors;
@@ -126,7 +126,7 @@ CREATE TABLE tu_post_errors_b16 (
 ALTER TABLE  tu_post_errors CHANGE  post_id  post_id varchar( 80 ) NOT NULL
 COMMENT 'Post ID on the originating service.';
 
-INSERT INTO tu_post_errors_b16 (SELECT * FROM tu_user_errors);
+INSERT INTO tu_post_errors_b16 (SELECT * FROM tu_user_errors)#rollback=2;
 
 RENAME TABLE tu_post_errors TO tu_post_errors_b15;
 RENAME TABLE tu_post_errors_b16 TO tu_post_errors;

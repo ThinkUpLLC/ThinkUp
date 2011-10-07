@@ -65,13 +65,16 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                 $stmt->closeCursor();
                 unlink($create_table);
 
+                // imported table list
+                $imported_tables = array();
+
                 // import data
-                //var_dump($infiles);
                 foreach($infiles as $infile) {
                     $table = $infile;
                     $matches = array();
                     if (preg_match('#.*/(\w+).txt$#', $table, $matches)) {
                         $table = $matches[1];
+                        $imported_tables[$table] = 1;
                         if (getenv('BACKUP_VERBOSE')!==false) {
                             print "  Restoring data for table: $table\n";
                         }
@@ -85,6 +88,20 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                     }
                 }
                 rmdir($bkdir);
+
+                //remove non-imported tables
+                $stmt = $this->execute("SHOW TABLES");
+                $db_tables = $this->getDataRowsAsArrays($stmt);
+                foreach($db_tables as $table) {
+                    foreach($table as $key => $value) {
+                        $table_name = $value;
+                        if(! isset( $imported_tables[ $table_name ] ) ) {
+                            $stmt = $this->execute("DROP TABLE IF EXISTS $table_name");
+                            error_log("  Backup import dropping table: $table_name");
+                        }
+                    }
+                }
+
                 return true;
             }
         } else {

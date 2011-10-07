@@ -59,6 +59,10 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $config = Config::getInstance();
         $this->table_prefix = $config->getValue('table_prefix');
+
+        // in case we exit without a teardown..
+        $this->tearDown();
+        $this->restart();
     }
 
     public function tearDown() {
@@ -85,6 +89,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             array_push($migration_versions, $version);
         }
         $migration_max_index = $migrations_count-1;
+
         for($i = 0; $i < $migrations_count-1; $i++) {
             $run_migrations = array($migration_versions[$migration_max_index] =>
             $MIGRATIONS[ $migration_versions[$migration_max_index] ]);
@@ -115,6 +120,37 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             unlink( $data['latest_migration_file'] );
         }
         $this->debug("Done Testing snowflake migration/update");
+
+    }
+
+    public function  testFailAndRerunMigration() {
+        // test fail and rerun
+        $this->debug("");
+        $this->debug("Testing fail and rollback rerun for migration 0.10");
+        require 'tests/migration-assertions.php';
+        $MIGRATIONS = array('0.9' => $MIGRATIONS['0.9'], $LATEST_VERSION => $MIGRATIONS[$LATEST_VERSION]);
+        $run_migrations = array($LATEST_VERSION => $MIGRATIONS[$LATEST_VERSION]);
+        $data = $this->setUpApp('0.9', $MIGRATIONS);
+        $this->runMigrations($run_migrations, '0.9', $fail_10 = 1);
+
+        $stmt = $this->pdo->query("select * from tu_completed_migrations");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 1);
+        $this->assertEqual($data[0]['migration'], '2011-04-19-0');
+        $this->assertPattern('/CREATE TABLE ' . $this->table_prefix . 'follows_b10/',$data[0]['sql_ran']);
+        $this->runMigrations($run_migrations, '0.9', $fail_10 = 2);
+
+        $stmt = $this->pdo->query("select * from " . $this->table_prefix .
+        "completed_migrations where migration like '2011-04-19%'");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), 74);
+
+        $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
+        $data = $stmt->fetchAll();
+        $this->assertEqual(count($data), $TOTAL_MIGRATION_COUNT);
+        if ($data['latest_migration_file'] && file_exists($data['latest_migration_file'])) {
+            unlink( $data['latest_migration_file'] );
+        }
     }
 
     /**
@@ -257,7 +293,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     /**
      * Runs migrations list
      */
-    private function runMigrations($TMIGRATIONS, $base_version) {
+    private function runMigrations($TMIGRATIONS, $base_version, $fail = false) {
         require 'tests/migration-assertions.php';
         foreach($TMIGRATIONS as  $version => $migration_data) {
             $this->debug("Running migration test for version: $version");
@@ -282,6 +318,24 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 fclose($fp);
             }
 
+            // if we want to break a sql migration for testing
+            if($fail && $fail == 1 ) {
+                $this->debug("Munging migration v0.10 sql for fail testing");
+                $migration_10 = $this->install_dir
+                . '/thinkup/install/sql/mysql_migrations/2011-04-19_v0.10.sql.migration';
+                $msql = file_get_contents($migration_10);
+                $msql = preg_replace('/INSERT INTO tu_follows_b10 \(SELECT/',
+                'INSERT INTO tu_follows_b10 (SELECTs', $msql);
+                file_put_contents($migration_10, $msql);
+            } else if ($fail && $fail == 2 ) {
+                $this->debug("Fixing migration v0.10 sql for fail recovery testing");
+                $migration_10 = $this->install_dir
+                . '/thinkup/install/sql/mysql_migrations/2011-04-19_v0.10.sql.migration';
+                $msql = file_get_contents($migration_10);
+                $msql = preg_replace('/INSERT INTO tu_follows_b10 \(SELECTs/',
+                'INSERT INTO tu_follows_b10 (SELECT', $msql);
+                file_put_contents($migration_10, $msql);
+            }
             $this->get($this->url.'/test_installer/thinkup/');
             $this->assertText("ThinkUp's database needs an update");
             $file_token = file_get_contents($this->install_dir.'/thinkup/_lib/view/compiled_view/.htupgrade_token');
@@ -291,9 +345,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
             preg_match("/sql_array = (\[.*?}])/", $content, $matches);
             $json_array = json_decode($matches[1]);
             $cnt = 0;
-
             foreach($json_array as $json_migration) {
-
                 $this->debug("running migration: " . $json_migration->version);
 
                 // if there is setup_sql run it
@@ -307,10 +359,17 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 }
                 $cnt++;
                 $this->get($token_url . "&migration_index=" . $cnt);
+                if($fail && $fail == 1) {
+                    $this->assertText('{ "processed":false,');
+                    $this->assertText('ThinkUp could not execute the following query: ' .
+                    'INSERT INTO tu_follows_b10 (SELECTs');
+                    return;
+                }
                 $this->assertText('{ "processed":true,');
                 $content = $this->getBrowser()->getContent();
                 if ( !preg_match('/"processed":true/', $content)) {
                     error_log($content);
+                    return;
                 }
                 $this->debug("Running migration assertion test for " . $json_migration->version);
                 if ( !isset($MIGRATIONS[ $json_migration->version ])) { continue; } // no assertions, so skip
@@ -374,6 +433,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
      * @return str Path to download file
      */
     private function getInstall($url, $version, $path) {
+
         $ch = curl_init();
         $zipfile = $path . '/' . $version . '.zip';
 

@@ -1,5 +1,7 @@
 -- 2011-03-22
 
+DROP TABLE IF EXISTS tu_follows_b10;
+
 CREATE TABLE tu_follows_b10 (
   user_id bigint(11) NOT NULL,
   follower_id bigint(11) NOT NULL,
@@ -12,7 +14,7 @@ CREATE TABLE tu_follows_b10 (
   KEY network (network,last_seen)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO tu_follows_b10 (SELECT * FROM tu_follows);
+INSERT INTO tu_follows_b10 (SELECT * FROM tu_follows) #rollback=1;
 
 RENAME TABLE tu_follows TO tu_follows_b9;
 RENAME TABLE tu_follows_b10 TO tu_follows;
@@ -110,6 +112,7 @@ ALTER TABLE  `tu_posts` CHANGE  `retweet_count_cache`  `retweet_count_cache` INT
 --
 -- Create Twitter plugin instances table.
 --
+
 CREATE TABLE tu_instances_twitter (
   id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID.',
   last_page_fetched_replies int(11) NOT NULL DEFAULT '1' COMMENT 'Last page of replies fetched for this instance.',
@@ -123,9 +126,10 @@ CREATE TABLE tu_instances_twitter (
 --
 -- Transfer data into plugin table.
 --
+TRUNCATE TABLE tu_instances_twitter;
 INSERT INTO tu_instances_twitter 
 (SELECT id, last_page_fetched_replies, last_page_fetched_tweets, last_favorite_id, last_unfav_page_checked, 
-last_page_fetched_favorites FROM tu_instances WHERE network='twitter');
+last_page_fetched_favorites FROM tu_instances WHERE network='twitter') #rollback=1;
 
 
 --

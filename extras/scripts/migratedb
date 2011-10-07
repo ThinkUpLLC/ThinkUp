@@ -10,13 +10,13 @@ echo "CREATE DATABASE $db_name COLLATE utf8_bin;" | $mysql -u $db_user -p$db_pas
 for f in *.sql.migration
 do
   echo "mysql -u $db_user -p$db_password $db_name < $f"
-  cat $f | $mysql -u $db_user -p$db_password $db_name
+  cat $f | sed 's/#rollback=[0-9]*//' | $mysql -u $db_user -p$db_password $db_name
 done
 
 for f in *.sql
 do
   echo "mysql -u $db_user -p$db_password $db_name < $f"
-  cat $f | $mysql -u $db_user -p$db_password $db_name
+  cat $f | sed 's/#rollback=[0-9]*//' | $mysql -u $db_user -p$db_password $db_name
 done
 
 now=`date '+%Y-%m-%d'`

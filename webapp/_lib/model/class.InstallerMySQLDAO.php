@@ -144,6 +144,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         $table_prefix = $config->getValue('table_prefix');
         $sql_list = preg_split('/;/',$insql);
         $cnt = 0;
+        $second_run = false;
         foreach($sql_list as $sql) {
             if (preg_match('/^\s+$/', $sql) || $sql == '') { # skip empty lines
                 continue;
@@ -165,6 +166,13 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
                     if ($error_array[0] > 0) {
                         throw new Exception("Unable to create completed_migrations table: " . $migration_string);
                     }
+                } else {
+                    $stmt = $this->execute("SHOW COLUMNS FROM #prefix#completed_migrations");
+                    $column_data = $this->getDataRowsAsArrays($stmt);
+                    if(! isset($column_data[2])) { // no sql_ran colum, so add
+                        $stmt = $this->execute("ALTER TABLE #prefix#completed_migrations ADD COLUMN " .
+                        "sql_ran text COMMENT 'The migration sql that was executed'");
+                    }
                 }
             }
             // have we already run this new migration?
@@ -183,11 +191,30 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
                 $already_run = $this->getDataIsReturned($stmt);
                 if ($already_run) {
                     $cnt++;
+                    $second_run = true;
                     //Too noisy during test run
                     //error_log("Migration with key '$migration_key' has already been run...");
                     continue;
                 }
             }
+            $rollback_match;
+            // if we are a sql line being rerun after a fail
+            if ($cnt > 0 && $second_run == true && preg_match('/rollback=(\d+)/', $sql, $rollback_match)) {
+                $rollback = $rollback_match[1];
+                for($i = $rollback - 1; $i >= 0; $i--) {
+                    $roll_back_sql = $sql_list[$cnt - $i];
+                    $ps = $this->execute($roll_back_sql);
+                    $error_array = $ps->errorInfo();
+                    if ($error_array[0] > 0) {
+                        error_log($error_array[0]);
+                        throw new Exception("migration sql error for $sql: " . $sql);
+                    }
+                    $ps->closeCursor();
+                }
+                $second_run = false;
+            }
+            $sql = preg_replace('/#.*$/', '', $sql); // filter any rollback comments
+
             $ps = $this->execute($sql);
             $error_array = $ps->errorInfo();
             if ($error_array[0] > 0) {
@@ -198,8 +225,9 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
                 $cnt++;
             }
             if ($new_migration == true && ! $if_exists_statement) {
-                $migration_sql = "INSERT INTO #prefix#completed_migrations (migration) VALUES (:migration)";
-                $stmt = $this->execute($migration_sql, array(':migration' => $migration_key));
+                $migration_sql = "INSERT INTO #prefix#completed_migrations (migration, sql_ran) " .
+                "VALUES (:migration, :sql_ran)";
+                $stmt = $this->execute($migration_sql, array(':migration' => $migration_key, ':sql_ran' => $sql));
                 if ($this->getInsertCount($stmt) != 1) {
                     throw new Exception("Unable to add record to completed_migrations table: " . $migration_sql);
                 }

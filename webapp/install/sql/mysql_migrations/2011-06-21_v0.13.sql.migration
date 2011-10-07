@@ -3,6 +3,8 @@
 -- ALTER TABLE tu_posts ADD retweet_count_api int(11) NOT NULL DEFAULT '0' COMMENT 'The total number of native retweets as reported by Twitter API. [Twitter-specific]';
 -- ALTER TABLE  tu_posts CHANGE  retweet_count_cache  retweet_count_cache INT( 11 ) NOT NULL DEFAULT  '0' COMMENT  'Manual count of native retweets as determined by ThinkUp. [Twitter-specific]';
 
+DROP TABLE IF EXISTS tu_posts_b13;
+
 CREATE TABLE tu_posts_b13 (
   id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal unique ID..',
   post_id bigint(20) unsigned NOT NULL COMMENT 'The ID of the post inside the respective service.',
@@ -45,7 +47,7 @@ CREATE TABLE tu_posts_b13 (
   FULLTEXT KEY post_fulltext (post_text)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO tu_posts_b13 (SELECT *, 0 FROM tu_posts);
+INSERT INTO tu_posts_b13 (SELECT *, 0 FROM tu_posts) #rollback=1;
 
 RENAME TABLE tu_posts TO tu_posts_b12;
 RENAME TABLE tu_posts_b13 TO tu_posts;
@@ -54,6 +56,9 @@ DROP TABLE tu_posts_b12;
 
 
 -- 2011-06-03
+
+DROP TABLE IF EXISTS tu_users_b13;
+
 CREATE TABLE tu_users_b13 (
   id int(11) NOT NULL AUTO_INCREMENT,
   user_id bigint(11) NOT NULL,
@@ -78,7 +83,7 @@ CREATE TABLE tu_users_b13 (
   UNIQUE KEY user_id (user_id,network)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO tu_users_b13 SELECT * FROM tu_users GROUP BY CONCAT(user_id, network); 
+INSERT INTO tu_users_b13 SELECT * FROM tu_users GROUP BY CONCAT(user_id, network) #rollback=1;
 
 RENAME TABLE tu_users TO tu_users_b12;
 RENAME TABLE tu_users_b13 TO tu_users;

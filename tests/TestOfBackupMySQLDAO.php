@@ -123,8 +123,15 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
      */
     public function testImportData() {
         $dao = new BackupMySQLDAO();
+
+        $stmt = $this->pdo->query("show tables");
+        $data = $stmt->fetchAll();
+        $pre_import = count($data);
+
+
         $export_file = $dao->export();
-        //$this->pdo->query("drop table tu_plugin_options");
+
+        $this->pdo->query("drop table tu_plugins");
         $this->assertTrue( $dao->import($export_file) );
         $stmt = $this->pdo->query("show create table tu_plugins");
         $data = $stmt->fetch();
@@ -136,22 +143,57 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
         $data = $stmt->fetch();
         $this->assertEqual($data['id'], 1);
         $this->assertEqual($data['name'], 'Twitter');
+
+        $stmt = $this->pdo->query("show tables");
+        $data = $stmt->fetchAll();
+        $post_import = count($data);
+        $this->assertEqual($pre_import, $post_import);
     }
 
-    public function recursiveDelete($str){
-        if (is_file($str)){
-            if (! preg_match("MAKETHISDIRWRITABLE", $str)) {
-                return @unlink($str);
-            } else {
-                return true;
-            }
-        }
-        elseif (is_dir($str)){
-            $scan = glob(rtrim($str,'/').'/*');
-            foreach($scan as $index=>$path){
-                $this->recursiveDelete($path);
-            }
-            return @rmdir($str);
+    /**
+     * test import data, drop new tables not in backup
+     */
+    public function testImportDataDropNewTables() {
+        $dao = new BackupMySQLDAO();
+
+        $stmt = $this->pdo->query("show tables");
+        $data = $stmt->fetchAll();
+        $pre_import = count($data);
+
+
+        $export_file = $dao->export();
+        $this->pdo->query("drop table tu_plugins");
+        $this->pdo->query("create table tu_dropme (`value` int(11) NOT NULL)");
+        $this->assertTrue( $dao->import($export_file) );
+        $stmt = $this->pdo->query("show create table tu_plugins");
+        $data = $stmt->fetch();
+        $stmt->closeCursor();
+        $this->assertEqual($data['Table'], 'tu_plugins');
+
+        $stmt = $this->pdo->query("show tables like '%dropme'");
+        $data = $stmt->fetch();
+        $this->assertFalse($data); // table should be dropped
+
+        $stmt = $this->pdo->query("show tables");
+        $data = $stmt->fetchAll();
+        $post_import = count($data);
+        $this->assertEqual($pre_import, $post_import);
+    }
+
+public function recursiveDelete($str){
+    if (is_file($str)){
+        if (! preg_match("MAKETHISDIRWRITABLE", $str)) {
+            return @unlink($str);
+        } else {
+            return true;
         }
     }
+    elseif (is_dir($str)){
+        $scan = glob(rtrim($str,'/').'/*');
+        foreach($scan as $index=>$path){
+            $this->recursiveDelete($path);
+        }
+        return @rmdir($str);
+    }
+}
 }
