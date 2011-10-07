@@ -39,9 +39,11 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     protected function buildData() {
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
         $builders = array();
 
-        $test_table_sql = 'CREATE TABLE tu_test_table(' .
+        $test_table_sql = 'CREATE TABLE ' . $config_array['table_prefix'] . 'test_table(' .
             'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
             'test_name varchar(20),' .
             'test_id int(11),' .
@@ -272,10 +274,13 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
     }
 
     public function testInstantiateDaoWithoutConfigFile() {
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
         $this->builders = self::buildData();
+        try {
         $this->removeConfigFile();
         Config::destroyInstance();
-        $cfg_values = array("table_prefix"=>"tu_", "db_host"=>"localhost");
+        $cfg_values = array("table_prefix"=> $config_array['table_prefix'], "db_host"=>"localhost");
         $config = Config::getInstance($cfg_values);
         $test_dao = new TestMySQLDAO($cfg_values);
         $users = $test_dao->getUserCount(0, 'mary');
@@ -283,6 +288,11 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual(count($users), 2);
         $this->assertEqual($users[0]['user_name'], 'mary');
         $this->assertEqual($users[1]['user_name'], 'sweetmary');
+        } catch (Exception $e) {
+            // restore config file if something goes wrong
+            $this->restoreConfigFile();
+            throw $e;
+        }
         $this->restoreConfigFile();
     }
 

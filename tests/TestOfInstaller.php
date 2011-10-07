@@ -45,7 +45,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
             // Define base URL, the same as $THINKUP_CFG['site_root_path']
             $current_script_path = explode('/', $_SERVER['PHP_SELF']);
             array_pop($current_script_path);
-            if ( in_array($current_script_path[count($current_script_path)-1],
+            if (!empty($current_script_path) && in_array($current_script_path[count($current_script_path)-1],
             array('account', 'post', 'session', 'user', 'install')) ) {
                 array_pop($current_script_path);
             }

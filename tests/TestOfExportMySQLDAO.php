@@ -288,7 +288,9 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetExportFields() {
-        $test_table_sql = 'CREATE TABLE tu_test_table(' .
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
+        $test_table_sql = 'CREATE TABLE ' . $config_array['table_prefix'] . 'test_table(' .
             'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
             'test_name varchar(20),' .
             'test_id int(11),' .

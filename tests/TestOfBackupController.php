@@ -132,7 +132,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
             $zip_files[$zfile['name']] = $zfile['name'];
         }
         //verify we have create table file
-        $this->assertTrue($zip_files["create_tables.sql"]);
+        $this->assertTrue(isset($zip_files["create_tables.sql"]));
         $za->close();
         $q = "show tables";
         $q2 = "show create table ";
@@ -141,7 +141,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         while($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
             foreach($data as $key => $value) {
                 $zfile = '/' . $value .'.txt';
-                $this->assertTrue($zip_files[$zfile]);
+                $this->assertTrue(isset($zip_files[$zfile]));
             }
         }
     }
