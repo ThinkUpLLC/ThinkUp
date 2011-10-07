@@ -19,7 +19,7 @@ password to access it. This database name should match the one you just set in `
 In order for the tests to pass, you must:
 
 * Have a `tests/config.tests.inc.php` file with the correct values set
-* Set the crawler log file in `webapp/config.inc.php` and make that file writable
+* Set the crawler and stream log files in `webapp/config.inc.php` and make those files writable
 * Set the test database name to an empty tests database which the tests will destroy each run in `webapp/config.inc.php`
 * Set the test database user to a user with all privileges in the test database and global CREATE, DROP, and FILE privs
 * Set caching to false in `webapp/config.inc.php`
@@ -28,7 +28,7 @@ In order for the tests to pass, you must:
 
 To run a particular test suite, like the UserDAO suite, in the ThinkUp source code root folder, use this command: 
 
-    $ php tests/TestOfUserDAO.php
+    $ php tests/TestOfUserMySQLDAO.php
 
 To run all the test suites, use:
 

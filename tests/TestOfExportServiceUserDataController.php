@@ -141,13 +141,13 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
         }
 
         //verify we have create table file
-        $this->assertTrue($zip_files["/README.txt"]);
-        $this->assertTrue($zip_files["/posts.tmp"]);
-        $this->assertTrue($zip_files["/links.tmp"]);
-        $this->assertTrue($zip_files["/users_from_posts.tmp"]);
-        $this->assertTrue($zip_files["/follows.tmp"]);
-        $this->assertTrue($zip_files["/encoded_locations.tmp"]);
-        $this->assertTrue($zip_files["/favorites.tmp"]);
+        $this->assertTrue(isset($zip_files["/README.txt"]));
+        $this->assertTrue(isset($zip_files["/posts.tmp"]));
+        $this->assertTrue(isset($zip_files["/links.tmp"]));
+        $this->assertTrue(isset($zip_files["/users_from_posts.tmp"]));
+        $this->assertTrue(isset($zip_files["/follows.tmp"]));
+        $this->assertTrue(isset($zip_files["/encoded_locations.tmp"]));
+        $this->assertTrue(isset($zip_files["/favorites.tmp"]));
         $za->close();
     }
 }

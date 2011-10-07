@@ -409,15 +409,17 @@ class TestOfLinkMySQLDAO extends ThinkUpUnitTestCase {
      * Set counter higher to avoid clashes w/ prev inserts.
      */
     public function testUniqueConstraint1() {
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
         $counter = 2000;
         $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
         $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
-        $q  = "INSERT IGNORE INTO tu_links (url, title, clicks, post_id, network, image_src) ";
+        $q  = "INSERT IGNORE INTO " . $config_array['table_prefix'] . "links (url, title, clicks, post_id, network, image_src) ";
         $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', '');";
         $res = PDODAO::$PDO->exec($q);
         $this->assertEqual($res, 1);
 
-        $q  = "INSERT IGNORE INTO tu_links (url, title, clicks, post_id, network, image_src) ";
+        $q  = "INSERT IGNORE INTO " . $config_array['table_prefix'] . "links (url, title, clicks, post_id, network, image_src) ";
         $q .= " VALUES ('http://example.com/".$counter."', 'Link $counter', 0, $counter, 'twitter', '');";
         $res = PDODAO::$PDO->exec($q);
         $this->assertEqual($res, 0);

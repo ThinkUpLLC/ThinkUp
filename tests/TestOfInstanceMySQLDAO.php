@@ -182,7 +182,9 @@ class TestOfInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->network_user_id, 10);
         $this->assertEqual($result->network_viewer_id, 10);
 
-        $q = "TRUNCATE TABLE tu_instances ";
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
+        $q = "TRUNCATE TABLE " . $config_array['table_prefix'] . "instances ";
         PDODAO::$PDO->exec($q);
 
         //Try empty
