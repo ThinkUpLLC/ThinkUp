@@ -26,7 +26,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2009-2011 Gina Trapani, Guillaume Boudreau
  */
-chdir("..");
+chdir(dirname(__FILE__) . "/..");
 require_once 'init.php';
 
 $controller = new CrawlerAuthController($argc, $argv);
