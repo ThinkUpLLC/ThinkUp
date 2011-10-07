@@ -28,10 +28,11 @@
  * @author Mark Wilkie <mwilkie[at]gmail[dot]com>
  *
  */
-require_once 'tests/init.tests.php';
+require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/model/class.TwitterRealtimePlugin.php';
-require_once THINKUP_ROOT_PATH.'webapp/plugins/twitterrealtime/controller/class.TwitterRealtimePluginConfigurationController.php';
+require_once THINKUP_ROOT_PATH.
+'webapp/plugins/twitterrealtime/controller/class.TwitterRealtimePluginConfigurationController.php';
 
 class TestOfTwitterRealtimePluginConfigurationController extends ThinkUpUnitTestCase {
     public function setUp(){
@@ -81,7 +82,7 @@ class TestOfTwitterRealtimePluginConfigurationController extends ThinkUpUnitTest
 
     private function buildPluginData() {
         $builder_owner = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
-        $builder_plugin = FixtureBuilder::build('plugins', array('folder_name' => 'twitterrealtime', 'is_active' => 1) );
+        $builder_plugin = FixtureBuilder::build('plugins', array('folder_name'=>'twitterrealtime', 'is_active'=>1) );
 
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-1';
         //        $plugin_options1 =

@@ -2140,17 +2140,21 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      * Set counter higher to avoid clashes w/ prev post inserts.
      */
     public function testUniqueConstraint1() {
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
         $counter = 1000;
         $pseudo_minute = str_pad($counter, 2, "0", STR_PAD_LEFT);
         $source = '<a href="http://twitter.com" rel="nofollow">Tweetie for Mac</a>';
-        $q = "INSERT IGNORE INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+        $q = "INSERT IGNORE INTO " . $config_array['table_prefix'] .
+        "posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
         post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES
         ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg',
         'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";
         $res = PDODAO::$PDO->exec($q);
         $this->assertEqual($res, 1);
 
-        $q = "INSERT IGNORE INTO tu_posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
+        $q = "INSERT IGNORE INTO " . $config_array['table_prefix'] .
+        "posts (post_id, author_user_id, author_username, author_fullname, author_avatar,
         post_text, source, pub_date, reply_count_cache, retweet_count_cache, network) VALUES
         ($counter, 13, 'ev', 'Ev Williams', 'avatar.jpg',
         'This is post $counter', '$source', '2006-01-01 00:$pseudo_minute:00', ".rand(0, 4).", 5, 'twitter');";

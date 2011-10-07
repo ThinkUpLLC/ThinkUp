@@ -25,7 +25,7 @@
  * @copyright 2011-2012  Amy Unruh
  * @author Amy Unruh
  */
-require_once 'tests/init.tests.php';
+require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 

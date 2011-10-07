@@ -55,10 +55,12 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
     public function testgetPluginViewDirectory() {
         $config = Config::getInstance();
         $path = Utils::getPluginViewDirectory('twitter');
-        $this->assertEqual($path, $config->getValue('source_root_path').'webapp/plugins/twitter/view/');
+        $this->assertEqual(realpath($path), realpath($config->getValue('source_root_path').
+        '/webapp/plugins/twitter/view/'));
 
         $path = Utils::getPluginViewDirectory('sweetmaryjane');
-        $this->assertEqual($path, $config->getValue('source_root_path').'webapp/plugins/sweetmaryjane/view/');
+        $this->assertEqual(realpath($path), realpath($config->getValue('source_root_path').
+        '/webapp/plugins/sweetmaryjane/view/'));
     }
 
     public function testGetPercentage(){
@@ -220,7 +222,6 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $expected = array('next_milestone'=>100, 'will_take'=>5);
         $this->assertEqual(Utils::predictNextMilestoneDate(75, 5), $expected);
     }
-
     public function testGetLastSaturday()  {
         $last_saturday = Utils::getLastSaturday('11/11/2011');
         $this->assertEqual('11/5', $last_saturday);

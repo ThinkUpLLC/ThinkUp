@@ -37,7 +37,8 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         global $THINKUP_CFG;
         //Make sure test_installer directory exists
-        if (!file_exists($THINKUP_CFG['source_root_path'].'webapp/test_installer/')) {
+        chdir(dirname(__FILE__) . '/../');
+        if (!file_exists($THINKUP_CFG['source_root_path'].'/webapp/test_installer/')) {
             exec('mkdir webapp/test_installer/');
         }
 
@@ -55,6 +56,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
     public function tearDown() {
         global $THINKUP_CFG;
         //Clean up test installation files
+        chdir(dirname(__FILE__) . '/../');
         exec('rm -rf webapp/test_installer/*');
 
         //Delete test database created during installation process
@@ -74,7 +76,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         //Config file doesn't exist
         $this->assertFalse(file_exists($THINKUP_CFG['source_root_path'].
-        'webapp/test_installer/thinkup/config.inc.php'));
+          '/webapp/test_installer/thinkup/config.inc.php'));
 
         //sleep(1000);
         //Start installation process
@@ -98,6 +100,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->setField('db_user', $THINKUP_CFG['db_user']);
         $this->setField('db_passwd', $THINKUP_CFG['db_password']);
         $this->setField('db_socket', $THINKUP_CFG['db_socket']);
+        $this->setField('db_prefix', $THINKUP_CFG['table_prefix']);
         $this->clickSubmitByName('Submit');
 
         $this->assertText('ThinkUp has been installed successfully. Check your email account; an account activation '.
@@ -105,7 +108,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
 
         //Config file has been written
         $this->assertTrue(file_exists($THINKUP_CFG['source_root_path'].
-        'webapp/test_installer/thinkup/config.inc.php'));
+          '/webapp/test_installer/thinkup/config.inc.php'));
 
         //sleep(1000);
         //Test bad activation code

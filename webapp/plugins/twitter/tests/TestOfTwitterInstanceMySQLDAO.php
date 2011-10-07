@@ -24,7 +24,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2011-2012 Gina Trapani
  */
-require_once 'tests/init.tests.php';
+require_once dirname(__FILE__) . '/../../../../tests/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'tests/classes/class.ThinkUpBasicUnitTestCase.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
@@ -114,6 +114,8 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetInstanceOneByLastRun(){
+        $config = Config::getInstance();
+        $config_array = $config->getValuesArray();
         //Try Newest
         $result = $this->DAO->getInstanceFreshestOne();
         $this->assertIsA($result, "Instance");
@@ -141,7 +143,7 @@ class TestOfTwitterInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result->network_viewer_id, 10);
         $this->assertEqual($result->last_page_fetched_replies, 10);
 
-        $q = "TRUNCATE TABLE tu_instances ";
+        $q = "TRUNCATE TABLE " . $config_array['table_prefix'] . "instances ";
         PDODAO::$PDO->exec($q);
 
         //Try empty

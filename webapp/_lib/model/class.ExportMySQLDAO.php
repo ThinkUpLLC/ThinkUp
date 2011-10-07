@@ -40,60 +40,50 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
     static $exported_follows_table_name = 'follows_tmp';
 
     public function createExportedPostsTable() {
-        $q = "CREATE TABLE ".self::$exported_posts_table_name." LIKE #prefix#posts;";
+        $q = "CREATE TABLE #prefix#".self::$exported_posts_table_name." LIKE #prefix#posts;";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q);
-        $q = "ALTER TABLE  ".self::$exported_posts_table_name." DROP  id";
+        $q = "ALTER TABLE #prefix#".self::$exported_posts_table_name." DROP  id";
         $stmt = $this->execute($q);
         return $this->doesExportedPostsTableExist();
     }
 
     public function doesExportedPostsTableExist() {
-        $q = "SHOW TABLES";
+        $q = "SHOW TABLES LIKE '#prefix#" . self::$exported_posts_table_name . "'";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q);
         $tables = $this->getDataRowAsArray($stmt);
-        foreach ($tables as $table_name) {
-            if ($table_name == self::$exported_posts_table_name) {
-                return true;
-            }
-        }
-        return false;
+        return !empty($tables);
     }
 
     public function dropExportedPostsTable() {
         if ( self::doesExportedPostsTableExist() ) {
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-            $q = "DROP TABLE ".self::$exported_posts_table_name;
+            $q = "DROP TABLE #prefix#".self::$exported_posts_table_name;
             $stmt = $this->execute($q);
         }
         return !$this->doesExportedPostsTableExist();
     }
 
     public function createExportedFollowsTable() {
-        $q = "CREATE TABLE ".self::$exported_follows_table_name." LIKE #prefix#follows;";
+        $q = "CREATE TABLE #prefix#".self::$exported_follows_table_name." LIKE #prefix#follows;";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q);
         return $this->doesExportedFollowsTableExist();
     }
 
     public function doesExportedFollowsTableExist() {
-        $q = "SHOW TABLES";
+        $q = "SHOW TABLES LIKE '#prefix#" . self::$exported_follows_table_name . "'";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q);
         $tables = $this->getDataRowAsArray($stmt);
-        foreach ($tables as $table_name) {
-            if ($table_name == self::$exported_follows_table_name) {
-                return true;
-            }
-        }
-        return false;
+        return !empty($tables);
     }
 
     public function dropExportedFollowsTable() {
         if ( self::doesExportedFollowsTableExist() ) {
             if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-            $q = "DROP TABLE ".self::$exported_follows_table_name;
+            $q = "DROP TABLE #prefix#".self::$exported_follows_table_name;
             $stmt = $this->execute($q);
         }
         return !$this->doesExportedFollowsTableExist();
@@ -104,7 +94,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
             self::createExportedPostsTable();
         }
         //select all-but-id into posts_to_export from posts where service user is the author
-        $q = "INSERT IGNORE INTO ".self::$exported_posts_table_name." SELECT ";
+        $q = "INSERT IGNORE INTO #prefix#".self::$exported_posts_table_name." SELECT ";
         $q .= self::getExportFields('posts') . " ";
         $q .= "FROM #prefix#posts WHERE ";
         $q .= "author_username = :author_username AND network = :network";
@@ -124,7 +114,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         }
         $total_posts_exported = 0;
         foreach ($posts_to_process as $post) {
-            $q = "INSERT IGNORE INTO ".self::$exported_posts_table_name." SELECT ";
+            $q = "INSERT IGNORE INTO #prefix#".self::$exported_posts_table_name." SELECT ";
             $q .= self::getExportFields('posts'). " ";
             $q .= "FROM #prefix#posts WHERE ";
             $q .= "in_reply_to_post_id = :post_id AND network=:network;";
@@ -132,7 +122,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
             $stmt = $this->execute($q, $vars);
             $total_posts_exported = $total_posts_exported + $this->getUpdateCount($stmt);
 
-            $q = "INSERT IGNORE INTO ".self::$exported_posts_table_name." SELECT ";
+            $q = "INSERT IGNORE INTO #prefix#".self::$exported_posts_table_name." SELECT ";
             $q .= self::getExportFields('posts'). " ";
             $q .= "FROM #prefix#posts WHERE ";
             $q .= "in_retweet_of_post_id = :post_id AND network=:network;";
@@ -149,7 +139,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         }
         $author_username = '@'.$username;
         //select all-but-id into posts_to_export from posts where service username is mentioned
-        $q = "INSERT IGNORE INTO ".self::$exported_posts_table_name." SELECT ";
+        $q = "INSERT IGNORE INTO #prefix#".self::$exported_posts_table_name." SELECT ";
         $q .= self::getExportFields('posts') . " ";
         $q .= "FROM #prefix#posts WHERE ";
         $q .= "network = :network AND ";
@@ -178,7 +168,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         $posts_to_insert = self::getRepliedToPostIDs($username, $service, $page, $page_size);
         while (count($posts_to_insert) > 0 ) {
             foreach ($posts_to_insert as $post) {
-                $q = "INSERT IGNORE INTO ".self::$exported_posts_table_name." SELECT ";
+                $q = "INSERT IGNORE INTO #prefix#".self::$exported_posts_table_name." SELECT ";
                 $q .= self::getExportFields('posts') . " ";
                 $q .= "FROM #prefix#posts WHERE ";
                 $q .= "network = :network AND post_id=:post_id;";
@@ -228,7 +218,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         $fav_ids = $this->getDataRowsAsArrays($stmt);
         $total_favs_exported = 0;
         foreach ($fav_ids as $post) {
-            $q = "INSERT IGNORE INTO ".self::$exported_posts_table_name." SELECT ";
+            $q = "INSERT IGNORE INTO #prefix#".self::$exported_posts_table_name." SELECT ";
             $q .= self::getExportFields('posts'). " ";
             $q .= "FROM #prefix#posts WHERE ";
             $q .= "post_id = :post_id AND network = :network";
@@ -255,7 +245,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         if ( !self::doesExportedPostsTableExist() ) {
             self::createExportedPostsTable();
         }
-        $q = "SELECT * INTO OUTFILE '$posts_file' FROM ".self::$exported_posts_table_name;
+        $q = "SELECT * INTO OUTFILE '$posts_file' FROM #prefix#".self::$exported_posts_table_name;
         $stmt = $this->execute($q);
 
         $q = "SELECT ".$this->getExportFields('links', 'l')." INTO OUTFILE '$links_file' FROM #prefix#links l ";
@@ -263,7 +253,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         $stmt = $this->execute($q);
 
         $q = "SELECT DISTINCT ".$this->getExportFields('users', 'u')." INTO OUTFILE '$users_file' ";
-        $q .= "FROM #prefix#users u INNER JOIN ".self::$exported_posts_table_name.
+        $q .= "FROM #prefix#users u INNER JOIN #prefix#".self::$exported_posts_table_name.
         " p ON p.author_user_id = u.user_id AND p.network = u.network;";
         $stmt = $this->execute($q);
 
@@ -283,7 +273,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
 
         self::createExportedFollowsTable();
         //export follows to temp table
-        $q = "INSERT IGNORE INTO ".self::$exported_follows_table_name." SELECT * FROM #prefix#follows ";
+        $q = "INSERT IGNORE INTO #prefix#".self::$exported_follows_table_name." SELECT * FROM #prefix#follows ";
         $q .= "WHERE network=:network AND user_id = :user_id;";
         $vars = array(
             ':user_id'=>$user_id,
@@ -292,7 +282,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         $stmt = $this->execute($q, $vars);
 
         //export followees to temp table
-        $q = "INSERT IGNORE INTO ".self::$exported_follows_table_name." SELECT * FROM #prefix#follows ";
+        $q = "INSERT IGNORE INTO #prefix#".self::$exported_follows_table_name." SELECT * FROM #prefix#follows ";
         $q .= "WHERE network=:network AND follower_id = :user_id;";
         $vars = array(
             ':user_id'=>$user_id,
@@ -301,12 +291,12 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
         $stmt = $this->execute($q, $vars);
 
         //export temp table to file
-        $q = "SELECT * INTO OUTFILE '$follows_file' FROM ".self::$exported_follows_table_name." ";
+        $q = "SELECT * INTO OUTFILE '$follows_file' FROM #prefix#".self::$exported_follows_table_name." ";
         $stmt = $this->execute($q, $vars);
 
         //export users join on temp table followers
         $q = "SELECT DISTINCT ".$this->getExportFields('users', 'u'). " FROM #prefix#users u ";
-        $q .= "INNER JOIN ".self::$exported_follows_table_name.
+        $q .= "INNER JOIN #prefix#".self::$exported_follows_table_name.
         " f ON f.network = u.network AND f.follower_id = u.user_id ";
         $q .= "INTO OUTFILE '$users_followees_file' ";
         $vars = array(
@@ -317,7 +307,7 @@ class ExportMySQLDAO extends PDODAO implements ExportDAO {
 
         //export users join on temp table followers
         $q = "SELECT DISTINCT ".$this->getExportFields('users', 'u'). " FROM #prefix#users u ";
-        $q .= "INNER JOIN ".self::$exported_follows_table_name.
+        $q .= "INNER JOIN #prefix#".self::$exported_follows_table_name.
         " f ON f.network = u.network AND f.user_id = u.user_id ";
         $q .= "INTO OUTFILE '$users_followers_file' ";
         $vars = array(

@@ -500,14 +500,14 @@ class Installer {
         $search = array();
         $replace = array();
         foreach (self::$tables as $key => $table) {
-            $search[$key] = 'tu_' . $table;
+            $search[$key] = '/\btu_' . $table . '/';
             $replace[$key] = $table_prefix . $table;
         }
         // additional search for adding two spaces after PRIMARY KEY
-        $search[]  = 'PRIMARY KEY (';
+        $search[]  = '/PRIMARY KEY \(/';
         $replace[] = 'PRIMARY KEY  (';
 
-        $str_query = str_replace($search, $replace, $str_query);
+        $str_query = preg_replace($search, $replace, $str_query);
         return $str_query;
     }
 

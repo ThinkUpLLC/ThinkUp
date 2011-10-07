@@ -45,7 +45,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
             // Define base URL, the same as $THINKUP_CFG['site_root_path']
             $current_script_path = explode('/', $_SERVER['PHP_SELF']);
             array_pop($current_script_path);
-            if ( in_array($current_script_path[count($current_script_path)-1],
+            if (!empty($current_script_path) && in_array($current_script_path[count($current_script_path)-1],
             array('account', 'post', 'session', 'user', 'install')) ) {
                 array_pop($current_script_path);
             }
@@ -369,6 +369,25 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
             $expected = $installer->getErrorMessages();
             $this->assertEqual( $expected['config_file'], "Config file doesn't exist.");
         }
+    }
+
+    public function testInstallerPopulateTablesWithNonStandardPrefix() {
+        $config = Config::getInstance();
+        $non_standard_prefix = 'non_standard_tu_';
+        $config->setValue('table_prefix', $non_standard_prefix);
+        $config_array = $config->getValuesArray();
+
+        $expected_table = $non_standard_prefix . 'instances_twitter';
+
+        $installer = Installer::getInstance();
+        $db = $installer->setDb($config_array);
+        $log_verbose = $installer->populateTables($config_array);
+        $this->assertTrue(isset($log_verbose[$expected_table]));
+
+        $q = sprintf("SHOW TABLES LIKE '%s'", $expected_table);
+        $stmt = PDODAO::$PDO->query($q);
+        $table = $stmt->fetch(PDO::FETCH_NUM);
+        $this->assertEqual($table[0], $expected_table);
     }
 
     public function testInstallerPopulateTables() {

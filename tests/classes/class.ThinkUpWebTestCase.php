@@ -47,7 +47,7 @@ class ThinkUpWebTestCase extends ThinkUpBasicWebTestCase {
         $THINKUP_CFG['db_name'] = $this->test_database_name;
 
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
-        $this->testdb_helper->create($THINKUP_CFG['source_root_path']."webapp/install/sql/build-db_mysql.sql");
+        $this->testdb_helper->create($THINKUP_CFG['source_root_path']."/webapp/install/sql/build-db_mysql.sql");
     }
 
     public function tearDown() {

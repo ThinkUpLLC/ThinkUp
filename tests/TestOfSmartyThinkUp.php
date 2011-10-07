@@ -45,7 +45,7 @@ class TestOfSmartyThinkUp extends ThinkUpBasicUnitTestCase {
      */
     public function testSmartyThinkUpDefaultValues() {
         $cfg = Config::getInstance();
-        $cfg->setValue('source_root_path', '/path/to/thinkup/');
+        $cfg->setValue('source_root_path', '/path/to/thinkup');
         $cfg->setValue('cache_pages', true);
         $cfg->setValue('cache_lifetime', 600);
         $v_mgr = new SmartyThinkUp();
