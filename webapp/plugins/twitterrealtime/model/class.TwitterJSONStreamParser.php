@@ -64,13 +64,13 @@ class TwitterJSONStreamParser {
             // to update the database.
         } elseif (isset($content['delete'])) {
             // a tweet deletion
-            $pd = DAOFactory::getDAO('PostDAO');
-            $post = $pd->getPost($content['delete']['status']['id'], 'twitter');
+            $post_dao = DAOFactory::getDAO('PostDAO');
+            $post = $post_dao->getPost($content['delete']['status']['id_str'], 'twitter');
             if ($post) {
                 $delstr =  "deleted post: " . $post->post_id . ": " . $post->post_text . " , by: " .
                 $post->author_username . ", id: " . $post->id . "\n";
                 $this->logger->logInfo($delstr, __METHOD__.','.__LINE__);
-                $pd->deletePost($post->id);
+                $post_dao->deletePost($post->id);
             }
         } elseif (isset($content['event'])) {
             // have an event such as a follow or a favorite

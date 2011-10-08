@@ -423,7 +423,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         foreach ($rows as $row) {
             if ($row['Field'] == 'post_id' || $row['Field'] == 'in_retweet_of_post_id'
             || ($row['Field'] == 'in_reply_to_post_id')) {
-                if (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(50)') {
+                if (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(80)') {
                     return true;
                 }
             }
@@ -432,7 +432,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         $rows = $this->getDataRowsAsArrays($this->execute($q));
         foreach ($rows as $row) {
             if ($row['Field'] == 'post_id'
-            && (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(50)')) {
+            && (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(80)')) {
                 return true;
             }
         }
@@ -440,7 +440,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         $rows = $this->getDataRowsAsArrays($this->execute($q));
         foreach ($rows as $row) {
             if ($row['Field'] == 'post_id'
-            && (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(50)')) {
+            && (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(80)')) {
                 return true;
             }
         }
@@ -448,7 +448,7 @@ class InstallerMySQLDAO extends PDODAO implements InstallerDAO  {
         $rows = $this->getDataRowsAsArrays($this->execute($q));
         foreach ($rows as $row) {
             if ($row['Field'] == 'last_post_id'
-            && (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(50)')) {
+            && (strtoupper($row['Type']) != 'BIGINT(20) UNSIGNED' && strtoupper($row['Type']) != 'VARCHAR(80)')) {
                 return true;
             }
         }
