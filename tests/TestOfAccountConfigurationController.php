@@ -701,7 +701,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $controller = new AccountConfigurationController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->control();
-        $this->assertPattern('/rss.php\?un=me152\%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/', $result);
+        $this->assertPattern('/crawler\/rss.php\?un=me152\%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/',
+        $result);
     }
 
     public function testLoadProperRSSUrlWithPlusSignInEmailAddress() {
@@ -711,8 +712,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($controller));
         $result = $controller->control();
         $this->debug($result);
-        $this->assertPattern('/rss.php\?un=me153\%2Bcheckurlencoding%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/',
-        $result);
+        $this->assertPattern(
+        '/crawler\/rss.php\?un=me153\%2Bcheckurlencoding%40example.com&as=c9089f3c9adaf0186f6ffb1ee8d6501c/', $result);
     }
 
     private function buildRSSData() {
