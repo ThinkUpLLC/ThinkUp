@@ -310,7 +310,7 @@ class Logger {
             $type = 'w';
         }
         $filehandle = null;
-        if (is_writable($filename)) {
+        if (is_writable($filename) || is_writable(dirname($filename))) {
             $filehandle = fopen($filename, $type);// or die("can't open file $filename");
         } else {
             error_log("Unable to write log file: " . $filename);
