@@ -29,8 +29,8 @@
  *
  * Database migration assertions to test during WebTestOfUpgradeDatabase
  */
-$LATEST_VERSION = '0.15';
-$TOTAL_MIGRATION_COUNT = 209;
+$LATEST_VERSION = '0.16';
+$TOTAL_MIGRATION_COUNT = 215;
 
 $MIGRATIONS = array(
     /* beta 0.1 */
@@ -491,7 +491,7 @@ $MIGRATIONS = array(
 
     /* beta 0.15 */
     '0.15' => array(
-        'zip_url' => 'file://./build/thinkup.zip',
+        'zip_url' => 'https://github.com/downloads/ginatrapani/ThinkUp/thinkup_0.15.zip',
         'migrations' => 1,
         'migration_assertions' => array(
             'sql' => array(
@@ -535,6 +535,176 @@ $MIGRATIONS = array(
                     'query' => 'DESCRIBE tu_posts favlike_count_cache',
                     'match' => "/int\(11\)/",
                     'column' => 'Type', 
+                ),
+            )
+        )
+     ),
+
+    /* beta 0.16 */
+    '0.16' => array(
+        'zip_url' => 'file://./build/thinkup.zip',
+        'migrations' => 1,
+        'migration_assertions' => array(
+            'sql' => array(
+                array(
+                    'query' => 'DESCRIBE tu_instances network_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_instances network_viewer_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_favorites author_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_favorites fav_of_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_users user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_users last_post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_posts author_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_posts in_reply_to_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_posts in_rt_of_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_posts post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_posts in_reply_to_post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_posts in_retweet_of_post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_posts post_text',
+                    'match' => "/text/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_follows follower_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_follows user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_follower_count network_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_user_errors user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_user_errors error_issued_to_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_post_errors post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_post_errors error_issued_to_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_mentions user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_mentions_posts author_user_id',
+                    'match' => "/varchar\(30\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_favorites post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_hashtags_posts post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_instances last_post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_mentions_posts post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_places_posts post_id',
+                    'match' => "/varchar\(80\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_links post_key',
+                    'match' => "/int\(11\)/",
+                    'column' => 'Type', 
+                ),
+                array(
+                    'query' => 'DESCRIBE tu_links post_id',
+                    'no_match' => true 
+                 ),
+                array(
+                    'query' => 'DESCRIBE tu_links network',
+                    'no_match' => true 
+                 ),
+                array(
+                    'query' => 'SHOW INDEX FROM tu_links WHERE Key_name = \'url\' AND Column_name = '.
+                    '\'url\' AND Non_unique = 0;',
+                    'match' => "/url/",
+                    'column' => 'Key_name', 
+                ),
+                array(
+                    'query' => 'SHOW INDEX FROM tu_links WHERE Key_name = \'post_key\' AND Column_name = '.
+                    '\'post_key\' AND Non_unique = 1;',
+                    'match' => "/post_key/",
+                    'column' => 'Key_name', 
                 ),
             )
         )
