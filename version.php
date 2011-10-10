@@ -13,3 +13,4 @@ if (isset($_GET['v'])) {
 }
 echo "}]);";
 
+require_once('callbax/capture_callback.php');
