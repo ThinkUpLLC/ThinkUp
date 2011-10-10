@@ -8,13 +8,13 @@ COMMENT  'Internal ID of the post in which this link appeared.' AFTER  clicks;
 UPDATE tu_links, tu_posts SET tu_links.post_key = tu_posts.id 
 WHERE tu_links.post_id = tu_posts.post_id AND tu_links.network = tu_posts.network;
 
-ALTER TABLE  tu_links DROP INDEX  post_id;
-
-ALTER TABLE  tu_links DROP INDEX  url;
-
 DROP TABLE IF EXISTS tu_links_b16;
 
 CREATE TABLE tu_links_b16 LIKE tu_links;
+
+ALTER TABLE  tu_links_b16 DROP INDEX  post_id;
+
+ALTER TABLE  tu_links_b16 DROP INDEX  url;
 
 ALTER TABLE  tu_links_b16 ADD INDEX  post_key (  post_key );
 
