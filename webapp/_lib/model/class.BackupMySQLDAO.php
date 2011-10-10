@@ -97,7 +97,6 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                         $table_name = $value;
                         if(! isset( $imported_tables[ $table_name ] ) ) {
                             $stmt = $this->execute("DROP TABLE IF EXISTS $table_name");
-                            error_log("  Backup import dropping table: $table_name");
                         }
                     }
                 }
