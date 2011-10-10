@@ -1,6 +1,6 @@
 <?php
 echo 'ThinkUpAppVersion.serverResponse([{';
-$current_version = '0.15';
+$current_version = '0.16';
 if (isset($_GET['v'])) {
 	$install_version = $_GET['v'];
 	if (version_compare($current_version, $install_version, '>')) {
