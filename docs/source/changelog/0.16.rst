@@ -3,7 +3,7 @@ Beta 0.16 - 06 Oct 2011
 
 **New features:**
 
-*   Google + plugin: Capture the last 25 public posts for an authorized Google account, chart reply and like totals
+*   Google + plugin: Capture the last 25 public posts for an authorized Google account, chart reply and +1 totals
 *   Facebook plugin: Capture backposts, chart friend/page liker count over time, capture friend and page liker details
 *   Dashboard: See hot posts at the top of the page (replaced most recent posts)
 
