@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "name": "Sample Cause",
+      "access_token": "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ",
+      "category": "Cause",
+      "id": "107982202636989"
+    },
+    {
+      "name": "pinkup",
+      "access_token": "AAABZByypHnsEBAClV6dI32M88r2l02Tt4Tt6py1SUXALuzcPm0shTx03cGti9UmmLPima3m5s6ZCfLWSqv3JAKI8ZAxM36Beo5cFhYQNQZDZD",
+      "category": "Application",
+      "id": "139411052797633"
+    }
+  ]
+}

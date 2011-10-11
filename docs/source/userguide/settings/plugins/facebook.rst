@@ -34,6 +34,7 @@ Add a Facebook page to ThinkUp
 ------------------------------
 
 ThinkUp's Facebook plugin works with Facebook pages, but it can only connect with regular Facebook user accounts.
-To add a Facebook page, connect a regular Facebook user account to ThinkUp. Make sure that user "likes" the page, and
-then add it to ThinkUp from the Likes dropdown in ThinkUp.
+To add a Facebook page, connect a regular Facebook user account to ThinkUp. Either create a new page or "like" an
+existing page on Facebook.com.  Then add it to ThinkUp from the pages dropdown in ThinkUp.  Any pages you manage will be
+listed first.
 

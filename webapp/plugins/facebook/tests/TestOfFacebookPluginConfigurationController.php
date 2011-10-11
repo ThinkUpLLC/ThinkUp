@@ -249,6 +249,48 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('owner_instances')), 1);
     }
 
+    public function testConfiguredPluginWithOneFacebookUserOneLikedPageOneManagedPage() {
+        self::buildInstanceData();
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        //The mock API accessor reads the page likes JSON from the testdata/668406218_likes file
+        $v_mgr = $controller->getViewManager();
+        $liked_pages = $v_mgr->getTemplateDataItem('user_pages');
+        $this->assertIsA($liked_pages, 'Array');
+        $this->assertEqual(sizeof($liked_pages), 1);
+        $admin_pages = $v_mgr->getTemplateDataItem('user_admin_pages');
+        $this->assertIsA($liked_pages, 'Array');
+        $this->assertEqual(sizeof($liked_pages), 1);
+        $this->assertPattern("/Pages You Manage/", $output);
+    }
+
+    public function testConfiguredPluginWithOneFacebookUserNoLikedPagesNoManagedPages() {
+        self::buildInstanceData();
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me2@example.com', true);
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        //The mock API accessor reads the page likes JSON from the testdata/668406218_likes file
+        $v_mgr = $controller->getViewManager();
+        $liked_pages = $v_mgr->getTemplateDataItem('user_pages');
+        $this->assertIsA($liked_pages, 'Array');
+        $this->assertEqual(sizeof($liked_pages), 0);
+        $admin_pages = $v_mgr->getTemplateDataItem('user_admin_pages');
+        $this->assertIsA($liked_pages, 'Array');
+        $this->assertEqual(sizeof($liked_pages), 0);
+        $this->assertNoPattern("/Pages You Manage/", $output);
+    }
+
     private function buildPluginOptions() {
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
         $builders = array();
