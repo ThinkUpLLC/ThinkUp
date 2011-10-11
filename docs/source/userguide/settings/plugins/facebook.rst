@@ -1,10 +1,10 @@
 Facebook
 ========
 
-ThinkUp's Facebook plugin collects posts and status updates for Facebook users and the Facebook pages those users like.
+ThinkUp's Facebook plugin collects posts and status updates for Facebook user profiles and pages.
 
-Configure the Facebook Plugin (Admin only)
-------------------------------------------
+Set Up the Facebook Plugin (Admin only)
+---------------------------------------
 
 To use the Facebook plugin, you'l need to `create a Facebook application on facebook.com 
 <https://developers.facebook.com/apps>`_. Set the Web Site > Site URL  as recommended, and the Facebook-provided API
@@ -34,6 +34,15 @@ Add a Facebook page to ThinkUp
 ------------------------------
 
 ThinkUp's Facebook plugin works with Facebook pages, but it can only connect with regular Facebook user accounts.
-To add a Facebook page, connect a regular Facebook user account to ThinkUp. Make sure that user "likes" the page, and
-then add it to ThinkUp from the Likes dropdown in ThinkUp.
+
+To add a Facebook page, connect a regular Facebook user account to ThinkUp. Then, either create a new page or "like" an
+existing page on Facebook.com.  Add it to ThinkUp from the pages dropdown in ThinkUp, which contains both pages you 
+manage and pages you "like."  Any pages you manage will be listed first.
+
+Help! I don't see Facebook pages I manage in the dropdown list
+--------------------------------------------------------------
+
+If you're only seeing pages you "like" but not pages you manage in the pages dropdown list, delete your Facebook user
+account from ThinkUp, and re-add it. Authorize ThinkUp to get access to your managed pages, and then they will appear
+in the drodown list.
 

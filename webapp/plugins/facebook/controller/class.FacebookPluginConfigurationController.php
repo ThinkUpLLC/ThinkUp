@@ -80,6 +80,11 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         return $this->generateView();
     }
 
+    public function isAccountPage($account_id, $access_token) {
+        $account = FacebookGraphAPIAccessor::apiRequest('/' . $account_id . '?metadata=true', $access_token);
+        return !empty($account) && !empty($account->type) && $account->type == 'page';
+    }
+
     protected function setUpFacebookInteractions($options) {
         // Create our Facebook Application instance
         $facebook = new Facebook(array(
@@ -102,8 +107,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             SessionCache::put('facebook_auth_csrf', md5(uniqid(rand(), true)));
         }
 
-        $params = array('scope'=>
-        'offline_access,read_stream,user_likes,user_location,user_website,read_friendlists,friends_location',
+        $params = array('scope'=>'offline_access,read_stream,user_likes,user_location,user_website,'.
+        'read_friendlists,friends_location,manage_pages,read_insights',
         'state'=>SessionCache::get('facebook_auth_csrf'));
 
         $fbconnect_link = $facebook->getLoginUrl($params);
@@ -113,11 +118,14 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
 
         $logger = Logger::getInstance();
         $user_pages = array();
+        $user_admin_pages = array();
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $owner_instances = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook');
 
         $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
         foreach ($owner_instances as $instance) {
+            // TODO: figure out if the scope has changed since this instance last got its tokens,
+            // and we need to get re-request permission with the new scope
             $tokens = $ownerinstance_dao->getOAuthTokens($instance->id);
             $access_token = $tokens['oauth_access_token'];
             if ($instance->network == 'facebook') { //not a page
@@ -125,9 +133,21 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 if (@$pages->data) {
                     $user_pages[$instance->network_user_id] = $pages->data;
                 }
+
+                $sub_accounts = FacebookGraphAPIAccessor::apiRequest('/'.$instance->network_user_id.'/accounts',
+                $access_token);
+                if (!empty($sub_accounts->data)) {
+                    $user_admin_pages[$instance->network_user_id] = array();
+                    foreach ($sub_accounts->data as $act) {
+                        if (self::isAccountPage($act->id, $access_token)) {
+                            $user_admin_pages[$instance->network_user_id][] = $act;
+                        }
+                    }
+                }
             }
         }
         $this->addToView('user_pages', $user_pages);
+        $this->addToView('user_admin_pages', $user_admin_pages);
 
         $owner_instance_pages = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook page');
         if (count($owner_instance_pages) > 0) {
@@ -153,8 +173,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $config = Config::getInstance();
                 $site_root_path = $config->getValue('site_root_path');
                 $redirect_uri = urlencode(sprintf('%s://%s%s%s', !empty($_SERVER['HTTPS']) ? 'https' : 'http',
-                  empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'],
-                  $site_root_path, 'account/?p=facebook'));
+                empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'],
+                $site_root_path, 'account/?p=facebook'));
 
                 //Build API request URL
                 $api_req = 'https://graph.facebook.com/oauth/access_token?client_id='.
