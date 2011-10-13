@@ -419,7 +419,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_passwd'] = $valid_db_password;
         $_POST['db_name'] = "mythinkupdb";
         $_POST['db_type'] = "mysql";
-        $_POST['db_host'] = "localcheese";
+        $_POST['db_host'] = "127.0.0.2";
         $_POST['db_socket'] = $valid_db_socket;
         $_POST['db_port'] = $valid_db_port;
         $_POST['db_prefix'] = "tu_";
