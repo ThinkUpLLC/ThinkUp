@@ -310,8 +310,6 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         $non_standard_prefix = 'non_standard_tu_';
         $config->setValue('table_prefix', $non_standard_prefix);
         $config_array = $config->getValuesArray();
-        // re-create tables with non-standard prefix
-        // self::setUp();
 
         $expected_table = $non_standard_prefix . 'instances_twitter';
 
