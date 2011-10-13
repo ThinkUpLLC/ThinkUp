@@ -16,7 +16,7 @@
     </div>
 </div>
 
-    {if count($owner_instances) > 0 }
+{if count($owner_instances) > 0 }
     <h2 class="subhead">Facebook User Profiles</h2>
      {include file="_usermessage.tpl" field="user_add"}
     {foreach from=$owner_instances key=iid item=i name=foo}
@@ -63,6 +63,38 @@
     <br />
     {/if}
 
+<h2 class="subhead">Add a Facebook Page You Manage</h2>
+{foreach from=$owner_instances key=iid item=i name=foo}
+  {assign var='facebook_user_id' value=$i->network_user_id}
+  {if $user_admin_pages.$facebook_user_id}
+    <div class="clearfix">
+        <div class="grid_4 right" style="padding-top:.5em;">
+            {$i->network_username}&nbsp;manages:
+        </div>
+        <form name="addpage" action="index.php?p=facebook">
+        <div class="grid_8">
+            {if $user_admin_pages.$facebook_user_id}
+            <input type="hidden" name="instance_id" value="{$i->id}">
+            <input type="hidden" name="p" value="facebook">
+            <input type="hidden" name ="viewer_id" value="{$i->network_user_id}" />
+            <input type="hidden" name ="owner_id" value="{$owner->id}" />
+            <select name="facebook_page_id">
+                {foreach from=$user_admin_pages.$facebook_user_id key=page_id item=page name=p}
+                    <option value="{$page->id}">{if strlen($page->name)>27}{$page->name|substr:0:27}...{else}{$page->name}{/if}</option> <br />
+                {/foreach}
+             </select>
+             {/if}
+        </div>
+        <div class="grid_7">
+             <span id="divaddadminpage{$i->network_username}"><input type="submit" name="action" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
+addPage"  id="{$i->network_username}" value="add page" /></span>
+        </div>
+        </form>
+    </div>
+    {else}
+    To add a Facebook page to ThinkUp, create a page on Facebook.com or ask the administrator to make you an admin, and refresh this page.
+    {/if}
+{/foreach}
 
 <h2 class="subhead">Add a Facebook Page You "Like"</h2>
 {foreach from=$owner_instances key=iid item=i name=foo}
@@ -96,6 +128,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     To add a Facebook page to ThinkUp, "like" it on Facebook.com and refresh this page.
     {/if}
 {/foreach}
+
 {/if}
 </div> 
 
