@@ -126,12 +126,12 @@ class TestOfBackupMySQLDAO extends ThinkUpUnitTestCase {
         $export_file = $dao->export();
         //$this->pdo->query("drop table tu_plugin_options");
         $this->assertTrue( $dao->import($export_file) );
-        $stmt = $this->pdo->query("show create table tu_plugins");
+        $stmt = $this->pdo->query("show create table " . $this->table_prefix . "plugins");
         $data = $stmt->fetch();
         $stmt->closeCursor();
-        $this->assertEqual($data['Table'], 'tu_plugins');
+        $this->assertEqual($data['Table'], $this->table_prefix . 'plugins');
 
-        $stmt = $this->pdo->query("select * from tu_plugins");
+        $stmt = $this->pdo->query("select * from " . $this->table_prefix . "plugins");
 
         $data = $stmt->fetch();
         $this->assertEqual($data['id'], 1);

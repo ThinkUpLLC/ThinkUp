@@ -518,6 +518,6 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST["repair"] = "yespls";
         $controller = new InstallerController(true);
         $result = $controller->go();
-        $this->assertPattern("/Created table tu_encoded_locations/", $result);
+        $this->assertPattern("/Created table " . $config->getValue('table_prefix') . "encoded_locations/", $result);
     }
 }

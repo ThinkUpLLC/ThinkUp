@@ -42,8 +42,8 @@ class ThinkUpTestDatabaseHelper extends PDODAO {
         $create_statements = split(";", $create_db_script);
         foreach ($create_statements as $q) {
             if (trim($q) != '') {
-                if ($this->prefix != 'tu_') {
-                    $q = str_replace('tu_', $this->prefix, $q);
+                if (self::$prefix != 'tu_') {
+                    $q = str_replace('tu_', self::$prefix, $q);
                 }
                 self::execute($q);
             }
