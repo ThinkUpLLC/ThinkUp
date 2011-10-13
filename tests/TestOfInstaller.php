@@ -305,6 +305,27 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         }
     }
 
+    public function testInstallerPopulateTablesWithNonStandardPrefix() {
+        $config = Config::getInstance();
+        $non_standard_prefix = 'non_standard_tu_';
+        $config->setValue('table_prefix', $non_standard_prefix);
+        $config_array = $config->getValuesArray();
+        // re-create tables with non-standard prefix
+        // self::setUp();
+
+        $expected_table = $non_standard_prefix . 'instances_twitter';
+
+        $installer = Installer::getInstance();
+        $db = $installer->setDb($config_array);
+        $log_verbose = $installer->populateTables($config_array);
+        $this->assertTrue(isset($log_verbose[$expected_table]));
+
+        $q = sprintf("SHOW TABLES LIKE '%s'", $expected_table);
+        $stmt = PDODAO::$PDO->query($q);
+        $table = $stmt->fetch(PDO::FETCH_NUM);
+        $this->assertEqual($table[0], $expected_table);
+    }
+
     public function testInstallerPopulateTables() {
         $config = Config::getInstance();
         $config_array = $config->getValuesArray();
