@@ -154,7 +154,7 @@ class FacebookCrawler {
 
         $fetch_next_page = true;
         $current_page_number = 1;
-        $next_api_request = 'https://graph.facebook.com/' .$id. '/posts?access_token=' .$this->access_token;
+        $next_api_request = 'https://graph.facebook.com/' .$id. '/feed?access_token=' .$this->access_token;
 
         //Cap crawl time for very busy pages with thousands of likes/comments
         $fetch_stop_time = time() + $this->max_crawl_time;
@@ -211,7 +211,7 @@ class FacebookCrawler {
         $thinkup_likes = array();
         $total_added_likes = 0;
 
-        $profile = null;
+        $profiles = array();
 
         //efficiency control vars
         $must_process_likes = true;
@@ -228,8 +228,14 @@ class FacebookCrawler {
             $post_id = $post_id[1];
             $this->logger->logInfo("Beginning to process ".$post_id.", post ".($index+1)." of ".count($stream->data).
             " on page ".$page_number, __METHOD__.','.__LINE__);
-            if (!isset($profile)) {
+
+            // stream can contain posts from multiple users.  get profile for this post
+            $profile = null;
+            if (!empty($profiles[$p->from->id])) {
+                $profile = $profiles[$p->from->id];
+            } else {
                 $profile = $this->fetchUser($p->from->id, 'Post stream', true);
+                $profiles[$p->from->id] = $profile;
             }
 
             //Assume profile comments are private and page posts are public
@@ -274,14 +280,26 @@ class FacebookCrawler {
                 $this->logger->logInfo("Post ".$post_id. " not in storage", __METHOD__.','.__LINE__);
             }
 
-            if (isset($profile) ) {
+            if (!isset($profile) ) {
+                $this->logger->logError("No profile set", __METHOD__.','.__LINE__);
+            } else {
                 if (!isset($post_in_storage)) {
-                    $post_to_process = array("post_id"=>$post_id, "author_username"=>$profile->username,
-                    "author_fullname"=>$profile->username,"author_avatar"=>$profile->avatar, 
-                    "author_user_id"=>$p->from->id, "post_text"=>isset($p->message)?$p->message:'', 
-                    "pub_date"=>$p->created_time, "favlike_count_cache"=>$likes_count,
-                    "in_reply_to_user_id"=>'', "in_reply_to_post_id"=>'', "source"=>'', 'network'=>$network,
-                    'is_protected'=>$is_protected, 'location'=>$profile->location);
+                    $post_to_process = array(
+                      "post_id"=>$post_id,
+                      "author_username"=>$profile->username,
+                      "author_fullname"=>$profile->username,
+                      "author_avatar"=>$profile->avatar,
+                      "author_user_id"=>$p->from->id,
+                      "post_text"=>isset($p->message)?$p->message:'',
+                      "pub_date"=>$p->created_time,
+                      "favlike_count_cache"=>$likes_count,
+                      "in_reply_to_user_id"=> isset($p->to->data[0]->id) ? $p->to->data[0]->id : '', // assume only one recipient
+                      "in_reply_to_post_id"=>'',
+                      "source"=>'',
+                      'network'=>$network,
+                      'is_protected'=>$is_protected,
+                      'location'=>$profile->location
+                    );
 
                     $new_post_key = $this->storePostAndAuthor($post_to_process, "Owner stream");
 
@@ -534,8 +552,6 @@ class FacebookCrawler {
                 //free up memory
                 $thinkup_users = array();
                 $thinkup_likes = array();
-            } else {
-                $this->logger->logError("No profile set", __METHOD__.','.__LINE__);
             }
             //reset control vars for next post
             $must_process_likes = true;
@@ -632,7 +648,7 @@ class FacebookCrawler {
         $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
         $user_dao = DAOFactory::getDAO('UserDAO');
 
-        foreach ($friends->data AS $friend) {
+        foreach ($friends->data as $friend) {
             $follower_id = $friend->id;
             if ($follows_dao->followExists($user_id, $follower_id, $network)) {
                 // follow relationship already exists

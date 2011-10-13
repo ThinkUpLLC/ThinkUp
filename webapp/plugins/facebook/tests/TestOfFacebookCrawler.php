@@ -162,6 +162,12 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->favlike_count_cache, 3);
         $this->assertEqual($post->location, 'San Diego, California');
 
+        // wall post
+        $post = $post_dao->getPost('10150414865507812', 'facebook');
+        $this->assertEqual($post->author_user_id, '503315820');
+        $this->assertEqual($post->location, 'Portland, Oregon');
+        $this->assertEqual($post->in_reply_to_user_id, $this->profile1_instance->network_user_id);
+
         $post = $post_dao->getPost('1546020', 'facebook');
         $this->assertPattern('/not the target demographic/', $post->post_text);
         $this->assertEqual($post->reply_count_cache, 0);

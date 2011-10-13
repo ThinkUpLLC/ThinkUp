@@ -540,4 +540,27 @@ interface PostDAO {
      * @param int $count
      */
     public function getHotPosts($author_user_id, $network, $count);
+
+    /**
+     * Get the posts to the given user_id that are not replies, e.g. Facebook wall posts
+     * @param $user_id
+     * @param $network
+     * @param $count
+     * @param $page
+     * @param $is_public
+     * @param $iterator
+     * @return array Posts
+     */
+    public function getPostsToUser($user_id, $network, $count = 15, $page = 1, $is_public = false,
+    $iterator = false);
+
+    /**
+     * Get Iterator of Posts to user.
+     * @param $user_id
+     * @param $network
+     * @param $count
+     * @param $is_public
+     * @return Iterator Posts with author object set, and optional link object set
+     */
+    public function getPostsToUserIterator($user_id, $network, $count, $is_public=false);
 }

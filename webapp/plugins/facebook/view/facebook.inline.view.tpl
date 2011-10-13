@@ -36,6 +36,14 @@
 </div>
 {/if}
 
+{if $messages_to_you}
+<div id="all-posts-div">
+  {foreach from=$messages_to_you key=tid item=t name=foo}
+    {include file="_post.tpl" t=$t}
+  {/foreach}
+</div>
+{/if}
+
 
 {if ($display eq 'followers_mostfollowed' and not $facebook_users) or ($display eq 'friends_mostactive' and not $facebook_users) }
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 

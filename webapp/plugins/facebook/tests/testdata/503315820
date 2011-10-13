@@ -1,0 +1,49 @@
+{
+  "id": "503315820", 
+  "name": "Christian G. Warden", 
+  "first_name": "Christian", 
+  "middle_name": "G.", 
+  "last_name": "Warden", 
+  "link": "https://www.facebook.com/christian.g.warden", 
+  "username": "christian.g.warden", 
+  "location": {
+    "id": "112548152092705", 
+    "name": "Portland, Oregon"
+  }, 
+  "work": [
+    {
+      "employer": {
+        "id": "137079890122", 
+        "name": "SwellPath Interactive"
+      }, 
+      "location": {
+        "id": "112548152092705", 
+        "name": "Portland, Oregon"
+      }, 
+      "position": {
+        "id": "150592854954385", 
+        "name": "Director of Technology"
+      }, 
+      "start_date": "2011-07"
+    }, 
+    {
+      "employer": {
+        "id": "114847955192838", 
+        "name": "CRC Health Group"
+      }, 
+      "location": {
+        "id": "111948785483165", 
+        "name": "Cupertino, California"
+      }, 
+      "start_date": "2008-01", 
+      "end_date": "2011-07"
+    }
+  ], 
+  "gender": "male", 
+  "website": "http://xn.pinkhamster.net/", 
+  "timezone": -7, 
+  "locale": "en_US", 
+  "verified": true, 
+  "updated_time": "2011-09-30T22:07:00+0000", 
+  "type": "user"
+}
