@@ -619,7 +619,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
     public function testAuthControlInviteUser() {
         $this->simulateLogin('me@example.com', false, true);
 
-        $_SERVER['HTTP_HOST'] = "mytestthinkup/";
+        $_SERVER['HTTP_HOST'] = "mytestthinkup";
         $_SERVER['HTTPS'] = null;
         $_POST['invite'] = 'Create Invitation' ;
         $_POST['csrf_token'] = parent::CSRF_TOKEN;
@@ -631,11 +631,11 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         $msgs_array = $v_mgr->getTemplateDataItem('success_msgs');
         $this->assertPattern('/Invitation created!/', $msgs_array['invite']);
-        $this->assertPattern('/http:\/\/mytestthinkup\/tests\/session\/register.php\?code=/', $msgs_array['invite']);
+        $this->assertPattern('/http:\/\/mytestthinkup\/session\/register.php\?code=/', $msgs_array['invite']);
 
         //test HTTPS
         $_SERVER['HTTPS'] = 1;
-        $_SERVER['HTTP_HOST'] = "myotherwtestthinkup/";
+        $_SERVER['HTTP_HOST'] = "myotherwtestthinkup";
         $_POST['invite'] = 'Create Invitation' ;
 
         $controller = new AccountConfigurationController(true);
@@ -645,7 +645,7 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
 
         $msgs_array = $v_mgr->getTemplateDataItem('success_msgs');
         $this->assertPattern('/Invitation created!/', $msgs_array['invite']);
-        $this->assertPattern('/https:\/\/myotherwtestthinkup\/tests\/session\/register.php\?code=/',
+        $this->assertPattern('/https:\/\/myotherwtestthinkup\/session\/register.php\?code=/',
         $msgs_array['invite']);
     }
 
