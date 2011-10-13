@@ -389,7 +389,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $result = $controller->go();
 
         $this->assertPattern('/ThinkUp couldn\'t connect to your database. The error message is:/', $result);
-        $this->assertPattern('/Unknown database \'mythinkupdb `lol\'/', $result);
+        $this->assertPattern('/(Unknown database|Access denied).*\'mythinkupdb `lol\'/', $result);
         $this->restoreConfigFile();
     }
 
