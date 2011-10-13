@@ -292,13 +292,13 @@ class FacebookCrawler {
                     if (isset($p->source) || isset($p->link)) { // there's a link to store
                         $link_url = (isset($p->source))?$p->source:$p->link;
                         $link = new Link(array(
-                        "url"=>$link_url, 
-                        "expanded_url"=>$link_url, 
+                        "url"=>$link_url,
+                        "expanded_url"=>$link_url,
                         "image_src"=>(isset($p->picture))?$p->picture:'',
-                        "caption"=>(isset($p->caption))?$p->caption:'', 
+                        "caption"=>(isset($p->caption))?$p->caption:'',
                         "description"=>(isset($p->description))?$p->description:'',
-                        "title"=>(isset($p->name))?$p->name:'', 
-                        "post_key"=>$new_post_key 
+                        "title"=>(isset($p->name))?$p->name:'',
+                        "post_key"=>$new_post_key
                         ));
                         array_push($thinkup_links, $link);
                     }
@@ -333,10 +333,10 @@ class FacebookCrawler {
                                         if (!isset($comment_in_storage)) {
                                             $comment_to_process = array("post_id"=>$comment_id,
                                             "author_username"=>$c->from->name, "author_fullname"=>$c->from->name,
-                                            "author_avatar"=>'https://graph.facebook.com/'.$c->from->id.'/picture', 
-                                            "author_user_id"=>$c->from->id, "post_text"=>$c->message, 
-                                            "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id, 
-                                            "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network, 
+                                            "author_avatar"=>'https://graph.facebook.com/'.$c->from->id.'/picture',
+                                            "author_user_id"=>$c->from->id, "post_text"=>$c->message,
+                                            "pub_date"=>$c->created_time, "in_reply_to_user_id"=>$profile->user_id,
+                                            "in_reply_to_post_id"=>$post_id, "source"=>'', 'network'=>$network,
                                             'is_protected'=>$is_protected, 'location'=>'');
                                             array_push($thinkup_posts, $comment_to_process);
                                             $comments_captured = $comments_captured + 1;
@@ -618,40 +618,41 @@ class FacebookCrawler {
     }
 
     private function storeFriends() {
-        if ($this->instance->network == 'facebook') {
-            //Retrieve friends via the Facebook API
-            $user_id = $this->instance->network_user_id;
-            $access_token = $this->access_token;
-            $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
-            $friends = FacebookGraphAPIAccessor::apiRequest('/' . $user_id . '/friends', $access_token);
+        if ($this->instance->network != 'facebook') {
+            return;
+        }
+        //Retrieve friends via the Facebook API
+        $user_id = $this->instance->network_user_id;
+        $access_token = $this->access_token;
+        $network = ($user_id == $this->instance->network_user_id)?$this->instance->network:'facebook';
+        $friends = FacebookGraphAPIAccessor::apiRequest('/' . $user_id . '/friends', $access_token);
 
-            //store relationships in follows table
-            $follows_dao = DAOFactory::getDAO('FollowDAO');
-            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
-            $user_dao = DAOFactory::getDAO('UserDAO');
+        //store relationships in follows table
+        $follows_dao = DAOFactory::getDAO('FollowDAO');
+        $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+        $user_dao = DAOFactory::getDAO('UserDAO');
 
-            foreach ($friends->data AS $friend) {
-                $follower_id = $friend->id;
-                if ($follows_dao->followExists($user_id, $follower_id, $network)) {
-                    // follow relationship already exists
-                    $follows_dao->update($user_id, $follower_id, $network);
-                } else {
-                    // follow relationship does not exist yet
-                    $follows_dao->insert($user_id, $follower_id, $network);
-                }
-
-                //and users in users table.
-                $follower_details = FacebookGraphAPIAccessor::apiRequest('/'.$follower_id, $this->access_token);
-                $follower_details->network = $network;
-
-                $follower = $this->parseUserDetails($follower_details);
-                $follower_object = new User($follower);
-
-                $user_dao->updateUser($follower_object);
+        foreach ($friends->data AS $friend) {
+            $follower_id = $friend->id;
+            if ($follows_dao->followExists($user_id, $follower_id, $network)) {
+                // follow relationship already exists
+                $follows_dao->update($user_id, $follower_id, $network);
+            } else {
+                // follow relationship does not exist yet
+                $follows_dao->insert($user_id, $follower_id, $network);
             }
 
-            //totals in follower_count table
-            $follower_count_dao->insert($user_id, $network, count($friends->data));
+            //and users in users table.
+            $follower_details = FacebookGraphAPIAccessor::apiRequest('/'.$follower_id, $this->access_token);
+            $follower_details->network = $network;
+
+            $follower = $this->parseUserDetails($follower_details);
+            $follower_object = new User($follower);
+
+            $user_dao->updateUser($follower_object);
         }
+
+        //totals in follower_count table
+        $follower_count_dao->insert($user_id, $network, count($friends->data));
     }
 }
