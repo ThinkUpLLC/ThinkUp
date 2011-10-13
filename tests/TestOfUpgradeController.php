@@ -224,7 +224,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertEqual($data[2]['migration'], '2011-09-21_some_stuff-2');
 
         // run it againto veriy it skips alrready run migrations, but add a new one as well
-        $new_sql = "INSERT INTO " . $this->table_prefix . "test1 (value) VALUES (4),(5),(6);";
+        $new_sql = "INSERT INTO #prefix#test1 (value) VALUES (4),(5),(6);";
         $this->newMigrationFiles('some_stuff', false, $new_sql);
         $_GET['migration_index'] = 1;
         $results = $controller->go();
