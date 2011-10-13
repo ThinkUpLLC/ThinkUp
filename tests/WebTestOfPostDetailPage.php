@@ -105,7 +105,7 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         'is_active'=>1));
         $config = Config::getInstance();
         $db_prefix = $config->getValue('table_prefix');
-        $pdo = PostMysqlDAO::$PDO;
+        $pdo = PostMySQLDAO::$PDO;
         $pdo->query("update " . $db_prefix . "posts set post_text = concat(post_text, ' &lt; &gt; &amp; < > &')");
         $this->get($this->url.'/post/index.php?t=10&n=twitter');
         $this->assertPattern("/This is post 10 &#60; &#62; &#38; &#60; &#62; &#38;/"); // we are all filtered entities

@@ -42,7 +42,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         parent::setUp();
 
         $optiondao = new OptionMySQLDAO();
-        $this->pdo = OptionMysqlDAO::$PDO;
+        $this->pdo = OptionMySQLDAO::$PDO;
 
         $this->install_dir = THINKUP_ROOT_PATH.'webapp/test_installer';
         $this->installs_dir = THINKUP_ROOT_PATH.'build';
