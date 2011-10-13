@@ -114,6 +114,11 @@ class PostAPIController extends ThinkUpController {
      * @var bool
      */
     public $include_rts = false;
+	/**
+	 * Set to false to bypass the default, network format output
+	 * 
+	 */
+	public $convert = true;
     /**
      * A User object set when either the user_id or username variables are set. If you are using User data at any point
      * in this class, you should use this object.
@@ -198,6 +203,9 @@ class PostAPIController extends ThinkUpController {
         }
         if (isset($_GET['include_rts'])) {
             $this->include_rts = $this->isTrue($_GET['include_rts']);
+        }
+        if (isset($_GET['convert'])) {
+            $this->convert = $this->isTrue($_GET['convert']);
         }
 
         /*
@@ -567,31 +575,37 @@ class PostAPIController extends ThinkUpController {
                 break;
         }
 
-        switch ($this->network) {
-            case 'twitter':
-                if (is_array($data)) {
-                    foreach ($data as $key => $post) {
-                        $data[$key] = $this->convertPostToTweet($post);
-                    }
-                } else {
-                    $data = $this->convertPostToTweet($data);
-                }
-                break;
-
-            case 'facebook':
-                // write a function here to convert to Facebook API style
-                break;
-
-            default: break;
-        }
-
-        // if no posts were found, $data is null. Set it to an empty array.
-        if (is_null($data)) {
-            $data = array();
-        }
-
-        $this->setJsonData($data);
-        return $this->generateView();
+		if($this->convert){
+	        switch ($this->network) {
+	            case 'twitter':
+	                if (is_array($data)) {
+	                    foreach ($data as $key => $post) {
+	                        $data[$key] = $this->convertPostToTweet($post);
+	                    }
+	                } else {
+	                    $data = $this->convertPostToTweet($data);
+	                }
+	                break;
+	
+	            case 'facebook':
+	                // write a function here to convert to Facebook API style
+	                break;
+	
+	            default: break;
+	        }
+	
+	        // if no posts were found, $data is null. Set it to an empty array.
+	
+	        $this->setJsonData($data);
+	        return $this->generateView();
+		
+		} else {
+	        if (is_null($data)) {
+	            $data = array();
+	        }
+			
+			return $data;
+		}
     }
 
     /**
