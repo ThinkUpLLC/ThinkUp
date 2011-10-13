@@ -143,6 +143,15 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         $qtab->addDataset($qtabds);
         $menus["questions"] = $qtab;
 
+        // Wall Posts
+        $messagestab = new MenuItem("Wall Posts", "Posts to your wall by other users", $fb_data_tpl);
+        $messagestabds = new Dataset("messages_to_you", 'PostDAO', "getPostsToUser",
+        array($instance->network_user_id, $instance->network, 15, '#page_number#', !Session::isLoggedIn()),
+        'getPostsToUserIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()));
+        $messagestabds->addHelp('userguide/listings/facebook/dashboard-wallposts');
+        $messagestab->addDataset($messagestabds);
+        $menus["tweets-messages"] = $messagestab;
+
         //Follower count history
         $follower_history_tpl = Utils::getPluginViewDirectory('facebook').'facebook.followercount.tpl';
         $trendtab = new MenuItem(($instance->network == 'facebook page')?'Fan count history':'Friend count history',

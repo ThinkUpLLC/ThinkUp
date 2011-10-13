@@ -797,6 +797,54 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $posts;
     }
 
+    /**
+     * Iterator wrapper for getPostsToUser
+     */
+    public function getPostsToUserIterator($user_id, $network, $count, $is_public=false) {
+        return $this->getPostsToUser($user_id, $network, $count, 1, $is_public, true);
+    }
+
+    /**
+     * get the posts to the given user_id that are not replies, e.g. Facebook wall posts
+     */
+    public function getPostsToUser($user_id, $network, $count = 15, $page = 1, $is_public = false,
+    $iterator = false) {
+        $start_on_record = ($page - 1) * $count;
+        if ($is_public) {
+            $protected = 'AND p.is_protected = 0 ';
+        } else {
+            $protected = '';
+        }
+
+        $q  = "SELECT p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.image_src, " .
+        "pub_date + interval #gmt_offset# hour AS adj_pub_date ";
+        $q .= "FROM #prefix#posts AS p ";
+        $q .= "LEFT JOIN #prefix#links AS l ON p.id = l.post_key ";
+        $q .= "WHERE p.network = :network ";
+        $q .= $protected;
+        $q .= " AND in_reply_to_post_id IS NULL ";
+        $q .= " AND p.in_reply_to_user_id = :user_id ";
+        $q .= "ORDER BY p.id DESC ";
+        $q .= "LIMIT :start_on_record, :limit";
+        $vars = array(
+            ':user_id'=>(string)$user_id,
+            ':network'=>$network,
+            ':limit'=>$count,
+            ':start_on_record'=>(int)$start_on_record
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        if ($iterator) {
+            return (new PostIterator($ps));
+        }
+        $all_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+        foreach ($all_rows as $row) {
+            $posts[] = $this->setPostWithLink($row);
+        }
+        return $posts;
+    }
+
     public function getAllQuestionPosts($author_id, $network, $count, $page=1, $order_by = 'pub_date',
     $direction = 'DESC', $is_public = false) {
         $start_on_record = ($page - 1) * $count;
