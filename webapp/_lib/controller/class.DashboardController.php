@@ -119,14 +119,6 @@ class DashboardController extends ThinkUpController {
     private function setInstance() {
         $instance_dao = DAOFactory::getDAO('InstanceDAO');
         $config = Config::getInstance();
-        $instance_id_to_display = $config->getValue('default_instance');
-        $instance_id_to_display = intval($instance_id_to_display);
-        if ( $instance_id_to_display != 0) {
-            $this->instance = $instance_dao->get($instance_id_to_display);
-        }
-        if (!isset($this->instance) || !$this->instance->is_public) {
-            $this->instance = $instance_dao->getInstanceFreshestPublicOne();
-        }
         if ($this->isLoggedIn()) {
             $owner_dao = DAOFactory::getDAO('OwnerDAO');
             $owner = $owner_dao->getByEmail($this->getLoggedInUser());
@@ -153,6 +145,18 @@ class DashboardController extends ThinkUpController {
                 }
             }
             $this->addToView('instances', $instance_dao->getPublicInstances());
+        }
+        if (!$this->instance) {
+            // A specific instance wasn't passed in the URL (or isn't accessible).
+            // Get a default one.
+            $instance_id_to_display = $config->getValue('default_instance');
+            $instance_id_to_display = intval($instance_id_to_display);
+            if ( $instance_id_to_display != 0) {
+                $this->instance = $instance_dao->get($instance_id_to_display);
+            }
+            if (!isset($this->instance) || !$this->instance->is_public) {
+                $this->instance = $instance_dao->getInstanceFreshestPublicOne();
+            }
         }
         if (isset($this->instance)) {
             //user
