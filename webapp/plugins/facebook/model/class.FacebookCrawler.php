@@ -168,7 +168,7 @@ class FacebookCrawler {
 
         while ($fetch_next_page) {
             $stream = FacebookGraphAPIAccessor::rawApiRequest($next_api_request, true);
-            if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data > 0)) {
+            if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data) > 0) {
                 $this->logger->logInfo(sizeof($stream->data)." Facebook posts found on page ".$current_page_number,
                 __METHOD__.','.__LINE__);
 
