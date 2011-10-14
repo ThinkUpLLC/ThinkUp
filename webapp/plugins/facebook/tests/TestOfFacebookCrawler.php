@@ -130,9 +130,20 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
     }
 
     public function testFetchPostsAndRepliesForProfile1() {
-        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 10);
+        $fbc = new FacebookCrawler($this->profile1_instance, 'fauxaccesstoken', 120);
+
+        $config = Config::getInstance();
+        $crawler_log = $config->getValue('log_location');
+        // prepare log for reading after fetchPostsAndReplies
+        $log_reader_handle = fopen($crawler_log, 'r');
+        fseek($log_reader_handle, 0, SEEK_END);
 
         $fbc->fetchPostsAndReplies();
+
+        fflush($this->logger->log);
+        $log_written = stream_get_contents($log_reader_handle);
+        fclose($log_reader_handle);
+        $this->assertFalse(preg_match('/FacebookCrawler::fetchPostsAndReplies,\d+ \| 0 Facebook posts found on page 2/', $log_written));
 
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('158944054123704', 'facebook');
