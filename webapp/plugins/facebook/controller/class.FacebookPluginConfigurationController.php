@@ -153,7 +153,8 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
                 $config = Config::getInstance();
                 $site_root_path = $config->getValue('site_root_path');
                 $redirect_uri = urlencode(sprintf('%s://%s%s%s', !empty($_SERVER['HTTPS']) ? 'https' : 'http',
-                  $_SERVER['SERVER_NAME'], $site_root_path, 'account/?p=facebook'));
+                  empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'],
+                  $site_root_path, 'account/?p=facebook'));
 
                 //Build API request URL
                 $api_req = 'https://graph.facebook.com/oauth/access_token?client_id='.

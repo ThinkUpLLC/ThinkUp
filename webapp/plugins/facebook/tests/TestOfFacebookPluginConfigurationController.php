@@ -51,7 +51,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $webapp->registerPlugin('facebook', 'FacebookPlugin');
 
         $_SERVER['SERVER_NAME'] = 'dev.thinkup.com';
-        $_SERVER['HTTP_HOST'] = 'http://';
+        $_SERVER['HTTP_HOST'] = 'dev.thinkup.com';
         $_SERVER['REQUEST_URI'] = '';
 
         //Add owners
@@ -317,6 +317,48 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         SessionCache::put('facebook_auth_csrf', '123');
         $_GET['p'] = 'facebook';
         $_GET['code'] = '456';
+        $_GET['state'] = '123';
+
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+
+        $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
+        $this->assertNull($instance); //Instance doesn't exist
+
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+
+        $msgs = $v_mgr->getTemplateDataItem('success_msgs');
+        $this->assertEqual($msgs['user_add'], "Success! Your Facebook account has been added to ThinkUp.");
+        $this->debug(Utils::varDumpToString($msgs));
+
+        $instance = $instance_dao->getByUserIdOnNetwork('606837591', 'facebook');
+        $this->assertNotNull($instance); //Instance created
+
+        $owner_instance = $owner_instance_dao->get($owner->id, $instance->id);
+        $this->assertNotNull($owner_instance); //Owner Instance created
+        //OAuth token set
+        $this->assertEqual($owner_instance->oauth_access_token, 'newfauxaccesstoken11234567890');
+    }
+
+    public function testConnectAccountSuccessfulNoServerName()  {
+        $owner_instance_dao = new OwnerInstanceMySQLDAO();
+        $instance_dao = new InstanceMySQLDAO();
+        $owner_dao = new OwnerMySQLDAO();
+
+        $config = Config::getInstance();
+        $config->setValue('site_root_path', '/');
+
+        // $_SERVER['SERVER_NAME'] may not be set, depending on web server configuration
+        unset($_SERVER['SERVER_NAME']);
+        $_SERVER['HTTP_HOST'] = 'srvr';
+        $_SERVER['HTTPS'] = true;
+        SessionCache::put('facebook_auth_csrf', '123');
+        $_GET['p'] = 'facebook';
+        $_GET['code'] = '789';
         $_GET['state'] = '123';
 
         $options_arry = $this->buildPluginOptions();
