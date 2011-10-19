@@ -6,33 +6,98 @@
     {if $error}
     <p class="error">
         {$error}
-    </p>    
+    </p>
     {/if}
 
-<h2>Follower Count By Day{if !$follower_count_history_by_day.history OR $follower_count_history_by_day.history|@count < 2}
-<br /><i>Not enough data to display chart</i>
-{else}
-{if $follower_count_history_by_day.trend}({if $follower_count_history_by_day.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_day.trend|number_format}</span>/day){/if}</h2>
-<img src="http://chart.apis.google.com/chart?chs=710x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$follower_count_history_by_day.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=FF9900&chd=t:{foreach from=$follower_count_history_by_day.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxr={$follower_count_history_by_day.min_count},{$follower_count_history_by_day.max_count}&chxs=1N*s*&chm=N*s*,666666,0,-1,10,,e::5" />
+<h2>{if $follower_count_history_by_day.trend}({if $follower_count_history_by_day.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_day.trend|number_format}</span>/day){/if}</h2>
+<div id="follower_count_history_by_day"></div>
 
 {if $follower_count_history_by_day.milestone}
-<br /><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_day.milestone.will_take} day{if $follower_count_history_by_day.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_day.milestone.next_milestone|number_format} followers</span> at this rate.</small>
-{/if}
-{/if}
-<br /><br />
-
-<h2>Follower Count By Week{if !$follower_count_history_by_week.history OR $follower_count_history_by_week.history|@count < 2}<br /><i>Not enough data to display chart</i><br clear="all"/>{else} {if $follower_count_history_by_week.trend != 0}({if $follower_count_history_by_week.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_week.trend|number_format}</span>/week){/if}</h2>
-<img src="http://chart.apis.google.com/chart?chs=710x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{$tid|date_format:"%b %d"}|{/foreach}1:|{foreach from=$follower_count_history_by_week.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=FF9900&chd=t:{foreach from=$follower_count_history_by_week.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_week.min_count},{$follower_count_history_by_week.max_count}&chxr={$follower_count_history_by_week.min_count},{$follower_count_history_by_week.max_count}&chxs=1N*s*&chm=N*s*,666666,0,-1,10,,e::5" />
-{if $follower_count_history_by_week.milestone}
-<br /><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} week{if $follower_count_history_by_week.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate.</small> 
-{/if}
+    <br /><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_day.milestone.will_take} day{if $follower_count_history_by_day.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_day.milestone.next_milestone|number_format} followers</span> at this rate.</small>
 {/if}
 
-<br /><br />
+<h2>{if $follower_count_history_by_week.trend != 0}({if $follower_count_history_by_week.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_week.trend|number_format}</span>/week){/if}</h2>
+<div id="follower_count_history_by_week"></div>
 
-<h2>Follower Count By Month{if !$follower_count_history_by_month.history OR $follower_count_history_by_month.history|@count < 2}<br /><i>Not enough data to display chart</i><br clear="all"/>{else} {if $follower_count_history_by_month.trend != 0}({if $follower_count_history_by_month.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_month.trend|number_format}</span>/month){/if}</h2>
-<img src="http://chart.apis.google.com/chart?chs=710x200&chxt=x,y&chxl=0:|{foreach from=$follower_count_history_by_month.history key=tid item=t name=foo}{$tid|date_format:"%b '%y"}|{/foreach}1:|{foreach from=$follower_count_history_by_month.y_axis key=tid item=t name=foo}{$t|number_format}{if !$smarty.foreach.foo.last}|{/if}{/foreach}&cht=bvs&chco=FF9900&chd=t:{foreach from=$follower_count_history_by_month.history key=tid item=t name=foo}{if $t > 0}{$t}{else}_{/if}{if !$smarty.foreach.foo.last},{/if}{/foreach}&chbh=a&chds={$follower_count_history_by_month.min_count},{$follower_count_history_by_month.max_count}&chxr={$follower_count_history_by_month.min_count},{$follower_count_history_by_month.max_count}&chxs=1N*s*&chm=N*s*,666666,0,-1,10,,e::5" />
+    {if $follower_count_history_by_week.milestone}
+<br /><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} week{if $follower_count_history_by_week.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate.</small>
+{/if}
+
+<h2>{if $follower_count_history_by_month.trend != 0}({if $follower_count_history_by_month.trend > 0}<span style="color:green">+{else}<span style="color:red">{/if}{$follower_count_history_by_month.trend|number_format}</span>/month){/if}</h2>
+<div id="follower_count_history_by_month"></div>
+
 {if $follower_count_history_by_month.milestone}
-<br /><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_month.milestone.will_take} month{if $follower_count_history_by_month.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_month.milestone.next_milestone|number_format} followers</span> at this rate.</small>
+    <br /><small style="color:gray">NEXT MILESTONE: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_month.milestone.will_take} month{if $follower_count_history_by_month.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_month.milestone.next_milestone|number_format} followers</span> at this rate.</small>
 {/if}
-{/if}
+
+<script type="text/javascript">
+// Load the Visualization API and the standard charts
+google.load('visualization', '1');
+// Set a callback to run when the Google Visualization API is loaded.
+google.setOnLoadCallback(drawCharts);
+
+{literal}
+function drawCharts() {
+{/literal}
+    var follower_count_history_by_day_data = new google.visualization.DataTable(
+    {$follower_count_history_by_day.vis_data});
+    var follower_count_history_by_week_data = new google.visualization.DataTable(
+    {$follower_count_history_by_week.vis_data});
+    var follower_count_history_by_month_data = new google.visualization.DataTable(
+    {$follower_count_history_by_month.vis_data});
+
+{literal}
+    var follower_count_history_by_day_chart = new google.visualization.ChartWrapper({
+        containerId: 'follower_count_history_by_day',
+        chartType: 'LineChart',
+        dataTable: follower_count_history_by_day_data,
+        options: {
+            title: 'Follower Count By Day',
+            width: 600,
+            height: 250,
+            legend: "top",
+            interpolateNulls: true,
+            vAxis: {
+              minValue: 0
+            }
+        },
+    });
+    follower_count_history_by_day_chart.draw();
+
+    var follower_count_history_by_week_chart = new google.visualization.ChartWrapper({
+        containerId: 'follower_count_history_by_week',
+        chartType: 'LineChart',
+        dataTable: follower_count_history_by_week_data,
+        options: {
+            title: 'Follower Count By Week',
+            width: 600,
+            height: 250,
+            legend: "top",
+            interpolateNulls: true,
+            vAxis: {
+              minValue: 0
+            }
+        },
+    });
+    follower_count_history_by_week_chart.draw();
+
+    var follower_count_history_by_month_chart = new google.visualization.ChartWrapper({
+        containerId: 'follower_count_history_by_month',
+        chartType: 'LineChart',
+        dataTable: follower_count_history_by_month_data,
+        options: {
+            title: 'Follower Count By Month',
+            width: 600,
+            height: 250,
+            legend: "top",
+            interpolateNulls: true,
+            vAxis: {
+              minValue: 0
+            }
+        },
+    });
+    follower_count_history_by_month_chart.draw();
+}
+
+{/literal}
+</script>
