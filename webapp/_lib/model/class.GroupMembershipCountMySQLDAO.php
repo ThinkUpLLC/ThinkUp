@@ -88,6 +88,24 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
         $ps = $this->execute($q, $vars);
         $history_rows = $this->getDataRowsAsArrays($ps);
 
+        foreach ($history_rows as $row) {
+            $timestamp = strtotime($row['full_date']);
+            $resultset[] = array('c' => array(
+                array('v' => sprintf('new Date(%d,%d,%d)', date('Y', $timestamp), date('n', $timestamp) - 1,
+                date('j', $timestamp)), 'f' => $row['date']),
+                array('v' => intval($row['count']))
+            ));
+        }
+        $metadata = array(
+          array('type' => 'date', 'label' => 'Date'),
+          array('type' => 'number', 'label' => 'Count'),
+        );
+        $vis_data = json_encode(array('rows' => $resultset, 'cols' => $metadata));
+        // Google Chart docs say that a string of the form "Date(Y,m,d)" should
+        // work, but chrome throws an error if we don't use an actual Date
+        // object.
+        $vis_data = preg_replace('/"(new Date[^"]+)"/', '$1', $vis_data);
+
         if (sizeof($history_rows) > 1 ) {
             //break down rows into a simpler date=>count assoc array
             $simplified_history = array();
@@ -156,16 +174,8 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
                     $percentages[] = round(Utils::getPercentage($amount_above_min, $difference));
                 }
             }
+            $history = $simplified_history;
 
-            $y_axis = array();
-            $num_y_axis_points = 4;
-            $y_axis_interval_size = $difference/$num_y_axis_points;
-            $i = 0;
-            while ($i < $num_y_axis_points) {
-                $y_axis[$i] = $min_count + ($y_axis_interval_size * $i);
-                $i = $i+1;
-            }
-            $y_axis[$num_y_axis_points] = $max_count;
             $milestone = Utils::predictNextMilestoneDate(intval($history_rows[sizeof($history_rows)-1]['count']),
             $trend);
             if (isset($milestone)) {
@@ -177,14 +187,9 @@ class GroupMembershipCountMySQLDAO extends PDODAO implements GroupMembershipCoun
             }
         } else  {
             $history = false;
-            $y_axis = false;
             $trend = false;
-            $percentages = false;
             $milestone = false;
-            $max_count = false;
-            $min_count = false;
         }
-        return array('history'=>$history, 'percentages'=>$percentages, 'y_axis'=>$y_axis, 'trend'=>$trend,
-        'milestone'=> $milestone, 'max_count'=>$max_count, 'min_count'=>$min_count);
+        return array('history'=>$history, 'trend'=>$trend, 'milestone'=> $milestone, 'vis_data' => $vis_data);
     }
 }

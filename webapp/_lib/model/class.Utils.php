@@ -420,4 +420,68 @@ class Utils {
             return date($format,strtotime("last Saturday",$offset));
         }
     }
+    /**
+     * Convert Hot Posts data to JSON for use with Google Charts
+     * @param array $hot_posts Array returned from PostDAO::getHotPosts
+     * @return string JSON
+     */
+    public static function getHotPostVisualizationData($hot_posts, $network) {
+        switch ($network) {
+            case 'twitter':
+                $post_label = 'Tweet';
+                $approval_field = 'all_retweets';
+                $approval_label = 'Retweets';
+                break;
+            case 'facebook':
+            case 'facebook page':
+                $post_label = 'Post';
+                $approval_field = 'favlike_count_cache';
+                $approval_label = 'Likes';
+                break;
+            case 'google+':
+                $post_label = 'Post';
+                $approval_field = 'favlike_count_cache';
+                $approval_label = "+1's";
+                break;
+            default:
+                $post_label = 'Post';
+                $approval_field = 'favlike_count_cache';
+                $approval_label = "Favorites";
+                break;
+        }
+        $metadata = array(
+        array('type' => 'string', 'label' => $post_label),
+        array('type' => 'number', 'label' => $approval_label),
+        array('type' => 'number', 'label' => 'Replies'),
+        );
+        $resultset = array();
+        foreach ($hot_posts as $post) {
+            $resultset[] = array('c' => array(
+            array('v' => $post->post_text),
+            array('v' => intval($post->$approval_field)),
+            array('v' => intval($post->reply_count_cache)),
+            ));
+        }
+        return json_encode(array('rows' => $resultset, 'cols' => $metadata));
+    }
+
+    /**
+     * Convert client usage data to JSON for Google Charts
+     * @param array $client_usage Array returned from PostDAO::getClientsUsedByUserOnNetwork
+     * @return string JSON
+     */
+    public static function getClientUsageVisualizationData($client_usage) {
+        $metadata = array(
+        array('type' => 'string', 'label' => 'Client'),
+        array('type' => 'number', 'label' => 'Posts'),
+        );
+        $resultset = array();
+        foreach ($client_usage as $client => $posts) {
+            $resultset[] = array('c' => array(
+            array('v' => $client, 'f' => sprintf('%s (%d)', $client, intval($posts))),
+            array('v' => intval($posts)),
+            ));
+        }
+        return json_encode(array('rows' => $resultset, 'cols' => $metadata));
+    }
 }
