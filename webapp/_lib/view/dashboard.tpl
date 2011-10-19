@@ -229,7 +229,6 @@
   </div> <!-- /.clearfix -->
 </div> <!-- /.container_24 -->
 
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
   
 {include file="_footer.tpl"}
