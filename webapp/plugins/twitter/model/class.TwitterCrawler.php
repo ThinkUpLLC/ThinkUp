@@ -739,6 +739,133 @@ class TwitterCrawler {
             }
         }
     }
+
+    /** Find group memberships that are probably no longer active, verify, and
+     * deactivate or update
+     */
+    public function updateStaleGroupMemberships() {
+        if (!isset($this->user)) {
+            $this->fetchInstanceUserInfo();
+        }
+        if (isset($this->user) && $this->api->available_api_calls_for_crawler > 0) {
+            $status_message = "";
+            $updated_group_member_count = 0;
+
+            $group_member_dao = DAOFactory::getDAO('GroupMemberDAO');
+
+            while ($this->api->available && $this->api->available_api_calls_for_crawler > 0) {
+                $stale_membership = $group_member_dao->findStalestMemberships($this->instance->network_user_id, 'twitter');
+                if (empty($stale_membership)) {
+                    break;
+                }
+                $check_group_member = $this->api->cURL_source['check_group_member'];
+                $args = array();
+                $args['list_id'] = $stale_membership->group_id;
+                $args['user_id'] = $this->instance->network_user_id;
+
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($check_group_member, $args);
+
+                if ($cURL_status == 404) {
+                    $status_message = sprintf('User, %s, no longer active on twitter list, %s',
+                      $this->instance->network_username, $stale_membership->group_name);
+                    $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+                    $group_member_dao->deactivate($this->instance->network_user_id, $stale_membership->group_id, 'twitter');
+                    $updated_group_member_count++;
+                } elseif ($cURL_status > 200) {
+                    break;
+                } else {
+                    $status_message = sprintf('Updating active member, %s, on twitter list, %s',
+                      $this->instance->network_username, $stale_membership->group_name);
+                    $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+                    $group_member_dao->update($this->instance->network_user_id, $stale_membership->group_id, 'twitter');
+                    $updated_group_member_count++;
+                }
+            }
+            if ($updated_group_member_count > 0) {
+                $group_member_count_dao = DAOFactory::getDAO('GroupMembershipCountDAO');
+                $status_message = $updated_group_member_count ." group membership(s) updated";
+                $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+                // update current number of active list membershps
+                $group_member_count_dao->recordCurrentCount($this->instance->network_user_id, 'twitter');
+            }
+        }
+    }
+
+    /**
+     * Fetch instance user's lists: Page back only if more than 2% of follows are missing from database
+     */
+    public function fetchInstanceUserGroups() {
+        if (!isset($this->user)) {
+            $this->fetchInstanceUserInfo();
+        }
+
+        if (isset($this->user) && $this->api->available_api_calls_for_crawler > 0) {
+            $status_message = "";
+
+            // Fetch follower pages
+            $continue_fetching = true;
+            $updated_group_member_count = 0;
+            $inserted_group_member_count = 0;
+
+            $group_dao = DAOFactory::getDAO('GroupDAO');
+            $group_member_dao = DAOFactory::getDAO('GroupMemberDAO');
+            // $group_owner_dao = DAOFactory::getDAO('GroupOwnerDAO');
+            $group_member_count_dao = DAOFactory::getDAO('GroupMembershipCountDAO');
+
+            while ($this->api->available && $this->api->available_api_calls_for_crawler > 0 && $continue_fetching) {
+
+                $groups = $this->api->cURL_source['groups'];
+                $args = array();
+                if (!isset($next_cursor))
+                $next_cursor = -1;
+                $args['cursor'] = strval($next_cursor);
+
+                list($cURL_status, $twitter_data) = $this->api->apiRequest($groups, $args);
+
+                if ($cURL_status > 200) {
+                    $continue_fetching = false;
+                } else {
+
+                    $status_message = "Parsing XML. ";
+                    $status_message .= "Cursor ".$next_cursor.":";
+                    $groups = $this->api->parseXML($twitter_data);
+                    $next_cursor = $this->api->getNextCursor();
+                    if ($next_cursor == 0) {
+                        $continue_fetching = false;
+                    }
+                    $status_message .= count($groups)." groups queued to update. ";
+                    $this->logger->logInfo($status_message, __METHOD__.','.__LINE__);
+                    $status_message = "";
+
+                    foreach ($groups as $g) {
+                        $group = new Group($g, 'Member');
+                        // if group exists, update it; otherwise, insert group
+                        $group_dao->updateGroup($group);
+
+                        // add/update group membership/ownership
+                        if ($group_member_dao->groupMemberExists($this->instance->network_user_id, $group->group_id, 'twitter')) {
+                            if ($group_member_dao->update($this->instance->network_user_id, $group->group_id, 'twitter')) {
+                                $updated_group_member_count++;
+                            }
+                        } else {
+                            if ($group_member_dao->insert($this->instance->network_user_id, $group->group_id, 'twitter')) {
+                                $inserted_group_member_count++;
+                            }
+                        }
+                    }
+                    $this->logger->logSuccess("Cursor at ".strval($next_cursor), __METHOD__.','.__LINE__);
+                }
+            }
+            if ($updated_group_member_count > 0 || $inserted_group_member_count > 0 ) {
+                $status_message = $updated_group_member_count ." group membership(s) updated; ". $inserted_group_member_count.
+                " new group membership(s) inserted.";
+                $this->logger->logUserSuccess($status_message, __METHOD__.','.__LINE__);
+            }
+            // update current number of active list membershps
+            $group_member_count_dao->recordCurrentCount($this->instance->network_user_id, 'twitter');
+        }
+    }
+
     /**
      * Fetch the instance user's friends' tweets.
      */

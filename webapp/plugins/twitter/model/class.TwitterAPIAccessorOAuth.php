@@ -169,7 +169,9 @@ class TwitterAPIAccessorOAuth {
             "show_tweet"=>"/statuses/show/[id]", "post_tweet"=>"/statuses/update", 
             "user_timeline"=>"/statuses/user_timeline/[id]", "show_user"=>"/users/show/[id]", 
             "retweeted_by_me"=>"/statuses/retweeted_by_me", "retweets_of_me"=>"/statuses/retweets_of_me", 
-            "retweeted_by"=>"/statuses/[id]/retweeted_by");
+            "retweeted_by"=>"/statuses/[id]/retweeted_by", "groups"=>"/lists/memberships",
+            "check_group_member"=>"/lists/members/show",
+        );
         # Construct cURL sources
         foreach ($api_method as $key=>$value) {
             $urls[$key] = $api_domain.$value.".".$api_format;
@@ -343,6 +345,20 @@ class TwitterAPIAccessorOAuth {
                         $parsed_payload = array('source_follows_target'=>$xml->source->following,
                             'target_follows_source'=>$xml->target->following);
                         break;
+                    case 'lists_list':
+                        $this->next_cursor = $xml->next_cursor;
+                        foreach ($xml->lists->children() as $item) {
+                            $parsed_payload[] = array(
+                                // might want to get additional fields:
+                                // slug, subscriber_count, member_count, created_at, mode
+                                'group_id' => (string)$item->id,
+                                'group_name' => (string)$item->full_name,
+                                'owner_id' => (string)$item->user->id,
+                                'owner_name' => (string)$item->user->screen_name,
+                                'network' => 'twitter',
+                            );
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -413,7 +429,7 @@ class TwitterAPIAccessorOAuth {
      * @return int
      */
     public function getNextCursor() {
-        return $this->next_cursor;
+        return (int)$this->next_cursor;
     }
     /**
      * Create DOM from URL.

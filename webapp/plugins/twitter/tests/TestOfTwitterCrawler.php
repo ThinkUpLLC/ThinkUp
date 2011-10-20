@@ -75,6 +75,13 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         // insert test follow
         $this->builders[] = FixtureBuilder::build('follows', array('user_id'=>930061, 'follower_id'=>36823,
         'last_seen'=>'-2y'));
+
+        $this->builders[] = FixtureBuilder::build('groups', array('group_id'=>19994710, 'group_name'=>'@userx/anotherlist',
+        'network' => 'twitter', 'active'=>1));
+
+        // stale group membership
+        $this->builders[] = FixtureBuilder::build('group_members', array('member_user_id'=>36823, 'group_id'=>19994710,
+        'active' => 1, 'network'=>'twitter', 'last_seen' => '-3d'));
     }
 
     public function tearDown() {
@@ -468,6 +475,34 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $updated_user->full_name);
         $this->assertEqual($updated_user->location, 'Bedford, OH', 'follower location set to '.
         $updated_user->location);
+    }
+
+    public function testFetchInstanceUserGroups() {
+        self::setUpInstanceUserAnilDash();
+        $tc = new TwitterCrawler($this->instance, $this->api);
+
+        $tc->fetchInstanceUserGroups();
+        $group_dao = DAOFactory::getDAO('GroupDAO');
+        $this->assertTrue($group_dao->groupExists($group = '1234566', 'twitter'), 'group does not exist');
+
+        $group_member_dao = DAOFactory::getDAO('GroupMemberDAO');
+        $this->assertTrue($group_member_dao->groupMemberExists($user = '36823', $group = '1234566', 'twitter'), 'group member does not exist');
+        $this->assertFalse($group_member_dao->groupMemberExists($user = '930061', $group = '1234566', 'twitter'), 'group member exists');
+
+        $group_membership_count_dao = DAOFactory::getDAO('GroupMembershipCountDAO');
+        $history = $group_membership_count_dao->getHistory($user = '36823', 'twitter', 'DAYS');
+        $this->assertEqual(count($history['history']), 1);
+    }
+
+    public function testUpdateStaleGroupMemberships() {
+        self::setUpInstanceUserAnilDash();
+        $tc = new TwitterCrawler($this->instance, $this->api);
+
+        $group_member_dao = DAOFactory::getDAO('GroupMemberDAO');
+        $this->assertTrue($group_member_dao->groupMemberExists($user = '36823', $group = '19994710', 'twitter', $active = true), 'group member does not exist');
+
+        $tc->updateStaleGroupMemberships();
+        $this->assertFalse($group_member_dao->groupMemberExists($user = '36823', $group = '19994710', 'twitter', $active = true), 'group member active');
     }
 
     public function testFetchInstanceUserFriends() {
