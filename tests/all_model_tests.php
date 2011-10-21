@@ -80,6 +80,7 @@ $model_tests->add(new TestOfMentionMySQLDAO());
 $model_tests->add(new TestOfPlaceMySQLDAO());
 $model_tests->add(new TestOfPDODAO());
 $model_tests->add(new TestOfURLProcessor());
+$model_tests->add(new TestOfTableStatsMySQLDAO());
 
 $tr = new TextReporter();
 $model_tests->run( $tr );

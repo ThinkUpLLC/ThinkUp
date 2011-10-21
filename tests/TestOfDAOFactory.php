@@ -343,6 +343,14 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertIsA($dao, 'StreamProcMySQLDAO');
     }
     /**
+     * Test get TableStatsDAO
+     */
+    public function testGetTableStatsDAO() {
+        $dao = DAOFactory::getDAO('TableStatsDAO');
+        $this->assertNotNull($dao);
+        $this->assertIsA($dao, 'TableStatsMySQLDAO');
+    }
+    /**
      * Test get InstallerDAO without a config file, override with array of config values
      */
     public function testGetInstallerDAONoConfigFile(){
