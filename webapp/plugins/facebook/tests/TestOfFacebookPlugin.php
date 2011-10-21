@@ -61,7 +61,7 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $menus = $webapp->getDashboardMenu($instance);
         $posts_menu = $menus["all_facebook_posts"];
 
-        $this->assertEqual(sizeof($menus), 5);
+        $this->assertEqual(sizeof($menus), 6);
         $post_tab = $menus['all_facebook_posts'];
         $this->assertEqual($post_tab->name, "All posts");
         $this->assertEqual($post_tab->description, "All status updates");
