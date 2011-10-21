@@ -66,6 +66,11 @@ class UpgradeController extends ThinkUpAuthController {
     const TOKEN_KEY = 'a_token_key';
 
     /**
+     * max table rows before we warn users to use the CLI upgrade interface
+     */
+    static $WARN_TABLE_ROW_COUNT = 250000;
+
+    /**
      * Constructor
      * @param bool $session_started
      * @return UpgradeController
@@ -141,6 +146,13 @@ class UpgradeController extends ThinkUpAuthController {
                     }
                     $this->addToView('version_updated', true);
                     $this->deleteTokenFile();
+                } else {
+                    // pass the count of the table with  the most records
+                    $table_stats_dao = DAOFactory::getDAO('TableStatsDAO');
+                    $table_counts = $table_stats_dao->getTableRowCounts();
+                    if($table_counts[0]['count'] > self::$WARN_TABLE_ROW_COUNT) {
+                        $this->addToView('high_table_row_count',$table_counts[0]);
+                    }
                 }
             }
         }
