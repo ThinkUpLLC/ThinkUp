@@ -381,8 +381,8 @@ class TestOfDAOFactory extends ThinkUpUnitTestCase {
         $this->assertTrue(isset($dao));
         $this->assertIsA($dao, 'InstallerMySQLDAO');
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 28);
-        $this->assertEqual($result[0], $cfg_values["table_prefix"].'encoded_locations');
+        $this->assertEqual(sizeof($result), 29);
+        $this->assertEqual($result[0], $cfg_values["table_prefix"].'domain_metrics');
         $this->restoreConfigFile();
     }
 }

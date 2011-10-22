@@ -154,6 +154,11 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
             $this->addToView('owner_instance_pages', $owner_instance_pages);
         }
 
+        $owner_instance_domains = $instance_dao->getByOwnerAndNetwork($this->owner, 'facebook domain');
+        if (count($owner_instance_domains) > 0) {
+            $this->addToView('owner_instance_domains', $owner_instance_domains);
+        }
+
         $this->addToView('owner_instances', $owner_instances);
     }
 
@@ -210,16 +215,39 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         }
 
         //insert pages
-        if (isset($_GET["action"]) && $_GET["action"] == "add page" && isset($_GET["facebook_page_id"])
-        && isset($_GET["viewer_id"]) && isset($_GET["owner_id"]) && isset($_GET["instance_id"])) {
+        if (isset($_GET["action"]) && isset($_GET["viewer_id"]) && isset($_GET["owner_id"]) && isset($_GET["instance_id"])) {
             //get access token
             $oid = DAOFactory::getDAO('OwnerInstanceDAO');
             $tokens = $oid->getOAuthTokens($_GET["instance_id"]);
             $access_token = $tokens['oauth_access_token'];
 
-            $page_data = FacebookGraphAPIAccessor::apiRequest('/'.$_GET["facebook_page_id"], $access_token);
-            self::insertPage($page_data->id, $_GET["viewer_id"], $_GET["instance_id"], $page_data->name,
-            $page_data->picture);
+            switch ($_GET["action"]) {
+            case "add page":
+                if (!$_GET["facebook_page_id"]) {
+                    return;
+                }
+                $page_data = FacebookGraphAPIAccessor::apiRequest('/'.$_GET["facebook_page_id"], $access_token);
+                self::insertPage($page_data->id, $_GET["viewer_id"], $_GET["instance_id"], $page_data->name,
+                $page_data->picture);
+                break;
+            case "add domain":
+                if (!$_GET["facebook_domain"]) {
+                    return;
+                }
+                $domain_data = FacebookGraphAPIAccessor::rawApiRequest('https://graph.facebook.com/?domain=' . 
+                $_GET["facebook_domain"] . '&access_token=' . $access_token, true);
+                if (isset($domain_data->error)) {
+                   $this->addErrorMessage('Could not find id for domain.  Facebook said: ' . $domain_data->error->message);
+                   return;
+                }
+                $insights_data = FacebookGraphAPIAccessor::apiRequest('/' . $domain_data->id . '/insights/domain_widget_likes', $access_token);
+                if (isset($insights_data->error)) {
+                   $this->addErrorMessage('This user does not have permission to access Facebook Insights for this domain.  See https://developers.facebook.com/docs/insights/');
+                   return;
+                }
+                self::insertDomain($domain_data->id, $_GET["viewer_id"], $_GET["instance_id"], $domain_data->name);
+                break;
+            }
         }
     }
 
@@ -314,6 +342,32 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         } else {
             $this->addInfoMessage("This Facebook Page is already in ThinkUp.", 'page_add');
             $instance_id = $i->id;
+        }
+    }
+
+    /**
+     * Insert domain into the data store as a Facebook domain instance
+     * @param str $fb_domain_id
+     * @param str $viewer_id
+     * @param int $existing_instance_id
+     * @param str $domain_name
+     * @return void
+     */
+    protected function insertDomain($fb_domain_id, $viewer_id, $existing_instance_id, $domain_name) {
+        //check if instance exists
+        $instance_dao = DAOFactory::getDAO('InstanceDAO');
+        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+        $i = $instance_dao->getByUserAndViewerId($fb_domain_id, $viewer_id, 'facebook domain');
+        if ($i == null ) {
+            $instance_id = $instance_dao->insert($fb_domain_id, $domain_name, "facebook domain", $viewer_id);
+            if ($instance_id) {
+                $this->addSuccessMessage("Success! Your domain has been added.", 'domain_add');
+            }
+            $tokens = $owner_instance_dao->getOAuthTokens($existing_instance_id);
+            $session_key = $tokens['oauth_access_token'];
+            $owner_instance_dao->insert($this->owner->id, $instance_id, $session_key);
+        } else {
+            $this->addInfoMessage("This domain is already in ThinkUp.", 'domain_add');
         }
     }
 }

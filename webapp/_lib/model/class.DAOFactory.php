@@ -172,6 +172,10 @@ class DAOFactory {
         'GroupOwnerDAO' => array (
     //MySQL Version
             'mysql' => 'GroupOwnerMySQLDAO'),
+    //Domain Metrics MySQL DAO
+        'DomainMetricsDAO' => array (
+    //MySQL Version
+            'mysql' => 'DomainMetricsMySQLDAO'),
     //TableStats MySQL DAO
         'TableStatsDAO' => array (
     //MySQL Version

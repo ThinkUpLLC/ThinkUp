@@ -136,6 +136,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         // drop all but follows and links
         $this->DAO = new InstallerMySQLDAO($config_array);
         $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."domain_metrics, ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
         //$config->getValue('table_prefix')."follows, ".
@@ -212,6 +213,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         // test with incomplete tables (also fail)
         $this->DAO = new InstallerMySQLDAO($config_array);
         $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."domain_metrics, ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
         $config->getValue('table_prefix')."follower_count, ".
@@ -381,6 +383,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         // drop everything but owners
         $dao = new InstallerMySQLDAO($config_array);
         $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."domain_metrics, ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
         $config->getValue('table_prefix')."follower_count, ".
@@ -423,6 +426,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         // test with verbose on empty test database
         $dao = new InstallerMySQLDAO($config_array);
         $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."domain_metrics, ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
         $config->getValue('table_prefix')."follower_count, ".
@@ -463,6 +467,7 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
         // test on existent tables that's not recognized as a ThinkUp table
         $this->DAO = new InstallerMySQLDAO($config_array);
         $q = "DROP TABLE ".
+        $config->getValue('table_prefix')."domain_metrics, ".
         $config->getValue('table_prefix')."encoded_locations, ".
         $config->getValue('table_prefix')."favorites, ".
         $config->getValue('table_prefix')."follower_count, ".
@@ -538,10 +543,10 @@ class TestOfInstaller extends ThinkUpUnitTestCase {
     public function testGetTablesToInstall(){
         $installer = Installer::getInstance();
         $tables = $installer->getTablesToInstall();
-        $expected_tables = array('encoded_locations', 'favorites', 'follower_count', 'follows', 'group_member_count',
-        'group_members', 'groups', 'hashtags', 'hashtags_posts', 
-        'instances',  'instances_twitter', 'invites', 'links', 'mentions', 'mentions_posts', 'options', 
-        'owner_instances', 'owners', 'places','places_posts', 
+        $expected_tables = array('domain_metrics', 'encoded_locations', 'favorites', 'follower_count', 'follows',
+        'group_member_count', 'group_members', 'groups', 'hashtags', 'hashtags_posts',
+        'instances',  'instances_twitter', 'invites', 'links', 'mentions', 'mentions_posts', 'options',
+        'owner_instances', 'owners', 'places','places_posts',
         'plugins', 'post_errors', 'posts', 'stream_data', 'stream_procs', 'user_errors', 'users');
         $this->assertIdentical($tables, $expected_tables);
     }

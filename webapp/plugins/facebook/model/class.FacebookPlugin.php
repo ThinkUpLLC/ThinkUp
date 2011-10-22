@@ -70,7 +70,8 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         //crawl Facebook user profiles and pages
         $profiles = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook');
         $pages = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook page');
-        $instances = array_merge($profiles, $pages);
+        $domains = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('facebook domain');
+        $instances = array_merge($profiles, $pages, $domains);
 
         foreach ($instances as $instance) {
             if (!$owner_instance_dao->doesOwnerHaveAccessToInstance($current_owner, $instance)) {
@@ -87,7 +88,11 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
             $instance_dao->updateLastRun($instance->id);
             $crawler = new FacebookCrawler($instance, $access_token, $max_crawl_time);
             try {
-                $crawler->fetchPostsAndReplies();
+                if ($instance->network == 'facebook domain') {
+                    $crawler->fetchDomainMetrics();
+                } else {
+                    $crawler->fetchPostsAndReplies();
+                }
             } catch (Exception $e) {
                 $logger->logUserError('EXCEPTION: '.$e->getMessage(), __METHOD__.','.__LINE__);
             }
@@ -103,7 +108,9 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         return $controller->go();
     }
 
-    public function getDashboardMenuItems($instance) {
+    protected function getPostingInstanceDashboardMenuItems($instance) {
+        $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
+
         $menus = array();
 
         $posts_data_tpl = Utils::getPluginViewDirectory('facebook').'posts.tpl';
@@ -198,6 +205,20 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         return $menus;
     }
 
+    protected function getDomainInstanceDashboardMenuItems($instance) {
+        $menus = array();
+        return $menus;
+    }
+
+    public function getDashboardMenuItems($instance) {
+        if ($instance->network == 'facebook domain') {
+            return self::getDomainInstanceDashboardMenuItems($instance);
+        } else {
+            return self::getPostingInstanceDashboardMenuItems($instance);
+        }
+    }
+
+
     public function getPostDetailMenuItems($post) {
         $facebook_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.post.likes.tpl';
         $menus = array();
@@ -228,14 +249,14 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
             'The number of times people clicked the Like button on your site',
             Utils::getPluginViewDirectory('facebook').'facebook.domain.likes.tpl');
 
-            $domain_likes_by_day_data = new Dataset('domain_widget_likes_by_day', 'DomainMetricsDAO', 'getHistory',
+            $domain_likes_by_day_data = new Dataset('domain_widget_likes_by_day', 'DomainMetricsDAO', 'getWidgetHistory',
             array($instance->network_user_id, $instance->network, 'DAY', 15));
             $domain_likes_module->addDataset($domain_likes_by_day_data);
-            $domain_likes_by_week_data = new Dataset('domain_widget_likes_by_week', 'DomainMetricsDAO', 'getHistory',
+            $domain_likes_by_week_data = new Dataset('domain_widget_likes_by_week', 'DomainMetricsDAO', 'getWidgetHistory',
             array($instance->network_user_id, $instance->network, 'WEEK', 15));
             $domain_likes_module->addDataset($domain_likes_by_week_data);
-            $domain_likes_by_month_data = new Dataset('domain_widget_likes_by_month', 'DomainMetricsDAO', 'getHistory',
-            array($instance->network_user_id, $instance->network, 'DAY', 15));
+            $domain_likes_by_month_data = new Dataset('domain_widget_likes_by_month', 'DomainMetricsDAO', 'getWidgetHistory',
+            array($instance->network_user_id, $instance->network, 'MONTH', 15));
             $domain_likes_module->addDataset($domain_likes_by_month_data);
 
             $modules[] = $domain_likes_module;

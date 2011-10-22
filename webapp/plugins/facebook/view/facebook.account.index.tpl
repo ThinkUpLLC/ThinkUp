@@ -63,6 +63,30 @@
     <br />
     {/if}
 
+    {if !empty($owner_instance_domains) }
+    <h2 class="subhead">Facebook Domains</h2>
+    {include file="_usermessage.tpl" field="domain_add"}
+    {foreach from=$owner_instance_domains key=iid item=i name=foo}
+    <div class="clearfix">
+        <div class="grid_4 right" style="padding-top:.5em;">
+            <a href="{$site_root_path}index.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
+        </div>
+        <div class="grid_4 right">
+            <span id="div{$i->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
+        </div>
+        <div class="grid_4 right">
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+        </div>
+        <div class="grid_8 right">
+            <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
+            {insert name="csrf_token"}<!-- delete page csrf token -->
+            <input onClick="return confirm('Do you really want to delete this page?');"  type="submit" name="action" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="delete" /></form></span>
+        </div>
+
+    </div>{/foreach}
+    <br />
+    {/if}
+
 <h2 class="subhead">Add a Facebook Page</h2>
 {foreach from=$owner_instances key=iid item=i name=foo}
   {assign var='facebook_user_id' value=$i->network_user_id}
@@ -104,6 +128,27 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     To add a Facebook page to ThinkUp, create a new page on Facebook.com or "like" an existing one, and refresh this page.
     {/if}
 {/foreach}
+
+<br />
+<h2 class="subhead">Get Facebook Metrics for a Domain</h2>
+<div class="clearfix">
+    <div class="grid_4 right" style="padding-top:.5em;">
+        Domain:
+    </div>
+    <form name="adddomain" action="index.php?p=facebook">
+    <div class="grid_8">
+        <input type="hidden" name="instance_id" value="{$i->id}">
+        <input type="hidden" name="p" value="facebook">
+        <input type="hidden" name ="viewer_id" value="{$i->network_user_id}" />
+        <input type="hidden" name ="owner_id" value="{$owner->id}" />
+        <input type="text" name="facebook_domain">
+    </div>
+    <div class="grid_7">
+         <span id="divadddomain{$i->network_username}"><input type="submit" name="action" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
+addPage"  id="{$i->network_username}" value="add domain" /></span>
+    </div>
+    </form>
+</div>
 
 {/if}
 </div> 

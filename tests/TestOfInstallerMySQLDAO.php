@@ -82,8 +82,8 @@ class TestOfInstallerMySQLDAO extends ThinkUpUnitTestCase {
         $config_array = $config->getValuesArray();
         $dao = new InstallerMySQLDAO($config_array);
         $result = $dao->getTables();
-        $this->assertEqual(sizeof($result), 27);
-        $this->assertEqual($result[0], $config_array["table_prefix"].'encoded_locations');
+        $this->assertEqual(sizeof($result), 28);
+        $this->assertEqual($result[0], $config_array["table_prefix"].'domain_metrics');
     }
     public function testCheckTable() {
         $config = Config::getInstance();

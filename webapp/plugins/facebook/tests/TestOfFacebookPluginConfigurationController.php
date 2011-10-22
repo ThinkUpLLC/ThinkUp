@@ -294,6 +294,31 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->assertNoPattern("/Pages You Manage/", $output);
     }
 
+    public function testConfiguredPluginWithOneFacebookUserOneDomainInstance() {
+        self::buildInstanceData();
+        // build some options data
+        $options_arry = $this->buildPluginOptions();
+        $this->simulateLogin('me@example.com', true);
+
+        //Add facebook domain instance
+        $domain_instance_builder = FixtureBuilder::build('instances', array('id'=>3,
+        'network_user_id'=>'10150093001972608', 'network_username'=>'www.example.com', 'network'=>'facebook domain',
+        'network_viewer_id' => '606837591', 'is_active'=>1));
+        $domain_instance_owner_builder = FixtureBuilder::build('owner_instances', array('owner_id'=>1, 'instance_id'=>3,
+        'oauth_access_token'=>'faux-access-token2'));
+
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new FacebookPluginConfigurationController($owner, 'facebook');
+        $output = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $domains = $v_mgr->getTemplateDataItem('owner_instance_domains');
+        $this->assertIsA($domains, 'Array');
+        $this->assertEqual(sizeof($domains), 1);
+        $this->assertPattern("/Facebook Domains/", $output);
+    }
+
     private function buildPluginOptions() {
         $namespace = OptionDAO::PLUGIN_OPTIONS . '-2';
         $builders = array();

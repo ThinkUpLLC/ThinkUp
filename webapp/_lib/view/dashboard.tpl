@@ -89,7 +89,7 @@
                         {/if}
                     {/if}
                 {/foreach}
-              {else}
+              {elseif empty($module_templates)} <!-- no posts or plugin-supplied modules -->
                  No posts to display. {if $logged_in_user}Update your data and try again.{/if}
               {/if}
             {/if}
