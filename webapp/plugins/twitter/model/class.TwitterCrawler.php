@@ -824,7 +824,11 @@ class TwitterCrawler {
                 }
                 $args['cursor'] = strval($next_cursor);
 
-                list($cURL_status, $twitter_data) = $this->api->apiRequest($groups, $args);
+                try {
+                    list($cURL_status, $twitter_data) = $this->api->apiRequest($groups, $args);
+                } catch (APICallLimitExceededException $e) {
+                    break;
+                }
 
                 if ($cURL_status > 200) {
                     $continue_fetching = false;
