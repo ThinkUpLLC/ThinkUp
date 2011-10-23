@@ -496,6 +496,23 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual(count($history['history']), 1);
     }
 
+    public function testFetchInstanceUserGroupsBudget() {
+        self::setUpInstanceUserAnilDash();
+        // set up crawl limit budget
+        $crawl_limit = array('fetchInstanceUserGroups' => array('count' => 2, 'remaining' => 0) );
+        $this->api->setCallerLimits($crawl_limit);
+        $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
+
+        $twitter_crawler->fetchInstanceUserGroups();
+        $group_dao = DAOFactory::getDAO('GroupDAO');
+        $this->assertFalse($group_dao->isGroupInStorage($group = '1234566', 'twitter'), 'group does not exist');
+
+        $group_member_dao = DAOFactory::getDAO('GroupMemberDAO');
+        $this->assertFalse($group_member_dao->isGroupMemberInStorage($user = '36823', $group = '1234566', 'twitter'),
+        'group member does not exists');
+
+    }
+
     public function testUpdateStaleGroupMemberships() {
         self::setUpInstanceUserAnilDash();
         $twitter_crawler = new TwitterCrawler($this->instance, $this->api);
