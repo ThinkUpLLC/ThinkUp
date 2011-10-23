@@ -49,6 +49,12 @@ class ThinkUpBasicWebTestCase extends WebTestCase {
 
         require THINKUP_ROOT_PATH.'tests/config.tests.inc.php';
         $this->test_database_name = $TEST_DATABASE;
+        if(ThinkUpUnitTestCase::ramDiskTestMode()) {
+            putenv("RD_MODE=1");
+            require THINKUP_WEBAPP_PATH.'config.inc.php';
+            $this->test_database_name = $THINKUP_CFG['db_name'];
+            $this->get($this->url.'/install/setmode.php?rd=1');
+        }
     }
 
     public function tearDown() {

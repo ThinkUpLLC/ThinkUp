@@ -30,6 +30,24 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/web_tester.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 
+if (isset($argv) && ($argv[1] == '--usage' || $argv[1] == '-h' || $argv[1] == '-help')) {
+    echo "ThinkUp test suite runner
+Usage: [environment vars...] php tests/all_tests.php [args...]
+
+Environment vars:
+    TEST_DEBUG=1            Output debugging message during development
+    SKIP_UPGRADE_TESTS=1    Skip upgrade tests, ie, do a short run
+    TEST_TIMING=1           Output test run timing information
+    RD_MODE=1               Use database stored on RAM disk (for speed improvements)
+
+Arguments:
+    -help, -h               Show this help message
+
+
+";
+    return;
+}
+
 $RUNNING_ALL_TESTS = true;
 $TOTAL_PASSES = 0;
 $TOTAL_FAILURES = 0;

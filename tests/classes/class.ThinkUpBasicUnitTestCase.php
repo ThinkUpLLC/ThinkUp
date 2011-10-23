@@ -140,7 +140,7 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
     }
 
     public function debug($message) {
-        if($this->DEBUG) {
+        if ($this->DEBUG) {
             $bt = debug_backtrace();
             print get_class($this) . ": line " . $bt[0]['line'] . " - " . $message . "\n";
         }
@@ -192,6 +192,11 @@ class ThinkUpBasicUnitTestCase extends UnitTestCase {
         }
 
         global $TEST_DATABASE;
+
+        if (getenv("RD_MODE")=="1") {
+            $TEST_DATABASE = $THINKUP_CFG['db_name'];
+        }
+
 
         if ($THINKUP_CFG['db_name'] != $TEST_DATABASE) {
             $message = "The database name in webapp/config.inc.php does not match \$TEST_DATABASE in ".

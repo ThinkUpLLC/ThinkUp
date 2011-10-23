@@ -15,6 +15,7 @@ Tweets
    :maxdepth: 1
 
    dashboard_tweets-all.rst
+   dashboard_tweets-touser.rst
    dashboard_tweets-questions.rst
    dashboard_tweets-mostreplies.rst
    dashboard_tweets-mostretweeted.rst

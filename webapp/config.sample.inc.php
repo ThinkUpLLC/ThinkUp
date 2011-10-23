@@ -67,11 +67,19 @@ $THINKUP_CFG['enable_profiler']           = false;
 $THINKUP_CFG['set_pdo_charset']           = false;
 
 //TESTS OVERRIDE: Run against the tests database and use unpackaged developer /thinkup/webapp/ folder structure
-if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") || getenv("MODE")=="TESTS") {
+if ((isset($_SESSION["MODE"]) && $_SESSION["MODE"] == "TESTS") && ! isset($_SESSION["RD_MODE"])
+|| (getenv("MODE")=="TESTS" && ! getenv("RD_MODE")=="1")) {
     // Full server path to /thinkup/ source code folder.
     $THINKUP_CFG['source_root_path']          = '/your-server-path-to/thinkup/';
     $THINKUP_CFG['db_user']                   = 'your_test_database_username';
     $THINKUP_CFG['db_password']               = 'your_test_database_password';
     $THINKUP_CFG['db_name']                   = 'your_test_database_name'; //by default, thinkup_tests
     ini_set('error_reporting', E_STRICT);
+}
+
+//Test RAM disk database override: Set this to run tests against the RAM disk tests database
+if (isset($_SESSION["RD_MODE"]) || getenv("RD_MODE")=="1") {
+    $THINKUP_CFG['db_user']                   = 'your_ram_disk_test_database_username';
+    $THINKUP_CFG['db_password']               = 'your_ram_disk_test_database_password';
+    $THINKUP_CFG['db_name']                   = $THINKUP_CFG['db_name'] . '_rd';
 }

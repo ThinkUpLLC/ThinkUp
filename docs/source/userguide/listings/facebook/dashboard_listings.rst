@@ -15,6 +15,7 @@ Posts
    :maxdepth: 1
 
    dashboard_all_facebook_posts.rst
+   dashboard_wallposts.rst
    dashboard_mostreplies.rst
    dashboard_mostlikes.rst
    dashboard_questions.rst

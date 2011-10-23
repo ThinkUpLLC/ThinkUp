@@ -46,12 +46,17 @@ To run all the test suites, use:
 
     $ php tests/all_tests.php
 
-To run a single test, set the TEST\_METHOD environment variable. For
-example:
+To run a single test, use SimpleTest's -t parameter. For example:
 
 ::
 
-    $ TEST_METHOD=testIsPluginActive php tests/TestOfPluginMySQLDAO.php
+    $ php tests/TestOfPluginMySQLDAO.php -t testIsPluginActive
+
+To see all the available options, run:
+
+::
+
+    $ php tests/all_tests -help
 
 Writing Tests
 -------------
@@ -126,6 +131,39 @@ Utils::varDumpToString method, like this:
 To see your debug statements, run your test like so:
 
 ``TEST_DEBUG=1 php tests/yourtest.php``
+
+How to Speed Up Test Runs
+-------------------------
+
+You can see how much time test groups take by setting the ``TEST_TIMING`` variable like so:
+
+``TEST_TIMING=1 php tests/all_tests.php``
+
+There are a few ways to speed up the test runs:
+
+1.  Set the environment var ``SKIP_UPGRADE_TESTS``. This will skip the installation upgrade test, and shave a
+    few minutes off of the test run.
+
+    ``SKIP_UPGRADE_TESTS=1 php tests/all_tests.php``
+
+2.  On OS X, set up your test database to run in a RAM disk to speed up database i/o during testing.
+
+    You will need to update the ``config.inc.php`` file to reflect the latest test override and test RAM disk option.
+
+    Copy ``./extras/dev/ramdisk/osx_make_ramdisk_db.conf.sample`` to ``./extras/dev/ramdisk/osx_make_ramdisk_db.conf``
+    and edit as necessary.
+
+    Finally, run the script to create the RAM disk and the RAM disk database:
+
+    ``sudo sh ./extras/dev/ramdisk/osx_make_ramdisk_db create -v``
+
+    Run the tests with ``RD_MODE`` set to 1:
+    
+    ``RD_MODE=1 php tests/all_tests.php`` 
+
+    When you are done testing you can remove the RAM disk with this command:
+
+    ``sudo sh extras/dev/ramdisk/osx_make_ramdisk_db delete -v``
 
 I'm getting lots of test failures. Help!
 ----------------------------------------

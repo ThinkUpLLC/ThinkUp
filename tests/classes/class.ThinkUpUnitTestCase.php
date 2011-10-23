@@ -50,10 +50,15 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
         require THINKUP_ROOT_PATH .'tests/config.tests.inc.php';
         $this->test_database_name = $TEST_DATABASE;
 
-        //Override default CFG values
-        $THINKUP_CFG['db_name'] = $this->test_database_name;
         $config = Config::getInstance();
-        $config->setValue('db_name', $this->test_database_name);
+
+        if (! self::ramDiskTestMode() ) {
+            //Override default CFG values
+            $THINKUP_CFG['db_name'] = $this->test_database_name;
+            $config->setValue('db_name', $this->test_database_name);
+        } else {
+            $this->test_database_name = $THINKUP_CFG['db_name'];
+        }
 
         $this->testdb_helper = new ThinkUpTestDatabaseHelper();
         $this->testdb_helper->drop($this->test_database_name);
@@ -81,5 +86,15 @@ class ThinkUpUnitTestCase extends ThinkUpBasicUnitTestCase {
     public function getElementById($doc, $id) {
         $xpath = new DOMXPath($doc);
         return $xpath->query("//*[@id='$id']")->item(0);
+    }
+
+    /**
+     * are we in ram disk test mode
+     */
+    public static function ramDiskTestMode() {
+        if (getenv("RD_MODE")=="1") {
+            return true;
+        }
+        return false;
     }
 }

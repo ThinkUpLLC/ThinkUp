@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# size of RAM disk
+MEGS=20
+
+# location of HDID
+HDID=/usr/bin/hdid
+
+# location of hdiutil
+HDIUTIL=/usr/bin/hdiutil
+
+# location of /sbin/newfs_hfs
+NEWFS=/sbin/newfs_hfs
+
+# location of mount
+MOUNT=/sbin/mount
+UMOUNT=/sbin/umount
+
+# tmp file
+TMP_FILE="/tmp/thinkup_rd_device"
+
+# php CLI
+PHP="/usr/bin/php"
+
+# mysql client
+MYSQL="/usr/local/mysql/bin/mysql"
+
+# mysql data dir
+MYSQL_DATA_DIR="/usr/local/mysql/data"
+
+# tmp file
+TMP_DATA_DIR="/tmp/thinkup_rd_dir"
+
+# glean db config data
+DB_HOST=`$PHP tests/scripts/parse_config.php db_host`
+DB_USER=`$PHP tests/scripts/parse_config.php db_user`
+DB_PASSWORD=`$PHP tests/scripts/parse_config.php db_password`
+DB_NAME=`$PHP tests/scripts/parse_config.php db_name`
+DB_SOCKET=`$PHP tests/scripts/parse_config.php db_socket`
+DB_PORT=`$PHP tests/scripts/parse_config.php db_port`
+DB_NAME_TEST_RD="${DB_NAME}_tests_rd"
+
+MYSQL_CMD="$MYSQL -h $DB_HOST -u $DB_USER";
+if [ -n "${DB_PASSWORD}" ]; then
+    MYSQL_CMD="$MYSQL_CMD --pasword=$DB_PASSWORD"
+fi
+if [ -n "${DB_SOCKET}" ]; then
+    MYSQL_CMD="$MYSQL_CMD -S $DB_SOCKET"
+fi
+if [ -n "${DB_PORT}" ]; then
+    MYSQL_CMD="$MYSQL_CMD -P $DB_PORT"
+fi

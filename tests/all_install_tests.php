@@ -33,10 +33,22 @@ require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/mock_objects.php';
 /* INSTALLER AND UPGRADER TESTS */
 $installer_tests = new TestSuite('Installer tests');
 $installer_tests->add(new WebTestOfInstallation());
-$installer_tests->add(new WebTestOfUpgradeDatabase());
+if(! getenv("SKIP_UPGRADE_TESTS")=="1") {
+    $installer_tests->add(new WebTestOfUpgradeDatabase());
+} else {
+    print("Note: Skipping WebTestOfUpgradeDatabase\n");
+}
 
 $tr = new TextReporter();
+$start =  ((float)$usec + (float)$sec);
 $installer_tests->run( $tr );
+
+if (getenv("TEST_TIMING")=="1") {
+    list($usec, $sec) = explode(" ", microtime());
+    $finish =  ((float)$usec + (float)$sec);
+    $runtime = round($finish - $start);
+    printf("Tests completed run in $runtime seconds\n");
+}
 if (isset($RUNNING_ALL_TESTS) && $RUNNING_ALL_TESTS) {
     $TOTAL_PASSES = $TOTAL_PASSES + $tr->getPassCount();
     $TOTAL_FAILURES = $TOTAL_FAILURES + $tr->getFailCount();

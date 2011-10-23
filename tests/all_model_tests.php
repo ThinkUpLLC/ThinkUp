@@ -86,7 +86,16 @@ $model_tests->add(new TestOfURLProcessor());
 $model_tests->add(new TestOfTableStatsMySQLDAO());
 
 $tr = new TextReporter();
+list($usec, $sec) = explode(" ", microtime());
+$start =  ((float)$usec + (float)$sec);
 $model_tests->run( $tr );
+
+if (getenv("TEST_TIMING")=="1") {
+    list($usec, $sec) = explode(" ", microtime());
+    $finish =  ((float)$usec + (float)$sec);
+    $runtime = round($finish - $start);
+    printf("Tests completed run in $runtime seconds\n");
+}
 if (isset($RUNNING_ALL_TESTS) && $RUNNING_ALL_TESTS) {
     $TOTAL_PASSES = $TOTAL_PASSES + $tr->getPassCount();
     $TOTAL_FAILURES = $TOTAL_FAILURES + $tr->getFailCount();

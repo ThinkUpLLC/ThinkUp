@@ -45,7 +45,15 @@ $web_tests->add(new WebTestOfRegistration());
 $web_tests->add(new WebTestOfTwitterDashboard());
 
 $tr = new TextReporter();
+$start =  ((float)$usec + (float)$sec);
 $web_tests->run( $tr );
+
+if (getenv("TEST_TIMING")=="1") {
+    list($usec, $sec) = explode(" ", microtime());
+    $finish =  ((float)$usec + (float)$sec);
+    $runtime = round($finish - $start);
+    printf("Tests completed run in $runtime seconds\n");
+}
 if (isset($RUNNING_ALL_TESTS) && $RUNNING_ALL_TESTS) {
     $TOTAL_PASSES = $TOTAL_PASSES + $tr->getPassCount();
     $TOTAL_FAILURES = $TOTAL_FAILURES + $tr->getFailCount();

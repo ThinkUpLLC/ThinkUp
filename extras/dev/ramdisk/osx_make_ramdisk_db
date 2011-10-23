@@ -1,0 +1,137 @@
+#!/bin/bash
+
+## Run tests on a RAM disk for speed improvements by setting up the test ramdisk database. Uses the current name
+## and appends rd the the name, ie thinkup_tests_rd
+
+# Make sure only root can run our script
+if [ "$(id -u)" != "0" ]; then
+    echo
+    echo "This script must be run as root, you can run as:"
+    echo
+    echo "    sudo $0"
+    echo
+    exit 1
+fi
+
+# source our config
+source ./extras/dev/ramdisk/osx_make_ramdisk_db.conf
+
+# debug me?
+if [ "$2" == "-v" ]; then
+  DEBUG=1;
+  echo "Debugging is enabled..."
+fi
+    
+## set up RAM disk for database
+function create_ramdb {
+
+	delete_ramdb
+    SECTORS=$((2*1024*${MEGS}))
+
+    $MYSQL_CMD -e "DROP DATABASE IF EXISTS $DB_NAME_TEST_RD"
+
+    if test $DEBUG; then
+        echo "Creating ${MEGS}Mb ram disk testing DB"
+    fi
+
+    DEVICE_NAME=`$HDID -nomount ram://$SECTORS`
+    echo $DEVICE_NAME > $TMP_FILE;
+    if test $DEBUG; then
+        echo "Created $DEVICE_NAME"
+    fi
+
+    OP=`$NEWFS $DEVICE_NAME`
+    mkdir $TMP_DATA_DIR
+    chmod 777 $TMP_DATA_DIR
+    $MOUNT -t hfs $DEVICE_NAME $TMP_DATA_DIR
+    if test $DEBUG; then
+        echo "mounting: $DEVICE_NAME $TMP_DATA_DIR"
+        echo "Creating database $DB_NAME_TEST_RD"
+        echo "$MYSQL_CMD -e 'CREATE DATABASE $DB_NAME_TEST_RD'"
+        echo "cp -r $MYSQL_TABLE_DIR/* $TMP_DATA_DIR"
+    fi
+    $MYSQL_CMD -e "CREATE DATABASE $DB_NAME_TEST_RD"
+    MYSQL_TABLE_DIR="${MYSQL_DATA_DIR}/${DB_NAME_TEST_RD}"
+    cp -r $MYSQL_TABLE_DIR/* $TMP_DATA_DIR
+    chmod a+rw $TMP_DATA_DIR/* 
+    rm -rf $MYSQL_TABLE_DIR
+    ln -s $TMP_DATA_DIR $MYSQL_TABLE_DIR
+}
+
+## set up our ram disk for our db
+function delete_ramdb {
+
+    if test $DEBUG; then
+        echo "Deleting ram disk if it exists"
+    fi
+
+    MYSQL_TABLE_DIR="${MYSQL_DATA_DIR}/${DB_NAME_TEST_RD}"
+    if [ -e "$MYSQL_TABLE_DIR" ]; then
+        unlink $MYSQL_TABLE_DIR;
+        mkdir $MYSQL_TABLE_DIR;
+        chmod 777 $MYSQL_TABLE_DIR;
+    fi
+    $MYSQL_CMD -e "DROP DATABASE IF EXISTS $DB_NAME_TEST_RD"
+
+    # do we have a device tmp file?
+    if [ -f "$TMP_FILE" ]; then
+        DEVICE_NAME=`cat /tmp/thinkup_rd_device`
+        if test $DEBUG; then
+            echo "Found tmp file: $TMP_FILE, read in device name $DEVICE_NAME"
+        fi
+        OP=`$UMOUNT $DEVICE_NAME`
+    fi
+
+    # If we have a tmp file with a device name, lets check if it exists
+    # and if so remove it.
+    if [ -n "${DEVICE_NAME+x}" ]; then
+        if test $DEBUG; then
+            echo "checking for $DEVICE_NAME"
+        fi
+        if [ -e "$DEVICE_NAME" ]; then
+            if test $DEBUG; then
+                $HDIUTIL detach $DEVICE_NAME
+            else
+                OP=`$HDIUTIL detach $DEVICE_NAME`
+            fi
+            rm -f $TMP_FILE;
+            if test $DEBUG; then
+                echo "deleted $DEVICE_NAME"
+            fi
+        fi
+    else
+        if test $DEBUG; then
+            echo "No ram disk found..."
+        fi
+    fi
+
+    rm -rf $TMP_DATA_DIR
+}
+
+# exit
+# 
+# echo $DEVICE_NAME
+# 
+# # save device for later use
+# echo $DEVICE_NAME > /tmp/thinkup_rd_device
+# 
+# # /dev/disk1
+# # $ newfs_hfs /dev/disk1
+# # $ mkdir /tmp/ramdisk1
+# # $ mount -t hfs /dev/disk1 /tmp/ramdisk1
+# 
+# hdiutil detach $DEVICE_NAME
+
+case "$1" in
+    create)
+        create_ramdb
+        ;;
+    delete)
+        delete_ramdb
+        ;;
+    *)
+        echo
+        echo $"Usage: $0 {create|delete} [-v to debug]"
+        echo
+        exit
+esac

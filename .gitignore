@@ -17,3 +17,4 @@ webapp/test_installer/*
 webapp/plugins/twitterrealtime/streaming/*.pid
 build/*
 docs/build/*
+extras/dev/ramdisk/osx_make_ramdisk_db.conf

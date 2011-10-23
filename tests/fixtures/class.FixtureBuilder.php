@@ -91,6 +91,10 @@ class FixtureBuilder {
      */
     static $pdo;
 
+    /**
+     * we cache our desc staments
+     */
+    static $table_descs = array();
 
     /*
      * our Constructor
@@ -160,6 +164,9 @@ class FixtureBuilder {
     public function describeTable($table) {
         $columns = array();
         $table = $this->config->getValue('table_prefix') . $table;
+        if(isset(self::$table_descs[$table])) {
+            return self::$table_descs[$table];
+        }
         try {
             $stmt = self::$pdo->query('desc ' . $table);
             while ($row = $stmt->fetch()) {
@@ -168,6 +175,7 @@ class FixtureBuilder {
         } catch(Exception $e) {
             throw new FixtureBuilderException('Unable to describe table "' . $table . '" - ' . $e->getMessage());
         }
+        self::$table_descs[$table] = $columns;
         return $columns;
     }
 

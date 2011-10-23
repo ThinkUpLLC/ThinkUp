@@ -63,6 +63,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         // in case we exit without a teardown..
         $this->tearDown();
         $this->restart();
+        $this->latest_build_made = false; //so we only create th elatest build zip once...
     }
 
     public function tearDown() {
@@ -259,13 +260,14 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
 
         $current_version = $config->getValue('THINKUP_VERSION');
         $latest_migration = glob($migration_sql_dir . '*_v' . $LATEST_VERSION .'.sql.migration');
-        if ($LATEST_VERSION == $current_version) {
+        if ($LATEST_VERSION == $current_version && $this->latest_build_made == false) {
             $this->debug("Building zip for latest version: $LATEST_VERSION");
             exec('extras/scripts/generate-distribution');
             exec('cp build/thinkup.zip build/' . $LATEST_VERSION . '.zip');
             if (file_exists($latest_migration_file)) {
                 unlink( $latest_migration_file );
             }
+            $this->latest_build_made = true;
         }
         return array('MIGRATIONS' => $MIGRATIONS, 'latest_migration_file'  => $latest_migration_file );
     }
