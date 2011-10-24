@@ -56,7 +56,7 @@
           <input name="pass1" type="password" id="pass1">
           <small>
             <br>
-            At least 5 characters
+            At least 8 characters and a mix of numbers and letters.
           </small>
         </div>
       </div>
