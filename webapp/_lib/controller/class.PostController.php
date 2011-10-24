@@ -39,7 +39,6 @@ class PostController extends ThinkUpController {
 
     public function control() {
         $this->view_name = (isset($_GET['v']))?$_GET['v']:'default';
-
         $post_dao = DAOFactory::getDAO('PostDAO');
         $this->setPageTitle('Post Details');
         $this->setViewTemplate('post.index.tpl');
