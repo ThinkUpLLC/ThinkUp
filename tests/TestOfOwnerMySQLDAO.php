@@ -92,6 +92,24 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     /**
+     * Test getById();
+     */
+    public function testGetById() {
+        //owner does not exists
+        $non_existing_owner = $this->DAO->getById(-99); // no such id
+        $this->assertFalse(isset($non_existing_owner));
+
+        //owner exists
+        $id = $this->builders[0]->columns['last_insert_id'];
+        $existing_owner = $this->DAO->getById($id); // valid id
+        $this->assertEqual($existing_owner->full_name, 'ThinkUp J. User');
+        $this->assertEqual($existing_owner->email, 'ttuser@example.com');
+        $this->assertEqual($existing_owner->failed_logins, 0);
+        $this->assertEqual($existing_owner->account_status, '');
+        $this->assertEqual($existing_owner->api_key, 'c9089f3c9adaf0186f6ffb1ee8d6501c');
+    }
+
+    /**
      * Test getAllOwners
      */
     public function testGetAllOwners() {
