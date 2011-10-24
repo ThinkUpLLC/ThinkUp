@@ -68,7 +68,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                 $this->addErrorMessage("Old password does not match or empty.", 'password');
             } elseif ($_POST['pass1'] != $_POST['pass2']) {
                 $this->addErrorMessage("New passwords did not match. Your password has not been changed.", 'password');
-            } elseif (!preg_match("/(?=.{8,})(?=.+[a-zA-Z])(?=.+[0-9])/", $_POST['pass1'])) {
+            } elseif (!preg_match("/(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])/", $_POST['pass1'])) {
                 $this->addErrorMessage("New password must be at least 8 characters and contain a mix of numbers and letters. ".
                 "Your password has not been changed.", 'password' );
             } else {
