@@ -213,4 +213,33 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
 
         return $menus;
     }
+
+    /**
+     * Provide additional modules to be placed on the default dashboard
+     * @param $instance Instance
+     * @return array additional data modules provided by the plugin
+     */
+    public function customDefaultDashboardModules($instance) {
+        $modules = array();
+        if ($instance->network == 'facebook domain') {
+            // TODO: set up domain_widget_like_views, domain_widget_likes, domain_active_users_locale,
+            // domain_active_users_gender_age data for dashboard
+            $domain_likes_module = new MenuItem('Domain Likes',
+            'The number of times people clicked the Like button on your site',
+            Utils::getPluginViewDirectory('facebook').'facebook.domain.likes.tpl');
+
+            $domain_likes_by_day_data = new Dataset('domain_widget_likes_by_day', 'DomainMetricsDAO', 'getHistory',
+            array($instance->network_user_id, $instance->network, 'DAY', 15));
+            $domain_likes_module->addDataset($domain_likes_by_day_data);
+            $domain_likes_by_week_data = new Dataset('domain_widget_likes_by_week', 'DomainMetricsDAO', 'getHistory',
+            array($instance->network_user_id, $instance->network, 'WEEK', 15));
+            $domain_likes_module->addDataset($domain_likes_by_week_data);
+            $domain_likes_by_month_data = new Dataset('domain_widget_likes_by_month', 'DomainMetricsDAO', 'getHistory',
+            array($instance->network_user_id, $instance->network, 'DAY', 15));
+            $domain_likes_module->addDataset($domain_likes_by_month_data);
+
+            $modules[] = $domain_likes_module;
+        }
+        return $modules;
+    }
 }

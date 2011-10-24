@@ -557,4 +557,14 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
         }
         return $budget_array;
     }
+
+    /**
+     * Provide additional modules to be placed on the default dashboard
+     * @param $instance Instance
+     * @return array additional data modules provided by the plugin
+     */
+    public function customDefaultDashboardModules($instance) {
+        $modules = array();
+        return $modules;
+    }
 }

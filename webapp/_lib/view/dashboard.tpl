@@ -42,6 +42,7 @@
 
         {if $instance}
           <!--begin public user dashboard-->
+          <!--begin header-->
           {if $user_details}
             <div class="grid_18 alpha omega">
               <div class="clearfix dashboard-header round-all">
@@ -60,6 +61,7 @@
               </div>
             </div>
           {/if}
+          <!--end header-->
 
           {if $data_template}
             {include file=$data_template}
@@ -213,6 +215,12 @@
             {/if}
           {/if} <!-- end if $data_template -->
         {/if}
+
+        {foreach from=$module_templates item=module_template}
+          <div class="clearfix">
+            {include file="$module_template"}
+          </div>
+        {/foreach}
 
         {if !$instance}
           <div style="width:60%;text-align:center;">
