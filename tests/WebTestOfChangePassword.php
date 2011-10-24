@@ -136,6 +136,7 @@ class WebTestOfChangePassword extends ThinkUpWebTestCase {
         $this->setField('pass1', 'dd');
         $this->setField('pass2', 'dd');
         $this->click('Change password');
-        $this->assertText('New password must be at least 5 characters. Your password has not been changed.');
+        $this->assertText('Your new password must be at least 8 characters and contain both numbers and letters. '.
+        'Your password has not been changed.');
     }
 }

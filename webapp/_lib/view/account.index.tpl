@@ -109,7 +109,7 @@
                 <div class="ui-state-highlight ui-corner-all" style="margin: 10px 0px 10px 0px; padding: .5em 0.7em;"> 
                   <p>
                     <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
-                    Must be at least 5 characters.
+                    8 characters with numbers and letters.
                   </p>
                 </div>
               </div>

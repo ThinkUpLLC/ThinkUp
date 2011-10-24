@@ -130,6 +130,54 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         $this->assertEqual($v_mgr->getTemplateDataItem('mail'), 'angie@example.com');
     }
 
+    public function testPasswordPolicyTooShort() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
+        $_POST['Submit'] = 'Register';
+        $_POST['full_name'] = "Angelina Jolie";
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypass';
+        $_POST['pass2'] = 'mypass';
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($error_msgs['password'], 'Password must be at least 8 characters and contain both numbers '.
+        'and letters.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('name'), 'Angelina Jolie');
+        $this->assertEqual($v_mgr->getTemplateDataItem('mail'), 'angie@example.com');
+    }
+
+    public function testPasswordPolicyNotMixed() {
+        // make sure registration is on...
+        $bvalues = array('namespace' => OptionDAO::APP_OPTIONS, 'option_name' => 'is_registration_open',
+        'option_value' => 'true');
+        $bdata = FixtureBuilder::build('options', $bvalues);
+
+        $_POST['Submit'] = 'Register';
+        $_POST['full_name'] = "Angelina Jolie";
+        $_POST['email'] = 'angie@example.com';
+        $_POST['user_code'] = '123456';
+        $_POST['pass1'] = 'mypassnomix';
+        $_POST['pass2'] = 'mypassnomix';
+        $controller = new RegisterController(true);
+        $results = $controller->go();
+
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('controller_title'), 'Register');
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($error_msgs['password'], 'Password must be at least 8 characters and contain both numbers '.
+        'and letters.');
+        $this->assertEqual($v_mgr->getTemplateDataItem('name'), 'Angelina Jolie');
+        $this->assertEqual($v_mgr->getTemplateDataItem('mail'), 'angie@example.com');
+    }
+
     public function testSuccessfulRegistration() {
         $config = Config::getInstance();
         $site_root_path = $config->getValue('site_root_path');
@@ -144,8 +192,8 @@ class TestOfRegisterController extends ThinkUpUnitTestCase {
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
         $_POST['user_code'] = '123456';
-        $_POST['pass1'] = 'mypass';
-        $_POST['pass2'] = 'mypass';
+        $_POST['pass1'] = 'mypass123';
+        $_POST['pass2'] = 'mypass123';
         $controller = new RegisterController(true);
         $results = $controller->go();
 
@@ -183,8 +231,8 @@ http:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activa
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
         $_POST['user_code'] = '123456';
-        $_POST['pass1'] = 'mypass';
-        $_POST['pass2'] = 'mypass';
+        $_POST['pass1'] = 'mypass123';
+        $_POST['pass2'] = 'mypass123';
         $controller = new RegisterController(true);
         $results = $controller->go();
 
@@ -215,8 +263,8 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
         $_POST['user_code'] = '123456';
-        $_POST['pass1'] = 'mypass';
-        $_POST['pass2'] = 'mypass';
+        $_POST['pass1'] = 'm1y2p3ass';
+        $_POST['pass2'] = 'm1y2p3ass';
         $config = Config::getInstance();
         $config->setValue('site_root_path', 'test url with spaces/');
         $controller = new RegisterController(true);
@@ -238,8 +286,8 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
         $_POST['user_code'] = '123456';
-        $_POST['pass1'] = 'mypass';
-        $_POST['pass2'] = 'mypass';
+        $_POST['pass1'] = '123mypass';
+        $_POST['pass2'] = '123mypass';
         $config = Config::getInstance();
         $config->setValue('site_root_path', 'test url with spaces/and/a few/slashes/too/');
         $controller = new RegisterController(true);
@@ -267,8 +315,8 @@ https:\/\/mytestthinkup'.str_replace('/', '\/', $site_root_path).'session\/activ
         $_POST['full_name'] = "Angelina Jolie";
         $_POST['email'] = 'angie@example.com';
         $_POST['user_code'] = '123456';
-        $_POST['pass1'] = 'mypass';
-        $_POST['pass2'] = 'mypass';
+        $_POST['pass1'] = 'my123pass';
+        $_POST['pass2'] = 'my123pass';
         $controller = new RegisterController(true);
         $results = $controller->go();
 
@@ -303,8 +351,8 @@ http:\/\/mythinkup'.str_replace('/', '\/', $site_root_path).'session\/activate.p
         $_POST['Submit'] = 'Register';
         $_POST['email'] = 'angie@example.com';
         $_POST['user_code'] = '123456';
-        $_POST['pass1'] = 'mypass';
-        $_POST['pass2'] = 'mypass';
+        $_POST['pass1'] = 'my12pass3';
+        $_POST['pass2'] = 'my12pass3';
         $controller = new RegisterController(true);
         $results = $controller->go();
 

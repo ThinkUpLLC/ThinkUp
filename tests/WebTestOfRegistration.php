@@ -62,8 +62,8 @@ class WebTestOfRegistration extends ThinkUpWebTestCase {
 
         $this->setFieldById('full_name', 'Test User');
         $this->setFieldById('email', 'TestUser@example.com');
-        $this->setFieldById('pass1', 'p4sswd');
-        $this->setFieldById('pass2', 'p4sswd');
+        $this->setFieldById('pass1', 'p4sswd123');
+        $this->setFieldById('pass2', 'p4sswd123');
         $this->setFieldById('user_code', '123456');
         $this->clickSubmitById('login-save');
 
@@ -108,8 +108,8 @@ class WebTestOfRegistration extends ThinkUpWebTestCase {
 
         $this->setFieldById('full_name', 'Test User');
         $this->setFieldById('email', 'TestUser@example.com');
-        $this->setFieldById('pass1', 'p4sswd');
-        $this->setFieldById('pass2', 'p4sswd');
+        $this->setFieldById('pass1', 'p4sswd123');
+        $this->setFieldById('pass2', 'p4sswd123');
         $this->setFieldById('user_code', '123456');
         $this->clickSubmitById('login-save');
 
