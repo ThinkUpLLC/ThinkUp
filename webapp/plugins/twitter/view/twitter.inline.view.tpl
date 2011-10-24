@@ -67,6 +67,12 @@
   {/foreach}
 {/if}
 
+{if $messages_to_you}
+  {foreach from=$messages_to_you key=tid item=t name=foo}
+    {include file="_post.tpl" t=$t}
+  {/foreach}
+{/if}
+
 {if ($display eq 'mentions-all' and not $all_mentions) or 
     ($display eq 'mentions-allreplies' and not $all_replies) or
     ($display eq 'home-timeline' and not $home_timeline) or
