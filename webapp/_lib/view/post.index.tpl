@@ -22,7 +22,7 @@
           <li{if $smarty.get.v eq ''} class="currentview"{/if}>
           <a href="index.php?t={$post->post_id}&n={$post->network|urlencode}">Replies&nbsp;&nbsp;&nbsp;</a>
           </li>
-          {if $logged_in_user && $post->reply_count_cache && $post->reply_count_cache > 1}
+          {if $post->reply_count_cache && $post->reply_count_cache > 1}
             <li id="grid_search_input">
             <input type="text" name="search" id="grid_search_sidebar_input" value="" style="margin-top: 3px;" size="10"/><input type="submit" href="#" class="grid_search" onclick="$('#grid_search_form').submit(); return false;" value="Search">
             </li>
@@ -176,7 +176,7 @@
             <div class="prepend">
               <div class="append_20 clearfix bt">
                 {include file="_post.word-frequency.tpl"}
-                {if $replies && $logged_in_user}
+                {if $replies}
                     {include file="_grid.search.tpl" version2=true}
                 {/if}
                 <div id="post-replies-div"{if $search_on} style="display: none;"{/if}><br />
@@ -214,7 +214,7 @@
 </div> <!-- /.container_24 -->
 
   <script type="text/javascript" src="{$site_root_path}assets/js/linkify.js"></script>
-  {if $replies && $logged_in_user}
+  {if $replies}
     <script type="text/javascript">post_username = '{$post->author_username}';</script>
     <script type="text/javascript" src="{$site_root_path}assets/js/grid_search.js"></script>
   {/if}

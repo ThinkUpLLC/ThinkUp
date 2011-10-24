@@ -78,7 +78,11 @@ class GridController extends ThinkUpAuthController {
     /**
      * Outputs JavaScript callback string with json array/list of post as an argument
      */
-    public function authControl() {
+    public function authControl($owner = false) {
+        $public_search = false;
+        if ($owner) {
+            $public_search = true;
+        }
         $this->setContentType('text/javascript');
         if (!$this->is_missing_param) {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
@@ -86,7 +90,9 @@ class GridController extends ThinkUpAuthController {
                 $username = $_GET['u'];
                 $ownerinstance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
                 $owner_dao = DAOFactory::getDAO('OwnerDAO');
-                $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+                if (! $owner) {
+                    $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+                }
                 $instance = $instance_dao->getByUsername($username, $_GET['n']);
                 if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $instance)) {
                     echo '{"status":"failed","message":"Insufficient privileges."}';
@@ -96,7 +102,8 @@ class GridController extends ThinkUpAuthController {
                     if (isset($_GET['t'])) {
                         // replies?
                         $post_dao = DAOFactory::getDAO('PostDAO');
-                        $posts_it = $post_dao->getRepliesToPostIterator($_GET['t'], $_GET['n']);
+                        $posts_it = $post_dao->getRepliesToPostIterator($_GET['t'],$_GET['n'], 'default','km',
+                        $public_search);
                     } else {
                         if (isset($_GET['nolimit']) && $_GET['nolimit'] == 'true') {
                             self::$MAX_ROWS = 0;

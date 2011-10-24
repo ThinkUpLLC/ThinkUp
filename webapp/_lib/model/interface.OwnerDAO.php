@@ -35,7 +35,12 @@ interface OwnerDAO {
      * @return Owner
      */
     public function getByEmail($email);
-
+    /**
+     * Gets owner by id
+     * @param int $id
+     * @return Owner
+     */
+    public function getById($id);
     /**
      * Gets all ThinkUp owners
      * @return array Of Owner objects

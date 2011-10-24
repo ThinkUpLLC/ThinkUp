@@ -47,11 +47,31 @@ abstract class ThinkUpAuthController extends ThinkUpController {
      * @TODO bounce back to original action once signed in
      */
     protected function bounce() {
+        $config = Config::getInstance();
+
         if (get_class($this)=='DashboardController' || get_class($this)=='PostController') {
             $controller = new DashboardController(true);
             return $controller->go();
+
+        } else if (get_class($this)=='GridController' && isset($_GET['t']) && isset($_GET['n']) && $_GET['u']) {
+            // We will allow public search on post replies
+            // So, we need to make sure this is a public instance
+            $instance_dao = DAOFactory::getDAO('InstanceDAO');
+            $instance = $instance_dao->getByUsername($_GET['u'], $_GET['n']);
+            if ($instance->is_public != 1) {
+                throw new Exception('You must <a href="'.$config->getValue('site_root_path').
+                'session/login.php">log in</a> to do this.');
+            } else {
+                // we need to fetch the owner since we are not logged in...
+                // and we'll pass to the grid controller
+                $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                $owner_instance = $owner_instance_dao->getByInstance($instance->id);
+                $owner = $owner_dao->getById($owner_instance[0]->owner_id);
+                $this->authControl($owner);
+            }
+
         } else {
-            $config = Config::getInstance();
             throw new Exception('You must <a href="'.$config->getValue('site_root_path').
             'session/login.php">log in</a> to do this.');
         }
