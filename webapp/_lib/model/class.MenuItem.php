@@ -55,17 +55,23 @@ class MenuItem {
      */
     var $header = null;
     /**
+     * @var str Parent view
+     */
+    var $parent = null;
+    /**
      * Constructor
      * @param str $name
      * @param str $description
      * @param str $view_template
      * @return MenuItem
      */
-    public function __construct($name, $description='', $view_template='inline.view.tpl', $header=null) {
+    public function __construct($name, $description='', $view_template='inline.view.tpl', $header=null,
+    $parent=null) {
         $this->name = $name;
         $this->description = $description;
         $this->view_template = $view_template;
         $this->header = $header;
+        $this->parent = $parent;
     }
 
     /**

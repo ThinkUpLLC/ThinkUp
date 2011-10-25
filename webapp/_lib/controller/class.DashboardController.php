@@ -94,6 +94,7 @@ class DashboardController extends ThinkUpController {
             $this->addToView('display', $this->view_name);
             $this->addToView('header', $menu_item->name);
             $this->addToView('description', $menu_item->description);
+            $this->addToView('parent', $menu_item->parent);
 
             $this->setPageTitle($this->instance->network_username.' on '.ucfirst($this->instance->network));
             $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;

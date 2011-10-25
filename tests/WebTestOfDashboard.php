@@ -69,10 +69,10 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->assertNoText('Logged in as admin: me@example.com');
 
         //click on a nav link
-        $this->click("All tweets");
+        $this->click("Tweets");
 
         //make sure it takes you to posts view
-        $this->assertText('All tweets');
+        $this->assertText('No posts to display');
         $this->assertTitle("thinkupapp on Twitter | ThinkUp");
 
         //not the login screen

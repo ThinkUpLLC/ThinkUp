@@ -1,6 +1,6 @@
 <div class="help-container">{insert name="help_link" id=$display}</div>
 <div class="clearfix">
-  <h2>{$header}</h2>
+  <h2>{if $parent_name}<a href="index.php?v={$parent}&u={$instance->network_username}&n=twitter">{$parent_name}</a> &rarr; {/if}{$header}</h2>
   {if $description}
     <i>{$description}
       {if $is_searchable}
@@ -150,3 +150,12 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
     {include file="_link.tpl" t=$f}
   {/foreach}  
 {/if}
+
+<div class="float-l" id="older-posts-div">
+  {if $next_page}
+    <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page">&#60; Older Posts</a>
+  {/if}
+  {if $last_page}
+    | <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page">Newer Posts  &#62;</a>
+  {/if}
+</div>

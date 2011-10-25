@@ -61,7 +61,7 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $menus = $webapp->getDashboardMenu($instance);
         $posts_menu = $menus["all_facebook_posts"];
 
-        $this->assertEqual(sizeof($menus), 6);
+        $this->assertEqual(sizeof($menus), 7);
         $post_tab = $menus['all_facebook_posts'];
         $this->assertEqual($post_tab->name, "All posts");
         $this->assertEqual($post_tab->description, "All status updates");
@@ -106,24 +106,8 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
         $this->assertEqual($post_tab_dataset->dao_method_name, "getAllQuestionPosts");
 
-        $post_tab = $menus['followers-history'];
-        $this->assertEqual($post_tab->name, "Friend count history");
-        $this->assertEqual($post_tab->description, "Your friend count over time");
-
         $post_tab_datasets = $post_tab->getDatasets();
-        $this->assertEqual(count($post_tab_datasets), 3);
-        $post_tab_dataset = $post_tab_datasets[0];
-        $this->assertEqual($post_tab_dataset->name, "follower_count_history_by_day");
-        $this->assertEqual($post_tab_dataset->dao_name, 'FollowerCountDAO');
-        $this->assertEqual($post_tab_dataset->dao_method_name, "getHistory");
-        $post_tab_dataset = $post_tab_datasets[1];
-        $this->assertEqual($post_tab_dataset->name, "follower_count_history_by_week");
-        $this->assertEqual($post_tab_dataset->dao_name, 'FollowerCountDAO');
-        $this->assertEqual($post_tab_dataset->dao_method_name, "getHistory");
-        $post_tab_dataset = $post_tab_datasets[2];
-        $this->assertEqual($post_tab_dataset->name, "follower_count_history_by_month");
-        $this->assertEqual($post_tab_dataset->dao_name, 'FollowerCountDAO');
-        $this->assertEqual($post_tab_dataset->dao_method_name, "getHistory");
+        $this->assertEqual(count($post_tab_datasets), 1);
 
         $logger->close();
     }

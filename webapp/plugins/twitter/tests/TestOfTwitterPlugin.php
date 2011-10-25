@@ -70,7 +70,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $menus = $this->webapp->getDashboardMenu($instance);
 
-        $this->assertEqual(sizeof($menus), 17);
+        $this->assertEqual(sizeof($menus), 21);
         $first_post_menuitem = $menus["tweets-all"];
         $this->assertEqual($first_post_menuitem->name, "All tweets", "Test name of first post menu item");
         $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");
@@ -140,7 +140,7 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $menus = $this->webapp->getDashboardMenu($instance);
 
-        $this->assertEqual(sizeof($menus), 19);
+        $this->assertEqual(sizeof($menus), 23);
         $first_post_menuitem = $menus["tweets-all"];
         $this->assertEqual($first_post_menuitem->name, "All tweets", "Test name of first post menu item");
         $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");

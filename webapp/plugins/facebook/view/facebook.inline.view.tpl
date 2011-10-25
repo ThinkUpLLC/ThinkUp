@@ -1,7 +1,8 @@
-<div class="">
-  <div class="help-container">{insert name="help_link" id=$display}</div>
+<div class="help-container">{insert name="help_link" id=$display}</div>
+<div class="clearfix">
+  <h2>{if $parent_name}<a href="index.php?v={$parent}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">{$parent_name}</a> &rarr; {/if}{$header}</h2>
   {if $description}
-    <i>{$description} 
+    <i>{$description}
       {if $is_searchable}
         <br /><a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a> 
       {/if}
@@ -81,3 +82,11 @@
     
 {/if}
 
+<div class="float-l" id="older-posts-div">
+  {if $next_page}
+    <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page">&#60; Older Posts</a>
+  {/if}
+  {if $last_page}
+    | <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page">Newer Posts  &#62;</a>
+  {/if}
+</div>

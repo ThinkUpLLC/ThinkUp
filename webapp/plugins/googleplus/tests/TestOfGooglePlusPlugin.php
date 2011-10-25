@@ -66,7 +66,7 @@ class TestOfGooglePlusPlugin extends ThinkUpUnitTestCase {
         $menus = $webapp->getDashboardMenu($instance);
         $posts_menu = $menus["all_gplus_posts"];
 
-        $this->assertEqual(sizeof($menus), 4);
+        $this->assertEqual(sizeof($menus), 5);
 
         $post_tab = $menus['all_gplus_posts'];
         $this->assertEqual($post_tab->name, "All posts");
