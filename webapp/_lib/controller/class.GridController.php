@@ -147,4 +147,32 @@ class GridController extends ThinkUpAuthController {
     public static function getMaxRows() {
         return self::$MAX_ROWS;
     }
+
+    /**
+     * skip auth if we are a reply search
+     * @return boolean $authed Returns true if the auth criteria has been met.
+     */
+    protected function preAuthControl() {
+        $response = false; // default to false, no auth, unless we are a reply search
+        if(isset($_GET['t']) && isset($_GET['n']) && $_GET['u']) {
+            // We will allow public search on post replies
+            // So, we need to make sure this is a public instance
+            $instance_dao = DAOFactory::getDAO('InstanceDAO');
+            $instance = $instance_dao->getByUsername($_GET['u'], $_GET['n']);
+            if($instance->is_public != 1) {
+                $response = false; // ie: authed failed
+            } else {
+                // we need to fetch the owner since we are not logged in...
+                // and we'll pass to the grid controller
+                $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                $owner_instance = $owner_instance_dao->getByInstance($instance->id);
+                $owner = $owner_dao->getById($owner_instance[0]->owner_id);
+                $this->authControl($owner);
+                $response = true;
+            }
+        }
+        return $response;
+    }
+
 }
