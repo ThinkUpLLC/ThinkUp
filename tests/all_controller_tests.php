@@ -61,6 +61,7 @@ $controller_test->add(new TestOfToggleActivePluginController());
 $controller_test->add(new TestOfTogglePublicInstanceController());
 $controller_test->add(new TestOfUserController());
 $controller_test->add(new TestOfPluginOptionController());
+$controller_test->add(new TestOfTestAuthController());
 $controller_test->add(new TestOfTestAuthAPIController());
 $controller_test->add(new TestOfRSSController());
 $controller_test->add(new TestOfUpgradeController());
