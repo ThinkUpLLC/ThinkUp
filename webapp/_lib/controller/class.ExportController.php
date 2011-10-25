@@ -67,7 +67,7 @@ class ExportController extends ThinkUpAuthController {
                 $network = $_GET['n'];
                 $instance = $instance_dao->getByUsernameOnNetwork($username, $network);
                 $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-                if ( !$owner_instance_dao->doesOwnerHaveAccess($owner, $instance) ) {
+                if ( !$owner_instance_dao->doesOwnerHaveAccessToInstance($owner, $instance) ) {
                     $this->addErrorMessage('Insufficient privileges');
                     return $this->generateView();
                 } else {

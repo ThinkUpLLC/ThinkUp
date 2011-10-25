@@ -94,7 +94,7 @@ class GridController extends ThinkUpAuthController {
                     $owner = $owner_dao->getByEmail($this->getLoggedInUser());
                 }
                 $instance = $instance_dao->getByUsername($username, $_GET['n']);
-                if (!$ownerinstance_dao->doesOwnerHaveAccess($owner, $instance)) {
+                if (!$ownerinstance_dao->doesOwnerHaveAccessToInstance($owner, $instance)) {
                     echo '{"status":"failed","message":"Insufficient privileges."}';
                 } else {
                     echo "tu_grid_search.populate_grid(";

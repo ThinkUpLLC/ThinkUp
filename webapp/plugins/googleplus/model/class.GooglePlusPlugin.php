@@ -62,7 +62,7 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         if (isset($options['google_plus_client_id']->option_value)
         && isset($options['google_plus_client_secret']->option_value)) {
             foreach ($instances as $instance) {
-                if (!$owner_instance_dao->doesOwnerHaveAccess($current_owner, $instance)) {
+                if (!$owner_instance_dao->doesOwnerHaveAccessToInstance($current_owner, $instance)) {
                     // Owner doesn't have access to this instance; let's not crawl it.
                     continue;
                 }

@@ -100,7 +100,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
 
         $instances = $instance_dao->getAllActiveInstancesStalestFirstByNetwork('twitter');
         foreach ($instances as $instance) {
-            if (!$owner_instance_dao->doesOwnerHaveAccess($current_owner, $instance)) {
+            if (!$owner_instance_dao->doesOwnerHaveAccessToInstance($current_owner, $instance)) {
                 // Owner doesn't have access to this instance; let's not crawl it.
                 continue;
             }

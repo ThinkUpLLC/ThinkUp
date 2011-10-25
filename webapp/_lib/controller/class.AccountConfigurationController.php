@@ -130,7 +130,7 @@ class AccountConfigurationController extends ThinkUpAuthController {
                     $instance_dao->delete($instance->network_username, $instance->network);
                     $this->addSuccessMessage('Account deleted.', 'account');
                 } else  {
-                    if ( $owner_instance_dao->doesOwnerHaveAccess($owner, $instance) ) {
+                    if ( $owner_instance_dao->doesOwnerHaveAccessToInstance($owner, $instance) ) {
                         //delete owner instance
                         $total_deletions = $owner_instance_dao->delete($owner->id, $instance->id);
                         if ( $total_deletions > 0 ) {

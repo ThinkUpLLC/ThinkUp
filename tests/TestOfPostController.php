@@ -97,16 +97,81 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertPattern( "/Insufficient privileges/", $results);
     }
 
-    public function testControlExistingPrivatePostIDLoggedIn() {
-        $this->simulateLogin('me@example.com');
+    public function testControlExistingPrivatePostIDLoggedInFollowed() {
+        $owner_builder = FixtureBuilder::build('owners', array('email'=>'me@example.com', 'is_admin'=>0));
+
+        $i_data = array('id' => 1, 'network_username' => 'mojojojo', 'network_user_id' =>'20', 'network'=>'twitter');
+        $instances_builder = FixtureBuilder::build('instances',  $i_data);
+
+        $oi_data = array('owner_id' => 1, 'instance_id' => 1);
+        $oinstances_builder = FixtureBuilder::build('owner_instances',  $oi_data);
+
+        $follows_builder = FixtureBuilder::build('follows', array('user_id'=>'10', 'follower_id'=>'20',
+        'network'=>'twitter'));
+
         $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
-        'author_username'=>'ev', 'post_text'=>'This is a test post', 'retweet_count_cache'=>'5', 'network'=>'twitter'));
+        'author_username'=>'ev', 'post_text'=>'This is a test private post', 'retweet_count_cache'=>'5',
+        'network'=>'twitter'));
         $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'1',
         'network'=>'twitter'));
+
+        $this->simulateLogin('me@example.com');
+
         $_GET["t"] = '1001';
         $controller = new PostController(true);
         $results = $controller->go();
-        $this->assertPattern( "/This is a test post/", $results);
+
+        $this->assertPattern( "/This is a test private post/", $results);
+        $this->assertTrue($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
+    }
+
+    public function testControlExistingPrivatePostIDLoggedInNotFollowed() {
+        $owner_builder = FixtureBuilder::build('owners', array('email'=>'me@example.com', 'is_admin'=>0));
+
+        $i_data = array('id' => 1, 'network_username' => 'mojojojo', 'network_user_id' =>'20', 'network'=>'twitter');
+        $instances_builder = FixtureBuilder::build('instances',  $i_data);
+
+        $oi_data = array('owner_id' => 1, 'instance_id' => 1);
+        $oinstances_builder = FixtureBuilder::build('owner_instances',  $oi_data);
+
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
+        'author_username'=>'ev', 'post_text'=>'This is a test private post', 'retweet_count_cache'=>'5',
+        'network'=>'twitter'));
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'1',
+        'network'=>'twitter'));
+
+        $this->simulateLogin('me@example.com');
+
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+
+        $this->assertNoPattern( "/This is a test private post/", $results);
+        $this->assertTrue($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
+    }
+
+    public function testControlExistingPrivatePostIDLoggedInNotFollowedAdmin() {
+        $owner_builder = FixtureBuilder::build('owners', array('email'=>'me@example.com', 'is_admin'=>1));
+
+        $i_data = array('id' => 1, 'network_username' => 'mojojojo', 'network_user_id' =>'20', 'network'=>'twitter');
+        $instances_builder = FixtureBuilder::build('instances',  $i_data);
+
+        $oi_data = array('owner_id' => 1, 'instance_id' => 1);
+        $oinstances_builder = FixtureBuilder::build('owner_instances',  $oi_data);
+
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1001', 'author_user_id'=>'10',
+        'author_username'=>'ev', 'post_text'=>'This is a test private post', 'retweet_count_cache'=>'5',
+        'network'=>'twitter'));
+        $user_builder = FixtureBuilder::build('users', array('user_id'=>'10', 'username'=>'ev', 'is_protected'=>'1',
+        'network'=>'twitter'));
+
+        $this->simulateLogin('me@example.com');
+
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+
+        $this->assertPattern( "/This is a test private post/", $results);
         $this->assertTrue($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
     }
 
@@ -133,12 +198,53 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         $this->assertTrue($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
     }
 
-    public function testPublicPostWithMixedAccessRepliesLoggedIn() {
+    public function testPublicPostWithMixedAccessRepliesLoggedInNotFollowed() {
+        $owner_builder = FixtureBuilder::build('owners', array('email'=>'me@example.com', 'is_admin'=>0));
+
         $this->simulateLogin('me@example.com');
         $builders = $this->buildPublicPostWithMixedAccessResponses();
         $_GET["t"] = '1001';
         $controller = new PostController(true);
         $results = $controller->go();
+        $this->assertPattern( "/This is a test post/", $results);
+        $this->assertPattern( "/This is a public reply to 1001/", $results);
+        $this->assertNoPattern("/This is a private reply to 1001/", $results);
+        $this->assertFalse($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
+    }
+
+    public function testPublicPostWithMixedAccessRepliesLoggedInFollowed() {
+        $owner_builder = FixtureBuilder::build('owners', array('email'=>'me@example.com', 'is_admin'=>0));
+
+        $i_data = array('id' => 1, 'network_username' => 'mojojojo', 'network_user_id' =>'20', 'network'=>'twitter');
+        $instances_builder = FixtureBuilder::build('instances',  $i_data);
+
+        $oi_data = array('owner_id' => 1, 'instance_id' => 1);
+        $oinstances_builder = FixtureBuilder::build('owner_instances',  $oi_data);
+
+        $follows_builder = FixtureBuilder::build('follows', array('user_id'=>'13', 'follower_id'=>'20',
+        'network'=>'twitter'));
+
+        $this->simulateLogin('me@example.com');
+        $builders = $this->buildPublicPostWithMixedAccessResponses();
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        //echo $results;
+        $this->assertPattern( "/This is a test post/", $results);
+        $this->assertPattern( "/This is a public reply to 1001/", $results);
+        $this->assertPattern("/This is a private reply to 1001/", $results);
+        $this->assertFalse($controller->getViewManager()->getTemplateDataItem('disable_embed_code'));
+    }
+
+    public function testPublicPostWithMixedAccessRepliesLoggedInNotFollowedAdmin() {
+        $owner_builder = FixtureBuilder::build('owners', array('email'=>'me@example.com', 'is_admin'=>1));
+
+        $this->simulateLogin('me@example.com');
+        $builders = $this->buildPublicPostWithMixedAccessResponses();
+        $_GET["t"] = '1001';
+        $controller = new PostController(true);
+        $results = $controller->go();
+        //echo $results;
         $this->assertPattern( "/This is a test post/", $results);
         $this->assertPattern( "/This is a public reply to 1001/", $results);
         $this->assertPattern("/This is a private reply to 1001/", $results);
@@ -174,6 +280,16 @@ class TestOfPostController extends ThinkUpUnitTestCase {
 
     public function testLoggedInPostWithViewsSpecified() {
         $builders = $this->buildPublicPostWithMixedAccessResponses();
+        $owner_builder = FixtureBuilder::build('owners', array('email'=>'me@example.com', 'is_admin'=>0));
+        $i_data = array('id' => 1, 'network_username' => 'mojojojo', 'network_user_id' =>'20', 'network'=>'twitter');
+        $instances_builder = FixtureBuilder::build('instances',  $i_data);
+
+        $oi_data = array('owner_id' => 1, 'instance_id' => 1);
+        $oinstances_builder = FixtureBuilder::build('owner_instances',  $oi_data);
+
+        $follows_builder = FixtureBuilder::build('follows', array('user_id'=>'13', 'follower_id'=>'20',
+        'network'=>'twitter'));
+
         $_GET["t"] = '1001';
         $_GET['n'] = 'twitter';
         //Log in and see private replies and retweets
@@ -208,6 +324,8 @@ class TestOfPostController extends ThinkUpUnitTestCase {
     }
 
     public function testCleanXSS() {
+        $owner_builder = FixtureBuilder::build('owners', array('email'=>'me@example.com', 'is_admin'=>0));
+
         $with_xss = true;
         $builders = $this->buildPublicPostWithMixedAccessResponses($with_xss);
         $_GET["t"] = '1001';
@@ -257,37 +375,37 @@ class TestOfPostController extends ThinkUpUnitTestCase {
         'is_protected'=>'0', 'network'=>'twitter'));
         $reply_builder1 = FixtureBuilder::build('posts', array('post_id'=>'1002', 'author_user_id'=>'11',
         'author_username'=>'jack', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter', 
-        'in_reply_to_post_id'=>1001, 'is_protected'=>'0'));
+        'in_reply_to_post_id'=>'1001', 'is_protected'=>'0'));
 
         $public_reply_author_builder2 = FixtureBuilder::build('users', array('user_id'=>'12', 'username'=>'jill',
         'is_protected'=>'0', 'network'=>'twitter'));
         $reply_builder2 = FixtureBuilder::build('posts', array('post_id'=>'1003', 'author_user_id'=>'12',
         'author_username'=>'jill', 'post_text'=>'This is a public reply to 1001', 'network'=>'twitter', 
-        'in_reply_to_post_id'=>1001, 'is_protected'=>'0'));
+        'in_reply_to_post_id'=>'1001', 'is_protected'=>'0'));
 
         $private_reply_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'13', 'username'=>'mary',
         'is_protected'=>'1', 'network'=>'twitter'));
         $reply_builder3 = FixtureBuilder::build('posts', array('post_id'=>'1004', 'author_user_id'=>'13',
         'author_username'=>'mary', 'post_text'=>'This is a private reply to 1001', 'network'=>'twitter', 
-        'in_reply_to_post_id'=>1001, 'is_protected'=>'1'));
+        'in_reply_to_post_id'=>'1001', 'is_protected'=>'1'));
 
         $private_retweet_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'14', 'username'=>'joan',
         'is_protected'=>'1', 'network'=>'twitter'));
         $retweet_builder1 = FixtureBuilder::build('posts', array('post_id'=>'1005', 'author_user_id'=>'14',
         'author_username'=>'joan', 'post_text'=>'This is a private retweet of 1001', 'network'=>'twitter', 
-        'in_retweet_of_post_id'=>1001, 'is_protected'=>'1'));
+        'in_retweet_of_post_id'=>'1001', 'is_protected'=>'1'));
 
         $private_retweet_author_builder2 = FixtureBuilder::build('users', array('user_id'=>'15', 'username'=>'peggy',
         'is_protected'=>'1', 'network'=>'twitter'));
         $retweet_builder2 = FixtureBuilder::build('posts', array('post_id'=>'1006', 'author_user_id'=>'15',
         'author_username'=>'peggy', 'post_text'=>'This is a private retweet of 1001', 'network'=>'twitter', 
-        'in_retweet_of_post_id'=>1001, 'is_protected'=>'1'));
+        'in_retweet_of_post_id'=>'1001', 'is_protected'=>'1'));
 
         $public_retweet_author_builder1 = FixtureBuilder::build('users', array('user_id'=>'16', 'username'=>'don',
         'is_protected'=>'0', 'network'=>'twitter'));
         $retweet_builder3 = FixtureBuilder::build('posts', array('post_id'=>'1007', 'author_user_id'=>'16',
         'author_username'=>'don', 'post_text'=>'This is a public retweet of 1001', 'network'=>'twitter', 
-        'in_retweet_of_post_id'=>1001, 'is_protected'=>'0'));
+        'in_retweet_of_post_id'=>'1001', 'is_protected'=>'0'));
 
         return array($post_builder, $original_post_author_builder, $public_reply_author_builder1, $reply_builder1,
         $public_reply_author_builder2, $reply_builder2, $private_reply_author_builder1, $reply_builder3,

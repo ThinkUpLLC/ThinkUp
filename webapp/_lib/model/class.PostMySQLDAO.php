@@ -212,11 +212,11 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $q .= "AND p.is_protected = 0 ";
         }
         if ($order_by == 'location') {
-            $q .= "ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count desc ";
+            $q .= "ORDER BY geo_status, reply_retweet_distance, is_reply_by_friend DESC, follower_count DESC ";
         } else {
-            $q .= "ORDER BY is_reply_by_friend DESC, follower_count desc ";
+            $q .= "ORDER BY is_reply_by_friend DESC, follower_count DESC ";
         }
-        $q .= " LIMIT :start_on_record, :limit;";
+        $q .= "LIMIT :start_on_record, :limit;";
         $vars = array(
             ':post_id'=>(string)$post_id,
             ':network'=>$network,

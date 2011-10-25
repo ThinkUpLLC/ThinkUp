@@ -125,7 +125,7 @@ class DashboardController extends ThinkUpController {
             if (isset($_GET["u"]) && isset($_GET['n'])) {
                 $instance = $instance_dao->getByUsernameOnNetwork($_GET["u"], $_GET['n']);
                 $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
-                if ($owner_instance_dao->doesOwnerHaveAccess($owner, $instance)) {
+                if ($owner_instance_dao->doesOwnerHaveAccessToInstance($owner, $instance)) {
                     $this->instance = $instance;
                 } else {
                     $this->instance = null;

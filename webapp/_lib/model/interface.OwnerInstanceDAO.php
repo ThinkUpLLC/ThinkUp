@@ -37,7 +37,16 @@ interface OwnerInstanceDAO {
      * @param Instance
      * @return bool true if yes, false if not
      */
-    public function doesOwnerHaveAccess($owner, $instance);
+    public function doesOwnerHaveAccessToInstance(Owner $owner, Instance $instance);
+
+    /**
+     * Check if an Owner has access to a an individual post
+     * @throws BadArgumentException If we do not pass a valid owner object
+     * @param Owner
+     * @param Post
+     * @return bool true if yes, false if not
+     */
+    public function doesOwnerHaveAccessToPost(Owner $owner, Post $post);
 
     /**
      * Get an owner instance by owner_id and instance_id

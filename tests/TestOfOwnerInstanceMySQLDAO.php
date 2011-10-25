@@ -47,7 +47,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testDelete() {
-        $dao = new OwnerInstanceMysqlDAO();
+        $dao = new OwnerInstanceMySQLDAO();
         $builder = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50) );
         $owner_instance = $dao->get(50, 20);
         $this->assertNotNull($owner_instance);
@@ -59,7 +59,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testDeleteByInstance() {
-        $dao = new OwnerInstanceMysqlDAO();
+        $dao = new OwnerInstanceMySQLDAO();
         $builder1 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50) );
         $builder2 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>51) );
         $builder3 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>52) );
@@ -81,7 +81,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetByInstance() {
-        $dao = new OwnerInstanceMysqlDAO();
+        $dao = new OwnerInstanceMySQLDAO();
         $builder1 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>50) );
         $builder2 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>51) );
         $builder3 = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20, 'owner_id'=>52) );
@@ -91,10 +91,10 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testInsertOwnerInstance() {
-        $dao = new OwnerInstanceMysqlDAO();
+        $dao = new OwnerInstanceMySQLDAO();
         $result = $dao->insert(10, 20, 'aaa', 'bbb');
         $this->assertTrue($result);
-        $stmt = OwnerInstanceMysqlDAO::$PDO->query( "select * from " . $this->table_prefix . 'owner_instances' );
+        $stmt = OwnerInstanceMySQLDAO::$PDO->query( "select * from " . $this->table_prefix . 'owner_instances' );
         $data = $stmt->fetch();
         $this->assertEqual(10, $data['owner_id'], 'we have an owner_id of: 10');
         $this->assertEqual(20, $data['instance_id'], 'we have an instance_id of: 20');
@@ -106,7 +106,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetOAuthTokens() {
 
         $builder = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20) );
-        $dao = new OwnerInstanceMysqlDAO();
+        $dao = new OwnerInstanceMySQLDAO();
 
         // no record
         $tokens = $dao->getOAuthTokens(21);
@@ -123,7 +123,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetOwnerInstance() {
 
         $builder = FixtureBuilder::build(self::TEST_TABLE_OI, array('instance_id' => 20) );
-        $dao = new OwnerInstanceMysqlDAO();
+        $dao = new OwnerInstanceMySQLDAO();
 
         // no record
         $owner_instance = $dao->get(1, 20);
@@ -147,7 +147,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function testUpdateTokens() {
         $builder_data = array('owner_id' => 2, 'instance_id' => 20);
         $builder = FixtureBuilder::build(self::TEST_TABLE_OI,  $builder_data);
-        $dao = new OwnerInstanceMysqlDAO();
+        $dao = new OwnerInstanceMySQLDAO();
 
         // invalid instance id
         $result = $dao->updateTokens(2, 21, 'ccc', 'ddd');
@@ -160,65 +160,109 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         // valid update
         $result = $dao->updateTokens(2, 20, 'ccc3', 'ddd3');
         $sql = "select * from " . $this->table_prefix . 'owner_instances where instance_id = 20';
-        $stmt = OwnerInstanceMysqlDAO::$PDO->query($sql);
+        $stmt = OwnerInstanceMySQLDAO::$PDO->query($sql);
         $data = $stmt->fetch();
         $this->assertEqual($data['oauth_access_token'], 'ccc3');
         $this->assertEqual($data['oauth_access_token_secret'], 'ddd3');
     }
 
-    public function testDoesOwnerHaveAccess() {
+    public function testDoesOwnerHaveAccessToInstance() {
         $oi_data = array('owner_id' => 2, 'instance_id' => 20);
         $oinstances_builder = FixtureBuilder::build(self::TEST_TABLE_OI,  $oi_data);
         $i_data = array('network_username' => 'mojojojo', 'id' => 20, 'network_user_id' =>'filler_data');
-        $instances_buuilder = FixtureBuilder::build(self::TEST_TABLE_I,  $i_data);
+        $instances_builder = FixtureBuilder::build(self::TEST_TABLE_I,  $i_data);
 
-        $dao = new OwnerInstanceMysqlDAO();
+        $dao = new OwnerInstanceMySQLDAO();
 
-        // bad owner
+        // no owner id or instance id
         try {
-            $dao->doesOwnerHaveAccess('wa', 'mojo');
+            $dao->doesOwnerHaveAccessToInstance(new Owner(), new Instance());
             $this->fail("should throw BadArgumentException");
         } catch(BadArgumentException $e) {
-            $this->assertPattern('/requires a valid/', $e->getMessage());
+            $this->assertPattern('/requires an/', $e->getMessage());
         }
 
         // no owner id
         try {
-            $dao->doesOwnerHaveAccess(new Owner(), 'mojo');
+            $dao->doesOwnerHaveAccessToInstance(new Owner(), new Instance());
             $this->fail("should throw BadArgumentException");
         } catch(BadArgumentException $e) {
-            $this->assertPattern('/requires a valid/', $e->getMessage());
+            $this->assertPattern('/requires an/', $e->getMessage());
         }
 
         // no match
         $owner = new Owner();
         $owner->id = 1;
 
-        // bad instance
-        try {
-            $dao->doesOwnerHaveAccess($owner, 'mojo');
-            $this->fail("should throw BadArgumentException");
-        } catch(BadArgumentException $e) {
-            $this->assertPattern('/requires a valid/', $e->getMessage());
-        }
-
         // no instance id
         try {
-            $dao->doesOwnerHaveAccess($owner, new Instance());
+            $dao->doesOwnerHaveAccessToInstance($owner, new Instance());
             $this->fail("should throw BadArgumentException");
         } catch(BadArgumentException $e) {
-            $this->assertPattern('/requires a valid/', $e->getMessage());
+            $this->assertPattern('/requires an/', $e->getMessage());
         }
 
         $instance = new Instance();
         $instance->id = 1;
-        $this->assertFalse($dao->doesOwnerHaveAccess($owner, $instance), 'no access');
+        $this->assertFalse($dao->doesOwnerHaveAccessToInstance($owner, $instance), 'no access');
         $owner->id = 2;
-        $this->assertFalse($dao->doesOwnerHaveAccess($owner, $instance), 'no access');
+        $this->assertFalse($dao->doesOwnerHaveAccessToInstance($owner, $instance), 'no access');
 
         // valid match
         $instance->id = 20;
-        $this->assertTrue($dao->doesOwnerHaveAccess($owner, $instance), 'has access');
+        $this->assertTrue($dao->doesOwnerHaveAccessToInstance($owner, $instance), 'has access');
+    }
+
+    public function testDoesOwnerHaveAccessToPost() {
+        $oi_data = array('owner_id' => 2, 'instance_id' => 20);
+        $oinstances_builder = FixtureBuilder::build(self::TEST_TABLE_OI,  $oi_data);
+        $i_data = array('id' => 20, 'network_username' => 'mojojojo', 'network_user_id' =>'10', 'network'=>'twitter');
+        $instances_builder = FixtureBuilder::build(self::TEST_TABLE_I,  $i_data);
+
+        $dao = new OwnerInstanceMySQLDAO();
+
+        $post = new Post(array('id'=>1, 'author_user_id'=>'20', 'author_username'=>'no one',
+        'author_fullname'=>"No One", 'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'',
+        'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
+        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'retweet_count_api' =>'', 'old_retweet_count_cache' => '', 'in_rt_of_user_id' =>'',
+        'post_id'=>'9021481076', 'is_protected'=>1, 'place_id' => 'ece7b97d252718cc', 'favlike_count_cache'=>0,
+        'post_text'=>'I like cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 
+        'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
+
+        // no owner id
+        try {
+            $dao->doesOwnerHaveAccessToPost(new Owner(), $post);
+            $this->fail("should throw BadArgumentException");
+        } catch(BadArgumentException $e) {
+            $this->assertPattern('/requires an/', $e->getMessage());
+        }
+
+        // no match
+        $owner = new Owner();
+        $owner->id = 1;
+
+        //public post and owner not admin
+        $post->is_protected = false;
+        $this->assertTrue($dao->doesOwnerHaveAccessToPost($owner, $post));
+
+        //protected post and owner not admin
+        $post->is_protected = true;
+        $this->assertFalse($dao->doesOwnerHaveAccessToPost($owner, $post));
+
+        //protected post but owner is admin
+        $owner->is_admin = true;
+        $this->assertTrue($dao->doesOwnerHaveAccessToPost($owner, $post));
+
+        //protected post, owner is not admin, and owner doesn't have an authed instance which follows author
+        $owner->is_admin = false;
+        $this->assertFalse($dao->doesOwnerHaveAccessToPost($owner, $post));
+
+        //protected post, owner is not admin, and owner DOES have an authed instance which follows author
+        $owner->id = 2;
+        $follows_builder = FixtureBuilder::build('follows', array('user_id'=>'20', 'follower_id'=>'10',
+        'network'=>'twitter'));
+        $this->assertTrue($dao->doesOwnerHaveAccessToPost($owner, $post));
 
     }
 }

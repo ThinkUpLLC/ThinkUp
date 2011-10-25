@@ -55,7 +55,18 @@ class PostController extends ThinkUpController {
                     if (isset($_GET['search'])) {
                         $this->addToView('search_on', true);
                     }
-                    if ( !$post->is_protected || $this->isLoggedIn()) {
+
+                    $viewer_has_access_to_post = false;
+                    if ( !$post->is_protected ) {
+                        $viewer_has_access_to_post = true;
+                    } elseif ($this->isLoggedIn()) {
+                        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                        $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+                        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                        $viewer_has_access_to_post = $owner_instance_dao->doesOwnerHaveAccessToPost($owner, $post);
+                    }
+
+                    if ($viewer_has_access_to_post) {
                         $plugin_option_dao = DAOFactory::GetDAO('PluginOptionDAO');
                         $options = $plugin_option_dao->getOptionsHash('geoencoder', true);
                         if (isset($options['distance_unit']->option_value)) {
@@ -69,16 +80,29 @@ class PostController extends ThinkUpController {
                         $replies = $post_dao->getRepliesToPost($post_id, $network, 'default', $distance_unit);
 
                         $public_replies = array();
+                        $viewable_replies = array();
                         foreach ($replies as $reply) {
-                            if (!$reply->author->is_protected) {
+                            if (!$reply->is_protected) {
                                 $public_replies[] = $reply;
+                                $viewable_replies[] = $reply;
+                            } else {
+                                if ($this->isLoggedIn()) {
+                                    if (!isset($owner_dao)) {
+                                        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+                                        $owner = $owner_dao->getByEmail($this->getLoggedInUser());
+                                        $owner_instance_dao = DAOFactory::getDAO('OwnerInstanceDAO');
+                                    }
+                                    if ( $owner_instance_dao->doesOwnerHaveAccessToPost($owner, $reply)) {
+                                        $viewable_replies[] = $reply;
+                                    }
+                                }
                             }
                         }
                         $public_replies_count = count($public_replies);
                         $this->addToView('public_reply_count', $public_replies_count );
 
                         if ($this->isLoggedIn()) {
-                            $this->addToView('replies', $replies );
+                            $this->addToView('replies', $viewable_replies );
                         } else {
                             $this->addToView('replies', $public_replies );
                         }

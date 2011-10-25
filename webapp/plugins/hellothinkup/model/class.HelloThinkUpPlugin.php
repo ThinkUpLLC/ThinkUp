@@ -60,7 +60,7 @@ class HelloThinkUpPlugin extends Plugin implements CrawlerPlugin, PostDetailPlug
         *
         * $instances = [...]
         * foreach ($instances as $instance) {
-        *	    if (!$oid->doesOwnerHaveAccess($current_owner, $instance)) {
+        *	    if (!$oid->doesOwnerHaveAccessToInstance($current_owner, $instance)) {
         *	        // Owner doesn't have access to this instance; let's not crawl it.
         *	        continue;
         *	    }

@@ -66,7 +66,7 @@ class Post {
      */
     var $post_text;
     /**
-     * @var tinyint Whether or not this post is protected, e.g. not publicly visible.
+     * @var bool Whether or not this post is protected, e.g. not publicly visible.
      */
     var $is_protected;
     /**
@@ -216,10 +216,6 @@ class Post {
         $this->is_reply_by_friend = PDODAO::convertDBToBool($val["is_reply_by_friend"]);
         $this->is_retweet_by_friend = PDODAO::convertDBToBool($val["is_retweet_by_friend"]);
         $this->favlike_count_cache = $val["favlike_count_cache"];
-
-        if (isset($val['is_protected'])) {
-            $this->is_protected = PDODAO::convertDBToBool($val["is_protected"]);
-        }
 
         // favorited is non-persistent.  Will be set from xml, but not from database retrieval.
         if (isset($val["favorited"])) {
