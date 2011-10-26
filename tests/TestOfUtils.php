@@ -220,4 +220,75 @@ class TestOfUtils extends ThinkUpBasicUnitTestCase {
         $expected = array('next_milestone'=>100, 'will_take'=>5);
         $this->assertEqual(Utils::predictNextMilestoneDate(75, 5), $expected);
     }
+
+    public function testGetHotPostVisualizationData() {
+        $hot_posts = array(
+            (object)array(
+                'post_text' => 'First Post',
+                'favlike_count_cache' => 1,
+                'all_retweets' => 2,
+                'reply_count_cache' => 3,
+            ),
+            (object)array(
+                'post_text' => 'Second Post',
+                'favlike_count_cache' => 10,
+                'all_retweets' => 20,
+                'reply_count_cache' => 30,
+            )
+        );
+
+        $result = Utils::getHotPostVisualizationData($hot_posts, 'twitter');
+        $this->assertEqual(gettype($result), 'string');
+
+        $visualization_object = json_decode($result);
+        $this->assertEqual(sizeof($visualization_object->rows), 2);
+        $this->assertEqual(sizeof($visualization_object->cols), 3);
+
+        $this->assertEqual($visualization_object->cols[0]->label, 'Tweet');
+        $this->assertEqual($visualization_object->cols[1]->label, 'Retweets');
+        $this->assertEqual($visualization_object->cols[2]->label, 'Replies');
+
+        $this->assertEqual($visualization_object->rows[0]->c[0]->v, 'First Post');
+        $this->assertEqual($visualization_object->rows[0]->c[1]->v, 2);
+        $this->assertEqual($visualization_object->rows[0]->c[2]->v, 3);
+
+        $result = Utils::getHotPostVisualizationData($hot_posts, 'facebook');
+        $this->assertEqual(gettype($result), 'string');
+
+        $visualization_object = json_decode($result);
+        $this->assertEqual(sizeof($visualization_object->rows), 2);
+        $this->assertEqual(sizeof($visualization_object->cols), 3);
+
+        $this->assertEqual($visualization_object->cols[0]->label, 'Post');
+        $this->assertEqual($visualization_object->cols[1]->label, 'Likes');
+        $this->assertEqual($visualization_object->cols[2]->label, 'Replies');
+
+        $this->assertEqual($visualization_object->rows[1]->c[0]->v, 'Second Post');
+        $this->assertEqual($visualization_object->rows[1]->c[1]->v, 10);
+        $this->assertEqual($visualization_object->rows[1]->c[2]->v, 30);
+    }
+
+    public function testGetClientVisualizationData() {
+        $client_data = array(
+            'Client 1' => 50,
+            'Client 2' => 10,
+        );
+
+        $result = Utils::getClientUsageVisualizationData($client_data);
+        $this->assertEqual(gettype($result), 'string');
+
+        $visualization_object = json_decode($result);
+        $this->assertEqual(sizeof($visualization_object->rows), 2);
+        $this->assertEqual(sizeof($visualization_object->cols), 2);
+
+        $this->assertEqual($visualization_object->cols[0]->label, 'Client');
+        $this->assertEqual($visualization_object->cols[1]->label, 'Posts');
+
+        $this->assertEqual($visualization_object->rows[0]->c[0]->v, 'Client 1');
+        $this->assertEqual($visualization_object->rows[0]->c[0]->f, 'Client 1 (50)');
+        $this->assertEqual($visualization_object->rows[0]->c[1]->v, 50);
+
+        $this->assertEqual($visualization_object->rows[1]->c[0]->v, 'Client 2');
+        $this->assertEqual($visualization_object->rows[1]->c[1]->v, 10);
+    }
 }

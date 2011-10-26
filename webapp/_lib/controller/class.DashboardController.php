@@ -194,7 +194,9 @@ class DashboardController extends ThinkUpController {
             true);
             $this->addToView('recent_posts', $recent_posts);
             $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 20);
+            $hot_posts_data = Utils::getHotPostVisualizationData($hot_posts, $this->instance->network);
             $this->addToView('hot_posts', $hot_posts);
+            $this->addToView('hot_posts_data', $hot_posts_data);
             $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
             $this->instance->network, 5);
             $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
@@ -232,11 +234,8 @@ class DashboardController extends ThinkUpController {
             list($all_time_clients_usage, $latest_clients_usage) =
             $post_dao->getClientsUsedByUserOnNetwork($this->instance->network_user_id, $this->instance->network);
 
-            // Only show the top 10 most used clients, since forever
-            $all_time_clients_usage = array_merge(
-            array_slice($all_time_clients_usage, 0, 10),
-            array('Others'=>array_sum(array_slice($all_time_clients_usage, 10)))
-            );
+            // The sliceVisibilityThreshold option in the chart will prevent small slices from being created
+            $all_time_clients_usage = Utils::getClientUsageVisualizationData($all_time_clients_usage);
             $this->addToView('all_time_clients_usage', $all_time_clients_usage);
 
             // Only show the two most used clients for the last 25 posts
