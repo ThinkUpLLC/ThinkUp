@@ -451,8 +451,8 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com', false, true);
         $_POST['changepass'] = 'Change password';
         $_POST['oldpass'] = 'oldpassword';
-        $_POST['pass1'] = 'newpassword';
-        $_POST['pass2'] = 'newpassword';
+        $_POST['pass1'] = '123newpassword';
+        $_POST['pass2'] = '123newpassword';
         $_GET['csrf_token'] = parent::CSRF_TOKEN;
 
         $controller = new AccountConfigurationController(true);
@@ -593,7 +593,37 @@ class TestOfAccountConfigurationController extends ThinkUpUnitTestCase {
         $this->assertEqual($owner->email, 'me@example.com');
         $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
         $this->assertEqual($error_msgs['password'],
-        'New password must be at least 5 characters. Your password has not been changed.');
+        'New password must be at least 8 characters and contain a mix of numbers and letters. Your password has not been changed.');
+
+        //not set: owners, body, success_msg, error_msg
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('body'));
+        $this->assertTrue(!$v_mgr->getTemplateDataItem('success_msg'));
+    }
+
+    public function testAuthControlLoggedInChangePasswordNewPwdNotMixed() {
+        $this->simulateLogin('me@example.com');
+        $_POST['changepass'] = 'Change password';
+        $_POST['oldpass'] = 'oldpassword';
+        $_POST['pass1'] = 'newpasscode';
+        $_POST['pass2'] = 'newpasscode';
+
+        $controller = new AccountConfigurationController(true);
+        $results = $controller->go();
+
+        //test if view variables were set correctly
+        $v_mgr = $controller->getViewManager();
+        $this->assertIsA($v_mgr->getTemplateDataItem('installed_plugins'), 'array');
+        $this->assertEqual(sizeof($v_mgr->getTemplateDataItem('installed_plugins')), 7);
+
+        $owner = $v_mgr->getTemplateDataItem('owner');
+        $this->assertIsA($owner, 'Owner');
+        $this->assertTrue(!$owner->is_admin);
+        $this->assertEqual($owner->full_name, 'ThinkUp J. User');
+        $this->assertEqual($owner->email, 'me@example.com');
+        $error_msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($error_msgs['password'],
+        'New password must be at least 8 characters and contain a mix of numbers and letters. Your password has not been changed.');
 
         //not set: owners, body, success_msg, error_msg
         $this->assertTrue(!$v_mgr->getTemplateDataItem('owners'));
