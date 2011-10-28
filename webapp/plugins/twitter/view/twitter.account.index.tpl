@@ -54,7 +54,7 @@
 {if $user_is_admin}
 <h2 class="subhead">Set Up the Twitter Plugin</h2>
 {include file="_usermessage.tpl" field="setup"}
-<ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps">Create a new application on Twitter for ThinkUp</a>.</li>
+<ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps" target="_blank">Create a new application on Twitter for ThinkUp</a>.</li>
 <li>Set the callback URL to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}plugins/twitter/auth.php</pre></li>
 <li>Set the application Default Access type to "Read-only".</li>
 <li>Enter the Twitter-provided consumer key and secret here.</li></ol>

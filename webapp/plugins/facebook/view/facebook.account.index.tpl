@@ -118,7 +118,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 <h2 class="subhead">Set Up the Facebook Plugin</h2>
 {include file="_usermessage.tpl" field="setup"}
 <ol style="margin-left:40px">
-<li><a href="https://developers.facebook.com/apps">Create a ThinkUp Facebook application.</a></li>
+<li><a href="https://developers.facebook.com/apps" target="_blank">Create a ThinkUp Facebook application.</a></li>
 <li>Set the Web Site &gt; Site URL to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}</pre></li>
 <li>Enter the Facebook-provided App ID and App Secret here.</li></ol>
 {/if}

@@ -49,7 +49,7 @@
 <h2 class="subhead">Set Up the Google+ Plugin</h2>
 {include file="_usermessage.tpl" field="setup"}
 <ol style="margin-left:40px">
-<li><a href="http://code.google.com/apis/console#access">Create a project in the Google APIs Console.</a></li>
+<li><a href="http://code.google.com/apis/console#access" target="_blank">Create a project in the Google APIs Console.</a></li>
 <li>Click "Services" and switch Google+ API to "On." Next, click "API Access" then "Create an OAuth 2.0 client ID."</li>
 <li>Edit the settings for your new Client ID then click "Next." Make sure "Application Type" is set to "Web Application" and set the first line of Authorized Redirect URIs to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}account/?p=google%2B</pre></li>
 <li>Enter the Google-provided Client ID and Client Secret here.</li></ol>
