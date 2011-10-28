@@ -119,7 +119,11 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {include file="_usermessage.tpl" field="setup"}
 <ol style="margin-left:40px">
 <li><a href="https://developers.facebook.com/apps" target="_blank">Click the "Create New App" button.</a></li>
-<li>Set the "App Display Name" to "ThinkUp," leave "App Namespace" blank, and submit the form.</li>
+<li>
+    Fill in the following settings.<br />
+    App Display Name: <span style="font-family:Courier;">ThinkUp</span><br />
+    App Namespace: (leave blank)
+</li>
 <li>
   At the bottom of the page, click the "Website" section and add the Site URL:
     <small>
