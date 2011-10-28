@@ -103,4 +103,47 @@ class TestOfTestAuthController extends ThinkUpUnitTestCase {
 
         $this->assertEqual($controller->getCacheKeyString(), '.httestme.tpl-me@example.com');
     }
+
+    /**
+     * Test Not authed, and not preauthed
+     */
+    public function testNoAuthNoPreAuth() {
+        $config = Config::getInstance();
+        $config->setValue('cache_pages', true);
+        $controller = new TestPreAuthController(true);
+        $results = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $config = Config::getInstance();
+        $this->assertEqual('You must <a href="'.$config->getValue('site_root_path').
+        'session/login.php">log in</a> to do this.', $v_mgr->getTemplateDataItem('error_msg'));
+    }
+
+    /**
+     * Test Pre-authed
+     */
+    public function testNoAuthPreAuth() {
+        $config = Config::getInstance();
+        $config->setValue('cache_pages', true);
+        $controller = new TestPreAuthController(true);
+        $_GET['preauth'] = true;
+        $results = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('test'), 'We are preauthed!');
+        $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'ThinkUp');
+    }
+
+    /**
+     * Test  normal authed
+     */
+    public function testRegularAuth() {
+        $this->simulateLogin('me@example.com');
+        $config = Config::getInstance();
+        $config->setValue('cache_pages', true);
+        $controller = new TestPreAuthController(true);
+        $_GET['preauth'] = true;
+        $results = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('test'), 'We are not preauthed!');
+        $this->assertEqual($v_mgr->getTemplateDataItem('app_title'), 'ThinkUp');
+    }
 }
