@@ -72,9 +72,6 @@
                     {if $post->post_text}
                         {if $post->network == 'twitter'}
                           {$post->post_text|filter_xss|link_usernames_to_twitter}
-                          <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
-                          <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
-                          <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
                         {else}
                           {$post->post_text}
                           {if $post->is_protected}
@@ -100,28 +97,33 @@
                   {/if}
       
                   <div class="clearfix gray" id="more-detail" style="width:460px;">
-                    <div class="grid_2 alpha">
-                        <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" />
-                      </div>
-                    <div class="grid_5">
-                        {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
-                          {if $post->location}{$post->location}<br>{/if}
-                          <!--{if $post->in_reply_to_post_id}<a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">In reply to</a>{/if}
-                          {if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
-                      -->
-                      </div>
-                    <div class="grid_4 omega">
-                          {if $post->source}
-                                {if $post->source eq 'web'}
-                                  Web
-                                {else}
-                                  {$post->source}<span class="ui-icon ui-icon-newwin"></span>
-                                {/if}
-                          {/if}<br>
-                            {if $post->network eq 'twitter'}
-                            <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">View on Twitter</a><span class="ui-icon ui-icon-newwin"></span>
+                    <div class="grid_11">
+                      {if $post->network eq 'twitter'}
+                        <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">
                       {/if}
-                    </div>
+                      {$post->adj_pub_date|relative_datetime} ago
+                        {if $post->network eq 'twitter'}
+                          </a>
+                        {/if}
+                        
+                        {if $post->location}from {$post->location}{/if}
+                        {if $post->source}
+                          via
+                          {if $post->source eq 'web'}
+                            Web
+                          {else}
+                            {$post->source}<span class="ui-icon ui-icon-newwin"></span>
+                          {/if}
+                        {/if}
+                        {if $post->network eq 'twitter'}
+                          <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
+                          <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
+                          <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
+                        {/if}
+                        <!--{if $post->in_reply_to_post_id}<a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">In reply to</a>{/if}
+                          {if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
+                        -->
+                      </div>
                     {if $disable_embed_code != true}
                     <div class="grid_15 omega">
                     Embed this thread:<br>
