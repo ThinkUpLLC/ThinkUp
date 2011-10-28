@@ -14,15 +14,16 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
 <div class="individual-tweet post clearfix{if $post->is_protected} private{/if}">
     <div class="grid_2 alpha">
       <div class="avatar-container">
-        <a href="{$site_root_path}user/?u={$post->author_username|urlencode}&n={$post->network|urlencode}&i={$selected_instance_username}">
-        <img src="{$post->author_avatar}" class="avatar2"/></a><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
+        {if $post->network == 'twitter'} <a href="http://twitter.com/{$post->author_username}" title="{$post->author_username} on Twitter">{/if}
+        <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
+        {if $post->network == 'twitter'}</a>{/if}
       </div>
     </div>
     <div class="grid_3 small">
       {if $post->network == 'twitter' && $username_link != 'internal'}
-        <a href="{$site_root_path}user/?u={$post->author_username|urlencode}&n={$post->network|urlencode}&i={$selected_instance_username}">{$post->author_username}</a>
+        <a href="http://twitter.com/{$post->author_username}" title="{$post->author_username} on Twitter">{$post->author_username}</a>
       {else}
-        <a href="{$site_root_path}user/index.php?u={$post->author_username|urlencode}&n={if $post->network eq 'facebook page'}facebook{else}{$post->network|urlencode}{/if}">{$post->author_username}</a>
+        {$post->author_username}
       {/if}
 
       {if ($post->author && $post->author->follower_count > 0)}

@@ -1,14 +1,18 @@
 <div class="individual-tweet prepend_20 clearfix{if $t.is_protected} private{/if}">
   <div class="grid_2 alpha">
-    <div class="avatar-container">    
-      <a href="{$site_root_path}user/?u={$f.user_name}&n={$instance->network|urlencode}&i={$instance->network_username|urlencode}"><img src="{$f.avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$f.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+    <div class="avatar-container">
+        {if $f.network == 'twitter'}<a href="http://twitter.com/{$f.user_name}" title="{$f.user_name} on Twitter">{/if}
+      <img src="{$f.avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$f.network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
+      {if $f.network == 'twitter'}</a>{/if}
     </div>
   </div>
   <div class="grid_4 small">
-    <a href="{$site_root_path}user/?u={$f.user_name|urlencode}&n={$f.network|urlencode}&i={$instance->network_username|urlencode}">{$f.user_name}</a>
+    {if $f.network == 'twitter'}<a href="http://twitter.com/{$f.user_name}" title="{$f.user_name} on Twitter">{/if}
+    {$f.user_name}
+    {if $f.network == 'twitter'}</a>{/if}
     <div class="small gray">
       {if $f.follower_count > 0 && $f.friend_count > 0}
-      {$f.follower_count} followers, {$f.friend_count} friends<br>
+      {$f.follower_count|number_format} followers, {$f.friend_count|number_format} friends<br>
       {/if}
       {if $f.network eq 'twitter'}<a href="http://twitter.com/{$f.user_name}" title="{$f.user_name} on Twitter"><span class="sprite ui-icon-person"></span></a>{/if}
     </div>

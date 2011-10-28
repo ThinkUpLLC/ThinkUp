@@ -18,8 +18,7 @@
 <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
     <div class="grid_2 alpha">
       <div class="avatar-container">
-        <a href="{$site_root_path}user/?u={$t->author_username|urlencode}&n={$t->network|urlencode}&i={$selected_instance_username}">
-        <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
+        <img src="{$t->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$t->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
         {if $t->is_reply_by_friend or $t->is_retweet_by_friend}
            <div class="small gray">Friend</div>
         {/if}
@@ -30,9 +29,7 @@
       <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
       href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
       {else}
-      <a href="{$site_root_path}user/index.php?u={$t->author_username|urlencode}&n={$t->network|urlencode}">
         {$t->author_username}
-      </a>
       {/if}
       {if $t->author->follower_count > 0}
         <div class="small gray">{$t->author->follower_count|number_format} followers</div>
