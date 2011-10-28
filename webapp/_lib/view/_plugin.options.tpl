@@ -64,7 +64,13 @@ function show_advanced() {
 {if $user_is_admin}
 <!-- plugin options form elements -->
 {foreach from=$option_elements key=option_name item=option_obj}
-    {if $option_obj.advanced}
+    {if $option_obj.advanced and !isset($advanced_options)}
+        <p>
+            <a href="#" onclick="show_advanced(); return false">
+            <img id="advanced-icon" src="{$site_root_path}assets/img/slickgrid/actions.gif" /> <span id="adv-flip-prompt">Show</span>
+            Advanced Options
+            </a>
+        </p>
         {assign var=advanced_options value=1}
     {/if}
     {if $option_headers.$option_name}
@@ -137,15 +143,6 @@ function show_advanced() {
 
 <div style="clear: both;"></div>
 {/foreach}
-
-{if $advanced_options}
-<p style="margin: 20px;">
-    <a href="#" onclick="show_advanced(); return false">
-    <img id="advanced-icon" src="{$site_root_path}assets/img/slickgrid/actions.gif" /> <span id="adv-flip-prompt">Show</span>
-    Advanced Options
-    </a>
-</p>
-{/if}
 
 {/if}
 
