@@ -42,7 +42,7 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $builders = array();
 
         $test_table_sql = 'CREATE TABLE tu_test_table(' .
-            'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' . 
+            'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
             'test_name varchar(20),' .
             'test_id int(11),' .
             'unique key test_id_idx (test_id)' .
@@ -59,6 +59,19 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $builders[] = FixtureBuilder::build('users', array('user_id'=>13, 'user_name'=>'sweetmary',
         'full_name'=>'Sweet Mary Jane', 'avatar'=>'avatar.jpg'));
         return $builders;
+    }
+
+    /*
+     * Test whether the database supports time zones or only offsets
+     */
+    private function isTimeZoneSupported() {
+        $testdao = DAOFactory::getDAO('TestDAO');
+        try {
+            TestMySQLDAO::$PDO->exec("SET time_zone = 'America/Los_Angeles'");
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 
     public function tearDown() {
@@ -328,7 +341,89 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $test_dao = new TestMySQLDAO();
         $tz_server = $test_dao->getTimezoneOffset();
 
-        $this->assertEqual($tz_config, $tz_server['tz_offset']);
+        if ($this->isTimeZoneSupported()) {
+            $this->assertEqual('Europe/London', $tz_server['tz_offset']);
+        } else {
+            $this->assertEqual($tz_config, $tz_server['tz_offset']);
+        }
         Config::destroyInstance();
+    }
+
+    /*
+     * To fully test this, you need to run the test with the timezone tables both empty and populated, and during DST
+     * and outside of DST.
+     *
+     * Truncate the timezone tables.
+     *
+     * $ echo "TRUNCATE TABLE time_zone; TRUNCATE TABLE time_zone_name; TRUNCATE TABLE time_zone_transition;
+     * TRUNCATE TABLE time_zone_transition_type;" | sudo mysql mysql
+     * $ sudo /etc/init.d/mysql restart
+     * Stopping MySQL database server: mysqld.
+     * Starting MySQL database server: mysqld.
+     * Checking for tables which need an upgrade, are corrupt or were not closed cleanly..
+     *
+     * Tests should fail because we can't set the time_zone session variable correctly
+     *
+     * $ faketime '2011-11-01' php tests/TestOfPDODAO.php -t testCompareMySQLAndPHPTimezoneOffsets
+     * TestOfPDODAO.php
+     * 1) Equal expectation fails at character 6 with [1293865200] and [1293868800] at
+     * [/home/cwarden/git/ThinkUp/tests/TestOfPDODAO.php line 351]
+     * in testCompareMySQLAndPHPTimezoneOffsets
+     * in TestOfPDODAO
+     * FAILURES!!!
+     *
+     * Test cases run: 1/3, Passes: 1, Failures: 1, Exceptions: 0
+     * $ faketime '2011-01-01' php tests/TestOfPDODAO.php -t testCompareMySQLAndPHPTimezoneOffsets
+     * TestOfPDODAO.php
+     * 1) Equal expectation fails at character 6 with [1314864000] and [1314860400] at
+     * [/home/cwarden/git/ThinkUp/tests/TestOfPDODAO.php line 358]
+     * in testCompareMySQLAndPHPTimezoneOffsets
+     * in TestOfPDODAO
+     * FAILURES!!!
+     * Test cases run: 1/3, Passes: 1, Failures: 1, Exceptions: 0
+     *
+     * Populate the timezone tables
+     *
+     * $ mysql_tzinfo_to_sql /usr/share/zoneinfo | sudo mysql mysql
+     *
+     * Now the tests will succeed
+     *
+     * $ faketime '2011-11-01' php tests/TestOfPDODAO.php -t testCompareMySQLAndPHPTimezoneOffsets
+     * TestOfPDODAO.php
+     * OK
+     * Test cases run: 1/3, Passes: 2, Failures: 0, Exceptions: 0
+     * $ faketime '2011-01-01' php tests/TestOfPDODAO.php -t testCompareMySQLAndPHPTimezoneOffsets
+     * TestOfPDODAO.php
+     * OK
+     * Test cases run: 1/3, Passes: 2, Failures: 0, Exceptions: 0
+     */
+    public function testCompareMySQLAndPHPTimezoneOffsets() {
+        if (!$this->isTimeZoneSupported()) {
+            return;
+        }
+        // These tests will only be run if the time_zone tables are populated in MySQL.
+        // See http://dev.mysql.com/doc/refman/5.1/en/mysql-tzinfo-to-sql.html
+        $config = Config::getInstance();
+        // set timezones the same for MySQL and PHP
+        $config->setValue('timezone', 'America/Los_Angeles');
+        date_default_timezone_set('America/Los_Angeles');
+        $timezone = $config->getValue('timezone');
+
+        TestMySQLDAO::destroyPDO();
+        $testdao = DAOFactory::getDAO('TestDAO');
+
+        // test time outside of daylight saving time
+        $stmt = TestMySQLDAO::$PDO->query('SELECT UNIX_TIMESTAMP("2011-01-01 00:00:00") AS time');
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $mysql_time = $row['time'];
+        $php_time = strtotime('2011-01-01 00:00:00');
+        $this->assertEqual($mysql_time, $php_time);
+
+        // test time during daylight saving time
+        $stmt = TestMySQLDAO::$PDO->query('SELECT UNIX_TIMESTAMP("2011-09-01 00:00:00") AS time');
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $mysql_time = $row['time'];
+        $php_time = strtotime('2011-09-01 00:00:00');
+        $this->assertEqual($mysql_time, $php_time);
     }
 }
