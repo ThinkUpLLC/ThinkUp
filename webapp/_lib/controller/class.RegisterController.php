@@ -91,8 +91,8 @@ class RegisterController extends ThinkUpController {
                         if (strcmp($_POST['pass1'], $_POST['pass2']) || empty($_POST['pass1'])) {
                             $this->addErrorMessage("Passwords do not match.", 'password');
                             $valid_input = false;
-                        } else if (strlen($_POST['pass1']) < 5) {
-                            $this->addErrorMessage("Password must be at least 5 characters.", 'password');
+                        } else if (!preg_match("/(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])/", $_POST['pass1'])) {
+                            $this->addErrorMessage("Password must be at least 8 characters and contain a mix of numbers and letters.", 'password');
                             $valid_input = false;
                         }
 
