@@ -195,7 +195,10 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $output = $controller->go();
 
-        $expected_pattern = '/Set the callback URL to <pre>https:\/\//';
+        $expected_pattern = '/Callback URL:
+    <small>
+      <code style="font-family:Courier;" id="clippy_2988">
+        https:\/\//';
         $this->assertPattern($expected_pattern, $output);
 
         $this->assertNoPattern('/http:\/\/mytestthinkup/', $output);
