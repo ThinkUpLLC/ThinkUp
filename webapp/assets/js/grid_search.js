@@ -4,8 +4,8 @@
 var TUGridSearch = function() {
 
     /**
-	 * @var boolean Enable for console logging
-	 */
+     * @var boolean Enable for console logging
+     */
     this.DEBUG = false;
 
     this.searchString = "";
@@ -19,8 +19,8 @@ var TUGridSearch = function() {
     };
 
     /**
-	 * Init grid search
-	 */
+     * Init grid search
+     */
     this.init = function() {
         // register on submit event on our form
         $(document).ready(function() {
@@ -41,9 +41,9 @@ var TUGridSearch = function() {
     }
 
     /**
-	 * @param Object
-	 *            {success: true|false, posts: [a posts array]};
-	 */
+     * @param Object
+     *            {success: true|false, posts: [a posts array]};
+     */
     this.populate_grid = function(obj) {
         if (tu_grid_search.DEBUG) { console.debug(obj.posts.length + ' posts'); }
         if (tu_grid_search.DEBUG) { console.debug(obj.limit + ' limit'); }
@@ -118,14 +118,14 @@ var TUGridSearch = function() {
         this.dataView.setItems(obj.posts);
         this.dataView.setFilter(tu_grid_search.myFilter);
         this.dataView.endUpdate();
-        $("#grid_search_count").html(tu_grid_search.dataView.rows.length);
+        $("#grid_search_count").html(this.add_commas(tu_grid_search.dataView.rows.length));
         $('#myGrid').show();
         var grid = new Slick.Grid($("#myGrid"), this.dataView.rows, columns, options);
         
         this.dataView.onRowCountChanged.subscribe(function(args) {
             grid.updateRowCount();
             grid.render();
-            $("#grid_search_count").html(tu_grid_search.dataView.rows.length);
+            $("#grid_search_count").html(this.add_commas(tu_grid_search.dataView.rows.length));
         });
         
         this.dataView.onRowsChanged.subscribe(function(rows) {
@@ -163,8 +163,8 @@ var TUGridSearch = function() {
     }
 
     /**
-	 * search filter
-	 */
+     * search filter
+     */
     this.myFilter = function (item) {
         if(item['id'] == -1 || item['text'] == null) { return false; }
         if (tu_grid_search.searchString != "" && 
@@ -176,8 +176,8 @@ var TUGridSearch = function() {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     this.load_iframe = function(nolimit) {
         nolimit = nolimit ? true : false;
         // close grid search with escape key
@@ -217,8 +217,8 @@ var TUGridSearch = function() {
         });
     }
     /**
-	 * 
-	 */
+     * 
+     */
     this.close_iframe = function() {
         var path = typeof (site_root_path) != 'undefined' ? site_root_path : '';
         $('#grid_iframe').attr('src', path + '/assets/img/ui-bg_glass_65_ffffff_1x400.png');
@@ -236,8 +236,8 @@ var TUGridSearch = function() {
     }
     
     /**
-	 * load xss script ewith post data callback
-	 */
+     * load xss script with post data callback
+     */
     this.get_data = function() {
         $('#myGrid').hide();
         var url = '../../post/grid.php' + document.location.search;
@@ -247,7 +247,21 @@ var TUGridSearch = function() {
         script.setAttribute("type", "text/javascript");
         document.getElementsByTagName('head')[0].appendChild(script);
     }
+    
+    /**
+     * Format numeric string with commas
+     */
+    this.add_commas = function(nStr) {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
 }
-
 var tu_grid_search = new TUGridSearch();
 tu_grid_search.init();
