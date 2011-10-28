@@ -91,41 +91,15 @@
                     </div>
                   {/if}
 
-      {if $post->link->expanded_url}
-      <br>
-        {if $post->link->image_src}
-         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->image_src}" style="margin-bottom:50px;"/></a></div>
-        {/if}
-         <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
-        {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
-      {/if}
-                  {literal}
-                  <script>
-                  $(function() {
-
-                    $('#button').click(function() {
-                      $('#more-detail').toggle('slow', function() {
-                        // Animation complete.
-                        if ($('#button').hasClass('ui-icon-circle-arrow-s')) {
-                            $('#button').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');
-                        } else if ($('#button').hasClass('ui-icon-circle-arrow-n')) {
-                            $('#button').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s');
-                        } else {
-                            $('#button').addClass('ui-icon-circle-arrow-s');
-                        }
-                      });
-                    });
-
-                    });
-                  </script>
-                  {/literal}
-
-                  <!-- more-detail element -->
-                  <div class="clearfix prepend append">
-                    <span id="button" class="float-l ui-icon ui-icon-circle-arrow-s"></span>
-                  </div>
-
-                  <div class="clearfix gray" id="more-detail" style="display:none;width:460px;">
+                  {if $post->link->expanded_url}
+                    {if $post->link->image_src}
+                     <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->image_src}" style="margin-bottom:50px;"/></a></div>
+                    {/if}
+                     <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
+                    {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
+                  {/if}
+      
+                  <div class="clearfix gray" id="more-detail" style="width:460px;">
                     <div class="grid_2 alpha">
                         <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" />
                       </div>
