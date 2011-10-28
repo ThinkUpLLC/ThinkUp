@@ -22,33 +22,31 @@
  
                 <!-- more-detail element -->
                 <div class="clearfix gray" id="more-detail" style="width:460px;">
-                    <div class="grid_11">
-                      {if $post->network eq 'twitter'}
-                        <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">
+                  {if $post->network eq 'twitter'}
+                    <a href="http://twitter.com/{$post->author_username}/statuses/{$post->post_id}">
+                  {/if}
+                  {$post->adj_pub_date|date_format:"%b %e, %Y %l:%M %p"}
+                    {if $post->network eq 'twitter'}
+                      </a>
+                    {/if}
+                    
+                    {if $post->location}from {$post->location}{/if}
+                    {if $post->source}
+                      via
+                      {if $post->source eq 'web'}
+                        Web
+                      {else}
+                        {$post->source}<span class="ui-icon ui-icon-newwin"></span>
                       {/if}
-                      {$post->adj_pub_date|relative_datetime} ago
-                        {if $post->network eq 'twitter'}
-                          </a>
-                        {/if}
-                        
-                        {if $post->location}from {$post->location}{/if}
-                        {if $post->source}
-                          via
-                          {if $post->source eq 'web'}
-                            Web
-                          {else}
-                            {$post->source}<span class="ui-icon ui-icon-newwin"></span>
-                          {/if}
-                        {/if}
-                        {if $post->network eq 'twitter'}
-                          <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
-                          <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
-                          <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
-                        {/if}
-                        <!--{if $post->in_reply_to_post_id}<a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">In reply to</a>{/if}
-                          {if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
-                        -->
-                      </div>
+                    {/if}
+                    {if $post->network eq 'twitter'}
+                      <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
+                      <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
+                      <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
+                    {/if}
+                    <!--{if $post->in_reply_to_post_id}<a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">In reply to</a>{/if}
+                      {if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
+                    -->
                 </div> <!-- /#more-detail -->
               </div>
             </div>

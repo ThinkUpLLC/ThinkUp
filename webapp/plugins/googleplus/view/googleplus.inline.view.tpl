@@ -29,44 +29,14 @@
          <span class="small"><a href="{$post->link->url}" title="{$post->link->expanded_url}">{if $post->link->title}{$post->link->title}{else}{$post->link->url}{/if}</a>
         {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
       {/if}
-                  {literal}
-                  <script>
-                  $(function() {
-
-                    $('#button').click(function() {
-                      $('#more-detail').toggle('slow', function() {
-                        // Animation complete.
-                        if ($('#button').hasClass('ui-icon-circle-arrow-s')) {
-                            $('#button').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');
-                        } else if ($('#button').hasClass('ui-icon-circle-arrow-n')) {
-                            $('#button').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s');
-                        } else {
-                            $('#button').addClass('ui-icon-circle-arrow-s');
-                        }
-                      });
-                    });
-
-                    });
-                  </script>
-                  {/literal}
 
                   <!-- more-detail element -->
-                  <div class="clearfix prepend append">
-                    <span id="button" class="float-l ui-icon ui-icon-circle-arrow-s"></span>
-                  </div>
-
-                  <div class="clearfix gray" id="more-detail" style="display:none;width:460px;">
-                    <div class="grid_2 alpha">
-                        <img src="{$site_root_path}assets/img/social_icons/{$post->network|get_plugin_path}.png" />
-                      </div>
-                    <div class="grid_5">
-                        {$post->adj_pub_date|date_format:"%D"} @ {$post->adj_pub_date|date_format:"%I:%M %p"}<br>
-                          {if $post->location}{$post->location}<br>{/if}
+                  <div class="clearfix gray" id="more-detail" style="width:460px;">
+                        {$post->adj_pub_date|date_format:"%b %e, %Y %l:%M %p"} 
+                          {if $post->location}from {$post->location}<br>{/if}
                           <!--{if $post->in_reply_to_post_id}<a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">In reply to</a>{/if}
                           {if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
                       -->
-                      </div>
-                    <div class="grid_4 omega">
                           {if $post->source}
                                 {if $post->source eq 'web'}
                                   Web
@@ -74,9 +44,8 @@
                                   {$post->source}<span class="ui-icon ui-icon-newwin"></span>
                                 {/if}
                           {/if}<br>
-                    </div>
                     {if $disable_embed_code != true}
-                    <div class="grid_15 omega">
+                    <div>
                     Embed this thread:<br>
                     <textarea cols="55" rows="3">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
                     </div>
