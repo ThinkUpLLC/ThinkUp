@@ -123,10 +123,18 @@
                       {if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
                     -->
                     {if $disable_embed_code != true}
-                    <div>
-                    Embed this thread:<br>
-                    <textarea cols="55" rows="3">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
-                    </div>
+                        <div>
+                        Embed this thread:<br>
+                        <textarea cols="55" rows="2" id="txtarea" onClick="SelectAll('txtarea');">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
+                        </div>
+                        {literal}
+                        <script type="text/javascript">
+                        function SelectAll(id) {
+                            document.getElementById(id).focus();
+                            document.getElementById(id).select();
+                        }
+                        </script>
+                        {/literal}
                     {/if}
                     
                   </div> <!-- /#more-detail -->
