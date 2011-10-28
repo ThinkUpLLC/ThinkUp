@@ -118,7 +118,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 <h2 class="subhead">Set Up the Facebook Plugin</h2>
 {include file="_usermessage.tpl" field="setup"}
 <ol style="margin-left:40px">
-<li><a href="https://developers.facebook.com/apps" target="_blank">Create a ThinkUp Facebook application.</a></li>
+<li><a href="https://developers.facebook.com/apps" target="_blank">Click the "Create New App" button.</a></li>
 <li>
   Set the Web Site &gt; Site URL to 
     <small>
