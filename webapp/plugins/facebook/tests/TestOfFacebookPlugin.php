@@ -59,12 +59,12 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $instance->network_user_id = 1;
 
         $menus = $webapp->getDashboardMenu($instance);
-        $posts_menu = $menus["all_facebook_posts"];
+        $posts_menu = $menus["posts-all"];
 
         $this->assertEqual(sizeof($menus), 7);
-        $post_tab = $menus['all_facebook_posts'];
+        $post_tab = $menus['posts-all'];
         $this->assertEqual($post_tab->name, "All posts");
-        $this->assertEqual($post_tab->description, "All status updates");
+        $this->assertEqual($post_tab->description, "All your status updates");
 
         $post_tab_datasets = $post_tab->getDatasets();
         $this->assertEqual(count($post_tab_datasets), 1);
@@ -73,7 +73,7 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
         $this->assertEqual($post_tab_dataset->dao_method_name, "getAllPosts");
 
-        $post_tab = $menus['mostreplies'];
+        $post_tab = $menus['posts-mostreplies'];
         $this->assertEqual($post_tab->name, "Most replied-to");
         $this->assertEqual($post_tab->description, "Posts with most replies");
 
@@ -84,7 +84,7 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
         $this->assertEqual($post_tab_dataset->dao_method_name, "getMostRepliedToPosts");
 
-        $post_tab = $menus['mostlikes'];
+        $post_tab = $menus['posts-mostlikes'];
         $this->assertEqual($post_tab->name, "Most liked");
         $this->assertEqual($post_tab->description, "Posts with most likes");
 
@@ -95,7 +95,7 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
         $this->assertEqual($post_tab_dataset->dao_method_name, "getMostFavedPosts");
 
-        $post_tab = $menus['questions'];
+        $post_tab = $menus['posts-questions'];
         $this->assertEqual($post_tab->name, "Inquiries");
         $this->assertEqual($post_tab->description, "Inquiries, or posts with a question mark in them");
 

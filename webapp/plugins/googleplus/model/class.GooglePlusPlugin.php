@@ -98,7 +98,7 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         $menus = array();
 
         if ($post->network == 'google+') {
-            $likes_menu_item = new MenuItem("+1's", "", $template_path, 'Google+');
+            $likes_menu_item = new MenuItem("+1's", "", $template_path);
             //if not logged in, show only public fav'd info
             $liked_dataset = new Dataset("plus1s", 'FavoritePostDAO', "getUsersWhoFavedPost", array($post->post_id,
             $post->network, !Session::isLoggedIn()) );
@@ -113,7 +113,7 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
 
 
         $posts_data_tpl = Utils::getPluginViewDirectory('googleplus').'posts.tpl';
-        $posts_menu_item = new MenuItem("Posts", "Post insights", $posts_data_tpl, "");
+        $posts_menu_item = new MenuItem("Posts", "Post insights", $posts_data_tpl);
 
         $posts_menu_ds_1 = new Dataset("all_posts", 'PostDAO', "getAllPosts",
         array($instance->network_user_id, $instance->network, 3, "#page_number#"),
@@ -139,39 +139,38 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         $gp_data_tpl = Utils::getPluginViewDirectory('googleplus').'googleplus.inline.view.tpl';
 
         //All tab
-        $alltab = new MenuItem("All posts", 'All posts', $gp_data_tpl, '', 'posts');
+        $alltab = new MenuItem("All posts", 'All posts', $gp_data_tpl, 'posts');
         $alltabds = new Dataset("gplus_posts", 'PostDAO', "getAllPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"),
         'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()),
         false );
         $alltabds->addHelp('userguide/listings/googleplus/dashboard_all_gplus_posts');
         $alltab->addDataset($alltabds);
-        $menus["all_gplus_posts"] = $alltab;
+        $menus["posts-all"] = $alltab;
 
         // Most replied-to tab
-        $mrttab = new MenuItem("Most discussed", "Posts with the most comments", $gp_data_tpl, '', 'posts');
+        $mrttab = new MenuItem("Most discussed", "Posts with the most comments", $gp_data_tpl, 'posts');
         $mrttabds = new Dataset("gplus_posts", 'PostDAO', "getMostRepliedToPosts",
         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
         $mrttabds->addHelp('userguide/listings/googleplus/dashboard_mostreplies');
         $mrttab->addDataset($mrttabds);
-        $menus["most_replied_to_gplus"] = $mrttab;
+        $menus["posts-mostreplies"] = $mrttab;
 
         // Most liked posts
-        $mltab = new MenuItem("Most +1'ed", "Posts with most +1's", $gp_data_tpl, '', 'posts');
+        $mltab = new MenuItem("Most +1'ed", "Posts with most +1's", $gp_data_tpl, 'posts');
         $mltabds = new Dataset("gplus_posts", 'PostDAO', "getMostFavedPosts",
         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
         $mltabds->addHelp('userguide/listings/googleplus/dashboard_mostlikes');
         $mltab->addDataset($mltabds);
-        $menus["most_plus_oned"] = $mltab;
+        $menus["posts-mostplusones"] = $mltab;
 
         //Questions tab
-        $qtab = new MenuItem("Inquiries", "Inquiries, or posts with a question mark in them",
-        $gp_data_tpl, '', 'posts');
+        $qtab = new MenuItem("Inquiries", "Inquiries, or posts with a question mark in them", $gp_data_tpl, 'posts');
         $qtabds = new Dataset("gplus_posts", 'PostDAO', "getAllQuestionPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"));
         $qtabds->addHelp('userguide/listings/googleplus/dashboard_questions');
         $qtab->addDataset($qtabds);
-        $menus["gplus_questions"] = $qtab;
+        $menus["posts-questions"] = $qtab;
         return $menus;
     }
 }

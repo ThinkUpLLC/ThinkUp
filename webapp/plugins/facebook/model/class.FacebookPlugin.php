@@ -127,16 +127,16 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         array($instance->network_user_id, $instance->network, 5, "#page_number#"));
         $posts_menu_item->addDataset($posts_menu_ds_4);
 
+        $posts_menu_ds_5 = new Dataset("wallposts", 'PostDAO', "getPostsToUser",
+        array($instance->network_user_id, $instance->network, 5, '#page_number#', !Session::isLoggedIn()),
+        'getPostsToUserIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()));
+        $posts_menu_item->addDataset($posts_menu_ds_5);
+
         $menus['posts'] = $posts_menu_item;
 
         $friends_data_tpl = Utils::getPluginViewDirectory('facebook').'friends.tpl';
         $friend_fan_menu_title = $instance->network == 'facebook page'?'Fans':'Friends';
         $friends_menu_item = new MenuItem($friend_fan_menu_title, "Friends insights", $friends_data_tpl);
-
-        $friends_menu_ds_1 = new Dataset("wallposts", 'PostDAO', "getPostsToUser",
-        array($instance->network_user_id, $instance->network, 5, '#page_number#', !Session::isLoggedIn()),
-        'getPostsToUserIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()));
-        $friends_menu_item->addDataset($friends_menu_ds_1);
 
         $friends_menu_ds_2 = new Dataset("follower_count_history_by_day", 'FollowerCountDAO', 'getHistory',
         array($instance->network_user_id, $instance->network, 'DAY', 15));
@@ -153,14 +153,14 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         $fb_data_tpl = Utils::getPluginViewDirectory('facebook').'facebook.inline.view.tpl';
 
         //All tab
-        $alltab = new MenuItem("All posts", 'All status updates', $fb_data_tpl, 'posts' );
+        $alltab = new MenuItem("All posts", 'All your status updates', $fb_data_tpl, 'posts' );
         $alltabds = new Dataset("all_facebook_posts", 'PostDAO', "getAllPosts",
         array($instance->network_user_id, $instance->network, 15, "#page_number#"),
         'getAllPostsIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()),
         false);
         $alltabds->addHelp('userguide/listings/facebook/dashboard_all_facebook_posts');
         $alltab->addDataset($alltabds);
-        $menus["all_facebook_posts"] = $alltab;
+        $menus["posts-all"] = $alltab;
 
         // Most replied-to tab
         $mrttab = new MenuItem("Most replied-to", "Posts with most replies", $fb_data_tpl, 'posts' );
@@ -168,7 +168,7 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
         $mrttabds->addHelp('userguide/listings/facebook/dashboard_mostreplies');
         $mrttab->addDataset($mrttabds);
-        $menus["mostreplies"] = $mrttab;
+        $menus["posts-mostreplies"] = $mrttab;
 
         // Most liked posts
         $mltab = new MenuItem("Most liked", "Posts with most likes", $fb_data_tpl, 'posts' );
@@ -176,7 +176,7 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         array($instance->network_user_id, $instance->network, 15, '#page_number#'));
         $mltabds->addHelp('userguide/listings/facebook/dashboard_mostlikes');
         $mltab->addDataset($mltabds);
-        $menus["mostlikes"] = $mltab;
+        $menus["posts-mostlikes"] = $mltab;
 
         //Questions tab
         $qtab = new MenuItem("Inquiries", "Inquiries, or posts with a question mark in them", $fb_data_tpl, 'posts' );
@@ -184,16 +184,16 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         array($instance->network_user_id, $instance->network, 15, "#page_number#"));
         $qtabds->addHelp('userguide/listings/facebook/dashboard_questions');
         $qtab->addDataset($qtabds);
-        $menus["questions"] = $qtab;
+        $menus["posts-questions"] = $qtab;
 
         // Wall Posts
-        $messagestab = new MenuItem("From others", "Posts to your wall by other users", $fb_data_tpl, 'friends' );
+        $messagestab = new MenuItem("From others", "Posts to your wall by other users", $fb_data_tpl, 'posts' );
         $messagestabds = new Dataset("messages_to_you", 'PostDAO', "getPostsToUser",
         array($instance->network_user_id, $instance->network, 15, '#page_number#', !Session::isLoggedIn()),
         'getPostsToUserIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()));
         $messagestabds->addHelp('userguide/listings/facebook/dashboard-wallposts');
         $messagestab->addDataset($messagestabds);
-        $menus["tweets-messages"] = $messagestab;
+        $menus["posts-toyou"] = $messagestab;
 
         return $menus;
     }

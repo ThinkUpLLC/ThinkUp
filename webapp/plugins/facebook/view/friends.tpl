@@ -1,11 +1,3 @@
-{if $wallposts|@count >1}
-    <h2>Posts on Your Wall</h2>
-    {foreach from=$wallposts key=tid item=t name=foo}
-        {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
-    {/foreach}
-    <div align="right"><a href="index.php?v=messages_to_you&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
-{/if}
-
 <h2>{if $instance->network eq 'facebook page'}Likes{else}Friends{/if} By Day{if !$follower_count_history_by_day.history OR $follower_count_history_by_day.history|@count < 2}
 <br /><i>Not enough data to display chart</i>
 {else}

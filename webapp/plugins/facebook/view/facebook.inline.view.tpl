@@ -11,8 +11,7 @@
     {/if}
 </div>
 
-{if ($display eq 'all_facebook_posts' and not $all_facebook_posts) or 
-    ($display eq 'all_facebook_replies' and not $all_facebook_replies) }
+{if ($display eq 'posts-all' and not $all_facebook_posts) }
   <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
@@ -21,7 +20,7 @@
   </div>
 {/if}
 
-{if $all_facebook_posts and ($display eq 'all_facebook_posts' OR $display eq 'questions')}
+{if $all_facebook_posts and ($display eq 'posts-all' OR $display eq 'posts-questions')}
 <div id="all-posts-div">
   {foreach from=$all_facebook_posts key=tid item=t name=foo}
     {include file="_post.tpl" t=$t}

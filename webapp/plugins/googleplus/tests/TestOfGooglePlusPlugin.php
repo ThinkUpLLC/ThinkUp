@@ -64,11 +64,11 @@ class TestOfGooglePlusPlugin extends ThinkUpUnitTestCase {
         $instance->network_user_id = 1;
 
         $menus = $webapp->getDashboardMenu($instance);
-        $posts_menu = $menus["all_gplus_posts"];
+        $posts_menu = $menus["posts-all"];
 
         $this->assertEqual(sizeof($menus), 5);
 
-        $post_tab = $menus['all_gplus_posts'];
+        $post_tab = $menus['posts-all'];
         $this->assertEqual($post_tab->name, "All posts");
         $this->assertEqual($post_tab->description, "All posts");
         $post_tab_datasets = $post_tab->getDatasets();
@@ -77,7 +77,7 @@ class TestOfGooglePlusPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
         $this->assertEqual($post_tab_dataset->dao_method_name, "getAllPosts");
 
-        $post_tab = $menus['most_replied_to_gplus'];
+        $post_tab = $menus['posts-mostreplies'];
         $this->assertEqual($post_tab->name, "Most discussed");
         $this->assertEqual($post_tab->description, "Posts with the most comments");
         $post_tab_datasets = $post_tab->getDatasets();
@@ -86,7 +86,7 @@ class TestOfGooglePlusPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
         $this->assertEqual($post_tab_dataset->dao_method_name, "getMostRepliedToPosts");
 
-        $post_tab = $menus['most_plus_oned'];
+        $post_tab = $menus['posts-mostplusones'];
         $this->assertEqual($post_tab->name, "Most +1'ed");
         $this->assertEqual($post_tab->description, "Posts with most +1's");
         $post_tab_datasets = $post_tab->getDatasets();
@@ -95,7 +95,7 @@ class TestOfGooglePlusPlugin extends ThinkUpUnitTestCase {
         $this->assertEqual($post_tab_dataset->dao_name, 'PostDAO');
         $this->assertEqual($post_tab_dataset->dao_method_name, "getMostFavedPosts");
 
-        $post_tab = $menus['gplus_questions'];
+        $post_tab = $menus['posts-questions'];
         $this->assertEqual($post_tab->name, "Inquiries");
         $this->assertEqual($post_tab->description, "Inquiries, or posts with a question mark in them");
         $post_tab_datasets = $post_tab->getDatasets();
