@@ -119,7 +119,39 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {include file="_usermessage.tpl" field="setup"}
 <ol style="margin-left:40px">
 <li><a href="https://developers.facebook.com/apps" target="_blank">Create a ThinkUp Facebook application.</a></li>
-<li>Set the Web Site &gt; Site URL to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}</pre></li>
+<li>
+  Set the Web Site &gt; Site URL to 
+    <small>
+      <code style="font-family:Courier;" id="clippy_2988">
+          http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}
+      </code>
+    </small>
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+              width="100"
+              height="14"
+              class="clippy"
+              id="clippy" >
+      <param name="movie" value="{$site_root_path}assets/flash/clippy.swf"/>
+      <param name="allowScriptAccess" value="always" />
+      <param name="quality" value="high" />
+      <param name="scale" value="noscale" />
+      <param NAME="FlashVars" value="id=clippy_2988&amp;copied=copied!&amp;copyto=copy to clipboard">
+      <param name="bgcolor" value="#FFFFFF">
+      <param name="wmode" value="opaque">
+      <embed src="{$site_root_path}assets/flash/clippy.swf"
+             width="100"
+             height="14"
+             name="clippy"
+             quality="high"
+             allowScriptAccess="always"
+             type="application/x-shockwave-flash"
+             pluginspage="http://www.macromedia.com/go/getflashplayer"
+             FlashVars="id=clippy_2988&amp;copied=copied!&amp;copyto=copy to clipboard"
+             bgcolor="#FFFFFF"
+             wmode="opaque"
+      />
+    </object>
+</li>
 <li>Enter the Facebook-provided App ID and App Secret here.</li></ol>
 {/if}
 <p>

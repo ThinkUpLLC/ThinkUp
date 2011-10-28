@@ -51,7 +51,39 @@
 <ol style="margin-left:40px">
 <li><a href="http://code.google.com/apis/console#access" target="_blank">Create a project in the Google APIs Console.</a></li>
 <li>Click "Services" and switch Google+ API to "On." Next, click "API Access" then "Create an OAuth 2.0 client ID."</li>
-<li>Edit the settings for your new Client ID then click "Next." Make sure "Application Type" is set to "Web Application" and set the first line of Authorized Redirect URIs to <pre>http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}account/?p=google%2B</pre></li>
+<li>
+  Edit the settings for your new Client ID then click "Next." Make sure "Application Type" is set to "Web Application" and set the first line of Authorized Redirect URIs to 
+    <small>
+      <code style="font-family:Courier;" id="clippy_2988">
+          http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{if $smarty.server.SERVER_PORT != '80'}:{$smarty.server.SERVER_PORT}{/if}{$site_root_path}account/?p=google%2B
+      </code>
+    </small>
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+              width="100"
+              height="14"
+              class="clippy"
+              id="clippy" >
+      <param name="movie" value="{$site_root_path}assets/flash/clippy.swf"/>
+      <param name="allowScriptAccess" value="always" />
+      <param name="quality" value="high" />
+      <param name="scale" value="noscale" />
+      <param NAME="FlashVars" value="id=clippy_2988&amp;copied=copied!&amp;copyto=copy to clipboard">
+      <param name="bgcolor" value="#FFFFFF">
+      <param name="wmode" value="opaque">
+      <embed src="{$site_root_path}assets/flash/clippy.swf"
+             width="100"
+             height="14"
+             name="clippy"
+             quality="high"
+             allowScriptAccess="always"
+             type="application/x-shockwave-flash"
+             pluginspage="http://www.macromedia.com/go/getflashplayer"
+             FlashVars="id=clippy_2988&amp;copied=copied!&amp;copyto=copy to clipboard"
+             bgcolor="#FFFFFF"
+             wmode="opaque"
+      />
+    </object>
+</li>
 <li>Enter the Google-provided Client ID and Client Secret here.</li></ol>
 {/if}
 <p>
