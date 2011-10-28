@@ -72,15 +72,14 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $this->assertEqual(sizeof($menus), 21);
         $first_post_menuitem = $menus["tweets-all"];
-        $this->assertEqual($first_post_menuitem->name, "All tweets", "Test name of first post menu item");
-        $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");
+        $this->assertEqual($first_post_menuitem->name, "Your tweets");
+        $this->assertEqual($first_post_menuitem->description, "All your tweets");
 
         $first_post_menuitem_datasets = $first_post_menuitem->getDatasets();
         $first_post_menuitem_dataset = $first_post_menuitem_datasets[0];
-        $this->assertEqual($first_post_menuitem_dataset->name, "all_tweets", "Test 1st menu item's 1st dataset name");
+        $this->assertEqual($first_post_menuitem_dataset->name, "all_tweets");
         $this->assertEqual($first_post_menuitem_dataset->dao_name, 'PostDAO');
-        $this->assertEqual($first_post_menuitem_dataset->dao_method_name, "getAllPosts",
-        "Test first post menu item's first dataset fetching method");
+        $this->assertEqual($first_post_menuitem_dataset->dao_method_name, "getAllPosts");
 
         // favorites menu
         $favs_menu = $menus["ftweets-all"];
@@ -142,8 +141,8 @@ class TestOfTwitterPlugin extends ThinkUpUnitTestCase {
 
         $this->assertEqual(sizeof($menus), 23);
         $first_post_menuitem = $menus["tweets-all"];
-        $this->assertEqual($first_post_menuitem->name, "All tweets", "Test name of first post menu item");
-        $this->assertEqual($first_post_menuitem->description, "All tweets", "Test description of first post menu item");
+        $this->assertEqual($first_post_menuitem->name, "Your tweets");
+        $this->assertEqual($first_post_menuitem->description, "All your tweets");
 
         $first_post_menuitem_datasets = $first_post_menuitem->getDatasets();
         $first_post_menuitem_dataset = $first_post_menuitem_datasets[0];

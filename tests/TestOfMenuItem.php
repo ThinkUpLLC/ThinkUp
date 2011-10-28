@@ -50,16 +50,16 @@ class TestOfMenuItem extends ThinkUpBasicUnitTestCase {
         $this->assertEqual($menu_item->name, 'Name of My Menu Item');
         $this->assertEqual($menu_item->description, '');
         $this->assertEqual($menu_item->view_template, 'inline.view.tpl');
-        $this->assertEqual($menu_item->header, null);
+        $this->assertEqual($menu_item->parent, null);
 
         $datasets = $menu_item->getDatasets();
         $this->assertIsA($datasets, 'array');
         $this->assertEqual(sizeof($datasets), 0);
 
-        $menu_item1 = new MenuItem("Name of My Menu Item 1", 'descriptive text', 'mytemplate.tpl', "My Menu Header");
+        $menu_item1 = new MenuItem("Name of My Menu Item 1", 'descriptive text', 'mytemplate.tpl', "my-parent");
         $this->assertEqual($menu_item1->name, 'Name of My Menu Item 1');
         $this->assertEqual($menu_item1->description, 'descriptive text');
         $this->assertEqual($menu_item1->view_template, 'mytemplate.tpl');
-        $this->assertEqual($menu_item1->header, "My Menu Header");
+        $this->assertEqual($menu_item1->parent, "my-parent");
     }
 }

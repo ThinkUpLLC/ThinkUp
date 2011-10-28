@@ -20,12 +20,6 @@
         {if $sidebar_menu}
           {foreach from=$sidebar_menu key=smkey item=sidebar_menu_item name=smenuloop}
           {if !$sidebar_menu_item->parent}
-            {if $sidebar_menu_item->header}
-                    </ul>
-                  </li>
-                <li>{$sidebar_menu_item->header}
-                <ul class="side-subnav">
-                {/if}
                 <li{if $smarty.get.v eq $smkey OR $parent eq $smkey} class="currentview"{/if}>
                 {* TODO: Remove this logic from the view *}
                 {if $parent eq $smkey}{assign var="parent_name" value=$sidebar_menu_item->name}{/if}

@@ -12,7 +12,6 @@
           <ul class="side-subnav">
             <li><br><a href="{insert name=dashboard_link}">Dashboard</a></li>
           </ul>
-          
           <li>
           Post
           <form id="grid_search_form" action="{$site_root_path}post">
@@ -27,14 +26,11 @@
             <input type="text" name="search" id="grid_search_sidebar_input" value="" style="margin-top: 3px;" size="10"/><input type="submit" href="#" class="grid_search" onclick="$('#grid_search_form').submit(); return false;" value="Search">
             </li>
           {/if}
-          </ul>
           </form>
           </li>
         {/if}
-        
         {if $sidebar_menu}
           {foreach from=$sidebar_menu key=smkey item=sidebar_menu_item name=smenuloop}
-            {if $sidebar_menu_item->header}</li></ul> <li>{$sidebar_menu_item->header}<ul class="side-subnav">{/if}
               <li{if $smarty.get.v eq $smkey} class="currentview"{/if}><a href="index.php?v={$smkey}&t={$post->post_id}&n={$post->network|urlencode}">{$sidebar_menu_item->name}&nbsp;&nbsp;&nbsp;</a></li>
             {/foreach}
               </li>

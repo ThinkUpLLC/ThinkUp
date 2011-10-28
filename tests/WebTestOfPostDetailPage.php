@@ -69,12 +69,12 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         //must be logged in to search
         $this->assertField('Search', 'Search');
         $this->assertText('Retweets');
-        $this->assertNoText('GeoEncoder');
+        $this->assertNoText('Response Map');
 
         $this->click('Retweets');
         $this->assertTitle("Post Details | ThinkUp");
         $this->assertText('This is post 10');
-        $this->assertNoText('GeoEncoder');
+        $this->assertNoText('Response Map');
     }
 
     public function testPostPageWithGeoencoderEnabled() {
@@ -87,7 +87,6 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->assertText('This is post 10');
         $this->assertPattern('/Search/'); // we now allow search for non logged in users...
         $this->assertText('Retweets');
-        $this->assertText('GeoEncoder');
         $this->assertText('Response Map');
         $this->assertText('Nearest Responses');
 
