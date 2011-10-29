@@ -151,7 +151,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $output = $controller->go();
         // we have a text form element with proper data
-        $this->assertNoPattern('/save options/', $output); // should have no submit option
+        $this->assertNoPattern('/Save Settings/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_oauth_consumer_secret/', $output); // should have no secret option
         $this->assertNoPattern('/plugin_options_archive_limit/', $output); // should have no limit option
         $this->assertNoPattern('/plugin_options_oauth_consumer_key/', $output); // should have no key option
@@ -171,7 +171,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $output = $controller->go();
         // we have a text form element with proper data
-        $this->assertPattern('/save options/', $output); // should have no submit option
+        $this->assertPattern('/Save Settings/', $output); // should have no submit option
         $this->assertPattern('/plugin_options_oauth_consumer_secret/', $output); // should have secret option
         $this->assertPattern('/plugin_options_archive_limit/', $output); // should have limit option
         $this->assertPattern('/plugin_options_oauth_consumer_key/', $output); // should have key option
@@ -215,7 +215,7 @@ class TestOfTwitterPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new TwitterPluginConfigurationController($owner, 'twitter');
         $output = $controller->go();
         // we have a text form element with proper data
-        $this->assertPattern('/save options/', $output); // should have no submit option
+        $this->assertPattern('/Save Settings/', $output); // should have no submit option
         $this->assertPattern('/plugin_options_oauth_consumer_secret/', $output); // should have secret option
         $this->assertPattern('/plugin_options_archive_limit/', $output); // should have limit option
         $this->assertPattern('/plugin_options_oauth_consumer_key/', $output); // should have key option

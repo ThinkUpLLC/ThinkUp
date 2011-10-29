@@ -1,5 +1,9 @@
-My web server cannot send email
-===============================
+Didn't receive an account activation email
+==========================================
+
+If you didn't receive an account activation email to the address you entered during installation, double-check your
+spam folder. If the email didn't arrive, check with your hosting provider about whether or not the server is able to 
+send email via `PHP's mail function <http://php.net/manual/en/function.mail.php>`_.
 
 We strongly recommend running ThinkUp on a web server which can send email.
 

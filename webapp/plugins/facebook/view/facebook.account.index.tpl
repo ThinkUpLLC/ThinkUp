@@ -115,10 +115,11 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {if $options_markup}
 <div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
-<h2 class="subhead">Set Up the Facebook Plugin</h2>
+<h2 class="subhead">Settings</h2>
 {include file="_usermessage.tpl" field="setup"}
+<p style="padding:5px">To set up the Facebook plugin:</p>
 <ol style="margin-left:40px">
-<li><a href="https://developers.facebook.com/apps" target="_blank">Click the "Create New App" button.</a></li>
+<li><a href="https://developers.facebook.com/apps" target="_blank">Click the "Create New App" button on Facebook.</a></li>
 <li>
     Fill in the following settings.<br />
     App Display Name: <span style="font-family:Courier;">ThinkUp</span><br />

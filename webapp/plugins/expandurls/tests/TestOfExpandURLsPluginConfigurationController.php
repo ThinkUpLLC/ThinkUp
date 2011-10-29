@@ -115,7 +115,7 @@ class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase 
         $output = $controller->go();
         $this->debug($output);
         // we have a text form element with proper data
-        $this->assertNoPattern('/save options/', $output); // should have no submit option
+        $this->assertNoPattern('/Save Settings/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_error_flickr_api_key/', $output); // should have no api key
         $this->assertNoPattern('/plugin_options_error_bitly_api_key/', $output); // should have no api key
         $this->assertNoPattern('/plugin_options_error_bitly_login/', $output); // should have no login name
@@ -138,7 +138,7 @@ class TestOfExpandURLsPluginConfigurationController extends ThinkUpUnitTestCase 
         $controller = new ExpandURLsPluginConfigurationController($owner, 'flickrthumbnails');
         $output = $controller->go();
         // we have a text form element with proper data
-        $this->assertPattern('/save options/', $output); // should have submit option
+        $this->assertPattern('/Save Settings/', $output); // should have submit option
         $this->assertPattern('/plugin_options_error_flickr_api_key/', $output); // should have api key option
         $this->assertPattern('/plugin_options_error_bitly_api_key/', $output); // should have api key option
         $this->assertPattern('/plugin_options_error_bitly_login/', $output); // should have login name option

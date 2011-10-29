@@ -130,7 +130,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         // submit elements should be disbaled
         $this->assertFalse($input_field->getAttribute('disabled'));
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+        $this->assertPattern('/type="submit".*Save Settings/', $doc->saveXML( $submit_p ) );
     }
 
     public function testSelectDistanceUnit() {
@@ -164,7 +164,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $this->assertEqual($radios->item(0)->getAttribute('value'), 'km');
         $this->assertEqual($radios->item(1)->getAttribute('value'), 'mi');
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+        $this->assertPattern('/type="submit".*Save Settings/', $doc->saveXML( $submit_p ) );
     }
 
     public function testGetPluginOptions() {
@@ -193,7 +193,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
         $output = $controller->go();
         // we have a text form element with proper data
-        $this->assertNoPattern('/save options/', $output); // should have no submit option
+        $this->assertNoPattern('/Save Settings/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_error_gmaps_api_key/', $output); // should have no api key
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
         $this->assertPattern('/var required_values_set = true/', $output); // is configured
@@ -219,7 +219,7 @@ class TestOfGeoEncoderPluginConfigurationController extends ThinkUpUnitTestCase 
         $controller = new GeoEncoderPluginConfigurationController($owner, 'geoencoder');
         $output = $controller->go();
         // we have a text form element with proper data
-        $this->assertPattern('/save options/', $output); // should have submit option
+        $this->assertPattern('/Save Settings/', $output); // should have submit option
         $this->assertPattern('/plugin_options_error_gmaps_api_key/', $output); // should have api key option
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin
         $this->assertPattern('/var required_values_set = true/', $output); // is configured

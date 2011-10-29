@@ -109,7 +109,8 @@ class WebTestOfDashboard extends ThinkUpWebTestCase {
         $this->assertText('Expand URLs');
 
         $this->click("Twitter");
-        $this->assertText('Set Up the Twitter Plugin');
+        $this->assertText('Settings');
+        $this->assertText('To set up the Twitter plugin');
     }
 
     public function testExport() {

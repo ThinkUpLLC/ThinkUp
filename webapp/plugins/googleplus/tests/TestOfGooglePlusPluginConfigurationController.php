@@ -168,7 +168,7 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         // submit and elemnts should be disbaled
         $this->assertFalse($input_field->getAttribute('disabled'));
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+        $this->assertPattern('/type="submit".*Save Settings/', $doc->saveXML( $submit_p ) );
     }
 
     public function testGetPluginOptions() {
@@ -224,9 +224,9 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         $v_mgr = $controller->getViewManager();
 
         //Should see error message
-        $errors = $v_mgr->getTemplateDataItem('error_msgs');
-        $this->assertEqual($errors['setup'], 'Please complete plugin setup to start using it.');
-        $this->debug(Utils::varDumpToString($errors));
+        $info = $v_mgr->getTemplateDataItem('info_msgs');
+        $this->assertEqual($info['setup'], 'Please complete plugin setup to start using it.');
+        $this->debug(Utils::varDumpToString($info));
 
         //Shouldn't see authorize link
         $this->assertNoPattern("/Click on this button to authorize ThinkUp to access your Google\+ account./",

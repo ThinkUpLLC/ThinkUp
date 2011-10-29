@@ -53,10 +53,9 @@ class TestOfDashboardController extends ThinkUpUnitTestCase {
 
         $v_mgr = $controller->getViewManager();
         $this->assertEqual($v_mgr->getTemplateDataItem('info_msg'),
-        'There are no public accounts set up in this ThinkUp installation.<br /><br />'.
-        'To make a current account public, log in and click on "Settings." Click on one of the plugins '.
-        'that contain accounts (like Twitter or Facebook) and click "Set Public" next to the account that '.
-        'should appear to users who are not logged in.');
+        'There are no public accounts set up in this ThinkUp installation.');
+
+        $this->assertNoPattern("/Adjust Your Settings/", $results);
     }
 
     public function testNoInstancesLoggedIn() {

@@ -56,10 +56,7 @@ class DashboardController extends ThinkUpController {
                 $this->loadView();
             } else {
                 if (!Session::isLoggedIn()) {
-                    $this->addInfoMessage('There are no public accounts set up in this ThinkUp installation.'.
-                    '<br /><br />To make a current account public, log in and click on "Settings." '.
-                    'Click on one of the plugins that contain accounts (like Twitter or Facebook) and '.
-                    'click "Set Public" next to the account that should appear to users who are not logged in.');
+                    $this->addInfoMessage('There are no public accounts set up in this ThinkUp installation.');
                 } else  {
                     $this->addInfoMessage('Welcome to ThinkUp. Let\'s get started.');
 
@@ -69,7 +66,7 @@ class DashboardController extends ThinkUpController {
                     foreach ($plugins as $plugin) {
                         if ($plugin->folder_name == 'twitter' || $plugin->folder_name == 'facebook'
                         || $plugin->folder_name == 'googleplus') {
-                            if ($plugin->is_active && $plugin->isConfigured()) {
+                            if ($plugin->is_active) {
                                 $add_user_buttons[] = $plugin->folder_name;
                             }
                         }

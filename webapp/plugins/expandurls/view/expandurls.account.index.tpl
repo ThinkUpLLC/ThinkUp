@@ -11,7 +11,7 @@
 {if $options_markup}
 <div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
-<h2 class="subhead">Set Up the ExpandURLs Plugin</h2>
+<h2 class="subhead">Settings</h2>
 {include file="_usermessage.tpl" field="setup"}
 {/if}
 {$options_markup}

@@ -73,7 +73,7 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
         if ($plugin->isConfigured()) {
             $this->setUpGPlusInteractions($options);
         } else {
-            $this->addErrorMessage('Please complete plugin setup to start using it.', 'setup');
+            $this->addInfoMessage('Please complete plugin setup to start using it.', 'setup');
         }
 
         return $this->generateView();

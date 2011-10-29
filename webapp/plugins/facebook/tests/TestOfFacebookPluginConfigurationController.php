@@ -108,9 +108,9 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $results = $controller->go();
 
         $v_mgr = $controller->getViewManager();
-        $errors = $v_mgr->getTemplateDataItem('error_msgs');
-        $this->assertEqual($errors['setup'], 'Please complete plugin setup to start using it.');
-        $this->debug(Utils::varDumpToString($errors));
+        $info = $v_mgr->getTemplateDataItem('info_msgs');
+        $this->assertEqual($info['setup'], 'Please complete plugin setup to start using it.');
+        $this->debug(Utils::varDumpToString($info));
     }
 
     public function testOutputNoParams() {
@@ -145,7 +145,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $controller = new FacebookPluginConfigurationController($owner, 'facebook');
         $output = $controller->go();
         // we have a text form element with proper data
-        $this->assertNoPattern('/save options/', $output); // should have no submit option
+        $this->assertNoPattern('/Save Settings/', $output); // should have no submit option
         $this->assertNoPattern('/plugin_options_error_facebook_app_id/', $output); // should have no app id
         $this->assertNoPattern('/plugin_options_error_message_facebook_api_secret/', $output); // no secret
         $this->assertNoPattern('/plugin_options_max_crawl_time/', $output); // no advanced option
@@ -174,7 +174,7 @@ class TestOfFacebookPluginConfigurationController extends ThinkUpUnitTestCase {
         $this->debug($output);
 
         // we have a text form element with proper data
-        $this->assertPattern('/save options/', $output); // should have submit option
+        $this->assertPattern('/Save Settings/', $output); // should have submit option
         $this->assertPattern('/plugin_options_error_message_facebook_api_secret/', $output); // secret option
         $this->assertPattern('/plugin_options_max_crawl_time/', $output); // advanced option
         $this->assertPattern('/var is_admin = true/', $output); // is a js admin

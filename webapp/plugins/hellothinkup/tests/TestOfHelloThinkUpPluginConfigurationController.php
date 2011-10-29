@@ -178,7 +178,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         // submit and elemnts should be disbaled
         $this->assertFalse($input_field->getAttribute('disabled'));
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+        $this->assertPattern('/type="submit".*Save Settings/', $doc->saveXML( $submit_p ) );
 
 
     }
@@ -218,7 +218,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $this->assertEqual( $radios->item(1)->getAttribute('value'), '2');
         $this->assertEqual( $radios->item(2)->getAttribute('value'), '3');
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+        $this->assertPattern('/type="submit".*Save Settings/', $doc->saveXML( $submit_p ) );
 
     }
 
@@ -257,7 +257,7 @@ class TestOfHelloThinkUpPluginConfigurationController extends ThinkUpUnitTestCas
         $this->assertEqual( $options->item(110)->getAttribute('value'), '2010');
 
         $submit_p = $this->getElementById($doc, 'plugin_option_submit_p');
-        $this->assertPattern('/type="submit".*save options/', $doc->saveXML( $submit_p ) );
+        $this->assertPattern('/type="submit".*Save Settings/', $doc->saveXML( $submit_p ) );
 
     }
 

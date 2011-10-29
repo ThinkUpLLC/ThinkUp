@@ -73,7 +73,7 @@ class TestOfTwitterRealtimePluginConfigurationController extends ThinkUpUnitTest
         $controller = new TwitterRealtimePluginConfigurationController($owner, 'twitterrealtime');
 
         $output = $controller->go();
-        $this->assertPattern('/save options/', $output); // should have no submit option
+        $this->assertPattern('/Save Settings/', $output); // should have no submit option
         $this->assertPattern('/php_path/', $output);
         $this->assertPattern('/redis/', $output); // should have secret option
     }

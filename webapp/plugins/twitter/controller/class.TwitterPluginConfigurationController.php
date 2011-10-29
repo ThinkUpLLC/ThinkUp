@@ -125,7 +125,7 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
                 $oauthorize_link = '';
             }
         } else {
-            $this->addErrorMessage('Please complete plugin setup to start using it.', 'setup');
+            $this->addInfoMessage('Please complete plugin setup to start using it.', 'setup');
         }
         // add plugin options from
         $this->addOptionForm();

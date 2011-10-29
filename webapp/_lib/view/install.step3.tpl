@@ -42,16 +42,7 @@
     
     
 <br /><br />
-       <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
-        <p>
-             <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
-             <b>Help! I didn't get the email.</b><br />
-             If you didn't receive your account activation email, then PHP's 
-             <a href="http://php.net/manual/en/function.mail.php">mail function</a> isn't working correctly on your server.
-              You may activate your account manually by setting the is_activated field equal to 1 in ThinkUp's
-             owners table, but keep in mind that ThinkUp's registration and forgot password features require
-             that the mail() function can send out email messages successfully.
-        </p>
+<p><a href="http://thinkupapp.com/docs/troubleshoot/common/emaildisabled.html">Didn't get the email?</a></p>
        </div>
              </div>
        

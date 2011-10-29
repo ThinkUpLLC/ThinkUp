@@ -46,8 +46,9 @@
 {if $options_markup}
 <div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
-<h2 class="subhead">Set Up the Google+ Plugin</h2>
+<h2 class="subhead">Settings</h2>
 {include file="_usermessage.tpl" field="setup"}
+<p style="padding:5px">To set up the Google+ plugin:</p>
 <ol style="margin-left:40px">
 <li><a href="http://code.google.com/apis/console#access" target="_blank">Create a project in the Google APIs Console.</a></li>
 <li>Click "Services" and switch Google+ API to "On." Next, click "API Access" then "Create an OAuth 2.0 client ID."</li>

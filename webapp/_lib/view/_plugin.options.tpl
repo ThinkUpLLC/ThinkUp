@@ -148,7 +148,7 @@ function show_advanced() {
 
 <p style="margin-top: 10px;" id="plugin_option_submit_p">
 {if $user_is_admin}
-<input type="submit" value="save options" />
+<input type="submit" value="Save Settings" />
 {/if}
 </p>
 

@@ -223,7 +223,11 @@
              {/foreach}
           {/if}
           <br><br>
+          {if $logged_in_user}
           <div style="float:right;"><a href="{$site_root_path}account/" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Adjust Your Settings</a></div>
+          {else}
+          <div style="float:right;"><a href="{$site_root_path}session/login.php" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Log In</a></div>
+          {/if}
           </div>
         {/if}
 
