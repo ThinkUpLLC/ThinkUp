@@ -45,16 +45,16 @@
       Last update: {$crawler_last_run|relative_datetime} ago
       {/if}
     {/if}
-    {if $instance} {if $logged_in_user} {if $instances|@count > 1 } | {/if} <a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}">Update now</a>{/if}{/if}
+    {if $instance} {if $logged_in_user} {if $instances|@count > 1 } {/if} <a href="{$site_root_path}crawler/updatenow.php{if $developer_log}?log=full{/if}" class="linkbutton">Update now</a>{/if}{/if}
   </div> <!-- .status-bar-left -->
   
   <div class="status-bar-right text-right">
     <ul> 
       {if $logged_in_user}
-        <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} | {if $user_is_admin}<script src="{$site_root_path}install/checkversion.php"></script>{/if}<a href="{$site_root_path}account/?m=manage">Settings</a> | <a href="{$site_root_path}session/logout.php">Log Out</a></li>
+        <li>Logged in as{if $user_is_admin} admin{/if}: {$logged_in_user} {if $user_is_admin}<script src="{$site_root_path}install/checkversion.php"></script>{/if}<a href="{$site_root_path}account/?m=manage" class="linkbutton">Settings</a> <a href="{$site_root_path}session/logout.php" class="linkbutton">Log Out</a></li>
       {else}
       
-        <li><a href="http://thinkupapp.com/">Get ThinkUp</a> | <a href="{$site_root_path}session/login.php">Log In</a></li>
+        <li><a href="http://thinkupapp.com/" class="linkbutton">Get ThinkUp</a> <a href="{$site_root_path}session/login.php" class="linkbutton"	>Log In</a></li>
       {/if}
     </ul>
   </div> <!-- .status-bar-right -->
@@ -68,7 +68,6 @@
   
   <div id="app-title"><a href="{$site_root_path}{$logo_link}">
     <h1><span class="bold">Think</span><span class="gray">Up</span></h1>
-    <h2>New ideas</h2>
   </a></div> <!-- end #app-title -->
   
 </div> <!-- end .container -->

@@ -25,7 +25,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
   </div>
 {/if}
 
-<div class="clearfix">
+<div class="clearfix article">
   <div class="individual-tweet post clearfix{if $post->is_protected} private{/if}">
     <div class="grid_13 alpha">
       <div class="post">

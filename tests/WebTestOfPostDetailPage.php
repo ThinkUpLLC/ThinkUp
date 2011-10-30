@@ -88,9 +88,9 @@ class WebTestOfPostDetailPage extends ThinkUpWebTestCase {
         $this->assertPattern('/Search/'); // we now allow search for non logged in users...
         $this->assertText('Retweets');
         $this->assertText('Response Map');
-        $this->assertText('Nearest Responses');
+        $this->assertText('Nearest Replies');
 
-        $this->click('Nearest responses');
+        $this->click('Nearest replies');
         $this->assertTitle("Post Details | ThinkUp");
         $this->assertText('This is post 10');
     }

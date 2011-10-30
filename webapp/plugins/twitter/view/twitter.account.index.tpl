@@ -1,9 +1,13 @@
-<div class="append_20">
-<h2 class="subhead">Twitter Plugin {insert name="help_link" id='twitter'}</h2>
+{include file="_usermessage.tpl"}
 
+<div class="append_20 alert helpful">
+{insert name="help_link" id='twitter'}
+<h2>Twitter Plugin </h2>
+
+<div class="">
 <p>The Twitter plugin captures and displays tweets, replies, mentions, retweets, friends, followers, favorites, links, and photos.</p>
 
-{include file="_usermessage.tpl"}
+</div>
 
 {if $oauthorize_link}
 <br>
@@ -51,6 +55,16 @@
 {include file="_plugin.showhider.tpl"}
 {include file="_usermessage.tpl" field="setup"}
 
+{if $options_markup}
+
+{if $user_is_admin}{include file="_usermessage.tpl" field="setup"}{/if}
+
+<div {if $user_is_admin}style=""{/if} class="section">
+{if $user_is_admin}
+
+
+<h2>Settings</h2>
+<div class="article">
 <p style="padding:5px">To set up the Twitter plugin:</p>
 <ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps/new" target="_blank">Create a new application on Twitter for ThinkUp</a>.</li>
 <li>
@@ -130,6 +144,10 @@
 {$options_markup}
 </p>
 {/if}
+
+<br />
+</div>
+{literal}
 
 {if $user_is_admin}</div>{/if}
 

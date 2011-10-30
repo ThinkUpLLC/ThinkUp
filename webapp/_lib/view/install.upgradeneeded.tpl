@@ -59,7 +59,7 @@
 <!-- end .container -->
 <div class="container_24 thinkup-canvas clearfix">
 <div class="grid_22 prefix_1 alpha omega prepend_20 append_20 clearfix">
-<div class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+<div class="alert urgent" style="margin: 20px 0px; padding: 0.5em 0.7em;">
 <!--  we are upgrading -->
 <p>
 {if $user_is_admin}
