@@ -369,8 +369,7 @@ class Installer {
                     // database contains at least 1 ThinkUp table
                     throw new InstallerException("<strong>Oops!</strong><br /> Looks like at least some of ThinkUp's ".
                     "database tables already exist. To install ThinkUp from scratch, drop its tables in the ".
-                    "<code style='font-family: Consolas,Monaco,Courier,monospace; border: 1px solid #999; ".
-                    "background-color: #ccc;'>{$config['db_name']}</code> database.<br />".
+                    "<code>{$config['db_name']}</code> database.<br />".
                     "To repair your existing tables, click <a href=\"" . THINKUP_BASE_URL . 
                     "install/index.php?step=repair&m=db\">here</a>.",
                     self::ERROR_DB_TABLES_EXIST);

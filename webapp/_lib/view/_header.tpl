@@ -32,7 +32,7 @@
       // buttons functionality
       $(function() {
         //all hover and click logic for buttons
-        $(".tt-button:not(.ui-state-disabled)")
+        $(".linkbutton:not(.ui-state-disabled)")
         .hover(
           function() {
             $(this).addClass("ui-state-hover"); 
@@ -42,8 +42,8 @@
           }
         )
         .mousedown(function() {
-            $(this).parents('.tt-buttonset-single:first').find(".tt-button.ui-state-active").removeClass("ui-state-active");
-            if ($(this).is('.ui-state-active.tt-button-toggleable, .tt-buttonset-multi .ui-state-active')) {
+            $(this).parents('.linkbuttonset-single:first').find(".linkbutton.ui-state-active").removeClass("ui-state-active");
+            if ($(this).is('.ui-state-active.linkbutton-toggleable, .linkbuttonset-multi .ui-state-active')) {
               $(this).removeClass("ui-state-active");
             }
             else {
@@ -51,7 +51,7 @@
             }
         })
         .mouseup(function() {
-          if (! $(this).is('.tt-button-toggleable, .tt-buttonset-single .tt-button,  .tt-buttonset-multi .tt-button') ) {
+          if (! $(this).is('.linkbutton-toggleable, .linkbuttonset-single .linkbutton,  .linkbuttonset-multi .linkbutton') ) {
             $(this).removeClass("ui-state-active");
           }
         });
@@ -67,8 +67,7 @@
   margin: 8px auto;
   height: 1px;
   }
-  .grid_4 a, .grid_10 a {color:#6184b5;}
-  .thinkup-canvas a {color:#6184b5;}
+
   </style>
   {/literal}
   

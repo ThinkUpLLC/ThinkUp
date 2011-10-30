@@ -1,5 +1,5 @@
    {if $post}
-      <div class="clearfix">
+      <div class="clearfix alert stats">
         <div class="grid_2 alpha">
         <div class="avatar-container">
           <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
@@ -31,6 +31,11 @@
           </div>
         {/if}
 
-<script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>
-<iframe width="710" frameborder=0 src="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n={$post->network}&t=post" name="childframe" id="childframe" >
-</iframe>
+<div class="section">
+    <h2>Response Map</h2>
+    <div class="article">
+    <script type="text/javascript" src="{$site_root_path}plugins/geoencoder/assets/js/iframe.js"></script>
+    <iframe width="710" frameborder=0 src="{$site_root_path}plugins/geoencoder/map.php?pid={$post->post_id}&n={$post->network}&t=post" name="childframe" id="childframe" >
+    </iframe>
+    </div>
+</div>

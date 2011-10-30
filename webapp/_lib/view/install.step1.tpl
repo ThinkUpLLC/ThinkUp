@@ -1,8 +1,8 @@
 {include file="_install.header.tpl"}
   <div class="container">
     <div id="thinkup-tabs">
-      <div class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+      <div class="ui-tabs ui-widget ui-widget-content">
+        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header alert stats">
           <li id="step-tab-1" class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
             <div class="key-stat install_step">
             <h1>1</h1>
@@ -33,14 +33,14 @@
         <h2 class="clearfix step_title">Check System Requirements</h2>
         {if $requirements_met}
              <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
-                 <p>
+                 <h2>
                    <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
                      <strong>Great!</strong> Your system has everything it needs to run ThinkUp.
-                 </p>
+                 </h2>
              </div> 
             <div class="clearfix">
               <div class="grid_10 prefix_8 left">
-                <div class="next_step tt-button ui-state-default ui-priority-secondary ui-corner-all">
+                <div class="next_step linkbutton ui-state-default ui-priority-secondary">
                   <a href="index.php?step=2" style="color:black" id="nextstep">Let's Go &raquo;</a>
                 </div>
               </div>

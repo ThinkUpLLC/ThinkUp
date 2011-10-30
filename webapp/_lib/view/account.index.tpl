@@ -14,15 +14,16 @@
     
     <div class="section thinkup-canvas clearfix" id="plugins">
       <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
+
         <div class="append_20 clearfix">
         {include file="_usermessage.tpl" field="account"}
           {if $installed_plugins}
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
               {if $smarty.foreach.foo.first}
                 <div class="clearfix header">
-                  <div class="grid_18 alpha">name</div>
+                  <div class="grid_17 alpha">name</div>
                   {if $user_is_admin}
-                  <div class="grid_4 omega"></div>
+                  <div class="grid_4 omega">activate</div>
                   {/if}
                 </div>
               {/if}
@@ -38,16 +39,16 @@
                 {if $user_is_admin}
                 <div class="grid_4 omega">
                   <span id="spanpluginactivation{$ip->id}">
-                      <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
+                      <input type="submit" name="submit" class="linkbutton btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
                   </span>
-                  <span style="display: none;padding:5px;" class='ui-state-success ui-corner-all mt_10' id="message{$ip->id}"></span>
+                  <span style="display: none;padding:5px;" class='ui-state-success ui-corner-all mt_10' id="messageactive{$ip->id}"></span>
                   </div>
                 {/if}
               </div>
               {/if}
             {/foreach}
           {else}
-            <a href="?m=manage" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-w"></span>Back to plugins</a>
+            <a href="?m=manage" class="linkbutton">&laquo; Back to plugins</a>
           {/if}
         </div>
         {if $body}
@@ -69,17 +70,19 @@
         <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
         
    <div class="prepend_20">
-    <div class="help-container">{insert name="help_link" id='backup'}</div>
+    {insert name="help_link" id='backup'}
     <h1>Back Up and Export Data</h1>
 
     <p><br />
-    <a href="{$site_root_path}install/backup.php">Back up ThinkUp's entire database</a>
-    <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
-         Recommended before upgrading ThinkUp.
+    
+    <div style="margin: 0px 0px 30px 0px;">
+        <a href="{$site_root_path}install/backup.php" class="linkbutton emphasized">Back up ThinkUp's entire database</a>
+        <p style="padding-left : 20px; margin-top : 14px;">Recommended before upgrading ThinkUp.</p>
       </div>
-    <a href="{$site_root_path}install/exportuserdata.php">Export a single service user's data</a>
-    <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
-         For transfer into another existing ThinkUp database.
+
+    <div style="margin: 0px 0px 30px 0px;">
+        <a href="{$site_root_path}install/exportuserdata.php" class="linkbutton emphasized">Export a single service user's data</a>
+        <p style="padding-left : 20px; margin-top : 14px;">For transfer into another existing ThinkUp database.</p>
     </div>
     </p>
   </div>
@@ -91,22 +94,22 @@
       <div class="thinkup-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
         {include file="_usermessage.tpl" field='password'}
-        <div class="help-container">{insert name="help_link" id='account'}</div>
+        {insert name="help_link" id='account'}
         <h1>Password</h1><br />
           <form name="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
             <div class="clearfix">
-              <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>
-              <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
+              <div class="grid_7 prefix_1 right"><label for="oldpass">Current password:</label></div>
+              <div class="grid_7 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
                 <input name="oldpass" type="password" id="oldpass">
                 {insert name="csrf_token"}<!-- reset password -->
               </div>
             </div>
             <div class="clearfix">
-              <div class="grid_9 prefix_1 right"><label for="pass1">New password:</label></div>
-              <div class="grid_9 left">
+              <div class="grid_7 prefix_1 right"><label for="pass1">New password:</label></div>
+              <div class="grid_12 left">
                 <input name="pass1" type="password" id="pass1">
                 <br>
-                <div class="ui-state-highlight ui-corner-all" style="margin: 10px 0px 10px 0px; padding: .5em 0.7em;"> 
+                <div class="alert helpful" style="margin: 10px 0px 10px 0px; padding: .5em 0.7em; min-height : 20px;"> 
                   <p>
                     <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
                     8 characters with numbers and letters.
@@ -114,26 +117,26 @@
                 </div>
               </div>
               <div class="clearfix append_bottom">
-                <div class="grid_9 prefix_1 right">
+                <div class="grid_7 prefix_1 right">
                   <label for="pass2">Re-type new password:</label>
                 </div>
-                <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
+                <div class="grid_7 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
                   <input name="pass2" type="password" id="pass2">
                 </div>
               </div>
-              <div class="prefix_10 grid_9 left">
-                <input type="submit" id="login-save" name="changepass" value="Change password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+              <div class="prefix_8 grid_7 left">
+                <input type="submit" id="login-save" name="changepass" value="Change password" class="linkbutton emphasized">
               </div>
             </div>
           </form>
 <br><br>
-<div class="help-container">{insert name="help_link" id='rss'}</div>
+{insert name="help_link" id='rss'}
 <h1>Automate ThinkUp Crawls</h1><br />
 
 <p>To set up ThinkUp to update automatically, subscribe to this secret RSS feed URL in your favorite news reader.</p>
 
 <div style="text-align: center; padding: 20px 0px 20px 0px;width:100%;">
-<a href="{$rss_crawl_url}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Secret RSS Feed to Update ThinkUp</a>
+<a href="{$rss_crawl_url}" class="linkbutton emphasized">Secret RSS Feed to Update ThinkUp</a>
 <div style="clear:all">&nbsp;<br><br><br></div>
 </div>
 
@@ -174,29 +177,29 @@
 <br /><br /><br/>
 </p>
 
-<h1>Reset Your API Key</h1><br />
+<h1>Your API Key</h1><br />
 {include file="_usermessage.tpl" field='api_key'}
 
-<p>Accidentally share your secret RSS URL? Reset your ThinkUp API key (and RSS feed URL) here.<br><br></p>
-
-          <div style="text-align: center; border-top: solid gray 1px; padding: 20px 0px 20px 0px;">
+          <div style="padding: 20px 0px 20px 0px;">
              <strong>Your Current ThinkUp API Key:</strong>
              <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
              <span id="show_api_key">
-             <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();">
+             <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();" class="linkbutton">
              Click to view</a>
              </span>
           </div> 
 
+<p>Accidentally share your secret RSS URL?</p>
+
           <form method="post" action="index.php?m=manage#instances" class="prepend_20 append_20" 
-          style="border-top: solid gray 1px; padding: 20px 0px 0px 0px;" id="api-key-form">
+          style="padding: 20px 0px 0px 0px;" id="api-key-form">
       <div class="grid_10 prefix_9 left">
                 <input type="hidden" name="reset_api_key" value="Reset API Key" />
                 <span id="apikey_conf" style="display: none;">
                 Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
                 </span>
                 <input type="button" value="Reset Your API Key" 
-                class="tt-button ui-state-default ui-priority-secondary ui-corner-all"
+                class="linkbutton"
                 {literal}
                 onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
                 {/literal}
@@ -206,32 +209,31 @@
         </div>
       </div>
     </div> <!-- end #instances -->
-
+    
     {if $user_is_admin}
-      <div class="section" id="ttusers">
+      <div class="thinkup-canvas" id="ttusers">
 
-        <div class="thinkup-canvas clearfix">
+     <div class="thinkup-canvas clearfix">
          <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
         <h1>Invite New User</h1>
         {include file="_usermessage.tpl" field='invite'}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
                 {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
-                class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+                class="linkbutton emphasized">
           </form>
         </div>
 
-
-
       <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
-        <h1>Registered Users</h1>
+      <h1>Registered Users</h1>
+
         <div class="append_20 clearfix">
         
 {foreach from=$owners key=oid item=o name=oloop}
   {if $smarty.foreach.oloop.first}
     <div class="clearfix header">
       <div class="grid_14 alpha">name</div>
-      <div class="grid_4">activation</div>
-      <div class="grid_4 omega">administrator</div>
+      <div class="grid_3">activate</div>
+      <div class="grid_3 omega">admin</div>
     </div>
   {/if}
   
@@ -244,7 +246,7 @@
          <br><br>Service users:
          <span style="color:#666"><br><small>
           {foreach from=$o->instances key=iid item=i}
-              {$i->network_username} - {$i->network|capitalize}
+              {$i->network_username} | {$i->network|capitalize}
               {if !$i->is_active} (paused){/if}<br>
           {/foreach}
         {else}
@@ -252,29 +254,28 @@
         {/if}
         </small></span>
     </div>
-    {if $user_is_admin}
         <div class="grid_4">
           {if $o->id neq $owner->id}
           <span id="spanowneractivation{$o->id}">
-          <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerActivationButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+          <input type="submit" name="submit" class="linkbutton toggleOwnerActivationButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
           </span>
-          <span style="display: none;padding:5px;" class="ui-state-success ui-corner-all mt_10" id="messageactive{$o->id}"></span>
+          <span style="display: none;padding:5px;" class="ui-state-success ui-corner-all mt_10" id="messageowneractive{$o->id}"></span>
           {/if}
       </div>
         <div class="grid_4 omega">
           {if $o->id neq $owner->id && $o->is_activated}
           <span id="spanowneradmin{$o->id}">
-          <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerAdminButton" id="userAdmin{$o->id}" value="{if $o->is_admin}Demote{else}Promote{/if}" />
+          <input type="submit" name="submit" class="linkbutton toggleOwnerAdminButton" id="userAdmin{$o->id}" value="{if $o->is_admin}Demote{else}Promote{/if}" />
           </span>
           <span style="display: none;padding:5px;" class="ui-state-success ui-corner-all mt_10" id="messageadmin{$o->id}"></span>
           {/if}
       </div>
-    {/if}
   </div>
 {/foreach}
         </div>
      </div>
 
+          
         </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #ttusers -->
     {/if} <!-- end is_admin -->
@@ -372,8 +373,8 @@ $(function() {
         data: dataString,
         success: function() {
           $('#spanpluginactivation' + u).css('display', 'none');
-          $('#message' + u).html("Activated!").hide().fadeIn(1500, function() {
-            $('#message' + u);
+          $('#messageactive' + u).html("Activated!").hide().fadeIn(1500, function() {
+            $('#messageactive' + u);
           });
           $('#spanpluginnamelink' + u).css('display', 'inline');
           $('#' + u).val('Deactivate');
@@ -381,7 +382,7 @@ $(function() {
           $('#' + u).removeClass('btnActivate');
           $('#' + u).addClass('btnDectivate');
           setTimeout(function() {
-              $('#message' + u).css('display', 'none');
+              $('#messageactive' + u).css('display', 'none');
               $('#spanpluginactivation' + u).hide().fadeIn(1500);
             },
             2000
@@ -399,8 +400,8 @@ $(function() {
         data: dataString,
         success: function() {
           $('#spanpluginactivation' + u).css('display', 'none');
-          $('#message' + u).html("Deactivated!").hide().fadeIn(1500, function() {
-            $('#message' + u);
+          $('#messageactive' + u).html("Deactivated!").hide().fadeIn(1500, function() {
+            $('#messageactive' + u);
           });
           $('#spanpluginnamelink' + u).css('display', 'none');
           $('#spanpluginnametext' + u).css('display', 'inline');
@@ -408,7 +409,7 @@ $(function() {
           $('#' + u).removeClass('btnDeactivate');
           $('#' + u).addClass('btnActivate');
           setTimeout(function() {
-              $('#message' + u).css('display', 'none');
+              $('#messageactive' + u).css('display', 'none');
               $('#spanpluginactivation' + u).hide().fadeIn(1500);
             },
             2000
@@ -438,8 +439,8 @@ $(function() {
         data: dataString,
         success: function() {
           $('#spanowneractivation' + u).css('display', 'none');
-          $('#messageactive' + u).html("Activated!").hide().fadeIn(1500, function() {
-            $('#messageactive' + u);
+          $('#messageowneractive' + u).html("Activated!").hide().fadeIn(1500, function() {
+            $('#messageowneractive' + u);
           });
           $('#spanownernamelink' + u).css('display', 'inline');
           $('#user' + u).val('Deactivate');
@@ -448,7 +449,7 @@ $(function() {
           $('#user' + u).addClass('btnDectivate');
           $('#userAdmin' + u).show();
           setTimeout(function() {
-              $('#messageactive' + u).css('display', 'none');
+              $('#messageowneractive' + u).css('display', 'none');
               $('#spanowneractivation' + u).hide().fadeIn(1500);
             },
             2000
@@ -468,8 +469,8 @@ $(function() {
         data: dataString,
         success: function() {
           $('#spanowneractivation' + u).css('display', 'none');
-          $('#messageactive' + u).html("Deactivated!").hide().fadeIn(150, function() {
-            $('#messageactive' + u);
+          $('#messageowneractive' + u).html("Deactivated!").hide().fadeIn(150, function() {
+            $('#messageowneractive' + u);
           });
           $('#spanownernamelink' + u).css('display', 'none');
           $('#spanownernametext' + u).css('display', 'inline');
@@ -478,7 +479,7 @@ $(function() {
           $('#user' + u).addClass('btnActivate');
           $('#userAdmin' + u).hide();
           setTimeout(function() {
-              $('#messageactive' + u).css('display', 'none');
+              $('#messageowneractive' + u).css('display', 'none');
               $('#spanowneractivation' + u).hide().fadeIn(1500);
             },
             2000

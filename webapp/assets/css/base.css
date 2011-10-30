@@ -12,7 +12,7 @@ img, q, dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
   border: 0;
-  font-family: inherit;
+  font-family: "Helvetica Neue", Arial, "Helvetica", sans-serif;
   font-size: 100%;
   font-style: inherit;
   font-weight: inherit;
@@ -234,28 +234,19 @@ are in place to stop long URLs or words from overflowing. */
 ==================================================
 */
 
-/* --- APPLICATION TITLE ---------------------- */
-
-#app-title {width:300px;float:left;margin-top:10px; margin-left : 10px; margin-bottom : 12px;}
-#app-title h1 {color:#333333;font-size: 30px;letter-spacing: -.08em;margin:0;padding:15px 0 0 0;line-height:.8em;}
-#app-title h2 {font-size: 13px;color: #416A93;margin:0;padding:0 0 0 10px;line-height:.8em;}
-#app-title a:link, #app-title a:visited  {text-decoration:none;}
-#app-title a:hover h1  {color: #416A93;text-decoration:none;}
-#app-title img {float:left;margin-right:2px;}
-
 /* --- DATA GRIDS ----------------------------- */
 
-.header {padding: 10px 0 0 0;font-weight: 500;color: #6184B5;font-size: .8em;/*border-bottom:1px solid #EEE;*/margin-bottom:.5em;}
+.header {padding: 10px 0 0 20px;font-weight: 500;font-size: .8em;margin-bottom:1px; background-color : #FAF9F2;}
 .footnote h2 {font-size:1.6em;padding-left:80px;}
 
 /* --- HEADLINES ------------------------------ */
 
-.thinkup-canvas h1 {color: #848884;font-size:1.6em;font-weight:700;margin:0;padding:0 0 0 0;}
+.thinkup-canvas h1 {color: #363636;font-size:1.6em;font-weight:700;margin:0;padding:0 0 0 0;}
 .thinkup-canvas h4 {color: #000;line-height:1em;font-size:1em;font-weight:700;margin:0;padding:0 0 10px 35px;}
 .thinkup-canvas h1.user {margin:0;padding:0;}
 .thinkup-canvas h1.post {color:#000;font-size:1em;font-weight:500;margin:0;padding:0;border:0px;}
-.thinkup-canvas h2 {color:#848884;font-size:1.2em;text-transform: capitalize;margin:0;padding:30px 0px 0px 0px;border-top:0px;}
-.thinkup-canvas h2.subhead {color:#848884;font-size:1.2em;font-weight:500;margin:0;padding:0;border-top:0px;}
+.thinkup-canvas h2 {color:#363636;font-size:1.2em;text-transform: capitalize;margin:0;padding:30px 0px 0px 0px;border-top:0px;}
+.thinkup-canvas h2.subhead {color:#363636;font-size:1.2em;font-weight:500;margin:0;padding:0;border-top:0px;}
 
 /* --- CONTENT -------------------------------- */
 
@@ -322,67 +313,25 @@ img.service-icon2 {left: 32px;}
 .sprite {background-image: url("../img/ui-icons_222222_256x240.png");height: 16px;width: 16px;}
 .sprite {background-repeat: no-repeat;display: block;overflow: hidden;text-indent: -99999px;}
 
-/* --- NUMBERS -------------------------------- */
-
-#keystats {padding:5px;font-size:medium;}
-.big-number {color:#000;font-size:1.7em;line-height:1.8em;}
-.big-number h1 {font-size:2.7em;font-weight:700;letter-spacing:-4px;padding:0;margin:0;}
-.big-number h3 {color:#666;font-size:0.8em;}
-
-.reply-count {-moz-border-radius: 3px;-webkit-border-radius: 3px;font-size: 1em;font-weight:bold;
-/*background-color: #e6e6e6;
-background: #FFFFFF;*/  
-background-color: #e6e6e6;
-background: -moz-linear-gradient(top, #FFFFFF, #E6E6E6);  
-background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#E6E6E6));  
-border: 1px solid #ddd;
-padding: 1px 0 3px 0;display:block;margin-top:.3em;text-align:center;line-height: 1.6em;/*height:2.2em;*/
-}
-.reply-count a:link, .reply-count a:visited {color: #000;text-decoration:none;display:block;}
-/*
-.reply-count {font-size:1.3em;font-weight:bold;background-color:#222;padding:10px;display:block;margin-top:2px;text-align:center;line-height:1.8em;height:2.2em;}
-.reply-count a:link, .reply-count a:visited {color:#FFF;text-decoration:underline;}
-*/
-.mention-count {
-font-size: 1.4em;
-font-weight:700;
-height: 20px;
-display:block;
-float:left;
-margin-left:.5em;
-line-height:1.8em;
-}
-
-.dashboard-header {
-	/* 
-	-moz-border-radius: 5px;-webkit-border-radius: 5px;
-	background-color: #e6e6e6; 
-	border: 1px solid #ddd;
-	*/
-	background: -moz-linear-gradient(top, #FFFFFF, #E6E6E6);  
-	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#E6E6E6));  
-	padding : 10px 10px 14px 20px;
-	margin-bottom : 20px;
-}
 
 /* --- BUTTONS -------------------------------- */
 /* adapted from the filament group: http://www.filamentgroup.com/examples/buttonFrameworkCSS/ */
 
-.tt-button {outline:0;margin:4px 4px 4px 0;padding:0.4em 1em;text-decoration:none !important;cursor:pointer;position:relative;text-align:center;zoom:1;}
-.tt-button .ui-icon {position:absolute;top:50%;margin-top:-8px;left:50%;margin-left:-8px;}
-a.tt-button {float:left;}
+.linkbutton {outline:0;margin:4px 4px 4px 0;padding:0.4em 1em;text-decoration:none !important;cursor:pointer;position:relative;text-align:center;zoom:1;}
+.linkbutton .ui-icon {position:absolute;top:50%;margin-top:-8px;left:50%;margin-left:-8px;}
+
 
 /* remove extra button width in IE */
 button.fg-button {width:auto;overflow:visible;}
 .tt-icon-left {float:left;margin:0.3em 0.5em;}
-.tt-button-icon-left {padding-left:2.1em;}
-.tt-button-icon-right {padding-right:2.1em;}
-.tt-button-icon-left .ui-icon {right:auto;left:0.2em;margin-left:0;}
-.tt-button-icon-right .ui-icon {left:auto;right:0.2em;margin-left:0;}
-.tt-button-icon-solo {display:block;width:8px;text-indent:-999em;} /* solo icon buttons must have block properties for the text-indent to work */
-.tt-buttonset {float:left;}
-.tt-buttonset .fg-button {float:left;}
-.tt-buttonset-single .fg-button, .tt-buttonset-multi .fg-button {margin-right:-1px;}
+.linkbutton-icon-left {padding-left:2.1em;}
+.linkbutton-icon-right {padding-right:2.1em;}
+.linkbutton-icon-left .ui-icon {right:auto;left:0.2em;margin-left:0;}
+.linkbutton-icon-right .ui-icon {left:auto;right:0.2em;margin-left:0;}
+.linkbutton-icon-solo {display:block;width:8px;text-indent:-999em;} /* solo icon buttons must have block properties for the text-indent to work */
+.linkbuttonset {float:left;}
+.linkbuttonset .fg-button {float:left;}
+.linkbuttonset-single .fg-button, .linkbuttonset-multi .fg-button {margin-right:-1px;}
 .tt-toolbar {padding:0.5em;margin:0;}
 .tt-toolbar .fg-buttonset {margin-right:1.5em;padding-left:1px;}
 .tt-toolbar .fg-button {font-size:1em;}
@@ -390,7 +339,3 @@ button.fg-button {width:auto;overflow:visible;}
 table.public_user_stats td.name { padding-right:20px; }
 table.public_user_stats td .detail { font-size:smaller; }
 table.public_user_stats td.value { vertical-align:top; }
-
-/* Status bar */
-#status-bar { background-image:url('../img/statusbar-bkgd.png'); }
-#page-bkgd { background-image:url('../img/statusbar-shadow.png'); background-repeat:repeat-x; }

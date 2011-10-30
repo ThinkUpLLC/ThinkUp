@@ -1,14 +1,20 @@
-<div class="append_20">
-<h2 class="subhead">Twitter Plugin {insert name="help_link" id='twitter'}</h2>
-
-<p>The Twitter plugin captures and displays tweets, replies, mentions, retweets, friends, followers, favorites, links, and photos.</p>
-
 {include file="_usermessage.tpl"}
 
+<div class="append_20 alert helpful">
+{insert name="help_link" id='twitter'}
+<h2>Twitter Plugin </h2>
+
+    <div class="">
+    <p>The Twitter plugin captures and displays tweets, replies, mentions, retweets, friends, followers, favorites, links, and photos.</p>
+    
+    </div>
+</div>
+
+<div class="append_20">
+
 {if $oauthorize_link}
-<br>
-<div id="add-account-div" style="display: none;">
-<a href="{$oauthorize_link}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Add a Twitter account</a>
+<div id="add-account-div" style="display: none; padding-top : 20px;">
+<a href="{$oauthorize_link}" class="linkbutton emphasized">Add a Twitter account</a>
 <br /><br />
 </div>
 {/if}
@@ -21,18 +27,18 @@
             <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a>
         </div>
         <div class="grid_4 right">
-            <span id="div{$i->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
+            <span id="div{$i->id}"><input type="submit" name="submit" class="linkbutton
             {if $i->is_public}btnPriv{else}btnPub{/if}" id="{$i->id}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
         </div>
         <div class="grid_4 right">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="linkbutton {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
         <div class="grid_8 right">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=twitter">
             <input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<input
             onClick="return confirm('Do you really want to delete this Twitter account?');"
-            type="submit" name="action" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" 
+            type="submit" name="action" class="linkbutton" 
             value="delete" /></form></span>
         </div>
         </div>
@@ -52,7 +58,7 @@
 {include file="_usermessage.tpl" field="setup"}
 
 <p style="padding:5px">To set up the Twitter plugin:</p>
-<ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps/new" target="_blank">Create a new application on Twitter for ThinkUp</a>.</li>
+<ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps/new" target="_blank" style="text-decoration: underline;">Create a new application on Twitter for ThinkUp</a>.</li>
 <li>
     Fill in the following settings.<br />
     Name: <span style="font-family:Courier;">ThinkUp</span><br />

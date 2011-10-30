@@ -1,10 +1,15 @@
-<div class="append_20">
-<h2 class="subhead">Twitter Realtime Plugin {insert name="help_link" id='twitterrealtime'}</h2>
+<div class="append_20 alert helpful">
+{insert name="help_link" id='twitterrealtime'}
+<h2>Twitter Realtime Plugin </h2>
 
 {if count($owner_instances) > 0 }
     <p>The Twitter Realtime Plugin requires the <a href="./?p=twitter">Twitter plugin</a> to be configured with your
     Twitter app's authorization information. If this is not set up, the Twitter Realtime Plugin will not run
     successfully. Currently, this plugin is only initiated from the command line.</p>
+    
+</div>
+
+<div class="append_20">
     <p>Pausing a given account disables the crawling performed by the <a href="./?p=twitter">Twitter plugin</a> for that
     account, as well as pausing the Twitter Realtime streaming. For streaming, the changes will take effect next
     time streaming is launched.</p>
@@ -14,7 +19,7 @@
             <a href="{$site_root_path}?u={$i->network_username}">{$i->network_username}</a>
         </div>
         <div class="grid_4 right">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling and streaming{else}start crawling and streaming{/if}" /></span>
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" class="linkbutton {if $i->is_active}btnPause{else}btnPlay{/if}" id="{$i->id}" value="{if $i->is_active}pause crawling and streaming{else}start crawling and streaming{/if}" /></span>
         </div>
 
         </div>
@@ -56,4 +61,3 @@ if( required_values_set ) {
 }
 {/literal}
 </script>
-

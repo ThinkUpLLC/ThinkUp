@@ -1,5 +1,5 @@
    {if $post}
-      <div class="clearfix">
+      <div class="clearfix alert stats">
         <div class="grid_2 alpha">
         <div class="avatar-container">
           <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
@@ -31,7 +31,8 @@
           </div>
         {/if}
  {if $geoencoder_nearest}
-   <div class="append_20 clearfix"><br />
+   <div class="append_20 clearfix section">
+   <h2>Nearest Replies</h2>
      {foreach from=$geoencoder_nearest key=tid item=t name=foo}
         {if  $smarty.foreach.foo.index > 1}
        {include file="_post.author_no_counts.tpl" post=$t sort='no' show_distance='true' scrub_reply_username='true' unit=$geoencoder_options.distance_unit->option_value}

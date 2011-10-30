@@ -53,10 +53,9 @@
   <link type="text/css" rel="stylesheet" href="{$site_root_path}assets/css/installer.css">
 </head>
 <body>
-  <div id="status-bar">&nbsp;</div>
   <div class="container clearfix">
-    <div id="app-title">
-          <h1><span class="bold">Think</span><span class="gray">Up</span></h1>
-          <h2>New ideas</h2>
-    </div>
+  
+	<div id="app-title">
+		<h1><span id="headerthink">Think</span><span id="headerup">Up</span></h1>
+	</div>
   </div>

@@ -10,7 +10,7 @@ $username_link (optional) If set to 'internal', render username link to internal
 $show_distance (optional) If set to 'true', show the location and reply/retweet distance from original post.
 $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles or kilometers of distance.
 *}
-<div class="clearfix">
+<div class="clearfix article">
 <div class="individual-tweet post clearfix{if $post->is_protected} private{/if}">
     <div class="grid_2 alpha">
       <div class="avatar-container">

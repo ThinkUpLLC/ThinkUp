@@ -86,7 +86,7 @@ class GeoEncoderPlugin extends Plugin implements CrawlerPlugin, PostDetailPlugin
 
             $nearest_template_path = Utils::getPluginViewDirectory('geoencoder').'geoencoder.nearest.tpl';
             //Define a menu item
-            $nearest_menu_item = new MenuItem("Nearest Responses", "", $nearest_template_path);
+            $nearest_menu_item = new MenuItem("Nearest Replies", "", $nearest_template_path);
             //Define a dataset to be displayed when that menu item is selected
             $nearest_dataset = new Dataset("geoencoder_nearest", 'PostDAO', "getRelatedPosts",
             array($post->post_id, $post->network, !Session::isLoggedIn()));

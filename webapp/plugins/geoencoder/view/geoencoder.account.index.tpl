@@ -1,12 +1,16 @@
 
-<div class="append_20">
+<div class="append_20 alert helpful">
 
-<h2 class="subhead">GeoEncoder Plugin {insert name="help_link" id='geoencoder'}</h2>
+{insert name="help_link" id='geoencoder'}
+<h2>GeoEncoder Plugin</h2>
 
 <p>
 The GeoEncoder plugin plots a post's responses on a Google Map and can lists them by distance from the original poster.
 </p>
-<br>
+
+</div>
+
+<div class="append_20">
 
 <div id="contact-admin-div" style="display: none; margin-top: 20px;">
 {include file="_plugin.admin-request.tpl"}
@@ -15,10 +19,10 @@ The GeoEncoder plugin plots a post's responses on a Google Map and can lists the
 {if $options_markup}
 {if $user_is_admin}
 {include file="_plugin.showhider.tpl"}
-<h2 class="subhead">Settings</h2>
+
 {include file="_usermessage.tpl" field="setup"}
 <p style="padding:5px">To set up the GeoEncoder plugin:</p>
-<ol style="margin-left:40px"><li><a href="http://code.google.com/apis/maps/signup.html" target="_blank">Sign up for a Google Maps API key</a>.</li>
+<ol style="margin-left:40px"><li><a href="http://code.google.com/apis/maps/signup.html" target="_blank" style="text-decoration : underline;">Sign up for a Google Maps API key</a>.</li>
 <li>Set the web site URL to <br>
 <code style="font-family:Courier;" id="clippy_2989">http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}</code>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"

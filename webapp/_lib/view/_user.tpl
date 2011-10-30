@@ -1,4 +1,4 @@
-<div class="individual-tweet prepend_20 clearfix{if $t.is_protected} private{/if}">
+<div class="individual-tweet prepend_20 clearfix{if $t.is_protected} private{/if} article">
   <div class="grid_2 alpha">
     <div class="avatar-container">
         {if $f.network == 'twitter'}<a href="https://twitter.com/intent/user?user_id={$f.user_id}" title="{$f.user_name} on Twitter">{/if}

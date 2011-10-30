@@ -8,21 +8,20 @@
     </div>
   </div>
 
-<div id="settings_error_message_error" 
-    class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em; display: none;">
-    <p>
-        <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
-        <span id="settings_error_message"></span>
-    </p>
+ <div class="alert urgent" id="settings_error_message_error" style="display: none;">
+     <p>
+       <span class="ui-icon ui-icon-alert" style="float: left; margin:.3em 0.3em 0 0;"></span>
+       <span id="settings_error_message"></span>
+     </p>
 </div>
 
- <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;display: none;" id="settings_success">
+
+ <div class="alert helpful"  id="settings_success" style="display: none;">
      <p>
        <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
        Settings saved!
      </p>
- </div> 
-
+ </div>    
 
 <form id="app-settings-form" name="app_settings" method="post" action="{$site_root_path}session/app_settings.php"
   onsubmit="return false">
@@ -39,7 +38,7 @@
         <input type="checkbox" name="is_registration_open" id="is_registration_open" value="true">
       </div>
       <div style="clear:both;"></div>
-      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
         Set whether or not your site's registration page is available and accepts new user registrations.
       </div>
 
@@ -52,7 +51,7 @@
         <input type="checkbox" name="recaptcha_enable" id="recaptcha_enable" value="true">
       </div>
       <div style="clear:both;"></div>
-      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
         Select to enable reCAPTCHA, and <a href="https://www.google.com/recaptcha">get your reCAPTCHA keys here</a>.
       </div>
 
@@ -77,17 +76,19 @@
        </div>
 
       <div style="float: left;">
+        
         <label for="is_api_disabled">
           Disable the JSON API:
           <br />
         </label>
       </div>
       <div style="float: left;">
+        {insert name="help_link" id="api"}
         <input type="checkbox" name="is_api_disabled" id="is_api_disabled" value="true">
       </div>
       <div style="clear:both;"></div>
-      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
-        Set whether or not your site's data is available via ThinkUp's JSON API. {insert name="help_link" id="api"}
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
+        Set whether or not your site's data is available via ThinkUp's JSON API. 
       </div>
 
       <div style="float: left;">
@@ -100,7 +101,7 @@
         <input type="checkbox" name="is_embed_disabled" id="is_embed_disabled" value="true">
       </div>
       <div style="clear:both;"></div>
-      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
         Set whether or not a user can embed a ThinkUp thread onto another web site.
       </div>
 
@@ -119,7 +120,7 @@
         </select>
       </div>
       <div style="clear:both;"></div>
-      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
         Set the service user to display by default. {insert name="help_link" id="default_service_user"}
       </div>
 
@@ -133,7 +134,7 @@
         <input type="checkbox" name="is_log_verbose" id="is_log_verbose" value="true">
       </div>
       <div style="clear:both;"></div>
-      <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
+      <div style="font-size: 12px; color : #555; margin: 0px 0px 10px 0px;">
         See the verbose, unformatted developer log on the Update Now screen.
       </div>
    </div>
@@ -146,9 +147,8 @@
     <div class="clearfix">
       <div class="grid_10 prefix_9 left">
         <input type="submit" id="app-settings-save" name="Submit" 
-        class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Save Settings">
+        class="linkbutton emphasized" value="Save Settings">
       </div>
     </div>
 
 </form>
-
