@@ -67,8 +67,7 @@
   margin: 8px auto;
   height: 1px;
   }
-  .grid_4 a, .grid_10 a {color:#6184b5;}
-  .thinkup-canvas a {color:#6184b5;}
+
   </style>
   {/literal}
   

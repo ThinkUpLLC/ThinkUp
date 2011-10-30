@@ -11,7 +11,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
 
 {if $smarty.foreach.foo.first}
   <div class="header clearfix">
-    <div class="grid_13 alpha">&#160;</div>
+    <div class="grid_12 alpha">&#160;</div>
     <div class="grid_2 center">
       {if $post->network eq 'twitter' || $post->network eq 'google+'}
         {if $show_favorites_instead_of_retweets}{if $post->network eq 'google+'}+1's{else}favorites{/if}{else}{if $post->network eq 'google+'}reshares{else}retweets{/if}{/if}
@@ -25,7 +25,7 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
   </div>
 {/if}
 
-<div class="clearfix">
+<div class="clearfix article">
   <div class="individual-tweet post clearfix{if $post->is_protected} private{/if}">
     <div class="grid_13 alpha">
       <div class="post">

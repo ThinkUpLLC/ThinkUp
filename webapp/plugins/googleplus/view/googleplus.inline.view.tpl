@@ -1,13 +1,14 @@
 <div class="">
           {if $post}
-            <div class="clearfix">
+            <div class="clearfix alert stats">
+            {insert name="help_link" id=$display}
               <div class="grid_2 alpha">
                 <div class="avatar-container">
                   <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
                 </div>
               </div>
 
-              <div class="grid_12">
+              <div class="grid_10">
                 <div class="br" style="min-height:110px">
                   <div class="tweet pr">
                     {if $post->post_text}
@@ -44,12 +45,6 @@
                                   {$post->source}<span class="ui-icon ui-icon-newwin"></span>
                                 {/if}
                           {/if}<br>
-                    {if $disable_embed_code != true}
-                    <div>
-                    Embed this thread:<br>
-                    <textarea cols="55" rows="3">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
-                    </div>
-                    {/if}
                     
                   </div> <!-- /#more-detail -->
                 </div>
@@ -58,14 +53,14 @@
             <div class="grid_5 center keystats omega">
               <div class="big-number">
                {if $post->favlike_count_cache}
-                  <h1>{$post->favlike_count_cache}</h2>
+                  <h2>{$post->favlike_count_cache}</h2>
                   <h3>+1s</h3>
               </div>
             </div>
         {/if}{/if}
 
 
-  <div class="help-container">{insert name="help_link" id=$display}</div>
+  <div class="help-container"></div>
   {if $description}
     <i>{$description}
       {if $is_searchable}
@@ -76,9 +71,26 @@
     {/if}
 </div>
 
+{if $disable_embed_code != true}
+	<div class="section">
+	<h2>Embed this thread:</h2>
+	<div class="article">
+	<textarea cols="55" rows="2" id="txtarea" onClick="SelectAll('txtarea');">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
+	</div>
+	</div>
+	{literal}
+	<script type="text/javascript">
+	function SelectAll(id) {
+	document.getElementById(id).focus();
+	document.getElementById(id).select();
+	}
+	</script>
+	{/literal}
+{/if}
+
 {if ($display eq 'all_gplus_posts' and not $gplus_posts) or 
     ($display eq 'most_replied_to_posts' and not $gplus_posts) }
-  <div class="ui-state-highlight ui-corner-all" style="margin: 20px 0px; padding: .5em 0.7em;"> 
+  <div class="alert urgent"> 
     <p>
       <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
       No posts to display.

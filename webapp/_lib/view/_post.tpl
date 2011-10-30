@@ -4,7 +4,7 @@
   <div class="header clearfix">
     <div class="grid_2 alpha">&#160;</div>
     <div class="grid_3">&#160;</div>
-    <div class="grid_9">&#160;</div>
+    <div class="grid_8">&#160;</div>
     <div class="grid_2 center">
       {if $t->network eq 'twitter'}retweets{else}{if $t->network eq 'google+'}+1's{else}likes{/if}{/if}
     </div>
@@ -14,7 +14,7 @@
   </div>
 {/if}
 
-<div class="clearfix">
+<div class="clearfix article">
 <div class="individual-tweet post clearfix{if $t->is_protected} private{/if}">
     <div class="grid_2 alpha">
       <div class="avatar-container">
@@ -35,7 +35,7 @@
         <div class="small gray">{$t->author->follower_count|number_format} followers</div>
       {/if}
         </div>
-    <div class="grid_9">
+    <div class="grid_8">
       <div class="post">
         {if $t->post_text}
           {if $scrub_reply_username}

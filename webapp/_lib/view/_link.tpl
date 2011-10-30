@@ -6,7 +6,7 @@
   </div>
 {/if}
 
-<div class="individual-tweet post clearfix">
+<div class="individual-tweet post clearfix article">
   <div class="grid_1 alpha">
     <a href="http://twitter.com/{$l->container_post->author_username}">
     <img src="{$l->container_post->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$l->container_post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
