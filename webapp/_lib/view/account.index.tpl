@@ -20,7 +20,7 @@
             {foreach from=$installed_plugins key=ipindex item=ip name=foo}
               {if $smarty.foreach.foo.first}
                 <div class="clearfix header">
-                  <div class="grid_18 alpha">name</div>
+                  <div class="grid_17 alpha">name</div>
                   {if $user_is_admin}
                   <div class="grid_4 omega">activate/deactivate</div>
                   {/if}
@@ -69,7 +69,7 @@
         <script type="text/javascript" src="{$site_root_path}assets/js/appconfig.js"></script>
         
    <div class="prepend_20">
-    <div class="help-container">{insert name="help_link" id='backup'}</div>
+    {insert name="help_link" id='backup'}
     <h1>Back Up and Export Data</h1>
 
     <p><br />
@@ -91,22 +91,22 @@
       <div class="thinkup-canvas clearfix">
         <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
         {include file="_usermessage.tpl" field='password'}
-        <div class="help-container">{insert name="help_link" id='account'}</div>
+        {insert name="help_link" id='account'}
         <h1>Password</h1><br />
           <form name="changepass" method="post" action="index.php?m=manage#instances" class="prepend_20 append_20">
             <div class="clearfix">
-              <div class="grid_9 prefix_1 right"><label for="oldpass">Current password:</label></div>
-              <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
+              <div class="grid_7 prefix_1 right"><label for="oldpass">Current password:</label></div>
+              <div class="grid_7 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
                 <input name="oldpass" type="password" id="oldpass">
                 {insert name="csrf_token"}<!-- reset password -->
               </div>
             </div>
             <div class="clearfix">
-              <div class="grid_9 prefix_1 right"><label for="pass1">New password:</label></div>
-              <div class="grid_9 left">
+              <div class="grid_7 prefix_1 right"><label for="pass1">New password:</label></div>
+              <div class="grid_12 left">
                 <input name="pass1" type="password" id="pass1">
                 <br>
-                <div class="ui-state-highlight ui-corner-all" style="margin: 10px 0px 10px 0px; padding: .5em 0.7em;"> 
+                <div class="alert helpful" style="margin: 10px 0px 10px 0px; padding: .5em 0.7em; min-height : 20px;"> 
                   <p>
                     <span class="ui-icon ui-icon-info" style="float: left; margin:.3em 0.3em 0 0;"></span>
                     8 characters with numbers and letters.
@@ -114,20 +114,20 @@
                 </div>
               </div>
               <div class="clearfix append_bottom">
-                <div class="grid_9 prefix_1 right">
+                <div class="grid_7 prefix_1 right">
                   <label for="pass2">Re-type new password:</label>
                 </div>
-                <div class="grid_9 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
+                <div class="grid_7 left" style="overflow: hidden; margin: 0px 0px 10px 5px;">
                   <input name="pass2" type="password" id="pass2">
                 </div>
               </div>
-              <div class="prefix_10 grid_9 left">
+              <div class="prefix_8 grid_7 left">
                 <input type="submit" id="login-save" name="changepass" value="Change password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
               </div>
             </div>
           </form>
 <br><br>
-<div class="help-container">{insert name="help_link" id='rss'}</div>
+{insert name="help_link" id='rss'}
 <h1>Automate ThinkUp Crawls</h1><br />
 
 <p>To set up ThinkUp to update automatically, subscribe to this secret RSS feed URL in your favorite news reader.</p>
@@ -218,7 +218,7 @@
     <div class="clearfix header">
       <div class="grid_8 alpha">name</div>
       {if $user_is_admin}
-      <div class="grid_10">service users</div>
+      <div class="grid_9">service users</div>
       <div class="grid_4 omega">actions</div>
       {/if}
     </div>

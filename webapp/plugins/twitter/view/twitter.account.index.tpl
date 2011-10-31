@@ -1,9 +1,13 @@
-<div class="append_20">
-<h2 class="subhead">Twitter Plugin {insert name="help_link" id='twitter'}</h2>
+{include file="_usermessage.tpl"}
 
+<div class="append_20 alert helpful">
+{insert name="help_link" id='twitter'}
+<h2>Twitter Plugin </h2>
+
+<div class="">
 <p>The Twitter plugin captures and displays tweets, replies, mentions, retweets, friends, followers, favorites, links, and photos.</p>
 
-{include file="_usermessage.tpl"}
+</div>
 
 {if $oauthorize_link}
 <br>
@@ -50,10 +54,15 @@
 
 
 {if $options_markup}
-<div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
+
+{if $user_is_admin}{include file="_usermessage.tpl" field="setup"}{/if}
+
+<div {if $user_is_admin}style=""{/if} class="section">
 {if $user_is_admin}
-<h2 class="subhead">Settings</h2>
-{include file="_usermessage.tpl" field="setup"}
+
+
+<h2>Settings</h2>
+<div class="article">
 <p style="padding:5px">To set up the Twitter plugin:</p>
 <ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps/new" target="_blank">Create a new application on Twitter for ThinkUp</a>.</li>
 <li>
@@ -131,6 +140,8 @@
 
 {$options_markup}
 </p>
+
+<br />
 </div>
 {literal}
 
@@ -146,4 +157,5 @@ if( required_values_set ) {
 </script>
 
 {/if}
+</div>
 

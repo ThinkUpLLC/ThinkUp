@@ -43,7 +43,7 @@
 function smarty_insert_help_link($params, &$smarty) {
     if (isset($smarty->_tpl_vars['help'][$params['id']])){
         return '<a href="http://thinkupapp.com/docs/'.$smarty->_tpl_vars['help'][$params['id']].
-        '.html" title="Learn more"><img src="'.$smarty->_tpl_vars['site_root_path'].'assets/img/help.png"></a>';
+        '.html" title="Learn more" class="linkbutton help">Help</a>';
     } else {
         return '';
     }
