@@ -44,7 +44,7 @@ RENAME TABLE tu_links TO tu_links_b14;
 
 RENAME TABLE tu_links_b15 TO tu_links;
 
-DROP TABLE tu_links_b14;
+DROP TABLE IF EXISTS tu_links_b14;
 
 
 -- 2011-08-25
@@ -79,7 +79,7 @@ RENAME TABLE tu_posts TO tu_posts_b14;
 
 RENAME TABLE tu_posts_b15 TO tu_posts;
 
-DROP TABLE tu_posts_b14;
+DROP TABLE IF EXISTS tu_posts_b14;
 
 
 -- 2011-08-30
@@ -107,5 +107,5 @@ RENAME TABLE tu_follows TO tu_follows_b14;
 
 RENAME TABLE tu_follows_b15 TO tu_follows;
 
-DROP TABLE tu_follows_b14;
+DROP TABLE IF EXISTS tu_follows_b14;
 

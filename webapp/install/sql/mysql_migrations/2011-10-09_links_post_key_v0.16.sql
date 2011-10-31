@@ -28,4 +28,4 @@ RENAME TABLE tu_links to tu_links_b15;
 
 RENAME TABLE tu_links_b16 TO tu_links;
 
-DROP TABLE tu_links_b15;
+DROP TABLE IF EXISTS tu_links_b15;

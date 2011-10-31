@@ -104,7 +104,7 @@ RENAME TABLE tu_favorites TO tu_favorites_b13;
 
 RENAME TABLE tu_favorites_b14 TO tu_favorites;
 
-DROP TABLE tu_favorites_b13;
+DROP TABLE IF EXISTS tu_favorites_b13;
 
 -- Moved this ALTER to the 2011-08-04 CREATE/INSERT INTO/DROP statements for better migration performance
 -- ALTER TABLE tu_posts ADD place_id varchar(255) NULL DEFAULT NULL COMMENT 'Place ID on a given network.' AFTER place ;
@@ -144,7 +144,7 @@ RENAME TABLE tu_owners TO tu_owners_b13;
 
 RENAME TABLE tu_owners_b14 TO tu_owners;
 
-DROP TABLE tu_owners_b13;
+DROP TABLE IF EXISTS tu_owners_b13;
 
 
 -- 2011-07-03 Fix 'no default value' error on some Windows installations
@@ -190,7 +190,7 @@ RENAME TABLE tu_users TO tu_users_b13;
 
 RENAME TABLE tu_users_b14 TO tu_users;
 
-DROP TABLE tu_users_b13;
+DROP TABLE IF EXISTS tu_users_b13;
 
 
 -- 2011-08-04 Convert post publication date from local TZ to UTC
@@ -261,4 +261,4 @@ RENAME TABLE tu_posts TO tu_posts_b13;
 
 RENAME TABLE tu_posts_b14 TO tu_posts;
 
-DROP TABLE tu_posts_b13;
+DROP TABLE IF EXISTS tu_posts_b13;

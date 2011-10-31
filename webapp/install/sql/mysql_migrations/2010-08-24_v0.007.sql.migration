@@ -97,7 +97,7 @@ CREATE TABLE tu_users2 (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO tu_users2 (SELECT * FROM tu_users WHERE 1 GROUP BY user_id);
-DROP TABLE tu_users;
+DROP TABLE IF EXISTS tu_users;
 RENAME TABLE tu_users2 TO tu_users;
 
 --

@@ -27,7 +27,7 @@ INSERT INTO tu_users_b16 (SELECT * FROM tu_users)#rollback=3;
 
 RENAME TABLE tu_users TO tu_users_b15;
 RENAME TABLE tu_users_b16 TO tu_users;
-DROP TABLE tu_users_b15;
+DROP TABLE IF EXISTS tu_users_b15;
 
 
 DROP TABLE IF EXISTS tu_posts_b16;
@@ -58,7 +58,7 @@ INSERT INTO tu_posts_b16 (SELECT * FROM tu_posts)#rollback=8;
 
 RENAME TABLE tu_posts TO tu_posts_b15;
 RENAME TABLE tu_posts_b16 TO tu_posts;
-DROP TABLE tu_posts_b15;
+DROP TABLE IF EXISTS tu_posts_b15;
 
 
 DROP TABLE IF EXISTS tu_follows_b16;
@@ -74,7 +74,7 @@ INSERT INTO tu_follows_b16 (SELECT * FROM tu_follows)#rollback=3;
 
 RENAME TABLE tu_follows TO tu_follows_b15;
 RENAME TABLE tu_follows_b16 TO tu_follows;
-DROP TABLE tu_follows_b15;
+DROP TABLE IF EXISTS tu_follows_b15;
 
 
 DROP TABLE IF EXISTS tu_follower_count_b16;
@@ -89,7 +89,7 @@ INSERT INTO tu_follower_count_b16 (SELECT * FROM tu_follower_count)#rollback=1;
 
 RENAME TABLE tu_follower_count TO tu_follower_count_b15;
 RENAME TABLE tu_follower_count_b16 TO tu_follower_count;
-DROP TABLE tu_follower_count_b15;
+DROP TABLE IF EXISTS tu_follower_count_b15;
 
 
 DROP TABLE IF EXISTS tu_user_errors_b16;
@@ -108,7 +108,7 @@ INSERT INTO tu_user_errors_b16 (SELECT * FROM tu_user_errors)#rollback=1;
 
 RENAME TABLE tu_user_errors TO tu_user_errors_b15;
 RENAME TABLE tu_user_errors_b16 TO tu_user_errors;
-DROP TABLE tu_user_errors_b15;
+DROP TABLE IF EXISTS tu_user_errors_b15;
 
 
 DROP TABLE IF EXISTS tu_post_errors_b16;
@@ -130,7 +130,7 @@ INSERT INTO tu_post_errors_b16 (SELECT * FROM tu_user_errors)#rollback=2;
 
 RENAME TABLE tu_post_errors TO tu_post_errors_b15;
 RENAME TABLE tu_post_errors_b16 TO tu_post_errors;
-DROP TABLE tu_post_errors_b15;
+DROP TABLE IF EXISTS tu_post_errors_b15;
 
 
 ALTER TABLE  tu_mentions CHANGE  user_id  user_id VARCHAR( 30 ) NOT NULL
@@ -187,4 +187,4 @@ COMMENT 'Post ID on the originating service.';
 
 RENAME TABLE tu_post_errors TO tu_post_errors_b15;
 RENAME TABLE tu_post_errors_b16 TO tu_post_errors;
-DROP TABLE tu_post_errors_b15;
+DROP TABLE IF EXISTS tu_post_errors_b15;

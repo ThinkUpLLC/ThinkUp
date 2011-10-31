@@ -52,7 +52,7 @@ INSERT INTO tu_posts_b13 (SELECT *, 0 FROM tu_posts) #rollback=1;
 RENAME TABLE tu_posts TO tu_posts_b12;
 RENAME TABLE tu_posts_b13 TO tu_posts;
 
-DROP TABLE tu_posts_b12;
+DROP TABLE IF EXISTS tu_posts_b12;
 
 
 -- 2011-06-03
@@ -88,4 +88,4 @@ INSERT INTO tu_users_b13 SELECT * FROM tu_users GROUP BY CONCAT(user_id, network
 RENAME TABLE tu_users TO tu_users_b12;
 RENAME TABLE tu_users_b13 TO tu_users;
 
-DROP TABLE tu_users_b12;
+DROP TABLE IF EXISTS tu_users_b12;

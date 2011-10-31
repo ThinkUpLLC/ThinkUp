@@ -19,7 +19,7 @@ INSERT INTO tu_follows_b10 (SELECT * FROM tu_follows) #rollback=1;
 RENAME TABLE tu_follows TO tu_follows_b9;
 RENAME TABLE tu_follows_b10 TO tu_follows;
 
-DROP TABLE tu_follows_b9;
+DROP TABLE IF EXISTS tu_follows_b9;
 
 
 -- 2011-03-26
