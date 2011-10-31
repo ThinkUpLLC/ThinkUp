@@ -68,7 +68,7 @@ class UpgradeController extends ThinkUpAuthController {
     /**
      * max table rows before we warn users to use the CLI upgrade interface
      */
-    static $WARN_TABLE_ROW_COUNT = 1000000;
+    static $WARN_TABLE_ROW_COUNT = 500000;
 
     /**
      * Constructor

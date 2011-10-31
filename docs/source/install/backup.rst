@@ -12,8 +12,8 @@ depends on how large your ThinkUp installation's database has grown.
 **Small Databases: Web-Based Backup (Logged-in admin only)** 
 
 If your ThinkUp installation only has 1 or 2 moderately active social media accounts set up in it, and none of your
-database tables have more than 1 million rows, then you should use the easy web-based backup tool. (Hint:
-you can see the sizes of your tables using a tool like phpMyAdmin or the ``mysql`` command line tool.)
+database tables have more than a half million rows, then you should use the easy web-based backup tool. ThinkUp will
+let you know if a table is larger than that when you begin the backup process.
 
 To use the web-based backup tool, log into ThinkUp as an administrator. Under :doc:`Settings>Application
 </userguide/settings/application>`, click on 
@@ -33,7 +33,7 @@ When running a web-based backup, here's what to do if you see the error :doc:`Ca
 **Large Databases: Command Line Backup** 
 
 If your ThinkUp installation has more than 2 very active social media accounts set up, chances are your database tables
-are large. (We consider a ThinkUp database with any table over 1 million rows large.)
+are large. (We consider a ThinkUp database with any table over half a million rows large.)
 
 Depending on your server speed and utilization, it can take a very long time for database structure updates to 
 complete on very large installations; so the web-based backup tool can time out. To be on the safe side,

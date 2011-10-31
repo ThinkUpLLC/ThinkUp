@@ -45,15 +45,15 @@ If the message reads "ThinkUp is currently in the process of upgrading. Please t
 The Upgrade page will let you know how many database migrations have to run to get up-to-date. 
 
 If your ThinkUp installation only has 1 or 2 moderately active social media accounts set up in it, and none of your
-database tables have more than 1 million rows, then you should use the easy web-based upgrader. (Hint:
-you can see the sizes of your tables using a tool like phpMyAdmin or the ``mysql`` command line tool.)
+database tables have more than half a million rows, then you should use the easy web-based upgrader. ThinkUp will let
+you know if any of your tables are this large when you begin the upgrade process.
 
-Click on the "Update now" page to update ThinkUp's database structure.
+Click on the "Update now" button to update ThinkUp's database structure.
 
 **Large Databases: Command Line Upgrade**
 
 If your ThinkUp installation has more than 2 very active social media accounts set up, chances are your database tables
-are large. (We consider a ThinkUp database with any table over 1 million rows large.)
+are large. (We consider a ThinkUp database with any table over half a million rows large.)
 
 Depending on your server speed and utilization, it can take a very long time for database structure updates to 
 complete on very large installations; so the web-based upgrader can time out. To be on the safe side,
