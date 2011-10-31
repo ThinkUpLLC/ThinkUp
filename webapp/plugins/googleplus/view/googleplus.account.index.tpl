@@ -43,10 +43,8 @@
 </div>
 
 
-{if $options_markup}
-<div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
-<h2 class="subhead">Settings</h2>
+{include file="_plugin.showhider.tpl"}
 {include file="_usermessage.tpl" field="setup"}
 <p style="padding:5px">To set up the Google+ plugin:</p>
 <ol style="margin-left:40px">
@@ -87,11 +85,15 @@
 </li>
 <li>Enter the Google-provided Client ID and Client Secret here.</li></ol>
 {/if}
+
+{if $options_markup}
 <p>
 {$options_markup}
 </p>
-</div>
-</div>
+{/if}
+
+{if $user_is_admin}</div>{/if}
+
 {literal}
 <script type="text/javascript">
 if( required_values_set ) {
@@ -103,6 +105,3 @@ if( required_values_set ) {
 }
 {/literal}
 </script>
-{/if}
-
-<br/>

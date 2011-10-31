@@ -13,8 +13,9 @@ The GeoEncoder plugin plots a post's responses on a Google Map and can lists the
 </div>
 
 {if $options_markup}
-<div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
-{if $user_is_admin}<h2 class="subhead">Settings</h2>
+{if $user_is_admin}
+{include file="_plugin.showhider.tpl"}
+<h2 class="subhead">Settings</h2>
 {include file="_usermessage.tpl" field="setup"}
 <p style="padding:5px">To set up the GeoEncoder plugin:</p>
 <ol style="margin-left:40px"><li><a href="http://code.google.com/apis/maps/signup.html" target="_blank">Sign up for a Google Maps API key</a>.</li>

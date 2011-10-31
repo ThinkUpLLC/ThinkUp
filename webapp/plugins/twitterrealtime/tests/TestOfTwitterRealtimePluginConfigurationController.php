@@ -58,6 +58,7 @@ class TestOfTwitterRealtimePluginConfigurationController extends ThinkUpUnitTest
         $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
         $controller = new TwitterRealtimePluginConfigurationController($owner, 'twitterrealtime');
         $output = $controller->go();
+        $this->debug($output);
         $this->assertPattern('/var is_admin = false/', $output); // not a js admin
         $controller = new TwitterRealtimePluginConfigurationController($owner, 'twitterrealtime');
         $output = $controller->go();

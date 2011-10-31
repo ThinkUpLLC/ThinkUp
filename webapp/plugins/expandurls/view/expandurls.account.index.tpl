@@ -6,11 +6,11 @@
 <div id="contact-admin-div" style="display: none; margin-top: 20px;">
 {include file="_plugin.admin-request.tpl"}
 </div>
-
+<br><br>
 
 {if $options_markup}
-<div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
+{include file="_plugin.showhider.tpl"}
 <h2 class="subhead">Settings</h2>
 {include file="_usermessage.tpl" field="setup"}
 {/if}

@@ -27,27 +27,25 @@
 {include file="_plugin.admin-request.tpl"}
 </div>
 
-<!--<p>Alternately, add a public Twitter username for ThinkUp capture data about:</p>
-<form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to ThinkUp"></form>-->
-
+{if $user_is_admin}
+{include file="_plugin.showhider.tpl"}
 <p>
-<b>Note:</b> You can use redis for the realtime data queue. You will need php 5.3 or greater, and a redis server 
+<b>Note:</b> You can use redis for the realtime data queue. You will need PHP 5.3 or greater, and a redis server 
 running  on the local host. If those two requirements are met you will see an option to enable the redis queue.
 </p>
 
-{if $options_markup}
-<div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
-<!-- Configure the TwitterRealtime Plugin -->
-{if $user_is_admin}
 <p>{$auth_from_twitter}</p>
 {/if}
-<p>
 
+{if $options_markup}
+<p>
 {$options_markup}
 </p>
-</div>
-{literal}
+{/if}
 
+{if $user_is_admin}</div>{/if}
+
+{literal}
 <script type="text/javascript">
 if( required_values_set ) {
     $('#add-account-div').show();
@@ -58,6 +56,4 @@ if( required_values_set ) {
 }
 {/literal}
 </script>
-
-{/if}
 

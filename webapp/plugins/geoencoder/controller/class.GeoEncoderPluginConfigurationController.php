@@ -53,6 +53,9 @@ class GeoEncoderPluginConfigurationController extends PluginConfigurationControl
         $plugin = new GeoEncoderPlugin();
         if (!$plugin->isConfigured()) {
             $this->addInfoMessage('Please complete plugin setup to start using it.', 'setup');
+            $this->addToView('is_configured', false);
+        } else {
+            $this->addToView('is_configured', true);
         }
 
         return $this->generateView();

@@ -112,11 +112,10 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {include file="_plugin.admin-request.tpl"}
 </div>
 
-{if $options_markup}
-<div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
-<h2 class="subhead">Settings</h2>
+{include file="_plugin.showhider.tpl"}
 {include file="_usermessage.tpl" field="setup"}
+
 <p style="padding:5px">To set up the Facebook plugin:</p>
 <ol style="margin-left:40px">
 <li><a href="https://developers.facebook.com/apps" target="_blank">Click the "Create New App" button on Facebook.</a></li>
@@ -160,10 +159,15 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 </li>
 <li>Enter the Facebook-provided App ID and App Secret here.</li></ol>
 {/if}
+
+
+{if $options_markup}
 <p>
 {$options_markup}
 </p>
-</div>
+{/if}
+
+{if $user_is_admin}</div>{/if}
 
 {literal}
 <script type="text/javascript">
@@ -176,5 +180,4 @@ if( required_values_set ) {
 }
 {/literal}
 </script>
-{/if}
 

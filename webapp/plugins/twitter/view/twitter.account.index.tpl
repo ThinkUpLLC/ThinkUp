@@ -12,7 +12,6 @@
 <br /><br />
 </div>
 {/if}
-
 {if count($owner_instances) > 0 }
 <br>
 <h2 class="subhead">Twitter Accounts</h2>
@@ -48,12 +47,10 @@
 <!--<p>Alternately, add a public Twitter username for ThinkUp capture data about:</p>
 <form method="get" action="index.php"><input type="hidden" name="p" value="twitter"><input name="twitter_username" /> <input type="submit" value="Add this Public User to ThinkUp"></form>-->
 
-
-{if $options_markup}
-<div {if $user_is_admin}style="border: solid gray 1px;padding:10px;margin:20px"{/if}>
 {if $user_is_admin}
-<h2 class="subhead">Settings</h2>
+{include file="_plugin.showhider.tpl"}
 {include file="_usermessage.tpl" field="setup"}
+
 <p style="padding:5px">To set up the Twitter plugin:</p>
 <ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps/new" target="_blank">Create a new application on Twitter for ThinkUp</a>.</li>
 <li>
@@ -127,13 +124,16 @@
 <li>Set the application Default Access type to "Read-only".</li>
 <li>Enter the Twitter-provided consumer key and secret here.</li></ol>
 {/if}
-<p>
 
+{if $options_markup}
+<p>
 {$options_markup}
 </p>
-</div>
-{literal}
+{/if}
 
+{if $user_is_admin}</div>{/if}
+
+{literal}
 <script type="text/javascript">
 if( required_values_set ) {
     $('#add-account-div').show();
@@ -144,6 +144,3 @@ if( required_values_set ) {
 }
 {/literal}
 </script>
-
-{/if}
-

@@ -74,8 +74,10 @@ class FacebookPluginConfigurationController extends PluginConfigurationControlle
         $facebook_plugin = new FacebookPlugin();
         if ($facebook_plugin->isConfigured()) {
             $this->setUpFacebookInteractions($facebook_plugin->getOptionsHash());
+            $this->addToView('is_configured', true);
         } else {
             $this->addInfoMessage('Please complete plugin setup to start using it.', 'setup');
+            $this->addToView('is_configured', false);
         }
         return $this->generateView();
     }

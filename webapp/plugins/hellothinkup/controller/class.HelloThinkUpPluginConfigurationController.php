@@ -89,7 +89,9 @@ class HelloThinkUpPluginConfigurationController extends PluginConfigurationContr
         $adv2 = array('name' => 'AdvancedInfo2', 'label' => '2nd advanced field', 'advanced' => true);
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, $adv2);
 
-        return $this->generateView();
+        $plugin = new HelloThinkUpPlugin();
+        $this->addToView('is_configured', $plugin->isConfigured());
 
+        return $this->generateView();
     }
 }

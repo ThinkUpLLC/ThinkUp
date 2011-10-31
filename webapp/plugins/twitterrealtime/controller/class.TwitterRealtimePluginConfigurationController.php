@@ -152,6 +152,8 @@ class TwitterRealtimePluginConfigurationController extends PluginConfigurationCo
 
         // add plugin options from
         $this->addOptionForm();
+        $plugin = new TwitterRealtimePlugin();
+        $this->addToView('is_configured', $plugin->isConfigured());
 
         return $this->generateView();
     }

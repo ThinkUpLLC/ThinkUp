@@ -117,15 +117,18 @@ class TwitterPluginConfigurationController extends PluginConfigurationController
 
                 $this->addToView('owner_instances', $owner_instances);
                 $this->addToView('oauthorize_link', $oauthorize_link);
+                $this->addToView('is_configured', true);
             } else {
                 //set error message here
                 $this->addErrorMessage(
                 "Unable to obtain OAuth tokens from Twitter. Please double-check the consumer key and secret ".
                 "are correct.", "setup");
                 $oauthorize_link = '';
+                $this->addToView('is_configured', false);
             }
         } else {
             $this->addInfoMessage('Please complete plugin setup to start using it.', 'setup');
+            $this->addToView('is_configured', false);
         }
         // add plugin options from
         $this->addOptionForm();

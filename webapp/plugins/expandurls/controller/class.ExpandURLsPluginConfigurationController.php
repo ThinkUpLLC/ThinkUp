@@ -47,7 +47,9 @@ class ExpandURLsPluginConfigurationController extends PluginConfigurationControl
         'label'=>'Bit.ly Username'));
 
         $this->addPluginOption(self::FORM_TEXT_ELEMENT, array('name'=>'bitly_api_key', 'size'=>40,
+
         'label'=>'Bit.ly API key (<a href="http://bitly.com/a/your_api_key">Get it here</a>)'));
+        $this->addToView('is_configured', true);
 
         return $this->generateView();
     }
