@@ -86,8 +86,8 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->assertText('Create Your ThinkUp Account');
         $this->setField('full_name', 'ThinkUp J. User');
         $this->setField('site_email', 'user@example.com');
-        $this->setField('password', 'secret');
-        $this->setField('confirm_password', 'secret');
+        $this->setField('password', 'secret12345');
+        $this->setField('confirm_password', 'secret12345');
         $this->setField('timezone', 'America/Los_Angeles');
 
         $this->setField('db_host', $THINKUP_CFG['db_host']);
@@ -124,7 +124,7 @@ class WebTestOfInstallation extends ThinkUpBasicWebTestCase {
         $this->clickLink('Log in');
 
         $this->setField('email', 'user@example.com');
-        $this->setField('pwd', 'secret');
+        $this->setField('pwd', 'secret12345');
         $this->click("Log In");
         $this->assertText('Welcome to ThinkUp. Let\'s get started.');
         //$this->showSource();

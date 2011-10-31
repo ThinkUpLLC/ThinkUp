@@ -174,8 +174,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_socket'] = "/tmp/mysql.sock";
         $_POST['db_port'] = "";
         $_POST['db_prefix'] = "tu_";
-        $_POST['password'] = "yoyoo";
-        $_POST['confirm_password'] = "yoyoo";
+        $_POST['password'] = "7yoyoo123";
+        $_POST['confirm_password'] = "7yoyoo123";
         $_POST['full_name'] = "My Full Name";
         $_POST['timezone'] = "America/Los_Angeles";
 
@@ -246,7 +246,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->restoreConfigFile();
     }
 
-    public function testFreshInstallStep3PasswordsToShort() {
+    public function testFreshInstallStep3PasswordsTooShort() {
         //drop DB
         $this->testdb_helper->drop($this->test_database_name);
         //remove config file
@@ -272,7 +272,37 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->go();
-        $this->assertPattern('/Password must be at least 5 characters./', $result);
+        $this->assertPattern('/Password must be at least 8 characters and contain both numbers and letters./', $result);
+        $this->restoreConfigFile();
+    }
+
+    public function testFreshInstallStep3PasswordsNotAlphanumeric() {
+        //drop DB
+        $this->testdb_helper->drop($this->test_database_name);
+        //remove config file
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        //set param for step 2
+        $_GET['step'] = '3';
+        //set post values from form
+        $_POST['site_email'] = "you@example.com";
+        $_POST['db_user'] = "username";
+        $_POST['db_passwd'] = "pass";
+        $_POST['db_name'] = "mythinkupdb";
+        $_POST['db_type'] = "mysql";
+        $_POST['db_host'] = "localhost";
+        $_POST['db_socket'] = "/tmp/mysql.sock";
+        $_POST['db_port'] = "";
+        $_POST['db_prefix'] = "tu_";
+        $_POST['password'] = "freshtestword";
+        $_POST['confirm_password'] = "freshtestword";
+        $_POST['full_name'] = "My Full Name";
+        $_POST['timezone'] = "America/Los_Angeles";
+
+        $controller = new InstallerController(true);
+        $this->assertTrue(isset($controller));
+        $result = $controller->go();
+        $this->assertPattern('/Password must be at least 8 characters and contain both numbers and letters/', $result);
         $this->restoreConfigFile();
     }
 
@@ -294,14 +324,15 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_socket'] = "/tmp/mysql.sock";
         $_POST['db_port'] = "";
         $_POST['db_prefix'] = "tu_";
-        $_POST['password'] = "pass";
-        $_POST['confirm_password'] = "asdfasdfasdfasdfasdf";
+        $_POST['password'] = "pass12345";
+        $_POST['confirm_password'] = "pass12345";
         $_POST['full_name'] = "My Full Name";
         $_POST['timezone'] = "";
 
         $controller = new InstallerController(true);
         $this->assertTrue(isset($controller));
         $result = $controller->go();
+        $this->debug($result);
         $this->assertPattern("/Please select a time zone./", $result);
         $this->restoreConfigFile();
     }
@@ -332,8 +363,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_socket'] = $valid_db_socket;
         $_POST['db_port'] = "";
         $_POST['db_prefix'] = "tu_";
-        $_POST['password'] = "asdfadsf";
-        $_POST['confirm_password'] = "asdfadsf";
+        $_POST['password'] = "987asdfadsf";
+        $_POST['confirm_password'] = "987asdfadsf";
         $_POST['full_name'] = "My Full Name";
         $_POST['timezone'] = "America/Los_Angeles";
 
@@ -377,8 +408,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_socket'] = $valid_db_socket;
         $_POST['db_port'] = "";
         $_POST['db_prefix'] = "tu_";
-        $_POST['password'] = "asdfadsf";
-        $_POST['confirm_password'] = "asdfadsf";
+        $_POST['password'] = "asdfadsf123";
+        $_POST['confirm_password'] = "asdfadsf123";
         $_POST['full_name'] = "My Full Name";
         $_POST['timezone'] = "America/Los_Angeles";
 
@@ -423,8 +454,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_socket'] = $valid_db_socket;
         $_POST['db_port'] = $valid_db_port;
         $_POST['db_prefix'] = "tu_";
-        $_POST['password'] = "asdfadsf";
-        $_POST['confirm_password'] = "asdfadsf";
+        $_POST['password'] = "asdfads123f";
+        $_POST['confirm_password'] = "asdfads123f";
         $_POST['full_name'] = "My Full Name";
         $_POST['timezone'] = "America/Los_Angeles";
 
@@ -468,8 +499,8 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_GET['step'] = '3';
         //set post values from form
         $_POST['site_email'] = "you@example.com";
-        $_POST['password'] = "asdfadsf";
-        $_POST['confirm_password'] = "asdfadsf";
+        $_POST['password'] = "asdfadsf123";
+        $_POST['confirm_password'] = "asdfadsf123";
         $_POST['db_user'] = $valid_db_username;
         $_POST['db_passwd'] = $valid_db_pwd;
         $_POST['db_name'] = $valid_db_name;

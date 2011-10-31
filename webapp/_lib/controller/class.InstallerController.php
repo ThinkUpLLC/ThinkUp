@@ -50,9 +50,9 @@ class InstallerController extends ThinkUpController {
         //Instead, set up the view manager with manual array configuration
         $cfg_array =  array(
             'site_root_path'=>THINKUP_BASE_URL,
-            'source_root_path'=>THINKUP_ROOT_PATH, 
-            'debug'=>false, 
-            'app_title'=>"ThinkUp", 
+            'source_root_path'=>THINKUP_ROOT_PATH,
+            'debug'=>false,
+            'app_title'=>"ThinkUp",
             'cache_pages'=>false);
         $this->view_mgr = new SmartyThinkUp($cfg_array);
         $this->setPageTitle('Install ThinkUp');
@@ -257,33 +257,35 @@ class InstallerController extends ThinkUpController {
         // check email
         if ( !Utils::validateEmail($email) ) {
             $this->addErrorMessage("Please enter a valid email address.", "email");
-            $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
         }
 
-        if ( $password != $confirm_password || $password == '' || strlen($password) < 5 ) { //check password
+        if ( $password != $confirm_password || $password == ''
+        || !preg_match("/(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])/", $password) ) { //check password
             if ($password != $confirm_password) {
                 $this->addErrorMessage("Your passwords did not match.", "password");
             } else if ( $password == '' ) {
                 $this->addErrorMessage("Please choose a password.", "password");
-            } else if ( strlen($password) < 5 ) {
-                $this->addErrorMessage("Password must be at least 5 characters.", "password");
+            } else if ( !preg_match("/(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])/", $password) ) {
+                $this->addErrorMessage("Password must be at least 8 characters and contain both numbers and letters.",
+                "password");
             }
-
-            $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
         }
 
         if ($_POST['db_name'] == '') {
             $this->addErrorMessage("Please enter a database name.", "database_name");
+            $display_errors = true;
         }
 
         if ( $_POST['db_host'] == '') {
             $this->addErrorMessage("Please enter a database host.", "database_host");
+            $display_errors = true;
         }
 
         if ($_POST['timezone'] == '') {
             $this->addErrorMessage("Please select a time zone.", "timezone");
+            $display_errors = true;
         }
 
         if (($error = $this->installer->checkDb($db_config)) !== true) { //check db
@@ -297,11 +299,11 @@ class InstallerController extends ThinkUpController {
             }
             $this->addErrorMessage("ThinkUp couldn't connect to your database. The error message is:<br /> ".
             " <strong>$db_error</strong><br />Please correct your database information and try again.", "database");
-            $this->setViewTemplate('install.step2.tpl');
             $display_errors = true;
         }
 
         if ( $display_errors ) {
+            $this->setViewTemplate('install.step2.tpl');
             $this->addToView('db_name', $db_config['db_name']);
             $this->addToView('db_user', $db_config['db_user']);
             $this->addToView('db_passwd', $db_config['db_password']);
@@ -330,13 +332,13 @@ class InstallerController extends ThinkUpController {
                 $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
                 "Use root (or sudo) to create the file manually, and allow PHP to write to it, by executing the ".
                 "following commands:<br /><code>touch " . escapeshellcmd(THINKUP_WEBAPP_PATH . "config.inc.php") .
-                "</code><br /><code>chown $whoami " . escapeshellcmd(THINKUP_WEBAPP_PATH . 
-                "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" . 
+                "</code><br /><code>chown $whoami " . escapeshellcmd(THINKUP_WEBAPP_PATH .
+                "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" .
                 THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
                 "<br /><br />Click the <strong>Next Step</strong> button below once you did either.");
             } else {
                 $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
-                "You will need to create the <code>" . 
+                "You will need to create the <code>" .
                 THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
                 "<br /><br />Click the <strong>Next Step</strong> button once this is done.");
             }
@@ -360,9 +362,9 @@ class InstallerController extends ThinkUpController {
             // view for email
             $cfg_array =  array(
             'site_root_path'=>THINKUP_BASE_URL,
-            'source_root_path'=>THINKUP_ROOT_PATH, 
-            'debug'=>false, 
-            'app_title'=>"ThinkUp", 
+            'source_root_path'=>THINKUP_ROOT_PATH,
+            'debug'=>false,
+            'app_title'=>"ThinkUp",
             'cache_pages'=>false);
             $email_view = new SmartyThinkUp($cfg_array);
             $email_view->caching=false;
