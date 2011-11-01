@@ -1,3 +1,4 @@
+<div class="section">
 <div class="">
           {if $post}
             <div class="clearfix alert stats">
@@ -59,33 +60,31 @@
             </div>
         {/if}{/if}
 
+{if $description}<h2>{$description}</h2>{/if}
 
-  <div class="help-container"></div>
-  {if $description}
-    <i>{$description}
-      {if $is_searchable}
-        <br /><a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a> 
-      {/if}
+<div class="header">
+  
+      {if $is_searchable}<a href="#" class="grid_search" title="Search" onclick="return false;"><span id="grid_search_icon">Search</span></a>{/if}
       {if $logged_in_user and $display eq 'all_gplus_posts'} | <a href="{$site_root_path}post/export.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Export</a>{/if}
-    </i>
-    {/if}
+
 </div>
 
-{if $disable_embed_code != true}
-	<div class="section">
-	<h2>Embed this thread:</h2>
-	<div class="article">
-	<textarea cols="55" rows="2" id="txtarea" onClick="SelectAll('txtarea');">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
-	</div>
-	</div>
-	{literal}
-	<script type="text/javascript">
-	function SelectAll(id) {
-	document.getElementById(id).focus();
-	document.getElementById(id).select();
-	}
-	</script>
-	{/literal}
+{if $display eq 'all_gplus_posts' or $gplus_posts}
+{else}
+	{if $disable_embed_code != true}
+		<div class="alert stats">
+		<h6>Embed this thread:</h6>
+		<textarea cols="55" rows="2" id="txtarea" onClick="SelectAll('txtarea');">&lt;script src=&quot;http{if $smarty.server.HTTPS}s{/if}://{$smarty.server.SERVER_NAME}{$site_root_path}api/embed/v1/thinkup_embed.php?p={$smarty.get.t}&n={$smarty.get.n|urlencode}&quot;>&lt;/script></textarea>
+		</div>
+		{literal}
+		<script type="text/javascript">
+		function SelectAll(id) {
+		document.getElementById(id).focus();
+		document.getElementById(id).select();
+		}
+		</script>
+		{/literal}
+	{/if}
 {/if}
 
 {if ($display eq 'all_gplus_posts' and not $gplus_posts) or 
@@ -106,11 +105,12 @@
 </div>
 {/if}
 
-<div class="float-l" id="older-posts-div">
+<div class="view-all" id="older-posts-div">
   {if $next_page}
     <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page">&#60; Older Posts</a>
   {/if}
   {if $last_page}
     | <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page">Newer Posts  &#62;</a>
   {/if}
+</div>
 </div>

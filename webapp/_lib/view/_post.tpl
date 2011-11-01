@@ -1,6 +1,5 @@
 {if $smarty.foreach.foo.first}
-<div style="clear:all"></div>
-<br><br><br>
+
   <div class="header clearfix">
     <div class="grid_2 alpha">&#160;</div>
     <div class="grid_3">&#160;</div>
