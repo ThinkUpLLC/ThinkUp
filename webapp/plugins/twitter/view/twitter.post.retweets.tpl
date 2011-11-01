@@ -1,11 +1,11 @@
        {if $post}
-          <div class="clearfix">
+          <div class="clearfix alert stats">
             <div class="grid_2 alpha">
               <div class="avatar-container">
                 <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon2"/>
              </div>
             </div>
-            <div class="grid_12">
+            <div class="grid_10">
               <div class="br" style="min-height:110px">
                 <span class="tweet pr">
                   {if $post->post_text}
@@ -30,9 +30,9 @@
                       </a>
                     {/if}
                     
-                    {if $post->location}from {$post->location}{/if}
+                    {if $post->location}<br />from {$post->location}{/if}
                     {if $post->source}
-                      via
+                      <br />via
                       {if $post->source eq 'web'}
                         Web
                       {else}
@@ -68,7 +68,8 @@
 
 {if $retweets}
 <div class="prepend">
-  <div class="append_20 clearfix bt"><br /><br />
+  <div class="append_20 clearfix section">
+  	<h2>Retweets</h2>
     {foreach from=$retweets key=tid item=t name=foo}
       {include file="_post.author_no_counts.tpl" post=$t scrub_reply_username=false}
     {/foreach}
@@ -78,7 +79,8 @@
 
 {if $favds}
   <div class="prepend">
-  <div class="append_20 clearfix bt"><br />
+  <div class="append_20 clearfix section">
+  	<h2>Favorited</h2>
     {foreach from=$favds key=fid item=f name=foo}
         {include file="_user.tpl" f=$f}
     {/foreach}
