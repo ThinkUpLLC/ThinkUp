@@ -55,16 +55,6 @@
 {include file="_plugin.showhider.tpl"}
 {include file="_usermessage.tpl" field="setup"}
 
-{if $options_markup}
-
-{if $user_is_admin}{include file="_usermessage.tpl" field="setup"}{/if}
-
-<div {if $user_is_admin}style=""{/if} class="section">
-{if $user_is_admin}
-
-
-<h2>Settings</h2>
-<div class="article">
 <p style="padding:5px">To set up the Twitter plugin:</p>
 <ol style="margin-left:40px"><li><a href="https://dev.twitter.com/apps/new" target="_blank">Create a new application on Twitter for ThinkUp</a>.</li>
 <li>
@@ -144,10 +134,6 @@
 {$options_markup}
 </p>
 {/if}
-
-<br />
-</div>
-{literal}
 
 {if $user_is_admin}</div>{/if}
 

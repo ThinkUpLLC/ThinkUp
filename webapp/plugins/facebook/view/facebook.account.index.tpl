@@ -133,13 +133,6 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {include file="_plugin.showhider.tpl"}
 {include file="_usermessage.tpl" field="setup"}
 
-{if $options_markup}{if $user_is_admin}{include file="_usermessage.tpl" field="setup"}{/if}{/if}
-
-{if $options_markup}
-<div {if $user_is_admin}{/if} class="section">
-{if $user_is_admin}
-<h2>Settings</h2>
-<div class="article">
 <p style="padding:5px">To set up the Facebook plugin:</p>
 <ol style="margin-left:40px">
 <li><a href="https://developers.facebook.com/apps" target="_blank">Click the "Create New App" button on Facebook.</a></li>
@@ -192,7 +185,6 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 {/if}
 
 {if $user_is_admin}</div>{/if}
-<br />
 
 {literal}
 <script type="text/javascript">
