@@ -1,3 +1,4 @@
+{if $post->reply_count_cache gt 19}
 <div id="word-frequency-div" class="section">
     <div>
     	<h2>Most Popular Reply Keywords</h2>
@@ -16,5 +17,5 @@
 	</div>
     <div style="clear: both;"></div>
 </div>
-
+{/if}
 

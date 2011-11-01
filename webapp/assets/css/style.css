@@ -1003,6 +1003,9 @@ aside{
 #footer{
      background: #7d7d7d;
      margin: 0;
+     position : relative;
+     bottom : 0px;
+     width : 100%;
 }
      #footer div.content{
           width: 90%;

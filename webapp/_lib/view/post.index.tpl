@@ -11,7 +11,7 @@
         {if $post}
 
             <li><a href="{insert name=dashboard_link}">Dashboard</a></li>
-          <li{if $smarty.get.v eq ''} class="currentview"{/if}>
+          <li{if $smarty.get.v eq ''} class="selected"{/if}>
           <a href="index.php?t={$post->post_id}&n={$post->network|urlencode}">Replies&nbsp;&nbsp;&nbsp;</a>
           </li>
           {if $post->reply_count_cache && $post->reply_count_cache > 1}
@@ -90,9 +90,9 @@
                       </a>
                     {/if}
                     
-                    {if $post->location}from {$post->location}{/if}
+                    {if $post->location}<br />from {$post->location}{/if}
                     {if $post->source}
-                      via
+                      <br />via
                       {if $post->source eq 'web'}
                         Web
                       {else}
@@ -104,9 +104,6 @@
                       <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
                       <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
                     {/if}
-                    <!--{if $post->in_reply_to_post_id}<a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">In reply to</a>{/if}
-                      {if $post->in_retweet_of_post_id}<a href="{$site_root_path}post/?t={$post->in_retweet_of_post_id}">In retweet of</a><br>{/if}
-                    -->
                     
                   </div> <!-- /#more-detail -->
                 </div>
@@ -115,7 +112,9 @@
               <div class="grid_5 omega center keystats">
                 <div class="big-number">
                     <h1>{$post->reply_count_cache|number_format}</h1>
-                    <h3>replies in {$post->adj_pub_date|relative_datetime}</h3>
+                    <h3>{if $post->reply_count_cache eq 1}reply{else}replies{/if}
+                    
+                     in {$post->adj_pub_date|relative_datetime}</h3>
                 </div>
               </div>
             </div> <!-- /.clearfix -->
