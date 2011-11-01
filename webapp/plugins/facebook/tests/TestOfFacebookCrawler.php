@@ -212,17 +212,17 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
 
         $post = $post_dao->getPost('10150328374252744', 'facebook');
         $this->assertEqual($post->post_text, '');
-        $this->assertNotNull($post->link);
-        $this->assertEqual($post->link->url,
+        $this->assertEqual(sizeof($post->links), 1);
+        $this->assertEqual($post->links[0]->url,
         'http://www.youtube.com/v/DC1g_Aq3dUc?feature=autoshare&version=3&autohide=1&autoplay=1');
-        $this->assertEqual($post->link->expanded_url,
+        $this->assertEqual($post->links[0]->expanded_url,
         'http://www.youtube.com/v/DC1g_Aq3dUc?feature=autoshare&version=3&autohide=1&autoplay=1');
-        $this->assertEqual($post->link->caption, 'Liked on www.youtube.com');
-        $this->assertEqual($post->link->description,
+        $this->assertEqual($post->links[0]->caption, 'Liked on www.youtube.com');
+        $this->assertEqual($post->links[0]->description,
         'A fan made trailer for the Warner Bros. production of Superman Returns. Fan trailer produced and edited by '.
         'Julian Francis Adderley.');
-        $this->assertEqual($post->link->title, 'Superman Restored (Theatrical Trailer)');
-        $this->assertEqual($post->link->post_key, 1);
+        $this->assertEqual($post->links[0]->title, 'Superman Restored (Theatrical Trailer)');
+        $this->assertEqual($post->links[0]->post_key, 1);
 
         // Test Facebook paging by confirming post on second "page"
         $post = $post_dao->getPost('10150357566827744', 'facebook');
@@ -263,16 +263,16 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->reply_count_cache, 8);
 
         //test link with image
-        $this->assertNotNull($post->link);
-        $this->assertEqual($post->link->url,
+        $this->assertEqual(sizeof($post->links), 1);
+        $this->assertEqual($post->links[0]->url,
         'http://lifehacker.com/5653429/top-10-ios-jailbreak-hacks');
-        $this->assertEqual($post->link->expanded_url,
+        $this->assertEqual($post->links[0]->expanded_url,
         'http://lifehacker.com/5653429/top-10-ios-jailbreak-hacks');
-        $this->assertEqual($post->link->image_src,
+        $this->assertEqual($post->links[0]->image_src,
         'http://platform.ak.fbcdn.net/www/app_full_proxy.php?app=45439413586&v=1&size=z&cksum=7de062ac249fe7caef80f66'.
         'f49a38818&src=http%3A%2F%2Fcache-02.gawkerassets.com%2Fassets%2Fimages%2F17%2F2010%2F10%2F160x120_jailbreak-'.
         'top-10.jpg');
-        $this->assertEqual($post->link->description,
+        $this->assertEqual($post->links[0]->description,
         'If you purchased an iOS device, you also signed up for its many limitations. Jailbreaking can put you back '.
         'in control. Here are ten great jailbreak hacks to help you customize and better utilize your iOS device...');
 

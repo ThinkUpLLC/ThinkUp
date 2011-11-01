@@ -177,14 +177,14 @@ class TestOfGooglePlusCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->reply_count_cache, 24);
         $this->assertEqual($post->favlike_count_cache, 159);
         $this->assertEqual($post->retweet_count_cache, 29);
-        $this->assertIsA($post->link, 'Link');
-        $this->assertEqual($post->link->url,
+        $this->assertIsA($post->links[0], 'Link');
+        $this->assertEqual($post->links[0]->url,
         'http://googleplusplatform.blogspot.com/2011/09/getting-started-on-google-api.html');
-        $this->assertEqual($post->link->title,
+        $this->assertEqual($post->links[0]->title,
         'Getting Started on the Google+ API - Google+ Platform Blog');
-        $this->assertEqual($post->link->description,
+        $this->assertEqual($post->links[0]->description,
         'Official source of information about the Google+ platform');
-        $this->assertEqual($post->link->image_src, '');
+        $this->assertEqual($post->links[0]->image_src, '');
 
         //now crawl on updated data and assert counts and post text get updated in database
         $gpc->api_accessor->setDataLocation('new_counts/');

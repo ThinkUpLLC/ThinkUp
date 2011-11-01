@@ -314,7 +314,21 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         'post_text'=>'@user3, you are rad.', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00',
         'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
         'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
-        'in_reply_to_user_id' => 23, 'in_reply_to_post_id' => null));
+        'in_reply_to_user_id' =>'23', 'in_reply_to_post_id' => null));
+
+        //Add another message to specific user with a couple of links
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'146', 'author_user_id'=>'20',
+        'author_username'=>'user1', 'author_fullname'=>'User 1', 'network'=>'twitter',
+        'post_text'=>'@user3, you are rad.', 'source'=>'web', 'pub_date'=>'2006-03-01 00:00:00',
+        'old_retweet_count_cache' => 0, 'in_rt_of_user_id' => null,
+        'reply_count_cache'=>0, 'retweet_count_cache'=>0, 'network'=>'twitter',
+        'in_reply_to_user_id' =>'23', 'in_reply_to_post_id' => null));
+
+        array_push($builders, $post_builder);
+        $post_key = $post_builder->columns['last_insert_id'];
+
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://alink1.com'));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://alink2.com'));
 
         return $builders;
     }
@@ -328,18 +342,29 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     }
 
     public function testGetAllQuestionPosts() {
+        $builders = array();
         //Add a question
-        $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
-        'post_text'=>'I need a new cell phone. What should I buy?', 'network'=>'twitter', 'in_reply_to_post_id'=>0,
+        $post_builder = FixtureBuilder::build('posts', array('author_user_id'=>'13', 'author_username'=>'ev',
+        'post_text'=>'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 '.
+        'What should I buy?', 'network'=>'twitter', 'in_reply_to_post_id'=>0,
         'pub_date'=>'-1d'));
+        array_push($builders, $post_builder);
+        $post_key = $post_builder->columns['last_insert_id'];
+
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah'));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://bit.ly/blah2'));
 
         $dao = new PostMySQLDAO();
-        $questions = $dao->getAllQuestionPosts(13, 'twitter', 10);
+        $questions = $dao->getAllQuestionPosts('13', 'twitter', '10');
 
         $this->debug('Questions: ' . $questions);
 
         $this->assertEqual(sizeof($questions), 1);
-        $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?' );
+        $this->assertEqual($questions[0]->post_text,
+        'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?' );
+        $this->assertEqual(sizeof($questions[0]->links), 2 );
+        $this->assertEqual($questions[0]->links[0]->url, 'http://bit.ly/blah' );
+        $this->assertEqual($questions[0]->links[1]->url, 'http://bit.ly/blah2' );
 
         //Add another question
         $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
@@ -347,7 +372,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $questions = $dao->getAllQuestionPosts(13, 'twitter', 10);
         $this->assertEqual(sizeof($questions), 2);
         $this->assertEqual($questions[1]->post_text, 'Best sushi in NY? downtown' );
-        $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?' );
+        $this->assertEqual($questions[0]->post_text,
+        'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?' );
 
         //Messages with a question mark in between two characters (e.g. URLs) aren't necessarily questions
         $builder[] = FixtureBuilder::build('posts', array('author_user_id'=>13, 'author_username'=>'ev',
@@ -358,7 +384,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // test paging
         $questions = $dao->getAllQuestionPosts(13, 'twitter', $count = 1, $page = 1);
-        $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?');
+        $this->assertEqual($questions[0]->post_text,
+        'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?');
 
         $questions = $dao->getAllQuestionPosts(13, 'twitter', $count = 1, $page = 2);
         $this->assertEqual($questions[0]->post_text, 'Best sushi in NY? downtown');
@@ -372,7 +399,8 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
 
         // test default order
         $questions = $dao->getAllQuestionPosts(13, 'twitter', $count = 1, $page = 1, "';-- SELECT");
-        $this->assertEqual($questions[0]->post_text, 'I need a new cell phone. What should I buy?');
+        $this->assertEqual($questions[0]->post_text,
+        'I need a new cell phone. Not this http://bit.ly/blah or this http://bit.ly/blah2 What should I buy?');
     }
     /**
      * Test getOrphanReplies
@@ -672,6 +700,14 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual(sizeof($posts), 0);
     }
 
+    public function testGetHotPostsWithMultipleLinks() {
+        $builders = $this->buildHotPostsWithMultipleLinks();
+        $dao = new PostMySQLDAO();
+        $posts = $dao->getHotPosts('30', 'twitter', 5);
+        $this->assertEqual(sizeof($posts), 1);
+        $links = $posts[0]->links;
+        $this->assertEqual(sizeof($links), 2);
+    }
     /**
      * Test getAllPosts via iterator
      */
@@ -778,34 +814,36 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($cnt, 41);
     }
 
-    /**
-     * Test getPost on a post that exists
-     */
     public function testGetPostExists() {
         $dao = new PostMySQLDAO();
-        $post = $dao->getPost(10, 'twitter');
+
+        //no links
+        $post = $dao->getPost('10', 'twitter');
         $this->assertTrue(isset($post));
         $this->assertEqual($post->post_text, 'This is post 10');
-        //link gets set
-        $this->assertTrue(isset($post->link));
-        //no link, so link member variables do not get set
-        $this->assertTrue(!isset($post->link->id));
+        //no link
+        $this->assertEqual(sizeof($post->links), 0);
         // our post primary key id
         $this->assertEqual($post->id, 10);
+
+        //links
+        $post = $dao->getPost('40', 'twitter');
+        $this->assertTrue(isset($post));
+
+        $this->assertEqual($post->post_text, 'This is image post 0');
+        //no link
+        $this->assertEqual(sizeof($post->links), 1);
+        $this->assertEqual($post->links[0]->url, 'http://example.com/0');
+        // our post primary key id
+        $this->assertEqual($post->id, 40);
     }
 
-    /**
-     * Test getPost on a post that does not exist
-     */
     public function testGetPostDoesNotExist(){
         $dao = new PostMySQLDAO();
         $post = $dao->getPost(100000001, 'twitter');
         $this->assertTrue(!isset($post));
     }
 
-    /**
-     * Test getRepliesToPost
-     */
     public function testGetRepliesToPost() {
         $dao = new PostMySQLDAO();
         // Default Sorting
@@ -820,7 +858,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         "post reply");
         $this->assertEqual($posts[2]->post_id, '133', "post ID");
         $this->assertEqual($posts[2]->author->username, 'linkbaiter', "Post author");
-        $this->assertEqual($posts[2]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
+        $this->assertEqual($posts[2]->links[0]->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
 
         $this->assertEqual($posts[2]->location,'Mumbai, Maharashtra, India');
 
@@ -836,7 +874,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         "post reply");
         $this->assertEqual($posts[1]->post_id, '133', "post ID");
         $this->assertEqual($posts[1]->author->username, 'linkbaiter', "Post author");
-        $this->assertEqual($posts[1]->link->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
+        $this->assertEqual($posts[1]->links[0]->expanded_url, 'http://example.com/expanded-link.html', "Expanded URL");
 
         $this->assertEqual($posts[2]->location,'Chennai, Tamil Nadu, India');
 
@@ -891,6 +929,24 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($posts[0]->author->username, 'user1', "Post author");
         $this->assertEqual($posts[0]->location,'New Delhi, Delhi, India');
 
+    }
+
+    private function buildHotPostsWithMultipleLinks() {
+        $builders = array();
+        $builders[] = FixtureBuilder::build('users', array('user_id'=>'30', 'user_name'=>'user1',
+        'full_name'=>'User 1', 'is_protected'=>0, 'network'=>'twitter'));
+
+        $post_builder = FixtureBuilder::build('posts', array('post_id'=>'1145', 'author_user_id'=>'30',
+        'author_full_name'=>'User 1', 'post_text'=>'Tweet w/ 2 links http://yay.com http://example.com',
+        'reply_count_cache'=>250, 'network'=>'twitter', 'pub_date'=>'-3h', 'in_reply_to_post_id'=>0,
+        'in_reply_to_user_id'=>0));
+        array_push($builders, $post_builder);
+        $post_key = $post_builder->columns['last_insert_id'];
+
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://yay.com'));
+        $builders[] = FixtureBuilder::build('links', array('post_key'=>$post_key, 'url'=>'http://example.com'));
+
+        return $builders;
     }
 
     private function buildFacebookPostAndReplies() {
@@ -1368,7 +1424,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['is_protected'] = 1;
 
         //add post with insufficient location data
-        $this->assertEqual($dao->addPost($vals), 20019);
+        $this->assertEqual($dao->addPost($vals), 20020);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1383,7 +1439,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['in_reply_to_post_id']= '';
 
         //test add straight post that doesn't exist
-        $this->assertEqual($dao->addPost($vals), 20020);
+        $this->assertEqual($dao->addPost($vals), 20021);
         $post = $dao->getPost(250, 'twitter');
         $this->assertEqual($post->post_id, 250);
         $this->assertEqual($post->author_user_id, 22);
@@ -1413,7 +1469,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         //test add reply, check cache count
         $vals['post_id']=251;
         $vals['in_reply_to_post_id']= 129;
-        $this->assertEqual($dao->addPost($vals), 20021);
+        $this->assertEqual($dao->addPost($vals), 20022);
         $post = $dao->getPost(129, 'twitter');
         $this->assertEqual($post->reply_count_cache, 1, "reply count got updated");
 
@@ -1421,7 +1477,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['post_id']=252;
         $vals['in_reply_to_post_id']= '';
         $vals['in_retweet_of_post_id']= 128;
-        $this->assertEqual($dao->addPost($vals), 20022);
+        $this->assertEqual($dao->addPost($vals), 20023);
         $post = $dao->getPost(128, 'twitter');
         $this->assertEqual($post->old_retweet_count_cache, 1, "old-style retweet count got updated");
         $this->assertEqual($post->retweet_count_cache, 0);
@@ -1443,7 +1499,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['network']= 'twitter';
         $vals['is_protected'] = 0;
 
-        $this->assertEqual($dao->addPost($vals), 20019);
+        $this->assertEqual($dao->addPost($vals), 20020);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1468,7 +1524,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
         $vals['network']= 'twitter';
         $vals['is_protected'] = 1;
 
-        $this->assertEqual($dao->addPost($vals), 20019);
+        $this->assertEqual($dao->addPost($vals), 20020);
         $post = $dao->getPost(2904, 'twitter');
         $this->assertEqual($post->post_id, 2904);
         $this->assertEqual($post->location, NULL);
@@ -1999,7 +2055,7 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
     public function testGetPoststoGeoencode() {
         $dao = new PostMySQLDAO();
         $posts = $dao->getPoststoGeoencode();
-        $this->assertEqual(count($posts), 141);
+        $this->assertEqual(count($posts), 142);
         $this->assertIsA($posts, "array");
     }
 
@@ -2311,11 +2367,15 @@ class TestOfPostMySQLDAO extends ThinkUpUnitTestCase {
      * test of getPostsToUser method
      */
     public function testGetPostsToUser() {
-        $builders = array();
         $dao = new PostMySQLDAO();
-        $res = $dao->getPostsToUser(23, 'twitter', 10);
-        $this->assertEqual(count($res), 1);
-        $this->assertEqual($res[0]->author_user_id,20);
+        $res = $dao->getPostsToUser('23', 'twitter', 10);
+        $this->assertEqual(count($res), 2);
+        $this->assertEqual($res[0]->author_user_id,'20');
+        $this->assertEqual(sizeof($res[0]->links), 2);
+        $this->assertEqual($res[0]->links[0]->url, 'http://alink1.com');
+        $this->assertEqual($res[0]->links[1]->url, 'http://alink2.com');
+        $this->assertEqual($res[1]->author_user_id,'20');
+        $this->assertEqual(sizeof($res[1]->links), 0);
     }
 
     /**

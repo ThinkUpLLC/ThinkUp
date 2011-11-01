@@ -40,8 +40,8 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
         {/if}
     </div>
     <div class="grid_12 omega">
-      {if $post->link->image_src}
-         <div class="pic"><a href="{$post->link->url}"><img src="{$post->link->image_src}" /></a></div>
+      {if $post->links[0]->image_src}
+         <div class="pic"><a href="{$post->links[0]->url}"><img src="{$post->links[0]->image_src}" /></a></div>
       {/if}
       <div class="post">
         {if $post->post_text}
@@ -58,11 +58,23 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
         {if !$post && $post->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}">&larr;</a>
         {/if}
-      {if $post->link->expanded_url and !$post->link->image_src and ($post->link->expanded_url != $post->link->url)}
-        <small>
-          <a href="{$post->link->expanded_url}" title="{$post->link->expanded_url}">{$post->link->expanded_url}</a>
-        </small>
-      {/if}
+
+
+      {foreach from=$post->links key=lkey item=link name=linkloop}
+          {if $link->expanded_url}
+            {if $post->post_text != ''}<br>{/if}
+            {if $link->image_src}
+             <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$link->url}"><img src="{$link->image_src}" style="margin-bottom:5px;"/></a></div>
+            {/if}
+             <span class="small"><a href="{$link->expanded_url}" title="{$link->url}">{if $link->title}{$link->title}{else}{$link->expanded_url}{/if}</a>
+            {if $link->description}<br><small>{$link->description}</small>{/if}</span>
+          {/if}
+      {/foreach}
+      <br clear="all">
+
+
+
+
       <div class="small gray">
       {if $post->is_protected}
         <span class="sprite icon-locked"></span>

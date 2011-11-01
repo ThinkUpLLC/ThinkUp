@@ -40,15 +40,18 @@ $show_favorites_instead_of_retweets (optional) If set or not false, show favorit
             {/if}
           {/if}
         {/if}
-      {if $post->link->expanded_url}
-        {if $t->post_text != ''}<br>{/if}
-        {if $post->link->image_src}
-         <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$post->link->url}"><img src="{$post->link->image_src}" style="margin-bottom:5px;"/></a></div>
-        {/if}
-         <span class="small"><a href="{$post->link->expanded_url}" title="{$post->link->url}">{if $post->link->title}{$post->link->title}{else}{$post->link->expanded_url}{/if}</a>
-        {if $post->link->description}<br><small>{$post->link->description}</small>{/if}</span>
-        <br clear="all">
-      {/if}
+
+      {foreach from=$post->links key=lkey item=link name=linkloop}
+          {if $link->expanded_url}
+            {if $post->post_text != ''}<br>{/if}
+            {if $link->image_src}
+             <div class="pic" style="float:left;margin-right:5px;margin-top:5px;"><a href="{$link->url}"><img src="{$link->image_src}" style="margin-bottom:5px;"/></a></div>
+            {/if}
+             <span class="small"><a href="{$link->expanded_url}" title="{$link->url}">{if $link->title}{$link->title}{else}{$link->expanded_url}{/if}</a>
+            {if $link->description}<br><small>{$link->description}</small>{/if}</span>
+          {/if}
+      {/foreach}
+      <br clear="all">
 
         {if !$post && $post->in_reply_to_post_id }
           <a href="{$site_root_path}post/?t={$post->in_reply_to_post_id}&n={$post->network|urlencode}"><span class="ui-icon ui-icon-arrowthick-1-w" title="reply to..."></span></a>

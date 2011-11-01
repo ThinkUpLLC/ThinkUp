@@ -154,7 +154,6 @@ class Post {
      * @var int The total number of favorites or likes this post received.
      */
     var $favlike_count_cache;
-
     /**
      *
      * @var User $author Optionally set
@@ -162,9 +161,9 @@ class Post {
     var $author;
     /**
      *
-     * @var Link $link Optionally set
+     * @var Array of Links $links Optionally set
      */
-    var $link;
+    var $links = array();
     /**
      * @var str Non-persistent, 'true' or 'false'
      */
@@ -241,6 +240,13 @@ class Post {
         $this->all_retweets = $val['old_retweet_count_cache'] + $largest_native_RT_count;
     }
 
+    /**
+     * Add link to links array.
+     * @param Link $link
+     */
+    public function addLink(Link $link) {
+        $this->links[] = $link;
+    }
     /**
      * Extract URLs from post text.
      * Find syntactically correct URLs such as http://foobar.com/data.php and some plausible URL fragments, e.g.

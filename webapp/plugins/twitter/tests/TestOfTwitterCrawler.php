@@ -392,13 +392,13 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         $this->assertEqual($post->old_retweet_count_cache, 0);
         $retweets = $post_dao->getRetweetsOfPost('13708601491193856', 'twitter', true);
         $this->assertEqual(sizeof($retweets), 1);
-        $this->assertEqual($post->link->url, "http://is.gd/izUl5");
-        $this->assertNotEqual($post->link->expanded_url, "http://is.gd/izUl5");
+        $this->assertEqual($post->links[0]->url, "http://is.gd/izUl5");
+        $this->assertNotEqual($post->links[0]->expanded_url, "http://is.gd/izUl5");
 
         $post = $post_dao->getPost('13960125416996864', 'twitter');
         $this->assertEqual($post->in_retweet_of_post_id, '13708601491193856');
         $this->assertEqual($post->in_rt_of_user_id, '20542737');
-        $this->assertEqual($post->link->url, "http://is.gd/izUl5");
+        $this->assertEqual($post->links[0]->url, "http://is.gd/izUl5");
 
         $twitter_crawler->fetchInstanceUserMentions();
         // old-style RT
@@ -785,18 +785,18 @@ class TestOfTwitterCrawler extends ThinkUpUnitTestCase {
         //Assert links got saved
         $post_dao = new PostMySQLDAO();
         $post = $post_dao->getPost('25138632577', 'twitter');
-        $this->assertIsA($post->link, "Link");
+        $this->assertIsA($post->links[0], "Link");
         $this->assertEqual($post->post_text, "Raw RSS feed of independent neuroblogs ".
         "http://friendfeed.com/neuroghetto Now also listed at scienceblogging.org Yay!");
-        $this->assertEqual($post->link->url, "http://friendfeed.com/neuroghetto");
-        $this->assertEqual($post->link->expanded_url, '');
+        $this->assertEqual($post->links[0]->url, "http://friendfeed.com/neuroghetto");
+        $this->assertEqual($post->links[0]->expanded_url, '');
 
         $post = $post_dao->getPost('25598018110', 'twitter');
-        $this->assertIsA($post->link, "Link");
+        $this->assertIsA($post->links[0], "Link");
         $this->assertEqual($post->post_text, "Wal-mart: People line up at midnight to buy baby formula, waiting for ".
         "monthly govt checks to hit accounts http://bit.ly/aK5pCQ");
-        $this->assertEqual($post->link->url, "http://bit.ly/aK5pCQ");
-        $this->assertEqual($post->link->expanded_url, '');
+        $this->assertEqual($post->links[0]->url, "http://bit.ly/aK5pCQ");
+        $this->assertEqual($post->links[0]->expanded_url, '');
     }
     public function testFetchFavoritesOfInstanceuserBudget() {
         self::setUpInstanceUserAmygdala();

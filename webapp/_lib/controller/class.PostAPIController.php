@@ -697,27 +697,6 @@ class PostAPIController extends ThinkUpController {
 
         if ($this->include_entities) {
             /*
-             * Gather the links and format them into a Tweet entity.
-             *
-             * As part of this conditional, a search for the link in the post text
-             * is made because it seemed occasionally that unrelated links were
-             * finding their way into entities. I don't know why.
-             */
-            $post->entities->urls = array();
-            if (!is_null($post->link)) {
-                if (!is_null($post->link->url) && !empty($post->link->url)
-                && stripos($post->link->url, $post->text) !== false) {
-                    $link = new stdClass();
-                    $link->url = stripslashes($post->link->url);
-                    $link->expanded_url = $post->link->expanded_url == "" ? null : $post->link->expanded_url;
-                    $link->indices = array();
-                    $link->indices[] = stripos($post->text, $link->url);
-                    $link->indices[] = strlen($link->url) + $link->indices[0];
-                    $post->entities->urls[] = $link;
-                }
-            }
-
-            /*
              * Gather hashtags and format them into a Tweet entity.
              */
             $extracted_hashtags = Post::extractHashtags($post->text);

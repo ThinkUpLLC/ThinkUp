@@ -100,8 +100,9 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         } else {
             $protected = '';
         }
-        $q = "select l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date from (#prefix#posts p
-        INNER JOIN #prefix#favorites f on f.post_id = p.post_id) LEFT JOIN #prefix#links l on l.post_key = p.id 
+        $q = "SELECT p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date
+        FROM (#prefix#posts p
+        INNER JOIN #prefix#favorites f on f.post_id = p.post_id) 
         WHERE f.fav_of_user_id = :owner_id AND p.network=:network ";
         $q .= $protected;
         if ($order_by == 'reply_count_cache') {
@@ -130,14 +131,34 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         if ($iterator) {
             return (new PostIterator($ps));
         }
-        $all_rows = $this->getDataRowsAsArrays($ps);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
-        foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $posts = array();
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
         return $posts;
     }
-
 
     /**
      * Get favorited posts by the given username.
@@ -159,10 +180,10 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
           ':author_username'=>$author_username,
           ':network'=>$network
         );
-        $q = "select l.*, p.*, pub_date - interval #gmt_offset# hour as adj_pub_date from
-        ((#prefix#posts p INNER JOIN #prefix#favorites f on f.post_id = p.post_id) LEFT JOIN 
-        #prefix#links l on l.post_key = p.id) LEFT JOIN #prefix#users u on u.user_id = f.fav_of_user_id 
-        where u.user_name = :author_username AND p.network=:network ";
+        $q = "SELECT p.*, pub_date - interval #gmt_offset# hour as adj_pub_date FROM
+        (#prefix#posts p INNER JOIN #prefix#favorites f on f.post_id = p.post_id)
+         LEFT JOIN #prefix#users u on u.user_id = f.fav_of_user_id 
+        WHERE u.user_name = :author_username AND p.network=:network ";
 
         if ($in_last_x_days > 0) {
             $q .= "AND pub_date >= DATE_SUB(CURDATE(), INTERVAL :in_last_x_days DAY) ";
@@ -183,10 +204,31 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         if ($iterator) {
             return (new PostIterator($ps));
         }
-        $all_rows = $this->getDataRowsAsArrays($ps);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
-        foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $posts = array();
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
         return $posts;
     }
@@ -222,12 +264,11 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
         // if ( !in_array($order_by, $this->REQUIRED_FIELDS) && !in_array($orderaa_by, $this->OPTIONAL_FIELDS  )) {
         //     $order_by="pub_date";
         // }
-        $q = "SELECT l.*, p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date, ";
+        $q = "SELECT p.*, pub_date - interval #gmt_offset# hour AS adj_pub_date, ";
         //TODO: Store favlike_count_cache during Twitter crawl so we don't do this dynamic GROUP BY fakeout
         $q .= "count(*) AS favlike_count_cache ";
         $q .= "FROM (#prefix#posts p INNER JOIN #prefix#favorites f on f.post_id = p.post_id) ";
-        $q .= "LEFT JOIN #prefix#links l ON l.post_key = p.id WHERE p.author_user_id = :author_user_id ";
-        $q .= "AND p.network = :network ";
+        $q .= "WHERE p.author_user_id = :author_user_id AND p.network = :network ";
         $q .= "GROUP BY p.post_text ORDER BY YEARWEEK(p.pub_date) DESC, favlike_count_cache DESC, p.pub_date DESC ";
         $q .= "LIMIT :start_on_record, :limit";
         $vars = array(
@@ -237,13 +278,34 @@ class FavoritePostMySQLDAO extends PostMySQLDAO implements FavoritePostDAO  {
           ':start_on_record'=>(int)$start_on_record
         );
         $ps = $this->execute($q, $vars);
-        if($iterator) {
+        if ($iterator) {
             return (new PostIterator($ps));
         }
-        $all_rows = $this->getDataRowsAsArrays($ps);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
-        foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $posts = array();
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
         return $posts;
     }

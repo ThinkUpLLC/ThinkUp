@@ -151,6 +151,10 @@ class ExportController extends ThinkUpAuthController {
         // output csv header
         fputcsv($fp, $column_labels);
         foreach($data as $id => $post) {
+            //Set links to null to avoid E_NOTICE: Array to string conversion
+            //TODO: Properly handle this and add links to exported file; perhaps not for tweets which can contain
+            //multiple links but the main media link on G+ or Facebook posts
+            $post->links = null;
             fputcsv($fp, (array)$post);
 
             // flush after each fputcsv to avoid clogging the buffer on large datasets

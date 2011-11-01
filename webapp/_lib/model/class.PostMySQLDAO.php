@@ -77,9 +77,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     }
 
     public function getPost($post_id, $network, $is_public = false) {
-        $q = "SELECT  p.*, p.id as post_key, l.id, l.url, l.expanded_url, l.title, l.clicks, l.image_src, l.error, ";
-        $q .= "l.description, l.image_src, l.caption, pub_date + interval #gmt_offset# hour as adj_pub_date ";
-        $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON l.post_key = p.id ";
+        $q = "SELECT  p.*, p.id as post_key, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
         $q .= "WHERE p.post_id=:post_id AND p.network=:network ";
         if ($is_public) {
             $q .= 'AND p.is_protected = 0 ';
@@ -91,9 +90,23 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        $row = $this->getDataRowAsArray($ps);
-        if ($row) {
-            $post = $this->setPostWithLink($row);
+        $post_row = $this->getDataRowAsArray($ps);
+
+        if ($post_row) {
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".$post_row['id'].")";
+            //echo Utils::mergeSQLVars($q, $vars);
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine post and links
+            $post = new Post($post_row);
+            foreach ($all_link_rows as $link_row) {
+                if ($link_row['post_key'] == $post->id) {
+                    $post->addLink(new Link($link_row));
+                }
+            }
             return $post;
         } else {
             return null;
@@ -112,43 +125,13 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $post;
     }
 
-    /**
-     * Add author and link object to post
-     * @param array $row
-     * @return Post post object with author User object and link object member variables
-     */
-    private function setPostWithAuthorAndLink($row) {
-        $user = new User($row, '');
-        $link = new Link($row);
-        $post = new Post($row);
-        $post->author = $user;
-        $post->link = $link;
-        if (isset($row['short_location'])) {
-            $post->short_location = $row['short_location'];
-        }
-        return $post;
-    }
-
-    /**
-     * Add link object to post
-     * @param arrays $row
-     */
-    protected function setPostWithLink($row) {
-        $post = new Post($row);
-        $link = new Link($row);
-        $post->link = $link;
-        return $post;
-    }
-
     public function getRepliesToPost($post_id, $network, $order_by = 'default', $unit = 'km', $is_public = false,
     $count= 350, $page = 1) {
         $start_on_record = ($page - 1) * $count;
 
-        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.image_src, l.error, ";
-        $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
+        $q = "SELECT u.*, p.*, (CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
-        $q .= "LEFT JOIN #prefix#links AS l ON l.post_key = p.id ";
         $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id AND u.network = :user_network ";
         $q .= "WHERE p.network=:network AND in_reply_to_post_id=:post_id ";
         if ($is_public) {
@@ -182,17 +165,42 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         }
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        $all_rows = $this->getDataRowsAsArrays($ps);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+
         $replies = array();
-        $location = array();
-        foreach ($all_rows as $row) {
-            if ($row['is_geo_encoded'] == 1) {
-                $row['short_location'] = $this->processLocationRows($row['location']);
-                if ($unit == 'mi') {
-                    $row['reply_retweet_distance'] = $this->calculateDistanceInMiles($row['reply_retweet_distance']);
-                }
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
             }
-            $replies[] = $this->setPostWithAuthorAndLink($row);
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $location = array();
+            foreach ($all_post_rows as $post_row) {
+                if ($post_row['is_geo_encoded'] == 1) {
+                    $post_row['short_location'] = $this->processLocationRows($post_row['location']);
+                    if ($unit == 'mi') {
+                        $post_row['reply_retweet_distance'] =
+                        $this->calculateDistanceInMiles($post_row['reply_retweet_distance']);
+                    }
+                }
+
+                $post = new Post($post_row);
+                $user = new User($post_row, '');
+                $post->author = $user;
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $replies[] = $post;
+            }
         }
         return $replies;
     }
@@ -201,11 +209,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $is_public = false, $count = 350, $page = 1) {
         $start_on_record = ($page - 1) * $count;
 
-        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.image_src, l.error, ";
-        $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
+        $q = "SELECT u.*, p.*, (CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
-        $q .= "LEFT JOIN #prefix#links AS l ON l.post_key = p.id ";
         $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id AND u.network = :user_network ";
         $q .= "WHERE p.network=:network AND in_reply_to_post_id=:post_id ";
         if ($is_public) {
@@ -231,11 +237,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
     public function getRetweetsOfPost($post_id, $network='twitter', $order_by = 'default', $unit = 'km',
     $is_public = false, $count = null, $page = 1) {
-        $q = "SELECT u.*, p.*, l.url, l.expanded_url, l.image_src, l.error, ";
-        $q .= "(CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
+        $q = "SELECT u.*, p.*, (CASE p.is_geo_encoded WHEN 0 THEN 9 ELSE p.is_geo_encoded END) AS geo_status, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
-        $q .= "LEFT JOIN #prefix#links AS l ON l.post_key = p.id ";
         $q .= "INNER JOIN #prefix#users u on p.author_user_id = u.user_id ";
         $q .= "WHERE p.network=:network AND in_retweet_of_post_id=:post_id ";
         if ($is_public) {
@@ -273,7 +277,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
                     $row['reply_retweet_distance'] = $this->calculateDistanceInMiles($row['reply_retweet_distance']);
                 }
             }
-            $retweets[] = $this->setPostWithAuthorAndLink($row);
+            $retweets[] = $this->setPostWithAuthor($row);
         }
         return $retweets;
     }
@@ -282,18 +286,14 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
     $geo_encoded_only = true, $include_original_post = true) {
         $start_on_record = ($page - 1) * $count;
         $q = "SELECT * FROM (
-        SELECT p.*,
-        l.url, l.expanded_url, l.image_src, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
+        SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date
         FROM #prefix#posts p 
-        LEFT JOIN #prefix#links AS l ON l.post_key = p.id 
         WHERE (in_retweet_of_post_id=:post_id OR in_reply_to_post_id=:post_id) ";
 
         if ($include_original_post) {
             $q .= "UNION
-            SELECT p.*,
-            l.url, l.expanded_url, l.image_src, l.error, pub_date + interval #gmt_offset# hour as adj_pub_date
+            SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date
             FROM #prefix#posts p
-            LEFT JOIN #prefix#links AS l ON l.post_key = p.id
             WHERE p.post_id=:post_id  ";
         }
         $q .= ") s ";
@@ -752,10 +752,6 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getPostsByFriends($user_id, $network, $count, 1, $is_public, true);
     }
 
-    /**
-     * get the posts from the friends of the given user_id;
-     * that is, their 'timeline' data
-     */
     public function getPostsByFriends($user_id, $network, $count = 15, $page = 1, $is_public = false,
     $iterator = false) {
 
@@ -766,10 +762,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $protected = '';
         }
 
-        $q  = "SELECT p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.image_src, " .
-        "pub_date + interval #gmt_offset# hour AS adj_pub_date ";
+        $q  = "SELECT p.*, pub_date + interval #gmt_offset# hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
-        $q .= "LEFT JOIN #prefix#links AS l ON p.id = l.post_key ";
         $q .= "WHERE p.network = :network ";
         $q .= $protected;
         $q .= " AND p.author_user_id IN ( ";
@@ -792,7 +786,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
         foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+            $posts[] = new Post($row);
         }
         return $posts;
     }
@@ -801,8 +795,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         return $this->getPostsToUser($user_id, $network, $count, 1, $is_public, true);
     }
 
-    public function getPostsToUser($user_id, $network, $count = 15, $page = 1, $is_public = false,
-    $iterator = false) {
+    public function getPostsToUser($user_id, $network, $count = 15, $page = 1, $is_public = false, $iterator = false) {
         $start_on_record = ($page - 1) * $count;
         if ($is_public) {
             $protected = 'AND p.is_protected = 0 ';
@@ -810,10 +803,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $protected = '';
         }
 
-        $q  = "SELECT p.*, l.id, l.url, l.expanded_url, l.title, l.clicks, l.image_src, " .
-        "pub_date + interval #gmt_offset# hour AS adj_pub_date ";
+        $q  = "SELECT p.*, pub_date + interval #gmt_offset# hour AS adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
-        $q .= "LEFT JOIN #prefix#links AS l ON p.id = l.post_key ";
         $q .= "WHERE p.network = :network ";
         $q .= $protected;
         $q .= " AND in_reply_to_post_id IS NULL ";
@@ -831,10 +822,30 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($iterator) {
             return (new PostIterator($ps));
         }
-        $all_rows = $this->getDataRowsAsArrays($ps);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
-        foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
         return $posts;
     }
@@ -853,11 +864,10 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             $protected = '';
         }
 
-        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date FROM ( SELECT * ";
+        $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date FROM ( SELECT * ";
         $q .= "FROM #prefix#posts p ";
         $q .= "WHERE p.author_user_id = :author_id AND p.network=:network ";
         $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) $protected) AS p ";
-        $q .= "LEFT JOIN #prefix#links l ON p.id = l.post_key ";
         $q .= "WHERE post_text RLIKE '\\\\?$' OR post_text like '%? %' ";
         $q .= "ORDER BY " . $order_by. ' ' . $direction . ' ';
         $q .= "LIMIT :start_on_record, :limit";
@@ -869,10 +879,31 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        $all_rows = $this->getDataRowsAsArrays($ps);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
-        foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
         return $posts;
     }
@@ -900,13 +931,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         // if the 'order_by' string is 'retweets', add an add'l aggregate (sum of two fields) var to the select,
         // which we can then sort on.
         if ($order_by == 'retweets') {
-            $q = "SELECT l.*, p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, " .
+            $q = "SELECT p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, ".
             "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         } else {
-            $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+            $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         }
         $q .= "FROM #prefix#posts p ";
-        $q .= "LEFT JOIN #prefix#links l ON p.id = l.post_key ";
         $q .= "WHERE author_user_id = :author_id AND p.network=:network ";
         if (!$include_replies) {
             $q .= "AND (in_reply_to_post_id IS null OR in_reply_to_post_id = 0) ";
@@ -937,18 +967,40 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($iterator) {
             return (new PostIterator($ps));
         }
-        $all_rows = $this->getDataRowsAsArrays($ps);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+
         $posts = array();
-        foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
         return $posts;
     }
 
     public function getHotPosts($author_user_id, $network, $count) {
-        $q  = "SELECT l.*, p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, ";
+        // Get posts
+        $q  = "SELECT p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, ";
         $q .= "pub_date + interval #gmt_offset# hour as adj_pub_date FROM #prefix#posts p ";
-        $q .= "LEFT JOIN #prefix#links l ON p.id = l.post_key ";
         $q .= "WHERE p.author_user_id = :author_user_id AND p.network=:network ";
         $q .= "AND (p.reply_count_cache + p.favlike_count_cache + p.retweet_count_cache + p.old_retweet_count_cache) ";
         $q .= "> 0 ";
@@ -960,14 +1012,33 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
             ':network'=>$network,
             ':limit'=>$count
         );
-        //echo Utils::mergeSQLVars($q, $vars);
+
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-
-        $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
-        foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
         return $posts;
     }
@@ -978,9 +1049,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         $order_by = $this->sanitizeOrderBy($order_by);
 
-        $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts p ";
-        $q .= "LEFT JOIN #prefix#links l ON p.id = l.post_key ";
         $q .= "WHERE author_user_id = :author_id AND p.network=:network AND pub_date BETWEEN :from AND :until ";
         if ($order_by == 'reply_count_cache') {
             $q .= "AND reply_count_cache > 0 ";
@@ -1008,7 +1078,7 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
         foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+            $posts[] = new Post($row);
         }
         return $posts;
     }
@@ -1031,13 +1101,12 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         // if the 'order_by' string is 'retweets', add an add'l aggregate (sum of two fields) var to the select,
         // which we can then sort on.
         if ($order_by == 'retweets') {
-            $q = "SELECT l.*, p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, " .
+            $q = "SELECT p.*, (p.retweet_count_cache + p.old_retweet_count_cache) as retweets, " .
             "pub_date + interval #gmt_offset# hour as adj_pub_date ";
         } else {
-            $q = "SELECT l.*, p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+            $q = "SELECT p.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         }
         $q .= "FROM #prefix#posts p ";
-        $q .= "LEFT JOIN #prefix#links l ON p.id = l.post_key ";
         $q .= "WHERE author_username = :author_username AND p.network = :network ";
 
         if ($in_last_x_days > 0) {
@@ -1063,10 +1132,31 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($iterator) {
             return (new PostIterator($ps));
         }
-        $all_rows = $this->getDataRowsAsArrays($ps);
         $posts = array();
-        foreach ($all_rows as $row) {
-            $posts[] = $this->setPostWithLink($row);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $posts = array();
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
         return $posts;
     }
@@ -1144,10 +1234,9 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         $direction = ($direction == 'DESC') ? 'DESC' : 'ASC';
 
         $author_username = '@'.$author_username;
-        $q = " SELECT l.*, p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q = " SELECT p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
         $q .= "FROM #prefix#posts AS p ";
         $q .= "INNER JOIN #prefix#users AS u ON p.author_user_id = u.user_id ";
-        $q .= "LEFT JOIN #prefix#links AS l ON p.id = l.post_key ";
         $q .= "WHERE p.network = :network AND ";
         //fulltext search only works for words longer than 4 chars
         if ( strlen($author_username) > PostMySQLDAO::FULLTEXT_CHAR_MINIMUM ) {
@@ -1175,12 +1264,34 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         if ($iterator) {
             return (new PostIterator($ps));
         }
-        $all_rows = $this->getDataRowsAsArrays($ps);
-        $all_posts = array();
-        foreach ($all_rows as $row) {
-            $all_posts[] = $this->setPostWithAuthorAndLink($row);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $posts = array();
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
-        return $all_posts;
+        return $posts;
     }
 
     public function getAllReplies($user_id, $network, $count, $page = 1, $order_by = 'pub_date', $direction = 'DESC',
@@ -1191,8 +1302,8 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
 
         $direction = $direction == 'DESC' ? 'DESC' : 'ASC';
 
-        $q = "SELECT l.*, p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
-        $q .= "FROM #prefix#posts p LEFT JOIN #prefix#links l ON p.id = l.post_key ";
+        $q = "SELECT p.*, u.*, pub_date + interval #gmt_offset# hour as adj_pub_date ";
+        $q .= "FROM #prefix#posts p ";
         $q .= "INNER JOIN #prefix#users u ON p.author_user_id = u.user_id ";
         $q .= "WHERE in_reply_to_user_id = :user_id AND p.network=:network ";
         if ($is_public) {
@@ -1207,12 +1318,34 @@ class PostMySQLDAO extends PDODAO implements PostDAO  {
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
-        $all_rows = $this->getDataRowsAsArrays($ps);
-        $all_posts = array();
-        foreach ($all_rows as $row) {
-            $all_posts[] = $this->setPostWithAuthorAndLink($row);
+        $all_post_rows = $this->getDataRowsAsArrays($ps);
+        $posts = array();
+
+        if ($all_post_rows) {
+            $post_keys_array = array();
+            foreach ($all_post_rows as $row) {
+                $post_keys_array[] = $row['id'];
+            }
+
+            // Get links
+            $q = "SELECT * FROM #prefix#links WHERE post_key in (".implode(',', $post_keys_array).")";
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $ps = $this->execute($q);
+            $all_link_rows = $this->getDataRowsAsArrays($ps);
+
+            // Combine posts and links
+            $posts = array();
+            foreach ($all_post_rows as $post_row) {
+                $post = new Post($post_row);
+                foreach ($all_link_rows as $link_row) {
+                    if ($link_row['post_key'] == $post->id) {
+                        $post->addLink(new Link($link_row));
+                    }
+                }
+                $posts[] = $post;
+            }
         }
-        return $all_posts;
+        return $posts;
     }
 
     public function getMostRepliedToPosts($user_id, $network, $count, $page=1, $is_public = false) {
