@@ -389,7 +389,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $result = $controller->go();
 
         $this->assertPattern('/ThinkUp couldn\'t connect to your database. The error message is:/', $result);
-        $this->assertPattern('/Unknown database \'mythinkupdb `lol\'/', $result);
+        $this->assertPattern('/(Unknown database|Access denied).*\'mythinkupdb `lol\'/', $result);
         $this->restoreConfigFile();
     }
 
@@ -419,7 +419,7 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST['db_passwd'] = $valid_db_password;
         $_POST['db_name'] = "mythinkupdb";
         $_POST['db_type'] = "mysql";
-        $_POST['db_host'] = "localcheese";
+        $_POST['db_host'] = "127.0.0.2";
         $_POST['db_socket'] = $valid_db_socket;
         $_POST['db_port'] = $valid_db_port;
         $_POST['db_prefix'] = "tu_";
@@ -518,6 +518,6 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $_POST["repair"] = "yespls";
         $controller = new InstallerController(true);
         $result = $controller->go();
-        $this->assertPattern("/Created table tu_encoded_locations/", $result);
+        $this->assertPattern("/Created table " . $config->getValue('table_prefix') . "encoded_locations/", $result);
     }
 }

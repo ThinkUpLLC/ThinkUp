@@ -102,7 +102,7 @@ class SmartyThinkUp extends Smarty {
         Utils::defineConstants();
 
         $this->Smarty();
-        $this->template_dir = array( THINKUP_WEBAPP_PATH.'_lib/view', $src_root_path.'tests/view');
+        $this->template_dir = array( THINKUP_WEBAPP_PATH.'_lib/view', $src_root_path.'/tests/view');
         $this->compile_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/';
         $this->plugins_dir = array('plugins', THINKUP_WEBAPP_PATH.'_lib/view/plugins/');
         $this->cache_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache';
