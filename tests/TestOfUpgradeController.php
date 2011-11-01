@@ -255,7 +255,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertEqual($data[2]['migration'], '2011-09-21_some_stuff-2');
 
         // run it againto veriy it skips alrready run migrations, but add a new one as well
-        $new_sql = "INSERT INTO #prefix#test1 (value) VALUES (4),(5),(6);";
+        $new_sql = "INSERT INTO " . $this->table_prefix . "test1 (value) VALUES (4),(5),(6);";
         $this->newMigrationFiles('some_stuff', false, $new_sql);
         $_GET['migration_index'] = 1;
         $results = $controller->go();
@@ -356,6 +356,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $com_sql_file = THINKUP_ROOT_PATH.'webapp/install/sql/completed_migrations.sql';
         //echo $com_sql_file;
         $com_sql = file_get_contents($com_sql_file);
+        $com_sql = str_replace('tu_', $this->table_prefix, $com_sql);
         $this->pdo->query($com_sql);
         $this->pdo->query("alter table " . $this->table_prefix . "completed_migrations DROP column sql_ran");
 
@@ -365,6 +366,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->assertTrue($obj->processed);
         $sql = file_get_contents($this->test_migrations[0]);
         $sql = preg_replace('/\-\-.*/','', $sql);
+        $sql = str_replace('tu_', $this->table_prefix, $sql);
         $this->assertEqual($obj->sql, $sql);
         $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
         $data2 = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -133,7 +133,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $data = $this->setUpApp('0.9', $MIGRATIONS);
         $this->runMigrations($run_migrations, '0.9', $fail_10 = 1);
 
-        $stmt = $this->pdo->query("select * from tu_completed_migrations");
+        $stmt = $this->pdo->query("select * from " . $this->table_prefix . "completed_migrations");
         $data = $stmt->fetchAll();
         $this->assertEqual(count($data), 1);
         $this->assertEqual($data[0]['migration'], '2011-04-19-0');
@@ -237,9 +237,13 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
         $this->setField('email', 'user@example.com');
         $this->setField('pwd', 'secret');
         $this->click("Log In");
-        //$this->showSource();
-        $this->assertText('You have no'); //accounts/services configured. Set up an account now');
-        $this->assertText('Set up'); //an account/a service like Twitter or Facebook now
+        // $this->showSource();
+        if (version_compare($version, '0.15', '>=')) {
+            $this->assertText('Welcome to ThinkUp');
+        } else {
+            $this->assertText('You have no'); //accounts/services configured. Set up an account now');
+            $this->assertText('Set up'); //an account/a service like Twitter or Facebook now
+        }
         //Visit Configuration/Settings page and assert content there
         if (version_compare($version, '0.6', '>=')) {
             $this->click("Settings"); //link name changed in beta 6
@@ -274,7 +278,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
     /**
      * Runs migrations list
      */
-    private function runMigrations($TMIGRATIONS, $base_version) {
+    private function runMigrations($TMIGRATIONS, $base_version, $fail = false) {
         require dirname(__FILE__) . '/migration-assertions.php';
         require THINKUP_WEBAPP_PATH.'config.inc.php';
         foreach($TMIGRATIONS as  $version => $migration_data) {
@@ -348,7 +352,7 @@ class WebTestOfUpgradeDatabase extends ThinkUpBasicWebTestCase {
                 if($fail && $fail == 1) {
                     $this->assertText('{ "processed":false,');
                     $this->assertText('ThinkUp could not execute the following query: ' .
-                    'INSERT INTO tu_follows_b10 (SELECTs');
+                    'INSERT INTO ' . $this->table_prefix . 'follows_b10 (SELECTs');
                     return;
                 }
                 $this->assertText('{ "processed":true,');
