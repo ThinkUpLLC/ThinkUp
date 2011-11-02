@@ -31,6 +31,14 @@
  */
 class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
+    /**
+     *
+     * We store the query results for doesOwnerHaveAccessToPost() to reduce query load while looping through
+     * post results
+     * @var array $post_access_query_cache
+     */
+    static $post_access_query_cache = array();
+
     public function doesOwnerHaveAccessToInstance(Owner $owner, Instance $instance) {
         // verify $owner has an id
         if (! isset($owner->id)) {
@@ -69,7 +77,6 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
             $message = 'doesOwnerHaveAccessToPost() requires an "Owner" object with "id" defined';
             throw new BadArgumentException($message);
         }
-
         //if post is public OR the owner is an admin, show it
         if (!$post->is_protected || $owner->is_admin) {
             return true;
@@ -82,19 +89,32 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         WHERE oi.owner_id = :owner_id AND i.network = :network";
 
         $vars = array(':owner_id' => $owner->id, ':network'=> $post->network);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $stmt = $this->execute($q, $vars);
-        $owner_network_user_ids = $this->getDataRowsAsArrays($stmt);
+        // we'll cache query results to speed up checks while looping through post iterators
+        $network_id_cache_key = implode("-", $vars) . '-network_id_cache';
+        if(isset(self::$post_access_query_cache[ $network_id_cache_key ])) {
+            $owner_network_user_ids = self::$post_access_query_cache[ $network_id_cache_key ];
+        } else {
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $stmt = $this->execute($q, $vars);
+            $owner_network_user_ids = $this->getDataRowsAsArrays($stmt);
+            self::$post_access_query_cache[ $network_id_cache_key ] = $owner_network_user_ids;
+        }
 
         // select all the network user ID's which follow protected author
         $q = "SELECT f.follower_id
         FROM  #prefix#follows f
         WHERE f.user_id = :user_id AND f.network = :network";
         $vars = array(':user_id' => $post->author_user_id, ':network'=> $post->network);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $stmt = $this->execute($q, $vars);
-        $authed_network_user_ids = $this->getDataRowsAsArrays($stmt);
-
+        // we'll cache query results to speed up checks while looping through post iterators
+        $follower_id_cache_key = implode("-", $vars) . '-follower_id_cache';
+        if(isset(self::$post_access_query_cache[ $follower_id_cache_key ])) {
+            $authed_network_user_ids = self::$post_access_query_cache[ $follower_id_cache_key ];
+        } else {
+            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+            $stmt = $this->execute($q, $vars);
+            $authed_network_user_ids = $this->getDataRowsAsArrays($stmt);
+            self::$post_access_query_cache[ $follower_id_cache_key ] = $authed_network_user_ids;
+        }
         // If there's overlap, return true else return false
         foreach ($owner_network_user_ids as $owner_network_user_id) {
             foreach ($authed_network_user_ids as $authed_network_user_id) {

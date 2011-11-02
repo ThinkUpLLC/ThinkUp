@@ -158,7 +158,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
     }
 
     public function testReplyToSearch() {
-        $builders = $this->buildData();
+        $builders = $this->buildData(0,0);
         $this->simulateLogin('me@example.com');
         $_GET['u'] = 'someuser1';
         $_GET['n'] = 'twitter';
@@ -226,6 +226,25 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         $this->assertEqual($ob->posts[0]->post_id_str, '10765432100123456783_str');
 
     }
+
+    public function testReplyToSearchFilterOutProtected() {
+        $builders = $this->buildData();
+        $this->simulateLogin('me@example.com');
+        $_GET['u'] = 'someuser1';
+        $_GET['n'] = 'twitter';
+        $_GET['t'] = '10765432100123456781';
+        $controller = new GridController(true);
+        $this->assertTrue(isset($controller));
+        ob_start();
+        $controller->control();
+        $results = ob_get_contents();
+        ob_end_clean();
+        $json = substr($results, 29, strrpos($results, ';') - 30);
+        $ob = json_decode( $json );
+        $this->assertEqual($ob->status, 'success');
+        $this->assertEqual(count($ob->posts), 1);
+    }
+
     public function testNoProfilerOutput() {
         // Enable profiler
         $config = Config::getInstance();
