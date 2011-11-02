@@ -46,3 +46,12 @@ If you're only seeing pages you "like" but not pages you manage in the pages dro
 account from ThinkUp, and re-add it. Authorize ThinkUp to get access to your managed pages, and then they will appear
 in the drodown list.
 
+Add a Domain to ThinkUp
+-----------------------
+
+ThinkUp's Facebook plugin works with Facebook Insights for Domains.
+
+To add a domain, `claim the domain on Facebook <https://developers.facebook.com/docs/insights/#claiming_a_domain>`_.
+Confirm that you can view the domain statistics in the Website section of
+`Facebook Insights <https://www.facebook.com/insights/>`_.
+Then enter the domain in ThinkUp.

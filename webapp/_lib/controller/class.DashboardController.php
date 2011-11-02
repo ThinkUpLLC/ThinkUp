@@ -178,71 +178,92 @@ class DashboardController extends ThinkUpController {
     }
 
     /**
+     * Load additional dashboard modules provided by the active plugin
+     */
+    private function loadPluginModules() {
+        $webapp = Webapp::getInstance();
+        $plugin_class_name = $webapp->getPluginObject($webapp->getActivePlugin());
+        $plugin = new $plugin_class_name;
+        $module_templates = array();
+        if ($plugin instanceof DashboardPlugin) {
+            $modules = $plugin->customDefaultDashboardModules($this->instance);
+            $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
+            foreach ($modules as $module) {
+                $module_templates[] = $module->view_template;
+                foreach ($module->getDatasets() as $dataset) {
+                    // How can we ensure there aren't namespace conflicts for dataset names?
+                    $this->addToView($dataset->name, $dataset->retrieveDataset($page));
+                }
+            }
+        }
+        $this->addToView('module_templates', $module_templates);
+    }
+
+    /**
      * Load instance dashboard
-     * @param str $username
-     * @param str $network
      */
     private function loadDefaultDashboard() {
-        if (isset($this->instance)) {
-            $this->setPageTitle($this->instance->network_username . "'s Dashboard");
-
-            $post_dao = DAOFactory::getDAO('PostDAO');
-            //posts
-            $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 20,
-            true);
-            $this->addToView('recent_posts', $recent_posts);
-            $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 20);
-            $this->addToView('hot_posts', $hot_posts);
-            $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
-            $this->instance->network, 5);
-            $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
-            $most_retweeted_1wk = $post_dao->getMostRetweetedPostsInLastWeek($this->instance->network_username,
-            $this->instance->network, 5);
-            $this->addToView('most_retweeted_1wk', $most_retweeted_1wk);
-            //for now, only show most liked/faved posts on Facebook dashboard
-            //once we cache fave counts for Twitter, we can remove this conditional
-            if ($this->instance->network == "facebook" || $this->instance->network == "facebook page"
-            || $this->instance->network == "google+") {
-                $most_faved_1wk = $post_dao->getMostFavedPostsInLastWeek($this->instance->network_username,
-                $this->instance->network, 5);
-                $this->addToView('most_faved_1wk', $most_faved_1wk);
-            }
-
-            //follows
-            $follow_dao = DAOFactory::getDAO('FollowDAO');
-            $least_likely_followers = $follow_dao->getLeastLikelyFollowers($this->instance->network_user_id, 'twitter',
-            12);
-            $this->addToView('least_likely_followers', $least_likely_followers);
-
-            //follower count history
-            //by day
-            $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
-            $follower_count_history_by_day = $follower_count_dao->getHistory($this->instance->network_user_id,
-            $this->instance->network, 'DAY', 5);
-            $this->addToView('follower_count_history_by_day', $follower_count_history_by_day);
-
-            //by week
-            $follower_count_history_by_week = $follower_count_dao->getHistory($this->instance->network_user_id,
-            $this->instance->network, 'WEEK', 5);
-            $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
-
-            $post_dao = DAOFactory::getDAO('PostDAO');
-            list($all_time_clients_usage, $latest_clients_usage) =
-            $post_dao->getClientsUsedByUserOnNetwork($this->instance->network_user_id, $this->instance->network);
-
-            // Only show the top 10 most used clients, since forever
-            $all_time_clients_usage = array_merge(
-            array_slice($all_time_clients_usage, 0, 10),
-            array('Others'=>array_sum(array_slice($all_time_clients_usage, 10)))
-            );
-            $this->addToView('all_time_clients_usage', $all_time_clients_usage);
-
-            // Only show the two most used clients for the last 25 posts
-            $latest_clients_usage = array_slice($latest_clients_usage, 0, 2);
-            $this->addToView('latest_clients_usage', $latest_clients_usage);
-        } else {
+        if (!isset($this->instance)) {
             $this->addErrorMessage($username." on ".ucwords($this->instance->network).
             " isn't set up on this ThinkUp installation.");
+            return;
         }
+        $this->loadPluginModules();
+        $this->setPageTitle($this->instance->network_username . "'s Dashboard");
+
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        //posts
+        $recent_posts = $post_dao->getAllPosts($this->instance->network_user_id, $this->instance->network, 20,
+        true);
+        $this->addToView('recent_posts', $recent_posts);
+        $hot_posts = $post_dao->getHotPosts($this->instance->network_user_id, $this->instance->network, 20);
+        $this->addToView('hot_posts', $hot_posts);
+        $most_replied_to_1wk = $post_dao->getMostRepliedToPostsInLastWeek($this->instance->network_username,
+        $this->instance->network, 5);
+        $this->addToView('most_replied_to_1wk', $most_replied_to_1wk);
+        $most_retweeted_1wk = $post_dao->getMostRetweetedPostsInLastWeek($this->instance->network_username,
+        $this->instance->network, 5);
+        $this->addToView('most_retweeted_1wk', $most_retweeted_1wk);
+        //for now, only show most liked/faved posts on Facebook dashboard
+        //once we cache fave counts for Twitter, we can remove this conditional
+        if ($this->instance->network == "facebook" || $this->instance->network == "facebook page"
+        || $this->instance->network == "google+") {
+            $most_faved_1wk = $post_dao->getMostFavedPostsInLastWeek($this->instance->network_username,
+            $this->instance->network, 5);
+            $this->addToView('most_faved_1wk', $most_faved_1wk);
+        }
+
+        //follows
+        $follow_dao = DAOFactory::getDAO('FollowDAO');
+        $least_likely_followers = $follow_dao->getLeastLikelyFollowers($this->instance->network_user_id, 'twitter',
+        12);
+        $this->addToView('least_likely_followers', $least_likely_followers);
+
+        //follower count history
+        //by day
+        $follower_count_dao = DAOFactory::getDAO('FollowerCountDAO');
+        $follower_count_history_by_day = $follower_count_dao->getHistory($this->instance->network_user_id,
+        $this->instance->network, 'DAY', 5);
+        $this->addToView('follower_count_history_by_day', $follower_count_history_by_day);
+
+        //by week
+        $follower_count_history_by_week = $follower_count_dao->getHistory($this->instance->network_user_id,
+        $this->instance->network, 'WEEK', 5);
+        $this->addToView('follower_count_history_by_week', $follower_count_history_by_week);
+
+        $post_dao = DAOFactory::getDAO('PostDAO');
+        list($all_time_clients_usage, $latest_clients_usage) =
+        $post_dao->getClientsUsedByUserOnNetwork($this->instance->network_user_id, $this->instance->network);
+
+        // Only show the top 10 most used clients, since forever
+        $all_time_clients_usage = array_merge(
+        array_slice($all_time_clients_usage, 0, 10),
+        array('Others'=>array_sum(array_slice($all_time_clients_usage, 10)))
+        );
+        $this->addToView('all_time_clients_usage', $all_time_clients_usage);
+
+        // Only show the two most used clients for the last 25 posts
+        $latest_clients_usage = array_slice($latest_clients_usage, 0, 2);
+        $this->addToView('latest_clients_usage', $latest_clients_usage);
     }
 }

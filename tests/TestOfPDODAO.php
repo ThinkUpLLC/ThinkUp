@@ -331,4 +331,30 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $this->assertEqual($tz_config, $tz_server['tz_offset']);
         Config::destroyInstance();
     }
+
+    public function testCompareMySQLAndPHPTimezoneOffsets() {
+        $config = Config::getInstance();
+
+        // set timezones the same for MySQL and PHP
+        $config->setValue('timezone', 'America/Los_Angeles');
+        date_default_timezone_set('America/Los_Angeles');
+        $timezone = $config->getValue('timezone');
+
+        TestMySQLDAO::destroyPDO();
+        $testdao = DAOFactory::getDAO('TestDAO');
+
+        // test time outside of daylight saving time
+        $stmt = TestMySQLDAO::$PDO->query('SELECT UNIX_TIMESTAMP("2011-01-01 00:00:00") AS time');
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $mysql_time = $row['time'];
+        $php_time = strtotime('2011-01-01 00:00:00');
+        $this->assertEqual($mysql_time, $php_time);
+
+        // test time during daylight saving time
+        $stmt = TestMySQLDAO::$PDO->query('SELECT UNIX_TIMESTAMP("2011-09-01 00:00:00") AS time');
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $mysql_time = $row['time'];
+        $php_time = strtotime('2011-09-01 00:00:00');
+        $this->assertEqual($mysql_time, $php_time);
+    }
 }

@@ -35,4 +35,11 @@ interface DashboardPlugin extends ThinkUpPlugin {
      * @return array of MenuItem objects (Tweets, Friends, Followers, etc)
      */
     public function getDashboardMenuItems($instance);
+
+    /**
+     * Provide additional modules to be placed on the default dashboard
+     * @param $instance Instance
+     * @return array additional data modules provided by the plugin
+     */
+    public function customDefaultDashboardModules($instance);
 }

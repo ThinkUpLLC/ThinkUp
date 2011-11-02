@@ -50,10 +50,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         parent::setUp();
         $this->logger = Logger::getInstance();
         $r = array('id'=>1, 'network_username'=>'Gina Trapani', 'network_user_id'=>'606837591',
-        'network_viewer_id'=>'606837591', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'606837591', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -63,10 +63,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->profile1_instance = new Instance($r);
 
         $r = array('id'=>2, 'network_username'=>'Mark Linford', 'network_user_id'=>'729597743',
-        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -76,10 +76,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->profile2_instance = new Instance($r);
 
         $r = array('id'=>3, 'network_username'=>'Mark Linford', 'network_user_id'=>'7568536355',
-        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook page',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -89,10 +89,10 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         $this->page1_instance = new Instance($r);
 
         $r = array('id'=>4, 'network_username'=>'Mark Linford', 'network_user_id'=>'133954286636768',
-        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0, 
-        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0', 
-        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0', 
-        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'', 
+        'network_viewer_id'=>'729597743', 'last_post_id'=>'0', 'last_page_fetched_replies'=>0,
+        'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0', 'total_replies_in_system'=>'0',
+        'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
         'avg_replies_per_day'=>'2', 'is_public'=>'0', 'is_active'=>'0', 'network'=>'facebook page',
         'last_favorite_id' => '0', 'last_unfav_page_checked' => '0', 'last_page_fetched_favorites' => '0',
         'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
@@ -100,6 +100,18 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         'earliest_post_in_system'=>'01-01-2009', 'favorites_profile' => '0'
         );
         $this->page2_instance = new Instance($r);
+
+        $r = array('id'=>5, 'network_username'=>'www.example.com', 'network_user_id'=>'10150093001972608',
+        'network_viewer_id'=>'729597743', 'is_active'=>'1', 'network'=>'facebook domain', 'last_post_id'=>'0',
+        'last_page_fetched_replies'=>0, 'last_page_fetched_tweets'=>'0', 'total_posts_in_system'=>'0',
+        'total_replies_in_system'=>'0', 'total_follows_in_system'=>'0', 'is_archive_loaded_replies'=>'0',
+        'is_archive_loaded_follows'=>'0', 'crawler_last_run'=>'', 'earliest_reply_in_system'=>'',
+        'avg_replies_per_day'=>'0', 'is_public'=>'0', 'last_favorite_id' => '0', 'last_unfav_page_checked' => '0',
+        'last_page_fetched_favorites' => '0', 'owner_favs_in_system' => '0', 'total_posts_by_owner'=>0,
+        'posts_per_day'=>0, 'posts_per_week'=>0, 'percentage_replies'=>0, 'percentage_links'=>0,
+        'earliest_post_in_system'=>'', 'favorites_profile' => '0'
+        );
+        $this->domain1_instance = new Instance($r);
     }
 
     public function tearDown() {
@@ -307,6 +319,27 @@ class TestOfFacebookCrawler extends ThinkUpUnitTestCase {
         }
         $stmt->closeCursor();
         $this->assertEqual($data[0]['count'], 307758);
+    }
+
+    public function testFetchDomainMetrics() {
+        $fbc = new FacebookCrawler($this->domain1_instance, 'fauxaccesstoken', 10);
+
+        $fbc->min_days_historical_data = 0;
+        $fbc->fetchDomainMetrics();
+
+        $sql = "SELECT instance_id, date, widget_like_views, widget_likes FROM " . $this->table_prefix .
+        "domain_metrics";
+        $stmt = DomainMetricsMySQLDAO::$PDO->query($sql);
+        $data = array();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            array_push($data, $row);
+        }
+        $stmt->closeCursor();
+        $this->assertEqual(sizeof($data), 3);
+        $this->assertEqual($data[0]['instance_id'], '5');
+        $this->assertEqual($data[0]['date'], '2011-10-22');
+        $this->assertEqual($data[0]['widget_like_views'], 12);
+        $this->assertEqual($data[0]['widget_likes'], 1);
     }
 
     public function testPostReplyPaging() {

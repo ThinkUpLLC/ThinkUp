@@ -173,4 +173,14 @@ class GooglePlusPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin,
         $menus["posts-questions"] = $qtab;
         return $menus;
     }
+
+    /**
+     * Provide additional modules to be placed on the default dashboard
+     * @param $instance Instance
+     * @return array additional data modules provided by the plugin
+     */
+    public function customDefaultDashboardModules($instance) {
+        $modules = array();
+        return $modules;
+    }
 }

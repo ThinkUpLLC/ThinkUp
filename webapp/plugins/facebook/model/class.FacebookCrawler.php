@@ -56,6 +56,11 @@ class FacebookCrawler {
      */
     var $page_like_count_set = false;
     /**
+     * Days of historical data to get for Domain Metrics
+     * @var int
+     */
+    var $min_days_historical_data = 120;
+    /**
      *
      * @param Instance $instance
      * @return FacebookCrawler
@@ -186,6 +191,84 @@ class FacebookCrawler {
             }
             if (time() > $fetch_stop_time) {
                 $fetch_next_page = false;
+                $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
+                ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
+            }
+        }
+    }
+
+    /**
+     * Fetch domain metrics from Facebook Insights.
+     */
+    public function fetchDomainMetrics($recreate_all_history = false) {
+        $id = $this->instance->network_user_id;
+        $network = $this->instance->network;
+
+        $domain_metrics_dao = DAOFactory::getDAO('DomainMetricsDAO');
+
+        $fetch_prev_page = true;
+        $fetch_prev_page = true;
+        $current_page_number = 1;
+
+        // We can get up to 35 days (3024000 seconds) of data at once; getting default of 3 days for now
+        $next_api_request = 'https://graph.facebook.com/' .$id. '/insights?access_token=' .$this->access_token;
+
+        //Cap crawl time for very busy pages with thousands of likes/comments
+        $fetch_stop_time = time() + $this->max_crawl_time;
+
+        // Latest referral data we have captured
+        $latest_captured = $domain_metrics_dao->getLatest($this->instance->id);
+        $earliest_captured = $domain_metrics_dao->getEarliest($this->instance->id);
+
+        // get at least last 30 days data
+        $start_date = strtotime($this->min_days_historical_data . ' days ago');
+
+        // Get most recent data first.  Then backfill to start date
+        while ($fetch_prev_page) {
+            $stream = FacebookGraphAPIAccessor::rawApiRequest($next_api_request, true);
+            if (isset($stream->data) && is_array($stream->data) && sizeof($stream->data) > 0) {
+                $this->logger->logInfo(sizeof($stream->data[0]->values)." day(s) of domain data found on page ".
+                $current_page_number, __METHOD__.','.__LINE__);
+
+                $pending_data = array();
+                foreach ($stream->data as $metric) {
+                    switch ($metric->name) {
+                    case 'domain_widget_like_views':
+                    case 'domain_widget_likes':
+                        break;
+                    default:
+                        // continue to the next metric
+                        continue 2;
+                    }
+                    foreach($metric->values as $period) {
+                        // End times are midnight PST/PDT, e.g. 2011-10-17T07:00:00+0000
+                        $date = date('Y-m-d', strtotime($period->end_time) - 1);
+                        $value = $period->value;
+                        $pending_data[$date][$metric->name] = $period->value;
+                    }
+                }
+                foreach ($pending_data as $date => $values) {
+                    $domain_metrics_dao->upsert($this->instance->id, $date, $values['domain_widget_like_views'],
+                    $values['domain_widget_likes']);
+                }
+                $starts = !empty($stream->data[0]->values) ? strtotime($stream->data[0]->values[0]->end_time) : 0;
+
+                // If there is still data available for dates since our first post
+                // that we haven't retrieved yet, or we want to repopulate all
+                // data, keep paging backwards.
+                if (isset($stream->paging->previous) && $starts > $start_date && ($starts > $latest_captured ||
+                    $earliest_captured > $start_date || $recreate_all_history)) {
+                    $next_api_request = $stream->paging->previous;
+                    $current_page_number++;
+                } else {
+                    $fetch_prev_page = false;
+                }
+            } else {
+                $this->logger->logInfo("No Facebook Insights domain data found for ID $id", __METHOD__.','.__LINE__);
+                $fetch_prev_page = false;
+            }
+            if (time() > $fetch_stop_time) {
+                $fetch_prev_page = false;
                 $this->logger->logUserInfo("Stopping this service user's crawl because it has exceeded max time of ".
                 ($this->max_crawl_time/60)." minute(s). ",__METHOD__.','.__LINE__);
             }

@@ -42,6 +42,7 @@ if (!class_exists('BaseFacebook')) {
 $webapp = Webapp::getInstance();
 $webapp->registerPlugin('facebook', 'FacebookPlugin');
 $webapp->registerPlugin('facebook page', 'FacebookPlugin');
+$webapp->registerPlugin('facebook domain', 'FacebookPlugin');
 
 $crawler = Crawler::getInstance();
 $crawler->registerCrawlerPlugin('FacebookPlugin');

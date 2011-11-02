@@ -1,0 +1,308 @@
+{
+  "data": [
+    {
+      "id": "10150093001972608/insights/domain_stories/day", 
+      "name": "domain_stories", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of times people posted a link to your site through an action on a social plugin or through a status message or Wall post. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_feed_views/day", 
+      "name": "domain_feed_views", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of times people viewed stories that link to your site in News Feed, Page Walls, or Profile Walls. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_feed_clicks/day", 
+      "name": "domain_feed_clicks", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of clicks sent to your site from stories in News Feed, Page Walls, or Profile Walls. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_likes/day", 
+      "name": "domain_widget_likes", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 1, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of times people clicked the Like button on your site. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_like_views/day", 
+      "name": "domain_widget_like_views", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 12, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 20, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of times people viewed Like buttons on your site. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_like_feed_views/day", 
+      "name": "domain_widget_like_feed_views", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of times people viewed stories generated from Like button clicks on your site. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_like_feed_clicks/day", 
+      "name": "domain_widget_like_feed_clicks", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of clicks sent to your site from stories in News Feed, Page Walls, or Profile Walls. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_comments_adds/day", 
+      "name": "domain_widget_comments_adds", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of times people left comments on your site using the Comments plugin. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_comments_views/day", 
+      "name": "domain_widget_comments_views", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily Comments Box impressions on your domain (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_comments_feed_views/day", 
+      "name": "domain_widget_comments_feed_views", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of times people viewed stories generated from Comments Box comments on your site. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_comments_feed_clicks/day", 
+      "name": "domain_widget_comments_feed_clicks", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of clicks sent to your site from Comment stories. (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_send_views/day", 
+      "name": "domain_widget_send_views", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily Impressions on the Send Button on your domain (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_send_clicks/day", 
+      "name": "domain_widget_send_clicks", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of times people sent messages from your domain using the Send button (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_send_inbox_views/day", 
+      "name": "domain_widget_send_inbox_views", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily Views of Inbox messages generated by the Send Button (Total Count)"
+    }, 
+    {
+      "id": "10150093001972608/insights/domain_widget_send_inbox_clicks/day", 
+      "name": "domain_widget_send_inbox_clicks", 
+      "period": "day", 
+      "values": [
+        {
+          "value": 0, 
+          "end_time": "2011-10-23T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-24T07:00:00+0000"
+        }, 
+        {
+          "value": 0, 
+          "end_time": "2011-10-25T07:00:00+0000"
+        }
+      ], 
+      "description": "Daily The number of clicks sent to your site from Send button messages (Total Count)"
+    }
+  ], 
+  "paging": {
+    "previous": "https://graph.facebook.com/10150093001972608/insights?format=json&since=1319081216&until=1319340416", 
+    "next": "https://graph.facebook.com/10150093001972608/insights?format=json&since=1319599616&until=1319858816"
+  }
+}

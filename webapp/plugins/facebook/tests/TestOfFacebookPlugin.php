@@ -112,6 +112,44 @@ class TestOfFacebookPlugin extends ThinkUpUnitTestCase {
         $logger->close();
     }
 
+    public function testDefaultDashboardModules() {
+        $instance_builder_1 = FixtureBuilder::build('instances', array('network_username'=>'www.example.com',
+        'network_user_id' => '10150093001972608', 'network'=>'facebook domain', 'is_activated'=>'1',
+        'is_public'=>'1'));
+
+        $webapp = Webapp::getInstance();
+        $plugin_class_name = $webapp->getPluginObject($webapp->getActivePlugin());
+        $plugin = new $plugin_class_name;
+
+        $instance = new Instance();
+        $instance->network = 'facebook';
+
+        $modules = $plugin->customDefaultDashboardModules($instance);
+        $this->assertTrue(is_array($modules));
+        $this->assertEqual(sizeof($modules), 0);
+
+        $instance->network = 'facebook domain';
+        $modules = $plugin->customDefaultDashboardModules($instance);
+
+        $this->assertTrue(is_array($modules));
+        $this->assertEqual(sizeof($modules), 1);
+
+
+        $datasets = $modules[0]->getDatasets();
+        $this->assertTrue(is_array($datasets));
+        $this->assertEqual(sizeof($datasets), 3);
+
+        $this->assertEqual($modules[0]->view_template,
+        Utils::getPluginViewDirectory('facebook').'facebook.domain.likes.tpl');
+
+        $this->assertEqual($datasets[0]->name, 'domain_widget_likes_by_day');
+        $this->assertEqual($datasets[1]->name, 'domain_widget_likes_by_week');
+        $this->assertEqual($datasets[2]->name, 'domain_widget_likes_by_month');
+
+        $this->assertEqual($datasets[0]->dao_name, 'DomainMetricsDAO');
+        $this->assertEqual($datasets[0]->dao_method_name, 'getWidgetHistory');
+    }
+
     public function testDeactivate() {
         //all facebook and facebook page accounts should be set to inactive on plugin deactivation
         $webapp = Webapp::getInstance();

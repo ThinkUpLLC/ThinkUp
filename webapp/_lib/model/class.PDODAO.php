@@ -123,7 +123,14 @@ abstract class PDODAO {
             $timezone = $this->config->getValue('timezone');
             $time = new DateTime("now", new DateTimeZone($timezone) );
             $tz_offset = $time->format('P');
-            self::$PDO->exec("SET time_zone = '$tz_offset'");
+            try {
+                self::$PDO->exec("SET time_zone = '$timezone'");
+            } catch (PDOException $e) {
+                // Time zone couldn't be set; use offset instead, but if the timezone is one for which offset changes
+                // throughout year, such as during daylight saving time, dates converted from/to UTC by the database
+                // from a different offset will be incorrect.
+                self::$PDO->exec("SET time_zone = '$tz_offset'");
+            }
         }
     }
 
