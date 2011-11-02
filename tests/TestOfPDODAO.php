@@ -61,6 +61,19 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         return $builders;
     }
 
+    /*
+     * Test whether the database supports time zones or only offsets
+     */
+    private function isTimeZoneSupported() {
+        $testdao = DAOFactory::getDAO('TestDAO');
+        try {
+            TestMySQLDAO::$PDO->exec("SET time_zone = 'America/Los_Angeles'");
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
     public function tearDown() {
         $this->builders = null;
         parent::tearDown();
@@ -328,13 +341,21 @@ class TestOfPDODAO extends ThinkUpUnitTestCase {
         $test_dao = new TestMySQLDAO();
         $tz_server = $test_dao->getTimezoneOffset();
 
-        $this->assertEqual($tz_config, $tz_server['tz_offset']);
+        if ($this->isTimeZoneSupported()) {
+            $this->assertEqual('Europe/London', $tz_server['tz_offset']);
+        } else {
+            $this->assertEqual($tz_config, $tz_server['tz_offset']);
+        }
         Config::destroyInstance();
     }
 
     public function testCompareMySQLAndPHPTimezoneOffsets() {
+        if (!$this->isTimeZoneSupported()) {
+            return;
+        }
+        // These tests will only be run if the time_zone tables are populated in MySQL.
+        // See http://dev.mysql.com/doc/refman/5.1/en/mysql-tzinfo-to-sql.html
         $config = Config::getInstance();
-
         // set timezones the same for MySQL and PHP
         $config->setValue('timezone', 'America/Los_Angeles');
         date_default_timezone_set('America/Los_Angeles');
