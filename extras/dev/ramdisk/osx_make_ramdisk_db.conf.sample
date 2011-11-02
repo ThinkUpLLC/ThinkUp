@@ -32,12 +32,12 @@ MYSQL_DATA_DIR="/usr/local/mysql/data"
 TMP_DATA_DIR="/tmp/thinkup_rd_dir"
 
 # glean db config data
-DB_HOST=`$PHP tests/scripts/parse_config.php db_host`
-DB_USER=`$PHP tests/scripts/parse_config.php db_user`
-DB_PASSWORD=`$PHP tests/scripts/parse_config.php db_password`
-DB_NAME=`$PHP tests/scripts/parse_config.php db_name`
-DB_SOCKET=`$PHP tests/scripts/parse_config.php db_socket`
-DB_PORT=`$PHP tests/scripts/parse_config.php db_port`
+DB_HOST=`$PHP extras/dev/ramdisk/parse_config.php db_host`
+DB_USER=`$PHP extras/dev/ramdisk/parse_config.php db_user`
+DB_PASSWORD=`$PHP extras/dev/ramdisk/parse_config.php db_password`
+DB_NAME=`$PHP extras/dev/ramdisk/parse_config.php db_name`
+DB_SOCKET=`$PHP extras/dev/ramdisk/parse_config.php db_socket`
+DB_PORT=`$PHP extras/dev/ramdisk/parse_config.php db_port`
 DB_NAME_TEST_RD="${DB_NAME}_tests_rd"
 
 MYSQL_CMD="$MYSQL -h $DB_HOST -u $DB_USER";

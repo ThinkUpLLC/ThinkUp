@@ -44,6 +44,8 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function tearDown() {
         parent::tearDown();
         $this->logger->close();
+        //clear doesOwnerHaveAccessToPost query cache
+        OwnerInstanceMySQLDAO::$post_access_query_cache = array();
     }
 
     public function testDelete() {
@@ -143,7 +145,7 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         'valid oauth_access_token_secret');
     }
 
-     
+
     public function testUpdateTokens() {
         $builder_data = array('owner_id' => 2, 'instance_id' => 20);
         $builder = FixtureBuilder::build(self::TEST_TABLE_OI,  $builder_data);
@@ -224,10 +226,10 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $post = new Post(array('id'=>1, 'author_user_id'=>'20', 'author_username'=>'no one',
         'author_fullname'=>"No One", 'author_avatar'=>'yo.jpg', 'source'=>'TweetDeck', 'pub_date'=>'',
         'adj_pub_date'=>'', 'in_reply_to_user_id'=>'',
-        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'', 
+        'in_reply_to_post_id'=>'', 'reply_count_cache'=>'', 'in_retweet_of_post_id'=>'', 'retweet_count_cache'=>'',
         'retweet_count_api' =>'', 'old_retweet_count_cache' => '', 'in_rt_of_user_id' =>'',
         'post_id'=>'9021481076', 'is_protected'=>1, 'place_id' => 'ece7b97d252718cc', 'favlike_count_cache'=>0,
-        'post_text'=>'I like cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'', 
+        'post_text'=>'I like cookies', 'network'=>'twitter', 'geo'=>'', 'place'=>'', 'location'=>'',
         'is_geo_encoded'=>0, 'is_reply_by_friend'=>0, 'is_retweet_by_friend'=>0, 'reply_retweet_distance'=>0));
 
         // no owner id
@@ -250,6 +252,10 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $post->is_protected = true;
         $this->assertFalse($dao->doesOwnerHaveAccessToPost($owner, $post));
 
+        // should have empty cache arrays
+        $this->assertEqual(count(OwnerInstanceMySQLDAO::$post_access_query_cache['1-twitter-network_id_cache']), 0);
+        $this->assertEqual(count(OwnerInstanceMySQLDAO::$post_access_query_cache['20-twitter-follower_id_cache']), 0);
+
         //protected post but owner is admin
         $owner->is_admin = true;
         $this->assertTrue($dao->doesOwnerHaveAccessToPost($owner, $post));
@@ -259,10 +265,18 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($dao->doesOwnerHaveAccessToPost($owner, $post));
 
         //protected post, owner is not admin, and owner DOES have an authed instance which follows author
+        OwnerInstanceMySQLDAO::$post_access_query_cache = array(); // clear cache
         $owner->id = 2;
         $follows_builder = FixtureBuilder::build('follows', array('user_id'=>'20', 'follower_id'=>'10',
         'network'=>'twitter'));
         $this->assertTrue($dao->doesOwnerHaveAccessToPost($owner, $post));
 
+        // should have populated cache arrays
+        $this->assertEqual(count(OwnerInstanceMySQLDAO::$post_access_query_cache['2-twitter-network_id_cache']), 1);
+        $this->assertEqual(count(OwnerInstanceMySQLDAO::$post_access_query_cache['20-twitter-follower_id_cache']), 1);
+        $this->assertEqual(
+        OwnerInstanceMySQLDAO::$post_access_query_cache['2-twitter-network_id_cache'][0]['network_user_id'], 10);
+        $this->assertEqual(
+        OwnerInstanceMySQLDAO::$post_access_query_cache['20-twitter-follower_id_cache'][0]['follower_id'], 10);
     }
 }

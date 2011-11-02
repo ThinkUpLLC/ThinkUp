@@ -83,6 +83,7 @@ class GridController extends ThinkUpAuthController {
         if ($owner) {
             $public_search = true;
         }
+        $private_reply_search = false;
         $this->setContentType('text/javascript');
         if (!$this->is_missing_param) {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
@@ -104,6 +105,9 @@ class GridController extends ThinkUpAuthController {
                         $post_dao = DAOFactory::getDAO('PostDAO');
                         $posts_it = $post_dao->getRepliesToPostIterator($_GET['t'],$_GET['n'], 'default','km',
                         $public_search);
+                        if (! $public_search) {
+                            $private_reply_search = true;
+                        }
                     } else {
                         if (isset($_GET['nolimit']) && $_GET['nolimit'] == 'true') {
                             self::$MAX_ROWS = 0;
@@ -120,9 +124,14 @@ class GridController extends ThinkUpAuthController {
                         throw Exception("Grid Search should use a PostIterator to conserve memory");
                     }
                     foreach($posts_it as $key => $value) {
+                        if ($private_reply_search) {
+                            if (! $ownerinstance_dao->doesOwnerHaveAccessToPost($owner, $value)) {
+                                continue;
+                            }
+                        }
                         $cnt++;
                         $data = array('id' => $cnt, 'text' => $value->post_text,
-                        'post_id_str' => $value->post_id . '_str', 'author' => $value->author_username, 
+                        'post_id_str' => $value->post_id . '_str', 'author' => $value->author_username,
                         'date' => $value->adj_pub_date, 'network' => $value->network);
                         echo json_encode($data) . ",\n";
                         flush();
