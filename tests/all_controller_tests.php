@@ -57,6 +57,7 @@ $controller_test->add(new TestOfTestAuthController());
 $controller_test->add(new TestOfTestAdminController());
 $controller_test->add(new TestOfToggleActiveInstanceController());
 $controller_test->add(new TestOfToggleActiveOwnerController());
+$controller_test->add(new TestOfToggleOwnerAdminController());
 $controller_test->add(new TestOfToggleActivePluginController());
 $controller_test->add(new TestOfTogglePublicInstanceController());
 $controller_test->add(new TestOfUserController());

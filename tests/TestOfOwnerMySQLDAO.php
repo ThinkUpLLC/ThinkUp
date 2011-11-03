@@ -349,13 +349,13 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
 
     public function testSetOwnerActive() {
         $builders_array = array();
-        # build our data
+        // build our data
         $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
         'email'=>'ttuser2@example.com', 'is_activated'=>0));
 
         $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
         'email'=>'ttuser3@example.com', 'is_activated'=>1));
-        # init our dao
+        // init our dao
         $dao = new OwnerMySQLDAO();
 
         // flip form false to true
@@ -383,6 +383,44 @@ class TestOfOwnerMySQLDAO extends ThinkUpUnitTestCase {
         $owner = $this->DAO->getByEmail('ttuser2@example.com');
         //new status
         $this->assertFalse($owner->is_activated);
+    }
+
+    public function testSetOwnerAdmin() {
+        $builders_array = array();
+        // build our data
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
+        'email'=>'ttuser2@example.com', 'is_activated'=>0, 'is_admin'=>0));
+
+        $builders_array[] = FixtureBuilder::build('owners', array('full_name'=>'ThinkUp J. User',
+        'email'=>'ttuser3@example.com', 'is_activated'=>1, 'is_admin'=>1));
+        // init our dao
+        $dao = new OwnerMySQLDAO();
+
+        // flip form false to true
+        $test_owners_records = $builders_array[0]->columns;
+        $id = $test_owners_records['last_insert_id'];
+        $this->assertTrue($dao->setOwnerAdmin($id, 1));
+        $owner = $this->DAO->getByEmail('ttuser2@example.com');
+        //new status
+        $this->assertTrue($owner->is_admin);
+
+        // already true
+        $test_owners_records = $builders_array[1]->columns;
+        $id = $test_owners_records['last_insert_id'];
+        // nothing updated, so false
+        $this->assertFalse($dao->setOwnerAdmin($id, 1));
+        $owner = $this->DAO->getByEmail('ttuser3@example.com');
+        //new status
+        $this->assertTrue($owner->is_admin);
+
+        // flip to false
+        $test_owners_records = $builders_array[0]->columns;
+        $id = $test_owners_records['last_insert_id'];
+        $this->assertTrue($dao->setOwnerAdmin($id, 0));
+
+        $owner = $this->DAO->getByEmail('ttuser2@example.com');
+        //new status
+        $this->assertFalse($owner->is_admin);
     }
 
     public function testIsOwnerAuthorized(){

@@ -304,6 +304,15 @@ SQL;
         return $this->getUpdateCount($stmt);
     }
 
+    public function setOwnerAdmin($id, $is_admin) {
+        $q = "UPDATE #prefix#owners
+             SET is_admin=:is_admin
+             WHERE id=:id";
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $stmt = $this->execute($q, array(':is_admin' => $is_admin, ':id' => $id));
+        return $this->getUpdateCount($stmt);
+    }
+
     public function resetAPIKey($id) {
         $q = "UPDATE #prefix#owners SET api_key=:api_key WHERE id=:id";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);

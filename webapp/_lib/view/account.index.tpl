@@ -22,7 +22,7 @@
                 <div class="clearfix header">
                   <div class="grid_18 alpha">name</div>
                   {if $user_is_admin}
-                  <div class="grid_4 omega">activate/deactivate</div>
+                  <div class="grid_4 omega"></div>
                   {/if}
                 </div>
               {/if}
@@ -206,45 +206,67 @@
         </div>
       </div>
     </div> <!-- end #instances -->
-    
+
     {if $user_is_admin}
       <div class="section" id="ttusers">
 
+        <div class="thinkup-canvas clearfix">
+         <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
+        <h1>Invite New User</h1>
+        {include file="_usermessage.tpl" field='invite'}
+          <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
+                {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
+                class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+          </form>
+        </div>
+
+
+
       <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
+        <h1>Registered Users</h1>
         <div class="append_20 clearfix">
         
 {foreach from=$owners key=oid item=o name=oloop}
   {if $smarty.foreach.oloop.first}
     <div class="clearfix header">
-      <div class="grid_8 alpha">name</div>
-      {if $user_is_admin}
-      <div class="grid_10">service users</div>
-      <div class="grid_4 omega">actions</div>
-      {/if}
+      <div class="grid_14 alpha">name</div>
+      <div class="grid_4">activation</div>
+      <div class="grid_4 omega">administrator</div>
     </div>
   {/if}
   
   <div class="clearfix bt append prepend">
-    <div class="grid_8 small alpha">
+    <div class="grid_14 small alpha">
         <span{if $o->is_admin} style="background-color:#FFFFCC"{/if}>{$o->full_name}</span><br>
         <small>{$o->email}</small>
-        <span style="color:#666"><br><small>{if $o->last_login neq '0000-00-00'}logged in {$o->last_login|relative_datetime} ago{/if}</small></span><br>
-        
-    </div>
-    <div class="grid_10 small">
-        {if $o->instances neq null}
+        <span style="color:#666"><br><small>{if $o->last_login neq '0000-00-00'}logged in {$o->last_login|relative_datetime} ago{/if}</small></span>
+         {if $o->instances neq null}
+         <br><br>Service users:
+         <span style="color:#666"><br><small>
           {foreach from=$o->instances key=iid item=i}
-              {$i->network_username} | {$i->network|capitalize}
+              {$i->network_username} - {$i->network|capitalize}
               {if !$i->is_active} (paused){/if}<br>
           {/foreach}
         {else}
            &nbsp;
         {/if}
+        </small></span>
     </div>
     {if $user_is_admin}
+        <div class="grid_4">
+          {if $o->id neq $owner->id}
+          <span id="spanowneractivation{$o->id}">
+          <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerActivationButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+          </span>
+          <span style="display: none;padding:5px;" class="ui-state-success ui-corner-all mt_10" id="messageactive{$o->id}"></span>
+          {/if}
+      </div>
         <div class="grid_4 omega">
-          {if !$o->is_admin}
-          <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+          {if $o->id neq $owner->id && $o->is_activated}
+          <span id="spanowneradmin{$o->id}">
+          <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerAdminButton" id="userAdmin{$o->id}" value="{if $o->is_admin}Demote{else}Promote{/if}" />
+          </span>
+          <span style="display: none;padding:5px;" class="ui-state-success ui-corner-all mt_10" id="messageadmin{$o->id}"></span>
           {/if}
       </div>
     {/if}
@@ -253,17 +275,6 @@
         </div>
      </div>
 
-        <div class="thinkup-canvas clearfix">
-         <div class="alpha omega grid_20 prefix_1 clearfix prepend_20 append_20">
-        <h1>Invite User</h1>
-        {include file="_usermessage.tpl" field='invite'}
-          <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
-                {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
-                class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
-          </form>
-        </div>
-          
-          
         </div> <!-- end .thinkup-canvas -->
       </div> <!-- end #ttusers -->
     {/if} <!-- end is_admin -->
@@ -427,16 +438,17 @@ $(function() {
         data: dataString,
         success: function() {
           $('#spanowneractivation' + u).css('display', 'none');
-          $('#message1' + u).html("Activated!").hide().fadeIn(1500, function() {
-            $('#message1' + u);
+          $('#messageactive' + u).html("Activated!").hide().fadeIn(1500, function() {
+            $('#messageactive' + u);
           });
           $('#spanownernamelink' + u).css('display', 'inline');
           $('#user' + u).val('Deactivate');
           $('#spanownernametext' + u).css('display', 'none');
           $('#user' + u).removeClass('btnActivate');
           $('#user' + u).addClass('btnDectivate');
+          $('#userAdmin' + u).show();
           setTimeout(function() {
-              $('#message1' + u).css('display', 'none');
+              $('#messageactive' + u).css('display', 'none');
               $('#spanowneractivation' + u).hide().fadeIn(1500);
             },
             2000
@@ -456,16 +468,17 @@ $(function() {
         data: dataString,
         success: function() {
           $('#spanowneractivation' + u).css('display', 'none');
-          $('#message1' + u).html("Deactivated!").hide().fadeIn(1500, function() {
-            $('#message1' + u);
+          $('#messageactive' + u).html("Deactivated!").hide().fadeIn(150, function() {
+            $('#messageactive' + u);
           });
           $('#spanownernamelink' + u).css('display', 'none');
           $('#spanownernametext' + u).css('display', 'inline');
           $('#user' + u).val('Activate');
           $('#user' + u).removeClass('btnDeactivate');
           $('#user' + u).addClass('btnActivate');
+          $('#userAdmin' + u).hide();
           setTimeout(function() {
-              $('#message1' + u).css('display', 'none');
+              $('#messageactive' + u).css('display', 'none');
               $('#spanowneractivation' + u).hide().fadeIn(1500);
             },
             2000
@@ -475,13 +488,81 @@ $(function() {
       return false;
     };
 
-    $(".toggleOwnerButton").click(function() {
+    var promoteOwner = function(u) {
+      //removing the "userAdmin" from id here to stop conflict with plugin    
+      u = u.substr(9);
+      var dataString = 'oid=' + u + "&a=1&csrf_token=" + window.csrf_token; // toggle owner active on
+      $.ajax({
+        type: "GET",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-owneradmin.php",
+        data: dataString,
+        success: function() {
+          $('#spanowneradmin' + u).css('display', 'none');
+          $('#messageadmin' + u).html("Promoted!").hide().fadeIn(1500, function() {
+            $('#messageadmin' + u);
+          });
+          $('#spanownernamelink' + u).css('display', 'inline');
+          $('#userAdmin' + u).val('Demote');
+          $('#spanownernametext' + u).css('display', 'none');
+          $('#userAdmin' + u).removeClass('btnActivate');
+          $('#userAdmin' + u).addClass('btnDectivate');
+          setTimeout(function() {
+              $('#messageadmin' + u).css('display', 'none');
+              $('#spanowneradmin' + u).hide().fadeIn(1500);
+            },
+            2000
+          );
+        }
+      });
+      return false;
+    };
+
+    var demoteOwner = function(u) {
+      //removing the "userAdmin" from id here to stop conflict with plugin
+      u = u.substr(9);
+      var dataString = 'oid=' + u + "&a=0&csrf_token=" + window.csrf_token; // toggle owner active off
+      $.ajax({
+        type: "GET",
+        url: "{/literal}{$site_root_path}{literal}account/toggle-owneradmin.php",
+        data: dataString,
+        success: function() {
+          $('#spanowneradmin' + u).css('display', 'none');
+          $('#messageadmin' + u).html("Demoted!").hide().fadeIn(1500, function() {
+            $('#messageadmin' + u);
+          });
+          $('#spanownernamelink' + u).css('display', 'none');
+          $('#spanownernametext' + u).css('display', 'inline');
+          $('#userAdmin' + u).val('Promote');
+          $('#userAdmin' + u).removeClass('btnDeactivate');
+          $('#userAdmin' + u).addClass('btnActivate');
+          setTimeout(function() {
+              $('#messageadmin' + u).css('display', 'none');
+              $('#spanowneradmin' + u).hide().fadeIn(1500);
+            },
+            2000
+          );
+        }
+      });
+      return false;
+    };
+
+    $(".toggleOwnerActivationButton").click(function() {
       if($(this).val() == 'Activate') {
         activateOwner($(this).attr("id"));
       } else {
         deactivateOwner($(this).attr("id"));
       }
     });
+
+    $(".toggleOwnerAdminButton").click(function() {
+      if($(this).val() == 'Promote') {
+        promoteOwner($(this).attr("id"));
+      } else {
+        demoteOwner($(this).attr("id"));
+      }
+    });
+
+
   });
 
   {/literal}
