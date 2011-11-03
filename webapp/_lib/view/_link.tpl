@@ -8,11 +8,11 @@
 
 <div class="individual-tweet post clearfix">
   <div class="grid_1 alpha">
-    <a href="http://twitter.com/{$l->container_post->author_username}">
+    <a href="https://twitter.com/intent/user?user_id={$l->container_post->author_user_id}">
     <img src="{$l->container_post->author_avatar}" class="avatar"/><img src="{$site_root_path}plugins/{$l->container_post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/></a>
   </div>
   <div class="grid_3 right small">
-    <a href="http://twitter.com/{$l->container_post->author_username}">{$l->container_post->author_username}</a>
+    <a href="https://twitter.com/intent/user?user_id={$l->container_post->author_user_id}">{$l->container_post->author_username}</a>
   </div>
   <div class="grid_13">
     {if $l->image_src}

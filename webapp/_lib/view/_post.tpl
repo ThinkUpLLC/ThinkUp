@@ -27,7 +27,7 @@
     <div class="grid_3 small">
       {if $t->network == 'twitter' && $username_link != 'internal'}
       <a {if $reply_count && $reply_count > $top_20_post_min}id="post_username-{$smarty.foreach.foo.iteration}" {/if}
-      href="http://twitter.com/{$t->author_username}">{$t->author_username}</a>
+      href="https://twitter.com/intent/user?user_id={$t->author_user_id}">{$t->author_username}</a>
       {else}
         {$t->author_username}
       {/if}

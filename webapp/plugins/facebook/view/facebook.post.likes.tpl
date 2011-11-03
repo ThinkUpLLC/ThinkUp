@@ -11,16 +11,9 @@
                 <div class="br" style="min-height:110px">
                   <div class="tweet pr">
                     {if $post->post_text}
-                        {if $post->network == 'twitter'}
-                          {$post->post_text|filter_xss|link_usernames_to_twitter}
-                          <a href="http://twitter.com/intent/tweet?in_reply_to={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-w" title="reply"></a>
-                          <a href="http://twitter.com/intent/retweet?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-arrowreturnthick-1-e" title="retweet"></a>
-                          <a href="http://twitter.com/intent/favorite?tweet_id={$post->post_id}"><span class="ui-icon ui-icon-star" title="favorite"></a>
-                        {else}
                           {$post->post_text}
                           {if $post->is_protected}
                                 <span class="sprite icon-locked"></span>
-                          {/if}
                           
                         {/if}
                     {/if}

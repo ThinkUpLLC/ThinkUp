@@ -14,14 +14,14 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
 <div class="individual-tweet post clearfix{if $post->is_protected} private{/if}">
     <div class="grid_2 alpha">
       <div class="avatar-container">
-        {if $post->network == 'twitter'} <a href="http://twitter.com/{$post->author_username}" title="{$post->author_username} on Twitter">{/if}
+        {if $post->network == 'twitter'} <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username} on Twitter">{/if}
         <img src="{$post->author_avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$post->network|get_plugin_path}/assets/img/favicon.ico" class="service-icon"/>
         {if $post->network == 'twitter'}</a>{/if}
       </div>
     </div>
     <div class="grid_3 small">
       {if $post->network == 'twitter' && $username_link != 'internal'}
-        <a href="http://twitter.com/{$post->author_username}" title="{$post->author_username} on Twitter">{$post->author_username}</a>
+        <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username} on Twitter">{$post->author_username}</a>
       {else}
         {$post->author_username}
       {/if}
@@ -33,9 +33,9 @@ $unit (optional) If $show_distance='true', unit should be 'mi' or 'km' for miles
       {/if}
         {if $post->network == 'twitter'}
             {if $post->is_reply_by_friend or $post->is_retweet_by_friend}
-                <a href="http://twitter.com/{$post->author_username}" title="Friend"><span class="sprite ui-icon-contact"></span></a>
+                <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="Friend"><span class="sprite ui-icon-contact"></span></a>
             {else}
-                <a href="http://twitter.com/{$post->author_username}" title="{$post->author_username} on Twitter"><span class="sprite ui-icon-person"></span></a>
+                <a href="https://twitter.com/intent/user?user_id={$post->author_user_id}" title="{$post->author_username} on Twitter"><span class="sprite ui-icon-person"></span></a>
             {/if}
         {/if}
     </div>

@@ -66,7 +66,7 @@
             <div class="grid_18 alpha omega">
             {foreach from=$mutual_friends key=uid item=u name=foo}
             <div class="avatar-container float-l mr_10 mb_10">  
-               <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.ico" class="service-icon2"/></a> 
+               <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name}"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.ico" class="service-icon2"/></a> 
             </div>
             {/foreach}
             </div>
