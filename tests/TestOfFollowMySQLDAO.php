@@ -71,13 +71,13 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>14,
-        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        'last_seen'=>'-1d', 'first_seen'=>'-1d', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>15,
-        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        'last_seen'=>'-1d', 'first_seen'=>'-8d', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>1324567890, 'follower_id'=>1623457890,
-        'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
+        'last_seen'=>'-2d', 'first_seen'=>'-2d', 'network'=>'twitter'));
 
         $builders[] = FixtureBuilder::build('follows', array('user_id'=>1623457890, 'follower_id'=>1324567890,
         'last_seen'=>'2006-01-08 23:54:41', 'network'=>'twitter'));
@@ -232,6 +232,11 @@ class TestOfFollowMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertEqual($result[0]["user_id"], 1234567890);
 
         $result = $this->DAO->getLeastLikelyFollowers(1324567890, 'twitter', 1, $page = 2);
+        $this->assertEqual($result[0]["user_id"], 1623457890);
+
+        $result = $this->DAO->getLeastLikelyFollowersThisWeek(1324567890, 'twitter', 15);
+        $this->assertIsA($result, "array");
+        $this->assertEqual(count($result), 1);
         $this->assertEqual($result[0]["user_id"], 1623457890);
     }
 

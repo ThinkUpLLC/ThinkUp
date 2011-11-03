@@ -171,11 +171,11 @@
             {/if}
             {if $least_likely_followers}
               <div class="clearfix">
-                <h2>Most Discerning Followers</h2>
+                <h2>This Week's Most Discerning Followers</h2>
                 <div class="clearfix">
                 {foreach from=$least_likely_followers key=uid item=u name=foo}
                   <div class="avatar-container" style="float:left;margin:7px;">
-                    <a href="http://twitter.com/{$u.user_name}" title="{$u.user_name}"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.ico" class="service-icon2"/></a>
+                    <a href="https://twitter.com/intent/user?user_id={$u.user_id}" title="{$u.user_name} has {$u.follower_count|number_format} followers and {$u.friend_count|number_format} friends"><img src="{$u.avatar}" class="avatar2"/><img src="{$site_root_path}plugins/{$u.network}/assets/img/favicon.ico" class="service-icon2"/></a>
                   </div>
                 {/foreach}
                 <div class="clearfix small prepend">

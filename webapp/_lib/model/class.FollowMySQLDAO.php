@@ -269,13 +269,36 @@ class FollowMySQLDAO extends PDODAO implements FollowDAO {
     public function getLeastLikelyFollowers($user_id, $network, $count = 20, $page = 1) {
         $start_on_record = ($page - 1) * $count;
 
-        $q  = "SELECT u.*, ROUND(100*friend_count/follower_count,4) ";
+        $q  = "SELECT u.*, ROUND((100*(friend_count/follower_count)),4) ";
         $q .= "AS LikelihoodOfFollow, ".$this->getAverageTweetCount()." ";
         $q .= "FROM #prefix#users AS u INNER JOIN #prefix#follows AS f ";
         $q .= "ON u.user_id = f.follower_id ";
         $q .= "WHERE f.user_id = :user_id AND f.network=:network AND f.network=u.network AND active=1 ";
         $q .= "AND follower_count > 10000 AND friend_count > 0 ";
         $q .= "ORDER BY LikelihoodOfFollow ASC, u.follower_count DESC ";
+        $q .= "LIMIT :start_on_record, :count ;";
+        $vars = array(
+            ':user_id'=>(string)$user_id, 
+            ':network'=>$network,
+            ':count'=>(int)$count,
+            ':start_on_record'=>(int)$start_on_record
+        );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getDataRowsAsArrays($ps);
+    }
+
+    public function getLeastLikelyFollowersThisWeek($user_id, $network, $count = 20, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
+
+        $q  = "SELECT u.*, ROUND((100*(friend_count/follower_count)),4) ";
+        $q .= "AS likelihood_of_follow, ".$this->getAverageTweetCount()." ";
+        $q .= "FROM #prefix#users AS u INNER JOIN #prefix#follows AS f ";
+        $q .= "ON u.user_id = f.follower_id ";
+        $q .= "WHERE f.first_seen >= date_sub(current_date, INTERVAL 7 day) ";
+        $q .= "AND f.user_id = :user_id AND f.network=:network AND f.network=u.network AND active=1 ";
+        $q .= "AND follower_count > 1000 AND friend_count > 0 ";
+        $q .= "ORDER BY likelihood_of_follow ASC, u.follower_count DESC ";
         $q .= "LIMIT :start_on_record, :count ;";
         $vars = array(
             ':user_id'=>(string)$user_id, 

@@ -155,7 +155,7 @@ interface FollowDAO {
     public function getMostFollowedFollowers($user_id, $network, $count = 20, $page = 1);
 
     /**
-     * Gets the followes with highest follower:friend count.
+     * Gets the followers with highest follower:friend count.
      * @param int $user_id
      * @param str $network
      * @param int $count
@@ -163,6 +163,16 @@ interface FollowDAO {
      * @return array - numbered keys, with arrays - named keys
      */
     public function getLeastLikelyFollowers($user_id, $network, $count = 20, $page = 1);
+
+    /**
+     * Gets the followers with highest follower:friend count first seen by ThinkUp in the past 7 days.
+     * @param int $user_id
+     * @param str $network
+     * @param int $count
+     * @param int $page defaults to 1
+     * @return array - numbered keys, with arrays - named keys
+     */
+    public function getLeastLikelyFollowersThisWeek($user_id, $network, $count = 20, $page = 1);
 
     /**
      * Gets the followers with the earliest join date.

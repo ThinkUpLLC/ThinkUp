@@ -250,8 +250,11 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
 
         $followers_ds1 = new Dataset('leastlikely', 'FollowDAO', "getLeastLikelyFollowers", array(
         $instance->network_user_id, 'twitter', 13, '#page_number#'));
-        $followers_ds1->addHelp('userguide/listings/twitter/dashboard_friends-mostactive');
         $followers_menu_item->addDataset($followers_ds1);
+
+        $followers_ds9 = new Dataset('leastlikelythisweek', 'FollowDAO', "getLeastLikelyFollowersThisWeek", array(
+        $instance->network_user_id, 'twitter', 13, '#page_number#'));
+        $followers_menu_item->addDataset($followers_ds9);
 
         $followers_ds2 = new Dataset("popular", 'FollowDAO', "getMostFollowedFollowers", array(
         $instance->network_user_id, 'twitter', 13, '#page_number#'));
@@ -455,7 +458,7 @@ class TwitterPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, Po
 
         //List membership count history
         $group_membership_history_tpl = Utils::getPluginViewDirectory('twitter').'twitter.listmembershipcount.tpl';
-        $group_trend_tab = new MenuItem('List stats', 'Your list membership count over time', 
+        $group_trend_tab = new MenuItem('List stats', 'Your list membership count over time',
         $group_membership_history_tpl, 'followers');
         $group_trend_tab_ds = new Dataset("list_membership_count_history_by_day", 'GroupMembershipCountDAO',
         'getHistory', array($instance->network_user_id, 'twitter', 'DAY', 15));
