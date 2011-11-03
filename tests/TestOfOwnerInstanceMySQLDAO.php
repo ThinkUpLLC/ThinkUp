@@ -44,6 +44,8 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
     public function tearDown() {
         parent::tearDown();
         $this->logger->close();
+        //clear doesOwnerHaveAccessToPost query cache
+        OwnerInstanceMySQLDAO::$post_access_query_cache = array();
     }
 
     public function testDelete() {
@@ -250,6 +252,10 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $post->is_protected = true;
         $this->assertFalse($dao->doesOwnerHaveAccessToPost($owner, $post));
 
+        // should have empty cache arrays
+        $this->assertEqual(count(OwnerInstanceMySQLDAO::$post_access_query_cache['1-twitter-network_id_cache']), 0);
+        $this->assertEqual(count(OwnerInstanceMySQLDAO::$post_access_query_cache['20-twitter-follower_id_cache']), 0);
+
         //protected post but owner is admin
         $owner->is_admin = true;
         $this->assertTrue($dao->doesOwnerHaveAccessToPost($owner, $post));
@@ -259,10 +265,19 @@ class TestOfOwnerInstanceMySQLDAO extends ThinkUpUnitTestCase {
         $this->assertFalse($dao->doesOwnerHaveAccessToPost($owner, $post));
 
         //protected post, owner is not admin, and owner DOES have an authed instance which follows author
+        OwnerInstanceMySQLDAO::$post_access_query_cache = array(); // clear cache
         $owner->id = 2;
         $follows_builder = FixtureBuilder::build('follows', array('user_id'=>'20', 'follower_id'=>'10',
         'network'=>'twitter'));
         $this->assertTrue($dao->doesOwnerHaveAccessToPost($owner, $post));
 
+        // should have populated cache arrays
+        $this->assertEqual(count(OwnerInstanceMySQLDAO::$post_access_query_cache['2-twitter-network_id_cache']), 1);
+        $this->assertEqual(count(OwnerInstanceMySQLDAO::$post_access_query_cache['20-twitter-follower_id_cache']), 1);
+        $this->assertEqual(
+        OwnerInstanceMySQLDAO::$post_access_query_cache['2-twitter-network_id_cache'][0]['network_user_id'], 10);
+        $this->assertEqual(
+        OwnerInstanceMySQLDAO::$post_access_query_cache['20-twitter-follower_id_cache'][0]['follower_id'], 10);
+        
     }
 }

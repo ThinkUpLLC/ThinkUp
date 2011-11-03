@@ -46,6 +46,8 @@ class TestOfPostController extends ThinkUpUnitTestCase {
 
     public function tearDown(){
         parent::tearDown();
+        //clear doesOwnerHaveAccessToPost query cache
+        OwnerInstanceMySQLDAO::$post_access_query_cache = array();
     }
 
     public function testConstructor() {
