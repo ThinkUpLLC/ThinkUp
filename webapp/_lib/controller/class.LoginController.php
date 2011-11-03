@@ -95,8 +95,10 @@ class LoginController extends ThinkUpController {
                         $owner_dao->updateLastLogin($user_email);
                         $owner_dao->resetFailedLogins($user_email);
                         $owner_dao->clearAccountStatus($user_email);
-                        $controller = new DashboardController(true);
-                        return $controller->go();
+                        if (!$this->redirect()) {
+                            $controller = new DashboardController(true);
+                            return $controller->go();
+                        }
                     }
                 }
             } else  {

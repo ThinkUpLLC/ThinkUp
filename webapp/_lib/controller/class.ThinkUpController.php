@@ -276,13 +276,31 @@ abstract class ThinkUpController {
     }
 
     /**
-     * Send content type header
+     * Send Content-Type header
      */
     protected function sendHeader() {
-        if ( ! headers_sent() ) { // suppress 'headers already sent' error while testing
+        if ( !headers_sent() ) { // suppress 'headers already sent' error while testing
             header('Content-Type: ' . $this->content_type, true);
         }
     }
+
+    /**
+     * Send Location header
+     * @param str $destination
+     * @return bool Whether or not redirect header was sent
+     */
+    protected function redirect($destination=null) {
+        if (!isset($destination)) {
+            $destination = THINKUP_BASE_URL;
+        }
+        if ( !headers_sent() ) {
+            header('Location: '.$destination);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Sets the view template filename
      *
