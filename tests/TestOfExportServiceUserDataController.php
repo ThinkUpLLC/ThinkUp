@@ -27,6 +27,7 @@
 require_once dirname(__FILE__).'/init.tests.php';
 require_once THINKUP_ROOT_PATH.'webapp/_lib/extlib/simpletest/autorun.php';
 require_once THINKUP_ROOT_PATH.'webapp/config.inc.php';
+require_once THINKUP_ROOT_PATH.'webapp/_lib/model/class.ExportMySQLDAO.php';
 
 class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
 
@@ -149,5 +150,45 @@ class TestOfExportServiceUserDataController extends ThinkUpUnitTestCase {
         $this->assertTrue($zip_files["/encoded_locations.tmp"]);
         $this->assertTrue($zip_files["/favorites.tmp"]);
         $za->close();
+    }
+
+    public function testMySQLErrors() {
+        $this->simulateLogin('me@example.com', true);
+        // backup of DAO mapping
+        $dao_mapping_backup = DAOFactory::$dao_mapping['ExportDAO'];
+
+        DAOFactory::$dao_mapping['ExportDAO']['mysql'] = 'TestExportDAOFileFail';
+        $controller = new ExportServiceUserDataController(true);
+        $_POST['instance_id'] = 1;
+        $results = $controller->go();
+        $this->assertPattern("/mysql user does not have the proper file permissions/", $results);
+
+        DAOFactory::$dao_mapping['ExportDAO']['mysql'] = 'TestExportDAOGrantFail';
+        $controller = new ExportServiceUserDataController(true);
+        $_POST['instance_id'] = 1;
+        $results = $controller->go();
+        $this->assertPattern("/mysql user does not have the proper permissions to grant/", $results);
+
+        DAOFactory::$dao_mapping['ExportDAO']['mysql'] = $dao_mapping_backup;
+    }
+}
+
+
+/**
+ * a mock ExportDAO to test file error
+ */
+class TestExportDAOFileFail {
+
+    public function dropExportedPostsTable($backup_file = null) {
+        throw new Exception("Can't get stat of file /foo");
+    }
+}
+
+/**
+ * a mock ExportDAO to test grant error
+ */
+class TestExportDAOGrantFail {
+    public function dropExportedPostsTable($backup_file = null) {
+        throw new Exception("Mysql does not have GRANT FILE ON permissions to write to: /bla");
     }
 }
