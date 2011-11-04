@@ -191,6 +191,15 @@ interface OwnerDAO {
      * @return int number of updated rows.
      */
     public function setOwnerActive($id, $is_activated);
+    
+     /**
+     * Sets an owner's admin status.
+     *
+     * @param str $owner_id
+     * @param int $is_admin Active = 1, Inactive=0.
+     * @return int number of updated rows.
+     */
+    public function setOwnerAdmin($id, $is_admin);
 
     /**
      * Generates and sets a new API key.
