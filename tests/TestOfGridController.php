@@ -275,7 +275,7 @@ class TestOfGridController extends ThinkUpUnitTestCase {
         'post_text'=>'My second @someuser1 post', 'network'=>'twitter', 'post_id' => '10765432100123456782'));
 
         $reply_builder = FixtureBuilder::build('posts', array('post_id' => '10765432100123456783',
-        'author_username'=>'reply_user', 'post_text'=>'Reply to a post', 'network'=>'twitter', 
+        'author_username'=>'reply_user', 'post_text'=>'Reply to a post', 'network'=>'twitter',
         'in_reply_to_post_id' => '10765432100123456781', 'author_user_id'=>'1234','is_protected' => $is_protected));
 
         return array($owner_builder, $instance_builder, $owner_instance_builder, $posts1_builder,
