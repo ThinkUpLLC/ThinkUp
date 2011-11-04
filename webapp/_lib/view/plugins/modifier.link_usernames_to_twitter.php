@@ -44,5 +44,6 @@
  * @return string
  */
 function smarty_modifier_link_usernames_to_twitter($text) {
-    return preg_replace('/(^|[^a-z0-9_])@([a-z0-9_]+)/i', '$1<a href="http://twitter.com/$2">@$2</a>', $text);
+    return preg_replace('/(^|[^a-z0-9_])@([a-z0-9_]+)/i',
+    '$1<a href="https://twitter.com/intent/user?screen_name=$2">@$2</a>', $text);
 }
