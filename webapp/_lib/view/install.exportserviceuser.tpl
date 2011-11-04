@@ -20,6 +20,24 @@
         through this interface.
     </p>
 </div>
+{elseif $mysql_file_perms}
+<div class="alert urgent" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
+    <p>
+        <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
+        It looks like the MySQL user does not have the proper file permissions to export data. Please see the
+        <a href="http://thinkup.readthedocs.org/en/latest/troubleshoot/messages/mysqlfile.rst">ThinkUp 
+        documentation</a> for more info on how to resolve this issue.
+    </p>
+</div>
+{elseif $grant_perms}
+<div class="alert urgent" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
+    <p>
+        <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
+        It looks like the MySQL user does not have the proper permissions to export data. Please see the
+        <a href="http://thinkup.readthedocs.org/en/latest/troubleshoot/messages/mysqlgrant.rst">ThinkUp 
+        documentation</a> for more info on how to resolve this issue.
+    </p>
+</div>
 {else}
 <div class="">
     {if $messages}

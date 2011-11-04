@@ -63,7 +63,7 @@ class ExportServiceUserDataController extends ThinkUpAdminController {
 
     public function adminControl() {
         $this->disableCaching();
-        if (!BackupController::checkForZipSupport()) {
+        if (! BackupController::checkForZipSupport()) {
             $this->addToView('no_zip_support', true);
         } else {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
@@ -84,7 +84,9 @@ This zip archive contains all the data related to a specific service user gather
                 'describes how to import that data into an existing ThinkUp installation.
 
 ');
-                    self::exportData($instance->network_username, $instance->network);
+                    if (! self::exportData($instance->network_username, $instance->network)) {
+                        return $this->generateView();
+                    }
                     self::generateZipFile();
                 } else {
                     $this->addErrorMessage('Invalid service user');
@@ -107,7 +109,7 @@ This zip archive contains all the data related to a specific service user gather
         $import_instructions = "To import your data, run the following commands in MySQL after you make two tweaks:
 
 1. In each command, where it says INTO TABLE tu_destination, replace tu_destination with the name of your destination ".
-        "table. 
+        "table.
 2. Replace /your/path/to/data.tmp to your actual file path. Make sure the data.tmp files and their enclosing ".
         "folder have the appropriate permissions for mysql to read the file. (Otherwise you'll get a ".
         "'ERROR 13 (HY000): Can't get stat of' error.)
@@ -115,17 +117,29 @@ This zip archive contains all the data related to a specific service user gather
 Commands to run:
 
 ";
-        self::appendToReadme($import_instructions);
+        try {
+            //begin export
+            self::appendToReadme($import_instructions);
 
-        //get user id (some export methods need it)
-        $user_dao = DAOFactory::getDAO('UserDAO');
-        $user = $user_dao->getUserByName($username, $service);
-        $user_id = $user->user_id;
+            //get user id (some export methods need it)
+            $user_dao = DAOFactory::getDAO('UserDAO');
+            $user = $user_dao->getUserByName($username, $service);
+            $user_id = $user->user_id;
 
-        //begin export
-        self::exportPostsRepliesRetweetsFavoritesMentions($username, $user_id, $service);
-        self::exportFollowsAndFollowers($user_id, $service);
-        self::exportFollowerCountHistory($user_id, $service);
+            self::exportPostsRepliesRetweetsFavoritesMentions($username, $user_id, $service);
+            self::exportFollowsAndFollowers($user_id, $service);
+            self::exportFollowerCountHistory($user_id, $service);
+            return true;
+        } catch(Exception $e) {
+            $err = $e->getMessage();
+            if (preg_match("/Can't create\/write to file/", $err) || preg_match("/Can\'t get stat of/", $err)) {
+                // a file open perm issue?
+                $this->addToView('mysql_file_perms', true);
+            } else {
+                $this->addToView('grant_perms', true);
+            }
+            return false;
+        }
     }
 
     protected function generateZipFile() {

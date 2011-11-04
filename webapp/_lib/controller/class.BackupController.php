@@ -53,32 +53,48 @@ class BackupController extends ThinkUpAdminController {
         // pass the count of the table with  the most records
         $table_stats_dao = DAOFactory::getDAO('TableStatsDAO');
         $table_counts = $table_stats_dao->getTableRowCounts();
-        if($table_counts[0]['count'] > UpgradeController::$WARN_TABLE_ROW_COUNT) {
+        if ($table_counts[0]['count'] > UpgradeController::$WARN_TABLE_ROW_COUNT) {
             $this->addToView('high_table_row_count',$table_counts[0]);
         }
         try {
             $backup_dao = DAOFactory::getDAO('BackupDAO');
             if (isset($_GET['backup'])) {
                 self::mutexLock();
-                /* export/download backup file */
-                $backup_dao->export();
-                if ( ! headers_sent() ) { // this is so our test don't barf on us
-                    header('Content-Type: application/zip');
-                    header('Content-Disposition: attachment; filename="thinkup_db_backup.zip"');
-                    header('Pragma: no-cache');
-                    header('Expires: 0');
-                }
-                $fh = fopen($this->backup_file, "rb");
-                if ($fh) {
-                    while (!feof($fh)) {
-                        $data = fread($fh, 256);
-                        echo $data;
-                        flush();
+                try {
+                    /* export/download backup file */
+                    $backup_dao->export();
+                    if ( ! headers_sent() ) { // this is so our test don't barf on us
+                        header('Content-Type: application/zip');
+                        header('Content-Disposition: attachment; filename="thinkup_db_backup.zip"');
+                        header('Pragma: no-cache');
+                        header('Expires: 0');
                     }
-                    fclose($fh);
-                    unlink($this->backup_file);
-                } else {
-                    throw new Exception("Unable to read backup zip file: " + $this->backup_file);
+                    $fh = fopen($this->backup_file, "rb");
+                    if ($fh) {
+                        while (!feof($fh)) {
+                            $data = fread($fh, 256);
+                            echo $data;
+                            flush();
+                        }
+                        fclose($fh);
+                        unlink($this->backup_file);
+                    } else {
+                        throw new Exception("Unable to read backup zip file: " + $this->backup_file);
+                    }
+                } catch (MySQLGrantException $e) {
+                    $this->addErrorMessage('It looks like the MySQL user does not have the proper permissions to grant'
+                    . ' export Access. Please see the'
+                    . ' <a href="http://thinkup.readthedocs.org/en/latest/troubleshoot/common/backupcannotwrite.html">'
+                    . ' ThinkUp documentation</a> for more info on how to resolve this issue.');
+                    self::mutexLock(true);
+                    return $this->generateView();
+                } catch (OpenFileException $e) {
+                    $this->addErrorMessage('It looks like the MySQL user does not have the proper file permissions to'
+                    . ' export data. Please see the'
+                    . ' <a href="http://thinkup.readthedocs.org/en/latest/troubleshoot/common/backupcannotwrite.html">'
+                    . ' ThinkUp documentation</a> for more info on how to resolve this issue.');
+                    self::mutexLock(true);
+                    return $this->generateView();
                 }
                 self::mutexLock(true);
             } else if (isset($_FILES['backup_file'])) {
