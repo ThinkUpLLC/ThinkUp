@@ -35,12 +35,7 @@ interface OwnerDAO {
      * @return Owner
      */
     public function getByEmail($email);
-    /**
-     * Gets owner by id
-     * @param int $id
-     * @return Owner
-     */
-    public function getById($id);
+
     /**
      * Gets all ThinkUp owners
      * @return array Of Owner objects
@@ -80,6 +75,14 @@ interface OwnerDAO {
      * @return int Affected rows
      */
     public function deactivateOwner($email);
+
+    /**
+     * Delete an owner.
+     * @param  int id
+     * @return int Affected rows
+     */
+     
+    public function deleteOwner($id);
 
     /**
      * Set hashed, owner password in the data store.
@@ -188,15 +191,6 @@ interface OwnerDAO {
      * @return int number of updated rows.
      */
     public function setOwnerActive($id, $is_activated);
-
-    /**
-     * Sets an owner's admin status.
-     *
-     * @param str $owner_id
-     * @param int $is_admin Active = 1, Inactive=0.
-     * @return int number of updated rows.
-     */
-    public function setOwnerAdmin($id, $is_admin);
 
     /**
      * Generates and sets a new API key.

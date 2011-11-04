@@ -59,18 +59,6 @@ SQL;
         return $this->getDataRowAsObject($ps, 'Owner');
     }
 
-    public function getById($id) {
-        $q = 'SELECT id,full_name,email,is_admin,last_login,is_activated,password_token,' .
-            'account_status,failed_logins,api_key ' .
-            'FROM #prefix#owners AS o WHERE id = :id';
-        $vars = array(
-            ':id'=>$id
-        );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $ps = $this->execute($q, $vars);
-        return $this->getDataRowAsObject($ps, 'Owner');
-    }
-
     public function getAllOwners() {
         $q = " SELECT id, full_name, email, is_admin, is_activated, last_login ";
         $q .= "FROM #prefix#owners ORDER BY last_login DESC;";
@@ -145,6 +133,18 @@ SQL;
             ':email'=>$email,
             ':is_activated'=>(($is_activated)?1:0)
         );
+        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
+        $ps = $this->execute($q, $vars);
+        return $this->getUpdateCount($ps);
+    }
+    
+    public function deleteOwner($id) {
+        //deletes an onwer owner
+        $q = " DELETE FROM #prefix#owners WHERE id=:id";
+        $vars = array(
+        	':id'=>$id
+        );
+        
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
@@ -301,15 +301,6 @@ SQL;
              WHERE id=:id";
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, array(':is_activated' => $is_activated, ':id' => $id));
-        return $this->getUpdateCount($stmt);
-    }
-
-    public function setOwnerAdmin($id, $is_admin) {
-        $q = "UPDATE #prefix#owners
-             SET is_admin=:is_admin
-             WHERE id=:id";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $stmt = $this->execute($q, array(':is_admin' => $is_admin, ':id' => $id));
         return $this->getUpdateCount($stmt);
     }
 

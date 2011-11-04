@@ -31,15 +31,14 @@
  */
 class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
 
-    public function doesOwnerHaveAccessToInstance(Owner $owner, Instance $instance) {
-        // verify $owner has an id
-        if (! isset($owner->id)) {
-            $message = 'doesOwnerHaveAccessToInstance() requires an "Owner" object with "id" defined';
+    public function doesOwnerHaveAccess($owner, $instance) {
+        // verify $owner is a proper object and has an owner_id
+        if (! is_a($owner, 'Owner') || ! isset($owner->id)) {
+            $message = 'doesOwnerHaveAccess() requires a valid "Owner" object with "id" defined';
             throw new BadArgumentException($message);
         }
-        // verify $instance has an id
-        if (! isset($instance->id)) {
-            $message = 'doesOwnerHaveAccessToInstance() requires an "Instance" object with "id" defined';
+        if (! is_a($instance, 'Instance') || ! isset($instance->id)) {
+            $message = 'doesOwnerHaveAccess() requires a valid "Instance" object with "id" defined';
             throw new BadArgumentException($message);
         }
         if ($owner->is_admin) {
@@ -57,53 +56,9 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                 WHERE 
                     i.id = :id AND oi.owner_id = :owner_id';
             $vars = array(':owner_id' => $owner->id, ':id' => $instance->id);
-            if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
             $stmt = $this->execute($q, $vars);
             return $this->getDataIsReturned($stmt);
         }
-    }
-
-    public function doesOwnerHaveAccessToPost(Owner $owner, Post $post) {
-        // verify $owner has an id
-        if ( !isset($owner->id)) {
-            $message = 'doesOwnerHaveAccessToPost() requires an "Owner" object with "id" defined';
-            throw new BadArgumentException($message);
-        }
-
-        //if post is public OR the owner is an admin, show it
-        if (!$post->is_protected || $owner->is_admin) {
-            return true;
-        }
-
-        //select all the network user ID's that the owner auth'ed
-        $q = "SELECT  i.network_user_id
-        FROM  #prefix#owner_instances oi
-        INNER JOIN #prefix#instances i ON i.id = oi.instance_id
-        WHERE oi.owner_id = :owner_id AND i.network = :network";
-
-        $vars = array(':owner_id' => $owner->id, ':network'=> $post->network);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $stmt = $this->execute($q, $vars);
-        $owner_network_user_ids = $this->getDataRowsAsArrays($stmt);
-
-        // select all the network user ID's which follow protected author
-        $q = "SELECT f.follower_id
-        FROM  #prefix#follows f
-        WHERE f.user_id = :user_id AND f.network = :network";
-        $vars = array(':user_id' => $post->author_user_id, ':network'=> $post->network);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
-        $stmt = $this->execute($q, $vars);
-        $authed_network_user_ids = $this->getDataRowsAsArrays($stmt);
-
-        // If there's overlap, return true else return false
-        foreach ($owner_network_user_ids as $owner_network_user_id) {
-            foreach ($authed_network_user_ids as $authed_network_user_id) {
-                if ($owner_network_user_id["network_user_id"] == $authed_network_user_id["follower_id"]) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public function get($owner_id, $instance_id) {
@@ -115,7 +70,6 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                 owner_id = :owner_id AND instance_id = :instance_id";
 
         $vars = array(':owner_id' => $owner_id, ':instance_id' => $instance_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, $vars);
         $owner_instance = $this->getDataRowAsObject($stmt, 'OwnerInstance');
         return $owner_instance;
@@ -129,7 +83,6 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
             WHERE  instance_id = :instance_id";
 
         $vars = array(':instance_id' => $instance_id);
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, $vars);
         $owner_instances = $this->getDataRowsAsObjects($stmt, 'OwnerInstance');
         return $owner_instances;
@@ -145,7 +98,6 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                       ':oauth_access_token' => $oauth_token,
                       ':oauth_access_token_secret' => $oauth_token_secret
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, $vars);
         if ( $this->getInsertCount($stmt) > 0) {
             return true;
@@ -154,14 +106,14 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         }
     }
 
-    public function delete($owner_id, $instance_id) {
+    public function delete($owner_id, $instance_id='') {
         $q  = "DELETE FROM #prefix#owner_instances ";
-        $q .= "WHERE owner_id=:owner_id AND instance_id=:instance_id;";
+        $q .= "WHERE owner_id=:owner_id ";
+        if ($instance_id!=='') $q.= "AND instance_id=:instance_id;";
         $vars = array(
             ':owner_id'=>$owner_id,
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -172,7 +124,6 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
         $vars = array(
             ':instance_id'=>$instance_id
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         return $this->getUpdateCount($ps);
     }
@@ -189,7 +140,6 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                         ':oauth_access_token' => $oauth_token,
                         ':oauth_access_token_secret' => $oauth_token_secret
         );
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, $vars);
         $insert_count = $this->getInsertCount($stmt);
         return ($insert_count > 0) ? true : false;
@@ -202,9 +152,9 @@ class OwnerInstanceMySQLDAO extends PDODAO implements OwnerInstanceDAO {
                 #prefix#owner_instances 
             WHERE 
                 instance_id = :instance_id ORDER BY id ASC LIMIT 1";
-        if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $stmt = $this->execute($q, array(':instance_id' => $id));
         $tokens = $this->getDataRowAsArray($stmt);
         return $tokens;
     }
+
 }
