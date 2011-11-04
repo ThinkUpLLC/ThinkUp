@@ -11,7 +11,6 @@
 {if $options_markup}
 {if $user_is_admin}
 {include file="_plugin.showhider.tpl"}
-<h2 class="subhead">Settings</h2>
 {include file="_usermessage.tpl" field="setup"}
 {/if}
 {$options_markup}
