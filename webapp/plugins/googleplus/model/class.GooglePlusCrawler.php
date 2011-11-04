@@ -219,19 +219,19 @@ class GooglePlusCrawler {
                     $post_dao->updatePostText($post['post_id'], 'google+', $post['post_text']);
                 }
 
-                if (isset($item->object->attachments)) {
+                if (isset($item->object->attachments) && isset($item->object->attachments[0]->url)) {
                     $link_url = $item->object->attachments[0]->url;
                     $link = new Link(array(
-                    "url"=>$link_url, 
-                    "expanded_url"=>$link_url, 
+                    "url"=>$link_url,
+                    "expanded_url"=>$link_url,
                     "image_src"=>(isset($item->object->attachments[0]->image->url))
                     ?$item->object->attachments[0]->image->url:'',
-                    "caption"=>'', 
+                    "caption"=>'',
                     "description"=>(isset($item->object->attachments[0]->content))
                     ?$item->object->attachments[0]->content:'',
                     "title"=>(isset($item->object->attachments[0]->displayName))
                     ?$item->object->attachments[0]->displayName:'',
-                    "post_key"=>$inserted_post_key 
+                    "post_key"=>$inserted_post_key
                     ));
                     $added_links = $link_dao->insert($link);
                 }
