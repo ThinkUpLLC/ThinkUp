@@ -114,11 +114,23 @@ class GooglePlusPluginConfigurationController extends PluginConfigurationControl
             } else {
                 $gplus_api_accessor = new GooglePlusAPIAccessor();
                 $gplus_user = $gplus_api_accessor->apiRequest('people/me', $tokens->access_token, null);
-                $gplus_user_id = $gplus_user->id;
-                $gplus_username = $gplus_user->displayName;
+                if (isset($gplus_user->error)) {
+                    if ($gplus_user->error->code == "403" && $gplus_user->error->message == 'Access Not Configured') {
+                        $this->addErrorMessage("Oops! Looks like Google+ API access isn't turned on. ".
+                        "<a href=\"http://code.google.com/apis/console#access\">In the Google APIs console</a>, ".
+                        "in Services, flip the Google+ API Status switch to 'On' and try again.", 'authorization');
+                    } else {
+                        $this->addErrorMessage("Oops! Something went wrong querying the Google+ API.<br>Google says \"".
+                        $gplus_user->error->code.": ".$gplus_user->error->message.
+                        ".\" Please double-check your settings and try again.", 'authorization');
+                    }
+                } else {
+                    $gplus_user_id = $gplus_user->id;
+                    $gplus_username = $gplus_user->displayName;
 
-                $this->saveAccessTokens($gplus_user_id, $gplus_username, $tokens->access_token,
-                $tokens->refresh_token);
+                    $this->saveAccessTokens($gplus_user_id, $gplus_username, $tokens->access_token,
+                    $tokens->refresh_token);
+                }
             }
         }
 

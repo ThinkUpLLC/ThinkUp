@@ -327,4 +327,32 @@ class TestOfGooglePlusPluginConfigurationController extends ThinkUpUnitTestCase 
         '<br>Google says "google_error_text." Please double-check your settings and try again.');
         $this->debug(Utils::varDumpToString($msgs));
     }
+
+    public function testGetUserProfileWith403Error() {
+        $builders = $this->buildPluginOptions();
+
+        $config = Config::getInstance();
+        $config->setValue('site_root_path', '/');
+
+        $plugin_options_dao = DAOFactory::getDAO("PluginOptionDAO");
+        PluginOptionMySQLDAO::$cached_options = array();
+
+        $builders[] = FixtureBuilder::build('owners', array('email' => 'me@example.com', 'user_activated' => 1) );
+
+        $this->simulateLogin('me@example.com');
+        $owner_dao = DAOFactory::getDAO('OwnerDAO');
+        $owner = $owner_dao->getByEmail(Session::getLoggedInUser());
+        $controller = new GooglePlusPluginConfigurationController($owner);
+
+        $_GET['code'] = 'test-google-provided-code-user-profile-403-error';
+
+        $results = $controller->go();
+        $v_mgr = $controller->getViewManager();
+        $this->assertEqual($v_mgr->getTemplateDataItem('success_msg'), '');
+        $msgs = $v_mgr->getTemplateDataItem('error_msgs');
+        $this->assertEqual($msgs['authorization'], 'Oops! Looks like Google+ API access isn\'t turned on. '.
+        '<a href="http://code.google.com/apis/console#access">In the Google APIs console</a>, in Services, flip the '.
+        'Google+ API Status switch to \'On\' and try again.');
+        $this->debug(Utils::varDumpToString($msgs));
+    }
 }
