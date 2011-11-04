@@ -43,7 +43,7 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         $q .= "FROM #prefix#users ";
         $q .= "WHERE user_id = :user_id AND network = :network;";
         $vars = array(
-            ':user_id'=>(string)$user_id, 
+            ':user_id'=>(string)$user_id,
             ':network'=>$network
         );
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
@@ -147,10 +147,6 @@ class UserMySQLDAO extends PDODAO implements UserDAO {
         if ($this->profiler_enabled) Profiler::setDAOMethod(__METHOD__);
         $ps = $this->execute($q, $vars);
         $results = $this->getUpdateCount($ps);
-        if ($results > 0) {
-            $this->logger->logInfo((($is_user_in_storage)?"Updated":"Added"). " user ".$user->username.
-            " (found in ".$user->found_in.")", __METHOD__.','.__LINE__);
-        }
         return $results;
     }
 
