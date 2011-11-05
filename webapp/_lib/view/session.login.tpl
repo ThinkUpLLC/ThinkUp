@@ -1,8 +1,7 @@
 {include file="_header.tpl"}
 {include file="_statusbar.tpl"}
 
-
-<div class="container_24 thinkup-canvas round-all clearfix">
+<div class="container_24 thinkup-canvas round-all clearfix" style="margin-top : 10px;">
 
 	<div class="grid_18" style="margin-bottom : 20px; margin-left : 100px;">
 		{include file="_usermessage.tpl"}
@@ -36,7 +35,7 @@
 			  </div>
 			</div>
 			<div class="clearfix">
-			  <div class="grid_10 prefix_6 left">
+			  <div class="grid_10 prefix_7 left">
 				<input type="submit" id="login-save" name="Submit" class="linkbutton emphasized" value="Log In">
 			  </div>
 			</div>

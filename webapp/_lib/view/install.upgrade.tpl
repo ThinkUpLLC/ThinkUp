@@ -1,18 +1,22 @@
 {include file="_header.tpl"}
 {include file="_statusbar.tpl"}
-<div class="container_24 thinkup-canvas round-all">
+
+<div class="container_24 thinkup-canvas round-all clearfix" style="margin-top : 10px;">
+
+	<div class="grid_18" style="margin-bottom : 20px; margin-left : 100px;">
+		{include file="_usermessage.tpl"}
+	</div>
+	
+	
+	
+
   <div class="prepend_20">
     <h1>Upgrade ThinkUp</h1>
-  </div>
-  <div class="clearfix prepend_20">
-    <div class="grid_17 prefix_3 left">
-    {include file="_usermessage.tpl"}
-    </div>
   </div>
 
     {if $high_table_row_count}
     <!-- too many db records, use CLI interface? -->
-    <div id="info-parent" class="ui-state-highlight ui-corner-all" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
+    <div id="info-parent" class="alert urgent" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
         <div id="migration-info">
            <p>
             <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
@@ -27,7 +31,7 @@
 
     {if ! $migrations[0]}
     <!-- no upgrade needed -->
-     <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+     <div class="alert helpful" style="margin: 20px 0px; padding: 0.5em 0.7em;">
          <p>
            <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
            Your database is up to date. <a href="{$site_root_path}">Continue using ThinkUp</a>, or <a href="backup.php">back up your database.</a>
@@ -37,7 +41,7 @@
         </p>
      </div> 
     {else}
-    <div id="info-parent" class="ui-state-highlight ui-corner-all" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
+    <div id="info-parent" class="alert urgent" style="margin: 0px 50px 0px 50px; padding: 0.5em 0.7em;">
         <div id="migration-info">
         <p>
         <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
@@ -57,17 +61,17 @@
     <div class="grid_10 prefix_9 left">
         <form name="upgrade" method="get" action="" id="upgrade-form" onsubmit="return false;">
         <input id="migration-submit" 
-        name="Submit" class="linkbutton ui-state-default ui-priority-secondary ui-corner-all" 
+        name="Submit" class="linkbutton emphasized" 
         value="Update ThinkUp's Database" type="submit" style="font-size:24px;line-height:2.2em;">
         </form>
         </div>
      </div>
      
-     <div id="upgrade-error" class="ui-state-error ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em; display: none;">
+     <div id="upgrade-error" class="alert urgent" style="margin: 20px 0px; padding: 0.5em 0.7em; display: none;">
      Error
      </div>
 
-     <div id="migration-status-details" style="margin: 20px; display: none;"><p><a href="javascript:jchange('migration-status');">Show update details:</a></p></div>
+     <div id="migration-status-details" style="margin: 20px; display: none;"><p><a href="javascript:jchange('migration-status');" class="linkbutton">Show update details:</a></p></div>
      {literal}
 <script language="javascript" type="text/javascript">
 function jchange(o) {

@@ -1,9 +1,14 @@
 /* RESETS 
 ==============================*/
-html {color: #222; font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;}
+html {
+	color: #222;
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
 body{
      background: #ebebeb; /* be sure to add the texture background */
      font-family: "Helvetica Neue", Arial, "Helvetica", sans-serif;
+     min-height : 100%;
 }
 
 a, a:visited{
@@ -101,7 +106,9 @@ ul.user-accounts li ul li {margin-left:2em;}
 #content {margin:0;padding:0;}
 .container {padding:0px;width:960px;margin: 0 auto;}
 .top {position:relative;top-20px;}
-.thinkup-canvas {}
+.thinkup-canvas {
+
+}
 #tweets_content, #mentions_content, #followers_content, #friends_content, #favorites_content, #links_content {position:relative;top:-40px;}
 
 #hd, #ft {padding : 20px 20px 20px 0px;}
@@ -257,7 +264,6 @@ h4.trigger a:active {border:none}
 /* body overlay div (backround grayout for slick grid search unit */
 #screen {position: absolute; left: 0; top: 0; background: #000; z-index: 99; color: red; display: none;}
 
-.ui-state-success { background-color: #BFDFBF; border: 1px solid green; color:green; }
 .ui-state-highlight p a {color:#416A93;}
 .ui-state-error p a {color:#416A93;}
 
@@ -401,7 +407,7 @@ line-height:1.8em;
    ****************************************
 */
 
-.linkbutton {
+.ui-state-success, .linkbutton {
 	background: #ebeadf;
   
 		 -moz-border-radius: 4px;
@@ -436,12 +442,21 @@ a.linkbutton.help {
 .linkbutton.emphasized {
 	font-size : larger;
 	min-width : 100px;
+	padding : 14px 14px;
 }
 
 .linkbutton.emphasized:hover {
 	background: #31C22D;
 }
 
+.ui-state-success {
+	background-color: #00bdf2;
+	color : white;
+/*
+	margin: 6px;
+	padding: 4px 12px;
+*/
+}
 
 #profile-bar{
      background: #FFF;
@@ -1031,11 +1046,16 @@ aside{
                background-position: 0 -25px;
           }
 #footer{
-     background: #7d7d7d;
-     margin: 0;
-     position : relative;
-     bottom : 0px;
-     width : 100%;
+	background: #7d7d7d;
+	position : relative;
+	width : 960px;
+	clear: both;
+	margin: 75px auto 75px auto;
+     border: 1px solid #c9c9c9;
+    
+          -moz-border-radius: 8px;
+          -webkit-border-radius: 8px;
+     border-radius: 8px;  
 }
      #footer div.content{
           width: 90%;

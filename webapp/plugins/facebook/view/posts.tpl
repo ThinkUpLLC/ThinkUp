@@ -7,7 +7,7 @@
     <div class="view-all"><a href="index.php?v=posts-all&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
 </div>
 {else}
-    <div class="alert helpful">No posts to display. {if $logged_in_user}Update your data and try again.{/if}</div>
+    <div class="alert helpful" style="clear : left;">No posts to display. {if $logged_in_user}Update your data and try again.{/if}</div>
 {/if}
 
 {if $wallposts|@count >1}

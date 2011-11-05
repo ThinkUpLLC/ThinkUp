@@ -14,12 +14,12 @@
 </div>
 
 
-<div id="add-account-div" style="display: none;">
+<div id="add-account-div" style="display: none; clear : left; margin-bottom : 35px;">
 <br />
     {if $fbconnect_link}
 <br>
      {include file="_usermessage.tpl" field="authorization"}
-<a href="{$fbconnect_link}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Add a Facebook User</a>
+<a href="{$fbconnect_link}" class="linkbutton emphasized">Add a Facebook User</a>
     {/if}
     
 </div>
@@ -36,15 +36,15 @@
             <a href="{$site_root_path}index.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
         </div>
         <div class="grid_4 right">
-            <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_public}btnPriv{else}btnPub{/if}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
+            <span id="div{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="linkbutton {if $i->is_public}btnPriv{else}btnPub{/if}" value="{if $i->is_public}set private{else}set public{/if}" /></span>
         </div>
         <div class="grid_4 right">
-            <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="tt-button ui-state-default ui-priority-secondary ui-corner-all {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
+            <span id="divactivate{$i->id}"><input type="submit" name="submit" id="{$i->id}" class="linkbutton {if $i->is_active}btnPause{else}btnPlay{/if}" value="{if $i->is_active}pause crawling{else}start crawling{/if}" /></span>
         </div>
         <div class="grid_8 right">
             <span id="delete{$i->id}"><form method="post" action="{$site_root_path}account/?p=facebook"><input type="hidden" name="instance_id" value="{$i->id}">
             {insert name="csrf_token"}<!-- delete account csrf token -->
-            <input onClick="return confirm('Do you really want to delete this Facebook account from ThinkUp?');"  type="submit" name="action" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="delete" /></form></span>
+            <input onClick="return confirm('Do you really want to delete this Facebook account from ThinkUp?');"  type="submit" name="action" class="linkbutton" value="delete" /></form></span>
         </div>
     </div>
     {/foreach}
@@ -52,12 +52,13 @@
 
     {if isset($owner_instance_pages) && count($owner_instance_pages) > 0 }{include file="_usermessage.tpl" field="page_add"}{/if}
 
-<div class="section">
 
     {if isset($owner_instance_pages) && count($owner_instance_pages) > 0 }
+<div class="section">
     <h2>Facebook Pages</h2>
+    <div class="article">
     {foreach from=$owner_instance_pages key=iid item=i name=foo}
-    <div class="clearfix article">
+    <div class="clearfix">
         <div class="grid_4 right" style="padding-top:.5em;">
             <a href="{$site_root_path}index.php?u={$i->network_username|urlencode}&n={$i->network|urlencode}">{$i->network_username}</a> 
         </div>
@@ -74,8 +75,9 @@
         </div>
 
     </div>{/foreach}
-    {/if}
+    </div>
 </div>
+    {/if}
 
 <div class="section">
 <h2>Add a Facebook Page</h2>
@@ -110,7 +112,7 @@
              </select>
         </div>
         <div class="grid_7">
-             <span id="divaddpage{$i->network_username}"><input type="submit" name="action" class="tt-button ui-state-default ui-priority-secondary ui-corner-all
+             <span id="divaddpage{$i->network_username}"><input type="submit" name="action" class="linkbutton
 addPage"  id="{$i->network_username}" value="add page" /></span>
         </div>
         </form>
@@ -122,8 +124,9 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
     {/if}
 {/foreach}
 
-{/if}
 </div>
+
+{/if}
 
 <div id="contact-admin-div" style="display: none;">
 {include file="_plugin.admin-request.tpl"}
@@ -135,7 +138,7 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
 
 <p style="padding:5px">To set up the Facebook plugin:</p>
 <ol style="margin-left:40px">
-<li><a href="https://developers.facebook.com/apps" target="_blank">Click the "Create New App" button on Facebook.</a></li>
+<li><a href="https://developers.facebook.com/apps" target="_blank" style="text-decoration: underline;">Click the "Create New App" button on Facebook.</a></li>
 <li>
     Fill in the following settings.<br />
     App Display Name: <span style="font-family:Courier;">ThinkUp</span><br />
@@ -174,7 +177,9 @@ addPage"  id="{$i->network_username}" value="add page" /></span>
       />
     </object>
 </li>
-<li>Enter the Facebook-provided App ID and App Secret here.</li></ol>
+<li>Enter the Facebook-provided App ID and App Secret here.</li>
+</ol>
+
 {/if}
 
 
