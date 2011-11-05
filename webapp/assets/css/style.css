@@ -57,8 +57,6 @@ a:hover, a:active { outline: 0; }
 
 /* WEIGHTS, COLORS, SIZES
 ==============================*/
-.bold {font-weight:700}
-.gray {color: #666;}
 
 .small {font-size: .8em;}
 .large {font-size: 1.6em;}
@@ -66,6 +64,27 @@ a:hover, a:active { outline: 0; }
 .underline {text-decoration:underline;}
 
 .lh_1 {line-height:1em;}
+
+/* --- APPLICATION TITLE ---------------------- */
+
+#app-title {width:300px;float:left;margin-top:10px; margin-left : 10px; margin-bottom : 12px;}
+#app-title h1 {color:#333333;font-size: 30px;letter-spacing: -.08em;margin:0;padding:15px 0 0 0;line-height:.8em;}
+#app-title h2 {font-size: 13px;color: #416A93;margin:0;padding:0 0 0 10px;line-height:.8em;}
+#app-title a:link, #app-title a:visited, #app-title a:hover  {text-decoration:none;}
+#app-title img {float:left;margin-right:2px;}
+
+#app-title #headerthink {
+	font-weight:700;
+}
+
+#app-title #headerthink:hover {
+	color: #00AEEF;
+}
+
+#app-title #headerup {
+	color: #666;
+	font-weight : 200;
+}
 
 
 /* GRAPHICS AND ICONS 
@@ -162,7 +181,7 @@ h4.trigger a:active {border:none}
 #thinkup-tabs .ui-corner-all {}
 
 /* added to ul */
-#thinkup-tabs .ui-tabs-nav {margin:0px;background-color: #E6E6E6;border:1px solid;}
+#thinkup-tabs .ui-tabs-nav {margin:0px;}
 #thinkup-tabs .ui-helper-reset {}
 #thinkup-tabs .ui-helper-clearfix {}
 #thinkup-tabs .ui-widget-header {background-image:none;}
@@ -393,9 +412,10 @@ line-height:1.8em;
 	display: inline;
 	margin: 6px;
 	padding: 4px 12px;
+	border : none;
 }
 
-.linkbutton:hover {
+.linkbutton:hover, .linkbutton.emphasized {
 	background-color: #00bdf2;
 	color : white;
 }
@@ -412,6 +432,16 @@ a.linkbutton.help {
 	padding-top : 4px;
 	margin : 0 6px 6px 6px;
 }
+
+.linkbutton.emphasized {
+	font-size : larger;
+	min-width : 100px;
+}
+
+.linkbutton.emphasized:hover {
+	background: #31C22D;
+}
+
 
 #profile-bar{
      background: #FFF;
@@ -1272,10 +1302,12 @@ input:invalid, textarea:invalid { background-color: #f0dddd; }
      .alert.stats{
           background: #FFF;
      }
-          .alert.stats p{
-               border-bottom: 1px solid #b7c5ca;
-               padding-bottom: 8px;
-          }
+		.alert.stats p{
+			/*			
+			border-bottom: 1px solid #b7c5ca;
+			*/
+			padding-bottom: 8px;
+		}
           #alert-avatars{
                padding: 4px 16px 16px 16px;
                height: 48px;

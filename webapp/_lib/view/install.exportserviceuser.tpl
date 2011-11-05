@@ -36,7 +36,7 @@
               <option value="{$i->id}">{$i->network_username} - {$i->network|capitalize} (updated {$i->crawler_last_run|relative_datetime} ago{if !$i->is_active} (paused){/if})</option>
           {/foreach}
         </select>
-        <input type="submit" style="margin: 20px 0px 0px 20px;" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Export User Data">
+        <input type="submit" style="margin: 20px 0px 0px 20px;" class="linkbutton ui-state-default ui-priority-secondary" value="Export User Data">
         </form>
         <br /><br />
     {/if}

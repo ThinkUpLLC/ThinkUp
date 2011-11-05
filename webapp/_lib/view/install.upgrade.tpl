@@ -57,7 +57,7 @@
     <div class="grid_10 prefix_9 left">
         <form name="upgrade" method="get" action="" id="upgrade-form" onsubmit="return false;">
         <input id="migration-submit" 
-        name="Submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" 
+        name="Submit" class="linkbutton ui-state-default ui-priority-secondary ui-corner-all" 
         value="Update ThinkUp's Database" type="submit" style="font-size:24px;line-height:2.2em;">
         </form>
         </div>

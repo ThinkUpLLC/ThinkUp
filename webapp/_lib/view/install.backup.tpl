@@ -42,7 +42,7 @@
 
 <input type="button" id="login-save" name="Submit" style="margin: 20px 0px 0px 20px;"
 onclick="document.location.href='?backup=true'" 
-class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Backup Now">
+class="linkbutton ui-state-default ui-priority-secondary" value="Backup Now">
 
 <br /><br />
 <p><a href="javascript: history.go(-1)">&larr;Back</a></p>
@@ -72,7 +72,7 @@ style="margin: 20px 0px 0px 20px;" action="{$site_root_path}install/backup.php">
     <input type="file" name="backup_file" id="backup_file" />
     &nbsp;
     <input type="submit" id="upload-backup-submit" name="Submit" style="display: none;" 
-    class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Upload Backup File">
+    class="linkbutton ui-state-default ui-priority-secondary" value="Upload Backup File">
 
 </form>
 

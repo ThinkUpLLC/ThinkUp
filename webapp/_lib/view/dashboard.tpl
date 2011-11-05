@@ -7,9 +7,10 @@
     <!-- begin left nav -->
     <div class="grid_4 alpha omega">
       <div id="nav">
+      	{if $instance}
         <ul id="top-level-sidenav">
+		{/if}
         {if $instance}
-
               <li{if $smarty.get.v eq ''} class="selected"{/if}>
                 <a href="{$site_root_path}index.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Dashboard</a>
               </li>
@@ -25,7 +26,9 @@
             {/foreach}
 
         {/if}
+      	{if $instance}
         </ul>
+		{/if}
       </div>
     </div>
 
@@ -237,14 +240,14 @@
           {if $add_user_buttons}
             {foreach from=$add_user_buttons key=smkey item=button name=smenuloop}
                 <br><br>
-                <div style="float:right;"><a href="{$site_root_path}account/?p={$button}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Add a {if $button eq 'googleplus'}Google+{else}{$button|ucwords}{/if} Account</a></div>
+                <div style="float:right;"><a href="{$site_root_path}account/?p={$button}" class="linkbutton emphasized">Add a {if $button eq 'googleplus'}Google+{else}{$button|ucwords}{/if} Account</a></div>
              {/foreach}
           {/if}
           <br><br>
           {if $logged_in_user}
-          <div style="float:right;"><a href="{$site_root_path}account/" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Adjust Your Settings</a></div>
+          <div style="float:right;"><a href="{$site_root_path}account/" class="linkbutton emphasized">Adjust Your Settings</a></div>
           {else}
-          <div style="float:right;"><a href="{$site_root_path}session/login.php" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Log In</a></div>
+          <div style="float:right;"><a href="{$site_root_path}session/login.php" class="linkbutton emphasized">Log In</a></div>
           {/if}
           </div>
         {/if}

@@ -333,7 +333,7 @@ class InstallerController extends ThinkUpController {
                 "</code><br /><code>chown $whoami " . escapeshellcmd(THINKUP_WEBAPP_PATH . 
                 "config.inc.php") ."</code><br /><br />If you don't have root access, create the <code>" . 
                 THINKUP_WEBAPP_PATH . "config.inc.php</code> file manually, and paste the following text into it.".
-                "<br /><br />Click the <strong>Next Step</strong> button below once you did either.");
+                "<br /><br />Click the <strong>Next Step</strong> button below once you have done either.");
             } else {
                 $this->addErrorMessage("ThinkUp couldn't write the <code>config.inc.php</code> file.<br /><br />".
                 "You will need to create the <code>" . 

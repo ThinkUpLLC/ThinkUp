@@ -11,14 +11,22 @@ code {
   background-color: #FFF;
   margin-top: 20px;
 }
-#installer-page {margin-top: 42px;}
+
+#installer-die textarea {
+	font-size : x-small;
+}
+
+#installer-page {
+	margin-top: 42px;
+	margin-bottom : 50px;
+}
 .install_step {
   border-right:1px solid #CCCCCC;
   margin:10px 0;
   padding:0;
 }
 .ui-state-default .install_step {color: #C0C0C0;}
-.ui-state-active .install_step {color: #333;}
+.ui-state-active .install_step {color: #222;}
 .no-border .install_step {border: none;}
 #dart1 {left: 100px;}
 #dart2 {left: 455px;}
@@ -94,36 +102,35 @@ span.label, span.value {
   color: green;
 }
 code {
-  border: 1px solid #999;
-  background-color: #ccc;
+	color : black;
 }
 .step_title, .error_title {
-  font-size: 26px;
-  color: #FF9900;
-  border-bottom: 1px solid #FF9900;
-  margin-bottom: 10px;
+  font-size: 18px;
+  color: black;
+  margin-bottom: 20px;
+  margin-top :30px;
+  font-weight : 700;
 }
 .error_title {
   color: red;
   border-color: red;
 }
 form.input label {
-  font-size:24px;
+  font-size:20px;
   line-height:2.2em;
 }
 form.input input {
   font-size:1.4em;
-  margin:0.5em 0 0;
-  width:345px;
+  margin:0 0 0;
+  width:80%;
 }
 form.input .input_information {
   display: block;
-  font-style: italic;
   color: #999;
+  width : 100%
 }
 .toggle-advanced-options { cursor: pointer; }
 .toggle-advanced-options a {
-    color: #FF9900;
 }
 .toggle-advanced-options a .ui-icon {
     display: inline-block;
