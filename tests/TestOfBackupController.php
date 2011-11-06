@@ -105,8 +105,7 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $old_count = UpgradeController::$WARN_TABLE_ROW_COUNT;
         UpgradeController::$WARN_TABLE_ROW_COUNT = 2;
         $results = $controller->control();
-        $this->assertPattern('/we recommend that you use the.*command line backup tool.*when backing up ThinkUp/sm',
-        $results);
+        $this->assertPattern('/we recommend that you use the/', $results);
         $table_counts = $v_mgr->getTemplateDataItem('high_table_row_count');
         $this->assertNotNull($table_counts);
         $this->assertNotNull(3, $table_counts['count']); // tu_plugins, defaults to three
@@ -237,5 +236,52 @@ class TestOfBackupController extends ThinkUpUnitTestCase {
         $data = $stmt->fetch();
         $this->assertEqual($data['id'], 1);
         $this->assertEqual($data['name'], 'Twitter');
+    }
+
+    public function testMySQLExportFails() {
+        // backup DAO mapping
+        $dao_mapping_backup = DAOFactory::$dao_mapping['BackupDAO'];
+
+        $this->simulateLogin('me@example.com', true);
+        $controller = new BackupController(true);
+        $_GET['backup'] = 'true';
+
+        // no grant perms
+        DAOFactory::$dao_mapping['BackupDAO']['mysql'] = 'TestBackupDAOGrantFail';
+        $results = $controller->go();
+        $this->assertPattern("/It looks like the mysql user does not have the proper permissions to grant/", $results);
+
+        // no file perms
+        $controller = new BackupController(true);
+        DAOFactory::$dao_mapping['BackupDAO']['mysql'] = 'TestBackupDAOFileFail';
+        $results = $controller->go();
+        $this->assertPattern("/It looks like the mysql user does not have the proper file permissions/", $results);
+
+        // restore DAO mapping
+        DAOFactory::$dao_mapping['BackupDAO']['mysql'] = $dao_mapping_backup;
+    }
+}
+
+/**
+ * a mock BackupDAO to test grant error
+ */
+class TestBackupDAOGrantFail implements BackupDAO {
+    public function import($zipfile) {
+        // does nothing
+    }
+    public function export($backup_file = null) {
+        throw new MySQLGrantException("Mysql does not have GRANT FILE ON permissions to write to: /bla");
+    }
+}
+
+/**
+ * a mock BackupDAO to test file error
+ */
+class TestBackupDAOFileFail implements BackupDAO {
+    public function import($zipfile) {
+        // does nothing
+    }
+    public function export($backup_file = null) {
+        throw new OpenFileException("Mysql does not have permissions to write to: /bla");
     }
 }

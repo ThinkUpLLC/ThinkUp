@@ -11,3 +11,5 @@ This is a working list of ThinkUp's error, information, and success messages, an
    upgrading
    crawlinprogress
    slickgridonlyshowing
+   mysqlgrant
+   mysqlfile

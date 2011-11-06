@@ -19,6 +19,24 @@
         through this interface.
     </p>
 </div>
+{elseif $mysql_file_perms}
+<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
+    <p>
+        <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
+        It looks like the mysql user does not have the proper file permissions to Export Data. Please see the
+        <a href="http://thinkup.readthedocs.org/en/latest/troubleshoot/common/backupcannotwrite.html">ThinkUp 
+        documentation</a> for more info on how to resolve this issue.
+    </p>
+</div>
+{elseif $grant_perms}
+<div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 
+    <p>
+        <span class="ui-icon ui-icon-info" style="float: left; margin: 0.3em 0.3em 0pt 0pt;"></span>
+        It looks like the mysql user does not have the proper permissions to grant Export Access. Please see the
+        <a href="http://thinkup.readthedocs.org/en/latest/troubleshoot/common/backupcannotwrite.html">ThinkUp 
+        documentation</a> for more info on how to resolve this issue.
+    </p>
+</div>
 {else}
     {if $messages}
     <div class="ui-state-highlight ui-corner-all" style="margin-top: 10px; padding: 0.5em 0.7em;"> 

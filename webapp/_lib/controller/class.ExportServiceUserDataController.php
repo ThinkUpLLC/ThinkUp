@@ -63,7 +63,7 @@ class ExportServiceUserDataController extends ThinkUpAdminController {
 
     public function adminControl() {
         $this->disableCaching();
-        if (!BackupController::checkForZipSupport()) {
+        if (! BackupController::checkForZipSupport()) {
             $this->addToView('no_zip_support', true);
         } else {
             $instance_dao = DAOFactory::getDAO('InstanceDAO');
@@ -84,7 +84,9 @@ This zip archive contains all the data related to a specific service user gather
                 'describes how to import that data into an existing ThinkUp installation.
 
 ');
-                    self::exportData($instance->network_username, $instance->network);
+                    if(! self::exportData($instance->network_username, $instance->network)) {
+                        return $this->generateView();
+                    }
                     self::generateZipFile();
                 } else {
                     $this->addErrorMessage('Invalid service user');
@@ -115,17 +117,29 @@ This zip archive contains all the data related to a specific service user gather
 Commands to run:
 
 ";
-        self::appendToReadme($import_instructions);
+        try {
+            //begin export
+            self::appendToReadme($import_instructions);
 
-        //get user id (some export methods need it)
-        $user_dao = DAOFactory::getDAO('UserDAO');
-        $user = $user_dao->getUserByName($username, $service);
-        $user_id = $user->user_id;
+            //get user id (some export methods need it)
+            $user_dao = DAOFactory::getDAO('UserDAO');
+            $user = $user_dao->getUserByName($username, $service);
+            $user_id = $user->user_id;
 
-        //begin export
-        self::exportPostsRepliesRetweetsFavoritesMentions($username, $user_id, $service);
-        self::exportFollowsAndFollowers($user_id, $service);
-        self::exportFollowerCountHistory($user_id, $service);
+            self::exportPostsRepliesRetweetsFavoritesMentions($username, $user_id, $service);
+            self::exportFollowsAndFollowers($user_id, $service);
+            self::exportFollowerCountHistory($user_id, $service);
+            return true;
+        } catch(Exception $e) {
+            $err = $e->getMessage();
+            if(preg_match("/Can't create\/write to file/", $err) || preg_match("/Can\'t get stat of/", $err)) {
+                // a file open perm issue?
+                $this->addToView('mysql_file_perms', true);
+            } else {
+                $this->addToView('grant_perms', true);
+            }
+            return false;
+        }
     }
 
     protected function generateZipFile() {

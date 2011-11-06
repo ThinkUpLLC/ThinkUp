@@ -141,32 +141,45 @@ class BackupMySQLDAO extends PDODAO implements BackupDAO {
                 $table_locks_list .= $value . ' WRITE';
             }
         }
-        $stmt = $this->execute("LOCK TABLES " . $table_locks_list);
-        $tmp_table_files = array();
-        foreach($data as $table) {
-            foreach($table as $key => $value) {
-                if (getenv('BACKUP_VERBOSE')!==false) {
-                    print "  Backing up data for table: $value\n";
-                }
-                $stmt = $this->execute($q2 . $value);
-                $create_tables .= "-- Create $value table statement\n";
-                $create_tables .= "DROP TABLE IF EXISTS $value;\n";
-                $create_data = $this->getDataRowAsArray($stmt);
-                $create_tables .= $create_data["Create Table"] . ";";
-                $create_tables .= "\n\n";
+        try {
+            $stmt = $this->execute("LOCK TABLES " . $table_locks_list);
+            $tmp_table_files = array();
+            foreach($data as $table) {
+                foreach($table as $key => $value) {
+                    if (getenv('BACKUP_VERBOSE')!==false) {
+                        print "  Backing up data for table: $value\n";
+                    }
+                    $stmt = $this->execute($q2 . $value);
+                    $create_tables .= "-- Create $value table statement\n";
+                    $create_tables .= "DROP TABLE IF EXISTS $value;\n";
+                    $create_data = $this->getDataRowAsArray($stmt);
+                    $create_tables .= $create_data["Create Table"] . ";";
+                    $create_tables .= "\n\n";
 
-                // export table data
-                $table_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/' . $value . '.txt';
-                if (file_exists($table_file)) {
-                    unlink($table_file);
+                    // export table data
+                    $table_file = THINKUP_WEBAPP_PATH . self::CACHE_DIR . '/' . $value . '.txt';
+                    if (file_exists($table_file)) {
+                        unlink($table_file);
+                    }
+                    $q3 = "select * INTO OUTFILE '$table_file' from $value";
+                    $stmt = $this->execute($q3);
+                    $zip->addFile($table_file,"/$value" . '.txt');
+                    array_push($tmp_table_files, $table_file);
                 }
-                $q3 = "select * INTO OUTFILE '$table_file' from $value";
-                $stmt = $this->execute($q3);
-                $zip->addFile($table_file,"/$value" . '.txt');
-                array_push($tmp_table_files, $table_file);
             }
+        } catch(Exception $e) {
+            $err = $e->getMessage();
+            if(preg_match("/Can't create\/write to file/", $err) || preg_match("/Can\'t get stat of/", $err)) {
+                // a file perm issue?
+                throw new OpenFileException("It looks like the mysql user does not have the proper file permissions "
+                . "to Backup Data");
+            } else {
+                // assume its a GRANT FILE OR LOCK TABLES issue?
+                throw new MySQLGrantException("It looks like the mysql user does not have the proper grant permissions "
+                . "to Backup Data");
+            }
+            error_log("export DB OUTFILE error: " . $e->getMessage());
         }
-
         // unlock tables...
         $stmt = $this->execute("unlock tables");
         if (getenv('BACKUP_VERBOSE')!==false) {

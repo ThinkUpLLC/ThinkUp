@@ -123,6 +123,7 @@ class TestOfUpgradeController extends ThinkUpUnitTestCase {
         $this->simulateLogin('me@example.com', true);
         $controller = new UpgradeController(true);
         $results = $controller->go();
+
         $this->assertPattern('/needs 1 database update/', $results);
         $v_mgr = $controller->getViewManager();
         $this->assertNull($v_mgr->getTemplateDataItem('high_table_row_count') ) ;
