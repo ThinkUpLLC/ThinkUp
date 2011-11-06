@@ -67,7 +67,7 @@
 <div class="container clearfix">
   
   <div id="app-title"><a href="{$site_root_path}{$logo_link}">
-    <h1><span class="bold">Think</span><span class="gray">Up</span></h1>
+    <h1><span id="headerthink">Think</span><span id="headerup">Up</span></h1>
   </a></div> <!-- end #app-title -->
   
 </div> <!-- end .container -->

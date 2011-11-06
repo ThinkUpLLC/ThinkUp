@@ -1,8 +1,8 @@
 {include file="_install.header.tpl"}
   <div class="container">
     <div id="thinkup-tabs">
-      <div class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+      <div class="ui-tabs ui-widget ui-widget-content">
+        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header alert stats">
           <li id="step-tab-1" class="ui-state-default ui-corner-top">
             <div class="key-stat install_step">
             <h1><span class="pass_step" id="pass-step-1">1</span></h1>
@@ -32,7 +32,7 @@
       <div class="grid_22 push_1 clearfix">
       <h2 class="clearfix step_title">Congratulations!</h2>
 
-     <div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+     <div class="alert helpful" style="margin: 20px 0px; padding: 0.5em 0.7em;">
          <p>
            <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
             ThinkUp has been installed successfully. Check your email account; an account activation message has been sent.

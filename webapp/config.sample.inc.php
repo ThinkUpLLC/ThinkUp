@@ -8,7 +8,7 @@ $THINKUP_CFG['app_title']                 = 'ThinkUp';
 
 // Public path of thinkup's /webapp/ folder on your web server.
 // For example, if the /webapp/ folder is located at http://yourdomain/thinkup/, set to '/thinkup/'.
-$THINKUP_CFG['site_root_path']            = '/';
+$THINKUP_CFG['site_root_path']            = '/thinkup/webapp/';
 
 // Server path to /thinkup/ source code folder, dirname( __FILE__ ) . '/'; by default
 $THINKUP_CFG['source_root_path']          = dirname( __FILE__ ) . '/';
@@ -17,7 +17,7 @@ $THINKUP_CFG['source_root_path']          = dirname( __FILE__ ) . '/';
 $THINKUP_CFG['timezone']                  = 'UTC';
 
 // Toggle Smarty caching. true: Smarty caching on, false: Smarty caching off
-$THINKUP_CFG['cache_pages']               = true;
+$THINKUP_CFG['cache_pages']               = false;
 
 // Smarty file cache lifetime in seconds; defaults to 600 (10 minutes)caching
 $THINKUP_CFG['cache_lifetime']               = 600;

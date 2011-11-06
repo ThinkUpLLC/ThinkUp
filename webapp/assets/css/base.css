@@ -234,15 +234,6 @@ are in place to stop long URLs or words from overflowing. */
 ==================================================
 */
 
-/* --- APPLICATION TITLE ---------------------- */
-
-#app-title {width:300px;float:left;margin-top:10px; margin-left : 10px; margin-bottom : 12px;}
-#app-title h1 {color:#333333;font-size: 30px;letter-spacing: -.08em;margin:0;padding:15px 0 0 0;line-height:.8em;}
-#app-title h2 {font-size: 13px;color: #416A93;margin:0;padding:0 0 0 10px;line-height:.8em;}
-#app-title a:link, #app-title a:visited  {text-decoration:none;}
-#app-title a:hover h1  {color: #00AEEF;text-decoration:none;}
-#app-title img {float:left;margin-right:2px;}
-
 /* --- DATA GRIDS ----------------------------- */
 
 .header {padding: 10px 0 0 20px;font-weight: 500;font-size: .8em;margin-bottom:1px; background-color : #FAF9F2;}
@@ -326,21 +317,21 @@ img.service-icon2 {left: 32px;}
 /* --- BUTTONS -------------------------------- */
 /* adapted from the filament group: http://www.filamentgroup.com/examples/buttonFrameworkCSS/ */
 
-.tt-button {outline:0;margin:4px 4px 4px 0;padding:0.4em 1em;text-decoration:none !important;cursor:pointer;position:relative;text-align:center;zoom:1;}
-.tt-button .ui-icon {position:absolute;top:50%;margin-top:-8px;left:50%;margin-left:-8px;}
-a.tt-button {float:left;}
+.linkbutton {outline:0;margin:4px 4px 4px 0;padding:0.4em 1em;text-decoration:none !important;cursor:pointer;position:relative;text-align:center;zoom:1;}
+.linkbutton .ui-icon {position:absolute;top:50%;margin-top:-8px;left:50%;margin-left:-8px;}
+
 
 /* remove extra button width in IE */
 button.fg-button {width:auto;overflow:visible;}
 .tt-icon-left {float:left;margin:0.3em 0.5em;}
-.tt-button-icon-left {padding-left:2.1em;}
-.tt-button-icon-right {padding-right:2.1em;}
-.tt-button-icon-left .ui-icon {right:auto;left:0.2em;margin-left:0;}
-.tt-button-icon-right .ui-icon {left:auto;right:0.2em;margin-left:0;}
-.tt-button-icon-solo {display:block;width:8px;text-indent:-999em;} /* solo icon buttons must have block properties for the text-indent to work */
-.tt-buttonset {float:left;}
-.tt-buttonset .fg-button {float:left;}
-.tt-buttonset-single .fg-button, .tt-buttonset-multi .fg-button {margin-right:-1px;}
+.linkbutton-icon-left {padding-left:2.1em;}
+.linkbutton-icon-right {padding-right:2.1em;}
+.linkbutton-icon-left .ui-icon {right:auto;left:0.2em;margin-left:0;}
+.linkbutton-icon-right .ui-icon {left:auto;right:0.2em;margin-left:0;}
+.linkbutton-icon-solo {display:block;width:8px;text-indent:-999em;} /* solo icon buttons must have block properties for the text-indent to work */
+.linkbuttonset {float:left;}
+.linkbuttonset .fg-button {float:left;}
+.linkbuttonset-single .fg-button, .linkbuttonset-multi .fg-button {margin-right:-1px;}
 .tt-toolbar {padding:0.5em;margin:0;}
 .tt-toolbar .fg-buttonset {margin-right:1.5em;padding-left:1px;}
 .tt-toolbar .fg-button {font-size:1em;}

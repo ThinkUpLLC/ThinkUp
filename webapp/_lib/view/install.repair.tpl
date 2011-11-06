@@ -53,7 +53,7 @@
           
           <div class="clearfix append_20">
             <div class="grid_10 prefix_7 left">
-              <input type="submit" name="repair" class="tt-button ui-state-default ui-priority-secondary ui-corner-all" value="Repair &raquo">
+              <input type="submit" name="repair" class="linkbutton ui-state-default ui-priority-secondary ui-corner-all" value="Repair &raquo">
             </div>
           </div>
         </form>

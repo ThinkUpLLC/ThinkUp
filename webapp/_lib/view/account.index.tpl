@@ -14,6 +14,7 @@
     
     <div class="section thinkup-canvas clearfix" id="plugins">
       <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
+
         <div class="append_20 clearfix">
         {include file="_usermessage.tpl" field="account"}
           {if $installed_plugins}
@@ -38,7 +39,7 @@
                 {if $user_is_admin}
                 <div class="grid_4 omega">
                   <span id="spanpluginactivation{$ip->id}">
-                      <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
+                      <input type="submit" name="submit" class="linkbutton btnToggle" id="{$ip->id}" value="{if $ip->is_active}Deactivate{else}Activate{/if}" />
                   </span>
                   <span style="display: none;padding:5px;" class='ui-state-success ui-corner-all mt_10' id="message{$ip->id}"></span>
                   </div>
@@ -47,7 +48,7 @@
               {/if}
             {/foreach}
           {else}
-            <a href="?m=manage" class="tt-button ui-state-default tt-button-icon-left ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-w"></span>Back to plugins</a>
+            <a href="?m=manage" class="linkbutton">&laquo; Back to plugins</a>
           {/if}
         </div>
         {if $body}
@@ -73,13 +74,15 @@
     <h1>Back Up and Export Data</h1>
 
     <p><br />
-    <a href="{$site_root_path}install/backup.php">Back up ThinkUp's entire database</a>
-    <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
-         Recommended before upgrading ThinkUp.
+    
+    <div style="margin: 0px 0px 30px 0px;">
+    	<a href="{$site_root_path}install/backup.php" class="linkbutton emphasized">Back up ThinkUp's entire database</a>
+        <p style="padding-left : 20px; margin-top : 14px;">Recommended before upgrading ThinkUp.</p>
       </div>
-    <a href="{$site_root_path}install/exportuserdata.php">Export a single service user's data</a>
-    <div style="font-size: 10px; margin: 0px 0px 10px 0px;">
-         For transfer into another existing ThinkUp database.
+
+    <div style="margin: 0px 0px 30px 0px;">
+	    <a href="{$site_root_path}install/exportuserdata.php" class="linkbutton emphasized">Export a single service user's data</a>
+        <p style="padding-left : 20px; margin-top : 14px;">For transfer into another existing ThinkUp database.</p>
     </div>
     </p>
   </div>
@@ -122,7 +125,7 @@
                 </div>
               </div>
               <div class="prefix_8 grid_7 left">
-                <input type="submit" id="login-save" name="changepass" value="Change password" class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+                <input type="submit" id="login-save" name="changepass" value="Change password" class="linkbutton emphasized">
               </div>
             </div>
           </form>
@@ -133,7 +136,7 @@
 <p>To set up ThinkUp to update automatically, subscribe to this secret RSS feed URL in your favorite news reader.</p>
 
 <div style="text-align: center; padding: 20px 0px 20px 0px;width:100%;">
-<a href="{$rss_crawl_url}" class="tt-button ui-state-default tt-button-icon-right ui-corner-all"><span class="ui-icon ui-icon-circle-arrow-e"></span>Secret RSS Feed to Update ThinkUp</a>
+<a href="{$rss_crawl_url}" class="linkbutton emphasized">Secret RSS Feed to Update ThinkUp</a>
 <div style="clear:all">&nbsp;<br><br><br></div>
 </div>
 
@@ -174,29 +177,30 @@
 <br /><br /><br/>
 </p>
 
-<h1>Reset Your API Key</h1><br />
+<h1>Your API Key</h1><br />
 {include file="_usermessage.tpl" field='api_key'}
 
-<p>Accidentally share your secret RSS URL? Reset your ThinkUp API key (and RSS feed URL) here.<br><br></p>
 
-          <div style="text-align: center; border-top: solid gray 1px; padding: 20px 0px 20px 0px;">
+          <div style="padding: 20px 0px 20px 0px;">
              <strong>Your Current ThinkUp API Key:</strong>
              <span id="hidden_api_key" style="display: none;">{$owner->api_key}</span>
              <span id="show_api_key">
-             <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();">
+             <a href="javascript:;" onclick="$('#show_api_key').hide(); $('#hidden_api_key').show();" class="linkbutton">
              Click to view</a>
              </span>
           </div> 
 
+<p>Accidentally share your secret RSS URL?</p>
+
           <form method="post" action="index.php?m=manage#instances" class="prepend_20 append_20" 
-          style="border-top: solid gray 1px; padding: 20px 0px 0px 0px;" id="api-key-form">
+          style="padding: 20px 0px 0px 0px;" id="api-key-form">
       <div class="grid_10 prefix_9 left">
                 <input type="hidden" name="reset_api_key" value="Reset API Key" />
                 <span id="apikey_conf" style="display: none;">
                 Don't forget! If you reset your API key, you will need to update your ThinkUp crawler RSS feed subscription. This action cannot be undone.
                 </span>
                 <input type="button" value="Reset Your API Key" 
-                class="tt-button ui-state-default ui-priority-secondary ui-corner-all"
+                class="linkbutton"
                 {literal}
                 onclick="if(confirm($('#apikey_conf').html().trim())) { $('#api-key-form').submit();}">
                 {/literal}
@@ -208,10 +212,14 @@
     </div> <!-- end #instances -->
     
     {if $user_is_admin}
-      <div class="section" id="ttusers">
-
+      <div class="thinkup-canvas" id="ttusers">
+      
       <div class="alpha omega grid_22 prefix_1 clearfix prepend_20 append_20">
+      <h1>ThinkUp Users</h1>
+
         <div class="append_20 clearfix">
+        
+
         
 {foreach from=$owners key=oid item=o name=oloop}
   {if $smarty.foreach.oloop.first}
@@ -244,7 +252,7 @@
     {if $user_is_admin}
         <div class="grid_4 omega">
           {if !$o->is_admin}
-          <input type="submit" name="submit" class="tt-button ui-state-default ui-priority-secondary ui-corner-all toggleOwnerButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
+          <input type="submit" name="submit" class="linkbutton toggleOwnerButton" id="user{$o->id}" value="{if $o->is_activated}Deactivate{else}Activate{/if}" />
           {/if}
       </div>
     {/if}
@@ -259,7 +267,7 @@
         {include file="_usermessage.tpl" field='invite'}
           <form name="invite" method="post" action="index.php?m=manage#ttusers" class="prepend_20 append_20">
                 {insert name="csrf_token"}<input type="submit" id="login-save" name="invite" value="Create Invitation" 
-                class="tt-button ui-state-default ui-priority-secondary ui-corner-all">
+                class="linkbutton emphasized">
           </form>
         </div>
           

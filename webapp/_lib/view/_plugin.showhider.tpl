@@ -26,4 +26,4 @@ function show_settings() {
 </p>
 
 <div class="plugin-settings">
-<h2 class="subhead">Settings</h2>
+<h2>Settings</h2>

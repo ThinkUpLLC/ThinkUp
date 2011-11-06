@@ -7,7 +7,7 @@
 <div class="container_24 thinkup-canvas clearfix">
 <div class="grid_22 prefix_1 alpha omega prepend_20 append_20 clearfix">
 <h1>Update ThinkUp</h1>
-<div class="ui-state-success ui-corner-all" style="margin: 20px 0px; padding: 0.5em 0.7em;">
+<div class="alert helpful" style="margin: 20px 0px; padding: 0.5em 0.7em;">
      <p>
            <span class="ui-icon ui-icon-check" style="float: left; margin:.3em 0.3em 0 0;"></span>
 ThinkUp is updating your data. To see the technical details of what's going on, check out the log below.
