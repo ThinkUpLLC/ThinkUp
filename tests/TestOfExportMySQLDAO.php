@@ -48,8 +48,23 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->config = Config::getInstance();
         $this->dao = new ExportMySQLDAO();
         $this->builders = $this->buildData();
+        
+        $this->cache_dir = $this->config->getValue("cache_dir");
+        
+        if (!($this->cache_dir)) {
+            $this->cache_dir = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR;
+        }
+        
+        if (!(file_exists($this->cache_dir))) {
+            // umask changes are necessary so that cache_dir has correct permissions.
+            // see http://us3.php.net/manual/en/function.mkdir.php#100106
+            $oldumask = umask(0);
+            $this->assertTrue(mkdir($this->cache_dir, 0777, true));
+            umask($oldumask);
+        }
     }
 
     public function tearDown() {
@@ -241,8 +256,22 @@ class TestOfExportMySQLDAO extends ThinkUpUnitTestCase {
         $more_data = array();
         $more_data[] = FixtureBuilder::build('favorites', array('post_id'=>44, 'fav_of_user_id'=>13,
         'author_user_id'=>8, 'network'=>'twitter'));
+        /*
+        $cache_dir = $this->config->getValue("cache_dir");
 
-        $favorites_file = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR . '/favorites.tmp';
+        if (!($cache_dir)) {
+            $cache_dir = THINKUP_WEBAPP_PATH . BackupDAO::CACHE_DIR;
+        }
+                
+        if (!(file_exists($cache_dir))) {
+            // umask changes are necessary so that cache_dir has correct permissions.
+            // see http://us3.php.net/manual/en/function.mkdir.php#100106
+            $oldumask = umask(0);
+            $this->assertTrue(mkdir($cache_dir, 0777, true));
+            umask($oldumask);
+        }
+        */
+        $favorites_file = $this->cache_dir . '/favorites.tmp';
         if (file_exists($favorites_file)) {
             unlink($favorites_file);
         }

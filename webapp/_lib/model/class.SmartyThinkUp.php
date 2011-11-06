@@ -103,9 +103,12 @@ class SmartyThinkUp extends Smarty {
 
         $this->Smarty();
         $this->template_dir = array( THINKUP_WEBAPP_PATH.'_lib/view', $src_root_path.'tests/view');
-        $this->compile_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/';
+        $this->compile_dir = isset($config_array['compiled_view_dir'])
+            ?$config_array['compiled_view_dir']:THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/';
         $this->plugins_dir = array('plugins', THINKUP_WEBAPP_PATH.'_lib/view/plugins/');
-        $this->cache_dir = THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache';
+        $this->cache_dir = isset($config_array['cache_dir'])
+            ?$config_array['cache_dir']:THINKUP_WEBAPP_PATH.'_lib/view/compiled_view/cache';
+        
         $this->caching = ($cache_pages)?1:0;
         $this->cache_lifetime = $cache_lifetime;
         $this->debug = $debug;
@@ -236,15 +239,26 @@ class SmartyThinkUp extends Smarty {
      */
     public function fetch($template, $cache_key=null, $compile_id=null, $display=false) {
         $continue = false;
+        
+        if (!file_exists($this->compile_dir)) {
+            mkdir($this->compile_dir, 0777, true);
+        }
+        
+        if (!file_exists($this->cache_dir)) {
+            mkdir($this->cache_dir, 0777, true);
+        }
+        
         if (is_writable($this->compile_dir)) {
             if ($this->caching == 1 && !file_exists($this->compile_dir.'/cache')) {
-                if (mkdir($this->compile_dir.'/cache/', 0777)) {
+                if (mkdir($this->compile_dir.'/cache/', 0777, true)) {
                     $continue = true;
                 }
             } else {
                 $continue = true;
             }
         }
+        
+        
         if ($continue) {
             return parent::fetch($template, $cache_key, $compile_id, $display);
         } else {
