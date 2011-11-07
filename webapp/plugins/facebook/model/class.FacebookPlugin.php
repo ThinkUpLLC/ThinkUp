@@ -187,7 +187,7 @@ class FacebookPlugin extends Plugin implements CrawlerPlugin, DashboardPlugin, P
         $menus["posts-questions"] = $qtab;
 
         // Wall Posts
-        $messagestab = new MenuItem("From others", "Posts to your wall by other users", $fb_data_tpl, 'posts' );
+        $messagestab = new MenuItem("Posts On Your Wall", "Posts to your wall by other users", $fb_data_tpl, 'posts' );
         $messagestabds = new Dataset("messages_to_you", 'PostDAO', "getPostsToUser",
         array($instance->network_user_id, $instance->network, 15, '#page_number#', !Session::isLoggedIn()),
         'getPostsToUserIterator', array($instance->network_user_id, $instance->network, GridController::getMaxRows()));
