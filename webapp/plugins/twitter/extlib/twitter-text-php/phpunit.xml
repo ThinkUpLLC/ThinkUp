@@ -1,0 +1,32 @@
+<phpunit backupGlobals="true"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         syntaxCheck="true">
+
+<testsuites>
+  <testsuite name="twitter">
+    <directory suffix=".php">tests/Twitter</directory>
+  </testsuite>
+</testsuites>
+
+<filter>
+  <whitelist addUncoveredFilesFromWhitelist="true">
+    <directory suffix=".php">lib/Twitter</directory>
+  </whitelist>
+</filter>
+
+<logging>
+  <log type="coverage-html" target="build/coverage"
+    charset="UTF-8" yui="true" highlight="false"
+    lowUpperBound="35" highLowerBound="70" />
+  <log type="plain" target="build/logs/plain.txt" />
+</logging>
+
+<php>
+  <const name="DATA" value="tests/data/twitter-text-conformance" />
+</php>
+
+</phpunit>

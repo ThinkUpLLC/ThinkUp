@@ -259,7 +259,7 @@ class Post {
      */
     public static function extractURLs($post_text) {
         $url_pattern = '(?i)\b'.
-        '((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)'. 
+        '((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)'.
         '(?:[^\s()<>/][^\s()<>]*|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+'.
         '(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’,�]))';
         preg_match_all('#'.$url_pattern.'#', $post_text, $matches);
@@ -274,14 +274,16 @@ class Post {
      * @return array $matches All mentions in this tweet.
      */
     public static function extractMentions($post_text) {
-        preg_match_all('/(^|[^a-z0-9_])@([a-z0-9_]+)/i', $post_text, $matches);
-
-        // sometimes there's leading or trailing whitespace on the match, trim it
-        foreach ($matches[0] as $key=>$match) {
-            $matches[0][$key] = trim($match, ' ');
+        if (!class_exists('Twitter_Extractor')) {
+            Loader::addSpecialClass('Twitter_Extractor',
+            'plugins/twitter/extlib/twitter-text-php/lib/Twitter/Extractor.php');
         }
-
-        return $matches[0];
+        $tweet = new Twitter_Extractor($post_text);
+        $mentions = $tweet->extractMentionedUsernames();
+        foreach ($mentions as $k => $v) {
+            $mentions[$k] = '@' . $v;
+        }
+        return $mentions;
     }
 
     /**
