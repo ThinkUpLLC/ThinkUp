@@ -113,6 +113,34 @@ class TestOfPost extends ThinkUpBasicUnitTestCase {
         $mentions = Post::extractMentions($test_str);
         $actual_mentions = array('@sam');
         $this->assertIdentical($mentions, $actual_mentions);
+
+        // Tests below come from twitter-text-conformance
+        $test_str = "@1234 woot yay win cake";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@1234');
+        $this->assertIdentical($mentions, $actual_mentions);
+
+        $test_str =  "の@usernameに到着を待っている";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@username');
+        $this->assertIdentical($mentions, $actual_mentions, "Extract mention in the middle of a Japanese tweet");
+
+        $test_str = "Current Status: @_@ (cc: @username)";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@username');
+        $this->assertIdentical($mentions, $actual_mentions, "DO NOT extract username ending in @");
+
+        $test_str = "@aliceìnheiro something something";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array();
+        $this->assertIdentical($mentions, $actual_mentions, "DO NOT extract username followed by accented latin
+        characters");
+
+        $test_str = "@username email me @test@example.com";
+        $mentions = Post::extractMentions($test_str);
+        $actual_mentions = array('@username');
+        $this->assertIdentical($mentions, $actual_mentions, "Extract lone metion but not @user@user (too close to an
+        email)");
     }
 
     public function testExtractHashtags() {
