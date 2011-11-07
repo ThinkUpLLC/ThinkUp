@@ -7,9 +7,9 @@
     <!-- begin left nav -->
     <div class="grid_4 alpha omega">
       <div id="nav">
-      	{if $instance}
+          {if $instance}
         <ul id="top-level-sidenav">
-		{/if}
+        {/if}
         {if $instance}
               <li{if $smarty.get.v eq ''} class="selected"{/if}>
                 <a href="{$site_root_path}?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Dashboard</a>
@@ -26,9 +26,9 @@
             {/foreach}
 
         {/if}
-      	{if $instance}
+          {if $instance}
         </ul>
-		{/if}
+        {/if}
       </div>
     </div>
 
@@ -175,7 +175,7 @@
 
             {/if}
 
-            {if $follower_count_history_by_week.milestone}
+            {if $follower_count_history_by_week.milestone and $follower_count_history_by_week.milestone.will_take > 0}
               <div class="small gray">
                 Next milestone: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} week{if $follower_count_history_by_week.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate. <a href="{$site_root_path}?v=followers-history&u={$instance->network_username}&n={$instance->network}">More...</a>
               </div>
