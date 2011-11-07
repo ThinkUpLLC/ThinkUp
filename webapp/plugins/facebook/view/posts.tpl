@@ -4,7 +4,7 @@
     {foreach from=$all_posts key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=posts-all&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
+    <div class="view-all"><a href="?v=posts-all&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
 </div>
 {else}
     <div class="alert helpful">No posts to display. {if $logged_in_user}Update your data and try again.{/if}</div>
@@ -16,7 +16,7 @@
     {foreach from=$wallposts key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=posts-toyou&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
+    <div class="view-all"><a href="?v=posts-toyou&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
 </div>
 {/if}
 
@@ -26,7 +26,7 @@
     {foreach from=$most_replied_to key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
-    <div align="right"><a href="index.php?v=posts-mostreplies&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
+    <div align="right"><a href="?v=posts-mostreplies&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
 </div>
 {/if}
 
@@ -36,7 +36,7 @@
     {foreach from=$most_liked key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=posts-mostlikes&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
+    <div class="view-all"><a href="?v=posts-mostlikes&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
 </div>
 {/if}
 
@@ -46,6 +46,6 @@
     {foreach from=$inquiries key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=posts-questions&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
+    <div class="view-all"><a href="?v=posts-questions&u={$instance->network_username|urlencode}&n={$instance->network}">More...</a></div>
 </div>
 {/if}

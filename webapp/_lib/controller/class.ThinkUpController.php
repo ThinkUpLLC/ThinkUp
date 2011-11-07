@@ -109,16 +109,16 @@ abstract class ThinkUpController {
             SessionCache::isKeySet('selected_instance_username')) {
                 $this->addToView('selected_instance_network', SessionCache::get('selected_instance_network'));
                 $this->addToView('selected_instance_username', SessionCache::get('selected_instance_username'));
-                $this->addToView('logo_link', 'index.php?u='. urlencode(SessionCache::get('selected_instance_username'))
+                $this->addToView('logo_link', '?u='. urlencode(SessionCache::get('selected_instance_username'))
                 .'&n='. urlencode(SessionCache::get('selected_instance_network')));
             }
         } catch (Exception $e) {
             Utils::defineConstants();
             $cfg_array =  array(
             'site_root_path'=>THINKUP_BASE_URL,
-            'source_root_path'=>THINKUP_ROOT_PATH, 
-            'debug'=>false, 
-            'app_title'=>"ThinkUp", 
+            'source_root_path'=>THINKUP_ROOT_PATH,
+            'debug'=>false,
+            'app_title'=>"ThinkUp",
             'cache_pages'=>false);
             $this->view_mgr = new SmartyThinkUp($cfg_array);
         }

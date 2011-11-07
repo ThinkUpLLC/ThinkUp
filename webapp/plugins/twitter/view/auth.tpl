@@ -7,7 +7,7 @@
   </div>
 
   <div class="grid_9 prefix_7 alpha omega prepend_20 append_20 clearfix">
-    <a href="{$site_root_path}account/index.php?p=twitter" class="linkbutton emphasized">Back to Twitter settings</a>
+    <a href="{$site_root_path}account/?p=twitter" class="linkbutton emphasized">Back to Twitter settings</a>
   </div>
 
 </div>

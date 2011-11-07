@@ -4,7 +4,7 @@
     {foreach from=$linksinfaves key=tid item=l name=foo}
         {include file="_link.tpl" t=$f}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=links-favorites&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=links-favorites&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 
@@ -14,7 +14,7 @@
     {foreach from=$linksbyfriends key=tid item=l name=foo}
         {include file="_link.tpl" t=$f}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=links-friends&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=links-friends&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 
@@ -25,7 +25,7 @@
     {foreach from=$photosbyfriends key=tid item=l name=foo}
         {include file="_link.tpl" t=$f}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=links-photos&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=links-photos&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 

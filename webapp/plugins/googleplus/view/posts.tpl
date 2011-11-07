@@ -4,7 +4,7 @@
     {foreach from=$all_posts key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=posts-all&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a></div>
+    <div class="view-all"><a href="?v=posts-all&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a></div>
 </div>
 {else}
 <div class="alert urgent">
@@ -18,7 +18,7 @@
     {foreach from=$most_replied_to key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=posts-mostreplies&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a></div>
+    <div class="view-all"><a href="?v=posts-mostreplies&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a></div>
 </div>
 {/if}
 
@@ -28,7 +28,7 @@
     {foreach from=$plus_oned key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=posts-mostplusones&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a></div>
+    <div class="view-all"><a href="?v=posts-mostplusones&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a></div>
 </div>
 {/if}
 
@@ -38,6 +38,6 @@
     {foreach from=$questions key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t show_favorites_instead_of_retweets="true"}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=posts-questions&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a></div>
+    <div class="view-all"><a href="?v=posts-questions&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">More...</a></div>
 </div>
 {/if}

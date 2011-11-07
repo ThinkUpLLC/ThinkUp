@@ -4,7 +4,7 @@
     {foreach from=$all_tweets key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=tweets-all&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=tweets-all&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {else}
 <div class="alert helpful">
@@ -19,7 +19,7 @@
     {foreach from=$messages_to_you key=tid item=t name=foo}
         {include file="_post.author_no_counts.tpl" post=$t}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=tweets-messages&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=tweets-messages&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 
@@ -29,7 +29,7 @@
     {foreach from=$most_replied_to_tweets key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=tweets-mostreplies&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=tweets-mostreplies&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 
@@ -48,7 +48,7 @@
     {foreach from=$most_retweeted key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=tweets-mostretweeted&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=tweets-mostretweeted&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 
@@ -58,7 +58,7 @@
     {foreach from=$favorites key=tid item=t name=foo}
         {include file="_post.author_no_counts.tpl" post=$t}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=ftweets-all&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=ftweets-all&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 
@@ -68,6 +68,6 @@
     {foreach from=$inquiries key=tid item=t name=foo}
         {include file="_post.counts_no_author.tpl" post=$t}
     {/foreach}
-    <div class="view-all"><a href="index.php?v=tweets-questions&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=tweets-questions&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}

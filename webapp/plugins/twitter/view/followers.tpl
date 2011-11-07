@@ -9,7 +9,7 @@
     {/foreach}
         <br /><br /><br />
     </div>
-    <div class="view-all"><a href="index.php?v=followers-leastlikely&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=followers-leastlikely&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 
@@ -24,7 +24,7 @@
     {/foreach}
     <br /><br /><br />
     </div>
-    <div class="view-all"><a href="index.php?v=followers-leastlikely&u={$instance->network_username}&n=twitter">More...</a></div>
+    <div class="view-all"><a href="?v=followers-leastlikely&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 
@@ -39,7 +39,7 @@
     {/foreach}
     <br /><br /><br />
 </div>
-<div class="view-all"><a href="index.php?v=followers-mostfollowed&u={$instance->network_username}&n=twitter">More...</a></div>
+<div class="view-all"><a href="?v=followers-mostfollowed&u={$instance->network_username}&n=twitter">More...</a></div>
 </div>
 {/if}
 

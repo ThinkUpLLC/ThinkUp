@@ -1,7 +1,7 @@
 <div class="section">
 <div class="clearfix">
   {insert name="help_link" id=$display}
-  <h2>{if $parent_name}<a href="index.php?v={$parent}&u={$instance->network_username}&n=twitter">{$parent_name}</a> &rarr; {/if}{$header}</h2>
+  <h2>{if $parent_name}<a href="?v={$parent}&u={$instance->network_username}&n=twitter">{$parent_name}</a> &rarr; {/if}{$header}</h2>
   {if $description}<h3>{$description}</h3>{/if}
 </div>
 {if ($display eq 'tweets-all' and not $all_tweets) or 
@@ -149,10 +149,10 @@ or ($display eq 'followers-former' and not $people) or ($display eq 'followers-e
 
 <div class="view-all" id="older-posts-div">
   {if $next_page}
-    <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page">&#60; Older</a>
+    <a href="{$site_root_path}?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$next_page}" id="next_page">&#60; Older</a>
   {/if}
   {if $last_page}
-    | <a href="{$site_root_path}index.php?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page">Newer &#62;</a>
+    | <a href="{$site_root_path}?{if $smarty.get.v}v={$smarty.get.v}&{/if}{if $smarty.get.u}u={$smarty.get.u}&{/if}{if $smarty.get.n}n={$smarty.get.n|urlencode}&{/if}page={$last_page}" id="last_page">Newer &#62;</a>
   {/if}
 </div>
 

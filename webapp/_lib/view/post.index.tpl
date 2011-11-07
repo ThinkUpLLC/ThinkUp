@@ -12,7 +12,7 @@
 
             <li><a href="{insert name=dashboard_link}">Dashboard</a></li>
           <li{if $smarty.get.v eq ''} class="selected"{/if}>
-          <a href="index.php?t={$post->post_id}&n={$post->network|urlencode}">Replies&nbsp;&nbsp;&nbsp;</a>
+          <a href="?t={$post->post_id}&n={$post->network|urlencode}">Replies&nbsp;&nbsp;&nbsp;</a>
           </li>
           {if $post->reply_count_cache && $post->reply_count_cache > 1}
             <li id="grid_search_input" style="padding:10px;">
@@ -26,7 +26,7 @@
         {/if}
         {if $sidebar_menu}
           {foreach from=$sidebar_menu key=smkey item=sidebar_menu_item name=smenuloop}
-              <li{if $smarty.get.v eq $smkey} class="selected"{/if}><a href="index.php?v={$smkey}&t={$post->post_id}&n={$post->network|urlencode}">{$sidebar_menu_item->name}&nbsp;&nbsp;&nbsp;</a></li>
+              <li{if $smarty.get.v eq $smkey} class="selected"{/if}><a href="?v={$smkey}&t={$post->post_id}&n={$post->network|urlencode}">{$sidebar_menu_item->name}&nbsp;&nbsp;&nbsp;</a></li>
             {/foreach}
         {/if}
 

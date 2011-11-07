@@ -12,7 +12,7 @@
 		{/if}
         {if $instance}
               <li{if $smarty.get.v eq ''} class="selected"{/if}>
-                <a href="{$site_root_path}index.php?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Dashboard</a>
+                <a href="{$site_root_path}?u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">Dashboard</a>
               </li>
         {/if}
         {if $sidebar_menu}
@@ -21,7 +21,7 @@
                 <li{if $smarty.get.v eq $smkey OR $parent eq $smkey} class="selected"{/if}>
                 {* TODO: Remove this logic from the view *}
                 {if $parent eq $smkey}{assign var="parent_name" value=$sidebar_menu_item->name}{/if}
-                <a href="{$site_root_path}index.php?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">{$sidebar_menu_item->name}</a></li>
+                <a href="{$site_root_path}?v={$smkey}&u={$instance->network_username|urlencode}&n={$instance->network|urlencode}">{$sidebar_menu_item->name}</a></li>
              {/if}
             {/foreach}
 
@@ -177,7 +177,7 @@
 
             {if $follower_count_history_by_week.milestone}
               <div class="small gray">
-                Next milestone: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} week{if $follower_count_history_by_week.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate. <a href="{$site_root_path}index.php?v=followers-history&u={$instance->network_username}&n={$instance->network}">More...</a>
+                Next milestone: <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.will_take} week{if $follower_count_history_by_week.milestone.will_take > 1}s{/if}</span> till you reach <span style="background-color:#FFFF80;color:black">{$follower_count_history_by_week.milestone.next_milestone|number_format} followers</span> at this rate. <a href="{$site_root_path}?v=followers-history&u={$instance->network_username}&n={$instance->network}">More...</a>
               </div>
             {/if}
             {if $least_likely_followers}
@@ -192,7 +192,7 @@
                 <br /><br /><br />    
                 </div>
                 <div class="clearfix view-all">
-                    <a href="{$site_root_path}index.php?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More..</a>
+                    <a href="{$site_root_path}?v=followers-leastlikely&u={$instance->network_username}&n={$instance->network}">More..</a>
                 </div>
                 </div>
             {/if}
